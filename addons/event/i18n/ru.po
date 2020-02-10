@@ -3,27 +3,29 @@
 # * event
 # 
 # Translators:
-# Viktor Pogrebniak <vp@aifil.ru>, 2017
-# Владимир Куряев <istercul@gmail.com>, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Collex100, 2017
-# Sergey Vilizhanin, 2017
-# Максим Дронь <dronmax@gmail.com>, 2017
-# Masha Koc <mariya.kos.ua@gmail.com>, 2017
-# Denis Trepalin <zekarious@gmail.com>, 2017
 # Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017
 # Alex Puchkov <ap@alteco.co>, 2017
+# Denis Trepalin <zekarious@gmail.com>, 2017
 # Evgeny <transingularity@gmail.com>, 2017
 # Артур Чеботарь <artcha.chebotar@gmail.com>, 2017
+# Martin Trigaux, 2018
+# Sergey Vilizhanin, 2018
+# Максим Дронь <dronmax@gmail.com>, 2018
 # Вадим Кунгурцев <kvadim@aport.ru>, 2018
+# Viktor Pogrebniak <vp@aifil.ru>, 2018
+# Владимир Куряев <istercul@gmail.com>, 2018
+# Masha Koc <mariya.kos.ua@gmail.com>, 2018
+# Collex100, 2018
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:56+0000\n"
-"PO-Revision-Date: 2018-07-27 11:56+0000\n"
-"Last-Translator: Вадим Кунгурцев <kvadim@aport.ru>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -381,7 +383,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "${object.event_id.name}: ${object.get_date_range_str()}"
-msgstr ""
+msgstr "${object.event_id.name}: ${object.get_date_range_str()}"
 
 #. module: event
 #: code:addons/event/models/event.py:297
@@ -566,6 +568,8 @@ msgid ""
 "Add a navigation menu to your event web pages with schedule, tracks, a track"
 " proposal form, etc."
 msgstr ""
+"Добавьте навигационное меню веб-страниц события графику, отслеживанием, "
+"формой предложения отслеживания и тому подобное."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -597,6 +601,8 @@ msgid ""
 "Are you sure you want to cancel this event? All the linked attendees will be"
 " cancelled as well."
 msgstr ""
+"Вы уверены, что хотите отменить это событие? Всех связанных участников также"
+" будет отменено."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -652,17 +658,17 @@ msgstr "Участники"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_auto_confirm
 msgid "Autoconfirm Registrations"
-msgstr ""
+msgstr "Автоматическое подтверждение регистрации"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_auto_confirm
 msgid "Automatically Confirm Registrations"
-msgstr ""
+msgstr "Автоматическое подтверждение регистрации"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_use_mail_schedule
 msgid "Automatically Send Emails"
-msgstr ""
+msgstr "Автоматическая отправка электронной почты"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_available
@@ -1028,7 +1034,7 @@ msgstr "Событие"
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "Event Automated Mailing"
-msgstr ""
+msgstr "Автоматическая рассылка событий"
 
 #. module: event
 #: model:ir.actions.report,name:event.report_event_event_badge
@@ -1116,6 +1122,10 @@ msgid ""
 "                              - or the responsible of the event,\n"
 "                              - or the last writer of the template."
 msgstr ""
+"Расписание события для: - Событие:% s (% s) - Запланировано:% s - Шаблон:% s"
+" (% s) Отклонено с ошибкой -% s Вы получаете этот электронное письмо, "
+"поскольку вы: - организатором мероприятия, - или ответственным за "
+"произошедшее, - или последним, кто редактировал шаблон."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_event_begin_date
@@ -1132,7 +1142,7 @@ msgstr "Тип события"
 #: model:ir.cron,cron_name:event.event_mail_scheduler
 #: model:ir.cron,name:event.event_mail_scheduler
 msgid "Event: Mail Scheduler"
-msgstr ""
+msgstr "Событие: Планировщик почты"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
@@ -1165,6 +1175,8 @@ msgid ""
 "Events and registrations will automatically be confirmed\n"
 "                                            upon creation, easing the flow for simple events."
 msgstr ""
+"События и регистрации будет автоматически подтверждено при создании, "
+"облегчая процесс проведения событий."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_auto_confirm
@@ -1172,6 +1184,8 @@ msgid ""
 "Events and registrations will automatically be confirmed upon creation, "
 "easing the flow for simple events."
 msgstr ""
+"События и регистрации автоматически подтверждение при создании, облегчая "
+"процесс проведения событий."
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1418,7 +1432,7 @@ msgstr "Ограничено"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_has_seats_limitation
 msgid "Limited Seats"
-msgstr ""
+msgstr "Ограниченное количество мест"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_address_id
@@ -1441,7 +1455,7 @@ msgstr "Луиджи Рони, старший менеджер событий"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_registration_ids
 msgid "Mail Registration"
-msgstr ""
+msgstr "почтовая регистрации"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_mail_ids
@@ -1477,7 +1491,7 @@ msgstr "Отправка по событию"
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage &amp; publish a schedule with tracks"
-msgstr ""
+msgstr "Управляйте и публикуйте расписание с отслеживанием"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -1497,7 +1511,7 @@ msgstr "Максимальное число участников"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_registration_max
 msgid "Maximum Registrations"
-msgstr ""
+msgstr "максимум регистрации"
 
 #. module: event
 #: code:addons/event/models/event.py:253
@@ -1505,6 +1519,8 @@ msgstr ""
 msgid ""
 "Maximum attendees number should be greater than minimum attendees number."
 msgstr ""
+"Максимальное количество участников должна превышать минимальное количество "
+"участников."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_min
@@ -1514,7 +1530,7 @@ msgstr "Минимальное число участников"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_registration_min
 msgid "Minimum Registrations"
-msgstr ""
+msgstr "минимальные регистрации"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1560,7 +1576,7 @@ msgstr "Число участников"
 #: model:ir.model.fields,help:event.field_res_partner_event_count
 #: model:ir.model.fields,help:event.field_res_users_event_count
 msgid "Number of events the partner has participated."
-msgstr ""
+msgstr "Количество мероприятий, в которых принимал участие партнер."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1597,12 +1613,12 @@ msgstr "Онлайн"
 #: model:ir.model.fields,field_description:event.field_event_event_is_online
 #: model:ir.model.fields,field_description:event.field_event_type_is_online
 msgid "Online Event"
-msgstr ""
+msgstr "онлайн событие"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings_module_website_event_sale
 msgid "Online Ticketing"
-msgstr ""
+msgstr "Продажа билетов онлайн"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_type_form
@@ -1610,6 +1626,8 @@ msgid ""
 "Online events like webinars do not require a specific location\n"
 "                                            and are hosted online."
 msgstr ""
+"Онлайн-события, такие как вебинары, не требуют определенного места и "
+"размещены онлайн."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_is_online
@@ -1617,6 +1635,8 @@ msgid ""
 "Online events like webinars do not require a specific location and are "
 "hosted online."
 msgstr ""
+"Онлайн-события, такие как вебинары, не требуют определенного местоположения "
+"и размещаются онлайн."
 
 #. module: event
 #: model:event.event,name:event.event_0
@@ -1668,7 +1688,7 @@ msgstr "Телефон"
 #. module: event
 #: model:event.type,name:event.event_type_data_physical
 msgid "Physical Event"
-msgstr ""
+msgstr "физическая событие"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1705,6 +1725,7 @@ msgid ""
 "Reference of the document that created the registration, for example a sales"
 " order"
 msgstr ""
+"Справка о документе, который создал регистрацию, например, заказ на продажу"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1803,7 +1824,7 @@ msgstr "Сканировать бейдж для подтверждения по
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
-msgstr ""
+msgstr "Расписание и отслеживание"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_scheduled_date
@@ -1818,12 +1839,12 @@ msgstr "Запланированное время"
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets on your website"
-msgstr ""
+msgstr "Продавайте билеты на вашем сайте"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with sales orders"
-msgstr ""
+msgstr "Продавайте билеты с заказом на продажу"
 
 #. module: event
 #: model:event.type,name:event.event_type_0
@@ -1906,6 +1927,8 @@ msgid ""
 "There are already attendees who attended this event. Please reset it to "
 "draft if you want to cancel this event."
 msgstr ""
+"Есть уже присутствуют, посетивших это событие. Пожалуйста, сбросьте ее в "
+"черновик, если хотите отменить это событие."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1968,7 +1991,7 @@ msgstr "Триггер"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_type
 msgid "Trigger "
-msgstr ""
+msgstr "Tригер"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_twitter_hashtag
@@ -2036,12 +2059,12 @@ msgstr "Ближайшие события на сегодня"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_use_hashtag
 msgid "Use Default Hashtag"
-msgstr ""
+msgstr "Используйте хэштег по умолчанию"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_use_timezone
 msgid "Use Default Timezone"
-msgstr ""
+msgstr "Используйте часовой пояс по умолчанию"
 
 #. module: event
 #: model:res.groups,name:event.group_event_user
@@ -2064,7 +2087,7 @@ msgstr "Видимость"
 #: code:addons/event/models/event_mail.py:130
 #, python-format
 msgid "WARNING: Event Scheduler Error for event: %s"
-msgstr ""
+msgstr "ВНИМАНИЕ: Ошибка планирования события:% s"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -2112,12 +2135,13 @@ msgstr "Рабочие процессы"
 #, python-format
 msgid "You must wait the event confirmation before doing this action."
 msgstr ""
+"Вы должны подождать подтверждения события перед выполнением этого действия."
 
 #. module: event
 #: code:addons/event/models/event.py:422
 #, python-format
 msgid "You must wait the event starting day before doing this action."
-msgstr ""
+msgstr "Нужно подождать до начала события, прежде чем делать это действие."
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
@@ -2149,31 +2173,31 @@ msgstr "event.confirm"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "events@odoo.com"
-msgstr ""
+msgstr "events@odoo.com"
 
 #. module: event
 #: code:addons/event/models/event.py:508
 #, python-format
 msgid "in %d days"
-msgstr ""
+msgstr "В% d дней"
 
 #. module: event
 #: code:addons/event/models/event.py:512
 #, python-format
 msgid "next month"
-msgstr ""
+msgstr "следующий месяц"
 
 #. module: event
 #: code:addons/event/models/event.py:510
 #, python-format
 msgid "next week"
-msgstr ""
+msgstr "Следующая неделя"
 
 #. module: event
 #: code:addons/event/models/event.py:514
 #, python-format
 msgid "on "
-msgstr ""
+msgstr "на"
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
@@ -2184,13 +2208,13 @@ msgstr "res.config.settings"
 #: code:addons/event/models/event.py:504
 #, python-format
 msgid "today"
-msgstr ""
+msgstr "сегодня"
 
 #. module: event
 #: code:addons/event/models/event.py:506
 #, python-format
 msgid "tomorrow"
-msgstr ""
+msgstr "завтра"
 
 #. module: event
 #: model:event.event,description:event.event_0

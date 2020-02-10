@@ -3,6 +3,7 @@
 
 import time
 from datetime import datetime
+from unittest.mock import patch
 
 from odoo.tests.common import TransactionCase
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
@@ -140,6 +141,7 @@ class TestStockValuation(TransactionCase):
         the currency rate, validate the receipt and then check that the value of the received goods
         is set according to the last currency rate.
         """
+        self.env['res.currency.rate'].search([]).unlink()
         usd_currency = self.env.ref('base.USD')
         self.env.user.company_id.currency_id = usd_currency.id
 
@@ -281,6 +283,9 @@ class TestStockValuationWithCOA(AccountingTestCase):
         self.partner_id = self.env.ref('base.res_partner_1')
         self.product1 = self.env.ref('product.product_product_8')
         Account = self.env['account.account']
+        self.usd_currency = self.env.ref('base.USD')
+        self.eur_currency = self.env.ref('base.EUR')
+
         self.stock_input_account = Account.create({
             'name': 'Stock Input',
             'code': 'StockIn',
@@ -294,6 +299,11 @@ class TestStockValuationWithCOA(AccountingTestCase):
         self.stock_valuation_account = Account.create({
             'name': 'Stock Valuation',
             'code': 'Stock Valuation',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+        })
+        self.price_diff_account = Account.create({
+            'name': 'price diff account',
+            'code': 'price diff account',
             'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
         })
         self.stock_journal = self.env['account.journal'].create({
@@ -313,12 +323,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
         self.product1.product_tmpl_id.cost_method = 'fifo'
         self.product1.product_tmpl_id.valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'delivery'
-        price_diff_account = self.env['account.account'].create({
-            'name': 'price diff account',
-            'code': 'price diff account',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
-        })
-        self.product1.property_account_creditor_price_difference = price_diff_account
+        self.product1.property_account_creditor_price_difference = self.price_diff_account
 
         # Receive 10@10 ; create the vendor bill
         po1 = self.env['purchase.order'].create({
@@ -405,5 +410,407 @@ class TestStockValuationWithCOA(AccountingTestCase):
         creditnote_po2.action_invoice_open()
 
         # check the anglo saxon entries
-        price_diff_entry = self.env['account.move.line'].search([('account_id', '=', price_diff_account.id)])
+        price_diff_entry = self.env['account.move.line'].search([('account_id', '=', self.price_diff_account.id)])
         self.assertEqual(price_diff_entry.credit, 100)
+
+    # Do not forward port in >= saas-11.3. PR #32616 takes care of it
+    def test_average_realtime_anglo_saxon_valuation_multicurrency_same_date(self):
+        """
+        The PO and invoice are in the same foreign currency.
+        The PO is invoiced on the same date as its creation.
+        This shouldn't create a price difference entry.
+        """
+        company = self.env.user.company_id
+        company.anglo_saxon_accounting = True
+
+        date_po = '2019-01-01'
+
+        # SetUp product
+        self.product1.product_tmpl_id.cost_method = 'average'
+        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.invoice_policy = 'order'
+        self.product1.product_tmpl_id.purchase_method = 'purchase'
+
+        self.product1.property_account_creditor_price_difference = self.price_diff_account
+
+        # SetUp currency and rates
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': date_po,
+            'rate': 1.0,
+            'currency_id': self.usd_currency.id,
+            'company_id': company.id,
+        })
+
+        self.env['res.currency.rate'].create({
+            'name': date_po,
+            'rate': 1.5,
+            'currency_id': self.eur_currency.id,
+            'company_id': company.id,
+        })
+
+        # Proceed
+        po = self.env['purchase.order'].create({
+            'currency_id': self.eur_currency.id,
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 1.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 100.0,
+                    'date_planned': date_po,
+                }),
+            ],
+        })
+        po.button_confirm()
+
+        inv = self.env['account.invoice'].create({
+            'type': 'in_invoice',
+            'date_invoice': date_po,
+            'currency_id': self.eur_currency.id,
+            'purchase_id': po.id,
+            'partner_id': self.partner_id.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'Test',
+                'price_subtotal': 100.0,
+                'price_unit': 100.0,
+                'product_id': self.product1.id,
+                'purchase_id': po.id,
+                'purchase_line_id': po.order_line.id,
+                'quantity': 1.0,
+                'account_id': self.stock_input_account.id,
+            })]
+        })
+
+        inv.action_invoice_open()
+
+        move_lines = inv.move_id.line_ids
+        self.assertEqual(len(move_lines), 2)
+
+        payable_line = move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
+        self.assertEqual(payable_line.amount_currency, -100.0)
+        self.assertAlmostEqual(payable_line.balance, -66.67)
+
+        stock_line = move_lines.filtered(lambda l: l.account_id == self.stock_input_account)
+        self.assertEqual(stock_line.amount_currency, 100.0)
+        self.assertAlmostEqual(stock_line.balance, 66.67)
+
+    def test_realtime_anglo_saxon_valuation_multicurrency_different_dates(self):
+        """
+        The PO and invoice are in the same foreign currency.
+        The PO is invoiced at a later date than its creation.
+        This should create a price difference entry for standard cost method
+        Not for average cost method though, since the PO and invoice have the same currency
+        """
+        company = self.env.user.company_id
+        company.anglo_saxon_accounting = True
+
+        date_po = '2019-01-01'
+        date_invoice = '2019-01-16'
+
+        # SetUp product Average
+        self.product1.product_tmpl_id.write({
+            'cost_method': 'average',
+            'valuation': 'real_time',
+            'invoice_policy': 'order',
+            'purchase_method': 'purchase',
+            'property_account_creditor_price_difference': self.price_diff_account.id,
+        })
+
+        # SetUp product Standard
+        # should have bought at 60 USD
+        # actually invoiced at 70 EUR > 35 USD
+        product_standard = self.product1.product_tmpl_id.copy({
+            'cost_method': 'standard',
+            'name': 'Standard Val',
+            'standard_price': 60,
+            'property_account_creditor_price_difference': self.price_diff_account.id
+        }).product_variant_id
+
+        # SetUp currency and rates
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': date_po,
+            'rate': 1.0,
+            'currency_id': self.usd_currency.id,
+            'company_id': company.id,
+        })
+
+        self.env['res.currency.rate'].create({
+            'name': date_po,
+            'rate': 1.5,
+            'currency_id': self.eur_currency.id,
+            'company_id': company.id,
+        })
+
+        self.env['res.currency.rate'].create({
+            'name': date_invoice,
+            'rate': 2,
+            'currency_id': self.eur_currency.id,
+            'company_id': company.id,
+        })
+
+        # To allow testing validation of PO
+        def _today(*args, **kwargs):
+            return date_po
+        patchers = [
+            patch('odoo.fields.Date.context_today', _today),
+        ]
+
+        for p in patchers:
+            p.start()
+
+        # Proceed
+        po = self.env['purchase.order'].create({
+            'currency_id': self.eur_currency.id,
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 1.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 100.0,
+                    'date_planned': date_po,
+                }),
+                (0, 0, {
+                    'name': product_standard.name,
+                    'product_id': product_standard.id,
+                    'product_qty': 1.0,
+                    'product_uom': product_standard.uom_po_id.id,
+                    'price_unit': 40.0,
+                    'date_planned': date_po,
+                }),
+            ],
+        })
+        po.button_confirm()
+
+        line_product_average = po.order_line.filtered(lambda l: l.product_id == self.product1)
+        line_product_standard = po.order_line.filtered(lambda l: l.product_id == product_standard)
+
+        inv = self.env['account.invoice'].create({
+            'type': 'in_invoice',
+            'date_invoice': date_invoice,
+            'currency_id': self.eur_currency.id,
+            'purchase_id': po.id,
+            'partner_id': self.partner_id.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'price_subtotal': 100.0,
+                    'price_unit': 100.0,
+                    'product_id': self.product1.id,
+                    'purchase_id': po.id,
+                    'purchase_line_id': line_product_average.id,
+                    'quantity': 1.0,
+                    'account_id': self.stock_input_account.id,
+                }),
+                (0, 0, {
+                    'name': product_standard.name,
+                    'price_subtotal': 70.0,
+                    'price_unit': 70.0,
+                    'product_id': product_standard.id,
+                    'purchase_id': po.id,
+                    'purchase_line_id': line_product_standard.id,
+                    'quantity': 1.0,
+                    'account_id': self.stock_input_account.id,
+                })
+            ]
+        })
+
+        inv.action_invoice_open()
+
+        for p in patchers:
+            p.stop()
+
+        move_lines = inv.move_id.line_ids
+        self.assertEqual(len(move_lines), 4)
+
+        # PAYABLE CHECK
+        payable_line = move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
+        self.assertEqual(payable_line.amount_currency, -170.0)
+        self.assertAlmostEqual(payable_line.balance, -85.00)
+
+        # PRODUCTS CHECKS
+
+        # NO EXCHANGE DIFFERENCE (average)
+        # We ordered for a value of 100 EUR
+        # But by the time we are invoiced for it
+        # the foreign currency appreciated from 1.5 to 2.0
+        # We still have to pay 100 EUR, which now values at 50 USD
+        product_lines = move_lines.filtered(lambda l: l.product_id == self.product1)
+
+        # Stock-wise, we have been invoiced 100 EUR, and we ordered 100 EUR
+        # there is no price difference
+        # However, 100 EUR should be converted at the time of the invoice
+        stock_line = product_lines.filtered(lambda l: l.account_id == self.stock_input_account)
+        self.assertEqual(stock_line.amount_currency, 100.00)
+        self.assertAlmostEqual(stock_line.balance, 50.00)
+
+        # PRICE DIFFERENCE (STANDARD)
+        # We ordered a product that should have cost 60 USD (120 EUR)
+        # However, we effectively got invoiced 70 EUR (35 USD)
+        product_lines = move_lines.filtered(lambda l: l.product_id == product_standard)
+
+        stock_line = product_lines.filtered(lambda l: l.account_id == self.stock_input_account)
+        self.assertEqual(stock_line.amount_currency, 120.00)
+        self.assertAlmostEqual(stock_line.balance, 60.00)
+
+        price_diff_line = product_lines.filtered(lambda l: l.account_id == self.price_diff_account)
+        self.assertEqual(price_diff_line.amount_currency, -50.00)
+        self.assertAlmostEqual(price_diff_line.balance, -25.00)
+
+    def test_average_realtime_with_delivery_anglo_saxon_valuation_multicurrency_different_dates(self):
+        """
+        The PO and invoice are in the same foreign currency.
+        The delivery occurs in between PO validation and invoicing
+        The invoice is created at an even different date
+        This should create a price difference entry.
+        """
+        company = self.env.user.company_id
+        company.anglo_saxon_accounting = True
+
+        date_po = '2019-01-01'
+        date_delivery = '2019-01-08'
+        date_invoice = '2019-01-16'
+
+        product_avg = self.product1.product_tmpl_id.copy({
+            'valuation': 'real_time',
+            'invoice_policy': 'order',
+            'purchase_method': 'purchase',
+            'cost_method': 'average',
+            'name': 'AVG',
+            'standard_price': 60,
+            'property_account_creditor_price_difference': self.price_diff_account.id
+        }).product_variant_id
+
+        # SetUp currency and rates
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': date_po,
+            'rate': 1.0,
+            'currency_id': self.usd_currency.id,
+            'company_id': company.id,
+        })
+
+        self.env['res.currency.rate'].create({
+            'name': date_po,
+            'rate': 1.5,
+            'currency_id': self.eur_currency.id,
+            'company_id': company.id,
+        })
+
+        self.env['res.currency.rate'].create({
+            'name': date_delivery,
+            'rate': 0.7,
+            'currency_id': self.eur_currency.id,
+            'company_id': company.id,
+        })
+
+        self.env['res.currency.rate'].create({
+            'name': date_invoice,
+            'rate': 2,
+            'currency_id': self.eur_currency.id,
+            'company_id': company.id,
+        })
+
+        # To allow testing validation of PO and Delivery
+        today = date_po
+        def _today(*args, **kwargs):
+            return today
+        def _now(*args, **kwargs):
+            return today + ' 01:00:00'
+
+        patchers = [
+            patch('odoo.fields.Date.context_today', _today),
+            patch('odoo.fields.Datetime.now', _now),
+        ]
+
+        for p in patchers:
+            p.start()
+
+        # Proceed
+        po = self.env['purchase.order'].create({
+            'currency_id': self.eur_currency.id,
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': product_avg.name,
+                    'product_id': product_avg.id,
+                    'product_qty': 1.0,
+                    'product_uom': product_avg.uom_po_id.id,
+                    'price_unit': 30.0,
+                    'date_planned': date_po,
+                })
+            ],
+        })
+        po.button_confirm()
+
+        line_product_avg = po.order_line.filtered(lambda l: l.product_id == product_avg)
+
+        today = date_delivery
+        picking = po.picking_ids
+        (picking.move_lines
+            .filtered(lambda l: l.purchase_line_id == line_product_avg)
+            .write({'quantity_done': 1.0}))
+
+        picking.button_validate()
+        # 1 Units received at rate 0.7 = 42.86
+        self.assertAlmostEqual(product_avg.standard_price, 42.86)
+
+        today = date_invoice
+        inv = self.env['account.invoice'].create({
+            'type': 'in_invoice',
+            'date_invoice': date_invoice,
+            'currency_id': self.eur_currency.id,
+            'purchase_id': po.id,
+            'partner_id': self.partner_id.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': product_avg.name,
+                    'price_subtotal': 30.0,
+                    'price_unit': 30.0,
+                    'product_id': product_avg.id,
+                    'purchase_id': po.id,
+                    'purchase_line_id': line_product_avg.id,
+                    'quantity': 1.0,
+                    'account_id': self.stock_input_account.id,
+                })
+            ]
+        })
+
+        inv.action_invoice_open()
+
+        for p in patchers:
+            p.stop()
+
+        move_lines = inv.move_id.line_ids
+        self.assertEqual(len(move_lines), 3)
+
+        # PAYABLE CHECK
+        payable_line = move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
+        self.assertEqual(payable_line.amount_currency, -30.0)
+        self.assertAlmostEqual(payable_line.balance, -15.00)
+
+        # PRODUCTS CHECKS
+
+        # DELIVERY DIFFERENCE (AVERAGE)
+        # We ordered a product at 30 EUR valued at 20 USD
+        # We received it when the exchange rate has appreciated
+        # So, the actualized 20 USD are now 20*1.5/0.7 = 42.857 USD
+        # At invoice time, it amounts to 85.71 EUR
+        product_lines = move_lines.filtered(lambda l: l.product_id == product_avg)
+
+        # The value of the stock is then 42.86 USD
+        stock_line = product_lines.filtered(lambda l: l.account_id == self.stock_input_account)
+        self.assertEqual(stock_line.amount_currency, 85.71)
+        self.assertAlmostEqual(stock_line.balance, 42.86)
+
+        price_diff_line = product_lines.filtered(lambda l: l.account_id == self.price_diff_account)
+        self.assertEqual(price_diff_line.amount_currency, -55.71)
+        self.assertAlmostEqual(price_diff_line.balance, -27.86)

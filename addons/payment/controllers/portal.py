@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http, _
+from odoo.exceptions import UserError
 from odoo.http import request
 
 
@@ -23,7 +24,7 @@ class WebsitePayment(http.Controller):
         }
         return request.render("payment.pay_methods", values)
 
-    @http.route(['/website_payment/pay'], type='http', auth='public', website=True)
+    @http.route(['/website_payment/pay'], type='http', auth='public', website=True, sitemap=False)
     def pay(self, reference='', amount=False, currency_id=None, acquirer_id=None, **kw):
         env = request.env
         user = env.user.sudo()
@@ -136,12 +137,47 @@ class WebsitePayment(http.Controller):
 
         return request.redirect(return_url if return_url else '/website_payment/confirm?tx_id=%d' % tx.id)
 
-    @http.route(['/website_payment/confirm'], type='http', auth='public', website=True)
+    @http.route(['/website_payment/json_token/<string:reference>/<string:amount>/<string:currency_id>',
+                '/website_payment/json_token/v2/<string:amount>/<string:currency_id>/<path:reference>'], type='json', auth='public')
+    def payment_token_json(self, pm_id, reference, amount, currency_id, return_url=None, **kwargs):
+        token = request.env['payment.token'].browse(int(pm_id))
+
+        if not token:
+            raise UserError(_('Incorrect token'))
+
+        partner_id = request.env.user.partner_id.id if not request.env.user._is_public() else False
+
+        values = {
+            'acquirer_id': token.acquirer_id.id,
+            'reference': reference,
+            'amount': float(amount),
+            'currency_id': int(currency_id),
+            'partner_id': partner_id,
+            'payment_token_id': pm_id,
+            'type': 'form_save' if token.acquirer_id.save_token != 'none' and partner_id else 'form',
+        }
+
+        tx = request.env['payment.transaction'].sudo().create(values)
+        request.session['website_payment_tx_id'] = tx.id
+
+        try:
+            res = tx.with_context(off_session=False).s2s_do_transaction()
+        except Exception as e:
+            raise UserError(_('Transaction failed'))
+
+        tx_info = tx._get_json_info()
+        return {
+            'tx_info': tx_info,
+            'redirect': '/website_payment/confirm?tx_id=%d' % tx.id,
+        }
+
+
+    @http.route(['/website_payment/confirm'], type='http', auth='public', website=True, sitemap=False)
     def confirm(self, **kw):
         tx_id = int(kw.get('tx_id', 0)) or request.session.pop('website_payment_tx_id', 0)
         if tx_id:
             tx = request.env['payment.transaction'].browse(tx_id)
-            if tx.state == 'done':
+            if tx.state in ['done', 'authorized']:
                 status = 'success'
                 message = tx.acquirer_id.done_msg
             elif tx.state == 'pending':

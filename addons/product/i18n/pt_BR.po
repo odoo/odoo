@@ -15,14 +15,16 @@
 # Martin Trigaux, 2018
 # Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2018
 # grazziano <gra.negocia@gmail.com>, 2018
+# Gabriel Bortolotto Contesotto <gabrielbortolotto@gmail.com>, 2019
+# Luiz Carareto Alonso <Luiz.cararetoalonso@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"POT-Creation-Date: 2019-03-29 09:08+0000\n"
 "PO-Revision-Date: 2017-09-20 10:22+0000\n"
-"Last-Translator: grazziano <gra.negocia@gmail.com>, 2018\n"
+"Last-Translator: Luiz Carareto Alonso <Luiz.cararetoalonso@gmail.com>, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -161,7 +163,7 @@ msgstr "<span>kg</span>"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>m³</span>"
-msgstr ""
+msgstr "<span>m³</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -698,7 +700,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Common Product Catalog"
-msgstr ""
+msgstr "Catálogo de Produto"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -774,6 +776,12 @@ msgstr ""
 #: selection:product.pricelist.item,base:0
 msgid "Cost"
 msgstr "Custo"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_cost_currency_id
+#: model:ir.model.fields,field_description:product.field_product_template_cost_currency_id
+msgid "Cost Currency"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
@@ -895,7 +903,7 @@ msgstr "Computador personalizado enviado em kit."
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Referência Cliente"
 
 #. module: product
 #: model:product.product,name:product.product_delivery_02
@@ -917,7 +925,7 @@ msgstr "Dia(s)"
 #: code:addons/product/models/res_company.py:59
 #, python-format
 msgid "Default %(currency)s pricelist for %(company)s"
-msgstr ""
+msgstr "Padrão %(currency)s lista de preço para %(company)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_uom_id
@@ -949,7 +957,7 @@ msgstr "Descrição"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Customers"
-msgstr ""
+msgstr "Descrição para Clientes"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -1271,7 +1279,7 @@ msgstr "Global"
 #: code:addons/product/models/product_template.py:30
 #, python-format
 msgid "Go to Internal Categories"
-msgstr ""
+msgstr "Ir para categorias internas"
 
 #. module: product
 #: model:product.product,name:product.membership_0
@@ -1507,7 +1515,7 @@ msgstr "Inventário"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
 msgid "Is Product Variant"
-msgstr ""
+msgstr "É variante de produto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
@@ -1935,7 +1943,7 @@ msgstr "Lista de Preço"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_pricelist_item_ids
 msgid "Pricelist Item"
-msgstr ""
+msgstr "Itens da lista de preço"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_applied_on
@@ -2030,7 +2038,7 @@ msgstr "Valor de Atributo de Produto"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 msgid "Product Attribute and Values"
-msgstr ""
+msgstr "Atributo e Valores do Produto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_attribute_line_ids
@@ -3080,7 +3088,7 @@ msgstr "Valores"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_variant_count
 msgid "Variant Count"
-msgstr ""
+msgstr "Contagem de variantes"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_variant
@@ -3106,7 +3114,7 @@ msgstr "Preços da Variante"
 #: model:ir.model.fields,field_description:product.field_product_product_variant_seller_ids
 #: model:ir.model.fields,field_description:product.field_product_template_variant_seller_ids
 msgid "Variant Seller"
-msgstr ""
+msgstr "Vendedor"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_attribute_value_action
@@ -3260,18 +3268,20 @@ msgid ""
 "You cannot define the decimal precision of 'Account' as greater than the "
 "rounding factor of the company's main currency"
 msgstr ""
+"Você não pode definir a precisão decimal de 'Conta' como maior que o fator "
+"de arredondamento da moeda principal da empresa"
 
 #. module: product
 #: code:addons/product/wizard/product_price_list.py:26
 #, python-format
 msgid "You have to set a logo or a layout for your company."
-msgstr ""
+msgstr "Você precisa definir um logou ou layout para sua empresa"
 
 #. module: product
 #: code:addons/product/wizard/product_price_list.py:28
 #, python-format
 msgid "You have to set your reports's header and footer layout."
-msgstr ""
+msgstr "Você precisa definir o layout de cabeçalho e rodapé do relatório."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
@@ -3309,6 +3319,8 @@ msgid ""
 "You must define at least one product category in order to be able to create "
 "products."
 msgstr ""
+"Você deve definir pelo menos uma categoria de produto para poder criar "
+"produtos."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -3357,7 +3369,7 @@ msgstr "por exemplo, Lâmpadas"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "e.g. Odoo Enterprise Subscription"
-msgstr ""
+msgstr "e.g. Odoo Enterprise Subscription"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view

@@ -246,7 +246,7 @@
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li t-foreach="website_sale_sortable" t-as="sortby">
-                        <a t-att-href="keep('/shop', order=sortby[1])">
+                        <a rel="noindex,nofollow" t-att-href="keep('/shop', order=sortby[1])">
                             <span t-raw="sortby[0]"/>
                         </a>
                     </li>
@@ -315,6 +315,7 @@
     <template id="products_attributes" inherit_id="website_sale.products" active="False" customize_show="True" name="Product Attribute's Filters">
         <xpath expr="//div[@id='products_grid_before']" position="inside">
             <form class="js_attributes" method="get">
+                <input t-if="category" type="hidden" name="category" t-att-value="category.id" />
                 <input type="hidden" name="search" t-att-value="search" />
                 <ul class="nav nav-pills nav-stacked mt16">
                     <t t-foreach="attributes" t-as="a">

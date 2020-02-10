@@ -4,9 +4,11 @@
 import base64
 from xml.etree import ElementTree as ET
 from collections import namedtuple
+from functools import partial
 
 from odoo import api, exceptions, fields, models, _
 from odoo.tools.pycompat import text_type
+from odoo.tools import float_round, float_is_zero
 
 INTRASTAT_XMLNS = 'http://www.onegate.eu/2010-01-01'
 
@@ -103,35 +105,156 @@ class XmlDeclaration(models.TransientModel):
             'res_id': self.id,
         }
 
+    def _get_rounding_digits(self):
+        """A hook to not break behavior
+        Allows to programmatically set with what precision
+        the price, weight and values will be rounded"""
+        return 0
+
+    def _build_intrastat_line(self, numlgn, item, linekey, amounts, dispatchmode, extendedmode):
+        round_digits = self._get_rounding_digits()
+        _round = partial(float_round, precision_digits=round_digits)
+
+        value, weight, supply_units = amounts
+        # Assuming weight cannot be negative
+        if weight >= 0 and weight < 0.01:
+            weight = 0.01
+
+        self._set_Dim(item, 'EXSEQCODE', text_type(numlgn))
+        self._set_Dim(item, 'EXTRF', text_type(linekey.EXTRF))
+        self._set_Dim(item, 'EXCNT', text_type(linekey.EXCNT))
+        self._set_Dim(item, 'EXTTA', text_type(linekey.EXTTA))
+        self._set_Dim(item, 'EXREG', text_type(linekey.EXREG))
+        self._set_Dim(item, 'EXTGO', text_type(linekey.EXGO))
+        if extendedmode:
+            self._set_Dim(item, 'EXTPC', text_type(linekey.EXTPC))
+            self._set_Dim(item, 'EXDELTRM', text_type(linekey.EXDELTRM))
+        self._set_Dim(item, 'EXTXVAL', text_type(_round(value)).replace(".", ","))
+        self._set_Dim(item, 'EXWEIGHT', text_type(_round(weight)).replace(".", ","))
+        self._set_Dim(item, 'EXUNITS', text_type(_round(supply_units)).replace(".", ","))
+
+    def _get_intrastat_linekey(self, declcode, inv_line, dispatchmode, extendedmode):
+        IntrastatRegion = self.env['l10n_be_intrastat.region']
+        company = self.company_id
+
+        #Check type of transaction
+        if inv_line.intrastat_transaction_id:
+            extta = inv_line.intrastat_transaction_id.code
+        else:
+            extta = "1"
+        #Check country
+        if inv_line.invoice_id.intrastat_country_id:
+            excnt = inv_line.invoice_id.intrastat_country_id.code
+        else:
+            excnt = inv_line.invoice_id.partner_shipping_id.country_id.code or inv_line.invoice_id.partner_id.country_id.code
+
+        #Check region
+        #If purchase, comes from purchase order, linked to a location,
+        #which is linked to the warehouse
+        #if sales, the sales order is linked to the warehouse
+        #if sales, from a delivery order, linked to a location,
+        #which is linked to the warehouse
+        #If none found, get the company one.
+        exreg = None
+        if inv_line.invoice_id.type in ('in_invoice', 'in_refund'):
+            #comes from purchase
+            po_lines = self.env['purchase.order.line'].search([('invoice_lines', 'in', inv_line.id)], limit=1)
+            if po_lines:
+                if self._is_situation_triangular(company, po_line=po_lines):
+                    return
+                location = self.env['stock.location'].browse(po_lines.order_id._get_destination_location())
+                region_id = self.env['stock.warehouse'].get_regionid_from_locationid(location)
+                if region_id:
+                    exreg = IntrastatRegion.browse(region_id).code
+        elif inv_line.invoice_id.type in ('out_invoice', 'out_refund'):
+            #comes from sales
+            so_lines = self.env['sale.order.line'].search([('invoice_lines', 'in', inv_line.id)], limit=1)
+            if so_lines:
+                if self._is_situation_triangular(company, so_line=so_lines):
+                    return
+                saleorder = so_lines.order_id
+                if saleorder and saleorder.warehouse_id and saleorder.warehouse_id.region_id:
+                    exreg = IntrastatRegion.browse(saleorder.warehouse_id.region_id.id).code
+
+        if not exreg:
+            if company.region_id:
+                exreg = company.region_id.code
+            else:
+                self._company_warning(_('The Intrastat Region of the selected company is not set, '
+                      'please make sure to configure it first.'))
+
+        #Check commodity codes
+        intrastat_id = inv_line.product_id.get_intrastat_recursively()
+        if intrastat_id:
+            exgo = self.env['report.intrastat.code'].browse(intrastat_id).name
+        else:
+            raise exceptions.Warning(
+                _('Product "%s" has no intrastat code, please configure it') % inv_line.product_id.display_name)
+
+        #In extended mode, 2 more fields required
+        if extendedmode:
+            #Check means of transport
+            if inv_line.invoice_id.transport_mode_id:
+                extpc = inv_line.invoice_id.transport_mode_id.code
+            elif company.transport_mode_id:
+                extpc = company.transport_mode_id.code
+            else:
+                self._company_warning(_('The default Intrastat transport mode of your company '
+                      'is not set, please make sure to configure it first.'))
+
+            #Check incoterm
+            if inv_line.invoice_id.incoterm_id:
+                exdeltrm = inv_line.invoice_id.incoterm_id.code
+            elif company.incoterm_id:
+                exdeltrm = company.incoterm_id.code
+            else:
+                self._company_warning(_('The default Incoterm of your company is not set, '
+                      'please make sure to configure it first.'))
+        else:
+            extpc = ""
+            exdeltrm = ""
+        intrastatkey = namedtuple("intrastatkey",
+                                  ['EXTRF', 'EXCNT', 'EXTTA', 'EXREG',
+                                   'EXGO', 'EXTPC', 'EXDELTRM'])
+        return intrastatkey(EXTRF=declcode, EXCNT=excnt,
+                            EXTTA=extta, EXREG=exreg, EXGO=exgo,
+                            EXTPC=extpc, EXDELTRM=exdeltrm)
+
+    def _get_reception_code(self, extended):
+        return 'EX19E' if extended else 'EX19S'
+
+    def _get_reception_form(self, extended):
+        return 'EXF19E' if extended else 'EXF19S'
+
+    def _get_expedition_code(self, extended):
+        return 'EX29E' if extended else 'EX29S'
+
+    def _get_expedition_form(self, extended):
+        return 'EXF29E' if extended else 'EXF29S'
+
     @api.multi
     def _get_lines(self, dispatchmode=False, extendedmode=False):
         company = self.company_id
-        IntrastatRegion = self.env['l10n_be_intrastat.region']
 
         if dispatchmode:
             mode1 = 'out_invoice'
             mode2 = 'in_refund'
-            declcode = "29"
+            extrf = "29"
+            declcode = self._get_expedition_code(extendedmode)
+            declform = self._get_expedition_form(extendedmode)
         else:
             mode1 = 'in_invoice'
             mode2 = 'out_refund'
-            declcode = "19"
+            extrf = "19"
+            declcode = self._get_reception_code(extendedmode)
+            declform = self._get_reception_form(extendedmode)
 
         decl = ET.Element('Report')
-        if not extendedmode:
-            decl.set('code', 'EX%sS' % declcode)
-        else:
-            decl.set('code', 'EX%sE' % declcode)
+        decl.set('code', declcode)
         decl.set('date', '%s-%s' % (self.year, self.month))
         datas = ET.SubElement(decl, 'Data')
-        if not extendedmode:
-            datas.set('form', 'EXF%sS' % declcode)
-        else:
-            datas.set('form', 'EXF%sE' % declcode)
+        datas.set('form', declform)
         datas.set('close', 'true')
-        intrastatkey = namedtuple("intrastatkey",
-                                  ['EXTRF', 'EXCNT', 'EXTTA', 'EXREG',
-                                   'EXGO', 'EXTPC', 'EXDELTRM'])
         entries = {}
 
         query = """
@@ -167,86 +290,10 @@ class XmlDeclaration(models.TransientModel):
         invoicelines = self.env['account.invoice.line'].browse(invoicelines_ids)
 
         for inv_line in invoicelines:
+            linekey = self._get_intrastat_linekey(extrf, inv_line, dispatchmode, extendedmode)
+            if linekey is None:
+                continue
 
-            #Check type of transaction
-            if inv_line.intrastat_transaction_id:
-                extta = inv_line.intrastat_transaction_id.code
-            else:
-                extta = "1"
-            #Check country
-            if inv_line.invoice_id.intrastat_country_id:
-                excnt = inv_line.invoice_id.intrastat_country_id.code
-            else:
-                excnt = inv_line.invoice_id.partner_shipping_id.country_id.code or inv_line.invoice_id.partner_id.country_id.code
-
-            #Check region
-            #If purchase, comes from purchase order, linked to a location,
-            #which is linked to the warehouse
-            #if sales, the sales order is linked to the warehouse
-            #if sales, from a delivery order, linked to a location,
-            #which is linked to the warehouse
-            #If none found, get the company one.
-            exreg = None
-            if inv_line.invoice_id.type in ('in_invoice', 'in_refund'):
-                #comes from purchase
-                po_lines = self.env['purchase.order.line'].search([('invoice_lines', 'in', inv_line.id)], limit=1)
-                if po_lines:
-                    if self._is_situation_triangular(company, po_line=po_lines):
-                        continue
-                    location = self.env['stock.location'].browse(po_lines.order_id._get_destination_location())
-                    region_id = self.env['stock.warehouse'].get_regionid_from_locationid(location)
-                    if region_id:
-                        exreg = IntrastatRegion.browse(region_id).code
-            elif inv_line.invoice_id.type in ('out_invoice', 'out_refund'):
-                #comes from sales
-                so_lines = self.env['sale.order.line'].search([('invoice_lines', 'in', inv_line.id)], limit=1)
-                if so_lines:
-                    if self._is_situation_triangular(company, so_line=so_lines):
-                        continue
-                    saleorder = so_lines.order_id
-                    if saleorder and saleorder.warehouse_id and saleorder.warehouse_id.region_id:
-                        exreg = IntrastatRegion.browse(saleorder.warehouse_id.region_id.id).code
-
-            if not exreg:
-                if company.region_id:
-                    exreg = company.region_id.code
-                else:
-                    self._company_warning(_('The Intrastat Region of the selected company is not set, '
-                          'please make sure to configure it first.'))
-
-            #Check commodity codes
-            intrastat_id = inv_line.product_id.get_intrastat_recursively()
-            if intrastat_id:
-                exgo = self.env['report.intrastat.code'].browse(intrastat_id).name
-            else:
-                raise exceptions.Warning(
-                    _('Product "%s" has no intrastat code, please configure it') % inv_line.product_id.display_name)
-
-            #In extended mode, 2 more fields required
-            if extendedmode:
-                #Check means of transport
-                if inv_line.invoice_id.transport_mode_id:
-                    extpc = inv_line.invoice_id.transport_mode_id.code
-                elif company.transport_mode_id:
-                    extpc = company.transport_mode_id.code
-                else:
-                    self._company_warning(_('The default Intrastat transport mode of your company '
-                          'is not set, please make sure to configure it first.'))
-
-                #Check incoterm
-                if inv_line.invoice_id.incoterm_id:
-                    exdeltrm = inv_line.invoice_id.incoterm_id.code
-                elif company.incoterm_id:
-                    exdeltrm = company.incoterm_id.code
-                else:
-                    self._company_warning(_('The default Incoterm of your company is not set, '
-                          'please make sure to configure it first.'))
-            else:
-                extpc = ""
-                exdeltrm = ""
-            linekey = intrastatkey(EXTRF=declcode, EXCNT=excnt,
-                                   EXTTA=extta, EXREG=exreg, EXGO=exgo,
-                                   EXTPC=extpc, EXDELTRM=exdeltrm)
             #We have the key
             #calculate amounts
             if inv_line.price_unit and inv_line.quantity:
@@ -266,22 +313,11 @@ class XmlDeclaration(models.TransientModel):
         numlgn = 0
         for linekey in entries:
             amounts = entries[linekey]
-            if round(amounts[0], 0) == 0:
+            if float_is_zero(amounts[0], precision_digits=self._get_rounding_digits()):
                 continue
             numlgn += 1
             item = ET.SubElement(datas, 'Item')
-            self._set_Dim(item, 'EXSEQCODE', text_type(numlgn))
-            self._set_Dim(item, 'EXTRF', text_type(linekey.EXTRF))
-            self._set_Dim(item, 'EXCNT', text_type(linekey.EXCNT))
-            self._set_Dim(item, 'EXTTA', text_type(linekey.EXTTA))
-            self._set_Dim(item, 'EXREG', text_type(linekey.EXREG))
-            self._set_Dim(item, 'EXTGO', text_type(linekey.EXGO))
-            if extendedmode:
-                self._set_Dim(item, 'EXTPC', text_type(linekey.EXTPC))
-                self._set_Dim(item, 'EXDELTRM', text_type(linekey.EXDELTRM))
-            self._set_Dim(item, 'EXTXVAL', text_type(round(amounts[0], 0)).replace(".", ","))
-            self._set_Dim(item, 'EXWEIGHT', text_type(round(amounts[1], 0)).replace(".", ","))
-            self._set_Dim(item, 'EXUNITS', text_type(round(amounts[2], 0)).replace(".", ","))
+            self._build_intrastat_line(numlgn, item, linekey, amounts, dispatchmode, extendedmode)
 
         if numlgn == 0:
             #no datas

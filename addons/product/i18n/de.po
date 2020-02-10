@@ -19,26 +19,27 @@
 # Ermin Trevisan <trevi@twanda.com>, 2017
 # dd5cd5bab88c61e9dedf84f5ea59b147, 2017
 # darenkster <inactive+darenkster@transifex.com>, 2017
-# Jan Meyer, 2017
 # Mathias Neef <mn@copado.de>, 2017
 # Wolfgang Taferner, 2017
 # Rudolf Schnapka <rs@techno-flex.de>, 2017
-# kuti, 2017
 # Mark Lorenz <bandworm@gmail.com>, 2017
 # e2f <projects@e2f.com>, 2018
-# Katharina Moritz <kmo@e2f.com>, 2018
 # Andi, 2018
 # brokemeister <work@maltejansen.de>, 2018
 # Anja Funk <anja.funk@afimage.de>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
+# Jan Meyer, 2018
+# kuti, 2018
 # Martin Trigaux, 2018
+# Chris Egal <sodaswed@web.de>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"POT-Creation-Date: 2019-03-29 09:08+0000\n"
 "PO-Revision-Date: 2017-09-20 10:22+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -813,6 +814,12 @@ msgid "Cost"
 msgstr "Kosten"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_cost_currency_id
+#: model:ir.model.fields,field_description:product.field_product_template_cost_currency_id
+msgid "Cost Currency"
+msgstr "Kostenwährung"
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
 msgid ""
 "Cost used for stock valuation in standard price and as a first price to set "
@@ -999,7 +1006,7 @@ msgstr "Beschreibung für Kunden"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Internal"
-msgstr ""
+msgstr "Beschreibung für Intern"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1562,7 +1569,7 @@ msgstr "Lager"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
 msgid "Is Product Variant"
-msgstr ""
+msgstr "Ist Produktvariante"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
@@ -2944,7 +2951,7 @@ msgstr "Dies ist die Summe der Preisaufschläge aller Attribute"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is only for internal purposes."
-msgstr ""
+msgstr "Dieser Hinweis dient nur internen Zwecken."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view

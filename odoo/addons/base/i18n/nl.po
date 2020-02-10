@@ -5,15 +5,16 @@
 # Translators:
 # Eric Geens <eric.geens@vitabiz.be>, 2017
 # Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2017
-# Martin Trigaux, 2017
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
 # Eric Geens <ericgeens@yahoo.com>, 2017
 # Julia van Orsouw <julia@odooexperts.nl>, 2017
 # Melroy van den Berg <webmaster1989@gmail.com>, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2018
 # Cas Vissers <c.vissers@brahoo.nl>, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Martin Trigaux, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:05+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -592,6 +593,16 @@ msgstr ""
 "\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_uk_reports_hmrc
+msgid ""
+"\n"
+"        Accounting reports send to HMRC\n"
+"    "
+msgstr ""
+"\n"
+"Boekhoudkundige rapportages verzonden naar HMRC"
+
+#. module: base
 #: model:ir.module.module,description:base.module_account_extension
 msgid ""
 "\n"
@@ -604,6 +615,21 @@ msgstr ""
 "        Aanpassen van de basismodule Boekhouding voor de Enterprise Edition.\n"
 "\n"
 "        Deze module wordt automatisch geïnstalleerd wanneer de boekhoudmodule en de Enterprise Edition aanwezig zijn\n"
+"    "
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_mx_reports_closing
+msgid ""
+"\n"
+"        Allow to generate the trial balance for the closing entry.\n"
+"\n"
+"        Colloquially known as \"Month 13\"\n"
+"    "
+msgstr ""
+"\n"
+"       Toestaan om het proefsaldo voor de afsluitende invoer te genereren.\n"
+"\n"
+"       In de volksmond bekend als \"13de maand\"\n"
 "    "
 
 #. module: base
@@ -1469,6 +1495,16 @@ msgstr ""
 "Laat het bedrijf configureren welke Pad installatie gebruikt moet worden om de nieuwe\n"
 "paden te linken (standaard, http://etherpad.com/).\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_be_intrastat_2019
+msgid ""
+"\n"
+"Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
+"    "
+msgstr ""
+"\n"
+"Voegt de mogelijkheid toe om het land van oorsprong van goederen en de BTW code van de klant in het Intrastat XML-rapport op te geven."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_calendar
@@ -6943,6 +6979,16 @@ msgstr ""
 "Ondersteunde documenten zijn SO, PO en facturen/credit facturen.\n"
 
 #. module: base
+#: code:addons/model.py:148
+#, python-format
+msgid ""
+" another model requires the record being deleted. If possible, archive it "
+"instead."
+msgstr ""
+"een ander model heeft het verwijderde record nodig. Archiveer dit record "
+"indien mogelijk."
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%A - Full weekday name."
 msgstr "%A - Volledige naam van de dag."
@@ -7081,6 +7127,16 @@ msgstr ", alleen lezen"
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid ", required"
 msgstr ", verplicht"
+
+#. module: base
+#: code:addons/model.py:136
+#, python-format
+msgid ""
+"- Create/update: a mandatory field is not set.\n"
+"- Delete: another model requires the record being deleted. If possible, archive it instead."
+msgstr ""
+"- Aanmaken/update: een verplicht veld is niet ingesteld.\n"
+"- Verwijderen: een ander model heeft het verwijderde record nodig. Archiveer dit record indien mogelijk."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -8032,6 +8088,11 @@ msgid "A module to test the API."
 msgstr "Een module om de API te testen."
 
 #. module: base
+#: model:ir.module.module,description:base.module_test_rpc
+msgid "A module to test the RPC requests."
+msgstr "Een module om de RPC-aanvragen te testen."
+
+#. module: base
 #: model:ir.module.module,description:base.module_test_uninstall
 msgid "A module to test the uninstall feature."
 msgstr "Een module om het de-installeren te testen"
@@ -8448,6 +8509,11 @@ msgstr "Actief"
 #: model:ir.module.module,summary:base.module_website_sale_delivery
 msgid "Add Delivery Costs to Online Sales"
 msgstr "Voegt afleverkosten toe aan online verkopen"
+
+#. module: base
+#: selection:ir.actions.server,state:0
+msgid "Add Followers"
+msgstr "Volgers toevoegen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_cash_basis_base_account
@@ -8869,7 +8935,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_module_module_application
 #: model:ir.model.fields,field_description:base.field_res_groups_category_id
 msgid "Application"
-msgstr "Sollicitatie"
+msgstr "Applicatie"
 
 #. module: base
 #: code:addons/base/res/res_users.py:767
@@ -9138,6 +9204,11 @@ msgstr "Automatisch Zoeken"
 #: model:ir.module.module,summary:base.module_marketing_automation
 msgid "Automate Marketing Campaigns"
 msgstr "Automatiseer marketing campagnes"
+
+#. module: base
+#: selection:ir.actions.server,usage:0
+msgid "Automated Action"
+msgstr "Geautomatiseerde actie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
@@ -9474,6 +9545,11 @@ msgstr "Wit-Rusland"
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
 msgstr "Belgische Intrastatverklaring"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat_2019
+msgid "Belgian Intrastat Declaration - Complement for 2019"
+msgstr "Belgische intrastat declaratie - Complement for 2019"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
@@ -10569,6 +10645,12 @@ msgid "Constraint Type"
 msgstr "Soort Beperking"
 
 #. module: base
+#: code:addons/model.py:153
+#, python-format
+msgid "Constraint:"
+msgstr "Beperking:"
+
+#. module: base
 #: sql_constraint:ir.model.constraint:0
 msgid "Constraints with the same name are unique per module."
 msgstr "Beperkingen met dezelfde naam zijn uniek per module."
@@ -10618,13 +10700,13 @@ msgstr "Naam contactpersoon"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_category_form
 msgid "Contact Tag"
-msgstr "Contact label"
+msgstr "Contactlabel"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_category_form
 #: model:ir.ui.view,arch_db:base.view_partner_category_list
 msgid "Contact Tags"
-msgstr "Contact labels"
+msgstr "Contactlabels"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
@@ -10646,7 +10728,7 @@ msgstr "Relaties & Adressen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_contacts
 msgid "Contacts Directory"
-msgstr "Contacten map"
+msgstr "Contacten"
 
 #. module: base
 #: sql_constraint:res.partner:0
@@ -11525,6 +11607,11 @@ msgid "Dependency"
 msgstr "Afhankelijkheid"
 
 #. module: base
+#: model:ir.module.module,description:base.module_test_pylint
+msgid "Deprecated empty module in favor of test-lint."
+msgstr "Afgekeurde lege module ten voordelen van test-lint."
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_description
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_name
 #: model:ir.model.fields,field_description:base.field_ir_module_category_description
@@ -11838,6 +11925,12 @@ msgid "Document model"
 msgstr "Document model"
 
 #. module: base
+#: code:addons/models.py:2888
+#, python-format
+msgid "Document type:"
+msgstr "Document type:"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum_doc
 msgid "Documentation"
 msgstr "Documentatie"
@@ -11897,8 +11990,8 @@ msgstr "Drop Shipping"
 msgid ""
 "Duplicating a company is not allowed. Please create a new company instead."
 msgstr ""
-"Een bedrijf dupliceren is niet toegestaan. Gelieve een nieuw bedrijf aan te "
-"maken in de plaats van het te dupliceren."
+"Een bedrijf dupliceren is niet toegestaan. Maak een nieuw bedrijf aan in de "
+"plaats van het te dupliceren."
 
 #. module: base
 #: code:addons/base/ir/ir_qweb/fields.py:394
@@ -11910,6 +12003,332 @@ msgstr "Tijdsduur kan niet negatief zijn"
 #: model:res.partner.industry,full_name:base.res_partner_industry_E
 msgid "E WATER SUPPLY;SEWERAGE,WASTE MANAGEMENT AND REMEDIATION ACTIVITIES"
 msgstr "E WATERVOORZIENING; RIOOL, AFVAL EN SANERING ACTIVITEITEN"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_cancellation
+msgid ""
+"EDI Cancellation\n"
+"================\n"
+"\n"
+"This module adds the next features in the cancel process:\n"
+"\n"
+"1. Button to request cancellation in the SAT was added.\n"
+"2. The cancel process in Odoo, only could be executed when the SAT status\n"
+"   is cancelled.\n"
+"3. The cancel button in the invoice is dummy if the invoice is not\n"
+"   cancelled in the SAT.\n"
+"\n"
+"Which is the new flow to cancel?\n"
+"--------------------------------\n"
+"\n"
+"A new button `(Request Cancelation)` was added on the invoice view, that\n"
+"appear when the invoice is open and the `PAC status` is `Signed`\n"
+"\n"
+"When this new button is press, send the CFDI to the PAC to try cancel it\n"
+"in the SAT system. And do not allows to cancel the invoice in Odoo until\n"
+"it was properly canceled in the SAT. (This is an automatic action that\n"
+"execute the system).\n"
+"\n"
+"If any invoice is cancelled in the SAT, and the user can not wait for the\n"
+"cron, could press the `Cancel` button, and this must be cancelled.\n"
+"\n"
+"Which are the cases supported in this module?\n"
+"---------------------------------------------\n"
+"\n"
+"**Case 1**\n"
+"\n"
+"+----------+---------+\n"
+"| System   | State   |\n"
+"+==========+=========+\n"
+"| Odoo     | Open    |\n"
+"+----------+---------+\n"
+"| PAC      | Signed  |\n"
+"+----------+---------+\n"
+"| SAT      | Valid   |\n"
+"+----------+---------+\n"
+"\n"
+"This case is when the invoice is properly signed in the SAT system. To\n"
+"cancel is necessary to press the button `Request Cancelation`, that will\n"
+"to verify that effectively the CFDI is not previously canceled in the SAT\n"
+"system and will to send it to cancel in the SAT.\n"
+"\n"
+"After of request the cancelation, could be found the next cases:\n"
+"\n"
+"*The cancel process was succesful*\n"
+"\n"
+"+----------+------------+\n"
+"| System   | State      |\n"
+"+==========+============+\n"
+"| Odoo     | Open       |\n"
+"+----------+------------+\n"
+"| PAC      | Cancelled  |\n"
+"+----------+------------+\n"
+"| SAT      | Valid      |\n"
+"+----------+------------+\n"
+"\n"
+"In this case, the system will execute the next actions:\n"
+"\n"
+"1. An action will to update the PAC status (To Canceled).\n"
+"\n"
+"2. A method will be called and will try to cancel the invoice in Odoo.\n"
+"\n"
+"\n"
+"*The cancel process cannot be completed*\n"
+"\n"
+"+----------+------------+\n"
+"| System   | State      |\n"
+"+==========+============+\n"
+"| Odoo     | Open       |\n"
+"+----------+------------+\n"
+"| PAC      | To Cancel  |\n"
+"+----------+------------+\n"
+"| SAT      | Valid      |\n"
+"+----------+------------+\n"
+"\n"
+"In this case, the system wait for the PAC system, and will execute the next\n"
+"action:\n"
+"\n"
+"1. A method will be called to verify if the CFDI was properly cancelled in\n"
+"the SAT system, and when the SAT status is `Cancelled` will try to cancel the\n"
+"invoice in Odoo.\n"
+"\n"
+"**Case 2**\n"
+"\n"
+"+----------+------------+\n"
+"| System   | State      |\n"
+"+==========+============+\n"
+"| Odoo     | Open       |\n"
+"+----------+------------+\n"
+"| PAC      | To Cancel  |\n"
+"+----------+------------+\n"
+"| SAT      | Valid      |\n"
+"+----------+------------+\n"
+"\n"
+"This case is the same that in the previous case when the cancel process\n"
+"cannot be completed.\n"
+"\n"
+"If the customer does not accept the CFDI cancelation, the cancel process\n"
+"must be aborted and the invoice must be returned to signed. For this, was\n"
+"added an action in the invoice `Revert CFDI cancellation`, that could be\n"
+"called in the `Actions` of it.\n"
+"\n"
+"\n"
+"**Case 3**\n"
+"\n"
+"+----------+------------+\n"
+"| System   | State      |\n"
+"+==========+============+\n"
+"| Odoo     | Open       |\n"
+"+----------+------------+\n"
+"| PAC      | To Cancel  |\n"
+"+----------+------------+\n"
+"| SAT      | Cancelled  |\n"
+"+----------+------------+\n"
+"\n"
+"The system executes a scheduled action that will cancel the invoice in Odoo,\n"
+"and in that process, the PAC status must be updated to `Cancelled`.\n"
+"\n"
+"\n"
+"**Case 4**\n"
+"\n"
+"+----------+------------+\n"
+"| System   | State      |\n"
+"+==========+============+\n"
+"| Odoo     | Cancel     |\n"
+"+----------+------------+\n"
+"| PAC      | Signed     |\n"
+"+----------+------------+\n"
+"| SAT      | Valid      |\n"
+"+----------+------------+\n"
+"\n"
+"The system executes a scheduled action that will check that the SAT status\n"
+"continues `Valid` and if yes, the invoice must be returned to `Open`\n"
+"(Without generate a new CFDI). For this:\n"
+"\n"
+"1. If the invoice does not has a journal entry, a new will be generated and\n"
+"the invoice state must be changed to `Open`.\n"
+"\n"
+"2. If the journal entry in the invoice has a revert, it will be cancelled\n"
+"and the invoice state must be changed to `Open`.\n"
+"\n"
+"**Case 5**\n"
+"\n"
+"+----------+------------+\n"
+"| System   | State      |\n"
+"+==========+============+\n"
+"| Odoo     | Cancel     |\n"
+"+----------+------------+\n"
+"| PAC      | To Cancel  |\n"
+"+----------+------------+\n"
+"| SAT      | Valid      |\n"
+"+----------+------------+\n"
+"\n"
+"This is the same case that in the previous one, but extra after that the\n"
+"invoice is open again, the PAC status must be updated to 'Signed.'\n"
+msgstr ""
+"EDI-annulering\n"
+"================\n"
+"\n"
+"Deze module voegt de volgende functies toe aan het annuleringsproces:\n"
+"\n"
+"1. Knop om annulering aan te vragen in de SAT is toegevoegd.\n"
+"2. Het annuleringsproces in Odoo kon alleen worden uitgevoerd wanneer de SAT-status\n"
+"   is geannuleerd.\n"
+"3. De knop Annuleren op de factuur is leeg als de factuur dat niet is\n"
+"   geannuleerd in de SAT.\n"
+"\n"
+"Wat is de nieuwe flow om te annuleren?\n"
+"--------------------------------\n"
+"\n"
+"Er is een nieuwe knop `(Verzoek tot annulering) 'toegevoegd aan de factuurweergave\n"
+"verschijnen wanneer de factuur open is en de `PAC-status` is` Ondertekend`\n"
+"\n"
+"Wanneer u op deze nieuwe knop drukt, stuurt u de CFDI naar de PAC om te proberen deze te annuleren\n"
+"in het SAT-systeem. En staat niet toe om de factuur in Odoo te annuleren tot\n"
+"het was correct geannuleerd in de SAT. (Dit is een automatische actie die\n"
+"voer het systeem uit).\n"
+"\n"
+"Als een factuur wordt geannuleerd in de SAT en de gebruiker kan niet wachten op de\n"
+"cron, kan op de knop 'Annuleren' drukken en dit moet worden geannuleerd.\n"
+"\n"
+"Welke cases worden in deze module ondersteund?\n"
+"---------------------------------------------\n"
+"\n"
+"**Case 1**\n"
+"\n"
+"+ ---------- + --------- +\n"
+"| Systeem | Status |\n"
+"+ ========== + ========= +\n"
+"| Odoo | Openen |\n"
+"+ ---------- + --------- +\n"
+"| PAC | Ondertekend |\n"
+"+ ---------- + --------- +\n"
+"| SAT | Geldig |\n"
+"+ ---------- + --------- +\n"
+"\n"
+"In dit geval wordt de factuur correct ondertekend in het SAT-systeem. Naar\n"
+"annuleren is noodzakelijk om op de knop `Verzoek annulering` te drukken, dat zal\n"
+"om te verifiëren dat de CFDI niet eerder is geannuleerd in de SAT\n"
+"systeem en wil om het te verzenden om te annuleren in de SAT.\n"
+"\n"
+"Na het verzoek tot annulering, konden de volgende gevallen worden gevonden:\n"
+"\n"
+"* Het annuleringsproces was succesvol *\n"
+"\n"
+"+ ---------- + ------------ +\n"
+"| Systeem | Status |\n"
+"+ ========== + ============ +\n"
+"| Odoo | Openen |\n"
+"+ ---------- + ------------ +\n"
+"| PAC | Geannuleerd |\n"
+"+ ---------- + ------------ +\n"
+"| SAT | Geldig |\n"
+"+ ---------- + ------------ +\n"
+"\n"
+"In dit geval voert het systeem de volgende acties uit:\n"
+"\n"
+"1. Er wordt een actie uitgevoerd om de PAC-status bij te werken (Naar geannuleerd).\n"
+"\n"
+"2. Er wordt een methode aangeroepen die probeert de factuur in Odoo te annuleren.\n"
+"\n"
+"\n"
+"* Het annuleringsproces kan niet worden voltooid *\n"
+"\n"
+"+ ---------- + ------------ +\n"
+"| Systeem | Status |\n"
+"+ ========== + ============ +\n"
+"| Odoo | Openen |\n"
+"+ ---------- + ------------ +\n"
+"| PAC | Annuleren |\n"
+"+ ---------- + ------------ +\n"
+"| SAT | Geldig |\n"
+"+ ---------- + ------------ +\n"
+"\n"
+"In dit geval wacht het systeem op het PAC-systeem en zal het het volgende uitvoeren\n"
+"actie:\n"
+"\n"
+"1. Er wordt een methode aangeroepen om te controleren of de CFDI correct is geannuleerd\n"
+"het SAT-systeem, en wanneer de SAT-status `Geannuleerd 'is zal proberen de te annuleren\n"
+"factuur in Odoo.\n"
+"\n"
+"** Case 2 **\n"
+"\n"
+"+ ---------- + ------------ +\n"
+"| Systeem | Status |\n"
+"+ ========== + ============ +\n"
+"| Odoo | Openen |\n"
+"+ ---------- + ------------ +\n"
+"| PAC | Annuleren |\n"
+"+ ---------- + ------------ +\n"
+"| SAT | Geldig |\n"
+"+ ---------- + ------------ +\n"
+"\n"
+"Dit geval is hetzelfde als in het vorige geval bij het annuleren\n"
+"kan niet worden voltooid.\n"
+"\n"
+"Als de klant de CFDI-annulering niet accepteert, wordt het annuleringsproces uitgevoerd\n"
+"moet worden afgebroken en de factuur moet worden teruggestuurd naar ondertekend. Hiervoor was\n"
+"een actie toegevoegd in de factuur \"CFDI annuleren annuleren\", dat zou kunnen\n"
+"genoemd in de `Acties 'ervan.\n"
+"\n"
+"\n"
+"** Case 3 **\n"
+"\n"
+"+ ---------- + ------------ +\n"
+"| Systeem | Status |\n"
+"+ ========== + ============ +\n"
+"| Odoo | Openen |\n"
+"+ ---------- + ------------ +\n"
+"| PAC | Annuleren |\n"
+"+ ---------- + ------------ +\n"
+"| SAT | Geannuleerd |\n"
+"+ ---------- + ------------ +\n"
+"\n"
+"Het systeem voert een geplande actie uit die de factuur in Odoo annuleert,\n"
+"en in dat proces moet de PAC-status worden bijgewerkt naar `Geannuleerd`.\n"
+"\n"
+"\n"
+"** Geval 4 **\n"
+"\n"
+"+ ---------- + ------------ +\n"
+"| Systeem | Status |\n"
+"+ ========== + ============ +\n"
+"| Odoo | Annuleren |\n"
+"+ ---------- + ------------ +\n"
+"| PAC | Ondertekend |\n"
+"+ ---------- + ------------ +\n"
+"| SAT | Geldig |\n"
+"+ ---------- + ------------ +\n"
+"\n"
+"Het systeem voert een geplande actie uit om te controleren of de SAT-status\n"
+"gaat door met 'Geldig' en zo ja, moet de factuur worden teruggestuurd naar 'Openen'\n"
+"(Zonder een nieuwe CFDI te genereren). Voor deze:\n"
+"\n"
+"1. Als de factuur geen journaalboeking heeft, wordt een nieuwe gegenereerd en\n"
+"de factuurstatus moet worden gewijzigd in `Openen '.\n"
+"\n"
+"2. Als de journaalboeking op de factuur ongedaan wordt gemaakt, wordt deze geannuleerd\n"
+"en de factuurstatus moet worden gewijzigd in `Openen '.\n"
+"\n"
+"** Case 5 **\n"
+"\n"
+"+ ---------- + ------------ +\n"
+"| Systeem | Status |\n"
+"+ ========== + ============ +\n"
+"| Odoo | Annuleren |\n"
+"+ ---------- + ------------ +\n"
+"| PAC | Annuleren |\n"
+"+ ---------- + ------------ +\n"
+"| SAT | Geldig |\n"
+"+ ---------- + ------------ +\n"
+"\n"
+"Dit is hetzelfde geval als in de vorige, maar extra daarna\n"
+"factuur is weer geopend, de PAC-status moet worden bijgewerkt naar 'Ondertekend'.\n"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_cancellation
+msgid "EDI Cancellation for Mexican Localization"
+msgstr "EDI annulering voor Mexicaanse lokalisatie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_external_trade
@@ -12855,6 +13274,18 @@ msgid "F CONSTRUCTION"
 msgstr "F CONSTRUCTIE"
 
 #. module: base
+#: code:addons/base/ir/ir_mail_server.py:128
+#, python-format
+msgid ""
+"Failed to encode the address %s\n"
+"from mail header:\n"
+"%s"
+msgstr ""
+"Kan het adres niet registreren %s\n"
+"van mail header:\n"
+"%s"
+
+#. module: base
 #: model:res.country,name:base.fk
 msgid "Falkland Islands"
 msgstr "Falklandeilanden"
@@ -13052,6 +13483,12 @@ msgid "Field names must be unique per model."
 msgstr "Veldnamen moeten uniek zijn per model."
 
 #. module: base
+#: code:addons/model.py:143
+#, python-format
+msgid "Field:"
+msgstr "Veld:"
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
 #: model:ir.model,name:base.model_ir_model_fields
 #: model:ir.model.fields,field_description:base.field_ir_model_field_id
@@ -13069,7 +13506,13 @@ msgid "Fields Description"
 msgstr "Omschrijving velden"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:582
+#: code:addons/models.py:2564
+#, python-format
+msgid "Fields:"
+msgstr "Velden:"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:595
 #, python-format
 msgid "Fields: %s"
 msgstr "Velden: %s"
@@ -13187,6 +13630,47 @@ msgstr "Finland"
 #: model:ir.module.module,shortdesc:base.module_mail_push
 msgid "Firebase Cloud Messaging"
 msgstr "Firebase Cloud berichten"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_reports_closing
+msgid ""
+"Fiscal Reports for Closing Entry\n"
+"================================\n"
+"\n"
+"Trial Balance report is complemented to allow generate the closing entry\n"
+"(A.K.A Month 13th move)\n"
+"\n"
+"Configuration\n"
+"=============\n"
+"\n"
+"Steps to get the report:\n"
+"\n"
+"1. The journal entry for transfer of exercises must be generated manually\n"
+"   with the end date of the fiscal year that is closing. And must be posted.\n"
+"\n"
+"2. This entry must be marked as closing entry for the fiscal year.\n"
+"\n"
+"3. The trial balance Month 13 report must be generated with dates for all the\n"
+"   fiscal year to report.\n"
+msgstr ""
+"Fiscal Reports for Closing Entry\n"
+"================================\n"
+"\n"
+"Trial Balance report is complemented to allow generate the closing entry\n"
+"(A.K.A Month 13th move)\n"
+"\n"
+"Configuration\n"
+"=============\n"
+"\n"
+"Steps to get the report:\n"
+"\n"
+"1. The journal entry for transfer of exercises must be generated manually\n"
+"   with the end date of the fiscal year that is closing. And must be posted.\n"
+"\n"
+"2. This entry must be marked as closing entry for the fiscal year.\n"
+"\n"
+"3. The trial balance Month 13 report must be generated with dates for all the\n"
+"   fiscal year to report.\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fleet
@@ -14664,6 +15148,11 @@ msgstr "Vertaling importeren"
 #: model:ir.module.module,description:base.module_currency_rate_live
 msgid "Import exchange rates from the Internet.\n"
 msgstr "Importeer de valutakoers vanaf het internet.\n"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_reports_cash_flow
+msgid "Improved Cash Flow Statement"
+msgstr "Verbeterde kasstroomrapportage"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_modules
@@ -16320,7 +16809,7 @@ msgstr "Mass mailing op deelnemers"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track
 msgid "Mass mailing on track speakers"
-msgstr "Mass mailing op sprekers"
+msgstr "Bulkmailing op sprekers"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_mps
@@ -16635,6 +17124,12 @@ msgstr "Model niet gevonden: %(model)s"
 #: model:ir.model.fields,help:base.field_ir_cron_model_id
 msgid "Model on which the server action runs."
 msgstr "Model waarop de server actie loopt."
+
+#. module: base
+#: code:addons/model.py:142 code:addons/model.py:152
+#, python-format
+msgid "Model:"
+msgstr "Model:"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_model
@@ -18217,9 +18712,20 @@ msgid "Odoo Mexican Localization Reports"
 msgstr "Mexicaanse lokalisatie rapportages"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_reports_closing
+msgid "Odoo Mexican Localization Reports for Closing"
+msgstr "Odoo Mexicaanse lokalisatierapporten voor afsluiting"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_customs
 msgid "Odoo Mexico Localization for Invoice with customs Number"
 msgstr "Odoo mexikaanse localisatie voor facturatie met aangepaste nummering"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_sale_coupon
+#: model:ir.module.module,summary:base.module_l10n_mx_edi_sale_coupon
+msgid "Odoo Mexico Localization for Sale Coupon"
+msgstr "Odoo mexicaanse localisatie voor kortingscodes"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_landing
@@ -19599,6 +20105,12 @@ msgid "Open a Window"
 msgstr "Open een venster"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:1215 code:addons/models.py:2888
+#, python-format
+msgid "Operation:"
+msgstr "Bewerking:"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_crm
 msgid "Opportunity to Quotation"
 msgstr "Prospect naar offerte"
@@ -20332,6 +20844,11 @@ msgstr "Betaalverwerker:r: PayuMoney"
 #: model:ir.module.module,summary:base.module_payment_stripe
 msgid "Payment Acquirer: Stripe Implementation"
 msgstr "Betaalverwerker: Stripe"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_stripe_sca
+msgid "Payment Acquirer: Stripe Implementation for the EU PSD2"
+msgstr "Betaalprovider: Stripe Implementatie voor de EU PSD2"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_transfer
@@ -21215,6 +21732,14 @@ msgstr "Regel bestaat niet of werd verwijderd."
 #: model:ir.ui.view,arch_db:base.view_rule_tree
 msgid "Record rules"
 msgstr "Recordregels"
+
+#. module: base
+#: code:addons/base/ir/ir_actions.py:245 code:addons/models.py:2789
+#: code:addons/models.py:2875 code:addons/models.py:2889
+#: code:addons/models.py:3235 code:addons/models.py:4020
+#, python-format
+msgid "Records:"
+msgstr "Records:"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_recruitment
@@ -22663,6 +23188,12 @@ msgstr "Straat2"
 #: model:ir.module.module,shortdesc:base.module_payment_stripe
 msgid "Stripe Payment Acquirer"
 msgstr "Stripe betaling verwerver"
+
+#. module: base
+#: model:ir.module.module,description:base.module_payment_stripe_sca
+#: model:ir.module.module,shortdesc:base.module_payment_stripe_sca
+msgid "Stripe Payment Acquirer - Strong Customer Authentication Update"
+msgstr "Stripe betaalprovider - Sterke klantauthenticatie update"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_studio
@@ -24115,6 +24646,11 @@ msgid "Test Performance"
 msgstr "Test performantie"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_rpc
+msgid "Test RPC"
+msgstr "Test RPC"
+
+#. module: base
 #: model:ir.module.module,description:base.module_test_access_rights
 msgid "Testing of access restrictions"
 msgstr "Testen van toegang beperkingen"
@@ -24464,14 +25000,8 @@ msgstr "De enige voorgedefinieerde variabelen zijn"
 #. module: base
 #: code:addons/model.py:121
 #, python-format
-msgid ""
-"The operation cannot be completed, probably due to the following:\n"
-"- deletion: you may be trying to delete a record while other records still reference it\n"
-"- creation/update: a mandatory field is not correctly set"
-msgstr ""
-"De bewerking kan niet worden afgerond, waarschijnlijk vanwege:\n"
-"- verwijdering: u probeert een record te verwijderen terwijl er nog door een ander aan wordt gerefereerd\n"
-"- maken/wijzigen: een verplicht veld is niet correct ingevuld"
+msgid "The operation cannot be completed:"
+msgstr "De bewerkingen kan niet voltooid worden:"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_domain
@@ -24572,6 +25102,16 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade_install
 msgid "The selected modules have been updated / installed !"
 msgstr "De geselecteerde modules zijn bijgewerkt / geïnstalleerd !"
+
+#. module: base
+#: code:addons/base/module/module.py:546
+#, python-format
+msgid ""
+"The server is busy right now, module operations are not possible at this "
+"time, please try again later."
+msgstr ""
+"De server is momenteel bezig, modulebewerkingen zijn niet mogelijk op dit "
+"moment. Probeer het later opnieuw."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_state_code
@@ -25185,6 +25725,11 @@ msgid "UK - Accounting Reports"
 msgstr "UK - Boekhoudkundige rapporten"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_uk_reports_hmrc
+msgid "UK - Accounting Reports to HMRC"
+msgstr "UK - Boekhoudkundige rapporten voor HMRC"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_delivery_ups
 msgid "UPS Bill My Account"
 msgstr "UPS factureer mijn account"
@@ -25317,7 +25862,7 @@ msgstr "Verenigde Arabische Emiraten"
 #. module: base
 #: model:res.country,name:base.uk
 msgid "United Kingdom"
-msgstr "Groot-Brittanië"
+msgstr "Groot-Brittannië"
 
 #. module: base
 #: model:res.country,name:base.us
@@ -25341,7 +25886,13 @@ msgid "Unknown"
 msgstr "Onbekend"
 
 #. module: base
-#: code:addons/models.py:994
+#: code:addons/models.py:833
+#, python-format
+msgid "Unknown database error: '%s'"
+msgstr "Onbekende databasefout: '%s'"
+
+#. module: base
+#: code:addons/models.py:996
 #, python-format
 msgid "Unknown database identifier '%s'"
 msgstr "Onbekende database identifier '%s'"
@@ -25611,6 +26162,15 @@ msgstr "Gebruikers standaard"
 #: model:ir.ui.menu,name:base.menu_ir_filters
 msgid "User-defined Filters"
 msgstr "Gebruikers filters"
+
+#. module: base
+#: code:addons/base/ir/ir_actions.py:245 code:addons/base/ir/ir_model.py:1215
+#: code:addons/models.py:2564 code:addons/models.py:2789
+#: code:addons/models.py:2875 code:addons/models.py:2889
+#: code:addons/models.py:3235 code:addons/models.py:4020
+#, python-format
+msgid "User:"
+msgstr "Gebruiker:"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_user
@@ -26130,7 +26690,7 @@ msgstr "Website e-mail"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mass_mailing
 msgid "Website Mass Mailing Campaigns"
-msgstr "Website bulk mailing campagnes"
+msgstr "Website bulkmailing campagnes"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mail
@@ -27226,6 +27786,16 @@ msgstr "test-inherits"
 #: model:ir.module.module,shortdesc:base.module_test_limits
 msgid "test-limits"
 msgstr "test-limiten"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_lint
+msgid "test-lint"
+msgstr "test-lint"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_translation_import
+msgid "test-translation-import"
+msgstr "test-translation-import"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_uninstall

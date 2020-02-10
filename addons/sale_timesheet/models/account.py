@@ -27,15 +27,14 @@ class AccountAnalyticLine(models.Model):
     @api.multi
     def write(self, values):
         # prevent to update invoiced timesheets if one line is of type delivery
-        sale_order_lines = self.env['sale.order.line']
+        sale_order_lines = self.sudo().mapped('so_line') or self.env['sale.order.line']
         if self.sudo().filtered(lambda aal: aal.so_line.product_id.invoice_policy == "delivery") and self.filtered(lambda timesheet: timesheet.timesheet_invoice_id):
             if any([field_name in values for field_name in ['unit_amount', 'employee_id', 'task_id', 'timesheet_revenue', 'so_line', 'amount', 'date']]):
                 raise UserError(_('You can not modify already invoiced timesheets (linked to a Sales order items invoiced on Time and material).'))
-        if 'task_id' in values and not values.get('so_line'):
-            sale_order_lines = self.sudo().mapped('so_line')
         result = super(AccountAnalyticLine, self).write(values)
         # applied only for timesheet
         self.filtered(lambda t: t.project_id)._timesheet_postprocess(values)
+        sale_order_lines |= self.sudo().mapped('so_line')
         sale_order_lines.with_context(sale_analytic_force_recompute=True)._analytic_compute_delivered_quantity()
         return result
 
@@ -134,7 +133,7 @@ class AccountAnalyticLine(models.Model):
                 total_revenue_invoiced = sum(analytic_lines.mapped('timesheet_revenue'))
                 # compute (new) revenue of current timesheet line
                 values['timesheet_revenue'] = min(
-                    analytic_account.currency_id.round(unit_amount * so_line.currency_id.compute(so_line.price_unit, analytic_account.currency_id) * (1-so_line.discount)),
+                    analytic_account.currency_id.round(unit_amount * sale_price * (1-so_line.discount/100)),
                     total_revenue_so - total_revenue_invoiced
                 )
                 values['timesheet_invoice_type'] = 'billable_fixed'

@@ -24,6 +24,10 @@ return AbstractModel.extend({
     init: function () {
         this._super.apply(this, arguments);
         this.end_date = null;
+        var week_start = _t.database.parameters.week_start;
+        // calendar uses index 0 for Sunday but Odoo stores it as 7
+        this.week_start = week_start !== undefined && week_start !== false ? week_start % 7 : moment().startOf('week').day();
+        this.week_stop = this.week_start + 6;
     },
 
     //--------------------------------------------------------------------------
@@ -58,10 +62,11 @@ return AbstractModel.extend({
             end.add(-1, 'days');
         }
 
+        var isDateEvent = this.fields[this.mapping.date_start].type === 'date';
         // An "allDay" event without the "all_day" option is not considered
         // as a 24h day. It's just a part of the day (by default: 7h-19h).
         if (event.allDay) {
-            if (!this.mapping.all_day) {
+            if (!this.mapping.all_day && !isDateEvent) {
                 if (event.r_start) {
                     start.hours(event.r_start.hours())
                          .minutes(event.r_start.minutes())
@@ -73,9 +78,11 @@ return AbstractModel.extend({
                        .utc();
                 } else {
                     // default hours in the user's timezone
-                    start.hours(7).add(-this.getSession().getTZOffset(start), 'minutes');
-                    end.hours(19).add(-this.getSession().getTZOffset(end), 'minutes');
+                    start.hours(7);
+                    end.hours(19);
                 }
+                start.add(-this.getSession().getTZOffset(start), 'minutes');
+                end.add(-this.getSession().getTZOffset(end), 'minutes');
             }
         } else {
             start.add(-this.getSession().getTZOffset(start), 'minutes');
@@ -256,23 +263,51 @@ return AbstractModel.extend({
     setDate: function (start) {
         // keep highlight/target_date in localtime
         this.data.highlight_date = this.data.target_date = start.clone();
-        // set dates in UTC with timezone applied manually
         this.data.start_date = this.data.end_date = start;
-        this.data.start_date.utc().add(this.getSession().getTZOffset(this.data.start_date), 'minutes');
-
         switch (this.data.scale) {
             case 'month':
-                this.data.start_date = this.data.start_date.clone().startOf('month').startOf('week');
-                this.data.end_date = this.data.start_date.clone().add(5, 'week').endOf('week');
+                var monthStart = this.data.start_date.clone().startOf('month');
+
+                var monthStartDay;
+                if (monthStart.day() >= this.week_start) {
+                    // the month's first day is after our week start
+                    // Then we are in the right week
+                    monthStartDay = this.week_start;
+                } else {
+                    // The month's first day is before our week start
+                    // Then we should go back to the the previous week
+                    monthStartDay = this.week_start - 7;
+                }
+
+                this.data.start_date = monthStart.day(monthStartDay).startOf('day');
+                this.data.end_date = this.data.start_date.clone().add(5, 'week').day(this.week_stop).endOf('day');
                 break;
             case 'week':
-                this.data.start_date = this.data.start_date.clone().startOf('week');
-                this.data.end_date = this.data.end_date.clone().endOf('week');
+                var weekStartDay = this.week_start;
+                if (this.data.start_date.day() < this.week_start) {
+                    // The week's first day is after our current day
+                    // Then we should go back to the previous week
+                    weekStartDay -= 7;
+                }
+                this.data.start_date = this.data.start_date.clone().day(weekStartDay).startOf('day');
+                this.data.end_date = this.data.end_date.clone().day(weekStartDay + 6).endOf('day');
                 break;
             default:
                 this.data.start_date = this.data.start_date.clone().startOf('day');
                 this.data.end_date = this.data.end_date.clone().endOf('day');
         }
+        // We have set start/stop datetime as definite begin/end boundaries of a period (month, week, day)
+        // in local TZ (what is the begining of the week *I am* in ?)
+        // The following code:
+        // - converts those to UTC using our homemade method (testable)
+        // - sets the moment UTC flag to true, to ensure compatibility with third party libs
+        var manualUtcDateStart = this.data.start_date.clone().add(-this.getSession().getTZOffset(this.data.start_date), 'minutes');
+        var formattedUtcDateStart = manualUtcDateStart.format('YYYY-MM-DDTHH:mm:ss') + 'Z';
+        this.data.start_date = moment.utc(formattedUtcDateStart);
+
+        var manualUtcDateEnd = this.data.end_date.clone().add(-this.getSession().getTZOffset(this.data.start_date), 'minutes');
+        var formattedUtcDateEnd = manualUtcDateEnd.format('YYYY-MM-DDTHH:mm:ss') + 'Z';
+        this.data.end_date = moment.utc(formattedUtcDateEnd);
     },
     setScale: function (scale) {
         if (!_.contains(scales, scale)) {
@@ -390,7 +425,7 @@ return AbstractModel.extend({
             monthNamesShort: moment.monthsShort(),
             dayNames: moment.weekdays(),
             dayNamesShort: moment.weekdaysShort(),
-            firstDay: moment()._locale._week.dow,
+            firstDay: this.week_start,
             slotLabelFormat: _t.database.parameters.time_format.search("%H") != -1 ? 'H:mm': 'h(:mm)a',
         };
     },
@@ -398,11 +433,13 @@ return AbstractModel.extend({
      * Return a domain from the date range
      *
      * @private
-     * @returns {Array}
+     * @returns {Array} A domain containing datetime start and stop in UTC
+     *  those datetime are formatted according to server's standards
      */
     _getRangeDomain: function () {
         // Build OpenERP Domain to filter object by this.mapping.date_start field
         // between given start, end dates.
+
         var domain = [[this.mapping.date_start, '<=', dateToServer(this.data.end_date)]];
         if (this.mapping.date_stop) {
             domain.push([this.mapping.date_stop, '>=', dateToServer(this.data.start_date)]);
@@ -663,13 +700,12 @@ return AbstractModel.extend({
         } else if (this.data.scale === 'month' && this.fields[this.mapping.date_start].type !== 'date') {
             // In month, FullCalendar gives the end day as the
             // next day at midnight (instead of 23h59).
-            date_stop.add(1, 'days');
+            r.end = date_stop.clone().add(1, 'days').startOf('day').format('YYYY-MM-DD');
+            r.start = date_start.clone().format('YYYY-MM-DD');
 
             // allow to resize in month mode
             r.reset_allday = r.allDay;
             r.allDay = true;
-            r.start = date_start.format('YYYY-MM-DD');
-            r.end = date_stop.startOf('day').format('YYYY-MM-DD');
         }
 
         return r;

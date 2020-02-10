@@ -3,21 +3,21 @@
 # * account
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Michael Yeung, 2017
 # Cécile Collart <cco@odoo.com>, 2018
 # Bill Hsu <hcm86@icloud.com>, 2018
 # 金儒 楊 <ce1123@cooleagle.com.tw>, 2018
-# sejun huang <sejun.huang@gmail.com>, 2018
+# Martin Trigaux, 2019
+# Michael Yeung, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# sejun huang <sejun.huang@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"Last-Translator: sejun huang <sejun.huang@gmail.com>, 2020\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -431,6 +431,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2347,7 +2349,7 @@ msgstr "等待付款"
 #: code:addons/account/models/chart_template.py:194
 #, python-format
 msgid "BILL"
-msgstr "帳單"
+msgstr "BILL"
 
 #. module: account
 #: selection:res.partner,trust:0
@@ -2598,7 +2600,7 @@ msgstr "屬於使用者的當前公司"
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Bill"
-msgstr "帳單"
+msgstr "Bill"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -2922,7 +2924,7 @@ msgstr "收入科目的種類"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Change"
-msgstr "找零"
+msgstr "更改"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_writeoff_label
@@ -3470,7 +3472,7 @@ msgstr "聯絡人"
 #: model:ir.model,name:account.model_account_abstract_payment
 msgid ""
 "Contains the logic shared between models which allows to register payments"
-msgstr "包含在允許登記付款的模型之間的共享邏輯"
+msgstr "包含在允許登記收/付款的模型之間的共享邏輯"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_contract_ids
@@ -4169,7 +4171,7 @@ msgstr "定義"
 #: model:ir.model.fields,field_description:account.field_res_partner_trust
 #: model:ir.model.fields,field_description:account.field_res_users_trust
 msgid "Degree of trust you have in this debtor"
-msgstr "您對債務人的信任層度"
+msgstr "您對債務人的信任程度"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_deprecated
@@ -4240,6 +4242,12 @@ msgid ""
 "Difference between the computed ending balance and the specified ending "
 "balance."
 msgstr "計算出來的期末餘額和指定的期末餘額之前的差額。"
+
+#. module: account
+#: code:addons/account/models/account_move.py:235
+#, python-format
+msgid "Difference debit - credit: "
+msgstr "區別 借方 - 信用: "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4499,12 +4507,17 @@ msgid "Due date"
 msgstr "到期日"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1176
+#: model:ir.ui.view,arch_db:account.view_move_form
+msgid "Duplicate"
+msgstr "複製"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1194
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
 "vendor bill/credit note."
-msgstr "發現重複的供應商。您可能重複記錄了同一供應商的帳單/信用記錄。"
+msgstr "檢測到重複的供應商參照，您可能對同一個供應商帳單／退款輸入了兩次"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_reports
@@ -5755,13 +5768,13 @@ msgstr "憑單必須是草稿狀態才能審核它。"
 #: code:addons/account/models/account_invoice.py:795
 #, python-format
 msgid "Invoice must be paid in order to set it to register payment."
-msgstr "憑單必須已付款了才能設定為登記付款。"
+msgstr "憑單必須已付款了才能設定為登記收/付款。"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:787
 #, python-format
 msgid "Invoice must be validated in order to set it to register payment."
-msgstr "登記付款前必須先審核憑單。"
+msgstr "登記收/付款前必須先審核憑單。"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
@@ -6498,7 +6511,7 @@ msgstr "層級"
 #: model:account.financial.report,name:account.account_financial_report_liability0
 #: model:account.financial.report,name:account.account_financial_report_liabilitysum0
 msgid "Liability"
-msgstr "負債"
+msgstr "負債與業主權益"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_move_id
@@ -8256,7 +8269,7 @@ msgstr "應收"
 #: selection:account.register.payments,payment_type:0
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Receive Money"
-msgstr "收錢"
+msgstr "收款"
 
 #. module: account
 #. openerp-web
@@ -8437,12 +8450,12 @@ msgstr "根據此種類型的退款，如果憑單已經調節，您不可以修
 #: model:ir.ui.view,arch_db:account.view_account_payment_from_invoices
 #: model:ir.ui.view,arch_db:account.view_account_payment_invoice_form
 msgid "Register Payment"
-msgstr "登記付款"
+msgstr "登記收/付款"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Register Payments"
-msgstr "登記付款"
+msgstr "登記收/付款"
 
 #. module: account
 #: model:ir.model,name:account.model_account_register_payments
@@ -8569,7 +8582,7 @@ msgstr "撤銷日期"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
 msgid "Reverse Entry"
-msgstr "撤銷分錄"
+msgstr "迴轉分錄"
 
 #. module: account
 #: code:addons/account/wizard/account_move_reversal.py:20
@@ -8895,7 +8908,7 @@ msgstr "可銷售產品"
 #: selection:account.register.payments,payment_type:0
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Send Money"
-msgstr "發錢"
+msgstr "支付"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
@@ -9197,7 +9210,7 @@ msgstr "總權益"
 #: model:ir.model.fields,field_description:account.field_account_tax_tag_ids
 #: model:ir.ui.view,arch_db:account.account_tag_view_form
 msgid "Tags"
-msgstr "摘要"
+msgstr "標籤"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10838,8 +10851,8 @@ msgid ""
 "                                have issued. The credit note will be created, validated and reconciled\n"
 "                                with the invoice. You will not be able to modify the credit note."
 msgstr ""
-"如果您效果取消一個根本不應該產生的憑單，您就可以使用這個選項\n"
-" 這張憑單的付款會被創建，確認和調節。您講不能更改付款"
+"如果您想要取消一個根本不應該產生的憑單，您可以使用這個選項\n"
+" 這張憑單的退款單會被創建，確認並與本憑單進行調節。您將無須修改此動作所產生之退款單"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_type_include_initial_balance
@@ -11227,7 +11240,7 @@ msgstr "您只可以刪除草稿狀態的憑單明細。"
 #: code:addons/account/models/account_payment.py:141
 #, python-format
 msgid "You can only register payments for open invoices"
-msgstr "只有打開狀態的憑單能被登記付款"
+msgstr "只有打開狀態的憑單能被登記收/付款"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_report_style_overwrite
@@ -11282,7 +11295,7 @@ msgstr "不能更改已經包含日記帳專案的公司的所有人。"
 msgid ""
 "You cannot change the value of the reconciliation on this account as it "
 "already has some moves"
-msgstr "您無法修改該客戶要調節的值，因為已經存在了憑證"
+msgstr "您無法修改該會計科目的調節功能，因為已經存在日記帳交易"
 
 #. module: account
 #: code:addons/account/models/account_move.py:500
@@ -11392,7 +11405,7 @@ msgid ""
 "First you should set the journal to allow cancelling entries."
 msgstr ""
 "您不能修改此日記帳的已經過帳的分錄。\n"
-"首先您續約設定日記帳以允許取消分錄。"
+"首先您需要設定日記帳以允許取消分錄。"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:789

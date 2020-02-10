@@ -38,7 +38,7 @@ class GoogleMap(http.Controller):
             "counter": len(partners),
             "partners": []
         }
-        for partner in partners.with_context({'show_address': True}):
+        for partner in partners.with_context(show_address=True):
             # TODO in master, do not use `escape` but `t-esc` in the qweb template.
             partner_data["partners"].append({
                 'id': partner.id,

@@ -479,25 +479,25 @@
                 <field name='name'>119.01 IVA pendiente de pago</field>
                 <field name='color'>4</field>
                 <field name='applicability'>accounts</field>
-                <field name='nature'>A</field>
+                <field name='nature'>D</field>
             </record>
             <record id='account_tag_119_02' model='account.account.tag'>
                 <field name='name'>119.02 IVA de importación pendiente de pago</field>
                 <field name='color'>4</field>
                 <field name='applicability'>accounts</field>
-                <field name='nature'>A</field>
+                <field name='nature'>D</field>
             </record>
             <record id='account_tag_119_03' model='account.account.tag'>
                 <field name='name'>119.03 IEPS pendiente de pago</field>
                 <field name='color'>4</field>
                 <field name='applicability'>accounts</field>
-                <field name='nature'>A</field>
+                <field name='nature'>D</field>
             </record>
             <record id='account_tag_119_04' model='account.account.tag'>
                 <field name='name'>119.04 IEPS pendiente de pago en importación</field>
                 <field name='color'>4</field>
                 <field name='applicability'>accounts</field>
-                <field name='nature'>A</field>
+                <field name='nature'>D</field>
             </record>
             <record id='account_tag_120_01' model='account.account.tag'>
                 <field name='name'>120.01 Anticipo a proveedores nacional</field>
@@ -917,7 +917,7 @@
                 <field name='name'>180.01 Crédito mercantil</field>
                 <field name='color'>4</field>
                 <field name='applicability'>accounts</field>
-                <field name='nature'>A</field>
+                <field name='nature'>D</field>
             </record>
             <record id='account_tag_181_01' model='account.account.tag'>
                 <field name='name'>181.01 Gastos de instalación</field>
@@ -2287,6 +2287,24 @@
                 <field name='applicability'>accounts</field>
                 <field name='nature'>A</field>
             </record>
+            <record id='account_tag_401_04_new' model='account.account.tag'>
+                <field name='name'>401.39 Ventas y/o servicios gravados realizados en zona fronteriza norte</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+                <field name='nature'>A</field>
+            </record>
+            <record id='account_tag_401_05_new' model='account.account.tag'>
+                <field name='name'>401.40 Ventas y/o servicios gravados realizados en zona fronteriza norte de contado</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+                <field name='nature'>A</field>
+            </record>
+            <record id='account_tag_401_06_new' model='account.account.tag'>
+                <field name='name'>401.41 Ventas y/o servicios gravados realizados en zona fronteriza norte a crédito</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+                <field name='nature'>A</field>
+            </record>
             <record id='account_tag_402_01' model='account.account.tag'>
                 <field name='name'>402.01 Devoluciones, descuentos o bonificaciones sobre ventas y/o servicios a la tasa general</field>
                 <field name='color'>4</field>
@@ -2307,6 +2325,12 @@
             </record>
             <record id='account_tag_402_04' model='account.account.tag'>
                 <field name='name'>402.04 Devoluciones, descuentos o bonificaciones de otros ingresos</field>
+                <field name='color'>4</field>
+                <field name='applicability'>accounts</field>
+                <field name='nature'>D</field>
+            </record>
+            <record id='account_tag_402_02_new' model='account.account.tag'>
+                <field name='name'>402.05 Devoluciones, descuentos o bonificaciones sobre ventas y/o servicios en zona fronteriza norte</field>
                 <field name='color'>4</field>
                 <field name='applicability'>accounts</field>
                 <field name='nature'>D</field>
@@ -2423,7 +2447,7 @@
                 <field name='name'>503 Devoluciones, descuentos o bonificaciones sobre compras</field>
                 <field name='color'>1</field>
                 <field name='applicability'>accounts</field>
-                <field name='nature'>D</field>
+                <field name='nature'>A</field>
             </record>
             <record id='account_tag_503_01' model='account.account.tag'>
                 <field name='name'>503.01 Devoluciones, descuentos o bonificaciones sobre compras</field>
@@ -2585,13 +2609,13 @@
                 <field name='name'>505.01 Costo por venta de activo fijo</field>
                 <field name='color'>4</field>
                 <field name='applicability'>accounts</field>
-                <field name='nature'>A</field>
+                <field name='nature'>D</field>
             </record>
             <record id='account_tag_505_02' model='account.account.tag'>
                 <field name='name'>505.02 Costo por baja de activo fijo</field>
                 <field name='color'>4</field>
                 <field name='applicability'>accounts</field>
-                <field name='nature'>A</field>
+                <field name='nature'>D</field>
             </record>
             <record id='account_tag_601_01' model='account.account.tag'>
                 <field name='name'>601.01 Sueldos y salarios</field>
@@ -4781,7 +4805,7 @@
                 <field name='name'>607.01 Participación de los trabajadores en las utilidades</field>
                 <field name='color'>4</field>
                 <field name='applicability'>accounts</field>
-                <field name='nature'>A</field>
+                <field name='nature'>D</field>
             </record>
             <record id='account_tag_608_01' model='account.account.tag'>
                 <field name='name'>608.01 Participación en resultados de subsidiarias</field>
@@ -4799,7 +4823,7 @@
                 <field name='name'>610.01 Participación de los trabajadores en las utilidades diferida</field>
                 <field name='color'>4</field>
                 <field name='applicability'>accounts</field>
-                <field name='nature'>A</field>
+                <field name='nature'>D</field>
             </record>
             <record id='account_tag_611_01' model='account.account.tag'>
                 <field name='name'>611.01 Impuesto Sobre la renta</field>
@@ -4817,7 +4841,7 @@
                 <field name='name'>612.01 Gastos no deducibles para CUFIN</field>
                 <field name='color'>4</field>
                 <field name='applicability'>accounts</field>
-                <field name='nature'>A</field>
+                <field name='nature'>D</field>
             </record>
             <record id='account_tag_613_01' model='account.account.tag'>
                 <field name='name'>613.01 Depreciación de edificios</field>

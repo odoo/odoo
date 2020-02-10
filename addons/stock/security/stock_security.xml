@@ -89,7 +89,7 @@
          <field name="name">stock_move multi-company</field>
         <field name="model_id" search="[('model','=','stock.move')]" model="ir.model"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|','|',('company_id','=',False),('company_id','child_of',[user.company_id.id]),('location_dest_id.company_id', '=', False)]</field>
      </record>
 
     <record model="ir.rule" id="stock_quant_rule">

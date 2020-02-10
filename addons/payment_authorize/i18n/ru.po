@@ -4,15 +4,18 @@
 # 
 # Translators:
 # Martin Trigaux, 2017
-# Sergey Vilizhanin <sv@grimmette.ru>, 2017
+# Sergey Vilizhanin, 2017
 # Collex100, 2017
+# Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Collex100, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:20+0000\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,6 +45,8 @@ msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
 "fingerprint (%s)"
 msgstr ""
+"Авторизация: полученные данные с отсутствующей ссылкой (%s) или trans_id "
+"(%s) или отпечатком пальца (%s)"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
@@ -56,17 +61,17 @@ msgstr "Номер карты"
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Cardholder name"
-msgstr ""
+msgstr "Имя владельца карты"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Expires (MM / YY)"
-msgstr ""
+msgstr "Истекает (ММ / ГГ)"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "How to get paid with Authorize.Net"
-msgstr ""
+msgstr "Как получить оплату с помощью Authorize.Net"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:61
@@ -90,7 +95,7 @@ msgstr "Операция Оплаты"
 #: code:addons/payment_authorize/controllers/main.py:63
 #, python-format
 msgid "Please complete your profile. "
-msgstr ""
+msgstr "Пожалуйста, заполните ваш профиль."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:58
@@ -106,13 +111,13 @@ msgstr "Провайдер"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token_save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "сохранить карточки"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:372
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
-msgstr ""
+msgstr "Не удалось создать профиль клиента в Authorize.NET."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:55
@@ -121,6 +126,8 @@ msgid ""
 "The transaction cannot be processed because some contact details are missing"
 " or invalid: "
 msgstr ""
+"Транзакцию невозможно обработать, поскольку некоторые контактные данные "
+"отсутствуют или недействительны:"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_authorize_profile
@@ -139,6 +146,10 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"Эта опция позволяет клиентам сохранять свою кредитную карточку как токен "
+"платежа и повторно использовать ее для дальнейшей покупки. Если вы "
+"управляете подписками (повторяющиеся счета-фактуры), вам нужно автоматически"
+" взимать плату за клиента, когда вы выдаете счет-фактуру."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token

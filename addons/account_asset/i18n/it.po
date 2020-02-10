@@ -3,25 +3,27 @@
 # * account_asset
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Paolo Valier, 2017
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
 # David Minneci <david@numeko.it>, 2018
+# Martin Trigaux, 2018
 # Davide Corio <enlightx@gmail.com>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 # Luca Tralli, 2018
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
+# Paolo Valier, 2018
 # Alessandro Forte <a.forte1010@gmail.com>, 2018
 # Federico Castellano <castellano.federico@outlook.com>, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Federico Castellano <castellano.federico@outlook.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:14+0000\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,19 +86,23 @@ msgid ""
 "Account used in the periodical entries, to record a part of the asset as "
 "expense."
 msgstr ""
+"Conto usato nelle registrazioni periodiche, per registrare una parte "
+"dell'ammortamento come spesa. "
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
 msgid ""
 "Account used to record the purchase of the asset at its original price."
 msgstr ""
+"Conto usato per registrare l'acquisto di immobilizzazioni al loro prezzo "
+"originale."
 
 #. module: account_asset
 #. openerp-web
 #: code:addons/account_asset/static/src/js/account_asset.js:52
 #, python-format
 msgid "Accounting entries waiting for manual verification"
-msgstr ""
+msgstr "Registrazioni contabili in attesa di verifica manuale"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
@@ -243,7 +249,7 @@ msgstr "Analisi Immobilizzazioni"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_move_asset_depreciation_ids
 msgid "Assets Depreciation Lines"
-msgstr ""
+msgstr "Riga di ammortamento delle immobilizzazioni"
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
@@ -306,6 +312,8 @@ msgstr ""
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_group_entries
 msgid "Check this if you want to group the generated entries by categories."
 msgstr ""
+"Seleziona questa casella per raggruppare le registrazioni contabili per "
+"categoria."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method
@@ -327,6 +335,9 @@ msgid ""
 "  * Number of Entries: Fix the number of entries and the time between 2 depreciations.\n"
 "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
 msgstr ""
+"Selezionare il metodo da usare per calcolare le date e il numero di ammortamenti.\n"
+"  *Numero di ammortamenti: Inserire il numero di ammortamenti e il periodo tra 2 ammortamenti.\n"
+"  *Data di fine: Selezionare il periodo tra 2 ammortamenti e la data di fine degli ammortamenti. "
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -648,7 +659,7 @@ msgstr "Raggruppa per..."
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_group_entries
 msgid "Group Journal Entries"
-msgstr ""
+msgstr "Raggruppare le registrazioni contabili"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_id
@@ -811,7 +822,7 @@ msgstr "Numero di Mesi in un Periodo"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "One Entry Every"
-msgstr ""
+msgstr "Una registrazione ogni"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:599

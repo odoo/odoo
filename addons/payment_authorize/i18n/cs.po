@@ -5,14 +5,15 @@
 # Translators:
 # Michal Veselý <michal@veselyberanek.net>, 2018
 # Ondřej Skuhravý <ondra.sk@volny.cz>, 2018
-# J. Podhorecky <j.podhorecky@volny.cz>, 2018
+# trendspotter <j.podhorecky@volny.cz>, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: J. Podhorecky <j.podhorecky@volny.cz>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:20+0000\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr "API Login Id"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_transaction_key
 msgid "API Transaction Key"
-msgstr ""
+msgstr "API Transaction Key"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token_authorize_profile
@@ -56,12 +57,12 @@ msgstr "Číslo platební karty"
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Cardholder name"
-msgstr ""
+msgstr "Jméno držitele karty"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Expires (MM / YY)"
-msgstr ""
+msgstr "Platnost vyprší (MM / RR)"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
@@ -90,7 +91,7 @@ msgstr "Platební transakce"
 #: code:addons/payment_authorize/controllers/main.py:63
 #, python-format
 msgid "Please complete your profile. "
-msgstr ""
+msgstr "Vyplňte prosím svůj profil."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:58
@@ -106,7 +107,7 @@ msgstr "Poskytovatel"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token_save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "Uložit kartu"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:372
@@ -121,6 +122,8 @@ msgid ""
 "The transaction cannot be processed because some contact details are missing"
 " or invalid: "
 msgstr ""
+"Transakci nelze zpracovat, protože některé kontaktní údaje chybí nebo jsou "
+"neplatné:"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_authorize_profile
@@ -128,6 +131,8 @@ msgid ""
 "This contains the unique reference for this partner/payment token "
 "combination in the Authorize.net backend"
 msgstr ""
+"Toto obsahuje jedinečný odkaz pro tuto kombinaci tokenů partnera / plateb v "
+"backendu Authorize.net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_save_token
@@ -137,6 +142,10 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"Tato možnost umožňuje zákazníkům uložit kreditní kartu jako token platby a "
+"znovu ji použít pro pozdější nákup. Pokud spravujete předplatné (opakující "
+"se fakturace), musíte ji při vystavení faktury automaticky účtovat "
+"zákazníkovi."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token

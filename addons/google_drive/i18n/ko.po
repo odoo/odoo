@@ -3,17 +3,18 @@
 # * google_drive
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Link Up링크업 <linkup.way@gmail.com>, 2018
 # Seongseok Shin <shinss61@hotmail.com>, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
+# Martin Trigaux, 2018
+# JH CHOI <hwangtog@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: 최재호 <hwangtog@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,21 +32,27 @@ msgid ""
 "                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
 "                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
 msgstr ""
+"새 필터를 만들려면 다음과 같이하십시오.\n"
+"                                 - 필터링 할 Odoo 문서로 이동하십시오. 예를 들어 영업 기회로 이동하여 영업 부서에서 검색하십시오.\n"
+"                                 - 이 \"검색\"보기에서 \"현재 필터 저장\"옵션을 선택하고 이름을 입력하십시오 (예 : 영업 부서)\n"
+"                                 - \"모든 사용자와 공유\"를 선택하면 영업 부서의 기회가 있는 모든 사용자에 대해 \"기타\"옵션의 Google 문서 링크가 표시됩니다.\n"
+"                                 - \"모든 사용자와 공유\"를 선택하지 않으면 영업 부서의 기회에 있는 다른 사용자에게 \"기타\" 옵션의 Google 문서 링크가 표시되지 않습니다.\n"
+"                                 - 필터를 지정하지 않으면 Google 문서 링크가 모든 기회에 대해 모든 사용자에게 '기타'옵션으로 표시됩니다."
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
 msgid "<strong>Active</strong>"
-msgstr ""
+msgstr "<strong>활성</strong>"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
 msgid "<strong>Model</strong>"
-msgstr ""
+msgstr "<strong>모델</strong>"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
 msgid "<strong>Template</strong>"
-msgstr ""
+msgstr "<strong>템플릿</strong>"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_active
@@ -116,7 +123,7 @@ msgstr "환경 설정 패널로 가기"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_client_id
 msgid "Google Client"
-msgstr ""
+msgstr "구글 클라이언트"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
@@ -132,7 +139,7 @@ msgstr "구글 드라이브 이름 패턴"
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
 msgid "Google Drive Templates"
-msgstr ""
+msgstr "구글 드라이브 템플릿"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:62
@@ -175,6 +182,9 @@ msgid ""
 "checklist for each order in a foreign country, ... Its very easy to manage "
 "them, link them to Odoo and use them to collaborate with your employees."
 msgstr ""
+"Odoo의 모든 기록에 자신의 Google 드라이브 템플릿을 연결하십시오. 공동 작업자가 채우기를 원하는 정말 구체적인 문서가 있는 "
+"경우. 예 : 스프레드 시트를 사용하여 제품의 품질을 제어하거나 외국의 각 주문에 대한 배송 점검 목록을 검토하십시오 ... 매우 쉽게 "
+"관리 할 수 있으며이를 Odoo와 연결하여 직원과 협력 할 수 있습니다."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model_id
@@ -190,7 +200,7 @@ msgstr "유효한 구글 문서 URL을 입력하세요."
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
 msgid "Related Model"
-msgstr ""
+msgstr "관련된 모델"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_resource_id

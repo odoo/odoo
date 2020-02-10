@@ -113,7 +113,7 @@ class AccountVoucher(models.Model):
                 ('type', 'in', ('bank', 'cash')),
                 ('company_id', '=', voucher.company_id.id),
             ]
-            if voucher.account_id and voucher.account_id.internal_type == 'liquidity':
+            if voucher.account_id:
                 field = 'default_debit_account_id' if voucher.voucher_type == 'sale' else 'default_credit_account_id'
                 domain.append((field, '=', voucher.account_id.id))
             voucher.payment_journal_id = self.env['account.journal'].search(domain, limit=1)
@@ -130,14 +130,32 @@ class AccountVoucher(models.Model):
     @api.multi
     @api.depends('tax_correction', 'line_ids.price_subtotal')
     def _compute_total(self):
+        tax_calculation_rounding_method = self.env.user.company_id.tax_calculation_rounding_method
         for voucher in self:
             total = 0
             tax_amount = 0
+            tax_lines_vals_merged = {}
             for line in voucher.line_ids:
                 tax_info = line.tax_ids.compute_all(line.price_unit, voucher.currency_id, line.quantity, line.product_id, voucher.partner_id)
-                total += tax_info.get('total_included', 0.0)
-                tax_amount += sum([t.get('amount',0.0) for t in tax_info.get('taxes', False)]) 
-            voucher.amount = total + voucher.tax_correction
+                if tax_calculation_rounding_method == 'round_globally':
+                    total += tax_info.get('total_excluded', 0.0)
+                    for t in tax_info.get('taxes', False):
+                        key = (
+                            t['id'],
+                            t['account_id'],
+                        )
+                        if key not in tax_lines_vals_merged:
+                            tax_lines_vals_merged[key] = t.get('amount', 0.0)
+                        else:
+                            tax_lines_vals_merged[key] += t.get('amount', 0.0)
+                else:
+                    total += tax_info.get('total_included', 0.0)
+                    tax_amount += sum([t.get('amount', 0.0) for t in tax_info.get('taxes', False)])
+            if tax_calculation_rounding_method == 'round_globally':
+                tax_amount = sum([voucher.currency_id.round(t) for t in tax_lines_vals_merged.values()])
+                voucher.amount = total + tax_amount + voucher.tax_correction
+            else:
+                voucher.amount = total + voucher.tax_correction
             voucher.tax_amount = tax_amount
 
     @api.onchange('date')
@@ -291,6 +309,8 @@ class AccountVoucher(models.Model):
         :return: Tuple build as (remaining amount not allocated on voucher lines, list of account_move_line created in this method)
         :rtype: tuple(float, list of int)
         '''
+        tax_calculation_rounding_method = self.env.user.company_id.tax_calculation_rounding_method
+        tax_lines_vals = []
         for line in self.line_ids:
             #create one move line per voucher line where amount is not 0.0
             if not line.price_subtotal:
@@ -318,7 +338,41 @@ class AccountVoucher(models.Model):
                 'currency_id': company_currency != current_currency and current_currency or False,
                 'payment_id': self._context.get('payment_id'),
             }
-            self.env['account.move.line'].with_context(apply_taxes=True).create(move_line)
+            # When global rounding is activated, we must wait until all tax lines are computed to
+            # merge them.
+            if tax_calculation_rounding_method == 'round_globally':
+                # _apply_taxes modifies the dict move_line in place to account for included/excluded taxes
+                tax_lines_vals += self.env['account.move.line'].with_context(round=False)._apply_taxes(
+                    move_line,
+                    move_line.get('debit', 0.0) - move_line.get('credit', 0.0)
+                )
+                # rounding False means the move_line's amount are not rounded
+                currency = self.env['res.currency'].browse(company_currency)
+                move_line['debit'] = currency.round(move_line['debit'])
+                move_line['credit'] = currency.round(move_line['credit'])
+                self.env['account.move.line'].create(move_line)
+            else:
+                self.env['account.move.line'].with_context(apply_taxes=True).create(move_line)
+
+        # When round globally is set, we merge the tax lines
+        if tax_calculation_rounding_method == 'round_globally':
+            tax_lines_vals_merged = {}
+            for tax_line_vals in tax_lines_vals:
+                key = (
+                    tax_line_vals['tax_line_id'],
+                    tax_line_vals['account_id'],
+                    tax_line_vals['analytic_account_id'],
+                )
+                if key not in tax_lines_vals_merged:
+                    tax_lines_vals_merged[key] = tax_line_vals
+                else:
+                    tax_lines_vals_merged[key]['debit'] += tax_line_vals['debit']
+                    tax_lines_vals_merged[key]['credit'] += tax_line_vals['credit']
+            currency = self.env['res.currency'].browse(company_currency)
+            for vals in tax_lines_vals_merged.values():
+                vals['debit'] = currency.round(vals['debit'])
+                vals['credit'] = currency.round(vals['credit'])
+                self.env['account.move.line'].create(vals)
         return line_total
 
     @api.multi

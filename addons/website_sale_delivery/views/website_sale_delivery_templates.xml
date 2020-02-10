@@ -34,9 +34,12 @@
                             <input t-att-value="delivery.id" t-att-id="'delivery_%i' % delivery.id" type="radio" name="delivery_type" t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False" t-att-class="'hidden' if delivery_nb == 1 else ''"/>
                             <label class="label-optional" t-field="delivery.name" t-att-for="'delivery_%i' % delivery.id"/>
                             <t t-if="delivery.delivery_type == 'fixed'">
-                                <span t-if="delivery.fixed_price > 0.0" class="badge pull-right"
-                                      t-field="delivery.fixed_price" t-options='{"widget": "monetary",
-                                      "from_currency": delivery.product_id.company_id.currency_id, "display_currency": website_sale_order.currency_id}'/>
+                                <span t-if="delivery.fixed_price > 0.0" class="badge pull-right">
+                                    <t t-set="monetary_options" t-value='{"widget": "monetary",
+                                       "from_currency": delivery.product_id.company_id.currency_id, "display_currency": website_sale_order.currency_id}'/>
+                                    <t t-if="delivery.free_over" t-esc="delivery.rate_shipment(website_sale_order)['price']" t-options='monetary_options'/>
+                                    <t t-else="" t-esc="delivery.fixed_price" t-options='monetary_options'/>
+                                </span>
                                 <span t-else="" class="badge pull-right">Free</span>
                             </t>
                             <t t-else="">

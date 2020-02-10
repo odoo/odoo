@@ -36,9 +36,10 @@ class MrpProductProduce(models.TransientModel):
             if 'product_qty' in fields:
                 res['product_qty'] = todo_quantity
             if 'produce_line_ids' in fields:
+                qty_by_bom = production.product_uom_id._compute_quantity(todo_quantity, production.bom_id.product_uom_id)
                 lines = []
                 for move in production.move_raw_ids.filtered(lambda x: (x.product_id.tracking != 'none') and x.state not in ('done', 'cancel') and x.bom_line_id):
-                    qty_to_consume = float_round(todo_quantity / move.bom_line_id.bom_id.product_qty * move.bom_line_id.product_qty,
+                    qty_to_consume = float_round(qty_by_bom / move.bom_line_id.bom_id.product_qty * move.bom_line_id.product_qty,
                                                  precision_rounding=move.product_uom.rounding, rounding_method="UP")
                     for move_line in move.move_line_ids:
                         if float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) <= 0:
@@ -133,6 +134,7 @@ class MrpProductProduce(models.TransientModel):
                 existing_move_line.product_uom_qty += self.product_qty
                 existing_move_line.qty_done += self.product_qty
             else:
+                location_dest_id = produce_move.location_dest_id.get_putaway_strategy(self.product_id).id or produce_move.location_dest_id.id
                 vals = {
                   'move_id': produce_move.id,
                   'product_id': produce_move.product_id.id,
@@ -142,7 +144,7 @@ class MrpProductProduce(models.TransientModel):
                   'qty_done': self.product_qty,
                   'lot_id': self.lot_id.id,
                   'location_id': produce_move.location_id.id,
-                  'location_dest_id': produce_move.location_dest_id.id,
+                  'location_dest_id': location_dest_id,
                 }
                 self.env['stock.move.line'].create(vals)
 

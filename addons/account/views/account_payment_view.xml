@@ -71,7 +71,7 @@
                                     </div>
                                     <div class="col-xs-6">
                                         <span class="pull-right label label-default">
-                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'sent': 'success'}}"/>
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'sent': 'success'}}"/>
                                         </span>
                                     </div>
                                 </div>
@@ -256,11 +256,11 @@
                                     <field name="payment_difference_handling" widget="radio" nolabel="1"/>
                                     <div attrs="{'invisible': [('payment_difference_handling','=','open')]}">
                                         <label for="writeoff_account_id" class="oe_edit_only" string="Post Difference In"/>
-                                        <field name="writeoff_account_id" string="Post Difference In" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
+                                        <field name="writeoff_account_id" string="Post Difference In" attrs="{'required': [('payment_difference_handling', '=', 'reconcile'), ('payment_difference', '!=', 0.0)]}"/>
                                         <label string="Journal" attrs="{'invisible': [('amount', '!=', 0)]}"/>
                                         <field name="journal_id" string="Journal" widget="selection" attrs="{'invisible': [('amount', '!=', 0)]}"/>
                                         <label for="writeoff_label" class="oe_edit_only" string="Label"/>
-                                        <field name="writeoff_label" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
+                                        <field name="writeoff_label" attrs="{'required': [('payment_difference_handling', '=', 'reconcile'), ('payment_difference', '!=', 0.0)]}"/>
                                     </div>
                                 </div>
                             </group>

@@ -59,7 +59,7 @@ class Holidays(models.Model):
 
             work_hours_data = [item for item in holiday.employee_id.iter_work_hours_count(fields.Datetime.from_string(holiday.date_from), fields.Datetime.from_string(holiday.date_to))]
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
-                self.env['account.analytic.line'].create({
+                self.env['account.analytic.line'].sudo().create({
                     'name': "%s (%s/%s)" % (holiday.name or '', index + 1, len(work_hours_data)),
                     'project_id': holiday_project.id,
                     'task_id': holiday_task.id,

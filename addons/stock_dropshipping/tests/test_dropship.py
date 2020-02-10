@@ -43,3 +43,19 @@ class TestDropship(TransactionCase):
         # Update qty on SO and check PO
         so.order_line.product_uom_qty = 2.00
         self.assertAlmostEqual(po_line.product_qty, 2.00)
+
+        # Create a new so line
+        sol2 = self.env['sale.order.line'].create({
+            'order_id': so.id,
+            'name': prod.name,
+            'product_id': prod.id,
+            'product_uom_qty': 3.00,
+            'product_uom': prod.uom_id.id,
+            'price_unit': 12,
+        })
+        # there is a new line
+        pol2 = po.order_line - po_line
+        # the first line is unchanged
+        self.assertAlmostEqual(po_line.product_qty, 2.00)
+        # the new line matches the new line on the so
+        self.assertAlmostEqual(pol2.product_qty, sol2.product_uom_qty)

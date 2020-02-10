@@ -39,7 +39,7 @@
                 <t t-foreach="apps" t-as="app">
                     <t t-set="app_data" t-value="widget.dashboards_data.apps_data[app]"/>
                     <t t-set="app_dashboard" t-value="apps[app]"/>
-                    <t t-if="vignette_nbr &lt; vignette_max &amp;&amp; widget.hidden_apps.indexOf(app_data['id']) == -1 &amp;&amp; app_data['state'] == 'uninstalled'">
+                    <t t-if="vignette_nbr &lt; vignette_max &amp;&amp; app_data &amp;&amp; widget.hidden_apps.indexOf(app_data['id']) == -1 &amp;&amp; app_data['state'] == 'uninstalled'">
                         <t t-set="vignette_nbr" t-value="vignette_nbr + 1"/>
                         <a href="#" class="o_box_item o_dashboard_action_form"
                                 name="Apps"

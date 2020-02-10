@@ -3,7 +3,7 @@
     <data>
         <template id="report_invoice_document">
             <t t-call="web.external_layout">
-                <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
+                <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)" />
                 <div class="page">
                     <div class="row">
                         <div name="invoice_address" class="col-xs-5 col-xs-offset-7">
@@ -102,7 +102,7 @@
                     <div class="clearfix">
                         <div id="total" class="row">
                             <div class="col-xs-4 pull-right">
-                                <table class="table table-condensed" style="min-width: 250px;max-width: 400px;">
+                                <table class="table table-condensed" style="min-width: 250px;max-width: 400px;page-break-inside: avoid;">
                                     <tr class="border-black" style="border-bottom:1px solid #dddddd;">
                                         <td><strong>Subtotal</strong></td>
                                         <td class="text-right">

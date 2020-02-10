@@ -97,7 +97,10 @@ if(!the_form.length) {
                         }
 
                         // checkboxes and radios
-                        the_form.find("input[name^=" + key + "][type!='text']").each(function(){
+                        the_form.find("input[name^='" + key + "_'][type='checkbox']").each(function(){
+                            $(this).val(value);
+                        });
+                        the_form.find("input[name=" + key + "][type!='text']").each(function(){
                             $(this).val(value);
                         });
                     });

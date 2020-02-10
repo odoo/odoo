@@ -106,6 +106,9 @@ class WebsiteBlog(http.Controller):
         # retrocompatibility to accept tag as slug
         active_tag_ids = tag and [int(unslug(t)[1]) for t in tag.split(',')] or []
         if active_tag_ids:
+            fixed_tag_slug = ",".join(slug(t) for t in request.env['blog.tag'].browse(active_tag_ids))
+            if fixed_tag_slug != tag:
+                return request.redirect(request.httprequest.full_path.replace("/tag/%s/" % tag, "/tag/%s/" % fixed_tag_slug, 1), 301)
             domain += [('tag_ids', 'in', active_tag_ids)]
         if blog:
             domain += [('blog_id', '=', blog.id)]
@@ -168,7 +171,7 @@ class WebsiteBlog(http.Controller):
         response = request.render("website_blog.blog_post_short", values)
         return response
 
-    @http.route(['/blog/<model("blog.blog"):blog>/feed'], type='http', auth="public")
+    @http.route(['/blog/<model("blog.blog"):blog>/feed'], type='http', auth="public", website=True)
     def blog_feed(self, blog, limit='15'):
         v = {}
         v['blog'] = blog

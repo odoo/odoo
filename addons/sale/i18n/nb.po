@@ -6,8 +6,8 @@
 # Viktor Basso <viktor@voit.no>, 2017
 # Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017
 # Jorunn D. Newth, 2018
-# Marius Stedjan <marius@stedjan.com>, 2018
 # Martin Trigaux, 2019
+# Marius Stedjan <marius@stedjan.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:23+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2020\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -241,6 +241,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_orders
@@ -452,7 +454,7 @@ msgstr "Godta og signer"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Account used for deposits"
-msgstr ""
+msgstr "Debitkonto"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_pagebreak
@@ -550,12 +552,12 @@ msgstr "Analytisk linje"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_analytic_tag_ids
 msgid "Analytic Tags"
-msgstr ""
+msgstr "Analytiske etiketter"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At cost"
-msgstr ""
+msgstr "For kost"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_variants_action
@@ -572,7 +574,7 @@ msgstr "Attributter"
 #: selection:product.template,sale_line_warn:0
 #: selection:res.partner,sale_warn:0
 msgid "Blocking Message"
-msgstr ""
+msgstr "Blokkeringsmelding"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -581,6 +583,9 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
+"Øk salget med to typer rabattordninger: promoteringer og kupongkoder. "
+"Spesifikke betingelser kan settes (produkter, kunder, minimum beløp, "
+"periode). Goder kan være rabatter (% eller beløp) eller gratis produkter."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
@@ -872,12 +877,12 @@ msgstr "Leveringsadresse for denne salgsordren."
 #: model:product.product,name:sale.advance_product_0
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
-msgstr ""
+msgstr "Innskudd"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_default_deposit_product_id
 msgid "Deposit Product"
-msgstr ""
+msgstr "Produkt for innskudd"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_name
@@ -981,6 +986,8 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
+"Nedbetalinger blir registrert ved opprettelse av fakturaer fra salgsordrer. "
+"De blir ikke kopiert ved duplisering av salgsordrer."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -1030,6 +1037,9 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"I denne rapporten kan du se en oversikt over beløp fakturert til dine "
+"kunder. Søkeverktøyet kan også brukes til å tilpasse fakturarapportene til "
+"dine behov."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -1175,6 +1185,9 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"Fakturainntekter for denne måneden. Dette er beløpet som salgskanalen har "
+"fakturert for denne måneden. Det blir brukt til å regne ut forholdet mellom "
+"nåværende og målsatt inntekt i kanban-visningen."
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
@@ -1294,12 +1307,14 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"Det er ikke tillatt å endre følgende felt i en låst ordre:\n"
+"%s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:551
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
-msgstr ""
+msgstr "Det er ikke tillatt å bekrefte en ordre med følgende status: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
@@ -1387,6 +1402,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
+"Sett ordreantall manuelt: Fakturer basert på det manuelt angitte antallet, uten å opprette en analytisk konto.\n"
+"Timelister i kontrakt: Fakturer basert på registrerte timer i den relaterte timelisten.\n"
+"Opprett en oppgave og registrer timer: Opprett en oppgave ved bekreftelse av salgsordre, og registrer jobbede timer."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_validity_date
@@ -1489,7 +1507,7 @@ msgstr "Ingenting å fakturere"
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
+msgstr "Antall dager mellom ordrebekreftelse og levering av varer til kunden"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_count
@@ -1725,17 +1743,17 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce
 msgid "Price Reduce"
-msgstr ""
+msgstr "Reduser pris"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr ""
+msgstr "Reduer pris eks. mva"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr ""
+msgstr "Reduser pris inkl. mva"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_price_subtotal
@@ -2073,7 +2091,7 @@ msgstr "Salgskanaler"
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Sales Done"
-msgstr ""
+msgstr "Salg fullført"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
@@ -2211,6 +2229,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Ved å huke av \"Advarsel\"-valget, vil brukeren bli vist meldingen. Ved å "
+"huke av \"Blokkerende melding\" vil brukeren bli blokkert fra å fortsette. "
+"Meldingen må angis i neste felt."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2220,7 +2241,7 @@ msgstr "Selg og kjøp produkter med ulike måleenheter"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
-msgstr ""
+msgstr "Selg produkter etter multippel av enheten pr pakke"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2244,6 +2265,9 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Sales tab)."
 msgstr ""
+"Å sende en e-post er nyttig om du må dele spesifikk informasjon om et "
+"produkt (instruksjoner, regler, linker, media osv). Opprett og velg "
+"e-postmalen fra produktskjemaet (i salgsfanen)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
@@ -2441,7 +2465,7 @@ msgstr "Avgifter"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Taxes used for deposits"
-msgstr ""
+msgstr "Avgifter brukt ved innskudd"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings_module_sale_payment
@@ -2465,6 +2489,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"Salgsordren %s som er linket til den analytiske kontoen %s er kansellert. Du"
+" kan ikke registrere et utlegg på en kansellert salgsordre."
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:133
@@ -2474,6 +2500,9 @@ msgid ""
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
 msgstr ""
+"Salgsordren %s som er linket til den analytiske kontoen %s er låst. Du kan "
+"ikke registrere et utlegg på en låst salgsordre. Opprett en ny salgsordre "
+"linket til denne analytiske kontoen."
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:129
@@ -2482,6 +2511,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
 msgstr ""
+"Salgsordren %s som er linket til den analytiske kontoen %s må være bekreftet"
+" før du registrerer utlegg."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
@@ -2520,6 +2551,9 @@ msgid ""
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
 msgstr ""
+"Produktet som brukes for å fakturere en nedbetaling må ha en "
+"faktureringspolicy satt til \"Bestilt antall\". Oppdater produktet for "
+"forskudd for å opprette en forskuddsfaktura."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:78
@@ -2575,6 +2609,8 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
+"Denne standardverdien blir satt på alle nye opprettede produkter. Denne kan "
+"endres på produkskjemaet."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -2600,6 +2636,11 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Denne rapporten analyserer dine tilbud. Analysen sjekker salgsinntekter og "
+"sorterer dem etter ulike gruppekriterier (selger, partner, produkt, etc..) "
+"Bruk denne rapporten til å utføre analyser på salg du ikke har fakturert "
+"enda. Hvis du ønsker å analysere omsetningen din, bør du bruke rapporten "
+"Fakturaanalyse i regnskapsappen."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -2610,6 +2651,11 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Denne rapporten analyserer dine salgsordre. Analysen sjekker salgsinntekter "
+"og sorterer dem etter ulike gruppekriterier (selger, partner, produkt, "
+"etc..) Bruk denne rapporten til å utføre analyser på salg du ikke har "
+"fakturert enda. Hvis du ønsker å analysere omsetningen din, bør du bruke "
+"rapporten Fakturaanalyse i regnskapsappen."
 
 #. module: sale
 #: selection:product.template,service_type:0

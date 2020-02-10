@@ -12,5 +12,7 @@ Ignacio Ibeas ignacio@acysos.com https://github.com/acysos
 
 List of contributors:
 
+Ignacio Ibeas info@acysos.com https://github.com/acysos
 Ignacio Ibeas ignacio@acysos.com https://github.com/acysos
 Alex Ezquebo alexander@acysos.com https://github.com/acysos
+Leonidas Pezo leonidas@acysos.com https://github.com/acysos

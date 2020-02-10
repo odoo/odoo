@@ -227,15 +227,21 @@ class Project(models.Model):
     @api.multi
     def map_tasks(self, new_project_id):
         """ copy and map tasks from old to new project """
-        tasks = self.env['project.task']
         # We want to copy archived task, but do not propagate an active_test context key
-        task_ids = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id)]).ids
+        task_ids = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id)], order='parent_id').ids
+        old_to_new_tasks = {}
         for task in self.env['project.task'].browse(task_ids):
             # preserve task name and stage, normally altered during copy
             defaults = {'stage_id': task.stage_id.id,
                         'name': task.name}
-            tasks += task.copy(defaults)
-        return self.browse(new_project_id).write({'tasks': [(6, 0, tasks.ids)]})
+            parent_id = old_to_new_tasks.get(task.parent_id.id, False) if task.parent_id else False
+            project_id = (new_project_id if not parent_id else
+                          self.env['project.project'].browse(new_project_id).subtask_project_id.id)
+            defaults['parent_id'] = parent_id
+            defaults['project_id'] = project_id
+            new_task = task.copy(defaults)
+            old_to_new_tasks[task.id] = new_task.id
+        return True
 
     @api.multi
     def copy(self, default=None):
@@ -244,6 +250,8 @@ class Project(models.Model):
         if not default.get('name'):
             default['name'] = _("%s (copy)") % (self.name)
         project = super(Project, self).copy(default)
+        if self.subtask_project_id == self:
+            project.subtask_project_id = project
         for follower in self.message_follower_ids:
             project.message_subscribe(partner_ids=follower.partner_id.ids, subtype_ids=follower.subtype_ids.ids)
         if 'tasks' not in default:

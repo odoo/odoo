@@ -9,6 +9,7 @@ from odoo.exceptions import UserError, ValidationError
 
 import time
 import math
+import copy
 
 class AccountCashboxLine(models.Model):
     """ Cash Box Details """
@@ -233,13 +234,17 @@ class AccountBankStatement(models.Model):
         statements = self.filtered(lambda r: r.state == 'open')
         for statement in statements:
             moves = self.env['account.move']
+            # `line.journal_entry_ids` gets invalidated from the cache during the loop
+            # because new move lines are being created at each iteration.
+            # The below dict is to prevent the ORM to permanently refetch `line.journal_entry_ids`
+            line_journal_entries = {line: line.journal_entry_ids for line in statement.line_ids}
             for st_line in statement.line_ids:
-                if st_line.account_id and not st_line.journal_entry_ids.ids:
+                journal_entries = line_journal_entries[st_line]
+                if st_line.account_id and not journal_entries.ids:
                     st_line.fast_counterpart_creation()
-                elif not st_line.journal_entry_ids.ids and not statement.currency_id.is_zero(st_line.amount):
+                elif not journal_entries.ids and not statement.currency_id.is_zero(st_line.amount):
                     raise UserError(_('All the account entries lines must be processed in order to close the statement.'))
-                for aml in st_line.journal_entry_ids:
-                    moves |= aml.move_id
+            moves = statement.mapped('line_ids.journal_entry_ids.move_id')
             if moves:
                 moves.filtered(lambda m: m.state != 'posted').post()
             statement.message_post(body=_('Statement %s confirmed, journal items were created.') % (statement.name,))
@@ -653,7 +658,7 @@ class AccountBankStatementLine(models.Model):
         liquidity_amt_clause = currency and '%(amount)s::numeric' or 'abs(%(amount)s::numeric)'
         sql_query = self._get_common_sql_query(excluded_ids=excluded_ids) + \
                 " AND ("+field+" = %(amount)s::numeric OR (acc.internal_type = 'liquidity' AND "+liquidity_field+" = " + liquidity_amt_clause + ")) \
-                ORDER BY date_maturity desc, aml.id desc LIMIT 1"
+                ORDER BY date_maturity asc, aml.id desc LIMIT 1"
         self.env.cr.execute(sql_query, params)
         results = self.env.cr.fetchone()
         if results:
@@ -811,9 +816,10 @@ class AccountBankStatementLine(models.Model):
             :param list of dicts data: must contains the keys 'counterpart_aml_dicts', 'payment_aml_ids' and 'new_aml_dicts',
                 whose value is the same as described in process_reconciliation except that ids are used instead of recordsets.
         """
+        data_copy = copy.deepcopy(data)
         AccountMoveLine = self.env['account.move.line']
         ctx = dict(self._context, force_price_include=False)
-        for st_line, datum in pycompat.izip(self, data):
+        for st_line, datum in pycompat.izip(self, data_copy):
             payment_aml_rec = AccountMoveLine.browse(datum.get('payment_aml_ids', []))
             for aml_dict in datum.get('counterpart_aml_dicts', []):
                 aml_dict['move_line'] = AccountMoveLine.browse(aml_dict['counterpart_aml_id'])
@@ -864,6 +870,8 @@ class AccountBankStatementLine(models.Model):
             :returns: The journal entries with which the transaction was matched. If there was at least an entry in counterpart_aml_dicts or new_aml_dicts, this list contains
                 the move created by the reconciliation, containing entries for the statement.line (1), the counterpart move lines (0..*) and the new move lines (0..*).
         """
+        payable_account_type = self.env.ref('account.data_account_type_payable')
+        receivable_account_type = self.env.ref('account.data_account_type_receivable')
         counterpart_aml_dicts = counterpart_aml_dicts or []
         payment_aml_rec = payment_aml_rec or self.env['account.move.line']
         new_aml_dicts = new_aml_dicts or []
@@ -884,17 +892,26 @@ class AccountBankStatementLine(models.Model):
                 raise UserError(_('A selected move line was already reconciled.'))
             if isinstance(aml_dict['move_line'], pycompat.integer_types):
                 aml_dict['move_line'] = aml_obj.browse(aml_dict['move_line'])
+
+        account_types = self.env['account.account.type']
         for aml_dict in (counterpart_aml_dicts + new_aml_dicts):
             if aml_dict.get('tax_ids') and isinstance(aml_dict['tax_ids'][0], pycompat.integer_types):
                 # Transform the value in the format required for One2many and Many2many fields
                 aml_dict['tax_ids'] = [(4, id, None) for id in aml_dict['tax_ids']]
+
+            user_type_id = self.env['account.account'].browse(aml_dict.get('account_id')).user_type_id
+            if user_type_id in [payable_account_type, receivable_account_type] and user_type_id not in account_types:
+                account_types |= user_type_id
         if any(line.journal_entry_ids for line in self):
             raise UserError(_('A selected statement line was already reconciled with an account move.'))
 
         # Fully reconciled moves are just linked to the bank statement
         total = self.amount
+        currency = self.currency_id or statement_currency
         for aml_rec in payment_aml_rec:
-            total -= aml_rec.debit - aml_rec.credit
+            balance = aml_rec.amount_currency if aml_rec.currency_id else aml_rec.balance
+            aml_currency = aml_rec.currency_id or aml_rec.company_currency_id
+            total -= aml_currency.with_context(date=aml_rec.date, company_id=aml_rec.company_id.id).compute(balance, currency)
             aml_rec.with_context(check_move_validity=False).write({'statement_line_id': self.id})
             counterpart_moves = (counterpart_moves | aml_rec.move_id)
 
@@ -912,10 +929,12 @@ class AccountBankStatementLine(models.Model):
 
             # Create The payment
             payment = self.env['account.payment']
+            partner_id = self.partner_id or (aml_dict.get('move_line') and aml_dict['move_line'].partner_id) or self.env['res.partner']
             if abs(total)>0.00001:
-                partner_id = self.partner_id and self.partner_id.id or False
                 partner_type = False
-                if partner_id:
+                if partner_id and len(account_types) == 1:
+                    partner_type = 'customer' if account_types == receivable_account_type else 'supplier'
+                if partner_id and not partner_type:
                     if total < 0:
                         partner_type = 'supplier'
                     else:
@@ -926,7 +945,7 @@ class AccountBankStatementLine(models.Model):
                 payment = self.env['account.payment'].create({
                     'payment_method_id': payment_methods and payment_methods[0].id or False,
                     'payment_type': total >0 and 'inbound' or 'outbound',
-                    'partner_id': self.partner_id and self.partner_id.id or False,
+                    'partner_id': partner_id.id,
                     'partner_type': partner_type,
                     'journal_id': self.statement_id.journal_id.id,
                     'payment_date': self.date,
@@ -966,23 +985,8 @@ class AccountBankStatementLine(models.Model):
                     aml_dict['currency_id'] = statement_currency.id
 
             # Create write-offs
-            # When we register a payment on an invoice, the write-off line contains the amount
-            # currency if all related invoices have the same currency. We apply the same logic in
-            # the manual reconciliation.
-            counterpart_aml = self.env['account.move.line']
-            for aml_dict in counterpart_aml_dicts:
-                counterpart_aml |= aml_dict.get('move_line', self.env['account.move.line'])
-            new_aml_currency = False
-            if counterpart_aml\
-                    and len(counterpart_aml.mapped('currency_id')) == 1\
-                    and counterpart_aml[0].currency_id\
-                    and counterpart_aml[0].currency_id != company_currency:
-                new_aml_currency = counterpart_aml[0].currency_id
             for aml_dict in new_aml_dicts:
                 aml_dict['payment_id'] = payment and payment.id or False
-                if new_aml_currency and not aml_dict.get('currency_id'):
-                    aml_dict['currency_id'] = new_aml_currency.id
-                    aml_dict['amount_currency'] = company_currency.with_context(ctx).compute(aml_dict['debit'] - aml_dict['credit'], new_aml_currency)
                 aml_obj.with_context(check_move_validity=False, apply_taxes=True).create(aml_dict)
 
             # Create counterpart move lines and reconcile them
@@ -993,9 +997,6 @@ class AccountBankStatementLine(models.Model):
                 aml_dict['payment_id'] = payment and payment.id or False
 
                 counterpart_move_line = aml_dict.pop('move_line')
-                if counterpart_move_line.currency_id and counterpart_move_line.currency_id != company_currency and not aml_dict.get('currency_id'):
-                    aml_dict['currency_id'] = counterpart_move_line.currency_id.id
-                    aml_dict['amount_currency'] = company_currency.with_context(ctx).compute(aml_dict['debit'] - aml_dict['credit'], counterpart_move_line.currency_id)
                 new_aml = aml_obj.with_context(check_move_validity=False).create(aml_dict)
 
                 (new_aml | counterpart_move_line).reconcile()

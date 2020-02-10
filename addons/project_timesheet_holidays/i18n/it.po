@@ -3,16 +3,18 @@
 # * project_timesheet_holidays
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Paolo Valier, 2017
+# Martin Trigaux, 2018
+# Paolo Valier, 2018
 # Sergio Zanchetta <primes2h@gmail.com>, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:22+0000\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +42,8 @@ msgstr "Aziende"
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings_leave_timesheet_project_id
 msgid "Default project value for timesheet generated from leave type."
 msgstr ""
+"Valore predefinito del progetto per il foglio ore generato dal tipo di "
+"permesso/di ferie. "
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/hr_holidays.py:30
@@ -52,7 +56,7 @@ msgstr ""
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_holidays_status_timesheet_generate
 msgid "Generate Timesheet"
-msgstr ""
+msgstr "Generare foglio ore"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_holidays_status_timesheet_generate
@@ -60,6 +64,8 @@ msgid ""
 "If checked, when validating a leave, timesheet will be generated in the "
 "Vacation Project of the company."
 msgstr ""
+"Se questa opzione è selezionata, al momento della convalida di un permesso, "
+"verrà generato un foglio ore nel progetto \"Ferie\" dell'azienda."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:30
@@ -117,6 +123,8 @@ msgstr "Attività"
 msgid ""
 "The project will contain the timesheet generated when a leave is validated."
 msgstr ""
+"Il progetto conterrà il foglio ore generato al momento della convalida di un"
+" permesso."
 
 #. module: project_timesheet_holidays
 #: model:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
@@ -130,6 +138,8 @@ msgid ""
 "You cannot delete timesheet lines attached to a leaves. Please cancel the "
 "leaves instead."
 msgstr ""
+"Impossibile eliminare una riga di foglio ore associata a un permesso. "
+"Eliminare invece il permesso."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_config_settings

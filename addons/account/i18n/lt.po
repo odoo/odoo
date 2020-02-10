@@ -4,32 +4,32 @@
 # 
 # Translators:
 # Aleksandr Jadov <a.jadov@tata.lt>, 2017
-# vaalds <vaalds@gmail.com>, 2017
 # Arminas Grigonis <arminas@versada.lt>, 2017
 # Anatolij, 2017
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
-# Paulius Sladkevičius <paulius@versada.eu>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
 # Rolandas <info@paninfo.lt>, 2017
 # Martin Trigaux, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# vaalds <vaalds@gmail.com>, 2018
 # Andrius Laukavičius <andrius@focusate.eu>, 2018
 # Edgaras Kriukonis <edgaras@focusate.eu>, 2018
-# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Paulius Sladkevičius <paulius@versada.eu>, 2018
 # Naglis Jonaitis, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
 # Eimantas <eimantas@focusate.eu>, 2018
-# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -445,6 +445,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4361,6 +4363,12 @@ msgid ""
 msgstr "Skirtumas tarp apskaičiuoto ir nurodyto baigiamojo balanso."
 
 #. module: account
+#: code:addons/account/models/account_move.py:235
+#, python-format
+msgid "Difference debit - credit: "
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Direct connection to your bank"
 msgstr "Tiesioginė sąsaja su jūsų banku"
@@ -4618,7 +4626,12 @@ msgid "Due date"
 msgstr "Mokėjimo terminas"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1176
+#: model:ir.ui.view,arch_db:account.view_move_form
+msgid "Duplicate"
+msgstr "Dubliuoti"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1194
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
@@ -11913,6 +11926,8 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
+"Negalite šiai sąskaitai nustatyti valiutos, nes ji jau turi žurnalo įrašų su"
+" kita užsienio valiuta."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1368

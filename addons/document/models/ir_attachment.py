@@ -9,7 +9,7 @@ import zipfile
 from odoo import api, models
 
 _logger = logging.getLogger(__name__)
-FTYPES = ['docx', 'pptx', 'xlsx', 'opendoc', 'pdf']
+FTYPES = ['docx', 'pptx', 'xlsx', 'opendoc']
 
 def textToString(element):
     buff = u""
@@ -92,6 +92,9 @@ class IrAttachment(models.Model):
     def _index_pdf(self, bin_data):
         '''Index PDF documents'''
 
+        # extractText gives very bad results for indexing, hence we don't index PDF anymore. A
+        # better alternative is probably PDFMiner.six, but not for stable.
+        # See POC at https://github.com/odoo/odoo/pull/27568.
         buf = u""
         if bin_data.startswith(b'%PDF-'):
             f = io.BytesIO(bin_data)

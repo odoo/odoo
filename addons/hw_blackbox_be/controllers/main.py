@@ -92,7 +92,7 @@ class Blackbox(Thread):
 
     def _send_and_wait_for_ack(self, packet, serial):
         ack = 0
-        MAX_RETRIES = 1
+        MAX_RETRIES = 1 # no more than 9
 
         while ack != 0x06 and int(chr(packet[4])) < MAX_RETRIES:
             serial.write(packet)
@@ -104,7 +104,7 @@ class Blackbox(Thread):
             # message so it's safe to do it. Also it would be a pain
             # to have to throw this all the way back to js just so it
             # can increment the retry counter and then try again.
-            packet = packet[:4] + str(int(packet[4]) + 1) + packet[5:]
+            packet[4] += 1
 
             if ack:
                 ack = ord(ack)
@@ -139,13 +139,13 @@ class Blackbox(Thread):
                 etx = ser.read(1)
                 bcc = ser.read(1)
 
-                if stx == chr(0x02) and etx == chr(0x03) and bcc and self._lrc(response) == ord(bcc):
+                if stx == chr(0x02).encode() and etx == chr(0x03).encode() and bcc and self._lrc(response.decode()) == ord(bcc):
                     got_response = True
-                    ser.write(chr(0x06))
+                    ser.write(chr(0x06).encode())
                 else:
                     _logger.warning("received ACK but not a valid response, sending NACK...")
                     sent_nacks += 1
-                    ser.write(chr(0x15))
+                    ser.write(chr(0x15).encode())
 
             if not got_response:
                 _logger.error("sent " + str(MAX_NACKS) + " NACKS without receiving response, giving up.")
@@ -173,4 +173,9 @@ if isfile("/home/pi/registered_blackbox_be"):
 
         @http.route('/hw_proxy/request_serial/', type='json', auth='none', cors='*')
         def request_serial(self):
-            return subprocess.check_output("ifconfig eth0 | grep -o 'HWaddr.*' | sed 's/HWaddr \\(.*\\)/\\1/' | sed 's/://g'", shell=True).rstrip()[-7:]
+            try:
+                with open('/sys/class/net/eth0/address', 'rb') as f:
+                    return f.read().rstrip().replace(b':', b'')[-7:]
+            except IOError as e:
+                _logger.warning("eth0 network interface MAC address could not be found")
+                return b''

@@ -3,28 +3,29 @@
 # * event
 # 
 # Translators:
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2017
-# Mustafa Rawi <mustafa@cubexco.com>, 2017
-# Martin Trigaux, 2017
-# hoxhe Aits <hoxhe0@gmail.com>, 2017
-# Shaima Safar <shaima.safar@open-inside.com>, 2017
-# Akram Alfusayal <akram_ma@hotmail.com>, 2017
-# amrnegm <amrnegm.01@gmail.com>, 2017
-# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2017
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2017
 # Mahmood Al Halwachi <mahmood.alhalwachi@gmail.com>, 2017
-# Yihya Hugirat <hugirat@gmail.com>, 2017
 # Islam Eldeeb <islameldeb@gmail.com>, 2017
 # Zuhair Hammadi <zuhair12@gmail.com>, 2017
+# Yihya Hugirat <hugirat@gmail.com>, 2017
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2017
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2017
+# amrnegm <amrnegm.01@gmail.com>, 2017
 # Mohammed Albasha <m.albasha.ma@gmail.com>, 2017
+# hoxhe Aits <hoxhe0@gmail.com>, 2017
+# Martin Trigaux, 2018
+# Akram Alfusayal <akram_ma@hotmail.com>, 2018
 # Nasma Elazrag <n.azrak@gmail.com>, 2018
+# Shaima Safar <shaima.safar@open-inside.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:56+0000\n"
-"PO-Revision-Date: 2018-07-27 11:56+0000\n"
-"Last-Translator: Nasma Elazrag <n.azrak@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -376,7 +377,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "${object.event_id.name}: ${object.get_date_range_str()}"
-msgstr ""
+msgstr "${object.event_id.name}: ${object.get_date_range_str()}"
 
 #. module: event
 #: code:addons/event/models/event.py:297
@@ -389,7 +390,7 @@ msgstr "%s (نسخة)"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "5 Intensive Days"
-msgstr ""
+msgstr "5 أيام حافلة"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -397,6 +398,8 @@ msgid ""
 "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the"
 " event or change the dates on which it is held.)</em>"
 msgstr ""
+"<em>(تحتفظ Chamber Works بأحقية إلغاء الفعالية، أو إعادة تسميتها أو تغيير "
+"مكانها<br>أو تغيير تواريخ إقامتها.)</em>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -404,6 +407,8 @@ msgid ""
 "<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn <i>Odoo"
 " Programming</i></font>"
 msgstr ""
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">لتتعلم <i>برمجة "
+"أودو</i></font>"
 
 #. module: event
 #: model:event.event,description:event.event_1
@@ -433,6 +438,7 @@ msgstr ""
 msgid ""
 "<i>You will be able to create dynamic page interacting with the ORM.</i>"
 msgstr ""
+"<i>ستتمكن من إنشاء صفحات ديناميكية تتفاعل مع كائن رسم خرائط العلاقات.</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -441,7 +447,7 @@ msgstr ""
 msgid ""
 "<i>You will be able to develop a full application with backend and user "
 "interface.</i>"
-msgstr ""
+msgstr "<i>ستتمكن من تطوير تطبيق بالكامل بواجهة خلفية وواجهة مستخدم.</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -449,7 +455,7 @@ msgstr ""
 #: model:event.event,description:event.event_3
 msgid ""
 "<i>You will be able to develop simple dynamic components in HTML pages.</i>"
-msgstr ""
+msgstr "<i>ستتمكن من تطوير عناصر ديناميكية بسيطة في صفحات HTML.</i>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -462,7 +468,7 @@ msgstr "<i>إلى</i>"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<small>John Doe, CEO</small>"
-msgstr ""
+msgstr "<small>جون دو، المدير التنفيذي</small>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -482,6 +488,10 @@ msgid ""
 "development </strong>process. This course is for new developers or for IT "
 "professionals eager to learn more about technical aspects.</span>"
 msgstr ""
+"<span style=\"text-align: -webkit-center; \">تهدف هذه الدورة التعليمية "
+"لمساعدة المطورين الذين يحتاجون لفهم عملية <strong>تطوير تطبيقات الأعمال "
+"التجارية</strong>. هذه الدورة موجهة للمطورين الجدد وكذلك لمحترفي تكنولوجيا "
+"المعلومات الراغبين في معرفة المزيد عن الجوانب التقنية.</span>"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -496,6 +506,7 @@ msgid ""
 "<strong>Having attended this course, participants should be able "
 "to:</strong>"
 msgstr ""
+"<strong>بحضورهم هذه الدورة التعليمية، ينبغي أن يتمكن المشاركون من:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -540,13 +551,15 @@ msgid ""
 "Add a navigation menu to your event web pages with schedule, tracks, a track"
 " proposal form, etc."
 msgstr ""
+"أضف قائمة تنقل لصفحات فعالياتك وأدرج بها جداول زمنية، ومسارات، ونموذج اقتراح"
+" المسار، إلخ."
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Advanced JQuery"
-msgstr ""
+msgstr "مستوى متقدم في JQuery"
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -571,13 +584,15 @@ msgid ""
 "Are you sure you want to cancel this event? All the linked attendees will be"
 " cancelled as well."
 msgstr ""
+"هل أنت متأكد أنك تريد إلغاء هذه الفعالية؟ سيتم إلغاء كافة الحضور المرتبط بها"
+" كذلك."
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Arrays"
-msgstr ""
+msgstr "مصفوفات"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -626,17 +641,17 @@ msgstr "الحضور"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_auto_confirm
 msgid "Autoconfirm Registrations"
-msgstr ""
+msgstr "تأكيد التسجيلات تلقائيًا"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_auto_confirm
 msgid "Automatically Confirm Registrations"
-msgstr ""
+msgstr "تأكيد التسجيلات تلقائيًا"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_use_mail_schedule
 msgid "Automatically Send Emails"
-msgstr ""
+msgstr "إرسال رسائل البريد الإلكتروني تلقائيًا"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_available
@@ -651,12 +666,12 @@ msgstr "الشارة الخلف"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_front
 msgid "Badge Front"
-msgstr ""
+msgstr "مقدمة الشارة"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
 msgid "Badge Inner Left"
-msgstr ""
+msgstr "يسار الجزء الداخلي من الشارة"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
@@ -672,40 +687,40 @@ msgstr "باركود"
 #: selection:event.mail,interval_type:0
 #: selection:event.type.mail,interval_type:0
 msgid "Before the event"
-msgstr ""
+msgstr "قبل الفعالية"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Best regards,"
-msgstr ""
+msgstr "مع أطيب تحياتنا،"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Bootstrap CSS"
-msgstr ""
+msgstr "Bootstrap CSS"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Bring your own laptop."
-msgstr ""
+msgstr "أحضر حاسوبك المحمول."
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Building a Full Application"
-msgstr ""
+msgstr "صنع تطبيق كامل"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Calling the ORM"
-msgstr ""
+msgstr "التواصل مع كائن رسم خرائط العلاقات"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -737,6 +752,8 @@ msgstr "الفئة"
 #: model:event.event,description:event.event_2
 msgid "Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)"
 msgstr ""
+"شركة Chamber Works، 60، روزوود كورت ديترويت، ميشيجان 48212 (الولايات "
+"المتحدة)"
 
 #. module: event
 #: model:ir.actions.act_window,help:event.act_event_registration_from_event
@@ -815,7 +832,7 @@ msgstr "مؤكد"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Confirmed attendees"
-msgstr ""
+msgstr "الحضور المؤكد"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -833,7 +850,7 @@ msgstr "جهة الاتصال"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Controllers and Views"
-msgstr ""
+msgstr "المتحكمات وأدوات العرض"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
@@ -923,7 +940,7 @@ msgstr "الوصف"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Develop a new module for a particular application."
-msgstr ""
+msgstr "تطوير موديول جديد لتطبيق معين."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm_display_name
@@ -939,7 +956,7 @@ msgstr "الاسم المعروض"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_sequence
 msgid "Display order"
-msgstr ""
+msgstr "ترتيب العرض"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -959,6 +976,8 @@ msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
 msgstr ""
+"خلال المؤتمر، سيعرض فريقنا نظرة عامة مفصلة عن تطبيقاتنا لإدارة الأعمال. "
+"ستعرفون فوائد استخدامه."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
@@ -969,7 +988,7 @@ msgstr "البريد الإلكتروني"
 #: model:ir.ui.view,arch_db:event.view_event_form
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Email Schedule"
-msgstr ""
+msgstr "جدولة رسائل البريد"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_template_id
@@ -985,7 +1004,7 @@ msgstr "تاريخ الإنتهاء"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end_located
 msgid "End Date Located"
-msgstr ""
+msgstr "تم تحديد تاريخ الانتهاء"
 
 #. module: event
 #: model:ir.model,name:event.model_event_event
@@ -999,18 +1018,18 @@ msgstr "الحدث"
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "Event Automated Mailing"
-msgstr ""
+msgstr "إرسال رسائل الفعاليات تلقائيًا"
 
 #. module: event
 #: model:ir.actions.report,name:event.report_event_event_badge
 msgid "Event Badge"
-msgstr ""
+msgstr "شارة الفعالية"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
 msgid "Event Categories"
-msgstr ""
+msgstr "فئات الفعالية"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -1035,22 +1054,22 @@ msgstr "تاريخ انتهاء الحدث"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Event Information"
-msgstr ""
+msgstr "معلومات عن الفعالية"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_logo
 msgid "Event Logo"
-msgstr ""
+msgstr "شعار الفعالية"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Event Mail Scheduler"
-msgstr ""
+msgstr "مجدول رسائل البريد للفعالية"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_tree
 msgid "Event Mail Schedulers"
-msgstr ""
+msgstr "مجدولات رسائل البريد للفعالية"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_name
@@ -1087,6 +1106,18 @@ msgid ""
 "                              - or the responsible of the event,\n"
 "                              - or the last writer of the template."
 msgstr ""
+"حدث خطأ بمجدول الفعالية:\n"
+"                              - الفعالية: %s (%s)\n"
+"                              - الموعد: %s\n"
+"                              - القالب: %s (%s)\n"
+"\n"
+"                            الخطأ:\n"
+"                              - %s\n"
+"\n"
+"                            وصلتك هذه الرسالة لأنك:\n"
+"                              - منظم الفعالية،\n"
+"                              - أو المسئول عن الفعالية،\n"
+"                              - أو آخر مشارك بالقالب."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_event_begin_date
@@ -1103,7 +1134,7 @@ msgstr "نوع الحدث"
 #: model:ir.cron,cron_name:event.event_mail_scheduler
 #: model:ir.cron,name:event.event_mail_scheduler
 msgid "Event: Mail Scheduler"
-msgstr ""
+msgstr "الفعالية: مجدول رسائل البريد"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
@@ -1128,7 +1159,7 @@ msgstr "تحليل التنفيذات"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
-msgstr ""
+msgstr "الفعالية: مجدولات رسائل البريد"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_type_form
@@ -1136,6 +1167,8 @@ msgid ""
 "Events and registrations will automatically be confirmed\n"
 "                                            upon creation, easing the flow for simple events."
 msgstr ""
+"سيتم تأكيد الفعاليات والتسجيلات تلقائيًا\n"
+"                                            عند إنشائهم، لتسهيل سير الفعاليات البسيطة."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_auto_confirm
@@ -1143,6 +1176,8 @@ msgid ""
 "Events and registrations will automatically be confirmed upon creation, "
 "easing the flow for simple events."
 msgstr ""
+"سيتم تأكيد الفعاليات والتسجيلات تلقائيًا عند إنشائهم، لتسهيل سير الفعاليات "
+"البسيطة."
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1152,7 +1187,7 @@ msgstr "احداث في المقاطعة الجديدة"
 #. module: event
 #: model:event.type,name:event.event_type_1
 msgid "Exhibition"
-msgstr ""
+msgstr "معرض"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -1162,7 +1197,7 @@ msgstr "متوقع"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Expected attendees"
-msgstr ""
+msgstr "الحضور المتوقع"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1172,7 +1207,7 @@ msgstr "نهاية الحدث"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "For any additional information, please contact us at"
-msgstr ""
+msgstr "للمزيد من المعلومات، برجاء التواصل معنا على"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_max
@@ -1180,6 +1215,8 @@ msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
 msgstr ""
+"لكل فعالية، يمكنك تحديد حد أقصى للمقاعد المحجوزة (عدد الحضور)، بحيث لا يُقبل"
+" حجز عدد أكبر منه."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_min
@@ -1188,6 +1225,8 @@ msgid ""
 "attendees), if it does not reach the mentioned registrations the event can "
 "not be confirmed (keep 0 to ignore this rule)"
 msgstr ""
+"لكل فعالية، يمكنك تحديد حد أدني للمقاعد المحجوزة (عدد الحضور)، بحيث لا يتم "
+"تأكيد الفعالية إذا لم يصل العدد للقيمة المذكورة (أبقها 0 لتجاهل هذه القاعدة)"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -1197,7 +1236,7 @@ msgstr "ورشة عمل وظيفية عبر الإنترنت"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Functional flow of the main applications;"
-msgstr ""
+msgstr "السير العملي للتطبيقات الرئيسية؛"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1215,14 +1254,14 @@ msgstr "تجميع حسب"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Having attended this conference, participants should be able to:"
-msgstr ""
+msgstr "بحضورهم هذا المؤتمر، ينبغي أن يتمكن المشاركون من:"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Hello World"
-msgstr ""
+msgstr "مرحبًا بالعالم"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1235,7 +1274,7 @@ msgstr "ساعة(ـات)"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "How to Debug"
-msgstr ""
+msgstr "كيفية اكتشاف الأخطاء"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1245,6 +1284,8 @@ msgid ""
 "I did not expect such a great learning experience. I feel like I can develop"
 " anything now."
 msgstr ""
+"لم أكن أتوقع هذه التجربة التعليمية العظيمة. أشعر أنني الآن قادر على تطوير أي"
+" شيء."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm_id
@@ -1273,21 +1314,21 @@ msgstr ""
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Immediately"
-msgstr ""
+msgstr "فورًا"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Install and administer your own server;"
-msgstr ""
+msgstr "تثبيت وإدارة سيرفرك الخاص؛"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Integrated Help"
-msgstr ""
+msgstr "مساعدة مدمجة"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_nbr
@@ -1300,26 +1341,26 @@ msgstr "الفترة"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Introduction to JQuery"
-msgstr ""
+msgstr "مقدمة لـJQuery"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Introduction to Javascript"
-msgstr ""
+msgstr "مقدمة لـJavascript"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Introduction to QWeb"
-msgstr ""
+msgstr "مقدمة لـQWeb"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Introduction, CRM, Sales Management"
-msgstr ""
+msgstr "مقدمة، العلاقات العامة، إدارة المبيعات"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_max
@@ -1334,7 +1375,7 @@ msgstr "سيقوم باختيار القيمة الدنيا الافتراضية
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_color
 msgid "Kanban Color Index"
-msgstr ""
+msgstr "معرف اللون في كانبان"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm___last_update
@@ -1372,12 +1413,12 @@ msgstr "آخر تحديث في"
 #. module: event
 #: selection:event.event,seats_availability:0
 msgid "Limited"
-msgstr ""
+msgstr "محدود"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_has_seats_limitation
 msgid "Limited Seats"
-msgstr ""
+msgstr "عدد المقاعد محدود"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_address_id
@@ -1390,33 +1431,33 @@ msgstr "المكان"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Loops"
-msgstr ""
+msgstr "الحلقات التكرارية"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Luigi Roni, Senior Event Manager"
-msgstr ""
+msgstr "لويجي روني، مدير الفعاليات"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_registration_ids
 msgid "Mail Registration"
-msgstr ""
+msgstr "التسجيل بالبريد الإلكتروني"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_mail_ids
 #: model:ir.model.fields,field_description:event.field_event_type_event_type_mail_ids
 msgid "Mail Schedule"
-msgstr ""
+msgstr "جدولة رسائل البريد"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_scheduler_id
 msgid "Mail Scheduler"
-msgstr ""
+msgstr "مجدول رسائل البريد"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
-msgstr ""
+msgstr "مجدولات رسائل البريد"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
@@ -1426,17 +1467,17 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_mail_sent
 msgid "Mail Sent"
-msgstr ""
+msgstr "تم إرسال الرسالة"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_sent
 msgid "Mail Sent on Event"
-msgstr ""
+msgstr "تم إرسال الرسالة بموعد الفعالية"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage &amp; publish a schedule with tracks"
-msgstr ""
+msgstr "إدارة ونشر جدول بمسارات تتبع"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -1446,34 +1487,34 @@ msgstr "المدير"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_availability
 msgid "Maximum Attendees"
-msgstr ""
+msgstr "الحد الأقصى للحضور"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_max
 msgid "Maximum Attendees Number"
-msgstr ""
+msgstr "الحد الأقصى لعدد الحضور"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_registration_max
 msgid "Maximum Registrations"
-msgstr ""
+msgstr "الحد الأقصى للتسجيلات"
 
 #. module: event
 #: code:addons/event/models/event.py:253
 #, python-format
 msgid ""
 "Maximum attendees number should be greater than minimum attendees number."
-msgstr ""
+msgstr "ينبغي أن يكون الحد الأقصى لعدد الحضور أكبر من الحد الأدنى له."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_min
 msgid "Minimum Attendees"
-msgstr ""
+msgstr "الحد الأدنى للحضور"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_registration_min
 msgid "Minimum Registrations"
-msgstr ""
+msgstr "الحد الأدنى للتسجيلات"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1503,12 +1544,12 @@ msgstr "لا يوجد مقاعد متاحة أكثر."
 #: code:addons/event/models/event.py:363
 #, python-format
 msgid "No more seats available for this event."
-msgstr ""
+msgstr "لا توجد مقاعد متاحة بهذه الفعالية."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_expected
 msgid "Number of Expected Attendees"
-msgstr ""
+msgstr "عدد الحضور المتوقع"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_used
@@ -1519,21 +1560,21 @@ msgstr "عدد المشاركين"
 #: model:ir.model.fields,help:event.field_res_partner_event_count
 #: model:ir.model.fields,help:event.field_res_users_event_count
 msgid "Number of events the partner has participated."
-msgstr ""
+msgstr "عدد الفعاليات التي شارك بها الشريك."
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Odoo Official Website"
-msgstr ""
+msgstr "موقع أودو الرسمي"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Odoo Web Client"
-msgstr ""
+msgstr "عميل ويب أودو"
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -1553,12 +1594,12 @@ msgstr "متصل"
 #: model:ir.model.fields,field_description:event.field_event_event_is_online
 #: model:ir.model.fields,field_description:event.field_event_type_is_online
 msgid "Online Event"
-msgstr ""
+msgstr "فعالية أونلاين"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings_module_website_event_sale
 msgid "Online Ticketing"
-msgstr ""
+msgstr "بيع التذاكر أونلاين"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_type_form
@@ -1566,6 +1607,8 @@ msgid ""
 "Online events like webinars do not require a specific location\n"
 "                                            and are hosted online."
 msgstr ""
+"لا تحتاج الفعاليات الأونلاين مثل ويبينارز مكانًا معينًا\n"
+"                                            وتُقام عبر الإنترنت."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_is_online
@@ -1573,6 +1616,7 @@ msgid ""
 "Online events like webinars do not require a specific location and are "
 "hosted online."
 msgstr ""
+"لا تحتاج الفعاليات الأونلاين مثل ويبينارز مكانًا معينًا وتُقام عبر الإنترنت."
 
 #. module: event
 #: model:event.event,name:event.event_0
@@ -1597,6 +1641,8 @@ msgid ""
 "Participants are expected to have some knowledge in programming. A basic "
 "knowledge of the Python programming is recommended."
 msgstr ""
+"يُتوقع أن يملك المشاركون معرفة مبدئية بالبرمجة. ونوصي بامتلاك خبرة بأساسيات "
+"لغة البرمجة بايثون."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1605,7 +1651,7 @@ msgstr ""
 msgid ""
 "Participants preferably have a functional knowledge of our software (see "
 "Functional Training)."
-msgstr ""
+msgstr "يُفضل أن يملك المشاركون معرفة عملية ببرنامجنا (انظر التدريب العملي)."
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -1620,43 +1666,43 @@ msgstr "رقم الهاتف"
 #. module: event
 #: model:event.type,name:event.event_type_data_physical
 msgid "Physical Event"
-msgstr ""
+msgstr "فعالية حقيقية"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Point of Sale (POS), Introduction to report customization."
-msgstr ""
+msgstr "نقطة البيع، مقدمة تخصيص تقاريرك."
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Project management, Human resources, Contract management."
-msgstr ""
+msgstr "إدارة المشروع، الموارد البشرية، إدارة العقود."
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
-msgstr ""
+msgstr "الشراء، إدارة البيع والشراء، المحاسبة المالية."
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Python Objects"
-msgstr ""
+msgstr "كائنات بايثون"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Read Great Contents"
-msgstr ""
+msgstr "قراءة محتوى عظيم"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_registration_origin
 msgid ""
 "Reference of the document that created the registration, for example a sales"
 " order"
-msgstr ""
+msgstr "رقم إشارة المستند الذي أنشأ التسجيل، أمر مبيعات مثلًا"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1675,7 +1721,7 @@ msgstr "التسجيل"
 #. module: event
 #: model:ir.actions.report,name:event.report_event_registration_badge
 msgid "Registration Badge"
-msgstr ""
+msgstr "شارة التسجيل"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_date_open
@@ -1690,17 +1736,17 @@ msgstr "يوم التسجيل"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration ID"
-msgstr ""
+msgstr "مُعرف التسجيل"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr ""
+msgstr "مجدول رسالة التسجيل"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration Mails"
-msgstr ""
+msgstr "رسائل التسجيل"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -1710,19 +1756,19 @@ msgstr "شهر التسجيل"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings_module_website_event_questions
 msgid "Registration Survey"
-msgstr ""
+msgstr "استطلاع التسجيل"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration mail"
-msgstr ""
+msgstr "رسالة التسجيل"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Report Engine"
-msgstr ""
+msgstr "معالج التقارير"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -1750,37 +1796,37 @@ msgstr "مسئول"
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Scan badges to confirm attendances"
-msgstr ""
+msgstr "مسح الشارات لتأكيد الحضور"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
-msgstr ""
+msgstr "الجداول الزمنية والمسارات"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_scheduled_date
 msgid "Scheduled Sent Mail"
-msgstr ""
+msgstr "الرسالة المرسلة المجدولة"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_scheduled_date
 msgid "Scheduled Time"
-msgstr ""
+msgstr "الوقت المجدول"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets on your website"
-msgstr ""
+msgstr "بيع التذاكر على موقعك"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with sales orders"
-msgstr ""
+msgstr "بيع التذاكر مع أوامر البيع"
 
 #. module: event
 #: model:event.type,name:event.event_type_0
 msgid "Seminar"
-msgstr ""
+msgstr "ندوة"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1826,7 +1872,7 @@ msgstr "تاريخ البدء"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin_located
 msgid "Start Date Located"
-msgstr ""
+msgstr "تم تحديد تاريخ البدء"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1858,6 +1904,8 @@ msgid ""
 "There are already attendees who attended this event. Please reset it to "
 "draft if you want to cancel this event."
 msgstr ""
+"هناك أشخاص حضروا بالفعل هذه الفعالية. برجاء إعادتها لحالة المسودة إذا كنت "
+"تريد إلغاؤها."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1867,13 +1915,15 @@ msgid ""
 "This course help me build my first application within a month. Definetly "
 "worth its price."
 msgstr ""
+"تساعدني هذه الدورة الدراسية على صنع تطبيقي الأول خلال شهر واحد. أظنها بلا شك"
+" تستحق ثمنها."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail_template_id
 #: model:ir.model.fields,help:event.field_event_type_mail_template_id
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
-msgstr ""
+msgstr "يحتوي هذا الحقل على قالب الرسالة التي سيتم إرسالها تلقائيًا"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings_module_event_sale
@@ -1891,12 +1941,12 @@ msgstr "المنطقة الزمنية"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "To get more information, visit the"
-msgstr ""
+msgstr "للمزيد من المعلومات، قم بزيارة"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings_module_website_event_track
 msgid "Tracks and Agenda"
-msgstr ""
+msgstr "المسارات وجدول الأعمال"
 
 #. module: event
 #: model:event.type,name:event.event_type_4
@@ -1908,7 +1958,7 @@ msgstr "التدريب"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Training Center Module"
-msgstr ""
+msgstr "موديول مركز التدريب"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail_interval_type
@@ -1918,13 +1968,13 @@ msgstr "إطلاق"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_type
 msgid "Trigger "
-msgstr ""
+msgstr "المفعل "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_twitter_hashtag
 #: model:ir.model.fields,field_description:event.field_event_type_default_hashtag
 msgid "Twitter Hashtag"
-msgstr ""
+msgstr "هاشتاج تويتر"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
@@ -1942,19 +1992,19 @@ msgstr "الحجوزات غير المؤكدة"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Underscore"
-msgstr ""
+msgstr "شرطة سفلية"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Understand the development concepts and architecture;"
-msgstr ""
+msgstr "تعرف على مبادئ وبنية عملية التطوير؛"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Understand the various modules;"
-msgstr ""
+msgstr "فهم الموديولات المتنوعة؛"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_unit
@@ -1986,12 +2036,12 @@ msgstr "الأحداث القادمة اعتبارا من اليوم"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_use_hashtag
 msgid "Use Default Hashtag"
-msgstr ""
+msgstr "استخدام الهاشتاج الافتراضي"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_use_timezone
 msgid "Use Default Timezone"
-msgstr ""
+msgstr "استخدام المنطقة الزمنية الافتراضية"
 
 #. module: event
 #: model:res.groups,name:event.group_event_user
@@ -2003,7 +2053,7 @@ msgstr "المستخدم"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Variables &amp; Operators"
-msgstr ""
+msgstr "متغيرات ومعاملات"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_type_form
@@ -2014,12 +2064,14 @@ msgstr "الظهور"
 #: code:addons/event/models/event_mail.py:130
 #, python-format
 msgid "WARNING: Event Scheduler Error for event: %s"
-msgstr ""
+msgstr "تحذير: خطأ في جدولة الفعالية: %s"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
 msgstr ""
+"إدارة المخازن، وعمليات التصنيع وتخطيط متطلبات المواد، والمبيعات، والاستيراد "
+"والتصدير."
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -2039,7 +2091,7 @@ msgstr "أسبوع (أسابيع)"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "What do people say about this course?"
-msgstr ""
+msgstr "ما رأي الناس في هذه الدورة الدراسية؟"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -2059,18 +2111,18 @@ msgstr "سير العمل"
 #: code:addons/event/models/event.py:420
 #, python-format
 msgid "You must wait the event confirmation before doing this action."
-msgstr ""
+msgstr "يجب أن تنتظر تأكيد الفعالية قبل القيام بهذا الإجراء."
 
 #. module: event
 #: code:addons/event/models/event.py:422
 #, python-format
 msgid "You must wait the event starting day before doing this action."
-msgstr ""
+msgstr "يجب أن تنتظر يوم بداية الفعالية قبل القيام بهذا الإجراء."
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for ${object.event_id.name}"
-msgstr ""
+msgstr "شارتك لـ${object.event_id.name}"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
@@ -2080,14 +2132,14 @@ msgstr "تسجيلك في ${object.event_id.name}"
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
-msgstr ""
+msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "drinks and lunch;"
-msgstr ""
+msgstr "شراب وغداء؛"
 
 #. module: event
 #: model:ir.model,name:event.model_event_confirm
@@ -2097,31 +2149,31 @@ msgstr ""
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "events@odoo.com"
-msgstr ""
+msgstr "events@odoo.com"
 
 #. module: event
 #: code:addons/event/models/event.py:508
 #, python-format
 msgid "in %d days"
-msgstr ""
+msgstr "خلال %d يوم"
 
 #. module: event
 #: code:addons/event/models/event.py:512
 #, python-format
 msgid "next month"
-msgstr ""
+msgstr "الشهر القادم"
 
 #. module: event
 #: code:addons/event/models/event.py:510
 #, python-format
 msgid "next week"
-msgstr ""
+msgstr "الأسبوع القادم"
 
 #. module: event
 #: code:addons/event/models/event.py:514
 #, python-format
 msgid "on "
-msgstr ""
+msgstr "في "
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
@@ -2132,13 +2184,13 @@ msgstr "الدقة.التكوين.إعدادات"
 #: code:addons/event/models/event.py:504
 #, python-format
 msgid "today"
-msgstr ""
+msgstr "اليوم"
 
 #. module: event
 #: code:addons/event/models/event.py:506
 #, python-format
 msgid "tomorrow"
-msgstr ""
+msgstr "غدًا"
 
 #. module: event
 #: model:event.event,description:event.event_0

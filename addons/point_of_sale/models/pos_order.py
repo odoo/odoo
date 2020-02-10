@@ -238,7 +238,7 @@ class PosOrder(models.Model):
         inv_line.update(price_unit=line.price_unit, discount=line.discount, name=inv_name)
         return InvoiceLine.sudo().create(inv_line)
 
-    def _create_account_move_line(self, session=None, move=None):
+    def _prepare_account_move_and_lines(self, session=None, move=None):
         def _flatten_tax_and_children(taxes, group_done=None):
             children = self.env['account.tax']
             if group_done is None:
@@ -460,6 +460,17 @@ class PosOrder(models.Model):
         if self and order.company_id.anglo_saxon_accounting:
             add_anglosaxon_lines(grouped_data)
 
+        return {
+            'grouped_data': grouped_data,
+            'move': move,
+        }
+
+    def _create_account_move_line(self, session=None, move=None):
+        vals = self._prepare_account_move_and_lines(session, move)
+
+        grouped_data = vals['grouped_data']
+        move = vals['move']
+
         all_lines = []
         for group_key, group_data in grouped_data.items():
             for value in group_data:
@@ -482,17 +493,16 @@ class PosOrder(models.Model):
         return - price_unit
 
     def _reconcile_payments(self):
+        cash_basis_percentage_before_rec = {move: move.line_ids._get_matched_percentage() for move in self.mapped('account_move')}
         for order in self:
             aml = order.statement_ids.mapped('journal_entry_ids') | order.account_move.line_ids | order.invoice_id.move_id.line_ids
             aml = aml.filtered(lambda r: not r.reconciled and r.account_id.internal_type == 'receivable' and r.partner_id == order.partner_id.commercial_partner_id)
 
-            # Reconcile returns first
-            # to avoid mixing up the credit of a payment and the credit of a return
-            # in the receivable account
-            aml_returns = aml.filtered(lambda l: (l.journal_id.type == 'sale' and l.credit) or (l.journal_id.type != 'sale' and l.debit))
             try:
-                aml_returns.reconcile()
-                (aml - aml_returns).reconcile()
+                # Cash returns will be well reconciled
+                # Whereas freight returns won't be
+                # "c'est la vie..."
+                aml.with_context(skip_tax_cash_basis_entry=True).reconcile()
             except Exception:
                 # There might be unexpected situations where the automatic reconciliation won't
                 # work. We don't want the user to be blocked because of this, since the automatic
@@ -501,6 +511,18 @@ class PosOrder(models.Model):
                 # It may be interesting to have the Traceback logged anyway
                 # for debugging and support purposes
                 _logger.exception('Reconciliation did not work for order %s', order.name)
+        for move in self.mapped('account_move'):
+            partial_reconcile = self.env['account.partial.reconcile'].search([
+                '|',
+                ('credit_move_id.move_id', '=', move.id),
+                ('debit_move_id.move_id', '=', move.id)], limit=1)
+            if partial_reconcile:
+                # In case none of the order debit move lines have been reconciled
+                # there is no need to create the tax cash basis entries as nothing has been reconciled
+                # a known case is when the the bank journal credit account is set to a receivable account,
+                # which has as effect to fully reconcile the payment line with its counterpart,
+                # leaving no payment lines to reconcile with the order debit lines.
+                partial_reconcile.create_tax_cash_basis_entry(cash_basis_percentage_before_rec[move])
 
     def _filtered_for_reconciliation(self):
         filter_states = ['invoiced', 'done']
@@ -659,7 +681,7 @@ class PosOrder(models.Model):
             Invoice += new_invoice
 
             for line in order.lines:
-                self.with_context(local_context)._action_create_invoice_line(line, new_invoice.id)
+                order.with_context(local_context)._action_create_invoice_line(line, new_invoice.id)
 
             new_invoice.with_context(local_context).sudo().compute_taxes()
             order.sudo().write({'state': 'invoiced'})
@@ -700,7 +722,7 @@ class PosOrder(models.Model):
         order_ids = []
 
         for tmp_order in orders_to_save:
-            to_invoice = tmp_order['to_invoice']
+            to_invoice = tmp_order['to_invoice'] or tmp_order['data'].get('to_invoice')
             order = tmp_order['data']
             if to_invoice:
                 self._match_payment_to_invoice(order)
@@ -709,7 +731,7 @@ class PosOrder(models.Model):
 
             try:
                 pos_order.action_pos_order_paid()
-            except psycopg2.OperationalError:
+            except psycopg2.DatabaseError:
                 # do not hide transactional errors, the order(s) won't be saved!
                 raise
             except Exception as e:
@@ -717,7 +739,9 @@ class PosOrder(models.Model):
 
             if to_invoice:
                 pos_order.action_pos_order_invoice()
-                pos_order.invoice_id.sudo().action_invoice_open()
+                pos_order.invoice_id.sudo().with_context(
+                    force_company=self.env.user.company_id.id, pos_picking_id=pos_order.picking_id
+                ).action_invoice_open()
                 pos_order.account_move = pos_order.invoice_id.move_id
         return order_ids
 
@@ -845,7 +869,7 @@ class PosOrder(models.Model):
                             # a serialnumber always has a quantity of 1 product, a lot number takes the full quantity of the order line
                             qty = 1.0
                             if stock_production_lot.product_id.tracking == 'lot':
-                                qty = pos_pack_lot.pos_order_line_id.qty
+                                qty = abs(pos_pack_lot.pos_order_line_id.qty)
                             qty_done += qty
                             pack_lots.append({'lot_id': stock_production_lot.id, 'qty': qty})
                         else:
@@ -857,6 +881,7 @@ class PosOrder(models.Model):
                 for pack_lot in pack_lots:
                     lot_id, qty = pack_lot['lot_id'], pack_lot['qty']
                     self.env['stock.move.line'].create({
+                        'picking_id': move.picking_id.id,
                         'move_id': move.id,
                         'product_id': move.product_id.id,
                         'product_uom_id': move.product_uom.id,

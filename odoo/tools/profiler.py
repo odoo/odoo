@@ -35,7 +35,7 @@ class _LogTracer(object):
 
         in_self = frame.f_locals['self']
 
-        if isinstance(in_self, (odoo.sql_db.Cursor, odoo.sql_db.TestCursor, odoo.sql_db.LazyCursor)):
+        if not isinstance(in_self, odoo.models.BaseModel):
             return self.tracer
 
         model = getattr(in_self, '_name', None)

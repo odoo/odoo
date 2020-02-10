@@ -1,10 +1,12 @@
-'use strict';
 odoo.define('website_sale_delivery.checkout', function (require) {
+    'use strict';
 
     require('web.dom_ready');
     var ajax = require('web.ajax');
     var core = require('web.core');
     var _t = core._t;
+    var concurrency = require('web.concurrency');
+    var dp = new concurrency.DropPrevious();
 
     /* Handle interactive carrier choice + cart update */
     var $pay_button = $('#o_payment_form_pay');
@@ -14,7 +16,7 @@ odoo.define('website_sale_delivery.checkout', function (require) {
         var $amount_untaxed = $('#order_total_untaxed span.oe_currency_value');
         var $amount_tax = $('#order_total_taxes span.oe_currency_value');
         var $amount_total = $('#order_total span.oe_currency_value');
-        var $carrier_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge.hidden');
+        var $carrier_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge:not(.o_delivery_compute)');
         var $compute_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_delivery_compute');
         var $discount = $('#order_discounted');
 
@@ -51,7 +53,7 @@ odoo.define('website_sale_delivery.checkout', function (require) {
         $pay_button.prop('disabled', true);
         var carrier_id = $(ev.currentTarget).val();
         var values = {'carrier_id': carrier_id};
-        ajax.jsonRpc('/shop/update_carrier', 'call', values)
+        dp.add(ajax.jsonRpc('/shop/update_carrier', 'call', values))
           .then(_onCarrierUpdateAnswer);
     };
 

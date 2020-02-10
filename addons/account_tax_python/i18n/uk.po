@@ -7,14 +7,15 @@
 # Yaroslav Molochko <onorua@gmail.com>, 2017
 # Bohdan Lisnenko, 2017
 # ТАрас <tratatuta@i.ua>, 2017
-# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:14+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,14 +41,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Обчислити суму податку, встановивши змінну \"результат\".\n"
+"Обчислити суму податку, встановивши змінну \"результат\"\n"
 "\n"
-":параметр сума_ балансу: плаваюча, фактична сума, на яку застосовується податок\n"
-":параметр вартість_ одиниці: плаваюча\n"
+":param base_amount: float, фактична сума, на яку застосовується податок\n"
+":param price_unit: float\n"
 ":param quantity: float\n"
-":param company: res.company recordset singleton\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
+":param company: res.company набір одиночних записів\n"
+":param product: product.product набір одиночних записів або Нічого\n"
+":param partner: res.partner набір одиночних записів або Нічого"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_compute
@@ -62,11 +63,11 @@ msgid ""
 msgstr ""
 "Обчислити суму податку, встановивши змінну \"результат\".\n"
 "\n"
-":параметр базова_сума: плаваюча, фактична сума, на яку застосовується податок\n"
-":параметр ціна_одиниці: плаваюча\n"
-":параметр кількість: плаваюча\n"
-":параметр товар: товар.товар встановлення рекорду синглтону або нічого\n"
-":параметр партнет: рез.партнер встановлення рекорду синглтону або нічого"
+":param base_amount: float, фактична сума, на яку застосовується податок\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product набір одиночних записів або Нічого\n"
+":param partner: res.partner набір одиночних записів або Нічого"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_python_applicable
@@ -81,11 +82,11 @@ msgid ""
 msgstr ""
 "Визначте, чи буде застосовано податок, встановивши змінну \"результат\" на \"Правильна\" або \"Невірна\".\n"
 "\n"
-":параметр ціна_одиниці: плаваюча\n"
-":param кількість: плаваюча\n"
-":param компанія: рез.компанія запис одиничної вартості\n"
-":param товар: товар.товар запис одиничної вартості або нічого\n"
-":param партнер: рез.партнер запис одиничної вартості або нічого"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company набір одиночних записів\n"
+":param product: product.product набір одиночних записів або Нічого\n"
+":param partner: res.partner набір одиночних записів або Нічого"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_applicable
@@ -99,10 +100,10 @@ msgid ""
 msgstr ""
 "Визначте, чи буде застосовано податок, встановивши змінну \"результат\" на \"Правильний\" або \"Невірний\".\n"
 "\n"
-":параметр ціна_одиниці: плаваюча\n"
-":параметр кількість: плаваюча\n"
-":параметр товар: товар.товар  запис одиничної вартості або нічого\n"
-":param партнер: рез.партнер запис одиничної вартості або нічого"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product набір одиночних записів або Нічого\n"
+":param partner: res.partner набір одиночних записів або Нічого"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_compute

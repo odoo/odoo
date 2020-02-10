@@ -133,3 +133,55 @@ class TestTracking(TestMail):
         self.assertEqual(set(last_msg.tracking_value_ids.mapped('new_value_char')), set([group_system.name_get()[0][1], 'Everyone', 'supername']))
         self.assertEqual(set(last_msg.tracking_value_ids.mapped('old_value_integer')), set([0, group_user.id]))
         self.assertEqual(set(last_msg.tracking_value_ids.mapped('new_value_integer')), set([0, group_system.id]))
+
+    def test_track_template(self):
+        # Test: Check that default_* keys are not taken into account in _message_track_post_template
+        magic_code = 'Up-Up-Down-Down-Left-Right-Left-Right-Square-Triangle'
+
+        mt_name_changed = self.env['mail.message.subtype'].create({
+            'name': 'MAGIC CODE WOOP WOOP',
+            'description': 'SPECIAL CONTENT UNLOCKED'
+        })
+        self.env['ir.model.data'].create({
+            'name': 'mt_name_changed',
+            'model': 'mail.message.subtype',
+            'module': 'mail',
+            'res_id': mt_name_changed.id
+        })
+        mail_template = self.env['mail.template'].create({
+            'name': 'SPECIAL CONTENT UNLOCKED',
+            'subject': 'SPECIAL CONTENT UNLOCKED',
+            'model_id': self.env.ref('mail.model_mail_test').id,
+            'auto_delete': True,
+            'body_html': '''<div>WOOP WOOP</div>''',
+        })
+
+        @api.multi
+        def _track_subtype(self, init_values):
+            if 'name' in init_values and init_values['name'] == magic_code:
+                return 'mail.mt_name_changed'
+            return False
+        self.registry('mail.test')._patch_method('_track_subtype', _track_subtype)
+
+        def _track_template(self, tracking):
+            res = {}
+            record = self[0]
+            changes, tracking_value_ids = tracking[record.id]
+            if 'name' in changes:
+                res['name'] = (mail_template, {'composition_mode': 'mass_mail'})
+            return res
+        self.registry('mail.test')._patch_method('_track_template', _track_template)
+
+        cls = type(self.env['mail.test'])
+        self.assertFalse(hasattr(getattr(cls, 'name'), 'track_visibility'))
+        getattr(cls, 'name').track_visibility = 'always'
+
+        @self.addCleanup
+        def cleanup():
+            del getattr(cls, 'name').track_visibility
+
+        test_mail_record = self.env['mail.test'].create({
+            'name': 'Zizizatestmailname',
+            'description': 'Zizizatestmaildescription',
+        })
+        test_mail_record.with_context(default_parent_id=2147483647).write({'name': magic_code})

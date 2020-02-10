@@ -3,14 +3,15 @@
 # * payment_authorize
 # 
 # Translators:
-# 최재호 <hwangtog@gmail.com>, 2018
+# JH CHOI <hwangtog@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: 최재호 <hwangtog@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:20+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,17 +22,17 @@ msgstr ""
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_login
 msgid "API Login Id"
-msgstr ""
+msgstr "API 로그인 Id"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_transaction_key
 msgid "API Transaction Key"
-msgstr ""
+msgstr "API Transaction Key"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token_authorize_profile
 msgid "Authorize.net Profile ID"
-msgstr ""
+msgstr "Authorize.net 프로필 ID"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:167
@@ -39,12 +40,12 @@ msgstr ""
 msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
 "fingerprint (%s)"
-msgstr ""
+msgstr "승인 : 누락된 참조(%s) 또는 trans_id(%s) 또는 fingerprint(%s)가 있는 수신 데이터"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "CVC"
-msgstr ""
+msgstr "CVC"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
@@ -54,17 +55,17 @@ msgstr "카드 번호"
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Cardholder name"
-msgstr ""
+msgstr "카드 소지자 이름"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Expires (MM / YY)"
-msgstr ""
+msgstr "만료일 (MM / YY)"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "How to get paid with Authorize.Net"
-msgstr ""
+msgstr "Authorize.Net으로 지불받는 방법"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:61
@@ -72,7 +73,7 @@ msgstr ""
 msgid ""
 "If you don't have any account, please ask your salesperson to update your "
 "profile. "
-msgstr ""
+msgstr "계정이 없는 경우 영업 담당자에게 프로필을 업데이트하도록 요청하십시오."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
@@ -88,7 +89,7 @@ msgstr "결제 처리"
 #: code:addons/payment_authorize/controllers/main.py:63
 #, python-format
 msgid "Please complete your profile. "
-msgstr ""
+msgstr "프로필을 마저 작성하십시오."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:58
@@ -104,13 +105,13 @@ msgstr "공급자"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token_save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "카드 저장"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:372
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
-msgstr ""
+msgstr "Authorize.NET에서 고객 프로필 생성에 실패했습니다."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:55
@@ -118,14 +119,14 @@ msgstr ""
 msgid ""
 "The transaction cannot be processed because some contact details are missing"
 " or invalid: "
-msgstr ""
+msgstr "일부 연락처 세부 정보가 누락되었거나 유효하지 않기 때문에 거래를 처리할 수 없습니다."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_authorize_profile
 msgid ""
 "This contains the unique reference for this partner/payment token "
 "combination in the Authorize.net backend"
-msgstr ""
+msgstr "여기에는 Authorize.net 백엔드에 있는 이 파트너/결제 토큰 조합에 대한고유한 참조가 포함되어 있습니다"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_save_token
@@ -135,6 +136,8 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"이 옵션을 사용하면 고객이 신용 카드를 결제 토큰으로 저장하고 나중에 구입할 때 재사용할 수 있습니다. 구독을 관리하는 경우(송장 청구)"
+" 송장을 발급할 때 고객에게 자동으로 요금을 청구해야 합니다."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token

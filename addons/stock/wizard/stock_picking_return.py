@@ -29,7 +29,7 @@ class ReturnPicking(models.TransientModel):
     parent_location_id = fields.Many2one('stock.location')
     location_id = fields.Many2one(
         'stock.location', 'Return Location',
-        domain="['|', ('id', '=', original_location_id), '&', ('return_location', '=', True), ('id', 'child_of', parent_location_id)]")
+        domain="['|', ('id', '=', original_location_id), ('return_location', '=', True)]")
 
     @api.model
     def default_get(self, fields):
@@ -45,6 +45,8 @@ class ReturnPicking(models.TransientModel):
             if picking.state != 'done':
                 raise UserError(_("You may only return Done pickings"))
             for move in picking.move_lines:
+                if move.state == 'cancel':
+                    continue
                 if move.scrapped:
                     continue
                 if move.move_dest_ids:

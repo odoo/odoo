@@ -285,13 +285,11 @@ var SnippetOption = Widget.extend({
             .addClass('active');
 
         _processSelectClassElements(this.$el);
-        _.each(this.$el.find('.dropdown-menu'), function (group) {
-            _processSelectClassElements($(group).children());
-        });
 
-        function _processSelectClassElements($elements) {
+        function _processSelectClassElements($el) {
             var maxNbClasses = -1;
-            $elements.filter('[data-select-class]')
+            $el.find('[data-select-class]')
+                .addBack('[data-select-class]')
                 .removeClass('active')
                 .filter(function () {
                     var className = $(this).data('selectClass');

@@ -16,8 +16,8 @@
                         <td>
                             <a title="assign to invoice" role="button" class="oe_form_field outstanding_credit_assign" t-att-data-id="line.id" style="margin-right: 10px;">Add</a>
                         </td>
-                        <td>
-                            <span class="oe_form_field" style="margin-right: 30px;"><t t-esc="line.journal_name"></t></span>
+                        <td style="max-width: 10em;">
+                            <div class="oe_form_field" style="margin-right: 30px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" t-att-title="line.title"><t t-esc="line.journal_name"></t></div>
                         </td>
                     </t>
                     <t t-if="!outstanding">

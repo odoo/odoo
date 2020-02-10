@@ -141,3 +141,45 @@ class TestSaleOrder(TestSale):
         sol = so.order_line.filtered(lambda l: l.product_id == serv_cost)
         self.assertTrue(sol, 'Sale: cost invoicing does not add lines when confirming vendor invoice')
         self.assertEquals((sol.price_unit, sol.qty_delivered, sol.product_uom_qty, sol.qty_invoiced), (160, 2, 0, 0), 'Sale: line is wrong after confirming vendor invoice')
+
+    def test_so_create_multicompany(self):
+        """In case we use new() outside of an onchange,
+           it might cause the value of related fields to be incorrect.
+           If so, then the company being a related might not be set,
+           which would mean that taxes from all child companies
+           would end up on the order lines.
+        """
+        user_demo = self.env.ref('base.user_demo')
+        company_1 = self.env.ref('base.main_company')
+        company_2 = self.env['res.company'].create({
+            'name': 'company 2',
+            'parent_id': company_1.id,
+        })
+
+        tax_company_1 = self.env['account.tax'].create({
+            'name': 'T1',
+            'amount': 90,
+            'company_id': company_1.id,
+        })
+
+        tax_company_2 = self.env['account.tax'].create({
+            'name': 'T2',
+            'amount': 90,
+            'company_id': company_2.id,
+        })
+
+        product_shared = self.env['product.template'].create({
+            'name': 'shared product',
+            'taxes_id': [(6, False, [tax_company_1.id, tax_company_2.id])],
+        })
+
+        so_1 = self.env['sale.order'].sudo(user_demo.id).create({
+            'partner_id': self.env.ref('base.res_partner_2').id,
+            'company_id': company_1.id,
+        })
+        so_1.write({
+            'order_line': [(0, False, {'product_id': product_shared.product_variant_id.id, 'order_id': so_1.id})],
+        })
+
+        self.assertEqual(set(so_1.order_line.tax_id.ids), set([tax_company_1.id]),
+            'Only taxes from the right company are put by default')

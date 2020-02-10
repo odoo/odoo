@@ -51,10 +51,10 @@ class CrmTeam(models.Model):
     def _compute_sales_to_invoice(self):
         sale_order_data = self.env['sale.order'].read_group([
             ('team_id', 'in', self.ids),
-            ('order_line.qty_to_invoice', '>', 0),
+            ('invoice_status','=','to invoice'),
         ], ['team_id'], ['team_id'])
         for datum in sale_order_data:
-            self.browse(datum['team_id'][0]).invoiced = datum['team_id_count']
+            self.browse(datum['team_id'][0]).sales_to_invoice_count = datum['team_id_count']
 
     @api.multi
     def _compute_invoiced(self):

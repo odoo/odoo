@@ -48,7 +48,7 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 
 from . import tools
 from .tools.func import frame_codeinfo
-from .tools import pycompat
+from .tools import pycompat, ustr
 
 from .tools import parse_version as pv
 if pv(psycopg2.__version__) < pv('2.7'):
@@ -232,7 +232,7 @@ class Cursor(object):
             res = self._obj.execute(query, params)
         except Exception as e:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
-                _logger.error("bad query: %s\nERROR: %s", self._obj.query or query, e)
+                _logger.error("bad query: %s\nERROR: %s", ustr(self._obj.query or query), e)
             raise
 
         # simple query count is always computed
@@ -431,16 +431,18 @@ class TestCursor(Cursor):
     """
     def __init__(self, *args, **kwargs):
         super(TestCursor, self).__init__(*args, **kwargs)
-        # in order to simulate commit and rollback, the cursor maintains a
-        # savepoint at its last commit
-        self.execute("SAVEPOINT test_cursor")
         # we use a lock to serialize concurrent requests
         self._lock = threading.RLock()
 
     def acquire(self):
         self._lock.acquire()
+        # the cursor maintains a savepoint at its last commit point
+        self.execute("SAVEPOINT test_cursor")
 
     def release(self):
+        # the cursor should be right after the savepoint; release it to make
+        # former savepoints directly accessible
+        self.execute("RELEASE SAVEPOINT test_cursor")
         self._lock.release()
 
     def force_close(self):
@@ -455,12 +457,13 @@ class TestCursor(Cursor):
         _logger.debug("TestCursor.autocommit(%r) does nothing", on)
 
     def commit(self):
+        # move the savepoint to the current position
         self.execute("RELEASE SAVEPOINT test_cursor")
         self.execute("SAVEPOINT test_cursor")
 
     def rollback(self):
+        # this does not release the savepoint; release() will do it
         self.execute("ROLLBACK TO SAVEPOINT test_cursor")
-        self.execute("SAVEPOINT test_cursor")
 
 class LazyCursor(object):
     """ A proxy object to a cursor. The cursor itself is allocated only if it is

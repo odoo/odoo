@@ -10,4 +10,11 @@
           <link rel="stylesheet" href="/payment/static/src/less/payment_form.less"/>
         </xpath>
     </template>
+
+    <template id="assets_backend" name="payment_assets_backend" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/payment/static/src/js/payment_translations.js"></script>
+        </xpath>
+    </template>
+
 </odoo>

@@ -19,5 +19,5 @@ class AuthOAuthProvider(models.Model):
     data_endpoint = fields.Char(string='Data URL')
     enabled = fields.Boolean(string='Allowed')
     css_class = fields.Char(string='CSS class', default='zocial')
-    body = fields.Char(required=True)
+    body = fields.Char(required=True, help='Link text in Login Dialog', translate=True)
     sequence = fields.Integer()

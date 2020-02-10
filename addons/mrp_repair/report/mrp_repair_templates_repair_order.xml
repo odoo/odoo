@@ -4,7 +4,7 @@
 <template id="report_mrprepairorder">
         <t t-set="o" t-value="doc"/>
             <t t-call="web.external_layout">
-                <t t-set="o" t-value="o.with_context({'lang': o.partner_id.lang})" />
+                <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)" />
                 <div class="page">
                     <div class="oe_structure"/>
 

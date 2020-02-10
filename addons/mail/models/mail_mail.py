@@ -5,10 +5,10 @@ import base64
 import datetime
 import logging
 import psycopg2
+import smtplib
 import threading
 
 from collections import defaultdict
-from email.utils import formataddr
 
 from odoo import _, api, fields, models
 from odoo import tools
@@ -152,6 +152,7 @@ class MailMail(models.Model):
         if notif_emails:
             notifications = self.env['mail.notification'].search([
                 ('mail_message_id', 'in', notif_emails.mapped('mail_message_id').ids),
+                ('res_partner_id', 'in', notif_emails.mapped('recipient_ids').ids),
                 ('is_email', '=', True)])
             if mail_sent:
                 notifications.write({
@@ -184,7 +185,7 @@ class MailMail(models.Model):
           - else fallback on mail.email_to splitting """
         self.ensure_one()
         if partner:
-            email_to = [formataddr((partner.name or 'False', partner.email or 'False'))]
+            email_to = [tools.formataddr((partner.name or 'False', partner.email or 'False'))]
         else:
             email_to = tools.email_split_and_format(self.email_to)
         return email_to
@@ -285,7 +286,7 @@ class MailMail(models.Model):
                 # `datas` (binary field) could bloat the browse cache, triggerring
                 # soft/hard mem limits with temporary data.
                 attachments = [(a['datas_fname'], base64.b64decode(a['datas']), a['mimetype'])
-                               for a in mail.attachment_ids.sudo().read(['datas_fname', 'datas', 'mimetype'])]
+                               for a in mail.attachment_ids.sudo().read(['datas_fname', 'datas', 'mimetype']) if a['datas'] is not False]
 
                 # specific behavior to customize the send email for notified partners
                 email_list = []
@@ -318,6 +319,20 @@ class MailMail(models.Model):
                     'failure_reason': _('Error without exception. Probably due do sending an email without computed recipients.'),
                 })
                 mail_sent = False
+
+                # Update notification in a transient exception state to avoid concurrent
+                # update in case an email bounces while sending all emails related to current
+                # mail record.
+                notifs = self.env['mail.notification'].search([
+                    ('is_email', '=', True),
+                    ('mail_message_id', 'in', mail.mapped('mail_message_id').ids),
+                    ('res_partner_id', 'in', mail.mapped('recipient_ids').ids),
+                    ('email_status', 'not in', ('sent', 'canceled'))
+                ])
+                if notifs:
+                    notifs.sudo().write({
+                        'email_status': 'exception',
+                    })
 
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
@@ -366,11 +381,12 @@ class MailMail(models.Model):
                     'MemoryError while processing mail with ID %r and Msg-Id %r. Consider raising the --limit-memory-hard startup option',
                     mail.id, mail.message_id)
                 raise
-            except psycopg2.Error:
-                # If an error with the database occurs, chances are that the cursor is unusable.
-                # This will lead to an `psycopg2.InternalError` being raised when trying to write
-                # `state`, shadowing the original exception and forbid a retry on concurrent
-                # update. Let's bubble it.
+            except (psycopg2.Error, smtplib.SMTPServerDisconnected):
+                # If an error with the database or SMTP session occurs, chances are that the cursor
+                # or SMTP session are unusable, causing further errors when trying to save the state.
+                _logger.exception(
+                    'Exception while processing mail with ID %r and Msg-Id %r.',
+                    mail.id, mail.message_id)
                 raise
             except Exception as e:
                 failure_reason = tools.ustr(e)

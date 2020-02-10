@@ -3,10 +3,8 @@
 # * product
 # 
 # Translators:
-# nle_odoo, 2017
 # Артур Чеботарь <artcha.chebotar@gmail.com>, 2017
 # Alex Puchkov <ap@alteco.co>, 2017
-# Dmitry sky <d.v.selitsky@gmail.com>, 2017
 # Evgeny <transingularity@gmail.com>, 2017
 # Andrey Samorukov <andrey.samorukov@me.com>, 2017
 # Masha Koc <mariya.kos.ua@gmail.com>, 2017
@@ -17,20 +15,23 @@
 # Sergey Vilizhanin, 2017
 # Collex100, 2017
 # Gennady Marchenko <gennadym@gmail.com>, 2017
+# Ꚁemetron <d.v.selitsky@gmail.com>, 2017
 # Yuriy Ney <k_wizard@mail.ru>, 2018
 # Denis Baranov <baranov@itlibertas.com>, 2018
 # Максим Дронь <dronmax@gmail.com>, 2018
 # Yuriy Ney <kwizardn@gmail.com>, 2018
 # sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
 # Martin Trigaux, 2018
+# nle_odoo, 2018
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"POT-Creation-Date: 2019-03-29 09:08+0000\n"
 "PO-Revision-Date: 2017-09-20 10:22+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -797,12 +798,22 @@ msgid "Cost"
 msgstr "Стоимость"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_cost_currency_id
+#: model:ir.model.fields,field_description:product.field_product_template_cost_currency_id
+msgid "Cost Currency"
+msgstr "Валюта стоимости"
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
 msgid ""
 "Cost used for stock valuation in standard price and as a first price to set "
 "in average/fifo. Also used as a base price for pricelists. Expressed in the "
 "default unit of measure of the product."
 msgstr ""
+"Стоимость используется для складской оценки стоимости по стандартной цене и "
+"как первая цена устанавливается в среднем / FIFO. Также используется как "
+"базовая цена для ПРАЙСЛИСТ. Выражается в единице измерения товара по "
+"умолчанию."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_standard_price
@@ -1537,7 +1548,7 @@ msgstr "Склад"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
 msgid "Is Product Variant"
-msgstr ""
+msgstr "Есть вариантом товара"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
@@ -2936,7 +2947,7 @@ msgstr "Это сумма дополнительной цены всех атр�
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is only for internal purposes."
-msgstr ""
+msgstr "Это примечание предназначена только для внутренних целей."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3142,7 +3153,7 @@ msgstr "Цены варианта"
 #: model:ir.model.fields,field_description:product.field_product_product_variant_seller_ids
 #: model:ir.model.fields,field_description:product.field_product_template_variant_seller_ids
 msgid "Variant Seller"
-msgstr ""
+msgstr "вариант продавца"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_attribute_value_action
@@ -3402,7 +3413,7 @@ msgstr "например Лампы"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "e.g. Odoo Enterprise Subscription"
-msgstr ""
+msgstr "например, Подписка Odoo Enterprise"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
@@ -3539,13 +3550,13 @@ msgstr "кварта"
 #: model:product.product,description_sale:product.consu_delivery_02
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid "raid 1, 512ECC ram"
-msgstr ""
+msgstr "raid 1, 512ECC ram"
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_01
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid "raid 10, 2048ECC ram"
-msgstr ""
+msgstr "raid 10, 2048ECC ram"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist

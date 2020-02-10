@@ -139,16 +139,16 @@ class TestMessagePost(TestMail):
 
         # notification emails: followers + recipients - author (user_employee)
         self.assertEqual(set(m['email_from'] for m in self._mails),
-                         set(['%s <%s>' % (self.user_employee.name, self.user_employee.email)]),
+                         set(['"%s" <%s>' % (self.user_employee.name, self.user_employee.email)]),
                          'message_post: notification email wrong email_from: should use sender email')
         self.assertEqual(set(m['email_to'][0] for m in self._mails),
-                         set(['%s <%s>' % (self.partner_1.name, self.partner_1.email),
-                              '%s <%s>' % (self.partner_2.name, self.partner_2.email),
-                              '%s <%s>' % (self.env.user.name, self.env.user.email)]))
+                         set(['"%s" <%s>' % (self.partner_1.name, self.partner_1.email),
+                              '"%s" <%s>' % (self.partner_2.name, self.partner_2.email),
+                              '"%s" <%s>' % (self.env.user.name, self.env.user.email)]))
         self.assertFalse(any(len(m['email_to']) != 1 for m in self._mails),
                          'message_post: notification email should be sent to one partner at a time')
         self.assertEqual(set(m['reply_to'] for m in self._mails),
-                         set(['%s %s <%s@%s>' % (self.env.user.company_id.name, self.test_pigs.name, self.test_pigs.alias_name, _domain)]),
+                         set(['"%s %s" <%s@%s>' % (self.env.user.company_id.name, self.test_pigs.name, self.test_pigs.alias_name, _domain)]),
                          'message_post: notification email should use group aliases and data for reply to')
         self.assertTrue(all(_subject in m['subject'] for m in self._mails))
         self.assertTrue(all(_body in m['body'] for m in self._mails))
@@ -196,8 +196,8 @@ class TestMessagePost(TestMail):
 
         self.assertEqual(
             set(m['email_to'][0] for m in self._mails),
-            set(['%s <%s>' % (self.partner_1.name, self.partner_1.email),
-                 '%s <%s>' % (self.user_employee.name, self.user_employee.email)]))
+            set(['"%s" <%s>' % (self.partner_1.name, self.partner_1.email),
+                 '"%s" <%s>' % (self.user_employee.name, self.user_employee.email)]))
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_internal(self):

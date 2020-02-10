@@ -74,12 +74,12 @@ odoo.define('website_form.animation', function (require) {
 
             // Prepare form inputs
             this.form_fields = this.$target.serializeArray();
-            _.each(this.$target.find('input[type=file]'), function (input) {
+            $.each(this.$target.find('input[type=file]'), function (outer_index, input) {
                 $.each($(input).prop('files'), function (index, file) {
                     // Index field name as ajax won't accept arrays of files
                     // when aggregating multiple files into a single field value
                     self.form_fields.push({
-                        name: input.name + '[' + index + ']',
+                        name: input.name + '[' + outer_index + '][' + index + ']',
                         value: file
                     });
                 });

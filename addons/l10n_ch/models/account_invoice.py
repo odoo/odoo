@@ -12,6 +12,7 @@ from odoo.tools.misc import mod10r
 l10n_ch_ISR_NUMBER_LENGTH = 27
 l10n_ch_ISR_NUMBER_ISSUER_LENGTH = 12
 
+
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
@@ -25,7 +26,7 @@ class AccountInvoice(models.Model):
 
     l10n_ch_isr_valid = fields.Boolean(compute='_compute_l10n_ch_isr_valid', help='Boolean value. True iff all the data required to generate the ISR are present')
 
-    l10n_ch_isr_sent = fields.Boolean(defaut=False, help="Boolean value telling whether or not the ISR corresponding to this invoice has already been printed or sent by mail.")
+    l10n_ch_isr_sent = fields.Boolean(default=False, help="Boolean value telling whether or not the ISR corresponding to this invoice has already been printed or sent by mail.")
     l10n_ch_currency_name = fields.Char(related='currency_id.name', help="The name of this invoice's currency") #This field is used in the "invisible" condition field of the 'Print ISR' button.
 
     @api.depends('partner_bank_id.bank_id.l10n_ch_postal_eur', 'partner_bank_id.bank_id.l10n_ch_postal_chf')
@@ -87,7 +88,7 @@ class AccountInvoice(models.Model):
                 record.l10n_ch_isr_number = mod10r(invoice_issuer_ref + internal_ref)
                 record.l10n_ch_isr_number_spaced = _space_isr_number(record.l10n_ch_isr_number)
 
-    @api.depends('currency_id.name', 'amount_total', 'partner_bank_id.bank_id', 'number', 'partner_bank_id.l10n_ch_postal', 'partner_bank_id.bank_id.l10n_ch_postal_eur', 'partner_bank_id.bank_id.l10n_ch_postal_chf')
+    @api.depends('currency_id.name', 'residual', 'partner_bank_id.bank_id', 'number', 'partner_bank_id.l10n_ch_postal', 'partner_bank_id.bank_id.l10n_ch_postal_eur', 'partner_bank_id.bank_id.l10n_ch_postal_chf')
     def _compute_l10n_ch_isr_optical_line(self):
         """ The optical reading line of the ISR looks like this :
                 left>isr_ref+ bank_ref>
@@ -113,7 +114,7 @@ class AccountInvoice(models.Model):
                     currency_code = '01'
                 elif record.currency_id.name == 'EUR':
                     currency_code = '03'
-                units, cents = float_split_str(record.amount_total, 2)
+                units, cents = float_split_str(record.residual, 2)
                 amount_to_display = units + cents
                 amount_ref = amount_to_display.zfill(10)
                 left = currency_code + amount_ref
@@ -141,7 +142,7 @@ class AccountInvoice(models.Model):
        This function is needed on the model, as it must be called in the report
        template, which cannot reference static functions
        """
-       return float_split_str(self.amount_total, 2)
+       return float_split_str(self.residual, 2)
 
     def isr_print(self):
         """ Triggered by the 'Print ISR' button.

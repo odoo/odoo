@@ -425,7 +425,9 @@ options.registry.ul = options.Class.extend({
     toggleClass: function () {
         this._super.apply(this, arguments);
 
-        this.$target.data('snippet-view').destroy();
+        this.trigger_up('animation_stop_demand', {
+            $target: this.$target,
+        });
 
         this.$target.find('.o_ul_toggle_self, .o_ul_toggle_next').remove();
         this.$target.find('li:has(>ul,>ol)').map(function () {

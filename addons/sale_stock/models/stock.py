@@ -11,7 +11,7 @@ class StockLocationRoute(models.Model):
 
 class StockMove(models.Model):
     _inherit = "stock.move"
-    sale_line_id = fields.Many2one('sale.order.line', 'Sale Line')
+    sale_line_id = fields.Many2one('sale.order.line', 'Sale Line', index=True)
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
@@ -38,7 +38,7 @@ class StockMove(models.Model):
         if 'product_uom_qty' in vals:
             for move in self:
                 if move.state == 'done':
-                    sale_order_lines = self.filtered(lambda move: move.sale_line_id and move.product_id.expense_policy == 'no').mapped('sale_line_id')
+                    sale_order_lines = self.filtered(lambda move: move.sale_line_id and move.product_id.expense_policy in [False, 'no']).mapped('sale_line_id')
                     for line in sale_order_lines.sudo():
                         line.qty_delivered = line._get_delivered_qty()
         return res

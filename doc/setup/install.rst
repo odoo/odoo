@@ -493,20 +493,20 @@ Under Windows a typical way to execute odoo would be:
 
 .. code-block:: doscon
 
-    C:\YourOdooPath> python3 odoo-bin -w odoo -r odoo --addons-path=addons,../mymodules --db-filter=mydb$
+    C:\YourOdooPath> python3 odoo-bin -w odoo -r odoo --addons-path=addons -d mydb
 
-Where ``odoo``, ``odoo`` are the postgresql login and password,
-``../mymodules`` a directory with additional addons and ``mydb`` the default
-db to serve on localhost:8069
+Where ``odoo``, ``odoo`` are the postgresql login and password
+and ``mydb`` the default db to serve on localhost:8069. You can add other
+directory paths separated by a comma to ``addons`` at the end of the addons-path option.
 
 Under Unix a typical way to execute odoo would be:
 
 .. code-block:: console
 
-    $ ./odoo-bin --addons-path=addons,../mymodules --db-filter=mydb$
+    $ ./odoo-bin --addons-path=addons -d mydb
 
-Where ``../mymodules`` is a directory with additional addons and ``mydb`` the
-default db to serve on localhost:8069
+Where ``mydb`` is the default db to serve on localhost:8069. You can add other
+directory paths separated by a comma to ``addons`` at the end of the addons-path option.
 
 Virtualenv
 ----------

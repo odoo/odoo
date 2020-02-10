@@ -282,7 +282,7 @@ named :samp:`report.{module.report_name}`. If it exists, it will use it to
 call the QWeb engine; otherwise a generic function will be used. If you wish
 to customize your reports by including more things in the template (like
 records of others models, for example), you can define this model, overwrite
-the function ``render_html`` and pass objects in the ``docargs`` dictionary:
+the function ``get_report_values`` and pass objects in the ``docargs`` dictionary:
 
 .. code-block:: python
 
@@ -290,16 +290,49 @@ the function ``render_html`` and pass objects in the ``docargs`` dictionary:
 
     class ParticularReport(models.AbstractModel):
         _name = 'report.module.report_name'
+
         @api.model
-        def render_html(self, docids, data=None):
-            report_obj = self.env['report']
+        def get_report_values(self, docids, data=None):
+            report_obj = self.env['ir.actions.report']
             report = report_obj._get_report_from_name('module.report_name')
             docargs = {
                 'doc_ids': docids,
                 'doc_model': report.model,
                 'docs': self,
             }
-            return report_obj.render('module.report_name', docargs)
+            return docargs
+
+.. _reference/reports/custom_fonts:
+
+Custom fonts
+============
+If you want to use custom fonts you will need to add your custom font and the related less/CSS to the ``web.reports_assets_common`` assets bundle. 
+Adding your custom font(s) to ``web.assets_common`` or ``web.assets_backend`` will not make your font available in QWeb reports.
+
+Example::
+
+    <template id="report_assets_common_custom_fonts" name="Custom QWeb fonts" inherit_id="web.report_assets_common">
+        <xpath expr="." position="inside">
+            <link href="/your_module/static/src/less/fonts.less" rel="stylesheet" type="text/less"/>
+        </xpath>
+    </template>
+
+You will need to define your ``@font-face`` within this less file, even if you've used in another assets bundle (other than ``web.reports_assets_common``).
+
+Example::
+
+    @font-face {
+        font-family: 'MonixBold';
+        src: local('MonixBold'), local('MonixBold'), url(/your_module/static/src/fonts/MonixBold-Regular.otf) format('opentype');
+    }
+
+    .h1-title-big {
+        font-family: MonixBold;
+        font-size: 60px;
+        color: #3399cc;
+    }
+
+After you've added the less into your assets bundle you can use the classes - in this example ``h1-title-big`` - in your custom QWeb report.
 
 Reports are web pages
 =====================

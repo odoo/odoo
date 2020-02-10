@@ -6,10 +6,10 @@
 # Zoriana Zaiats, 2017
 # ТАрас <tratatuta@i.ua>, 2017
 # rontif <oleksandr.basenko@gmail.com>, 2018
-# Olga Lugova <trolka.olug@gmail.com>, 2018
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# trolka <trolka.olug@gmail.com>, 2018
 # Martin Trigaux, 2018
-# Bohdan Lisnenko, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Bohdan Lisnenko, 2019
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:19+0000\n"
-"Last-Translator: Bohdan Lisnenko, 2018\n"
+"Last-Translator: Bohdan Lisnenko, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -233,12 +233,13 @@ msgstr ""
 #, python-format
 msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
 msgstr ""
+"%(user_name)s запросив вас слідкувати %(document)s за документом: %(title)s"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:31
 #, python-format
 msgid "%(user_name)s invited you to follow a new document."
-msgstr ""
+msgstr "%(user_name)s запросив вас слідкувати за новим документом."
 
 #. module: mail
 #. openerp-web
@@ -479,8 +480,8 @@ msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
 "                                    <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
-"<span class=\"o_stat_text\">вилучити</span>\n"
-"                                    <span class=\"o_stat_text\">контекстну дію</span>"
+"<span class=\"o_stat_text\">Вилучити</span>\n"
+"                                    <span class=\"o_stat_text\">Контекстна дія</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -890,7 +891,7 @@ msgstr "Долучити файл"
 #: model:ir.model.fields,field_description:mail.field_mail_template_attachment_ids
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Attachments"
-msgstr "Долучення"
+msgstr "Прикріплення"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_attachment_ids
@@ -1506,7 +1507,7 @@ msgstr "Видалити відправлені електронні листи 
 #: code:addons/mail/static/src/xml/thread.xml:325
 #, python-format
 msgid "Delete this attachment"
-msgstr "Видалити це долучення"
+msgstr "Видалити це прикріплення"
 
 #. module: mail
 #: selection:mail.mail,state:0
@@ -1629,14 +1630,14 @@ msgstr "Назва документу"
 #: code:addons/mail/static/src/xml/activity.xml:79
 #, python-format
 msgid "Done"
-msgstr "Готово"
+msgstr "Виконано"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:77
 #, python-format
 msgid "Done & Schedule Next"
-msgstr "Готово & Наступний розклад"
+msgstr "Виконано & Запланувати наступне"
 
 #. module: mail
 #. openerp-web
@@ -2263,7 +2264,7 @@ msgstr "Заголовки"
 #: code:addons/mail/wizard/invite.py:35
 #, python-format
 msgid "Hello,"
-msgstr ""
+msgstr "Вітаємо,"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_hidden
@@ -2617,7 +2618,7 @@ msgstr "Запросити підписника"
 #: code:addons/mail/static/src/xml/client_action.xml:133
 #, python-format
 msgid "Invite people"
-msgstr "Запросити людей"
+msgstr "Тільки запрошені люди"
 
 #. module: mail
 #. openerp-web
@@ -2634,7 +2635,7 @@ msgstr "Майстер запрошень"
 #. module: mail
 #: selection:mail.channel,public:0
 msgid "Invited people only"
-msgstr "Запросити тільки людей"
+msgstr "Тільки запрошені люди"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_is_follower
@@ -3311,7 +3312,7 @@ msgstr "Пошук повідомлень"
 #, python-format
 msgid "Messages can be <b>starred</b> to remind you to check back later."
 msgstr ""
-"Повідомлення можуть бути <b>зняті зірочкою</b> щоб нагадати вам, щоб "
+"Повідомлення можуть бути <b>позначені зірочкою</b>, щоб нагадати вам "
 "перевірити пізніше."
 
 #. module: mail
@@ -3429,12 +3430,12 @@ msgstr "Нове повідомлення"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_char
 msgid "New Value Char"
-msgstr "Нове значення Буква"
+msgstr "Знак нового значення"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_datetime
 msgid "New Value Datetime"
-msgstr "Нове значення Дата"
+msgstr "Дата і час нового значення"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_float
@@ -4163,7 +4164,7 @@ msgid ""
 msgstr ""
 "Батьківська модель, що містить псевдонім. Модель, яка містить посилання на "
 "псевдонім, не обов'язково являє собою модель, що дається alias_model_id "
-"(наприклад: project (parent_model) і завдання (model))"
+"(наприклад: проект (parent_model) і завдання (model))"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_parent_id
@@ -4428,7 +4429,7 @@ msgstr "Рекомендовані наступні дії"
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_force_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_test_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "Записати тему ID"
+msgstr "ID запису теми"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_references
@@ -4599,7 +4600,7 @@ msgstr "Скажіть щось"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Schedule"
-msgstr "План"
+msgstr "Запланувати"
 
 #. module: mail
 #. openerp-web
@@ -4712,7 +4713,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/thread_field.js:83
 #, python-format
 msgid "Sending Error"
-msgstr "Відправка помилки"
+msgstr "Помилка відправлення"
 
 #. module: mail
 #. openerp-web
@@ -4920,7 +4921,7 @@ msgstr "Під-поле"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_sub_object
 #: model:ir.model.fields,field_description:mail.field_mail_template_sub_object
 msgid "Sub-model"
-msgstr "Під-модель"
+msgstr "Підмодель"
 
 #. module: mail
 #. openerp-web
@@ -5032,7 +5033,7 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Модель (тип документу Odoo), до якої відповідає цей псевдонім. Будь-яка "
+"Модель (тип документа Odoo), якій відповідає цьому псевдоніму. Будь-яка "
 "вхідна електронна пошта, яка не відповідає існуючому запису, призведе до "
 "створення нового запису цієї моделі (наприклад, завдання проекту)"
 
@@ -5045,7 +5046,7 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Ім'я псевдоніма електронної пошти, наприклад, \"Робота\", якщо ви хочете "
+"Ім'я псевдоніма електронної пошти, наприклад, 'jobs', якщо ви хочете "
 "отримувати повідомлення електронної пошти на <jobs@example.odoo.com>"
 
 #. module: mail
@@ -5126,7 +5127,7 @@ msgstr "Ланцюжок"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_email_to
 msgid "To"
-msgstr "По"
+msgstr "До"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_email_to

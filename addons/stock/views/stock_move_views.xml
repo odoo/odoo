@@ -66,6 +66,38 @@
             </field>
         </record>
 
+        <record id="view_picking_move_tree" model="ir.ui.view">
+            <field name="name">stock.picking.move.tree</field>
+            <field name="model">stock.move</field>
+            <field eval="50" name="priority"/>
+            <field name="arch" type="xml">
+                <tree decoration-danger="state != 'done' and quantity_done > reserved_availability and show_reserved_availability" decoration-muted="scrapped == True or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="bottom">
+                    <field name="name" invisible="1"/>
+                    <field name="date_expected" invisible="1"/>
+                    <field name="state" invisible="1" readonly="0"/>
+                    <field name="picking_type_id" invisible="1"/>
+                    <field name="location_id" invisible="1"/>
+                    <field name="location_dest_id" invisible="1"/>
+                    <field name="scrapped" invisible="1"/>
+                    <field name="picking_code" invisible="1"/>
+                    <field name="product_type" invisible="1"/>
+                    <field name="show_details_visible" invisible="1"/>
+                    <field name="show_reserved_availability" invisible="1"/>
+                    <field name="show_operations" invisible="1" readonly="1"/>
+                    <field name="additional" invisible="1"/>
+                    <field name="has_move_lines" invisible="1"/>
+                    <field name="is_locked" invisible="1"/>
+                    <field name="product_id" required="1" attrs="{'readonly': ['|', '&amp;', ('state', '!=', 'draft'), ('additional', '=', False), ('has_move_lines', '=', True)]}"/>
+                    <field name="is_initial_demand_editable" invisible="1"/>
+                    <field name="is_quantity_done_editable" invisible="1"/>
+                    <field name="product_uom_qty" string="Initial Demand" attrs="{'readonly': [('is_initial_demand_editable', '=', False)]}"/>
+                    <field name="reserved_availability" string="Reserved"/>
+                    <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
+                    <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="view_move_kandan" model="ir.ui.view">
             <field name="name">stock.move.kanban</field>
             <field name="model">stock.move</field>
@@ -83,7 +115,7 @@
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
                                     </div>
-                                    <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'danger', 'assigned': 'success', 'confirmed': 'default'}}"/>
+                                    <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'danger', 'assigned': 'success', 'confirmed': 'default'}}"/>
                                 </div>
                                 <div class="o_kanban_record_body">
                                     <field name="product_id"/>
@@ -446,7 +478,7 @@
                                     </div>
                                     <div class="col-xs-4">
                                         <span class="pull-right text-right">
-                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'danger',
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'danger',
                                             'assigned': 'success', 'confirmed': 'default'}}"/>
                                         </span>
                                     </div>
@@ -510,7 +542,7 @@
                                     </div>
                                     <div class="col-xs-6">
                                         <span class="pull-right">
-                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'info', 'cancel': 'default',
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'cancel': 'default',
                                             'assigned': 'success', 'done': 'success'}}"/>
                                         </span>
                                     </div>

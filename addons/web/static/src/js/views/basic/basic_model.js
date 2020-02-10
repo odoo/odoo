@@ -726,6 +726,7 @@ var BasicModel = AbstractModel.extend({
         });
         _.each(fields, function (field) {
             var dataPoint;
+            record.data[field.name] = null;
             if (field.type === 'many2one') {
                 if (field.value) {
                     var id = _.isArray(field.value) ? field.value[0] : field.value;
@@ -3295,6 +3296,7 @@ var BasicModel = AbstractModel.extend({
         var res_id, value;
         var res_ids = params.res_ids || [];
         var data = params.data || (type === 'record' ? {} : []);
+        var context = params.context;
         if (type === 'record') {
             res_id = params.res_id || (params.data && params.data.id);
             if (res_id) {
@@ -3302,6 +3304,9 @@ var BasicModel = AbstractModel.extend({
             } else {
                 res_id = _.uniqueId('virtual_');
             }
+            // it doesn't make sense for a record datapoint to have those keys
+            // besides, it will mess up x2m and actions down the line
+            context = _.omit(context, ['orderedBy', 'group_by']);
         } else {
             var isValueArray = params.value instanceof Array;
             res_id = isValueArray ? params.value[0] : undefined;
@@ -3319,7 +3324,7 @@ var BasicModel = AbstractModel.extend({
             _domains: {},
             _rawChanges: {},
             aggregateValues: params.aggregateValues || {},
-            context: params.context,
+            context: context,
             count: params.count || res_ids.length,
             data: data,
             domain: params.domain || [],

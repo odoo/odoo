@@ -55,7 +55,7 @@
                                         <td class="text-right"><strong>Total</strong></td>
                                         <t t-set="total_value" t-value="sum(docs.mapped('unit_amount'))" />
                                         <t t-set="sign" t-value="'-' if total_value &lt; 0 else ''"/>
-                                        <td class="text-right"><strong t-esc="sign + '%s:%02.0f' % tuple(int(round(x)) for x in divmod(abs(total_value)*60,60))"/></td>
+                                        <td class="text-right"><strong t-esc="sign + '%02d:%02.0f' % tuple(int(round(x)) for x in divmod(abs(total_value)*60,60))"/></td>
                                     </tr>
                                 </tbody>
                             </table>

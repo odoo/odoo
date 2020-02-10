@@ -5,7 +5,7 @@
 
 {
     'name': 'Japan - Accounting',
-    'version': '2.0',
+    'version': '2.2',
     'category': 'Localization',
     'description': """
 
@@ -27,7 +27,7 @@ need to use these at all under normal circumstances.
 
     """,
     'author': 'Quartile Limited',
-    'website': 'https://www.odoo-asia.com/',
+    'website': 'https://www.quartile.co/',
     'depends': ['account'],
     'data': [
         'data/l10n_jp_chart_data.xml',

@@ -7,17 +7,18 @@
 # son dang <son.dang@doda100.com>, 2017
 # Phạm Lân <phamquanglan@gmail.com>, 2017
 # fanha99 <fanha99@hotmail.com>, 2017
-# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
 # Martin Trigaux, 2018
-# Duy BQ <duybq86@gmail.com>, 2018
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# Duy BQ <duybq86@gmail.com>, 2019
+# Christine Nguyen <dungnt@trobz.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"POT-Creation-Date: 2019-07-17 15:01+0000\n"
 "PO-Revision-Date: 2017-09-20 10:20+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
+"Last-Translator: Christine Nguyen <dungnt@trobz.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,12 +39,12 @@ msgstr "HTML bảo mật 3D"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "<b>Amount:</b>"
-msgstr ""
+msgstr "<b>Số tiền:</b>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "<b>Reference:</b>"
-msgstr ""
+msgstr "<b>Mã:</b>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
@@ -191,6 +192,10 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
+"<span><i>Lỗi,</i> xin lưu ý rằng có lỗi xảy ra trong quá trình giao dịch. "
+"Đơn hàng đã được xác nhận nhưng sẽ không được thanh toán. Đừng ngần ngại "
+"liên hệ với chúng tôi nếu bạn có bất kỳ câu hỏi nào về tình trạng đơn đặt "
+"hàng của bạn.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -363,7 +368,7 @@ msgstr "Không thể thiết đặt thanh toán"
 #: code:addons/payment/controllers/portal.py:111
 #, python-format
 msgid "Cannot setup the payment."
-msgstr ""
+msgstr "Không thể thiết lập thanh toán"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_capture_manually
@@ -717,7 +722,7 @@ msgstr "Danh sách nhà cung cấp hỗ trợ biểu tượng thanh toán này."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr ""
+msgstr "Cung cấp công cụ thanh toán này (Hóa đơn khách hàng, v.v.) "
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_methods
@@ -746,6 +751,9 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"Hình ảnh kích thước chuẩn của người cung cấp. Nó sẽ tự động thay đổi kích "
+"thước thành hình ảnh 128x128px , với tỷ lệ khung hình được bảo toàn. Sử dụng"
+" trường này trong dạng view hoặc kanban."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state_message
@@ -826,7 +834,7 @@ msgstr "Không bao giờ"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "No payment acquirer found."
-msgstr ""
+msgstr "Không tìm thấy tổ chức thanh toán nào."
 
 #. module: payment
 #. openerp-web
@@ -842,6 +850,8 @@ msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Lưu ý rằng mã bảo mật từ tổ chức thanh toán được đặt chỉ ủy quyền giao dịch "
+"(thay vì nắm bắt số tiền) không có sẵn"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_payment_flow
@@ -849,11 +859,13 @@ msgid ""
 "Note: Subscriptions does not take this field in account, it uses server to "
 "server by default."
 msgstr ""
+"Lưu ý: Đăng ký không lấy trường này trong tài khoản, nó sử dụng từ máy chủ "
+"đến máy chủ theo mặc định."
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone"
 
 #. module: payment
 #. openerp-web
@@ -888,7 +900,7 @@ msgstr "Tên Đối tác"
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
 #: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
-msgstr ""
+msgstr "PayUmoney"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
@@ -982,7 +994,7 @@ msgstr "Giao dịch Thanh toán thất bại (%s)"
 #: code:addons/payment/controllers/portal.py:135
 #, python-format
 msgid "Payment transaction failed."
-msgstr ""
+msgstr "Giao dịch thanh toán thất bại."
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
@@ -1002,6 +1014,15 @@ msgid ""
 "                reconcile the bank statement line with this temporary transfer account. Use reconciliation\n"
 "                templates to do it in one-click."
 msgstr ""
+"Các khoản thanh toán sẽ được vào sổ nhật kí này. Nếu bạn được thanh toán "
+"thẳng qua tài khoản ngân hàng của mình, \\ nchọn tài khoản ngân hàng của "
+"bạn. Nếu bạn được thanh toán theo đợt cho một số giao dịch, hãy tạo một nhật"
+" ký thanh toán \\ ncụ thể cho tổ chức thanh toán này để dễ dàng quản lý việc"
+" đối chiếu ngân hàng. Bạn giữ \\ nsố tiền trong tài khoản chuyển tạm thời "
+"của bạn (được tạo tự động khi bạn tạo \\ nnhật ký thanh toán). Sau đó, khi "
+"bạn được người thanh toán thanh toán trên tài khoản ngân hàng của mình, bạn "
+"\\ nđối chiếu dòng sao kê ngân hàng với tài khoản chuyển khoản tạm thời này."
+" Sử dụng mẫu đối chiếu \\ nđể làm điều đó trong một cú nhấp chuột."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
@@ -1027,7 +1048,7 @@ msgstr "Điện thoại"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "Please configure a payment acquirer."
-msgstr ""
+msgstr "Vui lòng cấu hình một tổ chức thanh toán."
 
 #. module: payment
 #. openerp-web
@@ -1073,9 +1094,23 @@ msgid "Provider"
 msgstr "Nhà cung cấp"
 
 #. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_translations.js:9
+#, python-format
+msgid "Publish"
+msgstr "Công khai"
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_translations.js:8
+#, python-format
+msgid "Published"
+msgstr "Đã công bố"
+
+#. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "Redirection to the acquirer website"
-msgstr ""
+msgstr "Chuyển hướng đến trang web của tổ chức thanh toán"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_reference
@@ -1086,7 +1121,7 @@ msgstr "Tham chiếu"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr ""
+msgstr "Mã của TX được lưu trữ trong cơ sở dữ liệu của tổ chức thanh toán"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -1106,7 +1141,7 @@ msgstr "Các trường bắt buộc không được điền"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_registration_view_template_id
 msgid "S2S Form Template"
-msgstr ""
+msgstr "Mẫu S2S"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_save_token
@@ -1173,7 +1208,7 @@ msgstr "Tên viết tắt"
 #: model:payment.acquirer,name:payment.payment_acquirer_sips
 #: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
@@ -1205,7 +1240,7 @@ msgstr "Tình trạng"
 #: model:payment.acquirer,name:payment.payment_acquirer_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_icon_ids
@@ -1232,6 +1267,7 @@ msgstr "Thông điệp Cám ơn"
 #, python-format
 msgid "The %s payment acquirers are not allowed to manual capture mode!"
 msgstr ""
+"Tổ chức thanh toán %s không cho phép thực hiện thủ công chế độ lưu giữ!"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:620
@@ -1253,12 +1289,16 @@ msgid ""
 "This field holds the image used for this payment icon, limited to "
 "1024x1024px"
 msgstr ""
+"Trường này lưu trữ hình ảnh sử dụng cho biểu tưởng thanh toán, giới hạn "
+"1024x1024px"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image
 msgid ""
 "This field holds the image used for this provider, limited to 1024x1024px"
 msgstr ""
+"Trường này lưu trữ hình ảnh sử dụng cho biểu tưởng nhà cung cấp, giới hạn "
+"1024x1024px"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_save_token
@@ -1380,7 +1420,7 @@ msgstr "Chúng tôi không thể chuyển hướng bạn đến biểu mẫu tha
 #: code:addons/payment/static/src/js/payment_form.js:180
 #, python-format
 msgid "We are not able to redirect you to the payment form. "
-msgstr ""
+msgstr "Chúng tôi không thể chuyển hướng bạn đến biểu mẫu thanh toán"
 
 #. module: payment
 #. openerp-web

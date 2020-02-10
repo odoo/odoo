@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from email.utils import formataddr
-
 from .common import TestMail
 from odoo import api
 from odoo.exceptions import AccessError, except_orm
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, formataddr
 
 
 class TestMailGroup(TestMail):

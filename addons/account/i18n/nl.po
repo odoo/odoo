@@ -7,24 +7,25 @@
 # Eric Geens <eric.geens@vitabiz.be>, 2017
 # Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2017
 # Volluta <volluta@tutanota.com>, 2017
-# Martin Trigaux, 2017
 # Eric Geens <ericgeens@yahoo.com>, 2017
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
 # Julia van Orsouw <julia@odooexperts.nl>, 2017
 # Melroy van den Berg <webmaster1989@gmail.com>, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2018
 # Thomas Pot <thomas@open2bizz.nl>, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
 # dpms <pieter.van.de.wygaert@telenet.be>, 2019
+# Martin Trigaux, 2019
+# Maxim Vandenbroucke <mxv@odoo.com>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: dpms <pieter.van.de.wygaert@telenet.be>, 2019\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -111,7 +112,7 @@ msgstr "%s (kopie)"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "&amp;nbsp;<span>on</span>"
-msgstr "&amp;nbsp;<span>op</span>"
+msgstr "&amp;nbsp;<span>over</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -439,6 +440,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1271,7 +1274,8 @@ msgstr "Een geselecteerde boeking is al afgeletterd."
 #: code:addons/account/models/account_bank_statement.py:892
 #, python-format
 msgid "A selected statement line was already reconciled with an account move."
-msgstr "Een geselecteerd bankafschrift is al afgeletterd met een boeking."
+msgstr ""
+"Een geselecteerd bankafschrift is al afgeletterd met een andere boeking."
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -1414,7 +1418,7 @@ msgstr "Rekening regel"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_account_ids
 #: model:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Account Mapping"
-msgstr "Rekeningen Indelen"
+msgstr "Vervangingstabel grootboekrekeningen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -1741,7 +1745,7 @@ msgstr "Rekening fiscale positie"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_template_form
 msgid "Accounts Mapping"
-msgstr "Rekeningen Indelen"
+msgstr "Vervangingstabel grootboekrekeningen"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_actions
@@ -2264,7 +2268,7 @@ msgstr "Toepasbaarheid"
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on credit journal item"
-msgstr "Toegepast op debet boeking"
+msgstr "Toegepast op credit boeking"
 
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
@@ -3371,7 +3375,7 @@ msgstr "Bedrijven die referenen aan relatie"
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Company"
-msgstr "Bedijf"
+msgstr "Bedrijf"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_company_currency_id
@@ -4363,6 +4367,12 @@ msgstr ""
 "Verschil tussen het berekende eindsaldo en het gespecificeerde eindsoldo"
 
 #. module: account
+#: code:addons/account/models/account_move.py:235
+#, python-format
+msgid "Difference debit - credit: "
+msgstr "Verschillende debet - credit:"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Direct connection to your bank"
 msgstr "Rechtstreekse verbinding met uw bank"
@@ -4620,7 +4630,12 @@ msgid "Due date"
 msgstr "Vervaldatum"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1176
+#: model:ir.ui.view,arch_db:account.view_move_form
+msgid "Duplicate"
+msgstr "Dupliceer"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1194
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
@@ -7582,7 +7597,7 @@ msgstr "Begin Dagboek"
 #: model:ir.model.fields,field_description:account.field_res_company_account_opening_move_id
 #, python-format
 msgid "Opening Journal Entry"
-msgstr "Openingsboeking"
+msgstr "Openingsbalans"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_opening_opening_move_line_ids
@@ -7592,7 +7607,7 @@ msgstr "Openingsboekingsregels"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op_opening_move_posted
 msgid "Opening Move Posted"
-msgstr "Openingsboeking geboekt"
+msgstr "Openingsbalans geboekt"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cashbox_line_number
@@ -7837,7 +7852,7 @@ msgstr "Bedrijfsnaam relatie"
 #: model:ir.ui.menu,name:account.menu_partner_ledger
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 msgid "Partner Ledger"
-msgstr "Saldilijst per relatie"
+msgstr "Saldilijst per klant/leverancier"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_partner_name
@@ -10403,7 +10418,7 @@ msgid ""
 "currency. You should remove the secondary currency on the account."
 msgstr ""
 "De geselecteerde rekening van uw boeking vraagt om een tweede valuta. U "
-"dient de tweede valuta op de rekening verwijderen op deze rekening."
+"dient de tweede valuta op de rekening verwijderen."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1612
@@ -11497,7 +11512,7 @@ msgstr "Betaling leverancier"
 #: model:ir.model.fields,field_description:account.field_res_partner_property_supplier_payment_term_id
 #: model:ir.model.fields,field_description:account.field_res_users_property_supplier_payment_term_id
 msgid "Vendor Payment Terms"
-msgstr "Betalingstermijn leverancier"
+msgstr "Betalingsconditie leverancier"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference

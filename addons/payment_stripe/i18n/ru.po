@@ -3,17 +3,20 @@
 # * payment_stripe
 # 
 # Translators:
-# Sergey Vilizhanin <sv@grimmette.ru>, 2017
-# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Sergey Vilizhanin, 2017
 # Anishchuk Sergei <anishukserg@l-profit.ru>, 2017
+# Martin Trigaux, 2017
+# Collex100, 2017
+# Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: Anishchuk Sergei <anishukserg@l-profit.ru>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:20+0000\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +55,7 @@ msgstr "Номер карты"
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Cardholder name"
-msgstr ""
+msgstr "Имя владельца карты"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_image_url
@@ -76,14 +79,14 @@ msgstr "Ошибка"
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Expires (MM / YY)"
-msgstr ""
+msgstr "Истекает (ММ / ГГ)"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/stripe.js:32
 #, python-format
 msgid "Just one more second, confirming your payment..."
-msgstr ""
+msgstr "Еще одну секунду, подтверждая ваш платеж ..."
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
@@ -109,22 +112,24 @@ msgid ""
 "Perhaps the problem can be solved by double-checking your credit card "
 "details, or contacting your bank?"
 msgstr ""
+"Возможно, проблема может быть решена путем двойной проверки данных вашей "
+"кредитной карты или обращение к вашему банку?"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "Опубликованный ключ Stripe"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "Секретный ключ Stripe"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:165
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
-msgstr ""
+msgstr "Stripe предоставил нам такую информацию о проблеме &#39;% s&#39;"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:177
@@ -142,7 +147,7 @@ msgstr "Stripe: не найдены заказы для ссылки %s"
 #: code:addons/payment_stripe/models/payment.py:163
 #, python-format
 msgid "We're sorry to report that the transaction has failed."
-msgstr ""
+msgstr "Нам очень жаль сообщить о невозможности осуществления транзакции."
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token

@@ -866,11 +866,11 @@ var StatementModel = BasicModel.extend({
             });
             var company_currency = session.get_currency(line.st_line.currency_id);
             var company_precision = company_currency && company_currency.digits[1] || 2;
-            total = utils.round_precision(total*1000, company_precision)/1000 || 0;
+            total = utils.round_decimals(total, company_precision) || 0;
             if(isOtherCurrencyId){
                 var other_currency = session.get_currency(isOtherCurrencyId);
                 var other_precision = other_currency && other_currency.digits[1] || 2;
-                amount_currency = utils.round_precision(amount_currency, other_precision)
+                amount_currency = utils.round_decimals(amount_currency, other_precision);
             }
             line.balance = {
                 amount: total,

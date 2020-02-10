@@ -325,6 +325,18 @@ class Related(models.Model):
     message_currency = fields.Many2one(related="message.author", string='Message Author')
 
 
+class ComputeProtected(models.Model):
+    _name = 'test_new_api.compute.protected'
+
+    foo = fields.Char(default='')
+    bar = fields.Char(compute='_compute_bar', store=True)
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        for record in self:
+            record.bar = record.foo
+
+
 class ComputeInverse(models.Model):
     _name = 'test_new_api.compute.inverse'
 
@@ -380,3 +392,21 @@ class ComputeRecursive(models.Model):
                 rec.display_name = rec.parent.display_name + " / " + rec.name
             else:
                 rec.display_name = rec.name
+
+
+class ComputeCascade(models.Model):
+    _name = 'test_new_api.cascade'
+
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar')               # depends on foo
+    baz = fields.Char(compute='_compute_baz', store=True)   # depends on bar
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        for record in self:
+            record.bar = "[%s]" % (record.foo or "")
+
+    @api.depends('bar')
+    def _compute_baz(self):
+        for record in self:
+            record.baz = "<%s>" % (record.bar or "")

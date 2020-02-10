@@ -8,7 +8,6 @@
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2017
 # Carles Antoli <carlesantoli@hotmail.com>, 2017
 # oihane <oihanecruce@gmail.com>, 2017
-# Gelo Joga Landoo <gj@landoo.es>, 2017
 # Sergio Flores <vitavitae1@gmail.com>, 2017
 # Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
 # alvaro hdz <alaherma@gmail.com>, 2017
@@ -22,32 +21,35 @@
 # Alejandro Santana <alejandrosantana@anubia.es>, 2017
 # David Arnold <blaggacao@users.noreply.github.com>, 2017
 # Nicole Kist <nki@odoo.com>, 2017
-# José Vicente <txusev@gmail.com>, 2017
 # Cristóbal Martí Oliver <info@moblesmarti.com>, 2017
 # Miguel Orueta <mo@landoo.es>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
 # Gafic SLP Albert Cabedo (GAFIC, SLP) <albertgafic@gmail.com>, 2017
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2017
-# Martin Trigaux, 2017
 # Raquel Iciarte <ric@odoo.com>, 2017
 # Pierre-Antoine Magnet <pma@odoo.com>, 2017
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 # Gustavo Valverde, 2018
-# Nicolás Broggi <rnbroggi@gmail.com>, 2018
-# ES R1 <e2fes@hotmail.com>, 2018
 # e2f <projects@e2f.com>, 2018
-# e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
+# ced903afe967c2a46d1036224972db9d, 2018
+# Nicolás Broggi <rnbroggi@gmail.com>, 2018
+# 966ff43e6966712895a590e7320ca288, 2018
+# Gelo Joga Landoo <gj@landoo.es>, 2018
+# Martin Trigaux, 2018
 # Cristopher Cravioto <ccr@odoo.com>, 2018
+# David Vidal <david.vidal@trespinos.es>, 2019
+# Luis Guzman <ark@switnet.org>, 2019
+# José Vicente <txusev@gmail.com>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:21+0000\n"
-"Last-Translator: Cristopher Cravioto <ccr@odoo.com>, 2018\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -881,9 +883,8 @@ msgid ""
 "Choose a specific tax regime at the order depending on the kind of customer "
 "(tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
-"Escoja un régimen fiscal específico en el pedido dependiendo del tipo de "
-"cliente (exento de impuestos, con servicio para llevar o para consumir en el"
-" restaurante, etc.)."
+"Escoja una posición fiscal específica en el pedido dependiendo del tipo de "
+"cliente (exento de impuestos, presencial o a distancia, etc.)."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1552,7 +1553,7 @@ msgstr "Posición fiscal"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Position per Order"
-msgstr "Situación fiscal por pedido"
+msgstr "Posición fiscal por pedido"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_fiscal_position_ids
@@ -1654,6 +1655,13 @@ msgstr "Agrupar por"
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Group Journal Items"
 msgstr "Agrupar apuntes"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:135
+#, python-format
+msgid "HTTPS connection to IoT Box failed"
+msgstr "Falló la conexión HTTPS al IoT Box"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_uom_categ_is_pos_groupable
@@ -2030,6 +2038,17 @@ msgstr "Programa de lealtad para usar en este punto de venta."
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 msgid "Make Payment"
 msgstr "Realizar pago"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:137
+#, python-format
+msgid ""
+"Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
+"the certificate of your IoT Box."
+msgstr ""
+"Asegúrese  de estar usando IoT Box v18.12 o mayor. Navegue a %s para aceptar"
+" el certificado de su IoT Box."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_available_pricelist_ids
@@ -2657,19 +2676,26 @@ msgstr "Errores en la recolección"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2003
+#: code:addons/point_of_sale/static/src/js/screens.js:2034
 #, python-format
 msgid "Please Confirm Large Amount"
 msgstr "Por favor Confirme Cantidad Grande"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:344
+#: code:addons/point_of_sale/models/pos_order.py:369
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Defina por favor la cuenta de ingresos para este producto:\"%s\"(id: %d)."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:587
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2083
+#, python-format
+msgid "Please print the invoice from the backend"
+msgstr "Por favor, imprima su factura desde el backend."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:653
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr "Por favor indique una empresa para la venta."
@@ -2907,7 +2933,14 @@ msgstr "Imprimir"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:716
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1372
+#, python-format
+msgid "Print Invoice"
+msgstr "Imprimir factura"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:719
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1375
 #, python-format
 msgid "Print Receipt"
 msgstr "Imprimir recibo"
@@ -2946,7 +2979,7 @@ msgstr "Error de impresión: "
 #: code:addons/point_of_sale/static/src/js/screens.js:1569
 #, python-format
 msgid "Printing is not supported on some android browsers"
-msgstr ""
+msgstr "La impresión no está soportada es algunos navegadores android"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2957,6 +2990,9 @@ msgid ""
 "printing protocol is available. It is possible to print your tickets by "
 "making use of an IoT Box."
 msgstr ""
+"Printing no está soportado en algunos navegadores android debido a que no "
+"cuentan con un protocolo de impresión definido por omisión. Es posible "
+"imprimir sus tickets haciendo uso de un IoT Box."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_product
@@ -3632,12 +3668,12 @@ msgstr "ID del impuesto"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_tax_regime
 msgid "Tax Regime"
-msgstr "Régimen fiscal"
+msgstr "Posición fiscal"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_tax_regime_selection
 msgid "Tax Regime Selection value"
-msgstr "Valor de la selección del régimen fiscal"
+msgstr "Valor de la selección de la posición fiscal"
 
 #. module: point_of_sale
 #: selection:pos.config,iface_tax_included:0
@@ -3768,17 +3804,28 @@ msgstr "El número de pedidos del punto de venta relacionados con este cliente"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2052
+#: code:addons/point_of_sale/static/src/js/screens.js:2094
 #, python-format
 msgid "The order could not be sent"
 msgstr "No se pudo enviar el pedido"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2063
+#: code:addons/point_of_sale/static/src/js/screens.js:2105
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
 msgstr "El orden no se pudo enviar al servidor debido a un error desconocido."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2084
+#, python-format
+msgid ""
+"The order has been synchronized earlier. Please make the invoice from the "
+"backend for the order: "
+msgstr ""
+"La venta ya ha sido sincronizada antes. Por favor, haga la factura desde el "
+"backend para el pedido:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_precompute_cash
@@ -4221,7 +4268,7 @@ msgstr "Utilizar números de Lotes/Serie existentes"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Use a default specific tax regime"
-msgstr "Utilizar un régimen fiscal específico por defecto"
+msgstr "Utilizar una posición fiscal específica por defecto"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_use_pricelist
@@ -4352,7 +4399,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1473
 #, python-format
 msgid "With a"
-msgstr "Con un/una"
+msgstr "Con un"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search

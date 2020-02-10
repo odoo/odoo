@@ -850,7 +850,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
     def existing_accounting(self, company_id):
         model_to_check = ['account.move.line', 'account.invoice', 'account.payment', 'account.bank.statement']
         for model in model_to_check:
-            if len(self.env[model].search([('company_id', '=', company_id.id)])) > 0:
+            if self.env[model].sudo().search([('company_id', '=', company_id.id)], limit=1):
                 return True
         return False
 

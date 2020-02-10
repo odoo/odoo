@@ -292,8 +292,8 @@ class MailTemplate(models.Model):
         # form a tree
         root = lxml.html.fromstring(html)
         if not len(root) and root.text is None and root.tail is None:
-            html = u'<div>%s</div>' % html
-            root = lxml.html.fromstring(html, encoding='unicode')
+            html = u'<div>%s</div>' % tools.ustr(html)
+            root = lxml.html.fromstring(html)
 
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         base = urls.url_parse(base_url)

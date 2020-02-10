@@ -426,7 +426,7 @@
         <record id="crm_case_form_view_oppor" model="ir.ui.view">
             <field name="name">crm.lead.form.opportunity</field>
             <field name="model">crm.lead</field>
-            <field name="priority">20</field>
+            <field name="priority">15</field>
             <field name="arch" type="xml">
                 <form string="Opportunities" class="o_opportunity_form">
                     <header>
@@ -636,6 +636,9 @@
                             help="Opportunities that are assigned to me"/>
                     <filter string="Unassigned" name="unassigned"
                             domain="[('user_id','=', False)]" help="No salesperson"/>
+                    <filter string="Open Opportunities" name="open_opportunities"
+                            domain="[('probability', '&lt;', 100), ('type', '=', 'opportunity')]"
+                            help="Open Opportunities"/>
                     <separator/>
                     <filter string="Activities Todo" name="activities_my"
                             domain="[('activity_ids.user_id', '=', uid)]"/>
@@ -797,6 +800,7 @@ for rec in records:
                           (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_case_tree_view_leads')}),
                           (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_crm_lead_kanban')})]"/>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
+            <field name="view_id" ref="crm.crm_case_form_view_leads"/>
             <field name="context">{
                     'default_type':'lead',
                     'search_default_type': 'lead',
@@ -833,7 +837,6 @@ for rec in records:
             <field name="domain">[('type','=','opportunity')]</field>
             <field name="context">{
                     'default_type': 'opportunity',
-                    'default_user_id': uid
                 }
             </field>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
@@ -884,7 +887,6 @@ for rec in records:
             <field name="domain">[('type','=','opportunity')]</field>
             <field name="context">{
                     'default_type': 'opportunity',
-                    'default_user_id': uid,
                     'search_default_assigned_to_me': 1,
             }</field>
             <field name="view_ids"

@@ -2,6 +2,7 @@
 #See its doc for more info.
 
 from . import test_account_customer_invoice
+from . import test_account_fiscal_year
 from . import test_account_move_closed_period
 from . import test_account_supplier_invoice
 from . import test_account_validate_account_move
@@ -18,3 +19,4 @@ from . import test_search
 from . import test_setup_bar
 from . import test_tax
 from . import test_templates_consistency
+from . import test_reconciliation_heavy_load

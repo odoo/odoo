@@ -331,7 +331,7 @@ class IrTranslation(models.Model):
 
         # create missing translations
         for res_id in set(ids) - set(existing_ids):
-            self.create({
+            self.sudo().create({
                 'lang': lang,
                 'type': tt,
                 'name': name,

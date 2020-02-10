@@ -99,7 +99,7 @@ Extra conditional branching directives ``t-elif`` and ``t-else`` are also
 available::
 
     <div>
-        <p t-if="user.birthday == today()">Happy bithday!</p>
+        <p t-if="user.birthday == today()">Happy birthday!</p>
         <p t-elif="user.login == 'root'">Welcome master!</p>
         <p t-else="">Welcome!</p>
     </div>
@@ -455,12 +455,16 @@ template inheritance
 ''''''''''''''''''''
 
 Template inheritance is used to alter existing templates in-place, e.g. to
-add information to templates created by an other modules.
+add information to templates created by other modules.
 
 Template inheritance is performed via the ``t-extend`` directive which takes
 the name of the template to alter as parameter.
 
-The alteration is then performed with any number of ``t-jquery``
+When ``t-extend`` is combined with ``t-name`` a new template with the given name
+is created. In this case the extended template is not altered, instead the
+directives define how to create the new template.
+
+In both cases the alteration is then performed with any number of ``t-jquery``
 sub-directives::
 
     <t t-extend="base.template">
@@ -487,6 +491,11 @@ on the extended template to select *context nodes* to which the specified
     the node's body replaces the context node's children
 ``replace``
     the node's body is used to replace the context node itself
+``attributes``
+    the nodes's body should be any number of ``attribute`` elements,
+    each with a ``name`` attribute and some textual content, the named
+    attribute of the context node will be set to the specified value
+    (either replaced if it already existed or added if not)
 No operation
     if no ``t-operation`` is specified, the template body is interpreted as
     javascript code and executed with the context node as ``this``

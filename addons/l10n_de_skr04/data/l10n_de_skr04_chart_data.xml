@@ -4413,7 +4413,7 @@
         <record id="chart_skr04_3850" model="account.account.template">
             <field name="code">3850</field>
             <field name="name">Aufgeschobene Einfuhrumsatzsteuer</field>
-            <field name="reconcile" eval="False"/>
+            <field name="reconcile" eval="True"/>
             <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_liabilities_bs_D_8')])]"/>
             <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
@@ -4725,6 +4725,14 @@
         <record id="chart_skr04_4560" model="account.account.template">
             <field name="code">4560</field>
             <field name="name">Provisionsumsätze</field>
+            <field name="reconcile" eval="False"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_pl_01')])]"/>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+        </record>
+        <record id="chart_skr04_4564" model="account.account.template">
+            <field name="code">4564</field>
+            <field name="name">Provisionsumsätze (§4Nr.8ff.UStG)</field>
             <field name="reconcile" eval="False"/>
             <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_pl_01')])]"/>
             <field name="user_type_id" ref="account.data_account_type_revenue"/>
@@ -5834,6 +5842,22 @@
             <field name="user_type_id" ref="account.data_account_type_expenses"/>
             <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
         </record>
+        <record id="chart_skr04_5166" model="account.account.template">
+            <field name="code">5166</field>
+            <field name="name">Einkauf Roh-, Hilfs- und Betriebsstoffe, innergemeinschaftlicher Erwerb ohne Vorsteuer und 7 % Umsatzsteuer</field>
+            <field name="reconcile" eval="False"/>
+            <field name="tag_ids" eval="[(6,0, [ref('l10n_de.tag_de_pl_05')])]"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+        </record>
+        <record id="chart_skr04_5167" model="account.account.template">
+            <field name="code">5167</field>
+            <field name="name">Einkauf Roh-, Hilfs- und Betriebsstoffe, innergemeinschaftlicher Erwerb ohne Vorsteuer und 19 % Umsatzsteuer</field>
+            <field name="reconcile" eval="False"/>
+            <field name="tag_ids" eval="[(6,0, [ref('l10n_de.tag_de_pl_05')])]"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+        </record>
         <record id="chart_skr04_5189" model="account.account.template">
             <field name="code">5189</field>
             <field name="name">Erwerb Roh-, Hilfs- und Betriebsstoffe letzter Abnehmer Dreiecksgeschäft</field>
@@ -5936,11 +5960,43 @@
             <field name="user_type_id" ref="account.data_account_type_expenses"/>
             <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
         </record>
+        <record id="chart_skr04_5550" model="account.account.template">
+            <field name="code">5550</field>
+            <field name="name">Steuerfreier EG-Erwerb</field>
+            <field name="reconcile" eval="False"/>
+            <field name="tag_ids" eval="[(6,0, [ref('l10n_de.tag_de_pl_05')])]"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+        </record>
+        <record id="chart_skr04_5551" model="account.account.template">
+            <field name="code">5551</field>
+            <field name="name">Wareneingang, im Drittland steuerbar (19%)</field>
+            <field name="reconcile" eval="False"/>
+            <field name="tag_ids" eval="[(6,0, [ref('l10n_de.tag_de_pl_05')])]"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+        </record>
+        <record id="chart_skr04_5552" model="account.account.template">
+            <field name="code">5552</field>
+            <field name="name">Erwerb 1. Abnehmer im Dreiecksgeschäft</field>
+            <field name="reconcile" eval="False"/>
+            <field name="tag_ids" eval="[(6,0, [ref('l10n_de.tag_de_pl_05')])]"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+        </record>
         <record id="chart_skr04_5553" model="account.account.template">
             <field name="code">5553</field>
             <field name="name">Erwerb Waren als letzter Abnehmer innerhalb Dreiecksgeschäft</field>
             <field name="reconcile" eval="False"/>
             <field name="tag_ids" eval="[(6, 0, [ref('l10n_de.tag_de_pl_05')])]"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+        </record>
+        <record id="chart_skr04_5557" model="account.account.template">
+            <field name="code">5557</field>
+            <field name="name">Wareneingang, im Drittland steuerbar (7%)</field>
+            <field name="reconcile" eval="False"/>
+            <field name="tag_ids" eval="[(6,0, [ref('l10n_de.tag_de_pl_05')])]"/>
             <field name="user_type_id" ref="account.data_account_type_expenses"/>
             <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
         </record>

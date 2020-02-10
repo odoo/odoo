@@ -5,7 +5,8 @@
         <div class="page">
             <div class="row">
                 <div class="col-xs-5 col-xs-offset-7">
-                    <span t-field="o.name"/><br/>
+                    <!-- When partner is a company, its name is included in contact_address -->
+                    <span t-if="not o.is_company"><span t-field="o.name"/><br/></span>
                     <span t-raw="o.contact_address.replace('\n\n', '\n').replace('\n', '&lt;br&gt;')"/>
                     <span t-field="o.vat"/>
                 </div>

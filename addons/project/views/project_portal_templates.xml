@@ -112,16 +112,6 @@
                     </div>
                 </div>
             </div>
-            <div class="row mt32">
-                <div class="col-md-12">
-                    <h4><strong>Message and communication history</strong></h4>
-                </div>
-                <div class="col-md-10 col-md-offset-1 mt16">
-                    <t t-call="portal.message_thread">
-                        <t t-set="object" t-value="project"/>
-                    </t>
-                </div>
-            </div>
         </t>
     </template>
 
@@ -142,7 +132,7 @@
                             <thead>
                                 <tr class="active">
                                     <th t-if="groupby == 'none'" class="col-md-9">Name</th>
-                                    <th t-else="" class="col-md-9"><span t-field="tasks[0].project_id.label_tasks"/> for project: <span t-field="tasks[0].project_id.name"/></th>
+                                    <th t-else="" class="col-md-9"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for project: <span t-field="tasks[0].sudo().project_id.name"/></th>
                                     <th class="col-md-2">Stage</th>
                                     <th>Ref</th>
                                 </tr>

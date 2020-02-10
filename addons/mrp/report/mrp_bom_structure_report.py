@@ -42,10 +42,9 @@ class BomStructureReport(models.AbstractModel):
                 child = self._get_child_vals(l, level, qty, uom)
                 result.append(child)
                 if l.child_line_ids:
-                    if level < 6:
-                        level += 1
+                    level += 1
                     _get_rec(l.child_line_ids, level, qty=child['pqty'], uom=child['puom'])
-                    if level > 0 and level < 6:
+                    if level > 0:
                         level -= 1
             return result
 

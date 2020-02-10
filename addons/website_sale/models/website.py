@@ -207,14 +207,14 @@ class Website(models.Model):
             self = self.with_context(pricelist=pricelist_id)
 
         # Test validity of the sale_order_id
-        sale_order = self.env['sale.order'].sudo().browse(sale_order_id).exists() if sale_order_id else None
+        sale_order = self.env['sale.order'].with_context(force_company=request.website.company_id.id).sudo().browse(sale_order_id).exists() if sale_order_id else None
 
         # create so if needed
         if not sale_order and (force_create or code):
             # TODO cache partner_id session
             pricelist = self.env['product.pricelist'].browse(pricelist_id).sudo()
             so_data = self._prepare_sale_order_values(partner, pricelist)
-            sale_order = self.env['sale.order'].sudo().create(so_data)
+            sale_order = self.env['sale.order'].with_context(force_company=request.website.company_id.id).sudo().create(so_data)
 
             # set fiscal position
             if request.website.partner_id.id != partner.id:
@@ -223,7 +223,7 @@ class Website(models.Model):
                 country_code = request.session['geoip'].get('country_code')
                 if country_code:
                     country_id = request.env['res.country'].search([('code', '=', country_code)], limit=1).id
-                    fp_id = request.env['account.fiscal.position'].sudo()._get_fpos_by_region(country_id)
+                    fp_id = request.env['account.fiscal.position'].sudo().with_context(force_company=request.website.company_id.id)._get_fpos_by_region(country_id)
                     sale_order.fiscal_position_id = fp_id
                 else:
                     # if no geolocation, use the public user fp
@@ -280,7 +280,7 @@ class Website(models.Model):
                 if code_pricelist:
                     pricelist_id = code_pricelist.id
                     update_pricelist = True
-            elif code is not None and sale_order.pricelist_id.code:
+            elif code is not None and sale_order.pricelist_id.code and code != sale_order.pricelist_id.code:
                 # code is not None when user removes code and click on "Apply"
                 pricelist_id = partner.property_product_pricelist.id
                 update_pricelist = True
@@ -296,14 +296,14 @@ class Website(models.Model):
 
         else:
             request.session['sale_order_id'] = None
-            return self.env['sale.order']
+            return self.env['sale.order'].with_context(force_company=request.website.company_id.id)
 
         return sale_order
 
     def sale_get_transaction(self):
         tx_id = request.session.get('sale_transaction_id')
         if tx_id:
-            transaction = self.env['payment.transaction'].sudo().browse(tx_id)
+            transaction = self.env['payment.transaction'].sudo().browse(tx_id).exists()
             # Ugly hack for SIPS: SIPS does not allow to reuse a payment reference, even if the
             # payment was not not proceeded. For example:
             # - Select SIPS for payment
