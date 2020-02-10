@@ -379,6 +379,7 @@ class Partner(models.Model):
             # value is set in the address: otherwise, keep the one from the
             # contact)
             address_fields = self._address_fields()
+            address_fields.append('vat')
             if any(self.parent_id[key] for key in address_fields):
                 def convert(value):
                     return value.id if isinstance(value, models.BaseModel) else value
