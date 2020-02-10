@@ -151,7 +151,7 @@ const FieldEditor = FormEditor.extend({
         if (this._isFieldCustom()) {
             field = this._getCustomField(this.$target[0].dataset.type, labelText);
         } else {
-            field = this.fields[this._getFieldName()];
+            field = Object.assign({}, this.fields[this._getFieldName()]);
             field.string = labelText;
         }
         field.records = this._getListItems();
@@ -802,7 +802,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         if (!value) {
             return;
         }
-        const field = this.fields[value];
+        const field = Object.assign({}, this.fields[value]);
         this._setActiveProperties(field);
         await this._replaceField(field);
         this.rerender = true;
@@ -1003,7 +1003,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         selectMenu = selectMenu || this.el.querySelector('we-list we-select-menu');
         if (selectMenu) {
             selectMenu.innerHTML = '';
-            const field = this.fields[this._getFieldName()];
+            const field = Object.assign({}, this.fields[this._getFieldName()]);
             this._fetchFieldRecords(field).then(() => {
                 let buttonItems;
                 const optionIds = Array.from(this.listTable.querySelectorAll('input')).map(opt => {
