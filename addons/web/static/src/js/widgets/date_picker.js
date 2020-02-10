@@ -203,7 +203,7 @@ var DateWidget = Widget.extend({
             this.$warning = $('<span>', {
                 class: 'fa fa-exclamation-triangle o_tz_warning o_datepicker_warning',
             });
-            var title = _t("This date is on the future. Make sure it is what you expected.");
+            var title = _t("This date is in the future. Make sure this is what you expect.");
             this.$warning.attr('title', title);
             this.$input.after(this.$warning);
         }
