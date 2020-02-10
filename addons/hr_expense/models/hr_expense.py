@@ -180,8 +180,12 @@ class HrExpense(models.Model):
 
         if any(attachment.res_id or attachment.res_model != 'hr.expense' for attachment in attachments):
             raise UserError(_("Invalid attachments!"))
-
-        product = self.env['product.product'].search([('default_code', '=', 'EXP_GEN')])
+        
+        product = self.env['product.product'].search([('can_be_expensed', '=', True)])
+        if product:
+            product = product.filtered(lambda p: p.default_code == "EXP_GEN") or product[0]
+        else:
+            raise UserError(_("You need to have at least one product that can be expensed in your database to proceed!"))
 
         for attachment in attachments:
             expense = self.env['hr.expense'].create({
