@@ -298,14 +298,19 @@
                     decoration-danger="(seats_max and seats_max&lt;seats_reserved)"
                     multi_edit="1">
                     <field name="name"/>
-                    <field name="event_type_id" readonly="1"/>
-                    <field name="date_begin" readonly="1"/>
-                    <field name="date_end" readonly="1"/>
-                    <field name="seats_reserved" sum="Total" readonly="1"/>
-                    <field name="seats_max" invisible="1" readonly="1"/>
+                    <field name="address_id" readonly="1"/>
+                    <field name="organizer_id" readonly="1" optional="hide"/>
                     <field name="user_id" readonly="1"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
+                    <field name="date_begin" readonly="1" widget="date"/>
+                    <field name="date_end" readonly="1" widget="date"/>
+                    <field name="stage_id" readonly="1"/>
+                    <field name="seats_expected" string="Expected Attendees" sum="Total" readonly="1"/>
+                    <field name="seats_used" sum="Total" readonly="1"/>
+                    <field name="seats_max" string="Maximum Seats" sum="Total" readonly="1" optional="hide"/>
+                    <field name="seats_reserved" sum="Total" readonly="1" optional="hide"/>
+                    <field name="seats_unconfirmed" string="Unconfirmed Seats" sum="Total" readonly="1" optional="hide"/>
                     <field name="message_needaction" invisible="1" readonly="1"/>
-                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                     <field name="activity_exception_decoration" widget="activity_exception" readonly="1"/>
                 </tree>
             </field>
