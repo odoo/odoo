@@ -36,8 +36,16 @@
                     padding: 10px;
                     font-size: 13px;
                 }
+                &.o_customer_composer {
+                    width: 100%;
+                    > textarea {
+                        height: 39px;
+                    }
+                }
                 @include media-breakpoint-down(sm) {
-                    width: 70%;
+                    &:not(.o_customer_composer) {
+                        width: 70%;
+                    }
                     > textarea {
                         padding: 15px 10px;
                     }

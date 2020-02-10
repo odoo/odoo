@@ -17,7 +17,13 @@
             <div class="o_thread_window_content">
             </div>
             <div t-if="widget.needsComposer()" class="o_thread_composer o_chat_mini_composer">
-                <input class="o_composer_text_field" t-att-placeholder="widget.options.placeholder"/>
+                <div class="o_composer_container">
+                    <div class="o_composer">
+                        <div class="o_composer_input o_customer_composer">
+                            <textarea class="o_composer_text_field" t-att-placeholder="widget.options.placeholder"/>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </t>
