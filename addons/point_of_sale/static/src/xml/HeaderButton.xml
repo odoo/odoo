@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="HeaderButton" owl="1">
+        <div class="header-button close_button" t-att-class="{ confirm: state.label === 'Confirm' }"
+             t-on-click="onClick">
+            <t t-esc="translatedLabel" />
+        </div>
+    </t>
+
+</templates>

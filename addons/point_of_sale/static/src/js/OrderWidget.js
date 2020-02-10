@@ -10,7 +10,6 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
         constructor() {
             super(...arguments);
             this.numpadState = this.props.numpadState;
-            this.orderlinesArray = this.order.get_orderlines();
             this.numpadState.reset();
             this.scrollableRef = useRef('scrollable');
             this.scrollToBottom = false;
@@ -26,6 +25,9 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
         }
         get order() {
             return this.env.pos.get_order();
+        }
+        get orderlinesArray() {
+            return this.order.get_orderlines();
         }
         mounted() {
             this.numpadState.on('set_value', this.set_value, this);
@@ -54,8 +56,41 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
                 this
             );
         }
+        patched() {
+            this.numpadState.off('set_value', null, this);
+            this.order.orderlines.off('change', null, this);
+            this.order.orderlines.off('add remove', null, this);
+            this.order.off('change', null, this);
+
+            this.numpadState.on('set_value', this.set_value, this);
+            this.order.orderlines.on(
+                'change',
+                () => {
+                    this.render();
+                },
+                this
+            );
+            this.order.orderlines.on(
+                'add remove',
+                () => {
+                    this.scrollToBottom = true;
+                    this.render();
+                    this.numpadState.reset();
+                },
+                this
+            );
+            this.order.on(
+                'change',
+                () => {
+                    this.numpadState.reset();
+                    this.render();
+                },
+                this
+            );
+        }
         willUnmount() {
             this.numpadState.off('set_value', null, this);
+            this.order.orderlines.off('change', null, this);
             this.order.orderlines.off('add remove', null, this);
             this.order.off('change', null, this);
         }

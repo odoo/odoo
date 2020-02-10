@@ -75,7 +75,7 @@ exports.PosModel = Backbone.Model.extend({
 
         // these dynamic attributes can be watched for change by other models or widgets
         this.set({
-            'synch':            { state:'connected', pending:0 },
+            'synch':            { status:'connected', pending:0 },
             'orders':           new OrderCollection(),
             'selectedOrder':    null,
             'selectedClient':   null,
@@ -976,12 +976,12 @@ exports.PosModel = Backbone.Model.extend({
         });
     },
 
-    set_synch: function(state, pending) {
-        if (['connected', 'connecting', 'error', 'disconnected'].indexOf(state) === -1) {
-            console.error(state, ' is not a known connection state.');
+    set_synch: function(status, pending) {
+        if (['connected', 'connecting', 'error', 'disconnected'].indexOf(status) === -1) {
+            console.error(status, ' is not a known connection state.');
         }
         pending = pending || this.db.get_orders().length + this.db.get_ids_to_remove_from_server().length;
-        this.set('synch', { state: state, pending: pending });
+        this.set('synch', { status, pending });
     },
 
     // send an array of orders to the server

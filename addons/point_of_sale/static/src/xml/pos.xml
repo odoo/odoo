@@ -2,134 +2,60 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="Chrome" owl="1">
-        <div class='pos-receipt-print'>
-            <!-- here go the receipts that will be printed -->
-        </div>
+        <div class="pos-receipt-print"></div>
 
-        <div class="pos" t-on-pos-error="onPosError">
-            <div class="pos-topheader">
-                <div class="pos-branding">
-                    <img class="pos-logo" src="/point_of_sale/static/src/img/logo.png" alt="Logo"/>
-                </div>
-                <div class="pos-rightheader">
-                    <span class="placeholder-OrderSelectorWidget"></span>
-                    <!-- here goes header buttons -->
-                    <div class="oe_status">
-                        <span class="placeholder-UsernameWidget"></span>
+        <div class="pos" t-on-pos-error="onPosError" t-on-toggle-debug-widget="onToggleDebugWidget">
+            <div t-if="state.isReady">
+                <div class="pos-topheader">
+                    <div class="pos-branding">
+                        <img class="pos-logo" t-on-click="onToggleDebugWidget"
+                             src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
+                    </div>
+                    <div class="pos-rightheader">
+                        <OrderSelector gui="gui" />
+                        <CashierName />
+                        <!-- <SaleDetailsButton t-if="env.pos.proxy.printer" /> -->
+                        <ProxyStatus t-if="env.pos.config.use_proxy" />
+                        <!-- <ClientScreen t-if="env.pos.config.use_proxy" /> -->
+                        <SyncNotification />
+                        <HeaderButton gui="gui" />
                     </div>
                 </div>
-            </div>
-
-            <div class="pos-content">
-
-                <div class='window'>
-                    <div class='subwindow'>
-                        <div class='subwindow-container'>
-                            <div class='subwindow-container-fix screens'>
-                                <t t-if="state.activeScreenName" t-component="screenComponent" t-props="screenProps"
-                                   t-on-show-screen="showScreen" t-key="state.activeScreenName" />
+                <div class="pos-content">
+                    <div class="window">
+                        <div class="subwindow">
+                            <div class="subwindow-container">
+                                <div class="subwindow-container-fix screens">
+                                    <t t-if="state.activeScreenName" t-component="screenComponent"
+                                       t-props="screenProps" t-on-show-screen="showScreen"
+                                       t-key="state.activeScreenName" />
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <DebugWidget t-if="env.isDebug()" gui="gui"
+                                 isShown="state.isDebugWidgetShown" />
                 </div>
-
-                <div class="placeholder-OnscreenKeyboardWidget"></div>
-            </div>
-
-            <div class='popups'>
-                <!-- here go the popups -->
+                <div class="popups"></div>
             </div>
 
             <div class="loader">
-                <div class='loader-feedback oe_hidden'>
-                    <h1 class='message'>Loading</h1>
-                    <div class='progressbar'>
-                        <div class='progress' width='50%'></div>
+                <div class="loader-feedback oe_hidden">
+                    <h1 class="message">Loading</h1>
+                    <div class="progressbar">
+                        <div class="progress" width="50%"></div>
                     </div>
-                    <div class='oe_hidden button skip'>
+                    <div class="oe_hidden button skip">
                         Skip
                     </div>
                 </div>
             </div>
-
-        </div>
-    </t>
-
-    <t t-name="SynchNotificationWidget">
-        <div class="oe_status js_synch">
-            <span class='js_msg oe_hidden'>0</span>
-            <div class="js_connected oe_icon oe_green">
-                <i class='fa fa-fw fa-wifi' role="img" aria-label="Synchronisation Connected" title="Synchronisation Connected"></i>
-            </div>
-            <div class="js_connecting oe_icon oe_hidden">
-                <i class='fa fa-fw fa-spin fa-spinner' role="img" aria-label="Synchronisation Connecting" title="Synchronisation Connecting"></i>
-            </div>
-            <div class="js_disconnected oe_icon oe_red oe_hidden">
-                <i class='fa fa-fw fa-wifi' role="img" aria-label="Synchronisation Disconnected" title="Synchronisation Disconnected"></i>
-            </div>
-            <div class="js_error oe_icon oe_red oe_hidden">
-                <i class='fa fa-fw fa-warning' role="img" aria-label="Synchronisation Error" title="Synchronisation Error"></i>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="ProxyStatusWidget">
-        <div class="oe_status js_proxy">
-            <div class="js_connected oe_green">
-                <span class="js_msg oe_hidden"></span>
-                <i class='fa fa-fw fa-sitemap' role="img" aria-label="Proxy Connected" title="Proxy Connected"></i>
-            </div>
-            <div class="js_connecting oe_hidden">
-                <span class="js_msg oe_hidden"></span>
-                <i class='fa fa-fw fa-spin fa-spinner' role="img" aria-label="Connecting to Proxy" title="Connecting to Proxy"></i>
-            </div>
-            <div class="js_warning oe_orange oe_hidden">
-                <span class="js_msg oe_hidden"></span>
-                <i class='fa fa-fw fa-sitemap' role="img" aria-label="Proxy Warning" title="Proxy Warning"></i>
-            </div>
-            <div class="js_disconnected oe_red oe_hidden">
-                <span class="js_msg oe_hidden"></span>
-                <i class='fa fa-fw fa-sitemap' role="img" aria-label="Proxy Disconnected" title="Proxy Disconnected"></i>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="SaleDetailsButton">
-        <div class="oe_status">
-            <div class="js_connected oe_icon">
-                <i class='fa fa-fw fa-print' role="img" aria-label="Print" title="Print a report with all the sales of the current PoS Session"></i>
-            </div>
-        </div>
-    </t>
-
-        <t t-name="ClientScreenWidget">
-        <div class="oe_status">
-            <span class="oe_customer_display_text"></span>
-            <div class="js_warning oe_icon oe_orange oe_hidden">
-                <i class='fa fa-fw fa-desktop' role="img" aria-label="Client Screen Warning" title="Client Screen Warning"></i>
-            </div>
-             <div class="js_disconnected oe_icon oe_red">
-                <i class='fa fa-fw fa-desktop' role="img" aria-label="Client Screen Disconnected" title="Client Screen Disconnected"></i>
-            </div>
-            <div class="js_connected oe_icon oe_green oe_hidden">
-                <i class='fa fa-fw fa-desktop' role="img" aria-label="Client Screen Connected" title="Client Screen Connected"></i>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="HeaderButtonWidget">
-        <div class="header-button">
-            <t t-if="!widget.icon">
-                <t t-esc="widget.label" />
-            </t>
-            <t t-else="">
-                <i class='fa fa-fw' role="img"/>
-            </t>
         </div>
     </t>
 
     <t t-name="PosCloseWarning">
-        <div>There are pending operations that could not be saved into the database, are you sure you want to exit?</div>
+        <div>There are pending operations that could not be saved into the database, are you sure
+            you want to exit?</div>
     </t>
 
     <t t-name="ActionButtonWidget">
@@ -140,13 +66,16 @@
 
     <t t-name="SetFiscalPositionButton">
         <div class='control-button o_fiscal_position_button'>
-            <i class='fa fa-book' role="img" aria-label="Set fiscal position" title="Set fiscal position"/> <t t-esc='widget.get_current_fiscal_position_name()'/>
+            <i class='fa fa-book' role="img" aria-label="Set fiscal position"
+               title="Set fiscal position" />
+            <t t-esc='widget.get_current_fiscal_position_name()' />
         </div>
     </t>
 
     <t t-name="SetPricelistButton">
         <div class='control-button o_pricelist_button'>
-            <i class='fa fa-th-list' role="img" aria-label="Price list" title="Price list"/> <t t-esc='widget.get_current_pricelist_name()'/>
+            <i class='fa fa-th-list' role="img" aria-label="Price list" title="Price list" />
+            <t t-esc='widget.get_current_pricelist_name()' />
         </div>
     </t>
 
@@ -158,14 +87,17 @@
                         <i class='fa fa-angle-double-left'></i>
                         Back
                     </span>
-                    <h1 class='product-name'><t t-esc="widget.get_product_name()" /></h1>
+                    <h1 class='product-name'>
+                        <t t-esc="widget.get_product_name()" />
+                    </h1>
                 </div>
                 <div class="centered-content">
                     <div class='weight js-weight'>
                         <t t-esc="widget.get_product_weight_string()" />
                     </div>
                     <div class='product-price'>
-                        <t t-esc="widget.format_currency(widget.get_product_price()) + '/' + widget.get_product_uom()" />
+                        <t
+                           t-esc="widget.format_currency(widget.get_product_price()) + '/' + widget.get_product_uom()" />
                     </div>
                     <div class='computed-price'>
                         123.14 €
@@ -179,86 +111,15 @@
         </div>
     </t>
 
-    <t t-name="SaleDetailsReport">
-        <div class="pos-receipt">
-            <t t-if='pos.company_logo_base64'>
-                <img class="pos-receipt-logo" t-att-src='pos.company_logo_base64' alt="Logo"/>
-                <br/>
-            </t>
-            <t t-if='!pos.company_logo_base64' class="pos-receipt-center-align">
-                <h1 t-esc='company.name' />
-                <br/>
-            </t>
-            <br /><br />
-
-            <!-- Orderlines -->
-
-            <div class='orderlines'>
-                <t t-foreach='products' t-as='line'>
-                    <div>
-                        <t t-esc='line.product_name.substr(0,20)' />
-                        <span class="pos-receipt-right-align">
-                            <t t-esc='Math.round(line.quantity * Math.pow(10, pos.dp["Product Unit of Measure"])) / Math.pow(10, pos.dp["Product Unit of Measure"])' />
-                            <t t-if='line.uom !== "Units"'>
-                                <t t-esc='line.uom' />
-                            </t>
-                            x
-                            <t t-esc='widget.format_currency_no_symbol(line.price_unit)' />
-                        </span>
-                    </div>
-                    <t t-if='line.discount !== 0'>
-                        <div class="pos-receipt-left-padding">Discount: <t t-esc='line.discount' />%</div>
-                    </t>
-                </t>
-            </div>
-
-            <br/>
-            <div>------------------------</div>
-            <br/>
-
-            <div>
-                Payments:
-            </div>
-            <div t-foreach='payments' t-as='payment'>
-                <t t-esc='payment.name'/>
-                <span t-esc='widget.format_currency_no_symbol(payment.total)' class="pos-receipt-right-align"/>
-            </div>
-
-            <br/>
-            <div>------------------------</div>
-            <br/>
-
-            <div>
-                Taxes:
-            </div>
-            <div t-foreach='taxes' t-as='taxe'>
-                <t t-esc='taxe.name'/>
-                <span t-esc='widget.format_currency_no_symbol(taxe.tax_amount)' class="pos-receipt-right-align"/>
-            </div>
-
-            <br/>
-            <div>------------------------</div>
-            <br/>
-
-            <div>
-                Total:
-                <span t-esc='widget.format_currency_no_symbol(total_paid)' class="pos-receipt-right-align"/>
-            </div>
-
-            <br/>
-            <div class="pos-receipt-order-data">
-                <div><t t-esc='date' /></div>
-            </div>
-
-        </div>
-    </t>
-
-
     <t t-name="PopupWidget">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-alert">
-                <p class="title"><t t-esc=" widget.options.title || 'Alert' " /></p>
-                <p class="body"><t t-esc=" widget.options.body || '' "/></p>
+                <p class="title">
+                    <t t-esc=" widget.options.title || 'Alert' " />
+                </p>
+                <p class="body">
+                    <t t-esc=" widget.options.body || '' " />
+                </p>
                 <div class="footer">
                     <div class="button cancel">
                         Ok
@@ -271,8 +132,12 @@
     <t t-name="ErrorPopupWidget">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-error">
-                <p class="title"><t t-esc=" widget.options.title || 'Error' " /></p>
-                <p class="body"><t t-esc=" widget.options.body || '' "/></p>
+                <p class="title">
+                    <t t-esc=" widget.options.title || 'Error' " />
+                </p>
+                <p class="body">
+                    <t t-esc=" widget.options.body || '' " />
+                </p>
                 <div class="footer">
                     <div class="button cancel">
                         Ok
@@ -285,8 +150,12 @@
     <t t-name="SyncErrorPopupWidget">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-error">
-                <header class="title"><t t-esc=" widget.options.title || 'Error' " /></header>
-                <main class="body traceback"><t t-esc=" widget.options.body || '' "/></main>
+                <header class="title">
+                    <t t-esc=" widget.options.title || 'Error' " />
+                </header>
+                <main class="body traceback">
+                    <t t-esc=" widget.options.body || '' " />
+                </main>
                 <footer class="footer">
                     <div class="button cancel">
                         Ok
@@ -302,20 +171,29 @@
     <t t-name="ErrorTracebackPopupWidget">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-error">
-                <header class="title"><t t-esc=" widget.options.title || 'Error' " /></header>
-                <main class="body traceback"><t t-esc=" widget.options.body || '' "/></main>
+                <header class="title">
+                    <t t-esc=" widget.options.title || 'Error' " />
+                </header>
+                <main class="body traceback">
+                    <t t-esc=" widget.options.body || '' " />
+                </main>
                 <footer class="footer">
                     <div class="button cancel">
                         Ok
                     </div>
-                    <a><div class="button icon download_error_file oe_hidden">
-                        <i class="fa fa-arrow-down" role="img" aria-label="Download error" title="Download error"></i>
-                    </div></a>
+                    <a>
+                        <div class="button icon download_error_file oe_hidden">
+                            <i class="fa fa-arrow-down" role="img" aria-label="Download error"
+                               title="Download error"></i>
+                        </div>
+                    </a>
                     <div class="button icon download">
-                        <i class="fa fa-download" role="img" aria-label="Download" title="Download"></i>
+                        <i class="fa fa-download" role="img" aria-label="Download"
+                           title="Download"></i>
                     </div>
                     <div class="button icon email">
-                        <i class="fa fa-paper-plane" role="img" aria-label="Send by email" title="Send by email"></i>
+                        <i class="fa fa-paper-plane" role="img" aria-label="Send by email"
+                           title="Send by email"></i>
                     </div>
                 </footer>
             </div>
@@ -327,7 +205,8 @@
             <div class="popup popup-barcode">
                 <header class="title">Unknown Barcode
                     <br />
-                    <span class='barcode'><t t-esc="widget.options.barcode" /></span>
+                    <span class='barcode'>
+                        <t t-esc="widget.options.barcode" /></span>
                 </header>
                 <main class="body">
                     The Point of Sale could not find any product, client, employee
@@ -345,8 +224,12 @@
     <t t-name="ConfirmPopupWidget">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-confirm">
-                <header class="title"><t t-esc=" widget.options.title || 'Confirm ?' " /></header>
-                <main class="body"><t t-esc="  widget.options.body || '' "/></main>
+                <header class="title">
+                    <t t-esc=" widget.options.title || 'Confirm ?' " />
+                </header>
+                <main class="body">
+                    <t t-esc="  widget.options.body || '' " />
+                </main>
                 <footer class="footer">
                     <div class="button confirm">
                         Confirm
@@ -362,7 +245,9 @@
     <t t-name="TextInputPopupWidget">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-textinput">
-                <header class="title"><t t-esc=" widget.options.title || '' " /></header>
+                <header class="title">
+                    <t t-esc=" widget.options.title || '' " />
+                </header>
                 <input type='text' t-att-value="widget.options.value || ''"></input>
                 <div class="footer">
                     <div class="button confirm">
@@ -379,17 +264,21 @@
     <t t-name="PackLotLinePopupWidget">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-text">
-                <header class="title"><t t-esc=" widget.options.title || '' " /></header>
+                <header class="title">
+                    <t t-esc=" widget.options.title || '' " />
+                </header>
                 <main class='packlot-lines'>
                     <t t-if="widget.options.pack_lot_lines">
-                        <t t-set="focus_lot_line" t-value="widget.focus_model || widget.options.pack_lot_lines.get_empty_model()"/>
+                        <t t-set="focus_lot_line"
+                           t-value="widget.focus_model || widget.options.pack_lot_lines.get_empty_model()" />
                         <t t-foreach='widget.options.pack_lot_lines.models' t-as='lot_line'>
                             <input type="text" t-att-cid="lot_line.cid"
-                                t-att-value="lot_line.get('lot_name')"
-                                t-att-autofocus="lot_line === focus_lot_line ? 'autofocus': undefined"
-                                class="popup-input packlot-line-input"
-                                placeholder="Serial/Lot Number"/>
-                            <i class="oe_link_icon remove-lot fa fa-trash-o" role="img" aria-label="Remove" title="Remove"></i>
+                                   t-att-value="lot_line.get('lot_name')"
+                                   t-att-autofocus="lot_line === focus_lot_line ? 'autofocus': undefined"
+                                   class="popup-input packlot-line-input"
+                                   placeholder="Serial/Lot Number" />
+                            <i class="oe_link_icon remove-lot fa fa-trash-o" role="img"
+                               aria-label="Remove" title="Remove"></i>
                         </t>
                     </t>
                 </main>
@@ -408,7 +297,9 @@
     <t t-name="TextAreaPopupWidget">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-textinput">
-                <header class="title"><t t-esc=" widget.options.title || '' " /></header>
+                <header class="title">
+                    <t t-esc=" widget.options.title || '' " />
+                </header>
                 <textarea><t t-esc="widget.options.value" /></textarea>
                 <footer class="footer">
                     <div class="button confirm">
@@ -425,11 +316,14 @@
     <t t-name="SelectionPopupWidget">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-selection">
-                <header class="title"><t t-esc=" widget.options.title || 'Select' " /></header>
+                <header class="title">
+                    <t t-esc=" widget.options.title || 'Select' " />
+                </header>
                 <div class='selection scrollable-y touch-scrollable'>
                     <t t-foreach="widget.list || []" t-as="item">
-                        <div t-attf-class="selection-item {{ widget.is_selected.call(widget, item.item) ? 'selected' : '' }}" t-att-data-item-index='item_index'>
-                            <t t-esc='item.label'/>
+                        <div t-attf-class="selection-item {{ widget.is_selected.call(widget, item.item) ? 'selected' : '' }}"
+                             t-att-data-item-index='item_index'>
+                            <t t-esc='item.label' />
                         </div>
                     </t>
                 </div>
@@ -445,7 +339,9 @@
     <t t-name="NumberPopupWidget">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-number">
-                <header class="title"><t t-esc=" widget.options.title || '' " /></header>
+                <header class="title">
+                    <t t-esc=" widget.options.title || '' " />
+                </header>
                 <div class='popup-input value active'>
                     <t t-esc='widget.inputbuffer' />
                 </div>
@@ -455,7 +351,8 @@
                     <button class="input-button number-char" data-action='3'>3</button>
                     <t t-if="widget.options.cheap">
                         <button class="mode-button add" data-action='+1'>+1</button>
-                    </t><t t-if="!widget.options.cheap">
+                    </t>
+                    <t t-if="!widget.options.cheap">
                         <button class="mode-button add" data-action='+10'>+10</button>
                     </t>
                     <br />
@@ -464,7 +361,8 @@
                     <button class="input-button number-char" data-action='6'>6</button>
                     <t t-if="widget.options.cheap">
                         <button class="mode-button add" data-action='+2'>+2</button>
-                    </t><t t-if="!widget.options.cheap">
+                    </t>
+                    <t t-if="!widget.options.cheap">
                         <button class="mode-button add" data-action='+20'>+20</button>
                     </t>
                     <br />
@@ -473,15 +371,20 @@
                     <button class="input-button number-char" data-action='9'>9</button>
                     <t t-if="widget.options.cheap">
                         <button class="mode-button add" data-action='+5'>+5</button>
-                    </t><t t-if="!widget.options.cheap">
+                    </t>
+                    <t t-if="!widget.options.cheap">
                         <button class="mode-button add" data-action='+50'>+50</button>
                     </t>
                     <br />
-                    <button class="input-button numpad-char" data-action='CLEAR' >C</button>
+                    <button class="input-button numpad-char" data-action='CLEAR'>C</button>
                     <button class="input-button number-char" data-action='0'>0</button>
-                    <button class="input-button number-char dot" t-att-data-action='widget.decimal_separator'><t t-esc='widget.decimal_separator'/></button>
-                    <button class="input-button numpad-backspace" data-action='BACKSPACE' >
-                        <img style="pointer-events: none;" src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" alt="Backspace"/>
+                    <button class="input-button number-char dot"
+                            t-att-data-action='widget.decimal_separator'>
+                        <t t-esc='widget.decimal_separator' /></button>
+                    <button class="input-button numpad-backspace" data-action='BACKSPACE'>
+                        <img style="pointer-events: none;"
+                             src="/point_of_sale/static/src/img/backspace.png" width="24"
+                             height="21" alt="Backspace" />
                     </button>
                     <br />
                 </div>
@@ -503,18 +406,30 @@
                 <header class="title">Finished Importing Orders</header>
                 <t t-if="widget.options and widget.options.report">
                     <t t-set="report" t-value="widget.options.report" />
-                    <t t-set="unpaid_skipped" t-value="(report.unpaid_skipped_existing || 0) + (report.unpaid_skipped_session || 0)" />
+                    <t t-set="unpaid_skipped"
+                       t-value="(report.unpaid_skipped_existing || 0) + (report.unpaid_skipped_session || 0)" />
                     <ul class='body'>
-                        <li>Successfully imported <b><t t-esc='report.paid || 0'/></b> paid orders</li>
-                        <li>Successfully  imported <b><t t-esc='report.unpaid || 0'/></b> unpaid orders</li>
+                        <li>Successfully imported <b>
+                                <t t-esc='report.paid || 0' /></b> paid orders</li>
+                        <li>Successfully imported <b>
+                                <t t-esc='report.unpaid || 0' /></b> unpaid orders</li>
                         <t t-if="unpaid_skipped">
-                            <li><b><t t-esc="unpaid_skipped"/></b> unpaid orders could not be imported
+                            <li><b>
+                                    <t t-esc="unpaid_skipped" /></b> unpaid orders could not be
+                                imported
                                 <ul>
-                                    <li><b><t t-esc="report.unpaid_skipped_existing || 0" /></b> were duplicates of existing orders</li>
-                                    <li><b><t t-esc="report.unpaid_skipped_session || 0" /></b> belong to another session:
+                                    <li><b>
+                                            <t t-esc="report.unpaid_skipped_existing || 0" /></b>
+                                        were duplicates of existing orders</li>
+                                    <li><b>
+                                            <t t-esc="report.unpaid_skipped_session || 0" /></b>
+                                        belong to another session:
                                         <t t-if="report.unpaid_skipped_sessions">
                                             <ul>
-                                                <li>Session ids: <b><t t-esc="JSON.stringify(report.unpaid_skipped_sessions)" /></b></li>
+                                                <li>Session ids: <b>
+                                                        <t
+                                                           t-esc="JSON.stringify(report.unpaid_skipped_sessions)" />
+                                                        </b></li>
                                             </ul>
                                         </t>
                                     </li>
@@ -533,235 +448,31 @@
         </div>
     </t>
 
-    <t t-name="DebugWidget">
-        <div class="debug-widget oe_hidden">
-            <h1>Debug Window</h1>
-            <div class="toggle" title="Dismiss" role="img" aria-label="Dismiss"><i class='fa fa-times' /></div>
-            <div class="content">
-                <p class="category">Electronic Scale</p>
-                <ul>
-                    <li><input type="text" class="weight"></input></li>
-                    <li class="button set_weight">Set Weight</li>
-                    <li class="button reset_weight">Reset</li>
-                </ul>
-
-                <p class="category">Barcode Scanner</p>
-                <ul>
-                    <li><input type="text" class="ean"></input></li>
-                    <li class="button barcode">Scan</li>
-                    <li class="button custom_ean">Scan EAN-13</li>
-                </ul>
-
-                <p class="category">Orders</p>
-
-                <ul>
-                    <li class="button delete_orders">Delete Paid Orders</li>
-                    <li class="button delete_unpaid_orders">Delete Unpaid Orders</li>
-                    <li class="button export_paid_orders">Export Paid Orders</li>
-                    <a><li class="button download_paid_orders oe_hidden">Download Paid Orders</li></a>
-                    <li class="button export_unpaid_orders">Export Unpaid Orders</li>
-                    <a><li class="button download_unpaid_orders oe_hidden">Download Unpaid Orders</li></a>
-                    <li class="button import_orders" style="position:relative">
-                        Import Orders
-                        <input type="file" style="opacity:0;position:absolute;top:0;left:0;right:0;bottom:0;margin:0;cursor:pointer"/>
-                    </li>
-                </ul>
-
-                <p class="category">Hardware Status</p>
-                <ul>
-                    <li class="status weighing">Weighing</li>
-                    <li class="button display_refresh">Refresh Display</li>
-                </ul>
-                <p class="category">Hardware Events</p>
-                <ul>
-                    <li class="event open_cashbox">Open Cashbox</li>
-                    <li class="event print_receipt">Print Receipt</li>
-                    <li class="event scale_read">Read Weighing Scale</li>
-                </ul>
-            </div>
-        </div>
-    </t>
-
-
     <!-- TODO jcb Unused? -->
     <t t-name="Paymentline">
         <div t-attf-class="paymentline #{line.selected ? 'selected' : ''}">
             <div class='paymentline-name'>
-                <t t-esc="line.payment_method.name"/>
+                <t t-esc="line.payment_method.name" />
             </div>
             <input class='paymentline-input'
-                t-att-type="widget.decimal_point === '.' ? 'number' : 'text'"
-                t-attf-pattern="[0-9]+([\\#{widget.decimal_point || '.' }][0-9]+)?"
-                step="0.01" t-att-value="line.get_amount_str()" />
-            <span  class='paymentline-delete'>
-                <img src="/point_of_sale/static/src/img/search_reset.gif" alt="Delete"/>
+                   t-att-type="widget.decimal_point === '.' ? 'number' : 'text'"
+                   t-attf-pattern="[0-9]+([\\#{widget.decimal_point || '.' }][0-9]+)?" step="0.01"
+                   t-att-value="line.get_amount_str()" />
+            <span class='paymentline-delete'>
+                <img src="/point_of_sale/static/src/img/search_reset.gif" alt="Delete" />
             </span>
-        </div>
-    </t>
-
-    <t t-name="PaymentlineOld">
-        <tr t-attf-class="paymentline #{line.selected ? 'selected' : ''}">
-            <td class="paymentline-type">
-                <t t-esc="line.payment_method.name"/>
-            </td>
-            <td class="paymentline-amount pos-right-align">
-                <input type="number" step="0.01" t-att-value="line.get_amount_str()" />
-                <span class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" alt="Delete"/></span>
-            </td>
-        </tr>
-    </t>
-
-    <t t-name="OrderSelectorWidget">
-        <div class="order-selector">
-            <span class="orders touch-scrollable">
-
-                <t t-foreach="widget.pos.get_order_list()" t-as="order">
-                    <t t-if="order === widget.pos.get_order()">
-                        <span class="order-button select-order selected" t-att-data-uid="order.uid">
-                            <span class="order-sequence">
-                                <t t-esc="order.sequence_number" />
-                            </span>
-                            <t t-esc="moment(order.creation_date).format('hh:mm')"/>
-                        </span>
-                    </t>
-                    <t t-if="order !== widget.pos.get_order()">
-                        <span class="order-button select-order" t-att-data-uid="order.uid">
-                            <span class="order-sequence">
-                                <t t-esc="order.sequence_number" />
-                            </span>
-                        </span>
-                    </t>
-                </t>
-            </span>
-            <span class="order-button square neworder-button">
-                <i class='fa fa-plus' role="img" aria-label="New order" title="New order"/>
-            </span>
-            <span class="order-button square deleteorder-button">
-                <i class='fa fa-minus' role="img" aria-label="Delete order" title="Delete order"/>
-            </span>
-        </div>
-    </t>
-
-    <t t-name="UsernameWidget">
-        <span class="username">
-            <t t-esc="widget.get_name()" />
-        </span>
-    </t>
-
-    <!-- Onscreen Keyboard :
-         http://net.tutsplus.com/tutorials/javascript-ajax/creating-a-keyboard-with-css-and-jquery/ -->
-    <t t-name="OnscreenKeyboardFull">
-        <div class="keyboard_frame">
-            <ul class="keyboard full_keyboard">
-                <li class="symbol"><span class="off">`</span><span class="on">~</span></li>
-                <li class="symbol"><span class="off">1</span><span class="on">!</span></li>
-                <li class="symbol"><span class="off">2</span><span class="on">@</span></li>
-                <li class="symbol"><span class="off">3</span><span class="on">#</span></li>
-                <li class="symbol"><span class="off">4</span><span class="on">$</span></li>
-                <li class="symbol"><span class="off">5</span><span class="on">%</span></li>
-                <li class="symbol"><span class="off">6</span><span class="on">^</span></li>
-                <li class="symbol"><span class="off">7</span><span class="on">&amp;</span></li>
-                <li class="symbol"><span class="off">8</span><span class="on">*</span></li>
-                <li class="symbol"><span class="off">9</span><span class="on">(</span></li>
-                <li class="symbol"><span class="off">0</span><span class="on">)</span></li>
-                <li class="symbol"><span class="off">-</span><span class="on">_</span></li>
-                <li class="symbol"><span class="off">=</span><span class="on">+</span></li>
-                <li class="delete lastitem">delete</li>
-                <li class="tab firstitem">tab</li>
-                <li class="letter">q</li>
-                <li class="letter">w</li>
-                <li class="letter">e</li>
-                <li class="letter">r</li>
-                <li class="letter">t</li>
-                <li class="letter">y</li>
-                <li class="letter">u</li>
-                <li class="letter">i</li>
-                <li class="letter">o</li>
-                <li class="letter">p</li>
-                <li class="symbol"><span class="off">[</span><span class="on">{</span></li>
-                <li class="symbol"><span class="off">]</span><span class="on">}</span></li>
-                <li class="symbol lastitem"><span class="off">\</span><span class="on">|</span></li>
-                <li class="capslock firstitem">caps lock</li>
-                <li class="letter">a</li>
-                <li class="letter">s</li>
-                <li class="letter">d</li>
-                <li class="letter">f</li>
-                <li class="letter">g</li>
-                <li class="letter">h</li>
-                <li class="letter">j</li>
-                <li class="letter">k</li>
-                <li class="letter">l</li>
-                <li class="symbol"><span class="off">;</span><span class="on">:</span></li>
-                <li class="symbol"><span class="off">'</span><span class="on">&quot;</span></li>
-                <li class="return lastitem">return</li>
-                <li class="left-shift firstitem">shift</li>
-                <li class="letter">z</li>
-                <li class="letter">x</li>
-                <li class="letter">c</li>
-                <li class="letter">v</li>
-                <li class="letter">b</li>
-                <li class="letter">n</li>
-                <li class="letter">m</li>
-                <li class="symbol"><span class="off">,</span><span class="on">&lt;</span></li>
-                <li class="symbol"><span class="off">.</span><span class="on">&gt;</span></li>
-                <li class="symbol"><span class="off">/</span><span class="on">?</span></li>
-                <li class="right-shift lastitem">shift</li>
-                <li class="space firstitem lastitem">&amp;nbsp;</li>
-            </ul>
-            <p class="close_button">close</p>
-        </div>
-    </t>
-
-    <t t-name="OnscreenKeyboardSimple">
-        <div class="keyboard_frame">
-            <ul class="keyboard simple_keyboard">
-                <li class="symbol firstitem row_qwerty"><span class="off">q</span><span class="on">1</span></li>
-                <li class="symbol"><span class="off">w</span><span class="on">2</span></li>
-                <li class="symbol"><span class="off">e</span><span class="on">3</span></li>
-                <li class="symbol"><span class="off">r</span><span class="on">4</span></li>
-                <li class="symbol"><span class="off">t</span><span class="on">5</span></li>
-                <li class="symbol"><span class="off">y</span><span class="on">6</span></li>
-                <li class="symbol"><span class="off">u</span><span class="on">7</span></li>
-                <li class="symbol"><span class="off">i</span><span class="on">8</span></li>
-                <li class="symbol"><span class="off">o</span><span class="on">9</span></li>
-                <li class="symbol lastitem"><span class="off">p</span><span class="on">0</span></li>
-
-                <li class="symbol firstitem row_asdf"><span class="off">a</span><span class="on">@</span></li>
-                <li class="symbol"><span class="off">s</span><span class="on">#</span></li>
-                <li class="symbol"><span class="off">d</span><span class="on">%</span></li>
-                <li class="symbol"><span class="off">f</span><span class="on">*</span></li>
-                <li class="symbol"><span class="off">g</span><span class="on">/</span></li>
-                <li class="symbol"><span class="off">h</span><span class="on">-</span></li>
-                <li class="symbol"><span class="off">j</span><span class="on">+</span></li>
-                <li class="symbol"><span class="off">k</span><span class="on">(</span></li>
-                <li class="symbol lastitem"><span class="off">l</span><span class="on">)</span></li>
-
-                <li class="symbol firstitem row_zxcv"><span class="off">z</span><span class="on">?</span></li>
-                <li class="symbol"><span class="off">x</span><span class="on">!</span></li>
-                <li class="symbol"><span class="off">c</span><span class="on">"</span></li>
-                <li class="symbol"><span class="off">v</span><span class="on">'</span></li>
-                <li class="symbol"><span class="off">b</span><span class="on">:</span></li>
-                <li class="symbol"><span class="off">n</span><span class="on">;</span></li>
-                <li class="symbol"><span class="off">m</span><span class="on">,</span></li>
-                <li class="delete lastitem">delete</li>
-
-                <li class="numlock firstitem row_space"><span class="off">123</span><span class="on">ABC</span></li>
-                <li class="space">&amp;nbsp;</li>
-                <li class="symbol"><span class="off">.</span><span class="on">.</span></li>
-                <li class="return lastitem">return</li>
-            </ul>
-            <p class="close_button">close</p>
         </div>
     </t>
 
     <t t-name="CustomerFacingDisplayHead">
         <div class="resources">
-            <base t-att-href="origin"/>
-            <link href="/point_of_sale/static/src/css/customer_facing_display.css" rel="stylesheet"/>
+            <base t-att-href="origin" />
+            <link href="/point_of_sale/static/src/css/customer_facing_display.css"
+                  rel="stylesheet" />
             <script type="text/javascript">
                 // This function needs to be named that way, call it the foreign JS API
                 // The iotbox will execute it, with the behavior intended
-                function foreign_js(){
+                function foreign_js() {
                     if ($('.pos-adv').hasClass('pos-hidden')) {
                         $('.pos-customer_facing_display').addClass('pos-js_no_ADV');
                     }
@@ -776,10 +487,18 @@
     <t t-name="CustomerFacingDisplayOrderLines">
         <t t-foreach="orderlines" t-as="orderline">
             <div class="pos_orderlines_item">
-                <div><div t-attf-style="background-image:url(#{orderline.product.image_base64})"/></div>
-                    <div><t t-esc="orderline.product.display_name" /></div>
-                    <div><t t-esc="orderline.get_quantity_str()" /></div>
-                    <div><t t-esc="pos.format_currency(orderline.get_display_price())"/></div>
+                <div>
+                    <div t-attf-style="background-image:url(#{orderline.product.image_base64})" />
+                </div>
+                <div>
+                    <t t-esc="orderline.product.display_name" />
+                </div>
+                <div>
+                    <t t-esc="orderline.get_quantity_str()" />
+                </div>
+                <div>
+                    <t t-esc="pos.format_currency(orderline.get_display_price())" />
+                </div>
             </div>
         </t>
     </t>
@@ -787,18 +506,21 @@
     <t t-name="CustomerFacingDisplayPaymentLines">
         <t t-foreach="order.get_paymentlines()" t-as="paymentline">
             <div>
-                <span><t t-esc="paymentline.name"/></span>
+                <span>
+                    <t t-esc="paymentline.name" /></span>
             </div>
             <div>
-                <span><t t-esc="pos.format_currency(paymentline.get_amount())"/></span>
+                <span>
+                    <t t-esc="pos.format_currency(paymentline.get_amount())" /></span>
             </div>
         </t>
         <t t-if="order.get_paymentlines().length > 0">
             <div>
                 <span class="pos-change_title">Change:</span>
             </div>
-            <div >
-                <span class="pos-change_amount"><t t-esc="pos.format_currency(order.get_change())"/></span>
+            <div>
+                <span class="pos-change_amount">
+                    <t t-esc="pos.format_currency(order.get_change())" /></span>
             </div>
         </t>
     </t>

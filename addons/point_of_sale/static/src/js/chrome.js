@@ -3,104 +3,16 @@ odoo.define('point_of_sale.chrome', function (require) {
 
 var PosBaseWidget = require('point_of_sale.BaseWidget');
 var gui = require('point_of_sale.gui');
-var keyboard = require('point_of_sale.keyboard');
 var models = require('point_of_sale.models');
 var core = require('web.core');
 var ajax = require('web.ajax');
 var CrashManager = require('web.CrashManager').CrashManager;
-var rpc = require('web.rpc');
 var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
-var field_utils = require('web.field_utils');
-var utils = require('web.utils');
-var round_di = utils.round_decimals;
 
 const { PosComponent } = require('point_of_sale.PosComponent');
 
 var _t = core._t;
-var _lt = core._lt;
 var QWeb = core.qweb;
-
-/* -------- The Order Selector -------- */
-
-// Allows the cashier to create / delete and
-// switch between orders.
-
-var OrderSelectorWidget = PosBaseWidget.extend({
-    template: 'OrderSelectorWidget',
-    init: function(parent, options) {
-        this._super(parent, options);
-        this.pos.get('orders').on('add remove change',this.renderElement,this);
-        this.pos.on('change:selectedOrder',this.renderElement,this);
-    },
-    get_order_by_uid: function(uid) {
-        var orders = this.pos.get_order_list();
-        for (var i = 0; i < orders.length; i++) {
-            if (orders[i].uid === uid) {
-                return orders[i];
-            }
-        }
-        return undefined;
-    },
-    order_click_handler: function(event,$el) {
-        var order = this.get_order_by_uid($el.data('uid'));
-        if (order) {
-            this.pos.set_order(order);
-        }
-    },
-    neworder_click_handler: function(event, $el) {
-        this.pos.add_new_order();
-    },
-    deleteorder_click_handler: function(event, $el) {
-        var self  = this;
-        var order = this.pos.get_order(); 
-        if (!order) {
-            return;
-        } else if ( !order.is_empty() ){
-            this.gui.show_popup('confirm',{
-                'title': _t('Destroy Current Order ?'),
-                'body': _t('You will lose any data associated with the current order'),
-                confirm: function(){
-                    self.pos.delete_current_order();
-                },
-            });
-        } else {
-            this.pos.delete_current_order();
-        }
-    },
-    renderElement: function(){
-        var self = this;
-        this._super();
-        this.$('.order-button.select-order').click(function(event){
-            self.order_click_handler(event,$(this));
-        });
-        this.$('.neworder-button').click(function(event){
-            self.neworder_click_handler(event,$(this));
-        });
-        this.$('.deleteorder-button').click(function(event){
-            self.deleteorder_click_handler(event,$(this));
-        });
-    },
-});
-
-/* ------- The User Name Widget ------- */
-
-// Displays the current cashier's name
-
-var UsernameWidget = PosBaseWidget.extend({
-    template: 'UsernameWidget',
-    init: function(parent, options){
-        options = options || {};
-        this._super(parent,options);
-    },
-    get_name: function(){
-        var user = this.pos.get_cashier();
-        if(user){
-            return user.name;
-        }else{
-            return "";
-        }
-    },
-});
 
 /* -------- The Header Button --------- */
 
@@ -332,24 +244,6 @@ var StatusWidget = PosBaseWidget.extend({
     },
 });
 
-/* ------- Synch. Notifications ------- */
-
-// Displays if there are orders that could
-// not be submitted, and how many. 
-
-var SynchNotificationWidget = StatusWidget.extend({
-    template: 'SynchNotificationWidget',
-    start: function(){
-        var self = this;
-        this.pos.on('change:synch', function(pos,synch){
-            self.set_status(synch.state, synch.pending);
-        });
-        this.$el.click(function(){
-            self.pos.push_order(null,{'show_error':true});
-        });
-    },
-});
-
 /* --------- The Proxy Status --------- */
 
 // Displays the status of the hardware proxy
@@ -407,50 +301,6 @@ var ProxyStatusWidget = StatusWidget.extend({
     },
 });
 
-
-/* --------- The Sale Details --------- */
-
-/** Print an overview of todays sales.
- *
- * If the current cashier is a manager all sales of the day will be printed, else only the sales of the current
- * session will be printed.
- */
-var SaleDetailsButton = PosBaseWidget.extend({
-    template: 'SaleDetailsButton',
-    start: function(){
-        var self = this;
-        this.$el.click(function(){
-            self.print_sale_details();
-        });
-    },
-
-    /** Print an overview of todays sales.
-     *
-     * By default this will print all sales of the day for current PoS config.
-     */
-    print_sale_details: function () {
-        var self = this;
-        rpc.query({
-            model: 'report.point_of_sale.report_saledetails',
-            method: 'get_sale_details',
-            args: [false, false, false, [this.pos.pos_session.id]],
-        })
-        .then(function(result){
-            var env = {
-                widget: new PosBaseWidget(self),
-                company: self.pos.company,
-                pos: self.pos,
-                products: result.products,
-                payments: result.payments,
-                taxes: result.taxes,
-                total_paid: result.total_paid,
-                date: (new Date()).toLocaleString(),
-            };
-            var report = QWeb.render('SaleDetailsReport', env);
-            self.pos.proxy.printer.print_receipt(report);
-        });
-    },
-});
 
 /* User interface for distant control over the Client display on the IoT Box */
 // The boolean posbox_supports_display (in devices.js) will allow interaction to the IoT Box on true, prevents it otherwise
@@ -601,7 +451,7 @@ class Chrome extends PosComponent {
         };
 
         this.pos = new models.PosModel(posModelDefaultAttributes);
-        this.state = owl.useState({ activeScreenName: null });
+        this.state = owl.useState({ activeScreenName: null, isReady: false, isDebugWidgetShown: true });
         this.defaultScreenProps = { pos: this.pos, gui: this.gui }
         this.additionalScreenProps = {}
         this.chrome = this; // So that chrome's childs have chrome set automatically
@@ -613,74 +463,6 @@ class Chrome extends PosComponent {
 
         this.widget = {};   // contains references to subwidgets instances
         this.widgets = [
-            {
-                name: 'order_selector',
-                widget: OrderSelectorWidget,
-                replace: '.placeholder-OrderSelectorWidget',
-            },
-            {
-                name: 'sale_details',
-                widget: SaleDetailsButton,
-                append: '.pos-rightheader',
-                condition: function() {
-                    return this.pos.proxy.printer;
-                },
-            },
-            {
-                name: 'proxy_status',
-                widget: ProxyStatusWidget,
-                append: '.pos-rightheader',
-                condition: function() {
-                    return this.pos.config.use_proxy;
-                },
-            },
-            {
-                name: 'screen_status',
-                widget: ClientScreenWidget,
-                append: '.pos-rightheader',
-                condition: function() {
-                    return this.pos.config.use_proxy;
-                },
-            },
-            {
-                name: 'notification',
-                widget: SynchNotificationWidget,
-                append: '.pos-rightheader',
-            },
-            {
-                name: 'close_button',
-                widget: HeaderButtonWidget,
-                append: '.pos-rightheader',
-                args: {
-                    label: _t('Close'),
-                    action: function() {
-                        this.$el.addClass('close_button');
-                        var self = this;
-                        if (!this.confirmed) {
-                            this.$el.addClass('confirm');
-                            this.$el.text(_t('Confirm'));
-                            this.confirmed = setTimeout(function() {
-                                self.$el.removeClass('confirm');
-                                self.$el.text(_t('Close'));
-                                self.confirmed = false;
-                            }, 2000);
-                        } else {
-                            clearTimeout(this.confirmed);
-                            this.gui.close();
-                        }
-                    },
-                },
-            },
-            {
-                name: 'username',
-                widget: UsernameWidget,
-                replace: '.placeholder-UsernameWidget',
-            },
-            {
-                name: 'keyboard',
-                widget: keyboard.OnscreenKeyboardWidget,
-                replace: '.placeholder-OnscreenKeyboardWidget',
-            },
             {
                 name: 'debug',
                 widget: DebugWidget,
@@ -702,7 +484,6 @@ class Chrome extends PosComponent {
                 this.build_chrome();
                 this.gui = new gui.Gui({pos: this.pos, chrome: this});
                 this.pos.gui = this.gui;
-                await this.build_widgets();
                 this.disable_rubberbanding();
                 this.disable_backpace_back();
                 await this.ready.resolve();
@@ -710,6 +491,8 @@ class Chrome extends PosComponent {
                 this.replace_crashmanager();
                 await this.pos.push_order();
                 this.showScreen({ detail: { name: 'ProductScreen', props: { gui: this.gui } } });
+                this.state.isReady = true;
+                // await this.build_widgets();
             } catch (error) {
                 this.loading_error(error)
             }
@@ -736,9 +519,9 @@ class Chrome extends PosComponent {
      *
      * @param {Object} error
      */
-    catchError(error) {
-        this.gui.show_popup('error', error.message);
-    }
+    // catchError(error) {
+    //     this.gui.show_popup('error', error.message);
+    // }
 
     /**
      * This is responsible on catching error outside the rendering context
@@ -749,7 +532,7 @@ class Chrome extends PosComponent {
      */
     onPosError(event) {
         const { error } = event.detail
-        this.catchError(error);
+        // this.catchError(error);
     }
 
     cleanup_dom() {
@@ -762,7 +545,7 @@ class Chrome extends PosComponent {
         BarcodeEvents.start();
     }
 
-    build_chrome() { 
+    build_chrome() {
         var self = this;
 
         if ($.browser.chrome) {
@@ -771,10 +554,6 @@ class Chrome extends PosComponent {
                 ajax.loadCSS('/point_of_sale/static/src/css/chrome50.css');
             }
         }
-
-        this.$('.pos-logo').click(function(){
-            self.click_logo();
-        });
 
         if(this.pos.config.iface_big_scrollbars){
             this.$el.addClass('big-scrollbars');
@@ -806,6 +585,10 @@ class Chrome extends PosComponent {
         });
     }
 
+    onToggleDebugWidget() {
+        this.state.isDebugWidgetShown = !this.state.isDebugWidgetShown;
+    }
+
     click_logo() {
         if (this.pos.debug) {
             this.widget.debug.show();
@@ -829,18 +612,18 @@ class Chrome extends PosComponent {
         }
     }
 
-        _scrollable(element, scrolling_down){
-            var $element = $(element);
-            var scrollable = true;
+    _scrollable(element, scrolling_down){
+        var $element = $(element);
+        var scrollable = true;
 
-            if (! scrolling_down && $element.scrollTop() <= 0) {
-                scrollable = false;
-            } else if (scrolling_down && $element.scrollTop() + $element.height() >= element.scrollHeight) {
-                scrollable = false;
-            }
-
-            return scrollable;
+        if (! scrolling_down && $element.scrollTop() <= 0) {
+            scrollable = false;
+        } else if (scrolling_down && $element.scrollTop() + $element.height() >= element.scrollHeight) {
+            scrollable = false;
         }
+
+        return scrollable;
+    }
 
     disable_rubberbanding(){
             var self = this;
@@ -949,30 +732,8 @@ class Chrome extends PosComponent {
         this.$('.loader').removeClass('oe_hidden').animate({opacity:1},150,'swing');
     }
 
-    load_widgets(widgets) {
-        for (var i = 0; i < widgets.length; i++) {
-            var widget = widgets[i];
-            if ( !widget.condition || widget.condition.call(this) ) {
-                var args = typeof widget.args === 'function' ? widget.args(this) : widget.args;
-                var w = new widget.widget(this, args || {});
-                if (widget.replace) {
-                    w.replace(this.$(widget.replace));
-                } else if (widget.append) {
-                    w.appendTo(this.$(widget.append));
-                } else if (widget.prepend) {
-                    w.prependTo(this.$(widget.prepend));
-                } else {
-                    w.appendTo(this.$el);
-                }
-                this.widget[widget.name] = w;
-            }
-        }
-    }
-
     // This method instantiates all the screens, widgets, etc.
     async build_widgets() {
-        this.load_widgets(this.widgets);
-
         this.popups = {};
         _.forEach(this.gui.popup_classes, async (classe) => {
             if (!classe.condition || classe.condition.call(this)) {
@@ -988,79 +749,14 @@ class Chrome extends PosComponent {
         super.destroy(...arguments);
         this.pos.destroy();
     }
-
-    format_currency(amount, precision) {
-        var currency =
-            this.pos && this.pos.currency
-                ? this.pos.currency
-                : { symbol: '$', position: 'after', rounding: 0.01, decimals: 2 };
-
-        amount = this.format_currency_no_symbol(amount, precision);
-
-        if (currency.position === 'after') {
-            return amount + ' ' + (currency.symbol || '');
-        } else {
-            return (currency.symbol || '') + ' ' + amount;
-        }
-    }
-    format_currency_no_symbol(amount, precision) {
-        var currency =
-            this.pos && this.pos.currency
-                ? this.pos.currency
-                : { symbol: '$', position: 'after', rounding: 0.01, decimals: 2 };
-        var decimals = currency.decimals;
-
-        if (precision && this.pos.dp[precision] !== undefined) {
-            decimals = this.pos.dp[precision];
-        }
-
-        if (typeof amount === 'number') {
-            amount = round_di(amount, decimals).toFixed(decimals);
-            amount = field_utils.format.float(round_di(amount, decimals), {
-                digits: [69, decimals],
-            });
-        }
-
-        return amount;
-    }
-    show() {
-        this.$el.removeClass('oe_hidden');
-    }
-    hide() {
-        this.$el.addClass('oe_hidden');
-    }
-    format_pr(value, precision) {
-        var decimals =
-            precision > 0
-                ? Math.max(0, Math.ceil(Math.log(1.0 / precision) / Math.log(10)))
-                : 0;
-        return value.toFixed(decimals);
-    }
-    format_fixed(value, integer_width, decimal_width) {
-        value = value.toFixed(decimal_width || 0);
-        var width = value.indexOf('.');
-        if (width < 0) {
-            width = value.length;
-        }
-        var missing = integer_width - width;
-        while (missing > 0) {
-            value = '0' + value;
-            missing--;
-        }
-        return value;
-    }
 }
 
 return {
     Chrome: Chrome,
     DebugWidget: DebugWidget,
     HeaderButtonWidget: HeaderButtonWidget,
-    OrderSelectorWidget: OrderSelectorWidget,
     ProxyStatusWidget: ProxyStatusWidget,
-    SaleDetailsButton: SaleDetailsButton,
     ClientScreenWidget: ClientScreenWidget,
     StatusWidget: StatusWidget,
-    SynchNotificationWidget: SynchNotificationWidget,
-    UsernameWidget: UsernameWidget,
 };
 });

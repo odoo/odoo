@@ -75,6 +75,12 @@
         'static/src/xml/WrappedProductNameLines.xml',
         'static/src/xml/OrderReceipt.xml',
         'static/src/xml/ReceiptScreen.xml',
+        'static/src/xml/OrderSelector.xml',
+        'static/src/xml/CashierName.xml',
+        'static/src/xml/ProxyStatus.xml',
+        'static/src/xml/SyncNotification.xml',
+        'static/src/xml/HeaderButton.xml',
+        'static/src/xml/DebugWidget.xml',
     ],
     'website': 'https://www.odoo.com/page/point-of-sale-shop',
 }
