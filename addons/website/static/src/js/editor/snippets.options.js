@@ -1027,9 +1027,9 @@ options.registry.layout_column = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    selectCount: function (previewMode, widgetValue, params) {
+    selectCount: async function (previewMode, widgetValue, params) {
         const nbColumns = parseInt(widgetValue);
-        this._updateColumnCount(nbColumns - this.$target.children().length);
+        await this._updateColumnCount(nbColumns - this.$target.children().length);
     },
 
     //--------------------------------------------------------------------------
@@ -1041,7 +1041,7 @@ options.registry.layout_column = options.Class.extend({
      */
     _computeWidgetState: function (methodName, params) {
         if (methodName === 'selectCount') {
-            return '' + (this.colsLength || this.$target.children().length);
+            return '' + this.$target.children().length;
         }
         return this._super(...arguments);
     },
@@ -1052,38 +1052,40 @@ options.registry.layout_column = options.Class.extend({
      * @private
      * @param {integer} count - positif to add, negative to remove
      */
-    _updateColumnCount: function (count) {
+    _updateColumnCount: async function (count) {
         if (!count) {
             return;
         }
 
         this.trigger_up('request_history_undo_record', {$target: this.$target});
 
-        var colsLength = this.$target.children().length + count;
         if (count > 0) {
             var $lastColumn = this.$target.children().last();
             for (var i = 0; i < count; i++) {
-                this.trigger_up('clone_snippet', {$snippet: $lastColumn});
+                await new Promise(resolve => {
+                    this.trigger_up('clone_snippet', {$snippet: $lastColumn, onSuccess: resolve});
+                });
             }
         } else {
             var self = this;
-            _.each(this.$target.children().slice(count), function (el) {
-                self.trigger_up('remove_snippet', {$snippet: $(el)});
-            });
+            for (const el of this.$target.children().slice(count)) {
+                await new Promise(resolve => {
+                    self.trigger_up('remove_snippet', {$snippet: $(el), onSuccess: resolve});
+                });
+            }
         }
 
-        this._resizeColumns(colsLength);
+        this._resizeColumns();
         this.trigger_up('cover_update');
     },
     /**
      * Resizes the columns so that they are kept on one row.
      *
      * @private
-     * @param {number} [colsLength] (default to the actual number of columns)
      */
-    _resizeColumns: function (colsLength) {
+    _resizeColumns: function () {
         var $columns = this.$target.children();
-        colsLength = colsLength || $columns.length;
+        const colsLength = $columns.length;
         var colSize = Math.floor(12 / colsLength) || 1;
         var colOffset = Math.floor((12 - colSize * colsLength) / 2);
         var colClass = 'col-lg-' + colSize;
@@ -1095,9 +1097,6 @@ options.registry.layout_column = options.Class.extend({
         if (colOffset) {
             $columns.first().addClass('offset-lg-' + colOffset);
         }
-        // TODO: remove in master. This is used to keep the UI in sync, but
-        // won't be needed once option methods are properly asynchronous.
-        this.colsLength = colsLength;
     },
 });
 
