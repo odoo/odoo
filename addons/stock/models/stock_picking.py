@@ -296,7 +296,7 @@ class Picking(models.Model):
                                'initial demand. When the picking is done this allows '
                                'changing the done quantities.')
     # Used to search on pickings
-    product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id', readonly=False)
+    product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id', readonly=True)
     show_operations = fields.Boolean(compute='_compute_show_operations')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
     has_tracking = fields.Boolean(compute='_compute_has_tracking')
@@ -651,6 +651,12 @@ class Picking(models.Model):
             all_in = False
         return all_in
 
+    def _get_entire_pack_location_dest(self, move_line_ids):
+        location_dest_ids = move_line_ids.mapped('location_dest_id')
+        if len(location_dest_ids) > 1:
+            return False
+        return location_dest_ids.id
+
     @api.multi
     def _check_entire_pack(self):
         """ This function check if entire packs are moved in the picking"""
@@ -665,7 +671,7 @@ class Picking(models.Model):
                             'picking_id': picking.id,
                             'package_id': pack.id,
                             'location_id': pack.location_id.id,
-                            'location_dest_id': picking.move_line_ids.filtered(lambda ml: ml.package_id == pack).mapped('location_dest_id')[:1].id,
+                            'location_dest_id': self._get_entire_pack_location_dest(move_lines_to_pack) or picking.location_dest_id.id,
                             'move_line_ids': [(6, 0, move_lines_to_pack.ids)]
                         })
                         move_lines_to_pack.write({
@@ -683,6 +689,8 @@ class Picking(models.Model):
                             'result_package_id': pack.id,
                             'package_level_id': package_level_ids[0].id,
                         })
+                        for pl in package_level_ids:
+                            pl.location_dest_id = self._get_entire_pack_location_dest(pl.move_line_ids) or picking.location_dest_id.id
 
     @api.multi
     def do_unreserve(self):
