@@ -120,6 +120,17 @@ class WebsiteTest(Home):
     def get_post_method_no_multilang(self, **kw):
         return request.make_response('get_post_nomultilang')
 
+    @http.route(['/test_route_json_http'], type='*', auth="public", methods=['GET', 'POST'], csrf=False)
+    def test_route_json_http(self, **kw):
+        if hasattr(request, 'jsonrequest'):
+            return request.jsonrequest
+        return str(kw)
+
+    @http.route(['/test_route_json_and_http_type_return_dict'], type='*', auth="public", methods=['GET'], csrf=False)
+    def test_route_json_and_http_type_return_dict(self):
+        """Return a dict for HTTP call (Content-type != json) and "JSON call"."""
+        return {'a': 7, 'b': 8}
+
     # Test Perfs
 
     @http.route(['/empty_controller_test'], type='http', auth='public', website=True, multilang=False, sitemap=False)

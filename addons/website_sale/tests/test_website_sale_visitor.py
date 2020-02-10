@@ -25,13 +25,13 @@ class WebsiteSaleVisitorTests(TransactionCase):
             'website_published': True,
         })
 
-        with MockRequest(self.env, website=self.website):
+        with MockRequest(self.env, website=self.website, request_type='json'):
             self.cookies = self.WebsiteSaleController.products_recently_viewed_update(product.id)
 
         self.assertEqual(len(Visitor.search([])), 1, "A visitor should be created after visiting a tracked product")
         self.assertEqual(len(Track.search([])), 1, "A track should be created after visiting a tracked product")
 
-        with MockRequest(self.env, website=self.website, cookies=self.cookies):
+        with MockRequest(self.env, website=self.website, cookies=self.cookies, request_type='json'):
             self.WebsiteSaleController.products_recently_viewed_update(product.id)
 
         self.assertEqual(len(Visitor.search([])), 1, "No visitor should be created after visiting another tracked product")
@@ -43,7 +43,7 @@ class WebsiteSaleVisitorTests(TransactionCase):
             'list_price': 320.0,
         })
 
-        with MockRequest(self.env, website=self.website, cookies=self.cookies):
+        with MockRequest(self.env, website=self.website, cookies=self.cookies, request_type='json'):
             self.WebsiteSaleController.products_recently_viewed_update(product.id)
 
         self.assertEqual(len(Visitor.search([])), 1, "No visitor should be created after visiting another tracked product")
