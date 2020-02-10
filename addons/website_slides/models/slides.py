@@ -312,8 +312,8 @@ class Slide(models.Model):
         help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
     index_content = fields.Text('Transcript')
     datas = fields.Binary('Content', attachment=True)
-    url = fields.Char('Document URL', help="Youtube or Google Document URL")
-    document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
+    url = fields.Char('Document URL', help="Youtube URL")
+    document_id = fields.Char('Document ID', help="Youtube ID")
     mime_type = fields.Char('Mime-type')
 
     @api.onchange('url')
@@ -325,7 +325,7 @@ class Slide(models.Model):
                 raise Warning(_('Could not fetch data from url. Document or access right not available:\n%s') % res['error'])
             values = res['values']
             if not values.get('document_id'):
-                raise Warning(_('Please enter valid Youtube or Google Doc URL'))
+                raise Warning(_('Please enter valid Youtube URL'))
             for key, value in values.items():
                 self[key] = value
 
@@ -548,7 +548,7 @@ class Slide(models.Model):
         values = {'slide_type': 'video', 'document_id': document_id}
         items = fetch_res['values'].get('items')
         if not items:
-            return {'error': _('Please enter valid Youtube or Google Doc URL')}
+            return {'error': _('Please enter valid Youtube URL')}
         youtube_values = items[0]
         if youtube_values.get('snippet'):
             snippet = youtube_values['snippet']
