@@ -38,7 +38,6 @@ class Users(models.Model):
     moderation_channel_ids = fields.Many2many(
         'mail.channel', 'mail_channel_moderator_rel',
         string='Moderated channels')
-    out_of_office_message = fields.Char(string='Chat Status')
 
     @api.depends('moderation_channel_ids.moderation', 'moderation_channel_ids.moderator_ids')
     def _compute_is_moderator(self):
@@ -73,10 +72,10 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
         init_res = super(Users, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
         type(self).SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
-        type(self).SELF_WRITEABLE_FIELDS.extend(['notification_type', 'out_of_office_message'])
+        type(self).SELF_WRITEABLE_FIELDS.extend(['notification_type'])
         # duplicate list to avoid modifying the original reference
         type(self).SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
-        type(self).SELF_READABLE_FIELDS.extend(['notification_type', 'out_of_office_message'])
+        type(self).SELF_READABLE_FIELDS.extend(['notification_type'])
         return init_res
 
     @api.model

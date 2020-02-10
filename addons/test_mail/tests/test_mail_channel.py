@@ -195,19 +195,6 @@ class TestChannelFeatures(TestMailCommon):
             self.test_channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertSentEmail(self.test_channel.env.user.partner_id, [self.test_partner])
 
-    @mute_logger('odoo.addons.mail.models.mail_mail')
-    def test_channel_out_of_office(self):
-        self.user_employee.out_of_office_message = 'Out'
-        test_chat = self.env['mail.channel'].with_context(self._test_context).create({
-            'channel_partner_ids': [(4, self.user_employee.partner_id.id), (4, self.user_admin.partner_id.id)],
-            'public': 'private',
-            'channel_type': 'chat',
-            'email_send': False,
-            'name': 'test'
-        })
-        infos = test_chat.with_user(self.user_admin).channel_info()
-        self.assertEqual(infos[0]['direct_partner'][0]['out_of_office_message'], 'Out')
-
 
 @tagged('moderation')
 class TestChannelModeration(TestMailCommon):
