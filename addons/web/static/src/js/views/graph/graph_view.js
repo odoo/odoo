@@ -16,8 +16,8 @@ var GraphRenderer = require('web.GraphRenderer');
 var _t = core._t;
 var _lt = core._lt;
 
-var GROUPABLE_TYPES =
-    ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
+var GroupByMenu = require('web.GroupByMenu');
+var GROUPABLE_TYPES = GroupByMenu.GROUPABLE_TYPES;
 
 var GraphView = AbstractView.extend({
     display_name: _lt('Graph'),
