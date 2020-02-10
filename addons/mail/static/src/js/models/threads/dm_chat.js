@@ -23,7 +23,6 @@ var DMChat = TwoUserChannel.extend(ChannelSeenMixin, {
      * @param {integer} params.data.direct_partner[0].id
      * @param {string} params.data.direct_partner[0].im_status
      * @param {string} params.data.direct_partner[0].name
-     * @param {string} [params.data.direct_partner[0].out_of_office_message]
      * @param {string} [params.data.direct_partner[0].out_of_office_date_end]
      */
     init: function (params) {
@@ -34,7 +33,6 @@ var DMChat = TwoUserChannel.extend(ChannelSeenMixin, {
 
         this._directPartnerID = data.direct_partner[0].id;
         this._name = data.custom_channel_name || data.direct_partner[0].name;
-        this._outOfOfficeMessage = data.direct_partner[0].out_of_office_message;
         this._outOfOfficeDateEnd = data.direct_partner[0].out_of_office_date_end;
         this._type = 'dm_chat';
 
@@ -78,15 +76,6 @@ var DMChat = TwoUserChannel.extend(ChannelSeenMixin, {
         return _.str.sprintf(_t("Out of office until %s"), formattedDate);
     },
     /**
-    * Get the out of office message of the thread
-    *
-    * @override {mail.model.AbstractThread}
-    * @returns {string}
-    */
-   getOutOfOfficeMessage: function () {
-        return this._outOfOfficeMessage;
-    },
-    /**
      * @override
      */
     getPreview: function () {
@@ -104,11 +93,9 @@ var DMChat = TwoUserChannel.extend(ChannelSeenMixin, {
 
     /**
      * @param {Object} data
-     * @param {string} data.outOfOfficeMessage
      * @param {string} data.outOfOfficeDateEnd
      */
     updateOutOfOfficeInfo: function (data) {
-        this._outOfOfficeMessage = data.outOfOfficeMessage;
         this._outOfOfficeDateEnd = data.outOfOfficeDateEnd;
         this.call('mail_service', 'getMailBus').trigger('updated_out_of_office', {
             threadID: this.getID(),

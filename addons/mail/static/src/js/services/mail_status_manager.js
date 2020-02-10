@@ -87,7 +87,6 @@ MailManager.include({
                         return;
                     }
                     dmChat.updateOutOfOfficeInfo({
-                        outOfOfficeMessage: channelInfo.direct_partner[0].out_of_office_message,
                         outOfOfficeDateEnd: channelInfo.direct_partner[0].out_of_office_date_end,
                     });
                 });
