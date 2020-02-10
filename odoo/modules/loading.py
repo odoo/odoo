@@ -175,6 +175,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             if package.name != 'base':
                 registry.setup_models(cr)
             migrations.migrate_module(package, 'pre')
+            if package.name != 'base':
+                env = api.Environment(cr, SUPERUSER_ID, {})
+                env['base'].flush()
 
         load_openerp_module(package.name)
 
