@@ -1120,6 +1120,12 @@ actual arch.
     def _validate_tag_search(self, node, name_manager, node_info):
         if len([c for c in node if c.tag == 'searchpanel']) > 1:
             self.handle_view_error(_('Search tag can only contains one search panel'))
+        if not list(node.iterdescendants(tag="field")):
+            # the field of the search view may be within a group node, which is why we must check
+            # for all descendants containing a node with a field tag, if this is not the case
+            # then a search is not possible.
+            self.handle_view_error(
+                _('Search tag requires at least one field element'), raise_exception=False)
 
     def _validate_tag_searchpanel(self, node, name_manager, node_info):
         for child in node.iterchildren(tag=etree.Element):
