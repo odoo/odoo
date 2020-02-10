@@ -504,18 +504,16 @@ class Channel(models.Model):
         Return the information needed by channel to display channel members
             :param all_partners: list of res.parner():
             :param direct_partners: list of res.parner():
-            :returns: a list of {'id', 'name', 'email'} for each partner and adds {im_status, out_of_office_message} for direct_partners.
+            :returns: a list of {'id', 'name', 'email'} for each partner and adds {im_status} for direct_partners.
             :rtype : list(dict)
         """
         partner_infos = {partner['id']: partner for partner in all_partners.sudo().read(['id', 'name', 'email'])}
-        # add im _status and out_of_office_message for direct_partners
+        # add im _status for direct_partners
         direct_partners_im_status = {partner['id']: partner for partner in direct_partners.sudo().read(['im_status'])}
 
         for i in direct_partners_im_status.keys():
             partner_infos[i].update(direct_partners_im_status[i])
 
-        for user in self.env['res.users'].search([('partner_id', 'in', direct_partners.ids), ('out_of_office_message', '!=', False)]):
-            partner_infos[user.partner_id.id]['out_of_office_message'] = user.out_of_office_message
         return partner_infos
 
     def channel_info(self, extra_info=False):

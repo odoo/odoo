@@ -5,9 +5,5 @@
     -->
     <div class="o_out_of_office" t-name="mail.thread.OutOfOffice">
         <div class="o_out_of_office_info" t-if="thread.getOutOfOfficeInfo()" t-esc="thread.getOutOfOfficeInfo()"/>
-        <div class="o_out_of_office_text o_text_wrap" t-if="thread.getOutOfOfficeMessage()">
-            <t t-esc="thread.getOutOfOfficeMessage()"/>
-            <a href="#" class="o_out_of_office_read_more_less_button">Read more</a>
-        </div>
     </div>
 </templates>

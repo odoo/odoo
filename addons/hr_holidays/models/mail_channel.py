@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class Channel(models.Model):
@@ -9,7 +9,7 @@ class Channel(models.Model):
 
     def partner_info(self, all_partners, direct_partners):
         partner_infos = super(Channel, self).partner_info(all_partners, direct_partners)
-        # only search for leave out_of_office_message if im_status is on leave
+        # only search for leave out_of_office_date_end if im_status is on leave
         partners_on_leave = [partner_id for partner_id in direct_partners.ids if 'leave' in partner_infos[partner_id]['im_status']]
         if partners_on_leave:
             now = fields.Datetime.now()

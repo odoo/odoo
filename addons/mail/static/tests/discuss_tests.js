@@ -1994,44 +1994,5 @@ QUnit.test('save filter discuss', async function (assert) {
     discuss.destroy();
 });
 
-QUnit.test('out-of-office info on discuss', async function (assert) {
-    assert.expect(3);
-
-    this.data.initMessaging = {
-        channel_slots: {
-            channel_direct_message: [{
-                id: 1,
-                channel_type: "chat",
-                direct_partner: [{
-                    id: 2,
-                    name: "Someone",
-                    im_status: "",
-                    out_of_office_message: "I'm busy doing nothing",
-                    out_of_office_date_end: false
-                }],
-                name: "DM",
-            }],
-        },
-    };
-    const discuss = await createDiscuss({
-        context: {},
-        params: {},
-        data: this.data,
-        services: this.services,
-    });
-
-    const $dmChat = discuss.$('.o_mail_discuss_item[data-thread-id=1]');
-    await testUtils.dom.click($dmChat);
-    assert.containsOnce(discuss, '.o_out_of_office',
-        'should contain out of office section on discuss');
-    assert.containsOnce(discuss, '.o_out_of_office_text',
-        'should contain out of office text on discuss');
-    assert.ok(
-        discuss.$('.o_out_of_office_text').text().trim().includes("I'm busy doing nothing"),
-        'should have content of provided out of office text');
-
-    discuss.destroy();
-});
-
 });
 });
