@@ -100,11 +100,7 @@ class ProductProduct(models.Model):
 
     def write(self, vals):
         if 'standard_price' in vals and not self.env.context.get('disable_auto_svl'):
-            for product_product in self:
-                if product_product.cost_method != 'fifo':
-                    counterpart_account_id = product_product._get_product_accounts()['expense'].id
-                    product_product._change_standard_price(vals['standard_price'], counterpart_account_id)
-
+            self.filtered(lambda p: p.cost_method != 'fifo')._change_standard_price(vals['standard_price'])
         return super(ProductProduct, self).write(vals)
 
     @api.depends('stock_valuation_layer_ids')
@@ -176,7 +172,7 @@ class ProductProduct(models.Model):
                 vals.update(fifo_vals)
         return vals
 
-    def _change_standard_price(self, new_price, counterpart_account_id=False):
+    def _change_standard_price(self, new_price):
         """Helper to create the stock valuation layers and the account moves
         after an update of standard price.
 
@@ -184,7 +180,7 @@ class ProductProduct(models.Model):
         """
         # Handle stock valuation layers.
 
-        if self.valuation == 'real_time' and not self.env['stock.valuation.layer'].check_access_rights('read', raise_exception=False):
+        if self.filtered(lambda p: p.valuation == 'real_time') and not self.env['stock.valuation.layer'].check_access_rights('read', raise_exception=False):
             raise UserError(_("You cannot update the cost of a product in automated valuation as it leads to the creation of a journal entry, for which you don't have the access rights."))
 
         svl_vals_list = []
@@ -221,17 +217,17 @@ class ProductProduct(models.Model):
                 continue
 
             # Sanity check.
-            if counterpart_account_id is False:
-                raise UserError(_('You must set a counterpart account.'))
+            if not product_accounts[product.id].get('expense'):
+                raise UserError(_('You must set a counterpart account on your product category.'))
             if not product_accounts[product.id].get('stock_valuation'):
                 raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
 
             if value < 0:
-                debit_account_id = counterpart_account_id
+                debit_account_id = product_accounts[product.id]['expense'].id
                 credit_account_id = product_accounts[product.id]['stock_valuation'].id
             else:
                 debit_account_id = product_accounts[product.id]['stock_valuation'].id
-                credit_account_id = counterpart_account_id
+                credit_account_id = product_accounts[product.id]['expense'].id
 
             move_vals = {
                 'journal_id': product_accounts[product.id]['stock_journal'].id,
