@@ -315,7 +315,7 @@ class WebRequest(object):
 
     def _call_function(self, *args, **kwargs):
         request = self
-        if self.endpoint.routing['type'] != self._request_type:
+        if self.endpoint.routing['type'] != self._request_type and self.endpoint.routing['type'] != '*':
             msg = "%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'"
             params = (self.endpoint.original, self.httprequest.path, self.endpoint.routing['type'], self._request_type)
             _logger.info(msg, *params)
@@ -506,7 +506,7 @@ def route(route=None, **kw):
 
     """
     routing = kw.copy()
-    assert 'type' not in routing or routing['type'] in ("http", "json")
+    assert 'type' not in routing or routing['type'] in ("http", "json", "*")
     def decorator(f):
         if route:
             if isinstance(route, list):
@@ -517,7 +517,7 @@ def route(route=None, **kw):
         @functools.wraps(f)
         def response_wrap(*args, **kw):
             response = f(*args, **kw)
-            if isinstance(response, Response) or f.routing_type == 'json':
+            if isinstance(response, Response) or request._request_type == 'json':
                 return response
 
             if isinstance(response, (bytes, pycompat.text_type)):
