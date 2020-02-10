@@ -857,25 +857,20 @@ options.registry.company_data = options.Class.extend({
         return Promise.all([this._super.apply(this, arguments), prom]);
     },
     /**
-     * When the users selects company data, opens a dialog to ask him if he
-     * wants to be redirected to the company form view to edit it.
+     * Redirect the user to the backend to edit his company info.
      *
      * @override
      */
-    onFocus: function () {
-        var self = this;
-        var proto = options.registry.company_data.prototype;
-
-        Dialog.confirm(this, _t("Do you want to edit the company data ?"), {
-            confirm_callback: function () {
-                self.trigger_up('request_save', {
-                    reload: false,
-                    onSuccess: function () {
-                        window.location.href = proto.__link;
-                    },
-                });
-            },
-        });
+    viewInBackend: function (previewMode, widgetValue, params) {
+        if (!previewMode) {
+            var proto = options.registry.company_data.prototype;
+            this.trigger_up('request_save', {
+                reload: false,
+                onSuccess: function () {
+                    window.location.href = proto.__link;
+                },
+            });
+        }
     },
 });
 
