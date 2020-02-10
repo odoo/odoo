@@ -39,14 +39,14 @@ class FleetVehicle(models.Model):
             self.manager_id = None
 
     brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Brand', related="model_id.brand_id", store=True, readonly=False)
-    log_drivers = fields.One2many('fleet.vehicle.assignation.log', 'vehicle_id', string='Assignation Logs')
+    log_drivers = fields.One2many('fleet.vehicle.assignation.log', 'vehicle_id', string='Assignment Logs')
     log_services = fields.One2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs')
     log_contracts = fields.One2many('fleet.vehicle.log.contract', 'vehicle_id', 'Contracts')
     contract_count = fields.Integer(compute="_compute_count_all", string='Contract Count')
     service_count = fields.Integer(compute="_compute_count_all", string='Services')
     odometer_count = fields.Integer(compute="_compute_count_all", string='Odometer')
     history_count = fields.Integer(compute="_compute_count_all", string="Drivers History Count")
-    next_assignation_date = fields.Date('Assignation Date', help='This is the date at which the car will be available, if not set it means available instantly')
+    next_assignation_date = fields.Date('Assignment Date', help='This is the date at which the car will be available, if not set it means available instantly')
     acquisition_date = fields.Date('Immatriculation Date', required=False,
         default=fields.Date.today, help='Date when the vehicle has been immatriculated')
     first_contract_date = fields.Date(string="First Contract Date", default=fields.Date.today)
@@ -307,7 +307,7 @@ class FleetVehicle(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Assignation Logs',
+            'name': 'Assignment Logs',
             'view_mode': 'tree',
             'res_model': 'fleet.vehicle.assignation.log',
             'domain': [('vehicle_id', '=', self.id)],
