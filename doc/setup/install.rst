@@ -412,7 +412,7 @@ A typical way to run the server would be:
 Where `CommunityPath` is the path of the Odoo Community installation, `dbuser` is the
 PostgreSQL login, `dbpassword` is the PostgreSQL password
 and `mydb` is the default database to serve on `localhost:8069`. You can add other
-directory paths separated by a comma to ``addons`` at the end of addons-path option.
+directory paths separated by a comma to ``addons`` at the end of the addons-path option.
 
 Linux
 -----
@@ -579,7 +579,7 @@ A typical way to run the server would be:
 
 Where `CommunityPath` is the path of the Odoo Community installation
 and `mydb` is the default database to serve on `localhost:8069`. You can add other
-directory paths separated by a comma to ``addons`` at the end of addons-path option.
+directory paths separated by a comma to ``addons`` at the end of the addons-path option.
 
 Mac OS
 ------
@@ -741,7 +741,7 @@ A typical way to run the server would be:
 
 Where `CommunityPath` is the path of the Odoo Community installation
 and `mydb` is the default database to serve on `localhost:8069`. You can add other
-directory paths separated by a comma to ``addons`` at the end of addons-path option.
+directory paths separated by a comma to ``addons`` at the end of the addons-path option.
 
 
 .. _setup/install/docker:
