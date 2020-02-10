@@ -2889,6 +2889,22 @@ var JournalDashboardGraph = AbstractField.extend({
                     intersect: false,
                     position: 'nearest',
                     caretSize: 0,
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (!(tooltipItem.value === null || typeof tooltipItem.value === 'undefined')) {
+                                label += parseFloat(tooltipItem.value).toFixed(2);
+                            } else {
+                                label += isNaN(tooltipItem.yLabel) ? tooltipItem.yLabel : tooltipItem.yLabel.toFixed(2);
+                            }
+
+                            return label;
+                        }
+                    }
                 },
             },
         };
@@ -2925,6 +2941,22 @@ var JournalDashboardGraph = AbstractField.extend({
                     intersect: false,
                     position: 'nearest',
                     caretSize: 0,
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (!(tooltipItem.value === null || typeof tooltipItem.value === 'undefined')) {
+                                label += parseFloat(tooltipItem.value).toFixed(2);
+                            } else {
+                                label += isNaN(tooltipItem.yLabel) ? tooltipItem.yLabel : tooltipItem.yLabel.toFixed(2);
+                            }
+
+                            return label;
+                        }
+                    }
                 },
                 elements: {
                     line: {
