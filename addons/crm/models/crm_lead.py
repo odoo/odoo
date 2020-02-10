@@ -108,7 +108,7 @@ class Lead(models.Model):
     # Dates
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
     date_action_last = fields.Datetime('Last Action', readonly=True)
-    date_open = fields.Datetime('Assignation Date', readonly=True, default=fields.Datetime.now)
+    date_open = fields.Datetime('Assignment Date', readonly=True, default=fields.Datetime.now)
     day_open = fields.Float('Days to Assign', compute='_compute_day_open', store=True)
     day_close = fields.Float('Days to Close', compute='_compute_day_close', store=True)
     date_last_stage_update = fields.Datetime('Last Stage Update', index=True, default=fields.Datetime.now)
