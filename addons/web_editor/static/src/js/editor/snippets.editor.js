@@ -386,7 +386,7 @@ var SnippetEditor = Widget.extend({
      * @private
      * @param {boolean} recordUndo
      */
-    clone: function (recordUndo) {
+    clone: async function (recordUndo) {
         this.trigger_up('snippet_will_be_cloned', {$target: this.$target});
 
         var $clone = this.$target.clone(false);
@@ -396,15 +396,18 @@ var SnippetEditor = Widget.extend({
         }
 
         this.$target.after($clone);
-        this.trigger_up('call_for_each_child_snippet', {
-            $snippet: $clone,
-            callback: function (editor, $snippet) {
-                for (var i in editor.styles) {
-                    editor.styles[i].onClone({
-                        isCurrent: ($snippet.is($clone)),
-                    });
-                }
-            },
+        await new Promise(resolve => {
+            this.trigger_up('call_for_each_child_snippet', {
+                $snippet: $clone,
+                callback: function (editor, $snippet) {
+                    for (var i in editor.styles) {
+                        editor.styles[i].onClone({
+                            isCurrent: ($snippet.is($clone)),
+                        });
+                    }
+                    resolve();
+                },
+            });
         });
         this.trigger_up('snippet_cloned', {$target: $clone, $origin: this.$target});
 
@@ -1925,11 +1928,13 @@ var SnippetsMenu = Widget.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onCloneSnippet: function (ev) {
+    _onCloneSnippet: async function (ev) {
         ev.stopPropagation();
-        this._createSnippetEditor(ev.data.$snippet).then(editor => {
-            editor.clone();
-        });
+        const editor = await this._createSnippetEditor(ev.data.$snippet);
+        await editor.clone();
+        if (ev.data.onSuccess) {
+            ev.data.onSuccess();
+        }
     },
     /**
      * Called when a child editor asks to deactivate the current snippet
@@ -2103,11 +2108,13 @@ var SnippetsMenu = Widget.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onRemoveSnippet: function (ev) {
+    _onRemoveSnippet: async function (ev) {
         ev.stopPropagation();
-        this._createSnippetEditor(ev.data.$snippet).then(function (editor) {
-            editor.removeSnippet();
-        });
+        const editor = await this._createSnippetEditor(ev.data.$snippet);
+        await editor.removeSnippet();
+        if (ev.data.onSuccess) {
+            ev.data.onSuccess();
+        }
     },
     /**
      * Saving will destroy all editors since they need to clean their DOM.
