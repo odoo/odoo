@@ -14,7 +14,7 @@ class ResPartnerGrade(models.Model):
     active = fields.Boolean('Active', default=lambda *args: 1)
     name = fields.Char('Level Name', translate=True)
     partner_weight = fields.Integer('Level Weight', default=1,
-        help="Gives the probability to assign a lead to this partner. (0 means no assignation.)")
+        help="Gives the probability to assign a lead to this partner. (0 means no assignment.)")
 
     def _compute_website_url(self):
         super(ResPartnerGrade, self)._compute_website_url()

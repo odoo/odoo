@@ -29,7 +29,7 @@ class Lead2OpportunityMassConvert(models.TransientModel):
     action = fields.Selection(selection_add=[
         ('each_exist_or_create', 'Use existing partner or create'),
     ], string='Related Customer', required=True)
-    force_assignation = fields.Boolean('Force assignation', help='If unchecked, this will leave the salesman of duplicated opportunities')
+    force_assignation = fields.Boolean('Force assignment', help='If unchecked, this will leave the salesman of duplicated opportunities')
 
     @api.onchange('action')
     def _onchange_action(self):

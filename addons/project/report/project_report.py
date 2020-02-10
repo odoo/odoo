@@ -12,7 +12,7 @@ class ReportProjectTaskUser(models.Model):
 
     name = fields.Char(string='Task Title', readonly=True)
     user_id = fields.Many2one('res.users', string='Assigned To', readonly=True)
-    date_assign = fields.Datetime(string='Assignation Date', readonly=True)
+    date_assign = fields.Datetime(string='Assignment Date', readonly=True)
     date_end = fields.Datetime(string='Ending Date', readonly=True)
     date_deadline = fields.Date(string='Deadline', readonly=True)
     date_last_stage_update = fields.Datetime(string='Last Stage Update', readonly=True)
