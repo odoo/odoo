@@ -12,6 +12,7 @@ import pytz
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, _
+from odoo.osv import expression
 from odoo.tools import exception_to_unicode
 
 _logger = logging.getLogger(__name__)
@@ -550,7 +551,15 @@ class GoogleCalendar(models.AbstractModel):
     @api.model
     def synchronize_events_cron(self):
         """ Call by the cron. """
-        users = self.env['res.users'].search([('google_calendar_last_sync_date', '!=', False)])
+        domain = [('google_calendar_last_sync_date', '!=', False)]
+        if self.env.context.get('last_sync_hours'):
+            last_sync_hours = self.env.context['last_sync_hours']
+            last_sync_date = datetime.now() - timedelta(hours=last_sync_hours)
+            domain = expression.AND([
+                domain,
+                [('google_calendar_last_sync_date', '<=', fields.Datetime.to_string(last_sync_date))]
+            ])
+        users = self.env['res.users'].search(domain, order='google_calendar_last_sync_date')
         _logger.info("Calendar Synchro - Started by cron")
 
         for user_to_sync in users.ids:
