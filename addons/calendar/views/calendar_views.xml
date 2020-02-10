@@ -23,7 +23,7 @@
         <field name="name">calendar.alarm.tree</field>
         <field name="model">calendar.alarm</field>
         <field name="arch" type="xml">
-            <tree string="Calendar Alarm" sample="1" editable="bottom">
+            <tree string="Calendar Alarm" sample="1">
                 <field name="name" invisible="1"/>
                 <field name="alarm_type"/>
                 <field name="duration"/>
@@ -33,23 +33,32 @@
     </record>
 
     <record id="calendar_alarm_view_form" model="ir.ui.view">
-            <field name="name">calendar.alarm.form</field>
-            <field name="model">calendar.alarm</field>
-            <field name="arch" type="xml">
-                <form string="Calendar Alarm">
-                 <group>
+        <field name="name">calendar.alarm.form</field>
+        <field name="model">calendar.alarm</field>
+        <field name="arch" type="xml">
+            <form string="Calendar Alarm">
+                <sheet>
                     <group>
-                        <field name="name" invisible="1"/>
-                        <field name="alarm_type"/>
+                        <group>
+                            <field name="name" invisible="1"/>
+                            <field name="alarm_type"/>
+                        </group>
+                        <group>
+                            <label for="duration"/>
+                            <div class="o_row">
+                                <field name="duration"/>
+                                <field name="interval"/>
+                            </div>
+                        </group>
+                        <group attrs="{'invisible': [('alarm_type','=','notification')]}">
+                            <field name="mail_template_id" attrs="{'invisible': [('alarm_type','!=','email')], 'required': [('alarm_type', '=', 'email')]}"
+                                context="{'default_model': 'calendar.event'}"/>
+                        </group>
                     </group>
-                    <group>
-                        <label for="duration"/>
-                        <div class="o_row">
-                            <field name="duration"/>
-                            <field name="interval"/>
-                        </div>
+                    <group attrs="{'invisible': [('alarm_type','!=','notification')]}">
+                        <field name="body"/>
                     </group>
-                </group>
+                </sheet>
             </form>
         </field>
     </record>
@@ -57,6 +66,7 @@
     <record id="action_calendar_alarm" model="ir.actions.act_window">
         <field name="name">Calendar Alarm</field>
         <field name="res_model">calendar.alarm</field>
+        <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_calendar_alarm_tree"/>
     </record>
 

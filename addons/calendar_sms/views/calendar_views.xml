@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
+    <record id="calendar_alarm_view_form" model="ir.ui.view">
+        <field name="name">calendar.alarm.view.form.inherit.calendar.sms</field>
+        <field name="model">calendar.alarm</field>
+        <field name="inherit_id" ref="calendar.calendar_alarm_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='mail_template_id']" position="after">
+                <field name="sms_template_id" attrs="{'invisible': [('alarm_type','!=','sms')], 'required': [('alarm_type', '=', 'sms')]}"
+                    context="{'default_model': 'calendar.event'}"/>
+            </xpath>
+        </field>
+    </record>
+
     <!-- Add action entry in the Action Menu for Events -->
     <record id="calendar_event_act_window_sms_composer_single" model="ir.actions.act_window">
         <field name="name">Send SMS</field>

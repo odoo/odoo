@@ -36,12 +36,14 @@
             <field name="duration" eval="3" />
             <field name="interval">hours</field>
             <field name="alarm_type">email</field>
+            <field name="mail_template_id" ref="calendar.calendar_template_meeting_reminder"/>
         </record>
         <record id="alarm_mail_2" model="calendar.alarm">
             <field name="name">Email - 6 Hours</field>
             <field name="duration" eval="6" />
             <field name="interval">hours</field>
             <field name="alarm_type">email</field>
+            <field name="mail_template_id" ref="calendar.calendar_template_meeting_reminder"/>
         </record>
     </data>
 </odoo>
