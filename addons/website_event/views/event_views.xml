@@ -55,8 +55,9 @@
         <field name="model">event.event</field>
         <field name="inherit_id" ref="event.view_event_tree"/>
         <field name="arch" type="xml">
-            <field name="name" position="after">
-                <field name="website_id" groups="website.group_multi_website" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+            <field name="company_id" position="after">
+                <field name="website_id" groups="website.group_multi_website" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" optional="show"/>
+                <field name="is_online" string="Is Online" optional="hide"/>
             </field>
         </field>
     </record>
