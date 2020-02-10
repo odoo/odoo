@@ -226,7 +226,7 @@ class HolidaysAllocation(models.Model):
             if allocation.parent_id and allocation.parent_id.type_request_unit == "hour":
                 allocation.number_of_hours_display = allocation.number_of_days * HOURS_PER_DAY
             else:
-                allocation.number_of_hours_display = allocation.number_of_days * (allocation.employee_id.sudo().resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+                allocation.number_of_hours_display = allocation.number_of_days * (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
 
     @api.depends('number_of_hours_display', 'number_of_days_display')
     def _compute_duration_display(self):

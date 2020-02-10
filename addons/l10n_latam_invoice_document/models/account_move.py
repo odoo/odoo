@@ -90,7 +90,7 @@ class AccountMove(models.Model):
         return super(AccountMove, self - with_latam_document_number)._compute_invoice_sequence_number_next()
 
     def post(self):
-        for rec in self.filtered(lambda x: x.l10n_latam_use_documents and (not x.name or x.name == '/')):
+        for rec in self.filtered(lambda x: x.l10n_latam_use_documents and not x.l10n_latam_document_number):
             if not rec.l10n_latam_sequence_id:
                 raise UserError(_('No sequence or document number linked to invoice id %s') % rec.id)
             if rec.type in ('in_receipt', 'out_receipt'):
