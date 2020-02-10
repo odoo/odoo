@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import date, timedelta
 
+from odoo.fields import Date
 from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheetNoChart
@@ -393,6 +394,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
             4) create invoice for the timesheets 4 days before
             5) create invoice for the timesheets from today
         """
+        today = Date.context_today(self.env.user)
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_customer_usd.id,
             'partner_invoice_id': self.partner_customer_usd.id,
@@ -430,7 +432,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
             'task_id': task_serv1.id,
             'unit_amount': 10,
             'employee_id': self.employee_manager.id,
-            'date': date.today() - timedelta(days=6)
+            'date': today - timedelta(days=6)
         })
 
         timesheet2 = self.env['account.analytic.line'].create({
@@ -439,7 +441,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
             'task_id': task_serv1.id,
             'unit_amount': 20,
             'employee_id': self.employee_manager.id,
-            'date': date.today() - timedelta(days=1)
+            'date': today - timedelta(days=1)
         })
 
         timesheet3 = self.env['account.analytic.line'].create({
@@ -448,7 +450,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
             'task_id': task_serv1.id,
             'unit_amount': 10,
             'employee_id': self.employee_manager.id,
-            'date': date.today() - timedelta(days=5)
+            'date': today - timedelta(days=5)
         })
 
         timesheet4 = self.env['account.analytic.line'].create({
@@ -473,7 +475,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         # invoice SO
         wizard = self.env['sale.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'delivered',
-            'date_invoice_timesheet': date.today() - timedelta(days=10)
+            'date_invoice_timesheet': today - timedelta(days=10)
         })
 
         self.assertTrue(wizard.invoicing_timesheet_enabled, 'The "date_invoice_timesheet" field should be visible in the wizard because a product in sale order has service_policy to "Timesheet on Task"')
@@ -484,7 +486,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         self.assertFalse(sale_order.invoice_ids, 'Normally, no invoice will be created created because the timesheet logged is after the date defined in date_invoice_timesheet field')
 
         wizard.write({
-            'date_invoice_timesheet': date.today() - timedelta(days=6)
+            'date_invoice_timesheet': today - timedelta(days=6)
         })
         wizard.create_invoices()
 
@@ -497,7 +499,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         invoice.post()
 
         wizard.write({
-            'date_invoice_timesheet': date.today() - timedelta(days=4)
+            'date_invoice_timesheet': today - timedelta(days=4)
         })
         wizard.create_invoices()
 
@@ -507,7 +509,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         self.assertEqual(so_line_deliver_global_project.qty_invoiced, timesheet1.unit_amount + timesheet3.unit_amount, "The last invoice done should have the quantity of the timesheet 3, because the date this timesheet is the only one before the 'date_invoice_timesheet' field in the wizard.")
 
         wizard.write({
-            'date_invoice_timesheet': date.today()
+            'date_invoice_timesheet': today
         })
 
         wizard.create_invoices()
@@ -517,4 +519,5 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
 
         # Check if all timesheets have been invoiced
         self.assertEqual(so_line_deliver_global_project.qty_invoiced, timesheet1.unit_amount + timesheet2.unit_amount + timesheet3.unit_amount)
-        self.assertEqual(so_line_deliver_task_project.qty_invoiced, + timesheet4.unit_amount)
+        self.assertTrue(so_line_deliver_task_project.invoice_lines)
+        self.assertEqual(so_line_deliver_task_project.qty_invoiced, timesheet4.unit_amount)
