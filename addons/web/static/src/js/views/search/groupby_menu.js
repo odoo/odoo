@@ -8,7 +8,7 @@ var DropdownMenu = require('web.DropdownMenu');
 var QWeb = core.qweb;
 var _t = core._t;
 
-var GROUPABLE_TYPES = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
+var GROUPABLE_TYPES = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime', 'integer'];
 
 var DEFAULT_INTERVAL = 'month';
 
