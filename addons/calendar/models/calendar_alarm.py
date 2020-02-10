@@ -21,6 +21,12 @@ class Alarm(models.Model):
         'Duration in minutes', store=True,
         search='_search_duration_minutes', compute='_compute_duration_minutes',
         help="Duration in minutes")
+    mail_template_id = fields.Many2one(
+        'mail.template', string="Email Template",
+        domain=[('model', 'in', ['calendar.attendee'])],
+        compute='_compute_mail_template_id', readonly=False, store=True,
+        help="Template used to render mail reminder content.")
+    body = fields.Text("Additional Message", help="Additional message that would be sent with the notification for the reminder")
 
     @api.depends('interval', 'duration')
     def _compute_duration_minutes(self):
@@ -33,6 +39,14 @@ class Alarm(models.Model):
                 alarm.duration_minutes = alarm.duration * 60 * 24
             else:
                 alarm.duration_minutes = 0
+
+    @api.depends('alarm_type', 'mail_template_id')
+    def _compute_mail_template_id(self):
+        for alarm in self:
+            if alarm.alarm_type == 'email' and not alarm.mail_template_id:
+                alarm.mail_template_id = self.env['ir.model.data'].xmlid_to_res_id('calendar.calendar_template_meeting_reminder')
+            elif alarm.alarm_type != 'email' or not alarm.mail_template_id:
+                alarm.mail_template_id = False
 
     def _search_duration_minutes(self, operator, value):
         return [
