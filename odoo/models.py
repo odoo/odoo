@@ -867,7 +867,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
                 messages.append(dict(info, type='error', **PGERROR_TO_OE[e.pgcode](self, fg, info, e)))
             except Exception as e:
-                _logger.exception("Error while loading record")
+                _logger.debug("Error while loading record", exc_info=True)
                 # Failed for some reason, perhaps due to invalid data supplied,
                 # rollback savepoint and keep going
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
