@@ -55,6 +55,7 @@ class WebsiteEventSaleController(WebsiteEventController):
             # free tickets -> order with amount = 0: auto-confirm, no checkout
             elif order:
                 order.action_confirm()  # tde notsure: email sending ?
+                request.website.sale_reset()
 
         return res
 
