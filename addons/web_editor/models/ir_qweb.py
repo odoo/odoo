@@ -239,7 +239,8 @@ class DateTime(models.AbstractModel):
             return False
 
         # parse from string to datetime
-        date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format + ' %H:%M'
+        user_lang = self.env['res.lang']._lang_get(self.env.user.lang)
+        date_format = ' '.join([user_lang.date_format, user_lang.time_format])
         dt = datetime.strptime(value, date_format)
 
         # convert back from user's timezone to UTC
