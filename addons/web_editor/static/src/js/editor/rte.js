@@ -681,6 +681,7 @@ var RTEWidget = Widget.extend({
              * Remove content editable everywhere and add it on the link only so that characters can be added
              * and removed at the start and at the end of it.
              */
+            let hasContentEditable = $target.attr('contenteditable');
             $target.attr('contenteditable', true);
             _.defer(function () {
                 $editable.not($target).attr('contenteditable', false);
@@ -690,7 +691,9 @@ var RTEWidget = Widget.extend({
             // Once clicked outside, remove contenteditable on link and reactive all
             $(document).on('mousedown.reactivate_contenteditable', function (e) {
                 if ($target.is(e.target)) return;
-                $target.removeAttr('contenteditable');
+                if (!hasContentEditable) {
+                    $target.removeAttr('contenteditable');
+                }
                 $editable.attr('contenteditable', true);
                 $(document).off('mousedown.reactivate_contenteditable');
             });
