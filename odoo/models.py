@@ -3077,7 +3077,7 @@ class BaseModel(object):
                 if f.compute or (f.name in self._cache):
                     fs.discard(f)
                 else:
-                    records &= self._in_cache_without(f)
+                    records &= self._in_cache_without(f, limit=None)
 
         # fetch records with read()
         assert self in records and field in fs
