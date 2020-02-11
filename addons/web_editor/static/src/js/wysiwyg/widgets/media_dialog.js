@@ -107,6 +107,8 @@ var MediaDialog = Dialog.extend({
             promises.push(this.videoWidget.appendTo(this.$("#editor-media-video")));
         }
 
+        this.opened(() => this.$('input.o_we_search:visible:first').focus());
+
         return Promise.all(promises);
     },
 

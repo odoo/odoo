@@ -37,11 +37,6 @@ odoo.define("website_blog.tour", function (require) {
         content: _t("Choose an image from the library."),
         position: "top",
     }, {
-        trigger: ".o_select_media_dialog .modal-footer > .btn-primary",
-        extra_trigger: ".o_existing_attachment_cell.o_we_attachment_selected",
-        content: _t("Click on <b>Save</b> to set the picture as cover."),
-        position: "top",
-    }, {
         trigger: "#o_wblog_post_content",
         content: _t("<b>Write your story here.</b> Use the top toolbar to style your text: add an image or table, set bold or italic, etc. Drag and drop building blocks for more graphical blogs."),
         position: "top",

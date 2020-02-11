@@ -256,6 +256,9 @@ QUnit.module('web_editor', {}, function () {
                     if (route.indexOf('/web_editor/static/src/img/') === 0) {
                         return Promise.resolve();
                     }
+                    if (route.indexOf('/web_unsplash/fetch_images') === 0) {
+                        return Promise.resolve();
+                    }
                     return this._super(route, args);
                 },
             });
@@ -278,8 +281,7 @@ QUnit.module('web_editor', {}, function () {
 
             // load static xml file (dialog, media dialog, unsplash image widget)
             await defMediaDialog;
-            await testUtils.dom.click($('.modal #editor-media-image .o_existing_attachment_cell:first'));
-            await testUtils.dom.click($('.modal .modal-footer button.btn-primary'));
+            await testUtils.dom.click($('.modal #editor-media-image .o_existing_attachment_cell:first').removeClass('d-none'));
 
             var $editable = form.$('.oe_form_field[name="body"] .note-editable');
 
@@ -307,6 +309,9 @@ QUnit.module('web_editor', {}, function () {
                     if (args.model === 'ir.attachment') {
                         return Promise.resolve([]);
                     }
+                    if (route.indexOf('/web_unsplash/fetch_images') === 0) {
+                        return Promise.resolve();
+                    }
                     return this._super(route, args);
                 },
             });
@@ -332,7 +337,6 @@ QUnit.module('web_editor', {}, function () {
             $('.modal .tab-content .tab-pane').removeClass('fade'); // to be sync in test
             await testUtils.dom.click($('.modal a[aria-controls="editor-media-icon"]'));
             await testUtils.dom.click($('.modal #editor-media-icon .font-icons-icon.fa-glass'));
-            await testUtils.dom.click($('.modal .modal-footer button.btn-primary'));
 
             var $editable = form.$('.oe_form_field[name="body"] .note-editable');
 
