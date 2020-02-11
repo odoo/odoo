@@ -10,14 +10,14 @@
             <t t-call-assets="survey.survey_assets" lazy_load="True"/>
         </xpath>
         <xpath expr="//header" position="before">
-            <t t-set="no_header" t-value="no_header or (survey and survey.certification) or (answer and answer.is_session_answer)"/>
-            <t t-set="no_footer" t-value="no_footer or not survey or survey.certification or (answer and answer.is_session_answer)"/>
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
         </xpath>
         <xpath expr="//header" position="after">
             <div id="wrap" class="oe_structure oe_empty"/>
         </xpath>
         <xpath expr="//footer" position="after">
-            <div t-if="no_footer" class="py-3">
+            <div class="py-3">
                 <div class="float-right px-5 py-2 bg-white rounded-left">
                     <t t-call="web.brand_promotion_message">
                         <t t-set="_message"></t>
