@@ -687,7 +687,7 @@ class HolidaysRequest(models.Model):
             if holiday.validation_type == 'no_validation':
                 # Automatic validation should be done in sudo, because user might not have the rights to do it by himself
                 holiday_sudo.action_validate()
-                holiday_sudo.message_subscribe(partner_ids=[holiday._get_responsible_for_approval().partner_id.id])
+                holiday_sudo.message_subscribe(partner_ids=[holiday_sudo._get_responsible_for_approval().partner_id.id])
                 holiday_sudo.message_post(body=_("The time off has been automatically approved"), subtype_xmlid="mail.mt_comment") # Message from OdooBot (sudo)
             elif not self._context.get('import_file'):
                 holiday_sudo.activity_update()
