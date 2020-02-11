@@ -366,14 +366,15 @@ class Post(models.Model):
 
     @api.depends('child_ids.create_uid', 'website_message_ids')
     def _get_child_count(self):
-        def process(node):
-            total = len(node.website_message_ids) + len(node.child_ids)
-            for child in node.child_ids:
-                total += process(child)
-            return total
-
         for post in self:
-            post.child_count = process(post)
+            children = self.search([('id', 'child_of', post.id)])
+            children_count = len(children)
+            message_count = self.env['mail.message'].search_count([
+                ('model', '=', post._name),
+                ('message_type', 'in', ['email', 'comment']),
+                ('res_id', 'in', children.ids + [post.id]),
+            ])
+            post.child_count = children_count + message_count
 
     def _get_uid_has_answered(self):
         for post in self:
