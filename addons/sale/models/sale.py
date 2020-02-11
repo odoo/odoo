@@ -356,8 +356,8 @@ class SaleOrder(models.Model):
         if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms:
             values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
 
-        # Use team of salesman if any otherwise leave as-is
-        values['team_id'] = partner_user.team_id.id if partner_user and partner_user.team_id else self.team_id
+        # Use team of saleman before to fallback on team of partner.
+        values['team_id'] = partner_user.team_id.id or self.partner_id.team_id.id or self.team_id.id
         self.update(values)
 
     @api.onchange('user_id')
