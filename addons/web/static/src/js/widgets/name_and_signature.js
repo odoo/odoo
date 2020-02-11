@@ -2,6 +2,7 @@ odoo.define('web.name_and_signature', function (require) {
 'use strict';
 
 var core = require('web.core');
+var config = require('web.config');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
 
@@ -162,7 +163,10 @@ var NameAndSignature = Widget.extend({
      * Focuses the name.
      */
     focusName: function () {
-        this.$nameInput.focus();
+        // Don't focus on mobile
+        if (!config.device.isMobile) {
+            this.$nameInput.focus();
+        }
     },
     /**
      * Gets the name currently given by the user.
