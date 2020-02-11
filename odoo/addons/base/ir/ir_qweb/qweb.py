@@ -48,7 +48,7 @@ arg = getattr(ast, 'arg', lambda arg, annotation: ast.Name(id=arg, ctx=ast.Param
 # so add a shim for *that* based on the signature of Python 3 I guess?
 arguments = ast.arguments
 if pycompat.PY2:
-    arguments = lambda args, vararg, kwonlyargs, kw_defaults, kwarg, defaults: ast.arguments(args=args, vararg=vararg, kwarg=kwarg, defaults=defaults)
+    arguments = lambda args, vararg, kwarg, defaults, **kwargs: ast.arguments(args=args, vararg=vararg, kwarg=kwarg, defaults=defaults)
 ####################################
 ###          qweb tools          ###
 ####################################
