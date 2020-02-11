@@ -38,8 +38,17 @@ class LinkTracker(models.Model):
 
     @api.depends('link_click_ids.link_id')
     def _compute_count(self):
+        if self.ids:
+            clicks_data = self.env['link.tracker.click'].read_group(
+                [('link_id', 'in', self.ids)],
+                ['link_id'],
+                ['link_id']
+            )
+            mapped_data = {m['link_id'][0]: m['link_id_count'] for m in clicks_data}
+        else:
+            mapped_data = dict()
         for tracker in self:
-            tracker.count = len(tracker.link_click_ids)
+            tracker.count = mapped_data.get(tracker.id, 0)
 
     @api.depends('code')
     def _compute_short_url(self):
@@ -187,8 +196,12 @@ class LinkTrackerClick(models.Model):
     _rec_name = "link_id"
     _description = "Link Tracker Click"
 
-    campaign_id = fields.Many2one(string='UTM Campaign', comodel_name="utm.campaign", related="link_id.campaign_id", store=True)
-    link_id = fields.Many2one('link.tracker', 'Link', required=True, ondelete='cascade')
+    campaign_id = fields.Many2one(
+        'utm.campaign', 'UTM Campaign',
+        related="link_id.campaign_id", store=True)
+    link_id = fields.Many2one(
+        'link.tracker', 'Link',
+        index=True, required=True, ondelete='cascade')
     ip = fields.Char(string='Internet Protocol')
     country_id = fields.Many2one('res.country', 'Country')
 
