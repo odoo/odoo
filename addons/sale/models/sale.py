@@ -316,7 +316,7 @@ class SaleOrder(models.Model):
             values['note'] = self.with_context(lang=self.partner_id.lang).env.user.company_id.invoice_terms
 
         # Use team of saleman before to fallback on team of partner.
-        values['team_id'] = self.partner_id.user_id and self.partner_id.user_id.sale_team_id.id or self.partner_id.team_id.id
+        values['team_id'] = self.partner_id.user_id and self.partner_id.user_id.sale_team_id.id or self.partner_id.team_id.id or self.team_id.id
         self.update(values)
 
     @api.onchange('partner_id')
