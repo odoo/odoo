@@ -433,20 +433,22 @@
                         <!-- Date & Time -->
                         <div class="o_wevent_sidebar_block">
                             <h6 class="o_wevent_sidebar_title">Date &amp; Time</h6>
-                            <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'EEEE'}"/>
-                            <h4 class="my-1" t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'long'}" itemprop="startDate" t-att-datetime="event.date_begin"/>
+                            <span class="o_not_editable" t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'EEEE'}"/>
+                            <h4 class="my-1 css_editable_mode_hidden" t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'long'}" itemprop="startDate" t-att-datetime="event.date_begin"/>
+                            <h4 class="my-1 css_non_editable_mode_hidden" t-field="event.with_context(tz=event.date_tz).date_begin" t-if="editable" itemprop="startDate" t-att-datetime="event.date_begin"/>
                             <t t-if="not event.is_one_day">Start -</t>
-                            <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'time_only': 'true', 'format': 'short'}"/>
+                            <span class="o_not_editable" t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'time_only': 'true', 'format': 'short'}"/>
                             <t t-if="event.is_one_day">
                                 <i class="fa fa-long-arrow-right mx-1"/>
                                 <span t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'time_only': 'true', 'format': 'short'}"/>
                             </t>
                             <t t-else="">
                                 <i class="fa fa-long-arrow-down d-block text-muted mx-3 my-2" style="font-size: 1.5rem"/>
-                                <span t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'date_only': 'true', 'format': 'EEEE'}"/>
-                                <h4 class="my-1" t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'date_only': 'true', 'format': 'long'}"/>
+                                <span class="o_not_editable" t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'date_only': 'true', 'format': 'EEEE'}"/>
+                                <h4 class="my-1 css_editable_mode_hidden" t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'date_only': 'true', 'format': 'long'}"/>
+                                <h4 class="my-1 css_non_editable_mode_hidden" t-field="event.with_context(tz=event.date_tz).date_end" t-if="editable"/>
                                 <t t-if="not event.is_one_day">End -</t>
-                                <span t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'time_only': 'true', 'format': 'short'}"/>
+                                <span class="o_not_editable" t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'time_only': 'true', 'format': 'short'}"/>
                             </t>
                             <!-- Timezone -->
                             <small t-esc="event.date_tz" class="d-block my-3 text-muted"/>
