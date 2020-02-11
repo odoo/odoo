@@ -49,6 +49,10 @@ class ReturnPicking(models.TransientModel):
         product_return_moves = [(5,)]
         if self.picking_id and self.picking_id.state != 'done':
             raise UserError(_("You may only return Done pickings."))
+        # In case we want to set specific default values (e.g. 'to_refund'), we must fetch the
+        # default values for creation.
+        line_fields = [f for f in self.env['stock.return.picking.line']._fields.keys()]
+        product_return_moves_data_tmpl = self.env['stock.return.picking.line'].default_get(line_fields)
         for move in self.picking_id.move_lines:
             if move.state == 'cancel':
                 continue
@@ -61,7 +65,14 @@ class ReturnPicking(models.TransientModel):
                 .mapped('move_line_ids').mapped('product_qty')
                 )
             quantity = float_round(quantity, precision_rounding=move.product_uom.rounding)
-            product_return_moves.append((0, 0, {'product_id': move.product_id.id, 'quantity': quantity, 'move_id': move.id, 'uom_id': move.product_id.uom_id.id}))
+            product_return_moves_data = dict(product_return_moves_data_tmpl)
+            product_return_moves_data.update({
+                'product_id': move.product_id.id,
+                'quantity': quantity,
+                'move_id': move.id,
+                'uom_id': move.product_id.uom_id.id,
+            })
+            product_return_moves.append((0, 0, product_return_moves_data))
 
         if self.picking_id and not product_return_moves:
             raise UserError(_("No products to return (only lines in Done state and not fully returned yet can be returned)."))
