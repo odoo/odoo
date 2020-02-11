@@ -121,8 +121,8 @@ class Survey(models.Model):
         help="The time at which the current question has started, used to handle the timer for attendees.")
     session_question_answer_count = fields.Integer("Answers Count", compute='_compute_session_question_answer_count')
     # live sessions - settings
-    session_show_ranking = fields.Boolean("Show Session Ranking", compute='_compute_session_show_ranking',
-        help="This mode will display a ranking chart of all attendees.")
+    session_show_leaderboard = fields.Boolean("Show Session Leaderboard", compute='_compute_session_show_leaderboard',
+        help="Whether or not we want to show the attendees leaderboard for this survey.")
     session_speed_rating = fields.Boolean("Reward quick answers", help="Attendees get more points if they answer quickly")
 
     _sql_constraints = [
@@ -194,9 +194,9 @@ class Survey(models.Model):
             survey.session_question_answer_count = answer_count
 
     @api.depends('scoring_type', 'question_and_page_ids.save_as_nickname')
-    def _compute_session_show_ranking(self):
+    def _compute_session_show_leaderboard(self):
         for survey in self:
-            survey.session_show_ranking = survey.scoring_type != 'no_scoring' and \
+            survey.session_show_leaderboard = survey.scoring_type != 'no_scoring' and \
                 any(question.save_as_nickname for question in survey.question_and_page_ids)
 
     @api.onchange('scoring_success_min')
@@ -563,8 +563,8 @@ class Survey(models.Model):
             'type': 'next_question'
         })
 
-    def _prepare_ranking_values(self):
-        """" The ranking is descending and takes the total of the attendee points up to the current question. """
+    def _prepare_leaderboard_values(self):
+        """" The leaderboard is descending and takes the total of the attendee points up to the current question. """
         self.ensure_one()
 
         return self.env['survey.user_input'].search([('survey_id', '=', self.id)],

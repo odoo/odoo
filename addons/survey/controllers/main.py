@@ -616,8 +616,8 @@ class Survey(http.Controller):
             'search_finished': post.get('finished') == 'true',
         }
 
-        if survey.session_show_ranking:
-            template_values['ranking'] = survey._prepare_ranking_values()
+        if survey.session_show_leaderboard:
+            template_values['leaderboard'] = survey._prepare_leaderboard_values()
 
         return request.render('survey.survey_page_statistics', template_values)
 
