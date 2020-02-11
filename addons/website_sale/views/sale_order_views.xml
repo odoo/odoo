@@ -95,6 +95,7 @@
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <search string="Search Abandoned Sales Orders">
+                <field name="name"/>
                 <filter string="Creation Date" name="creation_date" date="create_date"/>
                 <separator/>
                 <filter string="Recovery Email to Send" name="recovery_email" domain="[('cart_recovery_email_sent', '=', False)]" />

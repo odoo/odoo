@@ -5,7 +5,8 @@
         <field name="model">sale.order.template</field>
         <field name="arch" type="xml">
             <search string="Search Quotation Template">
-               <filter string="Archived" name="inactive" domain="[('active','=', False)]"/>
+                <field name="name"/>
+                <filter string="Archived" name="inactive" domain="[('active','=', False)]"/>
             </search>
         </field>
     </record>

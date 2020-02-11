@@ -30,6 +30,7 @@
             <field name="model">stock.rule</field>
             <field name="arch" type="xml">
                 <search string="Search Procurement">
+                    <field name="name"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand='0' string='Group by...'>
                         <filter string='Route' name="groupby_route" context="{'group_by': 'route_id'}"/>
