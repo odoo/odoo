@@ -211,6 +211,10 @@ function wysiwygData(data) {
                     string: "display_name",
                     type: 'char',
                 },
+                description: {
+                    string: "description",
+                    type: 'char',
+                },
                 mimetype: {
                     string: "mimetype",
                     type: 'char',
@@ -259,6 +263,7 @@ function wysiwygData(data) {
             records: [{
                 id: 1,
                 name: 'image',
+                description: '',
                 mimetype: 'image/png',
                 checksum: false,
                 url: '/web_editor/static/src/img/transparent.png',
