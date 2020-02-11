@@ -128,7 +128,6 @@ class TestTimesheet(TestCommonTimesheet):
             'unit_amount': 7,
             'employee_id': self.empl_employee2.id,
         })
-        timesheet3._onchange_employee_id()
         self.assertEqual(timesheet3.user_id, self.user_employee2, 'Timesheet user should be the one linked to the given employee')
         self.assertEqual(timesheet3.product_uom_id, timesheet_uom, "The UoM of the timesheet 3 should be the one set on the company of the analytic account.")
 
