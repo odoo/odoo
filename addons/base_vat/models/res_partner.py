@@ -148,14 +148,16 @@ class ResPartner(models.Model):
             if not partner.vat:
                 continue
             #check with country code as prefix of the TIN
-            vat_country, vat_number = self._split_vat(partner.vat)
-            if not check_func(vat_country, vat_number):
-                #if fails, check with country code from country
+            country_code, vat_number = self._split_vat(partner.vat)
+            if check_func(country_code, vat_number):
+                continue
+            #if fails, check with country code from country
+            if partner.commercial_partner_id.country_id.code:
                 country_code = partner.commercial_partner_id.country_id.code
-                if country_code:
-                    if not check_func(country_code.lower(), partner.vat):
-                        msg = partner._construct_constraint_msg(country_code.lower())
-                        raise ValidationError(msg)
+                if check_func(country_code.lower(), partner.vat):
+                    continue
+            msg = partner._construct_constraint_msg(country_code.lower())
+            raise ValidationError(msg)
 
     def _construct_constraint_msg(self, country_code):
         self.ensure_one()
@@ -382,6 +384,8 @@ class ResPartner(models.Model):
             return True
 
         vat = clean(vat, ' -.').upper().strip()
+        if not vat.startswith('NL'):
+            vat = 'NL' + vat
 
         if not (len(vat) == 14):
             return False
