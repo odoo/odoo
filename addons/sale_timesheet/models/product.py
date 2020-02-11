@@ -19,6 +19,11 @@ class ProductTemplate(models.Model):
     project_id = fields.Many2one(domain="[('billable_type', '=', 'no'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet' or '', True])]")
     project_template_id = fields.Many2one(domain="[('billable_type', '=', 'no'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet' or '', True])]")
 
+    def _default_visible_expense_policy(self):
+        visibility = self.user_has_groups('project.group_project_user')
+        return visibility or super(ProductTemplate, self)._default_visible_expense_policy()
+
+
     def _compute_visible_expense_policy(self):
         super(ProductTemplate, self)._compute_visible_expense_policy()
 

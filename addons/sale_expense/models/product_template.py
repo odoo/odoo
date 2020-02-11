@@ -7,6 +7,10 @@ from odoo import api, models
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
+    def _default_visible_expense_policy(self):
+        visibility = self.user_has_groups('hr_expense.group_hr_expense_user')
+        return visibility or super(ProductTemplate, self)._default_visible_expense_policy()
+
     def _compute_visible_expense_policy(self):
         super(ProductTemplate, self)._compute_visible_expense_policy()
 
