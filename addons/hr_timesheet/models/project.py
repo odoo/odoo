@@ -8,7 +8,9 @@ from odoo.exceptions import UserError, ValidationError, RedirectWarning
 class Project(models.Model):
     _inherit = "project.project"
 
-    allow_timesheets = fields.Boolean("Timesheets", default=True, help="Enable timesheeting on the project.")
+    allow_timesheets = fields.Boolean(
+        "Timesheets", compute='_compute_allow_timesheets', store=True, readonly=False,
+        default=True, help="Enable timesheeting on the project.")
     analytic_account_id = fields.Many2one(
         # note: replaces ['|', ('company_id', '=', False), ('company_id', '=', company_id)]
         domain="""[
@@ -23,10 +25,10 @@ class Project(models.Model):
         compute='_compute_total_timesheet_time',
         help="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.")
 
-    @api.onchange('analytic_account_id')
-    def _onchange_analytic_account(self):
-        if not self.analytic_account_id and self._origin:
-            self.allow_timesheets = False
+    @api.depends('analytic_account_id')
+    def _compute_allow_timesheets(self):
+        without_account = self.filtered(lambda t: not t.analytic_account_id and t._origin)
+        without_account.update({'allow_timesheets': False})
 
     @api.constrains('allow_timesheets', 'analytic_account_id')
     def _check_allow_timesheet(self):
