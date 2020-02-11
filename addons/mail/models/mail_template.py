@@ -130,7 +130,7 @@ class MailTemplate(models.Model):
                                       'attachment_id', 'Attachments',
                                       help="You may attach files to this template, to be added to all "
                                            "emails created from this template")
-    auto_delete = fields.Boolean('Auto Delete', default=True, help="Permanently delete this email after sending it, to save space")
+    auto_delete = fields.Boolean('Auto Delete', default=True, help="This option permanently removes any track of email after send, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
 
     scheduled_date = fields.Char('Scheduled Date', help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Jinja2 placeholders may be used.")
 
