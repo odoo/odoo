@@ -827,7 +827,6 @@ var StatementModel = BasicModel.extend({
                 }
                 values.push(values_dict);
                 line.reconciled = true;
-                self.valuenow++;
             }));
 
             _.each(self.lines, function(other_line) {
@@ -851,6 +850,7 @@ var StatementModel = BasicModel.extend({
                 })
                 .then(self._validatePostProcess.bind(self))
                 .then(function () {
+                    self.valuenow += handles.length;
                     return {handles: handles};
                 });
         });
