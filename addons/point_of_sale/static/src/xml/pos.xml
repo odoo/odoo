@@ -5,7 +5,7 @@
         <div class="pos-receipt-print"></div>
 
         <div class="pos" t-on-pos-error="onPosError" t-on-toggle-debug-widget="onToggleDebugWidget">
-            <div t-if="state.isReady">
+            <t t-if="state.isReady">
                 <div class="pos-topheader">
                     <div class="pos-branding">
                         <img class="pos-logo" t-on-click="onToggleDebugWidget"
@@ -36,8 +36,8 @@
                     <DebugWidget t-if="env.isDebug()" gui="gui"
                                  isShown="state.isDebugWidgetShown" />
                 </div>
-                <div class="popups"></div>
-            </div>
+                <div id="popups" class="popups"></div>
+            </t>
 
             <div class="loader">
                 <div class="loader-feedback oe_hidden">

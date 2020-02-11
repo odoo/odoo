@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ConfirmPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-confirm">
+                <header class="title">
+                    <t t-esc="props.title || 'Confirm ?'" />
+                </header>
+                <main class="body">
+                    <t t-esc=" props.body || ''" />
+                </main>
+                <footer class="footer">
+                    <div class="button confirm" t-on-click="okay">
+                        <t t-esc="okayText" />
+                    </div>
+                    <div class="button cancel" t-on-click="cancel">
+                        <t t-esc="cancelText" />
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </t>
+
+</templates>

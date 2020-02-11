@@ -519,9 +519,13 @@ class Chrome extends PosComponent {
      *
      * @param {Object} error
      */
-    // catchError(error) {
-    //     this.gui.show_popup('error', error.message);
-    // }
+    catchError(error) {
+        if (error instanceof Error) {
+            this.showPopup('ErrorTracebackPopup', { title: error.message, body: error.stack });
+        } else {
+            this.showPopup('ErrorPopup', { title: error.message });
+        }
+    }
 
     /**
      * This is responsible on catching error outside the rendering context
@@ -532,7 +536,7 @@ class Chrome extends PosComponent {
      */
     onPosError(event) {
         const { error } = event.detail
-        // this.catchError(error);
+        this.catchError(error);
     }
 
     cleanup_dom() {

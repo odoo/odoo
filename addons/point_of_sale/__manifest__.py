@@ -81,6 +81,10 @@
         'static/src/xml/SyncNotification.xml',
         'static/src/xml/HeaderButton.xml',
         'static/src/xml/DebugWidget.xml',
+        'static/src/xml/ErrorPopup.xml',
+        'static/src/xml/ConfirmPopup.xml',
+        'static/src/xml/TextInputPopup.xml',
+        'static/src/xml/ErrorTracebackPopup.xml',
     ],
     'website': 'https://www.odoo.com/page/point-of-sale-shop',
 }

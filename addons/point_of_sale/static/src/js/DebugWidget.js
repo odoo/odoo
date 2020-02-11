@@ -67,29 +67,29 @@ odoo.define('point_of_sale.DebugWidget', function(require) {
             this.state.barcodeInput = ean;
             this.env.pos.barcode_reader.scan(ean);
         }
-        deleteOrders() {
-            this.props.gui.show_popup('confirm', {
+        async deleteOrders() {
+            const userAgreed = await this.showPopup('ConfirmPopup', {
                 title: this.env._t('Delete Paid Orders ?'),
                 body: this.env._t(
                     'This operation will permanently destroy all paid orders from the local storage. You will lose all the data. This operation cannot be undone.'
                 ),
-                confirm: () => {
-                    this.env.pos.db.remove_all_orders();
-                    this.env.pos.set_synch('connected', 0);
-                },
             });
+            if (userAgreed) {
+                this.env.pos.db.remove_all_orders();
+                this.env.pos.set_synch('connected', 0);
+            }
         }
-        deleteUnpaidOrders() {
-            this.props.gui.show_popup('confirm', {
+        async deleteUnpaidOrders() {
+            const userAgreed = await this.showPopup('ConfirmPopup', {
                 title: this.env._t('Delete Unpaid Orders ?'),
                 body: this.env._t(
                     'This operation will destroy all unpaid orders in the browser. You will lose all the unsaved data and exit the point of sale. This operation cannot be undone.'
                 ),
-                confirm: () => {
-                    this.env.pos.db.remove_all_unpaid_orders();
-                    window.location = '/';
-                },
             });
+            if (userAgreed) {
+                this.env.pos.db.remove_all_unpaid_orders();
+                window.location = '/';
+            }
         }
         _createBlob(contents) {
             if (typeof contents !== 'string') {
