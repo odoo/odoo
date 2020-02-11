@@ -42,7 +42,6 @@ class TestAccountEntry(TestExpenseCommon):
             'sheet_id': expense.id,
             'analytic_account_id': self.analytic_account.id,
         })
-        expense_line._onchange_product_id()
         # State should default to draft
         self.assertEqual(expense.state, 'draft', 'Expense should be created in Draft state')
         # Submitted to Manager
@@ -106,7 +105,6 @@ class TestAccountEntry(TestExpenseCommon):
             'analytic_account_id': self.analytic_account.id,
             'currency_id': self.env.ref('base.EUR').id,
         })
-        expense_line._onchange_product_id()
         # State should default to draft
         self.assertEqual(expense.state, 'draft', 'Expense should be created in Draft state')
         # Submitted to Manager
