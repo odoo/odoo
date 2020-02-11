@@ -3,6 +3,10 @@
 <data>
     <!-- Main survey layout -->
     <template id="survey.layout" name="Survey Layout" inherit_id="web.frontend_layout" primary="True">
+        <xpath expr="//div[@id='wrapwrap']" position="before">
+            <!--TODO DBE Fix me : If one day, there is a survey_livechat bridge module, put this in that module-->
+            <t t-set="no_livechat" t-value="True"/>
+        </xpath>
         <xpath expr="//div[@id='wrapwrap']" position="attributes">
             <attribute name="t-att-style" add="('height: 100%; overflow: auto; background: url(' + '/survey/get_background_image/%s/%s' % (survey.access_token, answer.access_token) + ') no-repeat fixed center; box-shadow: inset 0 0 0 10000px rgba(255,255,255,.7); background-size: cover;') if survey and survey.background_image and answer else 'height: 100%; overflow: auto;'"/>
         </xpath>
