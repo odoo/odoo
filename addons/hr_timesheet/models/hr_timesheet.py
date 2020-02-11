@@ -40,10 +40,11 @@ class AccountAnalyticLine(models.Model):
 
     task_id = fields.Many2one(
         'project.task', 'Task', index=True,
-        domain="[('company_id', '=', company_id), ('project_id.allow_timesheets', '=', True), ('project_id', '=?', project_id)]"
-    )
-    project_id = fields.Many2one('project.project', 'Project', domain=_domain_project_id)
-
+        domain="[('company_id', '=', company_id), ('project_id.allow_timesheets', '=', True), ('project_id', '=?', project_id)]")
+    project_id = fields.Many2one(
+        'project.project', 'Project', compute='_compute_project_id', store=True, readonly=False,
+        domain=_domain_project_id)
+    user_id = fields.Many2one(compute='_compute_user_id', store=True, readonly=False)
     employee_id = fields.Many2one('hr.employee', "Employee", check_company=True, domain=_domain_employee_id)
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
@@ -58,17 +59,15 @@ class AccountAnalyticLine(models.Model):
             # reset task when changing project
             self.task_id = False
 
-    @api.onchange('task_id')
-    def _onchange_task_id(self):
-        if not self.project_id:
-            self.project_id = self.task_id.project_id
+    @api.depends('task_id.project_id')
+    def _compute_project_id(self):
+        for line in self.filtered(lambda line: not line.project_id):
+            line.project_id = line.task_id.project_id
 
-    @api.onchange('employee_id')
-    def _onchange_employee_id(self):
-        if self.employee_id:
-            self.user_id = self.employee_id.user_id
-        else:
-            self.user_id = self._default_user()
+    @api.depends('employee_id')
+    def _compute_user_id(self):
+        for line in self:
+            line.user_id = line.employee_id.user_id if line.employee_id else line._default_user()
 
     @api.depends('employee_id')
     def _compute_department_id(self):
