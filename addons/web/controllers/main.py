@@ -1464,6 +1464,10 @@ class Binary(http.Controller):
                 placeholder_content = Binary.placeholder(image=placeholder_filename)
             else:
                 placeholder_content = Binary.placeholder()
+            # Since we set a placeholder for any missing image, the status must be 200. In case one
+            # wants to configure a specific 404 page (e.g. though nginx), a 404 status will cause
+            # troubles.
+            status = 200
             image_base64 = base64.b64encode(placeholder_content)
 
             if not (width or height):
