@@ -57,7 +57,6 @@ class TestReInvoice(TestExpenseCommon, TestCommonSaleNoChart):
             'sale_order_id': self.sale_order.id,
             'analytic_account_id': self.sale_order.analytic_account_id.id,
         })
-        expense1._onchange_product_id()
         expense2 = self.env['hr.expense'].create({
             'name': 'Expense for delivered product',
             'employee_id': self.employee.id,
@@ -68,7 +67,6 @@ class TestReInvoice(TestExpenseCommon, TestCommonSaleNoChart):
             'sale_order_id': self.sale_order.id,
             'analytic_account_id': self.sale_order.analytic_account_id.id,
         })
-        expense2._onchange_product_id()
 
         # approve and generate entries
         self.expense_sheet.approve_expense_sheets()
@@ -111,7 +109,6 @@ class TestReInvoice(TestExpenseCommon, TestCommonSaleNoChart):
             'sale_order_id': self.sale_order.id,
             'analytic_account_id': self.sale_order.analytic_account_id.id,
         })
-        expense1._onchange_product_id()
 
         # approve and generate entries
         self.expense_sheet.approve_expense_sheets()
@@ -158,7 +155,6 @@ class TestReInvoice(TestExpenseCommon, TestCommonSaleNoChart):
             'sale_order_id': self.sale_order.id,
             'analytic_account_id': self.sale_order.analytic_account_id.id,
         })
-        expense1._onchange_product_id()
 
         # approve and generate entries
         self.expense_sheet.approve_expense_sheets()
@@ -183,7 +179,6 @@ class TestReInvoice(TestExpenseCommon, TestCommonSaleNoChart):
             'sale_order_id': self.sale_order.id,
             'analytic_account_id': self.sale_order.analytic_account_id.id,
         })
-        expense2._onchange_product_id()
 
         # approve and generate entries
         self.expense_sheet2.approve_expense_sheets()
@@ -218,19 +213,16 @@ class TestReInvoice(TestExpenseCommon, TestCommonSaleNoChart):
         expense1 = self.env['hr.expense'].create({
             'name': 'Expense for no expense product',
             'employee_id': self.employee.id,
-            'product_id': self.product_no_expense.id,
             'unit_amount': 15,
             'quantity': 3,
             'sheet_id': self.expense_sheet.id,
             'sale_order_id': self.sale_order.id,
             'analytic_account_id': analytic_account.id,
         })
-        expense1._onchange_product_id()  # will reset the SO field to NULL
-
+        expense1.write({'product_id': self.product_no_expense.id})
         # approve and generate entries
         self.expense_sheet.approve_expense_sheets()
         self.expense_sheet.action_sheet_move_create()
-
         self.assertFalse(expense1.sale_order_id, "None reinvoicable expense can not be linked to SO")
         self.assertFalse(self.sale_order.analytic_account_id, "Posting expense with an non expense product should not trigger analytic Account creation from SO, since non reinvoicable expense can not be linked to SO")
 

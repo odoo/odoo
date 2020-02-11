@@ -18,17 +18,19 @@ class HrEmployeeBase(models.AbstractModel):
     color = fields.Integer('Color Index', default=0)
     department_id = fields.Many2one('hr.department', 'Department', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     job_id = fields.Many2one('hr.job', 'Job Position', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    job_title = fields.Char("Job Title")
+    job_title = fields.Char("Job Title", compute="_compute_job_title", store=True, readonly=False)
     company_id = fields.Many2one('res.company', 'Company')
-    address_id = fields.Many2one('res.partner', 'Work Address', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    work_phone = fields.Char('Work Phone')
-    mobile_phone = fields.Char('Work Mobile')
+    address_id = fields.Many2one('res.partner', 'Work Address', compute="_compute_address_id", store=True, readonly=False,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    work_phone = fields.Char('Work Phone', compute="_compute_phones", store=True, readonly=False)
+    mobile_phone = fields.Char('Work Mobile', compute="_compute_phones", store=True, readonly=False)
     work_email = fields.Char('Work Email')
     work_location = fields.Char('Work Location')
     user_id = fields.Many2one('res.users')
     resource_id = fields.Many2one('resource.resource')
     resource_calendar_id = fields.Many2one('resource.calendar', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    parent_id = fields.Many2one('hr.employee', 'Manager', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    parent_id = fields.Many2one('hr.employee', 'Manager', compute="_compute_parent_id", store=True, readonly=False,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     coach_id = fields.Many2one(
         'hr.employee', 'Coach', compute='_compute_coach', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
@@ -90,6 +92,28 @@ class HrEmployeeBase(models.AbstractModel):
                 employee.coach_id = manager
             elif not employee.coach_id:
                 employee.coach_id = False
+
+    @api.depends('job_id')
+    def _compute_job_title(self):
+        for employee in self.filtered('job_id'):
+            employee.job_title = employee.job_id.name
+
+    @api.depends('address_id')
+    def _compute_phones(self):
+        for employee in self.filtered('address_id'):
+            employee.work_phone = employee.address_id.phone
+            employee.mobile_phone = employee.address_id.mobile
+
+    @api.depends('company_id')
+    def _compute_address_id(self):
+        for employee in self:
+            address = employee.company_id.partner_id.address_get(['default'])
+            employee.address_id = address['default'] if address else False
+
+    @api.depends('department_id')
+    def _compute_parent_id(self):
+        for employee in self.filtered('department_id.manager_id'):
+            employee.parent_id = employee.department_id.manager_id
 
     def _get_placeholder_filename(self, field=None):
         image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]

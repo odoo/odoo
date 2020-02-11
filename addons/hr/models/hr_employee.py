@@ -192,26 +192,6 @@ class HrEmployeePrivate(models.Model):
             if employee.pin and not employee.pin.isdigit():
                 raise ValidationError(_("The PIN must be a sequence of digits."))
 
-    @api.onchange('job_id')
-    def _onchange_job_id(self):
-        if self.job_id:
-            self.job_title = self.job_id.name
-
-    @api.onchange('address_id')
-    def _onchange_address(self):
-        self.work_phone = self.address_id.phone
-        self.mobile_phone = self.address_id.mobile
-
-    @api.onchange('company_id')
-    def _onchange_company(self):
-        address = self.company_id.partner_id.address_get(['default'])
-        self.address_id = address['default'] if address else False
-
-    @api.onchange('department_id')
-    def _onchange_department(self):
-        if self.department_id.manager_id:
-            self.parent_id = self.department_id.manager_id
-
     @api.onchange('user_id')
     def _onchange_user(self):
         if self.user_id:

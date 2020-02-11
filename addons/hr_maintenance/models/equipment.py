@@ -6,14 +6,17 @@ from odoo import api, fields, models, tools
 class MaintenanceEquipment(models.Model):
     _inherit = 'maintenance.equipment'
 
-    employee_id = fields.Many2one('hr.employee', string='Assigned Employee', tracking=True)
-    department_id = fields.Many2one('hr.department', string='Assigned Department', tracking=True)
+    employee_id = fields.Many2one('hr.employee', compute='_compute_equipment_assign',
+        store=True, readonly=False, string='Assigned Employee', tracking=True)
+    department_id = fields.Many2one('hr.department', compute='_compute_equipment_assign',
+        store=True, readonly=False, string='Assigned Department', tracking=True)
     equipment_assign_to = fields.Selection(
         [('department', 'Department'), ('employee', 'Employee'), ('other', 'Other')],
         string='Used By',
         required=True,
         default='employee')
     owner_user_id = fields.Many2one(compute='_compute_owner', store=True)
+    assign_date = fields.Date(compute='_compute_equipement_assign', store=True, readonly=False, copy=True)
 
     @api.depends('employee_id', 'department_id', 'equipment_assign_to')
     def _compute_owner(self):
@@ -24,13 +27,19 @@ class MaintenanceEquipment(models.Model):
             elif equipment.equipment_assign_to == 'department':
                 equipment.owner_user_id = equipment.department_id.manager_id.user_id.id
 
-    @api.onchange('equipment_assign_to')
-    def _onchange_equipment_assign_to(self):
-        if self.equipment_assign_to == 'employee':
-            self.department_id = False
-        if self.equipment_assign_to == 'department':
-            self.employee_id = False
-        self.assign_date = fields.Date.context_today(self)
+    @api.depends('equipment_assign_to')
+    def _compute_equipment_assign(self):
+        for equipment in self:
+            if equipment.equipment_assign_to == 'employee':
+                equipment.department_id = False
+                equipment.employee_id = equipment.employee_id
+            elif equipment.equipment_assign_to == 'department':
+                equipment.employee_id = False
+                equipment.department_id = equipment.department_id
+            else:
+                equipment.department_id = equipment.department_id
+                equipment.employee_id = equipment.employee_id
+            equipment.assign_date = fields.Date.context_today(self)
 
     @api.model
     def create(self, vals):
