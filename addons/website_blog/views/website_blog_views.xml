@@ -166,6 +166,7 @@
             <field name="model">blog.blog</field>
             <field name="arch" type="xml">
                 <search string="Blog">
+                    <field name="name"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>
             </field>
