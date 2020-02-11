@@ -289,10 +289,12 @@ form: module.record_id""" % (xml_id,)
         values = {
             'parent_id': False,
             'active': nodeattr2bool(rec, 'active', default=True),
+            'web_icon': False,
+            'name': False,
+            'action': False,
         }
 
-        if rec.get('sequence'):
-            values['sequence'] = int(rec.get('sequence'))
+        values['sequence'] = int(rec.get('sequence', 16))
 
         if parent is not None:
             values['parent_id'] = parent
@@ -300,7 +302,6 @@ form: module.record_id""" % (xml_id,)
             values['parent_id'] = self.id_get(rec.attrib['parent'])
         elif rec.get('web_icon'):
             values['web_icon'] = rec.attrib['web_icon']
-
 
         if rec.get('name'):
             values['name'] = rec.attrib['name']
@@ -495,38 +496,65 @@ form: module.record_id""" % (xml_id,)
 
         record = etree.Element('record', attrib=record_attrs)
         record.append(Field(name, name='name'))
-        record.append(Field(full_tpl_id, name='key'))
         record.append(Field("qweb", name='type'))
-        if 'track' in el.attrib:
-            record.append(Field(el.get('track'), name='track'))
+
+        View = self.env['ir.ui.view']
+
+        if 'track' in View:
+            if 'track' in el.attrib:
+                record.append(Field(name='track', eval=el.get('track')))
+            else:
+                record.append(Field(name="track", eval="False"))
+
         if 'priority' in el.attrib:
             record.append(Field(el.get('priority'), name='priority'))
+
         if 'inherit_id' in el.attrib:
             record.append(Field(name='inherit_id', ref=el.get('inherit_id')))
-        if 'website_id' in el.attrib:
-            record.append(Field(name='website_id', ref=el.get('website_id')))
+            if el.get('primary') == 'True':
+                # Pseudo clone mode, we'll set the t-name to the full canonical xmlid
+                el.append(
+                    builder.E.xpath(
+                        builder.E.attribute(full_tpl_id, name='t-name'),
+                        expr=".",
+                        position="attributes",
+                    )
+                )
+                record.append(Field('primary', name='mode'))
+            else:
+                record.append(Field("extension", name="mode"))
+        else:
+            record.append(Field(name="inherit_id", eval="False"))
+            record.append(Field('primary', name='mode'))
+
+        if 'website_id' in View:
+            if 'website_id' in el.attrib:
+                record.append(Field(name='website_id', ref=el.get('website_id')))
+            # else:
+            #     Keep default value (default website)
+            #     record.append(Field(name="website_id", eval="False"))
+
         if 'key' in el.attrib:
             record.append(Field(el.get('key'), name='key'))
-        if el.get('active') in ("True", "False"):
-            view_id = self.id_get(tpl_id, raise_if_not_found=False)
-            if self.mode != "update" or not view_id:
+        else:
+            record.append(Field(full_tpl_id, name='key'))
+
+        # Active flag is only set at creation (init or missing record) and if explicitly given
+        # Else, keep its value at update or use the default value at creation
+        if self.mode != 'update' or not self.id_get(tpl_id, raise_if_not_found=False):
+            if el.get('active') in ("True", "False"):
                 record.append(Field(name='active', eval=el.get('active')))
-        if el.get('customize_show') in ("True", "False"):
-            record.append(Field(name='customize_show', eval=el.get('customize_show')))
+
+        if 'customize_show' in View:
+            if el.get('customize_show') in ("True", "False"):
+                record.append(Field(name='customize_show', eval=el.get('customize_show')))
+            else:
+                record.append(Field(name="customize_show", eval="False"))
+
         groups = el.attrib.pop('groups', None)
         if groups:
-            grp_lst = [("ref('%s')" % x) for x in groups.split(',')]
-            record.append(Field(name="group_ids", eval="[Command.set(["+', '.join(grp_lst)+"])]"))
-        if el.get('primary') == 'True':
-            # Pseudo clone mode, we'll set the t-name to the full canonical xmlid
-            el.append(
-                builder.E.xpath(
-                    builder.E.attribute(full_tpl_id, name='t-name'),
-                    expr=".",
-                    position="attributes",
-                )
-            )
-            record.append(Field('primary', name='mode'))
+            grp_lst = ', '.join(f"ref('{g}')" for g in groups.split(','))
+            record.append(Field(name="group_ids", eval=f"[Command.set([{grp_lst}])]"))
         # inject complete <template> element (after changing node name) into
         # the ``arch`` field
         record.append(Field(el, name="arch", type="xml"))
