@@ -338,7 +338,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         // Disable text edition
         this.$target.attr('contentEditable', false);
         // Make button editable
-        this.$target.find('.s_website_form_send').parent().attr('contentEditable', true);
+        this.$target.find('.s_website_form_send').attr('contentEditable', true);
         // Get potential message
         this.$message = this.$target.parent().find('.s_website_form_end_message');
         this.showEndMessage = false;
