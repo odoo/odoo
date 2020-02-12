@@ -348,9 +348,12 @@ class WebsiteSlides(WebsiteProfile):
         '/slides/<model("slide.channel"):channel>/tag/<model("slide.tag"):tag>',
         '/slides/<model("slide.channel"):channel>/tag/<model("slide.tag"):tag>/page/<int:page>',
         '/slides/<model("slide.channel"):channel>/category/<model("slide.slide"):category>',
-        '/slides/<model("slide.channel"):channel>/category/<model("slide.slide"):category>/page/<int:page>'
+        '/slides/<model("slide.channel"):channel>/category/<model("slide.slide"):category>/page/<int:page>',
     ], type='http', auth="public", website=True, sitemap=sitemap_slide)
     def channel(self, channel, category=None, tag=None, page=1, slide_type=None, uncategorized=False, sorting=None, search=None, **kw):
+        """
+        Will return all necessary data to display the requested slide_channel along with a possible category.
+        """
         if not channel.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
 
@@ -376,7 +379,7 @@ class WebsiteSlides(WebsiteProfile):
                 pager_url += "/tag/%s" % tag.id
             if uncategorized:
                 domain += [('category_id', '=', False)]
-                pager_url += "?uncategorized=1"
+                pager_args['uncategorized'] = 1
             elif slide_type:
                 domain += [('slide_type', '=', slide_type)]
                 pager_url += "?slide_type=%s" % slide_type
@@ -463,10 +466,18 @@ class WebsiteSlides(WebsiteProfile):
         # documentation mode may display less slides than content by category but overhead of
         # computation is reasonable
         values['slide_promoted'] = request.env['slide.slide'].sudo().search(domain, limit=1, order=order)
+
+        limit_category_data = False
+        if channel.channel_type == 'documentation':
+            if category or uncategorized:
+                limit_category_data = self._slides_per_page
+            else:
+                limit_category_data = self._slides_per_category
+
         values['category_data'] = channel._get_categorized_slides(
             domain, order,
             force_void=not category,
-            limit=False if channel.channel_type != 'documentation' else self._slides_per_page if category else self._slides_per_category,
+            limit=limit_category_data,
             offset=pager['offset'])
         values['channel_progress'] = self._get_channel_progress(channel, include_quiz=True)
 
