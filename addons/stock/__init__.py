@@ -28,3 +28,12 @@ def _assign_default_mail_template_picking_id(cr, registry):
         company_ids_without_default_mail_template_id.write({
             'stock_mail_confirmation_template_id': default_mail_template_id.id,
         })
+
+
+def uninstall_hook(cr, registry):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    default = env['product.template']._fields['type'].default(env['product.template'])
+    # stock introduces an option on the `type` Selection field of `product.template`
+    # if this module is uninstalled and any `product.template` record still points to this option
+    # the registry will find itself in an unstable state and will most likely crash (eventually)
+    cr.execute("UPDATE product_template SET type = %s WHERE type = %s", (default, 'product'))
