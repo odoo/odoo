@@ -4,6 +4,7 @@ odoo.define('mail_bot.MailBotService', function (require) {
 var AbstractService = require('web.AbstractService');
 var core = require('web.core');
 var session = require('web.session');
+var localStorage = require('web.local_storage');
 
 var _t = core._t;
 
@@ -13,7 +14,11 @@ var MailBotService =  AbstractService.extend({
      */
     start: function () {
         this._hasRequest = (window.Notification && window.Notification.permission === "default") || false;
+        var lastRequestTime = localStorage.getItem('odoobot_notification_last_request_time');
         if ('odoobot_initialized' in session && ! session.odoobot_initialized) {
+            this._showOdoobotTimeout();
+        }
+        else if (lastRequestTime !== null && (new Date().getTime() - parseInt(lastRequestTime) > 7*24*60*60*1000)) {
             this._showOdoobotTimeout();
         }
     },
