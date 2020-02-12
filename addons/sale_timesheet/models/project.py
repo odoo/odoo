@@ -174,6 +174,7 @@ class ProjectTask(models.Model):
         ('no', 'No Billable')
     ], string="Billable Type", compute='_compute_billable_type', compute_sudo=True, store=True)
     is_project_map_empty = fields.Boolean("Is Project map empty", compute='_compute_is_project_map_empty')
+    has_multi_sol = fields.Boolean(compute='_compute_has_multi_sol', compute_sudo=True)
     allow_billable = fields.Boolean(related="project_id.allow_billable")
     display_create_order = fields.Boolean(compute='_compute_display_create_order')
 
@@ -191,11 +192,24 @@ class ProjectTask(models.Model):
 
     @api.onchange('sale_line_id')
     def _onchange_sale_line_id(self):
-        if self.timesheet_ids:
+        if self._get_timesheet() and self.allow_timesheets:
             if self.sale_line_id:
-                message = _("All timesheet hours that are not yet invoiced will be assigned to the selected Sales Order Item on save. Discard to avoid the change.")
+                if self.sale_line_id.product_id.service_policy == 'delivered_timesheet' and self._origin.sale_line_id.product_id.service_policy == 'delivered_timesheet':
+                    message = _("All timesheet hours that are not yet invoiced will be assigned to the selected Sales Order Item on save. Discard to avoid the change.")
+                else:
+                    message = _("All timesheet hours will be assigned to the selected Sales Order Item on save. Discard to avoid the change.")
             else:
                 message = _("All timesheet hours that are not yet invoiced will be removed from the selected Sales Order Item on save. Discard to avoid the change.")
+
+            return {'warning': {
+                'title': _("Warning"),
+                'message': message
+            }}
+
+    @api.onchange('project_id')
+    def _onchange_project_id(self):
+        if self._origin.allow_timesheets and self._get_timesheet():
+            message = _("All timesheet hours that are not yet invoiced will be assigned to the selected Project on save. Discard to avoid the change.")
 
             return {'warning': {
                 'title': _("Warning"),
@@ -233,6 +247,11 @@ class ProjectTask(models.Model):
         for task in self:
             task.is_project_map_empty = not bool(task.sudo().project_id.sale_line_employee_ids)
 
+    @api.depends('timesheet_ids')
+    def _compute_has_multi_sol(self):
+        for task in self:
+            task.has_multi_sol = task.timesheet_ids.so_line != task.sale_line_id
+
     @api.onchange('project_id')
     def _onchange_project(self):
         super(ProjectTask, self)._onchange_project()
@@ -254,12 +273,22 @@ class ProjectTask(models.Model):
             if project_dest.billable_type == 'employee_rate':
                 values['sale_line_id'] = False
         res = super(ProjectTask, self).write(values)
-        if 'sale_line_id' in values and self.sudo().timesheet_ids:
-            self.timesheet_ids.filtered(
+        if 'sale_line_id' in values and self.filtered('allow_timesheets').sudo().timesheet_ids:
+            so = self.env['sale.order.line'].browse(values['sale_line_id']).order_id
+            if so and not so.analytic_account_id:
+                so.analytic_account_id = self.project_id.analytic_account_id
+            timesheet_ids = self.filtered('allow_timesheets').timesheet_ids.filtered(
                 lambda t: (not t.timesheet_invoice_id or t.timesheet_invoice_id.state == 'cancel') and t.so_line.id == old_sale_line_id[t.task_id.id]
-            ).write({
-                'so_line': values['sale_line_id']
-            })
+            )
+            timesheet_ids.write({'so_line': values['sale_line_id']})
+            if 'project_id' in values:
+
+                # Special case when we edit SOL an project in same time, as we edit SOL of
+                # timesheet lines, function '_get_timesheet' won't find the right timesheet
+                # to edit so we must edit those here.
+                project = self.env['project.project'].browse(values.get('project_id'))
+                if project.allow_timesheets:
+                    timesheet_ids.write({'project_id': values.get('project_id')})
         return res
 
     def action_make_billable(self):
@@ -276,6 +305,11 @@ class ProjectTask(models.Model):
                 'default_product_id': self.project_id.timesheet_product_id.id,
             },
         }
+
+    def _get_timesheet(self):
+        # return not invoiced timesheet and timesheet without so_line or so_line linked to task
+        timesheet_ids = super(ProjectTask, self)._get_timesheet()
+        return timesheet_ids.filtered(lambda t: (not t.timesheet_invoice_id or t.timesheet_invoice_id.state == 'cancel') and (not t.so_line or t.so_line == t.task_id._origin.sale_line_id))
 
     def _get_action_view_so_ids(self):
         return list(set((self.sale_order_id + self.timesheet_ids.so_line.order_id).ids))

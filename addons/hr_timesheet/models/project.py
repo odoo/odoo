@@ -201,11 +201,23 @@ class Task(models.Model):
             'domain': [('project_id', '!=', False), ('task_id', 'in', tasks.ids)],
         }
 
+    def _get_timesheet(self):
+        # Is override in sale_timesheet
+        return self.timesheet_ids
+
     def write(self, values):
         # a timesheet must have an analytic account (and a project)
         if 'project_id' in values and self and not values.get('project_id'):
             raise UserError(_('This task must be part of a project because there are some timesheets linked to it.'))
-        return super(Task, self).write(values)
+        res = super(Task, self).write(values)
+
+        if 'project_id' in values:
+            project = self.env['project.project'].browse(values.get('project_id'))
+            if project.allow_timesheets:
+                # We write on all non yet invoiced timesheet the new project_id (if project allow timesheet)
+                self._get_timesheet().write({'project_id': values.get('project_id')})
+
+        return res
 
     def name_get(self):
         if self.env.context.get('hr_timesheet_display_remaining_hours'):
