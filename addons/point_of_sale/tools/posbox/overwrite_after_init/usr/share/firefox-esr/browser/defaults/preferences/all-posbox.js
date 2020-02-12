@@ -9,3 +9,4 @@ pref("browser.shell.checkDefaultBrowser", false);
 // Needed to change URL without having multiple tabs running
 pref("browser.link.open_newwindow", 1);
 pref("browser.shell.checkDefaultBrowser",false);
+pref("dom.max_chrome_script_run_time", 0);
