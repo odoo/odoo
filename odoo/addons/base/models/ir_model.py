@@ -2018,6 +2018,12 @@ class IrModelData(models.Model):
                     _logger.info('Deleting %s@%s (%s)', res_id, model, xmlid)
                     record = self.env[model].browse(res_id)
                     if record.exists():
+                        if record._name == 'ir.model.fields':
+                            _logger.warning(
+                                "Deleting field %s.%s (hint: fields should be"
+                                " explicitly removed by an upgrade script)",
+                                record.model, record.name,
+                            )
                         record.unlink()
                     else:
                         bad_imd_ids.append(id)
