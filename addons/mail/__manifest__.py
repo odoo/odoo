@@ -40,7 +40,6 @@
         'views/ir_model_views.xml',
         'views/res_partner_views.xml',
         'views/mail_blacklist_views.xml',
-        'views/mail_channel_partner_views.xml',
     ],
     'demo': [
         'data/mail_channel_demo.xml',
