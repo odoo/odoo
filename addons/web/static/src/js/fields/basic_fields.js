@@ -1871,6 +1871,10 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
             } else {
                 $img = this.$('img');
             }
+            var zoomDelay = 0;
+            if (this.nodeOptions.zoom_delay) {
+                zoomDelay = this.nodeOptions.zoom_delay;
+            }
 
             if(this.recordData[imageField]) {
                 $img.attr('data-zoom', 1);
@@ -1878,6 +1882,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
 
                 $img.zoomOdoo({
                     event: 'mouseenter',
+                    timer: zoomDelay,
                     attach: '.o_content',
                     attachToTarget: true,
                     onShow: function () {

@@ -588,7 +588,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         var self = this;
         var text = $inputData.text().trim();
         var value = parseFloat(text) || '';
-        var unit = text.match(/([^\s\d]+)$/)[1];
+        var unit = (text.match(/[^\s\d]+$/) || ['px'])[0];
 
         return new Promise(function (resolve, reject) {
             var qEdit = new QuickEdit(self, value, unit);
