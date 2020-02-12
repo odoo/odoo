@@ -11,7 +11,7 @@ class TestUi(odoo.tests.HttpCase):
             'fixed_price': 2,
             'free_over': True,
             'amount': 10,
-			'website_published': True,
+	    'website_published': True,
         })
         self.env.ref("delivery.delivery_carrier").write({
             'sequence': 9999,  # ensure last to load price async
