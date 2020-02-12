@@ -46,7 +46,7 @@
         <field name='name'>Estimación de cuentas incobrables nacional</field>
         <field name='code'>108.01.01</field>
         <field name="chart_template_id" ref="mx_coa"/>
-        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="reconcile" eval="True"/>
         <field name="tag_ids" eval="[(6,0,[ref('account_tag_108_01')])]"/>
     </record>
@@ -54,7 +54,7 @@
         <field name='name'>Estimación de cuentas incobrables extranjero</field>
         <field name='code'>108.02.01</field>
         <field name="chart_template_id" ref="mx_coa"/>
-        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="reconcile" eval="True"/>
         <field name="tag_ids" eval="[(6,0,[ref('account_tag_108_02')])]"/>
     </record>
@@ -212,6 +212,13 @@
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="tag_ids" eval="[(6,0,[ref('account_tag_304_01')])]"/>
     </record>
+    <record id='cuenta305_01' model='account.account.template'>
+        <field name='name'>Utilidad del ejercicio</field>
+        <field name='code'>305.01.01</field>
+        <field name="chart_template_id" ref="mx_coa"/>
+        <field name="user_type_id" ref="account.data_unaffected_earnings"/>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_305_01')])]"/>
+    </record>
     <record id='cuenta401_01' model='account.account.template'>
         <field name='name'>Ventas y/o servicios gravados a la tasa general</field>
         <field name='code'>401.01.01</field>
@@ -251,8 +258,8 @@
         <field name='name'>Utilidad o pérdida fiscal en venta y/o baja de activo fijo</field>
         <field name='code'>811.01.01</field>
         <field name="chart_template_id" ref="mx_coa"/>
-        <field name="user_type_id" ref="account.data_unaffected_earnings"/>
-        <field name="tag_ids" eval="[(6,0,[ref('account_tag_801_01')])]"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_811_01')])]"/>
     </record>
     <!--
         CoA setting accounts
