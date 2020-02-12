@@ -968,7 +968,9 @@ registry.background = SnippetOption.extend({
                 return (bgOption === '' && src === '' || bgOption !== '' && src.indexOf(bgOption) >= 0);
             })
             .addClass('active');
-
+        if (this.$target.hasClass('oe_custom_bg')) {
+            this.$el.find('li[data-select-class]').removeClass('active');
+        }
         this.$el.find('li[data-choose-image]').toggleClass('active', this.$target.hasClass('oe_custom_bg'));
     },
     /**
