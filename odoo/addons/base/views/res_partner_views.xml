@@ -655,24 +655,6 @@
             <field name="act_window_id" ref="action_partner_supplier_form"/>
         </record>
 
-
-        <record id="action_partner_employee_form" model="ir.actions.act_window">
-            <field name="name">Employees</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner</field>
-            <field name="domain">[('employee','=',1)]</field>
-            <field name="context">{'default_employee':1}</field>
-            <field name="filter" eval="True"/>
-        </record>
-
-        <record id="action_partner_other_form" model="ir.actions.act_window">
-            <field name="name">Other Partners</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner</field>
-            <field name="domain">[('supplier','!=',1),('customer','!=',1)]</field>
-            <field name="filter" eval="True"/>
-        </record>
-
         <!-- Categories -->
         <record id="view_partner_category_form" model="ir.ui.view">
             <field name="name">Contact Tags</field>
