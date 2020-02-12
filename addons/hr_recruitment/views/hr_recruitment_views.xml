@@ -3,7 +3,7 @@
     <data>
 
     <!-- Stage -->
-    <record id="hr_job_stage_act" model="ir.actions.act_window">
+    <!-- <record id="hr_job_stage_act" model="ir.actions.act_window">
         <field name="name">Recruitment / Applicants Stages</field>
         <field name="res_model">hr.recruitment.stage</field>
         <field name="domain">[]</field>
@@ -17,7 +17,7 @@
             hired.
           </p>
         </field>
-    </record>
+    </record> -->
 
     <!-- Applicants -->
     <record model="ir.ui.view" id="crm_case_tree_view_job">
@@ -900,7 +900,7 @@ action = act
         </field>
     </record>
 
-    <record id="hr_employee_action_from_department" model="ir.actions.act_window">
+    <!-- <record id="hr_employee_action_from_department" model="ir.actions.act_window">
         <field name="name">Newly Hired Employees</field>
         <field name="res_model">hr.employee</field>
         <field name="view_mode">kanban,tree,form</field>
@@ -910,7 +910,7 @@ action = act
             'default_department_id': active_id}
         </field>
         <field name="search_view_id" ref="hr_employee_view_search"/>
-    </record>
+    </record> -->
 
     <record id="hr_applicant_view_pivot" model="ir.ui.view">
          <field name="name">hr.applicant.pivot</field>
@@ -1001,7 +1001,7 @@ action = act
         </field>
     </record>
 
-    <record id="action_hr_recruitment_report_filtered_job" model="ir.actions.act_window">
+    <!-- <record id="action_hr_recruitment_report_filtered_job" model="ir.actions.act_window">
         <field name="name">Recruitment Analysis</field>
         <field name="res_model">hr.applicant</field>
         <field name="view_mode">graph,pivot</field>
@@ -1010,7 +1010,7 @@ action = act
             'search_default_job_id': [active_id],
             'default_job_id': active_id}
         </field>
-    </record>
+    </record> -->
 
     <!-- Custom reports (aka filters) -->
     <record id="hr_applicant_filter_recruiter" model="ir.filters">

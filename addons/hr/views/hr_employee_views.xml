@@ -308,15 +308,16 @@
             </field>
         </record>
 
-        <record id="open_view_employee_tree" model="ir.actions.act_window">
+        <!-- <record id="open_view_employee_tree" model="ir.actions.act_window">
             <field name="name">Employees Structure</field>
             <field name="res_model">hr.employee</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_employee_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="search_view_id" ref="view_employee_filter"/>
-        </record>
+        </record> -->
 
+        <!-- only used in hr_recruitment -->
         <record id="open_view_employee_list" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
