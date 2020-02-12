@@ -150,7 +150,7 @@
                     attrs="{'required': [('holiday_type', '=', 'department')], 'invisible': [('holiday_type', '!=', 'department')]}"/>
             </xpath>
             <xpath expr="//field[@name='department_id']" position="after">
-                <field name="mode_company_id" groups="hr_holidays.group_hr_holidays_user"
+                <field name="mode_company_id" string="Company" groups="hr_holidays.group_hr_holidays_user"
                     attrs="{'required': [('holiday_type', '=', 'company')], 'invisible': [('holiday_type', '!=', 'company')]}"/>
             </xpath>
             <xpath expr="//field[@name='allocation_type']" position="attributes">
