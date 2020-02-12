@@ -1305,7 +1305,7 @@ class Monetary(Field):
             if len(currency) > 1:
                 raise ValueError("Got multiple currencies while assigning values of monetary field %s" % str(self))
             elif currency:
-                value = currency.round(value)
+                value = round(currency.round(value), currency.decimal_places)
         return value
 
     def convert_to_record(self, value, record):

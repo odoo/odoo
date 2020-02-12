@@ -530,21 +530,21 @@ class TestFields(common.TransactionCase):
         # determine the possible roundings of amount
         if currency:
             ramount = currency.round(amount)
-            samount = float(float_repr(ramount, currency.decimal_places))
+            ramount = float(float_repr(ramount, currency.decimal_places))
         else:
-            ramount = samount = amount
+            ramount = amount
 
         # check the currency on record
         self.assertEqual(record.currency_id, currency)
 
         # check the value on the record
-        self.assertIn(record.amount, [ramount, samount], msg)
+        self.assertEqual(record.amount, ramount, msg)
 
         # check the value in the database
         record.flush()
         self.cr.execute('SELECT amount FROM test_new_api_mixed WHERE id=%s', [record.id])
         value = self.cr.fetchone()[0]
-        self.assertEqual(value, samount, msg)
+        self.assertEqual(value, ramount, msg)
 
     def test_20_monetary(self):
         """ test monetary fields """
