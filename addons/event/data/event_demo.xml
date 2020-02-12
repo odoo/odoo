@@ -128,7 +128,7 @@
     </record>
     <record id="event_2_mail_0" model="event.mail">
         <field name="event_id" ref="event.event_2"/>
-        <field name="template_id" ref="event.event_subscription"/>
+        <field name="template_ref" eval="'mail.template,%i' % ref('event.event_subscription')"/>
     </record>
 
     <record id="event.event_3" model="event.event">
@@ -164,7 +164,7 @@
     </record>
     <record id="event_3_mail_0" model="event.mail">
         <field name="event_id" ref="event.event_3"/>
-        <field name="template_id" ref="event.event_subscription"/>
+        <field name="template_ref" eval="'mail.template,%i' % ref('event.event_subscription')"/>
     </record>
 
     <!-- EVENT_4: very limited, intended to test seats reservation -->
