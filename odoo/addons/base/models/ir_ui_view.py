@@ -1820,6 +1820,63 @@ actual arch.
                 cow_view.write(authorized_vals)
         super(View, self)._load_records_write(values)
 
+    def get_unused_views(self):
+        self = self.with_context(active_test=False).sudo()
+        View = self
+        all_actions = self.env['ir.actions.act_window'].search([])
+        all_used_views = all_actions.view_id # Main view
+        all_used_views += all_actions.search_view_id # Search views
+        all_used_views += all_actions.view_ids.view_id # Sub views through ir.actions.act_window.view
+
+        # Find default views
+        for model in self.env['ir.model'].search([]):
+            for view_type in [
+                'tree', 'form', 'graph', 'search',
+                'kanban', 'pivot', 'calendar', 'cohort',
+                'dashboard', 'grid', 'gantt', 'map', 'activity'
+            ]:
+                all_used_views += View.browse(View.default_view(model.model, view_type))
+
+        all_used_views += all_used_views.inherit_id
+
+        if self.env.context.get('advanced_search', False):
+            maybe_unused_views = View.search([
+                ('id', 'not in', all_used_views.ids),
+                ('type', '!=', 'qweb'),
+                ('mode', '=', 'primary'),
+                ('active', 'in', [True, False])
+            ])
+
+            for view in maybe_unused_views.filtered('xml_id'):
+                xml_id = view.xml_id
+                base_xml_id = xml_id.split('.')[:1]
+                domain = ['|', ('arch_db', 'ilike', xml_id), ('arch_db', 'ilike', base_xml_id)]
+                # views_using_view = View.search(domain)
+                # if views_using_view:
+                #     maybe_unused_views -= view
+                #     print(view.xml_id,views_using_view.mapped('xml_id'))
+                if View.search_count(domain) > 0:
+                    maybe_unused_views -= view
+            action_domain = [('id', 'in', maybe_unused_views.ids)]
+        else:
+            action_domain = [
+                ('id', 'not in', all_used_views.ids),
+                ('type', '!=', 'qweb'),
+                ('mode', '=', 'primary'),
+                ('active', 'in', [True, False])
+            ]
+
+        return {
+            'name': _('Unused views'),
+            'view_mode': 'list,form',
+            'res_model': 'ir.ui.view',
+            'type': 'ir.actions.act_window',
+            'domain': action_domain,
+        }
+        # VFE TODO even inherited views but all_used_views += all_used_views.inherit_children_ids
+        # VFE TODO extension for payment acquirer views.
+        # VFE TODO website_form_view_id --> website_helpdesk_form
+
 
 class ResetViewArchWizard(models.TransientModel):
     """ A wizard to compare and reset views architecture. """

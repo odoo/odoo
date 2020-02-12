@@ -6,6 +6,8 @@
             <field name="arch" type="xml">
                 <form string="Views">
                   <sheet>
+                    <button name="get_unused_views" type="object" string="Find unused views" class="btn-primary"/>
+                    <button name="get_unused_views" type="object" string="Find unused views *" context="{'advanced_search': True}" class="btn-secondary"/>
                     <group>
                         <group>
                             <field name="name"/>
