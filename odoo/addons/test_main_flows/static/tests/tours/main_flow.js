@@ -1,10 +1,8 @@
 odoo.define('test_main_flows.tour', function (require) {
 "use strict";
 
-const core = require('web.core');
+const {_t} = require('web.core');
 const tour = require('web_tour.tour');
-
-const _t = core._t;
 
 tour.register('main_flow_tour', {
     test: true,
