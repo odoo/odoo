@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-        <record id="stock_move_tree" model="ir.ui.view">
+        <!-- <record id="stock_move_tree" model="ir.ui.view">
             <field name="name">Stock Moves</field>
             <field name="model">stock.move</field>
             <field name="arch" type="xml">
@@ -18,7 +18,7 @@
                     <field name="state"/>
                 </tree>
             </field>
-        </record>
+        </record> -->
 
 
         <record id="view_move_pivot" model="ir.ui.view">
@@ -144,7 +144,7 @@
             </field>
         </record>
 
-        <record id="view_move_picking_tree" model="ir.ui.view">
+        <!-- <record id="view_move_picking_tree" model="ir.ui.view">
             <field name="name">stock.move.tree</field>
             <field name="model">stock.move</field>
             <field eval="12" name="priority"/>
@@ -167,7 +167,7 @@
                     <field name="state"/>
                 </tree>
             </field>
-        </record>
+        </record> -->
 
         <record id="view_stock_move_operations" model="ir.ui.view">
             <field name="name">stock.move.operations.form</field>
@@ -483,7 +483,7 @@
             </field>
         </record>
 
-        <record id="stock_move_view_kanban" model="ir.ui.view">
+        <!-- <record id="stock_move_view_kanban" model="ir.ui.view">
             <field name="name">stock.move.kanban2</field>
             <field name="model">stock.move</field>
             <field name="arch" type="xml">
@@ -517,10 +517,10 @@
                     </templates>
                 </kanban>
             </field>
-        </record>
+        </record> -->
 
         <!-- test -->
-        <record id="view_move_tree_receipt_picking_board" model="ir.ui.view">
+        <!-- <record id="view_move_tree_receipt_picking_board" model="ir.ui.view">
             <field name="name">stock.move.tree3</field>
             <field name="model">stock.move</field>
             <field eval="6" name="priority"/>
@@ -534,9 +534,9 @@
                     <field name="date" groups="base.group_no_one"/>
                 </tree>
             </field>
-        </record>
+        </record> -->
 
-        <record id="view_stock_move_kanban" model="ir.ui.view">
+        <!-- <record id="view_stock_move_kanban" model="ir.ui.view">
             <field name="name">stock.move.kanban</field>
             <field name="model">stock.move</field>
             <field name="arch" type="xml">
@@ -572,7 +572,7 @@
                     </templates>
                 </kanban>
             </field>
-        </record>
+        </record> -->
 
         <menuitem action="stock_move_action" id="stock_move_menu" parent="stock.menu_warehouse_report" sequence="140" groups="base.group_no_one"/>
 
