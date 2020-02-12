@@ -22,7 +22,7 @@ class XlsxCreatorCase(common.HttpCase):
         super().setUp()
         self.model = self.env[self.model_name]
 
-        mail_new_test_user(self.env, login='fof', password='123456789')
+        u = mail_new_test_user(self.env, login='fof', password='123456789', groups='base.group_user,base.group_allow_export')
         self.authenticate('fof', '123456789')
 
         self.worksheet = {}  # mock worksheet
