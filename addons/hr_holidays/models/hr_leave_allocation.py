@@ -109,7 +109,7 @@ class HolidaysAllocation(models.Model):
              "\n- By Department: all employees of the specified department"
              "\n- By Employee Tag: all employees of the specific employee group category")
     mode_company_id = fields.Many2one(
-        'res.company', string='Company', readonly=True,
+        'res.company', string='Company Mode', readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     department_id = fields.Many2one(
         'hr.department', string='Department', readonly=True,
