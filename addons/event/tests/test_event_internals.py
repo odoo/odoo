@@ -104,7 +104,8 @@ class TestEventData(TestEventCommon):
         event_type.write({
             'event_type_mail_ids': [(5, 0), (0, 0, {
                 'interval_nbr': 1, 'interval_unit': 'days', 'interval_type': 'before_event',
-                'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})],
+                'template_ref': 'mail.template,%i' % self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})
+            ],
             'event_type_ticket_ids': [(5, 0), (0, 0, {'name': 'TestRegistration'})],
         })
         event.write({'event_type_id': event_type.id})
@@ -117,7 +118,7 @@ class TestEventData(TestEventCommon):
         self.assertEqual(event.event_mail_ids.interval_nbr, 1)
         self.assertEqual(event.event_mail_ids.interval_unit, 'days')
         self.assertEqual(event.event_mail_ids.interval_type, 'before_event')
-        self.assertEqual(event.event_mail_ids.template_id, self.env.ref('event.event_reminder'))
+        self.assertEqual(event.event_mail_ids.template_ref, self.env.ref('event.event_reminder'))
         self.assertEqual(len(event.event_ticket_ids), 1)
 
         # update template, unlink from event -> should not impact event
@@ -161,7 +162,7 @@ class TestEventData(TestEventCommon):
                     'interval_nbr': 77,
                     'interval_unit': 'days',
                     'interval_type': 'after_event',
-                    'template_id': self.env.ref('event.event_reminder').id,
+                    'template_ref': 'mail.template,%i' % self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder'),
                 })
             ]
         })
@@ -178,7 +179,7 @@ class TestEventData(TestEventCommon):
                     'notification_type': 'mail',
                     'interval_unit': 'now',
                     'interval_type': 'after_sub',
-                    'template_id': self.env.ref('event.event_subscription').id,
+                    'template_ref': 'mail.template,%i' % self.env['ir.model.data'].xmlid_to_res_id('event.event_subscription'),
                 })
             ]
         })
@@ -305,6 +306,18 @@ class TestEventData(TestEventCommon):
             set(map(lambda m: m.get('name', None), event_form.event_ticket_ids._records)),
             set(['Registration Ticket'])
         )
+
+    def test_event_mail_filter_template_on_event(self):
+        """Test that the mail template are filtered to show only those which are related to the event registration model.
+
+        This is important to be able to show only relevant mail templates on the related
+        field "template_ref".
+        """
+        self.env['mail.template'].search([('model', '=', 'event.registration')]).unlink()
+        self.env['mail.template'].create({'model_id': self.env['ir.model']._get('event.registration').id, 'name': 'test template'})
+        self.env['mail.template'].create({'model_id': self.env['ir.model']._get('res.partner').id, 'name': 'test template'})
+        templates = self.env['mail.template'].with_context(filter_template_on_event=True).name_search('test template')
+        self.assertEqual(len(templates), 1, 'Should return only mail templates related to the event registration model')
 
     @users('user_eventmanager')
     def test_event_registrable(self):
