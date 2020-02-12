@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="s_image_gallery" name="Gallery">
-    <section class="s_image_gallery o_spc-medium o_slideshow s_image_gallery_show_indicators s_nb_column_fixed s_image_gallery_indicators_rounded pt24"
+<template id="s_image_gallery" name="Image Gallery">
+    <section class="s_image_gallery o_slideshow s_image_gallery_show_indicators s_image_gallery_indicators_rounded pt24"
+             data-vcss="001"
+             data-columns="3" style="height: 500px; overflow: hidden;">
+        <div class="container">
+            <div class="alert alert-info css_editable_mode_display text-center" role="status"><span class="o_add_images" style="cursor: pointer;"><i class="fa fa-plus-circle"/> Add Images</span></div>
+        </div>
+    </section>
+</template>
+
+<template id="s_images_wall" name="Images Wall">
+    <section class="s_image_gallery o_spc-small o_masonry pt24 pb24"
              data-vcss="001"
              data-columns="3" style="height: 500px; overflow: hidden;">
         <div class="container">
@@ -14,10 +24,12 @@
 <template id="s_image_gallery_options" inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
         <div data-js="gallery" data-selector=".s_image_gallery">
-            <we-select string="Mode">
+            <we-select string="Mode" data-dependencies="!slideshow_mode_opt">
                 <we-button data-mode="grid" data-name="grid_mode_opt">Grid</we-button>
                 <we-button data-mode="masonry" data-name="masonry_mode_opt">Masonry</we-button>
                 <we-button data-mode="nomode">Float</we-button>
+
+                <!-- Hidden option -->
                 <we-button data-mode="slideshow" data-name="slideshow_mode_opt">Slideshow</we-button>
             </we-select>
             <we-input string="Speed"
