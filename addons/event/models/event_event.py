@@ -30,13 +30,13 @@ class EventType(models.Model):
             'notification_type': 'mail',
             'interval_unit': 'now',
             'interval_type': 'after_sub',
-            'template_id': self.env.ref('event.event_subscription').id,
+            'template_ref': 'mail.template,%i' % self.env.ref('event.event_subscription').id,
         }), (0, 0, {
             'notification_type': 'mail',
             'interval_nbr': 10,
             'interval_unit': 'days',
             'interval_type': 'before_event',
-            'template_id': self.env.ref('event.event_reminder').id,
+            'template_ref': 'mail.template,%i' % self.env.ref('event.event_reminder').id,
         })]
 
     name = fields.Char('Event Category', required=True, translate=True)
@@ -298,12 +298,8 @@ class EventEvent(models.Model):
             self.is_online = self.event_type_id.is_online
 
             if self.event_type_id.use_mail_schedule and self.event_type_id.event_type_mail_ids:
-                self.event_mail_ids = [(5, 0, 0)] + [
-                    (0, 0, {
-                        attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
-                        for attribute_name in self.env['event.type.mail']._get_event_mail_fields_whitelist()
-                        })
-                    for line in self.event_type_id.event_type_mail_ids]
+                self.event_mail_ids = [(5, 0, 0)] + \
+                    [(0, 0, line._prepare_event_mail_values()) for line in self.event_type_id.event_type_mail_ids]
 
             # compute tickets information
             if self.event_type_id.use_ticket:

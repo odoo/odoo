@@ -27,12 +27,12 @@ class TestMailSchedule(TestEventCommon):
                 (0, 0, {  # right at subscription
                     'interval_unit': 'now',
                     'interval_type': 'after_sub',
-                    'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_subscription')}),
+                    'template_ref': 'mail.template,%i' % self.env['ir.model.data'].xmlid_to_res_id('event.event_subscription')}),
                 (0, 0, {  # 1 days before event
                     'interval_nbr': 1,
                     'interval_unit': 'days',
                     'interval_type': 'before_event',
-                    'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')}),
+                    'template_ref': 'mail.template,%i' % self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')}),
             ]
         })
 

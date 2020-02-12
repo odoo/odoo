@@ -58,7 +58,7 @@
                                             <field name="event_type_mail_ids" style="width: 100%;">
                                                 <tree string="Communication" editable="bottom">
                                                     <field name="notification_type" invisible="1"/>
-                                                    <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
+                                                    <field name="template_ref" options="{'no_quick_create': True}"/>
                                                     <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}"/>
                                                     <field name="interval_unit"/>
                                                     <field name="interval_type"/>
@@ -265,7 +265,7 @@
                                     <tree string="Communication" editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="notification_type" invisible="1"/>
-                                        <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
+                                        <field name="template_ref" options="{'no_quick_create': True}" width="2"/>
                                         <field name="interval_nbr" attrs="{'readonly':[('interval_unit','=','now')]}"/>
                                         <field name="interval_unit"/>
                                         <field name="interval_type"/>
@@ -709,7 +709,7 @@
                             <group>
                                 <field name="event_id"/>
                                 <field name="notification_type" invisible="1"/>
-                                <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
+                                <field name="template_ref" options="{'no_quick_create': True}"/>
                                 <field name="mail_sent"/>
                             </group>
                             <group>
@@ -745,7 +745,7 @@
                 <tree string="Event Mail Schedulers">
                     <field name="event_id"/>
                     <field name="notification_type" invisible="1"/>
-                    <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
+                    <field name="template_ref" options="{'no_quick_create': True}"/>
                     <field name="scheduled_date"/>
                     <field name="mail_sent" string="Sent"/>
                     <field name="done"/>
