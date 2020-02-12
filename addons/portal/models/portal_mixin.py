@@ -77,8 +77,9 @@ class PortalMixin(models.AbstractModel):
     def _notify_get_groups(self, message, groups):
         access_token = self._portal_ensure_token()
         customer = self['partner_id']
+        signup_enabled = self.env['ir.config_parameter'].sudo().get_param('auth_signup.invitation_scope') == 'b2c'
 
-        if access_token and customer:
+        if access_token and customer and signup_enabled:
             additional_params = {
                 'access_token': self.access_token,
             }
@@ -94,6 +95,11 @@ class PortalMixin(models.AbstractModel):
                     },
                 })
             ]
+        elif customer and not signup_enabled:
+            for group_name, group_method, group_data in groups:
+                if group_name == 'customer':
+                    group_method = lambda pdata: pdata['id'] == customer.id
+            new_group = []
         else:
             new_group = []
         return super(PortalMixin, self)._notify_get_groups(message, new_group + groups)
