@@ -279,9 +279,9 @@ class ProductTemplate(models.Model):
         """
         product_weight_in_lbs_param = self.env['ir.config_parameter'].sudo().get_param('product.weight_in_lbs')
         if product_weight_in_lbs_param == '1':
-            return self.env.ref('uom.product_uom_lb')
+            return self.env.ref('uom.product_uom_lb', False) or self.env['uom.uom'].search([('measure_type', '=' , 'weight'), ('uom_type', '=', 'reference')], limit=1)
         else:
-            return self.env.ref('uom.product_uom_kgm')
+            return self.env.ref('uom.product_uom_kgm', False) or self.env['uom.uom'].search([('measure_type', '=' , 'weight'), ('uom_type', '=', 'reference')], limit=1)
 
     @api.model
     def _get_length_uom_id_from_ir_config_parameter(self):
