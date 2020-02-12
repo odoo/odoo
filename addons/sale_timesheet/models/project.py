@@ -250,7 +250,6 @@ class ProjectTask(models.Model):
 
     @api.onchange('project_id')
     def _onchange_project(self):
-        super(ProjectTask, self)._onchange_project()
         if self.project_id:
             if self.project_id.billable_type == 'employee_rate':
                 if not self.partner_id:

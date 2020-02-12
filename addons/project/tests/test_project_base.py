@@ -19,6 +19,9 @@ class TestProjectCommon(SavepointCase):
         cls.partner_2 = cls.env['res.partner'].create({
             'name': 'Valid Poilvache',
             'email': 'valid.other@gmail.com'})
+        cls.partner_3 = cls.env['res.partner'].create({
+            'name': 'Valid Poilboeuf',
+            'email': 'valid.poilboeuf@gmail.com'})
 
         # Test users to use through the various tests
         Users = cls.env['res.users'].with_context({'no_reset_password': True})
