@@ -88,16 +88,6 @@ var PopupWidget = PosBaseWidget.extend({
 });
 gui.define_popup({name:'alert', widget: PopupWidget});
 
-var ErrorPopupWidget = PopupWidget.extend({
-    template:'ErrorPopupWidget',
-    show: function(options){
-        this._super(options);
-        this.gui.play_sound('error');
-    },
-});
-gui.define_popup({name:'error', widget: ErrorPopupWidget});
-
-
 var SyncErrorPopupWidget = ErrorPopupWidget.extend({
     template:'SyncErrorPopupWidget',
     show: function(opts) {
@@ -143,12 +133,6 @@ var ErrorBarcodePopupWidget = ErrorPopupWidget.extend({
 });
 gui.define_popup({name:'error-barcode', widget: ErrorBarcodePopupWidget});
 
-
-var ConfirmPopupWidget = PopupWidget.extend({
-    template: 'ConfirmPopupWidget',
-});
-gui.define_popup({name:'confirm', widget: ConfirmPopupWidget});
-
 /**
  * A popup that allows the user to select one item from a list.
  *
@@ -190,27 +174,6 @@ var SelectionPopupWidget = PopupWidget.extend({
     }
 });
 gui.define_popup({name:'selection', widget: SelectionPopupWidget});
-
-
-var TextInputPopupWidget = PopupWidget.extend({
-    template: 'TextInputPopupWidget',
-    show: function(options){
-        options = options || {};
-        this._super(options);
-
-        this.renderElement();
-        this.$('input,textarea').focus();
-    },
-    click_confirm: function(){
-        var value = this.$('input,textarea').val();
-        this.gui.close_popup();
-        if( this.options.confirm ){
-            this.options.confirm.call(this,value);
-        }
-    },
-});
-gui.define_popup({name:'textinput', widget: TextInputPopupWidget});
-
 
 var TextAreaPopupWidget = TextInputPopupWidget.extend({
     template: 'TextAreaPopupWidget',

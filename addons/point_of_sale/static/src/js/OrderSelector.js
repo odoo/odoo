@@ -20,18 +20,16 @@ odoo.define('point_of_sale.OrderSelector', function(require) {
         addNewOrder() {
             this.env.pos.add_new_order();
         }
-        deleteCurrentOrder() {
+        async deleteCurrentOrder() {
             const order = this.env.pos.get_order();
             if (!order) {
                 return;
             } else if (!order.is_empty()) {
-                this.props.gui.show_popup('confirm', {
+                const userAgreed = await this.showPopup('ConfirmPopup', {
                     title: this.env._t('Destroy Current Order ?'),
                     body: this.env._t('You will lose any data associated with the current order'),
-                    confirm: () => {
-                        this.env.pos.delete_current_order();
-                    },
                 });
+                if (userAgreed) this.env.pos.delete_current_order();
             } else {
                 this.env.pos.delete_current_order();
             }

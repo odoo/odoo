@@ -12,7 +12,7 @@
                              src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
                     </div>
                     <div class="pos-rightheader">
-                        <OrderSelector gui="gui" />
+                        <OrderSelector />
                         <CashierName />
                         <!-- <SaleDetailsButton t-if="env.pos.proxy.printer" /> -->
                         <ProxyStatus t-if="env.pos.config.use_proxy" />
@@ -111,42 +111,6 @@
         </div>
     </t>
 
-    <t t-name="PopupWidget">
-        <div role="dialog" class="modal-dialog">
-            <div class="popup popup-alert">
-                <p class="title">
-                    <t t-esc=" widget.options.title || 'Alert' " />
-                </p>
-                <p class="body">
-                    <t t-esc=" widget.options.body || '' " />
-                </p>
-                <div class="footer">
-                    <div class="button cancel">
-                        Ok
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="ErrorPopupWidget">
-        <div role="dialog" class="modal-dialog">
-            <div class="popup popup-error">
-                <p class="title">
-                    <t t-esc=" widget.options.title || 'Error' " />
-                </p>
-                <p class="body">
-                    <t t-esc=" widget.options.body || '' " />
-                </p>
-                <div class="footer">
-                    <div class="button cancel">
-                        Ok
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
     <t t-name="SyncErrorPopupWidget">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-error">
@@ -162,38 +126,6 @@
                     </div>
                     <div class="button stop_showing_sync_errors">
                         Don't show again
-                    </div>
-                </footer>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="ErrorTracebackPopupWidget">
-        <div role="dialog" class="modal-dialog">
-            <div class="popup popup-error">
-                <header class="title">
-                    <t t-esc=" widget.options.title || 'Error' " />
-                </header>
-                <main class="body traceback">
-                    <t t-esc=" widget.options.body || '' " />
-                </main>
-                <footer class="footer">
-                    <div class="button cancel">
-                        Ok
-                    </div>
-                    <a>
-                        <div class="button icon download_error_file oe_hidden">
-                            <i class="fa fa-arrow-down" role="img" aria-label="Download error"
-                               title="Download error"></i>
-                        </div>
-                    </a>
-                    <div class="button icon download">
-                        <i class="fa fa-download" role="img" aria-label="Download"
-                           title="Download"></i>
-                    </div>
-                    <div class="button icon email">
-                        <i class="fa fa-paper-plane" role="img" aria-label="Send by email"
-                           title="Send by email"></i>
                     </div>
                 </footer>
             </div>
@@ -217,46 +149,6 @@
                         Ok
                     </div>
                 </footer>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="ConfirmPopupWidget">
-        <div role="dialog" class="modal-dialog">
-            <div class="popup popup-confirm">
-                <header class="title">
-                    <t t-esc=" widget.options.title || 'Confirm ?' " />
-                </header>
-                <main class="body">
-                    <t t-esc="  widget.options.body || '' " />
-                </main>
-                <footer class="footer">
-                    <div class="button confirm">
-                        Confirm
-                    </div>
-                    <div class="button cancel">
-                        Cancel
-                    </div>
-                </footer>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="TextInputPopupWidget">
-        <div role="dialog" class="modal-dialog">
-            <div class="popup popup-textinput">
-                <header class="title">
-                    <t t-esc=" widget.options.title || '' " />
-                </header>
-                <input type='text' t-att-value="widget.options.value || ''"></input>
-                <div class="footer">
-                    <div class="button confirm">
-                        Ok
-                    </div>
-                    <div class="button cancel">
-                        Cancel
-                    </div>
-                </div>
             </div>
         </div>
     </t>

@@ -14,35 +14,6 @@ const { PosComponent } = require('point_of_sale.PosComponent');
 var _t = core._t;
 var QWeb = core.qweb;
 
-/* -------- The Header Button --------- */
-
-// Used to quickly add buttons with simple
-// labels and actions to the point of sale 
-// header.
-
-var HeaderButtonWidget = PosBaseWidget.extend({
-    template: 'HeaderButtonWidget',
-    init: function(parent, options){
-        options = options || {};
-        this._super(parent, options);
-        this.action = options.action;
-        this.label  = options.label;
-        this.button_class = options.button_class;
-
-    },
-    renderElement: function(){
-        var self = this;
-        this._super();
-        if(this.action){
-            this.$el.click(function(){
-                self.action();
-            });
-        }
-    },
-    show: function() { this.$el.removeClass('oe_hidden'); },
-    hide: function() { this.$el.addClass('oe_hidden'); },
-});
-
 /* --------- The Debug Widget --------- */
 
 // The debug widget lets the user control 
@@ -221,86 +192,6 @@ var DebugWidget = PosBaseWidget.extend({
         });
     },
 });
-
-/* --------- The Status Widget -------- */
-
-// Base class for widgets that want to display
-// status in the point of sale header.
-
-var StatusWidget = PosBaseWidget.extend({
-    status: ['connected','connecting','disconnected','warning','error'],
-
-    set_status: function(status,msg){
-        for(var i = 0; i < this.status.length; i++){
-            this.$('.js_'+this.status[i]).addClass('oe_hidden');
-        }
-        this.$('.js_'+status).removeClass('oe_hidden');
-        
-        if(msg){
-            this.$('.js_msg').removeClass('oe_hidden').html(msg);
-        }else{
-            this.$('.js_msg').addClass('oe_hidden').html('');
-        }
-    },
-});
-
-/* --------- The Proxy Status --------- */
-
-// Displays the status of the hardware proxy
-// (connected, disconnected, errors ... )
-
-var ProxyStatusWidget = StatusWidget.extend({
-    template: 'ProxyStatusWidget',
-    set_smart_status: function(status){
-        if(status.status === 'connected'){
-            var warning = false;
-            var msg = '';
-            if(this.pos.config.iface_scan_via_proxy){
-                var scanner = status.drivers.scanner ? status.drivers.scanner.status : false;
-                if( scanner != 'connected' && scanner != 'connecting'){
-                    warning = true;
-                    msg += _t('Scanner');
-                }
-            }
-            if( this.pos.config.iface_print_via_proxy || 
-                this.pos.config.iface_cashdrawer ){
-                var printer = status.drivers.printer ? status.drivers.printer.status : false;
-                if (printer != 'connected' && printer != 'connecting') {
-                    warning = true;
-                    msg = msg ? msg + ' & ' : msg;
-                    msg += _t('Printer');
-                }
-            }
-            if( this.pos.config.iface_electronic_scale ){
-                var scale = status.drivers.scale ? status.drivers.scale.status : false;
-                if( scale != 'connected' && scale != 'connecting' ){
-                    warning = true;
-                    msg = msg ? msg + ' & ' : msg;
-                    msg += _t('Scale');
-                }
-            }
-
-            msg = msg ? msg + ' ' + _t('Offline') : msg;
-            this.set_status(warning ? 'warning' : 'connected', msg);
-        }else{
-            this.set_status(status.status, status.msg || '');
-        }
-    },
-    start: function(){
-        var self = this;
-        
-        this.set_smart_status(this.pos.proxy.get('status'));
-
-        this.pos.proxy.on('change:status',this,function(eh,status){ //FIXME remove duplicate changes 
-            self.set_smart_status(status.newValue);
-        });
-
-        this.$el.click(function(){
-            self.pos.connect_to_proxy();
-        });
-    },
-});
-
 
 /* User interface for distant control over the Client display on the IoT Box */
 // The boolean posbox_supports_display (in devices.js) will allow interaction to the IoT Box on true, prevents it otherwise
@@ -567,7 +458,7 @@ class Chrome extends PosComponent {
     // displays a system error with the error-traceback
     // popup.
     show_error(error) {
-        this.gui.show_popup('error-traceback',{
+        this.showPopup('ErrorTracebackPopup',{
             'title': error.message,
             'body':  error.message + '\n' + error.data.debug + '\n',
         });
@@ -580,7 +471,7 @@ class Chrome extends PosComponent {
         var self = this;
         CrashManager.include({
             show_error: function(error) {
-                if (self.gui) {
+                if (self.env.pos) {
                     self.show_error(error);
                 } else {
                     this._super(error);
@@ -758,9 +649,6 @@ class Chrome extends PosComponent {
 return {
     Chrome: Chrome,
     DebugWidget: DebugWidget,
-    HeaderButtonWidget: HeaderButtonWidget,
-    ProxyStatusWidget: ProxyStatusWidget,
     ClientScreenWidget: ClientScreenWidget,
-    StatusWidget: StatusWidget,
 };
 });

@@ -5,6 +5,7 @@ odoo.define('point_of_sale.TextInputPopup', function(require) {
     const { popupsRegistry } = require('point_of_sale.popupsRegistry');
     const { InputPopup } = require('point_of_sale.AbstractPopups');
 
+    // formerly TextInputPopupWidget
     class TextInputPopup extends InputPopup {
         constructor() {
             super(...arguments);

@@ -58,7 +58,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
         addNewPaymentLine(paymentMethod) {
             // original function: click_paymentmethods
             if (this.currentOrder.electronic_payment_in_progress()) {
-                this.gui.show_popup('error', {
+                this.showPopup('ErrorPopup', {
                     title: _t('Error'),
                     body: _t('There is already an electronic payment in progress.'),
                 });
@@ -163,8 +163,8 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             this._resetInput();
             this.render();
         }
-        validateOrder() {
-            if (this._isOrderValid()) {
+        async validateOrder(isForceValidate) {
+            if (await this._isOrderValid(isForceValidate)) {
                 // remove pending payments before finalizing the validation
                 for (let line of this.paymentLines) {
                     if (!line.is_done()) this.currentOrder.remove_paymentline(line);
@@ -207,7 +207,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                                 props: { isShowPrintInvoice: true },
                             });
                             if (error) {
-                                this.gui.show_popup('error', {
+                                this.showPopup('ErrorPopup', {
                                     title: 'Error: no internet connection',
                                     body: error,
                                 });
@@ -230,7 +230,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                                 .catch(error => {
                                     this.trigger('show-screen', { name: 'ReceiptScreen' });
                                     if (error) {
-                                        this.gui.show_popup('error', {
+                                        this.showPopup('ErrorPopup', {
                                             title: 'Error: no internet connection',
                                             body: error,
                                         });
@@ -242,11 +242,9 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 }
             }
         }
-        _isOrderValid(isForceValidate) {
-            var self = this;
-
+        async _isOrderValid(isForceValidate) {
             if (this.currentOrder.get_orderlines().length === 0) {
-                this.gui.show_popup('error', {
+                this.showPopup('ErrorPopup', {
                     title: _t('Empty Order'),
                     body: _t(
                         'There must be at least one product in your order before it can be validated'
@@ -261,7 +259,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
 
             if (this.currentOrder.has_not_valid_rounding()) {
                 var line = this.currentOrder.has_not_valid_rounding();
-                this.gui.show_popup('error', {
+                this.showPopup('ErrorPopup', {
                     title: _t('Incorrect rounding'),
                     body: _t(
                         'You have to round your payments lines.' + line.amount + ' is not rounded.'
@@ -281,7 +279,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                     cash = cash || this.env.pos.payment_methods[i].is_cash_count;
                 }
                 if (!cash) {
-                    this.gui.show_popup('error', {
+                    this.showPopup('ErrorPopup', {
                         title: _t('Cannot return change without a cash payment method'),
                         body: _t(
                             'There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale configuration'
@@ -300,13 +298,14 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 var body = !client
                     ? 'You need to select the customer before you can send the receipt via email.'
                     : 'This customer does not have a valid email address, define one or do not send an email.';
-                this.gui.show_popup('confirm', {
+
+                this.showPopup('ConfirmPopup', {
                     title: _t(title),
                     body: _t(body),
-                    confirm: function() {
-                        this.trigger('show-screen', { name: 'ClientListScreen' });
-                    },
+                }).then(userAgreed => {
+                    if (userAgreed) this.trigger('show-screen', { name: 'ClientListScreen' });
                 });
+
                 return false;
             }
 
@@ -316,7 +315,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 this.currentOrder.get_total_with_tax() > 0 &&
                 this.currentOrder.get_total_with_tax() * 1000 < this.currentOrder.get_total_paid()
             ) {
-                this.gui.show_popup('confirm', {
+                this.showPopup('ConfirmPopup', {
                     title: _t('Please Confirm Large Amount'),
                     body:
                         _t('Are you sure that the customer wants to  pay') +
@@ -328,9 +327,8 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                         this.env.pos.format_currency(this.currentOrder.get_total_with_tax()) +
                         ' ' +
                         _t('? Clicking "Confirm" will validate the payment.'),
-                    confirm: function() {
-                        self.validateOrder(true);
-                    },
+                }).then(userAgreed => {
+                    if (userAgreed) this.validateOrder(true);
                 });
                 return false;
             }
