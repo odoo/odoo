@@ -6,7 +6,7 @@
         <!-- This view is meant to be included in the employee profile view -->
         <!-- It ensures that if the 'normal' Preferences view is changed, it's
             also reflected in the employee's profile -->
-        <!-- <record id="res_users_view_form_simple_modif" model="ir.ui.view">
+        <record id="res_users_view_form_simple_modif" model="ir.ui.view">
             <field name="name">res.users.preferences.form.simplified.inherit</field>
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
@@ -19,8 +19,7 @@
                     <attribute name="invisible">1</attribute>
                 </xpath>
             </field>
-        </record> -->
-        <!-- TODO see with LUL -->
+        </record>
 
         <record id="view_users_form_simple_modif_resource" model="ir.ui.view">
             <field name="name">res.users.preferences.form.resource</field>
