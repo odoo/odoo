@@ -856,7 +856,7 @@
             <field name="name">project.task.tree.activity</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <tree string="Next Activities" decoration-danger="not is_closed and activity_date_deadline &lt; current_date" default_order="activity_date_deadline">
+                <tree string="Next Activities" decoration-danger="not is_closed and activity_date_deadline &lt; current_date" default_order="activity_date_deadline" multi_edit="1">
                     <field name="is_closed"/>
                     <field name="name"/>
                     <field name="project_id"/>
