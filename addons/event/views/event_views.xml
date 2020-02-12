@@ -13,7 +13,6 @@
                             <label for="name" string="Event Template"/>
                             <h1><field name="name" placeholder="e.g. Online Conferences" class="mb-2"/></h1>
                         </div>
-
                        <group>
                            <group>
                                <div colspan="2" class="o_checkbox_optional_field">
@@ -54,11 +53,12 @@
                            <page string="Communication" name="event_type_communication">
                                <field name="event_type_mail_ids" class="w-100">
                                    <tree string="Communication" editable="bottom">
-                                       <field name="notification_type" invisible="1"/>
-                                       <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
+                                       <field name="notification_type"/>
+                                       <field name="template_model_id" invisible="1"/>
+                                       <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}"/>
                                        <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}"/>
                                        <field name="interval_unit"/>
-                                       <field name="interval_type"/>
+                                        <field name="interval_type"/>
                                    </tree>
                                </field>
                            </page>
@@ -208,8 +208,9 @@
                                 <field name="event_mail_ids">
                                     <tree string="Communication" editable="bottom">
                                         <field name="sequence" widget="handle"/>
-                                        <field name="notification_type" invisible="1"/>
-                                        <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}" context="{'default_model': 'event.registration'}"/>
+                                        <field name="notification_type"/>
+                                        <field name="template_model_id" invisible="1"/>
+                                        <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}"/>
                                         <field name="interval_nbr" attrs="{'readonly':[('interval_unit','=','now')]}"/>
                                         <field name="interval_unit"/>
                                         <field name="interval_type"/>
@@ -698,8 +699,9 @@
                         <group>
                             <group>
                                 <field name="event_id"/>
-                                <field name="notification_type" invisible="1"/>
-                                <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
+                                <field name="notification_type"/>
+                                <field name="template_model_id" invisible="1"/>
+                                <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}"/>
                                 <field name="mail_state"/>
                             </group>
                             <group>
@@ -734,8 +736,9 @@
             <field name="arch" type="xml">
                 <tree string="Event Mail Schedulers">
                     <field name="event_id"/>
-                    <field name="notification_type" invisible="1"/>
-                    <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
+                    <field name="notification_type"/>
+                    <field name="template_model_id" invisible="1"/>
+                    <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}"/>
                     <field name="scheduled_date"/>
                     <field name="mail_count_done"/>
                     <field name="mail_state" widget="icon_selection" string=" "

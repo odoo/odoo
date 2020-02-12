@@ -380,10 +380,8 @@ class EventEvent(models.Model):
             command = [Command.unlink(mail.id) for mail in mails_to_remove]
             if event.event_type_id.event_type_mail_ids:
                 command += [
-                    Command.create({
-                        attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
-                        for attribute_name in self.env['event.type.mail']._get_event_mail_fields_whitelist()
-                    }) for line in event.event_type_id.event_type_mail_ids
+                    Command.create(line._prepare_event_mail_values())
+                    for line in event.event_type_id.event_type_mail_ids
                 ]
             if command:
                 event.event_mail_ids = command

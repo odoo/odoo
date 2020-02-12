@@ -227,7 +227,7 @@ class EventRegistration(models.Model):
             default_model='event.registration',
             default_res_id=self.id,
             default_use_template=bool(template),
-            default_template_id=template.id,
+            default_template_ref='mail.template,%i' % template.id,
             default_composition_mode='comment',
             custom_layout="mail.mail_notification_light",
         )
