@@ -70,7 +70,8 @@ const ColorPaletteWidget = Widget.extend({
     start: function () {
         const res = this._super.apply(this, arguments);
 
-        const $wrapper = this.$('.o_colorpicker_section_tabs');
+        const $colorSection = this.$('.o_colorpicker_sections');
+        const $wrapper = $colorSection.find('.o_colorpicker_section_tabs');
         $(qweb.render('web_editor.colorpicker')).appendTo($wrapper);
 
         this.el.querySelectorAll('.o_colorpicker_section').forEach(elem => {
@@ -84,10 +85,10 @@ const ColorPaletteWidget = Widget.extend({
         // Remove excluded palettes (note: only hide them to still be able
         // to remove their related colors on the DOM target)
         _.each(this.options.excluded, function (exc) {
-            $wrapper.find('[data-name="' + exc + '"]').addClass('d-none');
+            $colorSection.find('[data-name="' + exc + '"]').addClass('d-none');
         });
         if (this.options.excludeSectionOf) {
-            $wrapper.find('[data-name]:has([data-color="' + this.options.excludeSectionOf + '"])').addClass('d-none');
+            $colorSection.find('[data-name]:has([data-color="' + this.options.excludeSectionOf + '"])').addClass('d-none');
         }
 
         // Render common colors
