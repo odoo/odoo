@@ -368,6 +368,15 @@ options.registry.gallery = options.Class.extend({
         return this._super(...arguments);
     },
     /**
+     * @private
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'slideshow_mode_opt') {
+            return false;
+        }
+        return this._super(...arguments);
+    },
+    /**
      * Returns the images, sorted by index.
      *
      * @private
