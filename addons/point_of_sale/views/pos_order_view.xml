@@ -255,7 +255,8 @@
 
     <menuitem id="menu_point_ofsale" parent="menu_point_of_sale" action="action_pos_pos_form" sequence="2" groups="group_pos_manager,group_pos_user"/>
 
-    <record id="view_pos_order_line" model="ir.ui.view">
+    <!-- The tree view used is always view_pos_order_tree_all_sales_lines because defined after view_pos_order_line -->
+    <!-- <record id="view_pos_order_line" model="ir.ui.view">
         <field name="name">pos.order.line.tree</field>
         <field name="model">pos.order.line</field>
         <field name="arch" type="xml">
@@ -269,7 +270,7 @@
                 <field name="create_date" readonly="1"/>
             </tree>
         </field>
-    </record>
+    </record> -->
 
     <record id="view_pos_order_line_form" model="ir.ui.view">
         <field name="name">pos.order.line.form</field>

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_bank_statement_pos_session" model="ir.ui.view">
+    <!-- VFE no usage found for this view, todo ask PIM
+        https://github.com/odoo/odoo/commit/733fb360d25f885bd5c5b4688bbbc7f306f6f648
+    -->
+    <!-- <record id="view_bank_statement_pos_session" model="ir.ui.view">
         <field name="name">view.bank.statement.pos.session</field>
         <field name="model">account.bank.statement</field>
         <field name="mode">primary</field>
@@ -9,7 +12,7 @@
         <field name="arch" type="xml">
             <xpath expr="//button[@name='button_validate_or_action']" position="replace"/>
         </field>
-    </record>
+    </record> -->
 
     <record id="view_account_bnk_stmt_cashbox" model="ir.ui.view">
         <field name="name">account.bnk_stmt_cashbox.form</field>
