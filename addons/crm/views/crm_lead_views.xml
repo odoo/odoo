@@ -60,6 +60,14 @@
                             domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
                             attrs="{'invisible': ['|', ('active', '=', False), ('type', '=', 'lead')]}"/>
                     </header>
+                    <div class="alert alert-info text-center" attrs="{'invisible': [('possible_duplicate_count', '=', 0)]}" role="alert">
+                        We have found
+                        <button class="btn-link p-0" name="action_view_possible_duplicates" type="object">
+                            <field name="possible_duplicate_count"/>
+                            <span attrs="{'invisible': [('possible_duplicate_count', '&lt;', 2)]}"> leads</span>
+                            <span attrs="{'invisible': [('possible_duplicate_count', '&gt;', 1)]}"> lead</span>
+                        </button> similar to this one.
+                    </div>
                     <sheet>
                         <field name="active" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
@@ -472,13 +480,14 @@
                     <field name="partner_id"/>
                     <field name="activity_summary"/>
                     <field name="active"/>
+                    <field name="probability"/>
                     <field name="company_currency"/>
                     <field name="activity_state" />
                     <field name="activity_ids" />
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="planned_revenue" help="This bar allows to filter the opportunities based on scheduled activities."/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click">
+                            <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click o_crm_kanban_lead">
                                 <div class="o_dropdown_kanban dropdown">
 
                                     <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
@@ -489,6 +498,9 @@
                                         <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
                                         <ul class="oe_kanban_colorpicker" data-field="color"/>
                                     </div>
+                                </div>
+                                <div class="ribbon ribbon-top-right" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">
+                                    <span class="bg-danger">Lost</span>
                                 </div>
                                 <div class="oe_kanban_content">
                                     <div>
