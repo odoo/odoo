@@ -58,6 +58,9 @@ var ListController = BasicController.extend({
         this.fieldChangedPrevented = false;
         this.isPageSelected = false; // true iff all records of the page are selected
         this.isDomainSelected = false; // true iff the user selected all records matching the domain
+        session.user_has_group('base.group_allow_export').then(has_group => {
+            this.isExportEnable = has_group;
+        });
         Object.defineProperty(this, 'mode', {
             get: () => this.renderer.isEditable() ? 'edit' : 'readonly',
             set: () => {},
@@ -372,10 +375,13 @@ var ListController = BasicController.extend({
             return null;
         }
         const props = this._super(...arguments);
-        const otherActionItems = [{
-            description: _t("Export"),
-            callback: () => this._onExportData(),
-        }];
+        const otherActionItems = [];
+        if (this.isExportEnable) {
+            otherActionItems.push({
+                description: _t("Export"),
+                callback: () => this._onExportData()
+            });
+        }
         if (this.archiveEnabled) {
             otherActionItems.push({
                 description: _t("Archive"),

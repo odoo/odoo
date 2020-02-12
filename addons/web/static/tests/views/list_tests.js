@@ -177,7 +177,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('list with delete="0"', async function (assert) {
-        assert.expect(4);
+        assert.expect(3);
 
         const list = await createView({
             View: ListView,
@@ -192,13 +192,7 @@ QUnit.module('Views', {
         assert.ok(list.$('tbody td.o_list_record_selector').length, 'should have at least one record');
 
         await testUtils.dom.click(list.$('tbody td.o_list_record_selector:first input'));
-        assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus');
-        await cpHelpers.toggleActionMenu(list);
-        assert.deepEqual(
-            cpHelpers.getMenuItemTexts(list),
-            ['Export'],
-            'action menu should not have Delete button'
-        );
+        assert.containsNone(list.el, 'div.o_control_panel .o_cp_action_menus .o_dropdown_menu');
 
         list.destroy();
     });
@@ -218,6 +212,40 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(list.$('tr td:not(.o_list_record_selector)').first());
         assert.containsNone(list, 'tbody tr.o_selected_row', "should not have editable row");
+
+        list.destroy();
+    });
+
+    QUnit.test('list with export button', async function (assert) {
+        assert.expect(4);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            viewOptions: {hasActionMenus: true},
+            arch: '<tree><field name="foo"/></tree>',
+            session: {
+                async user_has_group(group) {
+                    if (group === 'base.group_allow_export') {
+                        return true;
+                    }
+                    return this._super(...arguments);
+                },
+            },
+        });
+
+        assert.containsNone(list.el, 'div.o_control_panel .o_cp_action_menus');
+        assert.ok(list.$('tbody td.o_list_record_selector').length, 'should have at least one record');
+
+        await testUtils.dom.click(list.$('tbody td.o_list_record_selector:first input'));
+        assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus');
+        await cpHelpers.toggleActionMenu(list);
+        assert.deepEqual(
+            cpHelpers.getMenuItemTexts(list),
+            ['Export', 'Delete'],
+            'action menu should have Export button'
+        );
 
         list.destroy();
     });
@@ -4538,7 +4566,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(list.$('.o_list_record_selector:first input'));
 
         await cpHelpers.toggleActionMenu(list);
-        assert.deepEqual(cpHelpers.getMenuItemTexts(list), ['Export', 'Delete', 'Action event']);
+        assert.deepEqual(cpHelpers.getMenuItemTexts(list), ['Delete', 'Action event']);
 
         list.destroy();
     });
