@@ -15,6 +15,7 @@ $o-cw-filter-avatar-size: 20px;
     display: flex;
 }
 
+<<<<<<< HEAD
 .o_calendar_view {
     flex: 1 1 auto;
     min-width: 0;
@@ -42,6 +43,21 @@ $o-cw-filter-avatar-size: 20px;
             @include size(101%); // Compensate border
             opacity: 0.9;
             transition: opacity 0.2s;
+=======
+    @for $index from 1 through $o-nb-calendar-colors {
+        .o_calendar_color_#{$index} {
+            color: #0D0D0D;
+            background-color: adjust-hue(rgb(255, 192, 192), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
+            border-color:  adjust-hue(rgb(255, 192, 192), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
+            opacity: 0.7;
+            &.o_event_hightlight {
+                opacity: 1.0;
+                color: black;
+            }
+            &:hover {
+                color: #666 !important;
+            }
+>>>>>>> c44323511b1... temp
         }
 
         .fc-content {
