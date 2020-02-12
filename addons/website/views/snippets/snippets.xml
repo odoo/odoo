@@ -219,8 +219,9 @@
 
     <div data-js="layout_column"
         data-selector="section"
-        data-target="> * > .row:not(.s_nb_column_fixed)">
+        data-target="> *:has(> .row:not(.s_nb_column_fixed)), > .s_allow_columns">
         <we-select string="Number of columns" data-no-preview="true">
+            <we-button data-select-count="0" data-name="zero_cols_opt">0</we-button>
             <we-button data-select-count="1">1</we-button>
             <we-button data-select-count="2">2</we-button>
             <we-button data-select-count="3">3</we-button>
