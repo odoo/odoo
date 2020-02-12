@@ -214,7 +214,7 @@ class TestTimesheet(TestCommonTimesheet):
         tracked_project.analytic_account_id.unlink()
 
     def test_transfert_project(self):
-        """ Transfert task with timesheet to another project should not modified past timesheets (they are still linked to old project. """
+        """ Transfert task with timesheet to another project. """
         Timesheet = self.env['account.analytic.line']
         # create a second project
         self.project_customer2 = self.env['project.project'].create({
@@ -242,8 +242,8 @@ class TestTimesheet(TestCommonTimesheet):
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
         timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_customer2.id)])
-        self.assertEqual(timesheet_count1, 1, "Still one timesheet in project 1")
-        self.assertEqual(timesheet_count2, 0, "No timesheet in project 2")
+        self.assertEqual(timesheet_count1, 0, "No timesheet in project 1")
+        self.assertEqual(timesheet_count2, 1, "Still one timesheet in project 2")
         self.assertEqual(len(self.task1.timesheet_ids), 1, "The timesheet still should be linked to task 1")
 
         # it is forbidden to set a task with timesheet without project
