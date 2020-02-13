@@ -19,30 +19,17 @@ class WebsiteVisitor(models.Model):
     def _compute_email_phone(self):
         super(WebsiteVisitor, self)._compute_email_phone()
         self.flush()
-        sql = """ SELECT v.id as visitor_id, l.id as lead_id,
-                  CASE WHEN p.email_normalized is not null THEN p.email_normalized ELSE l.email_normalized END as email,
-                  CASE WHEN p.mobile is not null THEN p.mobile WHEN l.mobile is not null THEN l.mobile ELSE l.phone END as mobile
-                  FROM website_visitor v
-                  JOIN crm_lead_website_visitor_rel lv on lv.website_visitor_id = v.id
-                  JOIN crm_lead l ON lv.crm_lead_id = l.id
-                  LEFT JOIN res_partner p on p.id = v.partner_id
-                  WHERE v.id in %s
-                  ORDER BY l.create_date ASC"""
-        self.env.cr.execute(sql, (tuple(self.ids),))
-        results = self.env.cr.dictfetchall()
-        mapped_data = {}
-        for result in results:
-            visitor_info = mapped_data.get(result['visitor_id'], {'email': '', 'mobile': ''})
-            if result['email']:
-                visitor_info['email'] = result['email']
-            if result['mobile']:
-                visitor_info['mobile'] = result['mobile']
-            mapped_data[result['visitor_id']] = visitor_info
 
-        for visitor in self:
-            email = mapped_data.get(visitor.id, {}).get('email')
-            visitor.email = email[:-1] if email else False
-            visitor.mobile = mapped_data.get(visitor.id, {}).get('mobile')
+        left_visitors = self.filtered(lambda visitor: not visitor.email or not visitor.mobile)
+        leads = left_visitors.mapped('lead_ids').sorted('create_date', reverse=True)
+        visitor_to_lead_ids = dict((visitor.id, visitor.lead_ids.ids) for visitor in left_visitors)
+
+        for visitor in left_visitors:
+            visitor_leads = leads.filtered(lambda lead: lead.id in visitor_to_lead_ids[visitor.id])
+            if not visitor.email:
+                visitor.email = next((lead.email_normalized for lead in visitor_leads if lead.email_normalized), False)
+            if not visitor.mobile:
+                visitor.mobile = next((lead.mobile or lead.phone for lead in visitor_leads if lead.mobile or lead.phone), False)
 
     def _prepare_visitor_send_mail_values(self):
         visitor_mail_values = super(WebsiteVisitor, self)._prepare_visitor_send_mail_values()
