@@ -24,6 +24,7 @@ class AccountDebitNote(models.TransientModel):
                                      "We won't copy them for debit notes from credit notes. ")
     # computed fields
     move_type = fields.Char(compute="_compute_from_moves")
+    journal_type = fields.Char(compute="_compute_from_moves")
 
     @api.model
     def default_get(self, fields):
@@ -39,6 +40,7 @@ class AccountDebitNote(models.TransientModel):
         for record in self:
             move_ids = record.move_ids
             record.move_type = move_ids[0].type if len(move_ids) == 1 or not any(m.type != move_ids[0].type for m in move_ids) else False
+            record.journal_type = record.move_type in ['in_refund', 'in_invoice'] and 'purchase' or 'sale'
 
     def _prepare_default_values(self, move):
         if move.type in ('in_refund', 'out_refund'):

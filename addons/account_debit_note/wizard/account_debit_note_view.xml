@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Create Debit Note">
                     <field name="move_type" invisible="1"/>
+                    <field name="journal_type" invisible="1"/>
                     <field name="move_ids" invisible="1"/>
                     <group>
                          <group>
@@ -15,7 +16,7 @@
                              <field name="copy_lines" attrs="{'invisible': [('move_type', 'in', ['in_refund', 'out_refund'])]}"/>
                          </group>
                          <group>
-                             <field name="journal_id"/>
+                             <field name="journal_id" domain="[('type', '=', journal_type)]"/>
                          </group>
                     </group>
                     <footer>
