@@ -56,6 +56,22 @@
             <xpath expr="//field[@name='stage_id']" position="before">
                 <field name="sale_order_id" string="Sale Order" filter_domain="['|', ('sale_order_id', 'ilike', self), ('sale_line_id', 'ilike', self)]"/>
             </xpath>
+            <filter name="inactive" position="before">
+                <filter string="To Invoice" name="to_invoice" domain="[('task_to_invoice', '=', True)]" groups="sales_team.group_sale_salesman" />
+                <separator/>
+            </filter>
+        </field>
+    </record>
+
+    <!-- To invoice batch action -->
+    <record id="project_task_server_action_batch_invoice" model="ir.actions.server">
+        <field name="name">Create invoice</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="binding_model_id" ref="project.model_project_task"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_create_invoice()
         </field>
     </record>
 
