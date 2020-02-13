@@ -2478,7 +2478,9 @@ class MailThread(models.AbstractModel):
                             left join mail_channel_partner mcp on p.id = mcp.partner_id
                             left join mail_channel c on c.id = mcp.channel_id
                             left join res_users u on p.id = u.partner_id
+                            left join res_users_log ul on u.id = ul.create_uid
                                 where (u.notification_type != 'inbox' or u.id is null)
+                                and (ul.id IS NOT NULL or u.id IS NULL)
                                 and (p.email != ANY(%s) or p.email is null)
                                 and c.id = ANY(%s)
                                 and p.id != ANY(%s)"""
