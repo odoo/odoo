@@ -514,7 +514,7 @@ class Holidays(models.Model):
     def _prepare_holidays_meeting_values(self):
         self.ensure_one()
         meeting_values = {
-            'name': self.display_name,
+            'name': _("%s on Time Off : %.2f day(s)") % (self.employee_id.name or self.category_id.name, self.number_of_days_temp),
             'categ_ids': [(6, 0, [
                 self.holiday_status_id.categ_id.id])] if self.holiday_status_id.categ_id else [],
             'duration': self.number_of_days_temp * HOURS_PER_DAY,
