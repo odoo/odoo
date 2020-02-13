@@ -68,7 +68,12 @@ class BaseAutomation(models.Model):
                                     help="If present, this condition must be satisfied before the update of the record.")
     filter_domain = fields.Char(string='Apply on', help="If present, this condition must be satisfied before executing the action rule.")
     last_run = fields.Datetime(readonly=True, copy=False)
-    on_change_field_ids = fields.Many2many('ir.model.fields', 'model_id', string="On Change Fields Trigger", help="Fields that trigger the onchange.")
+    on_change_field_ids = fields.Many2many(
+        "ir.model.fields",
+        relation="base_automation_onchange_fields_rel",
+        string="On Change Fields Trigger",
+        help="Fields that trigger the onchange.",
+    )
     trigger_field_ids = fields.Many2many('ir.model.fields', string='Trigger Fields',
                                         help="The action will be triggered if and only if one of these fields is updated."
                                              "If empty, all fields are watched.")
