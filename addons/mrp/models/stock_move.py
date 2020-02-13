@@ -99,11 +99,15 @@ class StockMove(models.Model):
     finished_lots_exist = fields.Boolean('Finished Lots Exist', compute='_compute_order_finished_lot_ids')
 
     def _unreserve_initial_demand(self, new_move):
-        # If you were already putting stock.move.lots on the next one in the work order, transfer those to the new move
-        self.filtered(lambda m: m.production_id or m.raw_material_production_id)\
+        # If we already set a lot in some move line of `self` used in production, we need
+        # to detach those move line to attache them to the new move(not yet created here)
+        line_ids = self.filtered(lambda m: m.production_id or m.raw_material_production_id)\
         .mapped('move_line_ids')\
-        .filtered(lambda ml: ml.qty_done == 0.0)\
-        .write({'move_id': new_move, 'product_uom_qty': 0})
+        .filtered(lambda ml: ml.qty_done == 0.0)
+        if line_ids:
+            line_ids.write({'product_uom_qty': 0})
+            new_move[0]['move_line_ids'] = [(6, 0, line_ids.ids)]
+        return new_move
 
     @api.depends('raw_material_production_id.move_finished_ids.move_line_ids.lot_id')
     def _compute_order_finished_lot_ids(self):
