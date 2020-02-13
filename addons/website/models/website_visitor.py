@@ -70,16 +70,16 @@ class WebsiteVisitor(models.Model):
             (record.name or _('Website Visitor #%s') % record.id)
         ) for record in self]
 
-    @api.depends('partner_id.email_normalized', 'partner_id.mobile')
+    @api.depends('partner_id.email_normalized', 'partner_id.mobile', 'partner_id.phone')
     def _compute_email_phone(self):
         results = self.env['res.partner'].search_read(
             [('id', 'in', self.partner_id.ids)],
-            ['id', 'email_normalized', 'mobile'],
+            ['id', 'email_normalized', 'mobile', 'phone'],
         )
         mapped_data = {
             result['id']: {
                 'email_normalized': result['email_normalized'],
-                'mobile': result['mobile']
+                'mobile': result['mobile'] if result['mobile'] else result['phone']
             } for result in results
         }
 
