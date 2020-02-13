@@ -164,7 +164,7 @@ class Contract(models.Model):
     @api.multi
     def write(self, vals):
         if vals.get('state') == 'open':
-            for contract in self:
+            for contract in self.filtered('employee_id'):
                 contract.employee_id.contract_id = contract
         return super(Contract, self).write(vals)
 
