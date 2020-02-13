@@ -88,8 +88,8 @@ SELECT
         ELSE date::date - interval '1 day'
     END, '1 day'::interval)::date date,
     CASE
-        WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' AND m.state = 'done' THEN product_qty
-        WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit'  AND m.state = 'done' THEN -product_qty
+        WHEN ((whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit') AND m.state = 'done' THEN product_qty
+        WHEN ((whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit') AND m.state = 'done' THEN -product_qty
         WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN -product_qty
         WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN product_qty
     END AS product_qty,
