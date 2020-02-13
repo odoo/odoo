@@ -100,11 +100,13 @@ const GallerySliderWidget = publicWidget.Widget.extend({
             if (page <= 0) {
                 self.$prev.detach();
             } else {
+                self.$prev.removeClass('d-none');
                 self.$prev.prependTo(self.$indicator);
             }
             if (page >= nbPages - 1) {
                 self.$next.detach();
             } else {
+                self.$next.removeClass('d-none');
                 self.$next.appendTo(self.$indicator);
             }
         }

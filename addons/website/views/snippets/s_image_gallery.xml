@@ -63,8 +63,12 @@
                 <we-button data-select-class="s_image_gallery_indicators_arrows_rounded">Rounded</we-button>
             </we-select>
             <we-checkbox string="Image Cover" data-select-class="s_image_gallery_cover" data-dependencies="slideshow_mode_opt"/>
-            <we-checkbox string="Show Indicators" data-select-class="s_image_gallery_show_indicators" data-dependencies="slideshow_mode_opt"/>
-            <we-checkbox string="Rounded Indicators" data-select-class="s_image_gallery_indicators_rounded" data-dependencies="slideshow_mode_opt"/>
+            <we-select string="Indicators" data-dependencies="slideshow_mode_opt">
+                <we-button data-select-class="">None</we-button>
+                <we-button data-select-class="s_image_gallery_show_indicators s_image_gallery_indicators_dots">Dots</we-button>
+                <we-button data-select-class="s_image_gallery_show_indicators">Squared Miniatures</we-button>
+                <we-button data-select-class="s_image_gallery_show_indicators s_image_gallery_indicators_rounded">Rounded Miniatures</we-button>
+            </we-select>
             <t t-call="website.snippet_options_border_widgets">
                 <t t-set="apply_to" t-valuef="img"/>
                 <t t-set="so_rounded_no_dependencies" t-value="true"/>
