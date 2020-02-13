@@ -831,7 +831,7 @@ class TestCowViewSaving(common.TransactionCase):
             'name': 'Main layout',
             'mode': 'extension',
             'inherit_id': base_view.id,
-            'arch': '<xpath expr="//t[@t-set=\'head_website\']" position="replace"><t t-call-assets="web_editor.summernote" t-js="false" groups="website.group_website_publisher"/></xpath>',
+            'arch': '<xpath expr="//t[@t-set=\'head_website\']" position="replace"><t t-call-assets="web_editor.assets_summernote" t-js="false" groups="website.group_website_publisher"/></xpath>',
             'key': '_website.layout',
         })
 
@@ -844,7 +844,7 @@ class TestCowViewSaving(common.TransactionCase):
             'name': 'Forum Layout',
             'mode': 'primary',
             'inherit_id': inherit_view.id,
-            'arch': '<xpath expr="//t[@t-call-assets=\'web_editor.summernote\'][@t-js=\'false\']" position="attributes"><attribute name="groups"/></xpath>',
+            'arch': '<xpath expr="//t[@t-call-assets=\'web_editor.assets_summernote\'][@t-js=\'false\']" position="attributes"><attribute name="groups"/></xpath>',
             'key': '_website_forum.layout',
         })])
 
