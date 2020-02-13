@@ -462,6 +462,21 @@ define([
           event: 'imageShape',
           value: 'img-thumbnail'
         });
+        var leafButton = tplIconButton(options.iconPrefix + options.icons.image.shapeLeaf, {
+          title: lang.image.shapeLeaf,
+          event: 'imageShape',
+          value: 'rounded-leaf'
+        });
+        var pillButton = tplIconButton(options.iconPrefix + options.icons.image.shapePill, {
+          title: lang.image.shapePill,
+          event: 'imageShape',
+          value: 'rounded-pill'
+        });
+        var stackedButton = tplIconButton(options.iconPrefix + options.icons.image.shapeStacked, {
+          title: lang.image.shapeStacked,
+          event: 'imageShape',
+          value: 'stacked'
+        });
         var noneButton = tplIconButton(options.iconPrefix + options.icons.image.shapeNone, {
           title: lang.image.shapeNone,
           event: 'imageShape',
@@ -476,7 +491,7 @@ define([
 
         var content = (options.disableResizeImage ? '' : '<div class="btn-group">' + autoButton + fullButton + halfButton + quarterButton + '</div>') +
                       '<div class="btn-group">' + leftButton + rightButton + justifyButton + '</div>' +
-                      '<div class="btn-group">' + roundedButton + circleButton + thumbnailButton + noneButton + '</div>' +
+                      '<div class="btn-group">' + roundedButton + circleButton + thumbnailButton + leafButton + pillButton + stackedButton + noneButton + '</div>' +
                       '<div class="btn-group">' + removeButton + '</div>';
         return tplPopover('note-image-popover', content);
       };
