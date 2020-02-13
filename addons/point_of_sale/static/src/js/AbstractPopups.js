@@ -16,9 +16,9 @@ odoo.define('point_of_sale.AbstractPopups', function(require) {
      * See `showPopup` in `point_of_sale.PosComponent` for further information.
      */
 
-    const { Component } = owl;
+    const { PosComponent } = require('point_of_sale.PosComponent');
 
-    class JustOkayPopup extends Component {
+    class JustOkayPopup extends PosComponent {
         constructor() {
             super(...arguments);
             this.props = this.props || {};
@@ -35,7 +35,7 @@ odoo.define('point_of_sale.AbstractPopups', function(require) {
         }
     }
 
-    class OkayCancelPopup extends Component {
+    class OkayCancelPopup extends PosComponent {
         constructor() {
             super(...arguments);
             this.props = this.props || {};

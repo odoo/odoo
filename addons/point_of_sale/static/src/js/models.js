@@ -422,6 +422,7 @@ exports.PosModel = Backbone.Model.extend({
                     product.lst_price = round_pr(product.lst_price * conversion_rate, self.currency.rounding);
                 }
                 product.categ = _.findWhere(self.product_categories, {'id': product.categ_id[0]});
+                product.pos = self;
                 return new exports.Product({}, product);
             }));
         },
@@ -1401,7 +1402,21 @@ exports.Product = Backbone.Model.extend({
     initialize: function(attr, options){
         _.extend(this, options);
     },
-
+    isAllowOnlyOneLot: function() {
+        const productUnit = this.get_unit();
+        return this.tracking === 'lot' || !productUnit || !productUnit.is_pos_groupable;
+    },
+    get_unit: function() {
+        var unit_id = this.uom_id;
+        if(!unit_id){
+            return undefined;
+        }
+        unit_id = unit_id[0];
+        if(!this.pos){
+            return undefined;
+        }
+        return this.pos.units_by_id[unit_id];
+    },
     // Port of get_product_price on product.pricelist.
     //
     // Anything related to UOM can be ignored, the POS will always use
@@ -1551,6 +1566,57 @@ exports.Orderline = Backbone.Model.extend({
         orderline.price_manually_set = this.price_manually_set;
         return orderline;
     },
+    getPackLotLinesToEdit: function(isAllowOnlyOneLot) {
+        const currentPackLotLines = this.pack_lot_lines.models;
+        let nExtraLines = Math.abs(this.quantity) - currentPackLotLines.length;
+        nExtraLines = nExtraLines > 0 ? nExtraLines : 1;
+        const tempLines = currentPackLotLines
+            .map(lotLine => ({
+                id: lotLine.cid,
+                text: lotLine.get('lot_name'),
+            }))
+            .concat(
+                Array.from(Array(nExtraLines)).map(_ => ({
+                    text: '',
+                }))
+            );
+        return isAllowOnlyOneLot ? [tempLines[0]] : tempLines;
+    },
+    /**
+     * @param { modifiedPackLotLines, newPackLotLines }
+     *    @param {Object} modifiedPackLotLines key-value pair of String (the cid) & String (the new lot_name)
+     *    @param {Array} newPackLotLines array of { lot_name: String }
+     */
+    setPackLotLines: function({ modifiedPackLotLines, newPackLotLines }) {
+        // Set the new values for modified lot lines.
+        let lotLinesToRemove = [];
+        for (let lotLine of this.pack_lot_lines.models) {
+            const modifiedLotName = modifiedPackLotLines[lotLine.cid];
+            if (modifiedLotName) {
+                lotLine.set({ lot_name: modifiedLotName });
+            } else {
+                // We should not call lotLine.remove() here because
+                // we don't want to mutate the array while looping thru it.
+                lotLinesToRemove.push(lotLine);
+            }
+        }
+
+        // Remove those that needed to be removed.
+        for (let lotLine of lotLinesToRemove) {
+            lotLine.remove();
+        }
+
+        // Create new pack lot lines.
+        let newPackLotLine;
+        for (let newLotLine of newPackLotLines) {
+            newPackLotLine = new exports.Packlotline({}, { order_line: this });
+            newPackLotLine.set({ lot_name: newLotLine.lot_name });
+            this.pack_lot_lines.add(newPackLotLine);
+        }
+
+        // Set the quantity of the line based on number of pack lots.
+        this.pack_lot_lines.set_quantity_by_lot();
+    },
     set_product_lot: function(product){
         this.has_product_lot = product.tracking !== 'none';
         this.pack_lot_lines  = this.has_product_lot && new PacklotlineCollection(null, {'order_line': this});
@@ -1629,24 +1695,6 @@ exports.Orderline = Backbone.Model.extend({
         return lots_required;
     },
 
-    compute_lot_lines: function(){
-        var pack_lot_lines = this.pack_lot_lines;
-        var lines = pack_lot_lines.length;
-        var lots_required = this.get_required_number_of_lots();
-
-        if(lots_required > lines){
-            for(var i=0; i<lots_required - lines; i++){
-                pack_lot_lines.add(new exports.Packlotline({}, {'order_line': this}));
-            }
-        }
-        if(lots_required < lines){
-            var to_remove = lines - lots_required;
-            var lot_lines = pack_lot_lines.sortBy('lot_name').slice(0, to_remove);
-            pack_lot_lines.remove(lot_lines);
-        }
-        return this.pack_lot_lines;
-    },
-
     has_valid_product_lot: function(){
         if(!this.has_product_lot){
             return true;
@@ -1657,15 +1705,7 @@ exports.Orderline = Backbone.Model.extend({
 
     // return the unit of measure of the product
     get_unit: function(){
-        var unit_id = this.product.uom_id;
-        if(!unit_id){
-            return undefined;
-        }
-        unit_id = unit_id[0];
-        if(!this.pos){
-            return undefined;
-        }
-        return this.pos.units_by_id[unit_id];
+        return this.product.get_unit();
     },
     // return the product of this orderline
     get_product: function(){
@@ -2194,14 +2234,6 @@ var PacklotlineCollection = Backbone.Collection.extend({
         this.order_line = options.order_line;
     },
 
-    get_empty_model: function(){
-        return this.findWhere({'lot_name': null});
-    },
-
-    remove_empty_model: function(){
-        this.remove(this.where({'lot_name': null}));
-    },
-
     get_valid_lots: function(){
         return this.filter(function(model){
             return model.get('lot_name');
@@ -2209,13 +2241,11 @@ var PacklotlineCollection = Backbone.Collection.extend({
     },
 
     set_quantity_by_lot: function() {
-        if (this.order_line.product.tracking == 'serial') {
-            var valid_lots_quantity = this.get_valid_lots().length;
-            if (this.order_line.quantity < 0){
-                valid_lots_quantity = -valid_lots_quantity;
-            }
-            this.order_line.set_quantity(valid_lots_quantity);
+        var valid_lots_quantity = this.get_valid_lots().length;
+        if (this.order_line.quantity < 0){
+            valid_lots_quantity = -valid_lots_quantity;
         }
+        this.order_line.set_quantity(valid_lots_quantity);
     }
 });
 
@@ -2724,9 +2754,6 @@ exports.Order = Backbone.Model.extend({
         }
         this.assert_editable();
         options = options || {};
-        var attr = JSON.parse(JSON.stringify(product));
-        attr.pos = this.pos;
-        attr.order = this;
         var line = new exports.Orderline({}, {pos: this.pos, order: this, product: product});
         this.fix_tax_included_price(line);
 
@@ -2767,12 +2794,8 @@ exports.Order = Backbone.Model.extend({
             this.select_orderline(this.get_last_orderline());
         }
 
-        if(line.has_product_lot){
-            // TODO jcb: There should be popup here asking for required product lot.
-            // This popup should be handled in chrome.
-            // e.g. if (product.tracking !== 'none') { let result = await trackingPopup.show({params}); }
-            // if (result) then add_product()
-            // this.display_lot_popup();
+        if (options.draftPackLotLines) {
+            this.selected_orderline.setPackLotLines(options.draftPackLotLines);
         }
         if (this.pos.config.iface_customer_facing_display) {
             this.pos.send_current_order_to_customer_facing_display();
@@ -2804,22 +2827,6 @@ exports.Order = Backbone.Model.extend({
             this.selected_orderline = undefined;
         }
     },
-
-    // TODO jcb: this logic needs to be placed in the chrome component
-    // display_lot_popup: function() {
-    //     var order_line = this.get_selected_orderline();
-    //     if (order_line){
-    //         var pack_lot_lines =  order_line.compute_lot_lines();
-    //         // this is not good because we are asking for the required information very late.
-    //         // Before adding the product, we should ask for this information first.
-    //         this.pos.gui.show_popup('packlotline', {
-    //             'title': _t('Lot/Serial Number(s) Required'),
-    //             'pack_lot_lines': pack_lot_lines,
-    //             'order_line': order_line,
-    //             'order': this,
-    //         });
-    //     }
-    // },
 
     /* ---- Payment Lines --- */
     add_paymentline: function(payment_method) {

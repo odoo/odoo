@@ -7,7 +7,7 @@
                 <t t-esc="props.line.get_product().display_name"/>
                 <t t-if="props.line.get_product().tracking!=='none'">
                     <t t-if="props.line.has_valid_product_lot()">
-                        <i  t-on-click="lotIconClicked"
+                        <i  t-on-click.stop="lotIconClicked"
                             class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_green"
                             aria-label="Valid product lot"
                             role="img"
@@ -15,7 +15,7 @@
                         />
                     </t>
                     <t t-else="">
-                        <i  t-on-click="lotIconClicked"
+                        <i  t-on-click.stop="lotIconClicked"
                             class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_red"
                             aria-label="Invalid product lot"
                             role="img"

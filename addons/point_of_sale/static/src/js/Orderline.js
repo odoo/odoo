@@ -8,7 +8,7 @@ odoo.define('point_of_sale.Orderline', function(require) {
             this.trigger('select-line', { orderline: this.props.line });
         }
         lotIconClicked() {
-            this.trigger('show-product-lot', { orderline: this.props.line });
+            this.trigger('edit-pack-lot-lines', { orderline: this.props.line });
         }
     }
 

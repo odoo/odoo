@@ -153,39 +153,6 @@
         </div>
     </t>
 
-    <t t-name="PackLotLinePopupWidget">
-        <div role="dialog" class="modal-dialog">
-            <div class="popup popup-text">
-                <header class="title">
-                    <t t-esc=" widget.options.title || '' " />
-                </header>
-                <main class='packlot-lines'>
-                    <t t-if="widget.options.pack_lot_lines">
-                        <t t-set="focus_lot_line"
-                           t-value="widget.focus_model || widget.options.pack_lot_lines.get_empty_model()" />
-                        <t t-foreach='widget.options.pack_lot_lines.models' t-as='lot_line'>
-                            <input type="text" t-att-cid="lot_line.cid"
-                                   t-att-value="lot_line.get('lot_name')"
-                                   t-att-autofocus="lot_line === focus_lot_line ? 'autofocus': undefined"
-                                   class="popup-input packlot-line-input"
-                                   placeholder="Serial/Lot Number" />
-                            <i class="oe_link_icon remove-lot fa fa-trash-o" role="img"
-                               aria-label="Remove" title="Remove"></i>
-                        </t>
-                    </t>
-                </main>
-                <footer class="footer">
-                    <div class="button confirm">
-                        Ok
-                    </div>
-                    <div class="button cancel">
-                        Cancel
-                    </div>
-                </footer>
-            </div>
-        </div>
-    </t>
-
     <t t-name="TextAreaPopupWidget">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-textinput">
