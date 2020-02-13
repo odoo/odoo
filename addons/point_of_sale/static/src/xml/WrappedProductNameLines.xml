@@ -3,9 +3,7 @@
 
     <t t-name="WrappedProductNameLines" owl="1">
         <span>
-            <t t-foreach="props.line.product_name_wrapped.slice(1)" t-as="wrapped_line">
-                <t t-esc="wrapped_line"/>
-            </t>
+            <t t-foreach="props.line.product_name_wrapped.slice(1)" t-as="wrapped_line"><t t-esc="wrapped_line"/></t>
         </span>
     </t>
 
