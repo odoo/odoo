@@ -215,3 +215,15 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         return self.l10n_ch_isr_number
+
+    def _is_isr_supplier_invoice(self):
+        """Check for payments that a supplier invoice has a bank account
+        that can issue ISR and that the reference is an ISR reference number"""
+        if (
+            not self.invoice_partner_bank_id.is_isr_issuer() and
+            self.invoice_payment_ref and
+            re.match(r'^(\d{2,27}|\d{2}( \d{5}){5})$', self.invoice_payment_ref)
+        ):
+            ref = self.invoice_payment_ref.replace(' ', '')
+            return ref == mod10r(ref[:-1])
+        return False
