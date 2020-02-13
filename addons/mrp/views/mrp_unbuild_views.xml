@@ -2,12 +2,20 @@
 <odoo>
     <!--  Unbuild and scrap menu -->
 
-   <record model="ir.actions.act_window" id="action_mrp_unbuild_moves">
+   <record id="action_mrp_unbuild_moves" model="ir.actions.act_window">
         <field name="name">Stock Moves</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.move.line</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">['|', ('move_id.unbuild_id', '=', active_id), ('move_id.consume_unbuild_id', '=', active_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                There's no product move yet
+            </p><p>
+                This menu gives you the full traceability of inventory operations on a specific product.
+                You can filter on the product to see all the past movements for the product.
+            </p>
+        </field>
     </record>
 
         <record id="mrp_unbuild_search_view" model="ir.ui.view">
@@ -33,22 +41,6 @@
                         <filter string="Manufacturing Order" name="mogroup" context="{'group_by': 'mo_id'}"/>
                     </group>
                </search>
-            </field>
-        </record>
-
-       <record model="ir.actions.act_window" id="action_mrp_unbuild_move_line">
-            <field name="name">Product Moves</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">stock.move.line</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">['|', ('move_id.unbuild_id', '=', active_id), ('move_id.consume_unbuild_id', '=', active_id)]</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_empty_folder">
-                    There's no product move yet
-                </p><p>
-                    This menu gives you the full traceability of inventory operations on a specific product.
-                    You can filter on the product to see all the past movements for the product.
-                </p>
             </field>
         </record>
 
