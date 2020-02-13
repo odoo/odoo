@@ -193,10 +193,11 @@ class Survey(models.Model):
 
             survey.session_question_answer_count = answer_count
 
-    @api.depends('scoring_type')
+    @api.depends('scoring_type', 'question_and_page_ids.save_as_nickname')
     def _compute_session_show_ranking(self):
         for survey in self:
-            survey.session_show_ranking = survey.scoring_type != 'no_scoring'
+            survey.session_show_ranking = survey.scoring_type != 'no_scoring' and \
+                any(question.save_as_nickname for question in survey.question_and_page_ids)
 
     @api.onchange('scoring_success_min')
     def _onchange_scoring_success_min(self):
