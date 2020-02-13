@@ -861,7 +861,9 @@ var utils = {
         return [
             '&',
             ['res_model', '=', 'ir.ui.view'],
-            ['name', 'like', 'assets_']
+            '|',
+            ['name', 'like', 'assets_'],
+            ['name', 'like', 'summernote'],
         ];
     },
 };
