@@ -21,6 +21,7 @@
         'views/crm_team_views.xml',
         'views/templates.xml',
         'views/snippets.xml',
+        'views/snippets/s_products_searchbar.xml',
         'views/res_config_settings_views.xml',
         'views/digest_views.xml',
         'views/website_sale_visitor_views.xml',

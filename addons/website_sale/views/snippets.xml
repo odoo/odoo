@@ -1,29 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="s_products_searchbar_input" name="Products Search Input">
-    <t t-call="website_sale.website_sale_products_search_box">
-        <t t-set="_classes" t-value="'s_wsale_products_searchbar_input mb-3'"/>
-    </t>
-</template>
-<template id="s_products_searchbar" name="Products Search">
-    <section class="s_wsale_products_searchbar bg-200 pt24 pb24">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 offset-lg-2">
-                    <div class="card">
-                        <div class="card-body">
-                            <h2>Search for a product</h2>
-                            <p>We have amazing products in our shop, check them now !</p>
-                            <t t-call="website_sale.s_products_searchbar_input"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</template>
-
 <template id="s_products_recently_viewed" name="Products Recently Viewed">
     <section class="s_wsale_products_recently_viewed d-none pt24 pb24" style="min-height: 400px;">
         <div class="container">
@@ -96,13 +73,7 @@
                 <we-button data-change-sequence="bottom">Push to bottom</we-button>
             </div>
         </div>
-
-        <div data-js="ProductsSearchBar"
-            data-selector=".s_wsale_products_searchbar_input">
-            <we-button data-no-preview="true" data-open-searchbar-settings="">Products Search Bar</we-button>
-        </div>
     </xpath>
-    <xpath expr="//*[@t-set='so_content_addition_selector']" position="inside">, .s_wsale_products_searchbar_input</xpath>
 </template>
 
 </odoo>
