@@ -17,6 +17,9 @@ var ReportWidget = Widget.extend({
         'click .o_stock_report_lot_action': 'actionOpenLot'
     },
     init: function(parent) {
+        if(parent.given_context.model === "stock.production.lot") {
+            this.current_lot = parent.given_context.active_id;
+        }
         this._super.apply(this, arguments);
     },
     start: function() {
@@ -36,6 +39,9 @@ var ReportWidget = Widget.extend({
     actionOpenLot: function(e) {
         e.preventDefault();
         var $el = $(e.target).parents('tr');
+        if ($el.data('lot_id') === this.current_lot) {
+            return;
+        }
         this.do_action({
             type: 'ir.actions.client',
             tag: 'stock_report_generic',
