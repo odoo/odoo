@@ -798,6 +798,7 @@ class payment_register(models.TransientModel):
 
     def _prepare_communication(self, invoices):
         '''Define the value for communication field
+
         Append all invoice's references together.
         '''
         return " ".join(i.invoice_payment_ref or i.ref or i.name for i in invoices)
@@ -826,11 +827,9 @@ class payment_register(models.TransientModel):
         }
         return values
 
-    def _get_payment_group_key(self, invoice):
-        """ Returns the grouping key to use for the given invoice when group_payment
-        option has been ticked in the wizard.
-        """
-        return (invoice.commercial_partner_id, invoice.currency_id, invoice.invoice_partner_bank_id, MAP_INVOICE_TYPE_PARTNER_TYPE[invoice.type])
+    def _get_payment_group_key(self, inv):
+        """Define group key to group invoices in payments."""
+        return (inv.commercial_partner_id, inv.currency_id, inv.invoice_partner_bank_id, MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type])
 
     def get_payments_vals(self):
         '''Compute the values for payments.
@@ -840,9 +839,10 @@ class payment_register(models.TransientModel):
         grouped = defaultdict(lambda: self.env["account.move"])
         for inv in self.invoice_ids:
             if self.group_payment:
-                grouped[self._get_payment_group_key(inv)] += inv
+                group_key = self._get_payment_group_key(inv)
             else:
-                grouped[inv.id] += inv
+                group_key = inv.id
+            grouped[group_key] += inv
         return [self._prepare_payment_vals(invoices) for invoices in grouped.values()]
 
     def create_payments(self):
