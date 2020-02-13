@@ -790,6 +790,12 @@ class payment_register(models.TransientModel):
             return {'domain': {'payment_method_id': domain_payment, 'journal_id': domain_journal}}
         return {}
 
+    def _prepare_communication(self, invoices):
+        '''Define the value for communication field
+        Append all invoice's references together.
+        '''
+        return " ".join(i.reference or i.number for i in invoices)
+
     def _prepare_payment_vals(self, invoices):
         '''Create the payment values.
 
@@ -808,7 +814,7 @@ class payment_register(models.TransientModel):
             'journal_id': self.journal_id.id,
             'payment_method_id': self.payment_method_id.id,
             'payment_date': self.payment_date,
-            'communication': " ".join(i.reference or i.number for i in invoices),
+            'communication': self._prepare_communication(invoices),
             'invoice_ids': [(6, 0, invoices.ids)],
             'payment_type': ('inbound' if amount > 0 else 'outbound'),
             'amount': abs(amount),
@@ -818,6 +824,17 @@ class payment_register(models.TransientModel):
             'partner_bank_account_id': invoices[0].partner_bank_id.id,
         }
         return values
+
+    def _get_payment_group_key(self, invoice):
+        """ Returns the grouping key to use for the given invoice when group_payment
+        option has been ticked in the wizard.
+        """
+        if invoice.partner_id.type == 'invoice':
+            partner_id = invoice.partner_id
+        else:
+            partner_id = invoice.commercial_partner_id
+
+        return (partner_id, invoice.currency_id, invoice.partner_bank_id, MAP_INVOICE_TYPE_PARTNER_TYPE[invoice.type])
 
     @api.multi
     def get_payments_vals(self):
@@ -833,7 +850,7 @@ class payment_register(models.TransientModel):
                 else:
                     partner_id = inv.commercial_partner_id
 
-                grouped[(partner_id, inv.currency_id, inv.partner_bank_id, MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type])] += inv
+                grouped[self._get_payment_group_key(inv)] += inv
             else:
                 grouped[inv.id] += inv
         return [self._prepare_payment_vals(invoices) for invoices in grouped.values()]
