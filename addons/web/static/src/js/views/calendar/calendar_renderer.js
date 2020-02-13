@@ -639,14 +639,14 @@ return AbstractRenderer.extend({
             var self = this;
             options.getColor = this.getColor.bind(this);
             options.fields = this.state.fields;
-            var filter = new SidebarFilter(self, options);
-            prom = filter.appendTo(this.$sidebar).then(function () {
+            var sidebarFilter = new SidebarFilter(self, options);
+            prom = sidebarFilter.appendTo(this.$sidebar).then(function () {
                 // Show filter popover
                 if (options.avatar_field) {
                     _.each(options.filters, function (filter) {
-                        if (filter.value !== 'all') {
+                        if (!['all', false].includes(filter.value)) {
                             var selector = _.str.sprintf('.o_calendar_filter_item[data-value=%s]', filter.value);
-                            self.$sidebar.find(selector).popover({
+                            sidebarFilter.$el.find(selector).popover({
                                 animation: false,
                                 trigger: 'hover',
                                 html: true,
@@ -665,7 +665,7 @@ return AbstractRenderer.extend({
                 }
                 return self._renderFiltersOneByOne(filterIndex + 1);
             });
-            this.filters.push(filter);
+            this.filters.push(sidebarFilter);
         }
         return Promise.resolve(prom);
     },
