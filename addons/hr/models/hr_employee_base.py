@@ -38,9 +38,10 @@ class HrEmployeeBase(models.AbstractModel):
         string='Timezone', related='resource_id.tz', readonly=False,
         help="This field is used in order to define in which timezone the resources will work.")
     hr_presence_state = fields.Selection([
-        ('present', 'Present'),
-        ('absent', 'Absent'),
-        ('to_define', 'To Define')], compute='_compute_presence_state', default='to_define')
+        ('present', 'At Work'),
+        ('absent', 'Off'),
+        ('to_define', 'To Be Checked')], compute='_compute_presence_state', default='to_define')
+    must_be_at_work = fields.Boolean(compute='_compute_must_be_at_work', help="Now, the user must be at work based on his calendar.")
     last_activity = fields.Date(compute="_compute_last_activity")
     last_activity_time = fields.Char(compute="_compute_last_activity")
 
@@ -50,16 +51,16 @@ class HrEmployeeBase(models.AbstractModel):
         This method is overritten in several other modules which add additional
         presence criterions. e.g. hr_attendance, hr_holidays
         """
-        # Check on login
-        check_login = literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr.hr_presence_control_login', 'False'))
-        for employee in self:
-            state = 'to_define'
-            if check_login:
-                if employee.user_id.im_status == 'online':
-                    state = 'present'
-                elif employee.user_id.im_status == 'offline':
-                    state = 'absent'
-            employee.hr_presence_state = state
+        self.hr_presence_state = 'to_define'
+
+    def _compute_must_be_at_work(self):
+        for tz in set(self.mapped('tz')):
+            employee_ids = self.filtered(lambda employee: employee.tz == tz)
+            now_tz = fields.Datetime.now().astimezone(timezone(tz)).replace(tzinfo=None)
+            valid_calendar = employee_ids.resource_calendar_id._get_calendar_including_time(now_tz)
+            employee_at_work = employee_ids.filtered(lambda e: e.resource_calendar_id in valid_calendar)
+            employee_at_work.must_be_at_work = True
+            (employee_ids - employee_at_work).must_be_at_work = False
 
     @api.depends('user_id')
     def _compute_last_activity(self):

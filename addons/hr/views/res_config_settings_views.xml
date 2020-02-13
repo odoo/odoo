@@ -21,49 +21,16 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="presence_control_setting" title="Presence of employees">
-
-                            <div class="o_setting_right_pane">
-                                <span class="o_form_label">Presence Control</span>
-                                <div class="content-group" name="hr_presence_options">
-                                    <div class="row">
-                                        <field name="module_hr_attendance" class="col-lg-1 ml16"/>
-                                        <label for="module_hr_attendance" class="o_light_label"/>
-                                    </div>
-                                    <div class="row">
-                                        <field name="hr_presence_control_login" class="col-lg-1 ml16"/>
-                                        <label for="hr_presence_control_login" class="o_light_label"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-12 col-lg-6 o_setting_box"
-                            id="presence_reporting_setting"
-                            title="Advanced presence of employees">
+                            id="presence_reporting_setting">
                             <div class="o_setting_left_pane">
                                 <field name="module_hr_presence"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="module_hr_presence"/>
-                                <div class="text-muted" name="hr_presence_options_advanced">
-                                    Presence reporting screen, email and IP address control.
-                                </div>
-                                <div class="row mt-1" attrs="{'invisible': [('module_hr_presence', '=', False)]}">
-                                    <field name="hr_presence_control_email" class="col-lg-1 ml16"/>
-                                    <label for="hr_presence_control_email" class="o_light_label"/>
-                                </div>
-                                <div class="row ml32" attrs="{'invisible': ['|', ('module_hr_presence', '=', False), ('hr_presence_control_email', '=', False)]}">
-                                    <span class="ml8 mr-2">Minimum number of emails to sent </span>
-                                    <field name="hr_presence_control_email_amount" class="ml-2 oe_inline"/>
-                                </div>
-                                <div class="row" attrs="{'invisible': [('module_hr_presence', '=', False)]}">
-                                    <field name="hr_presence_control_ip" class="col-lg-1 ml16"/>
-                                    <label for="hr_presence_control_ip" class="o_light_label"/>
-                                </div>
-                                <div class="row ml32" attrs="{'invisible': ['|', ('module_hr_presence', '=', False), ('hr_presence_control_ip', '=', False)]}">
-                                    <span class="ml8 mr-2">IP Addresses (comma-separated)</span>
-                                    <field name="hr_presence_control_ip_list" class="ml-2 oe_inline"/>
-                                </div>
+                                <p class="text-muted" name="hr_presence_options_advanced">
+                                    Track the presence of workers
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -103,7 +70,7 @@
                             </div>
                         </div>
                     </div>
-                    <h2>Employee Update Rights</h2>
+                    <h2>Employee Rights</h2>
                     <div class="row mt16 o_settings_container" name="employee_rights_setting_container">
                         <div class="col-12 col-lg-6 o_setting_box" title="Allow employees to update their own data.">
                             <div class="o_setting_left_pane">
@@ -112,7 +79,7 @@
                             <div class="o_setting_right_pane">
                                 <label for="hr_employee_self_edit"/>
                                 <div class="text-muted">
-                                    Allow employees to update their own data
+                                    Allow employees to update their own personal data, and track changes.
                                 </div>
                             </div>
                         </div>
