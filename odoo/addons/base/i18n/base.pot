@@ -4,34 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.1\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-16 12:49+0000\n"
-"PO-Revision-Date: 2019-12-16 12:49+0000\n"
+"POT-Creation-Date: 2020-02-13 08:46+0000\n"
+"PO-Revision-Date: 2020-02-13 08:46+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_cn_small_business
-msgid ""
-"\n"
-"\n"
-"    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
-"\n"
-"    添加中文省份数据\n"
-"\n"
-"    增加小企业会计科目表\n"
-"\n"
-"    修改小企业会计科目表\n"
-"    \n"
-"    修改小企业会计税率\n"
-"\n"
-"    "
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -548,6 +530,15 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_product_unspsc
+msgid ""
+"\n"
+"        Countries like Colombia, Peru and Mexico need to be able to use the \n"
+"        UNSPSC code for their products and uoms.  \n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_website_form
 msgid ""
 "\n"
@@ -936,6 +927,42 @@ msgid ""
 "    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
 "    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
 "    * The new lock date for advisors must be set after the previous lock date.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_sale_coupon_taxcloud
+msgid ""
+"\n"
+"    Manage discounts in taxclouds computations.\n"
+"    See https://taxcloud.com/support/discounts or\n"
+"    https://service.taxcloud.net/hc/en-us/articles/360015649791-How-can-discounts-be-applied-\n"
+"\n"
+"    Summary: all seller-provided discounts must be applied to the Sales Price before calculating sales tax.\n"
+"    Sellers should disclose their methodology to customers in a Discount Application Policy.\n"
+"\n"
+"    The algorithm is as follows:\n"
+"     - line-specific discounts are applied first, on the lines they are supposed to apply to.\n"
+"       This means product-specific discounts or discounts on the cheapest line.\n"
+"     - Then global discounts are applied evenly across paid lines, as much as possible.\n"
+"       If there is a remainder, it is applied sequentially, in the order of the lines,\n"
+"       until there is either no discount left or no discountable line left.\n"
+"\n"
+"    Note that discount lines (with a negative price) will have no taxes applied to them,\n"
+"    but rather the amount of these lines will be deduced from the lines they apply to during tax computation.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_sale_coupon_taxcloud_delivery
+msgid ""
+"\n"
+"    Manage discounts with deliveries in taxclouds computations.\n"
+"    This module follows the same logic as \"Account Taxcloud - Sale (coupon)\".\n"
+"    More information can be found there on how dicount computations are made for TaxCloud.\n"
+"\n"
+"    There is an added option for discount (free shipping) on deliveries.\n"
+"    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
 "    "
 msgstr ""
 
@@ -1338,6 +1365,13 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_sale_purchase_stock
+msgid ""
+"\n"
+"Add relation information between Sale Orders and Purchase Orders if Make to Order (MTO) is activated on one sold product.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_documents_project
 msgid ""
 "\n"
@@ -1491,6 +1525,15 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_sale_project
+msgid ""
+"\n"
+"Allows to create task from your sales order\n"
+"=============================================\n"
+"This module allows to generate a project/task from sales orders.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_voip
 msgid ""
 "\n"
@@ -1620,7 +1663,9 @@ msgid ""
 "Attachments list and document indexation\n"
 "========================================\n"
 "* Show attachment on the top of the forms\n"
-"* Document Indexation: odt\n"
+"* Document Indexation: odt, pdf, xlsx, docx\n"
+"\n"
+"The `pdfminer.six` Python library has to be installed in order to index PDF files\n"
 msgstr ""
 
 #. module: base
@@ -2023,13 +2068,6 @@ msgid ""
 "\n"
 "Allows to contact directly the employee in case of unjustified absence.\n"
 "    "
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_partner_autocomplete_address_extended
-msgid ""
-"\n"
-"Correct address formating when both partner_autocomplete and base_address_extended modules are installed"
 msgstr ""
 
 #. module: base
@@ -2717,6 +2755,16 @@ msgid ""
 "\n"
 "State Data/省份数据\n"
 "\n"
+"    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
+"\n"
+"    添加中文省份数据\n"
+"\n"
+"    增加小企业会计科目表\n"
+"\n"
+"    修改小企业会计科目表\n"
+"\n"
+"    修改小企业会计税率\n"
+"\n"
 "    "
 msgstr ""
 
@@ -2826,19 +2874,6 @@ msgid ""
 "\n"
 "If you activate this module, you won't be able to access the \n"
 "regular Odoo interface anymore.\n"
-"\n"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_hw_posbox_upgrade
-msgid ""
-"\n"
-"IoTBox Software Upgrader\n"
-"========================\n"
-"\n"
-"This module allows to remotely upgrade the IoTBox software to a\n"
-"new version. This module is specific to the IoTBox setup and environment\n"
-"and should not be installed on regular Odoo servers.\n"
 "\n"
 msgstr ""
 
@@ -4810,15 +4845,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_event_enterprise
-msgid ""
-"\n"
-"This module helps for analyzing event registration pattern,\n"
-"by enabling cohort view for registered attendees.\n"
-"    "
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_base_setup
 msgid ""
 "\n"
@@ -4838,6 +4864,17 @@ msgid ""
 "the testing of successful payments behaviors on e-commerce. It includes\n"
 "a protection to avoid using it in production environment. However, do\n"
 "not use it in production environment.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_timer
+msgid ""
+"\n"
+"This module implements a timer.\n"
+"==========================================\n"
+"\n"
+"It adds a timer to a view for time recording purpose\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -5293,11 +5330,19 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_inter_company_rules
+#: model:ir.module.module,description:base.module_sale_purchase_inter_company_rules
 msgid ""
 " Module for synchronization of Documents between several companies. For example, this allow you to have a Sales Order created automatically when a Purchase Order is validated with another company of the system as vendor, and inversely.\n"
 "\n"
-"    Supported documents are SO, PO and invoices/credit notes.\n"
+"    Supported documents are SO, PO.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_inter_company_rules
+msgid ""
+" Module for synchronization of Documents between several companies. For example, this allow you to have a Sales Order created automatically when a Purchase Order is validated with another company of the system as vendor, and inversely.\n"
+"\n"
+"    Supported documents are invoices/credit notes.\n"
 msgstr ""
 
 #. module: base
@@ -6528,8 +6573,8 @@ msgid "Account Invoice Extract"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_company__account_no
-msgid "Account No."
+#: model:ir.module.module,shortdesc:base.module_account_invoice_extract_purchase
+msgid "Account Invoice Extract Purchase"
 msgstr ""
 
 #. module: base
@@ -6555,6 +6600,16 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_account_taxcloud
 msgid "Account TaxCloud - Sale"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_coupon_taxcloud
+msgid "Account Taxcloud - Sale (coupon)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_coupon_taxcloud_delivery
+msgid "Account Taxcloud - Sale (coupon) - Delivery"
 msgstr ""
 
 #. module: base
@@ -6868,8 +6923,18 @@ msgid "Add sale order UTM info on mass mailing"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_stock_barcode_picking_batch
+msgid "Add the support of batch transfers into the barcode view"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_product_matrix
 msgid "Add variants to Sales Order through a grid entry."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_event_enterprise
+msgid "Add views and tweaks on event"
 msgstr ""
 
 #. module: base
@@ -6919,7 +6984,7 @@ msgid ""
 "This module allows users to login with their LDAP username and password, and\n"
 "will automatically create Odoo users for them on the fly.\n"
 "\n"
-"**Note:** This module only work on servers who have Python's ``ldap`` module installed.\n"
+"**Note:** This module only work on servers that have Python's ``python-ldap`` module installed.\n"
 "\n"
 "Configuration:\n"
 "--------------\n"
@@ -7013,13 +7078,13 @@ msgid "Advanced Address Formatting"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_event_track
-msgid "Advanced Events"
+#: model:ir.module.module,summary:base.module_website_event_track_gantt
+msgid "Advanced Event Track Management"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_event_track_gantt
-msgid "Advanced Events Gantt"
+#: model:ir.module.module,shortdesc:base.module_website_event_track
+msgid "Advanced Events"
 msgstr ""
 
 #. module: base
@@ -7691,11 +7756,6 @@ msgid "Auto-complete partner companies' data"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_partner_autocomplete_address_extended
-msgid "Autocomplete extended addresses"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
 msgid "Automated Action Rules"
 msgstr ""
@@ -7729,6 +7789,13 @@ msgstr ""
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_account_invoice_extract_purchase
+msgid ""
+"Automatically finds the purchase order linked to a vendor bill when using "
+"invoice extraction"
 msgstr ""
 
 #. module: base
@@ -7914,6 +7981,11 @@ msgid "Barcode Quality bridge module"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_stock_barcode_picking_batch
+msgid "Barcode for Batch Transfer"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes_mobile
 msgid "Barcode in Mobile"
 msgstr ""
@@ -7933,6 +8005,11 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Barcode type, eg: UPCA, EAN13, Code128"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_stock_barcode_quality_control_picking_batch
+msgid "Barcode/Quality/Batch Transfer bridge module"
 msgstr ""
 
 #. module: base
@@ -8371,6 +8448,11 @@ msgid "CRM"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_data_merge_crm
+msgid "CRM Deduplication"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_gamification_sale_crm
 msgid "CRM Gamification"
 msgstr ""
@@ -8751,11 +8833,6 @@ msgid "China - City Data"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_cn_small_business
-msgid "China - Small Business CoA"
-msgstr ""
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
 msgid ""
 "Choose a subview of partners that includes only address fields, to change "
@@ -8880,6 +8957,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_co_edi
 msgid "Colombian Localization for EDI documents"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_co_edi_ubl_2_1
+msgid "Colombian Localization for EDI documents UBL 2.1"
 msgstr ""
 
 #. module: base
@@ -9245,9 +9327,19 @@ msgid "Constraint Type"
 msgstr ""
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_model_constraint_search
+msgid "Constraint type"
+msgstr ""
+
+#. module: base
 #: code:addons/model.py:0
 #, python-format
 msgid "Constraint:"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_model_constraint_search
+msgid "Constraints"
 msgstr ""
 
 #. module: base
@@ -10067,6 +10159,12 @@ msgid "Dashboards"
 msgstr ""
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_productivity_data_cleaning
+#: model:ir.module.module,shortdesc:base.module_data_merge
+msgid "Data Cleaning"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_test_convert
 msgid "Data for xml conversion tests"
 msgstr ""
@@ -10696,11 +10794,6 @@ msgid "Displayed fields"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_event_enterprise
-msgid "Displays cohort analysis on attendees."
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.dj
 msgid "Djibouti"
 msgstr ""
@@ -11002,6 +11095,11 @@ msgid "Electronic invoicing for Colombia with Carvajal"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_co_edi_ubl_2_1
+msgid "Electronic invoicing for Colombia with Carvajal UBL 2.1"
+msgstr ""
+
+#. module: base
 #: code:addons/template_inheritance.py:0 code:addons/template_inheritance.py:0
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
@@ -11106,6 +11204,11 @@ msgstr ""
 msgid ""
 "Enter Python code here. Help about Python expression is available in the "
 "help tab of this document."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_track_gantt
+msgid "Enterprise Event Track"
 msgstr ""
 
 #. module: base
@@ -11331,6 +11434,11 @@ msgid "Executive 4   7.5 x 10 inches, 190.5 x 254 mm"
 msgstr ""
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_ir_model_fields__group_expand
+msgid "Expand Groups"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_accounting_expenses
 #: model:ir.module.module,shortdesc:base.module_hr_expense
 msgid "Expenses"
@@ -11495,6 +11603,11 @@ msgid "Extra Rights"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_hr_expense_extract
+msgid "Extract data from expense scans to fill them automatically"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_account_invoice_extract
 msgid "Extract data from invoice scans to fill them automatically"
 msgstr ""
@@ -11507,6 +11620,11 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_F
 msgid "F CONSTRUCTION"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_event_social_facebook
+msgid "Facebook Event"
 msgstr ""
 
 #. module: base
@@ -11662,6 +11780,11 @@ msgid "Field Service"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_industry_fsm_forecast
+msgid "Field Service - Project Forecast"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sale
 msgid "Field Service - Sale"
 msgstr ""
@@ -11767,6 +11890,28 @@ msgid "File"
 msgstr ""
 
 #. module: base
+#: code:addons/base/wizard/base_import_language.py:0
+#, python-format
+msgid ""
+"File %r not imported due to a malformed file.\n"
+"\n"
+"This issue can be caused by duplicates entries who are referring to the same field. Please check the content of the file you are trying to import.\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#. module: base
+#: code:addons/base/wizard/base_import_language.py:0
+#, python-format
+msgid ""
+"File %r not imported due to format mismatch or a malformed file. (Valid formats are .csv, .po, .pot)\n"
+"\n"
+"Technical Details:\n"
+"%s"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "File Arch"
@@ -11798,31 +11943,6 @@ msgstr ""
 msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
-msgstr ""
-
-#. module: base
-#: code:addons/base/wizard/base_import_language.py:0
-#, python-format
-msgid "File %r not imported due to a malformed file.\n"
-"\n"
-"This issue can be caused by duplicates entries who are referring to the same field. Please check the content of the file you are trying to import.\n"
-"\n"
-"Technical Details:\n"
-"%s"
-msgstr ""
-
-#. module: base
-#: code:addons/base/wizard/base_import_language.py:0
-#, python-format
-msgid "File %r not imported due to format mismatch or a malformed file. (Valid formats are .csv, .po, .pot)\n"
-"\n"
-"Technical Details:\n"
-"%s"
-msgstr ""
-
-#. module: base
-#: model:ir.model.fields,field_description:base.field_ir_attachment__datas_fname
-msgid "Filename"
 msgstr ""
 
 #. module: base
@@ -11873,6 +11993,16 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_K
 msgid "Finance/Insurance"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_data_merge
+#: model:ir.module.module,description:base.module_data_merge_crm
+#: model:ir.module.module,description:base.module_data_merge_utm
+#: model:ir.module.module,summary:base.module_data_merge
+#: model:ir.module.module,summary:base.module_data_merge_crm
+#: model:ir.module.module,summary:base.module_data_merge_utm
+msgid "Find duplicate records and merge them"
 msgstr ""
 
 #. module: base
@@ -12009,15 +12139,6 @@ msgstr ""
 msgid ""
 "For safety reasons, you cannot merge more than 3 contacts together. You can "
 "re-open the wizard several times if needed."
-msgstr ""
-
-#. module: base
-#: code:addons/models.py:0
-#, python-format
-msgid ""
-"For this kind of document, you may only access records you created yourself.\n"
-"\n"
-"(Document type: %s)"
 msgstr ""
 
 #. module: base
@@ -12232,12 +12353,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__gantt
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__gantt
 msgid "Gantt"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_website_event_track_gantt
-#: model:ir.module.module,summary:base.module_website_event_track_gantt
-msgid "Gantt View for Advanced Events"
 msgstr ""
 
 #. module: base
@@ -12554,6 +12669,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_search_view
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_search
+#: model_terms:ir.ui.view,arch_db:base.view_model_constraint_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_data_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
@@ -13013,6 +13129,16 @@ msgid "How to define a computed field"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_expense_extract
+msgid "Hr Expense Extract"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_expense_predict_product
+msgid "Hr Expense Predict product"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_survey
 msgid "Hr Recruitment Interview Forms"
 msgstr ""
@@ -13218,6 +13344,16 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__aggr_ids
 msgid "Ids"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,help:base.field_ir_model_fields__group_expand
+msgid ""
+"If checked, all the records of the target model will be included\n"
+"in a grouped result (e.g. 'Group By' filters, Kanban columns, etc.).\n"
+"Note that it can significantly reduce performance if the target model\n"
+"of the field contains a lot of records; usually used on models with\n"
+"few records (e.g. Stages, Job Positions, Event Types, etc.)."
 msgstr ""
 
 #. module: base
@@ -13753,7 +13889,8 @@ msgid "Integrate your POS with an Adyen payment terminal"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_inter_company_rules
+#: model:ir.module.module,shortdesc:base.module_account_inter_company_rules
+#: model:ir.module.module,shortdesc:base.module_sale_purchase_inter_company_rules
 msgid "Inter Company Module for Sale/Purchase Orders and Invoices"
 msgstr ""
 
@@ -13763,7 +13900,8 @@ msgid "Interaction between rules"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_inter_company_rules
+#: model:ir.module.module,summary:base.module_account_inter_company_rules
+#: model:ir.module.module,summary:base.module_sale_purchase_inter_company_rules
 msgid "Intercompany SO/PO/INV rules"
 msgstr ""
 
@@ -14034,11 +14172,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_iot
 msgid "IoT for Delivery"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_hw_posbox_upgrade
-msgid "IoTBox Software Upgrader"
 msgstr ""
 
 #. module: base
@@ -14740,8 +14873,8 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_account_predictive_bills
 msgid ""
-"Let the system try to select the right account and/or product for your "
-"vendor bills"
+"Let the system try to select the right account, taxes and/or product for "
+"your vendor bills"
 msgstr ""
 
 #. module: base
@@ -14848,6 +14981,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__link_field_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__link_field_id
 msgid "Link using field"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_event_social_facebook
+msgid ""
+"Link your Facebook events within Event.\n"
+"\n"
+"This module allows you to link your events with your Facebook events. In\n"
+"addition it allows you to post on your Facebook events, keep your attendees\n"
+"updated and get valuable insights on engagement."
 msgstr ""
 
 #. module: base
@@ -15043,6 +15186,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp_workorder_iot
 msgid "MRP features for Quality Control with IoT"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_purchase_stock
+msgid "MTO Sale <-> Purchase"
 msgstr ""
 
 #. module: base
@@ -15255,6 +15403,16 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_coupon_taxcloud_delivery
+msgid "Manage discounts in taxclouds computations with delivery."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_sale_coupon_taxcloud
+msgid "Manage discounts in taxclouds computations."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_mrp_plm
 msgid ""
 "Manage engineering change orders on products, bills of material and routings"
@@ -15299,6 +15457,11 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_hr_work_entry
 #: model:ir.module.module,summary:base.module_hr_work_entry_contract
 msgid "Manage work entries"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_event_social_facebook
+msgid "Manage your Facebook events"
 msgstr ""
 
 #. module: base
@@ -15803,6 +15966,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__model
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
+#: model_terms:ir.ui.view,arch_db:base.view_model_constraint_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_translation_search
@@ -15932,6 +16096,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__module_id
 #: model:ir.model.fields,field_description:base.field_ir_translation__module
 #: model_terms:ir.ui.view,arch_db:base.module_form
+#: model_terms:ir.ui.view,arch_db:base.view_model_constraint_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_data_search
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
 msgid "Module"
@@ -17693,6 +17858,13 @@ msgid "On delete property for many2one fields"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_sale_stock_margin
+msgid ""
+"Once the delivery is validated, update the cost on the SO to have an exact "
+"margin computation."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -17888,6 +18060,11 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Options"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_ir_model__order
+msgid "Order"
 msgstr ""
 
 #. module: base
@@ -18356,11 +18533,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_autocomplete
 msgid "Partner Autocomplete"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_partner_autocomplete_address_extended
-msgid "Partner Autocomplete extends Address autocomplete"
 msgstr ""
 
 #. module: base
@@ -19250,6 +19422,11 @@ msgid "Quality"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_quality_control_picking_batch
+msgid "Quality - Batch Transfer"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_quality
 msgid "Quality Base"
 msgstr ""
@@ -19510,6 +19687,11 @@ msgid "Record rules"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_timer
+msgid "Record time"
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0 code:addons/models.py:0
 #, python-format
 msgid "Records:"
@@ -19635,11 +19817,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment_use
 msgid "Reload from Attachment"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_hw_posbox_upgrade
-msgid "Remotely upgrade the IoTBox software"
 msgstr ""
 
 #. module: base
@@ -19937,12 +20114,6 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
-msgid "Rules can not be applied on Transient models."
-msgstr ""
-
-#. module: base
-#: code:addons/base/models/ir_rule.py:0
-#, python-format
 msgid "Rules can not be applied on the Record Rules model."
 msgstr ""
 
@@ -20047,8 +20218,20 @@ msgid "SMTP Server"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_purchase_stock
+msgid "SO/PO relation in case of MTO"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "SO022"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,help:base.field_ir_model__order
+msgid ""
+"SQL expression for ordering records in the model; e.g. \"x_sequence asc, id "
+"desc\""
 msgstr ""
 
 #. module: base
@@ -20132,6 +20315,11 @@ msgid "Sale Purchase"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_stock_margin
+msgid "Sale Stock Margin"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_dashboard
 msgid "Sale Subscription Dashboard"
 msgstr ""
@@ -20164,6 +20352,11 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales & Purchase"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_project
+msgid "Sales - Project"
 msgstr ""
 
 #. module: base
@@ -21411,6 +21604,11 @@ msgid "Supplementary arguments"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_quality_control_picking_batch
+msgid "Support of quality control into batch transfers"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.sr
 msgid "Suriname"
 msgstr ""
@@ -21522,6 +21720,13 @@ msgid "TGZ format: bundles multiple PO(T) files as a single archive"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_website_event_track_gantt
+msgid ""
+"THis module helps analyzing and organizing event tracks.\n"
+"For that purpose it adds a gantt view on event tracks."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_encryption__starttls
 msgid "TLS (STARTTLS)"
 msgstr ""
@@ -21577,6 +21782,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__target
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__target
 msgid "Target Window"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_sale_project
+msgid "Task Generation from Sales Orders"
 msgstr ""
 
 #. module: base
@@ -22399,6 +22609,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_test_timer
+msgid ""
+"This module contains tests related to timer. Those are\n"
+"contained in a separate module as it contains models used only to perform\n"
+"tests independently to functional aspects of other models. "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_test_mail_full
 msgid ""
 "This module contains tests related to various mail features\n"
@@ -22428,6 +22646,18 @@ msgstr ""
 #: model:ir.module.module,description:base.module_website_sale_taxcloud_delivery
 msgid ""
 "This module ensures that when delivery price is computed online, and taxes are computed with TaxCloud, the tax computation is done correctly on both the order and delivery.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_event_enterprise
+msgid ""
+"This module helps for analyzing event registrations.\n"
+"For that purposes it adds\n"
+"\n"
+"  * a cohort analysis on attendees;\n"
+"  * a gantt view on events;\n"
+"\n"
 "    "
 msgstr ""
 
@@ -22491,6 +22721,21 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_gantt
 msgid "Time off Gantt"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_timer
+msgid "Timer"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_timer
+msgid "Timer Tests"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_test_timer
+msgid "Timer Tests: feature and performance tests for timer"
 msgstr ""
 
 #. module: base
@@ -22940,6 +23185,12 @@ msgid "UK - Accounting Reports"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_product_unspsc
+#: model:ir.module.module,summary:base.module_product_unspsc
+msgid "UNSPSC product codes"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
 msgid "UPS Shipping"
 msgstr ""
@@ -22974,6 +23225,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.um
 msgid "USA Minor Outlying Islands"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_data_merge_utm
+msgid "UTM Deduplication"
 msgstr ""
 
 #. module: base
@@ -23035,6 +23291,14 @@ msgstr ""
 msgid ""
 "Unable to install module \"%s\" because an external dependency is not met: "
 "%s"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid ""
+"Unable to order by %s: fields used for ordering must be present on the model"
+" and stored."
 msgstr ""
 
 #. module: base
@@ -24592,6 +24856,7 @@ msgid "eCommerce Delivery"
 msgstr ""
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_website_elearning
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "eLearning"
 msgstr ""
@@ -24811,6 +25076,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sale
 msgid "pos_sale"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_hr_expense_predict_product
+msgid "predict the product from the expense description based on old ones"
 msgstr ""
 
 #. module: base
