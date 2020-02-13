@@ -30,10 +30,7 @@ publicWidget.registry.js_get_posts = publicWidget.Widget.extend({
         this.$target.empty(); // Compatibility with db that saved content inside by mistake
         this.$target.attr('contenteditable', 'False'); // Prevent user edition
 
-        var domain = [
-            ['website_published', '=', true],
-            ['post_date', '<=', moment().utc().locale('en').format('YYYY-MM-DD HH:mm:ss')],
-        ];
+        var domain = [];
         if (blogID) {
             domain.push(['blog_id', '=', blogID]);
         }

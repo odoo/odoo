@@ -300,6 +300,11 @@ class WebsiteBlog(http.Controller):
 
     @http.route(['/blog/render_latest_posts'], type='json', auth='public', website=True)
     def render_latest_posts(self, template, domain, limit=None, order='published_date desc'):
-        domain = expression.AND([domain, request.website.website_domain()])
-        posts = request.env['blog.post'].search(domain, limit=limit, order=order)
+        dom = expression.AND([
+            [('website_published', '=', True), ('post_date', '<=', fields.Datetime.now())],
+            request.website.website_domain()
+        ])
+        if domain:
+            dom = expression.AND([dom, domain])
+        posts = request.env['blog.post'].search(dom, limit=limit, order=order)
         return request.website.viewref(template).render({'posts': posts})
