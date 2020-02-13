@@ -142,7 +142,7 @@ class PaymentWizard(models.TransientModel):
                     raise UserError(_("You have to set a journal for your payment acquirer %s." % (self.manual_name,)))
 
             # delete wizard data immediately to get rid of residual credentials
-            self.unlink()
+            self.sudo().unlink()
         # the user clicked `apply` and not cancel so we can assume this step is done.
         self._set_payment_acquirer_onboarding_step_done()
         return {'type': 'ir.actions.act_window_close'}
