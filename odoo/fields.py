@@ -2134,6 +2134,24 @@ class Selection(Field):
             > result = [('a', 'A'), ('c', 'C'), ('b', 'B')]
     :type selection_add: list(tuple(str,str))
 
+    :param ondelete: provides a fallback mechanism for any overridden
+        field with a selection_add. It is a dict that maps every option
+        from the selection_add to a fallback action.
+
+        This fallback action will be applied to all records whose
+        selection_add option maps to it.
+
+        The actions can be any of the following:
+            - 'set null' -- the default, all records with this option
+              will have their selection value set to False.
+            - 'cascade' -- all records with this option will be
+              deleted along with the option itself.
+            - 'set default' -- all records with this option will be
+              set to the default of the field definition
+            - <callable> -- a callable whose first and only argument will be
+              the set of records containing the specified Selection option,
+              for custom processing
+
     The attribute ``selection`` is mandatory except in the case of
     ``related`` or extended fields.
     """
@@ -2142,6 +2160,7 @@ class Selection(Field):
     _slots = {
         'selection': None,              # [(value, string), ...], function or method name
         'validate': True,               # whether validating upon write
+        'ondelete': None,               # {value: policy} (what to do when value is deleted)
     }
 
     def __init__(self, selection=Default, string=Default, **kwargs):
@@ -2175,15 +2194,14 @@ class Selection(Field):
                     _logger.warning("%s: selection attribute will be ignored as the field is related", self)
                 selection = field.args['selection']
                 if isinstance(selection, list):
-                    if (
-                        values is not None
-                        and values != [kv[0] for kv in selection]
-                    ):
+                    if values is not None and values != [kv[0] for kv in selection]:
                         _logger.warning("%s: selection=%r overrides existing selection; use selection_add instead", self, selection)
                     values = [kv[0] for kv in selection]
                     labels.update(selection)
+                    self.ondelete = {}
                 else:
                     self.selection = selection
+                    self.ondelete = None
 
             if 'selection_add' in field.args:
                 if self.related:
@@ -2193,8 +2211,41 @@ class Selection(Field):
                     "%s: selection_add=%r must be a list" % (self, selection_add)
                 assert values is not None, \
                     "%s: selection_add=%r on non-list selection %r" % (self, selection_add, self.selection)
+
+                ondelete = field.args.get('ondelete') or {}
+                new_values = [kv[0] for kv in selection_add if kv[0] not in values]
+                for key in new_values:
+                    ondelete.setdefault(key, 'set null')
+                if self.required and new_values and 'set null' in ondelete.values():
+                    raise ValueError(
+                        "%r: required selection fields must define an ondelete policy that "
+                        "implements the proper cleanup of the corresponding records upon "
+                        "module uninstallation. Please use one or more of the following "
+                        "policies: 'set default' (if the field has a default defined), 'cascade', "
+                        "or a single-argument callable where the argument is the recordset "
+                        "containing the specified option." % self
+                    )
+
+                # check ondelete values
+                for key, val in ondelete.items():
+                    if callable(val) or val in ('set null', 'cascade'):
+                        continue
+                    if val == 'set default':
+                        assert self.default is not None, (
+                            "%r: ondelete policy of type 'set default' is invalid for this field "
+                            "as it does not define a default! Either define one in the base "
+                            "field, or change the chosen ondelete policy" % self
+                        )
+                        continue
+                    raise ValueError(
+                        "%r: ondelete policy %r for selection value %r is not a valid ondelete "
+                        "policy, please choose one of 'set null', 'set default', 'cascade' or "
+                        "a callable" % (self, val, key)
+                    )
+
                 values = merge_sequences(values, [kv[0] for kv in selection_add])
                 labels.update(kv for kv in selection_add if len(kv) == 2)
+                self.ondelete.update(ondelete)
 
         if values is not None:
             self.selection = [(value, labels[value]) for value in values]

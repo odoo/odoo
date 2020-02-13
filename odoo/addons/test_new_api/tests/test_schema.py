@@ -3,13 +3,24 @@ from odoo.models import MetaModel
 from odoo.tests import common
 
 
+def get_model_name(cls):
+    name = cls._name
+    if not name:
+        [name] = cls._inherit if isinstance(cls._inherit, list) else [cls._inherit]
+    assert isinstance(name, str)
+    return name
+
+
 class TestReflection(common.TransactionCase):
     """ Test the reflection into 'ir.model', 'ir.model.fields', etc. """
 
     def test_models_fields(self):
         """ check that all models and fields are reflected as expected. """
         # retrieve the models defined in this module, and check them
-        model_names = {cls._name for cls in MetaModel.module_to_models['test_new_api']}
+        model_names = {
+            get_model_name(cls)
+            for cls in MetaModel.module_to_models['test_new_api']
+        }
         ir_models = self.env['ir.model'].search([('model', 'in', list(model_names))])
         self.assertEqual(len(ir_models), len(model_names))
         for ir_model in ir_models:
