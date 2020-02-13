@@ -70,7 +70,7 @@ class HrLeave(models.Model):
 
         return resource_leaves | self.env['resource.calendar.leaves'].create(resource_leave_values)
 
-    @api.constrains('date_from', 'date_to')
+    @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_contracts(self):
         """
             A leave cannot be set across multiple contracts.
@@ -78,7 +78,7 @@ class HrLeave(models.Model):
             It happens if a leave is correctly created (not accross multiple contracts) but
             contracts are later modifed/created in the middle of the leave.
         """
-        for holiday in self:
+        for holiday in self.filtered('employee_id'):
             domain = [
                 ('employee_id', '=', holiday.employee_id.id),
                 ('date_start', '<=', holiday.date_to),
@@ -91,7 +91,8 @@ class HrLeave(models.Model):
             ]
             nbr_contracts = self.env['hr.contract'].sudo().search_count(domain)
             if nbr_contracts > 1:
-                raise ValidationError(_('A leave cannot be set across multiple contracts.'))
+                contracts = self.env['hr.contract'].sudo().search(domain)
+                raise ValidationError(_('A leave cannot be set across multiple contracts.') + '\n' + ', '.join(contracts.mapped('name')))
 
     @api.multi
     def _cancel_benefit_conflict(self):
