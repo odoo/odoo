@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.1\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-16 08:45+0000\n"
-"PO-Revision-Date: 2019-12-16 08:45+0000\n"
+"POT-Creation-Date: 2020-02-13 07:25+0000\n"
+"PO-Revision-Date: 2020-02-13 07:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -79,13 +79,13 @@ msgstr ""
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "<i class=\"fa fa-envelope-o\"/> send mail"
 msgstr ""
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "<i class=\"fa fa-file-o\"/> archives"
 msgstr ""
 
@@ -98,13 +98,8 @@ msgstr ""
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "<i class=\"fa fa-times\"/> unsubscribe"
-msgstr ""
-
-#. module: website_mail_channel
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
-msgid "<span class=\"oe_snippet_thumbnail_title\">Discussion Group</span>"
 msgstr ""
 
 #. module: website_mail_channel
@@ -274,13 +269,6 @@ msgid ""
 msgstr ""
 
 #. module: website_mail_channel
-#. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:0
-#, python-format
-msgid "Add a Subscribe Button"
-msgstr ""
-
-#. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid "Alone we can do so little, together we can do so much"
 msgstr ""
@@ -314,11 +302,6 @@ msgid "By thread"
 msgstr ""
 
 #. module: website_mail_channel
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
-msgid "Change Discussion List"
-msgstr ""
-
-#. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_subscribe
 msgid "Confirm subscription to ${object.name}"
 msgstr ""
@@ -329,15 +312,13 @@ msgid "Confirm unsubscription to ${object.name}"
 msgstr ""
 
 #. module: website_mail_channel
-#: model:ir.model,name:website_mail_channel.model_mail_channel
-msgid "Discussion Channel"
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel_options
+msgid "Create a public discussion group in your backend"
 msgstr ""
 
 #. module: website_mail_channel
-#. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:0
-#, python-format
-msgid "Discussion List"
+#: model:ir.model,name:website_mail_channel.model_mail_channel
+msgid "Discussion Channel"
 msgstr ""
 
 #. module: website_mail_channel
@@ -398,7 +379,7 @@ msgstr ""
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "Subscribe"
 msgstr ""
 
@@ -428,7 +409,7 @@ msgid "You have been correctly"
 msgstr ""
 
 #. module: website_mail_channel
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "a confirmation email has been sent."
 msgstr ""
 
@@ -502,6 +483,6 @@ msgstr ""
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "your email..."
 msgstr ""

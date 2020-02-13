@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.1\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-16 10:05+0000\n"
-"PO-Revision-Date: 2019-12-16 10:05+0000\n"
+"POT-Creation-Date: 2020-02-13 08:33+0000\n"
+"PO-Revision-Date: 2020-02-13 08:33+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -154,6 +154,18 @@ msgstr ""
 msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Meetings</span>\n"
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&gt;', 1)]}\"> Meeting</span>"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
+msgid ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Leads</span>\n"
+"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">Opportunities</span>"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
+msgid "<span class=\"o_stat_text\"> Leads</span>"
 msgstr ""
 
 #. module: crm
@@ -372,7 +384,6 @@ msgid "Cases by Sales Team"
 msgstr ""
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_tree
 msgid "Channel"
 msgstr ""
@@ -847,11 +858,6 @@ msgid "Email Quality"
 msgstr ""
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_lead__email_from
-msgid "Email address of the contact"
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_cc
 msgid "Email cc"
 msgstr ""
@@ -1184,11 +1190,6 @@ msgid "Language"
 msgstr ""
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_lead__lang_id
-msgid "Language of the lead."
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_action_last
 msgid "Last Action"
 msgstr ""
@@ -1261,11 +1262,6 @@ msgid "Lead"
 msgstr ""
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_utm_campaign__lead_count
-msgid "Lead Count"
-msgstr ""
-
-#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Enrichment"
 msgstr ""
@@ -1328,6 +1324,7 @@ msgid "Lead/Opportunity"
 msgstr ""
 
 #. module: crm
+#: code:addons/crm/models/crm_lost_reason.py:0
 #: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_lead
 #: model:ir.actions.act_window,name:crm.crm_lead_all_leads
 #: model:ir.model.fields,field_description:crm.field_crm_team__use_leads
@@ -1338,8 +1335,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
-#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
-#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
+#, python-format
 msgid "Leads"
 msgstr ""
 
@@ -1357,6 +1353,11 @@ msgid ""
 "Leads Analysis allows you to check different CRM related information like "
 "the treatment delays or number of leads per state. You can sort out your "
 "leads analysis by different groups to get accurate grained analysis."
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lost_reason__leads_count
+msgid "Leads Count"
 msgstr ""
 
 #. module: crm
@@ -1394,6 +1395,11 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_merge_opportunity__opportunity_ids
 msgid "Leads/Opportunities"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_utm_campaign__crm_lead_count
+msgid "Leads/Opportunities count"
 msgstr ""
 
 #. module: crm
@@ -1447,6 +1453,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lost_reason
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__lost_reason_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
+#: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Lost Reason"
@@ -1760,8 +1767,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_graph
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
-#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
-#: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model_terms:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Opportunities"
@@ -1811,11 +1816,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Opportunity"
-msgstr ""
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_utm_campaign__opportunity_count
-msgid "Opportunity Count"
 msgstr ""
 
 #. module: crm
@@ -1915,6 +1915,11 @@ msgid "Phone Quality"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__phone_mobile_search
+msgid "Phone/Mobile"
+msgstr ""
+
+#. module: crm
 #: code:addons/crm/models/crm_team.py:0
 #: model:ir.actions.act_window,name:crm.crm_lead_action_pipeline
 #: model:ir.model.fields,field_description:crm.field_crm_team__use_opportunities
@@ -1947,6 +1952,12 @@ msgid ""
 "                missed deadlines or the number of interactions per opportunity. This report is\n"
 "                mainly used by the sales manager in order to do the periodic review with the\n"
 "                teams of the sales pipeline."
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid "Please enter at least 3 digits when searching on phone / mobile."
 msgstr ""
 
 #. module: crm
@@ -2379,12 +2390,6 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:0
-#, python-format
-msgid "This target does not exist."
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__title
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Title"
@@ -2465,7 +2470,7 @@ msgid "Unread Messages Counter"
 msgstr ""
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_utm_campaign__crm_lead_activated
+#: model:ir.model.fields,field_description:crm.field_utm_campaign__use_leads
 msgid "Use Leads"
 msgstr ""
 
@@ -2585,12 +2590,6 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__website
 msgid "Website of the contact"
-msgstr ""
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_crm_lead__team_id
-msgid ""
-"When sending mails, the default email address is taken from the Sales Team."
 msgstr ""
 
 #. module: crm

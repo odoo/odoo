@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.1\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-16 10:06+0000\n"
-"PO-Revision-Date: 2019-12-16 10:06+0000\n"
+"POT-Creation-Date: 2020-02-13 08:34+0000\n"
+"PO-Revision-Date: 2020-02-13 08:34+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -533,13 +533,18 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__length
+#: model:ir.model.fields,field_description:delivery.field_product_packaging__packaging_length
 msgid "Length"
 msgstr ""
 
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_length
 msgid "Length must be positive"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging__length_uom_name
+msgid "Length unit of measure label"
 msgstr ""
 
 #. module: delivery
@@ -676,6 +681,11 @@ msgid "Print Return Label"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
 msgid "Product Packaging"
 msgstr ""
@@ -731,6 +741,7 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_price
+#: model:ir.model.fields,field_description:delivery.field_stock_move_line__sale_price
 msgid "Sale Price"
 msgstr ""
 
@@ -991,6 +1002,7 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__weight_uom_name
+#: model:ir.model.fields,field_description:delivery.field_product_packaging__weight_uom_name
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__weight_uom_name
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_uom_name
 msgid "Weight unit of measure label"
