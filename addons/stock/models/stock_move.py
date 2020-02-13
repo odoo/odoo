@@ -402,20 +402,6 @@ class StockMove(models.Model):
                 move.location_id.name, move.location_dest_id.name)))
         return res
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        # TDE CLEANME: why doing this tracking on picking here ? seems weird
-        tracking = []
-        for vals in vals_list:
-            if not self.env.context.get('mail_notrack') and vals.get('picking_id'):
-                picking = self.env['stock.picking'].browse(vals['picking_id'])
-                initial_values = {picking.id: {'state': picking.state}}
-                tracking.append((picking, initial_values))
-        res = super(StockMove, self).create(vals_list)
-        for picking, initial_values in tracking:
-            picking.message_track(['state'], initial_values)
-        return res
-
     def write(self, vals):
         # Handle the write on the initial demand by updating the reserved quantity and logging
         # messages according to the state of the stock.move records.
@@ -451,30 +437,11 @@ class StockMove(models.Model):
                     move_dest_ids.filtered(lambda m: m.delay_alert)._propagate_date_log_activity(move)
                 if move.delay_alert:
                     move._delay_alert_check(new_date)
-
-        # Manual tracking of the `state` field for the stock.picking records.
-        track_pickings = (
-            not self._context.get('mail_notrack')
-            and not self._context.get('tracking_disable')
-            and any(field in vals for field in ['state', 'picking_id'])
-        )
-        if track_pickings:
-            to_track_picking_ids = {move.picking_id.id for move in self if move.picking_id}
-            if vals.get('picking_id'):
-                to_track_picking_ids.add(vals['picking_id'])
-            to_track_picking_ids = list(to_track_picking_ids)
-            pickings = self.env['stock.picking'].browse(to_track_picking_ids)
-            initial_values = dict((picking.id, {'state': picking.state}) for picking in pickings)
-
         res = super(StockMove, self).write(vals)
         if vals.get('date_expected'):
             for move in self:
                 if move.state not in ('done', 'cancel'):
                     move.date = move.date_expected
-
-        if track_pickings:
-            pickings.message_track(['state'], initial_values)
-
         if receipt_moves_to_reassign:
             receipt_moves_to_reassign._action_assign()
         return res
