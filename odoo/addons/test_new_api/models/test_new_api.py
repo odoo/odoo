@@ -894,3 +894,100 @@ class StateMixin(models.AbstractModel):
         ('confirmed', 'Confirmed'),
         ('done', 'Done'),
     ])
+
+
+class SelectionBase(models.Model):
+    _name = 'test_new_api.model_selection_base'
+    _description = "Model with a base selection field"
+
+    my_selection = fields.Selection([
+        ('foo', "Foo"),
+        ('bar', "Bar"),
+    ])
+
+
+class SelectionBaseNullExplicit(models.Model):
+    _inherit = 'test_new_api.model_selection_base'
+    _description = "Model with a selection field extension with ondelete null"
+
+    my_selection = fields.Selection(selection_add=[
+        ('quux', "Quux"),
+    ], ondelete={'quux': 'set null'})
+
+
+class SelectionBaseNullImplicit(models.Model):
+    _inherit = 'test_new_api.model_selection_base'
+    _description = "Model with a selection field extension without ondelete"
+
+    my_selection = fields.Selection(selection_add=[
+        ('ham', "Ham"),
+    ])
+
+
+class SelectionRequired(models.Model):
+    _name = 'test_new_api.model_selection_required'
+    _description = "Model with a required selection field"
+
+    active = fields.Boolean(default=True)
+    my_selection = fields.Selection([
+        ('foo', "Foo"),
+        ('bar', "Bar"),
+    ], required=True, default='foo')
+
+
+class SelectionRequiredDefault(models.Model):
+    _inherit = 'test_new_api.model_selection_required'
+    _description = "Model with a selection field extension with ondelete default"
+
+    my_selection = fields.Selection(selection_add=[
+        ('baz', "Baz"),
+    ], ondelete={'baz': 'set default'})
+
+
+class SelectionRequiredCascade(models.Model):
+    _inherit = 'test_new_api.model_selection_required'
+    _description = "Model with a selection field extension with ondelete cascade"
+
+    my_selection = fields.Selection(selection_add=[
+        ('eggs', "Eggs"),
+    ], ondelete={'eggs': 'cascade'})
+
+
+class SelectionRequiredLiteral(models.Model):
+    _inherit = 'test_new_api.model_selection_required'
+    _description = "Model with a selection field extension with ondelete set <option>"
+
+    my_selection = fields.Selection(selection_add=[
+        ('bacon', "Bacon"),
+    ], ondelete={'bacon': lambda r: r.write({'my_selection': 'bar'})})
+
+
+class SelectionRequiredMultiple(models.Model):
+    _inherit = 'test_new_api.model_selection_required'
+    _description = "Model with a selection field extension with multiple ondelete policies"
+
+    my_selection = fields.Selection(selection_add=[
+        ('pikachu', "Pikachu"),
+        ('eevee', "Eevee"),
+    ], ondelete={'pikachu': 'set default', 'eevee': lambda r: r.write({'my_selection': 'bar'})})
+
+
+class SelectionRequiredCallback(models.Model):
+    _inherit = 'test_new_api.model_selection_required'
+    _description = "Model with a selection field extension with ondelete callback"
+
+    my_selection = fields.Selection(selection_add=[
+        ('knickers', "Oh la la"),
+    ], ondelete={
+        'knickers': lambda recs: recs.write({'active': False, 'my_selection': 'foo'}),
+    })
+
+
+class SelectionNonStored(models.Model):
+    _name = 'test_new_api.model_selection_non_stored'
+    _description = "Model with non-stored selection field"
+
+    my_selection = fields.Selection([
+        ('foo', "Foo"),
+        ('bar', "Bar"),
+    ], store=False)

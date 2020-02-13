@@ -893,7 +893,7 @@ class IrModelFields(models.Model):
             'index': bool(field.index),
             'store': bool(field.store),
             'copied': bool(field.copy),
-            'on_delete': getattr(field, 'ondelete', None),
+            'on_delete': field.ondelete if field.type == 'many2one' else None,
             'related': ".".join(field.related) if field.related else None,
             'readonly': bool(field.readonly),
             'required': bool(field.required),
@@ -1238,16 +1238,7 @@ class IrModelSelection(models.Model):
                               'Please modify them through Python code, '
                               'preferably through a custom addon!'))
 
-        for selection in self:
-            if selection.field_id.store and \
-                    not self.env[selection.field_id.model]._abstract:
-                # replace the value by NULL in the field's corresponding column
-                query = 'UPDATE "{table}" SET "{field}"=NULL WHERE "{field}"=%s'.format(
-                    table=self.env[selection.field_id.model]._table,
-                    field=selection.field_id.name,
-                )
-                self.env.cr.execute(query, [selection.value])
-
+        self._process_ondelete()
         result = super().unlink()
 
         # Reload registry for normal unlink only. For module uninstall, the
@@ -1258,6 +1249,40 @@ class IrModelSelection(models.Model):
             self.pool.setup_models(self._cr)
 
         return result
+
+    def _process_ondelete(self):
+        """ Process the 'ondelete' of the given selection values. """
+        for selection in self:
+            Model = self.env[selection.field_id.model]
+            field = Model._fields[selection.field_id.name]
+            if not field.store or Model._abstract:
+                continue
+
+            ondelete = (field.ondelete or {}).get(selection.value) or 'set null'
+            if callable(ondelete):
+                ondelete(selection._get_records())
+            elif ondelete == 'set null':
+                selection._get_records().write({field.name: False})
+            elif ondelete == 'set default':
+                value = field.convert_to_write(field.default(Model), Model)
+                selection._get_records().write({field.name: value})
+            elif ondelete == 'cascade':
+                selection._get_records().unlink()
+            else:
+                # this shouldn't happen... simply a sanity check
+                raise ValueError(_(
+                    "The ondelete policy %r is not valid for field %r"
+                ) % (ondelete, selection))
+
+    def _get_records(self):
+        """ Return the records having 'self' as a value. """
+        self.ensure_one()
+        Model = self.env[self.field_id.model]
+        query = 'SELECT id FROM "{table}" WHERE "{field}"=%s'.format(
+            table=Model._table, field=self.field_id.name,
+        )
+        self.env.cr.execute(query, [self.value])
+        return Model.browse(r[0] for r in self.env.cr.fetchall())
 
 
 class IrModelConstraint(models.Model):

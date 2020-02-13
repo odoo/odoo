@@ -11,7 +11,7 @@ import io
 from PIL import Image
 import psycopg2
 
-from odoo import fields
+from odoo import models, fields
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import common
@@ -2462,3 +2462,205 @@ class TestSelectionDeleteUpdate(common.TransactionCase):
             ('field_id.name', '=', 'state'),
             ('value', '=', 'confirmed'),
         ], limit=1).unlink()
+
+
+@common.tagged('selection_ondelete_base')
+class TestSelectionOndelete(common.TransactionCase):
+
+    MODEL_BASE = 'test_new_api.model_selection_base'
+    MODEL_REQUIRED = 'test_new_api.model_selection_required'
+    MODEL_NONSTORED = 'test_new_api.model_selection_non_stored'
+
+    def setUp(self):
+        super().setUp()
+        # enable unlinking ir.model.fields.selection
+        self.patch(self.registry, 'ready', False)
+
+    def _unlink_option(self, model, option):
+        self.env['ir.model.fields.selection'].search([
+            ('field_id.model', '=', model),
+            ('field_id.name', '=', 'my_selection'),
+            ('value', '=', option),
+        ], limit=1).unlink()
+
+    def test_ondelete_default(self):
+        # create some records, one of which having the extended selection option
+        rec1 = self.env[self.MODEL_REQUIRED].create({'my_selection': 'foo'})
+        rec2 = self.env[self.MODEL_REQUIRED].create({'my_selection': 'bar'})
+        rec3 = self.env[self.MODEL_REQUIRED].create({'my_selection': 'baz'})
+
+        # test that all values are correct before the removal of the value
+        self.assertEqual(rec1.my_selection, 'foo')
+        self.assertEqual(rec2.my_selection, 'bar')
+        self.assertEqual(rec3.my_selection, 'baz')
+
+        # unlink the extended option (simulates a module uninstall)
+        self._unlink_option(self.MODEL_REQUIRED, 'baz')
+
+        # verify that the ondelete policy has succesfully been applied
+        self.assertEqual(rec1.my_selection, 'foo')
+        self.assertEqual(rec2.my_selection, 'bar')
+        self.assertEqual(rec3.my_selection, 'foo')   # reset to default
+
+    def test_ondelete_base_null_explicit(self):
+        rec1 = self.env[self.MODEL_BASE].create({'my_selection': 'foo'})
+        rec2 = self.env[self.MODEL_BASE].create({'my_selection': 'bar'})
+        rec3 = self.env[self.MODEL_BASE].create({'my_selection': 'quux'})
+
+        self.assertEqual(rec1.my_selection, 'foo')
+        self.assertEqual(rec2.my_selection, 'bar')
+        self.assertEqual(rec3.my_selection, 'quux')
+
+        self._unlink_option(self.MODEL_BASE, 'quux')
+
+        self.assertEqual(rec1.my_selection, 'foo')
+        self.assertEqual(rec2.my_selection, 'bar')
+        self.assertFalse(rec3.my_selection)
+
+    def test_ondelete_base_null_implicit(self):
+        rec1 = self.env[self.MODEL_BASE].create({'my_selection': 'foo'})
+        rec2 = self.env[self.MODEL_BASE].create({'my_selection': 'bar'})
+        rec3 = self.env[self.MODEL_BASE].create({'my_selection': 'ham'})
+
+        self.assertEqual(rec1.my_selection, 'foo')
+        self.assertEqual(rec2.my_selection, 'bar')
+        self.assertEqual(rec3.my_selection, 'ham')
+
+        self._unlink_option(self.MODEL_BASE, 'ham')
+
+        self.assertEqual(rec1.my_selection, 'foo')
+        self.assertEqual(rec2.my_selection, 'bar')
+        self.assertFalse(rec3.my_selection)
+
+    def test_ondelete_cascade(self):
+        rec1 = self.env[self.MODEL_REQUIRED].create({'my_selection': 'foo'})
+        rec2 = self.env[self.MODEL_REQUIRED].create({'my_selection': 'bar'})
+        rec3 = self.env[self.MODEL_REQUIRED].create({'my_selection': 'eggs'})
+
+        self.assertEqual(rec1.my_selection, 'foo')
+        self.assertEqual(rec2.my_selection, 'bar')
+        self.assertEqual(rec3.my_selection, 'eggs')
+
+        self._unlink_option(self.MODEL_REQUIRED, 'eggs')
+
+        self.assertEqual(rec1.my_selection, 'foo')
+        self.assertEqual(rec2.my_selection, 'bar')
+        self.assertFalse(rec3.exists())
+
+    def test_ondelete_literal(self):
+        rec1 = self.env[self.MODEL_REQUIRED].create({'my_selection': 'foo'})
+        rec2 = self.env[self.MODEL_REQUIRED].create({'my_selection': 'bar'})
+        rec3 = self.env[self.MODEL_REQUIRED].create({'my_selection': 'bacon'})
+
+        self.assertEqual(rec1.my_selection, 'foo')
+        self.assertEqual(rec2.my_selection, 'bar')
+        self.assertEqual(rec3.my_selection, 'bacon')
+
+        self._unlink_option(self.MODEL_REQUIRED, 'bacon')
+
+        self.assertEqual(rec1.my_selection, 'foo')
+        self.assertEqual(rec2.my_selection, 'bar')
+        self.assertEqual(rec3.my_selection, 'bar')
+
+    def test_ondelete_multiple_explicit(self):
+        rec1 = self.env[self.MODEL_REQUIRED].create({'my_selection': 'foo'})
+        rec2 = self.env[self.MODEL_REQUIRED].create({'my_selection': 'eevee'})
+        rec3 = self.env[self.MODEL_REQUIRED].create({'my_selection': 'pikachu'})
+
+        self.assertEqual(rec1.my_selection, 'foo')
+        self.assertEqual(rec2.my_selection, 'eevee')
+        self.assertEqual(rec3.my_selection, 'pikachu')
+
+        self._unlink_option(self.MODEL_REQUIRED, 'eevee')
+        self._unlink_option(self.MODEL_REQUIRED, 'pikachu')
+
+        self.assertEqual(rec1.my_selection, 'foo')
+        self.assertEqual(rec2.my_selection, 'bar')
+        self.assertEqual(rec3.my_selection, 'foo')
+
+    def test_ondelete_callback(self):
+        rec = self.env[self.MODEL_REQUIRED].create({'my_selection': 'knickers'})
+
+        self.assertEqual(rec.my_selection, 'knickers')
+
+        self._unlink_option(self.MODEL_REQUIRED, 'knickers')
+
+        self.assertEqual(rec.my_selection, 'foo')
+        self.assertFalse(rec.active)
+
+    def test_non_stored_selection(self):
+        rec = self.env[self.MODEL_NONSTORED].create({})
+        rec.my_selection = 'foo'
+
+        self.assertEqual(rec.my_selection, 'foo')
+
+        self._unlink_option(self.MODEL_NONSTORED, 'foo')
+
+        self.assertFalse(rec.my_selection)
+
+
+@common.tagged('selection_ondelete_advanced')
+class TestSelectionOndeleteAdvanced(common.TransactionCase):
+
+    MODEL_BASE = 'test_new_api.model_selection_base'
+    MODEL_REQUIRED = 'test_new_api.model_selection_required'
+
+    def setUp(self):
+        super().setUp()
+        # necessary cleanup for resetting changes in the registry
+        for model_name in (self.MODEL_BASE, self.MODEL_REQUIRED):
+            Model = self.registry[model_name]
+            self.addCleanup(setattr, Model, '__bases__', Model.__bases__)
+        self.addCleanup(self.registry.model_cache.clear)
+
+    def test_ondelete_unexisting_policy(self):
+        class Foo(models.Model):
+            _inherit = self.MODEL_REQUIRED
+
+            my_selection = fields.Selection(selection_add=[
+                ('random', "Random stuff"),
+            ], ondelete={'random': 'poop'})
+
+        Foo._build_model(self.registry, self.env.cr)
+
+        with self.assertRaises(ValueError):
+            self.registry.setup_models(self.env.cr)
+
+    def test_ondelete_default_no_default(self):
+        class Foo(models.Model):
+            _inherit = self.MODEL_BASE
+
+            my_selection = fields.Selection(selection_add=[
+                ('corona', "Corona beers suck"),
+            ], ondelete={'corona': 'set default'})
+
+        Foo._build_model(self.registry, self.env.cr)
+
+        with self.assertRaises(AssertionError):
+            self.registry.setup_models(self.env.cr)
+
+    def test_ondelete_required_null_explicit(self):
+        class Foo(models.Model):
+            _inherit = self.MODEL_REQUIRED
+
+            my_selection = fields.Selection(selection_add=[
+                ('brap', "Brap"),
+            ], ondelete={'brap': 'set null'})
+
+        Foo._build_model(self.registry, self.env.cr)
+
+        with self.assertRaises(ValueError):
+            self.registry.setup_models(self.env.cr)
+
+    def test_ondelete_required_null_implicit(self):
+        class Foo(models.Model):
+            _inherit = self.MODEL_REQUIRED
+
+            my_selection = fields.Selection(selection_add=[
+                ('boing', "Boyoyoyoing"),
+            ])
+
+        Foo._build_model(self.registry, self.env.cr)
+
+        with self.assertRaises(ValueError):
+            self.registry.setup_models(self.env.cr)
