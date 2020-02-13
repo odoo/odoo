@@ -13,7 +13,7 @@
                         <field name="is_blacklisted" invisible="1"/>
                         <label for="contact_id" class="oe_inline"/>
                         <div class="o_row o_row_readonly">
-                            <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailings"
+                            <i class="fa fa-ban text-danger" role="img" title="This email is blacklisted for mass mailings"
                                 aria-label="Blacklisted" attrs="{'invisible': [('is_blacklisted', '=', False)]}" groups="base.group_user"></i>
                             <field name="contact_id"/>
                         </div>
@@ -164,8 +164,10 @@
                         <group>
                             <label for="email" class="oe_inline"/>
                             <div class="o_row o_row_readonly" name="email_details">
-                                <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailings"
-                                    aria-label="Blacklisted" attrs="{'invisible': [('is_blacklisted', '=', False)]}" groups="base.group_user"></i>
+                                 <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
+                                    title="This email is blacklisted for mass mailings. Click to unblacklist."
+                                    type="object" context="{'default_email': email}" groups="base.group_user"
+                                    attrs="{'invisible': [('is_blacklisted', '=', False)]}"/>
                                 <field name="email" widget="email"/>
                                 <field name="is_blacklisted" invisible="1"/>
                             </div>
