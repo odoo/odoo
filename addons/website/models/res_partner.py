@@ -29,7 +29,7 @@ class Partner(models.Model):
             'q': '%s, %s %s, %s' % (self.street or '', self.city or '', self.zip or '', self.country_id and self.country_id.display_name or ''),
             'z': zoom,
         }
-        return 'https://maps.google.com/maps' + werkzeug.urls.url_encode(params)
+        return 'https://maps.google.com/maps?' + werkzeug.urls.url_encode(params)
 
     def _get_name(self):
         name = super(Partner, self)._get_name()
@@ -41,4 +41,3 @@ class Partner(models.Model):
     def _compute_display_name(self):
         self2 = self.with_context(display_website=False)
         super(Partner, self2)._compute_display_name()
-
