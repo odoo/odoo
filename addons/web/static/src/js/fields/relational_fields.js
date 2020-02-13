@@ -271,12 +271,13 @@ var FieldMany2One = AbstractField.extend({
                     source.results = [];
 
                     // Check if this source should be used for the searched term
-                    if (!source.validation || source.validation.call(self, req.term)) {
+                    const search = req.term.trim();
+                    if (!source.validation || source.validation.call(self, search)) {
                         source.loading = true;
 
                         // Wrap the returned value of the source.method with a promise
                         // So event if the returned value is not async, it will work
-                        Promise.resolve(source.method.call(self, req.term)).then(function (results) {
+                        Promise.resolve(source.method.call(self, search)).then(function (results) {
                             source.results = results;
                             source.loading = false;
                             resp(self._concatenateAutocompleteResults());
