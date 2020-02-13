@@ -185,6 +185,27 @@
                 }
             }
         }
+        &.s_image_gallery_indicators_dots {
+            .carousel {
+                ul.carousel-indicators {
+                    height: 40px;
+                    margin: auto;
+
+                    li {
+                        max-width: 8px;
+                        max-height: 8px;
+                        margin: 0 6px;
+                        border-radius: 10px;
+                        background-color: $black;
+                        background-image: none !important;
+
+                        &:not(.active) {
+                            opacity: .4;
+                        }
+                    }
+                }
+            }
+        }
 
         @extend %image-gallery-slideshow-styles;
     }
