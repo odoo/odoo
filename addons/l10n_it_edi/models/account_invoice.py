@@ -258,7 +258,11 @@ class AccountMove(models.Model):
         self.ensure_one()
         allowed_state = ['to_send', 'invalid']
 
-        if not self.company_id.l10n_it_mail_pec_server_id or not self.company_id.l10n_it_address_send_fatturapa:
+        if (
+            not self.company_id.l10n_it_mail_pec_server_id
+            or not self.company_id.l10n_it_mail_pec_server_id.active
+            or not self.company_id.l10n_it_address_send_fatturapa
+        ):
             self.message_post(
                 body=(_("Error when sending mail with E-Invoice: Your company must have a mail PEC server and must indicate the mail PEC that will send electronic invoice."))
                 )
