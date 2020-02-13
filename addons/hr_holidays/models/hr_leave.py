@@ -639,8 +639,13 @@ class HolidaysRequest(models.Model):
     def _prepare_holidays_meeting_values(self):
         self.ensure_one()
         calendar = self.employee_id.resource_calendar_id or self.env.user.company_id.resource_calendar_id
+        if self.leave_type_request_unit == 'hour':
+            meeting_name = _("%s on Time Off : %.2f hour(s)") % (self.employee_id.name or self.category_id.name, self.number_of_hours_display)
+        else:
+            meeting_name = _("%s on Time Off : %.2f day(s)") % (self.employee_id.name or self.category_id.name, self.number_of_days)
+
         meeting_values = {
-            'name': self.display_name,
+            'name': meeting_name,
             'categ_ids': [(6, 0, [
                 self.holiday_status_id.categ_id.id])] if self.holiday_status_id.categ_id else [],
             'duration': self.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY),
