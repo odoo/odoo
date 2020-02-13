@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 
 
 class MailBlackList(models.Model):
@@ -78,6 +78,13 @@ class MailBlackList(models.Model):
             record = self.create({'email': email})
         return record
 
+    def action_remove_with_reason(self, email, reason=None):
+        record = self._remove(email)
+        if reason:
+            record.message_post(body=_("Unblacklisting Reason: %s" % (reason)))
+        
+        return record
+
     def _remove(self, email):
         normalized = tools.email_normalize(email)
         record = self.env["mail.blacklist"].with_context(active_test=False).search([('email', '=', normalized)])
@@ -87,6 +94,17 @@ class MailBlackList(models.Model):
             record = record.create({'email': email, 'active': False})
         return record
 
+    def mail_action_blacklist_remove(self):
+        return {
+            'name': 'Are you sure you want to unblacklist this Email Address?',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.blacklist.remove',
+            'target': 'new',
+        }
+
+    def action_add(self):
+        self._add(self.email)
 
 class MailBlackListMixin(models.AbstractModel):
     """ Mixin that is inherited by all model with opt out. This mixin stores a normalized
@@ -192,3 +210,18 @@ class MailBlackListMixin(models.AbstractModel):
         bounce counter of the record. """
         super(MailBlackListMixin, self)._message_reset_bounce(email)
         self.write({'message_bounce': 0})
+
+    def mail_action_blacklist_remove(self):
+        # wizard access rights currently not working as expected and allows users without access to
+        # open this wizard, therefore we check to make sure they have access before the wizard opens.
+        can_access = self.env['mail.blacklist'].check_access_rights('write', raise_exception=False)
+        if can_access:
+            return {
+                'name': 'Are you sure you want to unblacklist this Email Address?',
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'mail.blacklist.remove',
+                'target': 'new',
+            }
+        else:
+            raise AccessError("You do not have the access right to unblacklist emails. Please contact your administrator.")

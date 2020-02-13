@@ -13,12 +13,12 @@
                 <separator/>
                 <filter string="Valid SMS Recipients"
                     name="filter_valid_sms_recipient"
-                    domain="[('opt_out', '=', False), ('phone_blacklisted', '=', False), ('phone_sanitized', '!=', False)]"
+                    domain="[('opt_out', '=', False), ('phone_sanitized_blacklisted', '=', False), ('phone_sanitized', '!=', False)]"
                     invisible="not context.get('default_list_ids')"/>
                 <separator/>
                 <filter string="Exclude Blacklisted Phone"
                     name="filter_not_phone_bl"
-                    domain="[('phone_blacklisted', '=', False)]"/>
+                    domain="[('phone_sanitized_blacklisted', '=', False)]"/>
             </xpath>
         </field>
     </record>
@@ -32,7 +32,7 @@
             <xpath expr="//field[@name='is_blacklisted']" position="after">
                 <field name="mobile"/>
                 <field name="phone_sanitized" invisible="1"/>
-                <field name="phone_blacklisted"/>
+                <field name="phone_sanitized_blacklisted"/>
             </xpath>
         </field>
     </record>
@@ -45,11 +45,13 @@
             <xpath expr="//div[@name='email_details']" position="after">
                 <label for="mobile" class="oe_inline"/>
                 <div class="o_row o_row_readonly" name="phone_details">
-                    <i class="fa fa-ban" style="color: red;" role="img" title="This number is blacklisted for SMS Marketing"
-                        aria-label="Phone Blacklisted" attrs="{'invisible': [('phone_blacklisted', '=', False)]}" groups="base.group_user"></i>
+                    <button name="phone_action_blacklist_remove" class="fa fa-ban text-danger"
+                        title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+                        type="object" context="{'default_phone': mobile}" groups="base.group_user"
+                        attrs="{'invisible': [('mobile_blacklisted', '=', False)]}"/>
                     <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
                     <field name="phone_sanitized" invisible="1"/>
-                    <field name="phone_blacklisted" invisible="1"/>
+                    <field name="mobile_blacklisted" invisible="1"/>
                 </div>
             </xpath>
         </field>
