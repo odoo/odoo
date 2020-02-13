@@ -629,7 +629,7 @@ class ChromeBrowser():
         self.ws = None  # websocket
         self.request_id = 0
         self.user_data_dir = tempfile.mkdtemp(suffix='_chrome_odoo')
-        self.chrome_process = None
+        self.chrome_pid = None
 
         otc = odoo.tools.config
         self.screenshots_dir = os.path.join(otc['screenshots'], get_db_name(), 'screenshots')
@@ -664,13 +664,11 @@ class ChromeBrowser():
             os._exit(0)
 
     def stop(self):
-        if self.chrome_process is not None:
-            self._logger.info("Closing chrome headless with pid %s", self.chrome_process.pid)
+        if self.chrome_pid is not None:
+            self._logger.info("Closing chrome headless with pid %s", self.chrome_pid)
             self._websocket_send('Browser.close')
-            if self.chrome_process.poll() is None:
-                self._logger.info("Terminating chrome headless with pid %s", self.chrome_process.pid)
-                self.chrome_process.terminate()
-                self.chrome_process.wait()
+            self._logger.info("Terminating chrome headless with pid %s", self.chrome_pid)
+            os.kill(self.chrome_pid, signal.SIGTERM)
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
             self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
             shutil.rmtree(self.user_data_dir, ignore_errors=True)
@@ -703,8 +701,27 @@ class ChromeBrowser():
 
         raise unittest.SkipTest("Chrome executable not found")
 
+    def _spawn_chrome(self, cmd):
+        if os.name != 'posix':
+            return
+        pid = os.fork()
+        if pid != 0:
+            return pid
+        else:
+            if platform.system() != 'Darwin':
+                # since the introduction of pointer compression in Chrome 80 (v8 v8.0),
+                # the memory reservation algorithm requires more than 8GiB of virtual mem for alignment
+                # this exceeds our default memory limits.
+                # OSX already reserve huge memory for processes
+                import resource
+                resource.setrlimit(resource.RLIMIT_AS, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
+            # redirect browser stderr to /dev/null
+            with open(os.devnull, 'wb', 0) as stderr_replacement:
+                os.dup2(stderr_replacement.fileno(), sys.stderr.fileno())
+            os.execv(cmd[0], cmd)
+
     def _chrome_start(self):
-        if self.chrome_process is not None:
+        if self.chrome_pid is not None:
             return
         with socket.socket() as s:
             s.bind(('localhost', 0))
@@ -714,7 +731,6 @@ class ChromeBrowser():
 
         switches = {
             '--headless': '',
-            '--enable-logging': 'stderr',
             '--no-default-browser-check': '',
             '--no-first-run': '',
             '--disable-extensions': '',
@@ -737,17 +753,18 @@ class ChromeBrowser():
             '--remote-debugging-address': HOST,
             '--remote-debugging-port': str(self.devtools_port),
             '--no-sandbox': '',
+            '--disable-crash-reporter': '',
+            '--disable-gpu': '',
         }
         cmd = [self.executable]
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]
         url = 'about:blank'
         cmd.append(url)
-        self._logger.info('chrome_run executing %s', ' '.join(cmd))
         try:
-            self.chrome_process = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            self.chrome_pid = self._spawn_chrome(cmd)
         except OSError:
             raise unittest.SkipTest("%s not found" % cmd[0])
-        self._logger.info('Chrome pid: %s', self.chrome_process.pid)
+        self._logger.info('Chrome pid: %s', self.chrome_pid)
 
     def _find_websocket(self):
         version = self._json_command('version')
@@ -780,8 +797,10 @@ class ChromeBrowser():
         tries = 0
         failure_info = None
         while tries * delay < timeout:
-            if self.chrome_process.poll() is not None:
-                self._logger.error('Chrome crashed at startup with return code', self.chrome_process.returncode)
+            try:
+                os.kill(self.chrome_pid, 0)
+            except ProcessLookupError:
+                self._logger.error('Chrome crashed at startup')
                 break
             try:
                 r = requests.get(url, timeout=3)
