@@ -812,6 +812,18 @@ class Lead(models.Model):
         self._merge_opportunity_history(opportunities)
         self._merge_opportunity_attachments(opportunities)
 
+    def _opportunities_to_merge(self):
+        """
+            Filter the leads / opps to merge.
+            In order to get merged, these leads/opps can't be in 'Dead' or 'Closed' stage.
+        """
+        return self.filtered(lambda opp: opp.active and opp.probability < 100)
+
+    def action_merge_opportunities(self):
+        self = self._opportunities_to_merge()
+        head = self.merge_opportunity()
+        return head.redirect_lead_opportunity_view()
+
     def merge_opportunity(self, user_id=False, team_id=False, auto_unlink=True):
         """ Merge opportunities in one. Different cases of merge:
                 - merge leads together = 1 new lead

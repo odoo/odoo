@@ -42,34 +42,21 @@ class TestLeadMerge(TestLeadConvertMassCommon):
         self.assertEqual(self.lead_1.stage_id, self.stage_team1_1)
         self.lead_w_partner_company.action_set_won()  # won opps should be excluded
 
-        merge = self.env['crm.merge.opportunity'].with_context({
-            'active_model': 'crm.lead',
-            'active_ids': self.leads.ids,
-            'active_id': False,
-        }).create({
-            'user_id': self.user_sales_leads_convert.id,
-        })
-        # check user correctly triggered its sales team
-        merge._onchange_user()
-        self.assertEqual(merge.team_id, self.sales_team_convert)
-
         # TDE FIXME: not sure the browse in default get of wizard intended to exlude lost, as it browse ids
         # and exclude inactive leads, but that's not written anywhere ... intended ??
-        self.assertEqual(merge.opportunity_ids, self.leads - self.lead_w_partner_company - self.lead_w_email_lost)
+        self.assertEqual(self.leads._opportunities_to_merge(), self.leads - self.lead_w_partner_company - self.lead_w_email_lost)
         ordered_merge = self.lead_w_contact + self.lead_w_email + self.lead_1 + self.lead_w_partner
         ordered_merge_description = '\n\n'.join(l.description for l in ordered_merge)
 
         # merged opportunity: in this test, all input are leads. Confidence is based on stage
         # sequence -> lead_w_contact has a stage sequence of 30
-        result = merge.action_merge()
+        result = self.leads.action_merge_opportunities()
         merge_opportunity = self.env['crm.lead'].browse(result['res_id'])
         self.assertFalse((ordered_merge - merge_opportunity).exists())
         self.assertEqual(merge_opportunity, self.lead_w_contact)
         self.assertEqual(merge_opportunity.type, 'lead')
         self.assertEqual(merge_opportunity.description, ordered_merge_description)
-        # merged opportunity has updated salesman / team / stage is ok as generic
-        self.assertEqual(merge_opportunity.user_id, self.user_sales_leads_convert)
-        self.assertEqual(merge_opportunity.team_id, self.sales_team_convert)
+        # merged opportunity has updated stage is ok as generic
         self.assertEqual(merge_opportunity.stage_id, self.stage_gen_1)
 
     @users('user_sales_manager')
@@ -87,33 +74,17 @@ class TestLeadMerge(TestLeadConvertMassCommon):
         self.assertEqual(self.lead_w_partner_company.stage_id.sequence, 1)
         self.assertEqual(self.lead_1.stage_id.sequence, 1)
 
-        merge = self.env['crm.merge.opportunity'].with_context({
-            'active_model': 'crm.lead',
-            'active_ids': self.leads.ids,
-            'active_id': False,
-        }).create({
-            'team_id': self.sales_team_convert.id,
-            'user_id': False,
-        })
-        # TDE FIXME: see aa44700dccdc2618e0b8bc94252789264104047c -> no user, no team -> strange
-        merge._onchange_user()
-        merge.write({'team_id': self.sales_team_convert.id})
-
         # TDE FIXME: not sure the browse in default get of wizard intended to exlude lost, as it browse ids
         # and exclude inactive leads, but that's not written anywhere ... intended ??
-        self.assertEqual(merge.opportunity_ids, self.leads - self.lead_w_email_lost)
+        self.assertEqual(self.leads._opportunities_to_merge(), self.leads - self.lead_w_email_lost)
         ordered_merge = self.lead_w_partner_company + self.lead_w_contact + self.lead_w_email + self.lead_w_partner
 
-        result = merge.action_merge()
+        result = self.leads.action_merge_opportunities()
         merge_opportunity = self.env['crm.lead'].browse(result['res_id'])
         self.assertFalse((ordered_merge - merge_opportunity).exists())
         self.assertEqual(merge_opportunity, self.lead_1)
         self.assertEqual(merge_opportunity.type, 'opportunity')
 
-        # merged opportunity has same salesman (not updated in wizard)
+        # merged opportunity has same salesman and team
         self.assertEqual(merge_opportunity.user_id, self.user_sales_leads)
-        # TDE FIXME: as same uer_id is enforced, team is updated through onchange and therefore stage
-        # self.assertEqual(merge_opportunity.team_id, self.sales_team_convert)
         self.assertEqual(merge_opportunity.team_id, self.sales_team_1)
-        # TDE FIXME: BUT team_id is computed after checking stage, based on wizard's team_id
-        self.assertEqual(merge_opportunity.stage_id, self.stage_team_convert_1)

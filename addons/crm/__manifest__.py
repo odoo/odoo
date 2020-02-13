@@ -35,7 +35,6 @@
         'wizard/crm_lead_lost_views.xml',
         'wizard/crm_lead_to_opportunity_views.xml',
         'wizard/crm_lead_to_opportunity_mass_views.xml',
-        'wizard/crm_merge_opportunities_views.xml',
 
         'views/crm_templates.xml',
         'views/res_config_settings_views.xml',
