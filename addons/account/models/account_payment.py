@@ -660,6 +660,7 @@ class AccountPayment(models.Model):
                 (1, counterpart_lines.id, line_vals_list[1]),
             ]
 
+<<<<<<< HEAD
             for line in writeoff_lines:
                 line_ids_commands.append((2, line.id))
 
@@ -696,11 +697,52 @@ class AccountPayment(models.Model):
     def action_draft(self):
         ''' posted -> draft '''
         self.move_id.button_draft()
+=======
+    def _prepare_communication(self, invoices):
+        '''Define the value for communication field
+        Append all invoice's references together.
+        '''
+        " ".join(i.invoice_payment_ref or i.ref or i.name for i in invoices)
+
+    def _prepare_payment_vals(self, invoices):
+        '''Create the payment values.
+
+        :param invoices: The invoices/bills to pay. In case of multiple
+            documents, they need to be grouped by partner, bank, journal and
+            currency.
+        :return: The payment values as a dictionary.
+        '''
+        amount = self.env['account.payment']._compute_payment_amount(invoices, invoices[0].currency_id, self.journal_id, self.payment_date)
+        values = {
+            'journal_id': self.journal_id.id,
+            'payment_method_id': self.payment_method_id.id,
+            'payment_date': self.payment_date,
+            'communication': self._prepare_communication(invoices),
+            'invoice_ids': [(6, 0, invoices.ids)],
+            'payment_type': ('inbound' if amount > 0 else 'outbound'),
+            'amount': abs(amount),
+            'currency_id': invoices[0].currency_id.id,
+            'partner_id': invoices[0].commercial_partner_id.id,
+            'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].move_type],
+            'partner_bank_account_id': invoices[0].invoice_partner_bank_id.id,
+        }
+        return values
+
+    def _get_payment_group_key(self, invoice):
+        """ Returns the grouping key to use for the given invoice when group_payment
+        option has been ticked in the wizard.
+        """
+        return (invoice.commercial_partner_id, invoice.currency_id, invoice.invoice_partner_bank_id, MAP_INVOICE_TYPE_PARTNER_TYPE[invoice.move_type])
+
+    def get_payments_vals(self):
+        '''Compute the values for payments.
+>>>>>>> 8819f63f3c9... temp
 
     def button_open_invoices(self):
         ''' Redirect the user to the invoice(s) paid by this payment.
         :return:    An action on account.move.
         '''
+<<<<<<< HEAD
         self.ensure_one()
 
         action = {
@@ -724,6 +766,25 @@ class AccountPayment(models.Model):
     def button_open_statements(self):
         ''' Redirect the user to the statement line(s) reconciled to this payment.
         :return:    An action on account.move.
+=======
+        grouped = defaultdict(lambda: self.env["account.move"])
+        for inv in self.invoice_ids:
+            if self.group_payment:
+                grouped[self._get_payment_group_key(inv)] += inv
+            else:
+                grouped[inv.id] += inv
+        return [self._prepare_payment_vals(invoices) for invoices in grouped.values()]
+
+    def create_payments(self):
+        '''Create payments according to the invoices.
+        Having invoices with different commercial_partner_id or different type
+        (Vendor bills with customer invoices) leads to multiple payments.
+        In case of all the invoices are related to the same
+        commercial_partner_id and have the same type, only one payment will be
+        created.
+
+        :return: The ir.actions.act_window to show created payments.
+>>>>>>> 8819f63f3c9... temp
         '''
         self.ensure_one()
 
