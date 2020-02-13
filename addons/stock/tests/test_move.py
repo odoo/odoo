@@ -4277,12 +4277,12 @@ class StockMove(SavepointCase):
             'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
             'product_uom': self.uom_unit.id,
-            'product_uom_qty': 10.0,
+            'quantity_done': 10.0,
             'picking_id': picking.id,
         })
         picking._autoconfirm_picking()
         self.assertEqual(picking.state, 'assigned')
-        move1.product_uom_qty = 12
+        move1.quantity_done = 12
         self.assertEqual(picking.state, 'assigned')
 
     def test_initial_demand_4(self):
