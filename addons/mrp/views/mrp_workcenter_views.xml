@@ -505,20 +505,6 @@
         </field>
     </record>
 
-
-    <record model="ir.actions.act_window" id="mrp_workcenter_productivity_loss_action">
-        <field name="name">Productivity Losses</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">mrp.workcenter.productivity.loss</field>
-        <field name="view_mode">tree,kanban,form</field>
-        <field name="domain">[('manual', '=', 'True')]</field>
-        <field name="help" type="html">
-          <p class="o_view_nocontent_empty_folder">
-            No productivity loss defined
-          </p>
-        </field>
-    </record>
-
     <record id="oee_search_view" model="ir.ui.view">
         <field name="name">mrp.workcenter.productivity.search</field>
         <field name="model">mrp.workcenter.productivity</field>
