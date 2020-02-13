@@ -158,9 +158,9 @@ class AccountReconciliation(models.AbstractModel):
         reconcile_model = self.env['account.reconcile.model'].search([('rule_type', '!=', 'writeoff_button')])
 
         # Search for missing partners when opening the reconciliation widget.
-        partner_map = self._get_bank_statement_line_partners(bank_statement_lines)
-
-        matching_amls = reconcile_model._apply_rules(bank_statement_lines, excluded_ids=excluded_ids, partner_map=partner_map)
+        if bank_statement_lines:
+            partner_map = self._get_bank_statement_line_partners(bank_statement_lines)
+            matching_amls = reconcile_model._apply_rules(bank_statement_lines, excluded_ids=excluded_ids, partner_map=partner_map)
 
         # Iterate on st_lines to keep the same order in the results list.
         bank_statements_left = self.env['account.bank.statement']
