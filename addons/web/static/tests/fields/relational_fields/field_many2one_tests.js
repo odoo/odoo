@@ -871,6 +871,52 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('many2one search with trailing and leading spaces', async function (assert) {
+            assert.expect(10);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `<form><field name="trululu"/></form>`,
+                mockRPC: function (route, args) {
+                    if (args.method === 'name_search') {
+                        assert.step('search: ' + args.kwargs.name);
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+
+            const $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+
+            await testUtils.fields.many2one.clickOpenDropdown('trululu');
+            assert.isVisible($dropdown);
+            assert.containsN($dropdown, 'li:not(.o_m2o_dropdown_option)', 3,
+                'autocomplete should contains 3 suggestions');
+
+            // search with leading spaces
+            form.$('.o_field_many2one input').val('   first').trigger('keydown').trigger('keyup');
+            await testUtils.nextTick();
+            assert.containsOnce($dropdown, 'li:not(.o_m2o_dropdown_option)',
+                'autocomplete should contains 1 suggestion');
+
+            // search with trailing spaces
+            form.$('.o_field_many2one input').val('first  ').trigger('keydown').trigger('keyup');
+            await testUtils.nextTick();
+            assert.containsOnce($dropdown, 'li:not(.o_m2o_dropdown_option)',
+                'autocomplete should contains 1 suggestion');
+
+            // search with leading and trailing spaces
+            form.$('.o_field_many2one input').val('   first   ').trigger('keydown').trigger('keyup');
+            await testUtils.nextTick();
+            assert.containsOnce($dropdown, 'li:not(.o_m2o_dropdown_option)',
+                'autocomplete should contains 1 suggestion');
+
+            assert.verifySteps(['search: ', 'search: first', 'search: first', 'search: first']);
+
+            form.destroy();
+        });
+
         QUnit.test('many2one field with option always_reload', async function (assert) {
             assert.expect(4);
             var count = 0;
