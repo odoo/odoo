@@ -156,7 +156,7 @@ class MailGroup(http.Controller):
         return request.render('website_mail_channel.group_messages', values)
 
     @http.route([
-        '''/groups/<model('mail.channel', "[('channel_type', '=', 'channel')]"):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group[0])]"):message>''',
+        '''/groups/<model('mail.channel', "[('channel_type', '=', 'channel')]"):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group.id)]"):message>''',
     ], type='http', auth="public", website=True, sitemap=True)
     def thread_discussion(self, group, message, mode='thread', date_begin=None, date_end=None, **post):
         if group.channel_type != 'channel':
@@ -183,7 +183,7 @@ class MailGroup(http.Controller):
         return request.render('website_mail_channel.group_message', values)
 
     @http.route(
-        '''/groups/<model('mail.channel', "[('channel_type', '=', 'channel')]"):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group[0])]"):message>/get_replies''',
+        '''/groups/<model('mail.channel', "[('channel_type', '=', 'channel')]"):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group.id)]"):message>/get_replies''',
         type='json', auth="public", methods=['POST'], website=True)
     def render_messages(self, group, message, **post):
         if group.channel_type != 'channel':

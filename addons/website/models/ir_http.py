@@ -383,5 +383,7 @@ class ModelConverter(ModelConverter):
         domain = safe_eval(self.domain, (args or {}).copy())
         if dom:
             domain += dom
-        for record in Model.search_read(domain, ['display_name']):
-            yield {'loc': (record['id'], record['display_name'])}
+        for record in Model.search(domain):
+            # return record so URL will be the real endpoint URL as the record will go through `slug()`
+            # the same way as endpoint URL is retrieved during dispatch (301 redirect), see `to_url()` from ModelConverter
+            yield record

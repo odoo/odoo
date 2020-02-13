@@ -201,7 +201,7 @@ class WebsiteForum(WebsiteProfile):
         except IOError:
             return False
 
-    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False),('can_view', '=', True)]"):question>'''],
+    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum.id),('parent_id','=',False),('can_view', '=', True)]"):question>'''],
                 type='http', auth="public", website=True, sitemap=True)
     def question(self, forum, question, **post):
         if not forum.active:
