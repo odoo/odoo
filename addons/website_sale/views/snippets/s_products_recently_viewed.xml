@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_products_recently_viewed" name="eCommerce Products">
+    <section class="s_wsale_products_recently_viewed d-none pt24 pb24" style="min-height: 400px;">
+        <div class="container">
+            <div class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_non_editable_mode_hidden o_not_editable">
+                This is a preview of the recently viewed products by the user.<br/>
+                Once the user has seen at least one product this snippet will be visible.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"> × </button>
+            </div>
+
+            <h3 class="text-center mb32">Recently viewed Products</h3>
+            <div class="slider o_not_editable"/>
+        </div>
+    </section>
+</template>
+
+<template id="assets_snippet_s_products_recently_viewed_css_000" inherit_id="website_sale.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website_sale/static/src/snippets/s_products_recently_viewed/000.scss"/>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_products_recently_viewed_js_000" inherit_id="website_sale.assets_frontend">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_sale/static/src/snippets/s_products_recently_viewed/000.js"/>
+    </xpath>
+</template>
+
+</odoo>
