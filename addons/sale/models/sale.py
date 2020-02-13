@@ -75,9 +75,15 @@ class SaleOrder(models.Model):
         """
         # Ignore the status of the deposit product
         deposit_product_id = self.env['sale.advance.payment.inv']._default_product_id()
-        line_invoice_status_all = [(d['order_id'][0], d['invoice_status']) for d in self.env['sale.order.line'].read_group([('order_id', 'in', self.ids), ('product_id', '!=', deposit_product_id.id)], ['order_id', 'invoice_status'], ['order_id', 'invoice_status'], lazy=False)]
+        line_data = self.env['sale.order.line'].read_group(
+            domain=[('order_id', 'in', self.ids), ('product_id', '!=', deposit_product_id.id)],
+            fields=['order_id', 'invoice_status'],
+            groupby=['order_id', 'invoice_status'],
+            lazy=False)
+        line_invoice_status_all = [(d['order_id'][0], d['invoice_status']) for d in line_data]
         for order in self:
-            line_invoice_status = [d[1] for d in line_invoice_status_all if d[0] == order.id]
+            order_id = order.id or order._origin and order._origin.id
+            line_invoice_status = [d[1] for d in line_invoice_status_all if d[0] == order_id]
             if order.state not in ('sale', 'done'):
                 order.invoice_status = 'no'
             elif any(invoice_status == 'to invoice' for invoice_status in line_invoice_status):
