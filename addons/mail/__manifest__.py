@@ -11,6 +11,7 @@
     'data': [
         'views/mail_menus.xml',
         'wizard/invite_view.xml',
+        'wizard/mail_blacklist_remove_view.xml',
         'wizard/mail_compose_message_view.xml',
         'wizard/mail_resend_cancel_views.xml',
         'wizard/mail_resend_message_views.xml',

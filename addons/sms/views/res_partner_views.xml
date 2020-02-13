@@ -12,15 +12,27 @@
                 <field name="phone_sanitized" groups="base.group_no_one" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='phone']" position="replace">
-                <label for="phone"/>
-                <div class="o_row">
+                <field name="phone_blacklisted" invisible="1"/>
+                <field name="mobile_blacklisted" invisible="1"/>
+                <label for="phone" class="oe_inline"/>
+                <div class="o_row o_row_readonly">
+                    <button name="phone_action_blacklist_remove" class="fa fa-ban text-danger"
+                        title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+                        type="object" context="{'default_phone': phone}" groups="base.group_user"
+                        attrs="{'invisible': [('phone_blacklisted', '=', False)]}"/>
                     <field name="phone" widget="phone"/>
                 </div>
             </xpath>
             <xpath expr="//field[@name='mobile']" position="replace">
-                <label for="mobile"/>
-                <div class="o_row">
-                    <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
+                <field name="phone_blacklisted" invisible="1"/>
+                <field name="mobile_blacklisted" invisible="1"/>
+                <label for="mobile" class="oe_inline"/>
+                <div class="o_row o_row_readonly">
+                    <button name="phone_action_blacklist_remove" class="fa fa-ban text-danger"
+                        title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+                        type="object" context="{'default_phone': mobile}" groups="base.group_user"
+                        attrs="{'invisible': [('mobile_blacklisted', '=', False)]}"/>
+                    <field name="mobile" widget="phone"/>
                 </div>
             </xpath>
         </field>
