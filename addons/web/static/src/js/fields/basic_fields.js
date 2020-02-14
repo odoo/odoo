@@ -2579,6 +2579,13 @@ var JournalDashboardGraph = AbstractField.extend({
      * Called when the field is detached from the DOM.
      */
     on_detach_callback: function () {
+<<<<<<< HEAD
+=======
+        // ignore chart that have not yet been rendered
+        if (this.chart !== null) {
+            this.chart.tooltip.hidden(true);
+        }
+>>>>>>> eeb03ba6b45... temp
         this._isInDOM = false;
     },
 
