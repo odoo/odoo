@@ -55,6 +55,7 @@
         <field name="res_model">project.profitability.report</field>
         <field name="view_mode">pivot,graph</field>
         <field name="search_view_id" ref="project_profitability_report_view_search"/>
+        <field name="domain">[('is_template', '=', False)]</field>
         <field name="context">{
             'group_by_no_leaf':1,
             'group_by':[],

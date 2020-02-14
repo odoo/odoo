@@ -50,7 +50,7 @@ class Project(models.Model):
     def _compute_display_create_order(self):
         for project in self:
             show = True
-            if not project.partner_id or project.billable_type != 'no' or project.allow_billable or project.sale_order_id:
+            if not project.partner_id or project.billable_type != 'no' or project.allow_billable or project.sale_order_id or project.is_template:
                 show = False
             project.display_create_order = show
 
@@ -154,6 +154,12 @@ class Project(models.Model):
                 'default_product_id': self.timesheet_product_id.id,
             },
         }
+
+    @api.onchange('project_template_id')
+    def _copy_template(self):
+        super(Project, self)._copy_template()
+        setattr(self, 'allow_billable', getattr(self.project_template_id, 'allow_billable'))
+        setattr(self, 'timesheet_product_id', getattr(self.project_template_id, 'timesheet_product_id'))
 
 
 class ProjectTask(models.Model):

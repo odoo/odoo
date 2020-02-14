@@ -13,6 +13,7 @@ class ProfitabilityAnalysis(models.Model):
 
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', readonly=True)
     project_id = fields.Many2one('project.project', string='Project', readonly=True)
+    is_template = fields.Boolean(related="project_id.is_template")
     currency_id = fields.Many2one('res.currency', string='Project Currency', readonly=True)
     company_id = fields.Many2one('res.company', string='Project Company', readonly=True)
     user_id = fields.Many2one('res.users', string='Project Manager', readonly=True)

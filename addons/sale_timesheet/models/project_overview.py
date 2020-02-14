@@ -32,7 +32,7 @@ class Project(models.Model):
         uom_hour = self.env.ref('uom.product_uom_hour')
         hour_rounding = uom_hour.rounding
         billable_types = ['non_billable', 'non_billable_project', 'billable_time', 'billable_fixed']
-
+        self = self.search([('id', 'in', self.ids), ('is_template', '=', False)])
         values = {
             'projects': self,
             'currency': currency,
