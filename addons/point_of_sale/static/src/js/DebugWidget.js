@@ -45,7 +45,7 @@ odoo.define('point_of_sale.DebugWidget', function(require) {
             }
         }
         toggleWidget() {
-            this.state.isShown = !this.state.isShown;
+            this.state.isShow = !this.state.isShow;
         }
         setWeight() {
             var weightInKg = parse.float(this.state.weightInput);
@@ -134,7 +134,7 @@ odoo.define('point_of_sale.DebugWidget', function(require) {
             if (file) {
                 const report = this.env.pos.import_orders(await getFileAsText(file));
                 // TODO jcb: popups doesn't work yet.
-                this.props.gui.show_popup('orderimport', { report });
+                // this.props.gui.show_popup('orderimport', { report });
             }
         }
         refreshDisplay() {

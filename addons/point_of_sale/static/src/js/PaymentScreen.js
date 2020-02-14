@@ -12,7 +12,6 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
     class PaymentScreen extends PosComponent {
         constructor() {
             super(...arguments);
-            this.gui = this.props.gui;
             this.inputBuffer = '';
             this.isFirstInput = true;
             this.decimalPoint = _t.database.parameters.decimal_point;
@@ -87,14 +86,14 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 return;
             }
 
-            const newbuf = this.gui.numpad_input(this.inputBuffer, value, {
+            const newbuf = this.env.pos.gui.numpad_input(this.inputBuffer, value, {
                 firstinput: this.isFirstInput,
             });
 
             this.isFirstInput = newbuf.length === 0;
 
             // popup block inputs to prevent sneak editing.
-            if (this.gui.has_popup()) {
+            if (this.env.pos.gui.has_popup()) {
                 return;
             }
 
@@ -133,7 +132,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 value = change;
             }
 
-            this.gui.show_popup('number', {
+            this.env.pos.gui.show_popup('number', {
                 title: tip ? _t('Change Tip') : _t('Add Tip'),
                 value: this.env.pos.format_currency_no_symbol(value),
                 confirm: value => {

@@ -14,7 +14,6 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
          */
         constructor() {
             super(...arguments);
-            this.gui = this.props.gui;
             this.receiptRenderEnv = this._receiptRenderEnv();
         }
         mounted() {

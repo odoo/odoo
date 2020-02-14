@@ -323,8 +323,11 @@ var ClientScreenWidget = PosBaseWidget.extend({
 class Chrome extends PosComponent {
     constructor() {
         super(...arguments);
-        useListener('show-popup', event => this.__showPopup(event));
-        useListener('close-popup', () => this.__closePopup());
+        useListener('show-popup', this.__showPopup);
+        useListener('close-popup', this.__closePopup);
+        useListener('show-screen', this.showScreen);
+        useListener('pos-error', this.onPosError);
+        useListener('toggle-debug-widget', this.onToggleDebugWidget);
         this.$ = $;
 
         this.ready    = new $.Deferred(); // resolves when the whole GUI has been loaded
@@ -346,13 +349,11 @@ class Chrome extends PosComponent {
 
         this.pos = new models.PosModel(posModelDefaultAttributes);
         this.state = owl.useState({
-            activeScreenName: null,
             isReady: false,
-            isDebugWidgetShown: true,
+            isShowDebugWidget: true,
+            screen: this.getDefaultScreen(),
             popup: { isShow: false, name: null, component: null, props: {} },
         });
-        this.defaultScreenProps = { pos: this.pos, gui: this.gui }
-        this.additionalScreenProps = {}
         this.chrome = this; // So that chrome's childs have chrome set automatically
 
         this.logo_click_time  = 0;
@@ -362,11 +363,6 @@ class Chrome extends PosComponent {
 
         this.widget = {};   // contains references to subwidgets instances
         this.widgets = [
-            {
-                name: 'debug',
-                widget: DebugWidget,
-                append: '.pos-content',
-            },
         ];
 
         this.cleanup_dom();
@@ -400,9 +396,9 @@ class Chrome extends PosComponent {
                 await this.ready.resolve();
                 this.loading_hide();
                 this.replace_crashmanager();
-                await this.pos.push_order();
-                this.showScreen({ detail: { name: 'ProductScreen', props: { gui: this.gui } } });
                 this.state.isReady = true;
+                this.trigger('show-screen', { name: 'ProductScreen' })
+                await this.pos.push_order();
                 // await this.build_widgets();
             } catch (error) {
                 this.loading_error(error)
@@ -410,18 +406,10 @@ class Chrome extends PosComponent {
         })();
     }
 
-    get screenComponent() {
-        return this.constructor.components[this.state.activeScreenName];
-    }
-
-    get screenProps() {
-        return { ...this.defaultScreenProps, ...this.additionalScreenProps };
-    }
-
-    showScreen(event) {
-        const { name, props } = event.detail;
-        this.additionalScreenProps = props || {};
-        this.state.activeScreenName = name;
+    showScreen({ detail: { name, props } }) {
+        this.state.screen.name = name;
+        this.state.screen.component = this.constructor.components[name];
+        this.state.screen.props = props || {};
     }
 
     /**
@@ -501,31 +489,32 @@ class Chrome extends PosComponent {
     }
 
     onToggleDebugWidget() {
-        this.state.isDebugWidgetShown = !this.state.isDebugWidgetShown;
+        this.state.isShowDebugWidget = !this.state.isShowDebugWidget;
     }
 
-    click_logo() {
-        if (this.pos.debug) {
-            this.widget.debug.show();
-        } else {
-            var self  = this;
-            var time  = (new Date()).getTime();
-            var delay = 500;
-            if (this.logo_click_time + 500 < time) {
-                this.logo_click_time  = time;
-                this.logo_click_count = 1;
-            } else {
-                this.logo_click_time  = time;
-                this.logo_click_count += 1;
-                if (this.logo_click_count >= 6) {
-                    this.logo_click_count = 0;
-                    this.gui.sudo().then(function(){
-                        self.widget.debug.show();
-                    });
-                }
-            }
-        }
-    }
+    // TODO jcb: only commented for animation of toggling debug widget
+    // click_logo() {
+    //     if (this.pos.debug) {
+    //         this.widget.debug.show();
+    //     } else {
+    //         var self  = this;
+    //         var time  = (new Date()).getTime();
+    //         var delay = 500;
+    //         if (this.logo_click_time + 500 < time) {
+    //             this.logo_click_time  = time;
+    //             this.logo_click_count = 1;
+    //         } else {
+    //             this.logo_click_time  = time;
+    //             this.logo_click_count += 1;
+    //             if (this.logo_click_count >= 6) {
+    //                 this.logo_click_count = 0;
+    //                 this.gui.sudo().then(function(){
+    //                     self.widget.debug.show();
+    //                 });
+    //             }
+    //         }
+    //     }
+    // }
 
     _scrollable(element, scrolling_down){
         var $element = $(element);
@@ -647,22 +636,16 @@ class Chrome extends PosComponent {
         this.$('.loader').removeClass('oe_hidden').animate({opacity:1},150,'swing');
     }
 
-    // This method instantiates all the screens, widgets, etc.
-    async build_widgets() {
-        this.popups = {};
-        _.forEach(this.gui.popup_classes, async (classe) => {
-            if (!classe.condition || classe.condition.call(this)) {
-                var popup = new classe.widget(this,{});
-                await popup.appendTo(this.$('.popups'));
-                this.popups[classe.name] = popup;
-                this.gui.add_popup(classe.name, popup);
-            }
-        });
-    }
-
     destroy() {
         super.destroy(...arguments);
         this.pos.destroy();
+    }
+
+    getDefaultScreen() {
+        const name = 'ProductScreen';
+        const component = this.constructor.components[name];
+        const props = {};
+        return { name, component, props };
     }
 }
 

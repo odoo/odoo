@@ -4,7 +4,7 @@
     <t t-name="Chrome" owl="1">
         <div class="pos-receipt-print"></div>
 
-        <div class="pos" t-on-pos-error="onPosError" t-on-toggle-debug-widget="onToggleDebugWidget">
+        <div class="pos">
             <t t-if="state.isReady">
                 <div class="pos-topheader">
                     <div class="pos-branding">
@@ -18,7 +18,7 @@
                         <ProxyStatus t-if="env.pos.config.use_proxy" />
                         <!-- <ClientScreen t-if="env.pos.config.use_proxy" /> -->
                         <SyncNotification />
-                        <HeaderButton gui="gui" />
+                        <HeaderButton />
                     </div>
                 </div>
                 <div class="pos-content">
@@ -26,15 +26,13 @@
                         <div class="subwindow">
                             <div class="subwindow-container">
                                 <div class="subwindow-container-fix screens">
-                                    <t t-if="state.activeScreenName" t-component="screenComponent"
-                                       t-props="screenProps" t-on-show-screen="showScreen"
-                                       t-key="state.activeScreenName" />
+                                    <t t-component="state.screen.component"
+                                       t-props="state.screen.props" t-key="state.screen.name" />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <DebugWidget t-if="env.isDebug()" gui="gui"
-                                 isShown="state.isDebugWidgetShown" />
+                    <DebugWidget t-if="env.isDebug()" isShow="state.isShowDebugWidget" />
                 </div>
                 <div class="popups">
                     <t t-if="state.popup.isShow" t-component="state.popup.component"

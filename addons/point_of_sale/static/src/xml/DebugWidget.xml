@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="DebugWidget" owl="1">
-        <div class="debug-widget" t-att-class="{ oe_hidden: !props.isShown }">
+        <div class="debug-widget" t-att-class="{ oe_hidden: !props.isShow }">
             <h1>Debug Window</h1>
             <div class="toggle" t-on-click="trigger('toggle-debug-widget')" title="Dismiss"
                  role="img" aria-label="Dismiss"><i class="fa fa-times" /></div>

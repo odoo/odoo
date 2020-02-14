@@ -12,7 +12,6 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
     class ClientListScreen extends PosComponent {
         constructor() {
             super(...arguments);
-            this.gui = this.props.gui;
             this.state = {
                 query: null,
                 selectedClient: this.currentOrderClient,

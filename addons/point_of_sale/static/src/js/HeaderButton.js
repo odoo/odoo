@@ -25,7 +25,7 @@ odoo.define('point_of_sale.HeaderButton', function(require) {
                 }, 2000);
             } else {
                 clearTimeout(this.confirmed);
-                this.props.gui.close();
+                this.env.pos.gui.close();
             }
         }
     }

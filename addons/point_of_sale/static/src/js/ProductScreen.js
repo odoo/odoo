@@ -12,7 +12,6 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     class ProductScreen extends PosComponent {
         constructor() {
             super(...arguments);
-            this.gui = this.props.gui;
             this.numpadState = new NumpadState();
         }
         mounted() {
