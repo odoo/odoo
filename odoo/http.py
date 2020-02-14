@@ -304,7 +304,7 @@ class WebRequest(object):
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
            to abitrary responses. Anything returned (except None) will
-           be used as response.""" 
+           be used as response."""
         self._failed = exception # prevent tx commit
         if not isinstance(exception, NO_POSTMORTEM) \
                 and not isinstance(exception, werkzeug.exceptions.HTTPException):
@@ -589,7 +589,7 @@ class JsonRequest(WebRequest):
         self.jsonp = jsonp
         request = None
         request_id = args.get('id')
-        
+
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
             def handler():
@@ -870,6 +870,15 @@ more details.
                           until the last possible moment
         :param kw: forwarded to werkzeug's Response object
         """
+        # Adicionado pela Multidados para substituir
+        #  title: Odoo por MultiERP
+        # Modulo de Pesquisas
+        if qcontext and 'survey' in qcontext:
+            if 'title' in qcontext:
+                qcontext['title'].replace('Odoo', 'MultiERP: Pesquisa')
+            else:
+                qcontext['title'] = 'MultiERP: Pesquisa'
+
         response = Response(template=template, qcontext=qcontext, **kw)
         if not lazy:
             return response.render()
