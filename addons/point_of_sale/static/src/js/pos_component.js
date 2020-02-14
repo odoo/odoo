@@ -1,9 +1,6 @@
 odoo.define('point_of_sale.PosComponent', function(require) {
     'use strict';
 
-    const { until } = require('point_of_sale.utils');
-    const { popupsRegistry } = require('point_of_sale.popupsRegistry');
-
     class PosComponent extends owl.Component {
         /**
          * This function is available to all Components that inherits this class.
@@ -12,38 +9,23 @@ odoo.define('point_of_sale.PosComponent', function(require) {
          * demonstration:
          *
          * async getUserName() {
-         *   const userResponse = await this.showPopup('TextInputPopup', { title: 'What is your name?' });
+         *   const userResponse = await this.showPopup(
+         *     'TextInputPopup',
+         *     { title: 'What is your name?' }
+         *   );
          *   // at this point, the TextInputPopup is displayed. Depending on how the popup is defined,
          *   // say the input contains the name, the result of the interaction with the user is
          *   // saved in `userResponse`.
-         *   console.log(userResponse); // logs { agreed: true, data: <name> }
+         *   console.log(userResponse); // logs { confirmed: true, payload: <name> }
          * }
          *
          * @param {String} name Name of the popup component
          * @param {Object} props Object that will be used to render to popup
-         * @param {*} automaticResponse Optional. If provided, the return promise
-         *      immediate resolves to this value.
          */
-        async showPopup(name, props, automaticResponse = null) {
-            let popup;
-            try {
-                if (automaticResponse) {
-                    return automaticResponse;
-                } else {
-                    const popupComponent = popupsRegistry.get(name);
-                    popup = new popupComponent(this, props);
-                    popup.mount(document.getElementsByClassName('pos')[0] || document.body);
-                    await until(() => popup.responded);
-                    if (popup.agreed && popup.setupData) {
-                        await popup.setupData();
-                    }
-                    return popup.getResponse();
-                }
-            } catch (error) {
-                throw error;
-            } finally {
-                popup && popup.unmount();
-            }
+        showPopup(name, props) {
+            return new Promise(resolve => {
+                this.trigger('show-popup', { name, props, __theOneThatWaits: { resolve } });
+            });
         }
         /**
          * Returns the target object of the proxy instance created by the
@@ -59,7 +41,7 @@ odoo.define('point_of_sale.PosComponent', function(require) {
          * const stateTarget = this.getStateTarget(this.state)
          * // stateTarget is now { val: <latestVal> } and is not Proxy.
          *
-         * @param {Proxy} state state or proxy object.
+         * @param {Proxy} state state or Observer proxy object.
          */
         getStateTarget(state) {
             return this.__owl__.observer.weakMap.get(state).value;
@@ -68,7 +50,7 @@ odoo.define('point_of_sale.PosComponent', function(require) {
     PosComponent.addComponents = function(components) {
         for (let component of components) {
             if (this.components[component.name]) {
-                console.error(
+                console.warn(
                     `${component.name} already exists in ${this.name}'s components so it was skipped.`
                 );
             } else {

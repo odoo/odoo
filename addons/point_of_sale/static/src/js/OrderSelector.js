@@ -25,11 +25,11 @@ odoo.define('point_of_sale.OrderSelector', function(require) {
             if (!order) {
                 return;
             } else if (!order.is_empty()) {
-                const userAgreed = await this.showPopup('ConfirmPopup', {
+                const { confirmed } = await this.showPopup('ConfirmPopup', {
                     title: this.env._t('Destroy Current Order ?'),
                     body: this.env._t('You will lose any data associated with the current order'),
                 });
-                if (userAgreed) this.env.pos.delete_current_order();
+                if (confirmed) this.env.pos.delete_current_order();
             } else {
                 this.env.pos.delete_current_order();
             }

@@ -68,25 +68,25 @@ odoo.define('point_of_sale.DebugWidget', function(require) {
             this.env.pos.barcode_reader.scan(ean);
         }
         async deleteOrders() {
-            const userAgreed = await this.showPopup('ConfirmPopup', {
+            const { confirmed } = await this.showPopup('ConfirmPopup', {
                 title: this.env._t('Delete Paid Orders ?'),
                 body: this.env._t(
                     'This operation will permanently destroy all paid orders from the local storage. You will lose all the data. This operation cannot be undone.'
                 ),
             });
-            if (userAgreed) {
+            if (confirmed) {
                 this.env.pos.db.remove_all_orders();
                 this.env.pos.set_synch('connected', 0);
             }
         }
         async deleteUnpaidOrders() {
-            const userAgreed = await this.showPopup('ConfirmPopup', {
+            const { confirmed } = await this.showPopup('ConfirmPopup', {
                 title: this.env._t('Delete Unpaid Orders ?'),
                 body: this.env._t(
                     'This operation will destroy all unpaid orders in the browser. You will lose all the unsaved data and exit the point of sale. This operation cannot be undone.'
                 ),
             });
-            if (userAgreed) {
+            if (confirmed) {
                 this.env.pos.db.remove_all_unpaid_orders();
                 window.location = '/';
             }

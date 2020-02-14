@@ -11,11 +11,11 @@
                     <t t-esc=" props.body || ''" />
                 </main>
                 <footer class="footer">
-                    <div class="button confirm" t-on-click="okay">
-                        <t t-esc="okayText" />
+                    <div class="button confirm" t-on-click="confirm">
+                        <t t-esc="props.confirmText" />
                     </div>
                     <div class="button cancel" t-on-click="cancel">
-                        <t t-esc="cancelText" />
+                        <t t-esc="props.cancelText" />
                     </div>
                 </footer>
             </div>

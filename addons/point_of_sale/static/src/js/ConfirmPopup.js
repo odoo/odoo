@@ -1,13 +1,13 @@
 odoo.define('point_of_sale.ConfirmPopup', function(require) {
     'use strict';
 
-    const { popupsRegistry } = require('point_of_sale.popupsRegistry');
-    const { OkayCancelPopup } = require('point_of_sale.AbstractPopups');
+    const { Chrome } = require('point_of_sale.chrome');
+    const { AbstractAwaitablePopup } = require('point_of_sale.AbstractAwaitablePopup');
 
     // formerly ConfirmPopupWidget
-    class ConfirmPopup extends OkayCancelPopup {}
+    class ConfirmPopup extends AbstractAwaitablePopup {}
 
-    popupsRegistry.add(ConfirmPopup);
+    Chrome.addComponents([ConfirmPopup]);
 
     return { ConfirmPopup };
 });

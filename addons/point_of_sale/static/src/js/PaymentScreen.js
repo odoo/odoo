@@ -302,8 +302,8 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 this.showPopup('ConfirmPopup', {
                     title: _t(title),
                     body: _t(body),
-                }).then(userAgreed => {
-                    if (userAgreed) this.trigger('show-screen', { name: 'ClientListScreen' });
+                }).then(({ confirmed }) => {
+                    if (confirmed) this.trigger('show-screen', { name: 'ClientListScreen' });
                 });
 
                 return false;
@@ -327,8 +327,8 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                         this.env.pos.format_currency(this.currentOrder.get_total_with_tax()) +
                         ' ' +
                         _t('? Clicking "Confirm" will validate the payment.'),
-                }).then(userAgreed => {
-                    if (userAgreed) this.validateOrder(true);
+                }).then(({ confirmed }) => {
+                    if (confirmed) this.validateOrder(true);
                 });
                 return false;
             }

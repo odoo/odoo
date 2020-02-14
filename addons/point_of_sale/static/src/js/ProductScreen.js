@@ -48,20 +48,17 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                         packLotLinesToEdit = [];
                     }
                 }
-                const { agreed: isUserAgreed, data } = await this.showPopup('EditListPopup', {
+                const { confirmed, payload } = await this.showPopup('EditListPopup', {
                     title: this.env._t('Lot/Serial Number(s) Required'),
                     isSingleItem: isAllowOnlyOneLot,
                     array: packLotLinesToEdit,
                 });
-                if (isUserAgreed) {
-                    // Remove items with empty text.
-                    const newArray = data.array.filter(item => item.text.trim() !== '');
-
+                if (confirmed) {
                     // Segregate the old and new packlot lines
                     const modifiedPackLotLines = Object.fromEntries(
-                        newArray.filter(item => item.id).map(item => [item.id, item.text])
+                        payload.newArray.filter(item => item.id).map(item => [item.id, item.text])
                     );
-                    const newPackLotLines = newArray
+                    const newPackLotLines = payload.newArray
                         .filter(item => !item.id)
                         .map(item => ({ lot_name: item.text }));
 
@@ -75,7 +72,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             // Take the weight if necessary.
             if (product.to_weight && this.env.pos.config.iface_electronic_scale) {
                 // Show the ScaleScreen (or ScalePopup) to get the weight.
-                // const { agreed: userAgreed, data } = await this.gui.show_screen('scale', {
+                // const { confirmed: userAgreed, data } = await this.gui.show_screen('scale', {
                 //     product,
                 // });
                 // if (userAgreed) {

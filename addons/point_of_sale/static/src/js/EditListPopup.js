@@ -2,15 +2,15 @@ odoo.define('point_of_sale.EditListPopup', function(require) {
     'use strict';
 
     const { useState } = owl.hooks;
-    const { popupsRegistry } = require('point_of_sale.popupsRegistry');
-    const { InputPopup } = require('point_of_sale.AbstractPopups');
+    const { Chrome } = require('point_of_sale.chrome');
+    const { AbstractAwaitablePopup } = require('point_of_sale.AbstractAwaitablePopup');
     const { EditListInput } = require('point_of_sale.EditListInput');
 
     /**
      * Given a array of { id, text }, we show the user this popup to be able to modify this given array.
      * (used to replace PackLotLinePopupWidget)
      *
-     * The expected return of this popup when used with showPopup is an array of { _id, [id], text }.
+     * The expected return of showPopup when this popup is used is an array of { _id, [id], text }.
      *   - _id is the assigned unique identifier for each item.
      *   - id is the original id. if not provided, then it means that the item is new.
      *   - text is the modified/unmodified text.
@@ -23,13 +23,13 @@ odoo.define('point_of_sale.EditListPopup', function(require) {
      *   const names = [{ id: 1, text: 'Joseph'}, { id: 2, text: 'Kaykay' }];
      *
      *   // supply the items to the popup and wait for user's response
-     *   // when user pressed okay in the popup, the changes he made will be returned by the showPopup function.
-     *   const { agreed: isUserAgreed, data: newNames } = await this.showPopup('EditListPopup', {
-     *     title: "Are you okay with this item?",
+     *   // when user pressed `confirm` in the popup, the changes he made will be returned by the showPopup function.
+     *   const { confirmed, payload: newNames } = await this.showPopup('EditListPopup', {
+     *     title: "Can you confirm this item?",
      *     array: names })
      *
      *   // we then consume the new data. In this example, it is only logged.
-     *   if (isUserAgreed) {
+     *   if (confirmed) {
      *     console.log(newNames);
      *     // the above might log the following:
      *     // [{ _id: 1, id: 1, text: 'Joseph Caburnay' }, { _id: 2, id: 2, 'Kaykay' }, { _id: 3, 'James' }]
@@ -38,7 +38,7 @@ odoo.define('point_of_sale.EditListPopup', function(require) {
      *   }
      * ```
      */
-    class EditListPopup extends InputPopup {
+    class EditListPopup extends AbstractAwaitablePopup {
         /**
          * @param {String} title required title of popup
          * @param {Array} [props.array=[]] the array of { id, text } to be edited
@@ -82,10 +82,11 @@ odoo.define('point_of_sale.EditListPopup', function(require) {
         /**
          * @override
          */
-        async setupData() {
-            await super.setupData(...arguments);
-            this.data = {
-                array: this.getStateTarget(this.state).array,
+        getPayload() {
+            return {
+                newArray: this.getStateTarget(this.state).array.filter(
+                    item => item.text.trim() !== ''
+                ),
             };
         }
     }
@@ -95,7 +96,7 @@ odoo.define('point_of_sale.EditListPopup', function(require) {
         isSingleItem: false,
     };
 
-    popupsRegistry.add(EditListPopup);
+    Chrome.addComponents([EditListPopup]);
 
     return { EditListPopup };
 });

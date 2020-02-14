@@ -2,11 +2,11 @@ odoo.define('point_of_sale.TextInputPopup', function(require) {
     'use strict';
 
     const { useState, useRef } = owl.hooks;
-    const { popupsRegistry } = require('point_of_sale.popupsRegistry');
-    const { InputPopup } = require('point_of_sale.AbstractPopups');
+    const { Chrome } = require('point_of_sale.chrome');
+    const { AbstractAwaitablePopup } = require('point_of_sale.AbstractAwaitablePopup');
 
     // formerly TextInputPopupWidget
-    class TextInputPopup extends InputPopup {
+    class TextInputPopup extends AbstractAwaitablePopup {
         constructor() {
             super(...arguments);
             this.state = useState({ inputValue: '' });
@@ -15,13 +15,12 @@ odoo.define('point_of_sale.TextInputPopup', function(require) {
         mounted() {
             this.inputRef.el.focus();
         }
-        async setupData() {
-            await super.setupData(...arguments);
-            this.data = this.state.inputValue;
+        async getPayload() {
+            return this.state.inputValue;
         }
     }
 
-    popupsRegistry.add(TextInputPopup);
+    Chrome.addComponents([TextInputPopup]);
 
     return { TextInputPopup };
 });

@@ -17,13 +17,5 @@ odoo.define('point_of_sale.utils', function(require) {
         });
     }
 
-    function until(pred) {
-        const poll = resolve => {
-            if (pred()) resolve();
-            else setTimeout(_ => poll(resolve), 70);
-        };
-        return new Promise(poll);
-    }
-
-    return { getFileAsText, until };
+    return { getFileAsText };
 });

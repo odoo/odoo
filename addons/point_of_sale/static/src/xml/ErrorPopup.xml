@@ -11,8 +11,8 @@
                     <t t-esc="props.body || ''" />
                 </p>
                 <div class="footer">
-                    <div class="button cancel" t-on-click="okay">
-                        <t t-esc="okayText" />
+                    <div class="button cancel" t-on-click="confirm">
+                        <t t-esc="props.confirmText" />
                     </div>
                 </div>
             </div>

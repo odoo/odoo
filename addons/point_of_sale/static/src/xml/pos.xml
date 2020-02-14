@@ -36,7 +36,10 @@
                     <DebugWidget t-if="env.isDebug()" gui="gui"
                                  isShown="state.isDebugWidgetShown" />
                 </div>
-                <div id="popups" class="popups"></div>
+                <div class="popups">
+                    <t t-if="state.popup.isShow" t-component="state.popup.component"
+                       t-props="state.popup.props" t-key="state.popup.name" />
+                </div>
             </t>
 
             <div class="loader">
@@ -288,7 +291,7 @@
                                                 <li>Session ids: <b>
                                                         <t
                                                            t-esc="JSON.stringify(report.unpaid_skipped_sessions)" />
-                                                        </b></li>
+                                                    </b></li>
                                             </ul>
                                         </t>
                                     </li>
