@@ -2162,6 +2162,8 @@ class M2MProxy(X2MProxy, collections.Sequence):
 def record_to_values(fields, record):
     r = {}
     for f, descr in fields.items():
+        if f not in record:
+            continue
         v = record[f]
         if descr['type'] == 'many2one':
             assert v._name == descr['relation']
