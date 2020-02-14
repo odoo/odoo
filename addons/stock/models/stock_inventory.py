@@ -341,6 +341,7 @@ class InventoryLine(models.Model):
         required=True, readonly=True)
     product_qty = fields.Float(
         'Counted Quantity',
+        readonly=True, states={'confirm': [('readonly', False)]},
         digits='Product Unit of Measure', default=0)
     categ_id = fields.Many2one(related='product_id.categ_id', store=True)
     location_id = fields.Many2one(
