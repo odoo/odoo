@@ -711,7 +711,7 @@ class configmanager(object):
 
     def _normalize(self, path):
         if not path:
-            return path
+            return ''
         return realpath(abspath(expanduser(expandvars(path.strip()))))
 
 
