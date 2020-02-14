@@ -39,7 +39,7 @@ Cheers,
 Somebody."""
 
 
-class TestCrmCommon(MailCase, SavepointCase):
+class TestCrmCommon(SavepointCase, MailCase):
 
     @classmethod
     def setUpClass(cls):
@@ -112,9 +112,27 @@ class TestCrmCommon(MailCase, SavepointCase):
             'type': 'lead',
             'user_id': cls.user_sales_leads.id,
             'team_id': cls.sales_team_1.id,
+            'partner_id': False,
             'contact_name': 'Amy Wong',
             'email_from': 'amy.wong@test.example.com',
         })
+
+        # create an history for new team
+        cls.lead_team_1_won = cls.env['crm.lead'].create({
+            'name': 'Already Won',
+            'type': 'lead',
+            'user_id': cls.user_sales_leads.id,
+            'team_id': cls.sales_team_1.id,
+        })
+        cls.lead_team_1_won.action_set_won()
+        cls.lead_team_1_lost = cls.env['crm.lead'].create({
+            'name': 'Already Won',
+            'type': 'lead',
+            'user_id': cls.user_sales_leads.id,
+            'team_id': cls.sales_team_1.id,
+        })
+        cls.lead_team_1_lost.action_set_lost()
+        (cls.lead_team_1_won | cls.lead_team_1_lost).flush()
 
         cls.contact_company_1 = cls.env['res.partner'].create({
             'name': 'Planet Express',
@@ -148,18 +166,60 @@ class TestCrmCommon(MailCase, SavepointCase):
             'zip': '97648',
         })
 
-    def _create_duplicates(self, lead, count=2):
-        leads = self.env['crm.lead']
-        for x in range(count):
-            leads |= self.env['crm.lead'].create({
-                'name': 'Dup-%02d-%s' % (x+1, lead.name),
-                'type': 'lead',
-                'user_id': False,
+    def _create_duplicates(self, lead, create_opp=True):
+        """ Helper tool method creating, based on a given lead
+
+          * a customer (res.partner) based on lead email (to test partner finding)
+            -> FIXME: using same normalized email does not work currently, only exact email works
+          * a lead with same email_from
+          * a lead with same email_normalized (other email_from)
+          * a lead with customer but another email
+          * a lost opportunity with same email_from
+        """
+        self.customer = self.env['res.partner'].create({
+            'name': 'Lead1 Email Customer',
+            'email': lead.email_from,
+        })
+        self.lead_email_from = self.env['crm.lead'].create({
+            'name': 'Duplicate: same email_from',
+            'type': 'lead',
+            'team_id': lead.team_id.id,
+            'email_from': lead.email_from,
+        })
+        # self.lead_email_normalized = self.env['crm.lead'].create({
+        #     'name': 'Duplicate: email_normalize comparison',
+        #     'type': 'lead',
+        #     'team_id': lead.team_id.id,
+        #     'stage_id': lead.stage_id.id,
+        #     'email_from': 'CUSTOMER WITH NAME <%s>' % lead.email_normalized.upper(),
+        # })
+        self.lead_partner = self.env['crm.lead'].create({
+            'name': 'Duplicate: customer ID',
+            'type': 'lead',
+            'team_id': lead.team_id.id,
+            'partner_id': self.customer.id,
+            'email_from': 'another.email@test.example.com',
+        })
+        if create_opp:
+            self.opp_lost = self.env['crm.lead'].create({
+                'name': 'Duplicate: lost opportunity',
+                'type': 'opportunity',
                 'team_id': lead.team_id.id,
-                'contact_name': 'Duplicate %02d of %s' % (x+1, lead.contact_name),
+                'stage_id': lead.stage_id.id,
                 'email_from': lead.email_from,
             })
-        return leads
+            self.opp_lost.action_set_lost()
+        else:
+            self.opp_lost = self.env['crm.lead']
+
+        # self.assertEqual(self.lead_email_from.email_normalized, self.lead_email_normalized.email_normalized)
+        # self.assertTrue(lead.email_from != self.lead_email_normalized.email_from)
+        # self.assertFalse(self.opp_lost.active)
+
+        # new_lead = self.lead_email_from | self.lead_email_normalized | self.lead_partner | self.opp_lost
+        new_leads = self.lead_email_from | self.lead_partner | self.opp_lost
+        new_leads.flush()  # compute notably probability
+        return new_leads
 
 
 class TestLeadConvertCommon(TestCrmCommon):
@@ -280,4 +340,4 @@ class TestLeadConvertMassCommon(TestLeadConvertCommon):
         })
         for l in (cls.lead_w_partner | cls.lead_w_partner_company | cls.lead_w_contact | cls.lead_w_email | cls.lead_w_email_lost):
             l._onchange_user_id()
-            l.flush()
+        (cls.lead_w_partner | cls.lead_w_partner_company | cls.lead_w_contact | cls.lead_w_email | cls.lead_w_email_lost).flush()
