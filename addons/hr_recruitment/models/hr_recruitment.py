@@ -203,6 +203,7 @@ class Applicant(models.Model):
         stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
         return stages.browse(stage_ids)
 
+<<<<<<< HEAD
     @api.depends('job_id', 'department_id')
     def _compute_company(self):
         for applicant in self:
@@ -268,6 +269,60 @@ class Applicant(models.Model):
                 applicant.date_closed = fields.datetime.now()
             else:
                 applicant.date_closed = False
+=======
+    @api.onchange('job_id')
+    def onchange_job_id(self):
+        vals = self._onchange_job_id_internal(self.job_id.id)
+        self.department_id = vals['value']['department_id']
+        self.user_id = vals['value']['user_id']
+        self.stage_id = vals['value']['stage_id']
+
+    def _onchange_job_id_internal(self, job_id):
+        department_id = False
+        company_id = False
+        user_id = False
+        stage_id = self.stage_id.id or self._context.get('default_stage_id')
+        if job_id:
+            job = self.env['hr.job'].browse(job_id)
+            department_id = job.department_id.id
+            user_id = job.user_id.id
+            company_id = job.company_id.id
+            if not stage_id:
+                stage_ids = self.env['hr.recruitment.stage'].search([
+                    '|',
+                    ('job_id', '=', False),
+                    ('job_id', '=', job.id),
+                    ('fold', '=', False)
+                ], order='sequence asc', limit=1).ids
+                stage_id = stage_ids[0] if stage_ids else False
+
+        return {'value': {
+            'department_id': department_id,
+            'company_id': company_id,
+            'user_id': user_id,
+            'stage_id': stage_id
+        }}
+
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
+        self.partner_phone = self.partner_id.phone
+        self.partner_mobile = self.partner_id.mobile
+        self.email_from = self.partner_id.email
+
+    @api.onchange('stage_id')
+    def onchange_stage_id(self):
+        vals = self._onchange_stage_id_internal(self.stage_id.id)
+        if vals['value'].get('date_closed'):
+            self.date_closed = vals['value']['date_closed']
+
+    def _onchange_stage_id_internal(self, stage_id):
+        if not stage_id:
+            return {'value': {}}
+        stage = self.env['hr.recruitment.stage'].browse(stage_id)
+        if stage.fold:
+            return {'value': {'date_closed': fields.datetime.now()}}
+        return {'value': {'date_closed': False}}
+>>>>>>> 17714a00f53... temp
 
     @api.model
     def create(self, vals):
