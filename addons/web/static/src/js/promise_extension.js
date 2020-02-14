@@ -13,7 +13,7 @@
         return _catch.call(this, function (reason) {
             if (!reason || !(reason instanceof Error)) {
                 if (onRejected) {
-                    onRejected.call(this, reason);
+                    return onRejected.call(this, reason);
                 }
             }
             return Promise.reject(reason);
