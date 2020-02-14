@@ -262,9 +262,8 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
             'active_ids': self.lead_1.ids,
         }).create({})
         self.assertEqual(convert.partner_id, self.customer)
-        # TDE FIXME: should not give priority to partner email if it is void
-        # self.assertEqual(convert.duplicated_lead_ids, self.lead_1 | lead_email_from | lead_email_normalized | lead_partner)
-        self.assertEqual(convert.duplicated_lead_ids, self.env['crm.lead'])
+        # self.assertEqual(convert.duplicated_lead_ids, self.lead_1 | self.lead_email_from | self.lead_email_normalized | self.lead_partner | self.opp_lost)
+        self.assertEqual(convert.duplicated_lead_ids, self.lead_1 | self.lead_email_from | self.lead_partner | self.opp_lost)
 
         # Check: partner fallbacks
         self.lead_1.write({
@@ -278,9 +277,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
             'active_ids': self.lead_1.ids,
         }).create({})
         self.assertEqual(convert.partner_id, self.customer)
-        # TDE FIXME: CHECKME: 2917b38f28d5c2d6c53c706e613da7b8e2ad7b52 for lead without email
-        # self.assertEqual(convert.duplicated_lead_ids, self.lead_1 | lead_partner)
-        self.assertEqual(convert.duplicated_lead_ids, self.env['crm.lead'])
+        self.assertEqual(convert.duplicated_lead_ids, self.lead_1 | self.lead_partner)
 
     @users('user_sales_manager')
     def test_lead_merge_duplicates_flow(self):

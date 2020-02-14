@@ -916,17 +916,19 @@ class Lead(models.Model):
           (still only active leads are considered). If False, search for active
           and not won leads and opportunities;
         """
-        if not email:
+        if not email and not partner:
             return self.env['crm.lead']
-        partner_match_domain = []
-        for email in set(email_split(email) + [email]):
-            partner_match_domain.append(('email_from', '=ilike', email))
+
+        domain = []
+        for normalized_email in [tools.email_normalize(email) for email in tools.email_split(email)]:
+            domain.append(('email_normalized', '=', normalized_email))
         if partner:
-            partner_match_domain.append(('partner_id', '=', partner.id))
-        partner_match_domain = ['|'] * (len(partner_match_domain) - 1) + partner_match_domain
-        if not partner_match_domain:
+            domain.append(('partner_id', '=', partner.id))
+        domain = ['|'] * (len(domain) - 1) + domain
+
+        if not domain:
             return self.env['crm.lead']
-        domain = partner_match_domain
+
         if include_lost:
             domain += ['|', ('type', '=', 'opportunity'), ('active', '=', True)]
         else:
