@@ -5,7 +5,7 @@
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-text">
                 <header class="title">
-                    <t t-esc="props.title or ''" />
+                    <t t-esc="props.title" />
                 </header>
                 <main class="list-lines" t-on-remove-item="removeItem"
                       t-on-create-new-item="createNewItem">

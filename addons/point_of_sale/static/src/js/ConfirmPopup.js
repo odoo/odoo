@@ -6,6 +6,10 @@ odoo.define('point_of_sale.ConfirmPopup', function(require) {
 
     // formerly ConfirmPopupWidget
     class ConfirmPopup extends AbstractAwaitablePopup {}
+    ConfirmPopup.defaultProps = {
+        title: 'Confirm ?',
+        body: '',
+    }
 
     Chrome.addComponents([ConfirmPopup]);
 

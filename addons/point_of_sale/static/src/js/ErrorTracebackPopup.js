@@ -6,6 +6,10 @@ odoo.define('point_of_sale.ErrorTracebackPopup', function(require) {
 
     // formerly ErrorTracebackPopupWidget
     class ErrorTracebackPopup extends AbstractAwaitablePopup {}
+    ErrorTracebackPopup.defaultProps = {
+        title: 'Error with Traceback',
+        body: '',
+    };
 
     Chrome.addComponents([ErrorTracebackPopup]);
 

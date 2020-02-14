@@ -19,6 +19,10 @@ odoo.define('point_of_sale.TextInputPopup', function(require) {
             return this.state.inputValue;
         }
     }
+    TextInputPopup.defaultProps = {
+        title: '',
+        body: '',
+    };
 
     Chrome.addComponents([TextInputPopup]);
 

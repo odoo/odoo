@@ -5,11 +5,11 @@
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-textinput">
                 <header class="title">
-                    <t t-esc="props.title or ''" />
+                    <t t-esc="props.title" />
                 </header>
                 <div class="div">
                     <p>
-                        <t t-esc="props.body or ''" />
+                        <t t-esc="props.body" />
                     </p>
                     <input type="text" t-model="state.inputValue" t-ref="input" />
                 </div>

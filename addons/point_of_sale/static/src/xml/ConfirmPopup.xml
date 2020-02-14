@@ -5,10 +5,10 @@
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-confirm">
                 <header class="title">
-                    <t t-esc="props.title || 'Confirm ?'" />
+                    <t t-esc="props.title" />
                 </header>
                 <main class="body">
-                    <t t-esc=" props.body || ''" />
+                    <t t-esc=" props.body" />
                 </main>
                 <footer class="footer">
                     <div class="button confirm" t-on-click="confirm">

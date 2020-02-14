@@ -5,10 +5,10 @@
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-error">
                 <header class="title">
-                    <t t-esc="props.title or 'Error'" />
+                    <t t-esc="props.title" />
                 </header>
                 <main class="body traceback">
-                    <t t-esc="props.body or ''" />
+                    <t t-esc="props.body" />
                 </main>
                 <footer class="footer">
                     <div class="button cancel" t-on-click="confirm">
