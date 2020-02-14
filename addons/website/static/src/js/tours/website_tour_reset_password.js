@@ -86,8 +86,6 @@ tour.register('website_reset_password', {
         content: "check page has an iframe",
         trigger: 'iframe body',
         run: function () {
-            var content = $('iframe').contents()[0];
-            console.log(content && new XMLSerializer().serializeToString(content));
         },
     },
     {
