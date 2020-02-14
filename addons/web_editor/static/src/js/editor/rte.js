@@ -439,7 +439,7 @@ var RTEWidget = Widget.extend({
 
         $('.o_editable')
             .destroy()
-            .removeClass('o_editable o_is_inline_editable');
+            .removeClass('o_editable o_is_inline_editable o_editable_date_field_linked o_editable_date_field_format_changed');
 
         var $dirty = $('.o_dirty');
         $dirty
@@ -507,6 +507,17 @@ var RTEWidget = Widget.extend({
      * @param {jQuery} $editable
      */
     _enableEditableArea: function ($editable) {
+        if ($editable.data('oe-type') === "datetime" || $editable.data('oe-type') === "date") {
+            var selector = '[data-oe-id="' + $editable.data('oe-id') + '"]';
+            selector += '[data-oe-field="' + $editable.data('oe-field') + '"]';
+            selector += '[data-oe-model="' + $editable.data('oe-model') + '"]';
+            var $linkedFieldNodes = this.editable().find(selector).addBack(selector);
+            $linkedFieldNodes.not($editable).addClass('o_editable_date_field_linked');
+            if (!$editable.hasClass('o_editable_date_field_format_changed')) {
+                $linkedFieldNodes.html($editable.data('oe-original-with-format'));
+                $linkedFieldNodes.addClass('o_editable_date_field_format_changed');
+            }
+        }
         if ($editable.data('oe-type') === "monetary") {
             $editable.attr('contenteditable', false);
             $editable.find('.oe_currency_value').attr('contenteditable', true);
@@ -613,6 +624,9 @@ var RTEWidget = Widget.extend({
         var $target = $(ev.target);
         var $editable = $target.closest('.o_editable');
 
+        if (this && this.$last && this.$last.length && this.$last[0] !== $target[0]) {
+            $('.o_editable_date_field_linked').removeClass('o_editable_date_field_linked');
+        }
         if (!$editable.length || $.summernote.core.dom.isContentEditableFalse($target)) {
             return;
         }
@@ -656,6 +670,7 @@ var RTEWidget = Widget.extend({
             }, 150); // setTimeout to remove flickering when change to editable zone (re-create an editor)
             this.$last = null;
         }
+
         if ($editable.length && (!this.$last || this.$last[0] !== $editable[0])) {
             $editable.summernote(this._getConfig($editable));
 
