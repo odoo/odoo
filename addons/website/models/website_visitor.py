@@ -248,7 +248,7 @@ class WebsiteVisitor(models.Model):
         """ We need to do this part here to avoid concurrent updates error. """
         try:
             with self.env.cr.savepoint():
-                query_lock = "SELECT * FROM website_visitor where id = %s FOR UPDATE NOWAIT"
+                query_lock = "SELECT * FROM website_visitor where id = %s FOR NO KEY UPDATE NOWAIT"
                 self.env.cr.execute(query_lock, (self.id,), log_exceptions=False)
 
                 date_now = datetime.now()
