@@ -221,6 +221,7 @@ class Applicant(models.Model):
 
     def _onchange_job_id_internal(self, job_id):
         department_id = False
+        company_id = False
         user_id = False
         stage_id = self.stage_id.id or self._context.get('default_stage_id')
         if job_id:
