@@ -41,6 +41,30 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
+    @api.onchange('product_uom_qty')
+    def _onchange_product_uom_qty(self):
+        if self._origin:
+            product_uom_qty_origin = self._origin.read(["product_uom_qty"])[0]["product_uom_qty"]
+        else:
+            product_uom_qty_origin = 0
+
+        if self.state == 'sale' and self.product_id.type in ['product', 'consu'] and self.product_uom_qty < product_uom_qty_origin:
+            mo = self.env['mrp.production']
+            move = self.move_ids
+            while move:
+                if move.production_id:
+                    mo = move.production_id
+                    break
+                move = move.move_orig_ids
+            if mo and mo.state in ['done', 'to_close', 'progress', 'cancel', 'planned']:
+                warning_mess = {
+                    'title': _('Ordered quantity decreased!'),
+                    'message': _('You are decreasing the ordered quantity while the production order for this product is already running or finished.'),
+                }
+                return {'warning': warning_mess}
+            else:
+                return super()._onchange_product_uom_qty()
+
     @api.depends('product_uom_qty', 'qty_delivered', 'product_id', 'state')
     def _compute_qty_to_deliver(self):
         """The inventory widget should now be visible in more cases if the product is consumable."""
