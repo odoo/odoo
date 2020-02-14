@@ -140,8 +140,14 @@ class StockMove(models.Model):
     move_line_ids = fields.One2many('stock.move.line', 'move_id')
     move_line_nosuggest_ids = fields.One2many('stock.move.line', 'move_id', domain=[('product_qty', '=', 0.0)])
     origin_returned_move_id = fields.Many2one(
+<<<<<<< HEAD
         'stock.move', 'Origin return move', copy=False, index=True,
         help='Move that created the return move', check_company=True)
+=======
+        'stock.move', 'Origin return move',
+        copy=False, index=True,
+        help='Move that created the return move')
+>>>>>>> e6d331ddaa1... temp
     returned_move_ids = fields.One2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move')
     reserved_availability = fields.Float(
         'Quantity Reserved', compute='_compute_reserved_availability',
