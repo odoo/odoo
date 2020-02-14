@@ -40,7 +40,7 @@
     <record id="group_account_manager" model="res.groups">
         <field name="name">Billing Administrator</field>
         <field name="category_id" ref="base.module_category_accounting_accounting"/>
-        <field name="implied_ids" eval="[(4, ref('group_account_invoice'))]"/>
+        <field name="implied_ids" eval="[(4, ref('group_account_invoice')),(4, ref('base.group_private_addresses'))]"/>
     </record>
 
     <record id="base.user_admin" model="res.users">
