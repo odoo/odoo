@@ -196,9 +196,9 @@ class MailTemplate(models.Model):
                     report_service = report.report_name
 
                     if report.report_type in ['qweb-html', 'qweb-pdf']:
-                        result, format = report.render_qweb_pdf([res_id])
+                        result, format = report._render_qweb_pdf([res_id])
                     else:
-                        res = report.render([res_id])
+                        res = report._render([res_id])
                         if not res:
                             raise UserError(_('Unsupported report type %s found.') % report.report_type)
                         result, format = res
@@ -267,7 +267,7 @@ class MailTemplate(models.Model):
                     'company': 'company_id' in record and record['company_id'] or self.env.company,
                     'record': record,
                 }
-                body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
+                body = template._render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
                 values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
         mail = self.env['mail.mail'].sudo().create(values)
 

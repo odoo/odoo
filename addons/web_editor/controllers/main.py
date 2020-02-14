@@ -476,4 +476,4 @@ class Web_Editor(http.Controller):
         if request.env.user._is_public() \
                 and xmlid in request.env['web_editor.assets']._get_public_asset_xmlids():
             View = View.sudo()
-        return View.render_template(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
+        return View._render_template(xmlid, {k: values[k] for k in values if k in trusted_value_keys})

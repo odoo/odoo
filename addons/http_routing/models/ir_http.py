@@ -601,7 +601,7 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _get_error_html(cls, env, code, values):
-        return code, env['ir.ui.view'].render_template('http_routing.%s' % code, values)
+        return code, env['ir.ui.view']._render_template('http_routing.%s' % code, values)
 
     @classmethod
     def _handle_exception(cls, exception):
@@ -658,6 +658,6 @@ class IrHttp(models.AbstractModel):
             try:
                 code, html = cls._get_error_html(env, code, values)
             except Exception:
-                code, html = 418, env['ir.ui.view'].render_template('http_routing.http_error', values)
+                code, html = 418, env['ir.ui.view']._render_template('http_routing.http_error', values)
 
         return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')

@@ -35,7 +35,7 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, re
     if not report_id:
         raise Exception("Required report does not exist: %s" % rname)
 
-    res_data, res_format = report_id.render(ids, data=data)
+    res_data, res_format = report_id._render(ids, data=data)
 
     if not res_data:
         raise ValueError("Report %s produced an empty result!" % rname)

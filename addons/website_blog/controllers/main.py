@@ -299,4 +299,4 @@ class WebsiteBlog(http.Controller):
         if domain:
             dom = expression.AND([dom, domain])
         posts = request.env['blog.post'].search(dom, limit=limit, order=order)
-        return request.website.viewref(template).render({'posts': posts})
+        return request.website.viewref(template)._render({'posts': posts})

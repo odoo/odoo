@@ -1491,6 +1491,9 @@ actual arch.
 
     @api.model
     def read_template(self, xml_id):
+        """ Return a template content based on external id
+        Read access on ir.ui.view required
+        """
         return self._read_template(self.get_view_id(xml_id))
 
     @api.model
@@ -1599,16 +1602,23 @@ actual arch.
         return '%s.%s' % (xmlid['module'], xmlid['name'])
 
     @api.model
-    def render_template(self, template, values=None, engine='ir.qweb'):
-        return self.browse(self.get_view_id(template)).render(values, engine)
+    def render_public_asset(self, template, values=None):
+        if template not in PUBLIC_ASSETS:
+            _logger.warning("Add the external id %s in global variable PUBLC_ASSSETS to make the arch accessible in RPC", template)
+            raise ValidationError(_("Asset %s not accessible") % template)
+        template = self.browse(self.get_view_id(template))
+        return template.sudo()._render(values, engine="ir.qweb")
 
-    def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
+    def _render_template(self, template, values=None, engine='ir.qweb'):
+        return self.browse(self.get_view_id(template))._render(values, engine)
+
+    def _render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
         assert isinstance(self.id, int)
 
         qcontext = dict() if minimal_qcontext else self._prepare_qcontext()
         qcontext.update(values or {})
 
-        return self.env[engine].render(self.id, qcontext)
+        return self.env[engine]._render(self.id, qcontext)
 
     @api.model
     def _prepare_qcontext(self):

@@ -45,7 +45,7 @@ class Rating(http.Controller):
         }
         rating.write({'rating': rate, 'consumed': True})
         lang = rating.partner_id.lang or get_lang(request.env).code
-        return request.env['ir.ui.view'].with_context(lang=lang).render_template('rating.rating_external_page_submit', {
+        return request.env['ir.ui.view'].with_context(lang=lang)._render_template('rating.rating_external_page_submit', {
             'rating': rating, 'token': token,
             'rate_names': rate_names, 'rate': rate
         })
@@ -60,7 +60,7 @@ class Rating(http.Controller):
         record_sudo = request.env[rating.res_model].sudo().browse(rating.res_id)
         record_sudo.rating_apply(rate, token=token, feedback=kwargs.get('feedback'))
         lang = rating.partner_id.lang or get_lang(request.env).code
-        return request.env['ir.ui.view'].with_context(lang=lang).render_template('rating.rating_external_page_view', {
+        return request.env['ir.ui.view'].with_context(lang=lang)._render_template('rating.rating_external_page_view', {
             'web_base_url': request.env['ir.config_parameter'].sudo().get_param('web.base.url'),
             'rating': rating,
         })

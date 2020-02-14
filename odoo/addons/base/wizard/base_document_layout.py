@@ -64,7 +64,7 @@ class BaseDocumentLayout(models.TransientModel):
         for wizard in self:
             if wizard.report_layout_id:
                 ir_qweb = wizard.env['ir.qweb']
-                wizard.preview = ir_qweb.render('base.layout_preview', {'company': wizard})
+                wizard.preview = ir_qweb._render('base.layout_preview', {'company': wizard})
             else:
                 wizard.preview = False
 

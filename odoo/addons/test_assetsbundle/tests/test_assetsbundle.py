@@ -471,7 +471,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         self.assertEqual(len(css_bundle), 1)
 
     def test_20_exteral_lib_assets(self):
-        html = self.env['ir.ui.view'].render_template('test_assetsbundle.template2')
+        html = self.env['ir.ui.view']._render_template('test_assetsbundle.template2')
         attachments = self.env['ir.attachment'].search([('url', '=like', '/web/content/%-%/test_assetsbundle.bundle4.%')])
         self.assertEqual(len(attachments), 2)
         self.assertEqual(html.strip(), ("""<!DOCTYPE html>
@@ -490,7 +490,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 </html>""" % {"js": attachments[0].url, "css": attachments[1].url}).encode('utf8'))
 
     def test_21_exteral_lib_assets_debug_mode(self):
-        html = self.env['ir.ui.view'].render_template('test_assetsbundle.template2', {"debug": "assets"})
+        html = self.env['ir.ui.view']._render_template('test_assetsbundle.template2', {"debug": "assets"})
         attachments = self.env['ir.attachment'].search([('url', '=like', '/web/content/%-%/test_assetsbundle.bundle4.%')])
         self.assertEqual(len(attachments), 0)
         self.assertEqual(html.strip(), ("""<!DOCTYPE html>

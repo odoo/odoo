@@ -32,7 +32,7 @@ class TestQweb(TransactionCaseWithUserDemo):
 
         demo_env = self.env(user=demo)
 
-        html = demo_env['ir.qweb'].render('website.test_template', {"user": demo}, website_id= website.id)
+        html = demo_env['ir.qweb']._render('website.test_template', {"user": demo}, website_id= website.id)
         html = html.strip().decode('utf8')
         html = re.sub(r'\?unique=[^"]+', '', html).encode('utf8')
 
