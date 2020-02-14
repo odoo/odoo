@@ -24,7 +24,7 @@ class Lead2OpportunityPartner(models.TransientModel):
             result['lead_id'] = lead.id
 
             partner = lead._find_matching_partner()
-            email = lead.partner_id.email if lead.partner_id else lead.email_from
+            email = lead.partner_id.email if lead.partner_id.email else lead.email_from
 
             tomerge.update(self.env['crm.lead']._get_lead_duplicates(partner, email, include_lost=True).ids)
 
