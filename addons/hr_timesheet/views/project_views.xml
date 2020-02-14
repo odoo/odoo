@@ -39,44 +39,32 @@
             <field name="priority">24</field>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
-                    <button class="oe_stat_button" name="%(act_hr_timesheet_line_by_project)d" type="action" icon="fa-calendar" string="Timesheets" attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <button class="oe_stat_button" name="%(act_hr_timesheet_line_by_project)d" type="action" icon="fa-calendar" string="Timesheets" attrs="{'invisible': ['|', ('allow_timesheets', '=', False), ('is_template', '=', True)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </div>
-                <xpath expr="//div[@id='rating_settings']/.." position="before">
-                    <div class="row mt16 o_settings_container">
-                        <div class="col-lg-6 o_setting_box"  id="timesheet_settings">
-                            <div class="o_setting_left_pane">
-                                <field name="allow_timesheets"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="allow_timesheets" string="Timesheets"/>
-                                <div class="text-muted">
-                                    Log time on tasks
-                                </div>
+                <div id="rating_settings" position="before">
+                    <div class="col-lg-6 o_setting_box"  id="timesheet_settings">
+                        <div class="o_setting_left_pane">
+                            <field name="allow_timesheets"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="allow_timesheets" string="Timesheets"/>
+                            <div class="text-muted">
+                                Log time on tasks
                             </div>
                         </div>
                     </div>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="project_view_form_inherit" model="ir.ui.view">
-            <field name="name">project.view.form.inherit</field>
-            <field name="model">project.project</field>
-            <field name="inherit_id" ref="hr_timesheet.project_invoice_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//div[@id='timesheet_settings']" position="after">
-                        <div class="col-lg-6 o_setting_box"  attrs="{'invisible': [('allow_timesheets', '=', False)]}">
-                            <div class="o_setting_left_pane">
-                                <field name="allow_timesheet_timer"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="allow_timesheet_timer"/>
-                                <div class="text-muted">
-                                    Track your time using a timer
-                                </div>
+                    <div class="col-lg-6 o_setting_box" id="timesheet_timer_settings">
+                        <div class="o_setting_left_pane" attrs="{'invisible': [('allow_timesheets', '=', False)]}">
+                            <field name="allow_timesheet_timer"/>
+                        </div>
+                        <div class="o_setting_right_pane" attrs="{'invisible': [('allow_timesheets', '=', False)]}">
+                            <label for="allow_timesheet_timer"/>
+                            <div class="text-muted">
+                                Track your time using a timer
                             </div>
                         </div>
-                </xpath>
+                    </div>
+                </div>
             </field>
         </record>
 
@@ -120,7 +108,7 @@
                                 You can not log timesheets on this project since is linked to an inactive analytic account. Please change it, or reactivate the current one to timesheet on the project.
                             </div>
                         </group>
-                    <field name="timesheet_ids" mode="tree,kanban" attrs="{'invisible': [('analytic_account_active', '=', False)]}" context="{'default_project_id': project_id, 'default_name':''}">
+                    <field name="timesheet_ids" mode="tree,kanban" attrs="{'invisible': ['|', ('is_template', '=', True), ('analytic_account_active', '=', False)]}" context="{'default_project_id': project_id, 'default_name':''}">
                         <tree editable="bottom" string="Timesheet Activities" default_order="date">
                             <field name="date"/>
                             <field name="user_id" invisible="1"/>
@@ -176,7 +164,7 @@
                             </sheet>
                         </form>
                     </field>
-                    <group attrs="{'invisible': [('analytic_account_active', '=', False)]}">
+                    <group attrs="{'invisible': ['|', ('is_template', '=', True), ('analytic_account_active', '=', False)]}">
                         <group class="oe_subtotal_footer oe_right" name="project_hours">
                             <field name="effective_hours" widget="float_time" />
                             <button name="action_view_subtask_timesheet" string="Sub-tasks Hours Spent:" type="object" class="oe_inline oe_link pl-0" attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}"/>

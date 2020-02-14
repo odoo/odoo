@@ -74,6 +74,12 @@ class Project(models.Model):
             })
         return result
 
+    @api.onchange('project_template_id')
+    def _copy_template(self):
+        super(Project, self)._copy_template()
+        setattr(self, 'allow_timesheets', getattr(self.project_template_id, 'allow_timesheets'))
+        setattr(self, 'allow_timesheet_timer', getattr(self.project_template_id, 'allow_timesheet_timer'))
+
     @api.model
     def _init_data_analytic_account(self):
         self.search([('analytic_account_id', '=', False), ('allow_timesheets', '=', True)])._create_analytic_account()
@@ -104,7 +110,7 @@ class Task(models.Model):
         for task in self:
             displays = super()._compute_display_timer_buttons()
             start_p, start_s, stop, pause, resume = displays['start_p'], displays['start_p'], displays['stop'], displays['pause'], displays['resume']
-            if not task.display_timesheet_timer:
+            if not task.display_timesheet_timer or task.is_template:
                 start_p, start_s, stop, pause, resume = False, False, False, False, False
             else:
                 if not task.timer_start:

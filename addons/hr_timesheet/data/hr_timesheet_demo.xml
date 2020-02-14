@@ -16,6 +16,18 @@
         <field name="parent_id" ref="hr.employee_admin"/>
     </record>
 
+    <!-- Templates -->
+        <record id="project_template_3" model="project.project">
+            <field name="date_start" eval="time.strftime('%Y-%m-01 10:00:00')"/>
+            <field name="name">Legal consultancy template</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="type_ids" eval="[(4, ref('project.project_stage_0')), (4, ref('project.project_stage_1')), (4, ref('project.project_stage_2')), (4, ref('project.project_stage_3'))]"/>
+            <field name="partner_id" ref="base.partner_demo_portal"/>
+            <field name="is_template">True</field>
+            <field name="allow_timesheets">True</field>
+            <field name="privacy_visibility">portal</field>
+        </record>
+
     <!-- Projects -->
     <record id="account_analytic_account_project_1" model="account.analytic.account">
         <field name="name">Office Design</field>

@@ -22,7 +22,7 @@ class AccountAnalyticLine(models.Model):
         return result
 
     def _domain_project_id(self):
-        domain = [('allow_timesheets', '=', True)]
+        domain = [('allow_timesheets', '=', True), ('is_template', '=', False)]
         if not self.user_has_groups('hr_timesheet.group_timesheet_manager'):
             return expression.AND([domain,
                 ['|', ('privacy_visibility', '!=', 'followers'), ('allowed_internal_user_ids', 'in', self.env.user.ids)]
@@ -41,7 +41,7 @@ class AccountAnalyticLine(models.Model):
 
     task_id = fields.Many2one(
         'project.task', 'Task', index=True,
-        domain="[('company_id', '=', company_id), ('project_id.allow_timesheets', '=', True), ('project_id', '=?', project_id)]"
+        domain="[('company_id', '=', company_id), ('project_id.allow_timesheets', '=', True), ('project_id', '=?', project_id), ('is_template', '=', False)]"
     )
     project_id = fields.Many2one('project.project', 'Project', domain=_domain_project_id)
 
@@ -58,6 +58,7 @@ class AccountAnalyticLine(models.Model):
 
     @api.onchange('project_id')
     def onchange_project_id(self):
+        # force domain on task when project is set
         if self.project_id and self.project_id != self.task_id.project_id:
             # reset task when changing project
             self.task_id = False
