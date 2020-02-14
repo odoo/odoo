@@ -195,6 +195,12 @@
 
 .o_editable {
     &:not(:empty), &[data-oe-type] {
+        &[data-oe-type="datetime"], &[data-oe-type="date"] {
+            &.o_editable_date_field_linked {
+                box-shadow: $o-brand-odoo 0 0 5px 2px inset;
+                background-color: ligthen($o-brand-odoo, 20%);
+            }
+        }
         &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):hover {
             box-shadow: $o-brand-odoo 0 0 5px 2px inset;
         }

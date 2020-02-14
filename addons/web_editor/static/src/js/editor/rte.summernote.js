@@ -890,6 +890,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
     var $node = oLayoutInfo.editor();
     if ($node.data('oe-model') || $node.data('oe-translation-id')) {
         $node.on('content_changed', function () {
+            // RDERDE
             var $nodes = $('[data-oe-model], [data-oe-translation-id]')
                 .filter(function () { return this !== $node[0];});
 
@@ -922,6 +923,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
 
             if (!clone_data) {
                 clone_data = true;
+                // RDERDE 
                 $nodes.html(this.innerHTML);
                 clone_data = false;
             }

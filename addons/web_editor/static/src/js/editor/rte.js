@@ -456,7 +456,8 @@ var RTEWidget = Widget.extend({
 
         $('.o_editable')
             .destroy()
-            .removeClass('o_editable o_is_inline_editable');
+            .removeClass('o_editable o_is_inline_editable o_editable_date_field_linked o_editable_date_field_format_changed');
+            // TODO needed in cancel too?
 
         var $dirty = $('.o_dirty');
         $dirty
@@ -524,6 +525,14 @@ var RTEWidget = Widget.extend({
      * @param {jQuery} $editable
      */
     _enableEditableArea: function ($editable) {
+        if ($editable.data('oe-type') === "datetime" || $editable.data('oe-type') === "date") {
+            if (!$editable.hasClass('o_editable_date_field_format_changed')) {
+                $editable.html($editable.data('oe-original-with-format'));
+            }
+            // TODO: search only editable area, not whole doc with `$()`
+            var $linkedFieldNodes = $('[data-oe-id="' + $editable.data('oe-id') + '"][data-oe-field="' + $editable.data('oe-field') + '"][data-oe-model="' + $editable.data('oe-model') + '"]');
+            $linkedFieldNodes.addClass('o_editable_date_field_linked o_editable_date_field_format_changed');
+        }
         if ($editable.data('oe-type') === "monetary") {
             $editable.attr('contenteditable', false);
             $editable.find('.oe_currency_value').attr('contenteditable', true);
@@ -633,6 +642,7 @@ var RTEWidget = Widget.extend({
         var $target = $(ev.target);
         var $editable = $target.closest('.o_editable');
 
+        $('.o_editable_date_field_linked').removeClass('o_editable_date_field_linked');
         if (!$editable.length || $.summernote.core.dom.isContentEditableFalse($target)) {
             return;
         }

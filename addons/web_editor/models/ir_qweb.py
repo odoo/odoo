@@ -9,6 +9,7 @@ Also, adds methods to convert values back to Odoo models.
 """
 
 import ast
+import babel
 import base64
 import io
 import itertools
@@ -28,7 +29,7 @@ from werkzeug import urls
 import odoo.modules
 
 from odoo import api, models, fields
-from odoo.tools import ustr, pycompat
+from odoo.tools import ustr, posix_to_ldml, pycompat
 from odoo.tools import html_escape as escape
 from odoo.addons.base.models import ir_qweb
 
@@ -230,6 +231,13 @@ class DateTime(models.AbstractModel):
                 value = fields.Datetime.context_timestamp(self, timestamp=value)
                 value = fields.Datetime.to_string(value)
             attrs['data-oe-original'] = value
+
+            # TODO: same for `ir.qweb.field.date`
+            lg = self.env['res.lang']._lang_get(self.env.user.lang)
+            locale = babel.Locale.parse(lg.code)
+            format = posix_to_ldml('%s %s' % (lg.date_format, lg.time_format), locale=locale)
+            value_format = pycompat.to_text(babel.dates.format_datetime(record[field_name], format=format, locale=locale))
+            attrs['data-oe-original-with-format'] = value_format
         return attrs
 
     @api.model
@@ -239,8 +247,8 @@ class DateTime(models.AbstractModel):
             return False
 
         # parse from string to datetime
-        date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format + ' %H:%M'
-        dt = datetime.strptime(value, date_format)
+        lg = self.env['res.lang']._lang_get(self.env.user.lang)
+        dt = datetime.strptime(value, '%s %s' % (lg.date_format, lg.time_format))
 
         # convert back from user's timezone to UTC
         tz_name = self.env.context.get('tz') or self.env.user.tz
