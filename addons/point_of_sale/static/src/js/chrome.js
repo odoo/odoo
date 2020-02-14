@@ -492,30 +492,6 @@ class Chrome extends PosComponent {
         this.state.isShowDebugWidget = !this.state.isShowDebugWidget;
     }
 
-    // TODO jcb: only commented for animation of toggling debug widget
-    // click_logo() {
-    //     if (this.pos.debug) {
-    //         this.widget.debug.show();
-    //     } else {
-    //         var self  = this;
-    //         var time  = (new Date()).getTime();
-    //         var delay = 500;
-    //         if (this.logo_click_time + 500 < time) {
-    //             this.logo_click_time  = time;
-    //             this.logo_click_count = 1;
-    //         } else {
-    //             this.logo_click_time  = time;
-    //             this.logo_click_count += 1;
-    //             if (this.logo_click_count >= 6) {
-    //                 this.logo_click_count = 0;
-    //                 this.gui.sudo().then(function(){
-    //                     self.widget.debug.show();
-    //                 });
-    //             }
-    //         }
-    //     }
-    // }
-
     _scrollable(element, scrolling_down){
         var $element = $(element);
         var scrollable = true;

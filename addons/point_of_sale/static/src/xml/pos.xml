@@ -32,7 +32,7 @@
                             </div>
                         </div>
                     </div>
-                    <DebugWidget t-if="env.isDebug()" isShow="state.isShowDebugWidget" />
+                    <DebugWidget t-if="env.isDebug() and state.isShowDebugWidget" t-transition="fade" />
                 </div>
                 <div class="popups">
                     <t t-if="state.popup.isShow" t-component="state.popup.component"
