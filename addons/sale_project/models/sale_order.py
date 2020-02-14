@@ -178,7 +178,9 @@ class SaleOrderLine(models.Model):
         }
         if self.product_id.project_template_id:
             values['name'] = "%s - %s" % (values['name'], self.product_id.project_template_id.name)
-            project = self.product_id.project_template_id.copy(values)
+            values['partner_id'] = self.order_id.partner_id.id
+            values['project_template_id'] = self.product_id.project_template_id.id
+            project = self.product_id.project_template_id.create(values)
             project.tasks.write({
                 'sale_line_id': self.id,
                 'partner_id': self.order_id.partner_id.id,
