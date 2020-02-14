@@ -76,13 +76,20 @@ class Http(models.AbstractModel):
 
     @api.model
     def get_frontend_session_info(self):
-        return {
+        session_info = {
             'is_admin': request.session.uid and self.env.user._is_admin() or False,
             'is_system': request.session.uid and self.env.user._is_system() or False,
             'is_website_user': request.session.uid and self.env.user._is_public() or False,
             'user_id': request.session.uid and self.env.user.id or False,
             'is_frontend': True,
         }
+        if request.session.uid:
+            version_info = odoo.service.common.exp_version()
+            session_info.update({
+                'server_version': version_info.get('server_version'),
+                'server_version_info': version_info.get('server_version_info')
+            })
+        return session_info
 
     def get_currencies(self):
         Currency = request.env['res.currency']
