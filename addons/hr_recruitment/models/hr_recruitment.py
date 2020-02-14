@@ -301,12 +301,16 @@ class Applicant(models.Model):
             vals['date_open'] = fields.Datetime.now()
         if 'stage_id' in vals:
             vals.update(self._onchange_stage_id_internal(vals.get('stage_id'))['value'])
+        if vals.get('email_from'):
+            vals['email_from'] = vals['email_from'].strip()
         return super(Applicant, self).create(vals)
 
     def write(self, vals):
         # user_id change: update date_open
         if vals.get('user_id'):
             vals['date_open'] = fields.Datetime.now()
+        if vals.get('email_from'):
+            vals['email_from'] = vals['email_from'].strip()
         # stage_id: track last stage before update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.Datetime.now()
