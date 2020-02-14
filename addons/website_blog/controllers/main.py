@@ -69,7 +69,7 @@ class WebsiteBlog(http.Controller):
 
         active_tag_ids = tags and [unslug(tag)[1] for tag in tags.split(',')] or []
         if active_tag_ids:
-            fixed_tag_slug = ",".join(slug(t) for t in request.env['blog.tag'].browse(active_tag_ids))
+            fixed_tag_slug = ",".join(slug(t) for t in request.env['blog.tag'].browse(active_tag_ids).exists())
             if fixed_tag_slug != tags:
                 new_url = request.httprequest.full_path.replace("/tag/%s" % tags, "/tag/%s" % fixed_tag_slug, 1)
                 if new_url != request.httprequest.full_path:  # check that really replaced and avoid loop
