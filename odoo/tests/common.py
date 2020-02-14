@@ -16,6 +16,7 @@ import os
 import platform
 import re
 import requests
+import resource
 import shutil
 import signal
 import socket
@@ -478,6 +479,7 @@ class ChromeBrowser():
         self.user_data_dir = tempfile.mkdtemp(suffix='_chrome_odoo')
         self.chrome_process = None
         self.screencast_frames = []
+        self.sigxcpu_handler = None
         self._chrome_start()
         self._find_websocket()
         self._logger.info('Websocket url found: %s', self.ws_url)
@@ -486,7 +488,6 @@ class ChromeBrowser():
         self._websocket_send('Runtime.enable')
         self._logger.info('Chrome headless enable page notifications')
         self._websocket_send('Page.enable')
-        self.sigxcpu_handler = None
         if os.name == 'posix':
             self.sigxcpu_handler = signal.getsignal(signal.SIGXCPU)
             signal.signal(signal.SIGXCPU, self.signal_handler)
@@ -548,7 +549,6 @@ class ChromeBrowser():
 
         switches = {
             '--headless': '',
-            '--enable-logging': 'stderr',
             '--no-default-browser-check': '',
             '--no-first-run': '',
             '--disable-extensions': '',
@@ -558,17 +558,25 @@ class ChromeBrowser():
             '--remote-debugging-address': HOST,
             '--remote-debugging-port': str(self.devtools_port),
             '--no-sandbox': '',
+            '--disable-crash-reporter': '',
+            '--disable-gpu': '',
         }
         cmd = [self.executable]
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]
         url = 'about:blank'
         cmd.append(url)
+        if os.name == 'posix' and platform.system() != 'Darwin':
+            # prevent chrome crash because of huge memory reservation for V8
+            soft_limit, hard_limit = resource.getrlimit(resource.RLIMIT_AS)
+            resource.setrlimit(resource.RLIMIT_AS, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
         self._logger.info('chrome_run executing %s', ' '.join(cmd))
         try:
             self.chrome_process = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         except OSError:
             raise unittest.SkipTest("%s not found" % cmd[0])
         self._logger.info('Chrome pid: %s', self.chrome_process.pid)
+        if os.name == 'posix' and platform.system() != 'Darwin':
+            resource.setrlimit(resource.RLIMIT_AS, (soft_limit, hard_limit))
 
     def _find_websocket(self):
         version = self._json_command('version')
@@ -622,6 +630,8 @@ class ChromeBrowser():
         """
         send chrome devtools protocol commands through websocket
         """
+        if self.ws is None:
+            return
         sent_id = self.request_id
         payload = {
             'method': method,
