@@ -318,22 +318,22 @@ class Survey(http.Controller):
 
         survey_content = False
         if answer_sudo.state == 'done':
-            survey_content = request.env.ref('survey.survey_fill_form_done').render(survey_data)
+            survey_content = request.env.ref('survey.survey_fill_form_done')._render(survey_data)
         else:
-            survey_content = request.env.ref('survey.survey_fill_form_in_progress').render(survey_data)
+            survey_content = request.env.ref('survey.survey_fill_form_in_progress')._render(survey_data)
 
         survey_progress = False
         if answer_sudo.state == 'in_progress' and not survey_data.get('question', request.env['survey.question']).is_page:
             if survey_sudo.questions_layout == 'page_per_section':
                 page_ids = survey_sudo.page_ids.ids
-                survey_progress = request.env.ref('survey.survey_progression').render({
+                survey_progress = request.env.ref('survey.survey_progression')._render({
                     'survey': survey_sudo,
                     'page_ids': page_ids,
                     'page_number': page_ids.index(survey_data['page'].id) + (1 if survey_sudo.progression_mode == 'number' else 0)
                 })
             elif survey_sudo.questions_layout == 'page_per_question':
                 page_ids = survey_sudo.question_ids.ids
-                survey_progress = request.env.ref('survey.survey_progression').render({
+                survey_progress = request.env.ref('survey.survey_progression')._render({
                     'survey': survey_sudo,
                     'page_ids': page_ids,
                     'page_number': page_ids.index(survey_data['question'].id)
@@ -342,7 +342,7 @@ class Survey(http.Controller):
         return {
             'survey_content': survey_content,
             'survey_progress': survey_progress,
-            'survey_navigation': request.env.ref('survey.survey_navigation').render(survey_data),
+            'survey_navigation': request.env.ref('survey.survey_navigation')._render(survey_data),
         }
 
     @http.route('/survey/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
@@ -629,7 +629,7 @@ class Survey(http.Controller):
         return request.render('survey.survey_page_statistics', template_values)
 
     def _generate_report(self, user_input, download=True):
-        report = request.env.ref('survey.certification_report').sudo().render_qweb_pdf([user_input.id], data={'report_type': 'pdf'})[0]
+        report = request.env.ref('survey.certification_report').sudo()._render_qweb_pdf([user_input.id], data={'report_type': 'pdf'})[0]
 
         report_content_disposition = content_disposition('Certification.pdf')
         if not download:

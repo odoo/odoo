@@ -14,7 +14,7 @@ class WebsiteSaleVariantController(VariantController):
         kw.pop('pricelist_id')
         res = self.get_combination_info(product_template_id, product_id, combination, add_qty, request.website.get_current_pricelist(), **kw)
 
-        carousel_view = request.env['ir.ui.view'].render_template('website_sale.shop_product_carousel',
+        carousel_view = request.env['ir.ui.view']._render_template('website_sale.shop_product_carousel',
             values={
                 'product': request.env['product.template'].browse(res['product_template_id']),
                 'product_variant': request.env['product.product'].browse(res['product_id']),

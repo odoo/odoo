@@ -36,10 +36,10 @@ class MailTemplate(models.Model):
                     isr_report_name = 'ISR-' + inv_print_name + '.pdf'
                     qr_report_name = 'QR-bill-' + inv_print_name + '.pdf'
 
-                    isr_pdf = self.env.ref('l10n_ch.l10n_ch_isr_report').render_qweb_pdf(record.ids)[0]
+                    isr_pdf = self.env.ref('l10n_ch.l10n_ch_isr_report')._render_qweb_pdf(record.ids)[0]
                     isr_pdf = base64.b64encode(isr_pdf)
 
-                    qr_pdf = self.env.ref('l10n_ch.l10n_ch_qr_report').render_qweb_pdf(record.ids)[0]
+                    qr_pdf = self.env.ref('l10n_ch.l10n_ch_qr_report')._render_qweb_pdf(record.ids)[0]
                     qr_pdf = base64.b64encode(qr_pdf)
 
                     new_attachments = [(isr_report_name, isr_pdf), (qr_report_name, qr_pdf)]

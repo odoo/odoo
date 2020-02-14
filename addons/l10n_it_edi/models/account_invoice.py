@@ -233,7 +233,7 @@ class AccountMove(models.Model):
         else:
             document_type = 'TD0X'
 
-        pdf = self.env.ref('account.account_invoices').render_qweb_pdf(self.id)[0]
+        pdf = self.env.ref('account.account_invoices')._render_qweb_pdf(self.id)[0]
         pdf = base64.b64encode(pdf)
         pdf_name = re.sub(r'\W+', '', self.name) + '.pdf'
 
@@ -254,7 +254,7 @@ class AccountMove(models.Model):
             'pdf': pdf,
             'pdf_name': pdf_name,
         }
-        content = self.env.ref('l10n_it_edi.account_invoice_it_FatturaPA_export').render(template_values)
+        content = self.env.ref('l10n_it_edi.account_invoice_it_FatturaPA_export')._render(template_values)
         return content
 
     def send_pec_mail(self):

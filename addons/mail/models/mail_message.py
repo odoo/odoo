@@ -935,7 +935,7 @@ class Message(models.Model):
             MailThread.message_notify(
                 partner_ids=moderator.partner_id.ids,
                 subject=_('Message are pending moderation'),  # tocheck: target language
-                body=template.render({'record': moderator.partner_id}, engine='ir.qweb', minimal_qcontext=True),
+                body=template._render({'record': moderator.partner_id}, engine='ir.qweb', minimal_qcontext=True),
                 email_from=moderator.company_id.catchall_formatted or moderator.company_id.email_formatted,
             )
 

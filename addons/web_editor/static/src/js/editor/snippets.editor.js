@@ -1034,7 +1034,7 @@ var SnippetsMenu = Widget.extend({
         }
         this._defLoadSnippets = this._rpc({
             model: 'ir.ui.view',
-            method: 'render_template',
+            method: 'render_public_asset',
             args: [this.options.snippets, {}],
             kwargs: {
                 context: this.options.context,

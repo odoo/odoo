@@ -98,7 +98,7 @@ MockServer.include({
             if (args.method === 'read_template' && args.args[0] === "web_editor.colorpicker") {
                 return COLOR_PICKER_TEMPLATE;
             }
-            if (args.method === 'render_template' && args.args[0] === "web_editor.snippets") {
+            if (args.method === 'render_public_asset' && args.args[0] === "web_editor.snippets") {
                 return SNIPPETS_TEMPLATE;
             }
         }

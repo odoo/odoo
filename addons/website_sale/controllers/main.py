@@ -466,12 +466,12 @@ class WebsiteSale(http.Controller):
         if not display:
             return value
 
-        value['website_sale.cart_lines'] = request.env['ir.ui.view'].render_template("website_sale.cart_lines", {
+        value['website_sale.cart_lines'] = request.env['ir.ui.view']._render_template("website_sale.cart_lines", {
             'website_sale_order': order,
             'date': fields.Date.today(),
             'suggested_products': order._cart_accessories()
         })
-        value['website_sale.short_cart_summary'] = request.env['ir.ui.view'].render_template("website_sale.short_cart_summary", {
+        value['website_sale.short_cart_summary'] = request.env['ir.ui.view']._render_template("website_sale.short_cart_summary", {
             'website_sale_order': order,
         })
         return value
@@ -960,7 +960,7 @@ class WebsiteSale(http.Controller):
 
         return {
             'recall': order.get_portal_last_transaction().state == 'pending',
-            'message': request.env['ir.ui.view'].render_template("website_sale.payment_confirmation_status", {
+            'message': request.env['ir.ui.view']._render_template("website_sale.payment_confirmation_status", {
                 'order': order
             })
         }
@@ -1025,7 +1025,7 @@ class WebsiteSale(http.Controller):
     def print_saleorder(self, **kwargs):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
-            pdf, _ = request.env.ref('sale.action_report_saleorder').sudo().render_qweb_pdf([sale_order_id])
+            pdf, _ = request.env.ref('sale.action_report_saleorder').sudo()._render_qweb_pdf([sale_order_id])
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         else:
@@ -1243,7 +1243,7 @@ class WebsiteSale(http.Controller):
                     res_product.update(combination_info)
                     res_product['price'] = FieldMonetary.value_to_html(res_product['price'], monetary_options)
                     if rating:
-                        res_product['rating'] = request.env["ir.ui.view"].render_template('portal_rating.rating_widget_stars_static', values={
+                        res_product['rating'] = request.env["ir.ui.view"]._render_template('portal_rating.rating_widget_stars_static', values={
                             'rating_avg': product.rating_avg,
                             'rating_count': product.rating_count,
                         })

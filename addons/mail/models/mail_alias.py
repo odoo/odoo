@@ -182,7 +182,7 @@ Only allowed people can contact us at this address.""" % message_dict.get('to'))
         else:
             body = self._get_alias_bounced_body_fallback(message_dict)
         template = self.env.ref('mail.mail_bounce_alias_security', raise_if_not_found=True)
-        return template.render({
+        return template._render({
             'body': body,
             'message': message_dict
         }, engine='ir.qweb', minimal_qcontext=True)

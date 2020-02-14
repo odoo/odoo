@@ -681,7 +681,7 @@ class Contact(models.AbstractModel):
             'object': value,
             'options': options
         }
-        return self.env['ir.qweb'].render('base.contact', val, **options.get('template_options', dict()))
+        return self.env['ir.qweb']._render('base.contact', val, **options.get('template_options', dict()))
 
 
 class QwebView(models.AbstractModel):
@@ -700,4 +700,4 @@ class QwebView(models.AbstractModel):
             _logger.warning("%s.%s must be a 'ir.ui.view' model." % (record, field_name))
             return None
 
-        return pycompat.to_text(view.render(options.get('values', {}), engine='ir.qweb'))
+        return pycompat.to_text(view._render(options.get('values', {}), engine='ir.qweb'))

@@ -258,7 +258,7 @@ class WebsiteEventController(http.Controller):
                 "date": self.get_formated_date(event),
                 "event": event,
                 "url": event.website_url})
-        return request.env['ir.ui.view'].render_template("website_event.country_events_list", result)
+        return request.env['ir.ui.view']._render_template("website_event.country_events_list", result)
 
     def _process_tickets_form(self, event, form_details):
         """ Process posted data about ticket order. Generic ticket are supported
@@ -302,7 +302,7 @@ class WebsiteEventController(http.Controller):
                 availability_check = False
         if not tickets:
             return False
-        return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details", {'tickets': tickets, 'event': event, 'availability_check': availability_check})
+        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", {'tickets': tickets, 'event': event, 'availability_check': availability_check})
 
     def _process_attendees_form(self, event, form_details):
         """ Process data posted from the attendee details form.

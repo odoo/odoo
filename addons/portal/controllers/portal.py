@@ -371,7 +371,7 @@ class CustomerPortal(Controller):
         if not isinstance(report_sudo, type(request.env['ir.actions.report'])):
             raise UserError(_("%s is not the reference of a report") % report_ref)
 
-        method_name = 'render_qweb_%s' % (report_type)
+        method_name = '_render_qweb_%s' % (report_type)
         report = getattr(report_sudo, method_name)([model.id], data={'report_type': report_type})[0]
         reporthttpheaders = [
             ('Content-Type', 'application/pdf' if report_type == 'pdf' else 'text/html'),

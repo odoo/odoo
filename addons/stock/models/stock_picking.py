@@ -1163,7 +1163,7 @@ class Picking(models.Model):
                 'moves_information': rendering_context.values(),
                 'impacted_pickings': impacted_pickings,
             }
-            return self.env.ref('stock.exception_on_picking').render(values=values)
+            return self.env.ref('stock.exception_on_picking')._render(values=values)
 
         documents = self._log_activity_get_documents(moves, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
         documents = self._less_quantities_than_expected_add_documents(moves, documents)
@@ -1329,7 +1329,7 @@ class Picking(models.Model):
     def _attach_sign(self):
         """ Render the delivery report in pdf and attach it to the picking in `self`. """
         self.ensure_one()
-        report = self.env.ref('stock.action_report_delivery').render_qweb_pdf(self.id)
+        report = self.env.ref('stock.action_report_delivery')._render_qweb_pdf(self.id)
         filename = "%s_signed_delivery_slip" % self.name
         if self.partner_id:
             message = _('Order signed by %s') % (self.partner_id.name)

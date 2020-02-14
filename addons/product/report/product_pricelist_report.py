@@ -22,7 +22,7 @@ class report_product_pricelist(models.AbstractModel):
             self.env.context.get('pricelist_id'),
             self.env.context.get('quantities') or [1]
         )
-        return self.env.ref('product.report_pricelist_page').render(render_values)
+        return self.env.ref('product.report_pricelist_page')._render(render_values)
 
     def _get_report_data(self, active_model, active_ids, pricelist_id, quantities, report_type='html'):
         products = []

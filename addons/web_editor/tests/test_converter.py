@@ -129,7 +129,7 @@ class TestConvertBack(common.TransactionCase):
         field_value = 'record.%s' % field
         e.set('t-field', field_value)
 
-        rendered = self.env['ir.qweb'].render(t, {'record': record})
+        rendered = self.env['ir.qweb']._render(t, {'record': record})
 
         element = html.fromstring(rendered, parser=html.HTMLParser(encoding='utf-8'))
         model = 'ir.qweb.field.' + element.get('data-oe-type', '')
@@ -197,7 +197,7 @@ class TestConvertBack(common.TransactionCase):
         field_value = 'record.%s' % field
         e.set('t-field', field_value)
 
-        rendered = self.env['ir.qweb'].render(t, {'record': record})
+        rendered = self.env['ir.qweb']._render(t, {'record': record})
         element = html.fromstring(rendered, parser=html.HTMLParser(encoding='utf-8'))
 
         # emulate edition
