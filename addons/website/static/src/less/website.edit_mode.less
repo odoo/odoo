@@ -21,7 +21,8 @@
 
 .o_editable {
     &:not(:empty), &[data-oe-type] {
-        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):hover {
+        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):hover,
+        &.o_editable_date_field_linked {
             box-shadow: @odoo-brand-primary 0 0 5px 2px inset;
         }
     }
