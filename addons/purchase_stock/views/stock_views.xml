@@ -25,11 +25,4 @@
             </field>
         </record>
 
-        <record id="purchase_open_picking" model="ir.actions.act_window">
-            <field name="name">Receptions</field>
-            <field name="res_model">stock.picking</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('purchase_id', '=', active_id)]</field>
-        </record>
-
 </odoo>
