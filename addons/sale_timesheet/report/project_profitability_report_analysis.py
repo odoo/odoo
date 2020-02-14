@@ -107,7 +107,7 @@ class ProfitabilityAnalysis(models.Model):
                                 0.0 AS timesheet_unit_amount,
                                 0.0 AS timesheet_cost,
                                 CASE
-                                  WHEN AAL.product_id != (CAST((SELECT value FROM ir_config_parameter WHERE key='sale.default_deposit_product_id') as INT))
+                                  WHEN AAL.product_id != CAST((COALESCE((SELECT value FROM ir_config_parameter WHERE key='sale.default_deposit_product_id'), '-1')) as INT)
                                   THEN (SUM(AAL.amount))
                                   ELSE 0.0
                                 END AS expense_cost,
