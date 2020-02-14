@@ -38,7 +38,7 @@
         'data/project_mail_template_data.xml',
         'data/project_data.xml',
     ],
-    'demo': ['data/project_demo.xml'],
+    'demo': ['data/project_demo.xml', 'data/template_demo.xml'],
     'test': [
     ],
     'installable': True,

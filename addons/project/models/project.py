@@ -93,6 +93,16 @@ class Project(models.Model):
         result = dict((data['project_id'][0], data['project_id_count']) for data in task_data)
         for project in self:
             project.task_count = result.get(project.id, 0)
+    
+    def _compute_project_count(self):
+        if self.is_template == False:
+            self.project_count = 0
+        else:
+            project_data = self.env['project.project'].read_group([('project_template_id', 'in', self.ids)], ['project_template_id'], ['project_template_id'])
+            print(project_data)
+            result = dict((data['project_template_id'][0], data['project_template_id_count']) for data in project_data)
+            for project in self:
+                project.project_count = result.get(project.id, 0)
 
     def attachment_tree_view(self):
         attachment_action = self.env.ref('base.action_attachment')
@@ -164,6 +174,7 @@ class Project(models.Model):
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
     sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of Projects.")
     partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    project_template_id = fields.Many2one('project.project', string='Project Template', domain="[('is_template', '=', True)]", context="{'default_is_template': True}", copy=False)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", string="Currency", readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
@@ -186,6 +197,7 @@ class Project(models.Model):
         help="Timetable working hours to adjust the gantt diagram report")
     type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages')
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count")
+    project_count = fields.Integer(compute='_compute_project_count', string='Project Count')
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks',
                                domain=['|', ('stage_id.fold', '=', False), ('stage_id', '=', False)])
     color = fields.Integer(string='Color Index')
@@ -204,8 +216,10 @@ class Project(models.Model):
                 "- Invited employees: employees may only see the followed project and tasks.\n"
                 "- All employees: employees may see all project and tasks.\n"
                 "- Portal users and all employees: employees may see everything."
-                "   Portal users may see project and tasks followed by.\n"
-                "   them or by someone of their company.")
+                "   Portal users may see project and tasks followed by\n"
+                "   them or by someone of their company.\n"
+                " If this project is a template, the visibility selected here will be applied to all projects created from this "
+                "  and not to the template.")
 
     allowed_user_ids = fields.Many2many('res.users', compute='_compute_allowed_users', inverse='_inverse_allowed_user')
     allowed_internal_user_ids = fields.Many2many('res.users', 'project_allowed_internal_users_rel',
@@ -215,7 +229,7 @@ class Project(models.Model):
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, tracking=True)
     subtask_project_id = fields.Many2one('project.project', string='Sub-task Project', ondelete="restrict",
-        help="Project in which sub-tasks of the current project will be created. It can be the current project itself.")
+        help="Project in which sub-tasks of the current project will be created. It can be the current project itself.", domain=[('is_template', '=', False)])
     allow_subtasks = fields.Boolean('Sub-tasks', compute='_compute_allow_subtasks')
 
     # rating fields
@@ -234,6 +248,8 @@ class Project(models.Model):
     ], 'Rating Frequency')
 
     portal_show_rating = fields.Boolean('Rating visible publicly', copy=False)
+    
+    is_template = fields.Boolean('Is a template', copy=False, help='Make this project a template for others')
 
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
@@ -316,6 +332,15 @@ class Project(models.Model):
             self.map_tasks(project.id)
         return project
 
+    @api.onchange('project_template_id')
+    def _copy_template(self):
+        if self.project_template_id:
+            fields = ['partner_id', 'company_id', 'currency_id', 'type_ids', 'label_tasks', 
+                      'resource_calendar_id', 'color', 'user_id', 
+                      'privacy_visibility', 'display_name']
+            for field in fields:
+                setattr(self, field, getattr(self.project_template_id, field))
+
     @api.model
     def create(self, vals):
         # Prevent double project creation
@@ -323,8 +348,11 @@ class Project(models.Model):
         project = super(Project, self).create(vals)
         if not vals.get('subtask_project_id'):
             project.subtask_project_id = project.id
-        if project.privacy_visibility == 'portal' and project.partner_id.user_ids:
+        if project.privacy_visibility == 'portal' and project.partner_id.user_ids and not project.is_template:
             project.allowed_user_ids |= project.partner_id.user_ids
+        if project.project_template_id:
+            project._copy_template()
+            project.project_template_id.map_tasks(project.id)
         return project
 
     def write(self, vals):
@@ -525,6 +553,7 @@ class Task(models.Model):
     project_id = fields.Many2one('project.project', string='Project',
         compute='_compute_project_id', store=True, readonly=False,
         index=True, tracking=True, check_company=True, change_default=True)
+    is_template = fields.Boolean(string='Is a template', related='project_id.is_template', readonly=True)
     planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.',tracking=True)
     subtask_planned_hours = fields.Float("Subtasks", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
     user_id = fields.Many2one('res.users',
@@ -551,9 +580,9 @@ class Task(models.Model):
     legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True, related_sudo=False)
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True, related_sudo=False)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True, related_sudo=False)
-    parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
+    parent_id = fields.Many2one('project.task', string='Parent Task', index=True, domain="[('is_template', '=', False)]")
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", context={'active_test': False})
-    subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project', readonly=True)
+    subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project', readonly=True, domain=[('is_template', '=', False)])
     allow_subtasks = fields.Boolean('project.project', related="project_id.allow_subtasks", readonly=True)
     subtask_count = fields.Integer("Sub-task count", compute='_compute_subtask_count')
     email_from = fields.Char(string='Email', help="These people will receive email.", index=True,

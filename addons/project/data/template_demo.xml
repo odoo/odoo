@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Creation of the projects based on a template -->
+        <function model="project.project" name="create" eval="[{'name': 'Employee On Boarding','project_template_id': ref('project.project_template_1')}]" />
+    </data>
+</odoo>
