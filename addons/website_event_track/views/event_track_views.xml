@@ -63,7 +63,7 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar date_start="date" date_delay="duration" string="Event Tracks" color="location_id" event_limit="5">
-                    <field name="location_id"/>
+                    <field name="location_id" filters="1"/>
                     <field name="event_id"/>
                     <field name="partner_id" avatar_field="image_128"/>
                     <field name="user_id" avatar_field="image_128"/>
@@ -99,7 +99,7 @@
                         <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
                         <filter string="Date" name="date" context="{'group_by': 'date'}"/>
                         <filter string="Event" name="event" context="{'group_by': 'event_id'}"/>
-                        <filter string="Room" name="location" context="{'group_by': 'location_id'}"/>
+                        <filter string="Location" name="location" context="{'group_by': 'location_id'}"/>
                     </group>
                 </search>
             </field>
@@ -118,8 +118,9 @@
                             <field name="website_url" invisible="1"/>
                             <field name="is_published" widget="website_redirect_button"/>
                         </div>
-                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                        <field name="kanban_state" widget="state_selection"/>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="kanban_state" widget="state_selection" class="ml-3"/>
+                        <field name="image" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
@@ -201,7 +202,7 @@
                 <p class="o_view_nocontent_smiling_face">
                   Add a new track
                 </p><p>
-                  Tracks define the schedule of your event. These can be a talk, a round table, a meeting, etc.
+                  Tracks define the schedule of your event.<br/>These can be a talk, a round table, a meeting, etc.
                 </p>
             </field>
         </record>
@@ -215,14 +216,14 @@
               <p class="o_view_nocontent_smiling_face">
                 Add a new track
               </p><p>
-                Tracks define the schedule of your event. These can be a talk, a round table, a meeting, etc.
+                Tracks define the schedule of your event.<br/>These can be a talk, a round table, a meeting, etc.
               </p>
             </field>
         </record>
 
         <menuitem
             id="menu_event_track"
-            name="Event Tracks"
+            name="Tracks"
             action="action_event_track"
             parent="event.event_main_menu"
             groups="base.group_no_one"/>
@@ -232,7 +233,7 @@
             <field name="name">Event Locations</field>
             <field name="model">event.track.location</field>
             <field name="arch" type="xml">
-                <form string="Event Location">
+                <form string="Event Locations">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -262,75 +263,6 @@
             name="Locations"
             action="action_event_track_location"
             parent="event.menu_event_configuration"/>
-
-        <!-- EVENTS/CONFIGURATION/EVENT Sponsor Types -->
-        <record model="ir.ui.view" id="view_event_sponsor_type_form">
-            <field name="name">Sponsor Types</field>
-            <field name="model">event.sponsor.type</field>
-            <field name="arch" type="xml">
-                <form string="Event Sponsor Types">
-                    <sheet>
-                        <group>
-                            <field name="sequence"/>
-                            <field name="name"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_event_sponsor_type_tree">
-            <field name="name">Sponsor Types</field>
-            <field name="model">event.sponsor.type</field>
-            <field name="arch" type="xml">
-                <tree string="Event Sponsor Type" editable="bottom">
-                    <field name="sequence" widget="handle"/>
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.actions.act_window" id="action_event_sponsor_type">
-            <field name="name">Sponsor Types</field>
-            <field name="res_model">event.sponsor.type</field>
-        </record>
-
-        <menuitem
-            id="menu_event_sponsor_type"
-            action="action_event_sponsor_type"
-            parent="event.menu_event_configuration"
-            groups="base.group_no_one"/>
-
-        <!-- EVENT.SPONSOR VIEWS -->
-        <record model="ir.ui.view" id="view_event_sponsor_tree">
-            <field name="name">event.sponsor.tree</field>
-            <field name="model">event.sponsor</field>
-            <field name="arch" type="xml">
-                <tree editable="bottom">
-                    <field name="partner_id"/>
-                    <field name="url"/>
-                    <field name="sponsor_type_id"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_event_sponsor_search">
-            <field name="name">event.sponsor.search</field>
-            <field name="model">event.sponsor</field>
-            <field name="arch" type="xml">
-                <search string="Event Sponsors">
-                    <field name="partner_id"/>
-                    <field name="event_id"/>
-                </search>
-            </field>
-        </record>
-
-        <record model="ir.actions.act_window" id="action_event_sponsor_from_event">
-            <field name="name">Event Tracks</field>
-            <field name="res_model">event.sponsor</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
-        </record>
 
         <!-- EVENTS/CONFIGURATION/EVENT Tags -->
         <record model="ir.ui.view" id="view_event_track_tag_form">

@@ -2259,31 +2259,27 @@ var BasicModel = AbstractModel.extend({
      *   context.
      * @param {Object} modifiers
      * @returns {Object}
+     * @throws {Error} if one of the modifier domains is invalid
      */
     _evalModifiers: function (element, modifiers) {
-        var result = {};
-        var self = this;
-        var evalContext;
-        function evalModifier(mod) {
+        let evalContext = null;
+        const evaluated = {};
+        for (const k of ['invisible', 'column_invisible', 'readonly', 'required']) {
+            const mod = modifiers[k];
             if (mod === undefined || mod === false || mod === true) {
-                return !!mod;
+                if (k in modifiers) {
+                    evaluated[k] = !!mod;
+                }
+                continue;
             }
-            evalContext = evalContext || self._getEvalContext(element);
-            return new Domain(mod, evalContext).compute(evalContext);
+            try {
+                evalContext = evalContext || this._getEvalContext(element);
+                evaluated[k] = new Domain(mod, evalContext).compute(evalContext);
+            } catch (e) {
+                throw new Error(_.str.sprintf('for modifier "%s": %s', k, e.message));
+            }
         }
-        if ('invisible' in modifiers) {
-            result.invisible = evalModifier(modifiers.invisible);
-        }
-        if ('column_invisible' in modifiers) {
-            result.column_invisible = evalModifier(modifiers.column_invisible);
-        }
-        if ('readonly' in modifiers) {
-            result.readonly = evalModifier(modifiers.readonly);
-        }
-        if ('required' in modifiers) {
-            result.required = evalModifier(modifiers.required);
-        }
-        return result;
+        return evaluated;
     },
     /**
      * Fetch all name_gets for the many2ones in a group
@@ -3705,6 +3701,8 @@ var BasicModel = AbstractModel.extend({
      * its root parent) of the given dataPoint is a model in 'noCacheModels'.
      *
      * Reloads the currencies if the main model is 'res.currency'.
+     * Reloads the webclient if we modify a res.company, to (un)activate the
+     * multi-company environment.
      *
      * @private
      * @param {Object} dataPoint
@@ -3715,6 +3713,9 @@ var BasicModel = AbstractModel.extend({
         }
         if (dataPoint.model === 'res.currency') {
             session.reloadCurrencies();
+        }
+        if (dataPoint.model === 'res.company') {
+            this.do_action('reload_context');
         }
         if (_.contains(this.noCacheModels, dataPoint.model)) {
             core.bus.trigger('clear_cache');

@@ -27,6 +27,7 @@ class TestEventWebsite(TestEventWebsiteHelper):
             'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
             'registration_ids': [(0, 0, {
                 'partner_id': self.user_eventuser.partner_id.id,
+                'name': 'test_reg',
             })],
             'website_menu': True,
         })

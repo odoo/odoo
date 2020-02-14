@@ -363,7 +363,8 @@ class Picking(models.Model):
     is_locked = fields.Boolean(default=True, help='When the picking is not done this allows changing the '
                                'initial demand. When the picking is done this allows '
                                'changing the done quantities.')
-    product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id', readonly=False)
+    # Used to search on pickings
+    product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id', readonly=True)
     show_operations = fields.Boolean(compute='_compute_show_operations')
     show_reserved = fields.Boolean(related='picking_type_id.show_reserved')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
@@ -836,7 +837,7 @@ class Picking(models.Model):
             if pickings_without_moves:
                 raise UserError(_('Please add some items to move.'))
             if pickings_without_quantities:
-                raise UserError(_('You cannot validate a transfer if no quantites are reserved nor done. To force the transfer, switch in edit mode and encode the done quantities.'))
+                raise UserError(_('You cannot validate a transfer if no quantities are reserved nor done. To force the transfer, switch in edit mode and encode the done quantities.'))
             if pickings_without_lots:
                 raise UserError(_('You need to supply a Lot/Serial number for products %s.') % ', '.join(products_without_lots.mapped('display_name')))
         else:
@@ -844,7 +845,7 @@ class Picking(models.Model):
             if pickings_without_moves:
                 message += _('Transfers %s: Please add some items to move.') % ', '.join(pickings_without_moves.mapped('name'))
             if pickings_without_quantities:
-                message += _('\n\nTransfers %s: You cannot validate these transfers if no quantites are reserved nor done. To force these transfers, switch in edit more and encode the done quantities.') % ', '.join(pickings_without_quantities.mapped('name'))
+                message += _('\n\nTransfers %s: You cannot validate these transfers if no quantities are reserved nor done. To force these transfers, switch in edit more and encode the done quantities.') % ', '.join(pickings_without_quantities.mapped('name'))
             if pickings_without_lots:
                 message += _('\n\nTransfers %s: You need to supply a Lot/Serial number for products %s.') % (', '.join(pickings_without_lots.mapped('name')), ', '.join(products_without_lots.mapped('display_name')))
             if message:

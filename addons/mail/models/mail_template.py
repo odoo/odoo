@@ -101,9 +101,6 @@ class MailTemplate(models.Model):
                             "that provides the appropriate language, e.g. "
                             "${object.partner_id.lang}.",
                        placeholder="${object.partner_id.lang}")
-    user_signature = fields.Boolean('Add Signature',
-                                    help="If checked, the user's signature will be appended to the text version "
-                                         "of the message")
     subject = fields.Char('Subject', translate=True, help="Subject (placeholders may be used here)")
     email_from = fields.Char('From',
                              help="Sender address (placeholders may be used here). If not set, the default "
@@ -357,11 +354,6 @@ class MailTemplate(models.Model):
             # update values for all res_ids
             for res_id in template_res_ids:
                 values = results[res_id]
-                # body: add user signature, sanitize
-                if 'body_html' in fields and template.user_signature:
-                    signature = self.env.user.signature
-                    if signature:
-                        values['body_html'] = tools.append_content_to_html(values['body_html'], signature, plaintext=False)
                 if values.get('body_html'):
                     values['body'] = tools.html_sanitize(values['body_html'])
                 # technical settings

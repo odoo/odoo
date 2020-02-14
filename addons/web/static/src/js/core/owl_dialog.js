@@ -1,11 +1,9 @@
-odoo.define('web.OwlDialog', function (require) {
+odoo.define('web.OwlDialog', function () {
     "use strict";
-
-    const { useExternalListener } = require('web.custom_hooks');
 
     const { Component, hooks, misc } = owl;
     const { Portal } = misc;
-    const { useRef } = hooks;
+    const { useExternalListener, useRef } = hooks;
     const SIZE_CLASSES = {
         'extra-large': 'modal-xl',
         'large': 'modal-lg',
@@ -189,20 +187,18 @@ odoo.define('web.OwlDialog', function (require) {
          * @param {(LegacyDialog|OwlDialog)} dialog
          */
         static display(dialog) {
-            // Deactivate previous dialog
-            const activeDialogEl = document.querySelector('.modal.o_active_modal');
-            if (activeDialogEl) {
-                activeDialogEl.classList.remove('o_active_modal');
+            const activeDialog = this.displayed[this.displayed.length - 1];
+            if (activeDialog) {
+                // Deactivate previous dialog
+                const activeDialogEl = activeDialog instanceof this ?
+                    // Owl dialog
+                    activeDialog.modalRef.el :
+                    // Legacy dialog
+                    activeDialog.$modal[0];
+                activeDialogEl.classList.add('o_inactive_modal');
             }
             // Push dialog
             this.displayed.push(dialog);
-            // Add active class
-            const modalEl = dialog instanceof this ?
-                // Owl dialog
-                dialog.modalRef.el :
-                // Legacy dialog
-                dialog.$modal[0];
-            modalEl.classList.add('o_active_modal');
             // Update body class
             document.body.classList.add('modal-open');
         }
@@ -224,7 +220,7 @@ odoo.define('web.OwlDialog', function (require) {
                     lastDialog.modalRef.el :
                     // Legacy dialog
                     lastDialog.$modal[0];
-                modalEl.classList.add('o_active_modal');
+                modalEl.classList.remove('o_inactive_modal');
             } else {
                 document.body.classList.remove('modal-open');
             }

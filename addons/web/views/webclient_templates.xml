@@ -298,6 +298,8 @@
         <script type="text/javascript" src="/web/static/src/js/fields/relational_fields.js"></script>
         <script type="text/javascript" src="/web/static/src/js/fields/special_fields.js"></script>
         <script type="text/javascript" src="/web/static/src/js/fields/upgrade_fields.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/field_wrapper.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/abstract_field_owl.js"></script>
 
         <script type="text/javascript" src="/web/static/src/js/views/abstract_view.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/abstract_renderer.js"></script>
@@ -593,6 +595,10 @@
         </t>
     </template>
 
+    <template id="web.css_tests_assets">
+        <link type="text/css" rel="stylesheet" href="/web/static/lib/daterangepicker/daterangepicker.css"/>
+    </template>
+
     <template id="web.js_tests_assets">
         <t t-call-assets="web.assets_common" t-js="false"/>
         <t t-call-assets="web.assets_backend" t-js="false"/>
@@ -612,6 +618,9 @@
         <script type="text/javascript" src="/web/static/lib/ace/mode-python.js"></script>
         <script type="text/javascript" src="/web/static/lib/ace/mode-xml.js"></script>
         <script type="text/javascript" src="/web/static/lib/ace/mode-js.js"></script>
+        <script type="text/javascript" src="/web/static/lib/Chart/Chart.js"></script>
+        <script type="text/javascript" src="/web/static/lib/daterangepicker/daterangepicker.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/daterangepicker.js"></script>
 
         <script type="text/javascript" src="/web/static/tests/main_tests.js"></script>
 
@@ -655,6 +664,7 @@
             <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
             <t t-set="title">Web Tests</t>
             <t t-set="head">
+                <t t-call="web.css_tests_assets"/>
                 <t t-call="web.js_tests_assets"/>
 
                 <script type="text/javascript" src="/base/static/tests/base_settings_tests.js"></script>
@@ -781,7 +791,6 @@
                     QUnit.config.hidepassed = false;
 
                     odoo.define('web.WebClientWithoutServices', function (require) {
-                        var ServiceProviderMixin = require('web.ServiceProviderMixin');
                         var WebClient = require('web.WebClient');
                         var WebClientWithoutServices = WebClient.extend({
                             /**
@@ -789,12 +798,7 @@
                              *
                              * @override
                              */
-                            init: function () {
-                                var originalServiceProviderMixinInit = ServiceProviderMixin.init;
-                                ServiceProviderMixin.init = function () {};
-                                this._super.apply(this, arguments);
-                                ServiceProviderMixin.init = originalServiceProviderMixinInit;
-                            },
+                            _onCallService: function () {},
                         });
                         return WebClientWithoutServices;
                     });

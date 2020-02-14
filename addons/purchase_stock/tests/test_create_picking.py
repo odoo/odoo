@@ -4,6 +4,7 @@
 from datetime import datetime, timedelta
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.product.tests import common
+from odoo.tests import Form
 
 
 class TestCreatePicking(common.TestProductCommon):
@@ -468,3 +469,40 @@ class TestCreatePicking(common.TestProductCommon):
         # Now check scheduled date of delivery order is changed or not.
         self.assertNotEqual(purchase_order_line.date_planned, delivery_order.scheduled_date,
             'Delivery order schedule date should not changed.')
+
+    def test_update_quantity_and_return(self):
+        po = self.env['purchase.order'].create(self.po_vals)
+
+        po.order_line.product_qty = 10
+        po.button_confirm()
+
+        first_picking = po.picking_ids
+        first_picking.move_lines.quantity_done = 5
+        # create the backorder
+        backorder_wizard_dict = first_picking.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
+
+        self.assertEqual(len(po.picking_ids), 2)
+
+        # Create a partial return
+        stock_return_picking_form = Form(
+            self.env['stock.return.picking'].with_context(
+                active_ids=first_picking.ids,
+                active_id=first_picking.ids[0],
+                active_model='stock.picking'
+            )
+        )
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking.product_return_moves.quantity = 2.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick.action_assign()
+        return_pick.move_lines.quantity_done = 2
+        return_pick._action_done()
+
+        self.assertEqual(po.order_line.qty_received, 3)
+
+        po.order_line.product_qty += 2
+        backorder = po.picking_ids.filtered(lambda picking: picking.state == 'assigned')
+        self.assertEqual(backorder.move_lines.product_uom_qty, 7)

@@ -175,6 +175,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             if package.name != 'base':
                 registry.setup_models(cr)
             migrations.migrate_module(package, 'pre')
+            if package.name != 'base':
+                env = api.Environment(cr, SUPERUSER_ID, {})
+                env['base'].flush()
 
         load_openerp_module(package.name)
 
@@ -187,12 +190,16 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
 
         model_names = registry.load(cr, package)
 
+        mode = 'update'
+        if hasattr(package, 'init') or package.state == 'to install':
+            mode = 'init'
+
         loaded_modules.append(package.name)
         if needs_update:
             models_updated |= set(model_names)
             models_to_check -= set(model_names)
             registry.setup_models(cr)
-            registry.init_models(cr, model_names, {'module': package.name})
+            registry.init_models(cr, model_names, {'module': package.name}, new_install)
         elif package.state != 'to remove':
             # The current module has simply been loaded. The models extended by this module
             # and for which we updated the schema, must have their schema checked again.
@@ -202,10 +209,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             models_to_check |= set(model_names) & models_updated
 
         idref = {}
-
-        mode = 'update'
-        if hasattr(package, 'init') or package.state == 'to install':
-            mode = 'init'
 
         if needs_update:
             env = api.Environment(cr, SUPERUSER_ID, {})
@@ -423,13 +426,12 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         cr.execute("SELECT name from ir_module_module WHERE state IN ('to install', 'to upgrade', 'to remove')")
         module_list = [name for (name,) in cr.fetchall()]
         if module_list:
-            _logger.error("Some module have inconsistent state, some dependency may be missing: %s", module_list)
+            _logger.error("Some modules have inconsistent states, some dependencies may be missing: %s", sorted(module_list))
 
-        cr.execute("SELECT name from ir_module_module WHERE state = 'installed'")
+        cr.execute("SELECT name from ir_module_module WHERE state = 'installed' and name != 'studio_customization'")
         module_list = [name for (name,) in cr.fetchall() if name not in graph]
         if module_list:
-            _logger.error("Some module are not loaded, some dependency may be missing: %s", module_list)
-
+            _logger.error("Some modules are not loaded, some dependencies or manifest may be missing: %s", sorted(module_list))
 
         registry.loaded = True
         registry.setup_models(cr)
@@ -439,21 +441,17 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         for package in graph:
             migrations.migrate_module(package, 'end')
 
+        # STEP 3.6: apply remaining constraints in case of an upgrade
+        registry.finalize_constraints()
+
         # STEP 4: Finish and cleanup installations
         if processed_modules:
             env = api.Environment(cr, SUPERUSER_ID, {})
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
-                if model in registry and not registry[model]._abstract and not registry[model]._transient:
+                if model in registry and not registry[model]._abstract:
                     _logger.warning('The model %s has no access rules, consider adding one. E.g. access_%s,access_%s,model_%s,base.group_user,1,0,0,0',
                         model, model.replace('.', '_'), model.replace('.', '_'), model.replace('.', '_'))
-
-            # Temporary warning while we remove access rights on osv_memory objects, as they have
-            # been replaced by owner-only access rights
-            cr.execute("""select distinct mod.model, mod.name from ir_model_access acc, ir_model mod where acc.model_id = mod.id""")
-            for (model, name) in cr.fetchall():
-                if model in registry and registry[model]._transient:
-                    _logger.warning('The transient model %s (%s) should not have explicit access rules!', model, name)
 
             cr.execute("SELECT model from ir_model")
             for (model,) in cr.fetchall():

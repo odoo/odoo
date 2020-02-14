@@ -53,6 +53,7 @@
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="hide"/>
                     <field name="vat" optional="hide"/>
+                    <field name="category_id" optional="hide" widget="many2many_tags"/>
                     <field name="user_id" invisible="1"/>
                     <field name="is_company" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
@@ -84,8 +85,8 @@
                         <field name="function" placeholder="e.g. Sales Director" attrs="{'invisible': [('is_company','=', True)]}"/>
                         <field name="user_ids" invisible="1"/>
                         <field name="email" widget="email" context="{'gravatar_image': True}" required="context.get('force_email', False)" attrs="{'required': [('user_ids','!=', [])]}"/>
-                        <field name="phone" widget="phone"/>
-                        <field name="mobile" widget="phone"/>
+                        <field name="phone" widget="phone" options="{'enable_sms': false}"/>
+                        <field name="mobile" widget="phone" options="{'enable_sms': false}"/>
                     </group>
                 </form>
             </field>
@@ -116,7 +117,7 @@
                                 <field name="street" placeholder="Street..." class="o_address_street"/>
                                 <field name="street2" placeholder="Street 2..." class="o_address_street"/>
                                 <field name="city" placeholder="City" class="o_address_city"/>
-                                <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': country_id}"/>
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                             </div>
@@ -172,8 +173,8 @@
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="city" placeholder="City" class="o_address_city"
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
-                                <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'zip': zip}"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
@@ -184,8 +185,8 @@
                         <group>
                             <field name="function" placeholder="e.g. Sales Director"
                                 attrs="{'invisible': [('is_company','=', True)]}"/>
-                            <field name="phone" widget="phone"/>
-                            <field name="mobile" widget="phone"/>
+                            <field name="phone" widget="phone" options="{'enable_sms': false}"/>
+                            <field name="mobile" widget="phone" options="{'enable_sms': false}"/>
                             <field name="email" widget="email" context="{'gravatar_image': True}"/>
                         </group>
                     </group>
@@ -250,8 +251,8 @@
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="city" placeholder="City" class="o_address_city"
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
-                                <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'zip': zip}"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
@@ -339,8 +340,8 @@
                                                         <field t-if="record.state_id.raw_value" name="state_id"/>
                                                         <field name="country_id"/>
                                                     </div>
-                                                    <div t-if="record.phone.raw_value">Phone: <field name="phone" widget="phone"/></div>
-                                                    <div t-if="record.mobile.raw_value">Mobile: <field name="mobile" widget="phone"/></div>
+                                                    <div t-if="record.phone.raw_value">Phone: <t t-esc="record.phone.value"/></div>
+                                                    <div t-if="record.mobile.raw_value">Mobile: <t t-esc="record.mobile.value"/></div>
                                                 </div>
                                             </div>
                                         </t>
@@ -367,7 +368,7 @@
                                                         <field name="street" placeholder="Street..." class="o_address_street"/>
                                                         <field name="street2" placeholder="Street 2..." class="o_address_street"/>
                                                         <field name="city" placeholder="City" class="o_address_city"/>
-                                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' context="{'country_id': country_id, 'zip': zip}"/>
+                                                        <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
                                                         <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                                         <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                                     </div>
@@ -434,15 +435,15 @@
                                         <field name="street" placeholder="Street..." class="o_address_street"/>
                                         <field name="street2" placeholder="Street 2..." class="o_address_street"/>
                                         <field name="city" placeholder="City" class="o_address_city"/>
-                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' context="{'country_id': country_id, 'zip': zip}"/>
+                                        <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
                                         <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                         <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                     </div>
                                 </div>
                             </group>
                             <group>
-                                <field name="phone" widget="phone"/>
-                                <field name="mobile" widget="phone"/>
+                                <field name="phone" widget="phone" options="{'enable_sms': false}"/>
+                                <field name="mobile" widget="phone" options="{'enable_sms': false}"/>
                                 <field name="email"/>
                             </group>
                         </group>

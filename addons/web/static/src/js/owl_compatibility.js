@@ -10,7 +10,7 @@ odoo.define('web.OwlCompatibility', function () {
      */
 
     const { Component, hooks, tags } = owl;
-    const { useSubEnv } = hooks;
+    const { useRef, useSubEnv } = hooks;
     const { xml } = tags;
 
     const widgetSymbol = odoo.widgetSymbol;
@@ -123,7 +123,7 @@ odoo.define('web.OwlCompatibility', function () {
          */
         willUpdateProps(nextProps) {
             if (this.widget) {
-                return this.update(nextProps);
+                return this.updateWidget(nextProps);
             }
         }
 
@@ -138,7 +138,7 @@ odoo.define('web.OwlCompatibility', function () {
         __patch(vnode) {
             if (this.widget) {
                 if (this.__owl__.vnode) { // not at first rendering
-                    this.render();
+                    this.renderWidget();
                 }
                 vnode.elm = this.widget.el;
             }
@@ -202,8 +202,8 @@ odoo.define('web.OwlCompatibility', function () {
          * @param {Object} nextProps
          * @returns {Promise}
          */
-        update(/*nextProps*/) {
-            console.warn(`ComponentAdapter: Widget could not be updated, maybe override 'update' function?`);
+        updateWidget(/*nextProps*/) {
+            console.warn(`ComponentAdapter: Widget could not be updated, maybe override 'updateWidget' function?`);
         }
 
         /**
@@ -211,8 +211,8 @@ odoo.define('web.OwlCompatibility', function () {
          * function will be called just before patchin the DOM, s.t. the DOM is
          * updated at once. It must be synchronous
          */
-        render() {
-            console.warn(`ComponentAdapter: Widget could not be re-rendered, maybe override 'render' function?`);
+        renderWidget() {
+            console.warn(`ComponentAdapter: Widget could not be re-rendered, maybe override 'renderWidget' function?`);
         }
 
         /**
@@ -297,28 +297,23 @@ odoo.define('web.OwlCompatibility', function () {
      */
     const WidgetAdapterMixin = {
         /**
-         * Calls __callMounted on each sub component, and its descendants (this
-         * function isn't recursive) when the widget is appended into the DOM.
+         * Calls on_attach_callback on each child ComponentWrapper, which will
+         * call __callMounted on each sub component (recursively), to mark them
+         * as mounted.
          */
         on_attach_callback() {
-            function recursiveCallMounted(component) {
-                for (const key in component.__owl__.children) {
-                    recursiveCallMounted(component.__owl__.children[key]);
-                }
-                component.__callMounted();
-            }
             for (const component of children.get(this) || []) {
-                recursiveCallMounted(component);
+                component.on_attach_callback();
             }
         },
         /**
-         * Calls __callWillUnmount on each sub component (this function is
-         * recursive and thus will be automatically called on its descendants)
-         * when the widget is removed/detached from the DOM.
+         * Calls on_detach_callback on each child ComponentWrapper, which will
+         * call __callWillUnmount to mark itself and its children as no longer
+         * mounted.
          */
         on_detach_callback() {
             for (const component of children.get(this) || []) {
-                component.__callWillUnmount();
+                component.on_detach_callback();
             }
         },
         /**
@@ -362,16 +357,29 @@ odoo.define('web.OwlCompatibility', function () {
             this.Component = Component;
             this.props = props || {};
             this._handledEvents = new Set(); // Owl events we are redirecting
+
+            this.componentRef = useRef("component");
         }
 
         /**
-         * Define (empty) on_attach_callback (resp. on_detach_callback) on the
-         * Wrapper in case the parent would call them, for instance in
-         * on_attach_callback (resp. on_detach_callback). We only do that to
-         * prevent a crash, but the logic is already handled by the mixin.
+         * Calls __callMounted on itself and on each sub component (as this
+         * function isn't recursive) when the component is appended into the DOM.
          */
-        on_attach_callback() {}
-        on_detach_callback() {}
+        on_attach_callback() {
+            function recursiveCallMounted(component) {
+                for (const key in component.__owl__.children) {
+                    recursiveCallMounted(component.__owl__.children[key]);
+                }
+                component.__callMounted();
+            }
+            recursiveCallMounted(this);
+        }
+        /**
+         * Calls __callWillUnmount to notify the component it will be unmounted.
+         */
+        on_detach_callback() {
+            this.__callWillUnmount();
+        }
 
         /**
          * Overrides to remove the reference to this component in the parent.
@@ -483,7 +491,7 @@ odoo.define('web.OwlCompatibility', function () {
             parentChildren.push(this);
         }
     }
-    ComponentWrapper.template = xml`<t t-component="Component" t-props="props"/>`;
+    ComponentWrapper.template = xml`<t t-component="Component" t-props="props" t-ref="component"/>`;
 
     return {
         ComponentAdapter,

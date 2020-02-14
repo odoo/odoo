@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import base64
 import datetime
 import dateutil
@@ -23,15 +24,14 @@ except ImportError:
 from collections import namedtuple
 from email.message import EmailMessage
 from lxml import etree
-from werkzeug import url_encode
 from werkzeug import urls
 
 from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID
+from odoo.exceptions import MissingError
 from odoo.osv import expression
 
 from odoo.tools import pycompat, ustr
 from odoo.tools.misc import clean_context, split_every
-from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -258,7 +258,9 @@ class MailThread(models.AbstractModel):
             - log a creation message
         """
         if self._context.get('tracking_disable'):
-            return super(MailThread, self).create(vals_list)
+            threads = super(MailThread, self).create(vals_list)
+            threads._discard_tracking()
+            return threads
 
         threads = super(MailThread, self).create(vals_list)
         # subscribe uid unless asked not to
@@ -295,12 +297,12 @@ class MailThread(models.AbstractModel):
                 threads_no_subtype._message_log_batch(bodies={t.id: body for t in threads_no_subtype})
 
         # post track template if a tracked field changed
+        threads._discard_tracking()
         if not self._context.get('mail_notrack'):
-            track_threads = threads.with_lang()
-            tracked_fields = self._get_tracked_fields()
-            for thread in track_threads:
+            fnames = self._get_tracked_fields()
+            for thread in threads:
                 create_values = create_values_list[thread.id]
-                changes = [field for field in tracked_fields if create_values.get(field)]
+                changes = [fname for fname in fnames if create_values.get(fname)]
                 # based on tracked field to stay consistent with write
                 # we don't consider that a falsy field is a change, to stay consistent with previous implementation,
                 # but we may want to change that behaviour later.
@@ -312,15 +314,8 @@ class MailThread(models.AbstractModel):
         if self._context.get('tracking_disable'):
             return super(MailThread, self).write(values)
 
-        # Track initial values of tracked fields
-        track_self = self.with_lang()
-
-        tracked_fields = None
         if not self._context.get('mail_notrack'):
-            tracked_fields = track_self._get_tracked_fields()
-        if tracked_fields:
-            initial_values = dict((record.id, dict((key, getattr(record, key)) for key in tracked_fields))
-                                  for record in track_self)
+            self._prepare_tracking(self._fields)
 
         # Perform write
         result = super(MailThread, self).write(values)
@@ -328,19 +323,21 @@ class MailThread(models.AbstractModel):
         # update followers
         self._message_auto_subscribe(values)
 
-        # Perform the tracking
-        if tracked_fields:
-            tracking = track_self.with_context(clean_context(self._context)).message_track(tracked_fields, initial_values)
-            if any(change for rec_id, (change, tracking_value_ids) in tracking.items()):
-                (changes, tracking_value_ids) = tracking[track_self[0].id]
-                track_self._message_track_post_template(changes)
         return result
+
+    def _compute_field_value(self, field):
+        if not self._context.get('tracking_disable') and not self._context.get('mail_notrack'):
+            self._prepare_tracking(f.name for f in self._field_computed[field] if f.store)
+
+        return super()._compute_field_value(field)
 
     def unlink(self):
         """ Override unlink to delete messages and followers. This cannot be
         cascaded, because link is done through (res_model, res_id). """
         if not self:
             return True
+        # discard pending tracking
+        self._discard_tracking()
         self.env['mail.message'].search([('model', '=', self._name), ('res_id', 'in', self.ids), ('message_type', '!=', 'user_notification')]).unlink()
         res = super(MailThread, self).unlink()
         self.env['mail.followers'].sudo().search(
@@ -416,7 +413,7 @@ class MailThread(models.AbstractModel):
             doc = etree.XML(res['arch'])
             for node in doc.xpath("//field[@name='message_ids']"):
                 # the 'Log a note' button is employee only
-                options = safe_eval(node.get('options', '{}'))
+                options = ast.literal_eval(node.get('options', '{}'))
                 is_employee = self.env.user.has_group('base.group_user')
                 options['display_log_button'] = is_employee
                 # save options on the node
@@ -427,6 +424,52 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
     # Technical methods / wrappers / tools
     # ------------------------------------------------------
+
+    def _prepare_tracking(self, fields):
+        """ Prepare the tracking of ``fields`` for ``self``.
+
+        :param fields: iterable of fields names to potentially track
+        """
+        fnames = self._get_tracked_fields().intersection(fields)
+        if not fnames:
+            return
+        func = self.browse()._finalize_tracking
+        [initial_values] = self.env.cr.precommit.add(func, dict)
+        for record in self:
+            if not record.id:
+                continue
+            values = initial_values.setdefault(record.id, {})
+            if values is not None:
+                for fname in fnames:
+                    values.setdefault(fname, record[fname])
+
+    def _discard_tracking(self):
+        """ Prevent any tracking of fields on ``self``. """
+        if not self._get_tracked_fields():
+            return
+        func = self.browse()._finalize_tracking
+        [initial_values] = self.env.cr.precommit.add(func, dict)
+        # disable tracking by setting initial values to None
+        for id_ in self.ids:
+            initial_values[id_] = None
+
+    def _finalize_tracking(self, initial_values):
+        """ Generate the tracking messages for the records that have been
+        prepared with ``_prepare_tracking``.
+        """
+        ids = [id_ for id_, vals in initial_values.items() if vals]
+        if not ids:
+            return
+        records = self.browse(ids).sudo()
+        fnames = self._get_tracked_fields()
+        context = clean_context(self._context)
+        tracking = records.with_context(context).message_track(fnames, initial_values)
+        for record in records:
+            changes, tracking_value_ids = tracking.get(record.id, (None, None))
+            record._message_track_post_template(changes)
+        # this method is called after the main flush() and just before commit();
+        # we have to flush() again in case we triggered some recomputations
+        self.flush()
 
     def with_lang(self):
         if not self._context.get("lang"):
@@ -542,20 +585,14 @@ class MailThread(models.AbstractModel):
     # Automatic log / Tracking
     # ------------------------------------------------------
 
-    @api.model
+    @tools.ormcache()
     def _get_tracked_fields(self):
-        """ Return a structure of tracked fields for the current model.
-            :return dict: a dict mapping field name to description, containing on_change fields
-        """
-        tracked_fields = []
-        for name, field in self._fields.items():
-            tracking = getattr(field, 'tracking', None) or getattr(field, 'track_visibility', None)
-            if tracking:
-                tracked_fields.append(name)
-
-        if tracked_fields:
-            return self.fields_get(tracked_fields)
-        return {}
+        """ Return the set of tracked fields names for the current model. """
+        return {
+            name
+            for name, field in self._fields.items()
+            if getattr(field, 'tracking', None) or getattr(field, 'track_visibility', None)
+        }
 
     def _creation_subtype(self):
         """ Give the subtypes triggered by the creation of a record
@@ -602,9 +639,9 @@ class MailThread(models.AbstractModel):
             if not template:
                 continue
             if isinstance(template, str):
-                self.message_post_with_view(template, **post_kwargs)
+                self.with_lang().message_post_with_view(template, **post_kwargs)
             else:
-                self.message_post_with_template(template.id, **post_kwargs)
+                self.with_lang().message_post_with_template(template.id, **post_kwargs)
         return True
 
     @api.model
@@ -624,6 +661,8 @@ class MailThread(models.AbstractModel):
 
         # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
         for col_name, col_info in tracked_fields.items():
+            if col_name not in initial:
+                continue
             initial_value = initial[col_name]
             new_value = record[col_name]
 
@@ -651,16 +690,26 @@ class MailThread(models.AbstractModel):
         """ Track updated values. Comparing the initial and current values of
         the fields given in tracked_fields, it generates a message containing
         the updated values. This message can be linked to a mail.message.subtype
-        given by the ``_track_subtype`` method. """
+        given by the ``_track_subtype`` method.
+
+        :param tracked_fields: iterable of field names to track
+        :param initial_values: mapping {record_id: {field_name: value}}
+        :return: mapping {record_id: (changed_field_names, tracking_value_ids)}
+            containing existing records only
+        """
         if not tracked_fields:
             return True
 
+        tracked_fields = self.fields_get(tracked_fields)
         tracking = dict()
         for record in self:
-            tracking[record.id] = record._message_track(tracked_fields, initial_values[record.id])
+            try:
+                tracking[record.id] = record._message_track(tracked_fields, initial_values[record.id])
+            except MissingError:
+                continue
 
         for record in self:
-            changes, tracking_value_ids = tracking[record.id]
+            changes, tracking_value_ids = tracking.get(record.id, (None, None))
             if not changes:
                 continue
 
@@ -1001,7 +1050,7 @@ class MailThread(models.AbstractModel):
                 routes = []
                 for alias in dest_aliases:
                     user_id = self._mail_find_user_for_gateway(email_from, alias=alias).id or self._uid
-                    route = (alias.alias_model_id.model, alias.alias_force_thread_id, safe_eval(alias.alias_defaults), user_id, alias)
+                    route = (alias.alias_model_id.model, alias.alias_force_thread_id, ast.literal_eval(alias.alias_defaults), user_id, alias)
                     route = self._routing_check_route(message, message_dict, route, raise_exception=True)
                     if route:
                         _logger.info(
@@ -1648,7 +1697,7 @@ class MailThread(models.AbstractModel):
             normalized_email = tools.email_normalize(contact)
             partner = next((partner for partner in done_partners if partner.email_normalized == normalized_email), self.env['res.partner'])
             if not partner and force_create and normalized_email in normalized_emails:
-                partner = self.env['res.partner'].name_create(contact)[0]
+                partner = self.env['res.partner'].browse(self.env['res.partner'].name_create(contact)[0])
             partners.append(partner)
         return partners
 
@@ -2179,7 +2228,17 @@ class MailThread(models.AbstractModel):
                 for partner_id in inbox_pids:
                     bus_notifications.append([(self._cr.dbname, 'ir.needaction', partner_id), dict(message_format_values)])
             if channel_ids:
-                bus_notifications += self.env['mail.channel'].sudo().browse(channel_ids)._channel_message_notifications(message, message_format_values)
+                channels = self.env['mail.channel'].sudo().browse(channel_ids)
+                bus_notifications += channels._channel_message_notifications(message, message_format_values)
+                # Message from mailing channel should not make a notification in Odoo for users
+                # with notification "Handled by Email", but web client should receive the message.
+                # To do so, message is still sent from longpolling, but channel is marked as read
+                # in order to remove notification.
+                for channel in channels.filtered(lambda c: c.email_send):
+                    users = channel.channel_partner_ids.mapped('user_ids')
+                    for user in users.filtered(lambda u: u.notification_type == 'email'):
+                        channel.with_user(user).channel_seen()
+
         if bus_notifications:
             self.env['bus.bus'].sudo().sendmany(bus_notifications)
 
@@ -2231,7 +2290,8 @@ class MailThread(models.AbstractModel):
             'mail_message_id': message.id,
             'mail_server_id': message.mail_server_id.id, # 2 query, check acces + read, may be useless, Falsy, when will it be used?
             'auto_delete': mail_auto_delete,
-            'references': message.parent_id.message_id if message.parent_id else False,
+            # due to ir.rule, user have no right to access parent message if message is not published
+            'references': message.parent_id.sudo().message_id if message.parent_id else False,
             'subject': mail_subject,
         }
         headers = self._notify_email_headers()
@@ -2434,18 +2494,23 @@ class MailThread(models.AbstractModel):
             # here      : (searching all partners linked to channels with notif email if email is not the author one)
             # TDE FIXME: use email_sanitized
             email_from = msg_vals.get('email_from') or message.email_from
+            email_from = self.env['res.partner']._parse_partner_name(email_from)[1]
             exept_partner = [r['id'] for r in recipient_data['partners']]
             if author_id:
                 exept_partner.append(author_id)
-            new_pids = self.env['res.partner'].sudo().search([
-                ('id', 'not in', exept_partner),
-                ('channel_ids', 'in', email_cids),
-                ('email', 'not in', [email_from]),
-            ])
-            for partner in new_pids:
-                # caution: side effect, if user has notif type inbox, will receive en email anyway?
+            sql_query = """ select distinct on (p.id) p.id from res_partner p
+                            left join mail_channel_partner mcp on p.id = mcp.partner_id
+                            left join mail_channel c on c.id = mcp.channel_id
+                            left join res_users u on p.id = u.partner_id
+                                where (u.notification_type != 'inbox' or u.id is null)
+                                and (p.email != ANY(%s) or p.email is null)
+                                and c.id = ANY(%s)
+                                and p.id != ANY(%s)"""
+
+            self.env.cr.execute(sql_query, (([email_from], ), (email_cids, ), (exept_partner, )))
+            for partner_id in self._cr.fetchall():
                 # ocn_client: will add partners to recipient recipient_data. more ocn notifications. We neeed to filter them maybe
-                recipient_data['partners'].append({'id': partner.id, 'share': True, 'active': True, 'notif': 'email', 'type': 'channel_email', 'groups': []})
+                recipient_data['partners'].append({'id': partner_id[0], 'share': True, 'active': True, 'notif': 'email', 'type': 'channel_email', 'groups': []})
 
         return recipient_data
 
@@ -2482,7 +2547,7 @@ class MailThread(models.AbstractModel):
             token = self._notify_encode_link(base_link, params)
             params['token'] = token
 
-        link = '%s?%s' % (base_link, url_encode(params))
+        link = '%s?%s' % (base_link, urls.url_encode(params))
         if self:
             link = self[0].get_base_url() + link
 

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from math import ceil
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
@@ -17,7 +16,9 @@ class Project(models.Model):
             ('partner_id', '=?', partner_id),
         ]"""
     )
-    allow_timesheet_timer = fields.Boolean('Timesheet Timer', default=False, help="Use a timer to record timesheets on tasks")
+    allow_timesheet_timer = fields.Boolean(
+        'Timesheet Timer', compute='_compute_allow_timesheet_timer', readonly=False, store=True,
+        default=True, help="Use a timer to record timesheets on tasks")
 
     _sql_constraints = [
         ('timer_only_when_timesheet', "CHECK((allow_timesheets = 'f' AND allow_timesheet_timer = 'f') OR (allow_timesheets = 't'))", 'The timesheet timer can only be activated on project allowing timesheets.'),
@@ -34,10 +35,10 @@ class Project(models.Model):
             if project.allow_timesheets and not project.analytic_account_id:
                 raise ValidationError(_('To allow timesheet, your project %s should have an analytic account set.' % (project.name,)))
 
-    @api.onchange('allow_timesheets')
-    def _onchange_allow_timesheets(self):
-        if not self.allow_timesheets:
-            self.allow_timesheet_timer = False
+    @api.depends('allow_timesheets')
+    def _compute_allow_timesheet_timer(self):
+        for project in self:
+            project.allow_timesheet_timer = project.allow_timesheets
 
     @api.model
     def name_create(self, name):
@@ -77,12 +78,11 @@ class Project(models.Model):
     def _init_data_analytic_account(self):
         self.search([('analytic_account_id', '=', False), ('allow_timesheets', '=', True)])._create_analytic_account()
 
-
 class Task(models.Model):
     _name = "project.task"
     _inherit = ["project.task", "timer.mixin"]
 
-    analytic_account_active = fields.Boolean("Analytic Account", related='project_id.analytic_account_id.active', readonly=True)
+    analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active')
     allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.", readonly=True)
     remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', store=True, readonly=True, help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True, help="Computed using the sum of the task work done.")
@@ -92,32 +92,22 @@ class Task(models.Model):
     subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Sum of actually spent hours on the subtask(s)")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
 
-    timer_start = fields.Datetime("Timesheet Timer Start")
-    timer_pause = fields.Datetime("Timesheet Timer Last Pause")
     # YTI FIXME: Those field seems quite useless
     timesheet_timer_first_start = fields.Datetime("Timesheet Timer First Use", readonly=True)
     timesheet_timer_last_stop = fields.Datetime("Timesheet Timer Last Use", readonly=True)
     display_timesheet_timer = fields.Boolean("Display Timesheet Time", compute='_compute_display_timesheet_timer')
-    display_timer_start_primary = fields.Boolean(compute='_compute_display_timer_buttons')
+
     display_timer_start_secondary = fields.Boolean(compute='_compute_display_timer_buttons')
-    display_timer_stop = fields.Boolean(compute='_compute_display_timer_buttons')
-    display_timer_pause = fields.Boolean(compute='_compute_display_timer_buttons')
-    display_timer_resume = fields.Boolean(compute='_compute_display_timer_buttons')
 
     @api.depends('display_timesheet_timer', 'timer_start', 'timer_pause', 'total_hours_spent')
     def _compute_display_timer_buttons(self):
         for task in self:
-            start_p, start_s, stop, pause, resume = True, True, True, True, True
+            displays = super()._compute_display_timer_buttons()
+            start_p, start_s, stop, pause, resume = displays['start_p'], displays['start_p'], displays['stop'], displays['pause'], displays['resume']
             if not task.display_timesheet_timer:
                 start_p, start_s, stop, pause, resume = False, False, False, False, False
             else:
-                if task.timer_start:
-                    start_p, start_s = False, False
-                    if task.timer_pause:
-                        pause = False
-                    else:
-                        resume = False
-                else:
+                if not task.timer_start:
                     stop, pause, resume = False, False, False
                     if not task.total_hours_spent:
                         start_s = False
@@ -130,6 +120,12 @@ class Task(models.Model):
                 'display_timer_pause': pause,
                 'display_timer_resume': resume,
             })
+
+    @api.depends('project_id.analytic_account_id.active')
+    def _compute_analytic_account_active(self):
+        """ Overridden in sale_timesheet """
+        for task in self:
+            task.analytic_account_active = task.project_id.analytic_account_id.active
 
     @api.depends('timesheet_ids.unit_amount')
     def _compute_effective_hours(self):
@@ -205,26 +201,18 @@ class Task(models.Model):
         return result
 
     def action_timer_start(self):
-        self.ensure_one()
-        if not self.timesheet_timer_first_start:
-            self.write({'timesheet_timer_first_start': fields.Datetime.now()})
-        super(Task, self).action_timer_start()
+        if not self.user_timer_id.timer_start and self.display_timesheet_timer:
+            super(Task, self).action_timer_start()
 
     def action_timer_stop(self):
-        self.ensure_one()
-        if self.timer_start:  # timer was either running or paused
-            minutes_spent = self._get_minutes_spent()
-            minutes_spent = self._timer_rounding(minutes_spent)
+        # timer was either running or paused
+        if self.user_timer_id.timer_start and self.display_timesheet_timer:
+            minutes_spent = super().action_timer_stop()
+            minimum_duration = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_min_duration', 0))
+            rounding = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_rounding', 0))
+            minutes_spent = self._timer_rounding(minutes_spent, minimum_duration, rounding)
             return self._action_create_timesheet(minutes_spent * 60 / 3600)
         return False
-
-    def _timer_rounding(self, minutes_spent):
-        minimum_duration = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_min_duration', 0))
-        rounding = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_rounding', 0))
-        minutes_spent = max(minimum_duration, minutes_spent)
-        if rounding and ceil(minutes_spent % rounding) != 0:
-            minutes_spent = ceil(minutes_spent / rounding) * rounding
-        return minutes_spent
 
     def _action_create_timesheet(self, time_spent):
         return {
@@ -236,7 +224,7 @@ class Task(models.Model):
             "context": {
                 **self.env.context,
                 'active_id': self.id,
-                'active_model': 'project.task',
+                'active_model': self._name,
                 'default_time_spent': time_spent,
             },
         }

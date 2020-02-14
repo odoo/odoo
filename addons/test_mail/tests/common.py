@@ -45,12 +45,16 @@ class TestMailCommon(common.SavepointCase, mail_common.MailCase):
             'subject': 'About ${object.name}',
             'body_html': '<p>Hello ${object.name}</p>',
             'model_id': cls.env['ir.model']._get(model).id,
-            'user_signature': False,
         }
         if template_values:
             create_values.update(template_values)
         cls.email_template = cls.env['mail.template'].create(create_values)
         return cls.email_template
+
+    def flush_tracking(self):
+        """ Force the creation of tracking values. """
+        self.env['base'].flush()
+        self.cr.precommit()
 
 
 class TestMailMultiCompanyCommon(TestMailCommon):

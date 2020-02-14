@@ -1325,8 +1325,41 @@ var FieldFloatToggle = AbstractField.extend({
 });
 
 var FieldPercentage = FieldFloat.extend({
+    className: 'o_field_float_percentage o_field_number',
     description: _lt("Percentage"),
-    formatType:'percentage',
+
+    /**
+     * @constructor
+     */
+    init() {
+        this._super(...arguments);
+        if (this.mode === 'edit') {
+            this.tagName = 'div';
+            this.className += ' o_input';
+            
+            // do not display % in the input in edit
+            this.formatOptions.noSymbol = true;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * For percentage widget, the input is inside a div, alongside a span
+     * containing the percentage(%) symbol.
+     *
+     * @override
+     * @private
+     */
+    _renderEdit() {
+        this.$el.empty();
+        // Prepare and add the input
+        this._prepareInput(this.$input).appendTo(this.$el);
+        const $percentageSymbol = $('<span>', { text: '%' });
+        this.$el.append($percentageSymbol);
+    },
 });
 
 var FieldText = InputField.extend(TranslatableFieldMixin, {
@@ -1465,9 +1498,13 @@ var FieldEmail = InputField.extend({
      * @private
      */
     _renderReadonly: function () {
-        this.$el.text(this.value)
-            .addClass('o_form_uri o_text_overflow')
-            .attr('href', this.prefix + ':' + this.value);
+        if (this.value) {
+            this.$el.text(this.value)
+                .addClass('o_form_uri o_text_overflow')
+                .attr('href', this.prefix + ':' + this.value);
+        } else {
+            this.$el.text('');
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -1524,6 +1561,7 @@ var UrlWidget = InputField.extend({
     init: function () {
         this._super.apply(this, arguments);
         this.tagName = this.mode === 'readonly' ? 'a' : 'input';
+        this.websitePath = this.nodeOptions.website_path || false;
     },
 
     //--------------------------------------------------------------------------
@@ -1551,10 +1589,15 @@ var UrlWidget = InputField.extend({
      * @private
      */
     _renderReadonly: function () {
+        let href = this.value;
+        if (this.value && !this.websitePath) {
+            const regex = /^(?:[fF]|[hH][tT])[tT][pP][sS]?:\/\//;
+            href = !regex.test(this.value) ? `http://${href}` : href;
+        }
         this.$el.text(this.attrs.text || this.value)
             .addClass('o_form_uri o_text_overflow')
             .attr('target', '_blank')
-            .attr('href', this.value);
+            .attr('href', href);
     },
 
     //--------------------------------------------------------------------------
@@ -1865,13 +1908,18 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                     this.$el.addClass(this.attrs.class);
                 }
 
-                var urlThumb = this._getImageUrl(this.model, this.res_id, 'image_128', unique);
+                const image_field = this.field.manual ? this.name:'image_128';
+                var urlThumb = this._getImageUrl(this.model, this.res_id, image_field, unique);
 
                 this.$el.empty();
                 $img = this.$el;
                 $img.css('backgroundImage', 'url(' + urlThumb + ')');
             } else {
                 $img = this.$('img');
+            }
+            var zoomDelay = 0;
+            if (this.nodeOptions.zoom_delay) {
+                zoomDelay = this.nodeOptions.zoom_delay;
             }
 
             if(this.recordData[imageField]) {
@@ -1880,6 +1928,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
 
                 $img.zoomOdoo({
                     event: 'mouseenter',
+                    timer: zoomDelay,
                     attach: '.o_content',
                     attachToTarget: true,
                     onShow: function () {

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.1\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-16 10:06+0000\n"
-"PO-Revision-Date: 2019-12-16 10:06+0000\n"
+"POT-Creation-Date: 2020-02-13 08:34+0000\n"
+"PO-Revision-Date: 2020-02-13 08:34+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -108,6 +108,12 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ": Insufficient Quantity To Unbuild"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
@@ -148,6 +154,11 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Child MO's</span>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Load</span>"
 msgstr ""
@@ -177,6 +188,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<span class=\"o_stat_text\">Scraps</span>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Source MO's</span>"
 msgstr ""
 
 #. module: mrp
@@ -232,9 +248,7 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-msgid ""
-"<strong attrs=\"{'invisible': [('date_planned_finished', '=', False)]}\" class=\"mr8\">to</strong>\n"
-"                                    <strong class=\"oe_edit_only mr8\" attrs=\"{'invisible': [('date_planned_finished', '!=', False)]}\">to</strong>"
+msgid "<strong class=\"mr8 oe_inline\">to</strong>"
 msgstr ""
 
 #. module: mrp
@@ -308,6 +322,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workorder_view_gantt
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_gantt_production
 msgid "<strong>Workcenter: </strong>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
+msgid "? This may lead to inconsistencies in your inventory."
 msgstr ""
 
 #. module: mrp
@@ -442,13 +461,23 @@ msgid "Allowed Lots Domain"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__allowed_mo_ids
+msgid "Allowed Mo"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__post_visible
 msgid "Allowed to Post Inventory"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
+msgid "Allowed to Reserve Production"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unreserve_visible
-msgid "Allowed to Unreserve Inventory"
+msgid "Allowed to Unreserve Production"
 msgstr ""
 
 #. module: mrp
@@ -734,7 +763,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
+#: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "BoM line product %s should not be the same as BoM product."
 msgstr ""
@@ -798,13 +827,13 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__capacity
-#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__capacity
 msgid "Capacity"
 msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_category_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_uom_category_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_category_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__loss_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_type__loss_type
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_tree_view
@@ -844,7 +873,6 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__color
-#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__color
 msgid "Color"
 msgstr ""
 
@@ -877,6 +905,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_line__company_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Company"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/stock_rule.py:0
+#, python-format
+msgid "Company Manufacture Lead Time"
 msgstr ""
 
 #. module: mrp
@@ -983,6 +1017,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_abstract_workorder__consumption
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__consumption
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__consumption
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__consumption
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__consumption
 msgid "Consumption"
 msgstr ""
@@ -1000,6 +1035,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_uom_category_id
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__product_uom_category_id
+#: model:ir.model.fields,help:mrp.field_mrp_production__product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
@@ -1177,6 +1213,16 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
+msgid "Delay Alert Date"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert
+msgid "Delay alert"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delivery_count
 msgid "Delivery Orders"
 msgstr ""
@@ -1240,6 +1286,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_bom_structure__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
+msgid "Do you confirm you want to unbuild"
 msgstr ""
 
 #. module: mrp
@@ -1441,6 +1492,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_abstract_workorder__consumption__flexible
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__consumption__flexible
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_product_produce__consumption__flexible
+#: model:ir.model.fields.selection,name:mrp.selection__mrp_production__consumption__flexible
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__consumption__flexible
 msgid "Flexible"
 msgstr ""
@@ -1728,12 +1780,6 @@ msgid "Informative, not used in matching"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:0
-#, python-format
-msgid "Insufficient Quantity"
-msgstr ""
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
 msgid "Inventory Moves"
 msgstr ""
@@ -1791,6 +1837,11 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "It has already been unblocked."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__json_popover
+msgid "JSON data for the popover widget"
 msgstr ""
 
 #. module: mrp
@@ -1988,6 +2039,18 @@ msgid "Low"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "MO Generated by %s"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "MO Source of %s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_routings
 msgid "MRP Work Orders"
 msgstr ""
@@ -2089,10 +2152,12 @@ msgid "Manufacturing"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/stock_rule.py:0
 #: model:ir.model.fields,field_description:mrp.field_product_product__produce_delay
 #: model:ir.model.fields,field_description:mrp.field_product_template__produce_delay
 #: model:ir.model.fields,field_description:mrp.field_res_company__manufacturing_lead
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__manufacturing_lead
+#, python-format
 msgid "Manufacturing Lead Time"
 msgstr ""
 
@@ -2220,7 +2285,6 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Miscellaneous"
 msgstr ""
 
@@ -2239,6 +2303,11 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_line_ids
 msgid "Moves to Track"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_procurement_group__mrp_production_id
+msgid "Mrp Production"
 msgstr ""
 
 #. module: mrp
@@ -2372,6 +2441,11 @@ msgid "Number of errors"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_child_count
+msgid "Number of generated MO"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction_counter
 #: model:ir.model.fields,help:mrp.field_mrp_production__message_needaction_counter
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_needaction_counter
@@ -2388,16 +2462,16 @@ msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workorder__capacity
-msgid "Number of pieces that can be produced in parallel."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity
 msgid ""
 "Number of pieces that can be produced in parallel. In case the work center "
 "has a capacity of 5 and you have to produce 10 units on your work order, the"
 " usual operation time will be multiplied by 2."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
+msgid "Number of source MO"
 msgstr ""
 
 #. module: mrp
@@ -2649,13 +2723,18 @@ msgid "Plan"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__date_start_wo
-msgid "Plan From"
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+msgid "Plan Orders"
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
-msgid "Plan Orders"
+#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
+msgid "Plan a Manufacturing Order"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Plan from"
 msgstr ""
 
 #. module: mrp
@@ -2683,9 +2762,20 @@ msgid "Planned End Date"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "Planned at the same time than other workorder(s) at %s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.menu,name:mrp.mrp_planning_menu_root
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Planning"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Planning Issues"
 msgstr ""
 
 #. module: mrp
@@ -2700,6 +2790,11 @@ msgstr ""
 msgid ""
 "Please set the quantity you are currently producing. It should be different "
 "from zero."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__json_popover
+msgid "Popover Data JSON"
 msgstr ""
 
 #. module: mrp
@@ -2998,6 +3093,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_qty
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__product_qty
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_produced
+#: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__quantity
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -3131,6 +3227,13 @@ msgstr ""
 #. openerp-web
 #: code:addons/mrp/static/src/xml/mrp.xml:0
 #, python-format
+msgid "Replan"
+msgstr ""
+
+#. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/xml/mrp.xml:0
+#, python-format
 msgid "Report:"
 msgstr ""
 
@@ -3201,6 +3304,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing__name
+#: model:ir.model.fields,field_description:mrp.field_stock_move__routing_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
@@ -3273,6 +3377,19 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "Scheduled before the previous work order, planned from %s to %s"
+msgstr ""
+
+#. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/js/mrp_workorder_popover.js:0
+#, python-format
+msgid "Scheduling Information"
 msgstr ""
 
 #. module: mrp
@@ -3479,7 +3596,6 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
-#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid "Start a new work order"
 msgstr ""
 
@@ -3563,6 +3679,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_abstract_workorder__consumption__strict
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__consumption__strict
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_product_produce__consumption__strict
+#: model:ir.model.fields.selection,name:mrp.selection__mrp_production__consumption__strict
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__consumption__strict
 msgid "Strict"
 msgstr ""
@@ -3601,6 +3718,11 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__post_visible
 msgid "Technical field to check when we can post"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production__reserve_visible
+msgid "Technical field to check when we can reserve quantities"
 msgstr ""
 
 #. module: mrp
@@ -3656,6 +3778,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__routing_id
+#: model:ir.model.fields,help:mrp.field_stock_move__routing_id
 msgid ""
 "The list of operations (list of work centers) to produce the finished "
 "product. The routing is mainly used to compute work center costs during "
@@ -3747,6 +3870,12 @@ msgstr ""
 msgid ""
 "The unit of measure you choose is in a different category than the product "
 "unit of measure."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "The work order should have already been processed."
 msgstr ""
 
 #. module: mrp
@@ -4023,8 +4152,11 @@ msgid "Unblock"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__unbuild_id
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
+#, python-format
 msgid "Unbuild"
 msgstr ""
 
@@ -4067,6 +4199,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__product_uom_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_uom_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_line__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__product_uom_name
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -4116,6 +4249,7 @@ msgid "Unread Messages Counter"
 msgstr ""
 
 #. module: mrp
+#: model:ir.actions.server,name:mrp.mrp_production_action_unreserve_tree
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Unreserve"
 msgstr ""
@@ -4217,6 +4351,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__pending
 msgid "Waiting for another WO"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "Waiting the previous work order, planned from %s to %s"
 msgstr ""
 
 #. module: mrp
@@ -4416,7 +4556,6 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
-#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid ""
 "Work Orders are operations to be processed at a Work Center to realize a\n"
 "            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
@@ -4437,16 +4576,16 @@ msgid "Work order %s is still running"
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
-msgid "Work orders in progress. Click to block work center."
+#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
+msgid ""
+"Work orders correspond to the different operations, taking place at specific"
+" workcenters, which are performed to manufacture a product. Those can be "
+"defined in a routing that will be assigned to a bill of material."
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_production__date_start_wo
-msgid ""
-"Work orders will be planned based on the availability of the work centers"
-"              starting from this date. If empty, the work orders will be "
-"planned as soon as possible."
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
+msgid "Work orders in progress. Click to block work center."
 msgstr ""
 
 #. module: mrp
@@ -4690,6 +4829,12 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "You should provide a lot for the final product"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You should provide a lot number for the final product."
@@ -4716,9 +4861,21 @@ msgid "cancelled"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/stock_rule.py:0
+#: code:addons/mrp/models/stock_rule.py:0
+#, python-format
+msgid "day(s)"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
+msgid "from location"
 msgstr ""
 
 #. module: mrp

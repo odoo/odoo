@@ -1,13 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo.tests
 from datetime import timedelta
+
 from odoo.fields import Datetime
+from odoo.tests import HttpCase, tagged
 
 
-@odoo.tests.tagged('post_install', '-at_install')
-class TestUi(odoo.tests.HttpCase):
-    def test_01_event_configurator(self):
+@tagged('post_install', '-at_install')
+class TestUi(HttpCase):
+
+    def test_event_configurator(self):
+
         event = self.env['event.event'].create({
             'name': 'Design Fair Los Angeles',
             'date_begin': Datetime.now() + timedelta(days=1),

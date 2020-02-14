@@ -59,6 +59,7 @@ class Website(models.Model):
     language_ids = fields.Many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages', default=_active_languages)
     default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
     auto_redirect_lang = fields.Boolean('Autoredirect Language', default=True, help="Should users be redirected to their browser's language")
+    cookies_bar = fields.Boolean('Cookies Bar', help="Display a customizable cookies bar on your website.")
 
     def _default_social_facebook(self):
         return self.env.ref('base.main_company').social_facebook
@@ -168,6 +169,26 @@ class Website(models.Model):
         if 'cdn_activated' in values or 'cdn_url' in values or 'cdn_filters' in values:
             # invalidate the caches from static node at compile time
             self.env['ir.qweb'].clear_caches()
+
+        if 'cookies_bar' in values:
+            if values['cookies_bar']:
+                cookies_view = self.env.ref('website.cookie_policy', raise_if_not_found=False)
+                if cookies_view:
+                    cookies_view.with_context(website_id=self.id).write({'website_id': self.id})
+                    specific_cook_view = self.with_context(website_id=self.id).viewref('website.cookie_policy')
+                    self.env['website.page'].create({
+                        'is_published': True,
+                        'website_indexed': False,
+                        'url': '/cookie-policy',
+                        'website_id': self.id,
+                        'view_id': specific_cook_view.id,
+                    })
+            else:
+                self.env['website.page'].search([
+                    ('website_id', '=', self.id),
+                    ('url', '=', '/cookie-policy'),
+                ]).unlink()
+
         return result
 
     @api.model
@@ -282,6 +303,7 @@ class Website(models.Model):
                 'url': page_url,
                 'website_id': website.id,  # remove it if only one website or not?
                 'view_id': view.id,
+                'track': True,
             })
             result['view_id'] = view.id
         if add_menu:
@@ -498,7 +520,12 @@ class Website(models.Model):
     @api.model
     def get_current_website(self, fallback=True):
         if request and request.session.get('force_website_id'):
-            return self.browse(request.session['force_website_id'])
+            website_id = self.browse(request.session['force_website_id']).exists()
+            if not website_id:
+                # Don't crash is session website got deleted
+                request.session.pop('force_website_id')
+            else:
+                return website_id
 
         website_id = self.env.context.get('website_id')
         if website_id:

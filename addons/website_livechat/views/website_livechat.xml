@@ -20,10 +20,6 @@
                     <script type="text/javascript" src="/mail/static/src/js/thread_windows/abstract_thread_window.js"></script>
                     <script type="text/javascript" src="/im_livechat/static/src/js/website_livechat_window.js"></script>
 
-                <script type="text/javascript" src="/bus/static/src/js/longpolling_bus.js"></script>
-                <script type="text/javascript" src="/bus/static/src/js/crosstab_bus.js"></script>
-                <script type="text/javascript" src="/bus/static/src/js/services/bus_service.js"></script>
-
                 <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/thread_widget.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
@@ -234,11 +230,7 @@
 
         <!-- User Navbar -->
         <template id="user_navbar_inherit_website_livechat" inherit_id="website.user_navbar">
-            <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_livechat']" position="attributes">
-                <attribute name="name"/>
-                <attribute name="t-att-data-module-id"/>
-                <attribute name="t-att-data-module-shortdesc"/>
-                <attribute name="groups">im_livechat.im_livechat_group_manager</attribute>
+            <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_livechat']" position="replace">
             </xpath>
         </template>
 

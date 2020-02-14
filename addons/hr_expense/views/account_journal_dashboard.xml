@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view" />
         <field name="arch" type="xml">
             <xpath expr="//t[@id='account.JournalBodySalePurchase']//div[hasclass('o_kanban_primary_right')]" position="inside">
-                <div class="row">
+                <div class="row" t-if="dashboard.number_expenses_to_pay">
                     <div class="col-7 text-left">
                         <a type="object" t-if="journal_type == 'purchase'" name="open_expenses_action">
                             <t t-esc="dashboard.number_expenses_to_pay"/> Expenses to Process

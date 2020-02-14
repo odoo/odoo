@@ -988,7 +988,8 @@
         <article t-attf-class="question o_wforum_post row no-gutters #{can_bump and 'oe_js_bump'}"
             data-type="question"
             t-att-data-last-update="question.write_date"
-            t-att-data-id="question.id">
+            t-att-data-id="question.id"
+            t-att-data-state="question.state">
 
             <div t-if="question.state == 'active'" class="col-6 mb-3 col-md-auto pr-2 pr-md-3 pr-lg-4">
                 <t t-call="website_forum.vote">
@@ -1602,11 +1603,7 @@
 
 <!-- User Navbar -->
 <template id="user_navbar_inherit_website_forum" inherit_id="website.user_navbar">
-    <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_forum']" position="attributes">
-        <attribute name="name"/>
-        <attribute name="t-att-data-module-id"/>
-        <attribute name="t-att-data-module-shortdesc"/>
-        <attribute name="groups">website.group_website_designer</attribute>
+    <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_forum']" position="replace">
     </xpath>
 </template>
 

@@ -102,7 +102,7 @@ function _convertNumericToUnit(value, unitFrom, unitTo, cssProp, $target) {
  * @returns {Array|null}
  */
 function _getNumericAndUnit(value) {
-    const m = value.trim().match(/^([0-9.]+)(\w*)$/);
+    const m = value.trim().match(/^(-?[0-9.]+)(\w*)$/);
     if (!m) {
         return null;
     }

@@ -13,15 +13,6 @@ class AccountMove(models.Model):
     l10n_latam_internal_type = fields.Selection(
         related='l10n_latam_document_type_id.internal_type', string='L10n Latam Internal Type')
 
-    def _get_document_type_sequence(self):
-        """ Return the match sequences for the given journal and invoice """
-        self.ensure_one()
-        if self.journal_id.l10n_latam_use_documents and self.l10n_latam_country_code == 'CL':
-            res = self.journal_id.l10n_cl_sequence_ids.filtered(
-                lambda x: x.l10n_latam_document_type_id == self.l10n_latam_document_type_id)
-            return res
-        return super()._get_document_type_sequence()
-
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
         domain = super()._get_l10n_latam_documents_domain()

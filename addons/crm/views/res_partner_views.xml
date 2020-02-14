@@ -59,19 +59,6 @@
                 </xpath>
             </field>
         </record>
-        <!-- tree view of crm.activity.report -->
-        <record id="crm_activity_report_view_tree" model="ir.ui.view">
-            <field name="name">crm.activity.report.tree</field>
-            <field name="model">crm.activity.report</field>
-            <field name="arch" type="xml">
-                <tree delete="false" create="false">
-                    <field name="author_id"/>
-                    <field name="subtype_id"/>
-                    <field name="lead_id"/>
-                    <field name="date"/>
-                </tree>
-            </field>
-        </record>
 
         <!-- Add contextual button on partner form view -->
         <record id="view_partners_form_crm1" model="ir.ui.view">

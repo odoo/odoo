@@ -31,6 +31,7 @@
                             <field name="id" invisible="1"/>
                             <field name="name"/>
                             <field name="model" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="order"/>
                             <field name="transient" attrs="{'readonly': [('id', '!=', False)]}" groups="base.group_no_one"/>
                         </group>
                         <group>
@@ -273,6 +274,9 @@
                                             attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],
                                                     'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
                                                     'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
+                                        <field name="group_expand" groups="base.group_no_one"
+                                            attrs="{'readonly': [('ttype','!=','many2one')],
+                                                    'invisible': [('ttype','!=','many2one')]}"/>
                                         <field name="on_delete" groups="base.group_no_one"
                                             attrs="{'readonly': [('ttype','!=','many2one')],
                                                     'invisible': [('ttype','!=','many2one')]}"/>

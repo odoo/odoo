@@ -58,6 +58,13 @@
             width: $o-kanban-color-border-width;
         }
 
+        .o_kanban_record_details {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 100%,
+        }
+
         // Inner Sections
         .o_kanban_record_top, .o_kanban_record_body  {
             margin-bottom: $o-kanban-inner-hmargin;
@@ -119,6 +126,7 @@
                 flex: 0 1 auto;
 
                 .oe_kanban_avatar {
+                    border-radius: 50%;
                     width: 20px;
                     height: 20px;
                     object-fit: cover;
@@ -336,7 +344,7 @@
         }
 
         .oe_kanban_details {
-            display: flex;
+            display: inherit;
             flex-flow: column;
             width: 100%;
 

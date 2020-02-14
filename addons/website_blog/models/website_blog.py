@@ -13,17 +13,14 @@ from odoo.tools import html2plaintext
 
 class Blog(models.Model):
     _name = 'blog.blog'
-    _description = 'Blogs'
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.multi.mixin']
+    _description = 'Blog'
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.multi.mixin', 'website.cover_properties.mixin']
     _order = 'name'
 
     name = fields.Char('Blog Name', required=True, translate=True)
     subtitle = fields.Char('Blog Subtitle', translate=True)
     active = fields.Boolean('Active', default=True)
     content = fields.Html('Content', translate=html_translate, sanitize=False)
-    cover_properties = fields.Text(
-        'Cover Properties',
-        default='{"background-image": "none", "background-color": "oe_black", "opacity": "0.2", "resize_class": "o_half_screen_height"}')
 
     def write(self, vals):
         res = super(Blog, self).write(vals)
@@ -114,7 +111,7 @@ class BlogTag(models.Model):
 class BlogPost(models.Model):
     _name = "blog.post"
     _description = "Blog Post"
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin', 'website.cover_properties.mixin']
     _order = 'id DESC'
     _mail_post_access = 'read'
 
@@ -131,9 +128,6 @@ class BlogPost(models.Model):
     subtitle = fields.Char('Sub Title', translate=True)
     author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id)
     active = fields.Boolean('Active', default=True)
-    cover_properties = fields.Text(
-        'Cover Properties',
-        default='{"background-image": "none", "background-color": "oe_black", "opacity": "0.2", "resize_class": "o_half_screen_height"}')
     blog_id = fields.Many2one('blog.blog', 'Blog', required=True, ondelete='cascade')
     tag_ids = fields.Many2many('blog.tag', string='Tags')
     content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize=False)
@@ -151,7 +145,7 @@ class BlogPost(models.Model):
     write_date = fields.Datetime('Last Updated on', index=True, readonly=True)
     write_uid = fields.Many2one('res.users', 'Last Contributor', index=True, readonly=True)
     author_avatar = fields.Binary(related='author_id.image_128', string="Avatar", readonly=False)
-    visits = fields.Integer('No of Views', copy=False)
+    visits = fields.Integer('No of Views', copy=False, default=0)
     website_id = fields.Many2one(related='blog_id.website_id', readonly=True)
 
     @api.depends('content', 'teaser_manual')

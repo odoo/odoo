@@ -483,11 +483,10 @@ class AccountAccount(models.Model):
             if record.company_id.account_opening_move_id:
                 for line in self.env['account.move.line'].search([('account_id', '=', record.id),
                                                                  ('move_id','=', record.company_id.account_opening_move_id.id)]):
-                    #could be executed at most twice: once for credit, once for debit
                     if line.debit:
-                        opening_debit = line.debit
+                        opening_debit += line.debit
                     elif line.credit:
-                        opening_credit = line.credit
+                        opening_credit += line.credit
             record.opening_debit = opening_debit
             record.opening_credit = opening_credit
 
@@ -510,21 +509,30 @@ class AccountAccount(models.Model):
 
         if opening_move.state == 'draft':
             # check whether we should create a new move line or modify an existing one
-            opening_move_line = self.env['account.move.line'].search([('account_id', '=', self.id),
+            account_op_lines = self.env['account.move.line'].search([('account_id', '=', self.id),
                                                                       ('move_id','=', opening_move.id),
                                                                       (field,'!=', False),
                                                                       (field,'!=', 0.0)]) # 0.0 condition important for import
 
-            counter_part_map = {'debit': opening_move_line.credit, 'credit': opening_move_line.debit}
-            # No typo here! We want the credit value when treating debit and debit value when treating credit
+            if account_op_lines:
+                op_aml_debit = sum(account_op_lines.mapped('debit'))
+                op_aml_credit = sum(account_op_lines.mapped('credit'))
 
-            if opening_move_line:
+                # There might be more than one line on this account if the opening entry was manually edited
+                # If so, we need to merge all those lines into one before modifying its balance
+                opening_move_line = account_op_lines[0]
+                if len(account_op_lines) > 1:
+                    merge_write_cmd = [(1, opening_move_line.id, {'debit': op_aml_debit, 'credit': op_aml_credit, 'partner_id': None ,'name': _("Opening balance")})]
+                    unlink_write_cmd = [(2, line.id) for line in account_op_lines[1:]]
+                    opening_move.write({'line_ids': merge_write_cmd + unlink_write_cmd})
+
                 if amount:
                     # modify the line
                     opening_move_line.with_context(check_move_validity=False)[field] = amount
-                elif counter_part_map[field]:
+                else:
                     # delete the line (no need to keep a line with value = 0)
                     opening_move_line.with_context(check_move_validity=False).unlink()
+
             elif amount:
                 # create a new line, as none existed before
                 self.env['account.move.line'].with_context(check_move_validity=False).create({
@@ -913,7 +921,7 @@ class AccountJournal(models.Model):
         return self.__get_bank_statements_available_sources()
 
     name = fields.Char(string='Journal Name', required=True)
-    code = fields.Char(string='Short Code', size=5, required=True, help="The journal entries of this journal will be named using this prefix.")
+    code = fields.Char(string='Short Code', size=5, required=True, help="Shorter name used for display. The journal entries of this journal will also be named using this prefix by default.")
     active = fields.Boolean(default=True, help="Set active to false to hide the Journal without removing it.")
     type = fields.Selection([
             ('sale', 'Sales'),
@@ -936,19 +944,7 @@ class AccountJournal(models.Model):
         domain="[('deprecated', '=', False), ('company_id', '=', company_id)]", help="It acts as a default account for debit amount", ondelete='restrict')
     restrict_mode_hash_table = fields.Boolean(string="Lock Posted Entries with Hash",
         help="If ticked, the accounting entry or invoice receives a hash as soon as it is posted and cannot be modified anymore.")
-    sequence_id = fields.Many2one('ir.sequence', string='Entry Sequence',
-        help="This field contains the information related to the numbering of the journal entries of this journal.", required=True, copy=False)
-    refund_sequence_id = fields.Many2one('ir.sequence', string='Credit Note Entry Sequence',
-        help="This field contains the information related to the numbering of the credit note entries of this journal.", copy=False)
     sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)
-    sequence_number_next = fields.Integer(string='Next Number',
-        help='The next sequence number will be used for the next invoice.',
-        compute='_compute_seq_number_next',
-        inverse='_inverse_seq_number_next')
-    refund_sequence_number_next = fields.Integer(string='Credit Notes Next Number',
-        help='The next sequence number will be used for the next credit note.',
-        compute='_compute_refund_seq_number_next',
-        inverse='_inverse_refund_seq_number_next')
 
     invoice_reference_type = fields.Selection(string='Communication Type', required=True, selection=[('none', 'Free'), ('partner', 'Based on Customer'), ('invoice', 'Based on Invoice')], default='invoice', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
     invoice_reference_model = fields.Selection(string='Communication Standard', required=True, selection=[('odoo', 'Odoo'),('euro', 'European')], default='odoo', help="You can choose different models for each type of reference. The default one is the Odoo reference.")
@@ -959,6 +955,11 @@ class AccountJournal(models.Model):
         help="Company related to this journal")
 
     refund_sequence = fields.Boolean(string='Dedicated Credit Note Sequence', help="Check this box if you don't want to share the same sequence for invoices and credit notes made from this journal", default=False)
+    sequence_override_regex = fields.Text(help="Technical field used to enforce complex sequence composition that the system would normally misunderstand.\n"\
+                                          "This is a regex that can include all the following capture groups: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"\
+                                          "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"\
+                                          
+                                          "e.g: ^(?P<prefix1>.*?)(?P<year>\d{4})(?P<prefix2>\D*?)(?P<month>\d{2})(?P<prefix3>\D+?)(?P<seq>\d+)(?P<suffix>\D*?)$")
 
     inbound_payment_method_ids = fields.Many2many('account.payment.method', 'account_journal_inbound_payment_method_rel', 'journal_id', 'inbound_payment_method',
         domain=[('payment_type', '=', 'inbound')], string='For Incoming Payments', default=lambda self: self._default_inbound_payment_methods(),
@@ -983,6 +984,11 @@ class AccountJournal(models.Model):
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id', readonly=False)
     post_at = fields.Selection([('pay_val', 'Payment Validation'), ('bank_rec', 'Bank Reconciliation')], string="Post At", default='pay_val')
 
+    # Sale journals fields
+    sale_activity_type_id = fields.Many2one('mail.activity.type', string='Schedule Activity', default=False, help="Activity will be automatically scheduled on payment due date, improving collection process.")
+    sale_activity_user_id = fields.Many2one('res.users', string="Activity User", help="Leave empty to assign the Salesperson of the invoice.")
+    sale_activity_note = fields.Text('Activity Summary')
+
     # alias configuration for journals
     alias_id = fields.Many2one('mail.alias', string='Alias', copy=False)
     alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
@@ -1000,50 +1006,6 @@ class AccountJournal(models.Model):
         alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
         for record in self:
             record.alias_domain = alias_domain
-
-    # do not depend on 'sequence_id.date_range_ids', because
-    # sequence_id._get_current_sequence() may invalidate it!
-    @api.depends('sequence_id.use_date_range', 'sequence_id.number_next_actual')
-    def _compute_seq_number_next(self):
-        '''Compute 'sequence_number_next' according to the current sequence in use,
-        an ir.sequence or an ir.sequence.date_range.
-        '''
-        for journal in self:
-            if journal.sequence_id:
-                sequence = journal.sequence_id._get_current_sequence()
-                journal.sequence_number_next = sequence.number_next_actual
-            else:
-                journal.sequence_number_next = 1
-
-    def _inverse_seq_number_next(self):
-        '''Inverse 'sequence_number_next' to edit the current sequence next number.
-        '''
-        for journal in self:
-            if journal.sequence_id and journal.sequence_number_next:
-                sequence = journal.sequence_id._get_current_sequence()
-                sequence.sudo().number_next = journal.sequence_number_next
-
-    # do not depend on 'refund_sequence_id.date_range_ids', because
-    # refund_sequence_id._get_current_sequence() may invalidate it!
-    @api.depends('refund_sequence_id.use_date_range', 'refund_sequence_id.number_next_actual')
-    def _compute_refund_seq_number_next(self):
-        '''Compute 'sequence_number_next' according to the current sequence in use,
-        an ir.sequence or an ir.sequence.date_range.
-        '''
-        for journal in self:
-            if journal.refund_sequence_id and journal.refund_sequence:
-                sequence = journal.refund_sequence_id._get_current_sequence()
-                journal.refund_sequence_number_next = sequence.number_next_actual
-            else:
-                journal.refund_sequence_number_next = 1
-
-    def _inverse_refund_seq_number_next(self):
-        '''Inverse 'refund_sequence_number_next' to edit the current sequence next number.
-        '''
-        for journal in self:
-            if journal.refund_sequence_id and journal.refund_sequence and journal.refund_sequence_number_next:
-                sequence = journal.refund_sequence_id._get_current_sequence()
-                sequence.sudo().number_next = journal.refund_sequence_number_next
 
     @api.constrains('type_control_ids')
     def _constrains_type_control_ids(self):
@@ -1187,14 +1149,6 @@ class AccountJournal(models.Model):
                         'company_id': company.id,
                         'partner_id': company.partner_id.id,
                     })
-            if ('code' in vals and journal.code != vals['code']):
-                if self.env['account.move'].search([('journal_id', 'in', self.ids)], limit=1):
-                    raise UserError(_('This journal already contains items, therefore you cannot modify its short name.'))
-                new_prefix = self._get_sequence_prefix(vals['code'], refund=False)
-                journal.sequence_id.write({'prefix': new_prefix})
-                if journal.refund_sequence_id:
-                    new_prefix = self._get_sequence_prefix(vals['code'], refund=True)
-                    journal.refund_sequence_id.write({'prefix': new_prefix})
             if 'currency_id' in vals:
                 if not 'default_debit_account_id' in vals and journal.default_debit_account_id:
                     journal.default_debit_account_id.currency_id = vals['currency_id']
@@ -1222,16 +1176,6 @@ class AccountJournal(models.Model):
         if 'bank_acc_number' in vals:
             for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
-        # create the relevant refund sequence
-        if vals.get('refund_sequence'):
-            for journal in self.filtered(lambda j: j.type in ('sale', 'purchase') and not j.refund_sequence_id):
-                journal_vals = {
-                    'name': journal.name,
-                    'company_id': journal.company_id.id,
-                    'code': journal.code,
-                    'refund_sequence_number_next': vals.get('refund_sequence_number_next', journal.refund_sequence_number_next),
-                }
-                journal.refund_sequence_id = self.sudo()._create_sequence(journal_vals, refund=True).id
         # Changing the 'post_at' option will post the draft payment moves and change the related invoices' state.
         if 'post_at' in vals and vals['post_at'] != 'bank_rec':
             draft_moves = self.env['account.move'].search([('journal_id', 'in', self.ids), ('state', '=', 'draft')])
@@ -1243,33 +1187,6 @@ class AccountJournal(models.Model):
                 record._create_secure_sequence(['secure_sequence_id'])
 
         return result
-
-    @api.model
-    def _get_sequence_prefix(self, code, refund=False):
-        prefix = code.upper()
-        if refund:
-            prefix = 'R' + prefix
-        return prefix + '/%(range_year)s/'
-
-    @api.model
-    def _create_sequence(self, vals, refund=False):
-        """ Create new no_gap entry sequence for every new Journal"""
-        prefix = self._get_sequence_prefix(vals['code'], refund)
-        seq_name = refund and vals['code'] + _(': Refund') or vals['code']
-        seq = {
-            'name': _('%s Sequence') % seq_name,
-            'implementation': 'no_gap',
-            'prefix': prefix,
-            'padding': 4,
-            'number_increment': 1,
-            'use_date_range': True,
-        }
-        if 'company_id' in vals:
-            seq['company_id'] = vals['company_id']
-        seq = self.env['ir.sequence'].create(seq)
-        seq_date_range = seq._get_current_sequence()
-        seq_date_range.number_next = refund and vals.get('refund_sequence_number_next', 1) or vals.get('sequence_number_next', 1)
-        return seq
 
     @api.model
     def _prepare_liquidity_account(self, name, company, currency_id, type):
@@ -1345,11 +1262,6 @@ class AccountJournal(models.Model):
         if 'refund_sequence' not in vals:
             vals['refund_sequence'] = vals['type'] in ('sale', 'purchase')
 
-        # We just need to create the relevant sequences according to the chosen options
-        if not vals.get('sequence_id'):
-            vals.update({'sequence_id': self.sudo()._create_sequence(vals).id})
-        if vals.get('type') in ('sale', 'purchase') and vals.get('refund_sequence') and not vals.get('refund_sequence_id'):
-            vals.update({'refund_sequence_id': self.sudo()._create_sequence(vals, refund=True).id})
         journal = super(AccountJournal, self.with_context(mail_create_nolog=True)).create(vals)
         if 'alias_name' in vals:
             journal._update_mail_alias(vals)
@@ -1503,7 +1415,7 @@ class AccountTax(models.Model):
     - Group of Taxes: The tax is a set of sub taxes.
     - Fixed: The tax amount stays the same whatever the price.
     - Percentage of Price: The tax amount is a % of the price:
-        e.g 100 * 10% = 110 (not price included)
+        e.g 100 * (1 + 10%) = 110 (not price included)
         e.g 110 / (1 + 10%) = 100 (price included)
     - Percentage of Price Tax Included: The tax amount is a division of the price:
         e.g 180 / (1 - 10%) = 200 (not price included)
@@ -1614,9 +1526,9 @@ class AccountTax(models.Model):
             JOIN account_tax tax ON tax.id = line.tax_line_id
             WHERE line.tax_line_id IN %s
             AND line.company_id != tax.company_id
-            
+
             UNION ALL
-            
+
             SELECT line.id
             FROM account_move_line_account_tax_rel tax_rel
             JOIN account_tax tax ON tax.id = tax_rel.account_tax_id
@@ -1716,7 +1628,7 @@ class AccountTax(models.Model):
             return base_amount - (base_amount / (1 + self.amount / 100))
         # base / (1 - tax_amount) = new_base
         if self.amount_type == 'division' and not price_include:
-            return base_amount / (1 - self.amount / 100) - base_amount
+            return base_amount / (1 - self.amount / 100) - base_amount if (1 - self.amount / 100) else 0.0
         # <=> new_base * (1 - tax_amount) = base
         if self.amount_type == 'division' and price_include:
             return base_amount - (base_amount * (self.amount / 100))
@@ -1811,10 +1723,8 @@ class AccountTax(models.Model):
         # precision of the currency.
         # The context key 'round' allows to force the standard behavior.
         round_tax = False if company.tax_calculation_rounding_method == 'round_globally' else True
-        round_total = True
         if 'round' in self.env.context:
             round_tax = bool(self.env.context['round'])
-            round_total = bool(self.env.context['round'])
 
         if not round_tax:
             prec += 5
@@ -1842,7 +1752,33 @@ class AccountTax(models.Model):
             # (145 - 15) / (1.0 + 30%) * 90% = 130 / 1.3 * 90% = 90
             return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100
 
-        base = round(price_unit * quantity, prec)
+        # The first/last base must absolutely be rounded to work in round globally.
+        # Indeed, the sum of all taxes ('taxes' key in the result dictionary) must be strictly equals to
+        # 'price_included' - 'price_excluded' whatever the rounding method.
+        #
+        # Example using the global rounding without any decimals:
+        # Suppose two invoice lines: 27000 and 10920, both having a 19% price included tax.
+        #
+        #                   Line 1                      Line 2
+        # -----------------------------------------------------------------------
+        # total_included:   27000                       10920
+        # tax:              27000 / 1.19 = 4310.924     10920 / 1.19 = 1743.529
+        # total_excluded:   22689.076                   9176.471
+        #
+        # If the rounding of the total_excluded isn't made at the end, it could lead to some rounding issues
+        # when summing the tax amounts, e.g. on invoices.
+        # In that case:
+        #  - amount_untaxed will be 22689 + 9176 = 31865
+        #  - amount_tax will be 4310.924 + 1743.529 = 6054.453 ~ 6054
+        #  - amount_total will be 31865 + 6054 = 37919 != 37920 = 27000 + 10920
+        #
+        # By performing a rounding at the end to compute the price_excluded amount, the amount_tax will be strictly
+        # equals to 'price_included' - 'price_excluded' after rounding and then:
+        #   Line 1: sum(taxes) = 27000 - 22689 = 4311
+        #   Line 2: sum(taxes) = 10920 - 2176 = 8744
+        #   amount_tax = 4311 + 8744 = 13055
+        #   amount_total = 31865 + 13055 = 37920
+        base = currency.round(price_unit * quantity)
 
         # For the computation of move lines, we could have a negative base value.
         # In this case, compute all with positive values and negate them at the end.
@@ -1890,7 +1826,7 @@ class AccountTax(models.Model):
                         store_included_tax_total = False
                 i -= 1
 
-        total_excluded = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount)
+        total_excluded = currency.round(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount))
 
         # 5) Iterate the taxes in the sequence order to compute missing tax amounts.
         # Start the computation of accumulated amounts at the total_excluded value.
@@ -1975,9 +1911,9 @@ class AccountTax(models.Model):
         return {
             'base_tags': taxes.mapped(is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids').filtered(lambda x: x.repartition_type == 'base').mapped('tag_ids').ids,
             'taxes': taxes_vals,
-            'total_excluded': sign * (currency.round(total_excluded) if round_total else total_excluded),
-            'total_included': sign * (currency.round(total_included) if round_total else total_included),
-            'total_void': sign * (currency.round(total_void) if round_total else total_void),
+            'total_excluded': sign * total_excluded,
+            'total_included': sign * currency.round(total_included),
+            'total_void': sign * currency.round(total_void),
         }
 
     @api.model

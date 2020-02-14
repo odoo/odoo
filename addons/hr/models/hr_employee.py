@@ -4,14 +4,11 @@
 import base64
 from random import choice
 from string import digits
-import itertools
-from werkzeug import url_encode
-import pytz
+from werkzeug.urls import url_encode
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
-from odoo.addons.resource.models.resource_mixin import timezone_datetime
 
 
 class HrEmployeePrivate(models.Model):
@@ -114,6 +111,7 @@ class HrEmployeePrivate(models.Model):
         ('retired', 'Retired')
     ], string="Departure Reason", groups="hr.group_hr_user", copy=False, tracking=True)
     departure_description = fields.Text(string="Additional Information", groups="hr.group_hr_user", copy=False, tracking=True)
+    departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_user", copy=False, tracking=True)
     message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
 
     _sql_constraints = [
@@ -273,10 +271,14 @@ class HrEmployeePrivate(models.Model):
 
     def toggle_active(self):
         res = super(HrEmployeePrivate, self).toggle_active()
-        self.filtered(lambda employee: employee.active).write({
+        unarchived_employees = self.filtered(lambda employee: employee.active)
+        unarchived_employees.write({
             'departure_reason': False,
             'departure_description': False,
+            'departure_date': False
         })
+        archived_addresses = unarchived_employees.mapped('address_home_id').filtered(lambda addr: not addr.active)
+        archived_addresses.toggle_active()
         if len(self) == 1 and not self.active:
             return {
                 'type': 'ir.actions.act_window',

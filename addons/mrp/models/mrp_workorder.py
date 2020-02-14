@@ -457,6 +457,8 @@ class MrpWorkorder(models.Model):
         self._check_company()
         if float_compare(self.qty_producing, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
             raise UserError(_('Please set the quantity you are currently producing. It should be different from zero.'))
+        if self.production_id.product_id.tracking != 'none' and not self.finished_lot_id and self.move_raw_ids:
+            raise UserError(_('You should provide a lot for the final product'))
         if 'check_ids' not in self:
             for line in self.raw_workorder_line_ids | self.finished_workorder_line_ids:
                 line._check_line_sn_uniqueness()
@@ -786,6 +788,13 @@ class MrpWorkorderLine(models.Model):
         ondelete='cascade')
     finished_workorder_id = fields.Many2one('mrp.workorder', 'Finished Product for Workorder',
         ondelete='cascade')
+
+    @api.onchange('qty_to_consume')
+    def _onchange_qty_to_consume(self):
+        # Update qty_done for products added in ready state
+        wo = self.raw_workorder_id or self.finished_workorder_id
+        if wo.state == 'ready':
+            self.qty_done = self.qty_to_consume
 
     @api.model_create_multi
     def create(self, vals_list):

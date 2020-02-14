@@ -8,8 +8,6 @@
             <field name="arch" type="xml">
                 <search string="Search history">
                     <field name="name"/>
-                    <filter string="With Messages" name="session_not_empty" domain="[('channel_message_ids', '!=', False)]"/>
-                    <filter string="Empty Sessions" name="session_empty" domain="[('channel_message_ids', '=', False)]"/>
                     <group expand="0" string="Group By...">
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'livechat_channel_id'}"/>
                         <separator orientation="vertical"/>
@@ -131,11 +129,10 @@
             <field name="name">Sessions</field>
             <field name="res_model">mail.channel</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('livechat_channel_id', 'in', [active_id])]</field>
+            <field name="domain">[('livechat_channel_id', 'in', [active_id]), ('channel_message_ids', '!=', False)]</field>
             <field name="context">{
                 'search_default_livechat_channel_id': [active_id],
                 'default_livechat_channel_id': active_id,
-                'search_default_session_not_empty': 1,
             }</field>
             <field name="search_view_id" ref="mail_channel_view_search"/>
         </record>

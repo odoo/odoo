@@ -54,7 +54,9 @@ class SurveyQuestion(models.Model):
 
     # question generic data
     title = fields.Char('Title', required=True, translate=True)
-    description = fields.Html('Description', help="Use this field to add additional explanations about your question", translate=True)
+    description = fields.Html(
+        'Description', translate=True, sanitize=False,  # TDE TODO: sanitize but find a way to keep youtube iframe media stuff
+        help="Use this field to add additional explanations about your question or to illustrate it with pictures or a video")
     survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade')
     scoring_type = fields.Selection(related='survey_id.scoring_type', string='Scoring Type', readonly=True)
     sequence = fields.Integer('Sequence', default=10)
@@ -80,12 +82,16 @@ class SurveyQuestion(models.Model):
         ('matrix', 'Matrix')], string='Question Type')
     # -- char_box
     save_as_email = fields.Boolean(
-        "Save as user email", compute='_compute_save_as_email', readonly=False, store=True,
+        "Save as user email", compute='_compute_save_as_email', readonly=False, store=True, copy=True,
         help="If checked, this option will save the user's answer as its email address.")
+    save_as_nickname = fields.Boolean(
+        "Save as user nickname", compute='_compute_save_as_nickname', readonly=False, store=True, copy=True,
+        help="If checked, this option will save the user's answer as its nickname.")
     # -- simple choice / multiple choice / matrix
     suggested_answer_ids = fields.One2many(
         'survey.question.answer', 'question_id', string='Types of answers', copy=True,
         help='Labels used for proposed choices: simple choice, multiple choice and columns of matrix')
+    allow_value_image = fields.Boolean('Images on answers', help='Display images in addition to answer label. Valid only for simple / multiple choice questions.')
     # -- matrix
     matrix_subtype = fields.Selection([
         ('simple', 'One choice per row'),
@@ -93,11 +99,14 @@ class SurveyQuestion(models.Model):
     matrix_row_ids = fields.One2many(
         'survey.question.answer', 'matrix_question_id', string='Matrix Rows', copy=True,
         help='Labels used for proposed choices: rows of matrix')
-    # -- display options
+    # -- display & timing options
     column_nb = fields.Selection([
         ('12', '1'), ('6', '2'), ('4', '3'), ('3', '4'), ('2', '6')],
         string='Number of columns', default='12',
         help='These options refer to col-xx-[12|6|4|3|2] classes in Bootstrap for dropdown-based simple and multiple choice questions.')
+    is_time_limited = fields.Boolean("The question is limited in time",
+        help="Currently only supported for live sessions.")
+    time_limit = fields.Integer("Time limit (seconds)")
     # -- comments (simple choice, multiple choice, matrix (without count as an answer))
     comments_allowed = fields.Boolean('Show Comments Field')
     comments_message = fields.Char('Comment Message', translate=True, default=lambda self: _("If other, please specify:"))
@@ -177,6 +186,12 @@ class SurveyQuestion(models.Model):
         for question in self:
             if question.question_type != 'char_box' or not question.validation_email:
                 question.save_as_email = False
+
+    @api.depends('question_type')
+    def _compute_save_as_nickname(self):
+        for question in self:
+            if question.question_type != 'char_box':
+                question.save_as_nickname = False
 
     # Validation methods
     def validate_question(self, answer, comment=None):
@@ -424,7 +439,7 @@ class SurveyQuestion(models.Model):
         return {
             'numerical_max': max(all_values, default=0),
             'numerical_min': min(all_values, default=0),
-            'numerical_average': round(lines_sum / len(all_values) or 1, 2),
+            'numerical_average': round(lines_sum / (len(all_values) or 1), 2),
             'numerical_common_lines': collections.Counter(all_values).most_common(5),
         }
 
@@ -447,6 +462,7 @@ class SurveyQuestionAnswer(models.Model):
     matrix_question_id = fields.Many2one('survey.question', string='Question (as matrix row)', ondelete='cascade')
     sequence = fields.Integer('Label Sequence order', default=10)
     value = fields.Char('Suggested value', translate=True, required=True)
+    value_image = fields.Image('Image', max_width=256, max_height=256)
     is_correct = fields.Boolean('Is a correct answer')
     answer_score = fields.Float('Score for this choice', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
 

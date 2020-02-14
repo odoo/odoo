@@ -9,7 +9,6 @@ from odoo.addons.base.models.res_partner import _tz_get
 from odoo.tools import format_datetime
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import html_translate
-from odoo.tools.misc import _format_time_ago
 
 _logger = logging.getLogger(__name__)
 
@@ -34,12 +33,6 @@ class EventType(models.Model):
             'template_id': self.env.ref('event.event_subscription').id,
         }), (0, 0, {
             'notification_type': 'mail',
-            'interval_nbr': 1,
-            'interval_unit': 'days',
-            'interval_type': 'before_event',
-            'template_id': self.env.ref('event.event_reminder').id,
-        }), (0, 0, {
-            'notification_type': 'mail',
             'interval_nbr': 10,
             'interval_unit': 'days',
             'interval_type': 'before_event',
@@ -48,9 +41,14 @@ class EventType(models.Model):
 
     name = fields.Char('Event Category', required=True, translate=True)
     sequence = fields.Integer()
+    # tickets
+    use_ticket = fields.Boolean('Ticketing')
+    event_type_ticket_ids = fields.One2many(
+        'event.type.ticket', 'event_type_id',
+        string='Tickets', compute='_compute_event_type_ticket_ids',
+        readonly=False, store=True)
     # registration
-    has_seats_limitation = fields.Boolean(
-        'Limited Seats', default=False)
+    has_seats_limitation = fields.Boolean('Limited Seats')
     default_registration_min = fields.Integer(
         'Minimum Registrations', default=0,
         help="It will select this default minimum value when you choose this event")
@@ -68,14 +66,22 @@ class EventType(models.Model):
     default_timezone = fields.Selection(
         _tz_get, string='Timezone', default=lambda self: self.env.user.tz or 'UTC')
     # communication
-    use_hashtag = fields.Boolean('Use Default Hashtag')
-    default_hashtag = fields.Char('Twitter Hashtag')
     use_mail_schedule = fields.Boolean(
         'Automatically Send Emails', default=True)
     event_type_mail_ids = fields.One2many(
         'event.type.mail', 'event_type_id', string='Mail Schedule',
         copy=False,
         default=lambda self: self._get_default_event_type_mail_ids())
+
+    @api.depends('use_ticket')
+    def _compute_event_type_ticket_ids(self):
+        for template in self:
+            if not template.use_ticket:
+                template.event_type_ticket_ids = [(5, 0)]
+            elif not template.event_type_ticket_ids:
+                template.event_type_ticket_ids = [(0, 0, {
+                    'name': _('Registration'),
+                })]
 
     @api.onchange('has_seats_limitation')
     def _onchange_has_seats_limitation(self):
@@ -95,28 +101,22 @@ class EventEvent(models.Model):
         event_stages = self.env['event.stage'].search([])
         return event_stages[0] if event_stages else False
 
-    name = fields.Char(
-        string='Event', translate=True, required=True,
-        readonly=False)
+    name = fields.Char(string='Event', translate=True, required=True)
     note = fields.Text(string='Note')
+    description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
-        'res.users', string='Responsible',
-        default=lambda self: self.env.user,
-        tracking=True,
-        readonly=False)
+        'res.users', string='Responsible', tracking=True,
+        default=lambda self: self.env.user)
     company_id = fields.Many2one(
         'res.company', string='Company', change_default=True,
         default=lambda self: self.env.company,
-        required=False, readonly=False)
+        required=False)
     organizer_id = fields.Many2one(
-        'res.partner', string='Organizer',
-        tracking=True,
+        'res.partner', string='Organizer', tracking=True,
         default=lambda self: self.env.company.partner_id,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    event_type_id = fields.Many2one(
-        'event.type', string='Category',
-        readonly=False)
+    event_type_id = fields.Many2one('event.type', string='Category', ondelete='set null')
     color = fields.Integer('Kanban Color Index')
     event_mail_ids = fields.One2many('event.mail', 'event_id', string='Mail Schedule', copy=True)
     # Kanban fields
@@ -128,14 +128,12 @@ class EventEvent(models.Model):
     legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True)
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True)
-    duration_str = fields.Char(compute='_compute_duration_str')
     # Seats and computation
     seats_max = fields.Integer(
         string='Maximum Attendees Number',
-        readonly=True,
         help="For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted.")
     seats_availability = fields.Selection(
-        [('limited', 'Limited'), ('unlimited', 'Unlimited')],
+        [('unlimited', 'Unlimited'), ('limited', 'Limited')],
         'Maximum Attendees', required=True, default='unlimited')
     seats_min = fields.Integer(
         string='Minimum Attendees',
@@ -156,36 +154,30 @@ class EventEvent(models.Model):
         string='Number of Expected Attendees',
         compute_sudo=True, readonly=True, compute='_compute_seats')
     # Registration fields
-    registration_ids = fields.One2many(
-        'event.registration', 'event_id', string='Attendees',
-        readonly=False)
+    auto_confirm = fields.Boolean(string='Autoconfirm Registrations')
+    registration_ids = fields.One2many('event.registration', 'event_id', string='Attendees')
     event_registrations_open = fields.Boolean('Registration open', compute='_compute_event_registrations_open')
+    event_ticket_ids = fields.One2many(
+        'event.event.ticket', 'event_id', string='Event Ticket',
+        copy=True)
     # Date fields
     date_tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
         default=lambda self: self.env.user.tz or 'UTC')
-    date_begin = fields.Datetime(
-        string='Start Date', required=True,
-        tracking=True)
-    date_end = fields.Datetime(
-        string='End Date', required=True,
-        tracking=True)
+    date_begin = fields.Datetime(string='Start Date', required=True, tracking=True)
+    date_end = fields.Datetime(string='End Date', required=True, tracking=True)
     date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
     date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
+    is_ongoing = fields.Boolean('Is Ongoing', compute='_compute_is_ongoing', search='_search_is_ongoing')
     is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
-    auto_confirm = fields.Boolean(string='Autoconfirm Registrations')
+    start_sale_date = fields.Date('Start sale date', compute='_compute_start_sale_date')
+    # Location and communication
     is_online = fields.Boolean('Online Event')
     address_id = fields.Many2one(
-        'res.partner', string='Location',
+        'res.partner', string='Venue', tracking=True,
         default=lambda self: self.env.company.partner_id,
-        readonly=False,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        tracking=True)
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True, readonly=False)
-    twitter_hashtag = fields.Char('Twitter Hashtag')
-    description = fields.Html(
-        string='Description', translate=html_translate, sanitize_attributes=False,
-        readonly=False)
     # badge fields
     badge_front = fields.Html(string='Badge Front')
     badge_back = fields.Html(string='Badge Back')
@@ -222,10 +214,12 @@ class EventEvent(models.Model):
                 event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
             event.seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
 
-    @api.depends('date_end', 'seats_available', 'seats_availability')
+    @api.depends('date_end', 'seats_available', 'seats_availability', 'event_ticket_ids.sale_available')
     def _compute_event_registrations_open(self):
         for event in self:
-            event.event_registrations_open = event.date_end > fields.Datetime.now() and (event.seats_available or event.seats_availability == 'unlimited')
+            event.event_registrations_open = event.date_end and (event.date_end > fields.Datetime.now()) and \
+                (event.seats_available or event.seats_availability == 'unlimited') and \
+                (not event.event_ticket_ids or any(ticket.sale_available for ticket in event.event_ticket_ids))
 
     @api.depends('stage_id', 'kanban_state')
     def _compute_kanban_state_label(self):
@@ -255,6 +249,25 @@ class EventEvent(models.Model):
             else:
                 event.date_end_located = False
 
+    @api.depends('date_begin', 'date_end')
+    def _compute_is_ongoing(self):
+        now = fields.Datetime.now()
+        for event in self:
+            event.is_ongoing = event.date_begin <= now < event.date_end
+
+    def _search_is_ongoing(self, operator, value):
+        if operator not in ['=', '!=']:
+            raise ValueError(_('This operator is not supported'))
+        if not isinstance(value, bool):
+            raise ValueError(_('Value should be True or False (not %s)'), value)
+        now = fields.Datetime.now()
+        if (operator == '=' and value) or (operator == '!=' and not value):
+            domain = [('date_begin', '<=', now), ('date_end', '>', now)]
+        else:
+            domain = ['|', ('date_begin', '>', now), ('date_end', '<=', now)]
+        event_ids = self.env['event.event']._search(domain)
+        return [('id', 'in', event_ids)]
+
     @api.depends('date_begin', 'date_end', 'date_tz')
     def _compute_field_is_one_day(self):
         for event in self:
@@ -265,10 +278,11 @@ class EventEvent(models.Model):
             end_tz = fields.Datetime.context_timestamp(event, event.date_end)
             event.is_one_day = (begin_tz.date() == end_tz.date())
 
-    @api.depends('date_begin', 'date_end')
-    def _compute_duration_str(self):
+    @api.depends('event_ticket_ids.start_sale_date')
+    def _compute_start_sale_date(self):
         for event in self:
-            event.duration_str = _format_time_ago(self.env, event.date_end - event.date_begin, add_direction=False)
+            start_dates = [ticket.start_sale_date for ticket in event.event_ticket_ids if ticket.start_sale_date]
+            event.start_sale_date = min(start_dates) if start_dates else False
 
     @api.onchange('is_online')
     def _onchange_is_online(self):
@@ -286,21 +300,30 @@ class EventEvent(models.Model):
             if self.event_type_id.auto_confirm:
                 self.auto_confirm = self.event_type_id.auto_confirm
 
-            if self.event_type_id.use_hashtag:
-                self.twitter_hashtag = self.event_type_id.default_hashtag
-
             if self.event_type_id.use_timezone:
                 self.date_tz = self.event_type_id.default_timezone
 
             self.is_online = self.event_type_id.is_online
 
-            if self.event_type_id.event_type_mail_ids:
+            if self.event_type_id.use_mail_schedule and self.event_type_id.event_type_mail_ids:
                 self.event_mail_ids = [(5, 0, 0)] + [
                     (0, 0, {
                         attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
                         for attribute_name in self.env['event.type.mail']._get_event_mail_fields_whitelist()
                         })
                     for line in self.event_type_id.event_type_mail_ids]
+
+            # compute tickets information
+            if self.event_type_id.use_ticket:
+                all_ticket_values = []
+                for ticket in self.event_type_id.event_type_ticket_ids:
+                    ticket_vals = dict(
+                        (attribute_name, ticket[attribute_name] if not isinstance(ticket[attribute_name], models.BaseModel) else ticket[attribute_name].id)
+                        for attribute_name in self.env['event.type.ticket']._get_event_ticket_fields_whitelist()
+                    )
+                    all_ticket_values.append(ticket_vals)
+
+                self.event_ticket_ids = [(5, 0, 0)] + [(0, 0, item) for item in all_ticket_values]
 
     @api.constrains('seats_min', 'seats_max', 'seats_availability')
     def _check_seats_min_max(self):

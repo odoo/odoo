@@ -382,10 +382,12 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                 expected = counters.get(login, default)
                 if flush:
                     self.env.user.flush()
+                    self.env.cr.precommit()
                 count0 = self.cr.sql_log_count
                 yield
                 if flush:
                     self.env.user.flush()
+                    self.env.cr.precommit()
                 count = self.cr.sql_log_count - count0
                 if count != expected:
                     # add some info on caller to allow semi-automatic update of query count
@@ -400,9 +402,15 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                         msg = "Query count less than expected for user %s: %d < %d in %s at %s:%s"
                         logger.info(msg, login, count, expected, funcname, filename, linenum)
         else:
+            # flush before and after during warmup, in order to reproduce the
+            # same operations, otherwise the caches might not be ready!
+            if flush:
+                self.env.user.flush()
+                self.env.cr.precommit()
             yield
             if flush:
                 self.env.user.flush()
+                self.env.cr.precommit()
 
     def assertRecordValues(self, records, expected_values):
         ''' Compare a recordset with a list of dictionaries representing the expected results.
@@ -560,6 +568,7 @@ class SingleTransactionCase(BaseCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.registry = odoo.registry(get_db_name())
+        cls.addClassCleanup(cls.registry.reset_changes)
         cls.addClassCleanup(cls.registry.clear_caches)
 
         cls.cr = cls.registry.cursor()
@@ -1103,7 +1112,7 @@ class ChromeBrowser():
 
     LINE_PATTERN = '\tat %(functionName)s (%(url)s:%(lineNumber)d:%(columnNumber)d)\n'
     def _format_stack(self, logrecord):
-        if logrecord['type'] not in ('error', 'trace', 'warning'):
+        if logrecord['type'] not in ['trace']:
             return
 
         trace = logrecord.get('stackTrace')
@@ -1251,13 +1260,8 @@ class HttpCase(TransactionCase):
         - wait for ready object to be available
         - eval(code) inside the page
 
-        To signal success test do:
-        console.log('test successful')
-
-        To signal failure do:
-        console.error('test failed')
-
-        If neither are done before timeout test fails.
+        To signal success test do: console.log('test successful')
+        To signal test failure raise an exception or call console.error
         """
         # increase timeout if coverage is running
         if any(f.filename.endswith('/coverage/execfile.py') for f in inspect.stack()  if f.filename):

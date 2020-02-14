@@ -207,7 +207,8 @@ class StockRule(models.Model):
             'picking_type_id': self.picking_type_id.id,
             'propagate_cancel': self.propagate_cancel,
             'warehouse_id': self.warehouse_id.id,
-            'delay_alert': self.delay_alert
+            'delay_alert': self.delay_alert,
+            'procure_method': 'make_to_order',
         }
         return new_move_vals
 
@@ -499,6 +500,8 @@ class ProcurementGroup(models.Model):
 
         # Merge duplicated quants
         self.env['stock.quant']._quant_tasks()
+        if use_new_cursor:
+            self._cr.commit()
 
     @api.model
     def run_scheduler(self, use_new_cursor=False, company_id=False):

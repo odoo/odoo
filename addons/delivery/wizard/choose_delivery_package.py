@@ -60,5 +60,5 @@ class ChooseDeliveryPackage(models.TransientModel):
         # write shipping weight and product_packaging on 'stock_quant_package' if needed
         if self.delivery_packaging_id:
             delivery_package.packaging_id = self.delivery_packaging_id
-            if self.shipping_weight:
-                delivery_package.shipping_weight = self.shipping_weight
+        if self.shipping_weight:
+            delivery_package.shipping_weight = self.shipping_weight

@@ -179,7 +179,7 @@
                                     <field name="partner_address_email"
                                         attrs="{'invisible': [('partner_address_email', '=', False)]}" widget="email" string="Email"/>
                                 </div>
-                                <field name="phone" widget="phone" options="{'enable_sms': True}"/>
+                                <field name="phone" widget="phone"/>
                             </group>
                             <group name="lead_info" attrs="{'invisible': [('type', '=', 'opportunity')]}">
                                 <label for="contact_name"/>
@@ -198,8 +198,8 @@
                                 </div>
                                 <field name="email_cc" groups="base.group_no_one"/>
                                 <field name="function"/>
-                                <field name="phone" widget="phone" options="{'enable_sms': True}"/>
-                                <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
+                                <field name="phone" widget="phone"/>
+                                <field name="mobile" widget="phone"/>
                             </group>
                             <group attrs="{'invisible': [('type', '=', 'lead')]}">
                                 <field name="date_deadline"/>
@@ -271,7 +271,7 @@
                                             <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
                                         </div>
                                         <field name="function"/>
-                                        <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
+                                        <field name="mobile" widget="phone"/>
                                     </group>
                                     <group string="Marketing">
                                         <field name="campaign_id" />
@@ -313,9 +313,9 @@
             <field name="arch" type="xml">
                 <tree string="Leads" decoration-bf="message_needaction==True" decoration-muted="probability == 100">
                     <field name="date_deadline" invisible="1"/>
-                    <field name="create_date" optional="show"/>
+                    <field name="create_date" optional="hide"/>
                     <field name="name" string="Lead"/>
-                    <field name="contact_name" optional="show"/>
+                    <field name="contact_name" optional="hide"/>
                     <field name="partner_name" optional="hide"/>
                     <field name="email_from" optional="show"/>
                     <field name="phone" optional="show"/>
@@ -323,16 +323,17 @@
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="show"/>
                     <field name="partner_id" invisible="1"/>
+                    <field name="user_id" optional="show"/>
                     <field name="team_id" optional="show"/>
-                    <field name="user_id" optional="show" string="Sales Person"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="active" invisible="1"/>
                     <field name="probability" invisible="1"/>
-                    <field name="campaign_id" invisible="1"/>
+                    <field name="campaign_id" optional="hide"/>
                     <field name="referred" invisible="1"/>
-                    <field name="medium_id" invisible="1"/>
+                    <field name="medium_id" optional="hide"/>
+                    <field name="source_id" optional="hide"/>
                     <field name="message_needaction" invisible="1"/>
-                    <field name="tag_ids" optional="show" widget="many2many_tags"/>
+                    <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="priority" optional="hide"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
@@ -396,6 +397,7 @@
                 <calendar string="Leads Generation" create="0" mode="month" date_start="activity_date_deadline" color="user_id" hide_time="true" event_limit="5">
                     <field name="planned_revenue"/>
                     <field name="partner_id" avatar_field="image_128"/>
+                    <field name="user_id" filters="1" invisible="1"/>
                 </calendar>
             </field>
         </record>
@@ -590,30 +592,30 @@
             <field name="arch" type="xml">
                 <tree string="Opportunities" decoration-bf="message_needaction==True" decoration-muted="probability == 100" decoration-danger="activity_date_deadline and (activity_date_deadline &lt; current_date)">
                     <field name="date_deadline" invisible="1"/>
-                    <field name="create_date" optional="show"/>
+                    <field name="create_date" optional="hide"/>
                     <field name="name" string="Opportunity"/>
                     <field name="partner_id" string="Customer" optional="show"/>
-                    <field name="email_from" optional="hide"/>
-                    <field name="phone" optional="hide"/>
-                    <field name="city" optional="hide"/>
+                    <field name="email_from" optional="show"/>
+                    <field name="phone" optional="show"/>
+                    <field name="city" optional="show"/>
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="show"/>
-                    <field name="activity_date_deadline" optional="show"/>
-                    <field name="activity_summary" optional="show" readonly="1"/>
-                    <field name="medium_id" invisible="1"/>
-                    <field name="campaign_id" invisible="1"/>
-                    <field name="source_id" invisible="1"/>
+                    <field name="activity_date_deadline" optional="hide"/>
+                    <field name="activity_summary" optional="hide" readonly="1"/>
                     <field name="stage_id" required="1" optional="show"/>
-                    <field name="planned_revenue" sum="Expected Revenues" optional="show"/>
-                    <field name="probability" avg="Avg. of Probability" optional="show"/>
-                    <field name="user_id" optional="hide"/>
+                    <field name="probability" avg="Avg. of Probability" optional="hide"/>
+                    <field name="user_id" optional="show"/>
                     <field name="team_id" optional="show"/>
+                    <field name="planned_revenue" sum="Expected Revenues" optional="show"/>
                     <field name="referred" invisible="1"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="probability" invisible="1"/>
                     <field name="write_date" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show" />
-                    <field name="tag_ids" optional="hide" widget="many2many_tags"/>
+                    <field name="campaign_id" optional="hide"/>
+                    <field name="medium_id" optional="hide"/>
+                    <field name="source_id" optional="hide"/>
+                    <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="priority" optional="hide"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
@@ -735,52 +737,6 @@
         </record>
 
         <!--
-            crm.lost.reason views
-        -->
-        <record id="crm_lost_reason_view_search" model="ir.ui.view">
-            <field name="name">crm.lost.reason.view.search</field>
-            <field name="model">crm.lost.reason</field>
-            <field name="arch" type="xml">
-                <search string="Search Opportunities">
-                    <filter string="Include archived" name="archived" domain="['|', ('active', '=', True), ('active', '=', False)]"/>
-                    <separator/>
-                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                </search>
-            </field>
-        </record>
-
-        <record id="crm_lost_reason_view_form" model="ir.ui.view">
-            <field name="name">crm.lost.reason.form</field>
-            <field name="model">crm.lost.reason</field>
-            <field name="arch" type="xml">
-                <form string="Channel">
-                    <sheet>
-                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                        <div class="oe_title">
-                            <div class="oe_edit_only">
-                                <label for="name"/>
-                            </div>
-                            <h1>
-                                <field name="name"/>
-                            </h1>
-                            <field name="active" invisible="1"/>
-                        </div>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="crm_lost_reason_view_tree" model="ir.ui.view">
-            <field name="name">crm.lost.reason.tree</field>
-            <field name="model">crm.lost.reason</field>
-            <field name="arch" type="xml">
-                <tree string="Channel" editable="bottom">
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-
-        <!--
             MASS MAILING
         -->
         <act_window name="Send email"
@@ -796,7 +752,6 @@
                             'default_use_template': True,
                             'default_template_id': ref('crm.email_template_opportunity_mail'),
                         }"
-                groups="sales_team.group_sale_salesman"
                 />
 
         <!--Update of email_template defined in crm_lead_data, to add ref_ir_act_window
@@ -1035,27 +990,4 @@ if record:
             action="crm_lead_tag_action"
             parent="menu_crm_config_lead"
             sequence="1"/>
-
-        <!-- Configuration/Lead & Opporotunities/Lost Reasons Menu -->
-        <record id="crm_lost_reason_action" model="ir.actions.act_window">
-            <field name="name">Lost Reasons</field>
-            <field name="res_model">crm.lost.reason</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Define a new lost reason
-              </p><p>
-                Use lost reasons to explain why an opportunity is lost.
-              </p><p>
-                Some examples of lost reasons: "We don't have people/skill", "Price too high"
-              </p>
-            </field>
-        </record>
-
-        <menuitem
-            id="menu_crm_lost_reason"
-            action="crm_lost_reason_action"
-            parent="menu_crm_config_lead"
-            sequence="6"/>
-
 </odoo>

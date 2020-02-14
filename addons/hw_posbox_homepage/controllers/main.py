@@ -13,6 +13,7 @@ from odoo import http
 import os
 from odoo.tools import misc
 from pathlib import Path
+import threading
 
 from uuid import getnode as get_mac
 from odoo.addons.hw_proxy.controllers import main as hw_proxy
@@ -20,6 +21,7 @@ from odoo.addons.web.controllers import main as web
 from odoo.modules.module import get_resource_path
 from odoo.addons.hw_drivers.tools import helpers
 from odoo.addons.hw_drivers.controllers.driver import iot_devices
+from odoo.http import Response
 
 _logger = logging.getLogger(__name__)
 
@@ -46,8 +48,15 @@ remote_connect_template = jinja_env.get_template('remote_connect.html')
 configure_wizard_template = jinja_env.get_template('configure_wizard.html')
 six_payment_terminal_template = jinja_env.get_template('six_payment_terminal.html')
 list_credential_template = jinja_env.get_template('list_credential.html')
+upgrade_page_template = jinja_env.get_template('upgrade_page.html')
 
 class IoTboxHomepage(web.Home):
+    def __init__(self):
+        super(IoTboxHomepage,self).__init__()
+        self.updating = threading.Lock()
+
+    def clean_partition(self):
+        subprocess.check_call(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; cleanup'])
 
     def get_six_terminal(self):
         terminal_id = helpers.read_file_first_line('odoo-six-payment-terminal.conf')
@@ -280,3 +289,71 @@ class IoTboxHomepage(web.Home):
         helpers.unlink_file('odoo-six-payment-terminal.conf')
         subprocess.check_call(["sudo", "service", "odoo", "restart"])
         return "<meta http-equiv='refresh' content='0; url=http://" + helpers.get_ip() + ":8069'>"
+
+    @http.route('/hw_proxy/upgrade', type='http', auth='none', )
+    def upgrade(self):
+        commit = subprocess.check_output(["git", "--work-tree=/home/pi/odoo/", "--git-dir=/home/pi/odoo/.git", "log", "-1"]).decode('utf-8').replace("\n", "<br/>")
+        flashToVersion = helpers.check_image()
+        actualVersion = helpers.get_version()
+        if flashToVersion:
+            flashToVersion = '%s.%s' % (flashToVersion.get('major', ''), flashToVersion.get('minor', ''))
+        return upgrade_page_template.render({
+            'title': "Odoo's IoTBox - Software Upgrade",
+            'breadcrumb': 'IoT Box Software Upgrade',
+            'loading_message': 'Updating IoT box',
+            'commit': commit,
+            'flashToVersion': flashToVersion,
+            'actualVersion': actualVersion,
+        })
+
+    @http.route('/hw_proxy/perform_upgrade', type='http', auth='none')
+    def perform_upgrade(self):
+        self.updating.acquire()
+        os.system('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh')
+        self.updating.release()
+        return 'SUCCESS'
+
+    @http.route('/hw_proxy/get_version', type='http', auth='none')
+    def check_version(self):
+        return helpers.get_version()
+
+    @http.route('/hw_proxy/perform_flashing_create_partition', type='http', auth='none')
+    def perform_flashing_create_partition(self):
+        try:
+            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; create_partition']).decode().split('\n')[-2]
+            if response == 'Error_Card_Size':
+                raise Exception(response)
+            return Response('success', status=200)
+        except subprocess.CalledProcessError as e:
+            raise Exception(e.output)
+        except Exception as e:
+            _logger.error('A error encountered : %s ' % e)
+            return Response(str(e), status=500)
+
+    @http.route('/hw_proxy/perform_flashing_download_raspbian', type='http', auth='none')
+    def perform_flashing_download_raspbian(self):
+        try:
+            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; download_raspbian']).decode().split('\n')[-2]
+            if response == 'Error_Raspbian_Download':
+                raise Exception(response)
+            return Response('success', status=200)
+        except subprocess.CalledProcessError as e:
+            raise Exception(e.output)
+        except Exception as e:
+            self.clean_partition()
+            _logger.error('A error encountered : %s ' % e)
+            return Response(str(e), status=500)
+
+    @http.route('/hw_proxy/perform_flashing_copy_raspbian', type='http', auth='none')
+    def perform_flashing_copy_raspbian(self):
+        try:
+            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; copy_raspbian']).decode().split('\n')[-2]
+            if response == 'Error_Iotbox_Download':
+                raise Exception(response)
+            return Response('success', status=200)
+        except subprocess.CalledProcessError as e:
+            raise Exception(e.output)
+        except Exception as e:
+            self.clean_partition()
+            _logger.error('A error encountered : %s ' % e)
+            return Response(str(e), status=500)

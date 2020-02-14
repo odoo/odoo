@@ -587,37 +587,6 @@ QUnit.test('do not auto-focus chat window on receiving new message from new DM',
     parent.destroy();
 });
 
-QUnit.test('out-of-office status in thread window', async function (assert) {
-    assert.expect(1);
-    this.data.initMessaging = {
-        channel_slots: {
-            channel_channel: [{
-                id: 1,
-                name: "DM",
-                channel_type: "chat",
-                message_unread_counter: 0,
-                direct_partner: [{ id: 666, name: 'DemoUser1', im_status: 'online', out_of_office_message: 'Please don\'t disturb'}],
-            }],
-        },
-    };
-    var parent = this.createParent({
-        data: this.data,
-        services: this.services,
-    });
-    await testUtils.nextTick();
-
-    // detach channel 1, so that it opens corresponding thread window.
-    var channel = parent.call('mail_service', 'getChannel', 1);
-    await testUtils.nextTick();
-    channel.detach();
-    await testUtils.nextTick();
-
-    var $threadWindow = $('.o_thread_window');
-    assert.containsOnce($threadWindow, '.o_out_of_office_text');
-
-    parent.destroy();
-});
-
 QUnit.test('no out-of-office status in thread window', async function (assert) {
     assert.expect(1);
     this.data.initMessaging = {
@@ -646,113 +615,6 @@ QUnit.test('no out-of-office status in thread window', async function (assert) {
     var $threadWindow = $('.o_thread_window');
     assert.containsNone($threadWindow, '.o_out_of_office_text');
 
-    parent.destroy();
-});
-
-QUnit.test('auto-update out-of-office info on im_status change', async function (assert) {
-    assert.expect(5);
-
-    var imStatusDefs = [testUtils.makeTestPromise(), testUtils.makeTestPromise()];
-    var channelInfoDefs = [testUtils.makeTestPromise(), testUtils.makeTestPromise()];
-    var timeoutMock = mailTestUtils.patchMailTimeouts();
-    var step = 0;
-
-    this.data.initMessaging = {
-        channel_slots: {
-            channel_channel: [{
-                id: 1,
-                name: "DM",
-                channel_type: "chat",
-                message_unread_counter: 0,
-                direct_partner: [{
-                    id: 666,
-                    name: 'DemoUser1',
-                    im_status: 'online',
-                }],
-            }],
-        },
-    };
-
-    var parent = this.createParent({
-        data: this.data,
-        services: this.services,
-        mockRPC: function (route, args) {
-            if (route === '/longpolling/im_status') {
-                step++;
-                if (step === 1) {
-                    imStatusDefs[0].resolve();
-                    return Promise.resolve([
-                        {
-                            id: 666,
-                            im_status: 'leave',
-                        },
-                    ]);
-                } else if (step === 2) {
-                    imStatusDefs[1].resolve();
-                    return Promise.resolve([
-                        {
-                            id: 666,
-                            im_status: 'online',
-                        },
-                    ]);
-                }
-            }
-            if (args.method === 'channel_info') {
-                if (step === 1) {
-                    channelInfoDefs[0].resolve();
-                    return Promise.resolve([{
-                        id: 1,
-                        direct_partner: [{
-                            out_of_office_message: "Leave me alone",
-                            out_of_office_date_end: false,
-                        }],
-                    }]);
-                }
-                else if (step === 2) {
-                    channelInfoDefs[1].resolve();
-                    return Promise.resolve([{
-                        id: 1,
-                        direct_partner: [{
-                            out_of_office_message: false,
-                            out_of_office_date_end: false,
-                        }],
-                    }]);
-                }
-            }
-            return this._super.apply(this, arguments);
-        },
-    });
-    await testUtils.nextTick();
-
-    // detach channel 1, so that it opens corresponding thread window.
-    parent.call('mail_service', 'getChannel', 1).detach();
-    await testUtils.nextTick();
-
-    assert.containsNone($, '.o_out_of_office',
-        "should contain no out of office section on chat window initially");
-
-    timeoutMock.addTime(51*1000); // wait for next im status fetch
-
-    await Promise.all([imStatusDefs[0], channelInfoDefs[0]]);
-    await testUtils.nextTick();
-    assert.containsOnce($, '.o_out_of_office',
-        "should contain out of office section on chat window");
-    assert.containsOnce($, '.o_out_of_office > .o_out_of_office_text',
-        "should contain out of office text on chat window");
-    assert.ok(
-        $('.o_out_of_office > .o_out_of_office_text')
-            .text()
-            .replace(/\s/g, "")
-            .indexOf("Leavemealone") !== -1,
-        "should contain out of office text on chat window");
-    timeoutMock.addTime(51*1000); // wait for next im status fetch
-
-    await Promise.all([imStatusDefs[1], channelInfoDefs[1]]);
-    await testUtils.nextTick();
-    assert.containsNone($, '.o_out_of_office',
-        "should no longer contain out of office section on chat window");
-
-    timeoutMock.runPendingTimeouts();
     parent.destroy();
 });
 
@@ -899,6 +761,92 @@ QUnit.test('non-deletable message attachments', async function (assert) {
         $('.o_thread_window .o_attachment'),
         'o_attachment_delete_cross',
         "attachments should not be deletable");
+
+    parent.destroy();
+});
+
+QUnit.test('join channel from click channel mention', async function (assert) {
+    assert.expect(10);
+
+    this.data['mail.channel'].records = [{
+        id: 2,
+        name: "R&D Tasks",
+        channel_type: "channel",
+    }];
+    this.data['mail.message'].records.push({
+        author_id: [5, "Someone else"],
+        body: `<p><a href="#" class="o_mail_redirect" data-oe-id="2" data-oe-model="mail.channel">#R&D Tasks</a></p>`,
+        id: 10,
+        res_id: 1,
+        channel_ids: [1],
+    });
+
+    const parent = this.createParent({
+        data: this.data,
+        services: this.services,
+        session: { partner_id: 3 },
+        async mockRPC(route, args) {
+            if (args.method === 'channel_join_and_get_info') {
+                const channelID = args.args[0][0];
+                assert.step(`channel_join_and_get_info:${channelID}`);
+                return this.data['mail.channel'].records.find(channel => channel.id === channelID);
+            }
+            return this._super(...arguments);
+        },
+    });
+    await testUtils.nextTick();
+    assert.containsNone(
+        $,
+        '.o_thread_window',
+        "no thread window should be open initially"
+    );
+
+    // get channel instance to link to thread window
+    const channel = parent.call('mail_service', 'getChannel', 1);
+    channel.detach();
+    await testUtils.nextTick();
+    assert.containsOnce(
+        $,
+        '.o_thread_window',
+        "should have one thread open in chat window"
+    );
+    assert.strictEqual(
+        $('.o_thread_window .o_thread_window_title').text().trim(),
+        "#general",
+        "should have thread '#general' as open in chat window"
+    );
+    assert.containsOnce(
+        $,
+        '.o_thread_window .o_thread_message',
+        "should contain a single message in chat window"
+    );
+    assert.containsOnce(
+        $,
+        '.o_thread_window .o_thread_message a.o_mail_redirect',
+        "message should have a mention"
+    );
+    assert.containsOnce(
+        $,
+        '.o_thread_window .o_thread_message a.o_mail_redirect[data-oe-id="2"][data-oe-model="mail.channel"]',
+        "message should have a channel mention to R&D Task"
+    );
+
+    await testUtils.dom.click($('.o_thread_window .o_thread_message a.o_mail_redirect[data-oe-id="2"][data-oe-model="mail.channel"]'));
+    assert.verifySteps(
+        ['channel_join_and_get_info:2'],
+        "should have joined channel #R&D Task"
+    );
+    assert.containsN(
+        $,
+        '.o_thread_window',
+        2,
+        "should now have 2 threads open in chat windows after cliking on channel mention"
+    );
+    assert.strictEqual(
+        $('.o_thread_window .o_thread_window_title').text().replace(/\s/g, ""),
+        "#general#R&DTasks",
+        "should have threads '#general' and '#R&D Tasks' as open in chat windows"
+    );
 
     parent.destroy();
 });

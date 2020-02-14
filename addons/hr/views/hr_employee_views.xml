@@ -43,7 +43,7 @@
                     <field name="user_partner_id" invisible="1"/>
                     <field name="hr_presence_state" invisible="1"/>
                     <header>
-                        <a string="Chat" class="btn btn-primary o_employee_chat_btn" role="button" attrs="{'invisible': [('user_id','=', False)]}"/>
+                        <button string="Chat" class="btn btn-primary o_employee_chat_btn" attrs="{'invisible': [('user_id','=', False)]}"/>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_manager"/>
                     </header>
                     <sheet>
@@ -113,6 +113,7 @@
                                         <group name="departure" string="Departure" attrs="{'invisible': [('active', '=', True)]}">
                                             <field name="departure_reason"/>
                                             <field name="departure_description"/>
+                                            <field name="departure_date"/>
                                         </group>
                                         <group string="Schedule" groups="base.group_no_one">
                                             <field name="resource_calendar_id" required="1"/>
@@ -225,7 +226,7 @@
                    <templates>
                        <t t-name="kanban-box">
                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
-                           <field name="image_128" widget="image" class="o_kanban_image_fill_left o_hr_rounded_circle" options="{'zoom': true, 'background': true, 'preventClicks': false}"/>
+                           <field name="image_128" widget="image" class="o_kanban_image_fill_left o_hr_rounded_circle" options="{'zoom': true, 'zoom_delay': 1000, 'background': true, 'preventClicks': false}"/>
 
                             <div class="oe_kanban_details">
                                <div class="o_kanban_record_top">

@@ -19,15 +19,6 @@
                     </tree>
                 </field>
             </xpath>
-            <label for="sequence_number_next" position="attributes">
-                <attribute name="attrs">{'invisible': [('l10n_latam_use_documents', '=', True), ('l10n_latam_country_code', '=', 'CL')]}</attribute>
-            </label>
-            <field name="refund_sequence" position="attributes">
-                <attribute name="attrs">{'invisible': [('l10n_latam_use_documents', '=', True), ('l10n_latam_country_code', '=', 'CL')]}</attribute>
-            </field>
-            <xpath expr="//field[@name='sequence_number_next']/.." position="attributes">
-                <attribute name="attrs">{'invisible': [('l10n_latam_use_documents', '=', True), ('l10n_latam_country_code', '=', 'CL')]}</attribute>
-            </xpath>
         </field>
     </record>
 

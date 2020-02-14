@@ -109,6 +109,7 @@ class IrActions(models.Model):
                     WHERE a.binding_model_id=m.id AND m.model=%s
                     ORDER BY a.id """
         cr.execute(query, [model_name])
+        IrModelAccess = self.env['ir.model.access']
 
         # discard unauthorized actions, and read action definitions
         result = defaultdict(list)
@@ -117,8 +118,12 @@ class IrActions(models.Model):
             try:
                 action = self.env[action_model].browse(action_id)
                 action_groups = getattr(action, 'groups_id', ())
+                action_model = getattr(action, 'res_model', False)
                 if action_groups and not action_groups & user_groups:
                     # the user may not perform this action
+                    continue
+                if action_model and not IrModelAccess.check(action_model, mode='read', raise_exception=False):
+                    # the user won't be able to read records
                     continue
                 result[binding_type].append(action.read()[0])
             except (AccessError, MissingError):
@@ -386,7 +391,7 @@ class IrActionsServer(models.Model):
     crud_model_name = fields.Char(related='crud_model_id.model', string='Target Model', readonly=True)
     link_field_id = fields.Many2one('ir.model.fields', string='Link using field',
                                     help="Provide the field used to link the newly created record "
-                                         "on the record on used by the server action.")
+                                         "on the record used by the server action.")
     fields_lines = fields.One2many('ir.server.object.lines', 'server_id', string='Value Mapping', copy=True)
     groups_id = fields.Many2many('res.groups', 'ir_act_server_group_rel',
                                  'act_id', 'gid', string='Groups')
@@ -406,11 +411,6 @@ class IrActionsServer(models.Model):
     @api.onchange('crud_model_id')
     def _onchange_crud_model_id(self):
         self.link_field_id = False
-        self.crud_model_name = self.crud_model_id.model
-
-    @api.onchange('model_id')
-    def _onchange_model_id(self):
-        self.model_name = self.model_id.model
 
     def create_action(self):
         """ Create a contextual action for each server action. """

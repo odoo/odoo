@@ -106,8 +106,8 @@
     }
 }
 
-.modal:not(.o_active_modal) {
-    z-index: 1030;
+.modal.o_inactive_modal {
+    z-index: $zindex-modal-backdrop - 1;
 }
 
 .o_dialog {

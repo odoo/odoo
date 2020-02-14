@@ -15,7 +15,6 @@ from datetime import datetime
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -41,8 +40,6 @@ class MassMailing(models.Model):
     _name = 'mailing.mailing'
     _description = 'Mass Mailing'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'mail.render.mixin']
-    # number of periods for tracking mail_mail statistics
-    _period_number = 6
     _order = 'sent_date DESC'
     _inherits = {'utm.source': 'source_id'}
     _rec_name = "subject"
@@ -581,9 +578,19 @@ class MassMailing(models.Model):
     # ------------------------------------------------------
 
     def _get_default_mailing_domain(self):
-        mailing_domain = []
+        default_mailing_domain = self.default_get(['mailing_domain']).get('mailing_domain')
         if self.mailing_model_name == 'mailing.list' and self.contact_list_ids:
             mailing_domain = [('list_ids', 'in', self.contact_list_ids.ids)]
+        elif default_mailing_domain:
+            default_mailing_domain = literal_eval(default_mailing_domain) if isinstance(default_mailing_domain, str) else default_mailing_domain
+            try:
+                self.env[self.mailing_model_real].search(default_mailing_domain, limit=1)
+            except:
+                mailing_domain = []
+            else:
+                mailing_domain = default_mailing_domain
+        else:
+            mailing_domain = []
 
         if self.mailing_type == 'mail' and 'is_blacklisted' in self.env[self.mailing_model_name]._fields:
             mailing_domain = expression.AND([[('is_blacklisted', '=', False)], mailing_domain])

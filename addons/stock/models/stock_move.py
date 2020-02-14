@@ -54,7 +54,7 @@ class StockMove(models.Model):
         digits=0, store=True, compute_sudo=True,
         help='Quantity in the default UoM of the product')
     product_uom_qty = fields.Float(
-        'Initial Demand',
+        'Demand',
         digits='Product Unit of Measure',
         default=0.0, required=True, states={'done': [('readonly', True)]},
         help="This is the quantity of products from an inventory "
@@ -93,7 +93,7 @@ class StockMove(models.Model):
         'stock.move', 'stock_move_move_rel', 'move_dest_id', 'move_orig_id', 'Original Move',
         copy=False,
         help="Optional: previous stock move when chaining them")
-    picking_id = fields.Many2one('stock.picking', 'Transfer Reference', index=True, states={'done': [('readonly', True)]}, check_company=True)
+    picking_id = fields.Many2one('stock.picking', 'Transfer', index=True, states={'done': [('readonly', True)]}, check_company=True)
     picking_partner_id = fields.Many2one('res.partner', 'Transfer Destination Address', related='picking_id.partner_id', readonly=False)
     note = fields.Text('Notes')
     state = fields.Selection([
@@ -140,8 +140,10 @@ class StockMove(models.Model):
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', check_company=True)
     inventory_id = fields.Many2one('stock.inventory', 'Inventory', check_company=True)
     move_line_ids = fields.One2many('stock.move.line', 'move_id')
-    move_line_nosuggest_ids = fields.One2many('stock.move.line', 'move_id', domain=[('product_qty', '=', 0.0)])
-    origin_returned_move_id = fields.Many2one('stock.move', 'Origin return move', copy=False, help='Move that created the return move', check_company=True)
+    move_line_nosuggest_ids = fields.One2many('stock.move.line', 'move_id', domain=['|', ('product_qty', '=', 0.0), ('qty_done', '!=', 0.0)])
+    origin_returned_move_id = fields.Many2one(
+        'stock.move', 'Origin return move', copy=False, index=True,
+        help='Move that created the return move', check_company=True)
     returned_move_ids = fields.One2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move')
     reserved_availability = fields.Float(
         'Quantity Reserved', compute='_compute_reserved_availability',
@@ -400,20 +402,6 @@ class StockMove(models.Model):
                 move.location_id.name, move.location_dest_id.name)))
         return res
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        # TDE CLEANME: why doing this tracking on picking here ? seems weird
-        tracking = []
-        for vals in vals_list:
-            if not self.env.context.get('mail_notrack') and vals.get('picking_id'):
-                picking = self.env['stock.picking'].browse(vals['picking_id'])
-                initial_values = {picking.id: {'state': picking.state}}
-                tracking.append((picking, initial_values))
-        res = super(StockMove, self).create(vals_list)
-        for picking, initial_values in tracking:
-            picking.message_track(picking.fields_get(['state']), initial_values)
-        return res
-
     def write(self, vals):
         # Handle the write on the initial demand by updating the reserved quantity and logging
         # messages according to the state of the stock.move records.
@@ -449,30 +437,11 @@ class StockMove(models.Model):
                     move_dest_ids.filtered(lambda m: m.delay_alert)._propagate_date_log_activity(move)
                 if move.delay_alert:
                     move._delay_alert_check(new_date)
-
-        # Manual tracking of the `state` field for the stock.picking records.
-        track_pickings = (
-            not self._context.get('mail_notrack')
-            and not self._context.get('tracking_disable')
-            and any(field in vals for field in ['state', 'picking_id'])
-        )
-        if track_pickings:
-            to_track_picking_ids = {move.picking_id.id for move in self if move.picking_id}
-            if vals.get('picking_id'):
-                to_track_picking_ids.add(vals['picking_id'])
-            to_track_picking_ids = list(to_track_picking_ids)
-            pickings = self.env['stock.picking'].browse(to_track_picking_ids)
-            initial_values = dict((picking.id, {'state': picking.state}) for picking in pickings)
-
         res = super(StockMove, self).write(vals)
         if vals.get('date_expected'):
             for move in self:
                 if move.state not in ('done', 'cancel'):
                     move.date = move.date_expected
-
-        if track_pickings:
-            pickings.message_track(pickings.fields_get(['state']), initial_values)
-
         if receipt_moves_to_reassign:
             receipt_moves_to_reassign._action_assign()
         return res
@@ -622,18 +591,30 @@ class StockMove(models.Model):
 
     def _do_unreserve(self):
         moves_to_unreserve = self.env['stock.move']
+        moves_not_to_recompute = self.env['stock.move']
         for move in self:
-            if move.state == 'cancel':
+            if move.state == 'cancel' or (move.state == 'done' and move.scrapped):
                 # We may have cancelled move in an open picking in a "propagate_cancel" scenario.
+                # We may have done move in an open picking in a scrap scenario.
                 continue
-            if move.state == 'done':
-                if move.scrapped:
-                    # We may have done move in an open picking in a scrap scenario.
-                    continue
-                else:
-                    raise UserError(_('You cannot unreserve a stock move that has been set to \'Done\'.'))
+            elif move.state == 'done':
+                raise UserError(_("You cannot unreserve a stock move that has been set to 'Done'."))
             moves_to_unreserve |= move
-        moves_to_unreserve.mapped('move_line_ids').unlink()
+
+        ml_to_update = self.env['stock.move.line']
+        ml_to_unlink = self.env['stock.move.line']
+        for ml in moves_to_unreserve.move_line_ids:
+            if ml.qty_done:
+                ml_to_update |= ml
+            else:
+                ml_to_unlink |= ml
+                moves_not_to_recompute |= ml.move_id
+
+        ml_to_update.write({'product_uom_qty': 0})
+        ml_to_unlink.unlink()
+        # `write` on `stock.move.line` doesn't call `_recompute_state` (unlike to `unlink`),
+        # so it must be called for each move where no move line has been deleted.
+        (moves_to_unreserve - moves_not_to_recompute)._recompute_state()
         return True
 
     def _generate_serial_numbers(self, next_serial_count=False):
@@ -864,6 +845,7 @@ class StockMove(models.Model):
                 ('location_dest_id', '=', self.location_dest_id.id),
                 ('picking_type_id', '=', self.picking_type_id.id),
                 ('printed', '=', False),
+                ('immediate_transfer', '=', False),
                 ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])], limit=1)
         return picking
 

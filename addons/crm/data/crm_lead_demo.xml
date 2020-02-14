@@ -56,7 +56,7 @@
             <field name="user_id" ref="base.user_admin"/>
             <field name="date_open" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="stage_id" ref="stage_lead1"/>
-            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
             <field name="medium_id" ref="utm.utm_medium_email"/>
             <field name="source_id" ref="utm.utm_source_mailing"/>
         </record>
@@ -125,7 +125,7 @@
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_google_adwords"/>
-            <field name="source_id" ref="utm.utm_source_search_engine"/>
+            <field name="source_id" ref="utm.utm_source_facebook"/>
         </record>
 
         <record id="crm_case_4" model="crm.lead">
@@ -170,8 +170,8 @@
             <field name="stage_id" ref="stage_lead1"/>
             <field name="description"></field>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
-            <field name="medium_id" ref="utm.utm_medium_website"/>
-            <field name="source_id" ref="utm.utm_source_search_engine"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_mailing"/>
         </record>
         <record id="msg_case5_1" model="mail.message">
             <field name="subject">Inquiry</field>
@@ -207,7 +207,7 @@ Contact: +1 813 494 5005</p>]]></field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="stage_lead1"/>
-            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
             <field name="source_id" ref="utm.utm_source_mailing"/>
             <field name="medium_id" ref="utm.utm_medium_email"/>
         </record>
@@ -439,8 +439,9 @@ Andrew</p>]]></field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
-            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
-            <field name="source_id" ref="utm.utm_source_newsletter"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
+            <field name="source_id" ref="utm.utm_source_mailing"/>
+            <field name="medium_id" ref="utm.utm_medium_direct"/>
         </record>
         <record id="msg_case15_attach1" model="ir.attachment">
             <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
@@ -533,6 +534,7 @@ Andrew</p>]]></field>
             <field name="stage_id" ref="crm.stage_lead2"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="source_id" ref="utm.utm_source_mailing"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
         </record>
 
         <record id="crm_case_17" model="crm.lead">
@@ -589,8 +591,9 @@ Andrew</p>]]></field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
             <field eval="1" name="active"/>
-            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
             <field name="source_id" ref="utm.utm_source_newsletter"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
         </record>
         <record id="msg_case18_1" model="mail.message">
             <field name="subject">Inquiry</field>
@@ -640,6 +643,7 @@ Andrew</p>]]></field>
             <field name="date_closed" eval="(DateTime.today() - relativedelta(months=3)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="source_id" ref="utm.utm_source_mailing"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
         </record>
 
         <record id="crm_case_20" model="crm.lead">
@@ -660,8 +664,9 @@ Andrew</p>]]></field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
-            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
             <field name="source_id" ref="utm.utm_source_mailing"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
         </record>
 
         <record id="crm_case_21" model="crm.lead">
@@ -698,7 +703,7 @@ Andrew</p>]]></field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
-            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_email"/>
             <field name="source_id" ref="utm.utm_source_search_engine"/>
         </record>
@@ -734,7 +739,7 @@ Andrew</p>]]></field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
-            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_website"/>
             <field name="source_id" ref="utm.utm_source_search_engine"/>
         </record>
@@ -759,6 +764,7 @@ Andrew</p>]]></field>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
+            <field name="medium_id" ref="utm.utm_medium_phone"/>
             <field name="source_id" ref="utm.utm_source_search_engine"/>
         </record>
 
@@ -805,6 +811,9 @@ Andrew</p>]]></field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_mailing"/>
         </record>
 
         <record id="crm_case_28" model="crm.lead">
@@ -1045,11 +1054,11 @@ Andrew</p>]]></field>
 <field name="email_from">eespinazo5@reuters.com</field>
 <field name="country_id" ref="base.nl"/>
 <field name="city">Amsterdam</field>
-<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="tag_ids" eval="[(6, 0, [categ_oppor3])]"/>
 <field name="priority">1</field>
 <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
 <field name="stage_id" ref="crm.stage_lead1"/>
-<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+<field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
 <field name="medium_id" ref="utm.utm_medium_email"/>
 <field name="source_id" ref="utm.utm_source_search_engine"/>
 </record>

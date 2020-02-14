@@ -50,7 +50,7 @@
                     <field name="confirm_cancel" invisible="1"/>
                     <button name="button_mark_done" attrs="{'invisible': [('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight"/>
                     <button name="action_confirm" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('is_locked', '=', False)]}" string="Mark as Todo" type="object" class="oe_highlight"/>
-                    <button name="action_assign" attrs="{'invisible': ['|', '|', ('is_locked', '=', False), ('state', 'in', ('draft', 'done', 'cancel')), ('reservation_state', '=', 'assigned')]}" string="Check availability" type="object" class="oe_highlight"/>
+                    <button name="action_assign" attrs="{'invisible': ['|', '|', ('is_locked', '=', False), ('state', 'in', ('draft', 'done', 'cancel')), ('reserve_visible', '=', False)]}" string="Check availability" type="object" class="oe_highlight"/>
                     <button name="button_plan" attrs="{'invisible': ['|', ('state', '!=', 'confirmed'), ('routing_id', '=', False)]}" type="object" string="Plan" class="oe_highlight"/>
                     <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': ['|', '|', ('state', '!=', 'planned'), ('date_planned_start', '=', False), ('date_planned_finished', '=', False)]}"/>
                     <button name="open_produce_product" attrs="{'invisible': ['|', '|', '|', ('state', '=', 'to_close'), ('is_locked', '=', False), ('reservation_state', '!=', 'assigned'), ('routing_id', '!=', False)]}" string="Produce" type="object" class="oe_highlight"/>
@@ -73,6 +73,8 @@
                     <field name="is_locked" invisible="1"/>
                     <field name="post_visible" invisible="1"/>
                     <field name="unreserve_visible" invisible="1"/>
+                    <field name="reserve_visible" invisible="1"/>
+                    <field name="consumption" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="%(stock.action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="action" states="done" groups="stock.group_production_lot"/>
                         <button name="%(action_mrp_workorder_production_specific)d" type="action" attrs="{'invisible': [('workorder_count', '=', 0)]}" class="oe_stat_button" icon="fa-play-circle-o">
@@ -184,7 +186,7 @@
                     </group>
                     <notebook>
                         <page string="Components" name="components">
-                            <field name="move_raw_ids" context="{'final_lots': show_final_lots, 'tree_view_ref': 'mrp.view_stock_move_raw_tree', 'form_view_ref': 'mrp.view_stock_move_lots', 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id}" attrs="{'readonly': ['&amp;', ('state', '!=', 'draft'), ('is_locked', '=', True)]}"/>
+                            <field name="move_raw_ids" context="{'final_lots': show_final_lots, 'tree_view_ref': 'mrp.view_stock_move_raw_tree', 'form_view_ref': 'mrp.view_stock_move_lots', 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id}" attrs="{'readonly': ['&amp;', '&amp;', ('state', '!=', 'draft'), ('is_locked', '=', True), '|', ('state', '!=', 'confirmed'), ('consumption', '=', 'strict')]}"/>
                         </page>
                         <page string="Finished Products" name="finished_products">
                             <field name="move_finished_ids" invisible="1"/>
@@ -272,7 +274,7 @@
             <field name="arch" type="xml">
                 <calendar date_start="date_planned_start" date_stop="date_planned_finished"
                           string="Manufacturing Orders" color="routing_id" event_limit="5" quick_add="False">
-                    <field name="routing_id"/>
+                    <field name="routing_id" filters="1"/>
                     <field name="user_id" avatar_field="image_128"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>

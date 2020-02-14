@@ -22,11 +22,14 @@ class EventRegistration(models.Model):
     event_id = fields.Many2one(
         'event.event', string='Event', required=True,
         readonly=True, states={'draft': [('readonly', False)]})
+    event_ticket_id = fields.Many2one(
+        'event.event.ticket', string='Event Ticket', readonly=True,
+        states={'draft': [('readonly', False)]})
     # attendee
     partner_id = fields.Many2one(
         'res.partner', string='Contact',
         states={'done': [('readonly', True)]})
-    name = fields.Char(string='Attendee Name', index=True)
+    name = fields.Char(string='Attendee Name', index=True, required=True, tracking=True)
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
     mobile = fields.Char(string='Mobile')
@@ -43,75 +46,122 @@ class EventRegistration(models.Model):
         ('open', 'Confirmed'), ('done', 'Attended')],
         string='Status', default='draft', readonly=True, copy=False, tracking=True)
 
+    @api.onchange('event_id')
+    def _onchange_event_id(self):
+        # We reset the ticket when keeping it would lead to an inconstitent state.
+        if self.event_ticket_id and (not self.event_id or self.event_id != self.event_ticket_id.event_id):
+            self.event_ticket_id = None
+
     @api.constrains('event_id', 'state')
     def _check_seats_limit(self):
         for registration in self:
             if registration.event_id.seats_availability == 'limited' and registration.event_id.seats_max and registration.event_id.seats_available < (1 if registration.state == 'draft' else 0):
                 raise ValidationError(_('No more seats available for this event.'))
 
+    @api.constrains('event_ticket_id', 'state')
+    def _check_ticket_seats_limit(self):
+        for record in self:
+            if record.event_ticket_id.seats_max and record.event_ticket_id.seats_available < 0:
+                raise ValidationError(_('No more available seats for this ticket'))
+
+    @api.onchange('partner_id')
+    def _onchange_partner(self):
+        if self.partner_id:
+            self.update(self._synchronize_partner_values(self.partner_id))
+
+    # ------------------------------------------------------------
+    # CRUD
+    # ------------------------------------------------------------
+
+    @api.model
+    def create(self, vals):
+        # update missing pieces of information from partner
+        if vals.get('partner_id'):
+            partner_vals = self._synchronize_partner_values(
+                self.env['res.partner'].browse(vals['partner_id'])
+            )
+            vals = dict(partner_vals, **vals)
+
+        registration = super(EventRegistration, self).create(vals)
+        if registration._check_auto_confirmation():
+            registration.sudo().action_confirm()
+
+        return registration
+
+    def write(self, vals):
+        if vals.get('state') == 'done' and 'date_closed' not in vals:
+            vals['date_closed'] = fields.Datetime.now()
+
+        ret = super(EventRegistration, self).write(vals)
+
+        # update missing pieces of information from partner
+        if vals.get('partner_id'):
+            partner_vals = self._synchronize_partner_values(
+                self.env['res.partner'].browse(vals['partner_id'])
+            )
+            for registration in self:
+                partner_info = dict((key, val) for key, val in partner_vals.items() if not registration[key])
+                if partner_info:
+                    registration.write(partner_info)
+
+        if vals.get('state') == 'open':
+            # auto-trigger after_sub (on subscribe) mail schedulers, if needed
+            onsubscribe_schedulers = self.mapped('event_id.event_mail_ids').filtered(lambda s: s.interval_type == 'after_sub')
+            onsubscribe_schedulers.execute()
+
+        return ret
+
+    def name_get(self):
+        """ Custom name_get implementation to better differentiate registrations
+        linked to a given partner but with different name (one partner buying
+        several registrations)
+
+          * name, partner_id has no name -> take name
+          * partner_id has name, name void or same -> take partner name
+          * both have name: partner + name
+        """
+        ret_list = []
+        for registration in self:
+            if registration.partner_id.name:
+                if registration.name and registration.name != registration.partner_id.name:
+                    name = '%s, %s' % (registration.partner_id.name, registration.name)
+                else:
+                    name = registration.partner_id.name
+            else:
+                name = registration.name
+            ret_list.append((registration.id, name))
+        return ret_list
+
     def _check_auto_confirmation(self):
-        if self._context.get('registration_force_draft'):
-            return False
         if any(not registration.event_id.auto_confirm or
                (not registration.event_id.seats_available and registration.event_id.seats_availability == 'limited') for registration in self):
             return False
         return True
 
-    @api.model
-    def create(self, vals):
-        registration = super(EventRegistration, self).create(vals)
-        if registration._check_auto_confirmation():
-            registration.sudo().confirm_registration()
-        return registration
-
-    @api.model
-    def _prepare_attendee_values(self, registration):
-        """ Method preparing the values to create new attendees based on a
-        sales order line. It takes some registration data (dict-based) that are
-        optional values coming from an external input like a web page. This method
-        is meant to be inherited in various addons that sell events. """
-        partner_id = registration.pop('partner_id', self.env.user.partner_id)
-        event_id = registration.pop('event_id', False)
-        data = {
-            'name': registration.get('name', partner_id.name),
-            'phone': registration.get('phone', partner_id.phone),
-            'mobile': registration.get('mobile', partner_id.mobile),
-            'email': registration.get('email', partner_id.email),
-            'partner_id': partner_id.id,
-            'event_id': event_id and event_id.id or False,
-        }
-        data.update({key: value for key, value in registration.items() if key in self._fields})
-        return data
-
-    def do_draft(self):
-        self.write({'state': 'draft'})
-
-    def confirm_registration(self):
-        self.write({'state': 'open'})
-
-        # auto-trigger after_sub (on subscribe) mail schedulers, if needed
-        onsubscribe_schedulers = self.event_id.event_mail_ids.filtered(
-            lambda s: s.interval_type == 'after_sub')
-        onsubscribe_schedulers.execute()
-
-    def button_reg_close(self):
-        """ Close Registration """
-        for registration in self:
-            registration.write({'state': 'done', 'date_closed': fields.Datetime.now()})
-
-    def button_reg_cancel(self):
-        self.write({'state': 'cancel'})
-
-    @api.onchange('partner_id')
-    def _onchange_partner(self):
-        if self.partner_id:
-            contact_id = self.partner_id.address_get().get('contact', False)
+    def _synchronize_partner_values(self, partner):
+        if partner:
+            contact_id = partner.address_get().get('contact', False)
             if contact_id:
                 contact = self.env['res.partner'].browse(contact_id)
-                self.name = contact.name or self.name
-                self.email = contact.email or self.email
-                self.phone = contact.phone or self.phone
-                self.mobile = contact.mobile or self.mobile
+                return dict((fname, contact[fname]) for fname in ['name', 'email', 'phone', 'mobile'] if contact[fname])
+        return {}
+
+    # ------------------------------------------------------------
+    # ACTIONS / BUSINESS
+    # ------------------------------------------------------------
+
+    def action_set_draft(self):
+        self.write({'state': 'draft'})
+
+    def action_confirm(self):
+        self.write({'state': 'open'})
+
+    def action_set_done(self):
+        """ Close Registration """
+        self.write({'state': 'done'})
+
+    def action_cancel(self):
+        self.write({'state': 'cancel'})
 
     def _message_get_suggested_recipients(self):
         recipients = super(EventRegistration, self)._message_get_suggested_recipients()
@@ -197,6 +247,12 @@ class EventRegistration(models.Model):
         else:
             return _('on ') + format_datetime(self.env, self.event_begin_date, tz=self.event_id.date_tz, dt_format='medium')
 
-    def summary(self):
+    def _get_registration_summary(self):
         self.ensure_one()
-        return {'information': []}
+        return {
+            'id': self.id,
+            'partner_id': self.partner_id.id,
+            'ticket_name': self.event_ticket_id.name or _('None'),
+            'name': self.name,
+            'event_name': self.event_id.name,
+        }

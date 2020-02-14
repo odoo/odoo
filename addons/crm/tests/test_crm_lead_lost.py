@@ -28,9 +28,10 @@ class TestLeadConvert(crm_common.TestCrmCommon):
 
         lost_wizard = self.env['crm.lead.lost'].with_context({
             'active_ids': lead.ids,
-        }).create({})
+        }).create({
+            'lost_reason_id': self.lost_reason.id
+        })
 
-        lost_wizard.write({'lost_reason_id': self.lost_reason.id})
         lost_wizard.action_lost_reason_apply()
 
         self.assertEqual(lead.probability, 0)
@@ -55,8 +56,9 @@ class TestLeadConvert(crm_common.TestCrmCommon):
 
         lost_wizard = self.env['crm.lead.lost'].with_context({
             'active_ids': lead.ids
-        }).create({})
-        lost_wizard.write({'lost_reason_id': lost_reason.id})
+        }).create({
+            'lost_reason_id': lost_reason.id
+        })
 
         # nice try little salesman, you cannot invoke a wizard to update other people leads
         with self.assertRaises(AccessError):

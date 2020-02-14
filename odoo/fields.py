@@ -170,15 +170,28 @@ class Field(MetaField('DummyField', (object,), {})):
 
         Supported aggregate functions are:
 
-            * ``array_agg`` : values, including nulls, concatenated into an array
-            * ``count`` : number of rows
-            * ``count_distinct`` : number of distinct rows
-            * ``bool_and`` : true if all values are true, otherwise false
-            * ``bool_or`` : true if at least one value is true, otherwise false
-            * ``max`` : maximum value of all values
-            * ``min`` : minimum value of all values
-            * ``avg`` : the average (arithmetic mean) of all values
-            * ``sum`` : sum of all values
+        * ``array_agg`` : values, including nulls, concatenated into an array
+        * ``count`` : number of rows
+        * ``count_distinct`` : number of distinct rows
+        * ``bool_and`` : true if all values are true, otherwise false
+        * ``bool_or`` : true if at least one value is true, otherwise false
+        * ``max`` : maximum value of all values
+        * ``min`` : minimum value of all values
+        * ``avg`` : the average (arithmetic mean) of all values
+        * ``sum`` : sum of all values
+
+    :param str group_expand: function used to expand read_group results when grouping on
+        the current field.
+
+        .. code-block:: python
+
+            @api.model
+            def _read_group_selection_field(self, values, domain, order):
+                return ['choice1', 'choice2', ...] # available selection choices.
+
+            @api.model
+            def _read_group_many2one_field(self, records, domain, order):
+                return records + self.search([custom_domain])
 
     .. rubric:: Computed Fields
 
@@ -865,7 +878,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 model.flush([self.name])
 
         if self.required and not has_notnull:
-            sql.set_not_null(model._cr, model._table, self.name)
+            model.pool.post_constraint(sql.set_not_null, model._cr, model._table, self.name)
         elif not self.required and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)
 
@@ -1183,10 +1196,10 @@ class Integer(Field):
 
 
 class Float(Field):
-    """The precision digits are given by the attribute
+    """The precision digits are given by the (optional) digits attribute.
 
-    :param digits: a pair (total, decimal) or a
-        string referencing a `decimal.precision` record.
+    :param digits: a pair (total, decimal) or a string referencing a
+        :class:`~odoo.addons.base.models.decimal_precision.DecimalPrecision` record name.
     :type digits: tuple(int,int) or str
 
     When a float is a quantity associated with an unit of measure, it is important
@@ -2607,6 +2620,8 @@ class Many2oneReference(Integer):
 
     def _update_inverses(self, records, value):
         """ Add `records` to the cached values of the inverse fields of `self`. """
+        if not value:
+            return
         cache = records.env.cache
         model_ids = self._record_ids_per_res_model(records)
 
@@ -3576,9 +3591,9 @@ class Id(Field):
         # the code below is written to make record.id as quick as possible
         ids = record._ids
         size = len(ids)
-        if size is 0:
+        if size == 0:
             return False
-        elif size is 1:
+        elif size == 1:
             return ids[0]
         raise ValueError("Expected singleton: %s" % record)
 

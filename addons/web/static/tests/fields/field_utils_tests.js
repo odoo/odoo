@@ -135,7 +135,7 @@ QUnit.test('format binary', function (assert) {
 });
 
 QUnit.test('format percentage', function (assert) {
-    assert.expect(11);
+    assert.expect(12);
 
     var originalParameters = _.clone(core._t.database.parameters);
 
@@ -161,6 +161,7 @@ QUnit.test('format percentage', function (assert) {
     });
     assert.strictEqual(fieldUtils.format.percentage(0.125), '12,5%');
     assert.strictEqual(fieldUtils.format.percentage(0.666666), '66,67%');
+    assert.strictEqual(fieldUtils.format.percentage(0.5, null, { noSymbol: true }), '50');
 
     core._t.database.parameters = originalParameters;
 });
@@ -274,17 +275,15 @@ QUnit.test('parse monetary', function(assert) {
 });
 
 QUnit.test('parse percentage', function(assert) {
-    assert.expect(9);
+    assert.expect(7);
 
     var originalParameters = _.clone(core._t.database.parameters);
 
     assert.strictEqual(fieldUtils.parse.percentage(""), 0);
     assert.strictEqual(fieldUtils.parse.percentage("0"), 0);
-    assert.strictEqual(fieldUtils.parse.percentage("0%"), 0);
-    assert.strictEqual(fieldUtils.parse.percentage("0.02"), 0.02);
-    assert.strictEqual(fieldUtils.parse.percentage("1"), 1);
-    assert.strictEqual(fieldUtils.parse.percentage("2%"), 0.02);
-    assert.strictEqual(fieldUtils.parse.percentage("100%"), 1);
+    assert.strictEqual(fieldUtils.parse.percentage("0.5"), 0.005);
+    assert.strictEqual(fieldUtils.parse.percentage("1"), 0.01);
+    assert.strictEqual(fieldUtils.parse.percentage("100"), 1);
 
     _.extend(core._t.database.parameters, {
         grouping: [3, 0],
@@ -292,8 +291,8 @@ QUnit.test('parse percentage', function(assert) {
         thousands_sep: '.'
     });
 
-    assert.strictEqual(fieldUtils.parse.percentage("0,04"), 0.04);
-    assert.strictEqual(fieldUtils.parse.percentage("6,02%"), 0.0602);
+    assert.strictEqual(fieldUtils.parse.percentage("1.234,56"), 12.3456);
+    assert.strictEqual(fieldUtils.parse.percentage("6,02"), 0.0602);
 
     core._t.database.parameters = originalParameters;
 

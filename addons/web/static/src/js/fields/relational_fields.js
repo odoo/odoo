@@ -1213,14 +1213,20 @@ var FieldX2Many = AbstractField.extend({
      * @returns {boolean} true iff the list should contain a 'create' line.
      */
     _hasCreateLine: function () {
-        return !this.isReadonly && this.activeActions.create && (this.isMany2Many || this.canCreate);
+        return !this.isReadonly && (
+            (this.activeActions.create && this.canCreate) ||
+            (this.isMany2Many)
+        );
     },
     /**
      * @private
      * @returns {boolean} true iff the list should add a trash icon on each row.
      */
     _hasTrashIcon: function () {
-        return !this.isReadonly && this.activeActions.delete && (this.isMany2Many || this.canDelete);
+        return !this.isReadonly && (
+            (this.activeActions.delete && this.canDelete) ||
+            (this.isMany2Many)
+        );
     },
     /**
      * Instanciates or updates the adequate renderer.
@@ -2719,6 +2725,21 @@ var FieldStatus = AbstractField.extend({
         // instead of options.
         // If not set, the statusbar is not clickable.
         this.isClickable = !!this.attrs.clickable || !!this.nodeOptions.clickable;
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns false to force the statusbar to be always visible (even the field
+     * it not set).
+     *
+     * @override
+     * @returns {boolean} always false
+     */
+    isEmpty: function () {
+        return false;
     },
 
     //--------------------------------------------------------------------------

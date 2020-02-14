@@ -7,7 +7,9 @@ import os
 import re
 import traceback
 import unicodedata
-import werkzeug
+import werkzeug.exceptions
+import werkzeug.routing
+import werkzeug.urls
 
 # optional python-slugify import (https://github.com/un33k/python-slugify)
 try:
@@ -550,8 +552,8 @@ class IrHttp(models.AbstractModel):
             return cls._handle_exception(e)
 
         if getattr(request, 'is_frontend_multilang', False) and request.httprequest.method in ('GET', 'HEAD'):
-            generated_path = werkzeug.url_unquote_plus(path)
-            current_path = werkzeug.url_unquote_plus(request.httprequest.path)
+            generated_path = werkzeug.urls.url_unquote_plus(path)
+            current_path = werkzeug.urls.url_unquote_plus(request.httprequest.path)
             if generated_path != current_path:
                 if request.lang != cls._get_default_lang():
                     path = '/' + request.lang.url_code + path
@@ -627,6 +629,21 @@ class IrHttp(models.AbstractModel):
 
         if not request.uid:
             cls._auth_method_public()
+
+        # We rollback the current transaction before initializing a new
+        # cursor to avoid potential deadlocks.
+
+        # If the current (failed) transaction was holding a lock, the new
+        # cursor might have to wait for this lock to be released further
+        # down the line. However, this will only happen after the
+        # request is done (and in fact it won't happen). As a result, the
+        # current thread/worker is frozen until its timeout is reached.
+
+        # So rolling back the transaction will release any potential lock
+        # and, since we are in a case where an exception was raised, the
+        # transaction shouldn't be committed in the first place.
+        request.env.cr.rollback()
+
         with registry(request.env.cr.dbname).cursor() as cr:
             env = api.Environment(cr, request.uid, request.env.context)
             if code == 500:

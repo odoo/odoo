@@ -115,6 +115,9 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         self.assertResponse(response, 200)
         csrf_token = self._find_csrf_token(response.text)
 
+        r = self._access_begin(certification, answer_token)
+        self.assertResponse(r, 200)
+
         with patch.object(IrMailServer, 'connect'):
             self._answer_question(q01, q01.suggested_answer_ids.ids[3], answer_token, csrf_token)
             self._answer_question(q02, q02.suggested_answer_ids.ids[1], answer_token, csrf_token)

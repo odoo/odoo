@@ -44,7 +44,7 @@ class TestEventCommon(common.SavepointCase):
 
         cls.customer = cls.env['res.partner'].create({
             'name': 'Constantin Customer',
-            'email': 'constantin@example.com',
+            'email': 'constantin@test.example.com',
             'country_id': cls.env.ref('base.be').id,
             'phone': '0485112233',
         })
@@ -57,8 +57,13 @@ class TestEventCommon(common.SavepointCase):
             'default_registration_max': 30,
             'use_timezone': True,
             'default_timezone': 'Europe/Paris',
-            'use_hashtag': True,
-            'default_hashtag': 'amazing',
+            'use_ticket': True,
+            'event_type_ticket_ids': [(0, 0, {
+                'name': 'First Ticket',
+                }), (0, 0, {
+                    'name': 'Second Ticket',
+                })
+            ],
             'use_mail_schedule': True,
             'event_type_mail_ids': [
                 (0, 0, {  # right at subscription

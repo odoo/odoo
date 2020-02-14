@@ -43,7 +43,7 @@ class SaleOrder(models.Model):
                 values['price_unit'] = ticket.price
             else:
                 values['price_unit'] = ticket.price_reduce
-            values['name'] = ticket._get_ticket_multiline_description_sale()
+            values['name'] = ticket._get_ticket_multiline_description()
 
         # avoid writing related values that end up locking the product record
         values.pop('event_ok', None)
@@ -88,7 +88,7 @@ class SaleOrder(models.Model):
                 ('sale_order_id', 'in', self.ids),  # To avoid break on multi record set
                 ('event_ticket_id', '=', ticket.id),
             ], offset=new_qty, limit=(old_qty - new_qty), order='create_date asc')
-            attendees.button_reg_cancel()
+            attendees.action_cancel()
         # adding attendees
         elif ticket and new_qty > old_qty:
             line = OrderLine.browse(values['line_id'])

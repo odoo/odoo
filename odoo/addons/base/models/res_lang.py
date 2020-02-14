@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import json
 import locale
 import logging
@@ -8,7 +9,6 @@ import re
 from operator import itemgetter
 
 from odoo import api, fields, models, tools, _
-from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -166,7 +166,7 @@ class Lang(models.Model):
     def install_lang(self):
         """
 
-        This method is called from odoo/addons/data/res_lang_data.xml to load
+        This method is called from odoo/addons/base/data/res_lang_data.xml to load
         some language and set it as the default for every partners. The
         language is set via tools.config by the '_initialize_db' method on the
         'db' object. This is a fragile solution and something else should be
@@ -275,7 +275,7 @@ class Lang(models.Model):
         # floats and decimal ints need special action!
         if grouping:
             lang_grouping, thousands_sep, decimal_point = self._data_get(monetary)
-            eval_lang_grouping = safe_eval(lang_grouping)
+            eval_lang_grouping = ast.literal_eval(lang_grouping)
 
             if percent[-1] in 'eEfFgG':
                 parts = formatted.split('.')

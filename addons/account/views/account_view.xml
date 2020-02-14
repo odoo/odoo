@@ -285,22 +285,7 @@
                                 <group>
                                     <group>
                                         <field name="code"/>
-                                        <label for="sequence_number_next"/>
-                                        <div>
-                                            <field name="sequence_number_next" style="padding-right: 1.0em"/>
-                                            <field name="sequence_id" required="0"
-                                                   attrs="{'readonly': 1}" groups="base.group_no_one"/>
-                                        </div>
-                                        <field name="refund_sequence"
-                                               attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"
-                                               groups="base.group_no_one"/>
-                                        <label for="refund_sequence_number_next"
-                                               attrs="{'invisible': ['|',('type', 'not in', ['sale', 'purchase']), ('refund_sequence', '!=', True)]}"/>
-                                        <div attrs="{'invisible': ['|',('type', 'not in', ['sale', 'purchase']), ('refund_sequence', '!=', True)]}">
-                                            <field name="refund_sequence_number_next" style="padding-right: 1.0em"/>
-                                            <field name="refund_sequence_id" required="0"
-                                                   attrs="{'readonly': 1}" groups="base.group_no_one"/>
-                                        </div>
+                                        <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
                                     </group>
                                     <group>
                                         <field name="default_debit_account_id" options="{'no_create': True}" domain="[('deprecated', '=', False)]" groups="account.group_account_readonly"/>
@@ -341,6 +326,11 @@
                                     <group string="Payment Method Types" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}">
                                         <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
                                         <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
+                                    </group>
+                                    <group string="Follow Customer Payments" attrs="{'invisible': [('type', '!=', 'sale')]}">
+                                        <field name="sale_activity_type_id"/>
+                                        <field name="sale_activity_user_id" attrs="{'invisible': [('sale_activity_type_id', '=', False)]}"/>
+                                        <field name="sale_activity_note" placeholder="e.g. Give a phone call, check with others , ..."  attrs="{'invisible': [('sale_activity_type_id', '=', False)]}"/>
                                     </group>
                                 </group>
                             </page>
@@ -622,12 +612,12 @@ action = model.setting_init_bank_account_action()
                             <label for="balance_start"/>
                             <div>
                                 <field class="oe_inline" name="balance_start"/>
-                                <button name="open_cashbox_id" attrs="{'invisible': ['|','|',('state','!=','open'),('journal_type','!=','cash')]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'start'}"/>
+                                <button name="open_cashbox_id" attrs="{'invisible': ['|',('state','!=','open'),('journal_type','!=','cash')]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'start'}"/>
                             </div>
                             <label for="balance_end_real"/>
                             <div>
                                 <field class="oe_inline" name="balance_end_real"/>
-                                <button name="open_cashbox_id" attrs="{'invisible': ['|','|',('state','!=','open'),('journal_type','!=','cash')]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'close'}"/>
+                                <button name="open_cashbox_id" attrs="{'invisible': ['|',('state','!=','open'),('journal_type','!=','cash')]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'close'}"/>
                             </div>
                         </group>
                     </group>

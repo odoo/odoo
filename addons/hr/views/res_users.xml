@@ -16,12 +16,6 @@
                 <h1 position="replace"/>
                 <widget name="notification_alert" position="replace"/>
                 <xpath expr="//field[@name='image_1920']" position="replace"/>
-                <field name="signature" position="replace" />
-                <xpath expr="//group[@name='preference_contact']" position="before">
-                    <group>
-                        <field name="signature" />
-                    </group>
-                </xpath>
                 <xpath expr="//field[@name='company_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
@@ -61,7 +55,7 @@
                                 class="oe_stat_button"
                                 disabled="1"
                                 invisible="context.get('from_my_profile', False)"
-                                attrs="{'invisible': ['|', ('hr_presence_state', '=', 'absent')]}">
+                                attrs="{'invisible': [('hr_presence_state', '=', 'absent')]}">
                                 <div role="img" class="fa fa-fw fa-circle text-success o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}" aria-label="Available" title="Available"/>
                                 <div role="img" class="fa fa-fw fa-circle text-warning o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}" aria-label="Away" title="Away"/>
                                 <div role="img" class="fa fa-fw fa-circle text-danger o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'absent')]}" aria-label="Not available" title="Not available"/>
@@ -96,8 +90,8 @@
                         <group>
                             <group>
                                 <field name="can_edit" invisible="1"/>
-                                <field name="mobile_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                <field name="work_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="mobile_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
+                                <field name="work_phone" widget="phone" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
                             </group>
                             <group>
                                 <field name="work_email" widget="email" attrs="{'readonly': [('can_edit', '=', False)]}"/>
@@ -139,7 +133,7 @@
                                             options='{"always_reload": True, "highlight_first_line": True}'
                                             attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                         <field name="private_email" string="Email" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="employee_phone" string="Phone" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="employee_phone" string="Phone" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
                                         <field name="employee_bank_account_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                         <field name="km_home_work" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                     </group>
@@ -167,7 +161,7 @@
                                     </group>
                                     <group string="Emergency">
                                         <field name="emergency_contact" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="emergency_phone" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="emergency_phone" attrs="{'readonly': [('can_edit', '=', False)]}" options="{'enable_sms': false}"/>
                                     </group>
                                     <group string="Work Permit" name="work_permit">
                                         <field name="visa_no" attrs="{'readonly': [('can_edit', '=', False)]}"/>

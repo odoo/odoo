@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2020-02-13 07:25+0000\n"
+"PO-Revision-Date: 2020-02-13 07:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -91,31 +91,6 @@ msgid "Days"
 msgstr ""
 
 #. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__length
-msgid "Default Length"
-msgstr ""
-
-#. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__unit
-msgid "Default Units"
-msgstr ""
-
-#. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__volume
-msgid "Default Volume"
-msgstr ""
-
-#. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__weight
-msgid "Default Weight"
-msgstr ""
-
-#. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__working_time
-msgid "Default Working Time"
-msgstr ""
-
-#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__display_name
 #: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
 msgid "Display Name"
@@ -172,11 +147,6 @@ msgstr ""
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_length
 msgid "Length / Distance"
-msgstr ""
-
-#. module: uom
-#: model:uom.uom,name:uom.product_uom_litre
-msgid "Liters"
 msgstr ""
 
 #. module: uom
@@ -257,16 +227,6 @@ msgid "Type"
 msgstr ""
 
 #. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
-msgid "Type of Measure"
-msgstr ""
-
-#. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_uom__measure_type
-msgid "Type of measurement category"
-msgstr ""
-
-#. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
@@ -328,7 +288,7 @@ msgid ""
 msgstr ""
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:0
+#: code:addons/uom/models/uom_uom.py:0 code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
 msgstr ""
@@ -346,11 +306,6 @@ msgstr ""
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_wtime
 msgid "Working Time"
-msgstr ""
-
-#. module: uom
-#: model:ir.model.constraint,message:uom.constraint_uom_category_uom_category_unique_type
-msgid "You can have only one category per measurement type."
 msgstr ""
 
 #. module: uom
@@ -381,22 +336,32 @@ msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_floz
-msgid "fl oz"
+msgid "fl oz (US)"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_foot
-msgid "foot(ft)"
+msgid "ft"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_foot
+msgid "ft³"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
-msgid "gals"
+msgid "gal (US)"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
-msgid "inches"
+msgid "in"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_inch
+msgid "in³"
 msgstr ""
 
 #. module: uom
@@ -411,20 +376,25 @@ msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_lb
-msgid "lbs"
+msgid "lb"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
-msgid "miles"
+msgid "mi"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_meter
+msgid "m³"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
-msgid "ozs"
+msgid "oz"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
-msgid "qt"
+msgid "qt (US)"
 msgstr ""

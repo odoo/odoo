@@ -7,8 +7,30 @@ var FormEditorRegistry = require('website_form.form_editor_registry');
 var _t = core._t;
 
 FormEditorRegistry.add('apply_job', {
-    defaultTemplateName: 'website_hr_recruitment.default_job_form',
-    defaultTemplatePath: '/website_hr_recruitment/static/src/xml/website_hr_recruitment.xml',
+    formFields: [{
+        type: 'char',
+        modelRequired: true,
+        name: 'partner_name',
+        string: 'Your Name',
+    }, {
+        type: 'email',
+        required: true,
+        name: 'email_from',
+        string: 'Your Email',
+    }, {
+        type: 'char',
+        required: true,
+        name: 'partner_phone',
+        string: 'Phone Number',
+    }, {
+        type: 'text',
+        name: 'description',
+        string: 'Short Introduction',
+    }, {
+        type: 'binary',
+        custom: true,
+        name: 'Resume',
+    }],
     fields: [{
         name: 'job_id',
         type: 'many2one',

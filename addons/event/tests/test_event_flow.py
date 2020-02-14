@@ -47,10 +47,10 @@ class TestEventFlow(TestEventCommon):
             })
 
         # EventUser validates registrations
-        test_reg1.button_reg_close()
+        test_reg1.action_set_done()
         self.assertEqual(test_reg1.state, 'done', 'Event: wrong state of attended registration')
         self.assertEqual(test_event.seats_used, 1, 'Event: incorrect number of attendees after closing registration')
-        test_reg2.button_reg_close()
+        test_reg2.action_set_done()
         self.assertEqual(test_reg1.state, 'done', 'Event: wrong state of attended registration')
         self.assertEqual(test_event.seats_used, 2, 'Event: incorrect number of attendees after closing registration')
 

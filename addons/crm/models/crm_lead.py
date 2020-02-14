@@ -150,7 +150,9 @@ class Lead(models.Model):
     is_automated_probability = fields.Boolean('Is automated probability?', compute="_compute_is_automated_probability")
     # External records
     meeting_count = fields.Integer('# Meetings', compute='_compute_meeting_count')
-    lost_reason = fields.Many2one('crm.lost.reason', string='Lost Reason', index=True, tracking=True)
+    lost_reason = fields.Many2one(
+        'crm.lost.reason', string='Lost Reason',
+        index=True, ondelete='restrict', tracking=True)
 
     _sql_constraints = [
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
@@ -810,7 +812,7 @@ class Lead(models.Model):
         self._merge_opportunity_history(opportunities)
         self._merge_opportunity_attachments(opportunities)
 
-    def merge_opportunity(self, user_id=False, team_id=False):
+    def merge_opportunity(self, user_id=False, team_id=False, auto_unlink=True):
         """ Merge opportunities in one. Different cases of merge:
                 - merge leads together = 1 new lead
                 - merge at least 1 opp with anything else (lead or opp) = 1 new opp
@@ -853,7 +855,8 @@ class Lead(models.Model):
 
         # delete tail opportunities
         # we use the SUPERUSER to avoid access rights issues because as the user had the rights to see the records it should be safe to do so
-        opportunities_tail.sudo().unlink()
+        if auto_unlink:
+            opportunities_tail.sudo().unlink()
 
         return opportunities_head
 
@@ -986,6 +989,34 @@ class Lead(models.Model):
         if partner_company:
             return partner_company
         return Partner.create(self._create_lead_partner_data(self.name, is_company=False))
+
+    def _find_matching_partner(self):
+        """ Try to find a matching partner with available information on the Lead.
+            Like the customer's name, email, phone number, etc.
+            :return int partner_id if any, False otherwise
+        """
+        self.ensure_one()
+
+        # find the best matching partner
+        Partner = self.env['res.partner']
+        if self.partner_id:  # a partner is set already
+            return self.partner_id.id
+
+        if self.email_from:  # search through the existing partners based on the lead's email
+            return Partner.search([('email', '=', self.email_from)], limit=1).id
+
+        search_criteria = False
+        if self.partner_name:  # search through the existing partners based on the lead's partner or contact name
+            search_criteria = self.partner_name
+        elif self.contact_name:
+            search_criteria = self.contact_name
+        elif self.name:  # to be aligned with _create_lead_partner, search on lead's name as last possibility
+            search_criteria = self.name
+
+        if search_criteria:
+            return Partner.search([('name', 'ilike', '%' + search_criteria + '%')], limit=1).id
+
+        return False
 
     def handle_partner_assignation(self, action='create', partner_id=False):
         """ Handle partner assignation during a lead conversion.

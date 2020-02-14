@@ -1,4 +1,4 @@
-odoo.define('web.custom_hooks', function (require) {
+odoo.define('web.custom_hooks', function () {
     "use strict";
 
     const { Component, hooks } = owl;
@@ -38,32 +38,76 @@ odoo.define('web.custom_hooks', function (require) {
     }
 
     /**
-     * When component needs to listen to DOM Events on element(s) that is not part of his hierarchy, we can use
-     * `useExternalListener` hook.
-     * It will correctly add and remove the event listener.
+     * The useListener hook offers an alternative to Owl's classical event
+     * registration mechanism (with attribute 't-on-eventName' in xml). It is
+     * especially useful for abstract components, meant to be extended by
+     * specific ones. If those abstract components need to define event handlers,
+     * but don't have any template (because the template completely depends on
+     * specific cases), then using the 't-on' mechanism isn't adequate, as the
+     * handlers would be lost by the template override. In this case, using this
+     * hook instead is more convenient.
      *
-     * Example:
-     *  a menu needs to listen to the click on window to be closed automatically
+     * Example: navigation event handling in AbstractField
      *
-     * Usage:
-     *  in the constructor of the OWL component that needs to be notified,
-     *  `useExternalListener(window, 'click', this._doSomething);` listen to the click event on window and call
-     *  `this._doSomething` function of the component when the click happened
+     * Usage: like all Owl hooks, this function has to be called in the
+     * constructor of an Owl component:
      *
-     * @param {EventTarget} target
-     * @param {string} eventName
-     * @param {Function} handler
-     * @param {(Object|boolean)} [eventParams]
+     *   useListener('click', () => { console.log('clicked'); });
+     *
+     * An optional native query selector can be specified as second argument for
+     * event delegation. In this case, the handler is only called if the event
+     * is triggered on an element matching the given selector.
+     *
+     *   useListener('click', 'button', () => { console.log('clicked'); });
+     *
+     * Note: components that alter the event's target (e.g. Portal) are not
+     * expected to behave as expected with event delegation.
+     *
+     * @param {string} eventName the name of the event
+     * @param {string} [querySelector] a JS native selector for event delegation
+     * @param {function} handler the event handler (will be bound to the component)
      */
-    function useExternalListener(target, eventName, handler, eventParams) {
-        const boundHandler = handler.bind(Component.current);
+    function useListener(eventName, querySelector, handler) {
+        if (arguments.length === 2) {
+            querySelector = null;
+            handler = arguments[1];
+        }
+        if (!(typeof handler === 'function')) {
+            throw new Error('The handler must be a function');
+        }
 
-        onMounted(() => target.addEventListener(eventName, boundHandler, eventParams));
-        onWillUnmount(() => target.removeEventListener(eventName, boundHandler, eventParams));
+        const comp = Component.current;
+        let boundHandler;
+        if (querySelector) {
+            boundHandler = function (ev) {
+                let el = ev.target;
+                let target;
+                while (el && !target) {
+                    if (el.matches(querySelector)) {
+                        target = el;
+                    } else if (el === comp.el) {
+                        el = null;
+                    } else {
+                        el = el.parentElement;
+                    }
+                }
+                if (el) {
+                    handler.call(comp, ev);
+                }
+            };
+        } else {
+            boundHandler = handler.bind(comp);
+        }
+        onMounted(function () {
+            comp.el.addEventListener(eventName, boundHandler);
+        });
+        onWillUnmount(function () {
+            comp.el.removeEventListener(eventName, boundHandler);
+        });
     }
 
     return {
         useFocusOnUpdate,
-        useExternalListener,
+        useListener,
     };
 });

@@ -909,7 +909,7 @@ class expression(object):
 
             # Making search easier when there is a left operand as one2many or many2many
             elif len(path) > 1 and field.store and field.type in ('many2many', 'one2many'):
-                right_ids = comodel.search([('.'.join(path[1:]), operator, right)]).ids
+                right_ids = comodel.with_context(**field.context).search([('.'.join(path[1:]), operator, right)]).ids
                 leaf.leaf = (path[0], 'in', right_ids)
                 push(leaf)
 

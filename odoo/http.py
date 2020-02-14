@@ -167,7 +167,7 @@ def local_redirect(path, query=None, keep_hash=False, code=303):
     if not query:
         query = {}
     if query:
-        url += '?' + werkzeug.url_encode(query)
+        url += '?' + urls.url_encode(query)
     return werkzeug.utils.redirect(url, code)
 
 def redirect_with_hash(url, code=303):
@@ -699,7 +699,8 @@ def serialize_exception(e):
         "debug": traceback.format_exc(),
         "message": ustr(e),
         "arguments": e.args,
-        "exception_type": "internal_error"
+        "exception_type": "internal_error",
+        "context": getattr(e, 'context', {}),
     }
     if isinstance(e, odoo.exceptions.UserError):
         tmp["exception_type"] = "user_error"

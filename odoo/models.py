@@ -57,7 +57,6 @@ from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang
-from .tools.safe_eval import safe_eval
 from .tools.translate import _
 from .tools import date_utils
 
@@ -558,7 +557,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if ModelClass._transient:
             assert ModelClass._log_access, \
                 "TransientModels must have log_access turned on, " \
-                "in order to implement their access rights policy"
+                "in order to implement their vacuum policy"
 
         # link the class to the registry, and update the registry
         ModelClass.pool = pool
@@ -984,7 +983,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     # Failed to write, log to messages, rollback savepoint (to
                     # avoid broken transaction) and keep going
                 except Exception as e:
-                    _logger.exception("Error while loading record")
+                    _logger.debug("Error while loading record", exc_info=True)
                     info = rec_data['info']
                     message = (_(u'Unknown error during import:') + u' %s: %s' % (type(e), e))
                     moreinfo = _('Resolve other errors first')
@@ -1709,10 +1708,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             _logger.warning("Cannot execute name_search, no _rec_name defined on %s", self._name)
         elif not (name == '' and operator == 'ilike'):
             args += [(self._rec_name, operator, name)]
-        access_rights_uid = name_get_uid or self._uid
-        ids = self._search(args, limit=limit, access_rights_uid=access_rights_uid)
+        ids = self._search(args, limit=limit, access_rights_uid=name_get_uid)
         recs = self.browse(ids)
-        return lazy_name_get(recs.with_user(access_rights_uid))
+        return lazy_name_get(recs.with_user(name_get_uid))
 
     @api.model
     def _add_missing_default_values(self, values):
@@ -1754,6 +1752,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         ``tools.ormcache`` or ``tools.ormcache_multi``.
         """
         cls.pool._clear_cache()
+
+    @api.model
+    def _read_group_expand_full(self, groups, domain, order):
+        """Extend the group to include all targer records by default."""
+        return groups.search([], order=order)
 
     @api.model
     def _read_group_fill_results(self, domain, groupby, remaining_groupbys,
@@ -2514,22 +2517,20 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cr = self._cr
         foreign_key_re = re.compile(r'\s*foreign\s+key\b.*', re.I)
 
-        def process(key, definition):
+        for (key, definition, message) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
             current_definition = tools.constraint_definition(cr, self._table, conname)
-            if not current_definition:
-                # constraint does not exists
-                tools.add_constraint(cr, self._table, conname, definition)
-            elif current_definition != definition:
+            if current_definition == definition:
+                continue
+
+            if current_definition:
                 # constraint exists but its definition may have changed
                 tools.drop_constraint(cr, self._table, conname)
-                tools.add_constraint(cr, self._table, conname, definition)
 
-        for (key, definition, _) in self._sql_constraints:
             if foreign_key_re.match(definition):
-                self.pool.post_init(process, key, definition)
+                self.pool.post_init(tools.add_constraint, cr, self._table, conname, definition)
             else:
-                process(key, definition)
+                self.pool.post_constraint(tools.add_constraint, cr, self._table, conname, definition)
 
     def _execute_sql(self):
         """ Execute the SQL code from the _sql attribute (if any)."""
@@ -3237,9 +3238,6 @@ Record ids: %(records)s
         forbidden = invalid.exists()
         if forbidden:
             # the invalid records are (partially) hidden by access rules
-            if self.is_transient():
-                raise AccessError(_('For this kind of document, you may only access records you created yourself.\n\n(Document type: %s)') % (self._description,))
-
             raise self.env['ir.rule']._make_access_error(operation, forbidden)
 
         # If we get here, the invalid records are not in the database.
@@ -4162,15 +4160,6 @@ Record ids: %(records)s
                     if table not in query.tables:
                         query.tables.append(table)
 
-        if self._transient:
-            # One single implicit access rule for transient models: owner only!
-            # This is ok because we assert that TransientModels always have
-            # log_access enabled, so that 'create_uid' is always there.
-            domain = [('create_uid', '=', self._uid)]
-            tquery = self._where_calc(domain, active_test=False)
-            apply_rule(tquery.where_clause, tquery.where_clause_params, tquery.tables)
-            return
-
         # apply main rules on the object
         Rule = self.env['ir.rule']
         where_clause, where_params, tables = Rule.domain_get(self._name, mode)
@@ -5048,6 +5037,8 @@ Record ids: %(records)s
         non-superuser mode, unless `user` is the superuser (by convention, the
         superuser is always in superuser mode.)
         """
+        if not user:
+            return self
         return self.with_env(self.env(user=user, su=False))
 
     def with_company(self, company):
@@ -5232,10 +5223,10 @@ Record ids: %(records)s
             records.mapped('name')
 
             # returns a recordset of partners
-            record.mapped('partner_id')
+            records.mapped('partner_id')
 
             # returns the union of all partner banks, with duplicates removed
-            record.mapped('partner_id.bank_ids')
+            records.mapped('partner_id.bank_ids')
         """
         if not func:
             return self                 # support for an empty path of fields
@@ -5621,7 +5612,7 @@ Record ids: %(records)s
         return set(self._ids) >= set(other._ids)
 
     def __int__(self):
-        return self.id
+        return self.id or 0
 
     def __str__(self):
         return "%s%s" % (self._name, getattr(self, '_ids', ""))

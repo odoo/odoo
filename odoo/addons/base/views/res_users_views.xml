@@ -31,8 +31,7 @@
             name="Change Password"
             binding_model="res.users"
             res_model="change.password.wizard"
-            view_mode="form" target="new"
-            groups="base.group_erp_manager"/>
+            view_mode="form" target="new"/>
 
         <!-- res.groups -->
         <record id="view_groups_search" model="ir.ui.view">
@@ -138,14 +137,14 @@
                             <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
                             <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
                         </div>
-                        <group>
+                        <group name="phone_numbers">
                             <label for="groups_id" string="Access Rights"
                                     attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one"/>
                             <div attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one">
                                 <field name="groups_id" readonly="1" widget="many2many_tags" options="{'color_field': 'color'}" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
                             </div>
-                            <field name="phone" widget="phone"/>
-                            <field name="mobile" widget="phone"/>
+                            <field name="phone" widget="phone" options="{'enable_sms': false}"/>
+                            <field name="mobile" widget="phone" options="{'enable_sms': false}"/>
                         </group>
                     </sheet>
                 </form>

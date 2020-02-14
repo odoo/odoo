@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from . import sequence_mixin
 from . import partner
 from . import account
 from . import account_reconcile_model
@@ -21,3 +22,4 @@ from . import account_incoterms
 from . import digest
 from . import res_users
 from . import ir_actions_report
+from . import res_currency

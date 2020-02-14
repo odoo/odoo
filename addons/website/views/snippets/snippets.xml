@@ -3,6 +3,12 @@
 
 <!-- Snippets menu -->
 <template id="snippets" inherit_id="web_editor.snippets" primary="True">
+    <xpath expr="//div[@id='snippets_menu']" position="inside">
+        <button type="button" class="o_we_customize_theme_btn"
+                data-title="Customize your theme">
+            Theme
+        </button>
+    </xpath>
     <xpath expr="//t[@id='default_snippets']" position="replace">
         <t id="default_snippets">
             <div id="snippet_mega_menu" class="o_panel d-none">
@@ -51,6 +57,7 @@
                     <t t-snippet="website.s_references" t-thumbnail="/website/static/src/img/snippets_thumbs/s_references.png"/>
                     <t t-snippet="website.s_faq_collapse" t-thumbnail="/website/static/src/img/snippets_thumbs/s_faq_collapse.png"/>
                     <t t-snippet="website.s_features_grid" t-thumbnail="/website/static/src/img/snippets_thumbs/s_features_grid.png"/>
+                    <t t-snippet="website.s_table_of_content" t-thumbnail="/website/static/src/img/snippets_thumbs/s_table_of_content.png"/>
                     <t t-snippet="website.s_product_catalog" t-thumbnail="/website/static/src/img/snippets_thumbs/s_product_catalog.png"/>
                     <t t-snippet="website.s_product_list" t-thumbnail="/website/static/src/img/snippets_thumbs/s_product_list.png"/>
                     <t t-snippet="website.s_tabs" t-thumbnail="/website/static/src/img/snippets_thumbs/s_tabs.png"/>
@@ -68,8 +75,7 @@
                     <t id="form_form_hook"/>
                     <t id="sale_recently_viewed_product_hook"/>
                     <t id="sale_product_search_section_hook"/>
-                    <t id="blog_latest_posts_list_hook"/>
-                    <t id="blog_latest_posts_big_hook"/>
+                    <t id="blog_posts_hook"/>
                     <t id="event_local_events_hook"/>
                     <t id="snippet_google_map_hook"/>
                     <t id="mass_mailing_newsletter_block_hook"/>
@@ -123,14 +129,14 @@
 </template>
 
 <template id="website.snippet_options_border">
-    <we-row string="Border" class="o_we_inline">
+    <we-row string="Border">
         <we-colorpicker data-dependencies="border_width_opt"
                         data-select-style="true" data-css-property="border-color" data-color-prefix="border-"/>
-        <we-input class="o_we_inline" data-name="border_width_opt"
+        <we-input data-name="border_width_opt"
                   data-select-style="0" data-css-property="border-width"
                   data-unit="px" data-extra-class="border"/>
     </we-row>
-    <we-input string="Rounded" class="o_we_inline"
+    <we-input string="Rounded"
               data-dependencies="border_width_opt"
               data-select-style="0" data-css-property="border-radius"
               data-unit="px" data-extra-class="rounded"/>
@@ -193,13 +199,13 @@
             <we-divider/>
             <we-button data-select-class="s_carousel_default">Default</we-button>
         </we-select>
-        <we-input string="Speed" class="o_we_inline"
+        <we-input string="Speed"
                   data-select-data-attribute="0s" data-attribute-name="interval"
                   data-unit="s" data-save-unit="ms" data-step="0.1"/>
     </div>
 
     <div data-js="CarouselItem"
-         data-selector=".carousel-item">
+         data-selector=".s_carousel .carousel-item">
         <we-button data-slide="left" data-no-preview="true" class="fa fa-fw fa-angle-left"/>
         <we-button data-slide="right" data-no-preview="true" class="fa fa-fw fa-angle-right"/>
         <we-button data-add-slide="true" data-no-preview="true" class="fa fa-fw fa-plus"/>
@@ -251,7 +257,7 @@
     <div data-js="background" string="Background"
         data-selector="section, .parallax, .carousel-item"
         data-exclude=".s_hr, .s_image_gallery, .o_gallery .carousel-item">
-        <we-imagepicker class="o_we_inline" string="Background" data-background="" data-allow-videos=":not(.parallax, .s_parallax_bg)" data-first-filters="background"/>
+        <we-imagepicker string="Background" data-background="" data-allow-videos=":not(.parallax, .s_parallax_bg)" data-first-filters="background"/>
     </div>
 
     <!-- Background Image Size/Position -->
@@ -288,12 +294,14 @@
 
     <!-- Background Color -->
     <div id="so_main_colorpicker"
-         data-selector="section, .carousel-item, section .row > div"
+         data-selector="section, .carousel-item, section .row > div, .o_record_cover_container"
          data-exclude=".parallax, .o_gallery .carousel-item, .s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
         <we-colorpicker string="Background Color"
+            data-name="bg_color_opt"
             data-select-style="true"
             data-css-property="background-color"
-            data-color-prefix="bg-"/>
+            data-color-prefix="bg-"
+            data-dependencies="!cover_background_opt"/>
     </div>
 
     <!-- FILTER | .s_parallax -->
@@ -354,20 +362,42 @@
          data-selector="[data-oe-expression='res_company.partner_id']"
          data-no-check="true"/>
 
+    <div id="so_header_theme"
+         data-selector="#wrapwrap > header"
+         data-no-check="true">
+        <we-checkbox string="Show Sign In" data-customize-website="portal.portal_show_sign_in" data-reload="/"/>
+        <we-checkbox string="Fixed Top Menu" data-customize-website="website.affix_top_menu" data-reload="/"/>
+        <we-colorpicker string="Background Color" data-customize-website="" data-color="menu"/>
+        <we-select string="Logo" data-reload="/">
+            <we-button data-customize-website="">Text</we-button>
+            <we-button data-customize-website="website.layout_logo_show">Image</we-button>
+        </we-select>
+        <we-input string="Logo Height" data-customize-website="null" data-variable="logo-height" data-unit="px" data-save-unit="rem"/>
+        <we-row string="Font">
+            <we-fontfamilypicker data-variable="navbar-font-number"/>
+            <we-input data-customize-website="null" data-variable="header-font-size" data-unit="px" data-save-unit="rem"/>
+        </we-row>
+    </div>
+
     <div data-js="topMenuTransparency"
         data-selector="[data-main-object^='website.page('] #wrapwrap > header"
         data-no-check="true">
-        <we-checkbox string="Transparent" data-transparent="true" data-no-preview="true"/>
+        <we-checkbox string="Transparent on this page" data-transparent="true" data-no-preview="true"/>
     </div>
 
     <div data-js="topMenuColor"
          data-selector="[data-main-object^='website.page('] #wrapwrap > header"
          data-no-check="true">
-        <we-colorpicker string="Background Color"
+        <we-colorpicker string="Transparent color"
             data-select-style="true"
             data-css-property="background-color"
             data-color-prefix="bg-"
             data-excluded="theme, common, custom"/>
+    </div>
+
+    <div data-selector="#wrapwrap > footer"
+         data-no-check="true">
+        <we-colorpicker string="Background" data-customize-website="" data-color="footer"/>
     </div>
 
     <!-- Anchor Name -->
@@ -392,7 +422,7 @@
          data-drop-near=".o_mega_menu .nav-link"/>
 
     <div data-js="CoverProperties" data-selector=".o_record_cover_container" data-no-check="true">
-        <we-imagepicker class="o_we_inline" string="Cover" data-background="" data-first-filters="cover"/>
+        <we-imagepicker string="Image" data-background="" data-first-filters="cover" data-name="cover_background_opt"/>
         <we-select string="Size" data-cover-opt-name="size">
             <we-button data-select-class="o_record_has_cover o_full_screen_height">Full Screen</we-button>
             <we-button class="o_record_cover_opt_size_default" data-select-class="o_record_has_cover o_half_screen_height">Half Screen</we-button>
@@ -404,25 +434,6 @@
             <we-button data-filter-value="0.4">Medium</we-button>
             <we-button data-filter-value="0.6">High</we-button>
         </we-select>
-        <we-select string="Filter Color" data-cover-opt-name="filters">
-            <we-button data-filter-color="oe_black">Black</we-button>
-            <we-button data-filter-color="oe_none">White</we-button>
-            <we-button data-filter-color="bg-primary">Primary</we-button>
-            <we-button data-filter-color="bg-secondary">Secondary</we-button>
-            <we-button data-filter-color="oe_blue">Blue</we-button>
-            <we-button data-filter-color="oe_yellow">Yellow</we-button>
-            <we-button data-filter-color="oe_red">Red</we-button>
-            <we-button data-filter-color="oe_purple">Purple</we-button>
-            <we-button data-filter-color="oe_green">Green</we-button>
-        </we-select>
-        <we-select string="Text Size" data-cover-opt-name="text_size">
-            <we-button data-select-class="o_record_cover_font_hero">Hero</we-button>
-            <we-button data-select-class="o_record_cover_font_huge">Huge</we-button>
-            <we-button data-select-class="o_record_cover_font_big">Big</we-button>
-            <we-button data-select-class="">Regular</we-button>
-            <we-button data-select-class="o_record_cover_font_small">Small</we-button>
-            <we-button data-select-class="o_record_cover_font_tiny">Tiny</we-button>
-        </we-select>
         <we-select string="Text Alignment" data-cover-opt-name="text_align">
             <we-button data-select-class="">Left</we-button>
             <we-button data-select-class="text-center">Centered</we-button>
@@ -433,7 +444,7 @@
     <!-- Stretch section -->
     <div data-selector="section"
         data-target="> .container, > .container-fluid, > .o_container_small">
-        <we-select string="Width" class="o_we_inline">
+        <we-select string="Content Width">
             <we-button data-select-class="container-fluid">Full</we-button>
             <we-button data-select-class="container">Regular</we-button>
             <we-button data-select-class="o_container_small">Small</we-button>
@@ -442,7 +453,7 @@
 
     <!-- Min height of section -->
     <div data-selector="section">
-        <we-select string="Height" class="o_we_inline">
+        <we-select string="Height">
             <we-button data-select-class="">Fit content</we-button>
             <we-button data-select-class="o_half_screen_height">Half screen</we-button>
             <we-button data-select-class="o_full_screen_height">Full screen</we-button>
@@ -450,7 +461,7 @@
     </div>
     <!-- Scroll to next section button (only for full height) -->
     <div data-js="ScrollButton" data-selector="section">
-        <we-row string="Scroll down button" class="o_we_inline o_scroll_button_opt">
+        <we-row string="Scroll down button" class="o_scroll_button_opt">
             <we-colorpicker data-select-style="true"
                 data-css-property="color"
                 data-color-prefix="text-"
@@ -466,6 +477,68 @@
                 data-no-preview="true"
                 data-name="scroll_button_opt"/>
         </we-row>
+    </div>
+
+    <!-- Cookies Bar -->
+    <div data-selector="#website_cookies_bar" data-js="CookiesBar" data-target=".s_popup_main">
+        <we-select string="Layout" class="o_we_inline">
+            <we-button data-select-class="o_cookies_discrete" data-select-layout="discrete" data-trigger="position_bottom,s_popup_size_full">Discrete</we-button>
+            <we-button data-select-class="o_cookies_classic" data-select-layout="classic" data-trigger="position_bottom,s_popup_size_full">Classic</we-button>
+            <we-button data-select-class="o_cookies_popup" data-select-layout="popup" data-trigger="position_centered,s_popup_size_md">Popup</we-button>
+        </we-select>
+    </div>
+
+    <!-- Theme options -->
+    <div data-js="Theme" data-selector="theme" data-no-check="true">
+        <we-button class="o_we_primary_btn" data-switch-theme="" data-no-preview="true">Switch Theme</we-button>
+        <we-row string="Main Colors">
+            <we-colorpicker data-name="primary_color_opt" title="Primary" data-customize-website="" data-color-type="theme" data-color="primary"/>
+            <we-colorpicker data-name="secondary_color_opt" title="Secondary" data-customize-website="" data-color-type="theme" data-color="secondary"/>
+            <we-colorpicker data-name="alpha_as_primary_color_opt" title="Primary" data-customize-website="" data-color-type="theme" data-color="alpha"/>
+            <we-colorpicker data-name="beta_as_secondary_color_opt" title="Secondary" data-customize-website="" data-color-type="theme" data-color="beta"/>
+        </we-row>
+        <we-row string="Extra Colors">
+            <we-colorpicker data-name="alpha_as_extra_color_opt" data-customize-website="" data-color-type="theme" data-color="alpha"/>
+            <we-colorpicker data-name="beta_as_extra_color_opt" data-customize-website="" data-color-type="theme" data-color="beta"/>
+            <we-colorpicker data-customize-website="" data-color-type="theme" data-color="gamma"/>
+            <we-colorpicker data-customize-website="" data-color-type="theme" data-color="delta"/>
+            <we-colorpicker data-customize-website="" data-color-type="theme" data-color="epsilon"/>
+        </we-row>
+        <we-row string="Status Colors">
+            <we-colorpicker title="Success" data-customize-website="" data-color-type="theme" data-color="success"/>
+            <we-colorpicker title="Info" data-customize-website="" data-color-type="theme" data-color="info"/>
+            <we-colorpicker title="Warning" data-customize-website="" data-color-type="theme" data-color="warning"/>
+            <we-colorpicker title="Error" data-customize-website="" data-color-type="theme" data-color="danger"/>
+        </we-row>
+        <we-row string="Texts">
+            <we-colorpicker data-customize-website="" data-color="text"/>
+            <we-fontfamilypicker data-variable="font-number"/>
+        </we-row>
+        <we-row string="Headings">
+            <we-colorpicker data-customize-website="" data-color="h1"/>
+            <we-fontfamilypicker data-variable="headings-font-number"/>
+        </we-row>
+        <we-row string="Sub-Headings">
+            <we-colorpicker title="Headings 2" data-customize-website="" data-color="h2"/>
+            <we-colorpicker title="Headings 3" data-customize-website="" data-color="h3"/>
+            <we-colorpicker title="Headings 4" data-customize-website="" data-color="h4"/>
+            <we-colorpicker title="Headings 5" data-customize-website="" data-color="h5"/>
+            <we-colorpicker title="Headings 6" data-customize-website="" data-color="h6"/>
+        </we-row>
+        <we-fontfamilypicker string="Buttons" data-variable="buttons-font-number"/>
+        <we-row string="Background">
+            <we-colorpicker title="Body" data-customize-website="" data-color="body"/>
+            <we-select>
+                <we-button data-name="no_background_opt" data-customize-website="">None</we-button>
+                <we-button data-customize-website="website.option_custom_body_image">Image</we-button>
+                <we-button data-customize-website="website.option_custom_body_image, website.option_custom_body_pattern">Pattern</we-button>
+            </we-select>
+            <we-imagepicker data-dependencies="!no_background_opt" data-customize-body-bg="" data-first-filters="background"/>
+        </we-row>
+        <we-select string="Layout">
+            <we-button data-customize-website="">Full</we-button>
+            <we-button data-customize-website="website.option_layout_boxed_variables" id="option_layout_boxed">Boxed</we-button>
+        </we-select>
     </div>
 </template>
 </odoo>

@@ -3,7 +3,9 @@
 
     <t t-name="web.ribbon">
         <div class="ribbon ribbon-top-right">
-            <span t-att-class="widget.bgColor ? widget.bgColor : 'bg-success'"><t t-esc="widget.text"/></span>
+            <span t-att-class="widget.className" t-att-title="widget.tooltip">
+                <t t-esc="widget.text"/>
+            </span>
         </div>
     </t>
 

@@ -6,14 +6,12 @@ import logging.handlers
 import os
 import platform
 import pprint
-from . import release
 import sys
 import threading
 import time
+import warnings
 
-import psycopg2
-
-import odoo
+from . import release
 from . import sql_db
 from . import tools
 
@@ -129,6 +127,16 @@ def init_logger():
 
     logging.addLevelName(25, "INFO")
     logging.captureWarnings(True)
+
+    # enable deprecation warnings (disabled by default)
+    warnings.filterwarnings('once', category=DeprecationWarning)
+    # ignore deprecation warnings from invalid escape (there's a ton and it's
+    # pretty likely a super low-value signal)
+    warnings.filterwarnings('ignore', r'^invalid escape sequence \\.', category=DeprecationWarning)
+    # ignore warning from older setuptools version using imp
+    warnings.filterwarnings('ignore', category=DeprecationWarning, module='setuptools.depends')
+    # ignore warning from zeep using defusedxml.lxml
+    warnings.filterwarnings('ignore', category=DeprecationWarning, module='zeep.loader')
 
     from .tools.translate import resetlocale
     resetlocale()

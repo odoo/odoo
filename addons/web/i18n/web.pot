@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.1\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-16 08:45+0000\n"
-"PO-Revision-Date: 2019-12-16 08:45+0000\n"
+"POT-Creation-Date: 2020-02-13 07:25+0000\n"
+"PO-Revision-Date: 2020-02-13 07:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -101,6 +101,13 @@ msgid "%d years ago"
 msgstr ""
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_mixin.js:0
+#, python-format
+msgid "%s Files"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.webclient_bootstrap
 msgid ""
 "&lt;!--[if lt IE 10]&gt;\n"
@@ -162,6 +169,13 @@ msgstr ""
 #: code:addons/web/static/src/js/core/time.js:0
 #, python-format
 msgid "'%s' is not convertible to date, datetime nor time"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_progress_card.js:0
+#, python-format
+msgid "(%s/%sMb)"
 msgstr ""
 
 #. module: web
@@ -806,6 +820,13 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/file_upload_progress_bar.xml:0
+#, python-format
+msgid "Cancel Upload"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #, python-format
 msgid "Cannot render chart with mode : "
@@ -854,6 +875,13 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/colorpicker_dialog.js:0
 #, python-format
 msgid "Choose"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Choose File"
 msgstr ""
 
 #. module: web
@@ -1188,7 +1216,7 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/pivot.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Day"
@@ -1278,6 +1306,13 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_progress_bar.js:0
+#, python-format
+msgid "Do you really want to cancel the upload of %s?"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "Do you really want to delete this export template?"
@@ -1330,7 +1365,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
-msgid "Download xls"
+msgid "Download xlsx"
 msgstr ""
 
 #. module: web
@@ -1422,11 +1457,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:web.login
 #, python-format
 msgid "Email"
-msgstr ""
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-msgid "Email:"
 msgstr ""
 
 #. module: web
@@ -1641,7 +1671,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/pivot/pivot_controller.js:0
 #, python-format
 msgid ""
-"For Excel compatibility, data cannot be exported if there are more than 256 columns.\n"
+"For Excel compatibility, data cannot be exported if there are more than 16384 columns.\n"
 "\n"
 "Tip: try to flip axis, filter further or reduce the number of measures."
 msgstr ""
@@ -1756,6 +1786,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit ENTER to"
@@ -2093,11 +2124,6 @@ msgid "Mac"
 msgstr ""
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-msgid "Mail:"
-msgstr ""
-
-#. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #: code:addons/web/static/src/xml/debug.xml:0
@@ -2238,7 +2264,7 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/pivot.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Month"
@@ -2341,6 +2367,7 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "No color"
@@ -2355,6 +2382,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "No data to display"
@@ -2513,6 +2541,7 @@ msgstr ""
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:0
 #: code:addons/web/static/src/js/views/list/list_confirm_dialog.js:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Ok"
 msgstr ""
@@ -2693,11 +2722,6 @@ msgid "Phone"
 msgstr ""
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-msgid "Phone:"
-msgstr ""
-
-#. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/colorpicker_dialog.js:0
 #, python-format
@@ -2848,6 +2872,15 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_progress_card.js:0
+#: code:addons/web/static/src/xml/file_upload_progress_card.xml:0
+#: code:addons/web/static/src/xml/file_upload_progress_card.xml:0
+#, python-format
+msgid "Processing..."
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Progress Bar"
@@ -2898,7 +2931,7 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/pivot.xml:0
 #, python-format
 msgid "Quarter"
 msgstr ""
@@ -3446,20 +3479,12 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Tap on the list to change company"
-msgstr ""
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Technical Translation"
 msgstr ""
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
 #: model_terms:ir.ui.view,arch_db:web.external_layout_clean
 msgid "Tel:"
 msgstr ""
@@ -3746,15 +3771,16 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/pivot/pivot_renderer.js:0
+#: code:addons/web/static/src/xml/pivot.xml:0
 #, python-format
 msgid ""
 "Try to add some records, or make sure that there is at least one measure and"
-" no active filter in the search bar."
+" no active filter in the search bar"
 msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid ""
@@ -3814,7 +3840,6 @@ msgstr ""
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:0
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:0
-#: code:addons/web/static/src/js/views/kanban/kanban_renderer_mobile.js:0
 #: code:addons/web/static/src/js/views/list/list_renderer.js:0
 #: code:addons/web/static/src/js/views/list/list_renderer.js:0
 #: code:addons/web/static/src/js/views/pivot/pivot_model.js:0
@@ -3901,6 +3926,13 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_progress_bar.js:0
+#, python-format
+msgid "Upload canceled"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
@@ -3935,6 +3967,13 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Uploading..."
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_progress_card.js:0
+#, python-format
+msgid "Uploading... (%s%%)"
 msgstr ""
 
 #. module: web
@@ -4030,16 +4069,10 @@ msgid "Web Tests"
 msgstr ""
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-msgid "Web:"
-msgstr ""
-
-#. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/calendar/calendar_model.js:0
 #: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/pivot.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Week"
@@ -4089,7 +4122,7 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/pivot.xml:0
 #, python-format
 msgid "Year"
 msgstr ""
@@ -4472,6 +4505,13 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_mixin.js:0
+#, python-format
+msgid "message: %s"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "not"
@@ -4534,11 +4574,6 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "parent of"
-msgstr ""
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.brand_promotion
-msgid "portal"
 msgstr ""
 
 #. module: web

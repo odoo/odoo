@@ -16,7 +16,7 @@ import uuid
 from dateutil.relativedelta import relativedelta
 from difflib import HtmlDiff
 
-import werkzeug
+import werkzeug, werkzeug.urls
 from lxml import etree
 from lxml.etree import LxmlError
 from lxml.builder import E
@@ -63,7 +63,8 @@ def transfer_node_to_modifiers(node, modifiers, context=None, current_node_path=
     # Need the context to evaluate the invisible attribute on tree views.
     # For non-tree views, the context shouldn't be given.
     if node.get('attrs'):
-        modifiers.update(safe_eval(node.get('attrs')))
+        attrs = node.get('attrs').strip()
+        modifiers.update(ast.literal_eval(attrs))
 
     if node.get('states'):
         if 'invisible' in modifiers and isinstance(modifiers['invisible'], list):
@@ -1119,6 +1120,12 @@ actual arch.
     def _validate_tag_search(self, node, name_manager, node_info):
         if len([c for c in node if c.tag == 'searchpanel']) > 1:
             self.handle_view_error(_('Search tag can only contains one search panel'))
+        if not list(node.iterdescendants(tag="field")):
+            # the field of the search view may be within a group node, which is why we must check
+            # for all descendants containing a node with a field tag, if this is not the case
+            # then a search is not possible.
+            self.handle_view_error(
+                _('Search tag requires at least one field element'), raise_exception=False)
 
     def _validate_tag_searchpanel(self, node, name_manager, node_info):
         for child in node.iterchildren(tag=etree.Element):
@@ -1594,7 +1601,7 @@ actual arch.
             debug=request.session.debug if request else '',
             test_mode_enabled=bool(config['test_enable'] or config['test_file']),
             json=json_scriptsafe,
-            quote_plus=werkzeug.url_quote_plus,
+            quote_plus=werkzeug.urls.url_quote_plus,
             time=time,
             datetime=datetime,
             relativedelta=relativedelta,

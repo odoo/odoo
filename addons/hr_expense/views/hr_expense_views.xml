@@ -70,8 +70,8 @@
                 <form string="Expenses" class="o_expense_form">
                 <header>
                   <button name="action_submit_expenses" string="Create Report" type="object" class="oe_highlight o_expense_submit" attrs="{'invisible': ['|', ('attachment_number', '&lt;=', 0), ('sheet_id', '!=', False)]}"/>
-                  <widget name="attach_document" string="Attach Document" action="message_post" attrs="{'invisible': ['|', ('attachment_number', '&lt;', 1), ('id','=',False)]}"/>
-                  <widget name="attach_document" string="Attach Document" action="message_post" highlight="1" attrs="{'invisible': ['|',('attachment_number', '&gt;=', 1), ('id','=',False)]}"/>
+                  <widget name="attach_document" string="Attach Receipt" action="message_post" attrs="{'invisible': ['|', ('attachment_number', '&lt;', 1), ('id','=',False)]}"/>
+                  <widget name="attach_document" string="Attach Receipt" action="message_post" highlight="1" attrs="{'invisible': ['|',('attachment_number', '&gt;=', 1), ('id','=',False)]}"/>
                   <button name="action_submit_expenses" string="Create Report" type="object" class="o_expense_submit" attrs="{'invisible': ['|', ('attachment_number', '&gt;=', 1), ('sheet_id', '!=', False)]}"/>
                   <field name="state" widget="statusbar" statusbar_visible="draft,reported,approved,done,refused"/>
                   <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('sheet_id', '=', False)]}"/>
@@ -98,7 +98,7 @@
                             <field name="product_id" required="1" context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view'}"
                                    widget="many2one_barcode"
                             />
-                            <field name="unit_amount" required="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="unit_amount" required="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                             <field name="product_uom_category_id" invisible="1"/>
                             <label for="quantity"/>
                             <div class="o_row">
@@ -757,6 +757,26 @@
             </field>
         </record>
 
+        <record id="action_hr_expense_account" model="ir.actions.act_window">
+            <field name="name">Employee Expenses</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="view_mode">tree,kanban,form,pivot,graph</field>
+            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
+            <field name="domain">[]</field>
+            <field name="context">{
+                'search_default_approved': 1,
+                'search_default_to_post': 1,
+            }
+            </field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new expense report
+              </p><p>
+                Once you have created your expense, submit it to your manager who will validate it.
+              </p>
+            </field>
+        </record>
+
         <record id="action_hr_expense_sheet_all_all" model="ir.actions.act_window">
             <field name="name">All Expense Reports</field>
             <field name="res_model">hr.expense.sheet</field>
@@ -878,4 +898,6 @@ if records:
             sequence="100"/>
         <menuitem id="menu_hr_product" name="Expense Products" parent="menu_hr_expense_configuration"
             action="hr_expense_product" groups="hr_expense.group_hr_expense_manager" sequence="10"/>
+
+        <menuitem id="menu_hr_expense_account_employee_expenses" name="Employee Expenses" sequence="22" parent="account.menu_finance_payables" groups="hr_expense.group_hr_expense_user" action="action_hr_expense_account"/>
 </odoo>

@@ -116,7 +116,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @override
      */
     isSet: function () {
-        return this.value && this.value !== "<p><br/></p>" && this.value.match(/\S/);
+        var value = this.value && this.value.split('&nbsp;').join('').replace(/\s/g, ''); // Removing spaces & html spaces
+        return value && value !== "<p></p>" && value !== "<p><br></p>" && value.match(/\S/);
     },
     /**
      * @override

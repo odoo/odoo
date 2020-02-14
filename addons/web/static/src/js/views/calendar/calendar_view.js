@@ -66,9 +66,11 @@ var CalendarView = AbstractView.extend({
             if (child.tag !== 'field') return;
             var fieldName = child.attrs.name;
             fieldNames.push(fieldName);
-            if (!child.attrs.invisible) {
+            if (!child.attrs.invisible || child.attrs.filters) {
                 child.attrs.options = child.attrs.options ? pyUtils.py_eval(child.attrs.options) : {};
-                displayFields[fieldName] = {attrs: child.attrs};
+                if (!child.attrs.invisible) {
+                    displayFields[fieldName] = {attrs: child.attrs};
+                }
 
                 if (params.sidebar === false) return; // if we have not sidebar, (eg: Dashboard), we don't use the filter "coworkers"
 
@@ -92,23 +94,29 @@ var CalendarView = AbstractView.extend({
 
                     modelFilters.push(fields[fieldName].relation);
                 }
+                if (child.attrs.filters) {
+                    filters[fieldName] = filters[fieldName] || {
+                        'title': fields[fieldName].string,
+                        'fieldName': fieldName,
+                        'filters': [],
+                    };
+                    if (child.attrs.color) {
+                        filters[fieldName].field_color = child.attrs.color;
+                        filters[fieldName].color_model = fields[fieldName].relation;
+                    }
+                    if (!child.attrs.avatar_field && fields[fieldName].relation) {
+                        if (fields[fieldName].relation.includes(['res.users', 'res.partner', 'hr.employee'])) {
+                            filters[fieldName].avatar_field = 'image_128';
+                        }
+                        filters[fieldName].avatar_model = fields[fieldName].relation;
+                    }
+                }
             }
         });
 
         if (attrs.color) {
             var fieldName = attrs.color;
             fieldNames.push(fieldName);
-            filters[fieldName] = {
-                'title': fields[fieldName].string,
-                'fieldName': fieldName,
-                'filters': [],
-            };
-            if (fields[fieldName].relation) {
-                if (['res.users', 'res.partner', 'hr.employee'].indexOf(fields[fieldName].relation) !== -1) {
-                    filters[fieldName].avatar_field = 'image_128';
-                }
-                filters[fieldName].avatar_model = fields[fieldName].relation;
-            }
         }
 
         //if quick_add = False, we don't allow quick_add
@@ -140,6 +148,7 @@ var CalendarView = AbstractView.extend({
         this.rendererParams.model = viewInfo.model;
         this.rendererParams.hideDate = utils.toBoolElse(attrs.hide_date || '', false);
         this.rendererParams.hideTime = utils.toBoolElse(attrs.hide_time || '', false);
+        this.rendererParams.canDelete = this.controllerParams.activeActions.delete;
 
         this.loadParams.fieldNames = _.uniq(fieldNames);
         this.loadParams.mapping = mapping;

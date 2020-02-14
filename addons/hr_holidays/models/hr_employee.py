@@ -13,7 +13,8 @@ class HrEmployeeBase(models.AbstractModel):
     leave_manager_id = fields.Many2one(
         'res.users', string='Time Off',
         compute='_compute_leave_manager', store=True, readonly=False,
-        help="User responsible of leaves approval.")
+        help='Select the user responsible for approving "Time Off" of this employee.\n'
+             'If empty, the approval is done by an Administrator or Approver (determined in settings/users).')
     remaining_leaves = fields.Float(
         compute='_compute_remaining_leaves', string='Remaining Paid Time Off',
         help='Total number of paid time off allocated to this employee, change this value to create allocation/time off request. '

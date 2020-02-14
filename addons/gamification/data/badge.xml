@@ -89,8 +89,8 @@
                         % endif
                         <br/><br/>
                         Thank you,
-                        <br/>
-                        % if object.sender_id and object.sender_id.signature:
+                        % if object.sender_id.signature:
+                            <br />
                             ${object.sender_id.signature | safe}
                         % endif
                     </div>
@@ -135,7 +135,6 @@
 </td></tr>
 </table></field>
             <field name="lang">${object.user_id.lang}</field>
-            <field name="user_signature" eval="False"/>
             <field name="auto_delete" eval="True"/>
         </record>
     </data>

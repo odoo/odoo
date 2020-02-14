@@ -165,14 +165,14 @@
                             </div>
                         </div>
                     </div>
-                    <p t-if="o.type in ('out_invoice', 'in_refund')">
+                    <p t-if="o.type in ('out_invoice', 'in_refund') and o.invoice_payment_ref">
                         Please use the following communication for your payment : <b><span t-field="o.invoice_payment_ref"/></b>
-                    </p>
-                    <p t-if="o.narration" name="comment">
-                        <span t-field="o.narration"/>
                     </p>
                     <p t-if="o.invoice_payment_term_id" name="payment_term">
                         <span t-field="o.invoice_payment_term_id.note"/>
+                    </p>
+                    <p t-if="o.narration" name="comment">
+                        <span t-field="o.narration"/>
                     </p>
                     <p t-if="o.fiscal_position_id.note" name="note">
                         <span t-field="o.fiscal_position_id.note"/>
@@ -192,24 +192,26 @@
 
         <template id="report_invoice_document_with_payments" inherit_id="account.report_invoice_document" primary="True">
             <xpath expr="//div[@id='total']/div/table" position="inside">
-                <t t-set="payments_vals" t-value="o._get_reconciled_info_JSON_values()"/>
-                <t t-foreach="payments_vals" t-as="payment_vals">
-                    <tr>
-                        <td>
-                            <i class="oe_form_field text-right oe_payment_label">Paid on <t t-esc="payment_vals['date']" t-options='{"widget": "date"}'/></i>
-                        </td>
-                        <td class="text-right">
-                            <span t-esc="payment_vals['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                        </td>
-                    </tr>
-                </t>
-                <t t-if="len(payments_vals) > 0">
-                    <tr class="border-black">
-                        <td><strong>Amount Due</strong></td>
-                        <td class="text-right">
-                             <span t-field="o.amount_residual"/>
-                        </td>
-                    </tr>
+                <t t-if="o.payment_state != 'invoicing_legacy'">
+                    <t t-set="payments_vals" t-value="o._get_reconciled_info_JSON_values()"/>
+                    <t t-foreach="payments_vals" t-as="payment_vals">
+                        <tr>
+                            <td>
+                                <i class="oe_form_field text-right oe_payment_label">Paid on <t t-esc="payment_vals['date']" t-options='{"widget": "date"}'/></i>
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="payment_vals['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </td>
+                        </tr>
+                    </t>
+                    <t t-if="len(payments_vals) > 0">
+                        <tr class="border-black">
+                            <td><strong>Amount Due</strong></td>
+                            <td class="text-right">
+                                 <span t-field="o.amount_residual"/>
+                            </td>
+                        </tr>
+                    </t>
                 </t>
             </xpath>
         </template>

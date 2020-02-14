@@ -53,7 +53,7 @@ class HrExpense(models.Model):
     date = fields.Date(readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=fields.Date.context_today, string="Date")
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_employee_id, domain=lambda self: self._get_employee_id_domain(), check_company=True)
     # product_id not required to allow create an expense without product via mail alias, but should be required on the view.
-    product_id = fields.Many2one('product.product', string='Product', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, domain="[('can_be_expensed', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    product_id = fields.Many2one('product.product', string='Product', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, domain="[('can_be_expensed', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", ondelete='restrict')
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_product_uom_id, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True)
     unit_amount = fields.Float("Unit Price", readonly=True, required=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, digits='Product Price')
@@ -181,15 +181,21 @@ class HrExpense(models.Model):
         if any(attachment.res_id or attachment.res_model != 'hr.expense' for attachment in attachments):
             raise UserError(_("Invalid attachments!"))
 
+        product = self.env['product.product'].search([('default_code', '=', 'EXP_GEN')])
+
         for attachment in attachments:
             expense = self.env['hr.expense'].create({
                 'name': attachment.name.split('.')[0],
                 'unit_amount': 0,
+                'product_id': product.id
             })
-            attachment.write({'res_id': expense.id})
-            expense.message_post(body=_('Uploaded Attachment'), attachment_ids=[attachment.id])
+            expense.message_post(body=_('Uploaded Attachment'))
+            attachment.write({
+                'res_model': 'hr.expense',
+                'res_id': expense.id,
+            })
+            attachment.register_as_main_attachment()
             expenses += expense
-
         if len(expenses) == 1:
             return {
                 'name': _('Generated Expense'),

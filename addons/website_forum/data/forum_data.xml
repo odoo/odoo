@@ -58,7 +58,7 @@
             <field name="res_model">forum.forum</field>
             <field name="default" eval="True"/>
             <field name="hidden" eval="False"/>
-            <field name="parent_id" eval="ref('mt_answer_new')"/>
+            <field name="parent_id" ref="mt_answer_new"/>
             <field name="relation_field">forum_id</field>
         </record>
         <record id="mt_forum_question_new" model="mail.message.subtype">
@@ -66,7 +66,7 @@
             <field name="res_model">forum.forum</field>
             <field name="default" eval="True"/>
             <field name="hidden" eval="False"/>
-            <field name="parent_id" eval="ref('mt_question_new')"/>
+            <field name="parent_id" ref="mt_question_new"/>
             <field name="relation_field">forum_id</field>
         </record>
 

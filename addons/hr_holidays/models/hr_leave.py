@@ -550,6 +550,12 @@ class HolidaysRequest(models.Model):
                 raise ValidationError(_('The number of remaining time off is not sufficient for this time off type.\n'
                                         'Please also check the time off waiting for validation.'))
 
+    @api.constrains('date_from', 'date_to', 'employee_id')
+    def _check_date_state(self):
+        for holiday in self:
+            if holiday.state in ['cancel', 'refuse', 'validate1', 'validate']:
+                raise ValidationError(_("This modification is not allowed in the current state."))
+
     def _get_number_of_days(self, date_from, date_to, employee_id):
         """ Returns a float equals to the timedelta between two dates given as string."""
         if employee_id:
@@ -587,17 +593,28 @@ class HolidaysRequest(models.Model):
                 else:
                     target = leave.employee_id.name
                 if leave.leave_type_request_unit == 'hour':
-                    res.append(
-                        (leave.id,
-                        _("%s on %s : %.2f hours") %
-                        (target, leave.holiday_status_id.name, leave.number_of_hours_display))
-                    )
+                    res.append((
+                        leave.id,
+                        _("%s on %s: %.2f hours on %s") % (
+                            target,
+                            leave.holiday_status_id.name,
+                            leave.number_of_hours_display,
+                            fields.Date.to_string(leave.date_from),
+                        )
+                    ))
                 else:
-                    res.append(
-                        (leave.id,
-                        _("%s on %s: %.2f days") %
-                        (target, leave.holiday_status_id.name, leave.number_of_days))
-                    )
+                    display_date = fields.Date.to_string(leave.date_from)
+                    if leave.number_of_days > 1:
+                        display_date += ' ⇨ %s' % fields.Date.to_string(leave.date_to)
+                    res.append((
+                        leave.id,
+                        _("%s on %s: %.2f days (%s)") % (
+                            target,
+                            leave.holiday_status_id.name,
+                            leave.number_of_days,
+                            display_date,
+                        )
+                    ))
         return res
 
     def add_follower(self, employee_id):

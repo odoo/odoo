@@ -23,11 +23,14 @@
                                 style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View content</a>
                         </div>
                         Enjoy this exclusive content!
+                        % if user.signature
+                            <br />
+                            ${user.signature | safe}
+                        % endif
                     </p>
                 </div>
             </field>
             <field name="auto_delete" eval="True"/>
-            <field name="user_signature" eval="True"/>
         </record>
 
         <record id="slide_template_shared" model="mail.template">
@@ -50,11 +53,14 @@
                             <a href="${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}"
                                 style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View <strong>${object.name}</strong></a>
                         </div>
+                        % if user.signature
+                            <br />
+                            ${user.signature | safe}
+                        % endif
                     </p>
                 </div>
             </field>
             <field name="auto_delete" eval="True"/>
-            <field name="user_signature" eval="True"/>
         </record>
 
         <!-- Channel subtypes -->
@@ -83,12 +89,15 @@
             </a>
         </div>
         Enjoy this exclusive content !
+        % if user.signature
+            <br />
+            ${user.signature | safe}
+        % endif
     </p>
 </div>
             </field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
-            <field name="user_signature" eval="False"/>
         </record>
     </data>
 </odoo>

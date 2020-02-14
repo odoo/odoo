@@ -77,7 +77,6 @@
             <field name="inherit_id" ref="account.product_template_form_view"/>
             <field name="arch" type="xml">
                 <field name="property_account_expense_id" position="attributes">
-                    <attribute name="domain">[('deprecated','=',False)]</attribute>
                     <attribute name="attrs">{'readonly': [('purchase_ok', '=', 0)]}</attribute>
                 </field>
                 <field name='supplier_taxes_id' position="replace" >

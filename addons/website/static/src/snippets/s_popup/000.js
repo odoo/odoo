@@ -2,23 +2,22 @@ odoo.define('website.s_popup', function (require) {
 'use strict';
 
 const config = require('web.config');
-const core = require('web.core');
 const publicWidget = require('web.public.widget');
-
-const qweb = core.qweb;
-const _t = core._t;
+const utils = require('web.utils');
 
 const PopupWidget = publicWidget.Widget.extend({
     selector: '.s_popup',
     events: {
-        'click .s_popup_close': '_onCloseClick',
+        'click .js_close_popup': '_onCloseClick',
     },
 
     /**
      * @override
      */
     start: function () {
-        this._bindPopup();
+        if (!utils.get_cookie(this.$el.attr('id'))) {
+            this._bindPopup();
+        }
         return this._super(...arguments);
     },
     /**
@@ -54,7 +53,7 @@ const PopupWidget = publicWidget.Widget.extend({
         if (display === 'afterDelay') {
             this.timeout = setTimeout(() => this._showPopup(), delay);
         } else {
-            $(document).on('mouseleave.open_popup',  () => this._showPopup());
+            $(document).on('mouseleave.open_popup', () => this._showPopup());
         }
     },
     /**
@@ -78,6 +77,8 @@ const PopupWidget = publicWidget.Widget.extend({
      * @private
      */
     _onCloseClick: function () {
+        const nbDays = this.$el.find('.s_popup_main').data('consentsDuration');
+        utils.set_cookie(this.$el.attr('id'), true, nbDays * 24 * 60 * 60);
         this._hidePopup();
     },
 });

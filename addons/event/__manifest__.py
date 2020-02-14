@@ -21,6 +21,8 @@ Key Features
     'data': [
         'security/event_security.xml',
         'security/ir.model.access.csv',
+        'views/event_menu_views.xml',
+        'views/event_ticket_views.xml',
         'views/event_views.xml',
         'views/event_stage_views.xml',
         'report/event_event_templates.xml',
@@ -32,7 +34,9 @@ Key Features
         'views/res_partner_views.xml',
     ],
     'demo': [
+        'data/res_users_demo.xml',
         'data/event_demo.xml',
+        'data/event_registration_demo.xml',
     ],
     'installable': True,
     'auto_install': False,

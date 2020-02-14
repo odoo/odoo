@@ -145,6 +145,9 @@
         </t>
     </xpath>
 
+    <xpath expr="//footer" position="attributes">
+        <attribute name="data-name">Footer</attribute>
+    </xpath>
     <xpath expr="//div[hasclass('o_footer_copyright')]//span[@t-field='res_company.name']" position="after">
         <t t-call="website.language_selector"/>
     </xpath>
@@ -271,6 +274,31 @@
     </xpath>
 </template>
 
+<template id="cookies_bar" inherit_id="website.footer_custom" name="Cookies Bar">
+    <xpath expr="//div[@id='footer']" position="before">
+        <div id="website_cookies_bar" t-if="website.cookies_bar" class="s_popup o_snippet_invisible" data-name="Cookies Bar">
+            <div class='s_popup_main s_popup_fixed popup_backdrop d-none o_cookies_discrete'
+                 data-show-after="500" data-display="afterDelay" data-consents-duration="999">
+                <div class='s_popup_frame s_popup_full'>
+                    <div class='oe_structure s_popup_content bg-white'>
+                        <section class="pt4 pb4">
+                            <div class="container text-600 d-flex align-items-center">
+                                <div class="mb0">
+                                    <div class="o_cookies_bar_text_primary">
+                                        We use cookies to provide you a better user experience.
+                                    </div>
+                                </div>
+                                <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-sm text-nowrap ml-auto">Cookie Policy</a>
+                                <a href="#" role="button" class="js_close_popup o_cookies_bar_text_button btn btn-primary btn-sm text-nowrap">I agree</a>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </xpath>
+</template>
+
 <template id="language_selector" name="Language Selector">
     <ul class="js_language_selector mb0 list-inline" t-if="(request and request.is_frontend_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
         <li class="list-inline-item">
@@ -302,15 +330,17 @@
 
 <template id="record_cover">
     <t t-set="_cp" t-value="_cp or json.loads(_record.cover_properties)"/>
-    <div t-att-data-use_size="use_size"
+    <t t-set="default_cover_name">Cover</t>
+    <div t-att-data-name="display_opt_name or default_cover_name"
+         t-att-style="_cp.get('background_color_style')"
+         t-att-data-use_size="use_size"
          t-att-data-use_filters="use_filters"
-         t-att-data-use_text_size="use_text_size"
          t-att-data-use_text_align="use_text_align"
          t-att-data-res-model="request.env.user.has_group('website.group_website_publisher') and _record._name"
          t-att-data-res-id="request.env.user.has_group('website.group_website_publisher') and _record.id"
-         t-attf-class="o_record_cover_container d-flex flex-column h-100 bg-secondary #{use_size and _cp.get('resize_class')} #{use_text_size and _cp.get('text_size_class')} #{use_text_align and _cp.get('text_align_class')} #{additionnal_classes}">
-        <div class="o_record_cover_component o_record_cover_image" t-attf-style="background-image: #{_cp.get('background-image')};"/>
-        <div t-if="use_filters" t-attf-class="o_record_cover_component o_record_cover_filter #{_cp.get('background-color')}" t-attf-style="opacity: #{_cp.get('opacity', 0.0)};"/>
+         t-attf-class="o_record_cover_container d-flex flex-column h-100 #{_cp.get('background_color_class')} #{use_size and _cp.get('resize_class')} #{use_text_align and _cp.get('text_align_class')} #{additionnal_classes}">
+        <div t-attf-class="o_record_cover_component o_record_cover_image #{snippet_autofocus and 'o_we_snippet_autofocus'}" t-attf-style="background-image: #{_cp.get('background-image')};"/>
+        <div t-if="use_filters" t-attf-class="o_record_cover_component o_record_cover_filter oe_black" t-attf-style="opacity: #{_cp.get('opacity', 0.0)};"/>
         <t t-raw="0"/>
     </div>
 </template>
@@ -318,7 +348,7 @@
 <!-- Util template -->
 <template id="publish_management">
     <div groups="website.group_website_publisher" t-ignore="true" class="float-right css_editable_mode_hidden" t-att-style="style or None">
-        <div t-attf-class="btn-group #{btn_class} js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
+        <div t-attf-class="btn-group #{btn_class} js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-description="env['ir.model']._get(object._name).display_name" t-att-data-controller="publish_controller">
             <button class="btn btn-danger js_publish_btn">Unpublished</button>
             <button class="btn btn-success js_publish_btn">Published</button>
             <button type="button" t-attf-class="btn btn-default dropdown-toggle dropdown-toggle-split" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown"/>
@@ -333,7 +363,7 @@
 
 <template id="publish_short">
     <t groups="website.group_website_publisher" t-ignore="true">
-        <div t-attf-class="float-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
+        <div t-attf-class="float-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-description="env['ir.model']._get(object._name).display_name" t-att-data-controller="publish_controller">
             <button t-attf-class="btn btn-danger js_publish_btn #{additionnal_btn_classes or ''}">Unpublished</button>
             <button t-attf-class="btn btn-success js_publish_btn #{additionnal_btn_classes or ''}">Published</button>
         </div>
@@ -341,135 +371,6 @@
 </template>
 
 <template id="pager" name="Pager" inherit_id="portal.pager">
-</template>
-
-<!--
-    XML template to be processed for theme customization modal.
-
-    Allowed tags in the root <div/> elements:
-
-    <content>: Declares a new set of options (a tab pane in the dialog)
-        -> string = tab's nav text
-        -> title = tab's heading
-
-    In the <content/> elements:
-
-    <opt>: Declares a new toggle option
-        -> id (optional) = an ID to associate to the option
-
-        -> string (optional) = option's text
-        -> data-icon (optional) = an image URL to set as option's background
-        -> data-font (optional) = indicates which fonts to use to style the
-                option and adds default sample text if no 'string' is specified
-                (see $o-theme-fonts in scss)
-        -> data-col (optional, default 6) = bootstrap column size for the option
-                (ignored for options in a <list/>)
-
-        -> data-xmlid (optional) = template(s) to enable if the input is
-                checked (list of comma-separated xml ids)
-        -> data-enable (optional) = enable other options (list of
-                comma-separated option ids)
-        -> data-disable (optional) = disable other options (list of
-                comma-separated option ids)
-        -> data-reload (optional) = force the reloading of the page if the url
-                matches the value. Otherwise, only the main assets are reloaded
-
-        -> data-widget (optional) = indicates which widget to use (available
-                widgets are: color_palette)
-
-    <list>: Declares a subset of options showed as a list
-        -> string = list's title
-        -> data-col (optional, default 6) = bootstrap column size for the list
-
-    <selection>: Declares a subset of options showed as a selection (dropdown)
-        -> data-col (optional, default 6) = bootstrap column size for the option
-                (ignored for options in a <list/>)
-
-    Other elements will be ignored and their children will be processed as if
-    that element was omitted, except that those children will be considered as
-    in a new set of option. That allows to wrap an option in a fake element to
-    indicate it is a standalone option for example.
-
-    Note: if an option is the only one of its group, a toggle element will be
-    rendered.
--->
-<template id="theme_customize">
-    <div>
-        <!-- Color options -->
-        <content id="theme_customize_content_colors" string="Colors" title="Choose the theme colors">
-            <list string="Main">
-                <opt data-widget="color" data-color-type="theme" data-color="primary" string="Primary"/>
-                <opt data-widget="color" data-color-type="theme" data-color="secondary" string="Secondary"/>
-                <opt data-widget="color" data-color-type="theme" data-color="alpha" string="Primary"/>
-                <opt data-widget="color" data-color-type="theme" data-color="beta" string="Secondary"/>
-                <opt data-widget="color" data-color-type="theme" data-color="gamma" string="Extra Color"/>
-                <opt data-widget="color" data-color-type="theme" data-color="delta" string="Extra Color"/>
-                <opt data-widget="color" data-color-type="theme" data-color="epsilon" string="Extra Color"/>
-            </list>
-            <list string="Status">
-                <opt data-widget="color" data-color-type="theme" data-color="success" string="Success"/>
-                <opt data-widget="color" data-color-type="theme" data-color="info" string="Info"/>
-                <opt data-widget="color" data-color-type="theme" data-color="warning" string="Warning"/>
-                <opt data-widget="color" data-color-type="theme" data-color="danger" string="Error"/>
-            </list>
-            <list string="Text">
-                <opt data-widget="color" data-color="text" string="Text"/>
-                <opt data-widget="color" data-color="h1" string="Headings 1"/>
-                <opt data-widget="color" data-color="h2" string="Headings 2"/>
-                <opt data-widget="color" data-color="h3" string="Headings 3"/>
-                <opt data-widget="color" data-color="h4" string="Headings 4"/>
-                <opt data-widget="color" data-color="h5" string="Headings 5"/>
-                <opt data-widget="color" data-color="h6" string="Headings 6"/>
-            </list>
-            <list string="Background">
-                <opt data-widget="color" data-color="body" string="Body"/>
-                <opt data-widget="color" data-color="menu" string="Menus"/>
-                <opt data-widget="color" data-color="footer" string="Footer"/>
-            </list>
-        </content>
-
-        <!-- Menu options -->
-        <content id="theme_customize_content_navbar" string="Navbar" title="Choose your navbar">
-            <list string="Main Layout">
-                <checkbox><opt data-xmlid="website.affix_top_menu" data-reload="/"/></checkbox>
-                <checkbox><opt data-xmlid="portal.portal_show_sign_in" data-reload="/"/></checkbox>
-                <opt data-widget="input" data-unit="rem" data-variable="header-font-size" string="Font Size"/>
-            </list>
-            <list string="Logo">
-                <checkbox><opt data-xmlid="website.layout_logo_show" data-reload="/"/></checkbox>
-                <opt data-widget="input" data-unit="rem" data-variable="logo-height" string="Logo Height"/>
-            </list>
-        </content>
-
-        <!-- Layout Options -->
-        <content id="theme_customize_content_layout" string="Layout" title="Choose your layout">
-            <list string="Body">
-                <opt string="Full" data-xmlid="" data-icon="/website/static/src/img/options/layout-full.png"/>
-                <opt id="option_layout_boxed" string="Boxed" data-xmlid="website.option_layout_boxed_variables" data-icon="/website/static/src/img/options/layout-boxed.png"/>
-            </list>
-            <list string="Background">
-                <opt id="option_no_background" string="None" data-xmlid=""/>
-                <opt string="Choose an image" data-xmlid="website.option_custom_body_image"/>
-                <opt string="Choose a pattern" data-xmlid="website.option_custom_body_image, website.option_custom_body_pattern"/>
-            </list>
-        </content>
-
-        <!-- Font options -->
-        <content id="theme_customize_content_fonts" string="Fonts" title="Choose your fonts">
-            <list string="Title">
-                <fontselection data-variable="headings-font-number"/>
-            </list>
-            <list string="Body">
-                <fontselection data-variable="font-number"/>
-            </list>
-            <list string="Button">
-                <fontselection data-variable="buttons-font-number"/>
-            </list>
-            <list string="Navbar">
-                <fontselection data-variable="navbar-font-number"/>
-            </list>
-        </content>
-    </div>
 </template>
 
 <!-- Layout options -->

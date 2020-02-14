@@ -26,7 +26,7 @@ import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
 from collections import OrderedDict, defaultdict, Counter
-from werkzeug.urls import url_decode, iri_to_uri
+from werkzeug.urls import url_encode, url_decode, iri_to_uri
 from lxml import etree
 import unicodedata
 
@@ -496,6 +496,9 @@ class HomeStaticTemplateHelpers(object):
         for template_tree in list(all_templates_tree):
             if self.NAME_TEMPLATE_DIRECTIVE in template_tree.attrib:
                 template_name = template_tree.attrib[self.NAME_TEMPLATE_DIRECTIVE]
+                dotted_names = template_name.split('.', 1)
+                if len(dotted_names) > 1 and dotted_names[0] == addon:
+                    template_name = dotted_names[1]
             else:
                 # self.template_dict[addon] grows after processing each template
                 template_name = 'anonymous_template_%s' % len(self.template_dict[addon])
@@ -1098,6 +1101,7 @@ class Database(http.Controller):
             if not re.match(DBNAME_PATTERN, new_name):
                 raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
             dispatch_rpc('db', 'duplicate_database', [master_pwd, name, new_name])
+            request._cr = None  # duplicating a database leads to an unusable cursor
             return http.local_redirect('/web/database/manager')
         except Exception as e:
             error = "Database duplication error: %s" % (str(e) or repr(e))
@@ -1253,7 +1257,7 @@ class Session(http.Controller):
             'state': json.dumps({'d': request.db, 'u': ICP.get_param('web.base.url')}),
             'scope': 'userinfo',
         }
-        return 'https://accounts.odoo.com/oauth2/auth?' + werkzeug.url_encode(params)
+        return 'https://accounts.odoo.com/oauth2/auth?' + url_encode(params)
 
     @http.route('/web/session/destroy', type='json', auth="user")
     def destroy(self):

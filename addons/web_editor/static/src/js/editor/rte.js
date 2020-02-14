@@ -44,7 +44,16 @@ var History = function History($editable) {
         }
 
         $editable.trigger('content_will_be_destroyed');
-        $editable.html(oSnap.contents).scrollTop(oSnap.scrollTop);
+        var $tempDiv = $('<div/>', {html: oSnap.contents});
+        _.each($tempDiv.find('.o_temp_auto_element'), function (el) {
+            var $el = $(el);
+            var originalContent = $el.attr('data-temp-auto-element-original-content');
+            if (originalContent) {
+                $el.after(originalContent);
+            }
+            $el.remove();
+        });
+        $editable.html($tempDiv.html()).scrollTop(oSnap.scrollTop);
         $editable.trigger('content_was_recreated');
 
         $('.oe_overlay').remove();
@@ -449,8 +458,14 @@ var RTEWidget = Widget.extend({
 
         if (initialActiveElement && initialActiveElement !== document.activeElement) {
             initialActiveElement.focus();
-            initialActiveElement.selectionStart = initialSelectionStart;
-            initialActiveElement.selectionEnd = initialSelectionEnd;
+            try {
+                initialActiveElement.selectionStart = initialSelectionStart;
+                initialActiveElement.selectionEnd = initialSelectionEnd;
+            } catch (e) {
+                // The active element might be of a type that
+                // does not support selection.
+                console.log('error', e);
+            }
         }
     },
     /**
@@ -666,6 +681,7 @@ var RTEWidget = Widget.extend({
              * Remove content editable everywhere and add it on the link only so that characters can be added
              * and removed at the start and at the end of it.
              */
+            let hasContentEditable = $target.attr('contenteditable');
             $target.attr('contenteditable', true);
             _.defer(function () {
                 $editable.not($target).attr('contenteditable', false);
@@ -675,7 +691,9 @@ var RTEWidget = Widget.extend({
             // Once clicked outside, remove contenteditable on link and reactive all
             $(document).on('mousedown.reactivate_contenteditable', function (e) {
                 if ($target.is(e.target)) return;
-                $target.removeAttr('contenteditable');
+                if (!hasContentEditable) {
+                    $target.removeAttr('contenteditable');
+                }
                 $editable.attr('contenteditable', true);
                 $(document).off('mousedown.reactivate_contenteditable');
             });

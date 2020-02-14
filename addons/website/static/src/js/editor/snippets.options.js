@@ -1,20 +1,375 @@
 odoo.define('website.editor.snippets.options', function (require) {
 'use strict';
 
+const ColorpickerDialog = require('web.ColorpickerDialog');
+const config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 const wUtils = require('website.utils');
 var options = require('web_editor.snippets.options');
+require('website.s_popup_options');
 
 var _t = core._t;
 var qweb = core.qweb;
 
-options.Class.include({
+const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
+const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
+
+const UrlPickerUserValueWidget = InputUserValueWidget.extend({
+    custom_events: _.extend({}, InputUserValueWidget.prototype.custom_events || {}, {
+        website_url_chosen: '_onWebsiteURLChosen',
+    }),
+
+    /**
+     * @override
+     */
+    start: async function () {
+        await this._super(...arguments);
+        $(this.inputEl).addClass('text-left');
+        wUtils.autocompleteWithPages(this, $(this.inputEl));
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the autocomplete change the input value.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onWebsiteURLChosen: function (ev) {
+        $(this.inputEl).trigger('input');
+        this._onUserValueChange(ev);
+    },
+});
+
+const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
+    xmlDependencies: (SelectUserValueWidget.prototype.xmlDependencies || [])
+        .concat(['/website/static/src/xml/website.editor.xml']),
+    events: _.extend({}, SelectUserValueWidget.prototype.events || {}, {
+        'click .o_we_add_google_font_btn': '_onAddGoogleFontClick',
+        'click .o_we_delete_google_font_btn': '_onDeleteGoogleFontClick',
+    }),
+    fontVariables: [], // Filled by editor menu when all options are loaded
+
+    /**
+     * @override
+     */
+    start: async function () {
+        const style = window.getComputedStyle(document.documentElement);
+        this.nbFonts = parseInt(style.getPropertyValue('--number-of-fonts'));
+        const googleFontsProperty = style.getPropertyValue('--google-fonts').trim();
+        this.googleFonts = googleFontsProperty ? googleFontsProperty.split(/\s*,\s*/g) : [];
+
+        await this._super(...arguments);
+
+        const fontEls = [];
+        const methodName = this.el.dataset.methodName || 'customizeWebsite';
+        const variable = this.el.dataset.variable;
+        _.times(this.nbFonts, fontNb => {
+            const realFontNb = fontNb + 1;
+            const fontEl = document.createElement('we-button');
+            fontEl.classList.add(`o_we_option_font_${realFontNb}`);
+            fontEl.dataset.variable = variable;
+            fontEl.dataset[methodName] = realFontNb;
+            fontEl.dataset.font = realFontNb;
+            fontEls.push(fontEl);
+            this.menuEl.appendChild(fontEl);
+        });
+
+        if (this.googleFonts.length) {
+            const googleFontsEls = fontEls.slice(-this.googleFonts.length);
+            googleFontsEls.forEach((el, index) => {
+                $(el).append(core.qweb.render('website.delete_google_font_btn', {
+                    index: index,
+                }));
+            });
+        }
+        $(this.menuEl).append($(core.qweb.render('website.add_google_font_btn', {
+            variable: variable,
+        })));
+    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _updateUI: async function () {
+        await this._super(...arguments);
+
+        for (const className of this.menuTogglerEl.classList) {
+            if (className.match(/^o_we_option_font_\d+$/)) {
+                this.menuTogglerEl.classList.remove(className);
+            }
+        }
+        const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
+        this.menuTogglerEl.classList.add(`o_we_option_font_${activeWidget.el.dataset.font}`);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onAddGoogleFontClick: function (ev) {
+        const variable = $(ev.currentTarget).data('variable');
+        const dialog = new Dialog(this, {
+            title: _t("Add a Google Font"),
+            $content: $(core.qweb.render('website.dialog.addGoogleFont')),
+            buttons: [
+                {
+                    text: _t("Save & Reload"),
+                    classes: 'btn-primary',
+                    click: () => {
+                        const inputEl = dialog.el.querySelector('.o_input_google_font');
+                        const m = inputEl.value.match(/\bfamily=([\w+]+)/);
+                        if (!m) {
+                            inputEl.classList.add('is-invalid');
+                            return;
+                        }
+                        const font = m[1].replace(/\+/g, ' ');
+                        this.googleFonts.push(font);
+                        const values = {};
+                        values[variable] = this.nbFonts + 1;
+                        this.trigger_up('google_fonts_custo_request', {
+                            values: values,
+                            googleFonts: this.googleFonts,
+                        });
+                    },
+                },
+                {
+                    text: _t("Discard"),
+                    close: true,
+                },
+            ],
+        });
+        dialog.open();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onDeleteGoogleFontClick: async function (ev) {
+        ev.preventDefault();
+
+        const save = await new Promise(resolve => {
+            Dialog.confirm(this, _t("Deleting a font requires a reload of the page. This will save all your changes and reload the page, are you sure you want to proceed?"), {
+                confirm_callback: () => resolve(true),
+                cancel_callback: () => resolve(false),
+            });
+        });
+        if (!save) {
+            return;
+        }
+
+        const nbBaseFonts = this.nbFonts - this.googleFonts.length;
+
+        // Remove Google font
+        const googleFontIndex = parseInt(ev.target.dataset.fontIndex);
+        this.googleFonts.splice(googleFontIndex, 1);
+
+        // Adapt font variable indexes to the removal
+        const values = {};
+        const style = window.getComputedStyle(document.documentElement);
+        _.each(FontFamilyPickerUserValueWidget.prototype.fontVariables, variable => {
+            const value = parseInt(style.getPropertyValue('--' + variable));
+            const googleFontValue = nbBaseFonts + 1 + googleFontIndex;
+            if (value === googleFontValue) {
+                // If an element is using the google font being removed, reset
+                // it to the first base font.
+                values[variable] = 1;
+            } else if (value > googleFontValue) {
+                // If an element is using a google font whose index is higher
+                // than the one of the font being removed, that index must be
+                // lowered by 1 so that the font is unchanged.
+                values[variable] = value - 1;
+            }
+        });
+
+        this.trigger_up('google_fonts_custo_request', {
+            values: values,
+            googleFonts: this.googleFonts,
+        });
+    },
+});
+
+options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
+options.userValueWidgetsRegistry['we-fontfamilypicker'] = FontFamilyPickerUserValueWidget;
+
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+options.Class.include({
+    xmlDependencies: (options.Class.prototype.xmlDependencies || [])
+        .concat(['/website/static/src/xml/website.editor.xml']),
+    custom_events: _.extend({}, options.Class.prototype.custom_events || {}, {
+        'google_fonts_custo_request': '_onGoogleFontsCustoRequest',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    customizeWebsite: async function (previewMode, widgetValue, params) {
+        // Never allow previews for theme customizations
+        if (previewMode) {
+            return;
+        }
+
+        if (params.color) {
+            await this._customizeWebsiteColor(widgetValue, params);
+        } else if (params.variable) {
+            await this._customizeWebsiteVariable(widgetValue, params);
+        } else {
+            await this._customizeWebsiteViews(widgetValue, params);
+        }
+
+        if (params.reload || config.isDebug('assets')) {
+            // Caller will reload the page, nothing needs to be done anymore.
+            return;
+        }
+
+        // Finally, only update the bundles as no reload is required
+        await this._reloadBundles();
+
+        // Some public widgets may depend on the variables that were
+        // customized, so we have to restart them *all*.
+        await new Promise((resolve, reject) => {
+            this.trigger_up('widgets_start_request', {
+                editableMode: true,
+                onSuccess: () => resolve(),
+                onFailure: () => reject(),
+            });
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState: async function (methodName, params) {
+        if (methodName === 'customizeWebsite') {
+            if (params.color) {
+                return this._getCSSColorFromName(params.color);
+            }
+            if (params.variable) {
+                const style = window.getComputedStyle(document.documentElement);
+                return style.getPropertyValue('--' + params.variable).trim();
+            }
+
+            const allXmlIDs = this._getXMLIDsFromPossibleValues(params.possibleValues);
+            const enabledXmlIDs = await this._rpc({
+                route: '/website/theme_customize_get',
+                params: {
+                    'xml_ids': allXmlIDs,
+                },
+            });
+            let mostXmlIDsStr = '';
+            let mostXmlIDsNb = 0;
+            for (const xmlIDsStr of params.possibleValues) {
+                const enableXmlIDs = xmlIDsStr.split(/\s*,\s*/);
+                if (enableXmlIDs.length > mostXmlIDsNb
+                        && enableXmlIDs.every(xmlID => enabledXmlIDs.includes(xmlID))) {
+                    mostXmlIDsStr = xmlIDsStr;
+                    mostXmlIDsNb = enableXmlIDs.length;
+                }
+            }
+            return mostXmlIDsStr; // Need to return the exact same string as in possibleValues
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @private
+     */
+    _customizeWebsiteColor: async function (color, params) {
+        const baseURL = '/website/static/src/scss/options/colors/';
+        const colorType = params.colorType ? (params.colorType + '_') : '';
+        const url = `${baseURL}user_${colorType}color_palette.scss`;
+
+        if (!ColorpickerDialog.isCSSColor(color)) {
+            const style = window.getComputedStyle(document.documentElement);
+            color = style.getPropertyValue('--' + color).trim();
+            color = ColorpickerDialog.normalizeCSSColor(color);
+        }
+        const colors = {};
+        colors[params.color] = color;
+        if (params.color === 'alpha') {
+            colors['beta'] = null;
+            colors['gamma'] = null;
+            colors['delta'] = null;
+            colors['epsilon'] = null;
+        }
+
+        return this._makeSCSSCusto(url, colors);
+    },
+    /**
+     * @private
+     */
+    _customizeWebsiteVariable: async function (value, params) {
+        const values = {};
+        values[params.variable] = value;
+        return this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values);
+    },
+    /**
+     * @private
+     */
+    _customizeWebsiteViews: async function (xmlID, params) {
+        const allXmlIDs = this._getXMLIDsFromPossibleValues(params.possibleValues);
+        const enableXmlIDs = xmlID.split(/\s*,\s*/);
+        const disableXmlIDs = allXmlIDs.filter(xmlID => !enableXmlIDs.includes(xmlID));
+
+        return this._rpc({
+            route: '/website/theme_customize',
+            params: {
+                'enable': enableXmlIDs,
+                'disable': disableXmlIDs,
+            },
+        });
+    },
+    /**
+     * @private
+     * @param {string} colorName
+     * @returns {string}
+     */
+    _getCSSColorFromName: function (colorName) {
+        const style = window.getComputedStyle(document.documentElement);
+        const color = style.getPropertyValue('--' + colorName).trim();
+        return ColorpickerDialog.normalizeCSSColor(color);
+    },
+    /**
+     * @private
+     */
+    _getXMLIDsFromPossibleValues: function (possibleValues) {
+        const allXmlIDs = [];
+        for (const xmlIDsStr of possibleValues) {
+            allXmlIDs.push(...xmlIDsStr.split(/\s*,\s*/));
+        }
+        return allXmlIDs.filter((v, i, arr) => arr.indexOf(v) === i);
+    },
+    /**
+     * @private
+     */
+    _makeSCSSCusto: async function (url, values) {
+        return this._rpc({
+            route: '/website/make_scss_custo',
+            params: {
+                'url': url,
+                'values': _.mapObject(values, v => v || 'null'),
+            },
+        });
+    },
     /**
      * Refreshes all public widgets related to the given element.
      *
@@ -22,7 +377,7 @@ options.Class.include({
      * @param {jQuery} [$el=this.$target]
      * @returns {Promise}
      */
-    _refreshPublicWidgets: function ($el) {
+    _refreshPublicWidgets: async function ($el) {
         return new Promise((resolve, reject) => {
             this.trigger_up('widgets_start_request', {
                 editableMode: true,
@@ -31,6 +386,39 @@ options.Class.include({
                 onFailure: reject,
             });
         });
+    },
+    /**
+     * @private
+     */
+    _reloadBundles: async function () {
+        const bundles = await this._rpc({
+            route: '/website/theme_customize_bundle_reload',
+        });
+        let $allLinks = $();
+        const proms = _.map(bundles, (bundleURLs, bundleName) => {
+            var $links = $('link[href*="' + bundleName + '"]');
+            $allLinks = $allLinks.add($links);
+            var $newLinks = $();
+            _.each(bundleURLs, url => {
+                $newLinks = $newLinks.add($('<link/>', {
+                    type: 'text/css',
+                    rel: 'stylesheet',
+                    href: url,
+                }));
+            });
+
+            const linksLoaded = new Promise(resolve => {
+                let nbLoaded = 0;
+                $newLinks.on('load error', () => { // If we have an error, just ignore it
+                    if (++nbLoaded >= $newLinks.length) {
+                        resolve();
+                    }
+                });
+            });
+            $links.last().after($newLinks);
+            return linksLoaded;
+        });
+        await Promise.all(proms).then(() => $allLinks.remove());
     },
     /**
      * @override
@@ -42,6 +430,79 @@ options.Class.include({
             // TODO the flag should be retrieved through widget params somehow
             await this._refreshPublicWidgets();
         }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _onUserValueUpdate: async function (ev) {
+        const _super = this._super.bind(this);
+
+        // First check if the updated widget or any of the widgets it will
+        // trigger uses the 'customizeWebsite' method. If so, check if any one of
+        // them will require a reload. If it is the case, warns the user and ask
+        // if he agrees to save its current changes. If not, just do nothing.
+        // If yes, save the current changes and continue.
+        let requiresReload = false;
+        if (!ev.data.previewMode && !ev.data.isSimulatedEvent) {
+            const linkedWidgets = this._requestUserValueWidgets(...ev.data.triggerWidgetsNames);
+            const widgets = [ev.data.widget].concat(linkedWidgets);
+
+            for (const widget of widgets) {
+                const methodsNames = widget.getMethodsNames();
+                if (!methodsNames.includes('customizeWebsite')) {
+                    continue;
+                }
+                const params = widget.getMethodsParams('customizeWebsite');
+                if (params.reload || config.isDebug('assets')) {
+                    requiresReload = true;
+                    break;
+                }
+            }
+            if (requiresReload) {
+                const save = await new Promise(resolve => {
+                    Dialog.confirm(this, _t("This change needs to reload the page, this will save all your changes and reload the page, are you sure you want to proceed?") +
+                        (config.isDebug('assets') ? _t(" It appears you are in debug=assets mode, all theme customization options require a page reload in this mode.") : ''), {
+                        confirm_callback: () => resolve(true),
+                        cancel_callback: () => resolve(false),
+                    });
+                });
+                if (!save) {
+                    return;
+                }
+            }
+        }
+
+        await _super(...arguments);
+
+        if (requiresReload) {
+            this.trigger_up('request_save', {
+                reloadEditor: true,
+            });
+        }
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onGoogleFontsCustoRequest: function (ev) {
+        const values = ev.data.values ? _.clone(ev.data.values) : {};
+        const googleFonts = ev.data.googleFonts;
+        if (googleFonts.length) {
+            values['google-fonts'] = "('" + googleFonts.join("', '") + "')";
+        } else {
+            values['google-fonts'] = 'null';
+        }
+        this.trigger_up('snippet_edition_request', {exec: async () => {
+            return this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values);
+        }});
+        this.trigger_up('request_save', {
+            reloadEditor: true,
+        });
     },
 });
 
@@ -113,9 +574,112 @@ options.registry.background.include({
     },
 });
 
-options.registry.menu_data = options.Class.extend({
-    xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
+options.registry.Theme = options.Class.extend({
 
+    /**
+     * @override
+     */
+    start: async function () {
+        // The normal configuration of Odoo is to have two colors named 'alpha'
+        // and 'beta' which generate their own BS CSS classes but which are also
+        // used as 'primary' and 'secondary' BS values (to customize standard BS
+        // used in Odoo). However, some themes are still going against that
+        // system and do not link alpha-primary and beta-secondary at all.
+        this._alphaEqualsPrimary = (this._getCSSColorFromName('primary') === this._getCSSColorFromName('alpha'));
+        this._betaEqualsSecondary = (this._getCSSColorFromName('secondary') === this._getCSSColorFromName('beta'));
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @todo use scss customization instead (like for user colors)
+     * @see this.selectClass for parameters
+     */
+    customizeBodyBg: async function (previewMode, widgetValue, params) {
+        const xmlID = 'website.option_custom_body_image';
+        if (widgetValue) {
+            await this._rpc({
+                model: 'ir.model.data',
+                method: 'get_object_reference',
+                args: xmlID.split('.'),
+            }).then(data => {
+                return this._rpc({
+                    model: 'ir.ui.view',
+                    method: 'save',
+                    args: [
+                        data[1],
+                        `#wrapwrap { background-image: url("${widgetValue}"); }`,
+                        '//style',
+                    ],
+                });
+            });
+        } else {
+            await this._customizeWebsiteViews('', {possibleValues: ['', xmlID]});
+        }
+
+        await this._reloadBundles();
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
+    switchTheme: async function (previewMode, widgetValue, params) {
+        const save = await new Promise(resolve => {
+            Dialog.confirm(this, _t("Changing theme requires to leave the editor. This will save all your changes, are you sure you want to proceed?"), {
+                confirm_callback: () => resolve(true),
+                cancel_callback: () => resolve(false),
+            });
+        });
+        if (!save) {
+            return;
+        }
+        this.trigger_up('request_save', {
+            reload: false,
+            onSuccess: () => window.location.href = '/web#action=website.theme_install_kanban_action',
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState: async function (methodName, params) {
+        if (methodName === 'customizeBodyBg') {
+            const bgURL = $('#wrapwrap').css('background-image');
+            const srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
+            return bgURL && bgURL.replace(srcValueWrapper, '') || '';
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetVisibility: async function (widgetName, params) {
+        if (widgetName === 'theme_color_suggestions') {
+            return false;
+        }
+        if (widgetName === 'primary_color_opt' || widgetName === 'alpha_as_extra_color_opt') {
+            return !this._alphaEqualsPrimary;
+        }
+        if (widgetName === 'secondary_color_opt' || widgetName === 'beta_as_extra_color_opt') {
+            return !this._betaEqualsSecondary;
+        }
+        if (widgetName === 'alpha_as_primary_color_opt') {
+            return this._alphaEqualsPrimary;
+        }
+        if (widgetName === 'beta_as_secondary_color_opt') {
+            return this._betaEqualsSecondary;
+        }
+        return this._super(...arguments);
+    },
+});
+
+options.registry.menu_data = options.Class.extend({
     /**
      * When the users selects a menu, a dialog is opened to ask him if he wants
      * to follow the link (and leave editor), edit the menu or do nothing.
@@ -477,7 +1041,7 @@ options.registry.layout_column = options.Class.extend({
      */
     _computeWidgetState: function (methodName, params) {
         if (methodName === 'selectCount') {
-            return '' + this.$target.children().length;
+            return '' + (this.colsLength || this.$target.children().length);
         }
         return this._super(...arguments);
     },
@@ -495,6 +1059,7 @@ options.registry.layout_column = options.Class.extend({
 
         this.trigger_up('request_history_undo_record', {$target: this.$target});
 
+        var colsLength = this.$target.children().length + count;
         if (count > 0) {
             var $lastColumn = this.$target.children().last();
             for (var i = 0; i < count; i++) {
@@ -507,17 +1072,18 @@ options.registry.layout_column = options.Class.extend({
             });
         }
 
-        this._resizeColumns();
+        this._resizeColumns(colsLength);
         this.trigger_up('cover_update');
     },
     /**
      * Resizes the columns so that they are kept on one row.
      *
      * @private
+     * @param {number} [colsLength] (default to the actual number of columns)
      */
-    _resizeColumns: function () {
+    _resizeColumns: function (colsLength) {
         var $columns = this.$target.children();
-        var colsLength = $columns.length;
+        colsLength = colsLength || $columns.length;
         var colSize = Math.floor(12 / colsLength) || 1;
         var colOffset = Math.floor((12 - colSize * colsLength) / 2);
         var colClass = 'col-lg-' + colSize;
@@ -529,6 +1095,9 @@ options.registry.layout_column = options.Class.extend({
         if (colOffset) {
             $columns.first().addClass('offset-lg-' + colOffset);
         }
+        // TODO: remove in master. This is used to keep the UI in sync, but
+        // won't be needed once option methods are properly asynchronous.
+        this.colsLength = colsLength;
     },
 });
 
@@ -782,7 +1351,6 @@ options.registry.topMenuColor = options.Class.extend({
  * Handles the edition of snippet's anchor name.
  */
 options.registry.anchor = options.Class.extend({
-    xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
     isTopOption: true,
 
     //--------------------------------------------------------------------------
@@ -913,6 +1481,63 @@ options.registry.anchor = options.Class.extend({
     },
 });
 
+options.registry.CookiesBar = options.registry.SnippetPopup.extend({
+    xmlDependencies: (options.registry.SnippetPopup.prototype.xmlDependencies || []).concat(
+        ['/website/static/src/xml/website.cookies_bar.xml']
+    ),
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Change the cookies bar layout.
+     *
+     * @see this.selectClass for parameters
+     */
+    selectLayout: function (previewMode, widgetValue, params) {
+        let websiteId;
+        this.trigger_up('context_get', {
+            callback: function (ctx) {
+                websiteId = ctx['website_id'];
+            },
+        });
+
+        const $template = $(qweb.render(`website.cookies_bar.${widgetValue}`, {
+            websiteId: websiteId,
+        }));
+
+        const $content = this.$target.find('.s_popup_content');
+        const selectorsToKeep = [
+            '.o_cookies_bar_text_button',
+            '.o_cookies_bar_text_policy',
+            '.o_cookies_bar_text_title',
+            '.o_cookies_bar_text_primary',
+            '.o_cookies_bar_text_secondary',
+        ];
+
+        if (this.$savedSelectors === undefined) {
+            this.$savedSelectors = [];
+        }
+
+        for (const selector of selectorsToKeep) {
+            const $currentLayoutEls = $content.find(selector).contents();
+            const $newLayoutEl = $template.find(selector);
+            if ($currentLayoutEls.length) {
+                // save value before change, eg 'title' is not inside 'discrete' template
+                // but we want to preserve it in case of select another layout later
+                this.$savedSelectors[selector] = $currentLayoutEls;
+            }
+            const $savedSelector = this.$savedSelectors[selector];
+            if ($newLayoutEl.length && $savedSelector && $savedSelector.length) {
+                $newLayoutEl.empty().append($savedSelector);
+            }
+        }
+
+        $content.empty().append($template);
+    },
+});
+
 /**
  * Allows edition of 'cover_properties' in website models which have such
  * fields (blogs, posts, events, ...).
@@ -932,10 +1557,6 @@ options.registry.CoverProperties = options.Class.extend({
      */
     start: function () {
         this.$filterValueOpts = this.$el.find('[data-filter-value]');
-        this.$filterColorOpts = this.$el.find('[data-filter-color]');
-        this.filterColorClasses = this.$filterColorOpts.map(function () {
-            return $(this).data('filterColor');
-        }).get().join(' ');
 
         return this._super.apply(this, arguments);
     },
@@ -965,20 +1586,7 @@ options.registry.CoverProperties = options.Class.extend({
      */
     filterValue: function (previewMode, widgetValue, params) {
         this.$filter.css('opacity', widgetValue || 0);
-    },
-    /**
-     * @see this.selectClass for parameters
-     */
-    filterColor: function (previewMode, widgetValue, params) {
-        this.$filter.removeClass(this.filterColorClasses);
-        if (widgetValue) {
-            this.$filter.addClass(widgetValue);
-        }
-
-        var $firstVisibleFilterOpt = this.$filterValueOpts.eq(1);
-        if (parseFloat(this.$filter.css('opacity')) < parseFloat($firstVisibleFilterOpt.data('filterValue'))) {
-            this.filterValue(previewMode, $firstVisibleFilterOpt.data('filterValue'), $firstVisibleFilterOpt);
-        }
+        this.$filter.toggleClass('oe_black', parseFloat(widgetValue) !== 0);
     },
 
     //--------------------------------------------------------------------------
@@ -993,10 +1601,17 @@ options.registry.CoverProperties = options.Class.extend({
 
         // Update saving dataset
         this.$target[0].dataset.coverClass = this.$el.find('[data-cover-opt-name="size"] we-button.active').data('selectClass') || '';
-        this.$target[0].dataset.textSizeClass = this.$el.find('[data-cover-opt-name="text_size"] we-button.active').data('selectClass') || '';
         this.$target[0].dataset.textAlignClass = this.$el.find('[data-cover-opt-name="text_align"] we-button.active').data('selectClass') || '';
         this.$target[0].dataset.filterValue = this.$filterValueOpts.filter('.active').data('filterValue') || 0.0;
-        this.$target[0].dataset.filterColor = this.$filterColorOpts.filter('.active').data('filterColor') || '';
+        let colorPickerWidget = null;
+        this.trigger_up('user_value_widget_request', {
+            name: 'bg_color_opt',
+            onSuccess: _widget => colorPickerWidget = _widget,
+        });
+        const color = colorPickerWidget._value;
+        const isCSSColor = ColorpickerDialog.isCSSColor(color);
+        this.$target[0].dataset.bgColorClass = isCSSColor ? '' : 'bg-' + color;
+        this.$target[0].dataset.bgColorStyle = isCSSColor ? `background-color:${color};` : '';
     },
 
     //--------------------------------------------------------------------------
@@ -1010,15 +1625,6 @@ options.registry.CoverProperties = options.Class.extend({
         switch (methodName) {
             case 'filterValue': {
                 return parseFloat(this.$filter.css('opacity')).toFixed(1);
-            }
-            case 'filterColor': {
-                const classes = this.filterColorClasses.split(' ');
-                for (const className of classes) {
-                    if (this.$filter.hasClass(className)) {
-                        return className;
-                    }
-                }
-                return '';
             }
             case 'background': {
                 const background = this.$image.css('background-image');
@@ -1099,37 +1705,6 @@ options.registry.SnippetMove = options.Class.extend({
     },
 });
 
-const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
-const UrlPickerUserValueWidget = InputUserValueWidget.extend({
-    custom_events: _.extend({}, InputUserValueWidget.prototype.custom_events || {}, {
-        website_url_chosen: '_onWebsiteURLChosen',
-    }),
-
-    /**
-     * @override
-     */
-    start: async function () {
-        await this._super(...arguments);
-        $(this.inputEl).addClass('text-left');
-        wUtils.autocompleteWithPages(this, $(this.inputEl));
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Called when the autocomplete change the input value.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onWebsiteURLChosen: function (ev) {
-        $(this.inputEl).trigger('input');
-        this._onUserValueChange(ev);
-    },
-});
-
 options.registry.ScrollButton = options.Class.extend({
     /**
      * @override
@@ -1206,8 +1781,8 @@ options.registry.ScrollButton = options.Class.extend({
     },
 });
 
-options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
 return {
     UrlPickerUserValueWidget: UrlPickerUserValueWidget,
+    FontFamilyPickerUserValueWidget: FontFamilyPickerUserValueWidget,
 };
 });

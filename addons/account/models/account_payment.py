@@ -52,7 +52,7 @@ class account_payment(models.Model):
     move_line_ids = fields.One2many('account.move.line', 'payment_id', readonly=True, copy=False, ondelete='restrict')
     move_reconciled = fields.Boolean(compute="_get_move_reconciled", readonly=True)
 
-    state = fields.Selection([('draft', 'Draft'), ('posted', 'Validated'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancelled', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
+    state = fields.Selection([('draft', 'Draft'), ('posted', 'Validated'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancelled', 'Cancelled'), ('invoicing_legacy', 'Invoicing App Legacy')], readonly=True, default='draft', copy=False, string="Status", tracking=True)
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money'), ('transfer', 'Internal Transfer')], string='Payment Type', required=True, readonly=True, states={'draft': [('readonly', False)]})
     _payment_methods = fields.Many2many('account.payment.method', compute='_compute_payment_methods')
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Method', required=True, readonly=True, states={'draft': [('readonly', False)]},
@@ -540,7 +540,7 @@ class account_payment(models.Model):
                         'debit': balance + write_off_balance > 0.0 and balance + write_off_balance or 0.0,
                         'credit': balance + write_off_balance < 0.0 and -balance - write_off_balance or 0.0,
                         'date_maturity': payment.payment_date,
-                        'partner_id': payment.partner_id.id,
+                        'partner_id': payment.partner_id.commercial_partner_id.id,
                         'account_id': payment.destination_account_id.id,
                         'payment_id': payment.id,
                     }),
@@ -552,7 +552,7 @@ class account_payment(models.Model):
                         'debit': balance < 0.0 and -balance or 0.0,
                         'credit': balance > 0.0 and balance or 0.0,
                         'date_maturity': payment.payment_date,
-                        'partner_id': payment.partner_id.id,
+                        'partner_id': payment.partner_id.commercial_partner_id.id,
                         'account_id': liquidity_line_account.id,
                         'payment_id': payment.id,
                     }),
@@ -567,7 +567,7 @@ class account_payment(models.Model):
                     'debit': write_off_balance < 0.0 and -write_off_balance or 0.0,
                     'credit': write_off_balance > 0.0 and write_off_balance or 0.0,
                     'date_maturity': payment.payment_date,
-                    'partner_id': payment.partner_id.id,
+                    'partner_id': payment.partner_id.commercial_partner_id.id,
                     'account_id': payment.writeoff_account_id.id,
                     'payment_id': payment.id,
                 }))
@@ -605,7 +605,7 @@ class account_payment(models.Model):
                             'debit': balance < 0.0 and -balance or 0.0,
                             'credit': balance > 0.0 and balance or 0.0,
                             'date_maturity': payment.payment_date,
-                            'partner_id': payment.partner_id.id,
+                            'partner_id': payment.partner_id.commercial_partner_id.id,
                             'account_id': payment.company_id.transfer_account_id.id,
                             'payment_id': payment.id,
                         }),
@@ -617,7 +617,7 @@ class account_payment(models.Model):
                             'debit': balance > 0.0 and balance or 0.0,
                             'credit': balance < 0.0 and -balance or 0.0,
                             'date_maturity': payment.payment_date,
-                            'partner_id': payment.partner_id.id,
+                            'partner_id': payment.partner_id.commercial_partner_id.id,
                             'account_id': payment.destination_journal_id.default_credit_account_id.id,
                             'payment_id': payment.id,
                         }),

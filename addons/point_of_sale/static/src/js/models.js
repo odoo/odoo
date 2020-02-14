@@ -990,7 +990,7 @@ exports.PosModel = Backbone.Model.extend({
         options = options || {};
 
         var self = this;
-        var timeout = typeof options.timeout === 'number' ? options.timeout : 7500 * orders.length;
+        var timeout = typeof options.timeout === 'number' ? options.timeout : 30000 * orders.length;
 
         // Keep the order ids that are about to be sent to the
         // backend. In between create_from_ui and the success callback
@@ -1038,7 +1038,7 @@ exports.PosModel = Backbone.Model.extend({
                 }
                 console.warn('Failed to send orders:', orders);
                 self.gui.show_sync_error_popup();
-                throw reason;
+                throw error;
             });
     },
 
@@ -1998,8 +1998,8 @@ exports.Orderline = Backbone.Model.extend({
 
         return {
             'taxes': taxes_vals,
-            'total_excluded': sign * round_pr(total_excluded, currency_rounding),
-            'total_included': sign * round_pr(total_included, currency_rounding),
+            'total_excluded': sign * round_pr(total_excluded, this.pos.currency.rounding),
+            'total_included': sign * round_pr(total_included, this.pos.currency.rounding),
         }
     },
     get_all_prices: function(){

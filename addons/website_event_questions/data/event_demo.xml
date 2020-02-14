@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="event_0_question_0" model="event.question">
+        <field name="title">Meal Type</field>
+        <field name="is_individual" eval="False"/>
+        <field name="event_id" ref="event.event_0"/>
+    </record>
+    <record id="event_0_question_0_answer_0" model="event.answer">
+        <field name="name">Mixed</field>
+        <field name="sequence">1</field>
+        <field name="question_id" ref="website_event_questions.event_0_question_0"/>
+    </record>
+    <record id="event_0_question_0_answer_1" model="event.answer">
+        <field name="name">Vegetarian</field>
+        <field name="sequence">2</field>
+        <field name="question_id" ref="website_event_questions.event_0_question_0"/>
+    </record>
+    <record id="event_0_question_0_answer_2" model="event.answer">
+        <field name="name">Pastafarian</field>
+        <field name="sequence">3</field>
+        <field name="question_id" ref="website_event_questions.event_0_question_0"/>
+    </record>
+</data></odoo>

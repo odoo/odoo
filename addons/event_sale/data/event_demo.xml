@@ -1,48 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="event_0_ticket_1" model="event.event.ticket">
-        <field name="name">Standard</field>
-        <field name="event_id" ref="event.event_0"/>
+    <record id="event.event_0_ticket_0" model="event.event.ticket">
         <field name="product_id" ref="product_product_event"/>
-        <field name="end_sale_date" eval="(DateTime.today() + timedelta(90)).strftime('%Y-%m-%d')"/>
+        <field name="price">0</field>
+    </record>
+    <record id="event.event_0_ticket_1" model="event.event.ticket">
+        <field name="product_id" ref="product_product_event"/>
         <field name="price">1000.0</field>
-        <field name="seats_max">50</field>
     </record>
-
-    <record id="event_0_ticket_2" model="event.event.ticket">
-        <field name="name">VIP</field>
-        <field name="event_id" ref="event.event_0"/>
+    <record id="event.event_0_ticket_2" model="event.event.ticket">
         <field name="product_id" ref="product_product_event"/>
-        <field name="end_sale_date" eval="(DateTime.today() + timedelta(60)).strftime('%Y-%m-%d')"/>
         <field name="price">1500.0</field>
-        <field name="seats_max">10</field>
     </record>
 
-    <record id="event_4_ticket_1" model="event.event.ticket">
-        <field name="name">General Admission</field>
-        <field name="event_id" ref="event.event_4"/>
+    <record id="event.event_2_ticket_1" model="event.event.ticket">
         <field name="product_id" ref="product_product_event"/>
-        <field name="end_sale_date" eval="(DateTime.today() + timedelta(30)).strftime('%Y-%m-%d')"/>
+        <field name="price">1000.0</field>
+    </record>
+    <record id="event.event_2_ticket_2" model="event.event.ticket">
+        <field name="product_id" ref="product_product_event"/>
+        <field name="price">1500.0</field>
+    </record>
+
+    <record id="event.event_4_ticket_0" model="event.event.ticket">
+        <field name="product_id" ref="product_product_event"/>
         <field name="price">99.0</field>
-        <field name="seats_max">100</field>
     </record>
 
-    <record id="event_2_ticket_1" model="event.event.ticket">
-        <field name="name">Standard</field>
-        <field name="event_id" ref="event.event_2"/>
-        <field name="product_id" ref="product_product_event"/>
-        <field name="end_sale_date" eval="(DateTime.today() + timedelta(90)).strftime('%Y-%m-%d')"/>
-        <field name="price">1000.0</field>
-        <field name="seats_max">50</field>
-    </record>
-
-    <record id="event_2_ticket_2" model="event.event.ticket">
-        <field name="name">VIP</field>
-        <field name="event_id" ref="event.event_2"/>
-        <field name="product_id" ref="product_product_event"/>
-        <field name="end_sale_date" eval="(DateTime.today() + timedelta(60)).strftime('%Y-%m-%d')"/>
-        <field name="price">1500.0</field>
-        <field name="seats_max">5</field>
-    </record>
 </odoo>

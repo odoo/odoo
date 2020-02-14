@@ -16,6 +16,7 @@ This wizard will activate the CRON job and the Scheduler and will start the auto
     """,
     'depends': ['base_setup'],
     'data': [
+        'security/ir.model.access.csv',
         'data/ir_cron_data.xml',
         'views/ir_translation_views.xml',
         'views/res_config_settings_views.xml',

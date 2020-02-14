@@ -339,13 +339,9 @@ const UserValueWidget = Widget.extend({
             return;
         }
 
-        // Don't notify a reset update if the widget was not previewed before.
-        const isPreviewed = this.isPreviewed();
-        if (previewMode === 'reset' && !isPreviewed) {
-            return;
-        }
         // In the case we notify a change update, force a preview update if it
         // was not already previewed
+        const isPreviewed = this.isPreviewed();
         if (!previewMode && !isPreviewed) {
             this.notifyValueChange(true);
         }
@@ -359,7 +355,12 @@ const UserValueWidget = Widget.extend({
         // mutex. So, during test tours, we would notify both 'preview' and
         // 'reset' before the 'preview' handling is done: and so the widget
         // would not be considered in preview during that 'preview' handling.
-        if (previewMode === true) {
+        if (previewMode === true || previewMode === false) {
+            // Note: the widgets need to be considered in preview mode during
+            // non-preview handling (a previewed checkbox is considered having
+            // an inverted state)... but if, for example, a modal opens before
+            // handling that non-preview, a 'reset' will be thrown thus removing
+            // the preview class. So we force it in non-preview too.
             data.prepare = () => this.el.classList.add('o_we_preview');
         } else if (previewMode === 'reset') {
             data.prepare = () => this.el.classList.remove('o_we_preview');
@@ -519,7 +520,8 @@ const UserValueWidget = Widget.extend({
 const ButtonUserValueWidget = UserValueWidget.extend({
     tagName: 'we-button',
     events: {
-        'click': '_onUserValueChange',
+        'click': '_onButtonClick',
+        'click [role="button"]': '_onInnerButtonClick',
         'mouseenter': '_onUserValuePreview',
         'mouseleave': '_onUserValueReset',
     },
@@ -576,6 +578,27 @@ const ButtonUserValueWidget = UserValueWidget.extend({
             active = (this.getActiveValue(methodName) === value);
         }
         this.el.classList.toggle('active', active);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onButtonClick: function (ev) {
+        if (!ev._innerButtonClicked) {
+            this._onUserValueChange(ev);
+        }
+    },
+    /**
+     * @private
+     */
+    _onInnerButtonClick: function (ev) {
+        // Cannot just stop propagation as the click needs to be propagated to
+        // potential parent widgets for event delegation on those inner buttons.
+        ev._innerButtonClicked = true;
     },
 });
 
@@ -700,6 +723,10 @@ const SelectUserValueWidget = UserValueWidget.extend({
             this.trigger_up('user_value_widget_opening');
         }
         this.menuTogglerEl.classList.toggle('active');
+        const activeButton = this._userValueWidgets.find(widget => widget.isActive());
+        if (activeButton) {
+            this.menuEl.scrollTop = activeButton.el.offsetTop - (this.menuEl.offsetHeight / 2);
+        }
     },
 });
 
@@ -1649,9 +1676,9 @@ const SnippetOptionWidget = Widget.extend({
      * @param {*} data
      * @returns {Promise}
      */
-    notify: async function (name, data) {
+    notify: function (name, data) {
         if (name === 'target') {
-            await this.setTarget(data);
+            this.setTarget(data);
         }
     },
     /**
@@ -1660,12 +1687,13 @@ const SnippetOptionWidget = Widget.extend({
      * per-slide options to be in the main menu of the whole snippet. This
      * function allows to set the option's target.
      *
+     * Note: the UI is not updated accordindly automatically.
+     *
      * @param {jQuery} $target - the new target element
      * @returns {Promise}
      */
-    setTarget: async function ($target) {
+    setTarget: function ($target) {
         this.$target = $target;
-        await this.updateUI();
     },
     /**
      * Updates the UI. For widget update, @see _computeWidgetState.
@@ -1749,11 +1777,7 @@ const SnippetOptionWidget = Widget.extend({
                     depName = depName.substr(1);
                 }
 
-                let widget = null;
-                this.trigger_up('user_value_widget_request', {
-                    name: depName,
-                    onSuccess: _widget => widget = _widget,
-                });
+                const widget = this._requestUserValueWidgets(depName)[0];
                 if (widget) {
                     dependenciesData.push({
                         widget: widget,
@@ -1979,6 +2003,25 @@ const SnippetOptionWidget = Widget.extend({
     },
     /**
      * @private
+     * @param {...string} widgetNames
+     * @returns {UserValueWidget[]}
+     */
+    _requestUserValueWidgets: function (...widgetNames) {
+        const widgets = [];
+        for (const widgetName of widgetNames) {
+            let widget = null;
+            this.trigger_up('user_value_widget_request', {
+                name: widgetName,
+                onSuccess: _widget => widget = _widget,
+            });
+            if (widget) {
+                widgets.push(widget);
+            }
+        }
+        return widgets;
+    },
+    /**
+     * @private
      * @param {function<Promise<jQuery>>} [callback]
      * @returns {Promise}
      */
@@ -2016,7 +2059,7 @@ const SnippetOptionWidget = Widget.extend({
 
             if (params.applyTo) {
                 const $subTargets = this.$(params.applyTo);
-                const proms = _.each($subTargets, subTargetEl => {
+                const proms = _.map($subTargets, subTargetEl => {
                     const proxy = createPropertyProxy(this, '$target', $(subTargetEl));
                     return this[methodName].call(proxy, previewMode, widgetValue, params);
                 });
@@ -2037,7 +2080,7 @@ const SnippetOptionWidget = Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onUserValueUpdate: function (ev) {
+    _onUserValueUpdate: async function (ev) {
         ev.stopPropagation();
         const widget = ev.data.widget;
         const previewMode = ev.data.previewMode;
@@ -2064,6 +2107,13 @@ const SnippetOptionWidget = Widget.extend({
             await this._select(previewMode, widget);
             this.$target.trigger('content_changed');
 
+            // Enabling an option and notifying that the $target has changed
+            // may destroy the option (if the DOM is altered in such a way the
+            // option is not attached to it anymore). In that case, we must not
+            // wait for a response to the option update.
+            if (this.isDestroyed()) {
+                return;
+            }
             await new Promise(resolve => {
                 // Will update the UI of the correct widgets for all options
                 // related to the same $target/editor if necessary
@@ -2075,36 +2125,41 @@ const SnippetOptionWidget = Widget.extend({
             });
         }});
 
+        if (ev.data.isSimulatedEvent) {
+            // If the user value update was simulated through a trigger, we
+            // prevent triggering further widgets. This could be allowed at some
+            // point but does not work correctly in complex website cases (see
+            // customizeWebsite).
+            return;
+        }
+
         // Check linked widgets: force their value and simulate a notification
-        const triggerWidgetsNames = ev.data.triggerWidgetsNames;
+        const linkedWidgets = this._requestUserValueWidgets(...ev.data.triggerWidgetsNames);
+        if (linkedWidgets.length !== ev.data.triggerWidgetsNames.length) {
+            console.warn('Missing widget to trigger');
+            return;
+        }
+        let i = 0;
         const triggerWidgetsValues = ev.data.triggerWidgetsValues;
-        for (let i = 0, l = triggerWidgetsNames.length; i < l; i++) {
-            const widgetName = triggerWidgetsNames[i];
+        for (const linkedWidget of linkedWidgets) {
             const widgetValue = triggerWidgetsValues[i];
-
-            let linkedWidget = null;
-            this.trigger_up('user_value_widget_request', {
-                name: widgetName,
-                onSuccess: _widget => linkedWidget = _widget,
-            });
-            if (linkedWidget) {
-                if (widgetValue !== undefined) {
-                    // FIXME right now only make this work supposing it is a
-                    // colorpicker widget with big big hacks, this should be
-                    // improved a lot
-                    const normValue = this._normalizeWidgetValue(widgetValue);
-                    if (previewMode === true) {
-                        linkedWidget._previewColor = normValue;
-                    } else if (previewMode === false) {
-                        linkedWidget._previewColor = false;
-                        linkedWidget._value = normValue;
-                    } else {
-                        linkedWidget._previewColor = false;
-                    }
+            if (widgetValue !== undefined) {
+                // FIXME right now only make this work supposing it is a
+                // colorpicker widget with big big hacks, this should be
+                // improved a lot
+                const normValue = this._normalizeWidgetValue(widgetValue);
+                if (previewMode === true) {
+                    linkedWidget._previewColor = normValue;
+                } else if (previewMode === false) {
+                    linkedWidget._previewColor = false;
+                    linkedWidget._value = normValue;
+                } else {
+                    linkedWidget._previewColor = false;
                 }
-
-                linkedWidget.notifyValueChange(previewMode, true);
             }
+
+            linkedWidget.notifyValueChange(previewMode, true);
+            i++;
         }
     },
 });
@@ -2243,8 +2298,8 @@ registry.sizing = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    setTarget: async function () {
-        await this._super(...arguments);
+    setTarget: function () {
+        this._super(...arguments);
         this._onResize();
     },
     /**
@@ -2424,8 +2479,8 @@ registry.background = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    setTarget: async function () {
-        await this._super(...arguments);
+    setTarget: function () {
+        this._super(...arguments);
         // TODO should be automatic for all options as equal to the start method
         this.bindBackgroundEvents();
         this.__customImageSrc = this._getSrcFromCssValue();
@@ -3024,14 +3079,13 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                             },
                         });
                         this.trigger_up('reload_snippet_template');
-                        resolve();
                     },
                 }, {
                     text: _t("Discard"),
                     close: true,
-                    click: () => resolve(),
                 }],
             }).open();
+            dialog.on('closed', this, () => resolve());
         });
     },
 });

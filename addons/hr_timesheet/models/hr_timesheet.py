@@ -199,42 +199,33 @@ class AccountAnalyticLine(models.Model):
     def _compute_display_timer(self):
         uom_hour = self.env.ref('uom.product_uom_hour')
         for analytic_line in self:
-            analytic_line.display_timer = analytic_line.encoding_uom_id == uom_hour
+            analytic_line.display_timer = analytic_line.encoding_uom_id == uom_hour and analytic_line.project_id.allow_timesheet_timer
 
     def action_timer_start(self):
-        """ Start timer and search if another timer hasn't been launched.
-            If yes, then stop the timer before launch this timer.
+        """ Start a timer if it isn't already started and the
+        timesheets allow to track time
         """
-        if not self.timer_start and self.display_timer:
-            self._stop_running_timers()
+        if not self.user_timer_id.timer_start and self.display_timer:
             super().action_timer_start()
 
-    def _stop_running_timers(self):
-        """ Search if a timesheet has a timer activated and stop the timer.
-            Check if a timer is activated for another timesheet
-            if yes, then update unit_amount field and stop timer,
-            otherwise, do nothing.
-        """
-        analytic_line = self.search([('timer_start', '!=', False), ('user_id', '=', self.env.uid)])
-        if analytic_line:
-            analytic_line.action_timer_stop()
-
     def action_timer_stop(self):
-        """ Action stop the timer of the current timesheet.
-            When the timer must be stopped, we must calculate the new
-            unit_amount based on the timer and the previous value of
-            unit_amount for the current timesheet.
+        """ Stop the current timer
         """
-        if self.timer_start and self.display_timer:
-            minutes_spent = self._get_minutes_spent()
-            if self.unit_amount == 0 and minutes_spent < 1:
-                # Check if unit_amount equals 0 and minutes_spent is less than 1 minute,
-                # if yes, then remove the timesheet
-                self.unlink()
+        if self.user_timer_id.timer_start and self.display_timer:
+            minutes_spent = super().action_timer_stop()
+            self._add_timesheet_time(minutes_spent)
+
+    def _add_timesheet_time(self, minutes_spent):
+        if self.unit_amount == 0 and minutes_spent < 1:
+            # Check if unit_amount equals 0 and minutes_spent is less than 1 minute,
+            # if yes, then remove the timesheet
+            self.unlink()
+        else:
+            if minutes_spent < 1:
+                amount = self.unit_amount
             else:
-                if minutes_spent < 1:
-                    amount = self.unit_amount
-                else:
-                    amount = self.unit_amount + minutes_spent * 60 / 3600
-                self.write({'unit_amount': amount})
-                super().action_timer_stop()
+                amount = self.unit_amount + minutes_spent * 60 / 3600
+            self.write({'unit_amount': amount})
+
+    def _action_interrupt_user_timers(self):
+        self.action_timer_stop()

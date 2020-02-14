@@ -200,7 +200,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
             unopenedModal.close();
 
             let modals = document.querySelectorAll('.modal');
-            assert.ok(modals[modals.length - 1].classList.contains('o_active_modal'),
+            assert.notOk(modals[modals.length - 1].classList.contains('o_inactive_modal'),
                 "last dialog should have the active class");
             assert.notOk(modals[modals.length - 1].classList.contains('o_legacy_dialog'),
                 "active dialog should not have the legacy class");
@@ -211,7 +211,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
             await testUtils.dom.triggerEvent(modals[modals.length - 1], 'keydown', EscapeKey); // Press Escape
 
             modals = document.querySelectorAll('.modal');
-            assert.ok(modals[modals.length - 1].classList.contains('o_active_modal'),
+            assert.notOk(modals[modals.length - 1].classList.contains('o_inactive_modal'),
                 "last dialog should have the active class");
             assert.notOk(modals[modals.length - 1].classList.contains('o_legacy_dialog'),
                 "active dialog should not have the legacy class");
@@ -221,7 +221,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
             await testUtils.dom.click(modals[modals.length - 1].querySelector('.btn.btn-primary')); // Click on 'Ok' button
 
             modals = document.querySelectorAll('.modal');
-            assert.containsOnce(document.body, '.modal.o_legacy_dialog.o_active_modal',
+            assert.containsOnce(document.body, '.modal.o_legacy_dialog:not(.o_inactive_modal)',
                 "active dialog should have the legacy class");
             assert.containsOnce(document.body, '.o_dialog');
             assert.containsN(document.body, '.o_legacy_dialog', 2);
@@ -230,7 +230,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
             await testUtils.dom.triggerEvent(modals[modals.length - 1], 'keydown', EscapeKey);
 
             modals = document.querySelectorAll('.modal');
-            assert.containsOnce(document.body, '.modal.o_legacy_dialog.o_active_modal',
+            assert.containsOnce(document.body, '.modal.o_legacy_dialog:not(.o_inactive_modal)',
                 "active dialog should have the legacy class");
             assert.containsOnce(document.body, '.o_dialog');
             assert.containsOnce(document.body, '.o_legacy_dialog');
@@ -238,7 +238,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
             await testUtils.dom.click(modals[modals.length - 1].querySelector('.close'));
 
             modals = document.querySelectorAll('.modal');
-            assert.ok(modals[modals.length - 1].classList.contains('o_active_modal'),
+            assert.notOk(modals[modals.length - 1].classList.contains('o_inactive_modal'),
                 "last dialog should have the active class");
             assert.notOk(modals[modals.length - 1].classList.contains('o_legacy_dialog'),
                 "active dialog should not have the legacy class");
@@ -253,5 +253,66 @@ odoo.define('web.owl_dialog_tests', function (require) {
 
             parent.destroy();
         });
+    });
+
+    QUnit.test("Z-index toggling and interactions", async function (assert) {
+        assert.expect(3);
+
+        function createCustomModal(className) {
+            const $modal = $(
+                `<div role="dialog" class="${className}" tabindex="-1">
+                    <div class="modal-dialog medium">
+                        <div class="modal-content">
+                            <main class="modal-body">The modal body</main>
+                        </div>
+                    </div>
+                </div>`
+            ).appendTo('body').modal();
+            const modal = $modal[0];
+            modal.destroy = function () {
+                $modal.modal('hide');
+                this.remove();
+            };
+            return modal;
+        }
+
+        class Parent extends Component {
+            constructor() {
+                super(...arguments);
+                this.state = useState({ showSecondDialog: true });
+            }
+        }
+        Parent.components = { Dialog };
+        Parent.env = makeTestEnvironment();
+        Parent.template = xml`
+            <div>
+                <Dialog/>
+                <Dialog t-if="state.showSecondDialog"/>
+            </div>`;
+
+        const parent = new Parent();
+        await parent.mount(testUtils.prepareTarget());
+
+        const frontEndModal = createCustomModal('modal');
+        const backEndModal = createCustomModal('modal o_technical_modal');
+
+        // querySelector will target the first modal (the static one).
+        const owlIndexBefore = getComputedStyle(document.querySelector('.o_dialog .modal')).zIndex;
+        const feZIndexBefore = getComputedStyle(frontEndModal).zIndex;
+        const beZIndexBefore = getComputedStyle(backEndModal).zIndex;
+
+        parent.state.showSecondDialog = false;
+        await testUtils.nextTick();
+
+        assert.ok(owlIndexBefore < getComputedStyle(document.querySelector('.o_dialog .modal')).zIndex,
+            "z-index of the owl dialog should be incremented since the active modal was destroyed");
+        assert.strictEqual(feZIndexBefore, getComputedStyle(frontEndModal).zIndex,
+            "z-index of front-end modals should not be impacted by Owl Dialog activity system");
+        assert.strictEqual(beZIndexBefore, getComputedStyle(backEndModal).zIndex,
+            "z-index of custom back-end modals should not be impacted by Owl Dialog activity system");
+
+        parent.destroy();
+        frontEndModal.destroy();
+        backEndModal.destroy();
     });
 });

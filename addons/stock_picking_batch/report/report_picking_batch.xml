@@ -8,7 +8,7 @@
                     <t t-set="has_package" t-value="move_line_ids.filtered('result_package_id')" groups="stock.group_tracking_lot"/>
                     <t t-set="has_serial_number" t-value="move_line_ids.filtered('lot_id')" groups="stock.group_production_lot"/>
                     <t t-set="has_barcode" t-value="move_line_ids.mapped('product_id').filtered('barcode')"/>
-                    <t t-set="locations" t-value="move_line_ids.mapped('location_id')"/>
+                    <t t-set="locations" t-value="move_line_ids.mapped('location_id').sorted(lambda location: location.complete_name)"/>
                     <t t-call="web.external_layout">
                         <div class="page">
                             <h3>Summary: <span t-field="o.name"/></h3>
@@ -19,7 +19,7 @@
                             <table class="table table-condensed">
                                 <thead>
                                     <tr>
-                                        <th>Picking Reference</th>
+                                        <th>Transfer</th>
                                         <th>Barcode</th>
                                         <th>Status</th>
                                         <th>Scheduled Date</th>
@@ -58,7 +58,7 @@
                                             <th>Product</th>
                                             <th>Quantity</th>
                                             <th width="27%">To</th>
-                                            <th width="23%">Picking</th>
+                                            <th width="23%">Transfer</th>
                                             <th t-if="has_serial_number" width="15%">
                                                 <strong>Lot/Serial Number</strong>
                                             </th>
