@@ -187,7 +187,7 @@ class MaintenanceEquipment(models.Model):
                 if next_date < date_now:
                     next_date = date_now
             else:
-                next_date = self.effective_date + timedelta(days=equipment.period)
+                next_date = equipment.effective_date + timedelta(days=equipment.period)
             equipment.next_action_date = next_date
         (self - equipments).next_action_date = False
 
