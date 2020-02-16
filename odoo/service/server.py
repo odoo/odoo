@@ -896,7 +896,7 @@ class Worker(object):
         self.request_count = 0
 
     def setproctitle(self, title=""):
-        setproctitle('odoo: %s %s %s' % (self.__class__.__name__, self.pid, title))
+        setproctitle('odoo: %s %s' % (self.__class__.__name__, title))
 
     def close(self):
         os.close(self.watchdog_pipe[0])
@@ -951,7 +951,7 @@ class Worker(object):
 
     def start(self):
         self.pid = os.getpid()
-        self.setproctitle()
+        self.setproctitle("(idle)")
         _logger.info("Worker %s (%s) alive", self.__class__.__name__, self.pid)
         # Reseed the random number generator
         random.seed()
@@ -1036,6 +1036,8 @@ class WorkerHTTP(Worker):
         except socket.error as e:
             if e.errno not in (errno.EAGAIN, errno.ECONNABORTED):
                 raise
+        finally:
+            self.setproctitle("(idle)")
 
     def start(self):
         Worker.start(self)
@@ -1107,6 +1109,8 @@ class WorkerCron(Worker):
                               len(db_names) - self.request_max)
         else:
             self.db_index = 0
+
+        self.setproctitle("(idle)")
 
     def start(self):
         os.nice(10)     # mommy always told me to be nice with others...
@@ -1222,11 +1226,13 @@ def start(preload=None, stop=False):
 
     if odoo.evented:
         server = GeventServer(odoo.service.wsgi_server.application)
+        setproctitle('odoo: Longpolling process')
     elif config['workers']:
         if config['test_enable'] or config['test_file']:
             _logger.warning("Unit testing in workers mode could fail; use --workers 0.")
 
         server = PreforkServer(odoo.service.wsgi_server.application)
+        setproctitle('odoo: Main process (multi-worker mode)')
 
         # Workaround for Python issue24291, fixed in 3.6 (see Python issue26721)
         if sys.version_info[:2] == (3,5):
@@ -1256,6 +1262,7 @@ def start(preload=None, stop=False):
             except Exception:
                 _logger.warning("Could not set ARENA_MAX through mallopt()")
         server = ThreadedServer(odoo.service.wsgi_server.application)
+        setproctitle('odoo: Main process (multi-threaded mode)')
 
     watcher = None
     if 'reload' in config['dev_mode'] and not odoo.evented:
