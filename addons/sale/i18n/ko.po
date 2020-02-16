@@ -444,7 +444,7 @@ msgstr "제품 또는 고객에 대한 주의사항이 설정됩니다.(판매)"
 msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
-msgstr ""
+msgstr "판매 주문에서 패키지 유형을 선택하고 패키지당 단위 수의 배수인 수량을 강제 적용할 수 있습니다."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -1179,6 +1179,8 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"이번 달의 송장 수익. 이번 달에 영업 채널에서 송장이 발행된 금액입니다. 칸반 보기에서 현재 및 목표 수익의 진행률을 계산하는 데 "
+"사용됩니다."
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
@@ -1298,12 +1300,16 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"다음 필드를 잠긴 상태로 수정하는 것은 금지되어 있습니다 :\n"
+"%s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:551
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
 msgstr ""
+"다음과 같은 상태에서는 주문을 확인할 수 없습니다. :\n"
+"%s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
@@ -1858,7 +1864,7 @@ msgstr "파생 제품"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
-msgstr ""
+msgstr "계약금이 있는 상품"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_template_action
@@ -2258,6 +2264,8 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Sales tab)."
 msgstr ""
+"제품에 대한 특정 정보나 내용 (소개, 사용법, 링크, 미디어 등)을 공유해야 하는 경우 이메일을 보내는 것이 유용합니다. 제품 세부 "
+"사항 양식(판매 탭)에서 이메일 서식을 작성하고 설정하십시오."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
@@ -2477,6 +2485,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"판매 주문서 %s가 분석 계정 %s에 연결되어 있으며 해당 판매 주문서가  취소되었습니다. 취소된 판매 주문서에는 비용을 등록할 수 "
+"없습니다."
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:133
@@ -2486,6 +2496,8 @@ msgid ""
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
 msgstr ""
+"판매 주문서 %s는 분석 계정 %s에 연결되어 있으며  현재 잠겨 있습니다. 잠긴 판매 주문서에는 비용을 등록할 수 없습니다. 이 분석 "
+"계정에 연결된 새 SO를 생성해 주십시오."
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:129
@@ -2510,7 +2522,7 @@ msgstr "판매 주문과 관련된 분석 계정."
 msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
-msgstr ""
+msgstr "이익은 제품 판매 가격의 합계에서 세부 양식에 설정된 비용을 뺀 값으로 계산됩니다."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:151
@@ -2540,12 +2552,14 @@ msgstr "선급금 금액은 양수 여야합니다."
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no orders for your account."
-msgstr ""
+msgstr "현재 귀하의 계정에 대한 주문이 없습니다."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
 msgstr ""
+"현재 귀하의 계정에 대한 견적이 없습니다.\n"
+" "
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
