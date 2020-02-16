@@ -41,6 +41,13 @@ msgid ""
 " * Done: The MO is closed, the stock moves are posted. \n"
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
+"* Dự thảo: MO chưa được xác nhận.\n"
+"* Xác nhận: MO được xác nhận, các quy tắc kho và cung ứng các thành phần được kích hoạt.\n"
+"* Kế hoạch: WO được lên kế hoạch.\n"
+"* Đang tiến hành: Việc sản xuất đã bắt đầu (trên MO hoặc trên WO).\n"
+"* Chờ đóng: Quá trình sản xuất đã hoàn tất, MO cần được đóng.\n"
+"* Xong: MO đã đóng, các dịch chuyển kho đã gửi đi.\n"
+"* Đã hủy: MO đã bị hủy, không thể xác nhận được nữa."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reservation_state
@@ -49,6 +56,9 @@ msgid ""
 "            * Waiting: The material is not available to start the production.\n"
 "            The material availability is impacted by the manufacturing readiness            defined on the BoM."
 msgstr ""
+"* Sẵn sàng: Nguyên liệu có sẵn để bắt đầu sản xuất.\n"
+"* Đang chờ: Nguyên liệu không có sẵn để bắt đầu sản xuất.\n"
+"Nguyên liệu có sẵn để sản xuất được xác định dựa trên Định mức của Thành phẩm."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
@@ -347,6 +357,7 @@ msgstr "<strong>Khu vực làm việc:</strong>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "A BoM of type kit is used to split the product into its components."
 msgstr ""
+"Một loại Định mức bộ được dùng để chia nhỏ sản phẩm trong các thành phần"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -534,7 +545,7 @@ msgstr "Đã lưu"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "At the creation of a Manufacturing Order."
-msgstr ""
+msgstr "Khi tạo một Lệnh sản xuất."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1507,7 +1518,7 @@ msgstr "Thành phẩm của lệnh làm việc"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line__finished_product_produce_id
 msgid "Finished Product in Produce wizard"
-msgstr ""
+msgstr "Thành phẩm trong hướng dẫn sản xuất"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__move_finished_ids
@@ -1528,7 +1539,7 @@ msgstr "Địa điểm thành phẩm"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_product_produce__consumption__flexible
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__consumption__flexible
 msgid "Flexible"
-msgstr ""
+msgstr "Linh hoạt"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_follower_ids
@@ -1609,12 +1620,12 @@ msgstr "Chỉ ra trình tự sắp xếp khi hiển thị."
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet_google_slide
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__worksheet_type__google_slide
 msgid "Google Slide"
-msgstr ""
+msgstr "Google Slide"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Google Slide Link"
-msgstr ""
+msgstr "Liên kết Google Slide"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -1766,7 +1777,7 @@ msgstr "Chiều cao ảnh"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_src
 msgid "Image Src"
-msgstr ""
+msgstr "Nguồn ảnh"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_width
@@ -1791,6 +1802,8 @@ msgid ""
 "Impossible to plan the workorder. Please check the workcenter "
 "availabilities."
 msgstr ""
+"Không thể lập kế hoạch Lệnh làm việc. Vui lòng kiểm tra các Khu vực làm việc"
+" hiện có."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__progress
@@ -1815,6 +1828,8 @@ msgid ""
 "Informative date allowing to define when the manufacturing order should be "
 "processed at the latest to fulfill delivery on time."
 msgstr ""
+"Ngày thông tin cho phép xác định khi nào Lệnh sản xuất nên được xử lý muộn "
+"nhất để hoàn thành giao hàng đúng hạn."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_line__lot_produced_qty
@@ -2607,7 +2622,7 @@ msgstr "Số lượng Sản xuất Ban đầu"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee_target
 msgid "Overall Effective Efficiency Target in percentage"
-msgstr ""
+msgstr "Mục tiêu hiệu quả tổng thể theo tỷ lệ phần trăm"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report
@@ -2860,7 +2875,7 @@ msgstr "In"
 #: code:addons/mrp/static/src/xml/mrp.xml:0
 #, python-format
 msgid "Print Unfolded"
-msgstr ""
+msgstr "Chưa in"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__priority
@@ -3530,7 +3545,7 @@ msgstr "Hiển thị tất cả dữ liệu có ngày xử lý tiếp theo trư�
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
 msgid "Slot into workcenter calendar once planned"
-msgstr ""
+msgstr "Thêm vào lịch khu vực sản xuất khi đã lên kế hoạch"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_head
@@ -3559,6 +3574,8 @@ msgid ""
 "Some of your byproducts are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct byproducts."
 msgstr ""
+"Một số phụ phẩm của bạn đã được theo dõi, bạn có thể xác định một Lệnh sản "
+"xuất trong đơn hàng dể nhận đúng Phụ phẩm."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -3750,7 +3767,7 @@ msgstr "BoM Thứ cấp"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Subcontract the production of some products"
-msgstr "Gia công ngoài sản xuất của một số sản phẩm"
+msgstr "Cho phép thiết lập gia công ngoài trong qui trình sản xuất sản phẩm"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
@@ -3915,6 +3932,8 @@ msgid ""
 "The planned end date of the work order cannot be prior to the planned start "
 "date, please correct this to save the work order."
 msgstr ""
+"Ngày dự kiến kết thúc của Lệnh làm việc không thể trước ngày dự kiến bắt "
+"đầu, vui lòng sửa lỗi này để lưu Lệnh làm việc."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:0
@@ -3935,7 +3954,7 @@ msgstr "Mã dữ liệu này được đính kèm với."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__propagate_date
 msgid "The rescheduling is propagated to the next move."
-msgstr ""
+msgstr "Tính lại các loan báo cho lần Dịch chuyển kế tiếp."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__routing_id
@@ -4732,6 +4751,9 @@ msgid ""
 "              starting from this date. If empty, the work orders will be "
 "planned as soon as possible."
 msgstr ""
+"Lệnh làm việc sẽ được lên kế hoạch dựa trên sự sẵn có của các khu vực làm "
+"việc bắt đầu từ ngày này. Nếu trống, các Lệnh làm việc sẽ được lên kế hoạch "
+"càng sớm càng tốt."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view

@@ -1371,7 +1371,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__add_sign
 msgid "Add Sign"
-msgstr ""
+msgstr "Aláírás hozzáadása"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_new_bank_setting
@@ -11087,6 +11087,14 @@ msgid ""
 msgstr ""
 "Könyveletlen tételek vannak a zárolni tervezett periódusban. Kérjük "
 "könyvelje vagy törölje ezen tételeket."
+
+#. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"There is more than one receivable/payable account in the concerned invoices."
+" You cannot group payments in that case."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
