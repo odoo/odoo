@@ -3,34 +3,33 @@
 # 	* web
 # 
 # Translators:
-# Thiago MACÊDO <thiago95macedo@gmail.com>, 2019
-# Marcos Abreu <marcoos.abreu@gmail.com>, 2019
-# Marcelo Costa <marcelo@comdesk.com.br>, 2019
+# Thiago Macêdo <thiago95macedo@gmail.com>, 2017
+# Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2018
+# Rafael H L Moretti <rafael.moretti@gmail.com>, 2018
+# Marcelo Costa <marcelo@comdesk.com.br>, 2018
+# Maicon Grahl <maicongrahl@hotmail.com>, 2019
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2019
 # falexandresilva <falexandresilva@gmail.com>, 2019
+# Yannick Belot <yannickbh@gmail.com>, 2019
 # Franciele Neiva <franciele.neiva@br.ey.com>, 2019
 # Diego Bittencourt <diegomb86@gmail.com>, 2019
-# Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2019
+# Mateus Pinheiro <smateusbp@gmail.com>, 2019
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2019
-# Rafael H L Moretti <rafael.moretti@gmail.com>, 2019
+# danimaribeiro <danimaribeiro@gmail.com>, 2019
 # Rui Andrada <shingonoide@gmail.com>, 2019
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2019
-# Maicon Grahl <maicongrahl@hotmail.com>, 2019
 # Emanuel Martins <emanuel.breno@gmail.com>, 2019
-# Yannick Belot <yannickbh@gmail.com>, 2019
-# Silmar <pinheirosilmar@gmail.com>, 2019
-# Mateus Pinheiro <smateusbp@gmail.com>, 2019
-# danimaribeiro <danimaribeiro@gmail.com>, 2019
-# Martin Trigaux, 2019
 # grazziano <gra.negocia@gmail.com>, 2019
+# Silmar <pinheirosilmar@gmail.com>, 2019
+# Martin Trigaux, 2019
 # Mateus Lopes <mateus1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"POT-Creation-Date: 2020-02-13 07:25+0000\n"
+"PO-Revision-Date: 2016-08-05 13:11+0000\n"
 "Last-Translator: Mateus Lopes <mateus1@gmail.com>, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -125,6 +124,13 @@ msgid "%d years ago"
 msgstr "%d anos atrás"
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_mixin.js:0
+#, python-format
+msgid "%s Files"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.webclient_bootstrap
 msgid ""
 "&lt;!--[if lt IE 10]&gt;\n"
@@ -187,6 +193,13 @@ msgstr ""
 #, python-format
 msgid "'%s' is not convertible to date, datetime nor time"
 msgstr "'%s' não é uma data ou tempo convertivel"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_progress_card.js:0
+#, python-format
+msgid "(%s/%sMb)"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -404,6 +417,7 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Add column"
 msgstr ""
@@ -459,14 +473,14 @@ msgstr "Adicionar: "
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/signature.js:0
+#: code:addons/web/static/src/js/views/signature_dialog.js:0
 #, python-format
 msgid "Adopt Your Signature"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/signature.js:0
+#: code:addons/web/static/src/js/views/signature_dialog.js:0
 #, python-format
 msgid "Adopt and Sign"
 msgstr ""
@@ -815,17 +829,24 @@ msgstr "A visão de calendário não definiu o atributo 'date_start'"
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
-#: code:addons/web/static/src/js/fields/signature.js:0
 #: code:addons/web/static/src/js/fields/upgrade_fields.js:0
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #: code:addons/web/static/src/js/views/calendar/calendar_quick_create.js:0
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:0
 #: code:addons/web/static/src/js/views/list/list_confirm_dialog.js:0
+#: code:addons/web/static/src/js/views/signature_dialog.js:0
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Cancel"
 msgstr "Cancelar"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/file_upload_progress_bar.xml:0
+#, python-format
+msgid "Cancel Upload"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -877,6 +898,13 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/colorpicker_dialog.js:0
 #, python-format
 msgid "Choose"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Choose File"
 msgstr ""
 
 #. module: web
@@ -1211,7 +1239,7 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/pivot.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Day"
@@ -1301,6 +1329,13 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_progress_bar.js:0
+#, python-format
+msgid "Do you really want to cancel the upload of %s?"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "Do you really want to delete this export template?"
@@ -1353,8 +1388,8 @@ msgstr "Não saia dai, <br /> que ainda está carregando ..."
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
-msgid "Download xls"
-msgstr "Baixar xls"
+msgid "Download xlsx"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -1446,11 +1481,6 @@ msgstr ""
 #, python-format
 msgid "Email"
 msgstr "E-mail"
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-msgid "Email:"
-msgstr "E-mail:"
 
 #. module: web
 #. openerp-web
@@ -1664,7 +1694,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/pivot/pivot_controller.js:0
 #, python-format
 msgid ""
-"For Excel compatibility, data cannot be exported if there are more than 256 columns.\n"
+"For Excel compatibility, data cannot be exported if there are more than 16384 columns.\n"
 "\n"
 "Tip: try to flip axis, filter further or reduce the number of measures."
 msgstr ""
@@ -1779,6 +1809,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit ENTER to"
@@ -2118,11 +2149,6 @@ msgid "Mac"
 msgstr ""
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-msgid "Mail:"
-msgstr ""
-
-#. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #: code:addons/web/static/src/xml/debug.xml:0
@@ -2263,7 +2289,7 @@ msgstr "Monetário"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/pivot.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Month"
@@ -2366,6 +2392,7 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "No color"
@@ -2380,6 +2407,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "No data to display"
@@ -2433,6 +2461,13 @@ msgstr ""
 #, python-format
 msgid "No valid record to save"
 msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/core/utils.js:0
+#, python-format
+msgid "Node [%s] is not a JSONified XML node"
+msgstr "O Nó [%s] não é um nó no formato XML  JSONified"
 
 #. module: web
 #. openerp-web
@@ -2531,6 +2566,7 @@ msgstr ""
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:0
 #: code:addons/web/static/src/js/views/list/list_confirm_dialog.js:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Ok"
 msgstr "Ok"
@@ -2711,11 +2747,6 @@ msgid "Phone"
 msgstr "Telefone"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-msgid "Phone:"
-msgstr "Telefone:"
-
-#. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/colorpicker_dialog.js:0
 #, python-format
@@ -2856,6 +2887,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/web/static/src/js/chrome/sidebar.js:0
 #: code:addons/web/static/src/xml/report.xml:0
+#: code:addons/web/static/src/xml/report.xml:0
 #, python-format
 msgid "Print"
 msgstr "Imprimir"
@@ -2866,6 +2898,15 @@ msgstr "Imprimir"
 #, python-format
 msgid "Priority"
 msgstr "Prioridade"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_progress_card.js:0
+#: code:addons/web/static/src/xml/file_upload_progress_card.xml:0
+#: code:addons/web/static/src/xml/file_upload_progress_card.xml:0
+#, python-format
+msgid "Processing..."
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -2919,7 +2960,7 @@ msgstr "QWeb"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/pivot.xml:0
 #, python-format
 msgid "Quarter"
 msgstr "Trimestre"
@@ -3467,20 +3508,12 @@ msgstr "Espere uns minutos, pegue um café, <br /> porque está carregando..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Tap on the list to change company"
-msgstr ""
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Technical Translation"
 msgstr "Tradução Técnica"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
 #: model_terms:ir.ui.view,arch_db:web.external_layout_clean
 msgid "Tel:"
 msgstr "Tel:"
@@ -3772,15 +3805,16 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/pivot/pivot_renderer.js:0
+#: code:addons/web/static/src/xml/pivot.xml:0
 #, python-format
 msgid ""
 "Try to add some records, or make sure that there is at least one measure and"
-" no active filter in the search bar."
+" no active filter in the search bar"
 msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid ""
@@ -3840,7 +3874,6 @@ msgstr ""
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:0
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:0
-#: code:addons/web/static/src/js/views/kanban/kanban_renderer_mobile.js:0
 #: code:addons/web/static/src/js/views/list/list_renderer.js:0
 #: code:addons/web/static/src/js/views/list/list_renderer.js:0
 #: code:addons/web/static/src/js/views/pivot/pivot_model.js:0
@@ -3927,6 +3960,13 @@ msgstr "Enviar e Definir"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_progress_bar.js:0
+#, python-format
+msgid "Upload canceled"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
@@ -3962,6 +4002,13 @@ msgstr "Erro no envio"
 #, python-format
 msgid "Uploading..."
 msgstr "Enviando..."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_progress_card.js:0
+#, python-format
+msgid "Uploading... (%s%%)"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -4056,16 +4103,10 @@ msgid "Web Tests"
 msgstr ""
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-msgid "Web:"
-msgstr ""
-
-#. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/calendar/calendar_model.js:0
 #: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/pivot.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Week"
@@ -4115,7 +4156,7 @@ msgstr "ID XML:"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/pivot.xml:0
 #, python-format
 msgid "Year"
 msgstr "Ano"
@@ -4232,15 +4273,6 @@ msgstr ""
 #: code:addons/web/static/src/xml/name_and_signature.xml:0
 #, python-format
 msgid "Your name"
-msgstr ""
-
-#. module: web
-#: code:addons/web/controllers/main.py:0
-#, python-format
-msgid ""
-"Your password is the default (admin)! If this system is exposed to untrusted"
-" users it is important to change it immediately for security reasons. I will"
-" keep nagging you about it!"
 msgstr ""
 
 #. module: web
@@ -4510,6 +4542,13 @@ msgstr "menor ou igual a"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_mixin.js:0
+#, python-format
+msgid "message: %s"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "not"
@@ -4572,11 +4611,6 @@ msgstr "ou"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "parent of"
-msgstr ""
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.brand_promotion
-msgid "portal"
 msgstr ""
 
 #. module: web

@@ -3,34 +3,54 @@
 # 	* payment
 # 
 # Translators:
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Sergio Flores <vitavitae1@gmail.com>, 2016
+# Alejandro Die Sanchis <marketing@domatix.com>, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Humberto Garza De Koster <garzadekoster@gmail.com>, 2016
+# Jose Manuel <admin@jaboweb.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Gelo Joga Landoo <gj@landoo.es>, 2017
+# Alejandro Santana <alejandrosantana@anubia.es>, 2017
+# Ana Juaristi <ajuaristio@gmail.com>, 2017
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
+# Daniel Santibáñez Polanco <dansanti@gmail.com>, 2018
+# Cristóbal Martí Oliver <info@moblesmarti.com>, 2018
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
+# RGB Consulting <odoo@rgbconsulting.com>, 2018
+# e2f <projects@e2f.com>, 2018
+# José Vicente <txusev@gmail.com>, 2018
+# Gustavo Valverde, 2018
+# Nicolás Broggi <rnbroggi@gmail.com>, 2018
+# Cristian Salamea <ovnicraft@gmail.com>, 2019
 # Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>, 2019
 # Manuel De los Reyes <manuel9410z@gmail.com>, 2019
-# Erick Birbe <erickcion@gmail.com>, 2019
 # Cristopher Cravioto <ccr@odoo.com>, 2019
-# Cristian Salamea <ovnicraft@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
-# Carlos Lopez <celm1990@hotmail.com>, 2019
-# Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2019
-# Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
 # Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
-# Antonio Trueba, 2019
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2019
+# Vivian Montana <vmo@odoo.com>, 2019
+# Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
 # Sabina Batlle <sbb@odoo.com>, 2019
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
 # Efrem Jimenez <efj@odoo.com>, 2019
-# Jesse Garza <jga@odoo.com>, 2019
 # John Guardado <jgu@odoo.com>, 2019
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
+# Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2019
+# Antonio Trueba, 2019
+# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2019
 # Jon Perez <jop@odoo.com>, 2019
+# Jesse Garza <jga@odoo.com>, 2019
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:10+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-02-13 07:24+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -459,8 +479,8 @@ msgstr "Pagos cancelados"
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
-msgid "Cannot set-up the payment"
-msgstr "No se puede configurar el pago"
+msgid "Cannot setup the payment"
+msgstr ""
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -707,6 +727,7 @@ msgstr "Determina el orden de visualización"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__disabled
+#: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Disabled"
 msgstr "Deshabilitado"
 
@@ -723,7 +744,7 @@ msgstr "Descartar"
 #: model:ir.model.fields,field_description:payment.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre a mostrar"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__display_as
@@ -842,7 +863,7 @@ msgstr "Forma con tokenización"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "From"
-msgstr "Desde"
+msgstr "De"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -913,8 +934,8 @@ msgstr "Si no se define, se utilizará el nombre del adquirente."
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
-msgid "If, the payment hasn't been confirmed you can contact us."
-msgstr "Si no se ha confirmado el pago, puede contactarnos."
+msgid "If the payment hasn't been confirmed you can contact us."
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_128
@@ -983,7 +1004,7 @@ msgstr "¡Se ha encontrado un token no válido! Adquiridor de tokens %s!=%s"
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr "¡Se ha encontrado un token no válido! Socio de token %s != %s"
+msgstr "¡Se ha encontrado un token no válido! Socio de token != %s"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
@@ -1010,7 +1031,7 @@ msgstr "Diario donde se registrarán las transacciones exitosas"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_acquirer_onboarding_state__just_done
 msgid "Just done"
-msgstr "Recientemente realizado"
+msgstr "Recién hecho"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
@@ -1202,7 +1223,7 @@ msgstr "No se ha seleccionado medio de pago"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_acquirer_onboarding_state__not_done
 msgid "Not done"
-msgstr "No realizado"
+msgstr "No hecho"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__payment_token_id
@@ -1240,31 +1261,6 @@ msgstr "Aceptar"
 #, python-format
 msgid "Only administrators can access this data."
 msgstr "Solo los administradores pueden acceder a estos datos."
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:0
-#, python-format
-msgid "Only draft transaction can be authorized."
-msgstr "Solo se puede autorizar una transacción en borrador."
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:0
-#: code:addons/payment/models/payment_acquirer.py:0
-#, python-format
-msgid "Only draft transaction can be processed."
-msgstr "Solo se puede procesar una transacción en borrador."
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:0
-#, python-format
-msgid "Only draft/authorized transaction can be cancelled."
-msgstr ""
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:0
-#, python-format
-msgid "Only draft/authorized transaction can be posted."
-msgstr ""
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1592,6 +1588,11 @@ msgid "Related Document Model"
 msgstr "Modelo de documento relacionado"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_payment__related_partner_ids
+msgid "Related Partner"
+msgstr "Empresa relacionada"
+
+#. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Required fields not filled: %s"
@@ -1744,6 +1745,7 @@ msgstr "Plantilla para el método de registro"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__test
+#: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "Test Mode"
 msgstr "Modo Test"
@@ -1785,7 +1787,7 @@ msgid ""
 "message: %s"
 msgstr ""
 "La transacción %s con %s  para %s ha sido cancelada con el siguiente "
-"mensaje: %s"
+"mensaje:"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -2013,16 +2015,10 @@ msgstr "No hemos podido localizar su pago, pero no se preocupe."
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:0
+#: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to redirect you to the payment form."
 msgstr "No podemos redirigirlo al formulario de pago."
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:0
-#, python-format
-msgid "We are not able to redirect you to the payment form. "
-msgstr "No podemos redirigirle al formulario de pago."
 
 #. module: payment
 #. openerp-web

@@ -3,21 +3,21 @@
 # 	* website
 # 
 # Translators:
-# Adam Kettner <cetnerix@gmail.com>, 2019
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2019
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# Michal Veselý <michal@veselyberanek.net>, 2019
-# Martin Trigaux, 2019
-# Ladislav Tomm <tomm@helemik.cz>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Adam Kettner <cetnerix@gmail.com>, 2020
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2020
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2020
+# Martin Trigaux, 2020
+# Ladislav Tomm <tomm@helemik.cz>, 2020
+# Michal Veselý <michal@veselyberanek.net>, 2020
+# trendspotter <j.podhorecky@volny.cz>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:08+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"POT-Creation-Date: 2020-02-13 08:33+0000\n"
+"PO-Revision-Date: 2016-08-05 13:11+0000\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,13 +29,40 @@ msgstr ""
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
-msgid " Add Images"
-msgstr "Přidat obrázky"
+msgid ""
+" It appears you are in debug=assets mode, all theme customization options "
+"require a page reload in this mode."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
 msgid "# Visited Pages"
 msgstr "Počet navštívených stran"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog
+msgid "$10.50"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog
+msgid "$12.00"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog
+msgid "$15.50"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog
+msgid "$7.50"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog
+msgid "$9.00"
+msgstr ""
 
 #. module: website
 #: code:addons/website/models/website.py:0
@@ -45,6 +72,7 @@ msgid "%s (id:%s)"
 msgstr "%s (id:%s)"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid "&amp;times;"
 msgstr "&amp;times;"
@@ -87,13 +115,22 @@ msgid "(could be used in"
 msgstr "(mohl by být použit v"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.show_website_info
+#. openerp-web
+#: code:addons/website/static/src/xml/website.res_config_settings.xml:0
+#, python-format
 msgid ""
-",\n"
-"                                updated:"
+"(see e.g. Opinion\n"
+"            04/2012 on Cookie Consent Exemption by the EU Art.29 WP)."
 msgstr ""
-", \n"
-"aktualizováno:"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.res_config_settings.xml:0
+#, python-format
+msgid ""
+"* provided that your analytics is anonymized, which is not the\n"
+"            case by default with Google Analytics."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -101,9 +138,11 @@ msgid ", author:"
 msgstr ", autor:"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.show_website_info
-msgid ", updated:"
-msgstr ", aktualizováno:"
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+".\n"
+"                                                The website will still work if you reject or discard those cookies."
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -117,39 +156,35 @@ msgstr ""
 "Změna jeho názvu přeruší tyto hovory."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_timeline
+msgid "...and switch the timeline contents to fit your needs."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.default_csv
 msgid "1,2,3"
 msgstr "1,2,3"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "1/5"
-msgstr "1/5"
-
-#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_hr_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "100%"
 msgstr "100%"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "10s"
 msgstr "10s"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "12"
 msgstr "12"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "1s"
 msgstr "1s"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "2/5"
-msgstr "2/5"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -157,76 +192,60 @@ msgid "24x7 toll-free support"
 msgstr "24x7 bezplatná podpora"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_hr_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "25%"
 msgstr "25%"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "2s"
 msgstr "2s"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "3/5"
-msgstr "3/5"
-
-#. module: website
-#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__redirect_301
+#. openerp-web
+#: code:addons/website/static/src/xml/website.pageProperties.xml:0
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__301
+#, python-format
 msgid "301 Moved permanently"
 msgstr "301 Trvale přesunuto"
 
 #. module: website
-#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__redirect_302
+#. openerp-web
+#: code:addons/website/static/src/xml/website.pageProperties.xml:0
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__302
+#, python-format
 msgid "302 Moved temporarily"
 msgstr "302 Přechodně přesunuto"
 
 #. module: website
-#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__rewrite
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__308
 msgid "308 Redirect / Rewrite"
 msgstr "308 Přesměrováno / Přepsáno"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "3s"
 msgstr "3s"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "4/5"
-msgstr "4/5"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.403
-msgid "403: Forbidden"
-msgstr "403 Přístup odepřen"
-
-#. module: website
-#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__not_found
+#: model:ir.model.fields.selection,name:website.selection__website_rewrite__redirect_type__404
 msgid "404 Not Found"
 msgstr "404 Nenalezeno"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.404
-msgid "404: Page not found!"
-msgstr "404 Stránka nenalezena!"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "5/5"
-msgstr "5/5"
-
-#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_hr_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "50%"
 msgstr "50%"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "5s"
 msgstr "5s"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_hr_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "75%"
 msgstr "75%"
@@ -257,7 +276,6 @@ msgstr ""
 "svůj obsah!</i>"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_tabs
 #: model_terms:ir.ui.view,arch_db:website.s_text_block
 msgid ""
 "<b>Great stories are for everyone even when only written for just one "
@@ -271,7 +289,6 @@ msgstr ""
 "jednu osobu. Pokud je to pravé pro jednoho, je to pravé pro zbytek."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_tabs
 #: model_terms:ir.ui.view,arch_db:website.s_text_block
 msgid ""
 "<b>Great stories have personality.</b> Consider telling a great story that "
@@ -314,6 +331,15 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.view_edit_robots
+msgid ""
+"<br/><br/>\n"
+"                    Example of rule:<br/>\n"
+"                    <code class=\"ml-4\">Disallow: /web/login</code><br/>\n"
+"                    <code class=\"ml-4\">Allow: *</code>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 msgid ""
 "<font style=\"background-color: rgb(255, 255, 255);\">Good writing is "
@@ -332,10 +358,9 @@ msgstr ""
 "255);\">Upravit tento název</font>"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_banner
-msgid "<font style=\"font-size: 62px;\"><b>Sell Online.</b> Easily.</font>"
+#: model_terms:ir.ui.view,arch_db:website.s_cover
+msgid "<font style=\"font-size: 62px; font-weight: bold;\">Catchy Headline</font>"
 msgstr ""
-"<font style=\"font-size: 62px;\"><b>Prodávejte online.</b> Jednoduše.</font>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_picture
@@ -343,22 +368,26 @@ msgid "<font style=\"font-size: 62px;\">A punchy Headline</font>"
 msgstr "<font style=\"font-size: 62px;\">Průrazný titulek</font>"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
-msgid "<font style=\"font-size: 62px;\">FAQ</font>"
-msgstr "<font style=\"font-size: 62px;\">Časté otázky</font>"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "<font style=\"font-size: 62px;\">Our offers</font>"
 msgstr "<font style=\"font-size: 62px;\">Naše nabídky</font>"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_carousel
-msgid "<font style=\"font-size: 62px;\">Slide Title</font>"
+#: model_terms:ir.ui.view,arch_db:website.s_banner
+msgid "<font style=\"font-size: 62px;\">Sell Online. Easily.</font>"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_parallax
+#: model_terms:ir.ui.view,arch_db:website.s_carousel
+msgid "<font style=\"font-size: 62px;\">Slide Title</font>"
+msgstr "<font style=\"font-size: 62px;\">Název prezentace</font>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup
+msgid "<font style=\"font-size: 62px;\">Win 20$</font>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_title
 msgid "<font style=\"font-size: 62px;\">Your Site Title</font>"
 msgstr "<font style=\"font-size: 62px;\">Název vašeho webu</font>"
@@ -367,6 +396,11 @@ msgstr "<font style=\"font-size: 62px;\">Název vašeho webu</font>"
 #: model_terms:ir.ui.view,arch_db:website.s_card
 msgid "<i class=\"fa fa-1x fa-clock-o mr8\"/><small>2 days ago</small>"
 msgstr "<i class=\"fa fa-1x fa-clock-o mr8\"/><small>Před dvěma dny</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
+msgid "<i class=\"fa fa-1x fa-cog\"/> More Details"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_picture
@@ -410,193 +444,28 @@ msgid "<i class=\"fa fa-diamond\"/> Features"
 msgstr "<i class=\"fa fa-diamond\"/> Funkce"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-align-left\"/> Alignment"
-msgstr "<i class=\"fa fa-fw fa-align-left\"/> Zarovnání"
+#: model_terms:ir.ui.view,arch_db:website.s_rating_options
+msgid "<i class=\"fa fa-fw fa-circle\"/> Circles"
+msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-anchor\"/> Link Anchor"
-msgstr "<i class=\"fa fa-fw fa-anchor\"/> Spojovací kotva"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-arrows\"/> Background Image Sizing"
-msgstr "<i class=\"fa fa-fw fa-arrows\"/> Velikost obrázku na pozadí"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-arrows\"/> Size"
-msgstr "<i class=\"fa fa-fw fa-arrows\"/> Velikost"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-arrows-h\"/> Images spacing"
-msgstr "<i class=\"fa fa-fw fa-arrows-h\"/> Rozestupy obrázků"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-arrows-h\"/> Size"
-msgstr "<i class=\"fa fa-fw fa-arrows-h\"/> Velikost"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-arrows-h\"/> Width"
-msgstr "<i class=\"fa fa-fw fa-arrows-h\"/> Šířka"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-arrows-v\"/> Alignment"
-msgstr "<i class=\"fa fa-fw fa-arrows-v\"/> Zarovnání"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-clock-o\"/> Scroll Speed"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Rychlost posuvu"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-clock-o\"/> Slideshow speed"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Rychlost prezentace"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-clock-o\"/> Speed"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Rychlost"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-clone\"/> Transition"
-msgstr "<i class=\"fa fa-fw fa-clone\"/> Přechod"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-columns\"/> Number of columns"
-msgstr "<i class=\"fa fa-fw fa-columns\"/> Počet sloupců"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-eye-slash\"/> Transparent"
-msgstr "<i class=\"fa fa-fw fa-eye-slash\"/> Průhlednost"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-eyedropper\"/> Background Color"
-msgstr "<i class=\"fa fa-fw fa-eyedropper\"/> Barva pozadí"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-eyedropper\"/> Color"
-msgstr "<i class=\"fa fa-fw fa-eyedropper\"/> Barva"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-eyedropper\"/> Filter"
-msgstr "<i class=\"fa fa-fw fa-eyedropper\"/> Filtr"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-facebook\"/> Options"
-msgstr "<i class=\"fa fa-fw fa-facebook\"/> Možnosti"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-font\"/> Typography"
-msgstr "<i class=\"fa fa-fw fa-font\"/> Typografie"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_rating_options
 msgid "<i class=\"fa fa-fw fa-heart\"/> Hearts"
 msgstr "<i class=\"fa fa-fw fa-heart\"/> Srdce"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-magic\"/> Mode"
-msgstr "<i class=\"fa fa-fw fa-magic\"/> Režim"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-magic\"/> Style"
-msgstr "<i class=\"fa fa-fw fa-magic\"/> Styl"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-magic\"/> Styles"
-msgstr "<i class=\"fa fa-fw fa-magic\"/> Styly"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-minus\"/> Remove Tab"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-minus\"/> Thickness"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-paint-brush\"/> Styling"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-pencil\"/> Style"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-picture-o\"/> Background"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-plus\"/> Add Tab"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-plus-circle\"/> Add Slide"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-plus-circle\"/> Add images"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-refresh\"/> Re-order"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_rating_options
 msgid "<i class=\"fa fa-fw fa-square\"/> Squares"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-square\"/> Čtverce"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_rating_options
 msgid "<i class=\"fa fa-fw fa-star\"/> Stars"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-star\"/> Hvězdy"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-tasks\"/> Progress Bar"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-th\"/> Columns"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-trash\"/> Remove all images"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-fw fa-trash-o\"/> Remove Slide"
+#: model_terms:ir.ui.view,arch_db:website.s_rating_options
+msgid "<i class=\"fa fa-fw fa-thumbs-up\"/> Thumbs"
 msgstr ""
 
 #. module: website
@@ -605,6 +474,8 @@ msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-circle text-danger\"/>\n"
 "                            <span>Offline</span>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-circle text-danger\"/>\n"
+"                            <span>Offline</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
@@ -612,6 +483,8 @@ msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-circle text-success\"/>\n"
 "                            <span>Connected</span>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-circle text-success\"/>\n"
+"                            <span>Připojeno</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -619,14 +492,29 @@ msgid "<i class=\"fa fa-indent\"/> Inner content"
 msgstr "<i class=\"fa fa-indent\"/> Vnitřní obsah"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_three_columns
+#: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid ""
-"<i class=\"fa fa-info-circle mr-1\"/> <small>Additional information</small>"
-msgstr "<i class=\"fa fa-info-circle mr-1\"/> <small>Dodatečné informace</small>"
+"<i class=\"fa fa-info-circle mr-1\"/> <small>An additional "
+"information</small>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.protected_403
+msgid ""
+"<i class=\"fa fa-lock fa-2x\"/><br/>\n"
+"                            <span class=\"mt-1\">A password is required to access this page.</span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.protected_403
+msgid ""
+"<i class=\"fa fa-lock fa-2x\"/><br/>\n"
+"                            <span class=\"mt-1\">Wrong password</span>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "<i class=\"fa fa-magic icon-fix\"/> Effects"
+msgid "<i class=\"fa fa-magic icon-fix\"/> Dynamic Content"
 msgstr ""
 
 #. module: website
@@ -641,7 +529,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "<i class=\"fa fa-puzzle-piece\"/> Mega Menu"
-msgstr ""
+msgstr "<i class=\"fa fa-puzzle-piece\"/> Mega Menu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -698,7 +586,7 @@ msgstr ""
 #: code:addons/website/static/src/js/tours/banner.js:0
 #, python-format
 msgid "<p><b>Click here</b> to create a new page.</p>"
-msgstr ""
+msgstr "<p><b>Klikněte zde</b> pro vytvoření nové strany.</p>"
 
 #. module: website
 #. openerp-web
@@ -708,12 +596,22 @@ msgid ""
 "<p><b>Your homepage is live.</b></p><p>Let's add a new page for your "
 "site.</p>"
 msgstr ""
+"<p><b>Vaše stánka je živá.</b></p><p>Přidejte novou stranu do vašeho "
+"webu.</p>"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/tours/banner.js:0
 #, python-format
 msgid "<p>Enter a title for the page.</p>"
+msgstr "<p>Zadt název strany.</p>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<small class=\"text-muted\">\n"
+"                                            <i class=\"fa fa-info\"/>: type some of the first chars after 'google' is enough, we'll guess the rest.\n"
+"                                        </small>"
 msgstr ""
 
 #. module: website
@@ -722,24 +620,45 @@ msgid "<small>/ month</small>"
 msgstr "<small>/ měsíc</small>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_timeline
+msgid "<span class=\"bg-white\"><b>2015</b></span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_timeline
+msgid "<span class=\"bg-white\"><b>2018</b></span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_timeline
+msgid "<span class=\"bg-white\"><b>2019</b></span>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
 msgid ""
 "<span class=\"carousel-control-next-icon\"/>\n"
-"            <span class=\"sr-only\">Next</span>"
+"                <span class=\"sr-only\">Next</span>"
 msgstr ""
-"<span class=\"carousel-control-next-icon\"/>\n"
-"            <span class=\"sr-only\">Další</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
 msgid ""
 "<span class=\"carousel-control-prev-icon\"/>\n"
-"            <span class=\"sr-only\">Previous</span>"
+"                <span class=\"sr-only\">Previous</span>"
 msgstr ""
-"<span class=\"carousel-control-prev-icon\"/>\n"
-"            <span class=\"sr-only\">Předchozí</span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_showcase
+msgid "<span class=\"fa fa-fw fa-desktop s_showcase_icon\"/>First feature"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_showcase
+msgid "<span class=\"fa fa-heart s_showcase_icon\"/>Another feature"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -760,6 +679,11 @@ msgstr ""
 "label=\"Adresa\" title=\"Adresa\"/>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_showcase
+msgid "<span class=\"fa fa-paint-brush s_showcase_icon\"/>Second feature"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<span class=\"fa fa-pencil mr-2\"/>Edit"
 msgstr "<span class=\"fa fa-pencil mr-2\"/>Upravit"
@@ -767,6 +691,11 @@ msgstr "<span class=\"fa fa-pencil mr-2\"/>Upravit"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<span class=\"fa fa-plus mr-2\"/>New"
+msgstr "<span class=\"fa fa-plus mr-2\"/>Nový"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_showcase
+msgid "<span class=\"fa fa-sliders s_showcase_icon\"/>Last Feature"
 msgstr ""
 
 #. module: website
@@ -775,17 +704,6 @@ msgid "<span class=\"fa fa-sort fa-lg\" role=\"img\" aria-label=\"Sort\" title=\
 msgstr ""
 "<span class=\"fa fa-sort fa-lg\" role=\"img\" aria-label=\"Třídit\" "
 "title=\"Třídít\"/>"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_facebook_page
-msgid ""
-"<span class=\"o_add_facebook_page\">\n"
-"                <i class=\"fa fa-plus-circle\"/> Add Facebook Page\n"
-"            </span>"
-msgstr ""
-"<span class=\"o_add_facebook_page\">\n"
-"                <i class=\"fa fa-plus-circle\"/> Přidat Facebook Stranu\n"
-"            </span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery
@@ -797,6 +715,39 @@ msgstr ""
 "plus-circle\"/> Přidat obrázky</span>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Robots.txt</span>\n"
+"                                    <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Sitemap</span>\n"
+"                                    <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_badge
+msgid ""
+"<span class=\"s_badge badge bg-gamma o_animable\" data-name=\"Badge\">\n"
+"        <i class=\"fa fa-1x fa-fw fa-folder o_not-animable\"/>Category\n"
+"    </span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_media_list
+msgid ""
+"<span class=\"s_badge badge bg-gamma\" data-name=\"Badge\">\n"
+"                        <i class=\"fa fa-1x fa-fw fa-clock-o\"/>3 months ago\n"
+"                    </span>\n"
+"                    <span class=\"s_badge badge bg-gamma\" data-name=\"Badge\">\n"
+"                        <i class=\"fa fa-1x fa-fw fa-user\"/>by John DOE\n"
+"                    </span>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid ""
 "<span class=\"s_comparisons_currency\">$</span>\n"
@@ -828,11 +779,31 @@ msgstr ""
 "<span class=\"s_comparisons_currency\">$</span>\n"
 "                                <span class=\"s_comparisons_price\"><b>65</b></span>\n"
 "                                <span class=\"s_comparisons_decimal\">.00</span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_numbers
+msgid "<span class=\"s_number display-4 text-alpha\">12</span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_numbers
+msgid "<span class=\"s_number display-4 text-alpha\">45</span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_numbers
+msgid "<span class=\"s_number display-4 text-gamma\">37</span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_progress_bar
+msgid "<span class=\"s_progress_bar_text\">80% Development</span>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<span class=\"sr-only\">Toggle Dropdown</span>"
-msgstr ""
+msgstr "<span class=\"sr-only\">přepnout rozbalovací nabídku</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -858,10 +829,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_call_to_action
 msgid ""
 "<span>Contact us</span>\n"
-"                        <i class=\"fa fa-1x fa-fw fa-arrow-circle-right ml-1\"/>"
+"                            <i class=\"fa fa-1x fa-fw fa-arrow-circle-right ml-1\"/>"
 msgstr ""
-"<span>Kontaktujte nás</span>\n"
-"                           <i class=\"fa fa-1x fa-fw fa-arrow-circle-right ml-1\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
@@ -874,12 +843,6 @@ msgid "<span>— John DOE, CEO of <b>MyCompany</b></span>"
 msgstr "<span>— Jan Novák, ředitel společnosti <b>MojeFirma</b></span>"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.error_message
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "<strong>Error message:</strong>"
-msgstr "<strong>Chybové hlášení:</strong>"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid ""
 "A CDN helps you serve your website’s content with high availability and high"
@@ -888,6 +851,11 @@ msgstr ""
 "Služba CDN vám pomáhá poskytovat vašim webovým stránkám obsah s vysokou "
 "dostupností a vysokým výkonem pro každého návštěvníka, ať se nachází "
 "kdekoli."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart
+msgid "A Chart Title"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
@@ -921,6 +889,11 @@ msgstr ""
 "False, akce nemůže být spuštěna přes web."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_masonry_block
+msgid "A great title"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_block
 msgid ""
 "A great way to catch your reader's attention is to tell a story. "
@@ -932,8 +905,15 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__visit_count
 msgid ""
-"A new visit is considered if last connection was more than 24 hours ago."
+"A new visit is considered if last connection was more than 8 hours ago."
 msgstr ""
+"Nová návštěva se zvažuje, pokud poslední připojení bylo před více než 8 "
+"hodinami."
+
+#. module: website
+#: model:ir.model.constraint,message:website.constraint_website_visitor_partner_uniq
+msgid "A partner is linked to only one visitor."
+msgstr "Partner je spojen pouze s jedním návštěvníkem."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
@@ -941,16 +921,20 @@ msgid "A small explanation of this great <br/>feature, in clear words."
 msgstr "Malé vysvětlení této skvělé <br/>funkce, jasnými slovy."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_timeline
+msgid ""
+"A timeline is a graphical representation on which important events are "
+"marked."
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__is_connected
 msgid ""
 "A visitor is considered as connected if his last page view was within the "
 "last 5 minutes."
 msgstr ""
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__module_website_version
-msgid "A/B Testing"
-msgstr "Testování A / B"
+"Návštěvník je považován za připojeného, pokud jeho poslední zobrazení "
+"stránky bylo během posledních 5 minut."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -978,6 +962,16 @@ msgid "Access Token"
 msgstr "Přístupový token"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.protected_403
+msgid "Access to this page"
+msgstr ""
+
+#. module: website
+#: model:ir.model.constraint,message:website.constraint_website_visitor_access_token_unique
+msgid "Access token should be unique."
+msgstr "Přístupový token by měl být jedinečný."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Account &amp; Sales management"
 msgstr "Účetnictví &amp; Vedení prodeje"
@@ -988,6 +982,7 @@ msgid "Action"
 msgstr "Akce"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__active
 #: model:ir.model.fields,field_description:website.field_website_page__active
 #: model:ir.model.fields,field_description:website.field_website_rewrite__active
 #: model:ir.model.fields,field_description:website.field_website_visitor__active
@@ -996,12 +991,20 @@ msgid "Active"
 msgstr "Aktivní"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_rating_options
+msgid "Active Icon"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns
 msgid ""
 "Adapt these three columns to fit your design need. To duplicate, delete or "
 "move columns, select the column and use the top icons to perform your "
 "action."
 msgstr ""
+"Přizpůsobte tyto tři sloupce, aby vyhovovaly vašim potřebám designu. Chcete-"
+"li duplikovat, odstranit nebo přesunout sloupce, vyberte sloupec a pomocí "
+"horních ikon proveďte akci."
 
 #. module: website
 #. openerp-web
@@ -1020,21 +1023,31 @@ msgstr "Přidat funkce"
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
 #, python-format
 msgid "Add Mega Menu Item"
-msgstr ""
+msgstr "Přidat položku  Mega nabídky"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
 #, python-format
 msgid "Add Menu Item"
+msgstr "Přidat položku nabídky"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+msgid "Add Tab"
 msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/widgets/theme.js:0
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Add a Google Font"
+msgstr "Přidat  Google Font"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog_dish
+msgid "Add a description here"
 msgstr ""
 
 #. module: website
@@ -1043,11 +1056,16 @@ msgid "Add a great slogan."
 msgstr "Přidat skvělý slogan."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog
+msgid "Add a menu description"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/menu/content.js:0
 #, python-format
 msgid "Add a menu item"
-msgstr ""
+msgstr "Přidat položku nabídky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1055,9 +1073,19 @@ msgid "Add features"
 msgstr "Přidat funkce"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
+msgid "Add images"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Add links to social media on your website"
 msgstr "Přidat odkazy na sociální média na svých webových stránkách"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_process_steps
+msgid "Add to cart"
+msgstr "Přidat do košíku"
 
 #. module: website
 #. openerp-web
@@ -1068,10 +1096,31 @@ msgstr "Přidat do nabídky"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Adding a font requires a reload of the page. This will save all your "
+"changes."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid "Advertising &amp; Marketing"
+msgstr ""
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/js/tours/banner.js:0
 #, python-format
 msgid "After having checked how it looks on mobile, <b>close the preview</b>."
-msgstr ""
+msgstr "Po ověření, jak to vypadá na mobilu, <b>zavřete náhled</b>."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_hr_options
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Alignment"
+msgstr "Zarovnání"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
@@ -1090,8 +1139,18 @@ msgstr ""
 "komunitu více než tisíců vývojářů."
 
 #. module: website
+#: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__
+msgid "All"
+msgstr "Vše"
+
+#. module: website
 #: model:ir.model,name:website.model_website_route
 msgid "All Website Route"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+msgid "All pages"
 msgstr ""
 
 #. module: website
@@ -1103,7 +1162,7 @@ msgstr "Všechny tyto ikony jsou zcela zdarma pro komerční použití."
 #: model:ir.model.fields,help:website.field_ir_ui_view__track
 #: model:ir.model.fields,help:website.field_website_page__track
 msgid "Allow to specify for one page of the website to be trackable or not"
-msgstr ""
+msgstr "Určete zda bude jedna stránka webu sledovatelná nebo ne"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
@@ -1118,30 +1177,31 @@ msgstr ""
 "stránkám, pokud není výslovně uvedeno v tomto dokumentu."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.s_numbers
+msgid "Amazing pages"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
+msgid "An Other Color Block"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "An error occured while rendering the template"
 msgstr "Během vykreslování šablony došlo k chybě"
 
 #. module: website
 #: model:ir.actions.client,name:website.backend_dashboard
 #: model:ir.ui.menu,name:website.menu_website_google_analytics
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Analytics"
 msgstr "Analýza"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid ""
-"Analyze the efficiency of your marketing campaigns by using trackable UTM "
-"trackers (campaigns, medium, sources). Create trackers and follow clicks "
-"from the Promote menu of your website. Those trackers can be used in Google "
-"Analytics or in Odoo reports where you can see the opportunities and sales "
-"revenue generated thanks to your links."
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid "Analytics cookies and privacy information."
 msgstr ""
-"Analyzujte efektivitu svých marketingových kampaní pomocí sledovatelných "
-"trackerů UTM (kampaně, média, zdroje). Vytvořte trackery a postupujte podle "
-"kliknutí z nabídky Propagace svých webových stránek. Tyto sledovače lze "
-"použít v přehledech Google Analytics nebo Odoo, kde můžete vidět "
-"příležitosti a příjmy z prodeje díky svým odkazům."
 
 #. module: website
 #. openerp-web
@@ -1151,10 +1211,30 @@ msgid "Anchor name"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_masonry_block
+msgid "And a great subtitle"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
+msgid "Animate Scrolling"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
+msgid "Animated"
+msgstr ""
+
+#. module: website
 #: model:ir.actions.act_window,name:website.action_website_add_features
 #: model:ir.ui.menu,name:website.menu_website_add_features
 msgid "Apps"
 msgstr "Aplikace"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__arch
+msgid "Arch"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_db
@@ -1164,6 +1244,11 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_fs
 msgid "Arch Filename"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__arch_fs
+msgid "Arch Fs"
 msgstr ""
 
 #. module: website
@@ -1185,6 +1270,13 @@ msgid "Are you sure you want to delete this page ?"
 msgstr "Opravdu chcete tuto stránku smazat?"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.s_countdown.xml:0
+#, python-format
+msgid "As promised, we will offer 4 free tickets to our next summit."
+msgstr ""
+
+#. module: website
 #: model:ir.model,name:website.model_web_editor_assets
 msgid "Assets Utils"
 msgstr ""
@@ -1193,6 +1285,23 @@ msgstr ""
 #: model:ir.model,name:website.model_ir_attachment
 msgid "Attachment"
 msgstr "Příloha"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_theme_ir_attachment__copy_ids
+msgid "Attachment using a copy of me"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+"Authenticate users, protect user data and allow the website to deliver the services users expects,\n"
+"                                                such as maintaining the content of their cart, or allowing file uploads."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.theme_view_search
+msgid "Author"
+msgstr "Autor"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__auto_redirect_lang
@@ -1207,14 +1316,36 @@ msgid "Available on the Website"
 msgstr "K dispozici na webových stránkách"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
-msgid "Back"
-msgstr "Zpět"
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+msgid "Backdrop Color"
+msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Background"
 msgstr "Pozadí"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Background Color"
+msgstr "Barva pozadí"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Background Position"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+msgid "Bar Horizontal"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+msgid "Bar Vertical"
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_base
@@ -1227,9 +1358,24 @@ msgid "Base View Architecture"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__mode__primary
+msgid "Base view"
+msgstr "Základní pohled"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Basic sales &amp; marketing for up to 2 users"
 msgstr "Základní prodej & marketing až pro 2 uživatele"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_numbers
+msgid "Beautiful snippets"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog
+msgid "Beef Carpaccio"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -1237,29 +1383,37 @@ msgid "Beginner"
 msgstr "Začátečník"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
+msgid "Below Each Other"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+#: model_terms:ir.ui.view,arch_db:website.s_rating_options
 msgid "Big"
 msgstr "Velký"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Black"
-msgstr "Černá"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Blue"
-msgstr "Modrá"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Body"
 msgstr "Tělo"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_table_of_content
+msgid "Bootstrap based templates"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+#: model_terms:ir.ui.view,arch_db:website.snippet_options_border
 msgid "Border"
 msgstr "Rámeček"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+msgid "Border Width"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -1267,20 +1421,39 @@ msgid "Bordered"
 msgstr "Orámovaný"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Bottom"
 msgstr "Spodek"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Boxed"
 msgstr "balený"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Button"
-msgstr "Tlačítko"
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Boxes"
+msgstr "Krabice"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_table_of_content
+msgid "Building blocks system"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Buttons"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
+#, python-format
+msgid "By clicking on this banner, you give us permission to collect data."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_url
@@ -1301,14 +1474,16 @@ msgstr "CDN Filtry"
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__can_publish
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__can_publish
 msgid "Can Publish"
-msgstr ""
+msgstr "Může publikovat"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/backend/dashboard.js:0
 #: code:addons/website/static/src/js/menu/new_content.js:0
 #: code:addons/website/static/src/xml/website.xml:0
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
+#: model_terms:ir.ui.view,arch_db:website.view_edit_robots
+#: model_terms:ir.ui.view,arch_db:website.view_website_form_view_themes_modal
 #, python-format
 msgid "Cancel"
 msgstr "Zrušit"
@@ -1317,14 +1492,23 @@ msgstr "Zrušit"
 #: code:addons/website/models/res_lang.py:0
 #, python-format
 msgid "Cannot deactivate a language that is currently used on a website."
+msgstr "Nelze deaktivovat jazyk, který je aktuálně používán na webu."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.theme_view_search
+msgid "Category"
+msgstr "Kategorie"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid "Category of Cookie"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_cover
-msgid "Catchy Headline"
-msgstr "Chytlavý nadpis"
-
-#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_hr_options
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+#: model_terms:ir.ui.view,arch_db:website.s_text_highlight_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Center"
 msgstr "Střed"
@@ -1332,17 +1516,48 @@ msgstr "Střed"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Centered"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Change Cover"
-msgstr "Změnit úvodní stranu"
+msgstr "Zarovnáno na střed"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Change Icons"
 msgstr "Změnit ikony"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_text_highlight
+msgid "Change the color of this box"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_table_of_content
+msgid ""
+"Change theme in a few clicks, and browse through Odoo's catalog of\n"
+"                            ready-to-use themes available in our app store."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"Changing theme requires to leave the editor. This will save all your "
+"changes, are you sure you want to proceed?"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+msgid "Chart"
+msgstr "Graf"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog
+msgid "Cheese Onion Rings"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog
+msgid "Chefs Fresh Soup of the Day"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__field_parent
@@ -1356,9 +1571,20 @@ msgid "Child Menus"
 msgstr "Podřízená menu"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Choose a pattern"
-msgstr "Vyberte vzorek"
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog
+msgid "Chocolate Cake"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website.view_website_form_view_themes_modal
+msgid "Choose a theme"
+msgstr ""
+
+#. module: website
+#: model:ir.actions.act_window,name:website.theme_install_kanban_action
+msgid "Choose a theme for your website"
+msgstr "Vyberte téma pro vaše webové stránky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_picture
@@ -1374,37 +1600,32 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Choose an anchor name"
+msgstr "Zvolte název kotvy"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/theme_preview.xml:0
+#, python-format
+msgid "Choose another theme"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Choose an image"
-msgstr "Vyberte obrázek"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Choose the theme colors"
-msgstr "Vyberte barvy témat"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Choose your fonts"
-msgstr "Zvolte písmo"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Choose your layout"
-msgstr "Zvolte rozvržení"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Choose your navbar"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
+#: model_terms:ir.ui.view,arch_db:website.s_share_options
 msgid "Circle"
 msgstr "Kruh"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Classic"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Clean"
+msgstr "Čistý"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -1412,21 +1633,22 @@ msgid "Clever Slogan"
 msgstr "Poutavý slogan"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/customize.js:0
-#, python-format
+#: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid ""
-"Click here to choose your main branding color.<br/>It will recompute the "
-"palette with suggested matching colors."
+"Click and change content directly from the front-end: no complex back\n"
+"                            end to deal with."
 msgstr ""
-"Klikněte sem a vyberte hlavní barvu značky. <br/>Paletu znovu zkompilujete s"
-" navrhovanými odpovídajícími barvami."
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/tours/banner.js:0
 #, python-format
 msgid "Click on <b>Continue</b> to create the page."
+msgstr "Kliknutím na <b>Pokračovat</b> vytvoříte stránku."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_process_steps
+msgid "Click on the icon to adapt it <br/>to your purpose."
 msgstr ""
 
 #. module: website
@@ -1435,7 +1657,7 @@ msgstr ""
 #: code:addons/website/static/src/js/tours/banner.js:0
 #, python-format
 msgid "Click the <b>Save</b> button."
-msgstr ""
+msgstr "Klikněte na tlačítko <b>Uložit</b>"
 
 #. module: website
 #. openerp-web
@@ -1463,16 +1685,41 @@ msgstr "Klonovat tuto stránku"
 #. openerp-web
 #: code:addons/website/static/src/js/editor/wysiwyg_multizone_translate.js:0
 #: code:addons/website/static/src/xml/website.gallery.xml:0
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 #, python-format
 msgid "Close"
 msgstr "Zavřít"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Code"
+msgstr "Kód"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_alert_options
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Color"
+msgstr "Barva"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
+msgid ""
+"Color blocks are a simple and effective way to <strong>present and highlight"
+" your content</strong>. Choose an image or a color for the background. You "
+"can even resize and duplicate the blocks to create your own layout. Add "
+"images or icons to customize the blocks."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
 msgid "Colors"
 msgstr "Barvy"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
+msgid "Columns"
+msgstr "Sloupce"
 
 #. module: website
 #: model:ir.model,name:website.model_res_company
@@ -1525,11 +1772,18 @@ msgstr "Potvrzení"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/content/website_root.js:0
+#, python-format
+msgid "Congratulation"
+msgstr ""
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/js/backend/dashboard.js:0
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
 msgid "Connect Google Analytics"
-msgstr ""
+msgstr "Připojit  Google Analytics"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -1537,8 +1791,8 @@ msgid "Connect with us"
 msgstr "Spojte se s námi"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__connection_datetime
-msgid "Connection Datetime"
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_search_console
+msgid "Console Google Search"
 msgstr ""
 
 #. module: website
@@ -1548,18 +1802,17 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.404
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Contact Us"
 msgstr "Kontaktujte nás"
 
 #. module: website
+#: model:website.menu,name:website.menu_contactus
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 #: model_terms:ir.ui.view,arch_db:website.s_cover
-#: model:website.menu,name:website.menu_contactus
 #: model_terms:website.page,arch_db:website.contactus_page
 msgid "Contact us"
 msgstr "Kontaktujte nás"
@@ -1575,6 +1828,11 @@ msgstr ""
 "Budeme se snažit odpovědět vám co nejdříve."
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_robots__content
+msgid "Content"
+msgstr "Obsah"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_activated
 #: model:ir.model.fields,field_description:website.field_website__cdn_activated
 msgid "Content Delivery Network (CDN)"
@@ -1585,7 +1843,7 @@ msgstr "Content Delivery Network (CDN)"
 #: code:addons/website/static/src/xml/translator.xml:0
 #, python-format
 msgid "Content to translate"
-msgstr ""
+msgstr "Obsah k překladu"
 
 #. module: website
 #. openerp-web
@@ -1594,6 +1852,63 @@ msgstr ""
 #, python-format
 msgid "Continue"
 msgstr "Pokračovat"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_media_list
+msgid "Continue reading <i class=\"fa fa-long-arrow-right align-middle ml-1\"/>"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+#: model_terms:ir.ui.view,arch_db:website.cookies_bar
+#, python-format
+msgid "Cookie Policy"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.res_config_settings.xml:0
+#, python-format
+msgid "Cookie bars may significantly impair the experience"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__website_cookies_bar
+#: model:ir.model.fields,field_description:website.field_website__cookies_bar
+msgid "Cookies Bar"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+"Cookies are small bits of text sent by our servers to your computer or device when you access our services.\n"
+"                            They are stored in your browser and later sent back to our servers so that we can provide contextual content.\n"
+"                            Without cookies, using the web would be a much more frustrating experience.\n"
+"                            We use them to support your activities on our website. For example, your session (so you don't have to login again) or your shopping cart.\n"
+"                            <br/>\n"
+"                            Cookies are also used to help us understand your preferences based on previous or current activity on our website (the pages you have\n"
+"                            visited), your language and country, which enables us to provide you with improved services.\n"
+"                            We also use cookies to help us compile aggregate data about site traffic and site interaction so that we can offer\n"
+"                            better site experiences and tools in the future."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Copied !"
+msgstr "Zkopírováno !"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.s_countdown.xml:0
+#, python-format
+msgid "Countdown is over - Firework"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__country_id
@@ -1605,13 +1920,35 @@ msgstr "Stát"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__country_flag
 msgid "Country Flag"
-msgstr ""
+msgstr "Vlajka země"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_country_group_ids
 #: model:ir.model.fields,field_description:website.field_website__country_group_ids
 msgid "Country Groups"
 msgstr "Skupiny zemí"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.record_cover
+#: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Cover"
+msgstr "Obálka"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
+msgid "Cover Photo"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_cover_properties_mixin__cover_properties
+msgid "Cover Properties"
+msgstr "Vlastnosti Úvodní strany"
+
+#. module: website
+#: model:ir.model,name:website.model_website_cover_properties_mixin
+msgid "Cover Properties Website Mixin"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
@@ -1629,29 +1966,50 @@ msgid "Create a New Website"
 msgstr "Vytvořit novou webovou stranu"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Create a link to target this section"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_table_of_content
+msgid ""
+"Create your page from scratch by dragging and dropping pre-made,\n"
+"                            fully customizable building blocks."
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_theme_ir_attachment__create_uid
+#: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__create_uid
+#: model:ir.model.fields,field_description:website.field_theme_website_menu__create_uid
+#: model:ir.model.fields,field_description:website.field_theme_website_page__create_uid
 #: model:ir.model.fields,field_description:website.field_website__create_uid
 #: model:ir.model.fields,field_description:website.field_website_menu__create_uid
 #: model:ir.model.fields,field_description:website.field_website_page__create_uid
 #: model:ir.model.fields,field_description:website.field_website_rewrite__create_uid
+#: model:ir.model.fields,field_description:website.field_website_robots__create_uid
 #: model:ir.model.fields,field_description:website.field_website_route__create_uid
 #: model:ir.model.fields,field_description:website.field_website_visitor__create_uid
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__create_uid
 msgid "Created by"
 msgstr "Vytvořeno od"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_theme_ir_attachment__create_date
+#: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__create_date
+#: model:ir.model.fields,field_description:website.field_theme_website_menu__create_date
+#: model:ir.model.fields,field_description:website.field_theme_website_page__create_date
 #: model:ir.model.fields,field_description:website.field_website__create_date
 #: model:ir.model.fields,field_description:website.field_website_menu__create_date
 #: model:ir.model.fields,field_description:website.field_website_page__create_date
 #: model:ir.model.fields,field_description:website.field_website_rewrite__create_date
+#: model:ir.model.fields,field_description:website.field_website_robots__create_date
 #: model:ir.model.fields,field_description:website.field_website_route__create_date
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__create_date
 msgid "Created on"
 msgstr "Vytvořeno"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:0
+#: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #, python-format
 msgid "Custom"
 msgstr "Vlastní"
@@ -1668,17 +2026,24 @@ msgid "Customers"
 msgstr "Zákazníci"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_table_of_content
+msgid "Customization tool"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Customize"
 msgstr "Přizpůsobit"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/widgets/theme.js:0
-#: model_terms:ir.ui.view,arch_db:website.user_navbar
-#, python-format
-msgid "Customize Theme"
-msgstr "Přizpůsobte motiv"
+#: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
+msgid "Customize Backgrounds"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__customize_show
+msgid "Customize Show"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -1687,6 +2052,18 @@ msgstr "Přizpůsobte motiv"
 msgid ""
 "Customize any block through this menu. Try to change the background color of"
 " this block."
+msgstr ""
+"Upravte jakýkoli blok pomocí této nabídky. Zkuste změnit barvu pozadí tohoto"
+" bloku."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "D - H - M"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "D - H - M - S"
 msgstr ""
 
 #. module: website
@@ -1697,12 +2074,17 @@ msgid "DRAG BUILDING BLOCKS HERE"
 msgstr "SEM PŘESUNOUT STAVEBNÍ BLOKY"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_alert_options
+msgid "Danger"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.menu,name:website.menu_dashboard
 msgid "Dashboard"
 msgstr "Ovládací panel"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_hr_options
 msgid "Dashed"
 msgstr "Přerušovaná"
 
@@ -1750,6 +2132,11 @@ msgid "Default language code"
 msgstr "kód výchozího jazyka"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+msgid "Delay"
+msgstr "Zpoždění"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Delete Blocks"
 msgstr "Smazat bloky"
@@ -1759,7 +2146,7 @@ msgstr "Smazat bloky"
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
 #, python-format
 msgid "Delete Menu Item"
-msgstr ""
+msgstr "Smazaat položku nabídky"
 
 #. module: website
 #. openerp-web
@@ -1775,18 +2162,30 @@ msgid ""
 "Delete the above image or replace it with a picture that illustrates your "
 "message. Click on the picture to change its <em>rounded corner</em> style."
 msgstr ""
+"Odstraňte výše uvedený obrázek nebo jej nahraďte obrázkem, který ilustruje "
+"vaši zprávu. Kliknutím na obrázek můžete změnit jeho styl <em>zaoblení "
+"rohu</em>."
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Delete this font"
-msgstr ""
+msgstr "Smazat toto písmo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "Delete this page"
 msgstr "Smazat tuto stranu"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"Deleting a font requires a reload of the page. This will save all your "
+"changes and reload the page, are you sure you want to proceed?"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_references
@@ -1809,25 +2208,57 @@ msgid "Description"
 msgstr "Popis"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_tabs
-msgid "Details"
-msgstr "Podrobnosti"
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog_options
+msgid "Descriptions"
+msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_table_of_content
+msgid "Design features"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/theme_preview.xml:0
+#, python-format
+msgid "Desktop"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog
+msgid "Dessert"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+msgid "Direction"
+msgstr "Směr"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Disable autoplay"
 msgstr "Vypnout automatiské spuštění"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Disappearing"
+msgstr ""
+
+#. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/js/menu/content.js:0
 #: code:addons/website/static/src/js/menu/seo.js:0
-#: code:addons/website/static/src/js/widgets/theme.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Discard"
 msgstr "Zrušit"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_showcase
+msgid "Discover all the features"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
@@ -1835,25 +2266,61 @@ msgid "Discover more"
 msgstr "Objevte více"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Discrete"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Discussion Group"
 msgstr "Diskuzní skupina"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_share_options
+msgid "Disk"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+#: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
+msgid "Display"
+msgstr "Zobrazit"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_rating_options
+msgid "Display Inline"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_theme_ir_attachment__display_name
+#: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__display_name
+#: model:ir.model.fields,field_description:website.field_theme_utils__display_name
+#: model:ir.model.fields,field_description:website.field_theme_website_menu__display_name
+#: model:ir.model.fields,field_description:website.field_theme_website_page__display_name
 #: model:ir.model.fields,field_description:website.field_website__display_name
+#: model:ir.model.fields,field_description:website.field_website_cover_properties_mixin__display_name
 #: model:ir.model.fields,field_description:website.field_website_menu__display_name
 #: model:ir.model.fields,field_description:website.field_website_multi_mixin__display_name
 #: model:ir.model.fields,field_description:website.field_website_page__display_name
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__display_name
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__display_name
 #: model:ir.model.fields,field_description:website.field_website_rewrite__display_name
+#: model:ir.model.fields,field_description:website.field_website_robots__display_name
 #: model:ir.model.fields,field_description:website.field_website_route__display_name
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__display_name
 #: model:ir.model.fields,field_description:website.field_website_track__display_name
 #: model:ir.model.fields,field_description:website.field_website_visitor__display_name
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__display_name
 msgid "Display Name"
 msgstr "Zobrazované jméno"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_res_config_settings__website_cookies_bar
+#: model:ir.model.fields,help:website.field_website__cookies_bar
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Display a customizable cookies bar on your website."
+msgstr ""
 
 #. module: website
 #: code:addons/website/models/ir_qweb_fields.py:0
@@ -1876,9 +2343,8 @@ msgstr "Zobrazit popis webových stránek"
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_logo
 #: model:ir.model.fields,help:website.field_website__logo
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display this logo on the website."
-msgstr ""
+msgstr "Zobrazit toto logo na webu."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1917,12 +2383,12 @@ msgid "Don't forget to update all links referring to this page."
 msgstr "Nezapomeňte aktualizovat všechny odkazy odkazující na tuto stránku."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_hr_options
 msgid "Dotted"
 msgstr "Tečkovaná"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_hr_options
 msgid "Double"
 msgstr "Dvojitá"
 
@@ -1930,6 +2396,16 @@ msgstr "Dvojitá"
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Double click an icon to replace it with one of your choice."
 msgstr "Poklepáním na ikonu jej nahradíte ikonou, kterou si zvolíte."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_timeline
+msgid "Double-click an icon to change it."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+msgid "Doughnut"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -1943,21 +2419,21 @@ msgstr "Přetáhněte další blok pod úvodem do vaší stránky."
 #: code:addons/website/static/src/js/tours/banner.js:0
 #, python-format
 msgid "Drag the <i>Cover</i> block and drop it in your page."
-msgstr ""
+msgstr "Přetáhněte blok <i>Cover</i> a umístěte jej na svou stránku."
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/tours/banner.js:0
 #, python-format
 msgid "Drag the block and drop it in your new page."
-msgstr ""
+msgstr "Přetáhněte blok a umístěte  jej na novou stránku."
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
 #, python-format
 msgid "Drag to the right to get a submenu"
-msgstr ""
+msgstr "Přetažením doprava získáte podnabídku"
 
 #. module: website
 #. openerp-web
@@ -1967,14 +2443,31 @@ msgid "Dropdown menu"
 msgstr "Rozbalovací nabídka"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Due Date"
+msgstr "Termín splnění"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Duplicate"
 msgstr "Duplikovat"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_process_steps
+msgid "Duplicate blocks <br/>to add more steps."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Duplicate blocks and columns to add more features."
 msgstr "Duplikovat bloky a sloupce přidat další funkce."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_table_of_content
+msgid ""
+"Easily design your own Odoo templates thanks to clean HTML\n"
+"                            structure and bootstrap CSS."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.publish_management
@@ -1994,6 +2487,11 @@ msgstr "Upravit nabídku"
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
 #, python-format
 msgid "Edit Menu Item"
+msgstr "Upravit položku nabídky"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Edit Message"
 msgstr ""
 
 #. module: website
@@ -2025,6 +2523,11 @@ msgid "Edit my Analytics Client ID"
 msgstr "Upravit moje Analytics Client ID "
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Edit robots.txt"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
 msgid ""
 "Edit the content below this line to adapt the default \"page not found\" "
@@ -2039,6 +2542,11 @@ msgstr ""
 #, python-format
 msgid "Edit the menu"
 msgstr "Upravit nabídku"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_timeline
+msgid "Edit this text and change it with your content."
+msgstr ""
 
 #. module: website
 #: model:res.groups,name:website.group_website_designer
@@ -2062,17 +2570,24 @@ msgid "Equal height"
 msgstr "Stejná výška"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Error"
 msgstr "Chyba"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:0
-#, python-format
+#: model_terms:ir.ui.view,arch_db:website.s_media_list
+msgid "Event Heading"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 msgid "Events"
 msgstr "Události"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid "Examples"
+msgstr "Příklady"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -2085,6 +2600,13 @@ msgid ""
 "Explain the benefits you offer. <br/>Don't write about products or services "
 "here, write about solutions."
 msgstr ""
+"Vysvětlete výhody, které nabízíte. <br/>Zde nepíšete o produktech nebo "
+"službách, ale o řešeních."
+
+#. module: website
+#: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__mode__extension
+msgid "Extension View"
+msgstr "Zobrazení rozšíření"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_base_automation__xml_id
@@ -2095,13 +2617,9 @@ msgid "External ID"
 msgstr "Externí ID"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/widgets/theme.js:0
-#: code:addons/website/static/src/js/widgets/theme.js:0
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-#, python-format
-msgid "Extra Color"
-msgstr "Vlastní barva"
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Extra Colors"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -2115,13 +2633,6 @@ msgid "Facebook Account"
 msgstr "Facebook účet"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:0
-#, python-format
-msgid "Facebook Page"
-msgstr "Facebooková strana"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Fade"
 msgstr "Zeslabit"
@@ -2131,12 +2642,17 @@ msgstr "Zeslabit"
 #: code:addons/website/static/src/js/menu/new_content.js:0
 #, python-format
 msgid "Failed to install \"%s\""
+msgstr "Instalace \"%s\" se nezdařila"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog
+msgid "Farm Friendly Chicken Supreme"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Fast"
-msgstr ""
+msgstr "Rychlý"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__favicon
@@ -2178,14 +2694,29 @@ msgstr ""
 "Užitečné (tvrdé) resetování přerušených pohledů nebo čtení archivu ze souboru v režimu dev-xml."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Filter Color"
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog
+msgid "Filet Mignon 8oz"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+msgid "Fill"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+msgid "Fill and justify"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Filter"
+msgstr "Filtr"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Filter Intensity"
-msgstr ""
+msgstr "intenzita filtru"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
@@ -2195,7 +2726,7 @@ msgstr "První vlastnost"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_multi_menus
 msgid "First Menu"
-msgstr ""
+msgstr "První nabídka"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__create_date
@@ -2215,6 +2746,11 @@ msgstr "První stránka propojená s tímto pohledem"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Fit content"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Fit text"
 msgstr ""
 
@@ -2225,8 +2761,20 @@ msgstr "Pevné"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Fixed Top Menu"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Float"
 msgstr "Plovoucí"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_showcase
+msgid ""
+"Focus on what the customer would like to know, not what you want to show. "
+"Write a small explanation of this great feature"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2246,19 +2794,16 @@ msgid "Follow your website traffic in Odoo."
 msgstr "Sledovat provoz webových stránek v Odoo."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Font Size"
-msgstr "Velikost písma"
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Font"
+msgstr "Font"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Fonts"
-msgstr "Písma"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Footer"
-msgstr "Zápatí"
+#. openerp-web
+#: code:addons/website/static/src/xml/website.res_config_settings.xml:0
+#, python-format
+msgid "For session cookies, authentification and analytics*,"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -2277,6 +2822,9 @@ msgid ""
 "                                to keep his hands full by participating in the development of the software,\n"
 "                                marketing and the Customer Experience strategies."
 msgstr ""
+"Zakladatel a hlavní vizionář, Tony je hnací silou společnosti. Miluje\n"
+"podílet se na vývoji softwaru, aby si nad ním udržel plnou kontrolu,\n"
+"marketing a strategie zákaznických zkušeností."
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website__auth_signup_uninvited__b2c
@@ -2284,7 +2832,13 @@ msgid "Free sign up"
 msgstr "Přihlášení zdarma"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
+msgid "Friends' Faces"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Full"
 msgstr ""
 
@@ -2295,7 +2849,17 @@ msgstr "Celoobrazovkový režim"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Full screen"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Full-Width"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_process_steps
+msgid "Get Delivered"
 msgstr ""
 
 #. module: website
@@ -2354,6 +2918,7 @@ msgstr "Jít na Správce stran"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #, python-format
@@ -2439,15 +3004,16 @@ msgid "Google Maps API Key"
 msgstr "Google Maps API Key"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Google Plus"
-msgstr "Google Plus"
+#: model:ir.model.fields,field_description:website.field_res_config_settings__google_search_console
+#: model:ir.model.fields,field_description:website.field_website__google_search_console
+msgid "Google Search Console"
+msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__social_googleplus
-#: model:ir.model.fields,field_description:website.field_website__social_googleplus
-msgid "Google+ Account"
-msgstr "Google+ účet"
+#: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
+#: model:ir.model.fields,help:website.field_website__google_search_console
+msgid "Google key, or Enable to access first reply"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -2461,12 +3027,7 @@ msgid "Great products for great people"
 msgstr "Skvělé výrobky pro skvělé lidi"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Green"
-msgstr "Zelená"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Grid"
 msgstr "Mřížka"
 
@@ -2500,7 +3061,7 @@ msgstr "H2"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "HTML/CSS/JS Editor"
-msgstr ""
+msgstr "HTML/CSS/JS Editor"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_http
@@ -2513,6 +3074,18 @@ msgid "Half Screen"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Half screen"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.s_countdown.xml:0
+#, python-format
+msgid "Happy Odoo Anniversary!"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__header_color
 msgid "Header Color"
 msgstr "Barva záhlaví"
@@ -2520,37 +3093,42 @@ msgstr "Barva záhlaví"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__header_overlay
 msgid "Header Overlay"
+msgstr "Překryvná hlavička"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Headings"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Headings 1"
-msgstr "Nadpis 1"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Headings 2"
 msgstr "Nadpis 2"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Headings 3"
 msgstr "Nadpis 3"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Headings 4"
 msgstr "Nadpis 4"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Headings 5"
 msgstr "Nadpis 5"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Headings 6"
 msgstr "Nadpis 6"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Height"
+msgstr "Výška"
 
 #. module: website
 #. openerp-web
@@ -2560,16 +3138,21 @@ msgid "Here are the visuals used to help you translate efficiently:"
 msgstr "Zde jsou vizuály, které vám pomohou efektivně překládat:"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Hero"
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+"Here is an overview of the cookies that may be stored on your device when "
+"you visit our website:"
 msgstr ""
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:0
-#, python-format
-msgid "Hide Cover Photo"
-msgstr "Skrýt úvodní fotografii"
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+msgid "Hide For"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Hide countdown at the end"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2584,21 +3167,26 @@ msgid "High"
 msgstr "Vysoká"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
+msgid "Highlight Your Content"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid ""
 "Hint: Type '/' to search an existing page and '#' to link to an anchor."
 msgstr ""
+"Tip: Zadejte '/' pro prohledání existující stránky a '#' pro odkaz na kotvu."
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model:website.menu,name:website.menu_home
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
-#: model:website.menu,name:website.menu_home
 #, python-format
 msgid "Home"
 msgstr "Úvod"
@@ -2608,10 +3196,21 @@ msgstr "Úvod"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: model:ir.model.fields,field_description:website.field_website__homepage_id
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
-#: model_terms:ir.ui.view,arch_db:website.404
 #, python-format
 msgid "Homepage"
 msgstr "Úvodní strana"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.s_countdown.xml:0
+#, python-format
+msgid "Hopefully, we will meet you soon."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+msgid "Horizontal"
+msgstr "Horizontální"
 
 #. module: website
 #. openerp-web
@@ -2628,23 +3227,34 @@ msgid "How to get my Tracking ID"
 msgstr "Jak získat Tracking ID "
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Huge"
+#. openerp-web
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
+#: model_terms:ir.ui.view,arch_db:website.cookies_bar
+#, python-format
+msgid "I agree"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_theme_ir_attachment__id
+#: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__id
+#: model:ir.model.fields,field_description:website.field_theme_utils__id
+#: model:ir.model.fields,field_description:website.field_theme_website_menu__id
+#: model:ir.model.fields,field_description:website.field_theme_website_page__id
 #: model:ir.model.fields,field_description:website.field_website__id
+#: model:ir.model.fields,field_description:website.field_website_cover_properties_mixin__id
 #: model:ir.model.fields,field_description:website.field_website_menu__id
 #: model:ir.model.fields,field_description:website.field_website_multi_mixin__id
 #: model:ir.model.fields,field_description:website.field_website_page__id
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__id
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__id
 #: model:ir.model.fields,field_description:website.field_website_rewrite__id
+#: model:ir.model.fields,field_description:website.field_website_robots__id
 #: model:ir.model.fields,field_description:website.field_website_route__id
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__id
 #: model:ir.model.fields,field_description:website.field_website_track__id
 #: model:ir.model.fields,field_description:website.field_website_visitor__id
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__id
 msgid "ID"
 msgstr "ID"
 
@@ -2661,9 +3271,19 @@ msgid "ID of the view defined in xml file"
 msgstr "ID zobrazení definované v souboru xml"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_rating_options
 msgid "Icon"
 msgstr "Ikona"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_share_options
+msgid "Icon Layout"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_share_options
+msgid "Icon Layout Color"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__specific_user_account
@@ -2680,7 +3300,7 @@ msgstr ""
 "do sociálních sítí."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid ""
 "If this error is caused by a change of yours in the templates, you have the "
 "possibility to reset the template to its <strong>factory settings</strong>."
@@ -2720,8 +3340,14 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__partner_image
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Image"
 msgstr "Obrázek"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
+msgid "Images spacing"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
@@ -2735,6 +3361,13 @@ msgstr "V hlavní nabídce"
 msgid ""
 "In this mode, you can only translate texts. To change the structure of the page, you must edit the master page.\n"
 "        Each modification on the master page is automatically applied to all translated versions."
+msgstr ""
+"V tomto režimu můžete překládat pouze texty. Chcete-li změnit strukturu stránky, musíte upravit hlavní stránku.\n"
+"Každá změna na hlavní stránce se automaticky použije na všechny přeložené verze."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_rating_options
+msgid "Inactive Icon"
 msgstr ""
 
 #. module: website
@@ -2753,7 +3386,8 @@ msgid "Indexed"
 msgstr "Indexováno"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:ir.ui.view,arch_db:website.s_alert_options
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Info"
 msgstr "Informace"
 
@@ -2763,9 +3397,31 @@ msgid "Information about the"
 msgstr "Informace o"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__inherit_id
+msgid "Inherit"
+msgstr "Zdědit"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__inherit_id
 msgid "Inherited View"
 msgstr "Zděděný pohled"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
+msgid "Inline"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Inner"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_table_of_content
+msgid ""
+"Insert text styles like headers, bold, italic, lists and fonts with\n"
+"                            a simple WYSIWYG editor. Flexible and easy to use."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -2796,14 +3452,19 @@ msgid "Install new language"
 msgstr "Instalovt nový jazyk"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
+msgid "Installed"
+msgstr "Instalováno"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid "Installed Applications"
 msgstr "Instalované aplikace"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
-msgid "Installed Modules"
-msgstr "Nainstalované moduly"
+msgid "Installed Localizations / Account Charts"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__theme_id
@@ -2823,11 +3484,14 @@ msgid "Interact with them by sending them messages."
 msgstr ""
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:0
-#, python-format
-msgid "Invalid Facebook Page Url"
-msgstr "Neplatné URL Facebook Strany"
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid "Interaction History"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_table_of_content
+msgid "Intuitive system"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
@@ -2848,6 +3512,11 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Is Connected"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_ir_module_module__is_installed_on_current_website
+msgid "Is Installed On Current Website"
 msgstr ""
 
 #. module: website
@@ -2892,9 +3561,19 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_blockquote
+msgid "John DOE • CEO of MyCompany"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_call_to_action
 msgid "Join us and make your company a better place."
 msgstr "Přidejte se k nám a udělejte vaší firmu lepším místem."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+msgid "Justified"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2907,6 +3586,8 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_attachment__key
 #: model:ir.model.fields,field_description:website.field_mrp_document__key
+#: model:ir.model.fields,field_description:website.field_theme_ir_attachment__key
+#: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__key
 #: model:ir.model.fields,field_description:website.field_website_page__key
 msgid "Key"
 msgstr "Klíč"
@@ -2935,7 +3616,7 @@ msgstr "Jazyk"
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__lang_id
 msgid "Language from the website when visitor has been created"
-msgstr ""
+msgstr "Jazyk z webu po vytvoření návštěvníka"
 
 #. module: website
 #: model:ir.model,name:website.model_res_lang
@@ -2950,7 +3631,9 @@ msgid "Languages available on your website"
 msgstr "Jazyky dostupné na vašich webových stránkách"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_alert_options
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "Large"
 msgstr "Velký"
 
@@ -2965,28 +3648,29 @@ msgid "Last Connection"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_visitor__last_connections_ids
-msgid "Last Connections"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_multi_menus
 msgid "Last Menu"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_theme_ir_attachment____last_update
+#: model:ir.model.fields,field_description:website.field_theme_ir_ui_view____last_update
+#: model:ir.model.fields,field_description:website.field_theme_utils____last_update
+#: model:ir.model.fields,field_description:website.field_theme_website_menu____last_update
+#: model:ir.model.fields,field_description:website.field_theme_website_page____last_update
 #: model:ir.model.fields,field_description:website.field_website____last_update
+#: model:ir.model.fields,field_description:website.field_website_cover_properties_mixin____last_update
 #: model:ir.model.fields,field_description:website.field_website_menu____last_update
 #: model:ir.model.fields,field_description:website.field_website_multi_mixin____last_update
 #: model:ir.model.fields,field_description:website.field_website_page____last_update
 #: model:ir.model.fields,field_description:website.field_website_published_mixin____last_update
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin____last_update
 #: model:ir.model.fields,field_description:website.field_website_rewrite____last_update
+#: model:ir.model.fields,field_description:website.field_website_robots____last_update
 #: model:ir.model.fields,field_description:website.field_website_route____last_update
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata____last_update
 #: model:ir.model.fields,field_description:website.field_website_track____last_update
 #: model:ir.model.fields,field_description:website.field_website_visitor____last_update
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection____last_update
 msgid "Last Modified on"
 msgstr "Naposled změněno"
 
@@ -3003,24 +3687,32 @@ msgid "Last Page"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_theme_ir_attachment__write_uid
+#: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__write_uid
+#: model:ir.model.fields,field_description:website.field_theme_website_menu__write_uid
+#: model:ir.model.fields,field_description:website.field_theme_website_page__write_uid
 #: model:ir.model.fields,field_description:website.field_website__write_uid
 #: model:ir.model.fields,field_description:website.field_website_menu__write_uid
 #: model:ir.model.fields,field_description:website.field_website_page__write_uid
 #: model:ir.model.fields,field_description:website.field_website_rewrite__write_uid
+#: model:ir.model.fields,field_description:website.field_website_robots__write_uid
 #: model:ir.model.fields,field_description:website.field_website_route__write_uid
 #: model:ir.model.fields,field_description:website.field_website_visitor__write_uid
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__write_uid
 msgid "Last Updated by"
 msgstr "Naposledy upraveno od"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_theme_ir_attachment__write_date
+#: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__write_date
+#: model:ir.model.fields,field_description:website.field_theme_website_menu__write_date
+#: model:ir.model.fields,field_description:website.field_theme_website_page__write_date
 #: model:ir.model.fields,field_description:website.field_website__write_date
 #: model:ir.model.fields,field_description:website.field_website_menu__write_date
 #: model:ir.model.fields,field_description:website.field_website_page__write_date
 #: model:ir.model.fields,field_description:website.field_website_rewrite__write_date
+#: model:ir.model.fields,field_description:website.field_website_robots__write_date
 #: model:ir.model.fields,field_description:website.field_website_route__write_date
 #: model:ir.model.fields,field_description:website.field_website_visitor__write_date
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__write_date
 msgid "Last Updated on"
 msgstr "Naposled upraveno"
 
@@ -3054,17 +3746,34 @@ msgid "Last page view date"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Layout"
 msgstr "Rozvržení"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Layout Background"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Layout Background Color"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
-#: model_terms:ir.ui.view,arch_db:website.s_three_columns
 msgid "Learn more"
 msgstr "Další informace"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.options_s_timeline
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+#: model_terms:ir.ui.view,arch_db:website.s_hr_options
+#: model_terms:ir.ui.view,arch_db:website.s_share_options
+#: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+#: model_terms:ir.ui.view,arch_db:website.s_text_highlight_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Left"
 msgstr ""
@@ -3072,6 +3781,16 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menu_image_menu
 msgid "Left Menu"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+msgid "Legend"
+msgstr "Legenda"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_process_steps
+msgid "Let your customers follow <br/>and understand your process."
 msgstr ""
 
 #. module: website
@@ -3087,14 +3806,19 @@ msgid "Let's start designing."
 msgstr "Začněme úpravu designu."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.onboarding_website_theme_step
+msgid "Let's start!"
+msgstr "Začněme!"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Limited customization"
 msgstr "Omezené přizpůsobení"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Line-On-Sides"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+msgid "Line"
+msgstr "Řádek"
 
 #. module: website
 #. openerp-web
@@ -3104,12 +3828,7 @@ msgid "Link Anchor"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__module_website_links
-msgid "Link Trackers"
-msgstr ""
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_visitor__user_partner_id
+#: model:ir.model.fields,field_description:website.field_website_visitor__partner_id
 msgid "Linked Partner"
 msgstr ""
 
@@ -3130,6 +3849,11 @@ msgid "Links to other Websites"
 msgstr "Odkazy na jiné webové stránky"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
+msgid "Live Preview"
+msgstr "Okamžitý náhled"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/menu/seo.js:0
 #: code:addons/website/static/src/xml/website.background.video.xml:0
@@ -3139,17 +3863,12 @@ msgid "Loading..."
 msgstr "Načítání..."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.external_snippets
-msgid "Local Events"
-msgstr "Místní události"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Logo"
 msgstr "Logo"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Logo Height"
 msgstr ""
 
@@ -3159,13 +3878,13 @@ msgid "Low"
 msgstr "Nízké"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Main"
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Main Colors"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Main Layout"
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog
+msgid "Main Course"
 msgstr ""
 
 #. module: website
@@ -3189,26 +3908,26 @@ msgid "Manage Your Website Pages"
 msgstr "Správa webových stránek"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Manage multiple websites"
-msgstr "Správa více webových stránek"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "Manage this page"
 msgstr "Správa této stránky"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Masonry"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.404
-msgid "Maybe you were looking for one of these popular pages ?"
-msgstr "Možná jste hledali jednu z těchto oblíbených stránek?"
+#: model_terms:ir.ui.view,arch_db:website.s_media_list
+msgid "Media heading"
+msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_alert_options
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+#: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Medium"
 msgstr "Střední"
@@ -3238,6 +3957,7 @@ msgstr ""
 #. module: website
 #: code:addons/website/models/website.py:0
 #: model:ir.model.fields,field_description:website.field_website_menu__name
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "Menu"
@@ -3257,17 +3977,19 @@ msgid "Menu Label"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_theme_website_menu__copy_ids
+msgid "Menu using a copy of me"
+msgstr ""
+
+#. module: website
 #: code:addons/website/models/website.py:0
 #: model:ir.ui.menu,name:website.menu_website_menu_list
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
 #, python-format
 msgid "Menus"
 msgstr "Nabídky"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:0
-#, python-format
+#: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 msgid "Messages"
 msgstr "Zprávy"
 
@@ -3293,6 +4015,18 @@ msgid "Middle"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
+msgid "Minimalist"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/theme_preview.xml:0
+#, python-format
+msgid "Mobile"
+msgstr "mobilní"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__mobile
 msgid "Mobile Phone"
 msgstr ""
@@ -3305,6 +4039,12 @@ msgid "Mobile preview"
 msgstr "Mobilní náhled"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__mode
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
+msgid "Mode"
+msgstr "Režim"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__model
 msgid "Model"
 msgstr "Model"
@@ -3315,14 +4055,19 @@ msgid "Model Data"
 msgstr "Data modelu"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page__model_ids
-msgid "Models"
-msgstr "Modely"
-
-#. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_updated
 msgid "Modified Architecture"
 msgstr "Změněná architektura"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_module_module
+msgid "Module"
+msgstr "Modul"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Monitor Google Search results data"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -3334,22 +4079,22 @@ msgstr ""
 "podle důležitosti"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Move to first"
 msgstr "Přejít na první"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Move to last"
 msgstr "Přejít na poslední"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Move to next"
 msgstr "Přejít na další"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Move to previous"
 msgstr "Přejít na předchozí"
 
@@ -3364,11 +4109,6 @@ msgid "Multi Website Published Mixin"
 msgstr "Více publikovaných webových stránek Mixin"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Multi-Website"
-msgstr ""
-
-#. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__group_multi_website
 #: model:res.groups,name:website.group_multi_website
 msgid "Multi-website"
@@ -3380,8 +4120,16 @@ msgid "My Website"
 msgstr "Moje webová stránka"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup
+msgid "NEWCUSTOMER"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.pageProperties.xml:0
+#: model:ir.model.fields,field_description:website.field_theme_ir_attachment__name
+#: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__name
+#: model:ir.model.fields,field_description:website.field_theme_website_menu__name
 #: model:ir.model.fields,field_description:website.field_website_rewrite__name
 #: model:ir.model.fields,field_description:website.field_website_visitor__name
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
@@ -3401,9 +4149,14 @@ msgid "Narrow"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Navbar"
-msgstr "Navigační lišta"
+#: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
+msgid "Navbar position"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid "Network Advertising Initiative opt-out page"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3418,7 +4171,7 @@ msgstr "Nový příspěvek do blogu"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "New Course"
-msgstr ""
+msgstr "Nový kurz"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -3454,6 +4207,7 @@ msgid "New Product"
 msgstr "Nový produkt"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_theme_website_menu__new_window
 #: model:ir.model.fields,field_description:website.field_website_menu__new_window
 msgid "New Window"
 msgstr "Nové okno"
@@ -3467,11 +4221,6 @@ msgstr "Nová strana"
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Newsletter"
 msgstr "Newsletter"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.external_snippets
-msgid "Newsletter Block"
-msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
@@ -3490,6 +4239,18 @@ msgid "Next"
 msgstr "Další"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+msgid "No Slide Effect"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website_widget.xml:0
+#, python-format
+msgid "No Url"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "No customization"
 msgstr "Žádné úpravy"
@@ -3497,7 +4258,7 @@ msgstr "Žádné úpravy"
 #. module: website
 #: model_terms:ir.actions.act_window,help:website.website_visitor_page_action
 msgid "No page views yet for this visitor"
-msgstr ""
+msgstr "Pro tohoto návštěvníka zatím žádné zobrazení stránky"
 
 #. module: website
 #: model_terms:ir.actions.act_window,help:website.visitor_partner_action
@@ -3515,8 +4276,11 @@ msgid "No-scroll"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
+#: model_terms:ir.ui.view,arch_db:website.s_share_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "None"
 msgstr "Nic"
 
@@ -3551,11 +4315,28 @@ msgid "Not visible"
 msgstr "Neviditelný"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+"Note that some third-party services may install additional cookies on your "
+"browser in order to identify you."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid "Note: To hide this page, uncheck it from the top Customize menu."
 msgstr ""
 "Poznámka: Chcete-li tuto stránku skrýt, zrušte její zaškrtnutí v horní části"
 " nabídky Přizpůsobit."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Nothing"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Number of columns"
+msgstr "Počet sloupců"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_language_count
@@ -3565,7 +4346,7 @@ msgstr "Počet jazyků"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__visit_count
 msgid "Number of visits"
-msgstr ""
+msgstr "Počet návštěv"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns
@@ -3631,6 +4412,11 @@ msgid "Ok, never show me this again"
 msgstr "Ok, už mi to nikdy neukazuj"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+msgid "On Exit"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
@@ -3643,6 +4429,11 @@ msgid "On invitation"
 msgstr "Na pozvání"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_res_company__website_theme_onboarding_done
+msgid "Onboarding website theme step done"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid ""
 "Once the selection of available websites by domain is done, you can filter "
@@ -3650,6 +4441,13 @@ msgid ""
 msgstr ""
 "Po provedení výběru dostupných webových stránek podle domény můžete "
 "filtrovat podle skupin zemí."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+msgid ""
+"Once the user closes the popup, it won't be shown again for that period of "
+"time."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
@@ -3689,16 +4487,15 @@ msgid "Optimize SEO of this page"
 msgstr "Optimalizace SEO této stránky"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:0
-#, python-format
-msgid "Options"
-msgstr "Možnosti"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Order now"
 msgstr "Objednat teď"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup
+msgid ""
+"Order now, and get 20$ discount on your first order with the coupon:<br/>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -3731,10 +4528,16 @@ msgstr ""
 "svůj výkon."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_numbers
+msgid "Outstanding images"
+msgstr ""
+
+#. module: website
 #: code:addons/website/models/website.py:0
 #: code:addons/website/models/website.py:0
 #: model:ir.model,name:website.model_website_page
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__page_ids
+#: model:ir.model.fields,field_description:website.field_theme_website_menu__page_id
 #: model:ir.model.fields,field_description:website.field_website_page__page_ids
 #: model:ir.model.fields,field_description:website.field_website_track__page_id
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
@@ -3746,7 +4549,7 @@ msgstr "Strana"
 #: code:addons/website/models/website.py:0
 #, python-format
 msgid "Page <b>%s</b> contains a link to this page"
-msgstr ""
+msgstr "Strana <b>%s</b> obsahuje odkaz na tuto stránku"
 
 #. module: website
 #: code:addons/website/models/website.py:0
@@ -3762,6 +4565,7 @@ msgid "Page Anchor"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_theme_website_page__website_indexed
 #: model:ir.model.fields,field_description:website.field_website_page__website_indexed
 msgid "Page Indexed"
 msgstr "Strana indexována"
@@ -3795,9 +4599,9 @@ msgstr "Název stránky"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:0
 #: code:addons/website/static/src/xml/website.pageProperties.xml:0
 #: model:ir.model.fields,field_description:website.field_website_page__url
+#: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 #, python-format
 msgid "Page URL"
 msgstr "URL strany"
@@ -3810,6 +4614,11 @@ msgstr "Zobrazení stránek"
 #. module: website
 #: model:ir.actions.act_window,name:website.website_visitor_page_action
 msgid "Page Views History"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_theme_website_page__copy_ids
+msgid "Page using a copy of me"
 msgstr ""
 
 #. module: website
@@ -3828,6 +4637,11 @@ msgid "Pages"
 msgstr "Stránky"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_theme_website_menu__parent_id
+msgid "Parent"
+msgstr "Nadřazený"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__parent_id
 msgid "Parent Menu"
 msgstr "Nadřazená nabídka"
@@ -3838,9 +4652,9 @@ msgid "Parent Path"
 msgstr "Nadřazená cesta"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_website_visitor__user_partner_id
+#: model:ir.model.fields,help:website.field_website_visitor__partner_id
 msgid "Partner of the last logged in user."
-msgstr ""
+msgstr "Partner posledního přihlášeného uživatele."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__partner_id
@@ -3854,10 +4668,59 @@ msgstr "Partneři"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:0
+#: code:addons/website/static/src/xml/website.pageProperties.xml:0
 #, python-format
-msgid "Please enter valid facebook page URL for preview"
-msgstr "Zadejte platnou adresu facebookové stránky pro zobrazení náhledu"
+msgid "Password"
+msgstr "Heslo"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Pattern"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_process_steps
+msgid "Pay"
+msgstr "Zaplatit"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+msgid "Pie"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Plain"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/backend/res_config_settings.js:0
+#, python-format
+msgid "Please confirm"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Popup"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.options_s_timeline
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+#: model_terms:ir.ui.view,arch_db:website.s_text_highlight_options
+msgid "Position"
+msgstr "Pozice"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_media_list
+msgid "Post heading"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid "Preferences"
+msgstr "Předvolby"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.kanban_contain
@@ -3866,7 +4729,6 @@ msgstr "Předchozí"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:0
 #: code:addons/website/static/src/xml/website.seo.xml:0
 #, python-format
 msgid "Preview"
@@ -3888,25 +4750,15 @@ msgid "Previous View Architecture"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Primary"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.external_snippets
-msgid "Products Recently Viewed"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.external_snippets
-msgid "Products Search"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.external_snippets
-msgid "Products Search Input"
-msgstr ""
+#: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__priority
+msgid "Priority"
+msgstr "Priorita"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -3914,9 +4766,29 @@ msgid "Professional"
 msgstr "Profesionální"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_table_of_content
+msgid "Professional themes"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 msgid "Profile"
 msgstr "Profil"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Progress Bar Color"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Progress Bar Style"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Progress Bar Weight"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -3927,6 +4799,13 @@ msgstr "Propagovat"
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Promote page on the web"
 msgstr "Propagujte stránku na webu"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.pageProperties.xml:0
+#, python-format
+msgid "Public"
+msgstr "Veřejný"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__partner_id
@@ -3960,6 +4839,13 @@ msgstr "Publikováno"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/content/website_root.js:0
+#, python-format
+msgid "Published with success."
+msgstr ""
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/xml/website.pageProperties.xml:0
 #: model:ir.model.fields,field_description:website.field_website_page__date_publish
 #, python-format
@@ -3967,14 +4853,14 @@ msgid "Publishing Date"
 msgstr "Datum zveřejnění"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Purple"
-msgstr "Fialový"
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid "Purpose"
+msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "QWeb"
-msgstr "QWeb"
+#: model_terms:ir.ui.view,arch_db:website.s_text_highlight
+msgid "Put the focus on what you have to say!"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating
@@ -3989,10 +4875,20 @@ msgstr "Qweb"
 #. module: website
 #: model:ir.model,name:website.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
+msgstr "Qweb Field Contact"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+msgid "Radar"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_btn
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
+msgid "Re-order"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_media_list
 msgid "Read more"
 msgstr "Přečtěte si více"
 
@@ -4002,9 +4898,9 @@ msgid "Record Rule"
 msgstr "Pravidlo záznamu"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Red"
-msgstr "Červená"
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Redirect"
+msgstr "Přesměrování"
 
 #. module: website
 #. openerp-web
@@ -4016,7 +4912,7 @@ msgstr "Přesměrovat staré URL"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_rewrite_search
 msgid "Redirection Type"
-msgstr ""
+msgstr "Typ přesměrování"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_rewrite
@@ -4034,6 +4930,12 @@ msgid "Refresh route's list"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_media_list
+msgid "Register"
+msgstr "Registrovat"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Regular"
 msgstr "Běžný"
@@ -4041,12 +4943,12 @@ msgstr "Běžný"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_form_view
 msgid "Related Menu Items"
-msgstr ""
+msgstr "Související položky nabídky"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__menu_ids
 msgid "Related Menus"
-msgstr ""
+msgstr "Související nabídky"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__page_id
@@ -4061,6 +4963,13 @@ msgid "Related keywords"
 msgstr "Související klíčová slova"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+"Remember information about the preferred look or behavior of the website, "
+"such as your preferred language or region."
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
@@ -4068,8 +4977,18 @@ msgid "Remove"
 msgstr "Odebrat"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Remove Cover"
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+msgid "Remove Tab"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
+msgid "Remove all images"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
+msgid "Remove theme"
 msgstr ""
 
 #. module: website
@@ -4080,26 +4999,31 @@ msgid "Rename Page To:"
 msgstr "Přejmenovat stránku na:"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:0
-#, python-format
-msgid "Reset"
-msgstr "Resetovat"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
-msgid "Reset templates"
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Repeat pattern"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
+msgid "Reset templates"
+msgstr "Obnovit šablony"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Reset to initial version (hard reset)."
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
-msgid "Restore previous version (soft reset)."
+#. openerp-web
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
+#, python-format
+msgid "Respecting your privacy is our priority."
 msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
+msgid "Restore previous version (soft reset)."
+msgstr "Obnovit předchozí verzi (soft reset)."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_partner__website_id
@@ -4116,8 +5040,8 @@ msgid "Restricted Editor"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_tabs
-msgid "Review"
+#: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__restricted_group
+msgid "Restricted Group"
 msgstr ""
 
 #. module: website
@@ -4126,6 +5050,12 @@ msgid "Rewrite"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.options_s_timeline
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+#: model_terms:ir.ui.view,arch_db:website.s_hr_options
+#: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+#: model_terms:ir.ui.view,arch_db:website.s_text_highlight_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Right"
 msgstr "Vpravo"
@@ -4136,12 +5066,32 @@ msgid "Right Menu"
 msgstr ""
 
 #. module: website
+#: code:addons/website/models/res_config_settings.py:0
+#: model:ir.model.fields,field_description:website.field_website__robots_txt
+#, python-format
+msgid "Robots.txt"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_website_robots
+msgid "Robots.txt Editor"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"Robots.txt: This file tells to search engine crawlers which pages or files "
+"they can or can't request from your site.<br/>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.snippet_options_border
 msgid "Rounded"
 msgstr "Zaoblené"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Rounded corners"
 msgstr "Zaoblené rohy"
 
@@ -4150,6 +5100,11 @@ msgstr "Zaoblené rohy"
 #: model:ir.model.fields,field_description:website.field_website_route__path
 msgid "Route"
 msgstr "Pracovní postup"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "SEO"
+msgstr "SEO"
 
 #. module: website
 #: model:ir.model,name:website.model_website_seo_metadata
@@ -4172,14 +5127,59 @@ msgstr "Vzorové ikony"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/backend/dashboard.js:0
-#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/js/menu/content.js:0
 #: code:addons/website/static/src/js/menu/seo.js:0
-#: code:addons/website/static/src/js/widgets/theme.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
+#: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 #, python-format
 msgid "Save"
 msgstr "Uložit"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Save & Reload"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Save & copy"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Save the block to use it elsewhere"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_rating_options
+msgid "Score"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_ir_module_module__image_ids
+msgid "Screenshots"
+msgstr "Screenshoty"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Scroll Speed"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Scroll down button"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Scroll down to next section"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
@@ -4194,7 +5194,7 @@ msgstr "Vyhledávací menu"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_rewrite_search
 msgid "Search Redirect"
-msgstr ""
+msgstr "Hledání přesměrování"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
@@ -4210,7 +5210,7 @@ msgstr "Hledat..."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
 msgid "Second Feature"
-msgstr ""
+msgstr "Druhá funkce"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_multi_menus
@@ -4223,8 +5223,8 @@ msgid "Second list of Features"
 msgstr "Druhý seznam funkcí"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "Secondary"
 msgstr ""
 
@@ -4238,7 +5238,12 @@ msgstr ""
 #: code:addons/website/static/src/js/menu/content.js:0
 #, python-format
 msgid "Select a Menu"
-msgstr ""
+msgstr "Vyberte nabídku"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.onboarding_website_theme_step
+msgid "Select a theme for your website."
+msgstr "Vyberte téma pro vaše webové stránky."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -4251,6 +5256,11 @@ msgstr ""
 #, python-format
 msgid "Select an image for social share"
 msgstr "Vybrat obrázek pro sdílení na sociálních sítích"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_process_steps
+msgid "Select and delete blocks <br/>to remove some steps."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -4282,6 +5292,12 @@ msgid "Send us an email"
 msgstr "Pošlete nám email"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog_options
+msgid "Separator"
+msgstr "Oddělovač"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_theme_website_menu__sequence
 #: model:ir.model.fields,field_description:website.field_website_menu__sequence
 #: model:ir.model.fields,field_description:website.field_website_page__priority
 #: model:ir.model.fields,field_description:website.field_website_rewrite__sequence
@@ -4292,6 +5308,11 @@ msgstr "Číselná řada"
 #: model:ir.model,name:website.model_ir_actions_server
 msgid "Server Action"
 msgstr "Akce serveru"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid "Session &amp; Security"
+msgstr ""
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_configuration
@@ -4310,7 +5331,7 @@ msgid "Shadow"
 msgstr "Stín"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Shadows"
 msgstr "Stíny"
 
@@ -4318,11 +5339,6 @@ msgstr "Stíny"
 #: model_terms:ir.ui.view,arch_db:website.s_share
 msgid "Share"
 msgstr "Sdílet"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_tabs
-msgid "Shipping"
-msgstr "Doprava"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__auto_redirect_lang
@@ -4336,10 +5352,13 @@ msgid "Show As Optional Inherit"
 msgstr "Zobrazit jako volitelně zděděné"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:0
-#, python-format
-msgid "Show Friend's Faces"
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Show Message"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Show Sign In"
 msgstr ""
 
 #. module: website
@@ -4350,6 +5369,36 @@ msgid "Show in Top Menu"
 msgstr "Zobrazit v horním menu"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+msgid "Show on"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_process_steps
+msgid "Sign in"
+msgstr "Přihlásit"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.pageProperties.xml:0
+#: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__connected
+#, python-format
+msgid "Signed In"
+msgstr "Zapsán"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"Sitemap.xml: Help search engine crawlers to find out what pages are present "
+"and which have recently changed, and to crawl your site accordingly. This "
+"file is automatically generated by Odoo."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_alert_options
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+#: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Size"
 msgstr "Velikost"
@@ -4360,6 +5409,26 @@ msgid "Slide"
 msgstr "Prezentace"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+msgid "Slide Down"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+msgid "Slide Left"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+msgid "Slide Right"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+msgid "Slide Up"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.gallery.xml:0
 #, python-format
@@ -4367,9 +5436,14 @@ msgid "Slide image"
 msgstr "stránka prezentace"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Slideshow"
 msgstr "Slideshow"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
+msgid "Slideshow speed"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4377,14 +5451,19 @@ msgid "Slow"
 msgstr "Zobrazit"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_alert_options
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+#: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Small"
 msgstr "Malý"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Small Caps"
-msgstr "Malá písmena"
+#: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
+msgid "Small Header"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -4399,13 +5478,15 @@ msgid "Social Preview"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_hr_options
 msgid "Solid"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.400
-msgid "Something went wrong."
+#. openerp-web
+#: code:addons/website/static/src/xml/website.pageProperties.xml:0
+#, python-format
+msgid "Some Users"
 msgstr ""
 
 #. module: website
@@ -4421,15 +5502,40 @@ msgid "Sort by Url"
 msgstr "Seřadit podle URL"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__specific_user_account
-#: model:ir.model.fields,field_description:website.field_website__specific_user_account
-msgid "Specific User Account"
+#: model_terms:ir.ui.view,arch_db:website.s_media_list
+msgid ""
+"Speakers from all over the world will join our experts to give inspiring "
+"talks on various topics."
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__specific_user_account
+#: model:ir.model.fields,field_description:website.field_website__specific_user_account
+msgid "Specific User Account"
+msgstr "Konkrétní uživatelský účet"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Speed"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
+#: model_terms:ir.ui.view,arch_db:website.s_share_options
 msgid "Square"
 msgstr "Čtvercový"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+msgid "Stacked"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/theme_preview.xml:0
+#, python-format
+msgid "Start Now"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -4445,12 +5551,17 @@ msgstr "Začněte s klientem – zjistěte, co chce, a dejte mu to."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 msgid "Start your journey"
+msgstr "Začněte svou cestu"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog
+msgid "Starter"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Status"
-msgstr "Stav"
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Status Colors"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -4460,14 +5571,62 @@ msgid "Stay on this page"
 msgstr "Zůstat na této straně"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_carousel
-msgid "Storytelling is powerful.<br/> It draws readers in and engages them."
+#: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
+msgid "Sticky"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog
+msgid "Sticky Toffee Pudding"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel
+msgid "Storytelling is powerful.<br/> It draws readers in and engages them."
+msgstr "Vyprávění je mocné.<br/> Přitahuje čtenáře a zapojuje je."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
+msgid "Striped"
+msgstr "Pruhovaný"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_hr_options
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Style"
+msgstr "Styl"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
+msgid "Styling"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Sub-Headings"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Submit sitemap to Google"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_alert_options
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Success"
 msgstr "Úspěch"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Surrounded"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Switch Theme"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -4475,15 +5634,13 @@ msgid "TRANSLATE"
 msgstr "PŘELOŽIT"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:0
-#, python-format
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Tabs"
 msgstr "Záložky"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.400
-msgid "Take a look at the error message below."
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+msgid "Tabs color"
 msgstr ""
 
 #. module: website
@@ -4525,7 +5682,7 @@ msgid "Template <b>%s (id:%s)</b> is calling this file"
 msgstr "Šablona <b>%s (id:%s)</b> volá tento soubor"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Template fallback"
 msgstr ""
 
@@ -4542,7 +5699,12 @@ msgid "Terms of service"
 msgstr "Podmínky služby"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
+#: model_terms:ir.ui.view,arch_db:website.view_edit_robots
+msgid "Test your robots.txt with Google Search Console"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Text"
 msgstr "Text"
 
@@ -4552,8 +5714,24 @@ msgid "Text Alignment"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+msgid "Text Color"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_text_highlight
+msgid "Text Highlight"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Text Inline"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Text Size"
+msgid "Texts"
 msgstr ""
 
 #. module: website
@@ -4564,17 +5742,17 @@ msgstr "Zadané Client ID nebo klíč Google Analytics se zdá být nesprávné.
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:0
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
-msgid "The chosen name already exists"
+msgid "The anchor has been copied to your clipboard.<br>Link: %s"
 msgstr ""
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
-msgid "The chosen name is not valid (use only a-Z A-Z 0-9 - _)"
-msgstr ""
+msgid "The chosen name already exists"
+msgstr "Vybrané jméno již existuje"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -4604,9 +5782,11 @@ msgstr ""
 "jej nezadáte."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "The error occured while rendering the template"
-msgstr "Při vykreslování šablony došlo k chybě"
+#. openerp-web
+#: code:addons/website/static/src/xml/website.s_countdown.xml:0
+#, python-format
+msgid "The following message will become visible"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_partner__website_url
@@ -4637,25 +5817,12 @@ msgstr "Instalace aplikace již probíhá."
 #: code:addons/website/static/src/xml/website.seo.xml:0
 #, python-format
 msgid "The language of the keyword and related keywords."
-msgstr ""
+msgstr "Jazyk klíčového slova a souvisejících klíčových slov."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.403
-msgid "The page you were looking for could not be authorized."
-msgstr "Stránka, kterou jste hledali, nemohla být schválena."
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.404
-msgid ""
-"The page you were looking for could not be found; it is possible you have\n"
-"                        typed the address incorrectly, but it has most probably been removed due\n"
-"                        to the recent website reorganisation."
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "The selected templates will be reset to their factory settings."
-msgstr ""
+msgstr "Vybrané šablony budou obnoveny na tovární nastavení."
 
 #. module: website
 #. openerp-web
@@ -4665,9 +5832,51 @@ msgid "The title will take a default value unless you specify one."
 msgstr "Titul přijme výchozí hodnotu, pokud ji nezadáte."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+"The website will not work properly if you reject or discard those cookies."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid "The website will still work if you reject or discard those cookies."
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website__theme_id
+#: model_terms:ir.ui.view,arch_db:website.snippets
+#: model_terms:ir.ui.view,arch_db:website.theme_view_search
 msgid "Theme"
 msgstr "Téma"
+
+#. module: website
+#: model:ir.model,name:website.model_theme_ir_attachment
+msgid "Theme Attachments"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_ir_attachment__theme_template_id
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__theme_template_id
+#: model:ir.model.fields,field_description:website.field_mrp_document__theme_template_id
+#: model:ir.model.fields,field_description:website.field_website_menu__theme_template_id
+#: model:ir.model.fields,field_description:website.field_website_page__theme_template_id
+msgid "Theme Template"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_theme_ir_ui_view
+msgid "Theme UI View"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_theme_utils
+msgid "Theme Utils"
+msgstr "Téma Utils"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
+msgid "Theme preview"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
@@ -4692,6 +5901,7 @@ msgstr ""
 msgid ""
 "There is no website available for this company. You could create a new one."
 msgstr ""
+"Pro tuto společnost není k dispozici žádný web. Mohli byste vytvořit nový."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
@@ -4709,7 +5919,17 @@ msgstr ""
 " (souhrnně „Webové stránky“ nebo „Služby“)."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Thick"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_hr_options
+msgid "Thickness"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Thin"
 msgstr ""
 
@@ -4721,6 +5941,20 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_multi_menus
 msgid "Third Menu"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
+msgid "This Is a Color Block"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"This change needs to reload the page, this will save all your changes and "
+"reload the page, are you sure you want to proceed?"
 msgstr ""
 
 #. module: website
@@ -4766,6 +6000,13 @@ msgid ""
 "This is a simple hero unit, a simple jumbotron-style component <br/>for "
 "calling extra attention to featured content or information."
 msgstr ""
+"Jedná se o jednoduchou oznamovací jednotku, jednoduchou komponentu ve stylu "
+"jumbotronu,<br/> která upozorňuje na obsah nebo informace."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+msgid "This page"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
@@ -4787,7 +6028,7 @@ msgid "This page will be visible on {{ date_formatted }}"
 msgstr "Tato stránka bude vidět {{date_formatted}}"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Thumbnails"
 msgstr "Miniatury"
 
@@ -4798,8 +6039,13 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:0
+#: code:addons/website/static/src/xml/website.s_countdown.xml:0
 #, python-format
+msgid "Time's up! You can now visit"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 msgid "Timeline"
 msgstr "Časová osa"
 
@@ -4809,17 +6055,16 @@ msgid "Timezone"
 msgstr "Časové pásmo"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Tiny"
-msgstr ""
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:0
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
 #, python-format
 msgid "Title"
 msgstr "Název"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_share_options
+msgid "Title Position"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns
@@ -4849,6 +6094,14 @@ msgid "Tony Fred, CEO"
 msgstr "Tony Fred, CEO"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+msgid "Tooltip"
+msgstr "Kontextová nápověda"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
+#: model_terms:ir.ui.view,arch_db:website.s_share_options
+#: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Top"
 msgstr "Nahoru"
@@ -4877,19 +6130,9 @@ msgid "Total number of visits on tracked pages"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "Traceback"
-msgstr ""
-
-#. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__track
 #: model:ir.model.fields,field_description:website.field_website_page__track
 msgid "Track"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Track clicks on UTM links"
 msgstr ""
 
 #. module: website
@@ -4922,6 +6165,12 @@ msgid "Transform the picture (click twice to reset transformation)"
 msgstr "Transformovat obrázek (dvakrát klikněte pro reset transformace)"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Transition"
+msgstr "Přechod"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/wysiwyg_multizone_translate.js:0
 #, python-format
@@ -4944,8 +6193,18 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Transparent"
-msgstr "Průhledný"
+msgid "Transparent color"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Transparent on this page"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_product_catalog
+msgid "Tuna and Salmon Burger"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -4971,12 +6230,15 @@ msgstr ""
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.pageProperties.xml:0
+#: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__type
+#: model_terms:ir.ui.view,arch_db:website.s_alert_options
+#: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #, python-format
 msgid "Type"
 msgstr "Typ"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid ""
 "Type '<i class=\"confirm_word\">yes</i>' in the box below if you want to "
 "confirm."
@@ -5003,6 +6265,11 @@ msgid "UA-XXXXXXXX-Y"
 msgstr "UA-XXXXXXXX-Y"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "URL"
+msgstr "URL"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_from
 #: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
 msgid "URL from"
@@ -5020,19 +6287,21 @@ msgid "URL to"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Underlined"
-msgstr "Podtrženo"
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+"Understand how visitors engage with our website, via Google Analytics.\n"
+"                                                Learn more about"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.index_management
 msgid "Unindexed"
-msgstr ""
+msgstr "Neindexované"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Unlimited CRM power and support"
-msgstr ""
+msgstr "Neomezený výkon a podpora CRM"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -5044,7 +6313,7 @@ msgstr "Neomezené přizpůsobení"
 #: code:addons/website/static/src/js/backend/button.js:0
 #, python-format
 msgid "Unpublish"
-msgstr ""
+msgstr "Zneveřejnit"
 
 #. module: website
 #. openerp-web
@@ -5057,6 +6326,14 @@ msgid "Unpublished"
 msgstr "Nepublikovaný"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
+msgid "Update theme"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_theme_ir_attachment__url
+#: model:ir.model.fields,field_description:website.field_theme_website_menu__url
+#: model:ir.model.fields,field_description:website.field_theme_website_page__url
 #: model:ir.model.fields,field_description:website.field_website_menu__url
 #: model:ir.model.fields,field_description:website.field_website_track__url
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
@@ -5075,15 +6352,13 @@ msgid "Use Google Map on your website ("
 msgstr "Použijte mapu Google na svých webových stránkách ("
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:0
-#, python-format
-msgid "Use Small Header"
-msgstr "Použít Malé záhlaví"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Use a CDN to optimize the availability of your website's content"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_default_share_image
+msgid "Use a image by default for sharing"
 msgstr ""
 
 #. module: website
@@ -5099,10 +6374,37 @@ msgid "Use of Cookies"
 msgstr "Použít Cookies"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_media_list
+msgid ""
+"Use this component for creating a list of featured elements to which you "
+"want to bring attention."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_media_list
+msgid ""
+"Use this snippet to build various types of components that feature a left- "
+"or right-aligned image alongside textual content. Duplicate the element to "
+"create a list that fit your needs."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 msgid ""
 "Use this snippet to presents your content in a slideshow-like format.<br/> "
 "Don't write about products or services here, write about solutions."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
+msgid "Use this theme"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_timeline
+msgid ""
+"Use this timeline as a part of your resume, to show your visitors what "
+"you've done in the past."
 msgstr ""
 
 #. module: website
@@ -5141,10 +6443,22 @@ msgid "Used in page title"
 msgstr "Používá se v názvu stránky"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+"Used to make advertising more engaging to users and more valuable to publishers and advertisers,\n"
+"                                                such as providing more relevant ads when you visit other websites that display ads or to improve reporting on ad campaign performance."
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_country_group_ids
 #: model:ir.model.fields,help:website.field_website__country_group_ids
 msgid "Used when multiple websites have the same domain."
 msgstr "Používá se, když má více webů stejnou doménu."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_numbers
+msgid "Useful options"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_menu__group_ids
@@ -5152,23 +6466,21 @@ msgid "User need to be at least in one of these groups to see the menu"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.robots
-msgid ""
-"User-agent: *\n"
-"Sitemap:"
-msgstr ""
-"User-agent: *\n"
-"Sitemap:"
-
-#. module: website
 #: model:ir.model,name:website.model_res_users
 msgid "Users"
 msgstr "Uživatelé"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Value"
-msgstr "Hodnota"
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+"Users to collect information about your interactions with the website, the pages you've seen,\n"
+"                                                and any specific marketing campaign that brought you to the website."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+msgid "Vertical"
+msgstr "Vertikální"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5182,6 +6494,7 @@ msgstr "Velmi pomalé"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_ui_view
+#: model:ir.model.fields,field_description:website.field_theme_website_page__view_id
 #: model:ir.model.fields,field_description:website.field_website_page__view_id
 msgid "View"
 msgstr "Pohled"
@@ -5207,15 +6520,46 @@ msgid "View inheritance mode"
 msgstr "Zobrazit režim dědičnosti"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_product_list
+msgid "View item"
+msgstr ""
+
+#. module: website
 #: model:ir.actions.act_window,name:website.website_visitor_view_action
 #: model:ir.ui.menu,name:website.menu_visitor_view_menu
 msgid "Views"
 msgstr "Zobrazení"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__copy_ids
+msgid "Views using a copy of me"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__inherit_children_ids
 msgid "Views which inherit from this one"
 msgstr "Zobrazení, které se z tohoto dědí"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.pageProperties.xml:0
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__visibility
+#: model:ir.model.fields,field_description:website.field_website_page__visibility
+#, python-format
+msgid "Visibility"
+msgstr "Viditelnost"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__visibility_group
+#: model:ir.model.fields,field_description:website.field_website_page__visibility_group
+msgid "Visibility Group"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__visibility_password
+#: model:ir.model.fields,field_description:website.field_website_page__visibility_password
+msgid "Visibility Password"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
@@ -5242,11 +6586,18 @@ msgid "Visit Date"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.s_countdown.xml:0
+#, python-format
+msgid "Visit our facebook page to know if you are one of the lucky winners."
+msgstr ""
+
+#. module: website
 #: model:ir.model,name:website.model_website_track
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_ids
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Visited Pages"
-msgstr ""
+msgstr "Navštívené stránky"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__website_track_ids
@@ -5255,7 +6606,6 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_track__visitor_id
-#: model:ir.model.fields,field_description:website.field_website_visitor_lastconnection__visitor_id
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Visitor"
@@ -5295,7 +6645,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_graph
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Visitors"
-msgstr ""
+msgstr "Návštěvníci"
 
 #. module: website
 #. openerp-web
@@ -5316,12 +6666,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:website.website_visitors_action
 msgid "Wait for visitors to come to your website to see their history."
 msgstr ""
+"Počkejte, až návštěvníci navštíví vaše webové stránky a uvidí jejich "
+"historii."
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:0
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-#, python-format
+#: model_terms:ir.ui.view,arch_db:website.s_alert_options
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Warning"
 msgstr "Varování"
 
@@ -5347,21 +6697,58 @@ msgstr ""
 "život prostřednictvím vzrušujících produktů. Stavíme skvělé produkty k řešení vašich obchodních problémů."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_progress_bar
+msgid "We are almost done!"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+"We do not currently support Do Not Track signals, as there is no industry "
+"standard for compliance."
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.xml:0
 #, python-format
 msgid "We found these ones:"
+msgstr "Našli jsme tyto:"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+"We may not be able to provide the best service to you if you reject those "
+"cookies, but the website will work."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
+#: model_terms:ir.ui.view,arch_db:website.cookies_bar
+#, python-format
+msgid "We use cookies to provide you a better user experience."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
+#, python-format
+msgid ""
+"We use them to store info about your habits on our website. It will helps us"
+" to provide you the very best experience and customize what you see."
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_tree
 msgid "Web Visitors"
-msgstr ""
+msgstr "Weboví návštěvníci"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #: model:ir.actions.act_url,name:website.action_website
+#: model:ir.actions.act_url,name:website.theme_install_act_url
 #: model:ir.model,name:website.model_website
 #: model:ir.model.fields,field_description:website.field_ir_attachment__website_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_id
@@ -5398,8 +6785,11 @@ msgid "Website Favicon"
 msgstr "Favicon webové strany"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_logo
 #: model:ir.model.fields,field_description:website.field_website__logo
+#, python-format
 msgid "Website Logo"
 msgstr ""
 
@@ -5412,7 +6802,7 @@ msgstr "Menu webové strany"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_menus_form_view
 msgid "Website Menus Settings"
-msgstr ""
+msgstr "Nastavení nabídek webových stránek"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_name
@@ -5456,6 +6846,21 @@ msgid "Website Settings"
 msgstr "Nastavení webových stránek"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.onboarding_website_theme_step
+msgid "Website Theme"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_theme_website_menu
+msgid "Website Theme Menu"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_theme_website_page
+msgid "Website Theme Page"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Website Title"
 msgstr "Název webu"
@@ -5482,7 +6887,7 @@ msgstr "URL stránky"
 #: model:ir.model,name:website.model_website_visitor
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
 msgid "Website Visitor"
-msgstr ""
+msgstr "Návštěvník webu"
 
 #. module: website
 #: code:addons/website/models/website_visitor.py:0
@@ -5495,7 +6900,7 @@ msgstr ""
 #: model:ir.cron,cron_name:website.website_visitor_cron
 #: model:ir.cron,name:website.website_visitor_cron
 msgid "Website Visitor : Archive old visitors"
-msgstr ""
+msgstr "Webový návštěvník: Archivovat staré návštěvníky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
@@ -5511,7 +6916,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_tree
 msgid "Website menu"
-msgstr ""
+msgstr "Nabídka webových stránek"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_description
@@ -5589,17 +6994,35 @@ msgid "What do you want to do?"
 msgstr "Co chcete dělat?"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "White"
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "What should happen at the end?"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_table_of_content
+msgid "What you see is what you get"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_hr_options
+#: model_terms:ir.ui.view,arch_db:website.snippet_options
+msgid "Width"
+msgstr "Šířka"
+
+#. module: website
+#: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__password
+msgid "With Password"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_blockquote
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
-#: model_terms:ir.ui.view,arch_db:website.s_tabs
 msgid ""
 "Write a quote here from one of your customers. Quotes are a great way to "
 "build confidence in your products or services."
 msgstr ""
+"Sem napište poznámku od jednoho z vašich zákazníků. Poznámky jsou skvělý "
+"způsob, jak vybudovat důvěru ve vaše produkty nebo služby."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
@@ -5624,11 +7047,6 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Yellow"
-msgstr "Žlutý"
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/translator.xml:0
 #, python-format
@@ -5636,9 +7054,21 @@ msgid "You are about to enter the translation mode."
 msgstr "Chystáte se vstoupit do režimu překladu."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+"You can choose to have your computer warn you each time a cookie is being sent, or you can choose to turn off all cookies.\n"
+"                            Each browser is a little different, so look at your browser's Help menu to learn the correct way to modify your cookies."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "You can edit colors and background to highlight features."
 msgstr "Můžete upravit barvu a pozadí pro zdůraznění"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_timeline
+msgid "You can edit, duplicate..."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -5650,7 +7080,9 @@ msgstr ""
 "skupinu zemí vybrat, které webové stránky použít."
 
 #. module: website
+#: code:addons/website/models/res_users.py:0
 #: model:ir.model.constraint,message:website.constraint_res_users_login_key
+#, python-format
 msgid "You can not have two users with the same login!"
 msgstr "Nemůžete mít dva uživatele se stejným přihlašovacím jménem!"
 
@@ -5664,7 +7096,7 @@ msgstr "Nemáte dostatečná práva k provedení této akce."
 #: code:addons/website/models/mixins.py:0
 #, python-format
 msgid "You do not have the rights to publish/unpublish"
-msgstr ""
+msgstr "Nemáte oprávnění ke zveřejnění / zneveřejnění"
 
 #. module: website
 #. openerp-web
@@ -5685,6 +7117,17 @@ msgstr ""
 "vyhledávači."
 
 #. module: website
+#: code:addons/website/models/res_config_settings.py:0
+#, python-format
+msgid "You haven't defined your domain"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid "You may opt-out of a third-party's use of cookies by visiting the"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
@@ -5697,6 +7140,17 @@ msgid ""
 "You should carefully review the legal statements and other conditions of use"
 " of any website which you access through a link from this Website. Your "
 "linking to any other off-site pages or other websites is at your own risk."
+msgstr ""
+"Měli byste pečlivě zkontrolovat právní prohlášení a další podmínky používání"
+" jakéhokoli webu, ke kterému přistupujete prostřednictvím odkazu z tohoto "
+"webu. Váš odkaz na jakékoli jiné stránky mimo web nebo jiné webové stránky "
+"je na vaše vlastní riziko."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/content/website_root.js:0
+#, python-format
+msgid "You've published your %s."
 msgstr ""
 
 #. module: website
@@ -5723,7 +7177,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Your current changes will be saved automatically."
-msgstr ""
+msgstr "Vaše aktuální změny budou automaticky uloženy."
 
 #. module: website
 #. openerp-web
@@ -5740,15 +7194,43 @@ msgid "Your description looks too short."
 msgstr "Váš popis vypadá příliš krátce."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+"Your experience may be degraded if you discard those cookies, but the "
+"website will still work."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
 msgid "Your search '"
 msgstr "vaše hledání '"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_timeline
+msgid "Your title"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_youtube
 #: model:ir.model.fields,field_description:website.field_website__social_youtube
 msgid "Youtube Account"
 msgstr "Youtube účet"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+"__gads (Google)<br/>\n"
+"                                            __gac (Google)"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+"_ga (Google)<br/>\n"
+"                                            _gat (Google)<br/>\n"
+"                                            _gid (Google)<br/>\n"
+"                                            _gac_* (Google)"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -5758,9 +7240,9 @@ msgid "and copy paste the embed code here."
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.http_error_debug
-msgid "and evaluating the following expression:"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+msgid "days"
+msgstr "dnů"
 
 #. module: website
 #. openerp-web
@@ -5776,6 +7258,13 @@ msgstr "Ovládací panel e-shopu"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "edit"
+msgstr "upravit"
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "fonts.google.com"
@@ -5786,7 +7275,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.xml:0
 #, python-format
 msgid "found(s)"
-msgstr ""
+msgstr "nalezen(i)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.brand_promotion
@@ -5794,14 +7283,63 @@ msgid "free website"
 msgstr "webové stránky zdarma "
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid "frontend_lang (Odoo)"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "google1234567890123456.html"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+"im_livechat_previous_operator_pid (Odoo)<br/>\n"
+"                                            utm_campaign (Odoo)<br/>\n"
+"                                            utm_source (Odoo)<br/>\n"
+"                                            utm_medium (Odoo)"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid "instance of Odoo, the"
 msgstr "instance Odoo,"
 
 #. module: website
+#: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__inherit_id__ir_ui_view
+msgid "ir.ui.view"
+msgstr "ir.ui.view"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 msgid "name"
 msgstr "name"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.res_config_settings.xml:0
+#, python-format
+msgid ""
+"of\n"
+"            your visitors. We recommend you avoid them unless you have\n"
+"            verified with a legal advisor that you absolutely need cookie\n"
+"            consent in your country."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.s_countdown.xml:0
+#, python-format
+msgid "once the countdown ends."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.s_countdown.xml:0
+#, python-format
+msgid "only"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -5811,12 +7349,19 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "page, snippets, ...)"
+msgstr "stránka, úryvky, ...)"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.theme_view_form_preview
+msgid "phone"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "px"
-msgstr "px"
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+"session_id (Odoo)<br/>\n"
+"                                            fileToken (Odoo)"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -5826,14 +7371,16 @@ msgid "signs to get your website ready in no time."
 msgstr "znamení, že vaše webové stránky budou okamžitě připraveny."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.robots
-msgid "sitemap.xml"
-msgstr "sitemap.xml"
+#: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__inherit_id__theme_ir_ui_view
+msgid "theme.ir.ui.view"
+msgstr "theme.ir.ui.view"
 
 #. module: website
-#: model:ir.model,name:website.model_website_visitor_lastconnection
-msgid "temporary table for Visitor"
-msgstr ""
+#. openerp-web
+#: code:addons/website/static/src/xml/website.s_countdown.xml:0
+#, python-format
+msgid "this page"
+msgstr "tato strana"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
@@ -5842,7 +7389,6 @@ msgstr "url"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_id
-#: model_terms:ir.ui.view,arch_db:website.brand_promotion
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 msgid "website"
 msgstr "webová stránka"
@@ -5853,11 +7399,13 @@ msgid "www.odoo.com"
 msgstr "www.odoo.com"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.500
+#: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "yes"
 msgstr "ano"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_tabs
-msgid "— Jane DOE, CEO of <b>MyCompany</b>"
-msgstr "— Jana Nováková, ředitelka <b>MojeFirma</b>"
+#. openerp-web
+#: code:addons/website/static/src/xml/website.res_config_settings.xml:0
+#, python-format
+msgid "you do not need to ask for the consent"
+msgstr ""

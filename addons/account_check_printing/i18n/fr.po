@@ -3,19 +3,30 @@
 # 	* account_check_printing
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Benedicte HANET <hanetb@gmail.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Clo <clo@odoo.com>, 2016
+# Florent de Labarre <florent@iguanayachts.com>, 2017
+# Laura Piraux <lap@odoo.com>, 2017
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
+# Fabien Pinckaers <fp@openerp.com>, 2018
+# Richard Mathot <rim@odoo.com>, 2018
+# Stéphane GUILLY <stephane.guilly@laposte.net>, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
+# Marie Willemyns <mwi@odoo.com>, 2019
 # Rémi CAZENAVE <remi@le-filament.com>, 2019
+# Martin Trigaux, 2019
 # Guillaume Piens <gup@odoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
-# thomas quertinmont <tqu@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: thomas quertinmont <tqu@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-02-13 07:24+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,11 +50,6 @@ msgstr "Un mémo de chèque ne peut dépasser 60 caractères."
 #: model:ir.model,name:account_check_printing.model_account_chart_template
 msgid "Account Chart Template"
 msgstr "Modèle de plan comptable"
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_reconciliation_widget
-msgid "Account Reconciliation widget"
-msgstr "outil de réconciliation de compte"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -84,6 +90,11 @@ msgstr "Marge de gauche du chèque"
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_number
 msgid "Check Number"
 msgstr "Numéro de chèque"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_number_int
+msgid "Check Number Integer"
+msgstr ""
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
@@ -153,7 +164,7 @@ msgstr "Sociétés"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__country_code
 msgid "Company Country code"
-msgstr "Code pays de société"
+msgstr "Code pays de l'entreprise"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
@@ -173,7 +184,7 @@ msgstr "Créé le"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Nom affiché"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
@@ -198,7 +209,7 @@ msgstr "Journal"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks____last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
@@ -301,7 +312,7 @@ msgstr "Enregistrer un paiement"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Reset Amount in Words"
-msgstr ""
+msgstr "Réinitialiser le montant en toutes lettres"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
@@ -322,6 +333,14 @@ msgstr ""
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
 msgid "Sequence number of the next printed check."
 msgstr "Numéro de séquence du prochain chèque imprimé."
+
+#. module: account_check_printing
+#: code:addons/account_check_printing/models/account_payment.py:0
+#, python-format
+msgid ""
+"Something went wrong with Check Layout, please select another layout in "
+"Invoicing/Accounting Settings and try again."
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_printing_payment_method_selected
@@ -380,9 +399,9 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA. "
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
-"Cette option vous permet d’imprimer l'étiquette de date sur le chèque, "
+"Cette option vous permet d’imprimer l'intitulé de date sur le chèque, "
 "conformément au CPA. Désactivez cette option si votre chèque préimprimé "
-"comprend l'étiquette de la date."
+"comprend l'intitulé de la date."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -401,23 +420,6 @@ msgstr "Décochez ceux qui ont été envoyés"
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
-"You have to choose a check layout. For this, go in Apps, search for 'Checks "
-"layout' and install one."
+"You have to choose a check layout. For this, go in Invoicing/Accounting "
+"Settings, search for 'Checks layout' and set one."
 msgstr ""
-"Vous devez choisir un format de chèque. Pour cela, aller sue "
-"\"Applications\", rechercher \"Formats de chèque\" et installez."
-
-#. module: account_check_printing
-#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_middle
-msgid "check in middle"
-msgstr "Chèque au milieu"
-
-#. module: account_check_printing
-#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_bottom
-msgid "check on bottom"
-msgstr "Chèque en bas"
-
-#. module: account_check_printing
-#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_top
-msgid "check on top"
-msgstr "Chèque au dessus"

@@ -3,20 +3,37 @@
 # 	* pos_restaurant
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Xavier Symons <xsy@openerp.com>, 2016
+# Hubert TETARD <htetard@apik-conseils.com>, 2016
+# Leo Schmitt <inactive+lschmitt@transifex.com>, 2016
+# Florian Hatat, 2016
+# lucasdeliege <deliegelucas@gmail.com>, 2016
+# Quentin THEURET <odoo@kerpeo.com>, 2016
+# user 2 odoo <user2odoo@gmail.com>, 2016
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
+# Peter MEUEL <peter@teriiehina.net>, 2016
+# Fabien Bourgeois <fabien@yaltik.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Clo <clo@odoo.com>, 2016
+# Melanie Bernard <mbe@odoo.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Fabien Pinckaers <fp@openerp.com>, 2017
+# e2f <projects@e2f.com>, 2018
 # Frédéric LIETART <stuff@tifred.fr>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
-# Olivier ANDRE <frsw194@gmail.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
+# Martin Trigaux, 2019
 # Nicolas Roussey <nro@odoo.com>, 2019
+# lcaodoo <lca@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:15+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Nicolas Roussey <nro@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-02-13 08:33+0000\n"
+"PO-Revision-Date: 2016-08-05 13:08+0000\n"
+"Last-Translator: lcaodoo <lca@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,8 +52,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-cutlery\" title=\"For bars and restaurants\" "
 "role=\"img\" aria-label=\"For bars and restaurants\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-cutlery\" title=\"Pour les bars et restaurants\" "
-"role=\"img\" aria-label=\"Pour les bars et restaurants\"/>"
+"<span class=\"fa fa-lg fa-cutlery\" title=\"For bars and restaurants\" "
+"role=\"img\" aria-label=\"For bars and restaurants\"/>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -67,15 +84,9 @@ msgstr ""
 "définir la position des tables."
 
 #. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "Accept customer tips or convert their change to a tip"
-msgstr ""
-"Accepter les pourboires des clients ou convertir leur monnaie en pourboire"
-
-#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__active
 msgid "Active"
-msgstr "Active"
+msgstr "Actif"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -260,25 +271,11 @@ msgid "Delete"
 msgstr "Supprimer"
 
 #. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Discount:"
-msgstr "Réduction :"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Discounts"
-msgstr "Remises"
-
-#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__display_name
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Nom affiché"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -295,6 +292,10 @@ msgid ""
 "                An Order Printer will only print updates for products belonging to one of\n"
 "                its categories."
 msgstr ""
+"Chaque imprimante de ticket possède une adresse IP qui indique l'IoT Box/le proxy matériel \n"
+"où se situe l'imprimante, ainsi qu'une liste de catégories de produits.\n"
+"Les imprimantes peuvent uniquement imprimer les mises à jour des produits appartenant à l'une de\n"
+" ces catégories."
 
 #. module: pos_restaurant
 #. openerp-web
@@ -328,7 +329,7 @@ msgstr "Plans de l'étage"
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 #, python-format
 msgid "Floor: %s - PoS Config: %s \n"
-msgstr ""
+msgstr "Étage : %s - Configuration PdV : %s\n"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -410,7 +411,7 @@ msgstr "Est un bar/restaurant"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer____last_update
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table____last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__write_uid
@@ -435,16 +436,19 @@ msgid "Light grey"
 msgstr "Gris clair"
 
 #. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Logo"
-msgstr "Logo"
-
-#. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Manage table orders"
 msgstr "Gérer les commandes des tables"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__mp_dirty
+msgid "Mp Dirty"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__multiprint_resume
+msgid "Multiprint Resume"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -473,6 +477,13 @@ msgstr "Note"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__note
 msgid "Note added by the waiter."
 msgstr "Note ajoutée par le serveur"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/js/printbill.js:0
+#, python-format
+msgid "Nothing to Print"
+msgstr "Rien à imprimer"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -537,6 +548,13 @@ msgstr "Imprimante PdV"
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
+#, python-format
+msgid "PRO FORMA"
+msgstr "PRO FORMA"
+
+#. module: pos_restaurant
+#. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:0
 #, python-format
 msgid "Payment"
@@ -545,7 +563,7 @@ msgstr "Paiement"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__pos_config_id
 msgid "Point of Sale"
-msgstr "Point de vente"
+msgstr "Point de Vente"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_config
@@ -555,7 +573,7 @@ msgstr "Paramétrage du point de vente"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr ""
+msgstr "Lignes des commandes du point de vente"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order
@@ -667,7 +685,7 @@ msgstr "Ronde"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Round Shape"
-msgstr ""
+msgstr "Forme ronde"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -683,13 +701,6 @@ msgid "Sequence"
 msgstr "Séquence"
 
 #. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Served by"
-msgstr "Servi par"
-
-#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__shape
 msgid "Shape"
 msgstr "Forme"
@@ -697,7 +708,7 @@ msgstr "Forme"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__mp_skip
 msgid "Skip line when sending ticket to kitchen printers."
-msgstr ""
+msgstr "Passez la ligne à l'envoi à l'imprimante en cuisine"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -722,20 +733,6 @@ msgstr "Carré"
 #, python-format
 msgid "Square Shape"
 msgstr "Forme carrée"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Subtotal"
-msgstr "Sous-total"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "TOTAL"
-msgstr "SOMME"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
@@ -764,13 +761,6 @@ msgstr "Nom de la table? "
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 msgid "Tables"
 msgstr "Tables"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Tel:"
-msgstr "Tél. :"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__proxy_ip
@@ -846,15 +836,17 @@ msgstr "La largeur de la table en pixels"
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/js/printbill.js:0
+#, python-format
+msgid "There are no order lines"
+msgstr "Il n'y a pas de lignes de commande"
+
+#. module: pos_restaurant
+#. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "This floor has no tables yet, use the"
 msgstr "Cet étage n'a pas encore de tables, utilisez le"
-
-#. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "This product is used as reference on customer receipts."
-msgstr "Ce produit est utilisé comme référence sur les reçus client."
 
 #. module: pos_restaurant
 #. openerp-web
@@ -862,16 +854,6 @@ msgstr "Ce produit est utilisé comme référence sur les reçus client."
 #, python-format
 msgid "Tint"
 msgstr "Teinte"
-
-#. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "Tip Product"
-msgstr "Produit pour pourboire"
-
-#. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "Tips"
-msgstr "Pourboires"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -925,6 +907,8 @@ msgid ""
 "You cannot remove a floor that is used in a PoS session, close the "
 "session(s) first: \n"
 msgstr ""
+"Vous ne pouvez pas supprimer un étage utilisé pendant une session du PdV, "
+"fermez d'abord la session :\n"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -936,6 +920,10 @@ msgid ""
 "Changes made to previously synced orders will get lost at the next sync.\n"
 "Orders that where not synced before will be synced next time you open and close the same table."
 msgstr ""
+"Vous devez être connecté à internet pour sauvegarder vos modifications.\n"
+"\n"
+"Les changements apportés à des commandes déjà synchronisées seront perdus à la prochaine synchronisation.\n"
+"Les commandes encore à synchroniser le seront la prochaine fois que vous ouvrez et fermez la même table."
 
 #. module: pos_restaurant
 #. openerp-web

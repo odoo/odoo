@@ -3,17 +3,18 @@
 # 	* stock_account
 # 
 # Translators:
-# Martin Trigaux, 2019
+# ТАрас <tratatuta@i.ua>, 2018
 # Bohdan Lisnenko, 2019
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-02-13 07:24+0000\n"
+"PO-Revision-Date: 2016-08-05 13:10+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +30,11 @@ msgid "%s changed cost from %s to %s - %s"
 msgstr "%s змінена вартість з%s на %s - %s"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+msgid "<b>Set other input/output accounts on specific </b>"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
 msgid "Account Chart Template"
 msgstr "Шаблон плану рахунків"
@@ -39,14 +45,9 @@ msgid "Account Move"
 msgstr "Бухгалтерське проведення"
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_reconciliation_widget
-msgid "Account Reconciliation widget"
-msgstr "Віджет узгодження рахунку"
-
-#. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
-msgstr "Властивості рахунку обліку записів"
+msgstr "Властивості рахунків"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory__accounting_date
@@ -62,13 +63,19 @@ msgstr "Бухгалтерські записи"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
-msgstr "Інформація бухобліку"
+msgstr "Інформація для обліку"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__active
+msgid "Active"
+msgstr "Активно"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
 msgstr ""
+"Додайте додаткові витрати (транспорт, митниця, ...) у значенні товару."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -96,11 +103,6 @@ msgid "Average Cost (AVCO)"
 msgstr "Середня вартість (AVCO)"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
-msgid "Cancel"
-msgstr "Скасувати"
-
-#. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -108,8 +110,7 @@ msgid ""
 " the product category, or on the location, before processing this operation."
 msgstr ""
 "Не вдається знайти вхідний рахунок складу для товару %s. Перш ніж обробляти "
-"цю операцію, ви повинні визначити її у категорії товару чи на "
-"місцезнаходженні."
+"цю операцію, ви повинні визначити її у категорії товару чи на місці."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -120,25 +121,7 @@ msgid ""
 "operation."
 msgstr ""
 "Не вдається знайти вихідний рахунок складу для товару %s. Перш ніж обробляти"
-" цю операцію, ви повинні визначити її у категорії товару чи на "
-"місцезнаходженні."
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Category"
-msgstr "Категорія"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
-msgid "Change Price"
-msgstr "Змінити ціну"
-
-#. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.action_view_change_standard_price
-#: model:ir.model,name:stock_account.model_stock_change_standard_price
-#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
-msgid "Change Standard Price"
-msgstr "Змінити стандартну цію"
+" цю операцію, ви повинні визначити її у категорії товару чи на місці."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -147,8 +130,8 @@ msgid ""
 "Changing your cost method is an important change that will impact your "
 "inventory valuation. Are you sure you want to make that change?"
 msgstr ""
-"Зміна методу витрат - це важлива зміна, яка вплине на оцінку запасів. Ви "
-"впевнені, що хочете внести ці зміни?"
+"Зміна методу витрат - це важлива зміна, яка вплине на оцінку вашої "
+"інвентаризації. Ви впевнені, що хочете внести ці зміни?"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
@@ -171,16 +154,11 @@ msgstr ""
 "або його категорію для обробки цієї операції."
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
-msgid "Cost"
-msgstr "Вартість"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_product__cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template__cost_method
 msgid "Costing Method"
-msgstr "Метод розрахунку"
+msgstr "Метод калькуляції"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -189,26 +167,14 @@ msgid "Costing method change for product category %s: from %s to %s."
 msgstr "Зміна методу оцінки запасів для категорії товару %s: з %s на %s."
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__counterpart_account_id
-msgid "Counter-Part Account"
-msgstr "Контрактна частина рахунку"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__counterpart_account_id_required
-msgid "Counter-Part Account Required"
-msgstr "Контрактна частина рахунку обов'язкова"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__create_uid
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
 msgid "Created by"
 msgstr "Створив"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__create_date
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__currency_id
@@ -244,7 +210,6 @@ msgid "Description"
 msgstr "Опис"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
@@ -266,24 +231,25 @@ msgid "First In First Out (FIFO)"
 msgstr "First In First Out (FIFO)"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Group by..."
+msgstr "Групувати за..."
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory__has_account_moves
 msgid "Has Account Moves"
 msgstr "Має бухгалтерське проведення"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__id
 msgid "ID"
 msgstr "ID"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_change_standard_price__new_price
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__active
 msgid ""
-"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
-"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
-msgstr ""
-"Якщо собівартість буде збільшена, варіації рахунку обліку запасів буде дебетовано, а вихідний рахунок обліку запасів буде зараховуватися з величиною = (різниця суми * доступна кількість).\n"
-"Якщо собівартість знизиться, буде створена варіацію рахунка обліку запасів, а вхідний рахунок буде дебетовано."
+"If unchecked, it will allow you to hide the product without removing it."
+msgstr "Якщо не вибрано, це дозволить вам сховати правило без його видалення."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -293,7 +259,7 @@ msgstr "Склад"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Locations"
-msgstr "Місцезнаходження запасів"
+msgstr "Розташування складів"
 
 #. module: stock_account
 #: code:addons/stock_account/__init__.py:0
@@ -336,19 +302,16 @@ msgid "Landed Costs"
 msgstr "Додаткові витрати"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price____last_update
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Остання модифікація"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__write_uid
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_uid
 msgid "Last Updated by"
 msgstr "Востаннє оновив"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__write_date
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_date
 msgid "Last Updated on"
 msgstr "Останнє оновлення"
@@ -356,7 +319,7 @@ msgstr "Останнє оновлення"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
 msgid "Linked To"
-msgstr ""
+msgstr "Пов'язаний до"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
@@ -391,11 +354,6 @@ msgstr ""
 "категорії: \"%s\"."
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__new_price
-msgid "Price"
-msgstr "Ціна"
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_id
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_search
@@ -405,6 +363,7 @@ msgstr "Товар"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__categ_id
 msgid "Product Category"
 msgstr "Категорія товару"
 
@@ -415,6 +374,7 @@ msgstr "Переміщення товару (Рядок складського �
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_tmpl_id
 msgid "Product Template"
 msgstr "Шаблон товару"
 
@@ -446,6 +406,11 @@ msgid "Remaining Qty"
 msgstr "Залишкова кількість"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_value
+msgid "Remaining Value"
+msgstr "Оцінка залишку"
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
 msgid "Return Picking"
 msgstr "Повернути комплектування"
@@ -454,6 +419,11 @@ msgstr "Повернути комплектування"
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
 msgstr "Повернути рядок комплектування"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__categ_id
+msgid "Select category for the current product"
+msgstr "Виберіть категорію поточного товару"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -548,6 +518,15 @@ msgstr ""
 "як і обліковий запис оцінки складу."
 
 #. module: stock_account
+#: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"The action leads to the creation of a journal entry, for which you don't "
+"have the access rights."
+msgstr ""
+
+#. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -566,7 +545,7 @@ msgid ""
 "transit location."
 msgstr ""
 "Рядки переміщення не є узгодженими станами: вони роблять взаємодію в один "
-"крок, поки вони повинні пройти через місце транзиту в середині компанії."
+"крок, поки вони повинні пройти через міжвідомче місце транзиту."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -616,13 +595,6 @@ msgstr "Значення одиниці"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
 msgid "Unit of Measure"
 msgstr "Одиниця вимірювання"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.product_product_normal_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
-#: model_terms:ir.ui.view,arch_db:stock_account.view_template_property_form
-msgid "Update Cost"
-msgstr "Оновити вартість"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
@@ -676,7 +648,7 @@ msgstr "Рівень оцінки?"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
-msgstr ""
+msgstr "Зміна методу оцінки для категорії товару %s: з %s на %s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -692,7 +664,7 @@ msgstr "Рівень оцінки запасів"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Warning"
-msgstr "Сповіщення"
+msgstr "Попередження"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
@@ -700,6 +672,8 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"Якщо на товарі увімкнено автоматизовану оцінку запасів, на цьому рахунку "
+"буде зберігатися поточна вартість товарів."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
@@ -708,6 +682,9 @@ msgid ""
 "                unless there is a specific valuation account set on the source location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
+"При автоматизованій оцінці запасів статті цього журналу для всіх вхідних переміщених запасів будуть розміщені на цьому рахунку, \n"
+"якщо в місці призначення не встановлено конкретний рахунок оцінки. Це значення за замовчуванням для всіх товарів цієї категорії.\n"
+"Його також можна встановити безпосередньо на кожен товар."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -716,12 +693,26 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
+"При автоматизованій оцінці запасів статті цього журналу для всіх вихідних переміщених запасів будуть розміщені на цьому рахунку, \n"
+"якщо в місці призначення не встановлено конкретний рахунок оцінки. Це значення за замовчуванням для всіх товарів цієї категорії.\n"
+" Його також можна встановити безпосередньо на кожен товар."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
 msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
+msgstr ""
+"При автоматизованій оцінці запасів - це Журнал бухгалтерського обліку, в "
+"якому записи будуть автоматично розміщені при обробці складських переміщень."
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"You cannot update the cost of a product in automated valuation as it leads "
+"to the creation of a journal entry, for which you don't have the access "
+"rights."
 msgstr ""
 
 #. module: stock_account
@@ -764,11 +755,6 @@ msgid "You must set a counterpart account."
 msgstr "Вам потрібно встановити рахунок контрагента."
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
-msgid "_Apply"
-msgstr "_Apply"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_value
-msgid "remaining_value Value"
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+msgid "locations"
 msgstr ""
