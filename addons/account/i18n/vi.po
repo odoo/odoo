@@ -13,7 +13,7 @@
 # Minh Nguyen <ndminh210994@gmail.com>, 2019
 # fanha99 <fanha99@hotmail.com>, 2019
 # Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2019
-# Chinh Chinh <trinhttp@trobz.com>, 2019
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2019
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
 # Duy BQ <duybq86@gmail.com>, 2020
 # 
@@ -419,6 +419,8 @@ msgid ""
 "<span class=\"o_form_label\">Fiscal Localization</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Khu vực kế toán</span>\n"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4088,7 +4090,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 msgid "Define your fiscal years &amp; tax returns periodicity."
-msgstr ""
+msgstr "Chỉ định năm tài khoá của bạn &amp; Định kỳ khai thuế."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
@@ -4805,7 +4807,7 @@ msgstr "Vị thế tài chính"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Fiscal Localization"
-msgstr "Nội địa hóa tài chính"
+msgstr "Khu vực kế toán"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__position_id
@@ -10485,8 +10487,8 @@ msgid ""
 "Technical field used to hide the payment method if the selected journal has "
 "only one available which is 'manual'"
 msgstr ""
-"Technical field used to hide the payment method if the selected journal has "
-"only one available which is 'manual'"
+"Trường kỷ thuật dùng để ẩn phương thức thanh toán, nếu nhật ký được chọn chỉ"
+" có sẵn một phương thức 'thủ công'"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__tax_cash_basis_rec_id
@@ -11264,6 +11266,14 @@ msgid ""
 msgstr ""
 "Vẫn còn bút toán chưa đưa vào sổ trong kỳ mà bạn muốn đóng. Bạn nên đưa vào "
 "hoặc xóa chúng."
+
+#. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"There is more than one receivable/payable account in the concerned invoices."
+" You cannot group payments in that case."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12203,7 +12213,7 @@ msgid ""
 "Please go to Account Configuration and select or install a fiscal localization."
 msgstr ""
 "Chúng tôi không thể tìm thấy một biểu đồ của tài khoản cho công ty này, bạn nên cấu hình nó. \n"
-"Hãy đi tới cấu hình tài khoản và chọn hoặc cài đặt bản địa hoá tài chính."
+"Hãy đi tới cấu hình tài khoản và chọn hoặc cài đặt Khu vực kế toán."
 
 #. module: account
 #: code:addons/account/models/company.py:0
