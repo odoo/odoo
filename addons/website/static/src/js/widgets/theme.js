@@ -230,7 +230,6 @@ var ThemeCustomizeDialog = Dialog.extend({
             var editor = new weWidgets.MediaDialog(self, {
                 mediaWidth: 1920,
                 onlyImages: true,
-                firstFilters: ['background'],
             }, $image[0]);
 
             editor.on('save', self, function (media) { // TODO use scss customization instead (like for user colors)
