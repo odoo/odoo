@@ -494,7 +494,9 @@ class SaleOrder(models.Model):
         a clean extension chain).
         """
         self.ensure_one()
-        journal = self.env['account.move'].with_context(force_company=self.company_id.id, default_type='out_invoice')._get_default_journal()
+        # ensure a correct context for the _get_default_journal method and company-dependent fields
+        self = self.with_context(default_company_id=self.company_id.id, force_company=self.company_id.id)
+        journal = self.env['account.move'].with_context(default_type='out_invoice')._get_default_journal()
         if not journal:
             raise UserError(_('Please define an accounting sales journal for the company %s (%s).') % (self.company_id.name, self.company_id.id))
 
@@ -512,6 +514,7 @@ class SaleOrder(models.Model):
             'partner_shipping_id': self.partner_shipping_id.id,
             'invoice_partner_bank_id': self.company_id.partner_id.bank_ids[:1].id,
             'fiscal_position_id': self.fiscal_position_id.id or self.partner_invoice_id.property_account_position_id.id,
+            'journal_id': journal.id,  # company comes from the journal
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
             'invoice_payment_ref': self.reference,
@@ -542,7 +545,7 @@ class SaleOrder(models.Model):
             context.update({
                 'default_partner_id': self.partner_id.id,
                 'default_partner_shipping_id': self.partner_shipping_id.id,
-                'default_invoice_payment_term_id': self.payment_term_id.id or self.partner_id.property_payment_term_id.id or self.env['ir.default'].sudo().get('account.move', 'invoice_payment_term_id', company_id=self.env.company.id),
+                'default_invoice_payment_term_id': self.payment_term_id.id or self.partner_id.property_payment_term_id.id or self.env['account.move'].default_get(['invoice_payment_term_id']).get('invoice_payment_term_id'),
                 'default_invoice_origin': self.mapped('name'),
                 'default_user_id': self.user_id.id,
             })

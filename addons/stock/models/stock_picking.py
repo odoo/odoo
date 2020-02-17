@@ -573,11 +573,24 @@ class Picking(models.Model):
                         move[2]['company_id'] = picking_type.company_id.id
         res = super(Picking, self).create(vals)
         res._autoconfirm_picking()
+
+        # set partner as follower
+        if vals.get('partner_id'):
+            for picking in res.filtered(lambda p: p.location_id.usage == 'supplier' or p.location_dest_id.usage == 'customer'):
+                picking.message_subscribe([vals.get('partner_id')])
+
         return res
 
     def write(self, vals):
         if vals.get('picking_type_id') and self.state != 'draft':
             raise UserError(_("Changing the operation type of this record is forbidden at this point."))
+        # set partner as a follower and unfollow old partner
+        if vals.get('partner_id'):
+            for picking in self:
+                if picking.location_id.usage == 'supplier' or picking.location_dest_id.usage == 'customer':
+                    if picking.partner_id:
+                        picking.message_unsubscribe(picking.partner_id.ids)
+                    picking.message_subscribe([vals.get('partner_id')])
         res = super(Picking, self).write(vals)
         # Change locations of moves if those of the picking change
         after_vals = {}
@@ -763,6 +776,12 @@ class Picking(models.Model):
             all_in = False
         return all_in
 
+    def _get_entire_pack_location_dest(self, move_line_ids):
+        location_dest_ids = move_line_ids.mapped('location_dest_id')
+        if len(location_dest_ids) > 1:
+            return False
+        return location_dest_ids.id
+
     def _check_entire_pack(self):
         """ This function check if entire packs are moved in the picking"""
         for picking in self:
@@ -776,7 +795,7 @@ class Picking(models.Model):
                             'picking_id': picking.id,
                             'package_id': pack.id,
                             'location_id': pack.location_id.id,
-                            'location_dest_id': picking.move_line_ids.filtered(lambda ml: ml.package_id == pack).mapped('location_dest_id')[:1].id,
+                            'location_dest_id': self._get_entire_pack_location_dest(move_lines_to_pack) or picking.location_dest_id.id,
                             'move_line_ids': [(6, 0, move_lines_to_pack.ids)],
                             'company_id': picking.company_id.id,
                         })
@@ -795,6 +814,8 @@ class Picking(models.Model):
                             'result_package_id': pack.id,
                             'package_level_id': package_level_ids[0].id,
                         })
+                        for pl in package_level_ids:
+                            pl.location_dest_id = self._get_entire_pack_location_dest(pl.move_line_ids) or picking.location_dest_id.id
 
     def do_unreserve(self):
         for picking in self:
@@ -808,6 +829,9 @@ class Picking(models.Model):
         self.ensure_one()
         if not self.move_lines and not self.move_line_ids:
             raise UserError(_('Please add some items to move.'))
+
+        # add user as a follower
+        self.message_subscribe([self.env.user.partner_id.id])
 
         # If no lots when needed, raise error
         picking_type = self.picking_type_id
