@@ -139,8 +139,6 @@ var FileWidget = SearchableMediaWidget.extend({
         this.numberOfAttachmentsToDisplay = this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY;
 
         this.options = _.extend({
-            firstFilters: [],
-            lastFilters: [],
             showQuickUpload: config.isDebug(),
         }, options || {});
 
@@ -148,17 +146,6 @@ var FileWidget = SearchableMediaWidget.extend({
         this.selectedAttachments = [];
 
         this._onUploadURLButtonClick = dom.makeAsyncHandler(this._onUploadURLButtonClick);
-    },
-    /**
-     * Loads all the existing images related to the target media.
-     *
-     * @override
-     */
-    willStart: function () {
-        return Promise.all([
-            this._super.apply(this, arguments),
-            this.search('', true)
-        ]);
     },
     /**
      * @override
@@ -176,8 +163,6 @@ var FileWidget = SearchableMediaWidget.extend({
         this.$urlError = this.$('.o_we_url_error');
         this.$errorText = this.$('.o_we_error_text');
 
-        this._renderImages();
-
         // If there is already an attachment on the target, select by default
         // that attachment if it is among the loaded images.
         var o = {
@@ -190,13 +175,15 @@ var FileWidget = SearchableMediaWidget.extend({
             o.url = this.$media.attr('href').replace(/[?].*/, '');
             o.id = +o.url.match(/\/web\/content\/(\d+)/, '')[1];
         }
-        if (o.url) {
-            self._selectAttachement(_.find(self.attachments, function (attachment) {
-                return attachment.url === o.url;
-            }) || o);
-        }
 
-        return def;
+        return this.search('').then(function () {
+            if (o.url) {
+                self._selectAttachement(_.find(self.attachments, function (attachment) {
+                    return attachment.url === o.url;
+                }) || o);
+            }
+            return def;
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -216,40 +203,35 @@ var FileWidget = SearchableMediaWidget.extend({
      * @override
      * @param {boolean} noRender: if true, do not render the found attachments
      */
-    search: function (needle, noRender) {
+    search: function (needle) {
         var self = this;
-
+        this.attachments = [];
+        this.needle = needle;
+        return this.fetchAttachments(this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY, 0).then(function () {
+           self._renderImages();
+        });
+    },
+    /**
+     * @param {Number} number - the number of attachments to fetch
+     * @param {Number} offset - from which result to start fetching
+     */
+    fetchAttachments: function (number, offset) {
         return this._rpc({
             model: 'ir.attachment',
             method: 'search_read',
             args: [],
             kwargs: {
-                domain: this._getAttachmentsDomain(needle),
+                domain: this._getAttachmentsDomain(this.needle),
                 fields: ['name', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height'],
                 order: [{name: 'id', asc: false}],
                 context: this.options.context,
+                // Try to fetch first record of next page just to know whether there is a next page.
+                limit: number + 1,
+                offset: offset,
             },
-        }).then(function (attachments) {
-            self.attachments = _.chain(attachments)
-                .sortBy(function (r) {
-                    if (_.any(self.options.firstFilters, function (filter) {
-                        var regex = new RegExp(filter, 'i');
-                        return r.name && r.name.match(regex);
-                    })) {
-                        return -1;
-                    }
-                    if (_.any(self.options.lastFilters, function (filter) {
-                        var regex = new RegExp(filter, 'i');
-                        return r.name && r.name.match(regex);
-                    })) {
-                        return 1;
-                    }
-                    return 0;
-                })
-                .value();
-            if (!noRender) {
-                self._renderImages();
-            }
+        }).then(attachments => {
+            this.attachments = this.attachments.slice();
+            Array.prototype.splice.apply(this.attachments, [offset, attachments.length].concat(attachments));
         });
     },
 
@@ -354,13 +336,15 @@ var FileWidget = SearchableMediaWidget.extend({
      * @returns {Promise}
      */
     _loadMoreImages: function (forceSearch) {
-        this.numberOfAttachmentsToDisplay += 10;
-        if (!forceSearch) {
-            this._renderImages();
-            return Promise.resolve();
-        } else {
-            return this.search(this.$('.o_we_search').val() || '');
-        }
+        return this.fetchAttachments(10, this.numberOfAttachmentsToDisplay).then(() => {
+            this.numberOfAttachmentsToDisplay += 10;
+            if (!forceSearch) {
+                this._renderImages();
+                return Promise.resolve();
+            } else {
+                return this.search(this.$('.o_we_search').val() || '');
+            }
+        });
     },
     /**
      * Opens the image optimize dialog for the given attachment.
@@ -622,7 +606,6 @@ var FileWidget = SearchableMediaWidget.extend({
                         'data': result.split(',')[1],
                         'res_id': self.options.res_id,
                         'res_model': self.options.res_model,
-                        'filters': self.options.firstFilters.join('_'),
                     };
                     if (self.quickUpload) {
                         params['width'] = self._computeOptimizedWidth();
@@ -738,7 +721,6 @@ var FileWidget = SearchableMediaWidget.extend({
                 'url': this.$urlInput.val(),
                 'res_id': this.options.res_id,
                 'res_model': this.options.res_model,
-                'filters': this.options.firstFilters.join('_'),
             },
         }).then(function (attachment) {
             self.$urlInput.val('');

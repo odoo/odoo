@@ -1133,7 +1133,6 @@ const ImagepickerUserValueWidget = UserValueWidget.extend({
     start: async function () {
         await this._super(...arguments);
         const allowedSelector = this.el.dataset.allowVideos;
-        this.firstFilters = (this.el.dataset.firstFilters || '').split(',').filter(s => s !== '');
         this.allowVideos = allowedSelector ? this.$target.is(allowedSelector) : false;
 
         this.editImageButton = document.createElement('we-button');
@@ -1190,7 +1189,6 @@ const ImagepickerUserValueWidget = UserValueWidget.extend({
             isForBgVideo: true,
             res_model: $editable.data('oe-model'),
             res_id: $editable.data('oe-id'),
-            firstFilters: this.firstFilters,
         }, dummyEl).open();
         mediaDialog.on('save', this, data => {
             if (data.bgVideoSrc) {
