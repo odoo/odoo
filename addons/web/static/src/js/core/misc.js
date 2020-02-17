@@ -45,7 +45,7 @@ var Throbber = Widget.extend({
 
 /** Setup blockui */
 if ($.blockUI) {
-    $.blockUI.defaults.baseZ = 1100;
+    $.blockUI.defaults.baseZ = 1000;
     $.blockUI.defaults.message = '<div class="openerp oe_blockui_spin_container" style="background-color: transparent;">';
     $.blockUI.defaults.css.border = '0';
     $.blockUI.defaults.css["background-color"] = '';
