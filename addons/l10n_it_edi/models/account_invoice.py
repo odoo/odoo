@@ -62,6 +62,8 @@ class AccountInvoice(models.Model):
             if invoice.type == 'in_invoice' or invoice.type == 'in_refund':
                 invoice.l10n_it_send_state = "other"
                 continue
+            if invoice.l10n_it_send_state in ['sent', 'delivered', 'delivered_accepted']:
+                continue
 
             invoice._check_before_xml_exporting()
 
