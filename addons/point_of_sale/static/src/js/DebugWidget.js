@@ -7,8 +7,9 @@ odoo.define('point_of_sale.DebugWidget', function(require) {
     const { parse } = require('web.field_utils');
     const { Chrome } = require('point_of_sale.chrome');
     const { PosComponent } = require('point_of_sale.PosComponent');
+    const { Draggable } = require('point_of_sale.Draggable');
+    const { DraggablePart } = require('point_of_sale.DraggablePart');
 
-    // TODO jcb: Still missing with drag events
     class DebugWidget extends PosComponent {
         constructor() {
             super(...arguments);
@@ -141,6 +142,8 @@ odoo.define('point_of_sale.DebugWidget', function(require) {
             this.env.pos.proxy.message('display_refresh', {});
         }
     }
+
+    DebugWidget.addComponents([Draggable, DraggablePart]);
 
     Chrome.addComponents([DebugWidget]);
 

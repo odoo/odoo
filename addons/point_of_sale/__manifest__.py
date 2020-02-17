@@ -80,6 +80,8 @@
         'static/src/xml/ProxyStatus.xml',
         'static/src/xml/SyncNotification.xml',
         'static/src/xml/HeaderButton.xml',
+        'static/src/xml/Draggable.xml',
+        'static/src/xml/DraggablePart.xml',
         'static/src/xml/DebugWidget.xml',
         'static/src/xml/ErrorPopup.xml',
         'static/src/xml/ConfirmPopup.xml',

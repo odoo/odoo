@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="DraggablePart" owl="1">
+        <div t-on-mousedown="trigger('start-drag')" t-on-touchstart="trigger('start-drag')">
+            <t t-slot="default" />
+        </div>
+    </t>
+
+</templates>
