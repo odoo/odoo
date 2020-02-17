@@ -2,7 +2,7 @@
 <odoo>
 
 <template id="s_website_form" name="Form Builder">
-    <section class="s_website_form" data-vcss="001">
+    <section class="s_website_form pt16 pb16" data-vcss="001">
         <div class="container">
             <form action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*">
                 <div class="s_website_form_rows row s_col_no_bgcolor">
@@ -21,12 +21,12 @@
     <xpath expr="//div" position="after">
         <!-- Form -->
         <div data-js="WebsiteFormEditor" data-selector=".s_website_form" data-target="form">
-            <we-select string="Display Fields Mark" data-name="field_mark_select" data-no-preview="true">
+            <we-select string="Marked Fields" data-name="field_mark_select" data-no-preview="true">
                 <we-button data-select-class="">None</we-button>
                 <we-button data-select-class="o_mark_required" data-name="form_required_opt">Required</we-button>
                 <we-button data-select-class="o_mark_optional" data-name="form_optional_opt">Optional</we-button>
             </we-select>
-            <we-input data-set-mark="" data-dependencies="form_required_opt, form_optional_opt"/>
+            <we-input string="Mark Text" data-set-mark="" data-dependencies="form_required_opt, form_optional_opt"/>
             <we-input string="Labels Width"
                 data-select-style="" data-css-property="width"
                 data-unit="px" data-apply-to=".s_website_form_label"/>
@@ -75,6 +75,9 @@
                 <we-button data-custom-field="datetime">Date &amp; Time</we-button>
                 <we-button data-custom-field="binary">File Upload</we-button>
             </we-select>
+            <t t-set="unit_textarea_height">rows</t>
+            <we-input string="Height" data-step="1" t-attf-data-select-attribute="3#{unit_textarea_height}" t-att-data-unit="unit_textarea_height"
+                data-attribute-name="rows" data-apply-to="textarea"/>
             <we-select string="Display" data-name="multi_check_display_opt" data-no-preview="true">
                 <we-button data-multi-checkbox-display="horizontal">Horizontal</we-button>
                 <we-button data-multi-checkbox-display="vertical">Vertical</we-button>
