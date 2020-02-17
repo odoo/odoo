@@ -70,8 +70,12 @@ class MrpProduction(models.Model):
                 # able to produce orders
                 AccountAnalyticLine.create(vals)
 
+    def _apply_costs_service(self):
+        self.extra_cost += sum(self.bom_id.bom_line_ids.filtered(lambda l: l.product_id.type == 'service').product_id.mapped('standard_price'))
+
     def button_mark_done(self):
         self.ensure_one()
+        self._apply_costs_service()
         res = super(MrpProduction, self).button_mark_done()
         self._costs_generate()
         return res
