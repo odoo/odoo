@@ -66,13 +66,16 @@ odoo.define('web.custom_hooks', function () {
      * @param {string} eventName the name of the event
      * @param {string} [querySelector] a JS native selector for event delegation
      * @param {function} handler the event handler (will be bound to the component)
+     * @param {Object} [addEventListenerOptions] to be passed to addEventListener as options.
+     *    Useful for listening in the capture phase
      */
-    function useListener(eventName, querySelector, handler) {
-        if (arguments.length === 2) {
+    function useListener(eventName, querySelector, handler, addEventListenerOptions) {
+        if (typeof arguments[1] !== 'string') {
             querySelector = null;
             handler = arguments[1];
+            addEventListenerOptions = arguments[2];
         }
-        if (!(typeof handler === 'function')) {
+        if (typeof handler !== 'function') {
             throw new Error('The handler must be a function');
         }
 
@@ -99,10 +102,10 @@ odoo.define('web.custom_hooks', function () {
             boundHandler = handler.bind(comp);
         }
         onMounted(function () {
-            comp.el.addEventListener(eventName, boundHandler);
+            comp.el.addEventListener(eventName, boundHandler, addEventListenerOptions);
         });
         onWillUnmount(function () {
-            comp.el.removeEventListener(eventName, boundHandler);
+            comp.el.removeEventListener(eventName, boundHandler, addEventListenerOptions);
         });
     }
 
