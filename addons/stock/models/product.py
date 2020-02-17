@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
+from odoo.tools import safe_eval
 from odoo.tools.float_utils import float_round
 from datetime import datetime
 import operator as py_operator
@@ -460,6 +461,7 @@ class Product(models.Model):
         self.ensure_one()
         action = self.env.ref('stock.stock_move_line_action').read()[0]
         action['domain'] = [('product_id', '=', self.id)]
+        action['context'] = dict(safe_eval(action.get('context')), create=False)
         return action
 
     def action_view_related_putaway_rules(self):
@@ -776,6 +778,7 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         action = self.env.ref('stock.stock_move_line_action').read()[0]
         action['domain'] = [('product_id.product_tmpl_id', 'in', self.ids)]
+        action['context'] = dict(safe_eval(action.get('context')), create=False)
         return action
 
     def action_open_product_lot(self):
