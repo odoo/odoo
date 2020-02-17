@@ -92,6 +92,8 @@ odoo.define('point_of_sale.EditListPopup', function(require) {
     }
     EditListPopup.components = { EditListInput };
     EditListPopup.defaultProps = {
+        confirmText: 'Ok',
+        cancelText: 'Cancel',
         array: [],
         isSingleItem: false,
     };

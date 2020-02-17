@@ -30,10 +30,6 @@ odoo.define('point_of_sale.AbstractAwaitablePopup', function(require) {
             return null;
         }
     }
-    AbstractAwaitablePopup.defaultProps = {
-        confirmText: 'Ok',
-        cancelText: 'Cancel',
-    }
 
     return { AbstractAwaitablePopup };
 });

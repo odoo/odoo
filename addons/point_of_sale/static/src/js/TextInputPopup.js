@@ -20,6 +20,8 @@ odoo.define('point_of_sale.TextInputPopup', function(require) {
         }
     }
     TextInputPopup.defaultProps = {
+        confirmText: 'Ok',
+        cancelText: 'Cancel',
         title: '',
         body: '',
     };

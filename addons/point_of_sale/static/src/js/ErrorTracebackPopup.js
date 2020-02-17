@@ -7,6 +7,8 @@ odoo.define('point_of_sale.ErrorTracebackPopup', function(require) {
     // formerly ErrorTracebackPopupWidget
     class ErrorTracebackPopup extends AbstractAwaitablePopup {}
     ErrorTracebackPopup.defaultProps = {
+        confirmText: 'Ok',
+        cancelText: 'Cancel',
         title: 'Error with Traceback',
         body: '',
     };
