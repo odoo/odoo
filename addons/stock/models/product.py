@@ -39,7 +39,7 @@ class Product(models.Model):
              "Otherwise, this includes goods stored in any Stock Location "
              "with 'internal' type.")
     virtual_available = fields.Float(
-        'Forecast Quantity', compute='_compute_quantities', search='_search_virtual_available',
+        'Forecasted Quantity', compute='_compute_quantities', search='_search_virtual_available',
         digits='Product Unit of Measure', compute_sudo=False,
         help="Forecast quantity (computed as Quantity On Hand "
              "- Outgoing + Incoming)\n"
