@@ -739,7 +739,16 @@ class MrpProduction(models.Model):
         for production in self:
             if production.state in ('done', 'cancel'):
                 continue
-            moves_to_confirm |= (production.move_raw_ids | production.move_finished_ids).filtered(
+            additional_moves = production.move_raw_ids.filtered(
+                lambda move: move.state == 'draft' and move.additional
+            )
+            additional_moves.write({
+                'group_id': production.procurement_group_id.id,
+                'reference': production.name,  # set reference when MO name is different than 'New'
+            })
+            additional_moves._adjust_procure_method()
+            moves_to_confirm |= additional_moves
+            moves_to_confirm |= production.move_finished_ids.filtered(
                 lambda move: move.state == 'draft' and move.additional
             )
         if moves_to_confirm:
