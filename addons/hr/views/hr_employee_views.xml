@@ -116,7 +116,8 @@
                                         </group>
                                         <group string="Schedule" groups="base.group_no_one">
                                             <field name="resource_calendar_id" required="1"/>
-                                            <field name="tz"/>
+                                            <field name="id" invisible="1"/>
+                                            <field name="tz" attrs="{'required': [('id', '!=', False)]}"/>
                                         </group>
                                     </div>
                                 </div>
