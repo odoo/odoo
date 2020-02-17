@@ -419,10 +419,14 @@ class Chrome extends PosComponent {
      * @param {Object} error
      */
     catchError(error) {
-        if (error instanceof Error) {
-            this.showPopup('ErrorTracebackPopup', { title: error.message, body: error.stack });
+        if (this.isReady) {
+            if (error instanceof Error) {
+                this.showPopup('ErrorTracebackPopup', { title: error.message, body: error.stack });
+            } else {
+                this.showPopup('ErrorPopup', { title: error.message });
+            }
         } else {
-            this.showPopup('ErrorPopup', { title: error.message });
+            console.error(error);
         }
     }
 
