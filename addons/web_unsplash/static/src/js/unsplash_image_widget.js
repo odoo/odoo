@@ -163,7 +163,12 @@ widgetsMedia.ImageWidget.include({
      * @private
      */
     _loadMoreImages: function (forceSearch) {
-        this._super(this._unsplash.isActive || forceSearch);
+        if (!this._unsplash.isActive) {
+            return this._super(forceSearch);
+        }
+        this.imagesRows += 2;
+        this.IMAGES_DISPLAYED_TOTAL = this.imagesRows * this.IMAGES_PER_ROW;
+        this.search(this.$('.o_we_search').val() || '');
     },
     /**
      * @override
