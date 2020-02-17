@@ -3096,7 +3096,7 @@ class AccountMoveLine(models.Model):
             #computing the `reconciled` field.
             reconciled = False
             digits_rounding_precision = line.company_id.currency_id.rounding
-            if (line.matched_debit_ids or line.matched_credit_ids) and float_is_zero(amount, precision_rounding=digits_rounding_precision):
+            if float_is_zero(amount, precision_rounding=digits_rounding_precision):
                 if line.currency_id and line.amount_currency:
                     if float_is_zero(amount_residual_currency, precision_rounding=line.currency_id.rounding):
                         reconciled = True
@@ -3783,7 +3783,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             company_ids.add(line.company_id.id)
             all_accounts.append(line.account_id)
-            if (line.matched_debit_ids or line.matched_credit_ids) and line.reconciled:
+            if line.reconciled:
                 raise UserError(_('You are trying to reconcile some entries that are already reconciled.'))
         if len(company_ids) > 1:
             raise UserError(_('To reconcile the entries company should be the same for all entries.'))
