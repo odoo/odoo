@@ -11,7 +11,7 @@ from psycopg2 import OperationalError
 from odoo import SUPERUSER_ID, _, api, fields, models, registry
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import float_compare, float_round, frozendict, html_escape
+from odoo.tools import float_compare, float_is_zero, float_round, frozendict, html_escape
 from odoo.tools.misc import split_every
 
 _logger = logging.getLogger(__name__)
@@ -399,6 +399,8 @@ class ProcurementGroup(models.Model):
             procurement.values.setdefault('company_id', self.env.company)
             procurement.values.setdefault('priority', '1')
             procurement.values.setdefault('date_planned', fields.Datetime.now())
+            if float_is_zero(procurement.product_qty, precision_rounding=procurement.product_uom.rounding):
+                continue
             rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
             if not rule:
                 error = _('No rule has been found to replenish "%s" in "%s".\nVerify the routes configuration on the product.') %\
