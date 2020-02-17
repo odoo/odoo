@@ -1207,6 +1207,7 @@
                         <t t-set="helper_accept">Mark as Best Answer</t>
                         <t t-set="helper_decline">Unmark as Best Answer</t>
                         <a t-if="question.can_answer and question.forum_id.mode == 'questions'" t-attf-class="o_wforum_validate_toggler fa-stack mt-2 #{not answer.can_accept and 'karma_required'}"
+                           href="#"
                            t-attf-data-karma="#{answer.karma_accept}"
                            t-att-data-helper-accept="helper_accept"
                            t-att-data-helper-decline="helper_decline"
