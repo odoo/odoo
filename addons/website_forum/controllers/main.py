@@ -235,6 +235,8 @@ class WebsiteForum(WebsiteProfile):
             'filters': filters,
             'reversed': reversed,
         })
+        if (request.httprequest.referrer or "").startswith(request.httprequest.url_root):
+            values['back_button_url'] = request.httprequest.referrer
         return request.render("website_forum.post_description_full", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/toggle_favourite', type='json', auth="user", methods=['POST'], website=True)

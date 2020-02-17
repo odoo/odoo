@@ -128,12 +128,16 @@
 <template id="forum_nav_header">
     <div class="navbar navbar-expand-sm navbar-light">
         <div class="container flex-wrap flex-md-nowrap">
-            <a t-if="request.website.forums_count > 1" class="btn btn-light border mr-2" href="/forum/" title="All forums">
-                <i class="fa fa-chevron-left mr-1"/>All Forums
+            <a t-if="back_button_url" class="btn btn-light border mr-2" t-attf-href="#{back_button_url}" title="Back">
+                <i class="fa fa-chevron-left mr-1"/>Back
             </a>
-
             <!-- Desktop -->
             <ul class="navbar-nav mr-auto d-none d-lg-flex">
+                <li class="nav-item">
+                    <a t-if="request.website.forums_count > 1" class="nav-link" href="/forum/" title="All forums">
+                        All Forums
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a t-attf-href="/forum/#{ slug(forum) }" t-attf-class="nav-link #{question_count and 'active'}">Topics</a>
                 </li>
