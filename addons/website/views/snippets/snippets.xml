@@ -259,7 +259,7 @@
     <div data-js="background" string="Background"
         data-selector="section, .parallax, .carousel-item"
         data-exclude=".s_hr, .s_image_gallery, .o_gallery .carousel-item">
-        <we-imagepicker string="Background" data-background="" data-allow-videos=":not(.parallax, .s_parallax_bg)" data-first-filters="background"/>
+        <we-imagepicker string="Background" data-background="" data-allow-videos=":not(.parallax, .s_parallax_bg)"/>
     </div>
 
     <!-- Background Image Size/Position -->
@@ -424,7 +424,7 @@
          data-drop-near=".o_mega_menu .nav-link"/>
 
     <div data-js="CoverProperties" data-selector=".o_record_cover_container" data-no-check="true">
-        <we-imagepicker string="Image" data-background="" data-first-filters="cover" data-name="cover_background_opt"/>
+        <we-imagepicker string="Image" data-background="" data-name="cover_background_opt"/>
         <we-select string="Size" data-cover-opt-name="size">
             <we-button data-select-class="o_record_has_cover o_full_screen_height">Full Screen</we-button>
             <we-button class="o_record_cover_opt_size_default" data-select-class="o_record_has_cover o_half_screen_height">Half Screen</we-button>
@@ -535,7 +535,7 @@
                 <we-button data-customize-website="website.option_custom_body_image">Image</we-button>
                 <we-button data-customize-website="website.option_custom_body_image, website.option_custom_body_pattern">Pattern</we-button>
             </we-select>
-            <we-imagepicker data-dependencies="!no_background_opt" data-customize-body-bg="" data-first-filters="background"/>
+            <we-imagepicker data-dependencies="!no_background_opt" data-customize-body-bg=""/>
         </we-row>
         <we-select string="Layout">
             <we-button data-customize-website="">Full</we-button>
