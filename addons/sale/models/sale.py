@@ -574,7 +574,7 @@ class SaleOrder(models.Model):
             context.update({
                 'default_partner_id': self.partner_id.id,
                 'default_partner_shipping_id': self.partner_shipping_id.id,
-                'default_invoice_payment_term_id': self.payment_term_id.id or self.partner_id.property_payment_term_id.id or self.env['ir.default'].sudo().get('account.move', 'invoice_payment_term_id', company_id=self.env.company.id),
+                'default_invoice_payment_term_id': self.payment_term_id.id or self.partner_id.property_payment_term_id.id or self.env['account.move'].default_get(['invoice_payment_term_id']).get('invoice_payment_term_id'),
                 'default_invoice_origin': self.mapped('name'),
                 'default_user_id': self.user_id.id,
             })
