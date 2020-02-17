@@ -266,10 +266,13 @@ const FieldEditor = FormEditor.extend({
      * @param {Object} field Field to complete with the active field info
      */
     _setActiveProperties(field) {
+        const classList = this.$target[0].classList;
+        const textarea = this.$target[0].querySelector('textarea');
         field.placeholder = this._getPlaceholder();
-        field.required = this.$target[0].classList.contains('s_website_form_required');
-        field.modelRequired = this.$target[0].classList.contains('s_website_form_model_required');
-        field.hidden = this.$target[0].classList.contains('s_website_form_field_hidden');
+        field.rows = textarea && textarea.rows;
+        field.required = classList.contains('s_website_form_required');
+        field.modelRequired = classList.contains('s_website_form_model_required');
+        field.hidden = classList.contains('s_website_form_field_hidden');
         field.formatInfo = this._getFieldFormat();
     },
     /**
