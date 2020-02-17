@@ -3443,7 +3443,7 @@ QUnit.module('Media', {
                     if (!args.length && route.indexOf('data:image/png;base64') === 0 ||
                         args.method === "search_read" &&
                         args.kwargs.domain[7][2].join(',') === "image/gif,image/jpe,image/jpeg,image/jpg,image/gif,image/png") {
-                        return Promise.resolve(this.data.records);
+                        return Promise.resolve(this.data.records || []);
                     }
                 }
                 if (route.indexOf('youtube') !== -1) {

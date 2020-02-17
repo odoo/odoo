@@ -111,6 +111,7 @@ var ImageWidget = MediaWidget.extend({
 
         this.multiImages = options.multiImages;
 
+        // No longer supported, kept for compatibility with custos. TODO: Remove in master.
         this.firstFilters = options.firstFilters || [];
         this.lastFilters = options.lastFilters || [];
 
@@ -119,20 +120,9 @@ var ImageWidget = MediaWidget.extend({
     /**
      * @override
      */
-    willStart: function () {
-        return Promise.all([
-            this._super.apply(this, arguments),
-            this.search('', true)
-        ]);
-    },
-    /**
-     * @override
-     */
     start: function () {
         var def = this._super.apply(this, arguments);
         var self = this;
-
-        this._renderImages(true);
 
         var o = {
             url: null,
@@ -144,11 +134,13 @@ var ImageWidget = MediaWidget.extend({
             o.url = this.$media.attr('href').replace(/[?].*/, '');
             o.id = +o.url.match(/\/web\/content\/(\d+)/, '')[1];
         }
-        if (o.url) {
-            self._toggleImage(_.find(self.records, function (record) { return record.url === o.url;}) || o, true);
-        }
 
-        return def;
+        return this.search('').then(function () {
+            if (o.url) {
+                self._toggleImage(_.find(self.records, function (record) { return record.url === o.url;}) || o);
+            }
+            return def;
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -164,54 +156,41 @@ var ImageWidget = MediaWidget.extend({
     /**
      * @override
      */
-    search: function (needle, noRender) {
+    search: function (needle) {
         var self = this;
-        if (!noRender) {
-            this.$('input.o_we_url_input').val('').trigger('input').trigger('change');
-        }
+        this.$('input.o_we_url_input').val('').trigger('input').trigger('change');
+        this.records = [];
+        this.needle = needle;
+        return this.fetchRecords(this.IMAGES_ROWS * this.IMAGES_PER_ROW, 0).then(function () {
+            self._renderImages();
+            self._adaptLoadMore();
+        });
+    },
+    /**
+     * @override
+     */
+    fetchRecords: function (number, offset) {
+        var self = this;
         return this._rpc({
             model: 'ir.attachment',
             method: 'search_read',
             args: [],
             kwargs: {
-                domain: this._getAttachmentsDomain(needle),
+                domain: this._getAttachmentsDomain(this.needle),
                 fields: ['name', 'datas_fname', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'access_token'],
                 order: [{name: 'id', asc: false}],
                 context: this.context,
-            },
+                // Try to fetch first record of next page just to know whether there is a next page.
+                limit: number + 1,
+                offset: offset,
+            }
         }).then(function (records) {
-            self.records = _.chain(records)
-                .filter(function (r) {
-                    return (r.type === "binary" || r.url && r.url.length > 0);
-                })
-                .uniq(function (r) {
-                    return (r.url || r.id);
-                })
-                .sortBy(function (r) {
-                    if (_.any(self.firstFilters, function (filter) {
-                        var regex = new RegExp(filter, 'i');
-                        return r.name.match(regex) || r.datas_fname && r.datas_fname.match(regex);
-                    })) {
-                        return -1;
-                    }
-                    if (_.any(self.lastFilters, function (filter) {
-                        var regex = new RegExp(filter, 'i');
-                        return r.name.match(regex) || r.datas_fname && r.datas_fname.match(regex);
-                    })) {
-                        return 1;
-                    }
-                    return 0;
-                })
-                .value();
-
+            self.records = self.records.slice();
+            Array.prototype.splice.apply(self.records, [offset, records.length].concat(records));
             _.each(self.records, function (record) {
                 record.src = record.url || _.str.sprintf('/web/image/%s/%s', record.id, encodeURI(record.name));  // Name is added for SEO purposes
                 record.isDocument = !(/gif|jpe|jpg|png/.test(record.mimetype));
             });
-            if (!noRender) {
-                self._renderImages();
-                self._adaptLoadMore();
-            }
         });
     },
 
@@ -281,7 +260,11 @@ var ImageWidget = MediaWidget.extend({
 
         domain.push('|',
             ['mimetype', '=', false],
-            ['mimetype', this.options.document ? 'not in' : 'in', ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png']]);
+            ['mimetype', this.options.document ? 'not in' : 'in', ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png']],
+            '|',
+            ['type', '=like', 'binary'],
+            ['url', '!=', false]
+        );
         if (needle && needle.length) {
             domain.push('|', ['datas_fname', 'ilike', needle], ['name', 'ilike', needle]);
         }
@@ -307,14 +290,17 @@ var ImageWidget = MediaWidget.extend({
      * @private
      */
     _loadMoreImages: function (forceSearch) {
-        this.imagesRows += 2;
-        this.IMAGES_DISPLAYED_TOTAL = this.imagesRows * this.IMAGES_PER_ROW;
-        if (!forceSearch) {
-            this._renderImages();
-            this._adaptLoadMore();
-        } else {
-            this.search(this.$('.o_we_search').val() || '');
-        }
+        var self = this;
+        return this.fetchRecords(2 * this.IMAGES_PER_ROW, this.imagesRows * this.IMAGES_PER_ROW).then(function () {
+            self.imagesRows += 2;
+            self.IMAGES_DISPLAYED_TOTAL = self.imagesRows * self.IMAGES_PER_ROW;
+            if (!forceSearch) {
+                self._renderImages();
+                self._adaptLoadMore();
+            } else {
+                self.search(self.$('.o_we_search').val() || '');
+            }
+        });
     },
     /**
      * @private
