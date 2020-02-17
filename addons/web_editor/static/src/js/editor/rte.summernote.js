@@ -421,7 +421,6 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
         $editable: $editable,
         media: media,
         options: {
-            lastFilters: ['background'],
             onUpload: $editable.data('callbacks').onUpload,
             noVideos:
               $editable.data('oe-model') === "mail.compose.message" ||
