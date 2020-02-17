@@ -528,7 +528,7 @@ class HolidaysRequest(models.Model):
 
     @api.constrains('date_from', 'date_to', 'state', 'employee_id')
     def _check_date(self):
-        for holiday in self:
+        for holiday in self.filtered('employee_id'):
             domain = [
                 ('date_from', '<', holiday.date_to),
                 ('date_to', '>', holiday.date_from),
