@@ -43,3 +43,4 @@ class TestRecruitmentProcess(common.TransactionCase):
         applicant_meeting = applicant.action_makeMeeting()
         self.assertEquals(applicant_meeting['context']['default_name'], 'Application for the post of Jr.application Programmer.',
             'Applicant name does not match.')
+
