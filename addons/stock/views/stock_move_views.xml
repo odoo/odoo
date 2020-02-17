@@ -212,9 +212,12 @@
                         </group>
                     </group>
                     <field name="move_line_ids" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree', 'default_product_uom_id': product_uom, 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>
-                    <footer class="oe_edit_only">
+                    <footer class="oe_edit_only" attrs="{'invisible': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
                         <button string="Confirm" special="save" class="oe_highlight"/>
                         <button string="Discard" special="cancel"/>
+                    </footer>
+                    <footer class="oe_edit_only" attrs="{'invisible': ['|', '&amp;', ('state', '!=', 'cancel'), ('state', '!=', 'done'), '&amp;', ('state', '=', 'done'), ('is_locked', '!=', True)]}">
+                        <button string="Close" special="cancel"/>
                     </footer>
                 </form>
             </field>
