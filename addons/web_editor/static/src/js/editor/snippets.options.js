@@ -1531,18 +1531,22 @@ const SnippetOptionWidget = Widget.extend({
      * @returns {Promise|undefined}
      */
     selectDataAttribute: function (previewMode, widgetValue, params) {
-        const dataName = params.attributeName;
-        if (dataName) {
-            if (params.saveUnit && !params.withUnit) {
-                // Values that come with an unit are saved without unit as
-                // data-attribute unless told otherwise.
-                widgetValue = widgetValue.split(params.saveUnit).join('');
-            }
-            this.$target[0].dataset[dataName] = widgetValue;
-        }
-        if (params.extraClass) {
-            this.$target.toggleClass(params.extraClass, params.defaultValue !== widgetValue);
-        }
+        const value = this._selectAttributeHelper(widgetValue, params);
+        this.$target[0].dataset[params.attributeName] = value;
+    },
+    /**
+     * Default option method which allows to select a value and set it on the
+     * associated snippet as an attribute. The name of the attribute is
+     * given by the attributeName parameter.
+     *
+     * @param {boolean} previewMode - @see this.selectClass
+     * @param {string} widgetValue
+     * @param {Object} params
+     * @returns {Promise|undefined}
+     */
+    selectAttribute: function (previewMode, widgetValue, params) {
+        const value = this._selectAttributeHelper(widgetValue, params);
+        this.$target[0].setAttribute(params.attributeName, value);
     },
     /**
      * Default option method which allows to select a value and set it on the
@@ -1847,13 +1851,20 @@ const SnippetOptionWidget = Widget.extend({
                 });
                 return activeClassNames;
             }
+            case 'selectAttribute':
             case 'selectDataAttribute': {
-                const dataName = params.attributeName;
-                let dataValue = (this.$target[0].dataset[dataName] || '').trim();
-                if (params.saveUnit && !params.withUnit) {
-                    dataValue = dataValue.split(/\s+/g).map(v => v + params.saveUnit).join(' ');
+                const attrName = params.attributeName;
+                let attrValue;
+                if (methodName === 'selectAttribute') {
+                    attrValue = this.$target[0].getAttribute(attrName);
+                } else if (methodName === 'selectDataAttribute') {
+                    attrValue = this.$target[0].dataset[attrName];
                 }
-                return dataValue || params.attributeDefaultValue || '';
+                attrValue = (attrValue || '').trim();
+                if (params.saveUnit && !params.withUnit) {
+                    attrValue = attrValue.split(/\s+/g).map(v => v + params.saveUnit).join(' ');
+                }
+                return attrValue || params.attributeDefaultValue || '';
             }
             case 'selectStyle': {
                 if (params.colorPrefix && params.colorNames) {
@@ -2078,6 +2089,27 @@ const SnippetOptionWidget = Widget.extend({
                 await this[methodName](previewMode, widgetValue, params);
             }
         }
+    },
+    /**
+     * Used to handle attribute or data attribute value change
+     *
+     * @param {string} value
+     * @param {Object} params
+     * @returns {string|undefined}
+     */
+    _selectAttributeHelper(value, params) {
+        if (!params.attributeName) {
+            throw new Error('Attribute name missing');
+        }
+        if (params.saveUnit && !params.withUnit) {
+            // Values that come with an unit are saved without unit as
+            // data-attribute unless told otherwise.
+            value = value.split(params.saveUnit).join('');
+        }
+        if (params.extraClass) {
+            this.$target.toggleClass(params.extraClass, params.defaultValue !== value);
+        }
+        return value;
     },
 
     //--------------------------------------------------------------------------
