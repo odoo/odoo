@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import uuid
+from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
 
@@ -501,11 +502,55 @@ class Channel(models.Model):
         for channel in self:
             channel._action_add_members(channel.mapped('enroll_group_ids.users.partner_id'))
 
+    def _get_earned_karma(self, partner_ids):
+        """ Compute the number of karma earned by partners on a channel
+        Warning: this count will not be accurate if the configuration has been
+        modified after the completion of a course!
+        """
+        total_karma = defaultdict(int)
+
+        slide_completed = self.env['slide.slide.partner'].sudo().search([
+            ('partner_id', 'in', partner_ids),
+            ('channel_id', 'in', self.ids),
+            ('completed', '=', True),
+            ('quiz_attempts_count', '>', 0)
+        ])
+        for partner_slide in slide_completed:
+            slide = partner_slide.slide_id
+            if not slide.question_ids:
+                continue
+            gains = [slide.quiz_first_attempt_reward,
+                     slide.quiz_second_attempt_reward,
+                     slide.quiz_third_attempt_reward,
+                     slide.quiz_fourth_attempt_reward]
+            attempts = min(partner_slide.quiz_attempts_count - 1, 3)
+            total_karma[partner_slide.partner_id.id] += gains[attempts]
+
+        channel_completed = self.env['slide.channel.partner'].sudo().search([
+            ('partner_id', 'in', partner_ids),
+            ('channel_id', 'in', self.ids),
+            ('completed', '=', True)
+        ])
+        for partner_channel in channel_completed:
+            channel = partner_channel.channel_id
+            total_karma[partner_channel.partner_id.id] += channel.karma_gen_channel_finish
+
+        return total_karma
+
     def _remove_membership(self, partner_ids):
         """ Unlink (!!!) the relationships between the passed partner_ids
-        and the channels and their slides (done in the unlink of slide.channel.partner model). """
+        and the channels and their slides (done in the unlink of slide.channel.partner model).
+        Remove earned karma when completed quizz """
         if not partner_ids:
             raise ValueError("Do not use this method with an empty partner_id recordset")
+
+        earned_karma = self._get_earned_karma(partner_ids)
+        users = self.env['res.users'].sudo().search([
+            ('partner_id', 'in', list(earned_karma)),
+        ])
+        for user in users:
+            if earned_karma[user.partner_id.id]:
+                user.add_karma(-1 * earned_karma[user.partner_id.id])
 
         removed_channel_partner_domain = []
         for channel in self:
