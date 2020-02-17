@@ -33,6 +33,7 @@ class AccountMove(models.Model):
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = "Journal Entries"
     _order = 'date desc, name desc, id desc'
+    _mail_post_access = 'read'
 
     @api.model
     def _get_default_journal(self):
