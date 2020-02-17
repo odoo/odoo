@@ -1167,7 +1167,9 @@ class StockMove(models.Model):
                         move_line_vals_list.append(move._prepare_move_line_vals(quantity=missing_reserved_quantity))
                 assigned_moves |= move
             else:
-                if not move.move_orig_ids:
+                if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
+                    assigned_moves |= move
+                elif not move.move_orig_ids:
                     if move.procure_method == 'make_to_order':
                         continue
                     # If we don't need any quantity, consider the move assigned.
