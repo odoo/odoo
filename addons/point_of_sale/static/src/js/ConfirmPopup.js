@@ -9,7 +9,7 @@ odoo.define('point_of_sale.ConfirmPopup', function(require) {
     ConfirmPopup.defaultProps = {
         title: 'Confirm ?',
         body: '',
-    }
+    };
 
     Chrome.addComponents([ConfirmPopup]);
 

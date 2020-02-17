@@ -3,22 +3,26 @@
 
     <t t-name="ConfirmPopup" owl="1">
         <div role="dialog" class="modal-dialog">
-            <div class="popup popup-confirm">
-                <header class="title">
-                    <t t-esc="props.title" />
-                </header>
-                <main class="body">
-                    <t t-esc=" props.body" />
-                </main>
-                <footer class="footer">
-                    <div class="button confirm" t-on-click="confirm">
-                        <t t-esc="props.confirmText" />
-                    </div>
-                    <div class="button cancel" t-on-click="cancel">
-                        <t t-esc="props.cancelText" />
-                    </div>
-                </footer>
-            </div>
+            <Draggable>
+                <div class="popup popup-confirm">
+                    <DraggablePart>
+                        <header class="title">
+                            <t t-esc="props.title" />
+                        </header>
+                    </DraggablePart>
+                    <main class="body">
+                        <t t-esc=" props.body" />
+                    </main>
+                    <footer class="footer">
+                        <div class="button confirm" t-on-click="confirm">
+                            <t t-esc="props.confirmText" />
+                        </div>
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText" />
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
         </div>
     </t>
 

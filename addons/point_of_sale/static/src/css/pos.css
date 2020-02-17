@@ -2077,7 +2077,7 @@ td {
 /*  ********* The Debug Widget  ********* */
 
 .pos .debug-widget{
-    z-index:100000;
+    z-index:900;
     position: absolute;
     right: 10px;
     top: 10px;
@@ -2166,7 +2166,6 @@ td {
 }
 .pos .modal-dialog .popup{
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
     margin: auto;
     width:500px;
     height:400px;
@@ -2179,6 +2178,10 @@ td {
     z-index:1200;
     font-family: 'Lato';
     font-family: Lato;
+    /* position the popup at center and and still making it draggable*/
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 .pos .modal-dialog .popup-confirm{
     height: 250px;
