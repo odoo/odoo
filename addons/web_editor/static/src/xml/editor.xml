@@ -88,6 +88,7 @@
             enctype="multipart/form-data"
             t-att-target="iframeName">
             <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+            <!-- No longer supported, kept for compatibility. Remove in master. -->
             <input type="hidden" name="filters" t-att-value="widget.firstFilters.join('_')"/>
             <input t-if="widget.options.res_id" type="hidden" name="res_id" t-att-value="widget.options.res_id"/>
             <input t-if="widget.options.res_model" type="hidden" name="res_model" t-att-value="widget.options.res_model"/>

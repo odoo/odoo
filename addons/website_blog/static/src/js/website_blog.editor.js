@@ -186,7 +186,6 @@ options.registry.blog_cover = options.Class.extend({
 
         var editor = new weWidgets.MediaDialog(this, {
             onlyImages: true,
-            firstFilters: ['background']
         }, $image, $image[0]).open();
         editor.on('save', this, function (event, img) {
             var src = $image.attr('src');
