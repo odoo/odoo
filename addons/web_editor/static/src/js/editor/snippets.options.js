@@ -1731,7 +1731,7 @@ const SnippetOptionWidget = Widget.extend({
         const proms = this._userValueWidgets.map(async widget => {
             // Update widget value (for each method)
             const methodsNames = widget.getMethodsNames();
-            const proms = methodsNames.map(async methodName => {
+            for (const methodName of methodsNames) {
                 const params = widget.getMethodsParams(methodName);
 
                 let obj = this;
@@ -1749,8 +1749,7 @@ const SnippetOptionWidget = Widget.extend({
                 }
                 const normalizedValue = this._normalizeWidgetValue(value);
                 widget.setValue(normalizedValue, methodName);
-            });
-            await Promise.all(proms);
+            }
 
             // Refresh the UI of all widgets (after all the current values they
             // hold have been updated).

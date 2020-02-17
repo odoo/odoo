@@ -83,7 +83,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         await this._super(...arguments);
 
         const fontEls = [];
-        const methodName = this.el.dataset.methodName || 'customizeWebsite';
+        const methodName = this.el.dataset.methodName || 'customizeWebsiteVariable';
         const variable = this.el.dataset.variable;
         _.times(this.nbFonts, fontNb => {
             const realFontNb = fontNb + 1;
@@ -236,18 +236,80 @@ options.Class.include({
     /**
      * @see this.selectClass for parameters
      */
-    customizeWebsite: async function (previewMode, widgetValue, params) {
+    customizeWebsiteViews: async function (previewMode, widgetValue, params) {
+        await this._customizeWebsite(previewMode, widgetValue, params, 'views');
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
+    customizeWebsiteVariable: async function (previewMode, widgetValue, params) {
+        await this._customizeWebsite(previewMode, widgetValue, params, 'variable');
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
+    customizeWebsiteColor: async function (previewMode, widgetValue, params) {
+        await this._customizeWebsite(previewMode, widgetValue, params, 'color');
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState: async function (methodName, params) {
+        switch (methodName) {
+            case 'customizeWebsiteViews': {
+                const allXmlIDs = this._getXMLIDsFromPossibleValues(params.possibleValues);
+                const enabledXmlIDs = await this._rpc({
+                    route: '/website/theme_customize_get',
+                    params: {
+                        'xml_ids': allXmlIDs,
+                    },
+                });
+                let mostXmlIDsStr = '';
+                let mostXmlIDsNb = 0;
+                for (const xmlIDsStr of params.possibleValues) {
+                    const enableXmlIDs = xmlIDsStr.split(/\s*,\s*/);
+                    if (enableXmlIDs.length > mostXmlIDsNb
+                            && enableXmlIDs.every(xmlID => enabledXmlIDs.includes(xmlID))) {
+                        mostXmlIDsStr = xmlIDsStr;
+                        mostXmlIDsNb = enableXmlIDs.length;
+                    }
+                }
+                return mostXmlIDsStr; // Need to return the exact same string as in possibleValues
+            }
+            case 'customizeWebsiteVariable': {
+                const style = window.getComputedStyle(document.documentElement);
+                return style.getPropertyValue('--' + params.variable).trim();
+            }
+            case 'customizeWebsiteColor': {
+                return this._getCSSColorFromName(params.color);
+            }
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @private
+     */
+    _customizeWebsite: async function (previewMode, widgetValue, params, type) {
         // Never allow previews for theme customizations
         if (previewMode) {
             return;
         }
 
-        if (params.color) {
-            await this._customizeWebsiteColor(widgetValue, params);
-        } else if (params.variable) {
-            await this._customizeWebsiteVariable(widgetValue, params);
-        } else {
-            await this._customizeWebsiteViews(widgetValue, params);
+        switch (type) {
+            case 'views':
+                await this._customizeWebsiteViews(widgetValue, params);
+                break;
+            case 'variable':
+                await this._customizeWebsiteVariable(widgetValue, params);
+                break;
+            case 'color':
+                await this._customizeWebsiteColor(widgetValue, params);
+                break;
         }
 
         if (params.reload || config.isDebug('assets')) {
@@ -267,45 +329,6 @@ options.Class.include({
                 onFailure: () => reject(),
             });
         });
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _computeWidgetState: async function (methodName, params) {
-        if (methodName === 'customizeWebsite') {
-            if (params.color) {
-                return this._getCSSColorFromName(params.color);
-            }
-            if (params.variable) {
-                const style = window.getComputedStyle(document.documentElement);
-                return style.getPropertyValue('--' + params.variable).trim();
-            }
-
-            const allXmlIDs = this._getXMLIDsFromPossibleValues(params.possibleValues);
-            const enabledXmlIDs = await this._rpc({
-                route: '/website/theme_customize_get',
-                params: {
-                    'xml_ids': allXmlIDs,
-                },
-            });
-            let mostXmlIDsStr = '';
-            let mostXmlIDsNb = 0;
-            for (const xmlIDsStr of params.possibleValues) {
-                const enableXmlIDs = xmlIDsStr.split(/\s*,\s*/);
-                if (enableXmlIDs.length > mostXmlIDsNb
-                        && enableXmlIDs.every(xmlID => enabledXmlIDs.includes(xmlID))) {
-                    mostXmlIDsStr = xmlIDsStr;
-                    mostXmlIDsNb = enableXmlIDs.length;
-                }
-            }
-            return mostXmlIDsStr; // Need to return the exact same string as in possibleValues
-        }
-        return this._super(...arguments);
     },
     /**
      * @private
@@ -460,10 +483,10 @@ options.Class.include({
         const _super = this._super.bind(this);
 
         // First check if the updated widget or any of the widgets it will
-        // trigger uses the 'customizeWebsite' method. If so, check if any one of
-        // them will require a reload. If it is the case, warns the user and ask
-        // if he agrees to save its current changes. If not, just do nothing.
-        // If yes, save the current changes and continue.
+        // trigger uses one of the 'customizeWebsite...' methods. If so, check
+        // if any one of them will require a reload. If it is the case, warns
+        // the user and ask if he agrees to save its current changes. If not,
+        // just do nothing. If yes, save the current changes and continue.
         let requiresReload = false;
         if (!ev.data.previewMode && !ev.data.isSimulatedEvent) {
             const linkedWidgets = this._requestUserValueWidgets(...ev.data.triggerWidgetsNames);
@@ -471,11 +494,18 @@ options.Class.include({
 
             for (const widget of widgets) {
                 const methodsNames = widget.getMethodsNames();
-                if (!methodsNames.includes('customizeWebsite')) {
+                if (!methodsNames.includes('customizeWebsiteViews')
+                        && !methodsNames.includes('customizeWebsiteVariable')
+                        && !methodsNames.includes('customizeWebsiteColor')) {
                     continue;
                 }
-                const params = widget.getMethodsParams('customizeWebsite');
-                if (params.reload || config.isDebug('assets')) {
+                let paramsReload = false;
+                if (widget.getMethodsParams('customizeWebsiteViews').reload
+                        || widget.getMethodsParams('customizeWebsiteVariable').reload
+                        || widget.getMethodsParams('customizeWebsiteColor').reload) {
+                    paramsReload = true;
+                }
+                if (paramsReload || config.isDebug('assets')) {
                     requiresReload = true;
                     break;
                 }
