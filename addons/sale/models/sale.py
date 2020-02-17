@@ -517,6 +517,7 @@ class SaleOrder(models.Model):
         a clean extension chain).
         """
         self.ensure_one()
+<<<<<<< HEAD
         # ensure a correct context for the _get_default_journal method and company-dependent fields
         self = self.with_context(default_company_id=self.company_id.id, force_company=self.company_id.id)
         journal = self.env['account.move'].with_context(default_type='out_invoice')._get_default_journal()
@@ -525,6 +526,20 @@ class SaleOrder(models.Model):
 
         invoice_vals = {
             'ref': self.client_order_ref or '',
+=======
+        company_id = self.company_id.id
+        journal_id = (self.env['account.invoice'].with_context(company_id=company_id or self.env.user.company_id.id)
+            .default_get(['journal_id'])['journal_id'])
+        if not journal_id:
+            raise UserError(_('Please define an accounting sales journal for this company.'))
+        vinvoice = self.env['account.invoice'].new({'partner_id': self.partner_invoice_id.id, 'type': 'out_invoice'})
+        # Get partner extra fields
+        vinvoice._onchange_partner_id()
+        invoice_vals = vinvoice._convert_to_write(vinvoice._cache)
+        invoice_vals.update({
+            'name': self.client_order_ref or '',
+            'origin': self.name,
+>>>>>>> 5439bc6de87... temp
             'type': 'out_invoice',
             'narration': self.note,
             'currency_id': self.pricelist_id.currency_id.id,
