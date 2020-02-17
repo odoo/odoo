@@ -37,7 +37,7 @@ class MailMail(models.Model):
         return '<img src="%s" alt=""/>' % track_url
 
     def _get_unsubscribe_url(self, email_to):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.env.company.website or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         url = werkzeug.urls.url_join(
             base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
                 'mailing_id': self.mailing_id.id,
