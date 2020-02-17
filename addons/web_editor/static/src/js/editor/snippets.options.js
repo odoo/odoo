@@ -2065,7 +2065,6 @@ registry.background = SnippetOptionWidget.extend({
             noDocuments: true,
             noIcons: true,
             noVideos: true,
-            firstFilters: ['background'],
             res_model: $editable.data('oe-model'),
             res_id: $editable.data('oe-id'),
         };
