@@ -17,7 +17,10 @@ const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
 
 const UrlPickerUserValueWidget = InputUserValueWidget.extend({
     custom_events: _.extend({}, InputUserValueWidget.prototype.custom_events || {}, {
-        website_url_chosen: '_onWebsiteURLChosen',
+        'website_url_chosen': '_onWebsiteURLChosen',
+    }),
+    events: _.extend({}, InputUserValueWidget.prototype.events || {}, {
+        'click .o_we_redirect_to': '_onRedirectTo',
     }),
 
     /**
@@ -25,6 +28,10 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
      */
     start: async function () {
         await this._super(...arguments);
+        const linkButton = document.createElement('we-button');
+        linkButton.classList.add('o_we_redirect_to', 'fa', 'fa-fw', 'fa-external-link');
+        linkButton.title = _t("Redirect to URL in a new tab");
+        this.containerEl.appendChild(linkButton);
         $(this.inputEl).addClass('text-left');
         wUtils.autocompleteWithPages(this, $(this.inputEl));
     },
@@ -42,6 +49,16 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
     _onWebsiteURLChosen: function (ev) {
         $(this.inputEl).trigger('input');
         this._onUserValueChange(ev);
+    },
+    /**
+     * Redirects to the URL the widget currently holds.
+     *
+     * @private
+     */
+    _onRedirectTo: function () {
+        if (this._value) {
+            window.open(this._value, '_blank');
+        }
     },
 });
 
