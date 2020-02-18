@@ -504,6 +504,37 @@ class HrExpense(models.Model):
         self.sheet_id.message_post_with_view('hr_expense.hr_expense_template_refuse_reason',
                                              values={'reason': reason, 'is_sheet': False, 'name': self.name})
 
+    @api.model
+    def get_expense_dashbord(self):
+        if not self.env.user.employee_ids:
+            return
+        expenses = self.read_group(
+            [
+                ('employee_id', 'in', self.env.user.employee_ids.ids),
+                ('payment_mode', '=', 'own_account'),
+                ('state', 'in', ['draft', 'reported', 'approved'])
+            ], ['total_amount', 'currency_id', 'state'], ['state', 'currency_id'], lazy=False)
+        expense_state = {
+            'draft': {
+                'description': _('to report'),
+                'amount': list(),
+            },
+            'reported': {
+                'description': _('under validation'),
+                'amount': list(),
+            },
+            'approved': {
+                'description': _('to be reimbursed'),
+                'amount': list(),
+            }
+        }
+        for expense in expenses:
+            state = expense['state']
+            currency = expense['currency_id'][0]
+            amount = expense['total_amount']
+            expense_state[state]['amount'].append((currency, amount))
+        return expense_state
+
     # ----------------------------------------
     # Mail Thread
     # ----------------------------------------

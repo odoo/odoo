@@ -46,6 +46,7 @@ This module also uses analytic accounting and is compatible with the invoice on 
     'demo': ['data/hr_expense_demo.xml'],
     'qweb': [
         "static/src/xml/documents_upload_views.xml",
+        "static/src/xml/expense_dashboard.xml",
     ],
     'installable': True,
     'application': True,
