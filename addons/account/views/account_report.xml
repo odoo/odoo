@@ -9,7 +9,7 @@
             report_type="qweb-pdf"
             name="account.report_invoice_with_payments"
             file="account.report_invoice_with_payments"
-            attachment="(object.state in ('open','in_payment','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            attachment="(object.state in ('open','in_payment','paid')) and ((object.number or 'INV').replace('/','_')+'.pdf')"
             print_report_name="(object._get_report_base_filename())"
             groups="account.group_account_invoice"
         />
@@ -21,7 +21,7 @@
             report_type="qweb-pdf"
             name="account.report_invoice"
             file="account.report_invoice"
-            attachment="(object.state in ('open','in_payment','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            attachment="(object.state in ('open','in_payment','paid')) and ((object.number or 'INV').replace('/','_')+'.pdf')"
             print_report_name="(object._get_report_base_filename())"
         />
 
