@@ -28,7 +28,7 @@ var session = require('web.session');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
 
-const env = require('web.env');
+// const env = require('web.env');
 
 var _t = core._t;
 
