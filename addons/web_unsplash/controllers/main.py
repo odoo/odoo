@@ -140,7 +140,7 @@ class Web_Unsplash(http.Controller):
         else:
             return {'error': response.status_code}
 
-    @http.route("/web_unsplash/get_app_id", type='json', auth="public")
+    @http.route("/web_unsplash/get_app_id", type='json', auth="user")
     def get_unsplash_app_id(self, **post):
         return request.env['ir.config_parameter'].sudo().get_param('unsplash.app_id')
 
