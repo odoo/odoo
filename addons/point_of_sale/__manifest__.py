@@ -84,6 +84,7 @@
         'static/src/xml/DraggablePart.xml',
         'static/src/xml/DebugWidget.xml',
         'static/src/xml/ErrorPopup.xml',
+        'static/src/xml/ErrorBarcodePopup.xml',
         'static/src/xml/ConfirmPopup.xml',
         'static/src/xml/TextInputPopup.xml',
         'static/src/xml/ErrorTracebackPopup.xml',

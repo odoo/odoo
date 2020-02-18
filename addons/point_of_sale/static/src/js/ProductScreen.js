@@ -22,9 +22,23 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 },
                 this
             );
+            this.env.pos.barcode_reader.set_action_callback({
+                product: this._barcodeProductAction.bind(this),
+                weight: this._barcodeProductAction.bind(this),
+                price: this._barcodeProductAction.bind(this),
+                client: this._barcodeClientAction.bind(this),
+                discount: this._barcodeDiscountAction.bind(this),
+                error: this._barcodeErrorAction.bind(this),
+            });
         }
         willUnmount() {
             this.env.pos.off('change:selectedOrder', null, this);
+            if (this.env.pos.barcode_reader) {
+                this.env.pos.barcode_reader.reset_action_callbacks();
+            }
+        }
+        get currentOrder() {
+            return this.env.pos.get_order();
         }
         async clickProduct(event) {
             const product = event.detail;
@@ -36,8 +50,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 if (isAllowOnlyOneLot) {
                     packLotLinesToEdit = [];
                 } else {
-                    const orderline = this.env.pos
-                        .get_order()
+                    const orderline = this.currentOrder
                         .get_orderlines()
                         .filter(line => !line.get_discount())
                         .find(line => line.product.id === product.id);
@@ -80,10 +93,51 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             }
 
             // Add the product after having the extra information.
-            this.env.pos.get_order().add_product(product, {
+            this.currentOrder.add_product(product, {
                 draftPackLotLines,
                 quantity: weight,
             });
+        }
+        _barcodeProductAction(code) {
+            // NOTE: scan_product call has side effect in pos if it returned true.
+            if (!this.env.pos.scan_product(code)) {
+                this._barcodeErrorAction(code);
+            }
+        }
+        _barcodeClientAction(code) {
+            const partner = this.env.pos.db.get_partner_by_barcode(code.code);
+            if (partner) {
+                if (this.currentOrder.get_client() !== partner) {
+                    this.currentOrder.set_client(partner);
+                    this.currentOrder.set_pricelist(
+                        _.findWhere(this.env.pos.pricelists, {
+                            id: partner.property_product_pricelist[0],
+                        }) || this.env.pos.default_pricelist
+                    );
+                }
+                return true;
+            }
+            this._barcodeErrorAction(code);
+            return false;
+        }
+        _barcodeDiscountAction(code) {
+            var last_orderline = this.currentOrder.get_last_orderline();
+            if (last_orderline) {
+                last_orderline.set_discount(code.value);
+            }
+        }
+        // TODO jcb: The following two methods should be in PosScreenComponent?
+        // Why? Because once we start declaring barcode actions in different
+        // screens, these methods will also be declared over and over.
+        _barcodeErrorAction(code) {
+            this.showPopup('ErrorBarcodePopup', { code: this._codeRepr(code) });
+        }
+        _codeRepr(code) {
+            if (code.code.length > 32) {
+                return code.code.substring(0, 29) + '...';
+            } else {
+                return code.code;
+            }
         }
     }
     ProductScreen.components = { ProductsWidget, OrderWidget, NumpadWidget, ActionpadWidget };

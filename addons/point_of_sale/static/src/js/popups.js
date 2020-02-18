@@ -124,15 +124,6 @@ var ErrorTracebackPopupWidget = ErrorPopupWidget.extend({
 });
 gui.define_popup({name:'error-traceback', widget: ErrorTracebackPopupWidget});
 
-
-var ErrorBarcodePopupWidget = ErrorPopupWidget.extend({
-    template:'ErrorBarcodePopupWidget',
-    show: function(barcode){
-        this._super({barcode: barcode});
-    },
-});
-gui.define_popup({name:'error-barcode', widget: ErrorBarcodePopupWidget});
-
 /**
  * A popup that allows the user to select one item from a list.
  *
