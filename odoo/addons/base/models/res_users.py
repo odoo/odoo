@@ -263,11 +263,11 @@ class Users(models.Model):
     email = fields.Char(related='partner_id.email', inherited=True, readonly=False)
 
     accesses_count = fields.Integer('# Access Rights', help='Number of access rights that apply to the current user',
-                                    compute='_compute_accesses_count')
+                                    compute='_compute_accesses_count', compute_sudo=True)
     rules_count = fields.Integer('# Record Rules', help='Number of record rules that apply to the current user',
-                                 compute='_compute_accesses_count')
+                                 compute='_compute_accesses_count', compute_sudo=True)
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
-                                  compute='_compute_accesses_count')
+                                  compute='_compute_accesses_count', compute_sudo=True)
     image_1920 = fields.Image(related='partner_id.image_1920', inherited=True, readonly=False, default=_get_default_image)
 
     _sql_constraints = [
