@@ -40,14 +40,8 @@ try:
     # Python code that may break the security of the server.
     from jinja2.sandbox import SandboxedEnvironment
     mako_template_env = SandboxedEnvironment(
-        block_start_string="<%",
-        block_end_string="%>",
         variable_start_string="${",
         variable_end_string="}",
-        comment_start_string="<%doc>",
-        comment_end_string="</%doc>",
-        line_statement_prefix="%",
-        line_comment_prefix="##",
         trim_blocks=True,               # do not output newline after blocks
         autoescape=True,                # XML/HTML automatic escaping
     )
