@@ -9,7 +9,7 @@ from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import formatLang, get_lang
 
 
 class PurchaseOrder(models.Model):
@@ -638,7 +638,7 @@ class PurchaseOrderLine(models.Model):
 
         self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
         product_lang = self.product_id.with_context(
-            lang=self.partner_id.lang,
+            lang=get_lang(self.env, self.partner_id.lang).code,
             partner_id=self.partner_id.id,
             company_id=self.company_id.id,
         )
