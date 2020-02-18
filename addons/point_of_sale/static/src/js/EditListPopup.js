@@ -67,7 +67,7 @@ odoo.define('point_of_sale.EditListPopup', function(require) {
         removeItem(event) {
             const itemToRemove = event.detail;
             this.state.array.splice(
-                this.state.array.findIndex(item => item.id == itemToRemove.id),
+                this.state.array.findIndex(item => item._id == itemToRemove._id),
                 1
             );
             // We keep a minimum of one empty item in the popup.
