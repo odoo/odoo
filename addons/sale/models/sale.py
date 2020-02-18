@@ -361,14 +361,13 @@ class SaleOrder(models.Model):
         if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms:
             values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
 
-        # Use team of salesman if any otherwise leave as-is
-        values['team_id'] = partner_user.team_id.id if partner_user and partner_user.team_id else self.team_id
+        values['team_id'] = self.env['crm.team']._get_default_team_id(user_id=user_id)
         self.update(values)
 
     @api.onchange('user_id')
     def onchange_user_id(self):
-        if self.user_id and self.user_id.sale_team_id:
-            self.team_id = self.user_id.sale_team_id
+        if self.user_id:
+            self.team_id = self.env['crm.team']._get_default_team_id(user_id=self.user_id.id)
 
     @api.onchange('partner_id')
     def onchange_partner_id_warning(self):
