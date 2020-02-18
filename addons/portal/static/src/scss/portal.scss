@@ -536,6 +536,25 @@ form label {
     }
 }
 
+.o_portal_security_body {
+    @extend .mx-auto;
+    max-width: map-get($container-max-widths, sm);
+    section {
+        @extend .mt-4;
+        form.oe_reset_password_form {
+            max-width: initial;
+            margin: initial;
+        }
+        .form-group {
+            // for the absolutely positioned meter on new password
+            position: relative;
+        }
+        label, button {
+            @extend .text-nowrap;
+        }
+    }
+}
+
 // Copyright
 .o_footer_copyright {
 
@@ -551,3 +570,4 @@ form label {
         }
     }
 }
+

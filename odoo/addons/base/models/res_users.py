@@ -88,6 +88,11 @@ def parse_m2m(commands):
             ids.append(command)
     return ids
 
+def _jsonable(o):
+    try: json.dumps(o)
+    except TypeError: return False
+    else: return True
+
 @decorator.decorator
 def check_identity(fn, self):
     """ Wrapped method should be an *action method* (called from a button
@@ -105,8 +110,11 @@ def check_identity(fn, self):
         return fn(self)
 
     w = self.sudo().env['res.users.identitycheck'].create({
-        'request': json.dumps([ # assume self.env.context can be serialised to json
-            self.env.context,
+        'request': json.dumps([
+            { # strip non-jsonable keys (e.g. mapped to recordsets like binary_field_real_user)
+                k: v for k, v in self.env.context.items()
+                if _jsonable(v)
+            },
             self._name,
             self.ids,
             fn.__name__
