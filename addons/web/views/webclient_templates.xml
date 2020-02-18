@@ -265,7 +265,6 @@
         <script type="text/javascript" src="/web/static/src/js/tools/test_menus_loader.js"/>
         <script type="text/javascript" src="/web/static/src/js/tools/debug_manager_backend.js"></script>
         <script type="text/javascript" src="/web/static/src/js/tools/tools.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/env.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/data_export.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/date_picker.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/domain_selector_dialog.js"></script>
@@ -877,6 +876,7 @@
                 <t t-call="web.conditional_assets_tests"/>
 
                 <script type="text/javascript" src="/web/static/src/js/main.js"></script>
+                <script type="text/javascript" src="/web/static/src/js/env.js"></script>
             </t>
             <t t-set="head" t-value="head_web + (head or '')"/>
             <!-- <t t-set="body_classname" t-value="'o_web_client'"/> -->
