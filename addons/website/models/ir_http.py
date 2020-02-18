@@ -379,6 +379,5 @@ class ModelConverter(ModelConverter):
         domain = safe_eval(self.domain, (args or {}).copy())
         if dom:
             domain += dom
-        for record in Model.search_read(domain=domain, fields=['write_date', Model._rec_name]):
-            if record.get(Model._rec_name, False):
-                yield {'loc': (record['id'], record[Model._rec_name])}
+        for record in Model.search_read(domain, ['display_name']):
+            yield {'loc': (record['id'], record['display_name'])}

@@ -336,7 +336,7 @@ class PosSession(models.Model):
         # in the self.order_ids with group key of the `payment_method_id`
         # field of the pos.payment record.
         amounts = lambda: {'amount': 0.0, 'amount_converted': 0.0}
-        tax_amounts = lambda: {'amount': 0.0, 'amount_converted': 0.0, 'base_amount': 0.0}
+        tax_amounts = lambda: {'amount': 0.0, 'amount_converted': 0.0, 'base_amount': 0.0, 'base_amount_converted': 0.0}
         split_receivables = defaultdict(amounts)
         split_receivables_cash = defaultdict(amounts)
         combine_receivables = defaultdict(amounts)
@@ -415,8 +415,8 @@ class PosSession(models.Model):
                         exp_key = move.product_id.property_account_expense_id or move.product_id.categ_id.property_account_expense_categ_id
                         out_key = move.product_id.categ_id.property_stock_account_output_categ_id
                         amount = -sum(move.stock_valuation_layer_ids.mapped('value'))
-                        stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date)
-                        stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date)
+                        stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
+                        stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
 
                 # Increasing current partner's customer_rank
                 order.partner_id._increase_rank('customer_rank')
@@ -452,7 +452,7 @@ class PosSession(models.Model):
         combine_receivables = data.get('combine_receivables')
         MoveLine = data.get('MoveLine')
 
-        tax_vals = [self._get_tax_vals(key, amounts['amount'], amounts['amount_converted'], amounts['base_amount']) for key, amounts in taxes.items() if amounts['amount']]
+        tax_vals = [self._get_tax_vals(key, amounts['amount'], amounts['amount_converted'], amounts['base_amount_converted']) for key, amounts in taxes.items() if amounts['amount']]
         # Check if all taxes lines have account_id assigned. If not, there are repartition lines of the tax that have no account_id.
         tax_names_no_account = [line['name'] for line in tax_vals if line['account_id'] == False]
         if len(tax_names_no_account) > 0:
@@ -674,14 +674,14 @@ class PosSession(models.Model):
         }
         return self._credit_amounts(partial_vals, amount, amount_converted)
 
-    def _get_tax_vals(self, key, amount, amount_converted, base_amount):
+    def _get_tax_vals(self, key, amount, amount_converted, base_amount_converted):
         account_id, repartition_line_id, tax_id, tag_ids = key
         tax = self.env['account.tax'].browse(tax_id)
         partial_args = {
             'name': tax.name,
             'account_id': account_id,
             'move_id': self.move_id.id,
-            'tax_base_amount': base_amount,
+            'tax_base_amount': base_amount_converted,
             'tax_repartition_line_id': repartition_line_id,
             'tag_ids': [(6, 0, tag_ids)],
         }
@@ -689,11 +689,11 @@ class PosSession(models.Model):
 
     def _get_stock_expense_vals(self, exp_account, amount, amount_converted):
         partial_args = {'account_id': exp_account.id, 'move_id': self.move_id.id}
-        return self._debit_amounts(partial_args, amount, amount_converted)
+        return self._debit_amounts(partial_args, amount, amount_converted, force_company_currency=True)
 
     def _get_stock_output_vals(self, out_account, amount, amount_converted):
         partial_args = {'account_id': out_account.id, 'move_id': self.move_id.id}
-        return self._credit_amounts(partial_args, amount, amount_converted)
+        return self._credit_amounts(partial_args, amount, amount_converted, force_company_currency=True)
 
     def _get_statement_line_vals(self, statement, receivable_account, amount):
         return {
@@ -704,15 +704,67 @@ class PosSession(models.Model):
             'account_id': receivable_account.id,
         }
 
-    def _update_amounts(self, old_amounts, amounts_to_add, date, round=True):
-        new_amounts = {}
-        for k, amount in old_amounts.items():
-            if k == 'amount_converted':
-                amount_converted = old_amounts['amount_converted']
-                amount_to_convert = amounts_to_add['amount']
-                new_amounts['amount_converted'] = amount_converted if self.is_in_company_currency else (amount_converted + self._amount_converter(amount_to_convert, date, round))
+    def _update_amounts(self, old_amounts, amounts_to_add, date, round=True, force_company_currency=False):
+        """Responsible for adding `amounts_to_add` to `old_amounts` considering the currency of the session.
+
+            old_amounts {                                                       new_amounts {
+                amount                         amounts_to_add {                     amount
+                amount_converted        +          amount               ->          amount_converted
+               [base_amount                       [base_amount]                    [base_amount
+                base_amount_converted]        }                                     base_amount_converted]
+            }                                                                   }
+
+        NOTE:
+            - Notice that `amounts_to_add` does not have `amount_converted` field.
+                This function is responsible in calculating the `amount_converted` from the
+                `amount` of `amounts_to_add` which is used to update the values of `old_amounts`.
+            - Values of `amount` and/or `base_amount` should always be in session's currency [1].
+            - Value of `amount_converted` should be in company's currency
+
+        [1] Except when `force_company_currency` = True. It means that values in `amounts_to_add`
+            is in company currency.
+
+        :params old_amounts dict:
+            Amounts to update
+        :params amounts_to_add dict:
+            Amounts used to update the old_amounts
+        :params date date:
+            Date used for conversion
+        :params round bool:
+            Same as round parameter of `res.currency._convert`.
+            Defaults to True because that is the default of `res.currency._convert`.
+            We put it to False if we want to round globally.
+        :params force_company_currency bool:
+            If True, the values in amounts_to_add are in company's currency.
+            Defaults to False because it is only used to anglo-saxon lines.
+
+        :return dict: new amounts combining the values of `old_amounts` and `amounts_to_add`.
+        """
+        # make a copy of the old amounts
+        new_amounts = { **old_amounts }
+
+        amount = amounts_to_add.get('amount')
+        if self.is_in_company_currency or force_company_currency:
+            amount_converted = amount
+        else:
+            amount_converted = self._amount_converter(amount, date, round)
+
+        # update amount and amount converted
+        new_amounts['amount'] += amount
+        new_amounts['amount_converted'] += amount_converted
+
+        # consider base_amount if present
+        if not amounts_to_add.get('base_amount') == None:
+            base_amount = amounts_to_add.get('base_amount')
+            if self.is_in_company_currency or force_company_currency:
+                base_amount_converted = base_amount
             else:
-                new_amounts[k] = old_amounts[k] + amounts_to_add[k]
+                base_amount_converted = self._amount_converter(base_amount, date, round)
+
+            # update base_amount and base_amount_converted
+            new_amounts['base_amount'] += base_amount
+            new_amounts['base_amount_converted'] += base_amount_converted
+
         return new_amounts
 
     def _round_amounts(self, amounts):
@@ -725,7 +777,7 @@ class PosSession(models.Model):
                 new_amounts[key] = self.currency_id.round(amount)
         return new_amounts
 
-    def _credit_amounts(self, partial_move_line_vals, amount, amount_converted):
+    def _credit_amounts(self, partial_move_line_vals, amount, amount_converted, force_company_currency=False):
         """ `partial_move_line_vals` is completed by `credit`ing the given amounts.
 
         NOTE Amounts in PoS are in the currency of journal_id in the session.config_id.
@@ -742,40 +794,38 @@ class PosSession(models.Model):
 
         :return dict: complete values for creating 'amount.move.line' record
         """
-        if self.is_in_company_currency:
-            return {
-                'debit': -amount if amount < 0.0 else 0.0,
-                'credit': amount if amount > 0.0 else 0.0,
-                **partial_move_line_vals
-            }
+        if self.is_in_company_currency or force_company_currency:
+            additional_field = {}
         else:
-            return {
-                'debit': -amount_converted if amount_converted < 0.0 else 0.0,
-                'credit': amount_converted if amount_converted > 0.0 else 0.0,
-                'amount_currency': -amount if amount_converted > 0 else amount,
+            additional_field = {
+                'amount_currency': -amount,
                 'currency_id': self.currency_id.id,
-                **partial_move_line_vals
             }
+        return {
+            'debit': -amount_converted if amount_converted < 0.0 else 0.0,
+            'credit': amount_converted if amount_converted > 0.0 else 0.0,
+            **partial_move_line_vals,
+            **additional_field,
+        }
 
-    def _debit_amounts(self, partial_move_line_vals, amount, amount_converted):
+    def _debit_amounts(self, partial_move_line_vals, amount, amount_converted, force_company_currency=False):
         """ `partial_move_line_vals` is completed by `debit`ing the given amounts.
 
         See _credit_amounts docs for more details.
         """
-        if self.is_in_company_currency:
-            return {
-                'debit': amount if amount > 0.0 else 0.0,
-                'credit': -amount if amount < 0.0 else 0.0,
-                **partial_move_line_vals
-            }
+        if self.is_in_company_currency or force_company_currency:
+            additional_field = {}
         else:
-            return {
-                'debit': amount_converted if amount_converted > 0.0 else 0.0,
-                'credit': -amount_converted if amount_converted < 0.0 else 0.0,
-                'amount_currency': amount if amount_converted > 0 else -amount,
+            additional_field = {
+                'amount_currency': amount,
                 'currency_id': self.currency_id.id,
-                **partial_move_line_vals
             }
+        return {
+            'debit': amount_converted if amount_converted > 0.0 else 0.0,
+            'credit': -amount_converted if amount_converted < 0.0 else 0.0,
+            **partial_move_line_vals,
+            **additional_field,
+        }
 
     def _amount_converter(self, amount, date, round):
         # self should be single record as this method is only called in the subfunctions of self._validate_session
