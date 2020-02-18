@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template">
+    <t t-name="hr_expense.dashboard_list_header">
+        <div class="o_expense_container d-flex">
+            <div t-foreach="expenses" t-as="expense" t-attf-class="o_expense_card flex-grow-1 d-flex flex-column {{ expense_last ? 'o_expense_card_last' : '' }}">
+                <div class="content_center">
+                    <div t-foreach="expenses[expense]['amount']" t-as="amount_currency">
+                        <span t-esc="render_monetary_field(amount_currency[1], amount_currency[0])" class="h2 o_expense_purple"/>
+                        <div t-if="! amount_currency_last" class="mb-1">+</div>
+                    </div>
+                    <div t-if="expenses[expense]['amount'].length === 0">
+                        <span t-esc="render_monetary_field(0, False)" class="h2 o_expense_purple"/>
+                    </div>
+                    <b class="m-2"><span t-esc="expenses[expense]['description']"/></b>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

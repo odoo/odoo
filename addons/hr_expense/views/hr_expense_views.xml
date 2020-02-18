@@ -38,7 +38,7 @@
             <field name="name">hr.expense.tree</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <tree string="Expenses" decoration-bf="message_unread == True" class="o_expense_tree" js_class="hr_expense_tree" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" multi_edit="1">
+                <tree string="Expenses" decoration-bf="message_unread == True" class="o_expense_tree" js_class="hr_expense_tree_dashboard_upload" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" multi_edit="1">
                     <field name="attachment_number" invisible="True"/>
                     <field name="date" optional="show"/>
                     <field name="name"/>
@@ -475,6 +475,18 @@
             </field>
         </record>
 
+        <record id="view_hr_expense_sheet_dashboard_tree" model="ir.ui.view">
+            <field name="name">hr.expense.sheet.dashboard.tree</field>
+            <field name="model">hr.expense.sheet</field>
+            <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="js_class">hr_expense_tree_dashboard</attribute>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_hr_expense_sheet_form" model="ir.ui.view">
             <field name="name">hr.expense.sheet.form</field>
             <field name="model">hr.expense.sheet</field>
@@ -702,6 +714,7 @@
             <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
             <field name="domain">[('employee_id.user_id', '=', uid), ('state', '!=', 'cancel')]</field>
             <field name="context">{'search_default_my_reports': 1}</field>
+            <field name="view_id" ref="view_hr_expense_sheet_dashboard_tree"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new expense report
@@ -718,6 +731,7 @@
             <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
             <field name="domain">[]</field>
             <field name="context">{'search_default_submitted': 1}</field>
+            <field name="view_id" ref="view_hr_expense_sheet_tree"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
                 No expense reports to approve
