@@ -157,6 +157,10 @@ class WebsiteBlog(http.Controller):
 
         values = self._prepare_blog_values(blogs=blogs, blog=blog, date_begin=date_begin, date_end=date_end, tags=tag, state=state, page=page)
 
+        # in case of a redirection need by `_prepare_blog_values` we follow it
+        if isinstance(values, werkzeug.wrappers.Response):
+            return values
+
         if blog:
             values['main_object'] = blog
             values['edit_in_backend'] = True
