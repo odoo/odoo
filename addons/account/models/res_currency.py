@@ -15,7 +15,8 @@ class ResCurrency(models.Model):
     @api.depends('rounding')
     def _compute_display_rounding_warning(self):
         for record in self:
-            record.display_rounding_warning = record._origin.rounding != record.rounding \
+            record.display_rounding_warning = record.id \
+                                              and record._origin.rounding != record.rounding \
                                               and record._origin._has_accounting_entries()
 
     def write(self, vals):
