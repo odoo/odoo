@@ -296,7 +296,6 @@ class WebsiteEventController(http.Controller):
             {'1-name': 'r', '1-email': 'r@r.com', '1-phone': '', '1-event_ticket_id': '1'}
         """
         registration_fields = request.env['event.registration']._fields
-
         registrations = {}
         global_values = {}
         for key, value in form_details.items():

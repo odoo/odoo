@@ -65,7 +65,7 @@ class EventTicket(models.Model):
     start_sale_date = fields.Date(string="Registration Start")
     end_sale_date = fields.Date(string="Registration End")
     is_expired = fields.Boolean(string='Is Expired', compute='_compute_is_expired')
-    sale_available = fields.Boolean(string='Is Available', compute='_compute_sale_available')
+    sale_available = fields.Boolean(string='Is Available', compute='_compute_sale_available', compute_sudo=True)
     registration_ids = fields.One2many('event.registration', 'event_ticket_id', string='Registrations')
     # seats
     seats_reserved = fields.Integer(string='Reserved Seats', compute='_compute_seats', store=True)

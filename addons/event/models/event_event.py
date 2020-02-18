@@ -116,7 +116,7 @@ class EventEvent(models.Model):
     color = fields.Integer('Kanban Color Index')
     event_mail_ids = fields.One2many('event.mail', 'event_id', string='Mail Schedule', copy=True)
     # Kanban fields
-    kanban_state = fields.Selection([('normal', 'In Progress'), ('done', 'Done'), ('blocked', 'Blocked')])
+    kanban_state = fields.Selection([('normal', 'In Progress'), ('done', 'Done'), ('blocked', 'Blocked')], default='normal')
     kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', tracking=True, store=True)
     stage_id = fields.Many2one(
         'event.stage', ondelete='restrict', default=_get_default_stage_id,
