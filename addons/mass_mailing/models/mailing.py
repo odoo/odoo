@@ -294,7 +294,7 @@ class MassMailing(models.Model):
         self.write({'state': 'in_queue'})
 
     def action_cancel(self):
-        self.write({'state': 'draft', 'schedule_date': False})
+        self.write({'state': 'draft', 'schedule_date': False, 'next_departure': False})
 
     def action_retry_failed(self):
         failed_mails = self.env['mail.mail'].sudo().search([
