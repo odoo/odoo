@@ -90,14 +90,16 @@
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <span class="oe_edit_only o_pls_probability">
+                                    <div class="oe_edit_only d-flex align-items-center">
                                         <label for="probability"/>
                                         <button class="btn btn-link" name="action_set_automated_probability" type="object"
                                                 attrs="{'invisible': [('is_automated_probability', '=', True)]}">
                                             <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
                                         </button>
-                                        <small class="oe_grey" attrs="{'invisible': [('is_automated_probability', '=', True)]}"><field name="automated_probability"/> %% (Estimated by Odoo)</small>
-                                        </span>
+                                        <small class="oe_grey h6 mb0" attrs="{'invisible': [('is_automated_probability', '=', True)]}">
+                                            <field class="mb0" name="automated_probability"/> %% (Estimated by Odoo)
+                                        </small>
+                                    </div>
                                     <div id="probability" class="o_row d-flex">
                                         <field name="is_automated_probability" invisible="1"/>
                                         <field name="probability" widget="float" class="oe_inline"/>
