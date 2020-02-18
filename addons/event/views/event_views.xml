@@ -388,7 +388,7 @@
                                             <div class="float-left"><field name="activity_ids" widget="kanban_activity"/></div>
                                             <field name="kanban_state" widget="state_selection"/>
                                             <t t-set="unassigned"><t t-esc="_t('Unassigned')"/></t>
-                                            <img class="oe_kanban_avatar o_event_fit_20 ml-2" t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)"
+                                            <img class="oe_kanban_avatar o_event_fit_20 ml-2 rounded-circle" t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)"
                                                 t-att-title="record.user_id.value || unassigned" t-att-alt="record.user_id.value"/>
                                         </div>
                                     </div>
