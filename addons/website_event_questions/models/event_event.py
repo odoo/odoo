@@ -19,9 +19,9 @@ class EventEvent(models.Model):
 
     question_ids = fields.One2many('event.question', 'event_id', 'Questions', copy=True)
     general_question_ids = fields.One2many('event.question', 'event_id', 'General Questions',
-                                           domain=[('is_individual', '=', False)])
+                                           domain=[('once_per_order', '=', True)])
     specific_question_ids = fields.One2many('event.question', 'event_id', 'Specific Questions',
-                                            domain=[('is_individual', '=', True)])
+                                            domain=[('once_per_order', '=', False)])
 
     @api.onchange('event_type_id')
     def _onchange_type(self):
@@ -31,7 +31,7 @@ class EventEvent(models.Model):
                 (0, 0, {
                     'title': question.title,
                     'sequence': question.sequence,
-                    'is_individual': question.is_individual,
+                    'once_per_order': question.once_per_order,
                 })
                 for question in self.event_type_id.question_ids
             ]
