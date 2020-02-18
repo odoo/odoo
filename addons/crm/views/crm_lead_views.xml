@@ -80,7 +80,7 @@
                             <label for="name" class="oe_edit_only" string="Lead" attrs="{'invisible': [('type', '=', 'opportunity')]}"/>
                             <label for="name" class="oe_edit_only" attrs="{'invisible': [('type', '=', 'lead')]}"/>
                             <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>
-                            <h2 class="o_row row no-gutters d-flex">
+                            <h2 class="o_row row no-gutters d-block d-md-flex">
                                 <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}">
                                     <label for="planned_revenue" class="oe_edit_only" />
                                     <div class="o_row">
@@ -90,14 +90,20 @@
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <span class="oe_edit_only o_pls_probability">
-                                        <label for="probability"/>
-                                        <button class="btn btn-link" name="action_set_automated_probability" type="object"
-                                                attrs="{'invisible': [('is_automated_probability', '=', True)]}">
-                                            <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
-                                        </button>
-                                        <small class="oe_grey" attrs="{'invisible': [('is_automated_probability', '=', True)]}"><field name="automated_probability"/> %% (Estimated by Odoo)</small>
-                                        </span>
+                                    <div class="oe_edit_only row no-gutters">
+                                        <div class="col-4">
+                                            <label for="probability"/>
+                                        </div>
+                                        <div class="col-8 d-flex">
+                                                <button class="btn btn-link" name="action_set_automated_probability" type="object" attrs="{'invisible': [('is_automated_probability', '=', True)]}">
+                                                    <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
+                                                </button>
+                                                <div class="text-truncate oe_grey my-auto">
+                                                    <small class="h6" attrs="{'invisible': [('is_automated_probability', '=', True)]}">
+                                                    <field name="automated_probability"/> %% (Estimated by Odoo)</small>
+                                                </div>
+                                        </div>
+                                    </div>
                                     <div id="probability" class="o_row d-flex">
                                         <field name="is_automated_probability" invisible="1"/>
                                         <field name="probability" widget="float" class="oe_inline"/>
