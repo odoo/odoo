@@ -469,14 +469,6 @@ class Website(Home):
         request.env['web_editor.assets'].make_scss_customization(url, values)
         return True
 
-    @http.route(['/website/multi_render'], type='json', auth="public", website=True)
-    def multi_render(self, ids_or_xml_ids, values=None):
-        View = request.env['ir.ui.view']
-        res = {}
-        for id_or_xml_id in ids_or_xml_ids:
-            res[id_or_xml_id] = View._render_template(id_or_xml_id, values)
-        return res
-
     @http.route(['/website/update_visitor_timezone'], type='json', auth="public", website=True)
     def update_visitor_timezone(self, timezone):
         visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
