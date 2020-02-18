@@ -606,7 +606,6 @@ class JsonRequest(WebRequest):
         self.context = self.params.pop('context', dict(self.session.context))
 
     def _json_response(self, result=None, error=None):
-
         response = {
             'jsonrpc': '2.0',
             'id': self.jsonrequest.get('id')
@@ -657,40 +656,37 @@ class JsonRequest(WebRequest):
             return self._json_response(error=error)
 
     def dispatch(self):
-        try:
-            rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
-            rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
-            if rpc_request_flag or rpc_response_flag:
-                endpoint = self.endpoint.method.__name__
-                model = self.params.get('model')
-                method = self.params.get('method')
-                args = self.params.get('args', [])
+        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
+        rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
+        if rpc_request_flag or rpc_response_flag:
+            endpoint = self.endpoint.method.__name__
+            model = self.params.get('model')
+            method = self.params.get('method')
+            args = self.params.get('args', [])
 
-                start_time = time.time()
-                start_memory = 0
-                if psutil:
-                    start_memory = memory_info(psutil.Process(os.getpid()))
-                if rpc_request and rpc_response_flag:
-                    rpc_request.debug('%s: %s %s, %s',
-                        endpoint, model, method, pprint.pformat(args))
+            start_time = time.time()
+            start_memory = 0
+            if psutil:
+                start_memory = memory_info(psutil.Process(os.getpid()))
+            if rpc_request and rpc_response_flag:
+                rpc_request.debug('%s: %s %s, %s',
+                    endpoint, model, method, pprint.pformat(args))
 
-            result = self._call_function(**self.params)
+        result = self._call_function(**self.params)
 
-            if rpc_request_flag or rpc_response_flag:
-                end_time = time.time()
-                end_memory = 0
-                if psutil:
-                    end_memory = memory_info(psutil.Process(os.getpid()))
-                logline = '%s: %s %s: time:%.3fs mem: %sk -> %sk (diff: %sk)' % (
-                    endpoint, model, method, end_time - start_time, start_memory / 1024, end_memory / 1024, (end_memory - start_memory)/1024)
-                if rpc_response_flag:
-                    rpc_response.debug('%s, %s', logline, pprint.pformat(result))
-                else:
-                    rpc_request.debug(logline)
+        if rpc_request_flag or rpc_response_flag:
+            end_time = time.time()
+            end_memory = 0
+            if psutil:
+                end_memory = memory_info(psutil.Process(os.getpid()))
+            logline = '%s: %s %s: time:%.3fs mem: %sk -> %sk (diff: %sk)' % (
+                endpoint, model, method, end_time - start_time, start_memory / 1024, end_memory / 1024, (end_memory - start_memory)/1024)
+            if rpc_response_flag:
+                rpc_response.debug('%s, %s', logline, pprint.pformat(result))
+            else:
+                rpc_request.debug(logline)
 
-            return self._json_response(result)
-        except Exception as e:
-            return self._handle_exception(e)
+        return self._json_response(result)
 
 
 def serialize_exception(e):
