@@ -798,7 +798,7 @@ class PosSession(models.Model):
             additional_field = {}
         else:
             additional_field = {
-                'amount_currency': -amount if amount_converted > 0 else amount,
+                'amount_currency': -amount,
                 'currency_id': self.currency_id.id,
             }
         return {
@@ -817,7 +817,7 @@ class PosSession(models.Model):
             additional_field = {}
         else:
             additional_field = {
-                'amount_currency': amount if amount_converted > 0 else -amount,
+                'amount_currency': amount,
                 'currency_id': self.currency_id.id,
             }
         return {
