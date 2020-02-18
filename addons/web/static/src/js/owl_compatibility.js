@@ -203,7 +203,9 @@ odoo.define('web.OwlCompatibility', function () {
          * @returns {Promise}
          */
         updateWidget(/*nextProps*/) {
-            console.warn(`ComponentAdapter: Widget could not be updated, maybe override 'updateWidget' function?`);
+            if (this.env.isDebug('assets')) {
+                console.warn(`ComponentAdapter: Widget could not be updated, maybe override 'updateWidget' function?`);
+            }
         }
 
         /**
@@ -212,7 +214,9 @@ odoo.define('web.OwlCompatibility', function () {
          * updated at once. It must be synchronous
          */
         renderWidget() {
-            console.warn(`ComponentAdapter: Widget could not be re-rendered, maybe override 'renderWidget' function?`);
+            if (this.env.isDebug('assets')) {
+                console.warn(`ComponentAdapter: Widget could not be re-rendered, maybe override 'renderWidget' function?`);
+            }
         }
 
         /**
