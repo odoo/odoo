@@ -342,7 +342,6 @@ class SaleOrder(models.Model):
             self.update({
                 'partner_invoice_id': False,
                 'partner_shipping_id': False,
-                'payment_term_id': False,
                 'fiscal_position_id': False,
             })
             return
