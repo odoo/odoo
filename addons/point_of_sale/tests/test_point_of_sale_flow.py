@@ -726,3 +726,111 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         for iline in invoice.invoice_line_ids:
             self.assertFalse(iline.invoice_line_tax_ids)
+
+    def test_unbalanced_journal_entry_with_round_globally(self):
+        """
+        Check known case of unbalanced journal entry with round globally
+        This has been tested with:
+        - Round globally
+        - Tax T 21% included
+        - Product P1: list_price=11.9 - tax T
+        - Product P2: list_price=2.8 - tax T
+        """
+
+        # I set round globally on the company
+        company = self.pos_config.company_id
+        company.sudo().write({'tax_calculation_rounding_method': 'round_globally'})
+
+        # I create a tax 21% included in price
+        # For this test, tax account could be anything
+        tax_account = self.env['account.account'].search([('user_type_id', '=', 'Current Liabilities')])[0]
+        base_repartition_line = {
+            'account_id': False,
+            'company_id': company.id,
+            'factor_percent': 100,
+            'repartition_type': 'base'
+        }
+        tax_repartition_line = {
+            'account_id': tax_account.id,
+            'company_id': company.id,
+            'factor_percent': 100,
+            'repartition_type': 'tax'
+        }
+        tax = self.env['account.tax'].create({
+            'amount': 21,
+            'company_id': company.id,
+            'include_base_amount': False,
+            'invoice_repartition_line_ids': [(0, 0, base_repartition_line),
+                                             (0, 0, tax_repartition_line)],
+            'name': '21% inc',
+            'price_include': True,
+            'refund_repartition_line_ids': [(0, 0, base_repartition_line),
+                                             (0, 0, tax_repartition_line)],
+        })
+
+        # Modify 2 products with specific price and tax
+        self.led_lamp.write({'list_price': 2.8,
+                             'taxes_id': [(6, 0, [tax.id])]})
+        self.whiteboard_pen.write({'list_price': 11.9,
+                             'taxes_id': [(6, 0, [tax.id])]})
+
+        # I click on create a new session button
+        self.pos_config.open_session_cb()
+
+        current_session = self.pos_config.current_session_id
+
+        # The following data is real data for the exact same order.
+        # The detail has been taken from the RPC call to create_from_ui
+        # This is why some amounts have floating imprecision.
+        unbalanced_order = {'data':
+          {'amount_paid': 14.69,
+           'amount_return': 0,
+           'amount_tax': 2.5500000000000003,
+           'amount_total': 14.690000000000001,
+           'creation_date': fields.Datetime.to_string(fields.Datetime.now()),
+           'fiscal_position_id': False,
+           'pricelist_id': self.pos_config.available_pricelist_ids[0].id,
+           'lines': [[0,
+             0,
+             {'discount': 0,
+              'id': 1,
+              'pack_lot_ids': [],
+              'price_unit': 11.9,
+              'product_id': self.whiteboard_pen.id,
+              'price_subtotal': 9.83,
+              'price_subtotal_incl': 11.9,
+              'qty': 1,
+              'tax_ids': [(6, 0, [tax.id])]}],
+             [0,
+             0,
+             {'discount': 0,
+              'id': 2,
+              'pack_lot_ids': [],
+              'price_unit': 2.8,
+              'product_id': self.led_lamp.id,
+              'price_subtotal': 2.31,
+              'price_subtotal_incl': 2.8000000000000003,
+              'qty': 1,
+              'tax_ids': [(6, 0, [tax.id])]}]],
+           'name': 'Order 0045-003-0014',
+           'partner_id': False,
+           'pos_session_id': current_session.id,
+           'sequence_number': 1,
+           'statement_ids': [[0,
+             0,
+             {'account_id': self.env.user.partner_id.property_account_receivable_id.id,
+              'amount': 14.69,
+              'journal_id': self.pos_config.journal_ids[0].id,
+              'name': fields.Datetime.now(),
+              'statement_id': current_session.statement_ids[0].id}]],
+           'uid': '00045-003-0014',
+           'user_id': self.env.uid},
+          'id': '00045-003-0014',
+          'to_invoice': False}
+
+        # I create an order on an open session
+        self.PosOrder.create_from_ui([unbalanced_order])
+
+        # I close the session
+        current_session.action_pos_session_closing_control()
+        self.assertEqual(current_session.state, 'closed', "Session was not properly closed")
