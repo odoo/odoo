@@ -62,9 +62,8 @@ class Event(models.Model):
         track related menus. """
         super(Event, self)._compute_from_event_type()
         for event in self:
-            if not event.event_type_id:
-                if not event.website_menu:
-                    event.website_menu = False
+            if not event.event_type_id and not event.website_menu:
+                event.website_menu = False
             elif event.event_type_id:
                 event.website_menu = event.event_type_id.website_menu
 
