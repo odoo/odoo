@@ -1651,7 +1651,9 @@ class AccountTax(models.Model):
                         store_included_tax_total = False
                 i -= 1
 
-        total_excluded = currency.round(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount))
+        recomputed_base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount)
+        total_excluded = currency.round(recomputed_base)
+        recomputed_base = round(recomputed_base, prec)
 
         # 5) Iterate the taxes in the sequence order to compute missing tax amounts.
         # Start the computation of accumulated amounts at the total_excluded value.
@@ -1667,7 +1669,7 @@ class AccountTax(models.Model):
             #compute the tax_amount
             if (self._context.get('force_price_include') or tax.price_include) and total_included_checkpoints.get(i):
                 # We know the total to reach for that tax, so we make a substraction to avoid any rounding issues
-                tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount)
+                tax_amount = total_included_checkpoints[i] - (recomputed_base + cumulated_tax_included_amount)
                 cumulated_tax_included_amount = 0
             else:
                 tax_amount = tax.with_context(force_price_include=False)._compute_amount(
@@ -1729,6 +1731,7 @@ class AccountTax(models.Model):
             # Affect subsequent taxes
             if tax.include_base_amount:
                 base += factorized_tax_amount
+                recomputed_base += factorized_tax_amount
 
             total_included += factorized_tax_amount
             i += 1
