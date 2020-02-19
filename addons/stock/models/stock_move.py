@@ -1020,7 +1020,7 @@ class StockMove(models.Model):
         if merge:
             moves = self._merge_moves(merge_into=merge_into)
         # call `_action_assign` on every confirmed move which location_id bypasses the reservation
-        moves.filtered(lambda move: move._should_bypass_reservation() and move.state == 'confirmed')._action_assign()
+        moves.filtered(lambda move: not move.picking_id.immediate_transfer and move._should_bypass_reservation() and move.state == 'confirmed')._action_assign()
         return moves
 
     def _prepare_procurement_values(self):
