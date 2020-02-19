@@ -8,23 +8,6 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
                 <div class="app_settings_block" data-string="Point of sale" string="Point of Sale" data-key="point_of_sale" groups="point_of_sale.group_pos_manager">
-                    <h2>Product</h2>
-                    <div class="row mt16 o_settings_container" name="product_setting_container">
-                        <div class="col-12 col-lg-6 o_setting_box" id="update_quantities_stock_setting">
-                            <div class="o_setting_right_pane">
-                                <div>
-                                    <label string="Inventory Management" for="update_stock_quantities"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
-                                    <div class="text-muted">
-                                        Update quantities in stock
-                                    </div>
-                                    <div class="content-group mt16">
-                                        <field name="update_stock_quantities" colspan="4" nolabel="1" widget="radio"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <h2>Taxes</h2>
                     <div class="row mt16 o_settings_container" name="taxes_setting_container">
                         <div class="col-12 col-lg-6 o_setting_box"
@@ -147,6 +130,23 @@
                                 <a href="https://www.odoo.com/documentation/user/13.0/point_of_sale/payment/six.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Accept payments with a Six payment terminal
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Inventory</h2>
+                    <div class="row mt16 o_settings_container" name="product_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="update_quantities_stock_setting">
+                            <div class="o_setting_right_pane">
+                                <div>
+                                    <label string="Inventory Management" for="update_stock_quantities"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <div class="text-muted">
+                                        Update quantities in stock
+                                    </div>
+                                    <div class="content-group mt16 o_light_label">
+                                        <field name="update_stock_quantities" colspan="4" nolabel="1" widget="radio"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>

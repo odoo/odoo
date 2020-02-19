@@ -6,6 +6,8 @@
         <field name="arch" type="xml">
             <form string="Payment Methods">
                 <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <field name="active" invisible="1"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" class="oe_inline"/></h1>
@@ -54,6 +56,7 @@
                 <group expand="1" string="Group By">
                     <filter name="group_by_receivable_account" string="Account" domain="[]"  context="{'group_by':'receivable_account_id'}"/>
                 </group>
+                <filter string="Archived" name="active" domain="[('active', '=', False)]"/>
             </search>
         </field>
     </record>
