@@ -33,6 +33,7 @@ class MailChannel(models.Model):
 
     anonymous_name = fields.Char('Anonymous Name')
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')])
+    livechat_active = fields.Boolean('Is livechat ongoing?', help='Livechat session is active until visitor leave the conversation.')
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel')
     livechat_operator_id = fields.Many2one('res.partner', string='Operator', help="""Operator for this specific channel""")
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
@@ -156,6 +157,21 @@ class MailChannel(models.Model):
             'channel_ids': self.ids,
             'info': 'transient_message',
         })
+
+    def _get_visitor_leave_message(self, operator=False, cancel=False):
+        return _('Visitor has left the conversation.')
+
+    def _close_livechat_session(self, **kwargs):
+        """ Set deactivate the livechat channel and notify (the operator) the reason of closing the session."""
+        self.ensure_one()
+        if self.livechat_active:
+            self.livechat_active = False
+            # avoid useless notification if the channel is empty
+            if not self.channel_message_ids:
+                return
+            # Notify that the visitor has left the conversation
+            self.message_post(author_id=self.env.ref('base.partner_root').id,
+                              body=self._get_visitor_leave_message(**kwargs), message_type='comment', subtype_xmlid='mail.mt_comment')
 
     # Rating Mixin
 
