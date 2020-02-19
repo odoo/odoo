@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.tools.float_utils import float_compare
 from dateutil import relativedelta
 from odoo.exceptions import UserError
@@ -214,7 +214,7 @@ class PurchaseOrder(models.Model):
                 pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
                 if not pickings:
                     res = order._prepare_picking()
-                    picking = StockPicking.create(res)
+                    picking = StockPicking.with_user(SUPERUSER_ID).create(res)
                 else:
                     picking = pickings[0]
                 moves = order.order_line._create_stock_moves(picking)

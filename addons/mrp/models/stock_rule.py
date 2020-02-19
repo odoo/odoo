@@ -4,7 +4,7 @@
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.osv import expression
 from odoo.addons.stock.models.stock_rule import ProcurementException
 
@@ -51,7 +51,7 @@ class StockRule(models.Model):
 
         for company_id, productions_values in productions_values_by_company.items():
             # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
-            productions = self.env['mrp.production'].sudo().with_company(company_id).create(productions_values)
+            productions = self.env['mrp.production'].with_user(SUPERUSER_ID).sudo().with_company(company_id).create(productions_values)
             self.env['stock.move'].sudo().create(productions._get_moves_raw_values())
             productions.filtered(lambda p: p.move_raw_ids).action_confirm()
 
