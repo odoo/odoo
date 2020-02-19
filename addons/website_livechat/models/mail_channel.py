@@ -8,7 +8,6 @@ class MailChannel(models.Model):
     _inherit = 'mail.channel'
 
     livechat_visitor_id = fields.Many2one('website.visitor', string='Visitor')
-    livechat_active = fields.Boolean('Is livechat ongoing?', help='Livechat session is not considered as active if the visitor left the conversation.')
 
     def _execute_channel_pin(self, pinned=False):
         """ Override to clean an empty livechat channel.
@@ -53,23 +52,15 @@ class MailChannel(models.Model):
         recent_history = self.env['website.track'].search([('page_id', '!=', False), ('visitor_id', '=', visitor.id)], limit=3)
         return ' → '.join(visit.page_id.name + ' (' + visit.visit_datetime.strftime('%H:%M') + ')' for visit in reversed(recent_history))
 
-    def close_livechat_request_session(self, type='leave', **kwargs):
-        """ Set deactivate the livechat channel and notify (the operator) the reason of closing the session."""
-        self.ensure_one()
-        if self.livechat_active:
-            self.livechat_active = False
-            # avoid useless notification if the channel is empty
-            if not self.channel_message_ids:
-                return
-            # Notify that the visitor has left the conversation
-            name = _('The visitor') if not self.livechat_visitor_id else self.livechat_visitor_id.display_name
-            if type == 'cancel':
-                message = _('has started a conversation with %s. The chat request has been canceled.') % kwargs.get('speaking_with', 'an operator')
-            else:
-                message = _('has left the conversation.')
-            leave_message = '%s %s' % (name, message)
-            self.message_post(author_id=self.env.ref('base.user_root').sudo().partner_id.id,
-                              body=leave_message, message_type='comment', subtype_xmlid='mail.mt_comment')
+    def _get_visitor_leave_message(self, operator=False, cancel=False):
+        name = _('The visitor') if not self.livechat_visitor_id else self.livechat_visitor_id.display_name
+        if cancel:
+            message = _("""%s has started a conversation with %s. 
+                        The chat request has been canceled.""") % (name, operator or _('an operator'))
+        else:
+            message = _('%s has left the conversation.') % name
+
+        return message
 
     def message_post(self, **kwargs):
         """Override to mark the visitor as still connected.
