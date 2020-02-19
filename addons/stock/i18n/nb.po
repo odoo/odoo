@@ -5,8 +5,8 @@
 # Translators:
 # Mari Løken <inactive+mari123@transifex.com>, 2018
 # Martin Trigaux, 2018
-# Marius Stedjan <marius@stedjan.com>, 2019
 # Jorunn D. Newth, 2019
+# Marius Stedjan <marius@stedjan.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Jorunn D. Newth, 2019\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2020\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,6 +118,8 @@ msgid ""
 ".\n"
 "            Manual actions may be needed."
 msgstr ""
+".\n"
+"Manuelle handlinger kan behøves."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -738,7 +740,7 @@ msgstr ""
 #. module: stock
 #: selection:res.partner,picking_warn:0
 msgid "Blocking Message"
-msgstr ""
+msgstr "Blokkeringsmelding"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__quant_ids
@@ -983,7 +985,7 @@ msgstr "Beregn fraktkostnader og send med DHL"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr ""
+msgstr "Beregn fraktkostnader, og send med Easypost"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1072,6 +1074,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"Konvertering mellom enheter fungerer bare når de tilhører samme kategori. "
+"Konverteringen gjøres basert på forhold mellom enhetene."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -1362,7 +1366,7 @@ msgstr "Kunder"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Connector"
-msgstr ""
+msgstr "DHL-integrasjon"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast__date
@@ -1811,7 +1815,7 @@ msgstr "Utkast til forflytninger"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr ""
+msgstr "Easypost-integrasjon"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1879,7 +1883,7 @@ msgstr "FIFO, LIFO..."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
 msgid "FedEx Connector"
-msgstr ""
+msgstr "FedEx-integrasjon"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
@@ -2180,13 +2184,13 @@ msgstr "Hvis det er merket nye meldinger så krever dette din oppmerksomhet."
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction
 #: model:ir.model.fields,help:stock.field_stock_production_lot__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Hvis huket av, vil nye meldinger kreve din oppmerksomhet."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_has_error
 #: model:ir.model.fields,help:stock.field_stock_production_lot__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Hvis huket av, har enkelte meldinger leveringsfeil."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__propagate
@@ -2808,7 +2812,7 @@ msgstr "Forsinkede overføringer"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days
 msgid "Lead Time"
-msgstr ""
+msgstr "Ledetid"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_type
@@ -3017,7 +3021,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_main_attachment_id
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Hovedvedlegg"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:288
@@ -3116,7 +3120,7 @@ msgstr "Maksimumsantall"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_has_error
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Melding for feil ved levering"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn_msg
@@ -3446,7 +3450,7 @@ msgstr "Antall meldinger som krever handling"
 #: model:ir.model.fields,help:stock.field_stock_picking__message_has_error_counter
 #: model:ir.model.fields,help:stock.field_stock_production_lot__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Antall meldinger med leveringsfeil"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_unread_counter
@@ -4188,7 +4192,7 @@ msgstr "Produktmal"
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_tmpl_id
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__product_tmpl_id
 msgid "Product Tmpl"
-msgstr ""
+msgstr "Produktmal"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__type
@@ -4993,6 +4997,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Ved å huke av \"Advarsel\"-valget, vil brukeren bli vist meldingen. Ved å "
+"huke av \"Blokkerende melding\" vil brukeren bli blokkert fra å fortsette. "
+"Meldingen må angis i neste felt."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6096,12 +6103,12 @@ msgstr "Type operasjon"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
 msgid "UPS Connector"
-msgstr ""
+msgstr "UPS-integrasjon"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
 msgid "USPS Connector"
-msgstr ""
+msgstr "USPS-integrasjon"
 
 #. module: stock
 #. openerp-web
@@ -6224,7 +6231,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "UoM"
-msgstr ""
+msgstr "Enhet"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
@@ -6907,7 +6914,7 @@ msgstr "_Avbryt"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr ""
+msgstr "bpost-integrasjon"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form

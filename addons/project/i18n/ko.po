@@ -7,8 +7,8 @@
 # Seongseok Shin <shinss61@hotmail.com>, 2018
 # Martin Trigaux, 2018
 # Link Up링크업 <linkup.way@gmail.com>, 2018
-# JH CHOI <hwangtog@gmail.com>, 2020
 # Linkup <link-up@naver.com>, 2020
+# JH CHOI <hwangtog@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2020\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1183,6 +1183,8 @@ msgid ""
 "review the \"This Week\" column to move important tasks \"Today\". Every "
 "Monday, you review the \"This Month\" column."
 msgstr ""
+"이메일 게이트웨이로 받은 편지함을 쉽게 채웁니다. 받은 편지함을 정기적으로 검토하고 다른 열로 이동하여 작업을 예약하십시오. 매일 "
+"\"이번 주\"열을 검토하여 중요한 작업을 \"오늘\"로 이동하십시오. 매주 월요일에는 \"이 달\"열을 검토하십시오."
 
 #. module: project
 #. openerp-web
@@ -1352,7 +1354,7 @@ msgstr ""
 #: code:addons/project/models/project.py:808
 #, python-format
 msgid "I take it"
-msgstr ""
+msgstr "내가 가져갈게"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__id
@@ -1409,7 +1411,7 @@ msgid ""
 "If set and if the project's rating configuration is 'Rating when changing "
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
-msgstr ""
+msgstr "프로젝트의 등급 환경 설정이 '단계 변경 시 등급 지정'인 경우 작업이 이 단계에 도달하면 고객에게 이메일이 전송됩니다."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -1507,6 +1509,8 @@ msgid ""
 "It is the time planned to achieve the task. If this document has sub-tasks, "
 "it means the time needed to achieve this tasks and its childs."
 msgstr ""
+"작업을 달성하기 위해 계획된 시간입니다. 이 문서에 하위 작업이 있는 경우 이 작업과 해당 하위 작업을 수행하는 데 필요한 시간을 "
+"의미합니다."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_blocked
@@ -1537,7 +1541,7 @@ msgstr "칸반 유효 설명"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
 msgid "Kpi Project Task Opened Value"
-msgstr ""
+msgstr "Kpi 프로젝트 작업 공개된 값"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
@@ -2252,7 +2256,7 @@ msgstr "평가 수 "
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__portal_show_rating
 msgid "Rating visible publicly"
-msgstr ""
+msgstr "공개적으로 표시되는 등급"
 
 #. module: project
 #: selection:project.project,rating_status:0
@@ -2321,7 +2325,7 @@ msgstr "평가를 하는 이유"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of ${object.name}"
-msgstr ""
+msgstr "${object.name}의 접수"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_force_thread_id
@@ -2405,7 +2409,7 @@ msgstr "슬픈 표정"
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid ""
 "Schedule your teams across projects and estimate deadlines more accurately."
-msgstr ""
+msgstr "프로젝트 전반에 걸쳐 팀 일정과 마감일을 보다 정확하게 예측하십시오."
 
 #. module: project
 #: code:addons/project/controllers/portal.py:114
@@ -2521,7 +2525,7 @@ msgstr "소프트웨어 개발"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:29
 #, python-format
 msgid "Specifications"
-msgstr ""
+msgstr "사양"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2677,7 +2681,7 @@ msgstr "작업 수"
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Created"
-msgstr ""
+msgstr "작업 생성됨"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
@@ -2837,6 +2841,8 @@ msgid ""
 "the project is too restricted. Set the privacy to 'Visible by following "
 "customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"프로젝트의 개인 정보가 너무 제한되어 있으므로 프로젝트를 수신자와 공유할 수 없습니다. 수신자가 개인 정보에 접근할 수있게 하려면 개인 "
+"정보를 '고객을 팔로우해서 표시'로 설정하십시오."
 
 #. module: project
 #: code:addons/project/models/project.py:571
@@ -2846,6 +2852,8 @@ msgid ""
 "project is too restricted. Set the privacy of the project to 'Visible by "
 "following customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"프로젝트의 개인 정보가 너무 제한되어 있으므로 작업을 수신자와 공유할 수 없습니다. 수신자가 프로젝트에 접근할 수있게 하려면 프로젝트의 "
+"개인 정보를 '고객에게 공개'로 설정하십시오."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -2958,7 +2966,7 @@ msgstr "할 일"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:67
 #, python-format
 msgid "To Print"
-msgstr ""
+msgstr "인쇄"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -2966,6 +2974,8 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real time or by email to collaborate efficiently."
 msgstr ""
+"작업을 수행하려면 작업에 대한 활동 및 상태를 사용하십시오.<br>\n"
+"                     실시간 채팅 또는 이메일로 효율적으로 협업하십시오."
 
 #. module: project
 #. openerp-web
@@ -3170,7 +3180,7 @@ msgstr "작업량"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:39
 #, python-format
 msgid "Writing"
-msgstr ""
+msgstr "쓰기"
 
 #. module: project
 #: selection:project.project,rating_status_period:0
@@ -3197,7 +3207,7 @@ msgstr "또한 칸반 및 양식보기에서 사용할 수 있는 별표시의 �
 msgid ""
 "You cannot delete a project containing tasks. You can either archive it or "
 "first delete all of its tasks."
-msgstr ""
+msgstr "작업이 포함된 프로젝트는 삭제할 수 없습니다. 이를 보관하거나 또는 먼저 모든 작업을 삭제할 수 있습니다."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -3207,7 +3217,7 @@ msgstr "샘플 프로젝트 활성화"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "average"
-msgstr ""
+msgstr "평균"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
@@ -3222,7 +3232,7 @@ msgstr "예: 사무실 파티"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "for project:"
-msgstr ""
+msgstr "프로젝트의 경우 :"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
@@ -3243,4 +3253,4 @@ msgstr "작업"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 msgid "to play with."
-msgstr ""
+msgstr "놀기."

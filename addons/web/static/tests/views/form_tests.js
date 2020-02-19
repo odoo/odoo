@@ -5819,13 +5819,13 @@ QUnit.module('Views', {
         form.$buttons.find('.o_form_button_edit').click();
         form.$('input[name="foo"]').val("test").trigger("input");
         form.$buttons.find('.o_form_button_save').click();
-        assert.strictEqual(form.$('.o_form_view > .alert > div .oe_field_translate').length, 1,
+        assert.strictEqual(form.$('.o_form_view .alert .oe_field_translate').length, 1,
             "should have single translation alert");
 
         form.$buttons.find('.o_form_button_edit').click();
         form.$('input[name="display_name"]').val("test2").trigger("input");
         form.$buttons.find('.o_form_button_save').click();
-        assert.strictEqual(form.$('.o_form_view > .alert > div .oe_field_translate').length, 2,
+        assert.strictEqual(form.$('.o_form_view .alert .oe_field_translate').length, 2,
             "should have two translate fields in translation alert");
 
         form.destroy();
@@ -5861,25 +5861,25 @@ QUnit.module('Views', {
         form.$('input[name="foo"]').val("test").trigger("input");
         form.$buttons.find('.o_form_button_save').click();
 
-        assert.strictEqual(form.$('.o_form_view > .alert > div').length, 1,
+        assert.strictEqual(form.$('.o_form_view .alert > div').length, 1,
             "should have a translation alert");
 
         // click on the pager to switch to the next record
         form.pager.$('.o_pager_next').click();
-        assert.strictEqual(form.$('.o_form_view > .alert > div').length, 0,
+        assert.strictEqual(form.$('.o_form_view .alert > div').length, 0,
             "should not have a translation alert");
 
         // click on the pager to switch back to the previous record
         form.pager.$('.o_pager_previous').click();
-        assert.strictEqual(form.$('.o_form_view > .alert > div').length, 1,
+        assert.strictEqual(form.$('.o_form_view .alert > div').length, 1,
             "should have a translation alert");
 
         // remove translation alert by click X and check alert even after form reload
-        form.$('.o_form_view > .alert > .close').click();
-        assert.strictEqual(form.$('.o_form_view > .alert > div').length, 0,
+        form.$('.o_form_view .alert > .close').click();
+        assert.strictEqual(form.$('.o_form_view .alert > div').length, 0,
             "should not have a translation alert");
         form.reload();
-        assert.strictEqual(form.$('.o_form_view > .alert > div').length, 0,
+        assert.strictEqual(form.$('.o_form_view .alert > div').length, 0,
             "should not have a translation alert after reload");
 
         form.destroy();
@@ -5946,7 +5946,7 @@ QUnit.module('Views', {
         actionManager.$('input[name="foo"]').val("test").trigger("input");
         actionManager.controlPanel.$el.find('.o_form_button_save').click();
 
-        assert.strictEqual(actionManager.$('.o_form_view > .alert > div').length, 1,
+        assert.strictEqual(actionManager.$('.o_form_view .alert > div').length, 1,
             "should have a translation alert");
 
         var currentController = actionManager.getCurrentController().widget;
@@ -5960,7 +5960,7 @@ QUnit.module('Views', {
         });
 
         $('.o_control_panel .breadcrumb a:first').click();
-        assert.strictEqual(actionManager.$('.o_form_view > .alert > div').length, 1,
+        assert.strictEqual(actionManager.$('.o_form_view .alert > div').length, 1,
             "should have a translation alert");
 
         actionManager.destroy();

@@ -52,7 +52,7 @@ msgstr "# ספרות"
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "${(object.name or '').replace('/','-')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','-')}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -63,7 +63,7 @@ msgstr "${object.company_id.name|safe} חשבונית(Ref ${object.number or 'n/
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} קבלת תשלום (Ref ${object.name or 'n/a' })"
 
 #. module: account
 #: code:addons/account/models/account.py:937
@@ -90,7 +90,7 @@ msgstr "%s רצף"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "&amp;nbsp;<span>on</span>"
-msgstr ""
+msgstr "ו<span>ב</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_chatter
@@ -2769,7 +2769,7 @@ msgstr "בחר תבנית חשבונאית"
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 msgid "Choose a default sales tax for your products."
-msgstr ""
+msgstr "בחר מס מכירות ברירת מחדל עבור המוצרים שלך."
 
 #. module: account
 #. openerp-web
@@ -6514,7 +6514,7 @@ msgstr "דיוור המוני"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_campaign_id
 msgid "Mass Mailing Campaign"
-msgstr ""
+msgstr "קמפיין דיוור המוני"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_name
@@ -8589,7 +8589,7 @@ msgstr "מס מכירות"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sale_tax
 msgid "Sales tax"
-msgstr ""
+msgstr "מס מכירות"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__user_id

@@ -432,6 +432,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"저장 가능 제품은 재고를 관리하는 제품입니다. 창고 앱이 설치되어 있어야 합니다.\n"
+"소모품은 재고가 관리되지 않는 제품입니다.\n"
+"서비스는 귀하가 제공하는 비물질 제품입니다."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -1024,7 +1027,7 @@ msgstr "DHL과 연동하여 배송 비용과 운송건을 측정합니다"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr ""
+msgstr "Easypost와 연동하여 배송 비용과 운송건을 계산합니다"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1408,7 +1411,7 @@ msgstr "고객"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Connector"
-msgstr ""
+msgstr "DHL 연결기"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast__date
@@ -1868,7 +1871,7 @@ msgstr "임시 이동"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr ""
+msgstr "Easypost 연결기"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1941,7 +1944,7 @@ msgstr "FIFO, LIFO..."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
 msgid "FedEx Connector"
-msgstr ""
+msgstr "FedEx 연결기"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
@@ -3398,7 +3401,7 @@ msgstr "다음 활동 유형"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Next transfer(s) impacted:"
-msgstr ""
+msgstr "다음 배송에 영향 있음 :"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -5522,7 +5525,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr ""
+msgstr "재고 규칙 보고서"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_track_confirmation
@@ -6203,12 +6206,12 @@ msgstr "운영 유형"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
 msgid "UPS Connector"
-msgstr ""
+msgstr "UPS 연결기"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
 msgid "USPS Connector"
-msgstr ""
+msgstr "USPS 연결기"
 
 #. module: stock
 #. openerp-web
@@ -6758,7 +6761,7 @@ msgstr "선별이 완료되면 제품 이동을 삭제할 수 없습니다. 완�
 #: code:addons/stock/models/stock_move_line.py:147
 #, python-format
 msgid "You can not enter negative quantities."
-msgstr ""
+msgstr "음수를 입력 할 수 없습니다."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:426
@@ -7019,7 +7022,7 @@ msgstr "_취소"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr ""
+msgstr "bpost 연결기"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -7078,7 +7081,7 @@ msgstr "of"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "processed instead of"
-msgstr ""
+msgstr "다음 대신 처리됨"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form

@@ -101,6 +101,13 @@ class StockPicking(models.Model):
         for picking in self:
             picking.weight_uom_id = weight_uom_id
 
+    def get_multiple_carrier_tracking(self):
+        self.ensure_one()
+        try:
+            return json.loads(self.carrier_tracking_url)
+        except ValueError:
+            return False
+
     @api.depends('move_lines', 'move_ids_without_package')
     def _cal_weight(self):
         for picking in self:

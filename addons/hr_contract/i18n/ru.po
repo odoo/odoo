@@ -3,18 +3,18 @@
 # * hr_contract
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Андрей Гусев <gaussgss@gmail.com>, 2019
 # Ivan Yelizariev <yelizariev@it-projects.info>, 2019
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-14 07:34+0000\n"
+"POT-Creation-Date: 2020-02-06 19:08+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2019\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -291,6 +291,11 @@ msgid "Followers (Partners)"
 msgstr "Подписчики (Партнеры)"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Future Activities"
+msgstr "Будущие действия"
+
+#. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_type__sequence
 msgid "Gives the sequence when displaying a list of Contract."
 msgstr "Отображает список договоров по порядку."
@@ -379,6 +384,11 @@ msgstr "Последний раз обновил"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__write_date
 msgid "Last Updated on"
 msgstr "Последнее обновление"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Late Activities"
+msgstr "Действия с опозданием"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee__contract_id
@@ -513,6 +523,11 @@ msgid "Sequence"
 msgstr "Нумерация"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Show all records which have a next action date before today"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__reported_to_secretariat
 msgid "Social Secretariat"
 msgstr "социальный секретариат"
@@ -574,6 +589,11 @@ msgstr "Сдать отчет в социальной секретариат"
 #: selection:hr.contract,activity_state:0
 msgid "Today"
 msgstr "Сегодня"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Today Activities"
+msgstr "Сегодняшние мероприятия"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_unread

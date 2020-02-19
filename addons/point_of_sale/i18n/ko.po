@@ -128,6 +128,8 @@ msgid ""
 "laptops, or industrial hardware.</p><p>Once the session launched, the system"
 " continues to run without an internet connection.</p>"
 msgstr ""
+"<p>클릭해서 POS 인터페이스를 시작합니다. <b>태블릿</b>, 랩톱 또는 산업용 하드웨어에서 실행됩니다.</p> <p>세션이 "
+"시작되면 인터넷 연결 없이 시스템이 계속 실행됩니다.</p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -287,7 +289,7 @@ msgstr "= 이론적 결산 잔액"
 #: code:addons/point_of_sale/static/src/js/screens.js:2035
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
-msgstr ""
+msgstr "? \"확인\"을 클릭하면 결제가 승인됩니다."
 
 #. module: point_of_sale
 #. openerp-web
@@ -307,7 +309,7 @@ msgstr ""
 msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
-msgstr ""
+msgstr "이 POS 구성의 전역 고유 식별자로 클라이언트 생성 데이터의 충돌을 방지하는 데 사용됩니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__login_number
@@ -336,12 +338,12 @@ msgstr "주문에 대한 세션-고유 순서 번호"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_footer
 msgid "A short text that will be inserted as a footer in the printed receipt."
-msgstr ""
+msgstr "인쇄된 영수증에 꼬리말로 삽입되는 짧은 글."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_header
 msgid "A short text that will be inserted as a header in the printed receipt."
-msgstr ""
+msgstr "인쇄된 영수증에 머리말로 삽입되는 짧은글."
 
 #. module: point_of_sale
 #. openerp-web
@@ -368,7 +370,7 @@ msgstr "회계 정보"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__invoice_journal_id
 msgid "Accounting journal used to create invoices."
-msgstr ""
+msgstr "송장 생성에 사용되는 회계 분개장"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__journal_id
@@ -391,7 +393,7 @@ msgstr "팁 추가"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Add a custom message to header and footer"
-msgstr ""
+msgstr "머리말과 꼬리말에 사용자 정의 메시지 추가"
 
 #. module: point_of_sale
 #. openerp-web
@@ -403,7 +405,7 @@ msgstr "고객 추가"
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_account_journal_form
 msgid "Add a new payment method"
-msgstr ""
+msgstr "새로운 결제 수단 추가"
 
 #. module: point_of_sale
 #. openerp-web
@@ -431,6 +433,8 @@ msgid ""
 "the Sales Journal set on this point of sale if you use the Accounting "
 "application."
 msgstr ""
+"회계 응용 프로그램을 사용하는 경우 사용 가능한 모든 가격리스트는 회사와 동일한 통화로 또는 이 POS에 설정된 판매 분개장과 같아야 "
+"합니다."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:250
@@ -438,7 +442,7 @@ msgstr ""
 msgid ""
 "All payment methods must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
-msgstr ""
+msgstr "모든 결제 방법은 판매 분개장과 동일하거나 회사 통화로 설정해야 합니다."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
@@ -453,7 +457,7 @@ msgstr "계산원이 영수증을 재 인쇄하도록 허용"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Allow global discounts on orders"
-msgstr ""
+msgstr "주문에 대한 글로벌 할인 허용"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__amount
@@ -478,7 +482,7 @@ msgstr "총액"
 msgid ""
 "An error occurred when loading product prices. Make sure all pricelists are "
 "available in the POS."
-msgstr ""
+msgstr "제품 가격을 로드할 때 오류가 발생했습니다. POS에서 모든 가격표를 사용할 수 있는지 확인하십시오."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -489,7 +493,7 @@ msgstr "점포판매시스템의 내부 식별"
 #: code:addons/point_of_sale/models/pos_session.py:161
 #, python-format
 msgid "Another session is already opened for this point of sale."
-msgstr ""
+msgstr "이 POS에 다른 세션이 이미 열려 있습니다."
 
 #. module: point_of_sale
 #. openerp-web
@@ -511,7 +515,7 @@ msgstr "속성"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__rescue
 msgid "Auto-generated session for orphan orders, ignored in constraints"
-msgstr ""
+msgstr "제약 조건에서 무시되는 고아 주문에 대한 자동 생성 세션"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_auto
@@ -533,7 +537,7 @@ msgstr "이용 가능한 결제 방법"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_pricelist_ids
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Available Pricelists"
-msgstr ""
+msgstr "사용 가능한 가격표"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_journal_search_inherit_point_of_sale
@@ -567,7 +571,7 @@ msgstr "뒤로"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1192
 #, python-format
 msgid "Backspace"
-msgstr ""
+msgstr "백스페이스"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement
@@ -634,7 +638,7 @@ msgstr "버튼"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
 msgid "Bypass browser printing and prints via the hardware proxy."
-msgstr ""
+msgstr "브라우저 인쇄를 무시하고 하드웨어 프록시를 통해 인쇄합니다."
 
 #. module: point_of_sale
 #. openerp-web
@@ -736,6 +740,8 @@ msgid ""
 "Categories are used to browse your products through the\n"
 "                touchscreen interface."
 msgstr ""
+"범주는 터치스크린 인터페이스를 통해 \n"
+"                  제품을 검색하는 데 사용됩니다."
 
 #. module: point_of_sale
 #. openerp-web
@@ -755,7 +761,7 @@ msgstr "범주 사진"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_categ_id
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_categ_id
 msgid "Category used in the Point of Sale."
-msgstr ""
+msgstr "POS에서 사용되는 범주."
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_chairs
@@ -788,7 +794,7 @@ msgstr "고객 변경"
 #: code:addons/point_of_sale/static/src/js/screens.js:1885
 #, python-format
 msgid "Change Tip"
-msgstr ""
+msgstr "팁 변경"
 
 #. module: point_of_sale
 #. openerp-web
@@ -805,7 +811,7 @@ msgstr "변경 :"
 msgid ""
 "Check if the product should be weighted using the hardware scale "
 "integration."
-msgstr ""
+msgstr "하드웨어 수준의 통합을 사용하여 상품에 가중치를 부여해야 하는지 확인합니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__available_in_pos
@@ -1043,7 +1049,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
 msgid "Create a new product variant"
-msgstr ""
+msgstr "새 변형 상품 만들기"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__create_uid
@@ -1323,7 +1329,7 @@ msgstr "할인율"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Disc:"
-msgstr ""
+msgstr "할인율 :"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3307,7 +3313,7 @@ msgstr "반품"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_return
 msgid "Returned"
-msgstr ""
+msgstr "반납함"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines

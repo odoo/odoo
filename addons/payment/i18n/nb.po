@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2018
 # Jorunn D. Newth, 2019
-# Marius Stedjan <marius@stedjan.com>, 2019
+# Marius Stedjan <marius@stedjan.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2019\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2020\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +44,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "<b>Communication: </b>"
-msgstr ""
+msgstr "<b>Kommunikasjon: </b>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -235,13 +235,13 @@ msgstr ""
 #: code:addons/payment/models/account_invoice.py:72
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr ""
+msgstr "En journal på spesifiseres for innløseren %s."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:65
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
-msgstr ""
+msgstr "En betalingsinnløser kreves for å opprette en transaksjon."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:55
@@ -383,6 +383,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Er du sikker på at du vil kansellere den autoriserte transaksjonen? Denne "
+"handlingen kan ikke angres."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
@@ -403,7 +405,7 @@ msgstr "Autorisert"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_invoice__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "Autoriserte transaksjoner"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:34
@@ -495,7 +497,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Capture Transaction"
-msgstr ""
+msgstr "Valider transaksjon"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__capture_manually
@@ -511,7 +513,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment.action_open_payment_onboarding_payment_acquirer_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Choose a payment method"
-msgstr ""
+msgstr "Velg en betalingsmetode"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -652,7 +654,7 @@ msgstr "Tilpasset"
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Custom payment instructions"
-msgstr ""
+msgstr "Tilpasset betalingsinstruks"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
@@ -880,13 +882,13 @@ msgstr ""
 #: code:addons/payment/models/account_invoice.py:55
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
+msgstr "Ugyldig token funnet! Innløser for token %s er ikke lik %s"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:58
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "Ugyldig token funnet! Partner for token %s er ikke lik %s"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_invoice
@@ -908,7 +910,7 @@ msgstr "Fakturaer"
 #. module: payment
 #: selection:res.company,payment_acquirer_onboarding_state:0
 msgid "Just done"
-msgstr ""
+msgstr "Akkurat ferdig"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
@@ -1108,7 +1110,7 @@ msgstr "Ingen betalingsmetode valgt"
 #. module: payment
 #: selection:res.company,payment_acquirer_onboarding_state:0
 msgid "Not done"
-msgstr ""
+msgstr "Ikke ferdig"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__payment_token_id
@@ -1183,7 +1185,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Or scan me with your banking app."
-msgstr ""
+msgstr "Eller skan meg med bank-appen din."
 
 #. module: payment
 #: selection:res.company,payment_onboarding_payment_method:0
@@ -1208,7 +1210,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with another payment acquirer"
-msgstr ""
+msgstr "Betal med en annen betalingsinnløser"
 
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
@@ -1218,7 +1220,7 @@ msgstr ""
 #. module: payment
 #: selection:res.company,payment_onboarding_payment_method:0
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_email_account
@@ -1271,7 +1273,7 @@ msgstr "Betalingsikoner"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr ""
+msgstr "Betalingsinnstruksjon"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__journal_id
@@ -1597,7 +1599,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Set payments"
-msgstr ""
+msgstr "Sett betalinger"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__short_name
@@ -1687,7 +1689,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "The SEPA QR Code informations are not set correctly."
-msgstr ""
+msgstr "Informasjonen om SEPA QR-kode er ikke korrekt oppgitt."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:660
@@ -1840,7 +1842,7 @@ msgstr "Synlig i portal / nettsted"
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Void Transaction"
-msgstr ""
+msgstr "Annuller transaksjon"
 
 #. module: payment
 #. openerp-web

@@ -9,7 +9,7 @@
 # Martin Trigaux, 2018
 # Link Up링크업 <linkup.way@gmail.com>, 2018
 # Linkup <link-up@naver.com>, 2019
-# JH CHOI <hwangtog@gmail.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,6 +88,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"상품 환경 설정에 따라 수령 수량은 메커니즘에 의해 자동으로 계산 될 수 있습니다. :\n"
+"- 수동 : 수량은 내역에서 수동으로 설정됩니다. \n"
+"- 비용 분석 : 수량은 게시된 비용의 수량 합계입니다.\n"
+"- 작업 기록 : 수량은 이 판매 내역에 연결된 작업에 기록된 시간의 합계입니다.\n"
+"재고 이동 : 수량은 확정된 불출에서 나옵니다.\n"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
@@ -110,7 +115,7 @@ msgstr "분석 계정"
 #. module: sale_timesheet
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "비용 분석"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
@@ -572,7 +577,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "배송 수량을 갱신하는 방법"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
@@ -723,7 +728,7 @@ msgstr "상품"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Profitability"
-msgstr ""
+msgstr "수익성"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_graph
@@ -889,7 +894,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_assign_sale__sale_line_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order Item"
-msgstr ""
+msgstr "판매 주문 품목"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
@@ -1242,12 +1247,12 @@ msgstr "단위"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr ""
+msgstr "공급가액 청구됨"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr ""
+msgstr "청구될 공급가액"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_to_invoice

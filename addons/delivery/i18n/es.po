@@ -13,6 +13,7 @@
 # Mariana Santos Romo <msn@odoo.com>, 2019
 # Juan Pablo Mora <jpm@odoo.com>, 2019
 # enjolras <yo@miguelrevilla.com>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: enjolras <yo@miguelrevilla.com>, 2019\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +52,14 @@ msgid ""
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            %if object.carrier_tracking_url:\n"
-"                <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"                % set multiple_carrier_tracking = object.get_multiple_carrier_tracking()\n"
+"                %if multiple_carrier_tracking:\n"
+"                    % for line in multiple_carrier_tracking:\n"
+"                        <br/><a href=\"${line[1]}\" target=\"_blank\">${line[0]}</a>\n"
+"                    % endfor\n"
+"                %else:\n"
+"                    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"                %endif\n"
 "            %else:\n"
 "                ${object.carrier_tracking_ref}.\n"
 "            %endif\n"
@@ -67,6 +75,36 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        HOla ${object.partner_id.name},<br/><br/>\n"
+"        Nos complace informarle que su pedido ha sido enviado.\n"
+"        %if object.carrier_tracking_ref:\n"
+"            Su referencia de pedido es\n"
+"            <strong>\n"
+"            %if object.carrier_tracking_url:\n"
+"                % set multiple_carrier_tracking = object.get_multiple_carrier_tracking()\n"
+"                %if multiple_carrier_tracking:\n"
+"                    % for line in multiple_carrier_tracking:\n"
+"                        <br/><a href=\"${line[1]}\" target=\"_blank\">${line[0]}</a>\n"
+"                    % endfor\n"
+"                %else:\n"
+"                    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"                %endif\n"
+"            %else:\n"
+"                ${object.carrier_tracking_ref}.\n"
+"            %endif\n"
+"            </strong>\n"
+"        %endif\n"
+"        <br/><br/>\n"
+"        Tiene adjunto su albarán de entrega para más detalles.<br/><br/>\n"
+"        Gracias,<br/>\n"
+"        % if user and user.signature:\n"
+"          ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -621,14 +659,14 @@ msgid "Package Code"
 msgstr "Código del paquete"
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:35
-#: code:addons/delivery/models/stock_picking.py:122
+#: code:addons/delivery/models/stock_picking.py:40
+#: code:addons/delivery/models/stock_picking.py:134
 #, python-format
 msgid "Package Details"
 msgstr "Detalles del paquete"
 
 #. module: delivery
-#: code:addons/delivery/wizard/choose_delivery_package.py:52
+#: code:addons/delivery/wizard/choose_delivery_package.py:60
 #, python-format
 msgid "Package too heavy!"
 msgstr ""
@@ -761,7 +799,7 @@ msgstr ""
 "producción."
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:171
+#: code:addons/delivery/models/stock_picking.py:184
 #, python-format
 msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
@@ -826,7 +864,7 @@ msgid "The Poste"
 msgstr "The Poste"
 
 #. module: delivery
-#: code:addons/delivery/wizard/choose_delivery_package.py:53
+#: code:addons/delivery/wizard/choose_delivery_package.py:61
 #, python-format
 msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
@@ -978,7 +1016,7 @@ msgid "Width must be positive"
 msgstr "El ancho debe ser positivo"
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:222
+#: code:addons/delivery/models/stock_picking.py:236
 #, python-format
 msgid ""
 "You are shipping different packaging types in the same shipment.\n"
@@ -999,7 +1037,7 @@ msgid "You have multiple tracker links, they are available in the chatter."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:185
+#: code:addons/delivery/models/stock_picking.py:199
 #, python-format
 msgid ""
 "Your delivery method has no redirect on courier provider's website to track "

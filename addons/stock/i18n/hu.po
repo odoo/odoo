@@ -482,7 +482,7 @@ msgstr "Új útvonal hozzáadása"
 msgid ""
 "Add an internal note that will be printed on the Picking Operations sheet"
 msgstr ""
-"Belső megjegyzés hozzáadása, mely nyomtatásra kerül a Kigyűjtési műveletek "
+"Belső megjegyzés hozzáadása, mely nyomtatásra kerül a Kiszedési műveletek "
 "dokumentumra."
 
 #. module: stock
@@ -635,7 +635,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_overprocessed_transfer
 msgid "Are you sure you want to validate this picking?"
-msgstr ""
+msgstr "Biztos jóváhagyja ezt a kiszedést?"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -768,7 +768,7 @@ msgstr "Vonalkód leolvasó"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch Pickings"
-msgstr "Tömeges kigyűjtések"
+msgstr "Tömeges kiszedések"
 
 #. module: stock
 #: selection:res.partner,picking_warn:0
@@ -940,7 +940,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_line_exist
 msgid "Check the existence of pack operation on the picking"
-msgstr ""
+msgstr "Csomagolási művelet meglétének ellenőrzése a kiszedésen"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__return_location
@@ -1139,32 +1139,32 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking
 msgid "Count Picking"
-msgstr ""
+msgstr "Kiszedések száma"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr "Visszamaradt kigyújtések száma"
+msgstr "Visszamaradt kiszedések száma"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_draft
 msgid "Count Picking Draft"
-msgstr ""
+msgstr "Piszkozat kiszedések száma"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_late
 msgid "Count Picking Late"
-msgstr ""
+msgstr "Késő kiszedések száma"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_ready
 msgid "Count Picking Ready"
-msgstr ""
+msgstr "Előkészített kiszedések száma"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_waiting
 msgid "Count Picking Waiting"
-msgstr ""
+msgstr "Várakozó kiszedések száma"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -1691,7 +1691,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_product__description_picking
 #: model:ir.model.fields,field_description:stock.field_product_template__description_picking
 msgid "Description on Picking"
-msgstr "Kigyűjtési leírás"
+msgstr "Kiszedés leírás"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingin
@@ -1916,7 +1916,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Exception(s) occurred on the picking"
-msgstr ""
+msgstr "Kivétel(ek) merült(ek) fel a kiszedés kapcsán"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -2182,6 +2182,9 @@ msgid ""
 "                purchase order or picking order they come from. You will find\n"
 "                the list of all products you are waiting for."
 msgstr ""
+"Itt fogadhat egyedi termékeket, függetlenül attól, hogy\n"
+"                milyen beszerzési rendelés vagy kiszedési rendelés a forrásuk. Látható lesz \n"
+"                az összes termék, amire még várakozik."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__id
@@ -2310,9 +2313,9 @@ msgid ""
 "If the picking is unlocked you can edit initial demand (for a draft picking)"
 " or done quantities (for a done picking)."
 msgstr ""
-"Ha a kigyűjtés nincs zárolva, akkor szerkeszthető az eredeti igény "
-"(piszkozat kigyűjtések esetén) vagy az elvégzett mennyiség (elvégzett "
-"kigyűjtések esetén)"
+"Ha a kiszedés nincs zárolva, akkor szerkeszthető az eredeti igény (piszkozat"
+" kiszedések esetén) vagy az elvégzett mennyiség (elvégzett kiszedések "
+"esetén)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_reserved
@@ -2331,6 +2334,9 @@ msgid ""
 " operations. If not, the picking lines will represent an aggregate of "
 "detailed stock operations."
 msgstr ""
+"Ha bejelölésre került, akkor a kiszedési sorok részletes készletműveleteket "
+"mutatnak. Ha nincs bejelölve, akkor a kiszedési sorok összesített "
+"készletműveleteket mutatnak."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_create_lots
@@ -2768,7 +2774,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__last_done_picking
 msgid "Last 10 Done Pickings"
-msgstr "Utolsó 10 elvégzett kigyűjtés"
+msgstr "Utolsó 10 elvégzett kiszedés"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group____last_update
@@ -3228,7 +3234,7 @@ msgstr "Üzenetkézbesítési hiba"
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn_msg
 #: model:ir.model.fields,field_description:stock.field_res_users__picking_warn_msg
 msgid "Message for Stock Picking"
-msgstr "Készletkigyűjtés üzenet"
+msgstr "Készletkiszedés üzenet"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_ids
@@ -3356,6 +3362,9 @@ msgid ""
 " If none is given, the moves generated by stock rules will be grouped into "
 "one big picking."
 msgstr ""
+"A rendelési ponton keresztül létrehozott mozgások ebbe a beszerzési "
+"csoportba kerülnek. Ha nincs semmi megadva, akkor a készletszabályok alapján"
+" generált mozgások egy nagy kiszedésbe kerülnek csoportosításra."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
@@ -4019,57 +4028,57 @@ msgstr "Kigyűjtés típusa"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__picking_id
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Picking"
-msgstr "Kigyűjtés"
+msgstr "Kiszedés"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Picking List"
-msgstr "Kigyűjtési lista"
+msgstr "Kiszedési lista"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Picking Lists"
-msgstr "Kigyűjtési listák"
+msgstr "Kiszedési listák"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
 msgid "Picking Moves"
-msgstr ""
+msgstr "Kiszedési mozgások"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking
 msgid "Picking Operations"
-msgstr "Kigyűjtési műveletek"
+msgstr "Kiszedési műveletek"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "Picking Type"
-msgstr "Kigyűjtés típusa"
+msgstr "Kiszedés típusa"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Picking list"
-msgstr "Kigyűjtési lista"
+msgstr "Kiszedési lista"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.procurement_group_form_view
 msgid "Pickings"
-msgstr "Kigyűjtések"
+msgstr "Kiszedések"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Pickings already processed"
-msgstr "Kigyűjtés már végrehajtva"
+msgstr "A kiszedések már végrehajtásra kerültek"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
 msgid "Pickings for Groups"
-msgstr "Kigyűjtések csoportokhoz"
+msgstr "Kiszedések csoportokhoz"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Pickings that are late on scheduled time"
-msgstr "Kigyűjtések, melyek az ütemezett időn túlhaladtak"
+msgstr "Kiszedések, melyek az ütemezett időn már túlhaladtak"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
@@ -4147,7 +4156,7 @@ msgid ""
 "Priority for this picking. Setting manually a value here would set it as "
 "priority for all the moves"
 msgstr ""
-"A kigyűjtés prioritása. Az itt kézzel beállított érték megadja a prioritást "
+"A kiszedés prioritása. Az itt kézzel beállított érték megadja a prioritást "
 "az összes mozgás számára is."
 
 #. module: stock
@@ -4158,7 +4167,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process picking in batch per worker"
-msgstr ""
+msgstr "Kiszedések csoportos feldolgozása dolgozónként"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_overprocessed_transfer
@@ -4612,12 +4621,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__rate_picking_backorders
 msgid "Rate Picking Backorders"
-msgstr "Fenmmaradt kigyűjtések értékelése"
+msgstr "Visszamaradt kiszedések értékelése"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__rate_picking_late
 msgid "Rate Picking Late"
-msgstr ""
+msgstr "Késő kiszedések értékelése"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -4742,7 +4751,7 @@ msgstr "Lotok, csomagok, lokációk regisztrálása"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Remaining parts of picking partially processed"
-msgstr "Megmaradt kiválogatási alkatrészek részben feldolgozva"
+msgstr "Kiszedés fennmaradt részei részben feldolgozva"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_removal
@@ -4909,7 +4918,7 @@ msgstr "Visszáru"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr "Visszáru kigyűjtés sor"
+msgstr "Visszáru kiszedés sor"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:103
@@ -4921,7 +4930,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_picking_return.py:153
 #, python-format
 msgid "Returned Picking"
-msgstr "Visszavételezett kigyűjtés"
+msgstr "Visszaáruzott kiszedés"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
@@ -5176,7 +5185,7 @@ msgstr ""
 #: code:addons/stock/models/stock_warehouse.py:792
 #, python-format
 msgid "Sequence picking"
-msgstr ""
+msgstr "Kiszedés sorszám"
 
 #. module: stock
 #: selection:product.template,type:0
@@ -5554,7 +5563,7 @@ msgstr "Készletcsomag szint"
 #: model:ir.model.fields,field_description:stock.field_res_users__picking_warn
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_id
 msgid "Stock Picking"
-msgstr "Készlet kigyűjtés"
+msgstr "Készlet kiszedés"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_quant_ids
@@ -5716,7 +5725,7 @@ msgid ""
 "picking confirmation (when costing method used is 'average price' or "
 "'real'). Value given in company currency and in product uom."
 msgstr ""
-"Technikai mező, melyet egy kiválogatás jóváhagyásnál a felhasználó által "
+"Technikai mező, melyet egy kiszedés jóváhagyásnál a felhasználó által "
 "beállított termék költség rögzítéséhez használ (ha a 'átlag ár' vagy "
 "'tényleges' költség mód van használatban). Értékek a vállalathoz megadott "
 "pénznemben és mennyiségi egységben megadva."
@@ -6060,10 +6069,10 @@ msgid ""
 "returned picking in order to avoid logistic rules to be applied again (which"
 " would create duplicated operations)"
 msgstr ""
-"Úgy néz ki ez a kiválogatás hozzáfűzött egy másik művelethez. Később, mikor "
-"a most visszaküldött terméket megkapta, győződjön meg róla "
-"<b>visszafordít</b> a visszavett kiválogatást, ahhoz, hogy elkerülje a "
-"logisztikai szabály ismételt alkalmazását (Mely megduplázott műveleteket "
+"Úgy néz ki ez a kiszedés hozzáfűzésre került egy másik művelethez. Később, "
+"mikor a most visszaküldött terméket megkapta, győződjön meg róla "
+"<b>visszafordítja</b> a visszáruzott kiszedést, ahhoz, hogy elkerülje a "
+"logisztikai szabály ismételt alkalmazását (mely megduplázott műveleteket "
 "hozhat létre)"
 
 #. module: stock
@@ -6765,7 +6774,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__additional
 msgid "Whether the move was added after the picking's confirmation"
-msgstr ""
+msgstr "A mozgás a kiszedés jóváhagyása után került-e hozzáadásra, vagy sem"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__wizard_id
@@ -6846,7 +6855,7 @@ msgid ""
 "You can not delete product moves if the picking is done. You can only "
 "correct the done quantities."
 msgstr ""
-"Nem lehet termékmozgást törölni, ha a kigyűjtés már elvégzésre került. Csak "
+"Nem lehet termékmozgást törölni, ha a kiszedés már elvégzésre került. Csak "
 "az elvégzett mennyiségek korrekciója megengedett."
 
 #. module: stock
@@ -7069,13 +7078,13 @@ msgstr ""
 #: code:addons/stock/wizard/stock_picking_return.py:47
 #, python-format
 msgid "You may only return Done pickings."
-msgstr ""
+msgstr "Elvégzett kiszedések kapcsán csak visszáruzás lehetséges."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:38
 #, python-format
 msgid "You may only return one picking at a time."
-msgstr ""
+msgstr "Egy időben csak egy kiszedés visszáruzható."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:22

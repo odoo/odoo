@@ -22,8 +22,8 @@
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2019
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2019
 # Lorenzo Battistini <lb@takobi.online>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # Simone Sanfilippo <s.sanfilippo@hinge16.eu>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: Simone Sanfilippo <s.sanfilippo@hinge16.eu>, 2019\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -166,6 +166,10 @@ msgid ""
 "that you can start recording payments. We suggest you to control the opening"
 " balance of each register, using their CashBox tab.</span>"
 msgstr ""
+"<span class=\"o_form_label\">Il sistema aprirà tutti i registri di cassa per"
+" poter avviare la registrazione dei pagamenti. È consigliato tenere sotto "
+"controllo il saldo di apertura di ciascun registro usando la relativa scheda"
+" «Cassa».</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -950,14 +954,14 @@ msgstr "Schermo cliente disconnesso"
 #: code:addons/point_of_sale/static/src/js/chrome.js:463
 #, python-format
 msgid "Client Screen Unsupported. Please upgrade the IoT Box"
-msgstr ""
+msgstr "Schermo cliente non supportato, aggiornare il box IoT."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:99
 #, python-format
 msgid "Client Screen Warning"
-msgstr ""
+msgstr "Avviso schermo cliente"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1049,14 +1053,14 @@ msgstr "Connesso, non proprietario"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:76
 #, python-format
 msgid "Connecting to Proxy"
-msgstr ""
+msgstr "Connessione al proxy"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/models.js:121
 #, python-format
 msgid "Connecting to the IoT Box"
-msgstr ""
+msgstr "Connessione al box IoT"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_partner
@@ -1090,7 +1094,7 @@ msgstr "Nazione"
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
 msgid "Create a new PoS config"
-msgstr ""
+msgstr "Crea una nuova configurazione POS"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -1251,7 +1255,7 @@ msgstr "Logo aziendale predefinito"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Default sales tax for products"
-msgstr ""
+msgstr "Imposta di vendita predefinita per i prodotti"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -1336,7 +1340,7 @@ msgstr "Portaoggetti da scrivania"
 #: model:product.product,name:point_of_sale.desk_pad
 #: model:product.template,name:point_of_sale.desk_pad_product_template
 msgid "Desk Pad"
-msgstr ""
+msgstr "Sottomano"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_desks
@@ -1511,7 +1515,7 @@ msgstr "Scarica ordini non pagati"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1020
 #, python-format
 msgid "Download error"
-msgstr ""
+msgstr "Errore di scaricamento"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1599,7 +1603,7 @@ msgstr "Saldo finale"
 #: code:addons/point_of_sale/models/pos_category.py:13
 #, python-format
 msgid "Error ! You cannot create recursive categories."
-msgstr "Errore, non è possibile creare categorie ricorsive."
+msgstr "Errore, impossibile creare categorie ricorsive."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1742,7 +1746,7 @@ msgstr "Raggruppa i prodotti nel POS"
 #: code:addons/point_of_sale/static/src/js/models.js:142
 #, python-format
 msgid "HTTPS connection to IoT Box failed"
-msgstr ""
+msgstr "Connessione HTTPS al box IoT non riuscita"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1951,6 +1955,8 @@ msgid ""
 "It is forbidden to modify a tax used in a POS order not posted. You must "
 "close the POS sessions before modifying the tax."
 msgstr ""
+"È vietato modificare un'imposta utilizzata in un ordine POS non registrato. "
+"Per modificarla, chiudere prima le sessioni POS."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_journal
@@ -2126,7 +2132,7 @@ msgstr "Programma fedeltà da usare in questo punto vendita."
 #: model:product.product,name:point_of_sale.magnetic_board
 #: model:product.template,name:point_of_sale.magnetic_board_product_template
 msgid "Magnetic Board"
-msgstr ""
+msgstr "Lavagna magnetica"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
@@ -2201,7 +2207,7 @@ msgstr "Supporto per monitor"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_sales_price
 msgid "Multiple Product Prices"
-msgstr ""
+msgstr "Prezzi multipli prodotto"
 
 #. module: point_of_sale
 #: selection:res.config.settings,pos_pricelist_setting:0
@@ -2300,6 +2306,8 @@ msgid ""
 "No payment method configured! \n"
 "Either no Chart of Account is installed or no payment method is configured for this POS."
 msgstr ""
+"Nessun metodo di pagamento configurato. \n"
+"Non è stato installato alcun piano dei conti oppure nel POS non è stato configurato alcun metodo di pagamento."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:24
@@ -2920,7 +2928,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_invoice
 msgid "Point of Sale Invoice Report"
-msgstr ""
+msgstr "Resoconto fattura punto vendita"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_manager_id
@@ -2952,7 +2960,7 @@ msgstr "Ordini punto vendita"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
 msgid "Point of Sale Orders Report"
-msgstr ""
+msgstr "Resoconto ordini punto vendita"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
@@ -3154,7 +3162,7 @@ msgstr "Errore di stampa: "
 #: code:addons/point_of_sale/static/src/js/screens.js:1580
 #, python-format
 msgid "Printing is not supported on some android browsers"
-msgstr ""
+msgstr "Stampa non supportata su alcuni browser Android"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3398,7 +3406,7 @@ msgstr "Resi"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
 msgid "Sale Line Count"
-msgstr ""
+msgstr "Numero righe vendita"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
@@ -3633,7 +3641,7 @@ msgstr "Sessioni"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_snippets
 msgid "Set Custom Image..."
-msgstr ""
+msgstr "Imposta immagine personalizzata..."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3664,7 +3672,7 @@ msgstr "Imposta i codici per la lettura di prodotti, tessere clienti ecc."
 #: code:addons/point_of_sale/static/src/xml/pos.xml:128
 #, python-format
 msgid "Set fiscal position"
-msgstr ""
+msgstr "Imposta posizione fiscale"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3725,7 +3733,7 @@ msgstr ""
 #: model:product.product,name:point_of_sale.small_shelf
 #: model:product.template,name:point_of_sale.small_shelf_product_template
 msgid "Small Shelf"
-msgstr ""
+msgstr "Mensola piccola"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image_small
@@ -4312,7 +4320,7 @@ msgid ""
 "1024x1024px."
 msgstr ""
 "Questo campo contiene l'immagine usata per la categoria, con limite a "
-"1024x1024 px."
+"1024x1024px."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_manager_id
@@ -4442,7 +4450,7 @@ msgstr "Da pesare con bilancia"
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
 msgid "To record new orders, start a new session."
-msgstr ""
+msgstr "Per registrare ordini, avvia una nuova sessione."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:906
