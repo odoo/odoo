@@ -36,6 +36,14 @@ class SaleOrder(models.Model):
     def _get_default_require_payment(self):
         return self.env.company.portal_confirmation_pay
 
+    @api.model
+    def action_quotation_sent(self):
+        if self.filtered(lambda so: so.state != 'draft'):
+            raise UserError(_('Only draft orders can be marked as sent directly.'))
+        for order in self:
+            order.message_subscribe(partner_ids=order.partner_id.ids)
+        self.write({'state': 'sent'})
+
     @api.depends('order_line.price_total')
     def _amount_all(self):
         """
