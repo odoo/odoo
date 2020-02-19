@@ -155,7 +155,7 @@ class StockPickingBatch(models.Model):
         self.ensure_one()
         self._check_company()
         pickings = self.mapped('picking_ids').filtered(lambda picking: picking.state not in ('cancel', 'done'))
-        if any(picking.state not in ('assigned') for picking in pickings):
+        if any(picking.state not in ('assigned', 'confirmed') for picking in pickings):
             raise UserError(_('Some transfers are still waiting for goods. Please check or force their availability before setting this batch to done.'))
 
         for picking in pickings:
