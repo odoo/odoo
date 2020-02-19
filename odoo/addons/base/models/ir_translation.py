@@ -445,7 +445,14 @@ class IrTranslation(models.Model):
 
         # process outdated and discarded translations
         outdated.write({'state': 'to_translate'})
-        discarded.unlink()
+
+        if discarded:
+            # delete in SQL to avoid invalidating the whole cache
+            discarded._modified()
+            discarded.modified(self._fields)
+            self.flush(self._fields, discarded)
+            self.invalidate_cache(ids=discarded._ids)
+            self.env.cr.execute("DELETE FROM ir_translation WHERE id IN %s", [discarded._ids])
 
     @api.model
     @tools.ormcache_context('model_name', keys=('lang',))
