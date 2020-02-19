@@ -28,7 +28,6 @@ class TestEventData(TestEventSaleCommon):
             'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
         })
-        event._onchange_type()
         self.assertEqual(event.event_ticket_ids, self.env['event.event.ticket'])
 
         event_type.write({
@@ -43,7 +42,7 @@ class TestEventData(TestEventSaleCommon):
         self.assertEqual(event_type.event_type_ticket_ids.description, self.event_product.description_sale)
 
         # synchronize event
-        event._onchange_type()
+        event.write({'event_type_id': event_type.id})
         self.assertEqual(event.event_ticket_ids.name, event.event_type_id.event_type_ticket_ids.name)
         self.assertEqual(event.event_ticket_ids.seats_availability, 'limited')
         self.assertEqual(event.event_ticket_ids.seats_max, 5)
