@@ -534,7 +534,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'payment_date': time.strftime('%Y') + '-' + '07' + '-01',
             'partner_id': self.partner_agrolait_id,
             'payment_method_id': self.env.ref('account.account_payment_method_manual_out').id,
-            'destination_journal_id': dest_journal_id.id,
             'partner_type': 'supplier'})
 
         # One that will complete the payment of a, the rest goes to b
@@ -546,7 +545,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'payment_date': time.strftime('%Y') + '-' + '08' + '-01',
             'partner_id': self.partner_agrolait_id,
             'payment_method_id': self.env.ref('account.account_payment_method_manual_out').id,
-            'destination_journal_id': dest_journal_id.id,
             'partner_type': 'supplier'})
 
         # The last one will complete the payment of b
@@ -558,7 +556,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'payment_date': time.strftime('%Y') + '-' + '09' + '-01',
             'partner_id': self.partner_agrolait_id,
             'payment_method_id': self.env.ref('account.account_payment_method_manual_out').id,
-            'destination_journal_id': dest_journal_id.id,
             'partner_type': 'supplier'})
 
         payment_a.post()

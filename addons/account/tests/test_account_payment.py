@@ -15,24 +15,19 @@ class TestAccountMovePayment(AccountTestInvoicingCommon):
         cls.bank_journal = cls.company_data['default_journal_bank']
         cls.bank_journal.default_credit_account_id = cls.bank_journal.default_debit_account_id.copy()
 
-        cls.cash_journal = cls.company_data['default_journal_cash']
-        cls.cash_journal.default_credit_account_id = cls.cash_journal.default_debit_account_id.copy()
-
-        cls.inbound_payment = cls._init_payment(cls, 'inbound', partner_type='customer')
-        cls.outbound_payment = cls._init_payment(cls, 'outbound', partner_type='supplier')
-        cls.transfer_payment = cls._init_payment(cls, 'transfer')
+        cls.inbound_payment = cls._init_payment(cls, 'inbound', cls.partner_a, partner_type='customer')
+        cls.outbound_payment = cls._init_payment(cls, 'outbound', cls.partner_a, partner_type='supplier')
+        cls.inbound_internal_transfer = cls._init_payment(cls, 'inbound', cls.company_data['company'].partner_id)
+        cls.outbound_internal_transfer = cls._init_payment(cls, 'outbound', cls.company_data['company'].partner_id)
 
     @staticmethod
-    def _init_payment(cls, payment_type, partner_type=None):
+    def _init_payment(cls, payment_type, partner_id, partner_type=None):
         payment_form = Form(cls.env['account.payment'])
         payment_form.journal_id = cls.bank_journal
         payment_form.payment_date = fields.Date.from_string('2019-01-01')
         payment_form.amount = 100
-        if payment_type == 'transfer':
-            payment_form.destination_journal_id = cls.cash_journal
-        else:
-            payment_form.partner_type = partner_type
-            payment_form.partner_id = cls.partner_a
+        payment_form.partner_type = partner_type
+        payment_form.partner_id = partner_id
         payment_form.payment_type = payment_type
         return payment_form.save()
 
@@ -177,116 +172,51 @@ class TestAccountMovePayment(AccountTestInvoicingCommon):
             expected_payable_line,
         ])
 
-    def test_transfer_payment_move_1(self):
-        ''' Check created account.move for an account.payment having the 'transfer' type. '''
+    def test_inbound_transfer_payment_1(self):
         liquidity_bank_account = self.bank_journal.default_debit_account_id
-        liquidity_cash_account = self.cash_journal.default_credit_account_id
-
-        cash_transfer_line = {
+        self.inbound_internal_transfer.post()
+        transfer_line = {
             'account_id': self.company_data['company'].transfer_account_id.id,
-            'partner_id': False,
+            'partner_id': self.company_data['company'].partner_id.id,
             'currency_id': False,
             'amount_currency': 0.0,
             'debit': 0.0,
             'credit': 100.0,
         }
-        bank_transfer_line = {
-            'account_id': self.company_data['company'].transfer_account_id.id,
-            'partner_id': False,
+        liquidity_bank_line = {
+            'account_id': self.bank_journal.default_credit_account_id.id,
+            'partner_id': self.company_data['company'].partner_id.id,
             'currency_id': False,
             'amount_currency': 0.0,
             'debit': 100.0,
             'credit': 0.0,
         }
-        liquidity_cash_line = {
-            'account_id': liquidity_cash_account.id,
-            'partner_id': False,
+        self.assertPaymentValues(self.inbound_internal_transfer, [
+            transfer_line,
+            liquidity_bank_line,
+        ])
+        self.assertTrue(self.inbound_internal_transfer.is_internal_transfer)
+
+    def test_outbound_transfer_payment_1(self):
+        self.outbound_internal_transfer.post()
+        transfer_line = {
+            'account_id': self.company_data['company'].transfer_account_id.id,
+            'partner_id': self.company_data['company'].partner_id.id,
             'currency_id': False,
             'amount_currency': 0.0,
             'debit': 100.0,
             'credit': 0.0,
         }
         liquidity_bank_line = {
-            'account_id': liquidity_bank_account.id,
-            'partner_id': False,
+            'account_id': self.bank_journal.default_debit_account_id.id,
+            'partner_id': self.company_data['company'].partner_id.id,
             'currency_id': False,
             'amount_currency': 0.0,
             'debit': 0.0,
             'credit': 100.0,
         }
-
-        # Single currency.
-
-        self.transfer_payment.post()
-
-        self.assertPaymentValues(self.transfer_payment, [
-            cash_transfer_line,
-            bank_transfer_line,
-            liquidity_cash_line,
+        self.assertPaymentValues(self.outbound_internal_transfer, [
+            transfer_line,
             liquidity_bank_line,
         ])
-
-        # Multi currencies: Foreign currency on payment.
-
-        self.transfer_payment.action_draft()
-        self.transfer_payment.currency_id = self.currency_data['currency']
-        self.transfer_payment.post()
-
-        self.assertPaymentValues(self.transfer_payment, [
-            {
-                **cash_transfer_line,
-                'currency_id': self.currency_data['currency'].id,
-                'amount_currency': -100.0,
-                'credit': 50.0,
-            },
-            {
-                **bank_transfer_line,
-                'currency_id': self.currency_data['currency'].id,
-                'amount_currency': 100.0,
-                'debit': 50.0,
-            },
-            {
-                **liquidity_cash_line,
-                'currency_id': self.currency_data['currency'].id,
-                'amount_currency': 100.0,
-                'debit': 50.0,
-            },
-            {
-                **liquidity_bank_line,
-                'currency_id': self.currency_data['currency'].id,
-                'amount_currency': -100.0,
-                'credit': 50.0,
-            },
-        ])
-
-        self.transfer_payment.currency_id = self.company_data['currency']
-
-        # Multi currencies: Foreign currency on journal.
-
-        self.transfer_payment.action_draft()
-        self.transfer_payment.journal_id.currency_id = self.currency_data['currency']
-        self.transfer_payment.destination_journal_id.currency_id = self.currency_data['currency']
-        self.transfer_payment.post()
-
-        self.assertPaymentValues(self.transfer_payment, [
-            {
-                **cash_transfer_line,
-                'credit': 100.0,
-            },
-            {
-                **bank_transfer_line,
-                'debit': 100.0,
-            },
-            {
-                **liquidity_cash_line,
-                'currency_id': self.currency_data['currency'].id,
-                'amount_currency': 200.0,
-                'debit': 100.0,
-            },
-            {
-                **liquidity_bank_line,
-                'currency_id': self.currency_data['currency'].id,
-                'amount_currency': -200.0,
-                'credit': 100.0,
-            },
-        ])
+        self.assertTrue(self.outbound_internal_transfer.is_internal_transfer)
