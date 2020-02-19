@@ -134,6 +134,7 @@ class WebsiteForm(http.Controller):
                 # If it's not, we'll use attachments instead
                 if field_name in authorized_fields and authorized_fields[field_name]['type'] == 'binary':
                     data['record'][field_name] = base64.b64encode(field_value.read())
+                    field_value.stream.seek(0) # do not consume value forever
                     if authorized_fields[field_name]['manual'] and field_name + "_filename" in dest_model:
                         data['record'][field_name + "_filename"] = field_value.filename
                 else:
