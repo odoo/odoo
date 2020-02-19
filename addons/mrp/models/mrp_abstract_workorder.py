@@ -297,8 +297,11 @@ class MrpAbstractWorkorder(models.AbstractModel):
         if self.consumption == 'strict':
             for move in self.move_raw_ids:
                 lines = self._workorder_line_ids().filtered(lambda l: l.move_id == move)
-                qty_done = sum(lines.mapped('qty_done'))
-                qty_to_consume = sum(lines.mapped('qty_to_consume'))
+                qty_done = 0.0
+                qty_to_consume = 0.0
+                for line in lines:
+                    qty_done += line.product_uom_id._compute_quantity(line.qty_done, line.product_id.uom_id)
+                    qty_to_consume += line.product_uom_id._compute_quantity(line.qty_to_consume, line.product_id.uom_id)
                 rounding = self.product_uom_id.rounding
                 if float_compare(qty_done, qty_to_consume, precision_rounding=rounding) != 0:
                     raise UserError(_('You should consume the quantity of %s defined in the BoM. If you want to consume more or less components, change the consumption setting on the BoM.') % lines[0].product_id.name)
