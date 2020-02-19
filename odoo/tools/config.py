@@ -9,6 +9,7 @@ import glob
 import os
 import sys
 import tempfile
+import warnings
 import odoo
 from os.path import expandvars, expanduser, abspath, realpath
 from .. import release, conf, loglevels
@@ -280,10 +281,12 @@ class configmanager(object):
                          help="Force a limit on the maximum number of records kept in the virtual "
                               "osv_memory tables. The default is False, which means no count-based limit.",
                          type="int")
-        group.add_option("--osv-memory-age-limit", dest="osv_memory_age_limit", my_default=1.0,
-                         help="Force a limit on the maximum age of records kept in the virtual "
-                              "osv_memory tables. This is a decimal value expressed in hours, "
-                              "and the default is 1 hour.",
+        group.add_option("--transient-age-limit", dest="transient_age_limit", my_default=1.0,
+                         help="Time limit (decimal value in hours) records created with a "
+                              "TransientModel (mosly wizard) are kept in the database. Default to 1 hour.",
+                         type="float")
+        group.add_option("--osv-memory-age-limit", dest="osv_memory_age_limit", my_default=False,
+                         help="Deprecated alias to the transient-age-limit option",
                          type="float")
         group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=2,
                          help="Maximum number of threads processing concurrently cron jobs (default 2).",
@@ -350,6 +353,7 @@ class configmanager(object):
         """
         opt = self._parse_config(args)
         odoo.netsvc.init_logger()
+        self._warn_deprecated_options()
         odoo.modules.module.initialize_sys_path()
         return opt
 
@@ -381,6 +385,10 @@ class configmanager(object):
         die(not opt.save and opt.config and not os.access(opt.config, os.R_OK),
             "The config file '%s' selected with -c/--config doesn't exist or is not readable, "\
             "use -s/--save if you want to generate it"% opt.config)
+
+        die(bool(opt.osv_memory_age_limit) and bool(opt.transient_memory_age_limit),
+            "the osv-memory-count-limit option cannot be used with the "
+            "transient-age-limit option, please only use the latter.")
 
         # place/search the config file on Win32 near the server installation
         # (../etc from the server)
@@ -448,7 +456,7 @@ class configmanager(object):
             'stop_after_init', 'without_demo', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
             'test_file', 'test_tags',
-            'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
+            'osv_memory_count_limit', 'osv_memory_age_limit', 'transient_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
             'server_wide_modules',
         ]
@@ -525,8 +533,15 @@ class configmanager(object):
         conf.server_wide_modules = [
             m.strip() for m in self.options['server_wide_modules'].split(',') if m.strip()
         ]
-
         return opt
+
+    def _warn_deprecated_options(self):
+        if self.options['osv_memory_age_limit']:
+            warnings.warn(
+                "The osv-memory-age-limit is a deprecated alias to "
+                "the transient-age-limit option, please use the latter.",
+                DeprecationWarning)
+            self.options['transient_age_limit'] = self.options.pop('osv_memory_age_limit')
 
     def _is_addons_path(self, path):
         from odoo.modules.module import MANIFEST_NAMES

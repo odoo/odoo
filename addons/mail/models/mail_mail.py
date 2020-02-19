@@ -416,10 +416,8 @@ class MailMail(models.Model):
                         if isinstance(e, UnicodeEncodeError):
                             value = "Invalid text: %s" % e.object
                         else:
-                            # get the args of the original error, wrap into a value and throw a MailDeliveryException
-                            # that is an except_orm, with name and value as arguments
                             value = '. '.join(e.args)
-                        raise MailDeliveryException(_("Mail Delivery Failed"), value)
+                        raise MailDeliveryException(value)
                     raise
 
             if auto_commit is True:

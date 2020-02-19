@@ -1022,11 +1022,6 @@ exports.PosModel = Backbone.Model.extend({
             }).catch(function (reason){
                 var error = reason.message;
                 if(error.code === 200 ){    // Business Logic Error, not a connection problem
-                    //if warning do not need to display traceback!!
-                    if (error.data.exception_type == 'warning') {
-                        delete error.data.debug;
-                    }
-
                     // Hide error if already shown before ...
                     if ((!self.get('failed') || options.show_error) && !options.to_invoice) {
                         self.gui.show_popup('error-traceback',{
@@ -1071,13 +1066,6 @@ exports.PosModel = Backbone.Model.extend({
                 self.db.set_ids_removed_from_server(server_ids);
                 return server_ids;
             }).catch(function (reason){
-                var error = reason.message;
-                if(error.code === 200 ){    // Business Logic Error, not a connection problem
-                    //if warning do not need to display traceback!!
-                    if (error.data.exception_type == 'warning') {
-                        delete error.data.debug;
-                    }
-                }
                 self.gui.show_sync_error_popup();
                 console.error('Failed to remove orders:', server_ids);
             });

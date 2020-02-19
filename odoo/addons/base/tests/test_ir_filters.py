@@ -222,7 +222,7 @@ class TestGlobalDefaults(FiltersCase):
         )
 
         Filters = self.env['ir.filters'].with_user(self.USER_ID)
-        with self.assertRaises(exceptions.Warning):
+        with self.assertRaises(exceptions.UserError):
             Filters.create_or_replace({
                 'name': 'c',
                 'model_id': 'ir.filters',
@@ -242,7 +242,7 @@ class TestGlobalDefaults(FiltersCase):
         )
 
         Filters = self.env['ir.filters'].with_user(self.USER_ID)
-        with self.assertRaises(exceptions.Warning):
+        with self.assertRaises(exceptions.UserError):
             Filters.create_or_replace({
                 'name': 'a',
                 'model_id': 'ir.filters',

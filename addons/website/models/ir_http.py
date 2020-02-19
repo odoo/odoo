@@ -299,7 +299,7 @@ class Http(models.AbstractModel):
             try:
                 # exception.name might be int, string
                 exception_template = int(exception.name)
-            except:
+            except ValueError:
                 exception_template = exception.name
             view = View._view_obj(exception_template)
             if exception.html and exception.html in view.arch:

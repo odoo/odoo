@@ -78,7 +78,7 @@ class TestResConfig(TransactionCase):
         res = self.ResConfig.get_config_warning(self.error_msg_wo_menu)
 
         # Check type
-        self.assertIsInstance(res, exceptions.Warning)
+        self.assertIsInstance(res, exceptions.UserError)
 
         # Check returned value
         self.assertEqual(res.args[0], self.expected_final_error_msg_wo_menu)
