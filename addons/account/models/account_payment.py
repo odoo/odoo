@@ -38,8 +38,6 @@ class account_payment(models.Model):
 
     # Money flows from the journal_id's default_debit_account_id or default_credit_account_id to the destination_account_id
     destination_account_id = fields.Many2one('account.account', compute='_compute_destination_account_id', readonly=True)
-    # For money transfer, money goes from journal_id to a transfer account, then from the transfer account to destination_journal_id
-    destination_journal_id = fields.Many2one('account.journal', string='Transfer To', domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', company_id)]", readonly=True, states={'draft': [('readonly', False)]})
 
     invoice_ids = fields.Many2many('account.move', 'account_invoice_payment_rel', 'payment_id', 'invoice_id', string="Invoices", copy=False, readonly=True,
                                    help="""Technical field containing the invoice for which the payment has been generated.
@@ -53,7 +51,7 @@ class account_payment(models.Model):
     move_reconciled = fields.Boolean(compute="_get_move_reconciled", readonly=True)
 
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Validated'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancelled', 'Cancelled'), ('invoicing_legacy', 'Invoicing App Legacy')], readonly=True, default='draft', copy=False, string="Status", tracking=True)
-    payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money'), ('transfer', 'Internal Transfer')], string='Payment Type', required=True, readonly=True, states={'draft': [('readonly', False)]})
+    payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')], string='Payment Type', required=True, readonly=True, states={'draft': [('readonly', False)]})
     _payment_methods = fields.Many2many('account.payment.method', compute='_compute_payment_methods')
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Method', required=True, readonly=True, states={'draft': [('readonly', False)]},
         domain="""[
@@ -70,7 +68,7 @@ class account_payment(models.Model):
 
     partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')], tracking=True, readonly=True, states={'draft': [('readonly', False)]})
     partner_id = fields.Many2one('res.partner', string='Partner', tracking=True, readonly=True, states={'draft': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-
+    is_internal_transfer = fields.Boolean(compute="_compute_is_internal_transfer", store=True)
     amount = fields.Monetary(string='Amount', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     payment_date = fields.Date(string='Date', default=fields.Date.context_today, required=True, readonly=True, states={'draft': [('readonly', False)]}, copy=False, tracking=True)
@@ -132,6 +130,11 @@ class account_payment(models.Model):
             'invoice_ids': [(6, 0, invoices.ids)],
         })
         return rec
+
+    @api.depends('partner_id', 'journal_id')
+    def _compute_is_internal_transfer(self):
+        for payment in self:
+            payment.is_internal_transfer = payment.partner_id == payment.journal_id.company_id.partner_id
 
     @api.depends('amount', 'currency_id', 'payment_type', 'company_id', 'invoice_ids.company_id', )
     def _compute_suitable_journal_ids(self):
@@ -245,10 +248,8 @@ class account_payment(models.Model):
             # Set default partner type for the payment type
             if self.payment_type == 'inbound':
                 self.partner_type = 'customer'
-            elif self.payment_type == 'outbound':
+            else:  # -> self.payment_type == 'outbound'
                 self.partner_type = 'supplier'
-        elif self.payment_type not in ('inbound', 'outbound'):
-            self.partner_type = False
         self._onchange_journal()
         if self.currency_id.is_zero(self.amount) and self.has_invoices:
             self.payment_difference_handling = 'reconcile'
@@ -331,10 +332,6 @@ class account_payment(models.Model):
     def name_get(self):
         return [(payment.id, payment.name or _('Draft Payment')) for payment in self]
 
-    @api.model
-    def _get_move_name_transfer_separator(self):
-        return '§§'
-
     @api.depends('move_line_ids.reconciled')
     def _get_move_reconciled(self):
         for payment in self:
@@ -345,7 +342,7 @@ class account_payment(models.Model):
                     break
             payment.move_reconciled = rec
 
-    @api.depends('invoice_ids', 'payment_type', 'partner_type', 'partner_id')
+    @api.depends('invoice_ids', 'payment_type', 'partner_type', 'partner_id', 'is_internal_transfer')
     def _compute_destination_account_id(self):
         for payment in self:
             payment = payment.with_company(payment.company_id)
@@ -353,7 +350,7 @@ class account_payment(models.Model):
                 payment.destination_account_id = payment.invoice_ids[0].mapped(
                     'line_ids.account_id').filtered(
                         lambda account: account.user_type_id.type in ('receivable', 'payable'))[0]
-            elif payment.payment_type == 'transfer':
+            elif payment.is_internal_transfer:
                 if not payment.company_id.transfer_account_id.id:
                     raise UserError(_('There is no Transfer Account defined in the accounting settings. Please define one to be able to confirm this transfer.'))
                 payment.destination_account_id = payment.company_id.transfer_account_id.id
@@ -439,7 +436,7 @@ class account_payment(models.Model):
         ''' Prepare the creation of journal entries (account.move) by creating a list of python dictionary to be passed
         to the 'create' method.
 
-        Example 1: outbound with write-off:
+        Example : outbound with write-off:
 
         Account             | Debit     | Credit
         ---------------------------------------------------------
@@ -447,25 +444,15 @@ class account_payment(models.Model):
         RECEIVABLE          |           |   1000.0
         WRITE-OFF ACCOUNT   |   100.0   |
 
-        Example 2: internal transfer from BANK to CASH:
-
-        Account             | Debit     | Credit
-        ---------------------------------------------------------
-        BANK                |           |   1000.0
-        TRANSFER            |   1000.0  |
-        CASH                |   1000.0  |
-        TRANSFER            |           |   1000.0
-
         :return: A list of Python dictionary to be passed to env['account.move'].create.
         '''
         all_move_vals = []
         for payment in self:
             company_currency = payment.company_id.currency_id
-            move_names = payment.move_name.split(payment._get_move_name_transfer_separator()) if payment.move_name else None
 
             # Compute amounts.
             write_off_amount = payment.payment_difference_handling == 'reconcile' and -payment.payment_difference or 0.0
-            if payment.payment_type in ('outbound', 'transfer'):
+            if payment.payment_type == 'outbound':
                 counterpart_amount = payment.amount
                 liquidity_line_account = payment.journal_id.default_debit_account_id
             else:
@@ -502,7 +489,7 @@ class account_payment(models.Model):
 
             # Compute 'name' to be used in receivable/payable line.
             rec_pay_line_name = ''
-            if payment.payment_type == 'transfer':
+            if payment.is_internal_transfer:
                 rec_pay_line_name = payment.name
             else:
                 if payment.partner_type == 'customer':
@@ -519,8 +506,11 @@ class account_payment(models.Model):
                     rec_pay_line_name += ': %s' % ', '.join(payment.invoice_ids.mapped('name'))
 
             # Compute 'name' to be used in liquidity line.
-            if payment.payment_type == 'transfer':
-                liquidity_line_name = _('Transfer to %s') % payment.destination_journal_id.name
+            if payment.is_internal_transfer:
+                if payment.payment_type == 'inbound':
+                    liquidity_line_name = _('Transfer to %s') % payment.journal_id.name
+                elif payment.payment_type == 'outbound':
+                    liquidity_line_name = _('Transfer from %s') % payment.journal_id.name
             else:
                 liquidity_line_name = payment.name
 
@@ -573,62 +563,11 @@ class account_payment(models.Model):
                     'payment_id': payment.id,
                 }))
 
-            if move_names:
-                move_vals['name'] = move_names[0]
+            if payment.move_name:
+                move_vals['name'] = payment.move_name
 
             all_move_vals.append(move_vals)
 
-            # ==== 'transfer' ====
-            if payment.payment_type == 'transfer':
-                journal = payment.destination_journal_id
-
-                # Manage custom currency on journal for liquidity line.
-                if journal.currency_id and payment.currency_id != journal.currency_id:
-                    # Custom currency on journal.
-                    liquidity_line_currency_id = journal.currency_id.id
-                    transfer_amount = company_currency._convert(balance, journal.currency_id, payment.company_id, payment.payment_date)
-                else:
-                    # Use the payment currency.
-                    liquidity_line_currency_id = currency_id
-                    transfer_amount = counterpart_amount
-
-                transfer_move_vals = {
-                    'date': payment.payment_date,
-                    'ref': payment.communication,
-                    'partner_id': payment.partner_id.id,
-                    'journal_id': payment.destination_journal_id.id,
-                    'line_ids': [
-                        # Transfer debit line.
-                        (0, 0, {
-                            'name': payment.name,
-                            'amount_currency': -counterpart_amount if currency_id else 0.0,
-                            'currency_id': currency_id,
-                            'debit': balance < 0.0 and -balance or 0.0,
-                            'credit': balance > 0.0 and balance or 0.0,
-                            'date_maturity': payment.payment_date,
-                            'partner_id': payment.partner_id.commercial_partner_id.id,
-                            'account_id': payment.company_id.transfer_account_id.id,
-                            'payment_id': payment.id,
-                        }),
-                        # Liquidity credit line.
-                        (0, 0, {
-                            'name': _('Transfer from %s') % payment.journal_id.name,
-                            'amount_currency': transfer_amount if liquidity_line_currency_id else 0.0,
-                            'currency_id': liquidity_line_currency_id,
-                            'debit': balance > 0.0 and balance or 0.0,
-                            'credit': balance < 0.0 and -balance or 0.0,
-                            'date_maturity': payment.payment_date,
-                            'partner_id': payment.partner_id.commercial_partner_id.id,
-                            'account_id': payment.destination_journal_id.default_credit_account_id.id,
-                            'payment_id': payment.id,
-                        }),
-                    ],
-                }
-
-                if move_names and len(move_names) == 2:
-                    transfer_move_vals['name'] = move_names[1]
-
-                all_move_vals.append(transfer_move_vals)
         return all_move_vals
 
     def post(self):
@@ -649,41 +588,33 @@ class account_payment(models.Model):
 
             # keep the name in case of a payment reset to draft
             if not rec.name:
-                # Use the right sequence to set the name
-                if rec.payment_type == 'transfer':
+                if rec.is_internal_transfer:
                     sequence_code = 'account.payment.transfer'
                 else:
                     if rec.partner_type == 'customer':
                         if rec.payment_type == 'inbound':
                             sequence_code = 'account.payment.customer.invoice'
-                        if rec.payment_type == 'outbound':
+                        elif rec.payment_type == 'outbound':
                             sequence_code = 'account.payment.customer.refund'
-                    if rec.partner_type == 'supplier':
+                    elif rec.partner_type == 'supplier':
                         if rec.payment_type == 'inbound':
                             sequence_code = 'account.payment.supplier.refund'
-                        if rec.payment_type == 'outbound':
+                        elif rec.payment_type == 'outbound':
                             sequence_code = 'account.payment.supplier.invoice'
                 rec.name = self.env['ir.sequence'].next_by_code(sequence_code, sequence_date=rec.payment_date)
-                if not rec.name and rec.payment_type != 'transfer':
+                if not rec.name and not rec.is_internal_transfer:
                     raise UserError(_("You have to define a sequence for %s in your company.") % (sequence_code,))
 
-            moves = AccountMove.create(rec._prepare_payment_moves())
-            moves.filtered(lambda move: move.journal_id.post_at != 'bank_rec').post()
+            move = AccountMove.create(rec._prepare_payment_moves())
+            if move.journal_id.post_at != 'bank_rec':
+                move.post()
 
             # Update the state / move before performing any reconciliation.
-            move_name = self._get_move_name_transfer_separator().join(moves.mapped('name'))
-            rec.write({'state': 'posted', 'move_name': move_name})
+            rec.write({'state': 'posted', 'move_name': move.name})
 
-            if rec.payment_type in ('inbound', 'outbound'):
-                # ==== 'inbound' / 'outbound' ====
-                if rec.invoice_ids:
-                    (moves[0] + rec.invoice_ids).line_ids \
-                        .filtered(lambda line: not line.reconciled and line.account_id == rec.destination_account_id)\
-                        .reconcile()
-            elif rec.payment_type == 'transfer':
-                # ==== 'transfer' ====
-                moves.mapped('line_ids')\
-                    .filtered(lambda line: line.account_id == rec.company_id.transfer_account_id)\
+            if rec.invoice_ids:
+                (move + rec.invoice_ids).line_ids \
+                    .filtered(lambda line: not line.reconciled and line.account_id == rec.destination_account_id)\
                     .reconcile()
 
         return True

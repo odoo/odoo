@@ -85,10 +85,11 @@
                         filter_domain="['|', '|', ('name', 'ilike', self), ('partner_id', 'ilike', self), ('communication', 'ilike', self)]"/>
                     <field name="partner_id" string="Customer/Vendor"/>
                     <field name="journal_id"/>
+                    <field name="is_internal_transfer"/>
                     <separator/>
                     <filter string="Customer Payments" name="inbound_filter" domain="[('partner_type', '=', 'customer')]"/>
                     <filter string="Vendor Payments" name="outbound_filter" domain="[('partner_type', '=', 'supplier')]"/>
-                    <filter string="Transfers" name="transfers_filter" domain="[('payment_type', '=', 'transfer')]"/>
+                    <filter string="Transfers" name="transfers_filter" domain="[('is_internal_transfer', '=', True)]"/>
                     <separator/>
                     <filter string="Draft" name="state_draft" domain="[('state', '=', 'draft')]"/>
                     <filter string="Posted" name="state_posted" domain="[('state', '=', 'posted')]"/>
@@ -159,17 +160,17 @@
 
                         <group>
                             <field name="invoice_ids" invisible="1"/>
+                            <field name="is_internal_transfer" invisible="1"/>
                             <group name="partner_group" invisible="context.get('active_model') == 'account.move'">
                                 <field name="payment_type" widget="radio"/>
-                                <field name="partner_type" widget="selection" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}"/>
-                                <field name="partner_id" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}" context="{'default_is_company': True}"/>
+                                <field name="partner_type" widget="selection" attrs="{'required': [('state', '=', 'draft')], 'invisible': [('is_internal_transfer', '=', True)]}"/>
+                                <field name="partner_id" attrs="{'required': [('state', '=', 'draft')]}" context="{'default_is_company': True}"/>
                                 <field name="company_id" groups="base.group_multi_company" required="1"/>
                             </group>
                             <group>
                                 <field name="amount" invisible="1"/>
                                 <field name="_suitable_journal_ids" invisible="1"/>
                                 <field name="journal_id" widget="selection" attrs="{'invisible': [('amount', '=', 0), ('state', '!=', 'draft')]}"/>
-                                <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')]}"/>
                                 <field name="hide_payment_method" invisible="1"/>
                                 <field name="_payment_methods" invisible="1"/>
                                 <field name="payment_method_id" widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)]}"/>
@@ -294,7 +295,7 @@
             <field name="name">Internal Transfers</field>
             <field name="res_model">account.payment</field>
             <field name="view_mode">tree,kanban,form,graph</field>
-            <field name="context">{'default_payment_type': 'transfer', 'search_default_transfers_filter': 1}</field>
+            <field name="context">{'default_payment_type': 'outbound', 'search_default_transfers_filter': 1}</field>
             <field name="domain">[]</field>
             <field name="view_id" ref="view_account_supplier_payment_tree"/>
             <field name="help" type="html">
