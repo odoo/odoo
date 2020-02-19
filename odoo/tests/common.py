@@ -536,6 +536,28 @@ class ChromeBrowser():
 
         raise unittest.SkipTest("Chrome executable not found")
 
+<<<<<<< HEAD
+=======
+    def _spawn_chrome(self, cmd):
+        if os.name != 'posix':
+            return
+        pid = os.fork()
+        if pid != 0:
+            return pid
+        else:
+            if platform.system() != 'Darwin':
+                # since the introduction of pointer compression in Chrome 80 (v8 v8.0),
+                # the memory reservation algorithm requires more than 8GiB of virtual mem for alignment
+                # this exceeds our default memory limits.
+                # OSX already reserve huge memory for processes
+                import resource
+                resource.setrlimit(resource.RLIMIT_AS, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
+            # redirect browser stderr to /dev/null
+            with open(os.devnull, 'wb', 0) as stderr_replacement:
+                os.dup2(stderr_replacement.fileno(), sys.stderr.fileno())
+            os.execv(cmd[0], cmd)
+
+>>>>>>> 724d95ce42d... temp
     def _chrome_start(self):
         if self.chrome_process is not None:
             return
