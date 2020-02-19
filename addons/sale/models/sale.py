@@ -1412,7 +1412,7 @@ class SaleOrderLine(models.Model):
         :param qty: float quantity to invoice
         """
         self.ensure_one()
-        return {
+        res = {
             'display_type': self.display_type,
             'sequence': self.sequence,
             'name': self.name,
@@ -1426,6 +1426,9 @@ class SaleOrderLine(models.Model):
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'sale_line_ids': [(4, self.id)],
         }
+        if self.display_type:
+            res['account_id'] = False
+        return res
 
     def _prepare_procurement_values(self, group_id=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
