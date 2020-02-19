@@ -1458,12 +1458,6 @@ class AccountMove(models.Model):
             if line.exclude_from_invoice_tab:
                 continue
 
-            # Ensure related fields are well copied.
-            line.partner_id = self.partner_id
-            line.date = self.date
-            line.recompute_tax_line = True
-            line.currency_id = line_currency
-
             # Shortcut to load the demo data.
             # Doing line.account_id triggers a default_get(['account_id']) that could returns a result.
             # A section / note must not have an account_id set.
@@ -1476,6 +1470,19 @@ class AccountMove(models.Model):
                         line.account_id = self.journal_id.default_debit_account_id
             if line.product_id and not line._cache.get('name'):
                 line.name = line._get_computed_name()
+
+            # Compute the account before the partner_id
+            # In case account_followup is installed
+            # Setting the partner will get the account_id in cache
+            # If the account_id is not in cache, it will trigger the default value
+            # Which is wrong in some case
+            # It's better to set the account_id before the partner_id
+            # Ensure related fields are well copied.
+            line.partner_id = self.partner_id
+            line.date = self.date
+            line.recompute_tax_line = True
+            line.currency_id = line_currency
+
 
         self.line_ids._onchange_price_subtotal()
         self._recompute_dynamic_lines(recompute_all_taxes=True)
