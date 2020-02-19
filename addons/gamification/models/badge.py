@@ -24,7 +24,6 @@ class BadgeUser(models.Model):
     comment = fields.Text('Comment')
     badge_name = fields.Char(related='badge_id.name', string="Badge Name", readonly=False)
     level = fields.Selection(
-        [('bronze', 'Bronze'), ('silver', 'Silver'), ('gold', 'Gold')],
         string='Badge Level', related="badge_id.level", store=True, readonly=True)
 
     def _send_badge(self):
