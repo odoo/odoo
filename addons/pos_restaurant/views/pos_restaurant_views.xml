@@ -8,6 +8,8 @@
             <field name="arch" type="xml">
                 <form string="Restaurant Floor">
                     <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active" invisible="1"/>
                         <group col="4">
                             <field name="name" />
                             <field name="pos_config_id" />
@@ -34,6 +36,17 @@
                     <field name="name" />
                     <field name="pos_config_id" />
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_restaurant_floor_search" model="ir.ui.view">
+            <field name="name">restaurant.floor.search</field>
+            <field name="model">restaurant.floor</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <filter string="Archived" name="active" domain="[('active', '=', False)]"/>
+                </search>
             </field>
         </record>
 
