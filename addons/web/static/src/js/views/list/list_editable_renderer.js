@@ -662,7 +662,7 @@ ListRenderer.include({
         const table = this.el.getElementsByTagName('table')[0];
         let columnWidths = this.columnWidths;
 
-        if (!columnWidths) { // no column widths to restore
+        if (!columnWidths || !columnWidths.length) { // no column widths to restore
             // Set table layout auto and remove inline style to make sure that css
             // rules apply (e.g. fixed width of record selector)
             table.style.tableLayout = 'auto';

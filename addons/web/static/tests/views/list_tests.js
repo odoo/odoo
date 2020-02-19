@@ -1713,6 +1713,47 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('empty editable list with the handle widget and no content help', async function (assert) {
+        assert.expect(4);
+
+        // no records for the foo model
+        this.data.foo.records = [];
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree editable="bottom">
+                    <field name="int_field" widget="handle" />
+                    <field name="foo" />
+                </tree>`,
+            viewOptions: {
+                action: {
+                    help: '<p class="hello">click to add a foo</p>'
+                }
+            },
+        });
+
+        // as help is being provided in the action, table won't be rendered until a record exists
+        assert.containsNone(list, '.o_list_table', " there should not be any records in the view.");
+        assert.containsOnce(list, '.o_view_nocontent', "should have no content help");
+
+        // click on create button
+        await testUtils.dom.click(list.$('.o_list_button_add'));
+        const handleWidgetMinWidth = "33px";
+        const handleWidgetHeader = list.$('thead > tr > th.o_handle_cell');
+        assert.strictEqual(handleWidgetHeader.css('min-width'), handleWidgetMinWidth,
+            "While creating first record, min-width should be applied to handle widget.");
+
+        // creating one record
+        await testUtils.fields.editInput(list.$("tr.o_selected_row input[name='foo']"), 'test_foo');
+        await testUtils.dom.click(list.$('.o_list_button_save'));
+        assert.strictEqual(handleWidgetHeader.css('min-width'), handleWidgetMinWidth,
+            "After creation of the first record, min-width of the handle widget should remain as it is");
+
+        list.destroy();
+    });
+
     QUnit.test('editable list: overflowing table', async function (assert) {
         assert.expect(1);
 
