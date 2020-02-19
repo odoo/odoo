@@ -180,7 +180,7 @@ var PosDB = core.Class.extend({
         }
         for(var i = 0, len = products.length; i < len; i++){
             var product = products[i];
-            var search_string = this._product_search_string(product);
+            var search_string = utils.unaccent(this._product_search_string(product));
             var categ_id = product.pos_categ_id ? product.pos_categ_id[0] : this.root_category_id;
             product.product_tmpl_id = product.product_tmpl_id[0];
             if(!stored_categories[categ_id]){
@@ -377,7 +377,7 @@ var PosDB = core.Class.extend({
         }
         var results = [];
         for(var i = 0; i < this.limit; i++){
-            var r = re.exec(utils.unaccent(this.category_search_string[category_id]));
+            var r = re.exec(this.category_search_string[category_id]);
             if(r){
                 var id = Number(r[1]);
                 results.push(this.get_product_by_id(id));
