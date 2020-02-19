@@ -9,7 +9,7 @@ import threading
 import time
 
 import odoo
-from odoo.exceptions import UserError, ValidationError, QWebException
+from odoo.exceptions import UserError, ValidationError
 from odoo.models import check_method_name
 from odoo.tools.translate import translate, translate_sql_constraint
 from odoo.tools.translate import _
@@ -91,13 +91,7 @@ def check(f):
                 if odoo.registry(dbname)._init and not odoo.tools.config['test_enable']:
                     raise odoo.exceptions.Warning('Currently, this database is not fully loaded and can not be used.')
                 return f(dbname, *args, **kwargs)
-            except (OperationalError, QWebException) as e:
-                if isinstance(e, QWebException):
-                    cause = e.qweb.get('cause')
-                    if isinstance(cause, OperationalError):
-                        e = cause
-                    else:
-                        raise
+            except OperationalError as e:
                 # Automatically retry the typical transaction serialization errors
                 if e.pgcode not in PG_CONCURRENCY_ERRORS_TO_RETRY:
                     raise

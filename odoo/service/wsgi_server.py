@@ -35,22 +35,14 @@ RPC_FAULT_CODE_ACCESS_DENIED = 3
 RPC_FAULT_CODE_ACCESS_ERROR = 4
 
 def xmlrpc_handle_exception_int(e):
-    if isinstance(e, odoo.exceptions.UserError):
-        fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, odoo.tools.ustr(e.name))
-    elif isinstance(e, odoo.exceptions.RedirectWarning):
+    if isinstance(e, odoo.exceptions.RedirectWarning):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
-    elif isinstance(e, odoo.exceptions.MissingError):
-        fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
-    elif isinstance (e, odoo.exceptions.AccessError):
+    elif isinstance(e, odoo.exceptions.AccessError):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_ACCESS_ERROR, str(e))
     elif isinstance(e, odoo.exceptions.AccessDenied):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_ACCESS_DENIED, str(e))
-    elif isinstance(e, odoo.exceptions.DeferredException):
-        info = e.traceback
-        # Which one is the best ?
-        formatted_info = "".join(traceback.format_exception(*info))
-        #formatted_info = odoo.tools.exception_to_unicode(e) + '\n' + info
-        fault = xmlrpclib.Fault(RPC_FAULT_CODE_APPLICATION_ERROR, formatted_info)
+    elif isinstance(e, odoo.exceptions.UserError):
+        fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
     else:
         info = sys.exc_info()
         # Which one is the best ?
@@ -61,9 +53,7 @@ def xmlrpc_handle_exception_int(e):
     return xmlrpclib.dumps(fault, allow_none=None)
 
 def xmlrpc_handle_exception_string(e):
-    if isinstance(e, odoo.exceptions.UserError):
-        fault = xmlrpclib.Fault('warning -- %s\n\n%s' % (e.name, e.value), '')
-    elif isinstance(e, odoo.exceptions.RedirectWarning):
+    if isinstance(e, odoo.exceptions.RedirectWarning):
         fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
     elif isinstance(e, odoo.exceptions.MissingError):
         fault = xmlrpclib.Fault('warning -- MissingError\n\n' + str(e), '')
@@ -71,10 +61,8 @@ def xmlrpc_handle_exception_string(e):
         fault = xmlrpclib.Fault('warning -- AccessError\n\n' + str(e), '')
     elif isinstance(e, odoo.exceptions.AccessDenied):
         fault = xmlrpclib.Fault('AccessDenied', str(e))
-    elif isinstance(e, odoo.exceptions.DeferredException):
-        info = e.traceback
-        formatted_info = "".join(traceback.format_exception(*info))
-        fault = xmlrpclib.Fault(odoo.tools.ustr(e), formatted_info)
+    elif isinstance(e, odoo.exceptions.UserError):
+        fault = xmlrpclib.Fault('warning -- UserError\n\n' + str(e), '')
     #InternalError
     else:
         info = sys.exc_info()

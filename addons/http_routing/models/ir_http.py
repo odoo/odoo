@@ -572,9 +572,8 @@ class IrHttp(models.AbstractModel):
             exception=exception,
             traceback=traceback.format_exc(),
         )
-        # only except_orm exceptions contain a message
-        if isinstance(exception, exceptions.except_orm):
-            values['error_message'] = exception.name
+        if isinstance(exception, exceptions.UserError):
+            values['error_message'] = exception.args[0]
             code = 400
             if isinstance(exception, exceptions.AccessError):
                 code = 403
