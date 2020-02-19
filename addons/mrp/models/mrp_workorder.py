@@ -34,14 +34,14 @@ class MrpWorkorder(models.Model):
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         group_expand='_read_group_workcenter_id', check_company=True)
     working_state = fields.Selection(
-        'Workcenter Status', related='workcenter_id.working_state', readonly=False,
+        string='Workcenter Status', related='workcenter_id.working_state', readonly=False,
         help='Technical: used in views only')
     production_availability = fields.Selection(
-        'Stock Availability', readonly=True,
+        string='Stock Availability', readonly=True,
         related='production_id.reservation_state', store=True,
         help='Technical: used in views and domains only.')
     production_state = fields.Selection(
-        'Production State', readonly=True,
+        string='Production State', readonly=True,
         related='production_id.state',
         help='Technical: used in views only.')
     qty_production = fields.Float('Original Production Quantity', readonly=True, related='production_id.product_qty')
@@ -107,7 +107,7 @@ class MrpWorkorder(models.Model):
     worksheet = fields.Binary(
         'Worksheet', related='operation_id.worksheet', readonly=True)
     worksheet_type = fields.Selection(
-        'Worksheet Type', related='operation_id.worksheet_type', readonly=True)
+        string='Worksheet Type', related='operation_id.worksheet_type', readonly=True)
     worksheet_google_slide = fields.Char(
         'Worksheet URL', related='operation_id.worksheet_google_slide', readonly=True)
     move_raw_ids = fields.One2many(

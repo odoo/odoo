@@ -110,7 +110,7 @@ class Repair(models.Model):
     amount_untaxed = fields.Float('Untaxed Amount', compute='_amount_untaxed', store=True)
     amount_tax = fields.Float('Taxes', compute='_amount_tax', store=True)
     amount_total = fields.Float('Total', compute='_amount_total', store=True)
-    tracking = fields.Selection('Product Tracking', related="product_id.tracking", readonly=False)
+    tracking = fields.Selection(string='Product Tracking', related="product_id.tracking", readonly=False)
 
     @api.depends('partner_id')
     def _compute_default_address_id(self):
