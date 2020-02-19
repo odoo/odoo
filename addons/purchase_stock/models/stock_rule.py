@@ -290,6 +290,7 @@ class StockRule(models.Model):
             ('state', '=', 'draft'),
             ('picking_type_id', '=', self.picking_type_id.id),
             ('company_id', '=', company_id.id),
+            ('user_id', '=', False),
         )
         if values.get('orderpoint_id'):
             procurement_date = fields.Date.to_date(values['date_planned']) - relativedelta(days=int(values['supplier'].delay) + company_id.po_lead)
