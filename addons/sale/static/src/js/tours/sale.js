@@ -6,78 +6,129 @@ var tour = require('web_tour.tour');
 
 var _t = core._t;
 
-tour.register('sale_tour', {
+tour.register("sale_tour", {
     url: "/web",
+    rainbowMan: false,
 }, [tour.stepUtils.showAppsMenuItem(), {
-    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
-    content: _t('Open Sales app to send your first quotation in a few clicks.'),
-    position: 'right',
-    edition: 'community'
-}, {
-    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
-    content: _t('Open Sales app to send your first quotation in a few clicks.'),
-    position: 'bottom',
-    edition: 'enterprise'
-}, {
-    trigger: ".o_list_button_add",
-    extra_trigger: ".o_sale_order",
-    content: _t("Let's create a new quotation.<br/><i>Note that colored buttons usually point to the next logical actions.</i>"),
-    position: "bottom",
-}, {
-    trigger: ".o_form_editable .o_field_many2one[name='partner_id'] input",
-    extra_trigger: ".o_sale_order",
-    content: _t("Write the name of your customer to create one on the fly, or select an existing one."),
-    position: "bottom",
-    run: 'text Agrolait'
-}, {
-    trigger: ".ui-menu-item > a",
-    auto: true,
-    in_modal: false,
-}, {
-    trigger: ".o_field_x2many_list_row_add > a",
-    extra_trigger: ".o_field_many2one[name='partner_id'] .o_external_button",
-    content: _t("Click here to add some products or services to your quotation."),
-    position: "bottom",
-}, {
-    trigger: ".o_field_widget[name=product_id] input, .o_field_widget[name=product_template_id] input",
-    extra_trigger: ".o_sale_order",
-    content: _t("Select a product, or create a new one on the fly."),
+    trigger: ".o_app[data-menu-xmlid='sale.sale_menu_root']",
+    content: _t("Open Sales app to send your first quotation in a few clicks."),
     position: "right",
-    run: function (actions) {
-        var $input = this.$anchor.find('input');
-        actions.text("DESK0001", $input.length === 0 ? this.$anchor : $input);
-        // fake keydown to trigger search
-        var keyDownEvent = jQuery.Event("keydown");
-        keyDownEvent.which = 42;
-        this.$anchor.trigger(keyDownEvent);
-        var $descriptionElement = $('.o_form_editable textarea[name="name"]');
-        // when description changes, we know the product has been created
-        $descriptionElement.change(function () {
-            $descriptionElement.addClass('product_creation_success');
-        });
-    },
-    id: 'product_selection_step'
+    edition: "community"
 }, {
-    trigger: '.ui-menu.ui-widget .ui-menu-item a:contains("DESK0001")'
+    trigger: ".o_app[data-menu-xmlid='sale.sale_menu_root']",
+    content: _t("Open Sales app to send your first quotation in a few clicks."),
+    position: "bottom",
+    edition: "enterprise"
 }, {
-    trigger: '.o_form_editable textarea[name="name"].product_creation_success',
-    run: function () {} // wait for product creation
-}, {
-    trigger: ".o_form_button_save",
+    trigger: 'a.o_onboarding_step_action.btn[data-method=action_open_base_onboarding_company]',
     extra_trigger: ".o_sale_order",
-    content: _t("Once your quotation is ready, you can save, print or send it by email."),
+    content: _t("Start by checking your company's data."),
+    position: "bottom",
+}, {
+    trigger: ".modal-content input.o_field_widget[name='street'], .modal-content input.o_field_widget[name='street_name']",
+    content: _t("Let's enter the address."),
     position: "right",
-    id: "form_button_save_clicked"
+    run: "text Rainbow street"
 }, {
-    trigger: ".breadcrumb-item:not(.active):last",
-    extra_trigger: ".o_sale_order [data-value='draft'].btn-primary",
-    content: _t("Use the breadcrumbs to <b>go back to preceeding screens</b>."),
-    position: "bottom"
+    trigger: ".modal-content button[name='action_save_onboarding_company_step']",
+    content: _t("Looks good. Let's continue."),
+    position: "bottom",
 }, {
-    trigger: 'li a[data-menu-xmlid="sale.sale_order_menu"], .oe_secondary_menu_section[data-menu-xmlid="sale.sale_order_menu"]',
-    content: _t("Use this menu to access quotations, sales orders and customers."),
-    edition: "enterprise",
-    position: "bottom"
+    trigger: 'a.o_onboarding_step_action.btn[data-method=action_open_base_document_layout]',
+    extra_trigger: ".o_sale_order",
+    content: _t("Customize your quotes and orders."),
+    position: "bottom",
+}, {
+    trigger: "button[name='document_layout_save']",
+    extra_trigger: ".o_sale_order",
+    content: _t("Good job, let's continue."),
+    position: "bottom",
+}, {
+    trigger: 'a.o_onboarding_step_action.btn[data-method=action_open_sale_onboarding_payment_acquirer]',
+    extra_trigger: ".o_sale_order",
+    content: _t("To speed up order confirmation, we can activate electronic signatures or payments."),
+    position: "bottom",
+}, {
+    trigger: "button[name='add_payment_methods']",
+    extra_trigger: ".o_sale_order",
+    content: _t("Lets keep electronic signature for now."),
+    position: "bottom",
+}, {
+    trigger: 'a.o_onboarding_step_action.btn[data-method=action_open_sale_onboarding_sample_quotation]',
+    extra_trigger: ".o_sale_order",
+    content: _t("Now, we'll create a sample quote."),
+    position: "bottom",
 }]);
+
+tour.register("sale_quote_tour", {
+        url: "/web#action=sale.action_quotations_with_onboarding&view_type=form",
+        rainbowMan: true,
+        rainbowManMessage: "<b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote."
+    }, [{
+        trigger: ".o_form_editable .o_field_many2one[name='partner_id']",
+        extra_trigger: ".o_sale_order",
+        content: _t("Write a company name to create one, or see suggestions."),
+        position: "bottom",
+        run: function (actions) {
+            actions.text("Agrolait", this.$anchor.find("input"));
+        },
+    }, {
+        trigger: ".ui-menu-item > a",
+        auto: true,
+        in_modal: false,
+    }, {
+        trigger: ".o_field_x2many_list_row_add > a",
+        extra_trigger: ".o_field_many2one[name='partner_id'] .o_external_button",
+        content: _t("Click here to add some products or services to your quotation."),
+        position: "bottom",
+    }, {
+        trigger: ".o_field_widget[name='product_id'], .o_field_widget[name='product_template_id']",
+        extra_trigger: ".o_sale_order",
+        content: _t("Select a product, or create a new one on the fly."),
+        position: "right",
+        run: function (actions) {
+            var $input = this.$anchor.find("input");
+            actions.text("DESK0001", $input.length === 0 ? this.$anchor : $input);
+            // fake keydown to trigger search
+            var keyDownEvent = jQuery.Event("keydown");
+            keyDownEvent.which = 42;
+            this.$anchor.trigger(keyDownEvent);
+            var $descriptionElement = $(".o_form_editable textarea[name='name']");
+            // when description changes, we know the product has been created
+            $descriptionElement.change(function () {
+                $descriptionElement.addClass("product_creation_success");
+            });
+        },
+        id: "product_selection_step"
+    }, {
+        trigger: ".ui-menu.ui-widget .ui-menu-item a:contains('DESK0001')",
+        auto: true,
+    }, {
+        trigger: ".o_form_editable textarea[name='name'].product_creation_success",
+        auto: true,
+        run: function () {
+        } // wait for product creation
+    }, {
+        trigger: ".o_field_widget[name='price_unit'] ",
+        extra_trigger: ".o_sale_order",
+        content: _t("<b>Set a price</b>."),
+        position: "right",
+        run: "text 10.0"
+    },
+    ...tour.stepUtils.statusbarButtonsSteps("Send by Email", _t("<b>Send the quote</b> to yourself and check what the customer will receive."), ".o_statusbar_buttons button[name='action_quotation_send']"),
+    {
+        trigger: ".modal-content input[name='email']",
+        content: _t("Write <b>your own email address</b> here in order to test the flow."),
+        run: "text agrolait@example.com"
+    },
+    {
+        trigger: ".modal-footer button.btn-primary",
+        auto: true,
+    }, {
+        trigger: ".modal-footer button[name='action_send_mail']",
+        extra_trigger: ".modal-footer button[name='action_send_mail']",
+        content: _t("Let's send the quote."),
+        position: "bottom",
+    }]);
 
 });
