@@ -4,6 +4,7 @@
 import odoo.tests
 
 from datetime import timedelta
+
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.fields import Datetime
 
@@ -16,8 +17,8 @@ class TestUi(HttpCaseWithUserDemo):
         self.event_2 = self.env['event.event'].create({
             'name': 'Conference for Architects TEST',
             'user_id': self.env.ref('base.user_admin').id,
-            'date_begin': (Datetime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 07:00:00'),
-            'date_end': (Datetime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 16:30:00'),
+            'date_begin': (Datetime.today() + timedelta(days=5)).strftime('%Y-%m-%d 07:00:00'),
+            'date_end': (Datetime.today() + timedelta(days=5)).strftime('%Y-%m-%d 16:30:00'),
         })
 
         self.env['event.event.ticket'].create([{
@@ -34,6 +35,9 @@ class TestUi(HttpCaseWithUserDemo):
             'end_sale_date': (Datetime.today() + timedelta(90)).strftime('%Y-%m-%d'),
             'price': 1500.0,
         }])
+
+        # flush event to ensure having tickets available in the tests
+        self.event_2.flush()
 
         (self.env.ref('base.partner_admin') + self.partner_demo).write({
             'street': '215 Vine St',

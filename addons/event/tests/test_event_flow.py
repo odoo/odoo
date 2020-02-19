@@ -24,6 +24,7 @@ class TestEventFlow(TestEventCommon):
             'seats_max': 2,
             'seats_availability': 'limited',
         })
+        self.assertTrue(test_event.auto_confirm)
 
         # EventUser create registrations for this event
         test_reg1 = self.env['event.registration'].with_user(self.user_eventuser).create({
@@ -56,15 +57,17 @@ class TestEventFlow(TestEventCommon):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_event_flow(self):
-        """ Avanced event flow: no auto confirmation, manage minimum / maximum
+        """ Advanced event flow: no auto confirmation, manage minimum / maximum
         seats, ... """
         # EventUser creates a new event: ok
         test_event = self.env['event.event'].with_user(self.user_eventmanager).create({
             'name': 'TestEvent',
             'date_begin': datetime.datetime.now() + relativedelta(days=-1),
             'date_end': datetime.datetime.now() + relativedelta(days=1),
+            'seats_availability': 'limited',
             'seats_max': 10,
         })
+        self.assertFalse(test_event.auto_confirm)
 
         # EventUser create registrations for this event -> no auto confirmation
         test_reg1 = self.env['event.registration'].with_user(self.user_eventuser).create({
