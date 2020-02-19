@@ -58,7 +58,7 @@ class ProviderGrid(models.Model):
         except UserError as e:
             return {'success': False,
                     'price': 0.0,
-                    'error_message': e.name,
+                    'error_message': e.args[0],
                     'warning_message': False}
         if order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
             price_unit = order.company_id.currency_id._convert(

@@ -602,9 +602,9 @@ class WebsiteSlides(WebsiteProfile):
             channel = request.env['slide.channel'].browse(int(channel_id))
             can_upload = channel.can_upload
             can_publish = channel.can_publish
-        except (UserError, AccessError) as e:
+        except UserError as e:
             _logger.error(e)
-            return {'error': e.name}
+            return {'error': e.args[0]}
         else:
             if not can_upload or not can_publish:
                 return {'error': _('You cannot add tags to this course.')}
@@ -1013,9 +1013,9 @@ class WebsiteSlides(WebsiteProfile):
             channel = request.env['slide.channel'].browse(values['channel_id'])
             can_upload = channel.can_upload
             can_publish = channel.can_publish
-        except (UserError, AccessError) as e:
+        except UserError as e:
             _logger.error(e)
-            return {'error': e.name}
+            return {'error': e.args[0]}
         else:
             if not can_upload:
                 return {'error': _('You cannot upload on this channel.')}
@@ -1042,9 +1042,9 @@ class WebsiteSlides(WebsiteProfile):
             values['user_id'] = request.env.uid
             values['is_published'] = values.get('is_published', False) and can_publish
             slide = request.env['slide.slide'].sudo().create(values)
-        except (UserError, AccessError) as e:
+        except UserError as e:
             _logger.error(e)
-            return {'error': e.name}
+            return {'error': e.args[0]}
         except Exception as e:
             _logger.error(e)
             return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}

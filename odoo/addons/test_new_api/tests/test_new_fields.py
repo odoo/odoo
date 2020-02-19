@@ -1539,7 +1539,7 @@ class TestFields(TransactionCaseWithUserDemo):
                 'name': 'Test without attachment',
                 'image_wo_attachment': SVG.decode("utf-8"),
             })
-        self.assertEqual(e.exception.name, 'Only admins can upload SVG files.')
+        self.assertEqual(e.exception.args[0], 'Only admins can upload SVG files.')
 
     def test_90_binary_svg(self):
         from odoo.addons.base.tests.test_mimetypes import SVG

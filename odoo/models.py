@@ -342,7 +342,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     # default values for _transient_vacuum()
     _transient_check_count = 0
     _transient_max_count = lazy_classproperty(lambda _: config.get('osv_memory_count_limit'))
-    _transient_max_hours = lazy_classproperty(lambda _: config.get('osv_memory_age_limit'))
+    _transient_max_hours = lazy_classproperty(lambda _: config.get('transient_age_limit'))
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
 

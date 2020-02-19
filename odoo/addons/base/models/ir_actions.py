@@ -508,6 +508,7 @@ class IrActionsServer(models.Model):
             'model': model,
             # Exceptions
             'Warning': odoo.exceptions.Warning,
+            'UserError': odoo.exceptions.UserError,
             # record
             'record': record,
             'records': records,

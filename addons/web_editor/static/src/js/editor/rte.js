@@ -510,7 +510,7 @@ var RTEWidget = Widget.extend({
                     // new rejection with all relevant info
                     var id = _.uniqueId('carlos_danger_');
                     $el.addClass('o_dirty oe_carlos_danger ' + id);
-                    var html = (response.message.data.exception_type === 'except_osv');
+                    var html = Boolean(response.data.name);
                     if (html) {
                         var msg = $('<div/>', {text: response.message.data.message}).html();
                         var data = msg.substring(3, msg.length  -2).split(/', u'/);

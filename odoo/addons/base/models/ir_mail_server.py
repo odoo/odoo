@@ -15,7 +15,7 @@ import threading
 import html2text
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import except_orm, UserError
+from odoo.exceptions import UserError
 from odoo.tools import ustr, pycompat
 
 _logger = logging.getLogger(__name__)
@@ -24,10 +24,9 @@ _test_logger = logging.getLogger('odoo.tests')
 SMTP_TIMEOUT = 60
 
 
-class MailDeliveryException(except_orm):
+class MailDeliveryException(Exception):
     """Specific exception subclass for mail delivery errors"""
-    def __init__(self, name, value):
-        super(MailDeliveryException, self).__init__(name, value)
+
 
 # Python 3: patch SMTP's internal printer/debugger
 def _print_debug(self, *args):
