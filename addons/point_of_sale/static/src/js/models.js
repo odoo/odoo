@@ -1716,6 +1716,7 @@ exports.Orderline = Backbone.Model.extend({
         this.selected = selected;
         // this trigger also triggers the change event of the collection.
         this.trigger('change',this);
+        this.trigger('new-orderline-selected');
     },
     // returns true if this orderline is selected
     is_selected: function(){
@@ -3168,99 +3169,8 @@ var OrderCollection = Backbone.Collection.extend({
     model: exports.Order,
 });
 
-/*
- The numpad handles both the choice of the property currently being modified
- (quantity, price or discount) and the edition of the corresponding numeric value.
- */
-exports.NumpadState = Backbone.Model.extend({
-    defaults: {
-        buffer: "0",
-        mode: "quantity"
-    },
-    appendNewChar: function(newChar) {
-        var oldBuffer;
-        oldBuffer = this.get('buffer');
-        if (oldBuffer === '0') {
-            this.set({
-                buffer: newChar
-            });
-        } else if (oldBuffer === '-0') {
-            this.set({
-                buffer: "-" + newChar
-            });
-        } else if (!(newChar === '.') || oldBuffer.indexOf('.') === -1) {
-            this.set({
-                buffer: (this.get('buffer')) + newChar
-            });
-        }
-        this.trigger('set_value',this.get('buffer'));
-    },
-    deleteLastChar: function() {
-        if(this.get('buffer') === ""){
-            if(this.get('mode') === 'quantity'){
-                this.trigger('set_value','remove');
-            }else{
-                this.trigger('set_value',this.get('buffer'));
-            }
-        } else if (this.get('buffer') === "-0") {
-            this.set({ buffer: "0" });
-            this.trigger('set_value',this.get('buffer'));
-        }else{
-            var newBuffer = this.get('buffer').slice(0,-1) || "";
-            this.set({ buffer: newBuffer });
-            this.trigger('set_value',this.get('buffer'));
-        }
-    },
-    switchSign: function() {
-        var oldBuffer;
-        oldBuffer = this.get('buffer');
-        this.set({
-            buffer: oldBuffer[0] === '-' ? oldBuffer.substr(1) : "-" + oldBuffer
-        });
-        this.trigger('set_value',this.get('buffer'));
-    },
-    positiveSign: function() {
-        var oldBuffer;
-        oldBuffer = this.get('buffer');
-        if (oldBuffer[0] === '-'){
-            this.set({buffer: oldBuffer.substr(1)});
-            this.trigger('set_value',this.get('buffer'));
-        }
-    },
-    negativeSign: function() {
-        var oldBuffer;
-        oldBuffer = this.get('buffer');
-        if (oldBuffer[0] !== '-'){
-            this.set({buffer: "-" + oldBuffer});
-            this.trigger('set_value',this.get('buffer'));
-        }
-    },
-    changeMode: function(newMode) {
-        this.set({
-            buffer: "0",
-            mode: newMode
-        });
-    },
-    reset: function() {
-        this.set({
-            buffer: "0",
-            mode: "quantity"
-        });
-    },
-    resetValue: function(){
-        if(this.get('buffer') === "") {
-            this.trigger('set_value','remove');
-        }
-        else {
-            this.set({ buffer: "" });
-            this.trigger('set_value',this.get('buffer'));
-        }
-    },
-});
-
 // exports = {
 //     PosModel: PosModel,
-//     NumpadState: NumpadState,
 //     load_fields: load_fields,
 //     load_models: load_models,
 //     Orderline: Orderline,

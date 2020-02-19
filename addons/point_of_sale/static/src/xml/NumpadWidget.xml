@@ -3,33 +3,31 @@
 
     <t t-name="NumpadWidget" owl="1">
         <div class="numpad">
-            <button class="input-button number-char" t-on-click="clickAppendNewChar">1</button>
-            <button class="input-button number-char" t-on-click="clickAppendNewChar">2</button>
-            <button class="input-button number-char" t-on-click="clickAppendNewChar">3</button>
-            <button class="mode-button"
-                    t-att-class="{'selected-mode': props.state.get('mode')==='quantity'}"
-                    data-mode="quantity" t-on-click="clickChangeMode">Qty</button>
+            <button class="input-button number-char" t-on-click="sendInput('1')">1</button>
+            <button class="input-button number-char" t-on-click="sendInput('2')">2</button>
+            <button class="input-button number-char" t-on-click="sendInput('3')">3</button>
+            <button class="mode-button" t-att-class="{'selected-mode': state.mode === 'quantity'}"
+                    t-on-click="changeMode('quantity')">Qty</button>
             <br />
-            <button class="input-button number-char" t-on-click="clickAppendNewChar">4</button>
-            <button class="input-button number-char" t-on-click="clickAppendNewChar">5</button>
-            <button class="input-button number-char" t-on-click="clickAppendNewChar">6</button>
-            <button class="mode-button"
-                    t-att-class="{'selected-mode': props.state.get('mode')==='discount'}"
-                    data-mode="discount" t-on-click="clickChangeMode">Disc</button>
+            <button class="input-button number-char" t-on-click="sendInput('4')">4</button>
+            <button class="input-button number-char" t-on-click="sendInput('5')">5</button>
+            <button class="input-button number-char" t-on-click="sendInput('6')">6</button>
+            <button class="mode-button" t-att-class="{'selected-mode': state.mode === 'discount'}"
+                    t-on-click="changeMode('discount')">Disc</button>
             <br />
-            <button class="input-button number-char" t-on-click="clickAppendNewChar">7</button>
-            <button class="input-button number-char" t-on-click="clickAppendNewChar">8</button>
-            <button class="input-button number-char" t-on-click="clickAppendNewChar">9</button>
+            <button class="input-button number-char" t-on-click="sendInput('7')">7</button>
+            <button class="input-button number-char" t-on-click="sendInput('8')">8</button>
+            <button class="input-button number-char" t-on-click="sendInput('9')">9</button>
             <button class="mode-button" t-att-class="{
-                    'selected-mode': props.state.get('mode')==='price',
+                    'selected-mode': state.mode === 'price',
                     'disabled-mode': !hasPriceControlRights
-                }" t-att-disabled="!hasPriceControlRights" data-mode="price"
-                    t-on-click="clickChangeMode">Price</button>
+                }" t-att-disabled="!hasPriceControlRights"
+                    t-on-click="changeMode('price')">Price</button>
             <br />
-            <button class="input-button numpad-minus" t-on-click="clickSwitchSign">+/-</button>
-            <button class="input-button number-char" t-on-click="clickAppendNewChar">0</button>
-            <button class="input-button number-char" t-on-click="clickAppendNewChar">.</button>
-            <button class="input-button numpad-backspace" t-on-click="clickDeleteLastChar">
+            <button class="input-button numpad-minus" t-on-click="sendInput('-')">+/-</button>
+            <button class="input-button number-char" t-on-click="sendInput('0')">0</button>
+            <button class="input-button number-char" t-on-click="sendInput('.')">.</button>
+            <button class="input-button numpad-backspace" t-on-click="sendInput('Backspace')">
                 <img style="pointer-events: none;" src="/point_of_sale/static/src/img/backspace.png"
                      width="24" height="21" alt="Backspace" />
             </button>

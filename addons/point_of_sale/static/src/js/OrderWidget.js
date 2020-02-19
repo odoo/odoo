@@ -9,8 +9,6 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
     class OrderWidget extends PosComponent {
         constructor() {
             super(...arguments);
-            this.numpadState = this.props.numpadState;
-            this.numpadState.reset();
             this.scrollableRef = useRef('scrollable');
             this.scrollToBottom = false;
             onPatched(() => {
@@ -30,7 +28,20 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
             return this.order.get_orderlines();
         }
         mounted() {
-            this.numpadState.on('set_value', this.set_value, this);
+            this.env.pos.on(
+                'change:selectedOrder',
+                () => {
+                    this.trigger('new-orderline-selected');
+                },
+                this
+            );
+            this.order.orderlines.on(
+                'new-orderline-selected',
+                () => {
+                    this.trigger('new-orderline-selected');
+                },
+                this
+            );
             this.order.orderlines.on(
                 'change',
                 () => {
@@ -43,26 +54,38 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
                 () => {
                     this.scrollToBottom = true;
                     this.render();
-                    this.numpadState.reset();
                 },
                 this
             );
             this.order.on(
                 'change',
                 () => {
-                    this.numpadState.reset();
                     this.render();
                 },
                 this
             );
         }
         patched() {
-            this.numpadState.off('set_value', null, this);
+            this.env.pos.off('change:selectedOrderline', null, this);
+            this.order.orderlines.off('new-orderline-selected', null, this);
             this.order.orderlines.off('change', null, this);
             this.order.orderlines.off('add remove', null, this);
             this.order.off('change', null, this);
 
-            this.numpadState.on('set_value', this.set_value, this);
+            this.env.pos.on(
+                'change:selectedOrder',
+                () => {
+                    this.trigger('new-orderline-selected');
+                },
+                this
+            );
+            this.order.orderlines.on(
+                'new-orderline-selected',
+                () => {
+                    this.trigger('new-orderline-selected');
+                },
+                this
+            );
             this.order.orderlines.on(
                 'change',
                 () => {
@@ -75,28 +98,26 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
                 () => {
                     this.scrollToBottom = true;
                     this.render();
-                    this.numpadState.reset();
                 },
                 this
             );
             this.order.on(
                 'change',
                 () => {
-                    this.numpadState.reset();
                     this.render();
                 },
                 this
             );
         }
         willUnmount() {
-            this.numpadState.off('set_value', null, this);
+            this.env.pos.off('change:selectedOrderline', null, this);
+            this.order.orderlines.off('new-orderline-selected', null, this);
             this.order.orderlines.off('change', null, this);
             this.order.orderlines.off('add remove', null, this);
             this.order.off('change', null, this);
         }
         selectLine(event) {
             this.order.select_orderline(event.detail.orderline);
-            this.numpadState.reset();
         }
         // TODO jcb: Might be better to lift this to ProductScreen
         // because there is similar operation when clicking a product.
@@ -126,23 +147,6 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
                 orderline.setPackLotLines({ modifiedPackLotLines, newPackLotLines });
             }
             this.order.select_orderline(event.detail.orderline);
-        }
-        set_value(val) {
-            if (this.order.get_selected_orderline()) {
-                var mode = this.numpadState.get('mode');
-                if (mode === 'quantity') {
-                    this.order.get_selected_orderline().set_quantity(val);
-                } else if (mode === 'discount') {
-                    this.order.get_selected_orderline().set_discount(val);
-                } else if (mode === 'price') {
-                    var selected_orderline = this.order.get_selected_orderline();
-                    selected_orderline.price_manually_set = true;
-                    selected_orderline.set_unit_price(val);
-                }
-                if (this.env.pos.config.iface_customer_facing_display) {
-                    this.env.pos.send_current_order_to_customer_facing_display();
-                }
-            }
         }
     }
 

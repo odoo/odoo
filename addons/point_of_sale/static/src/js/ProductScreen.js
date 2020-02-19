@@ -7,12 +7,21 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const { OrderWidget } = require('point_of_sale.OrderWidget');
     const { NumpadWidget } = require('point_of_sale.NumpadWidget');
     const { ActionpadWidget } = require('point_of_sale.ActionpadWidget');
-    const { NumpadState } = require('point_of_sale.models');
+    const { useNumberBuffer } = require('point_of_sale.custom_hooks');
+    const { useListener } = require('web.custom_hooks');
 
     class ProductScreen extends PosComponent {
         constructor() {
             super(...arguments);
-            this.numpadState = new NumpadState();
+            useListener('update-selected-orderline', this.updateSelectedOrderline);
+            useListener('new-orderline-selected', this.newOrderlineSelected);
+            useListener('set-numpad-mode', this.setNumpadMode);
+            this.numberBuffer = useNumberBuffer({
+                decimalPoint: this.env._t.database.parameters.decimal_point,
+                nonKeyboardEvent: 'numpad-click-input',
+                triggerAtInput: 'update-selected-orderline',
+            });
+            this.numpadMode = 'quantity';
         }
         mounted() {
             this.env.pos.on(
@@ -97,6 +106,43 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 draftPackLotLines,
                 quantity: weight,
             });
+
+            this._setBuffer();
+        }
+        async setNumpadMode(event) {
+            const { mode } = event.detail;
+            this.numpadMode = mode;
+            this.numberBuffer.reset();
+        }
+        async updateSelectedOrderline(event) {
+            let { buffer } = event.detail;
+            let val = buffer === null ? 'remove' : buffer;
+            this._setValue(val);
+        }
+        async newOrderlineSelected() {
+            this._setBuffer();
+        }
+        _setBuffer() {
+            const selectedOrderline = this.currentOrder.get_selected_orderline();
+            if (selectedOrderline) {
+                this.numberBuffer.set(`${selectedOrderline.quantity}`);
+            }
+        }
+        _setValue(val) {
+            if (this.currentOrder.get_selected_orderline()) {
+                if (this.numpadMode === 'quantity') {
+                    this.currentOrder.get_selected_orderline().set_quantity(val);
+                } else if (this.numpadMode === 'discount') {
+                    this.currentOrder.get_selected_orderline().set_discount(val);
+                } else if (this.numpadMode === 'price') {
+                    var selected_orderline = this.currentOrder.get_selected_orderline();
+                    selected_orderline.price_manually_set = true;
+                    selected_orderline.set_unit_price(val);
+                }
+                if (this.env.pos.config.iface_customer_facing_display) {
+                    this.env.pos.send_current_order_to_customer_facing_display();
+                }
+            }
         }
         _barcodeProductAction(code) {
             // NOTE: scan_product call has side effect in pos if it returned true.
