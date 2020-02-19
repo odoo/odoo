@@ -73,13 +73,12 @@ class EventRegistration(models.Model):
                 'old_ticket_name': registration.event_ticket_id.name,
                 'new_ticket_name': new_event_ticket.name
             }
-            user_id = registration.event_id.user_id.id or \
-                      registration.sale_order_id.user_id.id or \
-                      fallback_user_id
-            registration.sale_order_id.activity_schedule_with_view('mail.mail_activity_data_warning',
-                 user_id=user_id,
-                 views_or_xmlid='event_sale.event_ticket_id_change_exception',
-                 render_context=render_context)
+            user_id = registration.event_id.user_id.id or registration.sale_order_id.user_id.id or fallback_user_id
+            registration.sale_order_id.activity_schedule_with_view(
+                'mail.mail_activity_data_warning',
+                user_id=user_id,
+                views_or_xmlid='event_sale.event_ticket_id_change_exception',
+                render_context=render_context)
 
     def _action_set_paid(self):
         self.write({'is_paid': True})

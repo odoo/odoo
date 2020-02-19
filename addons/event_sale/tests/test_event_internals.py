@@ -38,7 +38,6 @@ class TestEventData(TestEventSaleCommon):
                 'seats_max': 5,
             })]
         })
-        event_type.event_type_ticket_ids._onchange_product_id()
         self.assertEqual(event_type.event_type_ticket_ids.description, self.event_product.description_sale)
 
         # synchronize event
@@ -112,9 +111,7 @@ class TestEventTicketData(TestEventSaleCommon):
             ],
         })
         first_ticket = event.event_ticket_ids.filtered(lambda t: t.name == 'First Ticket')
-        first_ticket._onchange_product_id()
         second_ticket = event.event_ticket_ids.filtered(lambda t: t.name == 'Second Ticket')
-        second_ticket._onchange_product_id()
         # force second ticket price, after calling the onchange
         second_ticket.write({'price': 8.0})
 

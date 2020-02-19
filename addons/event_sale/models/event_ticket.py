@@ -14,25 +14,41 @@ class EventTemplateTicket(models.Model):
     def _default_product_id(self):
         return self.env.ref('event_sale.product_product_event', raise_if_not_found=False)
 
+    description = fields.Text(compute='_compute_description', copy=True, readonly=False, store=True)
     # product
     product_id = fields.Many2one(
-        'product.product', string='Product', required=True, domain=[("event_ok", "=", True)],
-        default=_default_product_id)
-    price = fields.Float(string='Price', digits='Product Price')
-    price_reduce = fields.Float(string="Price Reduce", compute="_compute_price_reduce", digits='Product Price')
+        'product.product', string='Product', required=True,
+        domain=[("event_ok", "=", True)], default=_default_product_id)
+    price = fields.Float(
+        string='Price', compute='_compute_price',
+        digits='Product Price', copy=True, readonly=False, store=True)
+    price_reduce = fields.Float(
+        string="Price Reduce", compute="_compute_price_reduce",
+        digits='Product Price')
 
     @api.depends('product_id')
-    def _compute_price_reduce(self):
-        for record in self:
-            product = record.product_id
-            discount = product.lst_price and (product.lst_price - product.price) / product.lst_price or 0.0
-            record.price_reduce = (1.0 - discount) * record.price
+    def _compute_price(self):
+        for ticket in self:
+            if ticket.product_id and ticket.product_id.lst_price:
+                ticket.price = ticket.product_id.lst_price or 0
+            elif not ticket.price:
+                ticket.price = 0
 
-    @api.onchange('product_id')
-    def _onchange_product_id(self):
-        self.price = self.product_id.list_price or 0
-        if not self.description and self.product_id.description_sale:
-            self.description = self.product_id.description_sale
+    @api.depends('product_id')
+    def _compute_description(self):
+        for ticket in self:
+            if ticket.product_id and ticket.product_id.description_sale:
+                ticket.description = ticket.product_id.description_sale
+            # initialize, i.e for embedded tree views
+            if not ticket.description:
+                ticket.description = False
+
+    @api.depends('product_id', 'price')
+    def _compute_price_reduce(self):
+        for ticket in self:
+            product = ticket.product_id
+            discount = product.lst_price and (product.lst_price - product.price) / product.lst_price or 0.0
+            ticket.price_reduce = (1.0 - discount) * ticket.price
 
     def _init_column(self, column_name):
         if column_name != "product_id":
