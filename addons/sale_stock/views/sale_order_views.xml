@@ -29,7 +29,11 @@
                     <field name="show_json_popover" invisible="1"/>
                     <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
                 </xpath>
-                <xpath expr="//group[@name='sale_shipping']" position="inside">
+                <xpath expr="//div[@name='commitment_date_div']" position="replace">
+                    <div class="o_row">
+                        <field name="commitment_date"/>
+                        <span class="text-muted" attrs="{'invisible': [('effective_date', '!=', False), ('commitment_date', '!=', False)]}">Expected: <field name="expected_date" widget="date"/></span>
+                    </div>
                     <field name="effective_date" attrs="{'invisible': [('effective_date', '=', False)]}"/>
                 </xpath>
                 <xpath expr="//page/field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
