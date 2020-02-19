@@ -108,9 +108,19 @@ class TestTaxCommon(AccountTestUsersCommon):
             ],
         })
 
+        cls.tax_21_percent = cls.tax_model.create({
+            'name': "test_rounding_methods_1",
+            'amount_type': 'percent',
+            'amount': 21,
+        })
+
         cls.bank_journal = cls.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', cls.account_manager.company_id.id)])[0]
         cls.bank_account = cls.bank_journal.default_debit_account_id
         cls.expense_account = cls.env['account.account'].search([('user_type_id.type', '=', 'payable')], limit=1) #Should be done by onchange later
+
+        # Ensure the rounding method is 'round_per_line' to avoid issue when launching the tests on
+        # an existing DB.
+        cls.env.user.company_id.tax_calculation_rounding_method = 'round_per_line'
 
     def _check_compute_all_results(self, total_included, total_excluded, taxes, res):
         self.assertAlmostEqual(res['total_included'], total_included)
@@ -649,4 +659,38 @@ class TestTax(TestTaxCommon):
                 # ---------------
             ],
             tax.compute_all(-1.0)
+        )
+
+    def test_rounding_tax_included_round_globally_01(self):
+        ''' Test the rounding of a 21% price included tax in an invoice having 11.90 and 2.80 as lines.
+        The decimal precision is set to 2.
+        '''
+        self.tax_21_percent.price_include = True
+        self.tax_21_percent.company_id.currency_id.rounding = 0.01
+        self.tax_21_percent.company_id.tax_calculation_rounding_method = 'round_globally'
+
+        res1 = self.tax_21_percent.compute_all(11.90)
+        self._check_compute_all_results(
+            11.90,      # 'total_included'
+            9.83,       # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (9.83471067, 2.0652893),
+                # ---------------
+            ],
+            res1
+        )
+
+        res2 = self.tax_21_percent.compute_all(2.80)
+        self._check_compute_all_results(
+            2.80,      # 'total_included'
+            2.31,      # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (2.3140496,  0.4859504),
+                # ---------------
+            ],
+            res2
         )
