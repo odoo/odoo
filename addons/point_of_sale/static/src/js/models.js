@@ -1906,6 +1906,7 @@ exports.Orderline = Backbone.Model.extend({
 
         var round_tax = this.pos.company.tax_calculation_rounding_method != 'round_globally';
 
+        var initial_currency_rounding = currency_rounding;
         if(!round_tax)
             currency_rounding = currency_rounding * 0.00001;
 
@@ -1914,7 +1915,7 @@ exports.Orderline = Backbone.Model.extend({
              return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100;
         }
 
-        var base = round_pr(price_unit * quantity, currency_rounding);
+        var base = round_pr(price_unit * quantity, initial_currency_rounding);
 
         var sign = 1;
         if(base < 0){
@@ -1960,7 +1961,7 @@ exports.Orderline = Backbone.Model.extend({
             i -= 1;
         });
 
-        var total_excluded = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount);
+        var total_excluded = round_pr(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount), initial_currency_rounding);
         var total_included = total_excluded;
 
         // 5) Iterate the taxes in the sequence order to fill missing base/amount values.
