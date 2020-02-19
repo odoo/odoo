@@ -31,6 +31,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 },
                 this
             );
+
             this.env.pos.barcode_reader.set_action_callback({
                 product: this._barcodeProductAction.bind(this),
                 weight: this._barcodeProductAction.bind(this),
@@ -39,6 +40,8 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 discount: this._barcodeDiscountAction.bind(this),
                 error: this._barcodeErrorAction.bind(this),
             });
+
+            this._setBuffer();
         }
         willUnmount() {
             this.env.pos.off('change:selectedOrder', null, this);
@@ -69,11 +72,19 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                         packLotLinesToEdit = [];
                     }
                 }
+                // When the popup is shown, pause the buffer so that the selected orderline
+                // is not modified when the popup is displayed.
+                this.numberBuffer.pause();
+
                 const { confirmed, payload } = await this.showPopup('EditListPopup', {
                     title: this.env._t('Lot/Serial Number(s) Required'),
                     isSingleItem: isAllowOnlyOneLot,
                     array: packLotLinesToEdit,
                 });
+
+                // Resume the buffer.
+                this.numberBuffer.resume();
+
                 if (confirmed) {
                     // Segregate the old and new packlot lines
                     const modifiedPackLotLines = Object.fromEntries(
