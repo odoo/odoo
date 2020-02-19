@@ -142,20 +142,19 @@ class TestPayment(AccountTestCommon):
     def test_internal_transfer_journal_usd_journal_eur(self):
         """ Create a transfer from a EUR journal to a USD journal """
         payment = self.payment_model.create({
+            'partner_id': self.company.partner_id.id,
             'payment_date': time.strftime('%Y') + '-07-15',
-            'payment_type': 'transfer',
+            'payment_type': 'outbound',
+            'partner_type': 'customer',
             'amount': 50,
             'currency_id': self.currency_usd_id,
             'journal_id': self.bank_journal_usd.id,
-            'destination_journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_out.id,
         })
         payment.post()
         self.assertRecordValues(payment.move_line_ids, [
             {'account_id': self.transfer_account.id, 'debit': 32.70, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_usd_id},
             {'account_id': self.account_usd.id, 'debit': 0.0, 'credit': 32.70, 'amount_currency': -50, 'currency_id': self.currency_usd_id},
-            {'account_id': self.transfer_account.id, 'debit': 0.0, 'credit': 32.70, 'amount_currency': -50, 'currency_id': self.currency_usd_id},
-            {'account_id': self.account_eur.id, 'debit': 32.70, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_usd_id},
         ])
 
     def test_payment_chf_journal_usd(self):
@@ -486,88 +485,6 @@ class TestPayment(AccountTestCommon):
         payment.post()
         self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 1)
         self.assertEqual(name, payment.move_line_ids.mapped('move_id').name)
-
-    def test_payment_transfer_draft_keep_names(self):
-        payment = self.payment_model.create({
-            'payment_type': 'transfer',
-            'payment_method_id': self.payment_method_manual_out.id,
-            'amount': 90,
-            'payment_date': time.strftime('%Y') + '-07-15',
-            'journal_id': self.bank_journal_euro.id,
-            'destination_journal_id': self.cash_journal_euro.id,
-        })
-
-        payment.post()
-        self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 2)
-
-        all_moves = payment.move_line_ids.mapped('move_id')
-        move = all_moves.filtered(lambda m: m.journal_id == self.bank_journal_euro)
-        transfer_move = all_moves - move
-        self.assertEqual(transfer_move.journal_id, self.cash_journal_euro)
-
-        name = move.name
-        transfer_name = transfer_move.name
-        self.assertTrue(name)
-        self.assertTrue(transfer_name)
-        self.assertNotEqual(name, transfer_name)
-
-        reconciled_lines = payment.move_line_ids.filtered(lambda l: l.reconciled)
-        self.assertEqual(len(reconciled_lines), 2)
-        self.assertEqual(reconciled_lines.mapped('move_id'), all_moves)
-
-        reconciled_lines.remove_move_reconcile()
-        payment.action_draft()
-        self.assertFalse(payment.move_line_ids.mapped('move_id'))
-
-        payment.post()
-        self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 2)
-
-        all_moves = payment.move_line_ids.mapped('move_id')
-        move = all_moves.filtered(lambda m: m.journal_id == self.bank_journal_euro)
-        transfer_move = all_moves - move
-        self.assertEqual(transfer_move.journal_id, self.cash_journal_euro)
-
-        self.assertEqual(name, move.name)
-        self.assertEqual(transfer_name, transfer_move.name)
-
-    def test_payment_draft_to_transfer(self):
-        payment = self.payment_model.create({
-            'payment_type': 'inbound',
-            'payment_method_id': self.payment_method_manual_in.id,
-            'partner_type': 'customer',
-            'partner_id': self.partner_agrolait.id,
-            'amount': 90,
-            'payment_date': time.strftime('%Y') + '-07-15',
-            'payment_difference_handling': 'reconcile',
-            'journal_id': self.bank_journal_euro.id,
-        })
-
-        payment.post()
-        self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 1)
-        name = payment.move_line_ids.mapped('move_id').name
-        self.assertTrue(name)
-
-        payment.action_draft()
-        self.assertFalse(payment.move_line_ids.mapped('move_id'))
-
-        payment.write({
-            'payment_type': 'transfer',
-            'payment_method_id': self.payment_method_manual_out.id,
-            'partner_id': False,
-            'destination_journal_id': self.cash_journal_euro.id,
-        })
-
-        payment.post()
-        self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 2)
-
-        all_moves = payment.move_line_ids.mapped('move_id')
-        move = all_moves.filtered(lambda m: m.journal_id == self.bank_journal_euro)
-        transfer_move = all_moves - move
-        self.assertEqual(transfer_move.journal_id, self.cash_journal_euro)
-
-        self.assertEqual(name, move.name)
-        self.assertTrue(transfer_move.name)
-        self.assertNotEqual(name, transfer_move.name)
 
     def test_partial_payment_inv_foreign_payment_domestic(self):
         """
