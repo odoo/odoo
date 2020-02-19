@@ -21,10 +21,8 @@ class ResConfigSettings(models.TransientModel):
         domain="[('visible','=', True)]")
     sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id', readonly=False)
     purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", related='company_id.account_purchase_tax_id', readonly=False)
-    tax_calculation_rounding_method = fields.Selection([
-        ('round_per_line', 'Round calculation of taxes per line'),
-        ('round_globally', 'Round globally calculation of taxes '),
-        ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method', readonly=False)
+    tax_calculation_rounding_method = fields.Selection(
+        related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method', readonly=False)
     module_account_accountant = fields.Boolean(string='Accounting')
     group_analytic_accounting = fields.Boolean(string='Analytic Accounting',
         implied_group='analytic.group_analytic_accounting')

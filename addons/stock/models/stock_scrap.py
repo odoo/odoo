@@ -36,7 +36,7 @@ class StockScrap(models.Model):
         'uom.uom', 'Unit of Measure',
         required=True, states={'done': [('readonly', True)]}, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
-    tracking = fields.Selection('Product Tracking', readonly=True, related="product_id.tracking")
+    tracking = fields.Selection(string='Product Tracking', readonly=True, related="product_id.tracking")
     lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial',
         states={'done': [('readonly', True)]}, domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]", check_company=True)

@@ -319,7 +319,7 @@ class MrpWorkcenterProductivity(models.Model):
         'mrp.workcenter.productivity.loss', "Loss Reason",
         ondelete='restrict', required=True)
     loss_type = fields.Selection(
-        "Effectiveness", related='loss_id.loss_type', store=True, readonly=False)
+        string="Effectiveness", related='loss_id.loss_type', store=True, readonly=False)
     description = fields.Text('Description')
     date_start = fields.Datetime('Start Date', default=fields.Datetime.now, required=True)
     date_end = fields.Datetime('End Date')

@@ -315,10 +315,8 @@ class Picking(models.Model):
         'stock.picking.type', 'Operation Type',
         required=True, readonly=True,
         states={'draft': [('readonly', False)]})
-    picking_type_code = fields.Selection([
-        ('incoming', 'Vendors'),
-        ('outgoing', 'Customers'),
-        ('internal', 'Internal')], related='picking_type_id.code',
+    picking_type_code = fields.Selection(
+        related='picking_type_id.code',
         readonly=True)
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs',
         readonly=True)

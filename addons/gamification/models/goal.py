@@ -179,9 +179,9 @@ class Goal(models.Model):
              "case of non-manual goal or goal not linked to a challenge.")
 
     definition_description = fields.Text("Definition Description", related='definition_id.description', readonly=True)
-    definition_condition = fields.Selection("Definition Condition", related='definition_id.condition', readonly=True)
+    definition_condition = fields.Selection(string="Definition Condition", related='definition_id.condition', readonly=True)
     definition_suffix = fields.Char("Suffix", related='definition_id.full_suffix', readonly=True)
-    definition_display = fields.Selection("Display Mode", related='definition_id.display_mode', readonly=True)
+    definition_display = fields.Selection(string="Display Mode", related='definition_id.display_mode', readonly=True)
 
     @api.depends('current', 'target_goal', 'definition_id.condition')
     def _get_completion(self):
