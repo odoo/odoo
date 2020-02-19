@@ -260,6 +260,17 @@ class StockMove(models.Model):
         keys = super(StockMove, self)._key_assign_picking()
         return keys + (self.created_production_id,)
 
+    @api.model
+    def _prepare_merge_moves_distinct_fields(self):
+        distinct_fields = super()._prepare_merge_moves_distinct_fields()
+        distinct_fields.append('created_production_id')
+        return distinct_fields
+
+    @api.model
+    def _prepare_merge_move_sort_method(self, move):
+        keys_sorted = super()._prepare_merge_move_sort_method(move)
+        keys_sorted.append(move.created_production_id.id)
+        return keys_sorted
 
     def _compute_kit_quantities(self, product_id, kit_qty, kit_bom, filters):
         """ Computes the quantity delivered or received when a kit is sold or purchased.
