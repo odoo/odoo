@@ -71,19 +71,35 @@ class ResCompany(models.Model):
             with the edi_invoice_template message loaded by default. """
         sample_sales_order = self._get_sample_sales_order()
         template = self.env.ref('sale.email_template_edi_sale', False)
-        action = self.env.ref('sale.action_open_sale_onboarding_sample_quotation').read()[0]
-        action['context'] = {
-            'default_res_id': sample_sales_order.id,
-            'default_use_template': bool(template),
-            'default_template_id': template and template.id or False,
-            'default_model': 'sale.order',
-            'default_composition_mode': 'comment',
-            'mark_so_as_sent': True,
-            'custom_layout': 'mail.mail_notification_paynow',
-            'proforma': self.env.context.get('proforma', False),
-            'force_email': True,
-            'mail_notify_author': True,
-        }
+
+        message_composer = self.env['mail.compose.message'].with_context(
+            default_use_template=bool(template),
+            mark_so_as_sent=True,
+            custom_layout='mail.mail_notification_paynow',
+            proforma=self.env.context.get('proforma', False),
+            force_email=True, mail_notify_author=True
+        ).create({
+            'res_id': sample_sales_order.id,
+            'template_id': template and template.id or False,
+            'model': 'sale.order',
+            'composition_mode': 'comment'})
+
+        # Simulate the onchange (like trigger in form the view)
+        update_values = message_composer.onchange_template_id(template.id, 'comment', 'sale.order', sample_sales_order.id)['value']
+        message_composer.write(update_values)
+
+        message_composer.send_mail()
+
+        self.set_onboarding_step_done('sale_onboarding_sample_quotation_state')
+
+        self.action_close_sale_quotation_onboarding()
+
+        action = self.env.ref('sale.action_orders').read()[0]
+        action.update({
+            'views': [[self.env.ref('sale.view_order_form').id, 'form']],
+            'view_mode': 'form',
+            'target': 'main',
+        })
         return action
 
     def get_and_update_sale_quotation_onboarding_state(self):
