@@ -38,10 +38,10 @@
                         To confirm, please visit the following link: <strong><a href="${ctx['token_url']}">${ctx['token_url']}</a></strong>
                         <br/><br/>
                         If this was a mistake or you did not requested this action, please ignore this message.
-                        % if user.signature
+                        {% if user.signature %}
                             <br/>
                             ${user.signature | safe}
-                        % endif
+                        {% endif %}
                     </div>
                 </td></tr>
                 <tr><td style="text-align:center;">
@@ -58,16 +58,16 @@
                         ${user.company_id.name}
                 </td></tr>
                 <tr><td valign="middle" align="left" style="opacity: 0.7;">
-                    % if user.company_id.phone
+                    {% if user.company_id.phone %}
                         ${user.company_id.phone} |
-                    %endif
-                    % if user.company_id.email
+                    {% endif %}
+                    {% if user.company_id.email %}
                         <a href="'mailto:%s' % ${user.company_id.email}" style="text-decoration:none; color: #454748;">${user.company_id.email}</a> |
-                    % endif
-                    % if user.company_id.website
+                    {% endif %}
+                    {% if user.company_id.website %}
                         <a href="'%s' % ${user.company_id.website}" style="text-decoration:none; color: #454748;">${user.company_id.website}
                         </a>
-                    % endif
+                    {% endif %}
                 </td></tr>
             </table>
         </td>
@@ -124,10 +124,10 @@
                         To confirm, please visit the following link: <strong><a href="${ctx['token_url']}">${ctx['token_url']}</a></strong>.
                         <br/><br/>
                         If this was a mistake or you did not requested this action, please ignore this message.
-                        % if user.signature:
+                        {% if user.signature %}
                             <br/>
                             ${user.signature | safe}
-                        % endif
+                        {% endif %}
                     </div>
                 </td></tr>
                 <tr><td style="text-align:center;">
@@ -144,16 +144,16 @@
                         ${user.company_id.name}
                 </td></tr>
                 <tr><td valign="middle" align="left" style="opacity: 0.7;">
-                    % if user.company_id.phone
+                    {% if user.company_id.phone %}
                         ${user.company_id.phone} |
-                    %endif
-                    % if user.company_id.email
+                    {% endif %}
+                    {% if user.company_id.email %}
                         <a href="'mailto:%s' % ${user.company_id.email}" style="text-decoration:none; color: #454748;">${user.company_id.email}</a> |
-                    % endif
-                    % if user.company_id.website
+                    {% endif %}
+                    {% if user.company_id.website %}
                         <a href="'%s' % ${user.company_id.website}" style="text-decoration:none; color: #454748;">${user.company_id.website}
                         </a>
-                    % endif
+                    {% endif %}
                 </td></tr>
             </table>
         </td>

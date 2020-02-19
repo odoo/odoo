@@ -22,12 +22,12 @@
                 </p>
                 <p>Continue your work to become a <strong>${object.next_rank_id.name}</strong> !</p>
                 <div style="margin: 16px 0px 16px 0px;">
-                    % set gamification_redirection_data = object.get_gamification_redirection_data()
-                    % for data in gamification_redirection_data
-                        % set url = data['url']
-                        % set label = data['label']
+                    {% set gamification_redirection_data = object.get_gamification_redirection_data()%}
+                    {% for data in gamification_redirection_data %}
+                        {% set url = data['url']%}
+                        {% set label = data['label']%}
                         <a href="${url}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">${label}</a>
-                    % endfor
+                    {% endfor %}
                 </div>
             </td>
             <td style="padding:15px 20px 10px 20px;">
@@ -36,13 +36,13 @@
                 </p>
             </td>
         </tr>
-        % if user.signature
+        {% if user.signature %}
         <tr>
             <td style="padding:15px 20px 10px 20px;">
                 ${user.signature | safe}
             </td>
         </tr>
-        % endif
+        {% endif %}
     </tbody>
  </table>
 </div></field>

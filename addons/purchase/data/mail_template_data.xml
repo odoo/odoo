@@ -10,14 +10,14 @@
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
         Dear ${object.partner_id.name}
-        % if object.partner_id.parent_id:
+        {% if object.partner_id.parent_id %}
             (${object.partner_id.parent_id.name})
-        % endif
+        {% endif %}
         <br/><br/>
         Here is in attachment a request for quotation <strong>${object.name}</strong>
-        % if object.partner_ref:
+        {% if object.partner_ref %}
             with reference: ${object.partner_ref}
-        % endif
+        {% endif %}
         from ${object.company_id.name}.
         <br/><br/>
         If you have any questions, please do not hesitate to contact us.
@@ -40,14 +40,14 @@
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
         Dear ${object.partner_id.name}
-        % if object.partner_id.parent_id:
+        {% if object.partner_id.parent_id %}
             (${object.partner_id.parent_id.name})
-        % endif
+        {% endif %}
         <br/><br/>
         Here is in attachment a purchase order <strong>${object.name}</strong>
-        % if object.partner_ref:
+        {% if object.partner_ref %}
             with reference: ${object.partner_ref}
-        % endif
+        {% endif %}
         amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>
         from ${object.company_id.name}.
         <br/><br/>

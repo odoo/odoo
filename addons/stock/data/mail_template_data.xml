@@ -10,23 +10,23 @@
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
         Hello ${object.partner_id.name},<br/><br/>
         We are glad to inform you that your order has been shipped.
-        %if object.carrier_tracking_ref:
+        {% if object.carrier_tracking_ref %}
             Your tracking reference is
             <strong>
-            %if object.carrier_tracking_url:
+            {% if object.carrier_tracking_url %}
                 <a href="${object.carrier_tracking_url}" target="_blank">${object.carrier_tracking_ref}</a>.
-            %else:
+            {% else %}:
                 ${object.carrier_tracking_ref}.
-            %endif
+            {% endif %}
             </strong>
-        %endif
+        {% endif %}
         <br/><br/>
         Please find your delivery order attached for more details.<br/><br/>
         Thank you,
-        % if user.signature:
+        {% if user.signature %}
             <br />
             ${user.signature | safe}
-        % endif
+        {% endif %}
     </p>
 </div>
         </field>

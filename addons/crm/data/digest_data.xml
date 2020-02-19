@@ -13,15 +13,15 @@
             <field name="group_id" ref="sales_team.group_sale_salesman_all_leads"/>
             <field name="tip_description" type="html">
 <div>
-    % set email = object.env['crm.team'].search([('alias_name','!=', False)],limit=1).alias_id.display_name
-    % if email
+    {% set email = object.env['crm.team'].search([('alias_name','!=', False)],limit=1).alias_id.display_name%}
+    {% if email %}
     <strong style="font-size: 16px;">Try the mail gateway</strong>
     <div style="font-size: 14px;">Email sent to <strong>${email}</strong> generate opportunities in your pipeline.<br/>
         <div style="text-align:center;margin-top:5px;margin-bottom:2px;">
             <a href="mailto:${email}" style="background-color:#56b3b5;padding:2px;color:#FFFFFF;font-weight:bold;text-decoration:none;">Try Now</a>
         </div>
     </div>
-    % endif
+    {% endif %}
 </div>
             </field>
         </record>

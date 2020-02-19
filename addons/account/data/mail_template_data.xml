@@ -15,34 +15,34 @@
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
         Dear
-        % if object.partner_id.parent_id:
+        {% if object.partner_id.parent_id %}
             ${object.partner_id.name} (${object.partner_id.parent_id.name}),
-        % else:
+        {% else %}
             ${object.partner_id.name},
-        % endif
+        {% endif %}
         <br /><br />
         Here is your
-        % if object.name:
+        {% if object.name %}
             invoice <strong>${object.name}</strong>
-        % else:
+        {% else %}
             invoice
-        %endif
-        % if object.invoice_origin:
+        {% endif %}
+        {% if object.invoice_origin %}
             (with reference: ${object.invoice_origin})
-        % endif
+        {% endif %}
         amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>
         from ${object.company_id.name}.
-        % if object.payment_state == 'paid':
+        {% if object.payment_state == 'paid' %}
             This invoice is already paid.
-        % else:
+        {% else %}
             Please remit payment at your earliest convenience.
-        % endif
+        {% endif %}
         <br /><br />
         Do not hesitate to contact us if you have any questions.
-        % if object.invoice_user_id.signature:
+        {% if object.invoice_user_id.signature %}
             <br />
             ${object.invoice_user_id.signature | safe}
-        % endif
+        {% endif %}
     </p>
 </div>
             </field>

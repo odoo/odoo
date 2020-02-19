@@ -10,24 +10,24 @@
 <div style="margin: 0px; padding: 0px; font-size: 13px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
         Dear ${object.partner_id.name or 'participant'}<br/><br/>
-        % if object.survey_id.certification:
+        {% if object.survey_id.certification %}
             You have been invited to take a new certification.
-        % else:
+        {% else %}
             We are conducting a survey and your response would be appreciated.
-        % endif
+        {% endif %}
         <div style="margin: 16px 0px 16px 0px;">
             <a href="${(object.get_start_url()) | safe}"
                 style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
-                % if object.survey_id.certification:
+                {% if object.survey_id.certification %}
                     Start Certification
-                % else:
+                {% else %}
                     Start Survey
-                % endif
+                {% endif %}
             </a>
         </div>
-        % if object.deadline:
+        {% if object.deadline %}
             Please answer the survey for ${format_date(object.deadline)}.<br/><br/>
-        % endif
+        {% endif %}
         Thank you for your participation.
     </p>
 </div>

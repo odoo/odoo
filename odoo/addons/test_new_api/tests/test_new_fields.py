@@ -1975,9 +1975,9 @@ class TestHtmlField(common.TransactionCase):
         self.assertEqual(self.model._fields['comment3'].strip_classes, True)
 
         some_ugly_html = """<p>Oops this should maybe be sanitized
-% if object.some_field and not object.oriented:
+{% if object.some_field and not object.oriented %}
 <table>
-    % if object.other_field:
+    {% if object.other_field %}
     <tr style="margin: 0px; border: 10px solid black;">
         ${object.mako_thing}
         <td>
@@ -1985,11 +1985,11 @@ class TestHtmlField(common.TransactionCase):
     <tr class="custom_class">
         This is some html.
     </tr>
-    % endif
+    {% endif %}
     <tr>
-%if object.dummy_field:
+{% if object.dummy_field %}
         <p>Youpie</p>
-%endif"""
+{% endif %}"""
 
         record = self.model.create({
             'comment1': some_ugly_html,

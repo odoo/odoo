@@ -12,21 +12,21 @@
     <p style="margin: 0px; padding: 0px;font-size: 13px;">
         Hello ${object.partner_id.name},<br/>
         Here is your repair order ${doc_name} <strong>${object.name}</strong>
-        % if object.origin:
+        {% if object.origin %}
             (with reference: ${object.origin} )
-        % endif
-        % if object.invoice_method != 'none':
+        {% endif %}
+        {% if object.invoice_method != 'none' %}
             amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong><br/>
-        % else:
+        {% else %}
             .<br/>
-        % endif
+        {% endif %}
         You can reply to this email if you have any questions.
         <br/><br/>
         Thank you,
-        % if user.signature
+        {% if user.signature %}
             <br />
             ${user.signature | safe}
-        % endif
+        {% endif %}
     </p>
 </div></field>
             <field name="report_template" ref="action_report_repair_order"/>

@@ -65,14 +65,14 @@
                 </td></tr>
                 <tr><td valign="middle" align="left" style="opacity: 0.7;">
                     ${object.user_id.company_id.phone}
-                    % if object.user_id.company_id.email
+                    {% if object.user_id.company_id.email %}
                         | <a href="'mailto:%s' % ${object.user_id.company_id.email}" style="text-decoration:none; color: #454748;">${object.user_id.company_id.email}</a>
-                    % endif
-                    % if object.user_id.company_id.website
+                    {% endif %}
+                    {% if object.user_id.company_id.website %}
                         | <a href="'%s' % ${object.user_id.company_id.website}" style="text-decoration:none; color: #454748;">
                         ${object.user_id.company_id.website}
                     </a>
-                    % endif
+                    {% endif %}
                 </td></tr>
             </table>
         </td>

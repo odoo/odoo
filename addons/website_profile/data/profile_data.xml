@@ -73,16 +73,16 @@
                     </td>
                     <td valign="middle" align="right" style="opacity: 0.7;">
                         ${user.company_id.phone}
-                        % if user.company_id.email:
+                        {% if user.company_id.email %}
                             | <a href="'mailto:%s' % ${user.company_id.email}" style="text-decoration:none; color: #454748;">
                                 ${user.company_id.email}
                             </a>
-                        % endif
-                        % if user.company_id.website:
+                        {% endif %}
+                        {% if user.company_id.website %}
                             | <a href="${user.company_id.website}" style="text-decoration:none; color: #454748;">
                                 ${user.company_id.website}
                             </a>
-                        % endif
+                        {% endif %}
                     </td>
                 </tr>
             </table>

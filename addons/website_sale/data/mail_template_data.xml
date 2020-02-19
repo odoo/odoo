@@ -16,7 +16,7 @@
         <td align="center" style="min-width: 590px;">
             <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="middle">
-                    % set company = object.company_id or object.user_id.company_id or user.company_id
+                    {% set company = object.company_id or object.user_id.company_id or user.company_id%}
                     <span style="font-size: 10px;">Your Cart</span><br/>
                     <span style="font-size: 20px; font-weight: bold;">
                         ${object.name}
@@ -37,8 +37,8 @@
                 <tr><td valign="top" style="font-size: 13px;">
                     <h1 style="color:#A9A9A9;">THERE'S SOMETHING IN YOUR CART.</h1>
                     Would you like to complete your purchase?<br/><br/>
-                    % if object.order_line:
-                        % for line in object.website_order_line:
+                    {% if object.order_line %}
+                        {% for line in object.website_order_line %}
                             <hr/>
                             <table width="100%">
                                 <tr>
@@ -53,9 +53,9 @@
                                     </td>
                                 </tr>
                             </table>
-                        % endfor
+                        {% endfor %}
                         <hr/>
-                    % endif
+                    {% endif %}
                     <div style="text-align: center; margin: 16px 0px 16px 0px; font-size: 14px;">
                         <a href="${object.get_base_url()}/shop/cart?access_token=${object.access_token}"
                             target="_blank"
@@ -80,12 +80,12 @@
                 </td></tr>
                 <tr><td valign="middle" align="left" style="opacity: 0.7;">
                     ${company.phone}
-                    % if company.email
+                    {% if company.email %}
                         | <a href="'mailto:%s' % ${company.email}" style="text-decoration:none; color: #454748;">${company.email}</a>
-                    % endif
-                    % if company.website
+                    {% endif %}
+                    {% if company.website %}
                         | <a href="'%s' % ${company.website}" style="text-decoration:none; color: #454748;">${company.website}</a>
-                    % endif
+                    {% endif %}
                 </td></tr>
             </table>
         </td>

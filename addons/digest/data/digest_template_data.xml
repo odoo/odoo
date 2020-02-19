@@ -9,12 +9,12 @@
 <table style="width: 100%; border-spacing: 0; font-family: Helvetica,Arial,Verdana,sans-serif;">
     <tr>
         <td align="center" valign="top" style="border-collapse: collapse; padding: 0">
-            % set user = ctx.get('user', user)
-            % set company = user.company_id
-            % set data = object.compute_kpis(company, user)
-            % set tips = object.compute_tips(company, user)
-            % set kpi_actions = object.compute_kpis_actions(company, user)
-            % set kpis = data.yesterday.keys()
+            {% set user = ctx.get('user', user)%}
+            {% set company = user.company_id%}
+            {% set data = object.compute_kpis(company, user)%}
+            {% set tips = object.compute_tips(company, user)%}
+            {% set kpi_actions = object.compute_kpis_actions(company, user)%}
+            {% set kpis = data.yesterday.keys()%}
             <table style="width: 100%; max-width: 600px; border-spacing: 0; border: 1px solid #e7e7e7; border-bottom: none; color: #6e7172; line-height: 23px; text-align: left;">
                 <tr>
                     <td style="border-collapse: collapse; padding: 10px 20px; text-align: left;">
@@ -32,16 +32,16 @@
                     <hr width="95%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 14px;"/>
                 </td></tr>
             </table>
-            % for kpi in kpis:
+            {% for kpi in kpis %}
                 <table style="border-spacing: 0; width: 100%; max-width: 600px;">
                     <tr>
                         <td style="border-collapse: collapse; background-color: #ffffff; border-left: 1px solid #e7e7e7; border-right: 1px solid #e7e7e7; line-height: 21px; padding: 0 20px 10px 20px; text-align: left;"><br/>
                             <span style="color: #3d466e; font-size: 18px; font-weight: 500; line-height: 23px;">${object.fields_get()[kpi]['string']}</span>
-                            %if kpi in kpi_actions:
+                            {% if kpi in kpi_actions %}
                                 <span style="float: right;">
                                     <a href="/web#action=${kpi_actions[kpi]}">View more</a>
                                 </span>
-                            %endif
+                            {% endif %}
                         </td>
                     </tr>
                     <tr>
@@ -54,16 +54,16 @@
                                                 <td style="border-collapse: collapse; padding: 20px; text-align: center;">
                                                     <span style="color: #56b3b5; font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px;">${data['yesterday'][kpi][kpi]}</span><br/>
                                                     <span style="color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;">Yesterday</span>
-                                                    % if data['yesterday'][kpi]['margin'] != 0.0:
+                                                    {% if data['yesterday'][kpi]['margin'] != 0.0 %}
                                                         <span style="color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;">
-                                                            % if data['yesterday'][kpi]['margin'] is greaterthan(0.0):
+                                                            {% if data['yesterday'][kpi]['margin'] is greaterthan(0.0) %}
                                                                 <span style="color: #0bbc22;">▲</span>${"%.2f" % data['yesterday'][kpi]['margin']} %
-                                                            % endif
-                                                            % if data['yesterday'][kpi]['margin'] is lessthan(0.0):
+                                                            {% endif %}
+                                                            {% if data['yesterday'][kpi]['margin'] is lessthan(0.0) %}
                                                                 <span style="color: #ff0000;">▼</span>${"%.2f" % data['yesterday'][kpi]['margin']} %
-                                                            % endif
+                                                            {% endif %}
                                                         </span>
-                                                    % endif
+                                                    {% endif %}
                                                 </td>
                                             </tr>
                                         </table>
@@ -74,16 +74,16 @@
                                                 <td style="border-collapse: collapse; padding: 20px; text-align: center;">
                                                     <span style="color: #9a5b82; font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px;">${data['lastweek'][kpi][kpi]}</span><br/>
                                                     <span style="color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;">Last 7 Days</span>
-                                                    % if data['lastweek'][kpi]['margin'] != 0.0:
+                                                    {% if data['lastweek'][kpi]['margin'] != 0.0 %}
                                                         <span style="color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;">
-                                                            % if data['lastweek'][kpi]['margin'] is greaterthan(0.0):
+                                                            {% if data['lastweek'][kpi]['margin'] is greaterthan(0.0) %}
                                                                 <span style="color: #0bbc22;">▲</span>${"%.2f" % data['lastweek'][kpi]['margin']} %
-                                                            % endif
-                                                            % if data['lastweek'][kpi]['margin'] is lessthan(0.0):
+                                                            {% endif %}
+                                                            {% if data['lastweek'][kpi]['margin'] is lessthan(0.0) %}
                                                                 <span style="color: #ff0000;">▼</span>${"%.2f" % data['lastweek'][kpi]['margin']} %
-                                                            %endif
+                                                            {% endif %}
                                                         </span>
-                                                    %endif
+                                                    {% endif %}
                                                 </td>
                                             </tr>
                                         </table>
@@ -94,16 +94,16 @@
                                                 <td style="border-collapse: collapse; margin: 0; text-align: center;">
                                                     <span style="color: #56b3b5; font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px">${data['lastmonth'][kpi][kpi]}</span><br/>
                                                     <span style="color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;">Last 30 Days</span>
-                                                    % if data['lastmonth'][kpi]['margin'] != 0.0:
+                                                    {% if data['lastmonth'][kpi]['margin'] != 0.0 %}
                                                         <span style="color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;">
-                                                             % if data['lastmonth'][kpi]['margin'] is greaterthan(0.0):
+                                                             {% if data['lastmonth'][kpi]['margin'] is greaterthan(0.0) %}
                                                                 <span style="color: #0bbc22;">▲</span>${"%.2f" % data['lastmonth'][kpi]['margin']} %
-                                                            % endif
-                                                            % if data['lastmonth'][kpi]['margin'] is lessthan(0.0):
+                                                            {% endif %}
+                                                            {% if data['lastmonth'][kpi]['margin'] is lessthan(0.0) %}
                                                                 <span style="color: #ff0000;">▼</span>${"%.2f" % data['lastmonth'][kpi]['margin']} %
-                                                            %endif
+                                                            {% endif %}
                                                         </span>
-                                                    %endif
+                                                    {% endif %}
                                                 </td>
                                             </tr>
                                         </table>
@@ -113,8 +113,8 @@
                         </td>
                     </tr>
                 </table>
-            % endfor
-            % if tips:
+            {% endfor %}
+            {% if tips %}
                 <table style="width: 100%; max-width: 600px; margin-top: 5px; border: 1px solid #e7e7e7;">
                     <tr>
                         <td style="border-collapse: collapse; background-color: #ffffff; line-height: 21px; padding: 0px 20px 20px;"><br/>
@@ -122,7 +122,7 @@
                         </td>
                     </tr>
                 </table>
-            % endif
+            {% endif %}
             <table style="width: 100%; max-width: 600px; margin-top: 5px; border: 1px solid #e7e7e7;">
                 <tr>
                     <td style="border-collapse: collapse; background-color: #ffffff; line-height: 21px; padding: 0 20px 10px 20px; text-align: center;"><br/>
@@ -139,13 +139,13 @@
             <table style="margin-top: 5px; border: 1px solid #e7e7e7; font-size: 15px; width: 100%; max-width: 600px;">
                 <tr>
                     <td style="border-collapse: collapse; margin: 0; padding: 10px 20px;">
-                        % if user.has_group('base.group_system'):
-                            <div style="margin-top: 20px;"> 
+                        {% if user.has_group('base.group_system') %}
+                            <div style="margin-top: 20px;">
                                 Want to customize this email?
                                 <a href="/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}" target="_blank" style="color: #875A7B;">Choose the metrics you care about</a>
                             </div>
                             <br />
-                        % endif
+                        {% endif %}
                         <p style="font-size: 11px; margin-top: 10px;">
                             <strong>
                                 Sent by

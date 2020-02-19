@@ -51,10 +51,10 @@
                         </div>
                         If you do not expect this, you can safely ignore this email.<br/><br/>
                         Thanks,
-                        % if user.signature:
+                        {% if user.signature %}
                             <br/>
                             ${user.signature | safe}
-                        % endif
+                        {% endif %}
                     </div>
                 </td></tr>
                 <tr><td style="text-align:center;">
@@ -72,14 +72,14 @@
                 </td></tr>
                 <tr><td valign="middle" align="left" style="opacity: 0.7;">
                     ${object.company_id.phone}
-                    % if object.company_id.email
+                    {% if object.company_id.email %}
                         | <a href="'mailto:%s' % ${object.company_id.email}" style="text-decoration:none; color: #454748;">${object.company_id.email}</a>
-                    % endif
-                    % if object.company_id.website
+                    {% endif %}
+                    {% if object.company_id.website %}
                         | <a href="'%s' % ${object.company_id.website}" style="text-decoration:none; color: #454748;">
                         ${object.company_id.website}
                     </a>
-                    % endif
+                    {% endif %}
                 </td></tr>
             </table>
         </td>
@@ -144,7 +144,7 @@
                                 Accept invitation
                             </a>
                         </div>
-                        % set website_url = object.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                        {% set website_url = object.env['ir.config_parameter'].sudo().get_param('web.base.url')%}
                         Your Odoo domain is: <b><a href='${website_url}'>${website_url}</a></b><br />
                         Your sign in email is: <b><a href="/web/login?login=${object.email}" target="_blank">${object.email}</a></b><br /><br />
                         Never heard of Odoo? It’s an all-in-one business software loved by 3+ million users. It will considerably improve your experience at work and increase your productivity.
@@ -170,14 +170,14 @@
                 </td></tr>
                 <tr><td valign="middle" align="left" style="opacity: 0.7;">
                     ${object.company_id.phone}
-                    % if object.company_id.email
+                    {% if object.company_id.email %}
                         | <a href="'mailto:%s' % ${object.company_id.email}" style="text-decoration:none; color: #454748;">${object.company_id.email}</a>
-                    % endif
-                    % if object.company_id.website
+                    {% endif %}
+                    {% if object.company_id.website %}
                         | <a href="'%s' % ${object.company_id.website}" style="text-decoration:none; color: #454748;">
                         ${object.company_id.website}
                     </a>
-                    % endif
+                    {% endif %}
                 </td></tr>
             </table>
         </td>
@@ -213,7 +213,7 @@
     <tr>
         <td align="center" style="min-width: 590px;">
             <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
-                 % set invited_users = ctx['invited_users']
+                 {% set invited_users = ctx['invited_users']%}
                 <td style="text-align : left">
                     <span style="font-size: 20px; font-weight: bold;">
                         Pending Invitations
@@ -224,9 +224,9 @@
                         Dear ${object.name or ''},<br/> <br/>
                         You added the following user(s) to your database but they haven't registered yet:
                         <ul>
-                            % for invited_user in invited_users:
+                            {% for invited_user in invited_users %}
                                 <li>${invited_user}</li>
-                            % endfor
+                            {% endfor %}
                         </ul>
                         Follow up with them so they can access your database and start working with you.
                         <br /><br/>
@@ -295,10 +295,10 @@
                             </a>
                         </div>
                         Thanks,<br/>
-                        % if user.signature:
+                        {% if user.signature %}
                             <br/>
                             ${user.signature | safe}
-                        % endif
+                        {% endif %}
                     </div>
                 </td></tr>
                 <tr><td style="text-align:center;">
@@ -316,14 +316,14 @@
                 </td></tr>
                 <tr><td valign="middle" align="left" style="opacity: 0.7;">
                     ${object.company_id.phone}
-                    % if object.company_id.email
+                    {% if object.company_id.email %}
                         | <a href="'mailto:%s' % ${object.company_id.email}" style="text-decoration:none; color: #454748;">${object.company_id.email}</a>
-                    % endif
-                    % if object.company_id.website
+                    {% endif %}
+                    {% if object.company_id.website %}
                         | <a href="'%s' % ${object.company_id.website}" style="text-decoration:none; color: #454748;">
                         ${object.company_id.website}
                     </a>
-                    % endif
+                    {% endif %}
                 </td></tr>
             </table>
         </td>

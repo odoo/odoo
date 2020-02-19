@@ -41,16 +41,16 @@
                 <br/><br/>
                 Thank you,
                 <div style="font-size: 11px; color: grey;">
-                    % if object.user_id:
+                    {% if object.user_id %}
                         -- <br/>
                         <strong>${object.user_id.name}</strong><br/>
                         Email: ${object.user_id.email or ''}<br/>
                         Phone: ${object.user_id.phone or ''}
-                    % else:
+                    {% else %}
                         -- <br/>
                         ${object.company_id.name}<br/>
                         The HR Team
-                    % endif
+                    {% endif %}
                 </div>
             </div>
         </td>
@@ -82,14 +82,14 @@
                 position, your application has been short listed for a
                 call or an interview.
                 <br/><br/>
-                % if 'website_url' in object.job_id and object.job_id.website_url:
+                {% if 'website_url' in object.job_id and object.job_id.website_url %}
                     <div style="margin: 16px 8px 16px 8px;">
                         <a href="${object.job_id.website_url}"
                             style="background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">Job Description</a>
                     </div>
-                % endif
+                {% endif %}
 
-                % if object.user_id:
+                {% if object.user_id %}
                     You will soon be contacted by:
                     <table>
                         <tr>
@@ -104,14 +104,14 @@
                         </tr>
                     </table>
                     <br/><br/>
-                % endif
+                {% endif %}
                 See you soon,
                 <div style="font-size: 11px; color: grey;">
                     -- <br/>
                     The HR Team
-                    % if 'website_url' in object.job_id and object.job_id.website_url
+                    {% if 'website_url' in object.job_id and object.job_id.website_url %}
                         Discover <a href="/jobs" style="text-decoration:none;color:#717188;">all our jobs</a>.<br/>
-                    % endif
+                    {% endif %}
                 </div>
 
                 <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
@@ -126,42 +126,42 @@
                 <br/>
 
                 <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;"/>
-                % set location = ''
-                % if object.job_id.address_id.name:
+                {% set location = ''%}
+                {% if object.job_id.address_id.name %}
                     <strong>${object.job_id.address_id.name}</strong><br/>
-                % endif
-                % if object.job_id.address_id.street:
+                {% endif %}
+                {% if object.job_id.address_id.street %}
                     ${object.job_id.address_id.street}<br/>
-                    % set location = object.job_id.address_id.street
-                % endif
-                % if object.job_id.address_id.street2:
+                    {% set location = object.job_id.address_id.street%}
+                {% endif %}
+                {% if object.job_id.address_id.street2 %}
                     ${object.job_id.address_id.street2}<br/>
-                    % set location = '%s, %s' % (location, object.job_id.address_id.street2)
-                % endif
-                % if object.job_id.address_id.city:
+                    {% set location = '%s, %s' % (location, object.job_id.address_id.street2)%}
+                {% endif %}
+                {% if object.job_id.address_id.city %}
                     ${object.job_id.address_id.city},
-                    % set location = '%s, %s' % (location, object.job_id.address_id.city)
-                % endif
-                % if object.job_id.address_id.state_id.name:
+                    {% set location = '%s, %s' % (location, object.job_id.address_id.city)%}
+                {% endif %}
+                {% if object.job_id.address_id.state_id.name %}
                     ${object.job_id.address_id.state_id.name},
-                    % set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)
-                % endif
-                % if object.job_id.address_id.zip:
+                    {% set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)%}
+                {% endif %}
+                {% if object.job_id.address_id.zip %}
                     ${object.job_id.address_id.zip}
-                    % set location = '%s, %s' % (location, object.job_id.address_id.zip)
-                % endif
+                    {% set location = '%s, %s' % (location, object.job_id.address_id.zip)%}
+                {% endif %}
                 <br/>
-                % if object.job_id.address_id.country_id.name:
+                {% if object.job_id.address_id.country_id.name %}
                     ${object.job_id.address_id.country_id.name}<br/>
-                    % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)
-                % endif
+                    {% set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)%}
+                {% endif %}
                 <br/>
 
-                % if object.job_id.address_id:
+                {% if object.job_id.address_id %}
                     <a href="https://maps.google.com/maps?q=${location}" target="new">
                         <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom;"/>
                     </a>
-                % endif
+                {% endif %}
             </div>
         </td>
     </tr>
@@ -188,15 +188,15 @@
                 <br/><br/>
                 We will come back to you shortly.
 
-                % if 'website_url' in object.job_id and object.job_id.website_url:
+                {% if 'website_url' in object.job_id and object.job_id.website_url %}
                     <div style="margin: 16px 8px 16px 8px;">
                         <a href="${object.job_id.website_url}"
                             style="background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">Job Description</a>
                     </div>
-                % endif
+                {% endif %}
 
                 <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
-                % if object.user_id:
+                {% if object.user_id %}
                     <h3 style="color:#9A6C8E;"><strong>Your Contact:</strong></h3>
                     <table>
                         <tr>
@@ -211,7 +211,7 @@
                         </tr>
                     </table>
                     <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
-                % endif
+                {% endif %}
 
                 <h3 style="color:#9A6C8E;"><strong>What is the next step?</strong></h3>
                 We usually <strong>answer applications within 3 days.</strong><br/><br/>
@@ -220,41 +220,41 @@
                 quickly enough (just reply to this email).
 
                 <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;"/>
-                % set location = ''
-                % if object.job_id.address_id.name:
+                {% set location = ''%}
+                {% if object.job_id.address_id.name %}
                     <strong>${object.job_id.address_id.name}</strong><br/>
-                % endif
-                % if object.job_id.address_id.street:
+                {% endif %}
+                {% if object.job_id.address_id.street %}
                     ${object.job_id.address_id.street}<br/>
-                    % set location = object.job_id.address_id.street
-                % endif
-                % if object.job_id.address_id.street2:
+                    {% set location = object.job_id.address_id.street%}
+                {% endif %}
+                {% if object.job_id.address_id.street2 %}
                     ${object.job_id.address_id.street2}<br/>
-                    % set location = '%s, %s' % (location, object.job_id.address_id.street2)
-                % endif
-                % if object.job_id.address_id.city:
+                    {% set location = '%s, %s' % (location, object.job_id.address_id.street2)%}
+                {% endif %}
+                {% if object.job_id.address_id.city %}
                     ${object.job_id.address_id.city},
-                    % set location = '%s, %s' % (location, object.job_id.address_id.city)
-                % endif
-                % if object.job_id.address_id.state_id.name:
+                    {% set location = '%s, %s' % (location, object.job_id.address_id.city)%}
+                {% endif %}
+                {% if object.job_id.address_id.state_id.name %}
                     ${object.job_id.address_id.state_id.name},
-                    % set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)
-                % endif
-                % if object.job_id.address_id.zip:
+                    {% set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)%}
+                {% endif %}
+                {% if object.job_id.address_id.zip %}
                     ${object.job_id.address_id.zip}
-                    % set location = '%s, %s' % (location, object.job_id.address_id.zip)
-                % endif
+                    {% set location = '%s, %s' % (location, object.job_id.address_id.zip)%}
+                {% endif %}
                 <br/>
-                % if object.job_id.address_id.country_id.name:
+                {% if object.job_id.address_id.country_id.name %}
                     ${object.job_id.address_id.country_id.name}<br/>
-                    % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)
-                % endif
+                    {% set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)%}
+                {% endif %}
                 <br/>
-                % if object.job_id.address_id:
+                {% if object.job_id.address_id %}
                     <a href="https://maps.google.com/maps?q=${location}" target="new">
                         <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom;"/>
                     </a>
-                % endif
+                {% endif %}
             </div>
         </td>
     </tr>

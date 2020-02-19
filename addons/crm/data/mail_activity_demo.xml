@@ -58,13 +58,13 @@
                             It's great to meet you! Now that you're on board, you'll discover what ${object.company_id.name} has to offer. My name is ${object.user_id.name} and I'll help you get the most out of Odoo. Could we plan a quick demo soon?<br/>
                             Feel free to reach out at any time!<br/><br/>
                             Best,<br/>
-                            % if object.user_id:
+                            {% if object.user_id %}
                                 <b>${object.user_id.name}</b>
                                 <br/>Email: ${object.user_id.email or ''}
                                 <br/>Phone: ${object.user_id.phone or ''}
-                            % else:
+                            {% else %}
                                 ${object.company_id.name}
-                            % endif
+                            {% endif %}
                         </div>
                     </td>
                 </tr>
@@ -78,12 +78,12 @@
             <b>${object.company_id.name}</b><br/>
             <div style="color: #999999;">
                 ${object.company_id.phone}
-                % if object.company_id.email
+                {% if object.company_id.email %}
                     | <a href="'mailto:%s' % ${object.company_id.email}" style="text-decoration:none; color: #999999;">${object.company_id.email}</a>
-                % endif
-                % if object.company_id.website
+                {% endif %}
+                {% if object.company_id.website %}
                     | <a href="'%s' % ${object.company_id.website}" style="text-decoration:none; color: #999999;">${object.company_id.website}</a>
-                % endif
+                {% endif %}
             </div>
         </td>
     </tr>

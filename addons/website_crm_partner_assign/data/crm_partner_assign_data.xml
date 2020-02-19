@@ -48,23 +48,23 @@
                             Hello,<br/>
                             We have been contacted by those prospects that are in your region. Thus, the following leads have been assigned to ${ctx['partner_id'].name}:<br/>
                             <ol>
-                                % for lead in ctx['partner_leads']:
+                                {% for lead in ctx['partner_leads'] %}
                                     <li><a href="${lead.lead_link}">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li><br/>
-                                % endfor
+                                {% endfor %}
                             </ol>
-                            % if ctx.get('partner_in_portal'):
+                            {% if ctx.get('partner_in_portal') %}
                                 Please connect to your <a href="${object.get_portal_url()}">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: "I'm interested" &amp; "I'm not interested".<br/>
-                            % else:
+                            {% else %}
                                 You do not have yet a portal access to our database. Please contact
                                 ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.<br/>
-                            % endif
+                            {% endif %}
                             The lead will be sent to another partner if you do not contact the lead before 20 days.<br/><br/>
                             Thank you,<br/>
                             ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}
                             <br/>
-                            % if not ctx['partner_id'].user_id:
+                            {% if not ctx['partner_id'].user_id %}
                                 PS: It looks like you do not have an account manager assigned to you, please contact us.
-                            % endif
+                            {% endif %}
                         </div>
                     </td>
                 </tr>
@@ -85,20 +85,20 @@
                 </td></tr>
                 <tr><td valign="middle" align="left" style="opacity: 0.7;">
                     ${user.company_id.phone}
-                    % if user.company_id.phone and (user.company_id.email or user.company_id.website)
+                    {% if user.company_id.phone and (user.company_id.email or user.company_id.website) %}
                     |
-                    % endif
-                    % if user.company_id.email
+                    {% endif %}
+                    {% if user.company_id.email %}
                     <a href="'mailto:%s' % ${user.company_id.email}" style="text-decoration:none; color: #454748;">${user.company_id.email}</a>
-                    % endif
-                    % if user.company_id.email and user.company_id.website
+                    {% endif %}
+                    {% if user.company_id.email and user.company_id.website %}
                     |
-                    % endif
-                    % if user.company_id.website
+                    {% endif %}
+                    {% if user.company_id.website %}
                     <a href="'%s' % ${user.company_id.website}" style="text-decoration:none; color: #454748;">
                     ${user.company_id.website}
                     </a>
-                    % endif
+                    {% endif %}
                 </td></tr>
             </table>
         </td>

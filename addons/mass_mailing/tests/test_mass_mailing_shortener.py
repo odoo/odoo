@@ -52,8 +52,8 @@ class TestMassMailingShortener(common.TransactionCase):
             "subject": "test_00_test_mass_mailing_shortener",
             "body_html": """
 Hi,
-% set url = "www.odoo.com"
-% set httpurl = "https://www.odoo.eu"
+{% set url = "www.odoo.com"%}
+{% set httpurl = "https://www.odoo.eu"%}
 Website0: <a id="url0" href="https://www.odoo.tz/my/${object.name}">https://www.odoo.tz/my/${object.name}</h1>
 Website1: <a id="url1" href="https://www.odoo.be">https://www.odoo.be</h1>
 Website2: <a id="url2" href="https://${url}">https://${url}</h1>

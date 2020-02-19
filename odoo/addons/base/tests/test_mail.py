@@ -33,13 +33,13 @@ class TestSanitizer(BaseCase):
     def test_mako(self):
         cases = [
             ('''<p>Some text</p>
-<% set signup_url = object.get_signup_url() %>
-% if signup_url:
+{% set signup_url = object.get_signup_url() %}
+{% if signup_url %}
 <p>
     You can access this document and pay online via our Customer Portal:
 </p>''', '''<p>Some text</p>
-<% set signup_url = object.get_signup_url() %>
-% if signup_url:
+{% set signup_url = object.get_signup_url() %}
+{% if signup_url %}
 <p>
     You can access this document and pay online via our Customer Portal:
 </p>''')

@@ -14,10 +14,10 @@
     If you have any questions, please let us know.
     <br/><br/>
     Thank you,
-    % if user.signature
+    {% if user.signature %}
         <br />
         ${user.signature | safe}
-    % endif
+    {% endif %}
 </div>
         </field>
             <field name="lang">${object.partner_id.lang}</field>
@@ -33,18 +33,18 @@
             <field name="partner_to" >${object.rating_get_partner_id().id}</field>
             <field name="body_html" type="html">
 <div>
-    % set access_token = object.rating_get_access_token()
-    % set partner = object.rating_get_partner_id()
+    {% set access_token = object.rating_get_access_token()%}
+    {% set partner = object.rating_get_partner_id()%}
     <table border="0" cellpadding="0" cellspacing="0" width="590" style="width:100%; margin:0px auto;">
     <tbody>
         <tr><td valign="top" style="font-size: 13px;">
             Hello ${partner.name},<br/><br/>
             Please take a moment to rate our services related to the task "<strong>${object.name}</strong>"
-            % if object.rating_get_rated_partner_id().name:
+            {% if object.rating_get_rated_partner_id().name %}
                 assigned to <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>
-            % else:
+            {% else %}
                 .<br/>
-            % endif
+            {% endif %}
         </td></tr>
         <tr><td style="text-align: center;">
             <table border="0" cellpadding="0" cellspacing="0" width="590" summary="o_mail_notification" style="width:100%; margin: 32px 0px 32px 0px;">
@@ -77,12 +77,12 @@
         </td></tr>
         <tr><td valign="top" style="font-size: 13px;">
             We appreciate your feedback. It helps us to improve continuously.
-            % if object.project_id.rating_status == 'stage':
+            {% if object.project_id.rating_status == 'stage' %}
                 <br/><span style="margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;">This customer survey has been sent because your task has been moved to the stage <b>${object.stage_id.name}</b></span>
-            % endif
-            % if object.project_id.rating_status == 'periodic':
+            {% endif %}
+            {% if object.project_id.rating_status == 'periodic' %}
                 <br/><span style="margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;">This customer survey is sent <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.</span>
-            % endif
+            {% endif %}
         </td></tr>
     </tbody>
     </table>

@@ -88,10 +88,10 @@
                 <tr>
                     <td valign="top" style="font-size: 13px;">
     <div>
-        % set lines = ctx['lines']
-        % set order = ctx['order']
-        % set supplier = user.env['res.partner'].browse(order['supplier_id'])
-        % set currency = user.env['res.currency'].browse(order['currency_id'])
+        {% set lines = ctx['lines']%}
+        {% set order = ctx['order']%}
+        {% set supplier = user.env['res.partner'].browse(order['supplier_id'])%}
+        {% set currency = user.env['res.currency'].browse(order['currency_id'])%}
         <p>
         Dear ${order['supplier_name']},
         </p><p>
@@ -109,22 +109,22 @@
                 </tr>
             </thead>
             <tbody>
-                % for line in lines
+                {% for line in lines %}
                 <tr>
                     <td style="width: 100%; font-size: 13px;" valign="top">${line['product']}</td>
                     <td style="width: 100%; font-size: 13px;" valign="top">
-                    % if line['toppings']:
+                    {% if line['toppings'] %}
                         ${line['toppings']}
-                    % endif
-                    % if line['note']:
+                    {% endif %}
+                    {% if line['note'] %}
                         <div style="color: rgb(173,181,189);">${line['note']}</div>
-                    % endif
+                    {% endif %}
                     </td>
                     <td style="width: 100%; font-size: 13px;" valign="top">${line['username']}</td>
                     <td style="width: 100%; font-size: 13px;" valign="top" align="right">${line['quantity']}</td>
                     <td style="width: 100%; font-size: 13px;" valign="top" align="right">${format_amount(line['price'], currency)}</td>
                 </tr>
-                % endfor
+                {% endfor %}
                 <tr>
                     <td></td>
                     <td></td>
@@ -156,20 +156,20 @@
                 </td></tr>
                 <tr><td valign="middle" align="left" style="opacity: 0.7;">
                     ${user.company_id.phone}
-                    % if user.company_id.phone and (user.company_id.email or user.company_id.website)
+                    {% if user.company_id.phone and (user.company_id.email or user.company_id.website) %}
                     |
-                    % endif
-                    % if user.company_id.email
+                    {% endif %}
+                    {% if user.company_id.email %}
                     <a href="'mailto:%s' % ${user.company_id.email}" style="text-decoration:none; color: #454748;">${user.company_id.email}</a>
-                    % endif
-                    % if user.company_id.email and user.company_id.website
+                    {% endif %}
+                    {% if user.company_id.email and user.company_id.website %}
                     |
-                    % endif
-                    % if user.company_id.website
+                    {% endif %}
+                    {% if user.company_id.website %}
                     <a href="'%s' % ${user.company_id.website}" style="text-decoration:none; color: #454748;">
                     ${user.company_id.website}
                     </a>
-                    % endif
+                    {% endif %}
                 </td></tr>
             </table>
         </td>

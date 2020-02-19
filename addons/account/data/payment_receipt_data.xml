@@ -19,10 +19,10 @@
         Do not hesitate to contact us if you have any questions.
         <br/><br/>
         Best regards,
-        % if user.signature:
+        {% if user.signature %}
             <br/>
             ${user.signature | safe}
-        % endif
+        {% endif %}
     </p>
 </div>
 </field>
