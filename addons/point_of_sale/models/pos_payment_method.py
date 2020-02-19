@@ -46,6 +46,7 @@ class PosPaymentMethod(models.Model):
     use_payment_terminal = fields.Selection(selection=lambda self: self._get_payment_terminal_selection(), string='Use a Payment Terminal', help='Record payments with a terminal on this journal.')
     hide_use_payment_terminal = fields.Boolean(compute='_compute_hide_use_payment_terminal', help='Technical field which is used to '
                                                'hide use_payment_terminal when no payment interfaces are installed.')
+    active = fields.Boolean(default=True)
 
     @api.depends('is_cash_count')
     def _compute_hide_use_payment_terminal(self):
@@ -75,6 +76,6 @@ class PosPaymentMethod(models.Model):
 
     def write(self, vals):
         if self._is_write_forbidden(set(vals.keys())):
-            raise UserError('Kindly close and validate the following open PoS Sessions before modifying this payment method.\n'
+            raise UserError('Please close and validate the following open PoS Sessions before modifying this payment method.\n'
                             'Open sessions: %s' % (' '.join(self.open_session_ids.mapped('name')),))
         return super(PosPaymentMethod, self).write(vals)
