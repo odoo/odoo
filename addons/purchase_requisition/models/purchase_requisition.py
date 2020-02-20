@@ -75,6 +75,7 @@ class PurchaseRequisition(models.Model):
 
     @api.onchange('vendor_id')
     def _onchange_vendor(self):
+        self = self.with_company(self.company_id)
         if not self.vendor_id:
             self.currency_id = self.env.company.currency_id.id
         else:
@@ -84,6 +85,7 @@ class PurchaseRequisition(models.Model):
             ('vendor_id', '=', self.vendor_id.id),
             ('state', '=', 'ongoing'),
             ('type_id.quantity_copy', '=', 'none'),
+            ('company_id', '=', self.company_id),
         ])
         if any(requisitions):
             title = _("Warning for %s") % self.vendor_id.name
