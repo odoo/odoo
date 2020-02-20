@@ -5,7 +5,7 @@ import logging
 import re
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 
 
@@ -60,6 +60,11 @@ class ProductCategory(models.Model):
     @api.model
     def name_create(self, name):
         return self.create({'name': name}).name_get()[0]
+
+    def unlink(self):
+        main_category = self.env.ref('product.product_category_all')
+        if main_category in self:
+            raise UserError(_("You cannot delete this product category, it is the default generic category."))
 
 
 class ProductProduct(models.Model):
