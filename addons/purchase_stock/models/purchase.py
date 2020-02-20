@@ -187,7 +187,6 @@ class PurchaseOrder(models.Model):
             picking_type = self.env['stock.picking.type'].search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
         return picking_type[:1]
 
-    @api.model
     def _prepare_picking(self):
         if not self.group_id:
             self.group_id = self.group_id.create({
@@ -210,6 +209,7 @@ class PurchaseOrder(models.Model):
     def _create_picking(self):
         StockPicking = self.env['stock.picking']
         for order in self:
+            order = order.with_company(order.company_id)
             if any([ptype in ['product', 'consu'] for ptype in order.order_line.mapped('product_id.type')]):
                 pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
                 if not pickings:

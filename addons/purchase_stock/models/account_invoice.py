@@ -40,6 +40,7 @@ class AccountMove(models.Model):
             if move.move_type not in ('in_invoice', 'in_refund', 'in_receipt') or not move.company_id.anglo_saxon_accounting:
                 continue
 
+            move = move.with_company(move.company_id)
             for line in move.invoice_line_ids.filtered(lambda line: line.product_id.type == 'product' and line.product_id.valuation == 'real_time'):
 
                 # Filter out lines being not eligible for price difference.
