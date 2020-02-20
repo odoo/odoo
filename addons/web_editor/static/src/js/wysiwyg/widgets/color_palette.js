@@ -44,10 +44,6 @@ const ColorPaletteWidget = Widget.extend({
             $editable: $(),
         }, options || {});
 
-        if (this.options.selectedColor) {
-            this.selectedColor = ColorpickerDialog.normalizeCSSColor(this.options.selectedColor);
-        }
-
         this.trigger_up('request_editable', {callback: val => this.options.$editable = val});
     },
     /**
@@ -118,17 +114,24 @@ const ColorPaletteWidget = Widget.extend({
         this.colorToColorNames = {};
         this.el.querySelectorAll('button[data-color]').forEach(elem => {
             const colorName = elem.dataset.color;
-            const color = ColorpickerDialog.normalizeCSSColor(this.style.getPropertyValue('--' + colorName).trim());
             const $color = $(elem);
             $color.addClass('bg-' + colorName);
-            if (this.selectedColor && (this.selectedColor === colorName || this.selectedColor === color)) {
-                $color.addClass('selected');
-            }
             this.colorNames.push(colorName);
             if (!elem.classList.contains('d-none')) {
+                const color = ColorpickerDialog.normalizeCSSColor(this.style.getPropertyValue('--' + colorName).trim());
                 this.colorToColorNames[color] = colorName;
             }
         });
+
+        // Select selected Color
+        if (this.options.selectedColor) {
+            const selectedColor = ColorpickerDialog.normalizeCSSColor(this.options.selectedColor);
+            this.selectedColor = this.colorToColorNames[selectedColor] || selectedColor;
+            const selectedButton = this.el.querySelector(`button[data-color="${this.selectedColor}"], button[style*="background-color:${this.selectedColor};"]`);
+            if (selectedButton) {
+                selectedButton.classList.add('selected');
+            }
+        }
 
         return res;
     },
@@ -220,9 +223,6 @@ const ColorPaletteWidget = Widget.extend({
      * @returns {jQuery}
      */
     _createColorButton: function (color, classes) {
-        if (this.selectedColor === color) { // both colors are already normalized
-            classes.push('selected');
-        }
         return $('<button/>', {
             class: classes.join(' '),
             style: 'background-color:' + color + ';',
@@ -243,6 +243,15 @@ const ColorPaletteWidget = Widget.extend({
             target: buttonEl,
         };
     },
+    /**
+     * Set the selectedColor and inform parents
+     *
+     * @param {Object} colorInfo
+     */
+    _selectColor: function (colorInfo) {
+        this.selectedColor = colorInfo.color = this.colorToColorNames[colorInfo.color] || colorInfo.color;
+        this.trigger_up('color_picked', colorInfo);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -259,8 +268,7 @@ const ColorPaletteWidget = Widget.extend({
         this.$('button.selected').removeClass('selected');
         $(buttonEl).addClass('selected');
         const colorInfo = this._getButtonInfo(buttonEl);
-        this.selectedColor = colorInfo.color;
-        this.trigger_up('color_picked', colorInfo);
+        this._selectColor(colorInfo);
     },
     /**
      * Called when a color button is entered.
@@ -322,10 +330,8 @@ const ColorPaletteWidget = Widget.extend({
         });
         colorpicker.on('colorpicker:saved', this, ev => {
             this.$('button.selected').removeClass('selected');
-            this.selectedColor = this.colorToColorNames[ev.data.cssColor] || ev.data.cssColor;
-            this._addCustomColorButton(this.selectedColor, ['selected']);
-            this.trigger_up('color_picked', {
-                color: this.selectedColor,
+            this._selectColor({
+                color: ev.data.cssColor,
                 target: target,
             });
         });
