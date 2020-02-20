@@ -215,3 +215,52 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
                     self.assertEquals(line.qty_invoiced, 2.0, "The ordered (serv) sale line are totally invoiced (qty invoiced = the invoice lines)")
                 self.assertEquals(line.untaxed_amount_to_invoice, line.price_unit * line.qty_to_invoice, "Amount to invoice is now set as qty to invoice * unit price since no price change on invoice, for ordered products")
                 self.assertEquals(line.untaxed_amount_invoiced, line.price_unit * line.qty_invoiced, "Amount invoiced is now set as qty invoiced * unit price since no price change on invoice, for ordered products")
+
+    def test_invoice_with_sections(self):
+        """ Test create and invoice with sections from the SO, and check qty invoice/to invoice, and the related amounts """
+
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_customer_usd.id,
+            'partner_invoice_id': self.partner_customer_usd.id,
+            'partner_shipping_id': self.partner_customer_usd.id,
+            'pricelist_id': self.pricelist_usd.id,
+        })
+
+        SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
+        SaleOrderLine.create({
+            'name': 'Section',
+            'display_type': 'line_section',
+            'order_id': sale_order.id,
+        })
+        sol_prod_deliver = SaleOrderLine.create({
+            'name': self.product_order.name,
+            'product_id': self.product_order.id,
+            'product_uom_qty': 5,
+            'product_uom': self.product_order.uom_id.id,
+            'price_unit': self.product_order.list_price,
+            'order_id': sale_order.id,
+            'tax_id': False,
+        })
+
+        # Confirm the SO
+        sale_order.action_confirm()
+
+        sol_prod_deliver.write({'qty_delivered': 5.0})
+
+        # Context
+        self.context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.journal_sale.id,
+        }
+
+        # Let's do an invoice with invoiceable lines
+        payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
+            'advance_payment_method': 'delivered'
+        })
+        payment.create_invoices()
+
+        invoice = sale_order.invoice_ids[0]
+
+        self.assertEqual(invoice.line_ids[0].display_type, 'line_section')
