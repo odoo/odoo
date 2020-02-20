@@ -69,7 +69,7 @@ class AccountAnalyticLine(models.Model):
             return {}
 
         result = 0.0
-        prod_accounts = self.product_id.product_tmpl_id._get_product_accounts()
+        prod_accounts = self.product_id.product_tmpl_id.with_company(self.company_id)._get_product_accounts()
         unit = self.product_uom_id
         account = prod_accounts['expense']
         if not unit or self.product_id.uom_po_id.category_id.id != unit.category_id.id:
