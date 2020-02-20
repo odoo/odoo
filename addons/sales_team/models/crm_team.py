@@ -20,22 +20,17 @@ class CrmTeam(models.Model):
     _order = "sequence"
     _check_company_auto = True
 
-    @api.model
-    @api.returns('self', lambda value: value.id if value else False)
     def _get_default_team_id(self, user_id=None, domain=None):
-        if not user_id:
-            user_id = self.env.uid
-        team_id = self.env['crm.team'].search([
-            '|', ('user_id', '=', user_id), ('member_ids', '=', user_id),
-            '|', ('company_id', '=', False), ('company_id', '=', self.env.company.id)
+        user_id = user_id or self.env.uid
+        user_salesteam_id = self.env['res.users'].browse(user_id).sale_team_id.id
+        # Avoid searching on member_ids (+1 query) when we may have the user salesteam already in cache.
+        team = self.env['crm.team'].search([
+            ('company_id', 'in', [False, self.env.company.id]),
+            '|', ('user_id', '=', user_id), ('id', '=', user_salesteam_id),
         ], limit=1)
-        if not team_id and 'default_team_id' in self.env.context:
-            team_id = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
-        if not team_id:
-            team_domain = domain or []
-            default_team_id = self.env['crm.team'].search(team_domain, limit=1)
-            return default_team_id or self.env['crm.team']
-        return team_id
+        if not team and 'default_team_id' in self.env.context:
+            team = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
+        return team or self.env['crm.team'].search(domain or [], limit=1)
 
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
