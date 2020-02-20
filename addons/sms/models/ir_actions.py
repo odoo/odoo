@@ -12,7 +12,7 @@ class ServerActions(models.Model):
 
     state = fields.Selection(selection_add=[
         ('sms', 'Send SMS Text Message'),
-    ])
+    ], ondelete={'sms': 'cascade'})
     # SMS
     sms_template_id = fields.Many2one(
         'sms.template', 'SMS Template', ondelete='set null',

@@ -19,7 +19,9 @@ _logger = logging.getLogger(__name__)
 class AcquirerPaypal(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('paypal', 'Paypal')])
+    provider = fields.Selection(selection_add=[
+        ('paypal', 'Paypal')
+    ], ondelete={'paypal': 'set default'})
     paypal_email_account = fields.Char('Email', required_if_provider='paypal', groups='base.group_user')
     paypal_seller_account = fields.Char(
         'Merchant Account ID', groups='base.group_user',

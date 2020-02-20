@@ -14,7 +14,7 @@ class BarcodeRule(models.Model):
 
     type = fields.Selection(selection_add=[
         ('credit', 'Credit Card')
-    ])
+    ], ondelete={'credit': 'set default'})
 
 
 class PosMercuryConfiguration(models.Model):

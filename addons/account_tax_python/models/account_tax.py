@@ -8,7 +8,9 @@ from odoo.tools.safe_eval import safe_eval
 class AccountTaxPython(models.Model):
     _inherit = "account.tax"
 
-    amount_type = fields.Selection(selection_add=[('code', 'Python Code')])
+    amount_type = fields.Selection(selection_add=[
+        ('code', 'Python Code')
+    ], ondelete={'code': lambda recs: recs.write({'amount_type': 'percent', 'active': False})})
 
     python_compute = fields.Text(string='Python Code', default="result = price_unit * 0.10",
         help="Compute the amount of the tax by setting the variable 'result'.\n\n"
@@ -54,7 +56,9 @@ class AccountTaxPython(models.Model):
 class AccountTaxTemplatePython(models.Model):
     _inherit = 'account.tax.template'
 
-    amount_type = fields.Selection(selection_add=[('code', 'Python Code')])
+    amount_type = fields.Selection(selection_add=[
+        ('code', 'Python Code')
+    ], ondelete={'code': 'cascade'})
 
     python_compute = fields.Text(string='Python Code', default="result = price_unit * 0.10",
         help="Compute the amount of the tax by setting the variable 'result'.\n\n"

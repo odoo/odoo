@@ -17,7 +17,9 @@ _logger = logging.getLogger(__name__)
 class PaymentAcquirer(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('alipay', 'Alipay')])
+    provider = fields.Selection(selection_add=[
+        ('alipay', 'Alipay')
+    ], ondelete={'alipay': 'set default'})
     alipay_payment_method = fields.Selection([
         ('express_checkout', 'Express Checkout (only for Chinese Merchant)'),
         ('standard_checkout', 'Cross-border'),
