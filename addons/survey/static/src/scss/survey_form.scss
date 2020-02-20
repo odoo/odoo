@@ -1,10 +1,22 @@
-.o_survey_wrap {
-    min-height: 100%;
+/**********************************************************
+  Remove website navbar : Should be done in website survey
+       but we won't do a bridge module only for this.
+  TODO: SmartPeople Fixme - cleaner solution? be my guest!
+ **********************************************************/
+body.o_connected_user {
+    padding-top: 0px !important;
+}
+
+nav#oe_main_menu_navbar {
+    display: none;
 }
 
 /**********************************************************
                         Common Style
  **********************************************************/
+.o_survey_wrap {
+    min-height: 100%;
+}
 
 .o_survey_form, .o_survey_print, .o_survey_session_manage, .o_survey_quick_access {
     .o_survey_question_error {
