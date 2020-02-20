@@ -824,6 +824,12 @@ class Picking(models.Model):
             picking.package_level_ids.filtered(lambda p: not p.move_ids).unlink()
 
     def button_validate(self):
+        # Clean-up the context key at validation to avoid forcing the creation of immediate
+        # transfers.
+        ctx = dict(self.env.context)
+        ctx.pop('default_immediate_transfer', None)
+        self = self.with_context(ctx)
+
         # Sanity checks.
         pickings_without_moves = self.browse()
         pickings_without_quantities = self.browse()
