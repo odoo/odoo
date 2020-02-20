@@ -348,6 +348,7 @@ class account_payment(models.Model):
     @api.depends('invoice_ids', 'payment_type', 'partner_type', 'partner_id')
     def _compute_destination_account_id(self):
         for payment in self:
+            payment = payment.with_company(payment.company_id)
             if payment.invoice_ids:
                 payment.destination_account_id = payment.invoice_ids[0].mapped(
                     'line_ids.account_id').filtered(

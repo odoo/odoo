@@ -743,6 +743,7 @@ class AccountMove(models.Model):
     def _recompute_payment_terms_lines(self):
         ''' Compute the dynamic payment term lines of the journal entry.'''
         self.ensure_one()
+        self = self.with_company(self.company_id)
         in_draft_mode = self != self._origin
         today = fields.Date.context_today(self)
 
