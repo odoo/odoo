@@ -538,7 +538,7 @@ class Picking(models.Model):
     @api.multi
     def unlink(self):
         self.mapped('move_lines')._action_cancel()
-        self.mapped('move_lines').unlink() # Checks if moves are not done
+        self.with_context(prefetch_fields=False).mapped('move_lines').unlink()  # Checks if moves are not done
         return super(Picking, self).unlink()
 
     # Actions

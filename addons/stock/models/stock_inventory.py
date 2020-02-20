@@ -180,7 +180,7 @@ class Inventory(models.Model):
         # tde todo: clean after _generate_moves
         for inventory in self.filtered(lambda x: x.state not in ('done','cancel')):
             # first remove the existing stock moves linked to this inventory
-            inventory.mapped('move_ids').unlink()
+            inventory.with_context(prefetch_fields=False).mapped('move_ids').unlink()
             inventory.line_ids._generate_moves()
 
     def action_cancel_draft(self):
