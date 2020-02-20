@@ -26,6 +26,7 @@ class ProductTemplate(models.Model):
             new_product_category = self.env['product.category'].browse(vals.get('categ_id'))
 
             for product_template in self:
+                product_template = product_template.with_company(product_template.company_id)
                 valuation_impacted = False
                 if product_template.cost_method != new_product_category.property_cost_method:
                     valuation_impacted = True
