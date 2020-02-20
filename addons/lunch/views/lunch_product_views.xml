@@ -85,6 +85,7 @@
                         <group>
                             <field name="new_until"/>
                             <field name='description'/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
                 </sheet>
@@ -125,8 +126,8 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_kanban_record">
-                            <field name="image_128" class="o_lunch_image o_kanban_image_fill_left d-none d-md-block" options="{'placeholder': '/lunch/static/img/lunch.png'}" widget="image"/>
-                            <div class="oe_kanban_details">
+                            <field name="image_128" class="o_lunch_image o_kanban_image_fill_left d-none d-md-block" options="{'placeholder': '/lunch/static/img/lunch.png', 'size': [94, 94]}" widget="image"/>
+                            <div class="oe_kanban_details ml8">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title">
@@ -247,8 +248,11 @@
                             <field name="name"/>
                         </h1>
                     </div>
+                    <label for="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <group>
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="topping_label_1"/>
                             <field name="topping_quantity_1"/>
                         </group>
@@ -329,6 +333,17 @@
         </field>
     </record>
 
+    <record id="lunch_product_category_view_search" model="ir.ui.view">
+        <field name="name">lunch.product.category.search</field>
+        <field name="model">lunch.product.category</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
     <record id="lunch_product_action" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">lunch.product</field>
@@ -362,6 +377,7 @@
         <field name="name">Product Categories</field>
         <field name="res_model">lunch.product.category</field>
         <field name="view_mode">tree,form,kanban</field>
+        <field name="search_view_id" ref="lunch_product_category_view_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             Create a new product category
