@@ -115,12 +115,12 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="clearfix">
+                <div>
                     <div class="row">
-                        <div t-attf-class="col-5 ml-auto">
+                        <div t-attf-class="col-auto ml-auto">
                             <table class="table table-sm"  t-attf-style="border-color: {{table_border_color}}">
                                 <tr class="o_subtotal">
-                                    <td>
+                                    <td class="pr-5">
                                         <strong t-if="company.report_layout_id.name == 'Clean'" t-attf-style="color: {{company.secondary_color}}">Subtotal</strong>
                                         <strong t-else="" t-attf-style="color: {{company.primary_color}}">Subtotal</strong>
                                     </td>
