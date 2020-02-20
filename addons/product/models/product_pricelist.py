@@ -398,7 +398,7 @@ class PricelistItem(models.Model):
     categ_id = fields.Many2one(
         'product.category', 'Product Category', ondelete='cascade',
         help="Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise.")
-    min_quantity = fields.Integer(
+    min_quantity = fields.Float(
         'Min. Quantity', default=0,
         help="For the rule to apply, bought/sold quantity must be greater "
              "than or equal to the minimum quantity specified in this field.\n"
