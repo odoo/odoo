@@ -1068,7 +1068,7 @@ class AccountInvoice(models.Model):
         tax_grouped = {}
         round_curr = self.currency_id.round
         for line in self.invoice_line_ids:
-            if not line.account_id:
+            if not line.account_id or line.display_type:
                 continue
             price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity, line.product_id, self.partner_id)['taxes']
@@ -1159,7 +1159,7 @@ class AccountInvoice(models.Model):
     def invoice_line_move_line_get(self):
         res = []
         for line in self.invoice_line_ids:
-            if not line.account_id:
+            if not line.account_id or line.display_type:
                 continue
             if line.quantity==0:
                 continue
@@ -1787,6 +1787,9 @@ class AccountInvoiceLine(models.Model):
         """ Used in on_change to set taxes and price"""
         self.ensure_one()
 
+        if self.display_type or not self.account_id:
+            return
+
         # Keep only taxes of the company
         company_id = self.company_id or self.env.user.company_id
 
@@ -1877,7 +1880,7 @@ class AccountInvoiceLine(models.Model):
 
     @api.onchange('account_id')
     def _onchange_account_id(self):
-        if not self.account_id:
+        if not self.account_id or self.display_type:
             return
         if not self.product_id:
             fpos = self.invoice_id.fiscal_position_id
