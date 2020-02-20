@@ -154,7 +154,7 @@ class HrExpense(models.Model):
             self.unit_amount = self.product_id.price_compute('standard_price')[self.product_id.id]
             self.product_uom_id = self.product_id.uom_id
             self.tax_ids = self.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == self.company_id)  # taxes only from the same company
-            account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
+            account = self.product_id.product_tmpl_id.with_company(self.company_id)._get_product_accounts()['expense']
             if account:
                 self.account_id = account
 
