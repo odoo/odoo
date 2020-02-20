@@ -13,7 +13,9 @@ from odoo.addons.stock.models.stock_rule import ProcurementException
 class StockRule(models.Model):
     _inherit = 'stock.rule'
 
-    action = fields.Selection(selection_add=[('buy', 'Buy')])
+    action = fields.Selection(selection_add=[
+        ('buy', 'Buy')
+    ], ondelete={'buy': 'cascade'})
 
     def _get_message_dict(self):
         message_dict = super(StockRule, self)._get_message_dict()
