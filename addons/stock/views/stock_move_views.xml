@@ -400,14 +400,6 @@
             </field>
         </record>
 
-
-        <record id="act_product_stock_move_open" model="ir.actions.act_window">
-            <field name="context">{'search_default_product_id': active_id, 'default_product_id': active_id}</field>
-            <field name="name">Moves</field>
-            <field name="res_model">stock.move</field>
-            <field name="view_id" ref="stock.view_move_tree"/>
-        </record>
-
         <record id="stock_move_action" model="ir.actions.act_window">
             <field name="name">Stock Moves</field>
             <field name="res_model">stock.move</field>
@@ -580,31 +572,6 @@
             </field>
         </record>
 
-        <record id="action_receipt_picking_move" model="ir.actions.act_window">
-            <field name="name">Incoming  Products</field>
-            <field name="res_model">stock.move</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_mode">tree,kanban,form</field>
-            <field name="domain" eval="[('picking_id.picking_type_id.code','=','incoming'), ('location_id.usage','!=','internal'), ('location_dest_id.usage', '=', 'internal')]"/>
-            <field name="view_ids" eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('view_move_tree_receipt_picking')}),
-                (0, 0, {'view_mode': 'kanban', 'view_id': ref('stock_move_view_kanban')})]"/>
-            <field name="context">{'product_receive': True, 'search_default_future': True}</field>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Register a product receipt
-              </p><p>
-                Here you can receive individual products, no matter what
-                purchase order or picking order they come from. You will find
-                the list of all products you are waiting for.
-              </p><p>
-                Once you receive an order, you can filter based on the name of
-                the vendor or the purchase order reference. Then you can confirm
-                all products received using the buttons on the right of each line.
-              </p>
-            </field>
-        </record>
-
-<menuitem action="stock_move_action" id="stock_move_menu" parent="stock.menu_warehouse_report" sequence="140" groups="base.group_no_one"/>
+        <menuitem action="stock_move_action" id="stock_move_menu" parent="stock.menu_warehouse_report" sequence="140" groups="base.group_no_one"/>
 
 </odoo>
