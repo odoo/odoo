@@ -251,6 +251,9 @@ class MailActivity(models.Model):
             )
             message |= record.message_ids[0]
 
+            # Removing attachments res_id to prevent unlinking it
+            # We still want them in the message
+            self.env['ir.attachment'].search([('res_model', '=', self._name), ('res_id', 'in', self.ids)]).write({'res_id': False})
         self.unlink()
         return message.ids and message.ids[0] or False
 
