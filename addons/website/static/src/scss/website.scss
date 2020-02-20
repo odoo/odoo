@@ -25,6 +25,10 @@ $-font-numbers: (
     // customized by themes, the user or anything else (so there is no file to
     // parse to get them). Those will be printed here as CSS variables.
 
+    // 0) does this theme enforce primary = alpha or secondary = beta
+    --is-alpha-primary: #{$-is-alpha-primary};
+    --is-beta-secondary: #{$-is-beta-secondary};
+
     // 1) Handle default values
     --header-font-size: #{$font-size-base};
 
