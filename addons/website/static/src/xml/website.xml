@@ -76,4 +76,17 @@
         </div>
         <t t-call="website.dependencies"/>
     </div>
+
+    <t t-name="website.oe_applications_menu">
+        <t t-as="menu" t-foreach="menu_data.children">
+            <a role="menuitem" class="dropdown-item"
+               t-att-data-action-id="menu.action ? menu.action.split(',')[1] : undefined"
+               t-att-data-action-model="menu.action ? menu.action.split(',')[0] : undefined"
+               t-att-data-menu="menu.id"
+               t-att-data-menu-xmlid="menu.xmlid"
+               t-att-href="_.str.sprintf('/web#menu_id=%s&amp;action=%s', menu.id, menu.action ? menu.action.split(',')[1] : '')">
+                <span class="oe_menu_text" t-esc="menu.name"/>
+            </a>
+        </t>
+    </t>
 </templates>
