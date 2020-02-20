@@ -830,6 +830,12 @@ class Picking(models.Model):
         if not self.move_lines and not self.move_line_ids:
             raise UserError(_('Please add some items to move.'))
 
+        # Clean-up the context key at validation to avoid forcing the creation of immediate
+        # transfers.
+        ctx = dict(self.env.context)
+        ctx.pop('default_immediate_transfer', None)
+        self = self.with_context(ctx)
+
         # add user as a follower
         self.message_subscribe([self.env.user.partner_id.id])
 
