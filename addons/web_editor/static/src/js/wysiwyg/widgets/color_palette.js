@@ -171,11 +171,7 @@ const ColorPaletteWidget = Widget.extend({
         if (this.options.excluded.includes('custom')) {
             return;
         }
-        const existingColors = new Set(this.summernoteCustomColorsArray.concat(
-            [...this.el.querySelectorAll('.o_custom_color')].map(el => {
-                return ColorpickerDialog.normalizeCSSColor(el.style.backgroundColor);
-            })
-        ));
+        const existingColors = new Set(this.summernoteCustomColorsArray);
         this.trigger_up('get_custom_colors', {
             onSuccess: (colors) => {
                 colors.forEach(color => {
@@ -265,8 +261,6 @@ const ColorPaletteWidget = Widget.extend({
      */
     _onColorButtonClick: function (ev) {
         const buttonEl = ev.currentTarget;
-        this.$('button.selected').removeClass('selected');
-        $(buttonEl).addClass('selected');
         const colorInfo = this._getButtonInfo(buttonEl);
         this._selectColor(colorInfo);
     },
@@ -307,7 +301,6 @@ const ColorPaletteWidget = Widget.extend({
      * @param {Event} ev
      */
     _onColorResetButtonClick: function (ev) {
-        this.$('button.selected').removeClass('selected');
         this.selectedColor = false;
         this.trigger_up('color_reset', {
             target: ev.target,
@@ -329,7 +322,6 @@ const ColorPaletteWidget = Widget.extend({
             defaultColor: selectedColor,
         });
         colorpicker.on('colorpicker:saved', this, ev => {
-            this.$('button.selected').removeClass('selected');
             this._selectColor({
                 color: ev.data.cssColor,
                 target: target,
