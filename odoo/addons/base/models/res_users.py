@@ -213,9 +213,6 @@ class Users(models.Model):
         default_user = self.env.ref('base.default_user', raise_if_not_found=False)
         return (default_user or self.env['res.users']).sudo().groups_id
 
-    def _companies_count(self):
-        return self.env['res.company'].sudo().search_count([])
-
     @api.model
     def _get_default_image(self):
         """ Get a default image when the user is created without image
@@ -249,7 +246,7 @@ class Users(models.Model):
     login_date = fields.Datetime(related='log_ids.create_date', string='Latest authentication', readonly=False)
     share = fields.Boolean(compute='_compute_share', compute_sudo=True, string='Share User', store=True,
          help="External user with limited access, created only for the purpose of sharing data.")
-    companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies", default=_companies_count)
+    companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies")
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
 
     # Special behavior for this field: res.company.search() will only return the companies
@@ -363,9 +360,7 @@ class Users(models.Model):
             user.share = not user.has_group('base.group_user')
 
     def _compute_companies_count(self):
-        companies_count = self._companies_count()
-        for user in self:
-            user.companies_count = companies_count
+        self.companies_count = self.env['res.company'].sudo().search_count([])
 
     @api.depends('tz')
     def _compute_tz_offset(self):
