@@ -172,6 +172,7 @@ class Repair(models.Model):
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
+        self = self.with_company(self.company_id)
         if not self.partner_id:
             self.address_id = False
             self.partner_invoice_id = False
