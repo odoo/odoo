@@ -32,8 +32,8 @@ def initialize_sys_path():
     Setup the addons path ``odoo.addons.__path__`` with various defaults
     and explicit directories.
     """
-    if getattr(initialize_sys_path, 'called', False): # only initialize once
-        return
+    # if getattr(initialize_sys_path, 'called', False): # only initialize once
+    #    return
     initialize_sys_path.called = True
 
     # hook odoo.addons on data dir
