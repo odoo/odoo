@@ -90,7 +90,7 @@
                             <group>
                                 <group>
                                     <field name="sequence"/>
-                                    <field name="consumption" attrs="{'invisible': [('type','!=','normal')]}"/>
+                                    <field name="consumption" attrs="{'invisible': [('type','!=','normal')], 'required': [('type','=','normal')]}"/>
                                 </group>
                                 <group>
                                     <field name="ready_to_produce" attrs="{'invisible': [('type','!=','normal')]}" string="Manufacturing Readiness"/>
