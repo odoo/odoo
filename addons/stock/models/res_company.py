@@ -124,8 +124,7 @@ class Company(models.Model):
     @api.model
     def create_missing_transit_location(self):
         company_without_transit = self.env['res.company'].search([('internal_transit_location_id', '=', False)])
-        for company in company_without_transit:
-            company._create_transit_location()
+        company_without_transit._create_transit_location()
 
     @api.model
     def create_missing_inventory_loss_location(self):
@@ -133,8 +132,7 @@ class Company(models.Model):
         inventory_loss_product_template_field = self.env['ir.model.fields'].search([('model','=','product.template'),('name','=','property_stock_inventory')])
         companies_having_property = self.env['ir.property'].search([('fields_id', '=', inventory_loss_product_template_field.id)]).mapped('company_id')
         company_without_property = company_ids - companies_having_property
-        for company in company_without_property:
-            company._create_inventory_loss_location()
+        company_without_property._create_inventory_loss_location()
 
     @api.model
     def create_missing_production_location(self):
@@ -142,16 +140,14 @@ class Company(models.Model):
         production_product_template_field = self.env['ir.model.fields'].search([('model','=','product.template'),('name','=','property_stock_production')])
         companies_having_property = self.env['ir.property'].search([('fields_id', '=', production_product_template_field.id)]).mapped('company_id')
         company_without_property = company_ids - companies_having_property
-        for company in company_without_property:
-            company._create_production_location()
+        company_without_property._create_production_location()
 
     @api.model
     def create_missing_scrap_location(self):
         company_ids  = self.env['res.company'].search([])
         companies_having_scrap_loc = self.env['stock.location'].search([('scrap_location', '=', True)]).mapped('company_id')
         company_without_property = company_ids - companies_having_scrap_loc
-        for company in company_without_property:
-            company._create_scrap_location()
+        company_without_property._create_scrap_location()
 
     @api.model
     def create_missing_scrap_sequence(self):
