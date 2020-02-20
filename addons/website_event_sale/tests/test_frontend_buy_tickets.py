@@ -7,6 +7,7 @@ from datetime import timedelta
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.fields import Datetime
 
+
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo):
 

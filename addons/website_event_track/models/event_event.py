@@ -18,15 +18,6 @@ class EventType(models.Model):
             self.website_track_proposal = False
 
 
-class EventMenu(models.Model):
-    _name = "website.event.menu"
-    _description = "Website Event Menu"
-
-    menu_id = fields.Many2one('website.menu', string='Menu', ondelete='cascade')
-    event_id = fields.Many2one('event.event', string='Event', ondelete='cascade')
-    menu_type = fields.Selection([('track', 'Event Tracks Menus'), ('track_proposal', 'Event Proposals Menus')])
-
-
 class Event(models.Model):
     _inherit = "event.event"
 
@@ -59,8 +50,13 @@ class Event(models.Model):
         for event in self:
             event.sponsor_count = result.get(event.id, 0)
 
-    def _toggle_create_website_menus(self, vals):
-        super(Event, self)._toggle_create_website_menus(vals)
+    @api.depends('track_ids.tag_ids', 'track_ids.tag_ids.color')
+    def _compute_tracks_tag_ids(self):
+        for event in self:
+            event.tracks_tag_ids = event.track_ids.mapped('tag_ids').filtered(lambda tag: tag.color != 0).ids
+
+    def _update_website_menus(self, vals):
+        super(Event, self)._update_website_menus(vals)
         for event in self:
             if 'website_track' in vals:
                 if vals['website_track']:
@@ -96,11 +92,6 @@ class Event(models.Model):
         self.ensure_one()
         res = [(_('Talk Proposals'), '/event/%s/track_proposal' % slug(self), False, 'track_proposal')]
         return res
-
-    @api.depends('track_ids.tag_ids', 'track_ids.tag_ids.color')
-    def _compute_tracks_tag_ids(self):
-        for event in self:
-            event.tracks_tag_ids = event.track_ids.mapped('tag_ids').filtered(lambda tag: tag.color != 0).ids
 
     @api.onchange('event_type_id')
     def _onchange_type(self):
