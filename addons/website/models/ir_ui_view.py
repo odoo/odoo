@@ -408,7 +408,8 @@ class View(models.Model):
                 languages=request.env['res.lang'].get_available(),
                 translatable=translatable,
                 editable=editable,
-                menu_data=self.env['ir.ui.menu'].load_menus_root() if request.website.is_user() else None,
+                # retrocompatibility, remove me in master
+                menu_data={'children': []} if request.website.is_user() else None,
             ))
 
         return qcontext
