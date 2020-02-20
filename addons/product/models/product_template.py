@@ -17,27 +17,15 @@ class ProductTemplate(models.Model):
     _description = "Product Template"
     _order = "name"
 
+    @tools.ormcache()
     def _get_default_category_id(self):
-        if self._context.get('categ_id') or self._context.get('default_categ_id'):
-            return self._context.get('categ_id') or self._context.get('default_categ_id')
-        category = self.env.ref('product.product_category_all', raise_if_not_found=False)
-        if not category:
-            category = self.env['product.category'].search([], limit=1)
-        if category:
-            return category.id
-        else:
-            err_msg = _('You must define at least one product category in order to be able to create products.')
-            redir_msg = _('Go to Internal Categories')
-            raise RedirectWarning(err_msg, self.env.ref('product.product_category_action_form').id, redir_msg)
+        # Deletion forbidden (at least through unlink)
+        return self.env.ref('product.product_category_all')
 
+    @tools.ormcache()
     def _get_default_uom_id(self):
-        return self.env["uom.uom"].search([], limit=1, order='id').id
-
-    def _get_default_weight_uom(self):
-        return self._get_weight_uom_name_from_ir_config_parameter()
-
-    def _get_default_volume_uom(self):
-        return self._get_volume_uom_name_from_ir_config_parameter()
+        # Deletion forbidden (at least through unlink)
+        return self.env.ref('uom.product_uom_unit')
 
     def _read_group_categ_id(self, categories, domain, order):
         category_ids = self.env.context.get('default_categ_id')
@@ -97,11 +85,11 @@ class ProductTemplate(models.Model):
 
     volume = fields.Float(
         'Volume', compute='_compute_volume', inverse='_set_volume', digits='Volume', store=True)
-    volume_uom_name = fields.Char(string='Volume unit of measure label', compute='_compute_volume_uom_name', default=_get_default_volume_uom)
+    volume_uom_name = fields.Char(string='Volume unit of measure label', compute='_compute_volume_uom_name')
     weight = fields.Float(
         'Weight', compute='_compute_weight', digits='Stock Weight',
         inverse='_set_weight', store=True)
-    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)
+    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name')
 
     sale_ok = fields.Boolean('Can be Sold', default=True)
     purchase_ok = fields.Boolean('Can be Purchased', default=True)
