@@ -21,6 +21,11 @@ class Event(models.Model):
     _name = 'event.event'
     _inherit = ['event.event', 'website.seo.metadata', 'website.published.multi.mixin', 'website.cover_properties.mixin']
 
+    def _default_cover_properties(self):
+        res = super()._default_cover_properties()
+        res['opacity'] = '0.4'
+        return res
+
     # description
     subtitle = fields.Char('Event Subtitle', translate=True)
     # registration
@@ -56,9 +61,15 @@ class Event(models.Model):
         if self.event_type_id:
             self.website_menu = self.event_type_id.website_menu
 
-    def _default_cover_properties(self):
-        res = super()._default_cover_properties()
-        res['opacity'] = '0.4'
+    @api.model
+    def create(self, vals):
+        res = super(Event, self).create(vals)
+        res._update_website_menus(vals)
+        return res
+
+    def write(self, vals):
+        res = super(Event, self).write(vals)
+        self._update_website_menus(vals)
         return res
 
     def _get_menu_entries(self):
@@ -71,7 +82,7 @@ class Event(models.Model):
             (_('Register'), '/event/%s/register' % slug(self), False),
         ]
 
-    def _toggle_create_website_menus(self, vals):
+    def _update_website_menus(self, vals):
         for event in self:
             if 'website_menu' in vals:
                 if event.menu_id and not event.website_menu:
@@ -82,17 +93,6 @@ class Event(models.Model):
                         event.menu_id = root_menu
                     for sequence, (name, url, xml_id) in enumerate(event._get_menu_entries()):
                         event._create_menu(sequence, name, url, xml_id)
-
-    @api.model
-    def create(self, vals):
-        res = super(Event, self).create(vals)
-        res._toggle_create_website_menus(vals)
-        return res
-
-    def write(self, vals):
-        res = super(Event, self).write(vals)
-        self._toggle_create_website_menus(vals)
-        return res
 
     def _create_menu(self, sequence, name, url, xml_id):
         if not url:
@@ -106,12 +106,6 @@ class Event(models.Model):
             'website_id': self.website_id.id,
         })
         return menu
-
-    def google_map_img(self, zoom=8, width=298, height=298):
-        self.ensure_one()
-        if self.address_id:
-            return self.sudo().address_id.google_map_img(zoom=zoom, width=width, height=height)
-        return None
 
     def google_map_link(self, zoom=8):
         self.ensure_one()
