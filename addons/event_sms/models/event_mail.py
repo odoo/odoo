@@ -7,7 +7,9 @@ from odoo import api, fields, models
 class EventTypeMail(models.Model):
     _inherit = 'event.type.mail'
 
-    notification_type = fields.Selection(selection_add=[('sms', 'SMS')])
+    notification_type = fields.Selection(selection_add=[
+        ('sms', 'SMS')
+    ], ondelete={'sms': 'set default'})
     sms_template_id = fields.Many2one(
         'sms.template', string='SMS Template',
         domain=[('model', '=', 'event.registration')], ondelete='restrict',
@@ -21,7 +23,9 @@ class EventTypeMail(models.Model):
 class EventMailScheduler(models.Model):
     _inherit = 'event.mail'
 
-    notification_type = fields.Selection(selection_add=[('sms', 'SMS')])
+    notification_type = fields.Selection(selection_add=[
+        ('sms', 'SMS')
+    ], ondelete={'sms': 'set default'})
     sms_template_id = fields.Many2one(
         'sms.template', string='SMS Template',
         domain=[('model', '=', 'event.registration')], ondelete='restrict',

@@ -24,7 +24,9 @@ INT_CURRENCIES = [
 class PaymentAcquirerStripe(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('stripe', 'Stripe')])
+    provider = fields.Selection(selection_add=[
+        ('stripe', 'Stripe')
+    ], ondelete={'stripe': 'set default'})
     stripe_secret_key = fields.Char(required_if_provider='stripe', groups='base.group_user')
     stripe_publishable_key = fields.Char(required_if_provider='stripe', groups='base.group_user')
     stripe_image_url = fields.Char(

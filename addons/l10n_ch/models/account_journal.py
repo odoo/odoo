@@ -14,7 +14,9 @@ class AccountJournal(models.Model):
 
     # creation of bank journals by giving the account number, allow craetion of the
     l10n_ch_postal = fields.Char('Client Number', related='bank_account_id.l10n_ch_postal', readonly=False)
-    invoice_reference_model = fields.Selection(selection_add=[('ch', 'Switzerland')])
+    invoice_reference_model = fields.Selection(selection_add=[
+        ('ch', 'Switzerland')
+    ], ondelete={'ch': lambda recs: recs.write({'invoice_reference_model': 'odoo'})})
 
     @api.model
     def create(self, vals):

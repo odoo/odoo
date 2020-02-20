@@ -14,7 +14,9 @@ class MailingTrace(models.Model):
     _inherit = 'mailing.trace'
     CODE_SIZE = 3
 
-    trace_type = fields.Selection(selection_add=[('sms', 'SMS')])
+    trace_type = fields.Selection(selection_add=[
+        ('sms', 'SMS')
+    ], ondelete={'sms': 'set default'})
     sms_sms_id = fields.Many2one('sms.sms', string='SMS', index=True, ondelete='set null')
     sms_sms_id_int = fields.Integer(
         string='SMS ID (tech)',

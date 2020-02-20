@@ -14,7 +14,9 @@ from odoo.exceptions import UserError
 class IrActionsActWindowView(models.Model):
     _inherit = 'ir.actions.act_window.view'
 
-    view_mode = fields.Selection(selection_add=[('qweb', 'QWeb')])
+    view_mode = fields.Selection(selection_add=[
+        ('qweb', 'QWeb')
+    ], ondelete={'qweb': 'cascade'})
 
 
 class Base(models.AbstractModel):

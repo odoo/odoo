@@ -47,7 +47,9 @@ CURRENCY_CODE_MAPS = {
 class AcquirerAdyen(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('adyen', 'Adyen')])
+    provider = fields.Selection(selection_add=[
+        ('adyen', 'Adyen')
+    ], ondelete={'adyen': 'set default'})
     adyen_merchant_account = fields.Char('Merchant Account', required_if_provider='adyen', groups='base.group_user')
     adyen_skin_code = fields.Char('Skin Code', required_if_provider='adyen', groups='base.group_user')
     adyen_skin_hmac_key = fields.Char('Skin HMAC Key', required_if_provider='adyen', groups='base.group_user')

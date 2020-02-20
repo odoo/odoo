@@ -18,7 +18,9 @@ _logger = logging.getLogger(__name__)
 class PaymentAcquirerPayulatam(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('payulatam', 'PayU Latam')])
+    provider = fields.Selection(selection_add=[
+        ('payulatam', 'PayU Latam')
+    ], ondelete={'payulatam': 'set default'})
     payulatam_merchant_id = fields.Char(string="PayU Latam Merchant ID", required_if_provider='payulatam', groups='base.group_user')
     payulatam_account_id = fields.Char(string="PayU Latam Account ID", required_if_provider='payulatam', groups='base.group_user')
     payulatam_api_key = fields.Char(string="PayU Latam API Key", required_if_provider='payulatam', groups='base.group_user')

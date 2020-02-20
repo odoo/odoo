@@ -17,7 +17,7 @@ class ServerActions(models.Model):
         ('email', 'Send Email'),
         ('followers', 'Add Followers'),
         ('next_activity', 'Create Next Activity'),
-    ])
+        ], ondelete={'email': 'cascade', 'followers': 'cascade', 'next_activity': 'cascade'})
     # Followers
     partner_ids = fields.Many2many('res.partner', string='Add Followers')
     channel_ids = fields.Many2many('mail.channel', string='Add Channels')

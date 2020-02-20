@@ -7,7 +7,9 @@ from odoo.exceptions import UserError
 class IrModelFields(models.Model):
     _inherit = 'ir.model.fields'
 
-    ttype = fields.Selection(selection_add=[('serialized', 'serialized')])
+    ttype = fields.Selection(selection_add=[
+        ('serialized', 'serialized'),
+    ], ondelete={'serialized': 'cascade'})
     serialization_field_id = fields.Many2one('ir.model.fields', string='Serialization Field',
         ondelete='cascade', domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]",
         help="If set, this field will be stored in the sparse structure of the "

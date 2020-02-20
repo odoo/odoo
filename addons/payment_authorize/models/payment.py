@@ -19,7 +19,9 @@ _logger = logging.getLogger(__name__)
 class PaymentAcquirerAuthorize(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('authorize', 'Authorize.Net')])
+    provider = fields.Selection(selection_add=[
+        ('authorize', 'Authorize.Net')
+    ], ondelete={'authorize': 'set default'})
     authorize_login = fields.Char(string='API Login Id', required_if_provider='authorize', groups='base.group_user')
     authorize_transaction_key = fields.Char(string='API Transaction Key', required_if_provider='authorize', groups='base.group_user')
     authorize_signature_key = fields.Char(string='API Signature Key', required_if_provider='authorize', groups='base.group_user')

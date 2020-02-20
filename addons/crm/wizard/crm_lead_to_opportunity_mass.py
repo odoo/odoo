@@ -24,7 +24,9 @@ class Lead2OpportunityMassConvert(models.TransientModel):
     deduplicate = fields.Boolean('Apply deduplication', default=True, help='Merge with existing leads/opportunities of each partner')
     action = fields.Selection(selection_add=[
         ('each_exist_or_create', 'Use existing partner or create'),
-    ], string='Related Customer')
+    ], string='Related Customer', ondelete={
+        'each_exist_or_create': lambda recs: recs.write({'action': 'exist'}),
+    })
     force_assignment = fields.Boolean(default=False)
 
     @api.depends('duplicated_lead_ids')

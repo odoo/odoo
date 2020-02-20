@@ -25,7 +25,9 @@ _logger = logging.getLogger(__name__)
 class PaymentAcquirerOgone(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('ogone', 'Ingenico')])
+    provider = fields.Selection(selection_add=[
+        ('ogone', 'Ingenico')
+    ], ondelete={'ogone': 'set default'})
     ogone_pspid = fields.Char('PSPID', required_if_provider='ogone', groups='base.group_user')
     ogone_userid = fields.Char('API User ID', required_if_provider='ogone', groups='base.group_user')
     ogone_password = fields.Char('API User Password', required_if_provider='ogone', groups='base.group_user')

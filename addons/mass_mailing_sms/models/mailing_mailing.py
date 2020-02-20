@@ -21,7 +21,9 @@ class Mailing(models.Model):
         return res
 
     # mailing options
-    mailing_type = fields.Selection(selection_add=[('sms', 'SMS')])
+    mailing_type = fields.Selection(selection_add=[
+        ('sms', 'SMS')
+    ], ondelete={'sms': 'set default'})
     # sms options
     body_plaintext = fields.Text('SMS Body', compute='_compute_body_plaintext', store=True, readonly=False)
     sms_template_id = fields.Many2one('sms.template', string='SMS Template', ondelete='set null')

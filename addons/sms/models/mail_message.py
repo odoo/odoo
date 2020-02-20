@@ -14,7 +14,9 @@ class MailMessage(models.Model):
     gateway. """
     _inherit = 'mail.message'
 
-    message_type = fields.Selection(selection_add=[('sms', 'SMS')])
+    message_type = fields.Selection(selection_add=[
+        ('sms', 'SMS')
+    ], ondelete={'sms': lambda recs: recs.write({'message_type': 'email'})})
     has_sms_error = fields.Boolean(
         'Has SMS error', compute='_compute_has_sms_error', search='_search_has_sms_error',
         help='Has error')

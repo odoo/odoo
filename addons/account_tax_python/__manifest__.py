@@ -17,5 +17,4 @@ A tax defined as python code consists of two snippets of python code which are e
     'data': [
         'views/account_tax_views.xml',
     ],
-    'uninstall_hook': "uninstall_hook",
 }

@@ -7,7 +7,9 @@ from odoo import api, fields, models
 class Channel(models.Model):
     _inherit = 'slide.channel'
 
-    enroll = fields.Selection(selection_add=[('payment', 'On payment')])
+    enroll = fields.Selection(selection_add=[
+        ('payment', 'On payment')
+    ], ondelete={'payment': lambda recs: recs.write({'enroll': 'invite'})})
     product_id = fields.Many2one('product.product', 'Product', index=True)
     product_sale_revenues = fields.Monetary(
         string='Total revenues', compute='_compute_product_sale_revenues',

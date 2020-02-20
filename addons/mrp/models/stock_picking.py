@@ -7,7 +7,9 @@ from odoo import fields, models
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
 
-    code = fields.Selection(selection_add=[('mrp_operation', 'Manufacturing')])
+    code = fields.Selection(selection_add=[
+        ('mrp_operation', 'Manufacturing')
+    ], ondelete={'mrp_operation': 'cascade'})
     count_mo_todo = fields.Integer(string="Number of Manufacturing Orders to Process",
         compute='_get_mo_count')
     count_mo_waiting = fields.Integer(string="Number of Manufacturing Orders Waiting",

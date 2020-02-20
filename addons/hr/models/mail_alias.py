@@ -7,7 +7,9 @@ from odoo import fields, models, tools, _
 class Alias(models.Model):
     _inherit = 'mail.alias'
 
-    alias_contact = fields.Selection(selection_add=[('employees', 'Authenticated Employees')])
+    alias_contact = fields.Selection(selection_add=[
+        ('employees', 'Authenticated Employees'),
+    ], ondelete={'employees': 'cascade'})
 
     def _get_alias_bounced_body_fallback(self, message_dict):
         if self.alias_contact == 'employees':
