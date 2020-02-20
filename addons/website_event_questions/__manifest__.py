@@ -7,6 +7,7 @@
     'version': '1.1',
     'depends': ['website_event'],
     'data': [
+        'views/assets.xml',
         'views/event_views.xml',
         'views/event_templates.xml',
         'security/ir.model.access.csv',
