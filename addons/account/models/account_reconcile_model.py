@@ -336,7 +336,7 @@ class AccountReconcileModel(models.Model):
                 open_balance_dict = False
             else:
                 balance = total_residual - line_residual
-                partner = partner or st_line.partner_id
+                partner = (partner or st_line.partner_id).with_company(st_line.company_id)
                 open_balance_dict = {
                     'name': '%s : %s' % (st_line.name, _('Open Balance')),
                     'account_id': balance < 0 and partner.property_account_payable_id.id or partner.property_account_receivable_id.id,
