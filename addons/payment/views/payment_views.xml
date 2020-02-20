@@ -117,7 +117,11 @@
                                 </div>
                                 <div class="o_payment_acquirer_bottom">
                                     <t t-if="installed">
+<<<<<<< HEAD
                                         <field name="state" widget="label_selection" options="{'classes': {'enabled': 'success', 'test': 'warning', 'disabled' : 'danger'}}"/>
+=======
+                                        <field name="environment" widget="label_selection" options="{'classes': {'test': 'warning', 'production': 'success'}}" attrs="{'invisible': [('provider', '=', 'transfer')]}"/>
+>>>>>>> e9520f21c00... temp
                                     </t>
                                     <button t-if="!installed and !selection_mode and !to_buy" type="object" class="btn btn-secondary float-right" name="button_immediate_install">Install</button>
                                     <t t-if="!installed and to_buy">
