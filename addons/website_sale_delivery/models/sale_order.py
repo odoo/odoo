@@ -37,6 +37,7 @@ class SaleOrder(models.Model):
             self._remove_delivery_line()
             return True
         else:
+            self = self.with_company(self.company_id)
             # attempt to use partner's preferred carrier
             if not force_carrier_id and self.partner_shipping_id.property_delivery_carrier_id:
                 force_carrier_id = self.partner_shipping_id.property_delivery_carrier_id.id
