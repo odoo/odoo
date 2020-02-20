@@ -43,7 +43,9 @@ CURRENCY_CODES = {
 class AcquirerSips(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('sips', 'Sips')])
+    provider = fields.Selection(selection_add=[
+        ('sips', 'Sips')
+    ], ondelete={'sips': 'set default'})
     sips_merchant_id = fields.Char('Merchant ID', help="Used for production only", required_if_provider='sips', groups='base.group_user')
     sips_secret = fields.Char('Secret Key', size=64, required_if_provider='sips', groups='base.group_user')
     sips_test_url = fields.Char("Test url", required_if_provider='sips', default='https://payment-webinit.simu.sips-atos.com/paymentInit')

@@ -38,7 +38,11 @@ class PriceRule(models.Model):
 class ProviderGrid(models.Model):
     _inherit = 'delivery.carrier'
 
-    delivery_type = fields.Selection(selection_add=[('base_on_rule', 'Based on Rules')])
+    delivery_type = fields.Selection(selection_add=[
+        ('base_on_rule', 'Based on Rules'),
+        ], ondelete={'base_on_rule': lambda recs: recs.write({
+            'delivery_type': 'fixed', 'fixed_price': 0,
+        })})
     price_rule_ids = fields.One2many('delivery.price.rule', 'carrier_id', 'Pricing Rules', copy=True)
 
     def base_on_rule_rate_shipment(self, order):
