@@ -298,7 +298,7 @@ class PosSession(models.Model):
         self._check_if_no_draft_orders()
         if self.update_stock_at_closing:
             self._create_picking_at_end_of_session()
-        self._create_account_move()
+        self.with_company(self.company_id)._create_account_move()
         if self.move_id.line_ids:
             self.move_id.post()
             # Set the uninvoiced orders' state to 'done'
