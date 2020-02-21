@@ -170,7 +170,7 @@ class ResPartner(models.Model):
         """
         Check Angolan VAT number.
         """
-        return 10 <= len(vat) <= 15 or vat == '999999999'
+        return 10 <= len(vat) <= 15
 
     def check_vat_ch(self, vat):
         '''
