@@ -407,7 +407,10 @@ class ProcurementGroup(models.Model):
             procurement.values.setdefault('company_id', self.env.company)
             procurement.values.setdefault('priority', '1')
             procurement.values.setdefault('date_planned', fields.Datetime.now())
-            if float_is_zero(procurement.product_qty, precision_rounding=procurement.product_uom.rounding):
+            if (
+                procurement.product_id.type not in ('consu', 'product') or
+                float_is_zero(procurement.product_qty, precision_rounding=procurement.product_uom.rounding)
+            ):
                 continue
             rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
             if not rule:
