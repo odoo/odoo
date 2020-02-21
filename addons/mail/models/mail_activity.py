@@ -464,6 +464,19 @@ class MailActivity(models.Model):
         # marking as 'done'
         messages = self.env['mail.message']
         next_activities_values = []
+
+        # Search for all attachments linked to the activities we are about to unlink. This way, we
+        # can link them to the message posted and prevent their deletion.
+        attachments = self.env['ir.attachment'].search_read([
+            ('res_model', '=', self._name),
+            ('res_id', 'in', self.ids),
+        ], ['id', 'res_id'])
+
+        activity_attachments = defaultdict(list)
+        for attachment in attachments:
+            activity_id = attachment['res_id']
+            activity_attachments[activity_id].append(attachment['id'])
+
         for activity in self:
             # extract value to generate next activities
             if activity.force_next:
@@ -494,7 +507,19 @@ class MailActivity(models.Model):
                 mail_activity_type_id=activity.activity_type_id.id,
                 attachment_ids=[(4, attachment_id) for attachment_id in attachment_ids] if attachment_ids else [],
             )
-            messages |= record.message_ids[0]
+
+            # Moving the attachments in the message
+            # TODO: Fix void res_id on attachment when you create an activity with an image
+            # directly, see route /web_editor/attachment/add
+            activity_message = record.message_ids[0]
+            message_attachments = self.env['ir.attachment'].browse(activity_attachments[activity.id])
+            if message_attachments:
+                message_attachments.write({
+                    'res_id': activity_message.id,
+                    'res_model': activity_message._name,
+                })
+                activity_message.attachment_ids = message_attachments
+            messages |= activity_message
 
         next_activities = self.env['mail.activity'].create(next_activities_values)
         self.unlink()  # will unlink activity, dont access `self` after that
