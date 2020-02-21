@@ -38,4 +38,31 @@
     </t>
     <params id="boolean-value-condition-false-else">{"condition": false}</params>
     <result id="boolean-value-condition-false-else"><![CDATA[<div><span>begin</span>fail-else<span>end</span></div>]]></result>
+
+    <t t-name="comment-branching">
+        <t t-if="condition == 'if'">if</t>
+        <t t-elif="condition == 'elif1'">elif1</t>
+        <!-- Comment ignored PART OF THE TEST !!!  -->
+        <t t-elif="condition == 'elif2'">elif2</t>
+        <t t-else="">else</t>
+    </t>
+    <params id="comment-branching">{"condition": "elif1"}</params>
+    <result id="comment-branching"><![CDATA[elif1]]></result>
+
+    <t t-name="comment-branching-1">
+        <t t-if="condition == 'if'">if</t>
+        <t t-elif="condition == 'elif1'">elif1</t>
+        <!-- Comment ignored PART OF THE TEST !!!  -->
+        <t t-elif="condition == 'elif2'">elif2</t>
+        <t t-else="">else</t>
+    </t>
+    <params id="comment-branching-1">{"condition": "elif2"}</params>
+    <result id="comment-branching-1"><![CDATA[elif2]]></result>
+
+    <t t-name="comment-branching-2">
+        <div t-if="condition == 'if'">if</div><!-- Comment ignored PART OF THE TEST !!!  --><div>sometext</div>
+    </t>
+    <params id="comment-branching-2">{"condition": "if"}</params>
+    <result id="comment-branching-2"><![CDATA[<div>if</div><div>sometext</div>]]></result>
+
 </templates>
