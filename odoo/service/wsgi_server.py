@@ -22,7 +22,6 @@ except ImportError:
 import werkzeug.exceptions
 import werkzeug.wrappers
 import werkzeug.serving
-import werkzeug.contrib.fixers
 
 import odoo
 from odoo.tools import config
