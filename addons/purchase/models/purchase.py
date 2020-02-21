@@ -617,6 +617,19 @@ class PurchaseOrderLine(models.Model):
         else:
             return datetime.today() + relativedelta(days=seller.delay if seller else 0)
 
+    @api.onchange('product_id', 'date_order')
+    def _onchange_product_id_date(self):
+        default_analytic_account = self.env['account.analytic.default'].sudo().account_get(
+            product_id=self.product_id.id,
+            partner_id=self.order_id.partner_id.id,
+            user_id=self.env.uid,
+            date=self.date_order,
+            company_id=self.company_id.id,
+        )
+        if default_analytic_account:
+            self.account_analytic_id = default_analytic_account.analytic_id.id
+            self.analytic_tag_ids = [(6, 0, default_analytic_account.analytic_tag_ids.ids)]
+
     @api.onchange('product_id')
     def onchange_product_id(self):
         if not self.product_id:

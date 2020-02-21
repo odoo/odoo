@@ -19,6 +19,7 @@ You could use this simplified accounting in case you work with an (external) acc
     'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
+        'security/account_analytic_default_security.xml',
         'data/data_account_type.xml',
         'data/account_data.xml',
         'data/digest_data.xml',
@@ -65,6 +66,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'report/account_hash_integrity_templates.xml',
         'wizard/account_transfer_wizard.xml',
         'views/res_currency.xml',
+        'views/account_analytic_default_view.xml',
     ],
     'demo': [
         'demo/account_demo.xml',

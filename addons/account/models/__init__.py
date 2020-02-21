@@ -3,6 +3,7 @@
 from . import sequence_mixin
 from . import partner
 from . import account
+from . import account_analytic_default
 from . import account_reconcile_model
 from . import account_payment
 from . import account_payment_term
