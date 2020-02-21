@@ -1052,6 +1052,57 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
+    QUnit.test('list view without groupby menu', async function (assert) {
+        assert.expect(2);
+
+        const searchMenuTypesOriginal = ListView.prototype.searchMenuTypes;
+        ListView.prototype.searchMenuTypes = ['filter', 'favorite'];
+
+        const actionManager = await createActionManager({
+            actions: [{
+                id: 11,
+                name: 'Partners Action 11',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[3, 'list']],
+                search_view_id: [9, 'search'],
+                context: {
+                    group_by: ['foo'],
+                },
+            }],
+            archs: {
+                'foo,3,list': `<tree editable="top">
+                    <field name="display_name"/>
+                    <field name="foo"/>
+                    </tree>`,
+                'foo,9,search': `<search>
+                    <filter name="filterA" string="A" domain="[]"/>
+                    <filter string="candle" name="itsName" context="{'group_by': 'foo'}"/>
+                    </search>`,
+            },
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    throw new Error("Should not do a read_group RPC");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await actionManager.doAction(11);
+
+        assert.containsNone(actionManager, '.o_control_panel .o_cp_right button:contains(Group By)',
+            "there should not be groupby dropdown");
+        await testUtils.fields.triggerKey('press', actionManager.$('.o_control_panel .o_searchview_input'), 97);
+        assert.containsNone(actionManager,
+            '.o_searchview .o_searchview_autocomplete:contains("Group by: candle")',
+            `filter suggestion should not have Group by suggestion`
+        );
+
+        actionManager.destroy();
+        ListView.prototype.searchMenuTypes = searchMenuTypesOriginal;
+    });
+
     QUnit.test('selection changes are triggered correctly', async function (assert) {
         assert.expect(8);
 

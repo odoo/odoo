@@ -259,9 +259,13 @@ var KanbanView = BasicView.extend({
     _updateMVCParams: function () {
         this._super.apply(this, arguments);
         var defaultGroupBy = this.arch.attrs.default_group_by;
-        this.loadParams.groupBy = defaultGroupBy ?
-                                    [defaultGroupBy] :
-                                    (this.loadParams.groupedBy || []);
+        if (this.searchMenuTypes.includes('groupBy')) {
+            this.loadParams.groupBy = defaultGroupBy ?
+                                        [defaultGroupBy] :
+                                        (this.loadParams.groupedBy || []);
+        } else {
+            this.loadParams.groupBy = [];
+        }
     },
 });
 

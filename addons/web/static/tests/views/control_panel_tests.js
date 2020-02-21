@@ -539,5 +539,27 @@ QUnit.module('Views', {
 
         controlPanel.destroy();
     });
+
+    QUnit.test('groupby menu is not rendered if searchMenuTypes does not have groupBy', async function (assert) {
+        assert.expect(2);
+
+        const controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: `<search>
+                <filter name="filterA" string="A" domain="[]"/>
+                <groupBy name="groupby" string="Hi"
+                    "context="{'group_by': 'bar'}"/>
+                </search>`,
+            data: this.data,
+            searchMenuTypes: ['filter'],
+        });
+
+        assert.containsN(controlPanel, '.o_search_options .o_dropdown', 1,
+            "there should be 1 dropdown for filter only");
+        assert.containsNone(controlPanel, '.o_search_options .o_dropdown:contains("Group By")',
+            "there should not be groupby dropdown");
+
+        controlPanel.destroy();
+    });
 });
 });
