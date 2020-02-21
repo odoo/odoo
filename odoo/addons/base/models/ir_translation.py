@@ -127,7 +127,7 @@ class IrTranslationImport(object):
                            FROM %s
                            WHERE type = 'model_terms'
                            AND noupdate IS NOT TRUE
-                           ON CONFLICT (type, name, lang, res_id, md5(src))
+                           ON CONFLICT (type, name, lang, res_id, md5(src)) WHERE type='model_terms'
                             DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
                             WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
                        """ % (self._model_table, self._table))
@@ -157,7 +157,7 @@ class IrTranslation(models.Model):
     _log_access = False
 
     name = fields.Char(string='Translated field', required=True)
-    res_id = fields.Integer(string='Record ID', index=True)
+    res_id = fields.Integer(string='Record ID')
     lang = fields.Selection(selection='_get_languages', string='Language', validate=False)
     type = fields.Selection(TRANSLATION_TYPE, string='Type', index=True)
     src = fields.Text(string='Internal Source')  # stored in database, kept for backward compatibility
@@ -172,7 +172,7 @@ class IrTranslation(models.Model):
 
     # aka gettext extracted-comments - we use them to flag openerp-web translation
     # cfr: http://www.gnu.org/savannah-checkouts/gnu/gettext/manual/html_node/PO-Files.html
-    comments = fields.Text(string='Translation comments', index=True)
+    comments = fields.Text(string='Translation comments')
 
     _sql_constraints = [
         ('lang_fkey_res_lang', 'FOREIGN KEY(lang) REFERENCES res_lang(code)',
@@ -185,11 +185,11 @@ class IrTranslation(models.Model):
 
     def _auto_init(self):
         res = super(IrTranslation, self)._auto_init()
-        # Add separate md5 index on src (no size limit on values, and good performance).
-        tools.create_index(self._cr, 'ir_translation_src_md5', self._table, ['md5(src)'])
-        # Cover 'model_terms' type
-        tools.create_unique_index(self._cr, 'ir_translation_unique', self._table,
-                                  ['type', 'name', 'lang', 'res_id', 'md5(src)'])
+        # Add separate hash index on src (no size limit on values, and good performance).
+        tools.create_index_using(self._cr, 'ir_translation_src_hash', self._table, ['src'], 'hash')
+
+        if not tools.index_exists(self._cr, 'ir_translation_unique'):
+            self._cr.execute("CREATE UNIQUE INDEX ir_translation_unique ON ir_translation (type, name, lang, res_id, md5(src)) WHERE type = 'model_terms'")
         if not tools.index_exists(self._cr, 'ir_translation_code_unique'):
             self._cr.execute("CREATE UNIQUE INDEX ir_translation_code_unique ON ir_translation (type, lang, md5(src)) WHERE type = 'code'")
         if not tools.index_exists(self._cr, 'ir_translation_model_unique'):
@@ -680,7 +680,7 @@ class IrTranslation(models.Model):
                 INSERT INTO ir_translation (name, lang, res_id, src, type,
                                             module, value, state, comments)
                 VALUES {}
-                ON CONFLICT (type, name, lang, res_id, md5(src))
+                ON CONFLICT (type, name, lang, res_id, md5(src)) WHERE type='model_terms'
                 DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) =
                     (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type,
                      EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
@@ -882,7 +882,7 @@ class IrTranslation(models.Model):
             ('module', 'in', mods), ('lang', '=', lang),
             ('comments', 'like', 'openerp-web'), ('value', '!=', False),
             ('value', '!=', '')],
-            ['module', 'src', 'value', 'lang'], order='module')
+            ['module', 'src', 'value', 'lang'])
         for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
             translations_per_module.setdefault(mod, {'messages': []})
             translations_per_module[mod]['messages'].extend({

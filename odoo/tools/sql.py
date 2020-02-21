@@ -204,6 +204,14 @@ def create_unique_index(cr, indexname, tablename, expressions):
     cr.execute('CREATE UNIQUE INDEX "{}" ON "{}" ({})'.format(indexname, tablename, args))
     _schema.debug("Table %r: created index %r (%s)", tablename, indexname, args)
 
+def create_index_using(cr, indexname, tablename, expressions, using='btree'):
+    """ Create the given index unless it exists. """
+    if index_exists(cr, indexname):
+        return
+    args = ', '.join(expressions)
+    cr.execute('CREATE INDEX "{}" ON "{}" USING {} ({})'.format(indexname, tablename, using, args))
+    _schema.debug("Table %r: created %s index %r (%s)", tablename, using, indexname, args)
+
 def drop_index(cr, indexname, tablename):
     """ Drop the given index if it exists. """
     cr.execute('DROP INDEX IF EXISTS "{}"'.format(indexname))
