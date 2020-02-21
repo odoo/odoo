@@ -346,22 +346,33 @@ odoo.define('web.ControlPanelModel', function (require) {
          * @returns {Object[]}
          */
         getFacets() {
-            const groups = this._getGroups();
-            return groups.map(group => {
-                const { activities, type, id } = group;
-                const facet = {
-                    groupId: id,
-                    separator: type === 'groupBy' ? ">" : this.env._t("or"),
-                    values: this._getFacetDescriptions(activities, type),
-                };
-                const icon = FACET_ICONS[type];
-                if (icon) {
-                    facet.icon = icon;
-                } else {
-                    facet.title = activities[0].filter.description;
+            const accept = type => {
+                if (type === 'groupBy' && !this.searchMenuTypes.includes('groupBy')) {
+                    return false;
                 }
-                return facet;
-            });
+                return true;
+            };
+
+            const groups = this._getGroups();
+            const facets = [];
+            for (const group of groups) {
+                const { activities, type, id } = group;
+                if (accept(type)) {
+                    const facet = {
+                        groupId: id,
+                        separator: type === 'groupBy' ? ">" : this.env._t("or"),
+                        values: this._getFacetDescriptions(activities, type),
+                    };
+                    const icon = FACET_ICONS[type];
+                    if (icon) {
+                        facet.icon = icon;
+                    } else {
+                        facet.title = activities[0].filter.description;
+                    }
+                    facets.push(facet);
+                }
+            }
+            return facets;
         }
 
         /**
@@ -400,9 +411,14 @@ odoo.define('web.ControlPanelModel', function (require) {
             const query = {
                 context: this._getContext(groups),
                 domain: this._getDomain(groups, requireEvaluation),
-                groupBy: this._getGroupBy(groups),
                 orderedBy: this._getOrderedBy(groups)
             };
+            if (this.searchMenuTypes.includes('groupBy')) {
+                const groupBy = this._getGroupBy(groups);
+                query.groupBy = groupBy;
+            } else {
+                query.groupBy = [];
+            }
             if (this.searchMenuTypes.includes('timeRange')) {
                 const timeRanges = this._getTimeRanges(requireEvaluation);
                 query.timeRanges = timeRanges || {};
