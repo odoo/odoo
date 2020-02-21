@@ -323,8 +323,6 @@ var ClientScreenWidget = PosBaseWidget.extend({
 class Chrome extends PosComponent {
     constructor() {
         super(...arguments);
-        useListener('show-popup', this.__showPopup);
-        useListener('close-popup', this.__closePopup);
         useListener('show-screen', this.showScreen);
         useListener('pos-error', this.onPosError);
         useListener('toggle-debug-widget', this.onToggleDebugWidget);
@@ -352,7 +350,6 @@ class Chrome extends PosComponent {
             isReady: false,
             isShowDebugWidget: true,
             screen: this.getDefaultScreen(),
-            popup: { isShow: false, name: null, component: null, props: {} },
         });
         this.chrome = this; // So that chrome's childs have chrome set automatically
 
@@ -366,18 +363,6 @@ class Chrome extends PosComponent {
         ];
 
         this.cleanup_dom();
-    }
-
-    __showPopup(event) {
-        const { name, props, __theOneThatWaits } = event.detail;
-        this.state.popup.isShow = true;
-        this.state.popup.name = name;
-        this.state.popup.component = this.constructor.components[name];
-        this.state.popup.props = { ...props, __theOneThatWaits };
-    }
-
-    __closePopup() {
-        this.state.popup.isShow = false;
     }
 
     mounted() {
