@@ -135,7 +135,7 @@ odoo.define('web.OwlCompatibility', function () {
          *
          * @override
          */
-        __patch(vnode) {
+        __patch(target, vnode) {
             if (this.widget) {
                 if (this.__owl__.vnode) { // not at first rendering
                     this.renderWidget();
