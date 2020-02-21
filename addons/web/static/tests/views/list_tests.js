@@ -1283,6 +1283,46 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
+    QUnit.test('list view not groupable', async function (assert) {
+        assert.expect(2);
+
+        const searchMenuTypesOriginal = ListView.prototype.searchMenuTypes;
+        ListView.prototype.searchMenuTypes = ['filter', 'favorite'];
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree editable="top">
+                    <field name="display_name"/>
+                    <field name="foo"/>
+                </tree>
+            `,
+            archs: {
+                'foo,false,search': `
+                    <search>
+                        <filter context="{'group_by': 'foo'}" name="foo"/>
+                    </search>
+                `,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    throw new Error("Should not do a read_group RPC");
+                }
+                return this._super.apply(this, arguments);
+            },
+            context: { search_default_foo: 1, },
+        });
+
+        assert.containsNone(list, '.o_control_panel div.o_search_options div.o_group_by_menu',
+        "there should not be groupby menu");
+        assert.deepEqual(cpHelpers.getFacetTexts(list), []);
+
+        list.destroy();
+        ListView.prototype.searchMenuTypes = searchMenuTypesOriginal;
+    });
+
     QUnit.test('selection changes are triggered correctly', async function (assert) {
         assert.expect(8);
 
