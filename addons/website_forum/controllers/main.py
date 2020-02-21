@@ -85,7 +85,10 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/new', type='json', auth="user", methods=['POST'], website=True)
     def forum_create(self, forum_name="New Forum", add_menu=False):
-        forum_id = request.env['forum.forum'].create({'name': forum_name})
+        forum_id = request.env['forum.forum'].create({
+            'name': forum_name,
+            'website_id': request.website.id,
+        })
         if add_menu:
             request.env['website.menu'].create({
                 'name': forum_name,
