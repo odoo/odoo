@@ -6,6 +6,7 @@ var ajax = require('web.ajax');
 var ListView = require('web.ListView');
 var testUtils = require('web.test_utils');
 
+var createActionManager = testUtils.createActionManager;
 var createAsyncView = testUtils.createAsyncView;
 
 QUnit.module('Views', {
@@ -128,6 +129,43 @@ QUnit.module('Views', {
             },
         });
         list.destroy();
+    });
+
+    QUnit.test('groupBy dropdown not displayed if view is not groupable', function (assert) {
+        assert.expect(1);
+
+        ListView.prototype.groupable = false;
+        var actionManager = createActionManager({
+            actions: [{
+                id: 1,
+                name: 'Foo Action 1',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[false, 'list']],
+                context: {
+                    group_by: ['bar'],
+                },
+            }],
+            archs: {
+                'foo,false,list': '<tree><field name="foo"/><field name="bar"/></tree>',
+                'foo,false,search': '<search></search>',
+            },
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    throw new Error("Should not do a read_group RPC");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        actionManager.doAction(1);
+
+        assert.containsNone($, 'o_dropdown:not(.o_hidden) .o_group_by_menu',
+            "groupby menu should not be available");
+
+        actionManager.destroy();
+        ListView.prototype.groupable = true;
     });
 
 });
