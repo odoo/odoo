@@ -36,7 +36,11 @@ var KanbanView = BasicView.extend({
         // false so that they will won't be loaded by the initial load
         this.loadParams.openGroupByDefault = config.device.isMobile ? false : true;
         this.loadParams.type = 'list';
-        this.loadParams.groupBy = this.arch.attrs.default_group_by ? [this.arch.attrs.default_group_by] : (params.groupBy || []);
+        if (this.groupable) {
+            this.loadParams.groupBy = this.arch.attrs.default_group_by ? [this.arch.attrs.default_group_by] : (params.groupBy || []);
+        } else {
+            this.loadParams.groupBy = [];
+        }
         var progressBar;
         utils.traverse(this.arch, function (n) {
             var isProgressBar = (n.tag === 'progressbar');
