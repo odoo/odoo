@@ -16,12 +16,11 @@
                     <div class="subwindow collapsed">
                         <div class="subwindow-container">
                             <div class="subwindow-container-fix pads">
-                                <!-- <div class="control-buttons">
-                                    <t t-foreach="controlButtons" t-as="controlButton">
-                                        <t t-component="controlButton.component"
-                                           t-props="controlButton.props"></t>
+                                <div class="control-buttons">
+                                    <t t-foreach="controlButtons" t-as="cb" t-key="cb.name">
+                                        <t t-component="cb.component" t-key="cb.name" />
                                     </t>
-                                </div> -->
+                                </div>
                                 <ActionpadWidget />
                                 <NumpadWidget />
                             </div>

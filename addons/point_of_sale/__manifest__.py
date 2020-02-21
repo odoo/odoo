@@ -91,6 +91,8 @@
         'static/src/xml/ErrorTracebackPopup.xml',
         'static/src/xml/EditListInput.xml',
         'static/src/xml/EditListPopup.xml',
+        'static/src/xml/SetPricelistButton.xml',
+        'static/src/xml/SetFiscalPositionButton.xml',
     ],
     'website': 'https://www.odoo.com/page/point-of-sale-shop',
 }

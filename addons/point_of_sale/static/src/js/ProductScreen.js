@@ -52,6 +52,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         get currentOrder() {
             return this.env.pos.get_order();
         }
+        get controlButtons() {
+            return this.constructor.controlButtons.filter(cb => {
+                return cb.condition.bind(this)();
+            });
+        }
         async clickProduct(event) {
             const product = event.detail;
             let draftPackLotLines, weight, packLotLinesToEdit;
@@ -198,8 +203,62 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         }
     }
     ProductScreen.components = { ProductsWidget, OrderWidget, NumpadWidget, ActionpadWidget };
-    // TODO jcb: This is the way to add control buttons above the numpad
-    ProductScreen.addControlButton = () => {};
+    ProductScreen.controlButtons = [];
+
+    /**
+     * @param {Object} controlButton
+     * @param {Component} controlButton.component
+     * @param {Function} controlButton.condition
+     * @param {Array} [controlButton.position] array of two elements
+     *      [locator, relativeTo]
+     *      locator: string -> any of ('before', 'after', 'replace')
+     *      relativeTo: string -> other controlButtons component name
+     */
+    ProductScreen.addControlButton = function(controlButton) {
+        // We set the name first.
+        if (!controlButton.name) {
+            controlButton.name = controlButton.component.name;
+        }
+
+        // If no position is set, we just push it to the array.
+        if (!controlButton.position) {
+            this.controlButtons.push(controlButton);
+        } else {
+            // Find where to put the new controlButton.
+            const [locator, relativeTo] = controlButton.position;
+            let whereIndex = -1;
+            for (let i = 0; i < this.controlButtons.length; i++) {
+                if (this.controlButtons[i].name === relativeTo) {
+                    if (['before', 'replace'].includes(locator)) {
+                        whereIndex = i;
+                    } else if (locator === 'after') {
+                        whereIndex = i + 1;
+                    }
+                    break;
+                }
+            }
+
+            // If found where to put, then perform the necessary mutation of
+            // the buttons array.
+            // Else, we just push this controlButton to the array.
+            if (whereIndex > -1) {
+                this.controlButtons.splice(
+                    whereIndex,
+                    locator === 'replace' ? 1 : 0,
+                    controlButton
+                );
+            } else {
+                let warningMessage =
+                    `'${controlButton.name}' has invalid 'position' ([${locator}, ${relativeTo}]).` +
+                    'It is pushed to the controlButtons stack instead.';
+                console.warn(warningMessage);
+                this.controlButtons.push(controlButton);
+            }
+        }
+
+        // We then add to the components object.
+        this.addComponents([controlButton.component]);
+    };
 
     Chrome.addComponents([ProductScreen]);
 
