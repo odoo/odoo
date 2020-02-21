@@ -1095,7 +1095,15 @@ class QWeb(object):
     def _compile_directive_if(self, el, options):
         orelse = []
         next_el = el.getnext()
+        comments_to_remove = []
+        while isinstance(next_el, etree._Comment):
+            comments_to_remove.append(next_el)
+            next_el = next_el.getnext()
+
         if next_el is not None and {'t-else', 't-elif'} & set(next_el.attrib):
+            parent = el.getparent()
+            for comment in comments_to_remove:
+                parent.remove(comment)
             if el.tail and not el.tail.isspace():
                 raise ValueError("Unexpected non-whitespace characters between t-if and t-else directives")
             el.tail = None
