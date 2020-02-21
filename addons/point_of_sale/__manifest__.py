@@ -48,6 +48,7 @@
     'application': True,
     'qweb': [
         'static/src/xml/pos.xml',
+        'static/src/xml/debug_manager.xml',
         'static/src/xml/ProductScreen.xml',
         'static/src/xml/ClientLine.xml',
         'static/src/xml/ClientDetails.xml',

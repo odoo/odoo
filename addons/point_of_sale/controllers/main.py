@@ -43,6 +43,12 @@ class PosController(http.Controller):
         }
         return request.render('point_of_sale.index', qcontext=context)
 
+    @http.route('/pos/web/tests', type='http', auth="user")
+    def test_suite(self, mod=None, **kwargs):
+        # TODO jcb: session context can be set here. It might be
+        # important in instantiating PosModel for test initialization.
+        return request.render('point_of_sale.qunit_suite')
+
     @http.route('/pos/sale_details_report', type='http', auth='user')
     def print_sale_details(self, date_start=False, date_stop=False, **kw):
         r = request.env['report.point_of_sale.report_saledetails']
