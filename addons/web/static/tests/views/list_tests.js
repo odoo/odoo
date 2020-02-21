@@ -8091,7 +8091,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('list view with optional fields rendering', async function (assert) {
-        assert.expect(11);
+        assert.expect(12);
 
         var RamStorageService = AbstractStorageService.extend({
             storage: new RamStorage(),
@@ -8139,9 +8139,9 @@ QUnit.module('Views', {
         assert.containsN(list, 'th', 4, "should have 4 th");
         assert.ok(list.$('th:contains(M2O field)').is(':visible'),
             "should have a visible m2o field"); //m2o field
+        assert.isVisible(list.$('.o_optional_columns_dropdown'), "dropdown should remain visible");
 
         // disable optional field
-        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
         assert.strictEqual(list.$('div.o_optional_columns div.dropdown-item:first input:checked')[0],
             list.$('div.o_optional_columns div.dropdown-item [name="m2o"]')[0],
             "m2o advanced field check box should be checked in dropdown");
@@ -8154,6 +8154,142 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
         assert.notOk(list.$('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked"));
+
+        list.destroy();
+    });
+
+    QUnit.test('list view with optional fields: mock rpcs', async function (assert) {
+        assert.expect(13);
+
+        const RamStorageService = AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="m2o" optional="show"/>
+                    <field name="m2m" widget="many2many_tags" optional="hide"/>
+                </tree>`,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.step(`search_read ${args.model}: ${args.fields}`);
+                } else if (args.method === 'read') {
+                    assert.step(`read ${args.model}: ${args.args[1]}`);
+                }
+                return this._super(...arguments);
+            },
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+
+        assert.containsN(list, 'th', 3, "should have 3 th, 1 for selector, 2 for columns");
+        assert.strictEqual(list.$('th').text(), '​FooM2O field');
+        assert.verifySteps([
+            'search_read foo: foo,m2o',
+        ]);
+
+        // add m2m field
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        assert.containsN(list, 'div.o_optional_columns div.dropdown-item', 2);
+        await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:nth(1) input'));
+        assert.containsN(list, 'th', 4, "should have 4 th, 1 for selector, 3 for columns");
+        assert.strictEqual(list.$('th').text(), '​FooM2O fieldM2M field');
+        assert.verifySteps([
+            'search_read foo: foo,m2o,m2m',
+            'read bar: display_name',
+        ]);
+
+        // remove m2o field
+        await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:first input'));
+        assert.containsN(list, 'th', 3, "should have 3 th, 1 for selector, 2 for columns");
+        assert.strictEqual(list.$('th').text(), '​FooM2M field');
+        assert.verifySteps([]);
+
+        list.destroy();
+    });
+
+    QUnit.test('list view with optional fields and default config: mock rpcs', async function (assert) {
+        assert.expect(4);
+
+        const localStorageKey = 'optional_fields,foo,list,undefined,amount,date,foo,m2m,m2o';
+        const RamStorageService = AbstractStorageService.extend({
+            storage: new RamStorage(),
+            getItem(key) {
+                return key === localStorageKey ? ['m2o', 'date'] : this._super(...arguments);
+            },
+        });
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="m2o" optional="show"/>
+                    <field name="m2m" widget="many2many_tags" optional="show"/>
+                    <field name="amount" optional="hide"/>
+                    <field name="date" optional="hide"/>
+                </tree>`,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.step(`search_read ${args.model}: ${args.fields}`);
+                } else if (args.method === 'read') {
+                    assert.step(`read ${args.model}: ${args.args[1]}`);
+                }
+                return this._super(...arguments);
+            },
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+
+        assert.containsN(list, 'th', 4, "should have 4 th, 1 for selector, 3 for columns");
+        assert.strictEqual(list.$('th').text(), '​FooM2O fieldSome Date');
+        assert.verifySteps([
+            'search_read foo: foo,m2o,date',
+        ]);
+
+        list.destroy();
+    });
+
+    QUnit.test('list view with optional fields and modifiers: mock rpcs', async function (assert) {
+        assert.expect(5);
+
+        const RamStorageService = AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree>
+                    <field name="foo" attrs="{'invisible': [['int_field', '=', 10]]}"/>
+                    <field name="int_field" optional="hide"/>
+                </tree>`,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.step(`search_read ${args.model}: ${args.fields}`);
+                }
+                return this._super(...arguments);
+            },
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+
+        assert.containsN(list, 'th', 2, "should have 4 th, 1 for selector, 1 for columns");
+        assert.strictEqual(list.$('th').text(), '​Foo');
+        assert.strictEqual(list.$('.o_data_cell').text(), 'blipgnapblip',
+            "yop should be invisible");
+        assert.verifySteps(['search_read foo: foo,int_field']);
 
         list.destroy();
     });
@@ -8364,7 +8500,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('list view with optional fields rendering and local storage mock', async function (assert) {
-        assert.expect(12);
+        assert.expect(11);
 
         var forceLocalStorage = true;
 
@@ -8420,10 +8556,7 @@ QUnit.module('Views', {
         // enable optional field
         await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:eq(1) input'));
 
-        assert.verifySteps([
-            'setItem ' + localStorageKey + ' to ["m2o","reference"]',
-            'getItem ' + localStorageKey,
-        ]);
+        assert.verifySteps(['setItem ' + localStorageKey + ' to ["m2o","reference"]']);
 
         // 4 th (1 for checkbox, 3 for columns)
         assert.containsN(list, 'th', 4, "should have 4 th");

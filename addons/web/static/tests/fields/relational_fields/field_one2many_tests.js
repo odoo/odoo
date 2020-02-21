@@ -8741,6 +8741,222 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('one2many field list with optional fields: mock rpcs', async function (assert) {
+            assert.expect(14);
+
+            this.data.partner.records[0].p = [2];
+            this.data.partner.records[1].timmy = [12, 14];
+
+            const RamStorageService = AbstractStorageService.extend({
+                storage: new RamStorage(),
+            });
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree>
+                                <field name="foo"/>
+                                <field name="trululu" optional="show"/>
+                                <field name="timmy" widget="many2many_tags" optional="hide"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                res_id: 1,
+                mockRPC: function (route, args) {
+                    if (route === '/web/dataset/search_read') {
+                        assert.step(`search_read ${args.model}: ${args.fields}`);
+                    } else if (args.method === 'read') {
+                        assert.step(`read ${args.model}: ${args.args[1]}`);
+                    }
+                    return this._super(...arguments);
+                },
+                services: {
+                    local_storage: RamStorageService,
+                },
+            });
+
+            assert.containsN(form, '.o_list_view th', 2, "should have 2 columns");
+            assert.strictEqual(form.$('.o_list_view th').text(), 'FooTrululu');
+            assert.verifySteps([
+                'read partner: p,display_name',
+                'read partner: foo,trululu',
+            ]);
+
+            // add timmy field
+            await testUtils.dom.click(form.$('.o_optional_columns_dropdown_toggle'));
+            assert.containsN(form, '.o_optional_columns div.dropdown-item', 2);
+            await testUtils.dom.click(form.$('div.o_optional_columns div.dropdown-item:nth(1) input'));
+            assert.containsN(form, '.o_list_view th', 3, "should have 3 columns");
+            assert.strictEqual(form.$('.o_list_view th').text(), 'FooTrululupokemon');
+            assert.verifySteps([
+                'read partner: foo,trululu,timmy',
+                'read partner_type: display_name',
+            ]);
+
+            // remove trululu field
+            await testUtils.dom.click(form.$('.o_optional_columns div.dropdown-item:first input'));
+            assert.containsN(form, '.o_list_view th', 2, "should have 2 columns");
+            assert.strictEqual(form.$('.o_list_view th').text(), 'Foopokemon');
+            assert.verifySteps([]);
+
+            form.destroy();
+        });
+
+        QUnit.test('one2many field list with optional fields and default config: mock rpcs', async function (assert) {
+            assert.expect(5);
+
+            this.data.partner.records[0].p = [2];
+            this.data.partner.records[1].timmy = [12, 14];
+
+            const localStorageKey = 'optional_fields,partner,form,undefined,p,list,undefined,foo,int_field,qux,timmy,trululu';
+            const RamStorageService = AbstractStorageService.extend({
+                storage: new RamStorage(),
+                getItem(key) {
+                    return key === localStorageKey ? ['trululu', 'qux'] : this._super(...arguments);
+                },
+            });
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree>
+                                <field name="foo"/>
+                                <field name="trululu" optional="show"/>
+                                <field name="timmy" widget="many2many_tags" optional="show"/>
+                                <field name="int_field" optional="hide"/>
+                                <field name="qux" optional="hide"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                res_id: 1,
+                mockRPC: function (route, args) {
+                    if (route === '/web/dataset/search_read') {
+                        assert.step(`search_read ${args.model}: ${args.fields}`);
+                    } else if (args.method === 'read') {
+                        assert.step(`read ${args.model}: ${args.args[1]}`);
+                    }
+                    return this._super(...arguments);
+                },
+                services: {
+                    local_storage: RamStorageService,
+                },
+            });
+
+            assert.containsN(form, '.o_list_view th', 3, "should have 3 columns");
+            assert.strictEqual(form.$('.o_list_view th').text(), 'FooTrululuQux');
+            assert.verifySteps([
+                'read partner: p,display_name',
+                'read partner: foo,trululu,qux',
+            ]);
+
+            form.destroy();
+        });
+
+        QUnit.test('one2many field list (non inline) with optional fields and default config: mock rpcs', async function (assert) {
+            assert.expect(5);
+
+            this.data.partner.records[0].p = [2];
+            this.data.partner.records[1].timmy = [12, 14];
+
+            const localStorageKey = 'optional_fields,partner,form,undefined,p,list,undefined,foo,int_field,qux,timmy,trululu';
+            const RamStorageService = AbstractStorageService.extend({
+                storage: new RamStorage(),
+                getItem(key) {
+                    return key === localStorageKey ? ['trululu', 'qux'] : this._super(...arguments);
+                },
+            });
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `<form><field name="p"/></form>`,
+                res_id: 1,
+                archs: {
+                    'partner,false,list': `
+                        <tree>
+                            <field name="foo"/>
+                            <field name="trululu" optional="show"/>
+                            <field name="timmy" widget="many2many_tags" optional="show"/>
+                            <field name="int_field" optional="hide"/>
+                            <field name="qux" optional="hide"/>
+                        </tree>`,
+                },
+                mockRPC: function (route, args) {
+                    if (route === '/web/dataset/search_read') {
+                        assert.step(`search_read ${args.model}: ${args.fields}`);
+                    } else if (args.method === 'read') {
+                        assert.step(`read ${args.model}: ${args.args[1]}`);
+                    }
+                    return this._super(...arguments);
+                },
+                services: {
+                    local_storage: RamStorageService,
+                },
+            });
+
+            assert.containsN(form, '.o_list_view th', 3, "should have 3 columns");
+            assert.strictEqual(form.$('.o_list_view th').text(), 'FooTrululuQux');
+            assert.verifySteps([
+                'read partner: p,display_name',
+                'read partner: foo,trululu,qux',
+            ]);
+
+            form.destroy();
+        });
+
+        QUnit.test('one2many field list with optional fields and modifiers: mock rpcs', async function (assert) {
+            assert.expect(6);
+
+            this.data.partner.records[0].p = [1, 2];
+            this.data.partner.records[1].timmy = [12, 14];
+
+            const RamStorageService = AbstractStorageService.extend({
+                storage: new RamStorage(),
+            });
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree>
+                                <field name="foo" attrs="{'invisible': [['int_field', '=', 10]]}"/>
+                                <field name="int_field" optional="hide"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                res_id: 1,
+                mockRPC: function (route, args) {
+                    if (route === '/web/dataset/search_read') {
+                        assert.step(`search_read ${args.model}: ${args.fields}`);
+                    } else if (args.method === 'read') {
+                        assert.step(`read ${args.model}: ${args.args[1]}`);
+                    }
+                    return this._super(...arguments);
+                },
+                services: {
+                    local_storage: RamStorageService,
+                },
+            });
+
+            assert.containsOnce(form, '.o_list_view th', "should have 1 columns");
+            assert.strictEqual(form.$('.o_list_view th').text(), 'Foo');
+            assert.strictEqual(form.$('.o_list_view .o_data_cell').text(), 'blip',
+                "yop should be invisible");
+            assert.verifySteps([
+                'read partner: p,display_name',
+                'read partner: foo,int_field',
+            ]);
+
+            form.destroy();
+        });
     });
 });
 });

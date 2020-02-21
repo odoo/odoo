@@ -17,6 +17,7 @@ var config = require('web.config');
 var fieldRegistry = require('web.field_registry');
 var pyUtils = require('web.py_utils');
 var utils = require('web.utils');
+var viewUtils = require('web.viewUtils');
 
 var BasicView = AbstractView.extend({
     config: _.extend({}, AbstractView.prototype.config, {
@@ -37,6 +38,9 @@ var BasicView = AbstractView.extend({
      * @param {Object} params
      */
     init: function (viewInfo, params) {
+        // 'optionalFields' is used to retrieve custom configurations of optional fields in lists
+        this.optionalFields = {};
+
         this._super.apply(this, arguments);
 
         this.fieldsInfo = {};
@@ -61,9 +65,64 @@ var BasicView = AbstractView.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Override to read in the local storage the potential custom configs of
+     * optional fields, and update the 'optional' attribute of the fields
+     * accordingly.
+     *
+     * @override
+     */
+    getController(parent) {
+        for (const key in this.optionalFields) {
+            const visibleFields = parent.call('local_storage', 'getItem', key);
+            if (!visibleFields) {
+                continue; // no stored configuration
+            }
+            const fv = this.optionalFields[key];
+            const fieldInfo = fv.fieldsInfo[fv.type];
+            for (const fieldName in fieldInfo) {
+                if (!fieldInfo[fieldName].optional) {
+                    continue; // the field isn't optional
+                }
+                fieldInfo[fieldName].optional = visibleFields.includes(fieldName) ? 'show' : 'hide';
+            }
+        }
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * This function iterates over all fields in a fieldInfo to flag those that
+     * are used in modifiers (of other fields).
+     *
+     * @private
+     * @param {Object} fieldInfo a dict whose keys are fieldNames and values are
+     *   the description of those fields in a given view
+     */
+    _flagFieldsUsedInModifiers: function (fieldInfo) {
+        for (const fieldName in fieldInfo) {
+            const modifiers = fieldInfo[fieldName].modifiers;
+            for (const modifier in modifiers) {
+                if (!Array.isArray(modifiers[modifier])) {
+                    continue;
+                }
+                for (const domainPart of modifiers[modifier]) {
+                    const fieldInDomain = domainPart[0];
+                    // some fields (like 'id') are automatically fetched, so they
+                    // could not be in fieldsInfo but still used in modifiers
+                    if (fieldInfo[fieldInDomain]) {
+                        fieldInfo[fieldInDomain].usedInModifiers = true;
+                    }
+                }
+            }
+        }
+    },
     /**
      * Returns the AbstractField specialization that should be used for the
      * given field informations. If there is no mentioned specific widget to
@@ -224,9 +283,11 @@ var BasicView = AbstractView.extend({
      * @param {string} viewType
      * @param {Object} field - the field properties
      * @param {Object} attrs - the field attributes (from the xml)
+     * @param {string} fieldName - the name of the field to process
+     * @param {Object} fieldsView - the fieldsView we are processing
      * @returns {Object} attrs
      */
-    _processField: function (viewType, field, attrs) {
+    _processField: function (viewType, field, attrs, fieldName, fieldsView) {
         var self = this;
         attrs.Widget = this._getFieldWidgetClass(viewType, field, attrs);
 
@@ -278,7 +339,7 @@ var BasicView = AbstractView.extend({
             attrs.views = {};
             _.each(field.views, function (innerFieldsView, viewType) {
                 viewType = viewType === 'tree' ? 'list' : viewType;
-                attrs.views[viewType] = self._processFieldsView(innerFieldsView, viewType);
+                attrs.views[viewType] = self._processFieldsView(innerFieldsView, viewType, fieldsView, fieldName);
             });
         }
 
@@ -343,9 +404,11 @@ var BasicView = AbstractView.extend({
      * @param {string} fieldsView.arch
      * @param {Object} fieldsView.fields
      * @param {string} [viewType] by default, this.viewType
+     * @param {Object} [parentFieldsView] for x2many fieldsViews
+     * @param {string} [x2mFieldName] for x2many fieldsViews, the x2many field name
      * @returns {Object} the processed fieldsView with extra key 'fieldsInfo'
      */
-    _processFieldsView: function (fieldsView, viewType) {
+    _processFieldsView: function (fieldsView, viewType, parentFieldsView, x2mFieldName) {
         var fv = this._super.apply(this, arguments);
 
         viewType = viewType || this.viewType;
@@ -354,6 +417,7 @@ var BasicView = AbstractView.extend({
         fv.fieldsInfo[viewType] = Object.create(null);
 
         this._processArch(fv.arch, fv);
+        this._processOptionalFields(fv, parentFieldsView, x2mFieldName);
 
         return fv;
     },
@@ -385,8 +449,10 @@ var BasicView = AbstractView.extend({
             var viewType = fv.type;
             var fieldsInfo = fv.fieldsInfo[viewType];
             var fields = fv.viewFields;
-            fieldsInfo[node.attrs.name] = this._processField(viewType,
-                fields[node.attrs.name], node.attrs ? _.clone(node.attrs) : {});
+            var fieldName = node.attrs.name;
+            var field = fields[fieldName];
+            var attrs = node.attrs ? _.clone(node.attrs) : {};
+            fieldsInfo[node.attrs.name] = this._processField(viewType, field, attrs, fieldName, fv);
 
             if (fieldsInfo[node.attrs.name].fieldDependencies) {
                 var deps = fieldsInfo[node.attrs.name].fieldDependencies;
@@ -409,6 +475,52 @@ var BasicView = AbstractView.extend({
             return false;
         }
         return node.tag !== 'arch';
+    },
+    /**
+     * This only concerns list views (main or x2many), as they implement the
+     * optional fields feature (fields that can be displayed/hidden by the
+     * user, and his custom config is stored in his local storage). We do not
+     * want to fetch hidden fields, if they are not strictly necessary (i.e. if
+     * they are not used in modifiers). This function identifies those fields
+     * that *must* be fetched, and generates the local storage key to retrieve
+     * the potential custom configuration. The configuration will be retrieved
+     * later on, in 'getController' (we can't call the local storage service
+     * right now, because we have no parent).
+     *
+     * @private
+     * @param {Object} fieldsView
+     * @param {Object} [parentFieldsView] for x2many fieldsViews
+     * @param {string} [x2mFieldName] for x2many fieldsViews, the x2many field name
+     */
+    _processOptionalFields: function (fieldsView, parentFieldsView, x2mFieldName) {
+        if (fieldsView.type !== 'list') {
+            return; // this only applies to list views
+        }
+
+        // flag fields used in modifiers to force them to be loaded, even
+        // if they are optional and hidden
+        this._flagFieldsUsedInModifiers(fieldsView.fieldsInfo.list);
+
+        // generate the local storage key and associates it with the fields view
+        const keyParts = {
+            fields: Object.keys(fieldsView.fieldsInfo[fieldsView.type]),
+        };
+        if (parentFieldsView) {
+            // x2m case
+            keyParts.model = parentFieldsView.model;
+            keyParts.viewType = parentFieldsView.type;
+            keyParts.viewId = parentFieldsView.view_id;
+            keyParts.relationalField = x2mFieldName;
+            keyParts.subViewType = fieldsView.type;
+            keyParts.subViewId = fieldsView.view_id;
+        } else {
+            // main list view case
+            keyParts.model = fieldsView.model;
+            keyParts.viewType = fieldsView.type;
+            keyParts.viewId = fieldsView.view_id;
+        }
+        const key = viewUtils.getOptionalFieldsStorageKey(keyParts);
+        this.optionalFields[key] = fieldsView;
     },
     /**
      * Processes in place the subview attributes (in particular,

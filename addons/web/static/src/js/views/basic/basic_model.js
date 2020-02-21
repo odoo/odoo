@@ -3554,7 +3554,16 @@ var BasicModel = AbstractModel.extend({
     _getFieldNames: function (element, options) {
         var fieldsInfo = element.fieldsInfo;
         var viewType = options && options.viewType || element.viewType;
-        return Object.keys(fieldsInfo && fieldsInfo[viewType] || {});
+        const fields = fieldsInfo && fieldsInfo[viewType] || {};
+        let fieldNames = Object.keys(fields);
+        if (viewType === 'list') {
+            // in list views (main or x2many), we do not want to fetch optional,
+            // hidden fields, except if they are used in modifier domains
+            fieldNames = fieldNames.filter(fieldName => {
+                return fields[fieldName].optional !== 'hide' || fields[fieldName].usedInModifiers;
+            });
+        }
+        return fieldNames;
     },
     /**
      * Get many2one fields names in a datapoint. This is useful in order to

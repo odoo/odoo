@@ -31,6 +31,47 @@ var viewUtils = {
         }
     },
     /**
+     * Generates a local storage key for optional fields in list views. The
+     * purpose of this key is to uniquely identify a list view and its fields
+     * (so it should be different after installing a module, if that module adds
+     * (or removes) fields in the view).
+     *
+     * For main list views, the key looks like:
+     *   'optional_fields,<modelName>,<viewType>,<viewId>,<fields>'
+     * For x2many list views, the key looks like:
+     *   'optional_fields,<modelName>,<viewType>,<viewId>,<x2mFieldName>,
+     *   <subViewType>,<subViewId>,<fields>'
+     *
+     * In both cases, <fields> is the (comma-separated) list of fields in the
+     * list view, sorted by name.
+     *
+     * For now, <subViewType> is always 'list', and <viewType> is either 'list'
+     * (when this is a main list view) or 'form' (when this is a x2m list view).
+     * However, having them in the key would ease the generalization of the
+     * optional fields feature to other views without breaking existing keys.
+     *
+     * Note that changing the above specs would make users loose their custom
+     * configs.
+     *
+     * @param {Object} keyParts
+     * @param {string} keyParts.model
+     * @param {string[]} keyParts.fields
+     * @param {integer} [keyParts.viewId]
+     * @param {string} [keyParts.relationalField]
+     * @param {string} [keyParts.subViewType]
+     * @param {integer} [keyParts.subViewId]
+     * @returns {string}
+     */
+    getOptionalFieldsStorageKey: function (keyParts) {
+        let parts = ['model', 'viewType', 'viewId'];
+        if (keyParts.relationalField) {
+            parts = parts.concat(['relationalField', 'subViewType', 'subViewId']);
+        }
+        const viewPart = parts.map(part => keyParts[part] || 'undefined').join(',');
+        const fieldsPart = keyParts.fields.sort((a, b) => a < b ? -1 : 1).join(',');
+        return `optional_fields,${viewPart},${fieldsPart}`;
+    },
+    /**
      * States whether or not the quick create feature is available for the given
      * datapoint, depending on its groupBy field.
      *

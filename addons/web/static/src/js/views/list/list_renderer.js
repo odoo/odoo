@@ -70,9 +70,6 @@ var ListRenderer = BasicRenderer.extend({
         this.groupbys = params.groupbys;
     },
     /**
-     * Compute columns visilibity. This can't be done earlier as we need the
-     * controller to respond to the load_optional_fields call of processColumns.
-     *
      * @override
      */
     willStart: function () {
@@ -92,15 +89,25 @@ var ListRenderer = BasicRenderer.extend({
         this.$('th:eq(0) input, th:eq(1)').first().focus();
     },
     /**
-     * @override
+     * Opens/folds the dropdown of optional fields.
      */
-    updateState: function (state, params) {
+    toggleOptionalFieldDropdown: function () {
+        this.$('.o_optional_columns .dropdown-toggle').dropdown('toggle');
+    },
+    /**
+     * @override
+     * @param {boolean} [params.openOptionalFieldsDropdown=false]
+     */
+    updateState: async function (state, params) {
         this.isGrouped = state.groupedBy.length > 0;
         this._processColumns(params.columnInvisibleFields || {});
         if (params.selectedRecords) {
             this.selection = params.selectedRecords;
         }
-        return this._super.apply(this, arguments);
+        await this._super.apply(this, arguments);
+        if (params.openOptionalFieldsDropdown) {
+            this.toggleOptionalFieldDropdown();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -248,20 +255,6 @@ var ListRenderer = BasicRenderer.extend({
         return this.hasSelectors ? n + 1 : n;
     },
     /**
-     * Returns the local storage key for stored enabled optional columns
-     *
-     * @private
-     * @returns {string}
-     */
-    _getOptionalColumnsStorageKeyParts: function () {
-        var self = this;
-        return {
-            fields: _.map(this.state.fieldsInfo[this.viewType], function (_, fieldName) {
-                return {name: fieldName, type: self.state.fields[fieldName].type};
-            }),
-        };
-    },
-    /**
      * Removes the columns which should be invisible.
      *
      * @param  {Object} columnInvisibleFields contains the column invisible modifier values
@@ -272,20 +265,15 @@ var ListRenderer = BasicRenderer.extend({
         this.columns = [];
         this.optionalColumns = [];
         this.optionalColumnsEnabled = [];
-        var storedOptionalColumns;
-        this.trigger_up('load_optional_fields', {
-            keyParts: this._getOptionalColumnsStorageKeyParts(),
-            callback: function (res) {
-                storedOptionalColumns = res;
-            },
-        });
+        const fieldInfo = this.state.fieldsInfo.list;
         _.each(this.arch.children, function (c) {
             if (c.tag !== 'control' && c.tag !== 'groupby') {
+                const name = c.attrs.name;
                 var reject = c.attrs.modifiers.column_invisible;
                 // If there is an evaluated domain for the field we override the node
                 // attribute to have the evaluated modifier value.
-                if (c.attrs.name in columnInvisibleFields) {
-                    reject = columnInvisibleFields[c.attrs.name];
+                if (name in columnInvisibleFields) {
+                    reject = columnInvisibleFields[name];
                 }
                if (c.attrs.class) {
                     if (c.attrs.class.match(/\boe_edit_only\b/)) {
@@ -296,24 +284,19 @@ var ListRenderer = BasicRenderer.extend({
                     }
                 }
                 if (!reject && c.attrs.widget === 'handle') {
-                    self.handleField = c.attrs.name;
+                    self.handleField = name;
                     if (self.isGrouped) {
                         reject = true;
                     }
                 }
 
-                if (!reject && c.attrs.optional) {
+                if (!reject && c.tag === 'field' && fieldInfo[name].optional) {
                     self.optionalColumns.push(c);
-                    var enabled;
-                    if (storedOptionalColumns === undefined) {
-                        enabled = c.attrs.optional === 'show';
+                    if (fieldInfo[name].optional === 'show') {
+                        self.optionalColumnsEnabled.push(name);
                     } else {
-                        enabled = _.contains(storedOptionalColumns, c.attrs.name);
+                        reject = true;
                     }
-                    if (enabled) {
-                        self.optionalColumnsEnabled.push(c.attrs.name);
-                    }
-                    reject = !enabled;
                 }
 
                 if (!reject) {
@@ -1093,8 +1076,8 @@ var ListRenderer = BasicRenderer.extend({
      * @param {MouseEvent} ev
      */
     _onToggleOptionalColumn: function (ev) {
-        var self = this;
         ev.stopPropagation();
+        ev.preventDefault();
         var input = ev.currentTarget.querySelector('input');
         var fieldIndex = this.optionalColumnsEnabled.indexOf(input.name);
         if (fieldIndex >= 0) {
@@ -1103,12 +1086,10 @@ var ListRenderer = BasicRenderer.extend({
             this.optionalColumnsEnabled.push(input.name);
         }
         this.trigger_up('save_optional_fields', {
-            keyParts: this._getOptionalColumnsStorageKeyParts(),
+            keyParts: {
+                fields: Object.keys(this.state.fieldsInfo[this.viewType]),
+            },
             optionalColumnsEnabled: this.optionalColumnsEnabled,
-        });
-        this._processColumns(this.columnInvisibleFields || {});
-        this._renderView().then(function () {
-            self._onToggleOptionalColumnDropdown(ev);
         });
     },
     /**
@@ -1125,7 +1106,7 @@ var ListRenderer = BasicRenderer.extend({
         // the toggle and the dropdown itself is not supported by popper.js by
         // default, which is why we need to toggle the dropdown manually.
         ev.stopPropagation();
-        this.$('.o_optional_columns .dropdown-toggle').dropdown('toggle');
+        this.toggleOptionalFieldDropdown();
     },
     /**
      * Manages the keyboard events on the list. If the list is not editable, when the user navigates to

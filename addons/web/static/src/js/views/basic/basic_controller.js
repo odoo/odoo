@@ -13,6 +13,7 @@ var Dialog = require('web.Dialog');
 var FieldManagerMixin = require('web.FieldManagerMixin');
 var Pager = require('web.Pager');
 var TranslationDialog = require('web.TranslationDialog');
+var viewUtils = require('web.viewUtils');
 
 var _t = core._t;
 
@@ -22,7 +23,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         reload: '_onReload',
         resequence_records: '_onResequenceRecords',
         set_dirty: '_onSetDirty',
-        load_optional_fields: '_onLoadOptionalFields',
         save_optional_fields: '_onSaveOptionalFields',
         sidebar_data_asked: '_onSidebarDataAsked',
         translate: '_onTranslate',
@@ -443,49 +443,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         });
     },
     /**
-     * Compute the optional fields local storage key using the given parts.
-     *
-     * @param {Object} keyParts
-     * @param {string} keyParts.viewType view type
-     * @param {string} [keyParts.relationalField] name of the field with subview
-     * @param {integer} [keyParts.subViewId] subview id
-     * @param {string} [keyParts.subViewType] type of the subview
-     * @param {Object} keyParts.fields fields
-     * @param {string} keyParts.fields.name field name
-     * @param {string} keyParts.fields.type field type
-     * @returns {string} local storage key for optional fields in this view
-     * @private
-     */
-    _getOptionalFieldsLocalStorageKey: function (keyParts) {
-        keyParts.model = this.modelName;
-        keyParts.viewType = this.viewType;
-        keyParts.viewId = this.viewId;
-
-        var parts = [
-            'model',
-            'viewType',
-            'viewId',
-            'relationalField',
-            'subViewType',
-            'subViewId',
-        ];
-
-        var viewIdentifier = parts.reduce(function (identifier, partName) {
-            if (partName in keyParts) {
-                return identifier + ',' + keyParts[partName];
-            }
-            return identifier;
-        }, 'optional_fields');
-
-        viewIdentifier =
-            keyParts.fields.sort(this._nameSortComparer)
-                           .reduce(function (identifier, field) {
-                                return identifier + ',' + field.name;
-                            }, viewIdentifier);
-
-        return viewIdentifier;
-    },
-    /**
      * Return the params (current_min, limit and size) to pass to the pager,
      * according to the current state.
      *
@@ -523,16 +480,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      */
     _isPagerVisible: function () {
         return true;
-    },
-    /**
-     *  Sort function used to sort the fields by names, to compute the optional fields keys
-     *
-     *  @param {Object} left
-     *  @param {Object} right
-     *  @private
-      */
-    _nameSortComparer: function(left, right) {
-        return left.name < right.name ? -1 : 1;
     },
     /**
      * Helper function to display a warning that some fields have an invalid
@@ -757,37 +704,57 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         });
     },
     /**
-     * Load the optional columns settings in local storage for this view
-     *
-     * @param {OdooEvent} ev
-     * @param {Object} ev.data.keyParts see _getLocalStorageKey
-     * @param {function} ev.data.callback function to call with the result
-     * @private
-     */
-    _onLoadOptionalFields: function (ev) {
-        var res = this.call(
-            'local_storage',
-            'getItem',
-            this._getOptionalFieldsLocalStorageKey(ev.data.keyParts)
-        );
-        ev.data.callback(res);
-    },
-    /**
      * Save the optional columns settings in local storage for this view
      *
      * @param {OdooEvent} ev
-     * @param {Object} ev.data.keyParts see _getLocalStorageKey
-     * @param {Array<string>} ev.data.optionalColumnsEnabled list of optional
+     * @param {Object} ev.data.keyParts
+     * @param {string[]} ev.data.keyParts.fields
+     * @param {string} [ev.data.keyParts.relationalField]
+     * @param {string} [ev.data.keyParts.subViewType]
+     * @param {integer} [ev.data.keyParts.subViewId]
+     * @param {string[]} ev.data.optionalColumnsEnabled list of optional
      *   field names that have been enabled
      * @private
      */
-    _onSaveOptionalFields: function (ev) {
-        this.call(
-            'local_storage',
-            'setItem',
-            this._getOptionalFieldsLocalStorageKey(ev.data.keyParts),
-            ev.data.optionalColumnsEnabled
-        );
+    _onSaveOptionalFields: async function (ev) {
+        // generate key
+        const keyParts = ev.data.keyParts;
+        keyParts.model = this.modelName;
+        keyParts.viewType = this.viewType;
+        keyParts.viewId = this.viewId;
+        const key = viewUtils.getOptionalFieldsStorageKey(keyParts);
+
+        // store new config
+        const visibleFields = ev.data.optionalColumnsEnabled;
+        this.call('local_storage', 'setItem', key, visibleFields);
+
+        // update the optional status in the fieldsInfo
+        const relationalField = ev.data.keyParts.relationalField;
+        const state = this.model.get(this.handle, { raw: !relationalField });
+        let fieldInfo = state.fieldsInfo[this.viewType];
+        if (relationalField) {
+            fieldInfo = fieldInfo[relationalField].views.list.fieldsInfo.list;
+        }
+        let mustReload = false;
+        for (const fieldName in fieldInfo) {
+            if (fieldInfo[fieldName].optional) {
+                const visible = visibleFields.includes(fieldName);
+                mustReload = mustReload || (visible && fieldInfo[fieldName].optional === 'hide');
+                fieldInfo[fieldName].optional = visible ? 'show' : 'hide';
+            }
+        }
+
+        // reload and/or re-render
+        if (relationalField) {
+            const handle = state.data[relationalField].id;
+            if (mustReload) {
+                await this.model.reload(handle);
+            }
+            await this._confirmSave(handle);
+            ev.data.reOpenOptionalFieldsDropdown();
+        } else {
+            this.update({ openOptionalFieldsDropdown: true }, { reload: mustReload });
+        }
     },
     /**
      * @private

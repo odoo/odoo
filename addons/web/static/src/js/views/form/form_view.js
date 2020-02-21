@@ -2,7 +2,6 @@ odoo.define('web.FormView', function (require) {
 "use strict";
 
 var BasicView = require('web.BasicView');
-var config = require('web.config');
 var Context = require('web.Context');
 var core = require('web.core');
 var FormController = require('web.FormController');
@@ -134,7 +133,7 @@ var FormView = BasicView.extend({
                         .then(function (views) {
                             for (var viewName in views) {
                                 // clone to make runbot green?
-                                attrs.views[viewName] = self._processFieldsView(views[viewName], viewName);
+                                attrs.views[viewName] = self._processFieldsView(views[viewName], viewName, self.fieldsView, fieldName);
                                 attrs.views[viewName].fields = attrs.views[viewName].viewFields;
                                 self._processSubViewAttrs(attrs.views[viewName], attrs);
                             }

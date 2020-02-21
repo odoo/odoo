@@ -8204,7 +8204,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('form view with inline tree view with optional fields and local storage mock', async function (assert) {
-        assert.expect(12);
+        assert.expect(11);
 
         var Storage = RamStorage.extend({
             getItem: function (key) {
@@ -8261,10 +8261,7 @@ QUnit.module('Views', {
         // enable optional field
         await testUtils.dom.click(form.$('div.o_optional_columns div.dropdown-item input'));
 
-        assert.verifySteps([
-            'setItem ' + localStorageKey + ' to ["bar"]',
-            'getItem ' + localStorageKey,
-        ]);
+        assert.verifySteps(['setItem ' + localStorageKey + ' to ["bar"]']);
 
         assert.containsN(form, 'th', 3,
             "should have 3 th, 1 for selector, 2 for columns");
@@ -8279,7 +8276,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('form view with tree_view_ref with optional fields and local storage mock', async function (assert) {
-        assert.expect(12);
+        assert.expect(11);
 
         var Storage = RamStorage.extend({
             getItem: function (key) {
@@ -8341,10 +8338,7 @@ QUnit.module('Views', {
         // enable optional field
         await testUtils.dom.click(form.$('div.o_optional_columns div.dropdown-item input'));
 
-        assert.verifySteps([
-            'setItem ' + localStorageKey + ' to ["foo"]',
-            'getItem ' + localStorageKey,
-        ]);
+        assert.verifySteps(['setItem ' + localStorageKey + ' to ["foo"]']);
 
         assert.containsN(form, 'th', 3,
             "should have 3 th, 1 for selector, 2 for columns");
