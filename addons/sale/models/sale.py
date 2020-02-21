@@ -203,7 +203,7 @@ class SaleOrder(models.Model):
         copy=False, oldname='requested_date', readonly=True,
         help="This is the delivery date promised to the customer. If set, the delivery order "
              "will be scheduled based on this date rather than product lead times.")
-    expected_date = fields.Datetime("Expected Date", compute='_compute_expected_date', store=False, oldname='commitment_date',  # Note: can not be stored since depends on today()
+    expected_date = fields.Datetime("Expected Date", compute='_compute_expected_date', store=False,  # Note: can not be stored since depends on today()
         help="Delivery date you can promise to the customer, computed from product lead times and from the shipping policy of the order.")
     amount_undiscounted = fields.Float('Amount Before Discount', compute='_compute_amount_undiscounted', digits=0)
 
