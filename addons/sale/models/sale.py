@@ -52,6 +52,28 @@ class SaleOrder(models.Model):
                 'amount_total': amount_untaxed + amount_tax,
             })
 
+    @api.depends('invoice_status', 'amount_untaxed', 'order_line.untaxed_amount_to_invoice')
+    def _compute_untaxed_amount_to_invoice(self):
+        # I don't want to desynchronize the amount per line from the total amount
+        # Hence I don't want to use another compute method than the one on the lines
+        # Hence I'm just gonna make a sum of the corresponding field on the lines
+        # Hence this will be tax excluded, alright?
+        orders_to_invoice = self.filtered(lambda so: so.invoice_status in ('to invoice', 'upselling'))
+        orders_not_to_invoice = self - orders_to_invoice
+        line_data = self.env['sale.order.line'].read_group(
+            domain=[('order_id', 'in', orders_to_invoice.ids)],
+            fields=['untaxed_amount_to_invoice:sum'],
+            groupby=['order_id']
+        )
+        amount_per_order = {ld['order_id'][0]: ld['untaxed_amount_to_invoice'] for ld in line_data}
+        orders_not_to_invoice.write({'amount_to_invoice': 0.0})
+        for order in orders_to_invoice:
+            draft_invoiced = 0.0
+            for invoice in order.invoice_ids.filtered(lambda x: x.state == 'draft'):
+                draft_invoiced += invoice.currency_id._convert(invoice.amount_untaxed, order.currency_id, order.company_id, invoice.invoice_date or fields.Date.today())
+
+            order.amount_to_invoice = (amount_per_order.get(order.id) or order.amount_untaxed) - draft_invoiced
+
     @api.depends('order_line.invoice_lines')
     def _get_invoiced(self):
         # The invoice_ids are obtained thanks to the invoice lines of the SO
@@ -212,6 +234,7 @@ class SaleOrder(models.Model):
     amount_by_group = fields.Binary(string="Tax amount by group", compute='_amount_by_group', help="type: [(name, amount, base, formated amount, formated base)]")
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all', tracking=4)
+    amount_to_invoice = fields.Monetary(string='Untaxed Amount To Invoice', readonly=True, compute='_compute_untaxed_amount_to_invoice', store=True)
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, digits=(12, 6), readonly=True, help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
 
     payment_term_id = fields.Many2one(
