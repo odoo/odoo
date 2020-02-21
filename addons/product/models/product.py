@@ -227,7 +227,9 @@ class ProductProduct(models.Model):
             partner = self.env.context.get('partner', False)
             quantity = self.env.context.get('quantity', 1.0)
 
-            # Support context pricelists specified as display_name or ID for compatibility
+            # Support context pricelists specified as list, display_name or ID for compatibility
+            if isinstance(pricelist_id_or_name, list):
+                pricelist_id_or_name = pricelist_id_or_name[0]
             if isinstance(pricelist_id_or_name, str):
                 pricelist_name_search = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
                 if pricelist_name_search:

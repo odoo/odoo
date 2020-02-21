@@ -8,7 +8,7 @@ import math
 
 from collections import namedtuple
 
-from datetime import datetime, time
+from datetime import datetime, date, timedelta, time
 from pytz import timezone, UTC
 
 from odoo import api, fields, models, SUPERUSER_ID, tools
@@ -89,12 +89,12 @@ class HolidaysRequest(models.Model):
             user_tz = self.env.user.tz or 'UTC'
             localized_dt = timezone('UTC').localize(values['date_from']).astimezone(timezone(user_tz))
             global_from = localized_dt.time().hour == 7 and localized_dt.time().minute == 0
-            new_values['request_date_from'] = values['date_from'].date()
+            new_values['request_date_from'] = localized_dt.date()
         if values.get('date_to'):
             user_tz = self.env.user.tz or 'UTC'
             localized_dt = timezone('UTC').localize(values['date_to']).astimezone(timezone(user_tz))
             global_to = localized_dt.time().hour == 19 and localized_dt.time().minute == 0
-            new_values['request_date_to'] = values['date_to'].date()
+            new_values['request_date_to'] = localized_dt.date()
         if global_from and global_to:
             new_values['request_unit_custom'] = True
         return new_values
@@ -320,6 +320,9 @@ class HolidaysRequest(models.Model):
             # find last attendance coming before last_day
             attendance_to = next((att for att in reversed(attendances) if int(att.dayofweek) <= self.request_date_to.weekday()), attendances[-1] if attendances else default_value)
 
+        compensated_request_date_from = self.request_date_from
+        compensated_request_date_to = self.request_date_to
+
         if self.request_unit_half:
             if self.request_date_from_period == 'am':
                 hour_from = float_to_time(attendance_from.hour_from)
@@ -333,13 +336,17 @@ class HolidaysRequest(models.Model):
         elif self.request_unit_custom:
             hour_from = self.date_from.time()
             hour_to = self.date_to.time()
+            compensated_request_date_from = self._adjust_date_based_on_tz(self.request_date_from, hour_from)
+            compensated_request_date_to = self._adjust_date_based_on_tz(self.request_date_to, hour_to)
         else:
             hour_from = float_to_time(attendance_from.hour_from)
             hour_to = float_to_time(attendance_to.hour_to)
 
         tz = self.env.user.tz if self.env.user.tz and not self.request_unit_custom else 'UTC'  # custom -> already in UTC
-        self.date_from = timezone(tz).localize(datetime.combine(self.request_date_from, hour_from)).astimezone(UTC).replace(tzinfo=None)
-        self.date_to = timezone(tz).localize(datetime.combine(self.request_date_to, hour_to)).astimezone(UTC).replace(tzinfo=None)
+
+        self.date_from = timezone(tz).localize(datetime.combine(compensated_request_date_from, hour_from)).astimezone(UTC).replace(tzinfo=None)
+        self.date_to = timezone(tz).localize(datetime.combine(compensated_request_date_to, hour_to)).astimezone(UTC).replace(tzinfo=None)
+
         self._onchange_leave_dates()
 
     @api.onchange('request_unit_half')
@@ -474,7 +481,7 @@ class HolidaysRequest(models.Model):
 
     @api.constrains('date_from', 'date_to', 'state', 'employee_id')
     def _check_date(self):
-        for holiday in self:
+        for holiday in self.filtered('employee_id'):
             domain = [
                 ('date_from', '<', holiday.date_to),
                 ('date_to', '>', holiday.date_from),
@@ -516,6 +523,28 @@ class HolidaysRequest(models.Model):
         hours = self.env.company.resource_calendar_id.get_work_hours_count(date_from, date_to)
 
         return {'days': hours / (today_hours or HOURS_PER_DAY), 'hours': hours}
+
+    def _adjust_date_based_on_tz(self, leave_date, hour):
+        """ request_date_{from,to} are local to the user's tz but hour_{from,to} are in UTC.
+
+        In some cases they are combined (assuming they are in the same tz) as a datetime. When
+        that happens it's possible we need to adjust one of the dates. This function adjust the
+        date, so that it can be passed to datetime().
+
+        E.g. a leave in US/Pacific for one day:
+        - request_date_from: 1st of Jan
+        - request_date_to:   1st of Jan
+        - hour_from:         15:00 (7:00 local)
+        - hour_to:           03:00 (19:00 local) <-- this happens on the 2nd of Jan in UTC
+        """
+        user_tz = timezone(self.env.user.tz if self.env.user.tz else 'UTC')
+        request_date_to_utc = UTC.localize(datetime.combine(leave_date, hour)).astimezone(user_tz).replace(tzinfo=None)
+        if request_date_to_utc.date() < leave_date:
+            return leave_date + timedelta(days=1)
+        elif request_date_to_utc.date() > leave_date:
+            return leave_date - timedelta(days=1)
+        else:
+            return leave_date
 
     ####################################################
     # ORM Overrides methods
@@ -633,7 +662,7 @@ class HolidaysRequest(models.Model):
             if leave_type.validation_type == 'no_validation':
                 # Automatic validation should be done in sudo, because user might not have the rights to do it by himself
                 holiday_sudo.action_validate()
-                holiday_sudo.message_subscribe(partner_ids=[holiday._get_responsible_for_approval().partner_id.id])
+                holiday_sudo.message_subscribe(partner_ids=[holiday_sudo._get_responsible_for_approval().partner_id.id])
                 holiday_sudo.message_post(body=_("The time off has been automatically approved"), subtype="mt_comment") # Message from OdooBot (sudo)
             elif not self._context.get('import_file'):
                 holiday_sudo.activity_update()

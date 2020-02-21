@@ -37,6 +37,7 @@ var SummernoteDialog = Dialog.extend({
         var self = this;
         this.opened(function () {
             self.$('input:first').focus();
+            self.$el.closest('.modal').addClass('o_web_editor_dialog');
             self.$el.closest('.modal').on('hidden.bs.modal', self.options.onClose);
         });
         this.on('closed', this, function () {

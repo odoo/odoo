@@ -58,7 +58,7 @@ tour.register('sale_tour', {
     },
     id: 'product_selection_step'
 }, {
-    trigger: '.o_m2o_dropdown_option a:contains("DESK0001")'
+    trigger: '.ui-menu.ui-widget .ui-menu-item a:contains("DESK0001")'
 }, {
     trigger: '.o_form_editable textarea[name="name"].product_creation_success',
     run: function () {} // wait for product creation

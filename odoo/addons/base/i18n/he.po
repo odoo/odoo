@@ -6128,6 +6128,12 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>"
 msgstr ""
+"<b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">כתובת חברה</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">כתובת לחיוב</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">כתובת לאספקה</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">כתובת אחרת</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">כתובת פרטית</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">כתובת</b>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
@@ -7369,7 +7375,7 @@ msgstr "נדרשת גישת מנהל כדי להסיר התקנה של מודו�
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
 msgid "Advanced Address Formatting"
-msgstr "עיצוב כתובת מתקדמת"
+msgstr "עיצוב כתובת מתקדם"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track
@@ -7442,7 +7448,7 @@ msgstr "אפגניסטן"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_country__name_position__after
 msgid "After Address"
-msgstr ""
+msgstr "אחרי כתובת"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_currency__position__after
@@ -7527,7 +7533,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_ocn_client
 msgid "Allow push notification to devices"
-msgstr "אפשר לדחוף הודעה להתקנים"
+msgstr "אפשר הודעה בדחיפה למכשירים"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_comparison
@@ -8366,7 +8372,7 @@ msgstr "תשלום אצווה"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_country__name_position__before
 msgid "Before Address"
-msgstr "לפני הכתובת"
+msgstr "לפני כתובת"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_currency__position__before
@@ -11359,7 +11365,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_marketing_email_marketing
 #: model:ir.module.module,shortdesc:base.module_mass_mailing
 msgid "Email Marketing"
-msgstr "שיווק בדוא\"ל"
+msgstr "שיווק בדואר אלקטרוני"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__signature
@@ -15023,7 +15029,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Learn More"
-msgstr ""
+msgstr "למד עוד"
 
 #. module: base
 #: model:res.country,name:base.lb
@@ -15156,7 +15162,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_link_tracker
 #: model:ir.module.module,shortdesc:base.module_website_links
 msgid "Link Tracker"
-msgstr ""
+msgstr "מעקב קישורים"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip_crm
@@ -15305,7 +15311,7 @@ msgstr "לוגו אינטרנט"
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_search_view
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_tree_view
 msgid "Logs"
-msgstr ""
+msgstr "רישומים"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_loyalty
@@ -18645,7 +18651,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__parent_id
 msgid "Parent Category"
-msgstr "קטגורית הורה"
+msgstr "קטגורית אב"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_parent_id
@@ -19150,7 +19156,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_prev
 msgid "Previous View Architecture"
-msgstr ""
+msgstr "ארכיטקטורה תצוגה מקדימה"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__lastcall
@@ -19869,7 +19875,7 @@ msgstr "אותרה רקורסיה בפועלת בן של השרת"
 #: code:addons/models.py:0
 #, python-format
 msgid "Recursion Detected."
-msgstr ""
+msgstr "התגלתה רקורסיה."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__reference
@@ -21015,7 +21021,7 @@ msgstr "הגדר את נתוני החברה שלך"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
 msgid "Set your company's data for documents header/footer."
-msgstr "הגדר את נתוני החברה שלך עבור כותרת / כותרת תחתונה של מסמכים."
+msgstr "הגדר את נתוני החברה שלך לכותרת עליונה / כותרת תחתונה במסמכים."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_url__binding_model_id
@@ -21226,7 +21232,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social
 msgid "Social Marketing"
-msgstr ""
+msgstr "שיווק ברשתות חברתיות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_media
@@ -24851,7 +24857,7 @@ msgstr "משלוח מסחר אלקטרוני "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "eLearning"
-msgstr ""
+msgstr "למידה אלקטרונית"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form

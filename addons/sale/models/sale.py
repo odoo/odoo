@@ -7,7 +7,7 @@ from itertools import groupby
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import formatLang, get_lang
 from odoo.osv import expression
 from odoo.tools import float_is_zero, float_compare
 
@@ -336,7 +336,6 @@ class SaleOrder(models.Model):
             self.update({
                 'partner_invoice_id': False,
                 'partner_shipping_id': False,
-                'payment_term_id': False,
                 'fiscal_position_id': False,
             })
             return
@@ -348,19 +347,21 @@ class SaleOrder(models.Model):
             'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
-            'user_id': partner_user.id or self.env.uid
         }
+        user_id = partner_user.id or self.env.uid
+        if self.user_id.id != user_id:
+            values['user_id'] = user_id
+
         if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms:
             values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
 
-        # Use team of salesman if any otherwise leave as-is
-        values['team_id'] = partner_user.team_id.id if partner_user and partner_user.team_id else self.team_id
+        values['team_id'] = self.env['crm.team']._get_default_team_id(user_id=user_id)
         self.update(values)
 
     @api.onchange('user_id')
     def onchange_user_id(self):
-        if self.user_id and self.user_id.sale_team_id:
-            self.team_id = self.user_id.sale_team_id
+        if self.user_id:
+            self.team_id = self.env['crm.team']._get_default_team_id(user_id=self.user_id.id)
 
     @api.onchange('partner_id')
     def onchange_partner_id_warning(self):
@@ -491,7 +492,9 @@ class SaleOrder(models.Model):
         a clean extension chain).
         """
         self.ensure_one()
-        journal = self.env['account.move'].with_context(force_company=self.company_id.id, default_type='out_invoice')._get_default_journal()
+        # ensure a correct context for the _get_default_journal method and company-dependent fields
+        self = self.with_context(default_company_id=self.company_id.id, force_company=self.company_id.id)
+        journal = self.env['account.move'].with_context(default_type='out_invoice')._get_default_journal()
         if not journal:
             raise UserError(_('Please define an accounting sales journal for the company %s (%s).') % (self.company_id.name, self.company_id.id))
 
@@ -509,6 +512,7 @@ class SaleOrder(models.Model):
             'partner_shipping_id': self.partner_shipping_id.id,
             'invoice_partner_bank_id': self.company_id.partner_id.bank_ids[:1].id,
             'fiscal_position_id': self.fiscal_position_id.id or self.partner_invoice_id.property_account_position_id.id,
+            'journal_id': journal.id,  # company comes from the journal
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
             'invoice_payment_ref': self.reference,
@@ -539,7 +543,7 @@ class SaleOrder(models.Model):
             context.update({
                 'default_partner_id': self.partner_id.id,
                 'default_partner_shipping_id': self.partner_shipping_id.id,
-                'default_invoice_payment_term_id': self.payment_term_id.id,
+                'default_invoice_payment_term_id': self.payment_term_id.id or self.partner_id.property_payment_term_id.id or self.env['account.move'].default_get(['invoice_payment_term_id']).get('invoice_payment_term_id'),
                 'default_invoice_origin': self.mapped('name'),
                 'default_user_id': self.user_id.id,
             })
@@ -1358,7 +1362,7 @@ class SaleOrderLine(models.Model):
         :param qty: float quantity to invoice
         """
         self.ensure_one()
-        return {
+        res = {
             'display_type': self.display_type,
             'sequence': self.sequence,
             'name': self.name,
@@ -1372,6 +1376,9 @@ class SaleOrderLine(models.Model):
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'sale_line_ids': [(4, self.id)],
         }
+        if self.display_type:
+            res['account_id'] = False
+        return res
 
     def _prepare_procurement_values(self, group_id=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
@@ -1433,7 +1440,7 @@ class SaleOrderLine(models.Model):
             vals['product_uom_qty'] = self.product_uom_qty or 1.0
 
         product = self.product_id.with_context(
-            lang=self.order_id.partner_id.lang,
+            lang=get_lang(self.env, self.order_id.partner_id.lang).code,
             partner=self.order_id.partner_id,
             quantity=vals.get('product_uom_qty') or self.product_uom_qty,
             date=self.order_id.date_order,

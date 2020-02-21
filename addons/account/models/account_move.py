@@ -33,6 +33,7 @@ class AccountMove(models.Model):
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = "Journal Entries"
     _order = 'date desc, name desc, id desc'
+    _mail_post_access = 'read'
 
     @api.model
     def _get_default_journal(self):
@@ -311,9 +312,9 @@ class AccountMove(models.Model):
                     return {'warning': warning}
         for line in self.line_ids:
             line.partner_id = self.partner_id.commercial_partner_id
-        if self.is_sale_document(include_receipts=True):
+        if self.is_sale_document(include_receipts=True) and self.partner_id.property_payment_term_id:
             self.invoice_payment_term_id = self.partner_id.property_payment_term_id
-        elif self.is_purchase_document(include_receipts=True):
+        elif self.is_purchase_document(include_receipts=True) and self.partner_id.property_supplier_payment_term_id:
             self.invoice_payment_term_id = self.partner_id.property_supplier_payment_term_id
 
         self._compute_bank_partner_id()
@@ -1451,12 +1452,6 @@ class AccountMove(models.Model):
             if line.exclude_from_invoice_tab:
                 continue
 
-            # Ensure related fields are well copied.
-            line.partner_id = self.partner_id
-            line.date = self.date
-            line.recompute_tax_line = True
-            line.currency_id = line_currency
-
             # Shortcut to load the demo data.
             # Doing line.account_id triggers a default_get(['account_id']) that could returns a result.
             # A section / note must not have an account_id set.
@@ -1469,6 +1464,19 @@ class AccountMove(models.Model):
                         line.account_id = self.journal_id.default_debit_account_id
             if line.product_id and not line._cache.get('name'):
                 line.name = line._get_computed_name()
+
+            # Compute the account before the partner_id
+            # In case account_followup is installed
+            # Setting the partner will get the account_id in cache
+            # If the account_id is not in cache, it will trigger the default value
+            # Which is wrong in some case
+            # It's better to set the account_id before the partner_id
+            # Ensure related fields are well copied.
+            line.partner_id = self.partner_id
+            line.date = self.date
+            line.recompute_tax_line = True
+            line.currency_id = line_currency
+
 
         self.line_ids._onchange_price_subtotal()
         self._recompute_dynamic_lines(recompute_all_taxes=True)
@@ -1513,6 +1521,13 @@ class AccountMove(models.Model):
             ctx_vals = {'default_type': vals.get('type') or self._context.get('default_type')}
             if vals.get('journal_id'):
                 ctx_vals['default_journal_id'] = vals['journal_id']
+                # reorder the companies in the context so that the company of the journal
+                # (which will be the company of the move) is the main one, ensuring all
+                # property fields are read with the correct company
+                journal_company = self.env['account.journal'].browse(vals['journal_id']).company_id
+                allowed_companies = self._context.get('allowed_company_ids', journal_company.ids)
+                reordered_companies = sorted(allowed_companies, key=lambda cid: cid != journal_company.id)
+                ctx_vals['allowed_company_ids'] = reordered_companies
             self_ctx = self.with_context(**ctx_vals)
             new_vals = self_ctx._add_missing_default_values(vals)
 
@@ -1833,10 +1848,11 @@ class AccountMove(models.Model):
         params = [self.id, self.id]
         self._cr.execute(query, params)
         total_amount, total_reconciled = self._cr.fetchone()
-        if float_is_zero(total_amount, precision_rounding=self.company_id.currency_id.rounding):
+        currency = self.company_id.currency_id
+        if float_is_zero(total_amount, precision_rounding=currency.rounding):
             return 1.0
         else:
-            return abs(total_reconciled / total_amount)
+            return abs(currency.round(total_reconciled) / currency.round(total_amount))
 
     def _get_reconciled_payments(self):
         """Helper used to retrieve the reconciled payments on this journal entry"""
@@ -2086,7 +2102,7 @@ class AccountMove(models.Model):
             if move.auto_post and move.date > fields.Date.today():
                 raise UserError(_("This move is configured to be auto-posted on {}".format(move.date.strftime(get_lang(self.env).date_format))))
 
-            move.message_subscribe([p.id for p in [move.partner_id, move.commercial_partner_id] if p not in move.sudo().message_partner_ids])
+            move.message_subscribe([p.id for p in [move.partner_id] if p not in move.sudo().message_partner_ids])
 
             to_write = {'state': 'posted'}
 
@@ -2816,8 +2832,12 @@ class AccountMoveLine(models.Model):
                 'discount': 0.0,
                 'price_unit': balance / (quantity or 1.0),
             }
-        else:
+        elif not discount_factor:
+            # balance of line is 0, but discount  == 100% so we display the normal unit_price
             vals = {}
+        else:
+            # balance is 0, so unit price is 0 as well
+            vals = {'price_unit': 0.0}
         return vals
 
     # -------------------------------------------------------------------------
@@ -3015,7 +3035,7 @@ class AccountMoveLine(models.Model):
             #computing the `reconciled` field.
             reconciled = False
             digits_rounding_precision = line.company_id.currency_id.rounding
-            if (line.matched_debit_ids or line.matched_credit_ids) and float_is_zero(amount, precision_rounding=digits_rounding_precision):
+            if float_is_zero(amount, precision_rounding=digits_rounding_precision):
                 if line.currency_id and line.amount_currency:
                     if float_is_zero(amount_residual_currency, precision_rounding=line.currency_id.rounding):
                         reconciled = True
@@ -3313,7 +3333,7 @@ class AccountMoveLine(models.Model):
                 ))
                 super(AccountMoveLine, line).write(to_write)
             elif any(field in vals for field in BUSINESS_FIELDS):
-                to_write = self._get_price_total_and_subtotal()
+                to_write = line._get_price_total_and_subtotal()
                 to_write.update(line._get_fields_onchange_subtotal(
                     price_subtotal=to_write['price_subtotal'],
                 ))
@@ -3381,9 +3401,13 @@ class AccountMoveLine(models.Model):
 
             # Suggest default value for 'partner_id'.
             if 'partner_id' in default_fields and not values.get('partner_id'):
-                partners = move.line_ids[-2:].mapped('partner_id')
-                if len(partners) == 1:
-                    values['partner_id'] = partners.id
+                if len(move.line_ids[-2:]) == 2 and  move.line_ids[-1].partner_id == move.line_ids[-2].partner_id != False:
+                    values['partner_id'] = move.line_ids[-2:].mapped('partner_id').id
+
+            # Suggest default value for 'account_id'.
+            if 'account_id' in default_fields and not values.get('account_id'):
+                if len(move.line_ids[-2:]) == 2 and  move.line_ids[-1].account_id == move.line_ids[-2].account_id != False:
+                    values['account_id'] = move.line_ids[-2:].mapped('account_id').id
         return values
 
     @api.depends('ref', 'move_id')
@@ -3614,7 +3638,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             company_ids.add(line.company_id.id)
             all_accounts.append(line.account_id)
-            if (line.matched_debit_ids or line.matched_credit_ids) and line.reconciled:
+            if line.reconciled:
                 raise UserError(_('You are trying to reconcile some entries that are already reconciled.'))
         if len(company_ids) > 1:
             raise UserError(_('To reconcile the entries company should be the same for all entries.'))
@@ -3812,7 +3836,9 @@ class AccountMoveLine(models.Model):
                     if total_amount_currency == 0.0:
                         matched_percentage_per_move[line.move_id.id] = 1.0
                     else:
-                        matched_percentage_per_move[line.move_id.id] = total_reconciled_currency / total_amount_currency
+                        # lines_to_consider is always non-empty when total_amount_currency is 0
+                        currency = lines_to_consider[0].currency_id or lines_to_consider[0].company_id.currency_id
+                        matched_percentage_per_move[line.move_id.id] = currency.round(total_reconciled_currency) / currency.round(total_amount_currency)
         return matched_percentage_per_move
 
     def _get_analytic_tag_ids(self):

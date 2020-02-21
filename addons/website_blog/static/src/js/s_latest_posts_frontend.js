@@ -20,14 +20,11 @@ publicWidget.registry.js_get_posts = publicWidget.Widget.extend({
         var blogID = self.$target.data('filterByBlogId');
         var template = self.$target.data('template') || 'website_blog.s_latest_posts_list_template';
         var loading = self.$target.data('loading');
+        var domain = [];
 
         this.$target.empty(); // Compatibility with db that saved content inside by mistake
         this.$target.attr('contenteditable', 'False'); // Prevent user edition
 
-        var domain = [
-            ['website_published', '=', true],
-            ['post_date', '<=', moment().utc().locale('en').format('YYYY-MM-DD HH:mm:ss')],
-        ];
         if (blogID) {
             domain.push(['blog_id', '=', parseInt(blogID)]);
         }

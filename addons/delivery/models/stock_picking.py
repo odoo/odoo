@@ -109,6 +109,13 @@ class StockPicking(models.Model):
             else:
                 picking.return_label_ids = False
 
+    def get_multiple_carrier_tracking(self):
+        self.ensure_one()
+        try:
+            return json.loads(self.carrier_tracking_url)
+        except ValueError:
+            return False
+
     @api.depends('move_lines')
     def _cal_weight(self):
         for picking in self:

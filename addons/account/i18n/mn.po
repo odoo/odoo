@@ -11086,6 +11086,8 @@ msgid ""
 "The payments which have not been matched with a bank statement will not be "
 "shown in bank reconciliation data if they were made before this date"
 msgstr ""
+"Энэ огнооноос өмнө хийгдсэн банк болон бэлэн мөнгөний хуулгатай тулгагдаагүй"
+" төлбөрийн гүйлгээг банк эсвэл бэлэн мөнгөний тулгах мэдээлэлд харуулахгүй."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -11288,6 +11290,14 @@ msgid ""
 msgstr ""
 "Түгжихийг хүсч байгаа мөчлөгт тань батлаагүй бичлэгүүд байсаар байна. "
 "Тэдгээрийг батлах эсвэл устгах нь зохимжтой. "
+
+#. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"There is more than one receivable/payable account in the concerned invoices."
+" You cannot group payments in that case."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0

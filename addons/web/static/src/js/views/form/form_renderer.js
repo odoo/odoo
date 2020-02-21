@@ -147,6 +147,8 @@ var FormRenderer = BasicRenderer.extend({
                 }));
             if (this.$('.o_form_statusbar').length) {
                 this.$('.o_form_statusbar').after($notification);
+            } else if (this.$('.o_form_sheet_bg').length) {
+                this.$('.o_form_sheet_bg').prepend($notification);
             } else {
                 this.$el.prepend($notification);
             }

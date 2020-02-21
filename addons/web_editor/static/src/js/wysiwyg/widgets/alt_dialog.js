@@ -51,7 +51,7 @@ var AltDialog = Dialog.extend({
         var allNonEscQuots = /"/g;
         $(this.media).attr('alt', alt ? alt.replace(allNonEscQuots, "&quot;") : null)
             .attr('title', title ? title.replace(allNonEscQuots, "&quot;") : null);
-
+        $(this.media).trigger('content_changed');
         this.final_data = this.media;
         return this._super.apply(this, arguments);
     },

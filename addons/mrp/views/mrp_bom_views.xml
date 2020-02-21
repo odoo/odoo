@@ -108,7 +108,7 @@
                             <group>
                                 <group>
                                     <field name="ready_to_produce" attrs="{'invisible': [('type','!=','normal')]}" string="Manufacturing Readiness" groups="mrp.group_mrp_routings"/>
-                                    <field name="consumption" attrs="{'invisible': [('type','!=','normal')]}"/>
+                                    <field name="consumption" attrs="{'invisible': [('type','!=','normal')], 'required': [('type','=','normal')]}"/>
                                 </group>
                                 <group>
                                     <field name="picking_type_id" attrs="{'invisible': [('type','!=','normal')]}" string="Operation" groups="stock.group_adv_location"/>

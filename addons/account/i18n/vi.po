@@ -13,7 +13,7 @@
 # Minh Nguyen <ndminh210994@gmail.com>, 2019
 # fanha99 <fanha99@hotmail.com>, 2019
 # Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2019
-# Chinh Chinh <trinhttp@trobz.com>, 2019
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2019
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
 # Duy BQ <duybq86@gmail.com>, 2020
 # 
@@ -10558,6 +10558,8 @@ msgid ""
 "Technical field used to hide the payment method if the selected journal has "
 "only one available which is 'manual'"
 msgstr ""
+"Trường kỷ thuật dùng để ẩn phương thức thanh toán, nếu nhật ký được chọn chỉ"
+" có sẵn một phương thức 'thủ công'"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__tax_cash_basis_rec_id
@@ -10716,6 +10718,14 @@ msgstr "Tài khoản %s (%s) đã không dùng nữa."
 msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The account selected on your journal entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account."
 msgstr ""
 
 #. module: account
@@ -13050,3 +13060,43 @@ msgstr "hoá đơn nhà cung cấp"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Đếm"
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You can't change the company of your account since there are some journal "
+"items linked to it."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You can't change the company of your journal since there are some journal "
+"entries linked to it."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"You can't change the company of your tax since there are some journal items "
+"linked to it."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_analytic_line.py:0
+#, python-format
+msgid ""
+"You can't set a different company on your analytic account since there are "
+"some journal items linked to it."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_analytic_line.py:0
+#, python-format
+msgid ""
+"You can't set a different company on your analytic tags since there are some"
+" journal items linked to it."
+msgstr ""

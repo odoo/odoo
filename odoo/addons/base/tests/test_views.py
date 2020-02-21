@@ -239,6 +239,32 @@ class TestViewInheritance(ViewCase):
                 'arch': self.arch_for('itself', parent=True),
             })
 
+    def test_write_arch(self):
+        self.env['res.lang'].load_lang('fr_FR')
+
+        v = self.makeView("T", arch='<form string="Foo">Bar</form>')
+        self.env['ir.translation']._upsert_translations([{
+            'type': 'model_terms',
+            'name': 'ir.ui.view,arch_db',
+            'lang': 'fr_FR',
+            'res_id': v.id,
+            'src': 'Foo',
+            'value': 'Fou',
+        }, {
+            'type': 'model_terms',
+            'name': 'ir.ui.view,arch_db',
+            'lang': 'fr_FR',
+            'res_id': v.id,
+            'src': 'Bar',
+            'value': 'Barre',
+        }])
+        self.assertEqual(v.arch, '<form string="Foo">Bar</form>')
+
+        # modify v to discard translations; this should not invalidate 'arch'!
+        v.arch = '<form></form>'
+        self.assertEqual(v.arch, '<form></form>')
+
+
 class TestApplyInheritanceSpecs(ViewCase):
     """ Applies a sequence of inheritance specification nodes to a base
     architecture. IO state parameters (cr, uid, model, context) are used for

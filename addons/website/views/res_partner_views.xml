@@ -5,9 +5,9 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <field name="company_id" position="after" options="{'no_create': True}">
-                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
-            </field>
+            <xpath expr="//group[@name='misc']/field[@name='company_id']" position="after">
+                <field name="website_id"/>
+            </xpath>
         </field>
     </record>
 </odoo>

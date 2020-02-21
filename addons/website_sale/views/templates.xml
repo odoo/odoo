@@ -79,7 +79,7 @@
             <li t-attf-class="nav-item o_wsale_my_cart #{'' if website_sale_order and website_sale_order.cart_quantity else 'd-none'}">
                 <a href="/shop/cart" class="nav-link">
                     <i class="fa fa-shopping-cart"></i>
-                    My Cart <sup t-attf-class="my_cart_quantity badge badge-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''" />
+                    My Cart <sup t-attf-class="my_cart_quantity badge badge-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''" t-att-data-order-id="website_sale_order and website_sale_order.id or ''"/>
                 </a>
             </li>
         </xpath>

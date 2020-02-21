@@ -1985,8 +1985,8 @@ exports.Orderline = Backbone.Model.extend({
 
         return {
             'taxes': taxes_vals,
-            'total_excluded': sign * round_pr(total_excluded, currency_rounding),
-            'total_included': sign * round_pr(total_included, currency_rounding),
+            'total_excluded': sign * round_pr(total_excluded, this.pos.currency.rounding),
+            'total_included': sign * round_pr(total_included, this.pos.currency.rounding),
         }
     },
     get_all_prices: function(){

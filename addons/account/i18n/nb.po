@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Jan Pedro Tumusok <jpt@eyenetworks.no>, 2019
-# Marius Stedjan <marius@stedjan.com>, 2019
 # Jorunn D. Newth, 2019
 # Martin Trigaux, 2019
+# Marius Stedjan <marius@stedjan.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2020\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -173,6 +173,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hei ${object.partner_id.name}<br/><br/>\n"
+"        Takk for din betaling.\n"
+"        Her er din kvittering <strong>${(object.name or '').replace('/','-')}</strong> pålydende\n"
+"        <strong>${format_amount(object.amount, object.currency_id)}</strong> fra ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Kontakt oss gjerne om du har spørsmål.\n"
+"        <br/><br/>\n"
+"        Takk,<br/>\n"
+"        % if user and user.signature:\n"
+"        ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -208,6 +224,36 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hei\n"
+"        % if object.partner_id.parent_id:\n"
+"            ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
+"        % else:\n"
+"            ${object.partner_id.name},\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Her er din\n"
+"        % if object.name:\n"
+"            faktura <strong>${object.name}</strong>\n"
+"        % else:\n"
+"            faktura\n"
+"        %endif\n"
+"        % if object.invoice_origin:\n"
+"            (med referanse: ${object.invoice_origin})\n"
+"        % endif\n"
+"        pålydende <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        fra ${object.company_id.name}.\n"
+"        % if object.invoice_payment_state == 'paid':\n"
+"            Fakturaen er allerede betalt.\n"
+"        % else:\n"
+"            Vær snill og betal fakturaen så snart som mulig.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Kontakt oss gjerne om du har spørsmål.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -228,7 +274,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-download\"/> Download"
-msgstr ""
+msgstr "<i class=\"fa fa-download\"/> Last ned"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -319,6 +365,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -326,6 +375,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Verdier satt her er spesifikt"
+" for firma.\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -478,7 +529,7 @@ msgstr "<span>Beskrivelse</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Disc.%</span>"
-msgstr ""
+msgstr "<span>Rab.%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -538,7 +589,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Taxes</span>"
-msgstr ""
+msgstr "<span>Avgifter</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -563,7 +614,7 @@ msgstr "<span>Visning</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"mr16\">Subtotal</strong>"
-msgstr ""
+msgstr "<strong class=\"mr16\">Sum</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -582,7 +633,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<strong class=\"text-muted\">Salesperson</strong>"
-msgstr ""
+msgstr "<strong class=\"text-muted\">Selger</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_with_payments
@@ -800,7 +851,7 @@ msgstr "Advarsel kan settes på en partner (konto)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Adgangsadvarsel"
 
 #. module: account
 #. openerp-web
@@ -1371,7 +1422,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add a note"
-msgstr ""
+msgstr "Legg til notat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1393,7 +1444,7 @@ msgstr "Legg til en linje til"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add a section"
-msgstr ""
+msgstr "Legg til seksjon"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1819,7 +1870,7 @@ msgstr "Analytiske linjer"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_analytic_tags
 #: model:ir.ui.menu,name:account.account_analytic_tag_menu
 msgid "Analytic Tags"
-msgstr ""
+msgstr "Analytiske etiketter"
 
 #. module: account
 #. openerp-web
@@ -2352,7 +2403,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
-msgstr ""
+msgstr "Blokkeringsmelding"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type__include_initial_balance
@@ -4075,7 +4126,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Digest"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4087,7 +4138,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Disc.%"
-msgstr ""
+msgstr "Rab.%"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount
@@ -4176,7 +4227,7 @@ msgstr "Vis på fakturaer"
 #: code:addons/account/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "Har ikke tilgang, hopp over denne dataen for brukerens digest e-post"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete_message
@@ -5219,7 +5270,7 @@ msgstr "Ikon"
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_icon
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikon for å indikere aktivitetsunntak."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -5237,7 +5288,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment__message_needaction
 #: model:ir.model.fields,help:account.field_account_payment__message_unread
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Hvis huket av, vil nye meldinger kreve din oppmerksomhet."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_has_error
@@ -5249,7 +5300,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment__message_has_error
 #: model:ir.model.fields,help:account.field_account_payment__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Hvis huket av, har enkelte meldinger leveringsfeil."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__nocreate
@@ -6200,7 +6251,7 @@ msgstr "Juni"
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_coa_state__just_done
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_fy_data_state__just_done
 msgid "Just done"
-msgstr ""
+msgstr "Akkurat ferdig"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__reason
@@ -6609,7 +6660,7 @@ msgstr "Loggfør et internt notat"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Looks great!"
-msgstr ""
+msgstr "Ser bra ut!"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -6650,7 +6701,7 @@ msgstr "Epostliste"
 #: model:ir.model.fields,field_description:account.field_account_move__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_payment__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Hovedvedlegg"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__currency_id
@@ -6824,7 +6875,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_payment__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Melding for feil ved levering"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__record_name
@@ -7131,7 +7182,7 @@ msgstr "Ikke betalt"
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_coa_state__not_done
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_fy_data_state__not_done
 msgid "Not done"
-msgstr ""
+msgstr "Ikke ferdig"
 
 #. module: account
 #. openerp-web
@@ -7231,7 +7282,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__message_has_error_counter
 #: model:ir.model.fields,field_description:account.field_account_payment__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Antall feil"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_needaction_counter
@@ -7247,7 +7298,7 @@ msgstr "Antall meldinger som krever handling"
 #: model:ir.model.fields,help:account.field_account_move__message_has_error_counter
 #: model:ir.model.fields,help:account.field_account_payment__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Antall meldinger med leveringsfeil"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_unread_counter
@@ -8486,7 +8537,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.client,name:account.action_bank_reconcile
 msgid "Reconciliation on Bank Statements"
-msgstr ""
+msgstr "Avstemming av bankutskrifter"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8647,7 +8698,7 @@ msgstr "Reply-To"
 #: model:ir.model,name:account.model_ir_actions_report
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__report_action_id
 msgid "Report Action"
-msgstr ""
+msgstr "Rapporthandling"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__tax_report_line_id
@@ -8893,7 +8944,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_account_payment__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "SMS Leveringsfeil"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -9209,6 +9260,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Ved å huke av \"Advarsel\"-valget, vil brukeren bli vist meldingen. Ved å "
+"huke av \"Blokkerende melding\" vil brukeren bli blokkert fra å fortsette. "
+"Meldingen må angis i neste felt."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -9266,7 +9320,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
 msgid "Send sample"
-msgstr ""
+msgstr "Send eksempel"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__sent
@@ -9957,7 +10011,7 @@ msgstr "Avgiftsmaler"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__amount_by_group
 msgid "Tax amount by group"
-msgstr ""
+msgstr "Avgiftsbeløp pr gruppe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_calculation_rounding_method
@@ -10121,7 +10175,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "Teknisk felt for UX-formål"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__balance
@@ -10927,6 +10981,14 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid ""
+"There is more than one receivable/payable account in the concerned invoices."
+" You cannot group payments in that case."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
 "There is no Transfer Account defined in the accounting settings. Please "
 "define one to be able to confirm this transfer."
 msgstr ""
@@ -11399,14 +11461,14 @@ msgstr "Type"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__type_name
 msgid "Type Name"
-msgstr ""
+msgstr "Navn på type"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__activity_exception_decoration
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Type for unntaksaktiviteten på posten."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
@@ -11529,7 +11591,7 @@ msgstr "Total uten avgiftsberegning"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "UoM"
-msgstr ""
+msgstr "Enhet"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form

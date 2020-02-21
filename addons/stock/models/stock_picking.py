@@ -359,7 +359,8 @@ class Picking(models.Model):
     is_locked = fields.Boolean(default=True, help='When the picking is not done this allows changing the '
                                'initial demand. When the picking is done this allows '
                                'changing the done quantities.')
-    product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id', readonly=False)
+    # Used to search on pickings
+    product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id', readonly=True)
     show_operations = fields.Boolean(compute='_compute_show_operations')
     show_reserved = fields.Boolean(related='picking_type_id.show_reserved')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
@@ -402,7 +403,7 @@ class Picking(models.Model):
             else:
                 picking.show_lots_text = False
 
-    @api.depends('move_type', 'move_lines.state', 'move_lines.picking_id')
+    @api.depends('move_type', 'immediate_transfer', 'move_lines.state', 'move_lines.picking_id')
     def _compute_state(self):
         ''' State of a picking depends on the state of its related stock.move
         - Draft: only used for "planned pickings"
@@ -427,7 +428,9 @@ class Picking(models.Model):
                 picking.state = 'done'
             else:
                 relevant_move_state = picking.move_lines._get_relevant_state_among_moves()
-                if relevant_move_state == 'partially_available':
+                if picking.immediate_transfer and relevant_move_state not in ('draft', 'cancel', 'done'):
+                    picking.state = 'assigned'
+                elif relevant_move_state == 'partially_available':
                     picking.state = 'assigned'
                 else:
                     picking.state = relevant_move_state
@@ -570,11 +573,24 @@ class Picking(models.Model):
                         move[2]['company_id'] = picking_type.company_id.id
         res = super(Picking, self).create(vals)
         res._autoconfirm_picking()
+
+        # set partner as follower
+        if vals.get('partner_id'):
+            for picking in res.filtered(lambda p: p.location_id.usage == 'supplier' or p.location_dest_id.usage == 'customer'):
+                picking.message_subscribe([vals.get('partner_id')])
+
         return res
 
     def write(self, vals):
         if vals.get('picking_type_id') and self.state != 'draft':
             raise UserError(_("Changing the operation type of this record is forbidden at this point."))
+        # set partner as a follower and unfollow old partner
+        if vals.get('partner_id'):
+            for picking in self:
+                if picking.location_id.usage == 'supplier' or picking.location_dest_id.usage == 'customer':
+                    if picking.partner_id:
+                        picking.message_unsubscribe(picking.partner_id.ids)
+                    picking.message_subscribe([vals.get('partner_id')])
         res = super(Picking, self).write(vals)
         # Change locations of moves if those of the picking change
         after_vals = {}
@@ -620,7 +636,7 @@ class Picking(models.Model):
             .filtered(lambda move: move.state == 'draft')\
             ._action_confirm()
         # call `_action_assign` on every confirmed move which location_id bypasses the reservation
-        self.filtered(lambda picking: picking.location_id.usage in ('supplier', 'inventory', 'production') and picking.state == 'confirmed')\
+        self.filtered(lambda picking: not picking.immediate_transfer and picking.location_id.usage in ('supplier', 'inventory', 'production') and picking.state == 'confirmed')\
             .mapped('move_lines')._action_assign()
         return True
 
@@ -760,6 +776,12 @@ class Picking(models.Model):
             all_in = False
         return all_in
 
+    def _get_entire_pack_location_dest(self, move_line_ids):
+        location_dest_ids = move_line_ids.mapped('location_dest_id')
+        if len(location_dest_ids) > 1:
+            return False
+        return location_dest_ids.id
+
     def _check_entire_pack(self):
         """ This function check if entire packs are moved in the picking"""
         for picking in self:
@@ -773,7 +795,7 @@ class Picking(models.Model):
                             'picking_id': picking.id,
                             'package_id': pack.id,
                             'location_id': pack.location_id.id,
-                            'location_dest_id': picking.move_line_ids.filtered(lambda ml: ml.package_id == pack).mapped('location_dest_id')[:1].id,
+                            'location_dest_id': self._get_entire_pack_location_dest(move_lines_to_pack) or picking.location_dest_id.id,
                             'move_line_ids': [(6, 0, move_lines_to_pack.ids)],
                             'company_id': picking.company_id.id,
                         })
@@ -792,6 +814,8 @@ class Picking(models.Model):
                             'result_package_id': pack.id,
                             'package_level_id': package_level_ids[0].id,
                         })
+                        for pl in package_level_ids:
+                            pl.location_dest_id = self._get_entire_pack_location_dest(pl.move_line_ids) or picking.location_dest_id.id
 
     def do_unreserve(self):
         for picking in self:
@@ -805,6 +829,15 @@ class Picking(models.Model):
         self.ensure_one()
         if not self.move_lines and not self.move_line_ids:
             raise UserError(_('Please add some items to move.'))
+
+        # Clean-up the context key at validation to avoid forcing the creation of immediate
+        # transfers.
+        ctx = dict(self.env.context)
+        ctx.pop('default_immediate_transfer', None)
+        self = self.with_context(ctx)
+
+        # add user as a follower
+        self.message_subscribe([self.env.user.partner_id.id])
 
         # If no lots when needed, raise error
         picking_type = self.picking_type_id

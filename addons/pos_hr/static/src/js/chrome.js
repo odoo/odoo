@@ -95,7 +95,7 @@ odoo.define('pos_hr.chrome', function (require) {
             'args': {
                 label: _lt('Lock'),
                 action: function() {
-                    this.gui.show_screen('login');
+                    this.chrome.return_to_login_screen();
                 }
             }
         },
@@ -110,7 +110,10 @@ odoo.define('pos_hr.chrome', function (require) {
                     return false;
                 });
             this._super();
-        }
+        },
+        return_to_login_screen: function() {
+            this.gui.show_screen('login');
+        },
 
     });
 

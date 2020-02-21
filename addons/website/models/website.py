@@ -490,7 +490,12 @@ class Website(models.Model):
     @api.model
     def get_current_website(self, fallback=True):
         if request and request.session.get('force_website_id'):
-            return self.browse(request.session['force_website_id'])
+            website_id = self.browse(request.session['force_website_id']).exists()
+            if not website_id:
+                # Don't crash is session website got deleted
+                request.session.pop('force_website_id')
+            else:
+                return website_id
 
         website_id = self.env.context.get('website_id')
         if website_id:

@@ -589,6 +589,7 @@ options.registry.layout_column = options.Class.extend({
 
         this.trigger_up('request_history_undo_record', {$target: this.$target});
 
+        var colsLength = this.$target.children().length + count;
         if (count > 0) {
             var $lastColumn = this.$target.children().last();
             for (var i = 0; i < count; i++) {
@@ -601,17 +602,18 @@ options.registry.layout_column = options.Class.extend({
             });
         }
 
-        this._resizeColumns();
+        this._resizeColumns(colsLength);
         this.trigger_up('cover_update');
     },
     /**
      * Resizes the columns so that they are kept on one row.
      *
      * @private
+     * @param {number} [colsLength] (default to the actual number of columns)
      */
-    _resizeColumns: function () {
+    _resizeColumns: function (colsLength) {
         var $columns = this.$target.children();
-        var colsLength = $columns.length;
+        colsLength = colsLength || $columns.length;
         var colSize = Math.floor(12 / colsLength) || 1;
         var colOffset = Math.floor((12 - colSize * colsLength) / 2);
         var colClass = 'col-lg-' + colSize;
@@ -623,6 +625,9 @@ options.registry.layout_column = options.Class.extend({
         if (colOffset) {
             $columns.first().addClass('offset-lg-' + colOffset);
         }
+        // TODO: remove in master. This is used to keep the UI in sync, but
+        // won't be needed once option methods are properly asynchronous.
+        this.colsLength = colsLength;
     },
     /**
      * @override
@@ -630,7 +635,7 @@ options.registry.layout_column = options.Class.extend({
     _setActive: function () {
         this._super.apply(this, arguments);
         this.$el.find('[data-select-count]').removeClass('active')
-            .filter('[data-select-count=' + this.$target.children().length + ']').addClass('active');
+            .filter('[data-select-count=' + (this.colsLength || this.$target.children().length) + ']').addClass('active');
     },
 });
 

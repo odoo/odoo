@@ -1159,7 +1159,6 @@ their root element is ``<gantt>``.
 
     .. only:: solutions
 
-        #. Create a computed field expressing the session's duration in hours
         #. Add the gantt view's definition, and add the gantt view to the
            *Session* model's action
 

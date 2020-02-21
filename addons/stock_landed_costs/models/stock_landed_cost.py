@@ -133,6 +133,7 @@ class LandedCost(models.Model):
                 'line_ids': [],
                 'type': 'entry',
             }
+            valuation_layer_ids = []
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
                 remaining_qty = sum(line.move_id.stock_valuation_layer_ids.mapped('remaining_qty'))
                 linked_layer = line.move_id.stock_valuation_layer_ids[:1]
@@ -152,8 +153,8 @@ class LandedCost(models.Model):
                         'stock_landed_cost_id': cost.id,
                         'company_id': cost.company_id.id,
                     })
-                    move_vals['stock_valuation_layer_ids'] = [(6, None, [valuation_layer.id])]
                     linked_layer.remaining_value += cost_to_add
+                    valuation_layer_ids.append(valuation_layer.id)
                 # Update the AVCO
                 product = line.move_id.product_id
                 if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
@@ -167,6 +168,7 @@ class LandedCost(models.Model):
                     qty_out = line.move_id.product_qty
                 move_vals['line_ids'] += line._create_accounting_entries(move, qty_out)
 
+            move_vals['stock_valuation_layer_ids'] = [(6, None, valuation_layer_ids)]
             move = move.create(move_vals)
             cost.write({'state': 'done', 'account_move_id': move.id})
             move.post()
@@ -176,7 +178,7 @@ class LandedCost(models.Model):
                 for product in cost.cost_lines.product_id:
                     accounts = product.product_tmpl_id.get_product_accounts()
                     input_account = accounts['stock_input']
-                    all_amls.filtered(lambda aml: aml.account_id == input_account).reconcile()
+                    all_amls.filtered(lambda aml: aml.account_id == input_account and not aml.full_reconcile_id).reconcile()
         return True
 
     def _check_sum(self):

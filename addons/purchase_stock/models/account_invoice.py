@@ -160,6 +160,8 @@ class AccountMove(models.Model):
     def post(self):
         # OVERRIDE
         # Create additional price difference lines for vendor bills.
+        if self._context.get('move_reverse_cancel'):
+            return super(AccountMove, self).post()
         self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_in_lines_vals())
         return super(AccountMove, self).post()
 

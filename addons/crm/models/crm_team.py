@@ -107,7 +107,10 @@ class Team(models.Model):
     def action_your_pipeline(self):
         action = self.env.ref('crm.crm_lead_action_pipeline').read()[0]
         user_team_id = self.env.user.sale_team_id.id
-        if not user_team_id:
+        if user_team_id:
+            # To ensure that the team is readable in multi company
+            user_team_id = self.search([('id', '=', user_team_id)], limit=1).id
+        else:
             user_team_id = self.search([], limit=1).id
             action['help'] = _("""<p class='o_view_nocontent_smiling_face'>Add new opportunities</p><p>
     Looks like you are not a member of a Sales Team. You should add yourself

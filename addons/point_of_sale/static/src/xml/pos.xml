@@ -870,11 +870,7 @@
         </div>
     </t>
 
-    <t t-name="OrderReceiptWrappedProductNameLines">
-        <t t-foreach="line.product_name_wrapped.slice(1)" t-as="wrapped_line">
-            <t t-esc="wrapped_line"/>
-        </t>
-    </t>
+    <t t-name="OrderReceiptWrappedProductNameLines"><t t-foreach="line.product_name_wrapped.slice(1)" t-as="wrapped_line"><t t-esc="wrapped_line"/></t></t>
 
     <t t-name="OrderReceipt">
         <div class="pos-receipt">
@@ -925,21 +921,9 @@
                 <t t-foreach='receipt.orderlines' t-as='line'>
                     <t t-set='simple' t-value='(line.discount === 0 and line.unit_name === "Units" and line.quantity === 1 and !discount_to_show and !(line.display_discount_policy == "without_discount" &amp;&amp; line.price != line.price_lst))' />
                     <t t-if='simple'>
-                        <div>
-                            <t t-esc='line.product_name_wrapped[0]' />
-                            <span t-esc='widget.format_currency_no_symbol(line.price_display)' class="price_display pos-receipt-right-align"/>
-                        </div>
-                        <t t-call="OrderReceiptWrappedProductNameLines"/>
-                    </t>
+                        <div><t t-esc='line.product_name_wrapped[0]' /><span t-esc='widget.format_currency_no_symbol(line.price_display)' class="price_display pos-receipt-right-align"/></div><t t-call="OrderReceiptWrappedProductNameLines"/></t>
                     <t t-if='!simple'>
-                        <div t-esc='line.product_name_wrapped[0]'/>
-                        <t t-call="OrderReceiptWrappedProductNameLines"/>
-                        <t t-if="line.display_discount_policy == 'without_discount' &amp;&amp; line.price != line.price_lst">
-                            <div class="pos-receipt-left-padding">
-                                <t t-esc="widget.format_currency_no_symbol(line.price_lst)" />
-                                ->
-                                <t t-esc="widget.format_currency_no_symbol(line.price)" />
-                            </div>
+                        <div t-esc='line.product_name_wrapped[0]'/><t t-call="OrderReceiptWrappedProductNameLines"/><t t-if="line.display_discount_policy == 'without_discount' &amp;&amp; line.price != line.price_lst"><div class="pos-receipt-left-padding"><t t-esc="widget.format_currency_no_symbol(line.price_lst)" />-><t t-esc="widget.format_currency_no_symbol(line.price)" /></div>
                         </t>
                         <t t-elif='line.discount !== 0'>
                             <div class="pos-receipt-left-padding">

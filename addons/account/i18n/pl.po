@@ -27,11 +27,11 @@
 # zieloo <zieloo@gmail.com>, 2019
 # Natalia Gros <nag@odoo.com>, 2019
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2019
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2019
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2019
 # Karol Rybak <karolrybak85@gmail.com>, 2019
 # Maksym <ms@myodoo.pl>, 2020
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2020
 # Paweł Wodyński <pw@myodoo.pl>, 2020
 # 
 msgid ""
@@ -111,7 +111,7 @@ msgstr "%s (kopia)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%s (rounding)"
-msgstr ""
+msgstr "%s (zaokrąglenie)"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -6342,7 +6342,7 @@ msgstr "Czerwiec"
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_coa_state__just_done
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_fy_data_state__just_done
 msgid "Just done"
-msgstr ""
+msgstr "Wykonano"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__reason
@@ -6756,7 +6756,7 @@ msgstr "Zapisz wewnętrzną notatkę"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Looks great!"
-msgstr ""
+msgstr "Wygląda świetnie!"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -7293,7 +7293,7 @@ msgstr "Nie zapłacone"
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_coa_state__not_done
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_fy_data_state__not_done
 msgid "Not done"
-msgstr ""
+msgstr "Nie wykonano"
 
 #. module: account
 #. openerp-web
@@ -8251,7 +8251,7 @@ msgstr "Adres URL dostępu do portalu"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Post"
-msgstr "Wyślij"
+msgstr "Zaksięguj"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8261,12 +8261,12 @@ msgstr "Zaksięguj wszystkie zapisy"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__post_at
 msgid "Post At"
-msgstr ""
+msgstr "Zaksięguj na"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post
 msgid "Post Automatically"
-msgstr ""
+msgstr "Zaksięguj automatycznie"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -8281,12 +8281,12 @@ msgstr "Zaksięguj zapisy dziennika"
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
 msgid "Post Payments"
-msgstr ""
+msgstr "Zaksięguj płatności"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 msgid "Post entries"
-msgstr ""
+msgstr "Zaksięguj zapisy"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__posted
@@ -8316,7 +8316,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Posting"
-msgstr ""
+msgstr "Księgowanie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__bank_account_code_prefix
@@ -11157,6 +11157,14 @@ msgid ""
 msgstr ""
 "W okresie, który chcesz zablokować, są jeszcze nieopublikowane wpisy. "
 "Powinieneś je opublikować lub usunąć."
+
+#. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"There is more than one receivable/payable account in the concerned invoices."
+" You cannot group payments in that case."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0

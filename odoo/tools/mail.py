@@ -328,7 +328,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
             html += '\n\n'
         html += ustr('[%s] %s\n') % (i + 1, url)
 
-    return html
+    return html.strip()
 
 def plaintext2html(text, container_tag=False):
     """ Convert plaintext into html. Content of the text is escaped to manage

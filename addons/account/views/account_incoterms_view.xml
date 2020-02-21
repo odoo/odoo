@@ -36,6 +36,7 @@
             <field name="model">account.incoterms</field>
             <field name="arch" type="xml">
                 <search string="Incoterms">
+                    <field name="name"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 </search>

@@ -114,8 +114,8 @@ class TestAccountInvoiceReport(InvoiceTestCommon):
         self.assertInvoiceReportValues([
             # amount_total  price_average   price_subtotal  residual    quantity
             [2000,          2000,           2000,           2000,       1],
-            [2000,          1000,           1000,           2000,       1],
-            [2000,          1000,           1000,           2000,       3],
+            [1000,          1000,           1000,           2000,       1],
+            [1000,          1000,           1000,           2000,       3],
             [6,             6,              6,              6,          1],
             [-20,           -20,            -20,            -20,        1],
             [-20,           -20,            -20,            -20,        1],

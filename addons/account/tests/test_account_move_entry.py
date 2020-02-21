@@ -355,12 +355,10 @@ class TestAccountMove(InvoiceTestCommon):
 
         move = self.test_move.with_user(user)
         partner = self.env['res.partner'].create({'name': 'Belouga'})
-        commercial_partner = self.env['res.partner'].create({'name': 'Rorqual'})
         move.partner_id = partner
-        move.commercial_partner_id = commercial_partner
 
         move.post()
-        self.assertEqual(move.message_partner_ids, self.env.user.partner_id | existing_partners | partner | commercial_partner)
+        self.assertEqual(move.message_partner_ids, self.env.user.partner_id | existing_partners | partner)
 
     def test_misc_move_onchange(self):
         ''' Test the behavior on onchanges for account.move having 'entry' as type. '''

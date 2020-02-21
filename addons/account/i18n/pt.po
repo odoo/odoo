@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Pedro Filipe <pedro2.10@hotmail.com>, 2019
-# Tiago Santos <tiago.santos@arxi.pt>, 2019
 # Daniel C Santos <dcs@thinkopensolutions.pt>, 2019
 # Cbasilio <carlos.basilio@gmail.com>, 2019
 # Cristina Loureiro <cloureiro@live.com>, 2019
@@ -23,6 +22,7 @@
 # Pedro Castro Silva <pedrocs@exo.pt>, 2019
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2019
 # Nuno Silva <nuno.silva@arxi.pt>, 2020
+# Tiago Santos <tiago.santos@arxi.pt>, 2020
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Nuno Silva <nuno.silva@arxi.pt>, 2020\n"
+"Last-Translator: Tiago Santos <tiago.santos@arxi.pt>, 2020\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -190,6 +190,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Car@ ${object.partner_id.name}<br/><br/>\n"
+"        Agradeçemos o seu pagamento.\n"
+"        Enviamos em anexo o recibo <strong>${(object.name or '').replace('/','-')}</strong> no valor \n"
+"        de <strong>${format_amount(object.amount, object.currency_id)}</strong> de ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Se tiver alguma dúvida, não hesite em contactar-nos. \n"
+"        <br/><br/>\n"
+"        Melhores cumprimentos,<br/>\n"
+"        % if user and user.signature:\n"
+"        ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -225,6 +241,36 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Car@\n"
+"        % if object.partner_id.parent_id:\n"
+"            ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
+"        % else:\n"
+"            ${object.partner_id.name},\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Enviamos em anexo a \n"
+"        % if object.name:\n"
+"            fatura <strong>${object.name}</strong>\n"
+"        % else:\n"
+"            fatura\n"
+"        %endif\n"
+"        % if object.invoice_origin:\n"
+"            (com referência: ${object.invoice_origin})\n"
+"        % endif\n"
+"        no valor de <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        de ${object.company_id.name}.\n"
+"        % if object.invoice_payment_state == 'paid':\n"
+"            Esta fatura já se encontra paga.\n"
+"        % else:\n"
+"            Por favor, efetue o pagamento assim que possível.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Se tiver alguma dúvida, não hesite em contactar-nos.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -11152,6 +11198,14 @@ msgid ""
 msgstr ""
 "Encontram-se ainda lançamentos por publicar no período que pretende fechar. "
 "Deve publicá-los ou eliminá-los."
+
+#. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"There is more than one receivable/payable account in the concerned invoices."
+" You cannot group payments in that case."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0

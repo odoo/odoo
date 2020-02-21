@@ -378,6 +378,7 @@ class ProductProduct(models.Model):
                 'stock_move_id': move.id,
                 'company_id': move.company_id.id,
                 'description': 'Revaluation of %s (negative inventory)' % move.picking_id.name or move.name,
+                'stock_valuation_layer_id': svl_to_vacuum.id,
             }
             vacuum_svl = self.env['stock.valuation.layer'].sudo().create(vals)
 
@@ -596,6 +597,8 @@ class ProductProduct(models.Model):
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:
             candidate_quantity = abs(candidate.quantity)
+            if float_is_zero(candidate_quantity, precision_rounding=candidate.uom_id.rounding):
+                continue  # correction entries
             if not float_is_zero(qty_invoiced, precision_rounding=candidate.uom_id.rounding):
                 qty_ignored = min(qty_invoiced, candidate_quantity)
                 qty_invoiced -= qty_ignored
@@ -605,7 +608,8 @@ class ProductProduct(models.Model):
             qty_taken_on_candidate = min(qty_to_take_on_candidates, candidate_quantity)
 
             qty_to_take_on_candidates -= qty_taken_on_candidate
-            tmp_value += qty_taken_on_candidate * (candidate.value / candidate.quantity)
+            tmp_value += qty_taken_on_candidate * \
+                ((candidate.value + sum(candidate.stock_valuation_layer_ids.mapped('value'))) / candidate.quantity)
             if float_is_zero(qty_to_take_on_candidates, precision_rounding=candidate.uom_id.rounding):
                 break
 

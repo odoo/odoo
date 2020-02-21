@@ -660,6 +660,11 @@ class Field(MetaField('DummyField', (object,), {})):
                 return get_context('active_test', self.context.get('active_test', True))
             else:
                 v = get_context(key)
+                # The web client may set a list in the context:
+                # https://github.com/odoo/odoo/blob/4b06fe19fa68255b7982d15e5847da2f6d6209fd/addons/web/static/src/js/views/control_panel/control_panel_model.js#L962
+                # Therefore, we automatically convert lists into tuples
+                if type(v) is list:
+                    v = tuple(v)
                 try: hash(v)
                 except TypeError:
                     raise TypeError(
@@ -890,7 +895,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 model.flush([self.name])
 
         if self.required and not has_notnull:
-            sql.set_not_null(model._cr, model._table, self.name)
+            model.pool.post_constraint(sql.set_not_null, model._cr, model._table, self.name)
         elif not self.required and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)
 
@@ -1176,10 +1181,10 @@ class Integer(Field):
 
 
 class Float(Field):
-    """The precision digits are given by the attribute
+    """The precision digits are given by the (optional) digits attribute.
 
-    :param digits: a pair (total, decimal) or a
-        string referencing a `decimal.precision` record.
+    :param digits: a pair (total, decimal) or a string referencing a
+        :class:`~odoo.addons.base.models.decimal_precision.DecimalPrecision` record name.
     :type digits: tuple(int,int) or str
     """
 

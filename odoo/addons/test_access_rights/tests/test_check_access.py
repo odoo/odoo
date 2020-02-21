@@ -38,3 +38,19 @@ class TestAccess(odoo.tests.HttpCase):
         document.check_access_rights('read')
         document.check_access_rule('read')
         # no raise, because we are supposed to be able to read our ticket
+
+    def test_name_search_with_sudo(self):
+        """Check that _name_search return correct values with sudo
+        """
+        no_access_user = self.env['res.users'].create({
+            'login': 'no_access',
+            'name': 'no_access',
+            'groups_id': [(5, 0)],
+        })
+        document = self.env['test_access_right.ticket'].with_user(no_access_user)
+        res = document.sudo().name_search('Need help here')
+        #Invalide cache in case the name is already there
+        #and will not trigget check_access_rights when
+        #the name_get will access the name
+        self.document.invalidate_cache(fnames=['name'])
+        self.assertEqual(res[0][1], "Need help here")

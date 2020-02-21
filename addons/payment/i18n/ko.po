@@ -49,7 +49,7 @@ msgstr "<b>금액 :</b>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "<b>Communication: </b>"
-msgstr "<b>통신 : </b>"
+msgstr "<b>의사소통 : </b>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -63,6 +63,8 @@ msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
+"<h3>결제 안내입니다 : </h3><ul><li>은행 : %s</li><li>계좌번호 : %s</li><li>계좌 소유자 : "
+"%s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -95,17 +97,17 @@ msgstr "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Home\"/
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-lock\"/> Pay"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\"/> 지불"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-plus-circle\"/> Add new card"
-msgstr ""
+msgstr "<i class=\"fa fa-plus-circle\"/> 새 카드 추가하기"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-trash\"/> Delete"
-msgstr "<i class=\"fa fa-trash\"/> 삭제"
+msgstr "<i class=\"fa fa-trash\"/> 삭제하기"
 
 #. module: payment
 #. openerp-web
@@ -117,7 +119,7 @@ msgstr "<p>이 카드는 현재 다음 레코드에 연결되어 있습니다 :<
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<small class=\"text-muted\">(Some fees may apply)</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">(일부 수수료가 적용될 수 있습니다)</small>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
@@ -125,23 +127,24 @@ msgid ""
 "<span class=\"badge badge-primary oe_inline "
 "o_enterprise_label\">Enterprise</span>"
 msgstr ""
+"<span class=\"badge badge-primary oe_inline o_enterprise_label\">기업용</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span class=\"fa fa-arrow-right\"> Get my Stripe keys</span>"
-msgstr "<span class=\"fa fa-arrow-right\"> 개인 스트라이프 키 받기</span>"
+msgstr "<span class=\"fa fa-arrow-right\"> 내 Stripe 키 받기</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid ""
 "<span class=\"fa fa-arrow-right\"> How to configure your PayPal "
 "account</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-right\"> PayPal 계정을 구성하는 방법</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "<span class=\"o_stat_text\">Credit Cards</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">신용 카드</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -149,6 +152,8 @@ msgid ""
 "<span>Start selling directly without an account; an email will be sent by "
 "Paypal to create your new account and collect your payments.</span>"
 msgstr ""
+"<span>계정 없이도 바로 판매를 시작하십시오. Paypal은 새 계정을 만들고 지불금을 수령하기 위해 이메일을 "
+"발송합니다.</span>"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
@@ -217,7 +222,7 @@ msgstr "회계 계정 서식"
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid "Account Holder:"
-msgstr ""
+msgstr "계정 소유자 :"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__acc_number
@@ -227,7 +232,7 @@ msgstr "계정 번호"
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid "Account Number:"
-msgstr ""
+msgstr "계정 번호 :"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_id
@@ -274,7 +279,7 @@ msgstr "활성"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_active
 msgid "Add Extra Fees"
-msgstr "추가 수수료 추가"
+msgstr "추가 수수료 추가하기"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -290,7 +295,7 @@ msgstr "아디옌"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_alipay
 msgid "Alipay"
-msgstr ""
+msgstr "알리페이"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__save_token__always
@@ -307,7 +312,7 @@ msgstr "금액"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
 msgid "Amount Max"
-msgstr ""
+msgstr "최대 금액"
 
 #. module: payment
 #. openerp-web
@@ -342,7 +347,7 @@ msgstr "승인 메커니즘 지원"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__auth_msg
 msgid "Authorize Message"
-msgstr ""
+msgstr "승인 메시지"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
@@ -378,7 +383,7 @@ msgstr "은행명"
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid "Bank:"
-msgstr ""
+msgstr "은행 :"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
@@ -388,22 +393,22 @@ msgstr "Buckaroo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
 msgid "Callback Document ID"
-msgstr "콜백 문서 ID"
+msgstr "답신 문서 ID"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_model_id
 msgid "Callback Document Model"
-msgstr "콜백 문서 모델"
+msgstr "답신 문서 모델"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr "콜백 해쉬"
+msgstr "답신 해쉬"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
 msgid "Callback Method"
-msgstr "콜백 메서드"
+msgstr "답신 메서드"
 
 #. module: payment
 #. openerp-web
@@ -473,7 +478,7 @@ msgstr "결제 방법 선택"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Choose your default customer payment method."
-msgstr ""
+msgstr "고객의 기본 결제 방법을 선택하십시오."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -602,52 +607,52 @@ msgstr "자격 인증"
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_adyen
 msgid "Credit Card (powered by Adyen)"
-msgstr ""
+msgstr "신용 카드 (Adyen 제공)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_alipay
 msgid "Credit Card (powered by Alipay)"
-msgstr ""
+msgstr "신용 카드 (Alipay 제공)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_authorize
 msgid "Credit Card (powered by Authorize)"
-msgstr ""
+msgstr "신용 카드 (승인 제공)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_buckaroo
 msgid "Credit Card (powered by Buckaroo)"
-msgstr ""
+msgstr "신용 카드 (Buckaroo 제공)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_ingenico
 msgid "Credit Card (powered by Ingenico)"
-msgstr ""
+msgstr "신용 카드 (Ingenico 제공)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_payulatam
 msgid "Credit Card (powered by PayU Latam)"
-msgstr ""
+msgstr "신용 카드 (PayU Latam 제공)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_payu
 msgid "Credit Card (powered by PayUmoney)"
-msgstr ""
+msgstr "신용 카드 (PayUmoney 제공)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_sips
 msgid "Credit Card (powered by Sips)"
-msgstr ""
+msgstr "신용 카드 (Sip 제공)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_stripe
 msgid "Credit Card (powered by Stripe)"
-msgstr ""
+msgstr "신용 카드 (Stripe 제공)"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__stripe
 msgid "Credit card (via Stripe)"
-msgstr ""
+msgstr "신용 카드 (Stripe를 통해)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__currency_id
@@ -658,7 +663,7 @@ msgstr "통화"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__provider__manual
 msgid "Custom Payment Form"
-msgstr ""
+msgstr "맞춤 결제 양식"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__manual
@@ -684,7 +689,7 @@ msgstr "표시 순서 결정"
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__disabled
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Disabled"
-msgstr "장애가 있음"
+msgstr "비활성화"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -742,7 +747,7 @@ msgstr "이메일"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__enabled
 msgid "Enabled"
-msgstr ""
+msgstr "활성화"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__error
@@ -759,7 +764,7 @@ msgstr "오류 :"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "Fee"
-msgstr ""
+msgstr "수수료"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
@@ -815,27 +820,27 @@ msgstr "토큰화가 있는 양식"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "From"
-msgstr "출고 창고"
+msgstr "시작"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
-msgstr ""
+msgstr "결제 링크 생성"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "판매 결제 링크 생성"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_invoice_order_generate_link
 msgid "Generate a Payment Link"
-msgstr ""
+msgstr "결제 링크 생성"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Group By"
-msgstr "그룹화"
+msgstr "그룹별"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_http
@@ -845,7 +850,7 @@ msgstr "HTTP 라우팅"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_processed
 msgid "Has the payment been post processed"
-msgstr "결제 사후 처리 되었음"
+msgstr "결제가 사후 처리 되었음"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pre_msg
@@ -855,17 +860,17 @@ msgstr "도움 메시지"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__display_as
 msgid "How the acquirer is displayed to the customers."
-msgstr ""
+msgstr "매입사가 고객에게 표시되는 방법"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__paypal_user_type__new_user
 msgid "I don't have a Paypal account"
-msgstr ""
+msgstr "Paypal 계정이 없습니다"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__paypal_user_type__existing_user
 msgid "I have a Paypal account"
-msgstr ""
+msgstr "Paypal 계정이 있습니다"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__id
@@ -880,7 +885,7 @@ msgstr "ID"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "If not defined, the acquirer name will be used."
-msgstr ""
+msgstr "정의되지 않은 경우 매입사 이름이 사용됩니다."
 
 #. module: payment
 #. openerp-web
@@ -908,6 +913,8 @@ msgid ""
 "             acquirer. Watch out, test and production modes require\n"
 "             different credentials."
 msgstr ""
+"테스트 모드에서는 가짜 결제가 테스트 결제 인터페이스를 통해 처리됩니다. 이 모드는 매입사를 설정할 때 권장됩니다. 주의, 테스트 및 "
+"생산 모드에는 서로 다른 자격 증명이 필요합니다."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ingenico
@@ -974,7 +981,7 @@ msgstr "분개장 기입 항목"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
 msgid "Journal where the successful transactions will be posted"
-msgstr ""
+msgstr "성공적인 거래가 게시되는 분개장"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_acquirer_onboarding_state__just_done
@@ -1029,17 +1036,17 @@ msgstr "이 결제 아이콘을 지원하는 매입사 목록입니다."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
 msgid "Manage Payment Methods"
-msgstr ""
+msgstr "결제 수단 관리"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
 msgid "Manage payment methods"
-msgstr ""
+msgstr "결제 수단 관리"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "Manage your payment methods"
-msgstr "지불 방법 관리"
+msgstr "결제 수단 관리"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
@@ -1071,7 +1078,7 @@ msgstr "메시지"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__auth_msg
 msgid "Message displayed if payment is authorized."
-msgstr ""
+msgstr "결제가 승인되면 메시지가 표시됩니다."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pre_msg
@@ -1249,7 +1256,7 @@ msgstr "기타"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__other
 msgid "Other payment acquirer"
-msgstr ""
+msgstr "다른 결제 매입사"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_pdt_token
@@ -1276,7 +1283,7 @@ msgstr "페이팔"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_payulatam
 msgid "PayU Latam"
-msgstr ""
+msgstr "PayU Latam"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
@@ -1311,12 +1318,12 @@ msgstr "결제 흐름"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Followup"
-msgstr ""
+msgstr "결제 후속 조치"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Form"
-msgstr ""
+msgstr "결제 양식"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_icon
@@ -1343,7 +1350,7 @@ msgstr "걸제 분개장"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
 msgid "Payment Link"
-msgstr ""
+msgstr "결제 링크"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__payment_method
@@ -1359,7 +1366,7 @@ msgstr "결제 방법"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__description
 msgid "Payment Ref"
-msgstr ""
+msgstr "결제 참조"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1411,7 +1418,7 @@ msgstr "결제 방법 설정 완료!"
 #: model:ir.model,name:payment.model_account_payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form_view
 msgid "Payments"
-msgstr "결제"
+msgstr "결제 관리"
 
 #. module: payment
 #. openerp-web
@@ -1460,7 +1467,7 @@ msgstr "결제 매입사를 구성해 주십시오."
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid "Please make a payment to:"
-msgstr ""
+msgstr "결제 안내입니다 :"
 
 #. module: payment
 #. openerp-web
@@ -1480,7 +1487,7 @@ msgstr "새로운 결제 방법을 추가하는 옵션을 선택하십시오."
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "Please set an amount smaller than %s."
-msgstr ""
+msgstr "%s 보다 작은 금액을 설정하십시오."
 
 #. module: payment
 #. openerp-web
@@ -1550,7 +1557,7 @@ msgstr "관련 문서 모델"
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Required fields not filled: %s"
-msgstr ""
+msgstr "필수 필드가 작성되지 않았습니다 : %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__return_url
@@ -1596,12 +1603,12 @@ msgstr "지원되는 카드 데이타 저장중"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Select countries. Leave empty to use everywhere."
-msgstr ""
+msgstr "국가를 선택하십시오. 어디에서나 사용하려면 비워 두십시오."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
 msgid "Selected onboarding payment method"
-msgstr "선택된 결제 방법 온보딩 "
+msgstr "선택된 온보딩 결제 방법 "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__sequence
@@ -1675,17 +1682,17 @@ msgstr "단계"
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__stripe
 #: model:payment.acquirer,name:payment.payment_acquirer_stripe
 msgid "Stripe"
-msgstr "스트라이프"
+msgstr "Stripe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr "스트라이프 공개 가능 키"
+msgstr "Stripe 공개 가능 키"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr "스트라이프 비밀 키"
+msgstr "Stripe 비밀 키"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
@@ -1702,7 +1709,7 @@ msgstr "방법 등록을 위한 서식"
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Test Mode"
-msgstr ""
+msgstr "테스트 모드"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1758,7 +1765,7 @@ msgstr "%s 거래는 %s와 %s 사이의 거래로 승인되었습니다. 관련 
 msgid ""
 "The transaction %s with %s for %s has return failed with the following error"
 " message: %s"
-msgstr ""
+msgstr "%s 거래는 %s와 %s 사이의 거래로 다음 오류 메시지와 함께 실패하여 되돌아왔습니다 : %s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1770,7 +1777,7 @@ msgstr "%s 거래는 %s와 %s 사이의 거래로 보류중입니다."
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "The value of the payment amount must be positive."
-msgstr ""
+msgstr "결제 금액은 양수여야 합니다."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1778,7 +1785,7 @@ msgstr ""
 msgid ""
 "This Transaction was automatically processed & refunded in order to validate"
 " a new credit card."
-msgstr ""
+msgstr "이 거래는 새 신용 카드를 승인하기 위해 자동으로 처리 및 환불되었습니다."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -1821,6 +1828,18 @@ msgid ""
 "tx_values: transaction values\n"
 "context: the current context dictionary"
 msgstr ""
+"이 서식은 필요한 모든 값을 사용하여 매입사 버튼을 렌더링합니다.\n"
+"다음 평가 컨텍스트를 사용하여 QWeb을 렌더링합니다 :\n"
+"tx_url : 양식을 게시하는 트랜잭션 URL\n"
+"acquirer : payment.acquirer 찾아보기 레코드\n"
+"user : 현재 사용자 찾아보기 레코드\n"
+"reference : 트랜잭션 참조 번호\n"
+"currency : 트랜잭션 통화 찾아보기 레코드\n"
+"amount : 거래 금액, float 값\n"
+"partner : 구매자 파트너 탐색 레코드. 필수 요소는 아님\n"
+"partner_values : 구매자에 대한 구체적인 값. 예: 배송 양식에서 오는 값\n"
+"tx_values : 거래 값\n"
+"context : 현재 컨텍스트 사전"
 
 #. module: payment
 #. openerp-web
@@ -1840,6 +1859,8 @@ msgid ""
 "Trigger a transaction of 1 currency unit and its refund to check the validity of new credit cards entered in the customer portal.\n"
 "        Without this check, the validity will be verified at the very first transaction."
 msgstr ""
+"고객 포털에 입력 한 새 신용 카드의 유효성을 확인하기 위해 1 통화 단위의 거래 및 환불을 발생 시킵니다. \n"
+"          이 확인이 없으면 첫 번째 거래에서 유효성이 확인됩니다."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__type
@@ -1892,7 +1913,7 @@ msgstr "확인됨"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__check_validity
 msgid "Verify Card Validity"
-msgstr ""
+msgstr "카드 유효성 확인"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
@@ -1962,7 +1983,7 @@ msgstr "결제 양식으로 전환할 수 없습니다."
 #: code:addons/payment/static/src/js/payment_processing.js:0
 #, python-format
 msgid "We are processing your payment, please wait ..."
-msgstr ""
+msgstr "귀하의 결제가 처리중입니다. 잠시 기다려 주십시오 ..."
 
 #. module: payment
 #. openerp-web
@@ -2090,7 +2111,7 @@ msgstr "결제가 접수되었지만 수동으로 확인해야 합니다."
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
-msgstr ""
+msgstr "결제가 성공적으로 처리되었지만 승인 대기 중입니다."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0

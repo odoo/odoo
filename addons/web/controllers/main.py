@@ -1446,6 +1446,10 @@ class Binary(http.Controller):
         if status in [301, 304] or (status != 200 and download):
             return request.env['ir.http']._response_by_status(status, headers, image_base64)
         if not image_base64:
+            # Since we set a placeholder for any missing image, the status must be 200. In case one
+            # wants to configure a specific 404 page (e.g. though nginx), a 404 status will cause
+            # troubles.
+            status = 200
             image_base64 = base64.b64encode(self.placeholder(image=placeholder))
             if not (width or height):
                 width, height = odoo.tools.image_guess_size_from_field_name(field)
