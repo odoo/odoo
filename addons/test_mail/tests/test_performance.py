@@ -182,7 +182,7 @@ class TestAdvMailPerformance(TransactionCase):
             #voip module read activity_type during create leading to one less query in enterprise on action_feedback
             category = activity.activity_type_id.category
 
-        with self.assertQueryCount(__system__=24, emp=47):  # com runbot: 25 - 46 // test_mail only: 24 - 45
+        with self.assertQueryCount(__system__=25, emp=47):  # com runbot: 26 - 46 // test_mail only: 25 - 45
             activity.action_feedback(feedback='Zizisse Done !')
 
     @users('__system__', 'emp')
@@ -199,7 +199,7 @@ class TestAdvMailPerformance(TransactionCase):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(__system__=26, emp=49):  # com runbot: 27 - 86 // test_mail only: 26 - 47
+        with self.assertQueryCount(__system__=27, emp=49):  # com runbot: 28 - 86 // test_mail only: 27 - 47
             record.action_close('Dupe feedback')
 
         self.assertEqual(record.activity_ids, self.env['mail.activity'])
