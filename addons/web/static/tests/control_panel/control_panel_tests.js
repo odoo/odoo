@@ -125,5 +125,27 @@ odoo.define('web.control_panel_tests', function (require) {
 
             controlPanel.destroy();
         });
+
+        QUnit.test('groupby menu is not rendered if searchMenuTypes does not have groupBy', async function (assert) {
+            assert.expect(2);
+
+            const arch =  `<search/>`;
+            const searchMenuTypes = ['filter'];
+            const params = {
+                cpStoreConfig: {
+                    viewInfo: { arch, fields: this.fields },
+                    searchMenuTypes
+                },
+                cpProps: { fields: this.fields, searchMenuTypes },
+            };
+            const controlPanel = await createControlPanel(params);
+
+            assert.containsOnce(controlPanel.el, 'div.o_search_options div.o_filter_menu');
+            assert.containsNone(controlPanel.el, 'div.o_search_options div.o_group_by_menu');
+
+            controlPanel.destroy();
+        });
+
+
     });
 });
