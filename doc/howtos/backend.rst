@@ -1475,17 +1475,21 @@ for editing and merging PO/POT files.
    .. only:: solutions
 
         #. Create a directory ``openacademy/i18n/``
+        #. You will need to activate the developer mode
+           to access the menus mentioned below (
+           :menuselection:`Settings --> Activate the developer mode`
+           )
         #. Install whichever language you want (
-           :menuselection:`Administration --> Translations --> Load an
-           Official Translation`)
-        #. Synchronize translatable terms (:menuselection:`Administration -->
-           Translations --> Application Terms --> Synchronize Translations`)
+           :menuselection:`Settings --> Translations --> Load a
+           Translation`)
+        #. Generate the missing terms (:menuselection:`Settings -->
+           Translations --> Application Terms --> Generate Missing Terms`)
         #. Create a template translation file by exporting (
-           :menuselection:`Administration --> Translations -> Import/Export
+           :menuselection:`Settings --> Translations -> Import/Export
            --> Export Translation`) without specifying a language, save in
            ``openacademy/i18n/``
         #. Create a translation file by exporting (
-           :menuselection:`Administration --> Translations --> Import/Export
+           :menuselection:`Settings --> Translations --> Import/Export
            --> Export Translation`) and specifying a language. Save it in
            ``openacademy/i18n/``
         #. Open the exported translation file (with a basic text editor or a
