@@ -1,16 +1,7 @@
 odoo.define('point_of_sale.PosComponent', function(require) {
     'use strict';
 
-    const { useState } = owl;
-    const { useListener } = require('web.custom_hooks');
-
     class PosComponent extends owl.Component {
-        constructor() {
-            super(...arguments);
-            this.popup = useState({ isShow: false, name: null, component: null, props: {} });
-            useListener('show-popup', this.__showPopup);
-            useListener('close-popup', this.__closePopup);
-        }
         /**
          * This function is available to all Components that inherits this class.
          * The goal of this function is to show an awaitable dialog (popup) that
@@ -36,16 +27,6 @@ odoo.define('point_of_sale.PosComponent', function(require) {
             return new Promise(resolve => {
                 this.trigger('show-popup', { name, props, __theOneThatWaits: { resolve } });
             });
-        }
-        __showPopup(event) {
-            const { name, props, __theOneThatWaits } = event.detail;
-            this.popup.isShow = true;
-            this.popup.name = name;
-            this.popup.component = this.constructor.components[name];
-            this.popup.props = { ...props, __theOneThatWaits };
-        }
-        __closePopup() {
-            this.popup.isShow = false;
         }
         /**
          * Returns the target object of the proxy instance created by the

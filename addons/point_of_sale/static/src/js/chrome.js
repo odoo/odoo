@@ -9,6 +9,7 @@ var ajax = require('web.ajax');
 var CrashManager = require('web.CrashManager').CrashManager;
 var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
 
+const { useState } = owl;
 const { PosComponent } = require('point_of_sale.PosComponent');
 const { useListener } = require('web.custom_hooks');
 
@@ -326,6 +327,8 @@ class Chrome extends PosComponent {
         useListener('show-screen', this.showScreen);
         useListener('pos-error', this.onPosError);
         useListener('toggle-debug-widget', this.onToggleDebugWidget);
+        useListener('show-popup', this.__showPopup);
+        useListener('close-popup', this.__closePopup);
         this.$ = $;
 
         this.ready    = new $.Deferred(); // resolves when the whole GUI has been loaded
@@ -346,11 +349,14 @@ class Chrome extends PosComponent {
         };
 
         this.pos = new models.PosModel(posModelDefaultAttributes);
-        this.state = owl.useState({
+        // states
+        this.state = useState({
             isReady: false,
             isShowDebugWidget: true,
             screen: this.getDefaultScreen(),
         });
+        this.popup = useState({ isShow: false, name: null, component: null, props: {} });
+
         this.chrome = this; // So that chrome's childs have chrome set automatically
 
         this.logo_click_time  = 0;
@@ -363,6 +369,18 @@ class Chrome extends PosComponent {
         ];
 
         this.cleanup_dom();
+    }
+
+    __showPopup(event) {
+        const { name, props, __theOneThatWaits } = event.detail;
+        this.popup.isShow = true;
+        this.popup.name = name;
+        this.popup.component = this.constructor.components[name];
+        this.popup.props = { ...props, __theOneThatWaits };
+    }
+
+    __closePopup() {
+        this.popup.isShow = false;
     }
 
     mounted() {
