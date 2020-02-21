@@ -636,8 +636,8 @@ class PurchaseOrderLine(models.Model):
     price_tax = fields.Float(compute='_compute_amount', string='Tax', store=True)
 
     order_id = fields.Many2one('purchase.order', string='Order Reference', index=True, required=True, ondelete='cascade')
-    account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
+    account_analytic_id = fields.Many2one('account.analytic.account', store=True, string='Analytic Account', compute='_compute_analytic_id_and_tag_ids', readonly=False)
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', store=True, string='Analytic Tags', compute='_compute_analytic_id_and_tag_ids', readonly=False)
     company_id = fields.Many2one('res.company', related='order_id.company_id', string='Company', store=True, readonly=True)
     state = fields.Selection(related='order_id.state', store=True, readonly=False)
 
@@ -812,6 +812,19 @@ class PurchaseOrderLine(models.Model):
             return date_order + relativedelta(days=seller.delay if seller else 0)
         else:
             return datetime.today() + relativedelta(days=seller.delay if seller else 0)
+
+    @api.depends('product_id', 'date_order')
+    def _compute_analytic_id_and_tag_ids(self):
+        for rec in self:
+            default_analytic_account = rec.env['account.analytic.default'].sudo().account_get(
+                product_id=rec.product_id.id,
+                partner_id=rec.order_id.partner_id.id,
+                user_id=rec.env.uid,
+                date=rec.date_order,
+                company_id=rec.company_id.id,
+            )
+            rec.account_analytic_id = rec.account_analytic_id or default_analytic_account.analytic_id
+            rec.analytic_tag_ids = rec.analytic_tag_ids or default_analytic_account.analytic_tag_ids
 
     @api.onchange('product_id')
     def onchange_product_id(self):

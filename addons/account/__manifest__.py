@@ -78,6 +78,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'wizard/account_transfer_wizard.xml',
         'views/res_currency.xml',
         'views/account_menuitem.xml',
+        'views/account_analytic_default_view.xml',
     ],
     'demo': [
         'demo/account_demo.xml',
