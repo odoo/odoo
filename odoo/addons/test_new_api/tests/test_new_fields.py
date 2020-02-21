@@ -1216,6 +1216,20 @@ class TestFields(TransactionCaseWithUserDemo):
         # check that this does not generate an infinite recursion
         new_disc._convert_to_write(new_disc._cache)
 
+    def test_40_new_inherited_fields(self):
+        """ Test the behavior of new records with inherited fields. """
+        email = self.env['test_new_api.emailmessage'].new({'body': 'XXX'})
+        self.assertEqual(email.body, 'XXX')
+        self.assertEqual(email.message.body, 'XXX')
+
+        email.body = 'YYY'
+        self.assertEqual(email.body, 'YYY')
+        self.assertEqual(email.message.body, 'YYY')
+
+        email.message.body = 'ZZZ'
+        self.assertEqual(email.body, 'ZZZ')
+        self.assertEqual(email.message.body, 'ZZZ')
+
     def test_40_new_ref_origin(self):
         """ Test the behavior of new records with ref/origin. """
         Discussion = self.env['test_new_api.discussion']

@@ -1010,8 +1010,17 @@ class Field(MetaField('DummyField', (object,), {})):
                 env.cache.set(record, self, value)
 
             elif (not record.id) and self.type == 'many2one' and self.delegate:
-                # special case: parent records are new as well
-                parent = record.env[self.comodel_name].new()
+                # the parent record is also a new record, with the same cached
+                # values as record for the corresponding inherited fields
+                def is_inherited_field(name):
+                    field = record._fields[name]
+                    return field.inherited and field.related[0] == self.name
+
+                parent = record.env[self.comodel_name].new({
+                    name: value
+                    for name, value in record._cache.items()
+                    if is_inherited_field(name)
+                })
                 value = self.convert_to_cache(parent, record)
                 env.cache.set(record, self, value)
 
@@ -1088,6 +1097,11 @@ class Field(MetaField('DummyField', (object,), {})):
                 self.write(new_records, value)
                 if self.relational:
                     new_records.modified([self.name])
+
+            if self.inherited:
+                # special case: also assign parent records if they are new
+                parents = records[self.related[0]]
+                parents.filtered(lambda r: not r.id)[self.name] = value
 
         if other_ids:
             # base case: full business logic
