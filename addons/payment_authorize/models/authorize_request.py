@@ -301,8 +301,8 @@ class AuthorizeAPI():
                 },
                 'transactionRequest': {
                     'transactionType': 'priorAuthCaptureTransaction',
-                    'refTransId': transaction_id,
-                    'amount': str(amount)
+                    'amount': str(amount),
+                    'refTransId': transaction_id
                 }
             }
         }
