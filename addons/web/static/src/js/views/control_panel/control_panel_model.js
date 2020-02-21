@@ -16,6 +16,7 @@ let TIME_RANGE_OPTIONS = controlPanelViewParameters.TIME_RANGE_OPTIONS;
 let COMPARISON_TIME_RANGE_OPTIONS = controlPanelViewParameters.COMPARISON_TIME_RANGE_OPTIONS;
 const OPTION_GENERATORS = controlPanelViewParameters.OPTION_GENERATORS;
 const YEAR_OPTIONS = controlPanelViewParameters.YEAR_OPTIONS;
+const { rank } = controlPanelViewParameters;
 
 // Returns a predicate used to test if two arrays (of maximal length 2) have the same basic content.
 function isEqualTo (array1) {
@@ -497,8 +498,9 @@ var ControlPanelModel = mvc.Model.extend({
             const combinationId = [filterId, optionId];
             const initiaLength = group.activeFilterIds.length;
             const index = group.activeFilterIds.findIndex(isEqualTo(combinationId));
+
             if (index === -1) {
-                group.activeFilterIds.push(combinationId);
+                group.activeFilterIds = this._insert(group.activeFilterIds, combinationId);
                 filter.currentOptionIds.add(optionId);
                 if (initiaLength === 0) {
                     this.query.push(group.id);
@@ -1017,6 +1019,49 @@ var ControlPanelModel = mvc.Model.extend({
             };
         }
         return context;
+    },
+    /**
+     * Insert a combination of type [filterId, optionId] in activeFilterIds for
+     * a corresponding filter of type 'groupBy' with options.
+     * The array activeFilterIds is by construction of the form
+     *
+     * A1 'concat' A2 'concat' A3
+     *
+     * where filterId does not occur in the arrays A1 and A3 (possibly empty) and
+     * A2 = [[filterId, optionId_1], ..., [filterId, optionId_n]] (possibly empty).
+     *
+     * The idea of the function below is to insert [filterId, optionId] at the end
+     * of activeFilterIds if A2 is empty and inside A2 otherwise while keeping A2 ordered
+     * for the natural order on option ids: 'year' < 'quarter' < ... < 'day'.
+     *
+     * @private
+     * @param {Array[]} activeFilterIds
+     * @param {Array} combinationId
+     * @returns {Array[]}
+     */
+    _insert(activeFilterIds, combinationId) {
+        const filterId = combinationId[0];
+        let firstIndex = -1;
+        let lastIndex = -1;
+        activeFilterIds.forEach((cId, i) => {
+            if (cId[0] === filterId) {
+                firstIndex = firstIndex === -1 ? i : firstIndex;
+                lastIndex = i;
+            }
+        });
+        if (firstIndex === -1) { // case A2 empty
+            activeFilterIds.push(combinationId);
+        } else { // case A2 non empty
+            const a1 = activeFilterIds.slice(0, firstIndex);
+            const a2 = activeFilterIds.slice(firstIndex, lastIndex + 1);
+            const a3 = activeFilterIds.slice(lastIndex + 1);
+
+            a2.push(combinationId);
+            a2.sort((c1, c2) => rank(c1[1]) - rank(c2[1]));
+
+            activeFilterIds = [].concat(a1, a2, a3);
+        }
+        return activeFilterIds;
     },
     /**
      * Load custom filters in db, then create a group of type 'favorite' and a
