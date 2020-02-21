@@ -17,10 +17,10 @@ import logging
 import os
 import re
 import hashlib
-from datetime import datetime
 
 import pytz
 import requests
+from dateutil import parser
 from lxml import etree, html
 from PIL import Image as I
 from werkzeug import urls
@@ -239,8 +239,7 @@ class DateTime(models.AbstractModel):
             return False
 
         # parse from string to datetime
-        date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format + ' %H:%M'
-        dt = datetime.strptime(value, date_format)
+        dt = parser.parse(value)
 
         # convert back from user's timezone to UTC
         tz_name = self.env.context.get('tz') or self.env.user.tz
