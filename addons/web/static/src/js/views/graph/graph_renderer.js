@@ -462,9 +462,9 @@ return AbstractRenderer.extend({
                 xAxes: [{
                     type: 'category',
                     scaleLabel: {
-                        display: this.state.groupBy.length && !this.isEmbedded,
-                        labelString: this.state.groupBy.length ?
-                            this.fields[this.state.groupBy[0].split(':')[0]].string : '',
+                        display: this.state.processedGroupBy.length && !this.isEmbedded,
+                        labelString: this.state.processedGroupBy.length ?
+                            this.fields[this.state.processedGroupBy[0].split(':')[0]].string : '',
                     },
                     ticks: {
                         // don't use bind:  callback is called with 'index' as second parameter
@@ -506,14 +506,14 @@ return AbstractRenderer.extend({
         var boxColor;
         if (this.state.mode === 'bar') {
             label = this._relabelling(label, dataset.originIndex);
-            if (this.state.groupBy.length > 1 || this.state.origins.length > 1) {
+            if (this.state.processedGroupBy.length > 1 || this.state.origins.length > 1) {
                 label = label + "/" + dataset.label;
             }
             value = this._formatValue(item.yLabel);
             boxColor = dataset.backgroundColor;
         } else if (this.state.mode === 'line') {
             label = this._relabelling(label, dataset.originIndex);
-            if (this.state.groupBy.length > 1 || this.state.origins.length > 1) {
+            if (this.state.processedGroupBy.length > 1 || this.state.origins.length > 1) {
                 label = label + "/" + dataset.label;
             }
             value = this._formatValue(item.yLabel);
@@ -811,7 +811,7 @@ return AbstractRenderer.extend({
         // prepare data
         var data = this._prepareData(dataPoints);
         data.datasets.forEach(function (dataset, index) {
-            if (self.state.groupBy.length <= 1 && self.state.origins.length > 1) {
+            if (self.state.processedGroupBy.length <= 1 && self.state.origins.length > 1) {
                 if (dataset.originIndex === 0) {
                     dataset.fill = 'origin';
                     dataset.backgroundColor = hexToRGBA(COLORS[0], 0.4);

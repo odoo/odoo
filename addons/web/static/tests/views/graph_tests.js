@@ -946,6 +946,35 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
+    QUnit.test('graph view only keeps finer groupby filter option for a given groupby', async function (assert) {
+        assert.expect(3);
+
+        var graph = await createView({
+            View: GraphView,
+            model: "foo",
+            groupBy:['date:year','product_id', 'date', 'date:quarter'],
+            data: this.data,
+            arch: '<graph string="Partners" type="line">' +
+                        '<field name="bar"/>' +
+                '</graph>',
+        });
+
+        assert.checkLabels(graph, [["January 2016"], ["March 2016"], ["May 2016"], ["April 2016"]]);
+        // mockReadGroup does not always sort groups -> May 2016 is before April 2016 for that reason.
+        assert.checkLegend(graph, ["xphone","xpad"]);
+        assert.checkDatasets(graph, ['label', 'data'], [
+            {
+                label: 'xphone',
+                data: [2, 2, 0, 0],
+            }, {
+                label: 'xpad',
+                data: [0, 0, 1, 1],
+            }
+        ]);
+
+        graph.destroy();
+    });
+
     QUnit.module('GraphView: comparison mode', {
         beforeEach: async function () {
             this.data.foo.records[0].date = '2016-12-15';
