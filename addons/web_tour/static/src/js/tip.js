@@ -312,6 +312,10 @@ Tip.getConsumeEventType = function ($element) {
         var type = $(this).attr("type");
         return !type || !!type.match(/^(email|number|password|search|tel|text|url)$/);
     })) {
+        // FieldDateRange triggers a special event when using the widget
+        if ($element.hasClass("o_field_date_range")) {
+            return "apply.daterangepicker input";
+        }
         return "input";
     } else if ($element.hasClass('ui-draggable-handle')) {
         return "drag";
