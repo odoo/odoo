@@ -2909,6 +2909,50 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('kanban view not groupable', async function (assert) {
+        assert.expect(3);
+
+        const searchMenuTypesOriginal = KanbanView.prototype.searchMenuTypes;
+        KanbanView.prototype.searchMenuTypes = ['filter', 'favorite'];
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban class="o_kanban_test" default_group_by="bar">
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <filter string="candle" name="itsName" context="{'group_by': 'foo'}"/>
+                    </search>
+                `,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    throw new Error("Should not do a read_group RPC");
+                }
+                return this._super.apply(this, arguments);
+            },
+            context: { search_default_itsName: 1, },
+        });
+
+        assert.doesNotHaveClass(kanban.$('.o_kanban_view'), 'o_kanban_grouped');
+        assert.containsNone(kanban, '.o_control_panel div.o_search_options div.o_group_by_menu');
+        assert.deepEqual(cpHelpers.getFacetTexts(kanban), []);
+
+        kanban.destroy();
+        KanbanView.prototype.searchMenuTypes = searchMenuTypesOriginal;
+    });
+
     QUnit.test('kanban view with create=False', async function (assert) {
         assert.expect(1);
 
