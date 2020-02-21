@@ -92,13 +92,10 @@ class TestUiTranslate(odoo.tests.HttpCase):
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
 
-    def test_01_public_homepage(self):
-        self.browser_js("/", "console.log('test successful')", "'website.content.snippets.animation' in odoo.__DEBUG__.services")
-
-    def test_02_admin_tour_banner(self):
+    def test_01_admin_tour_banner(self):
         self.start_tour("/", 'banner', login='admin', step_delay=100)
 
-    def test_03_restricted_editor(self):
+    def test_02_restricted_editor(self):
         self.restricted_editor = self.env['res.users'].create({
             'name': 'Restricted Editor',
             'login': 'restricted',
@@ -110,7 +107,7 @@ class TestUi(odoo.tests.HttpCase):
         })
         self.start_tour("/", 'restricted_editor', login='restricted')
 
-    def test_04_backend_dashboard(self):
+    def test_03_backend_dashboard(self):
         self.start_tour("/", 'backend_dashboard', login='admin')
 
     def test_05_specific_website_editor(self):
