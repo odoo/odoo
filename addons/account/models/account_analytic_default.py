@@ -63,25 +63,3 @@ class AccountAnalyticDefault(models.Model):
                 res = rec
                 best_index = index
         return res
-
-
-class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
-
-    # Overload of fields defined in account
-    analytic_account_id = fields.Many2one(compute="_compute_analytic_account", store=True, readonly=False)
-    analytic_tag_ids = fields.Many2many(compute="_compute_analytic_account", store=True, readonly=False)
-
-    @api.depends('product_id', 'account_id', 'partner_id', 'date_maturity')
-    def _compute_analytic_account(self):
-        for record in self:
-            rec = self.env['account.analytic.default'].account_get(
-                product_id=record.product_id.id,
-                partner_id=record.partner_id.commercial_partner_id.id or record.move_id.partner_id.commercial_partner_id.id,
-                account_id=record.account_id.id,
-                user_id=record.env.uid,
-                date=record.date_maturity,
-                company_id=record.move_id.company_id.id
-            )
-            record.analytic_account_id = (record._origin or record).analytic_account_id or rec.analytic_id
-            record.analytic_tag_ids = (record._origin or record).analytic_tag_ids or rec.analytic_tag_ids
