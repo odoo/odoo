@@ -32,6 +32,7 @@ _eu_country_vat = {
 _eu_country_vat_inverse = {v: k for k, v in _eu_country_vat.items()}
 
 _ref_vat = {
+    'ao': 'AO1234567890',  # Angolan, contributed by Nuno Silva @ ARXI
     'at': 'ATU12345675',
     'be': 'BE0477472701',
     'bg': 'BG1234567892',
@@ -171,6 +172,13 @@ class ResPartner(models.Model):
 
     __check_vat_ch_re1 = re.compile(r'(MWST|TVA|IVA)[0-9]{6}$')
     __check_vat_ch_re2 = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
+
+    def check_vat_ao(self, vat):
+        """
+        Check Angolan VAT
+        """
+        # Legal requirements demand solely that the VAT number be between 10 and 15 (included) characters long
+        return 10 <= len(vat) <= 15
 
     def check_vat_ch(self, vat):
         '''
