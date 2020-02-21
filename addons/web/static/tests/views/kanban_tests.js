@@ -12,6 +12,7 @@ var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 var widgetRegistry = require('web.widget_registry');
 
+var createActionManager = testUtils.createActionManager;
 var makeTestPromise = testUtils.makeTestPromise;
 var nextTick = testUtils.nextTick;
 var createView = testUtils.createView;
@@ -2829,6 +2830,94 @@ QUnit.module('Views', {
         await kanban.update({groupBy: []});
         assert.containsN(kanban, '.o_kanban_group', 2, "should have " + 2 + " columns again");
         kanban.destroy();
+    });
+
+    QUnit.test('kanban view without groupby menu', async function (assert) {
+        assert.expect(3);
+
+        const searchMenuTypesOriginal = KanbanView.prototype.searchMenuTypes;
+        KanbanView.prototype.searchMenuTypes = ['filter', 'favorite'];
+
+        const actionManager = await createActionManager({
+            actions: [{
+                id: 11,
+                name: 'Partners Action 11',
+                res_model: 'partner',
+                type: 'ir.actions.act_window',
+                views: [[3, 'kanban']],
+                search_view_id: [9, 'search'],
+                context: {
+                    search_default_itsName: 1,
+                },
+            }],
+            archs: {
+                'partner,3,kanban': `<kanban class="o_kanban_test" default_group_by="bar">
+                    <field name="bar"/>
+                    <templates><t t-name="kanban-box">
+                    <div><field name="foo"/></div>
+                    </t></templates></kanban>`,
+
+                'partner,9,search': `<search>
+                    <filter name="filterA" string="A" domain="[]"/>
+                    <filter string="candle" name="itsName" context="{'group_by': 'foo'}"/>
+                    </search>`,
+            },
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    throw new Error("Should not do a read_group RPC");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await actionManager.doAction(11);
+        await testUtils.nextTick();
+
+        assert.doesNotHaveClass(actionManager.$('.o_kanban_view'), 'o_kanban_grouped');
+        assert.containsNone(actionManager, '.o_control_panel .o_cp_right button:contains(Group By)',
+            "there should not be groupby dropdown");
+        await testUtils.fields.triggerKey('press', actionManager.$('.o_control_panel .o_searchview_input'), 97);
+        assert.containsNone(actionManager,
+            '.o_searchview .o_searchview_autocomplete:contains("Group by: candle")',
+            `filter suggestion should not have Group by suggestion`
+        );
+
+        actionManager.destroy();
+        KanbanView.prototype.searchMenuTypes = searchMenuTypesOriginal;
+    });
+
+    QUnit.test('kanban view with default_group_by and without groupby menu', async function (assert) {
+        assert.expect(2);
+
+        const searchMenuTypesOriginal = KanbanView.prototype.searchMenuTypes;
+        KanbanView.prototype.searchMenuTypes = ['filter', 'favorite'];
+        this.data.partner.records.product_id = 1;
+        this.data.product.records.push({ id: 1, display_name: "third product" });
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `<kanban class="o_kanban_test" default_group_by="bar">
+                        <field name="bar"/>
+                        <templates><t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    '</t></templates></kanban>`,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/web_read_group') {
+                    throw new Error("Should not do a read_group RPC");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.doesNotHaveClass(kanban.$('.o_kanban_view'), 'o_kanban_grouped');
+        assert.containsNone(kanban, '.o_control_panel .o_cp_right button:contains(Group By)',
+            "there should not be groupby dropdown");
+
+        kanban.destroy();
+        KanbanView.prototype.searchMenuTypes = searchMenuTypesOriginal;
     });
 
     QUnit.test('kanban view with create=False', async function (assert) {
