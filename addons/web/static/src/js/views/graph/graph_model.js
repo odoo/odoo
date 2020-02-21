@@ -2,13 +2,9 @@ odoo.define('web.GraphModel', function (require) {
 "use strict";
 
 var core = require('web.core');
-const { DEFAULT_INTERVAL, INTERVAL_OPTIONS } = require('web.controlPanelViewParameters');
+const { DEFAULT_INTERVAL, rank } = require('web.controlPanelViewParameters');
 
 var _t = core._t;
-
-function rank(oId) {
-    return INTERVAL_OPTIONS.findIndex(o => o.optionId === oId);
-}
 
 /**
  * The graph model is responsible for fetching and processing data from the
