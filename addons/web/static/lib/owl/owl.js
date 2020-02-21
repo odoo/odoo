@@ -213,8 +213,13 @@
     function handleEvent(event, vnode) {
         var name = event.type, on = vnode.data.on;
         // call event handler(s) if exists
-        if (on && on[name]) {
-            invokeHandler(on[name], vnode, event);
+        if (on) {
+            if (on[name]) {
+                invokeHandler(on[name], vnode, event);
+            }
+            else if (on["!" + name]) {
+                invokeHandler(on["!" + name], vnode, event);
+            }
         }
     }
     function createListener() {
@@ -234,14 +239,18 @@
             if (!on) {
                 for (name in oldOn) {
                     // remove listener if element was changed or existing listeners removed
-                    oldElm.removeEventListener(name, oldListener, false);
+                    const capture = name.charAt(0) === "!";
+                    name = capture ? name.slice(1) : name;
+                    oldElm.removeEventListener(name, oldListener, capture);
                 }
             }
             else {
                 for (name in oldOn) {
                     // remove listener if existing listener removed
                     if (!on[name]) {
-                        oldElm.removeEventListener(name, oldListener, false);
+                        const capture = name.charAt(0) === "!";
+                        name = capture ? name.slice(1) : name;
+                        oldElm.removeEventListener(name, oldListener, capture);
                     }
                 }
             }
@@ -256,14 +265,18 @@
             if (!oldOn) {
                 for (name in on) {
                     // add listener if element was changed or new listeners added
-                    elm.addEventListener(name, listener, false);
+                    const capture = name.charAt(0) === "!";
+                    name = capture ? name.slice(1) : name;
+                    elm.addEventListener(name, listener, capture);
                 }
             }
             else {
                 for (name in on) {
                     // add listener if new listener added
                     if (!oldOn[name]) {
-                        elm.addEventListener(name, listener, false);
+                        const capture = name.charAt(0) === "!";
+                        name = capture ? name.slice(1) : name;
+                        elm.addEventListener(name, listener, capture);
                     }
                 }
             }
@@ -1428,6 +1441,9 @@
         }
         return doc;
     }
+    function escapeQuotes(str) {
+        return str.replace(/\'/g, "\\'");
+    }
     //------------------------------------------------------------------------------
     // QWeb rendering engine
     //------------------------------------------------------------------------------
@@ -1543,10 +1559,11 @@
                     }) > 1) {
                         throw new Error("Only one conditional branching directive is allowed per node");
                     }
-                    // All text nodes between branch nodes are removed
+                    // All text (with only spaces) and comment nodes (nodeType 8) between
+                    // branch nodes are removed
                     let textNode;
                     while ((textNode = node.previousSibling) !== prevElem) {
-                        if (textNode.nodeValue.trim().length) {
+                        if (textNode.nodeValue.trim().length && textNode.nodeType !== 8) {
                             throw new Error("text is not allowed between branching directives");
                         }
                         textNode.remove();
@@ -1870,14 +1887,14 @@
                         if ((value = value.trim())) {
                             let classDef = value
                                 .split(/\s+/)
-                                .map(a => `'${a}':true`)
+                                .map(a => `'${escapeQuotes(a)}':true`)
                                 .join(",");
                             classObj = `_${ctx.generateID()}`;
                             ctx.addLine(`let ${classObj} = {${classDef}};`);
                         }
                     }
                     else {
-                        ctx.addLine(`let _${attID} = '${value}';`);
+                        ctx.addLine(`let _${attID} = '${escapeQuotes(value)}';`);
                         if (!name.match(/^[a-zA-Z]+$/)) {
                             // attribute contains 'non letters' => we want to quote it
                             name = '"' + name + '"';
@@ -2406,7 +2423,10 @@
     };
     const FNAMEREGEXP = /^[$A-Z_][0-9A-Z_$]*$/i;
     function makeHandlerCode(ctx, fullName, value, putInCache, modcodes = MODS_CODE) {
-        const [event, ...mods] = fullName.slice(5).split(".");
+        let [event, ...mods] = fullName.slice(5).split(".");
+        if (mods.includes("capture")) {
+            event = "!" + event;
+        }
         if (!event) {
             throw new Error("Missing event name with t-on directive");
         }
@@ -2533,6 +2553,12 @@
         return Number(s.slice(0, -1).replace(",", ".")) * 1000;
     }
     function whenTransitionEnd(elm, cb) {
+        if (!elm.parentNode) {
+            // if we get here, this means that the element was removed for some other
+            // reasons, and in that case, we don't want to work on animation since nothing
+            // will be displayed anyway.
+            return;
+        }
         const styles = window.getComputedStyle(elm);
         const delays = (styles.transitionDelay || "").split(", ");
         const durations = (styles.transitionDuration || "").split(", ");
@@ -2713,6 +2739,27 @@
                     source[k] = val;
                 }
             });
+        }
+    };
+    QWeb.utils.assignHooks = function assignHooks(dataObj, hooks) {
+        if ("hook" in dataObj) {
+            const hookObject = dataObj.hook;
+            for (let name in hooks) {
+                const current = hookObject[name];
+                const fn = hooks[name];
+                if (current) {
+                    hookObject[name] = (...args) => {
+                        current(...args);
+                        fn(...args);
+                    };
+                }
+                else {
+                    hookObject[name] = fn;
+                }
+            }
+        }
+        else {
+            dataObj.hook = hooks;
         }
     };
     /**
@@ -2969,13 +3016,18 @@
                 }
                 let eventsCode = events
                     .map(function ([name, value]) {
+                    const capture = name.match(/\.capture/);
+                    name = capture ? name.replace(/\.capture/, "") : name;
                     const { event, handler } = makeHandlerCode(ctx, name, value, false, T_COMPONENT_MODS_CODE);
+                    if (capture) {
+                        return `vn.elm.addEventListener('${event}', ${handler}, true);`;
+                    }
                     return `vn.elm.addEventListener('${event}', ${handler});`;
                 })
                     .join("");
                 const styleExpr = tattStyle || (styleAttr ? `'${styleAttr}'` : false);
                 const styleCode = styleExpr ? `vn.elm.style = ${styleExpr};` : "";
-                createHook = `vnode.data.hook = {create(_, vn){${styleCode}${eventsCode}}};`;
+                createHook = `utils.assignHooks(vnode.data, {create(_, vn){${styleCode}${eventsCode}}});`;
             }
             ctx.addLine(`let w${componentID} = ${templateKey} in parent.__owl__.cmap ? parent.__owl__.children[parent.__owl__.cmap[${templateKey}]] : false;`);
             let shouldProxy = !ctx.parentNode;
@@ -3033,7 +3085,7 @@
             ctx.addLine(`w${componentID} = new W${componentID}(parent, props${componentID});`);
             if (transition) {
                 ctx.addLine(`const __patch${componentID} = w${componentID}.__patch;`);
-                ctx.addLine(`w${componentID}.__patch = fiber => {__patch${componentID}.call(w${componentID}, fiber); if(!w${componentID}.__owl__.transitionInserted){w${componentID}.__owl__.transitionInserted = true;utils.transitionInsert(w${componentID}.__owl__.vnode, '${transition}');}};`);
+                ctx.addLine(`w${componentID}.__patch = (t, vn) => {__patch${componentID}.call(w${componentID}, t, vn); if(!w${componentID}.__owl__.transitionInserted){w${componentID}.__owl__.transitionInserted = true;utils.transitionInsert(w${componentID}.__owl__.vnode, '${transition}');}};`);
             }
             ctx.addLine(`parent.__owl__.cmap[${templateKey}] = w${componentID}.__owl__.id;`);
             if (hasSlots) {
@@ -3115,6 +3167,16 @@
                 }
             });
         }
+        rejectFiber(fiber, reason) {
+            fiber = fiber.root;
+            const index = this.tasks.findIndex(t => t.fiber === fiber);
+            if (index >= 0) {
+                const [task] = this.tasks.splice(index, 1);
+                fiber.cancel();
+                fiber.error = new Error(reason);
+                task.callback();
+            }
+        }
         /**
          * Process all current tasks. This only applies to the fibers that are ready.
          * Other tasks are left unchanged.
@@ -3171,7 +3233,7 @@
      * states and in general determine the state of the rendering.
      */
     class Fiber {
-        constructor(parent, component, force, inserter) {
+        constructor(parent, component, force, target, position) {
             this.id = Fiber.nextId++;
             // isCompleted means that the rendering corresponding to this fiber's work is
             // done, either because the component has been mounted or patched, or because
@@ -3199,7 +3261,8 @@
             this.parent = null;
             this.component = component;
             this.force = force;
-            this.inserter = inserter;
+            this.target = target;
+            this.position = position;
             const __owl__ = component.__owl__;
             this.scope = __owl__.scope;
             this.root = parent ? parent.root : this;
@@ -3307,7 +3370,7 @@
         complete() {
             let component = this.component;
             this.isCompleted = true;
-            if (!this.inserter && !component.__owl__.isMounted) {
+            if (!this.target && !component.__owl__.isMounted) {
                 return;
             }
             // build patchQueue
@@ -3333,16 +3396,41 @@
             for (let i = patchLen - 1; i >= 0; i--) {
                 const fiber = patchQueue[i];
                 component = fiber.component;
-                component.__patch(fiber.vnode);
-                if (!fiber.shouldPatch && (!fiber.inserter || i !== 0)) {
-                    component.__owl__.pvnode.elm = component.__owl__.vnode.elm;
+                if (fiber.target && i === 0) {
+                    let target;
+                    if (fiber.position === "self") {
+                        target = fiber.target;
+                        if (target.tagName.toLowerCase() !== fiber.vnode.sel) {
+                            throw new Error(`Cannot attach '${component.constructor.name}' to target node (not same tag name)`);
+                        }
+                    }
+                    else {
+                        target = component.__owl__.vnode || document.createElement(fiber.vnode.sel);
+                    }
+                    component.__patch(target, fiber.vnode);
+                }
+                else {
+                    if (fiber.shouldPatch) {
+                        component.__patch(component.__owl__.vnode, fiber.vnode);
+                    }
+                    else {
+                        component.__patch(document.createElement(fiber.vnode.sel), fiber.vnode);
+                        component.__owl__.pvnode.elm = component.__owl__.vnode.elm;
+                    }
                 }
                 component.__owl__.currentFiber = null;
             }
             // insert into the DOM (mount case)
             let inDOM = false;
-            if (this.inserter) {
-                this.inserter(this.component.el);
+            if (this.target) {
+                switch (this.position) {
+                    case "first-child":
+                        this.target.prepend(this.component.el);
+                        break;
+                    case "last-child":
+                        this.target.appendChild(this.component.el);
+                        break;
+                }
                 inDOM = document.body.contains(this.component.el);
                 this.component.env.qweb.trigger("dom-appended");
             }
@@ -3350,13 +3438,13 @@
             for (let i = patchLen - 1; i >= 0; i--) {
                 const fiber = patchQueue[i];
                 component = fiber.component;
-                if (fiber.shouldPatch && !this.inserter) {
+                if (fiber.shouldPatch && !this.target) {
                     component.patched();
                     if (component.__owl__.patchedCB) {
                         component.__owl__.patchedCB();
                     }
                 }
-                else if (this.inserter ? inDOM : true) {
+                else if (this.target ? inDOM : true) {
                     component.__callMounted();
                 }
             }
@@ -3775,20 +3863,21 @@
                     return Promise.resolve();
                 }
             }
+            if (__owl__.currentFiber) {
+                const currentFiber = __owl__.currentFiber;
+                if (currentFiber.target === target && currentFiber.position === position) {
+                    return scheduler.addFiber(currentFiber);
+                }
+                else {
+                    scheduler.rejectFiber(currentFiber, "Mounting operation cancelled");
+                }
+            }
             if (!(target instanceof HTMLElement || target instanceof DocumentFragment)) {
                 let message = `Component '${this.constructor.name}' cannot be mounted: the target is not a valid DOM node.`;
                 message += `\nMaybe the DOM is not ready yet? (in that case, you can use owl.utils.whenReady)`;
                 throw new Error(message);
             }
-            let inserter = position === "last-child"
-                ? el => target.appendChild(el)
-                : position === "first-child"
-                    ? el => target.prepend(el)
-                    : el => { };
-            if (position === "self") {
-                this.__target = target;
-            }
-            const fiber = new Fiber(null, this, false, inserter);
+            const fiber = new Fiber(null, this, false, target, position);
             fiber.shouldPatch = false;
             if (!__owl__.vnode) {
                 this.__prepareAndRender(fiber, () => { });
@@ -3832,9 +3921,12 @@
             // currentFiber that is already rendered (isRendered is true), so we are
             // about to be mounted
             const isMounted = __owl__.isMounted;
-            const fiber = new Fiber(null, this, force, null);
+            const fiber = new Fiber(null, this, force, null, null);
             Promise.resolve().then(() => {
                 if (__owl__.isMounted || !isMounted) {
+                    if (fiber.isCompleted) {
+                        return;
+                    }
                     // we are mounted (__owl__.isMounted), or if we are currently being
                     // mounted (!isMounted), so we call __render
                     this.__render(fiber);
@@ -3979,7 +4071,7 @@
             const shouldUpdate = parentFiber.force || this.shouldUpdate(nextProps);
             if (shouldUpdate) {
                 const __owl__ = this.__owl__;
-                const fiber = new Fiber(parentFiber, this, parentFiber.force, null);
+                const fiber = new Fiber(parentFiber, this, parentFiber.force, null, null);
                 if (!parentFiber.child) {
                     parentFiber.child = fiber;
                 }
@@ -4009,19 +4101,8 @@
          * Main patching method. We call the virtual dom patch method here to convert
          * a virtual dom vnode into some actual dom.
          */
-        __patch(vnode) {
-            const __owl__ = this.__owl__;
-            if (this.__target) {
-                if (this.__target.tagName.toLowerCase() !== vnode.sel) {
-                    throw new Error(`Cannot attach '${this.constructor.name}' to target node (not same tag name)`);
-                }
-                __owl__.vnode = patch(this.__target, vnode);
-                delete this.__target;
-            }
-            else {
-                const target = __owl__.vnode || document.createElement(vnode.sel);
-                __owl__.vnode = patch(target, vnode);
-            }
+        __patch(target, vnode) {
+            this.__owl__.vnode = patch(target, vnode);
         }
         /**
          * The __prepare method is only called by the t-component directive, when a
@@ -4030,7 +4111,7 @@
          */
         __prepare(parentFiber, scope, cb) {
             this.__owl__.scope = scope;
-            const fiber = new Fiber(parentFiber, this, parentFiber.force, null);
+            const fiber = new Fiber(parentFiber, this, parentFiber.force, null, null);
             fiber.shouldPatch = false;
             if (!parentFiber.child) {
                 parentFiber.child = fiber;
@@ -4615,19 +4696,6 @@
     }
     AsyncRoot.template = xml `<t t-slot="default"/>`;
 
-    /**
-     * Portal
-     *
-     * The Portal component allows to render a part of a component outside it's DOM.
-     * It is for example useful for dialogs: for css reasons, dialogs are in general
-     * placed in a specific spot of the DOM (e.g. directly in the body). With the
-     * Portal, a component can conditionally specify in its tempate that it contains
-     * a dialog, and where this dialog should be inserted in the DOM.
-     *
-     * The Portal component ensures that the communication between the content of
-     * the Portal and its parent properly works: business events reaching the Portal
-     * are re-triggered on an empty <portal> node located in the parent's DOM.
-     */
     class Portal extends Component {
         constructor(parent, props) {
             super(parent, props);
@@ -4722,7 +4790,7 @@
          *
          * @override
          */
-        __patch(vnode) {
+        __patch(target, vnode) {
             if (this.doTargetLookUp) {
                 const target = document.querySelector(this.props.target);
                 if (!target) {
@@ -4748,7 +4816,7 @@
             const portalPatch = this.portal ? this.portal : document.createElement(vnode.children[0].sel);
             this.portal = patch(portalPatch, vnode.children[0]);
             vnode.children = [];
-            super.__patch(vnode);
+            super.__patch(target, vnode);
             if (shouldDeploy) {
                 this.__deployPortal();
             }
@@ -5066,9 +5134,9 @@
     exports.useState = useState$1;
     exports.utils = utils;
 
-    exports.__info__.version = '1.0.4';
-    exports.__info__.date = '2020-01-21T09:28:57.200Z';
-    exports.__info__.hash = 'e402ee6';
+    exports.__info__.version = '1.0.5';
+    exports.__info__.date = '2020-02-21T08:48:04.397Z';
+    exports.__info__.hash = 'fd6327b';
     exports.__info__.url = 'https://github.com/odoo/owl';
 
 }(this.owl = this.owl || {}));
