@@ -95,7 +95,6 @@ class ProductProduct(models.Model):
     value_svl = fields.Float(compute='_compute_value_svl')
     quantity_svl = fields.Float(compute='_compute_value_svl')
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
-    valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
 
     def write(self, vals):
         if 'standard_price' in vals and not self.env.context.get('disable_auto_svl'):
