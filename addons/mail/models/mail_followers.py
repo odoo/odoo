@@ -135,7 +135,7 @@ SELECT DISTINCT ON(pid, cid) * FROM (
             ON subtype.id = subrel.mail_message_subtype_id
         WHERE subrel.mail_message_subtype_id = %%s AND fol.res_model = %%s AND fol.res_id IN %%s
     )
-    SELECT partner.id as pid, NULL AS cid,
+    SELECT partner.id as pid, NULL::int AS cid,
             partner.active as active, partner.partner_share as pshare, NULL as ctype,
             users.notification_type AS notif, array_agg(groups.id) AS groups
         FROM res_partner partner
@@ -150,7 +150,7 @@ SELECT DISTINCT ON(pid, cid) * FROM (
         ) %s
         GROUP BY partner.id, users.notification_type
     UNION
-    SELECT NULL AS pid, channel.id AS cid,
+    SELECT NULL::int AS pid, channel.id AS cid,
             TRUE as active, NULL AS pshare, channel.channel_type AS ctype,
             CASE WHEN channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif, NULL AS groups
         FROM mail_channel channel
@@ -171,7 +171,7 @@ ORDER BY pid, cid, notif
             params, query_pid, query_cid = [], '', ''
             if pids:
                 query_pid = """
-SELECT partner.id as pid, NULL AS cid,
+SELECT partner.id as pid, NULL::int AS cid,
     partner.active as active, partner.partner_share as pshare, NULL as ctype,
     users.notification_type AS notif, NULL AS groups
 FROM res_partner partner
@@ -180,7 +180,7 @@ WHERE partner.id IN %s"""
                 params.append(tuple(pids))
             if cids:
                 query_cid = """
-SELECT NULL AS pid, channel.id AS cid,
+SELECT NULL::int AS pid, channel.id AS cid,
     TRUE as active, NULL AS pshare, channel.channel_type AS ctype,
     CASE when channel.email_send = TRUE then 'email' else 'inbox' end AS notif, NULL AS groups
 FROM mail_channel channel WHERE channel.id IN %s """
