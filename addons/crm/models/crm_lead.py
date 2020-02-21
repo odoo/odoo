@@ -447,7 +447,7 @@ class Lead(models.Model):
         return write_result
 
     def _update_probability(self):
-        lead_probabilities = self._pls_get_naive_bayes_probabilities()
+        lead_probabilities = self.sudo()._pls_get_naive_bayes_probabilities()
         for lead in self:
             if lead.id in lead_probabilities:
                 lead_proba = lead_probabilities[lead.id]
