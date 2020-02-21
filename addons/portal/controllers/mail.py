@@ -130,7 +130,7 @@ class PortalChatter(http.Controller):
         attachment_tokens = [attachment_token for attachment_token in attachment_tokens.split(',') if attachment_token]
         self._portal_post_check_attachments(attachment_ids, attachment_tokens)
 
-        if message or attachment_ids:
+        if message or attachment_ids or kw.get('force'):
             # message is received in plaintext and saved in html
             if message:
                 message = plaintext2html(message)

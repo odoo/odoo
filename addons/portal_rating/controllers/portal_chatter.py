@@ -17,6 +17,9 @@ class PortalChatter(PortalChatter):
     @http.route()
     def portal_chatter_post(self, res_model, res_id, message, redirect=None, attachment_ids='', attachment_tokens='', **kwargs):
         if kwargs.get('rating_value'):
+            if not message and kwargs.get('rating_value') != '0' and 'false':
+                # Ensuring the rating is created even if there's no message
+                kwargs['force'] = True
             kwargs['rating_feedback'] = kwargs.pop('rating_feedback', message)
         return super(PortalChatter, self).portal_chatter_post(res_model, res_id, message, redirect=redirect, attachment_ids=attachment_ids, attachment_tokens=attachment_tokens, **kwargs)
 

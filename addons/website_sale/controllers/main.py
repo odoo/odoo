@@ -347,6 +347,7 @@ class WebsiteSale(http.Controller):
             'categories': categs,
             'main_object': product,
             'product': product,
+            'rating_count': product.rating_count,
             'add_qty': add_qty,
             'view_track': view_track,
         }

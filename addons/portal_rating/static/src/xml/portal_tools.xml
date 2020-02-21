@@ -17,6 +17,20 @@
         </div>
     </t>
 
+    <t t-name="portal_rating.chatter_rating_count">
+        <t t-set="count" t-value="widget.get('rating_count')"/>
+        <div class="o_rating_counter">
+            <t t-if="count > 0">
+                <span class="o_message_count"> <t t-esc="count"/></span>
+                <t t-if="count == 1">rating</t>
+                <t t-else="">ratings</t>
+            </t>
+            <t t-else="">
+                There are no ratings for now.
+            </t>
+        </div>
+    </t>
+
     <t t-name="portal_rating.rating_card">
         <div class="row o_website_rating_card_container">
             <div class="col-lg-3 offset-lg-2" t-if="!_.isEmpty(widget.get('rating_card_values'))">
@@ -26,7 +40,7 @@
                     <t t-call="portal_rating.rating_stars_static">
                         <t t-set="val" t-value="widget.get('rating_card_values')['avg'] || 0"/>
                     </t>
-                    <t t-call="portal.chatter_message_count"/>
+                    <t t-call="portal_rating.chatter_rating_count"/>
                 </div>
             </div>
             <div class="col-lg-6" t-if="!_.isEmpty(widget.get('rating_card_values'))">

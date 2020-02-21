@@ -67,7 +67,7 @@ class SlidesPortalChatter(PortalChatter):
             domain = [('res_model', '=', res_model), ('res_id', '=', res_id), ('is_internal', '=', False), ('message_id', '=', message.id)]
             rating = request.env['rating.rating'].sudo().search(domain, order='write_date DESC', limit=1)
             rating.write({
-                'rating': float(post['rating_value']),
+                'rating': post['rating_value'] != 'false' and float(post['rating_value']) or False,
                 'feedback': html2plaintext(message.body),
             })
 

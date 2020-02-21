@@ -9,7 +9,7 @@ from collections import defaultdict
 from operator import itemgetter
 
 from odoo import _, api, fields, models, modules, tools
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import groupby
@@ -140,6 +140,18 @@ class Message(models.Model):
     # Besides for new messages, and messages never sending emails, there was no mail, and it was searching for nothing.
     mail_ids = fields.One2many('mail.mail', 'mail_message_id', string='Mails', groups="base.group_system")
     canned_response_ids = fields.One2many('mail.shortcode', 'message_ids', string="Canned Responses", store=False)
+    body_is_empty = fields.Boolean(search="_search_empty_body")
+
+    def _search_empty_body(self, operator, value):
+        if operator not in ['=', '!='] or not isinstance(value, bool):
+            raise UserError(_('Operation not supported'))
+        if value:
+            sign = '|'
+            operator = '='
+        else:
+            sign = '&'
+            operator = '!='
+        return [sign, ('body', operator, '<p></p>'), ('body', operator, '')]
 
     def _compute_description(self):
         for message in self:

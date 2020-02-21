@@ -37,11 +37,16 @@
 
     <t t-extend="portal.Chatter">
         <t t-jquery="t[t-call='portal.chatter_message_count']" t-operation="replace">
-            <t t-if="widget.options['display_rating']">
+            <t t-if="widget.options['display_rating'] and !widget.options['disable_count']">
                 <t t-call="portal_rating.rating_card"/>
             </t>
-            <t t-if="!widget.options['display_rating']">
+            <t t-elif="!widget.options['disable_count']">
                 <t t-call="portal.chatter_message_count"/>
+            </t>
+        </t>
+        <t t-jquery="t[t-call='portal.chatter_messages']" t-operation="replace">
+            <t t-if="!widget.options['disable_messages']">
+                <t t-call="portal.chatter_messages"/>
             </t>
         </t>
     </t>

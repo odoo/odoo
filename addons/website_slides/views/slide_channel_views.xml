@@ -45,7 +45,7 @@
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer"
                                 attrs="{'invisible': [('allow_comment', '=', False)]}">
-                                <field name="rating_count" string="Reviews" widget="statinfo"/>
+                                <field name="rating_count" string="Ratings" widget="statinfo"/>
                             </button>
                             <field name="is_published" widget="website_redirect_button"/>
                         </div>
@@ -258,7 +258,7 @@
                                         </div>
                                         <div class="col-6 o_kanban_primary_right">
                                             <div class="d-flex" t-if="record.rating_count.raw_value">
-                                                <a name="action_view_ratings" type="object" class="mr-auto"><field name="rating_count"/> reviews</a>
+                                                <a name="action_view_ratings" type="object" class="mr-auto"><field name="rating_count"/>ratings</a>
                                                 <span><field name="rating_avg_stars"/> / 5</span>
                                             </div>
                                             <div class="d-flex">

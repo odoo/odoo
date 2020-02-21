@@ -3,6 +3,10 @@
     <template id="message_thread" inherit_id="portal.message_thread">
         <xpath expr="//div[@id='discussion']" position="attributes">
             <attribute name="t-att-data-display_rating">display_rating or False</attribute>
+            <attribute name="t-att-data-domain">json.dumps(reviews_domain)</attribute>
+            <attribute name="t-att-data-rating_count">rating_count</attribute>
+            <attribute name="t-att-data-disable_count">disable_count or False</attribute>
+            <attribute name="t-att-data-disable_messages">disable_messages or False</attribute>
         </xpath>
     </template>
 </odoo>

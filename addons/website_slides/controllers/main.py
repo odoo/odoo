@@ -444,6 +444,8 @@ class WebsiteSlides(WebsiteProfile):
             # chatter
             'rating_avg': channel.rating_avg,
             'rating_count': channel.rating_count,
+            'review_count': channel.rating_review_count,
+            'reviews_domain': [('body_is_empty', '=', False)],
             # display data
             'user': request.env.user,
             'pager': pager,

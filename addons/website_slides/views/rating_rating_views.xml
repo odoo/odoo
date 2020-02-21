@@ -3,7 +3,6 @@
     <record id="rating_rating_view_kanban_slide_channel" model="ir.ui.view">
         <field name="name">rating.rating.view.kanban.slides</field>
         <field name="model">rating.rating</field>
-        <field name="priority">20</field>
         <field name="arch" type="xml">
             <kanban create="false" class="o_slide_rating_kanban">
                 <field name="rating"/>
@@ -17,8 +16,8 @@
                         <t t-set="val_decimal" t-value="val_stars - val_integer"/>
                         <t t-set="empty_star" t-value="5 - (val_integer + Math.ceil(val_decimal))"/>
                         <div class="oe_kanban_card oe_kanban_global_click">
-                            <div class="d-flex flex-row">
-                                <div class="o_slide_rating_kanban_left mr-3">
+                            <div class="d-flex flex-row text-center">
+                                <div class="o_slide_rating_kanban_left w-100">
                                     <h1 class="o_slide_rating_value text-center text-primary" t-esc="val_stars"/>
                                     <t t-foreach="_.range(0, val_integer)" t-as="num">
                                         <i class="fa fa-star" aria-label="A star" role="img"></i>
@@ -29,28 +28,16 @@
                                     <t t-foreach="_.range(0, empty_star)" t-as="num" role="img">
                                         <i class="fa fa-star text-black-25" aria-label="A star"></i>
                                     </t>
-                                </div>
-                                <div>
-                                    <div class="o_kanban_card_header">
-                                        <div class="o_kanban_card_header_title">
-                                            <span class="font-weight-bold"><field name="partner_id"/></span>
-                                        </div>
-                                    </div>
-                                    <div class="o_kanban_card_content mt0 d-flex flex-column">
-                                        <span>
-                                            <i class="fa fa-folder mr-2" aria-label="Open folder"></i>
-                                            <a type="object" name="action_open_rated_object" t-att-title="record.res_name.raw_value">
-                                                <field name="res_name" />
-                                            </a>
-                                        </span>
-                                        <span><i class="fa fa-clock-o mr-2" aria-label="Create date"/> <field name="create_date" /></span>
-                                        <div class="d-flex mt-2">
-                                            <span t-esc="record.feedback.raw_value"/>
-                                        </div>
+                                    <div class="font-weight-bold"><field name="partner_id"/></div>
+                                    <div>
+                                        <i class="fa fa-folder mr-2" aria-label="Open folder"></i>
+                                        <a type="object" name="action_open_rated_object" t-att-title="record.res_name.raw_value">
+                                            <field name="res_name"/>
+                                        </a>
                                     </div>
                                 </div>
-                             </div>
-                         </div>
+                            </div>
+                        </div>
                     </t>
                 </templates>
             </kanban>
@@ -86,6 +73,17 @@
         </field>
     </record>
 
+    <record id="rating_rating_view_tree_slides" model="ir.ui.view">
+        <field name="name">rating.rating.view.tree.slides.channel</field>
+        <field name="model">rating.rating</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="5"/>
+        <field name="inherit_id" ref="rating.rating_rating_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="feedback" position="replace"/>
+        </field>
+    </record>
+
     <record id="rating_rating_view_pivot_slide_channel" model="ir.ui.view">
         <field name="name">rating.rating.view.pivot.slides</field>
         <field name="model">rating.rating</field>
@@ -99,6 +97,48 @@
         </field>
     </record>
 
+    <record id="rating_rating_view_kanban_slide_channel_review" model="ir.ui.view">
+        <field name="name">rating.review.view.kanban.slides</field>
+        <field name="model">rating.rating</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="25"/>
+        <field name="inherit_id" ref="rating_rating_view_kanban_slide_channel"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[1]/div[1]/div[1]/div[2]" position="replace" />
+            <xpath expr="//div[1]/div[1]/div[1]/div[1]" position="replace" />
+            <xpath expr="//div[1]/div[1]" position="attributes">
+                <attribute name="class">d-flex flex-row</attribute>
+            </xpath>
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="class">o_slide_review_kanban</attribute>
+            </xpath>
+            <xpath expr="//div[1]/div[1]/div[1]" position="attributes">
+                <attribute name="class">o_slide_rating_kanban_left mr-3</attribute>
+            </xpath>
+            <xpath expr="//div[1]/div[1]/div[1]" position="after">
+                <div>
+                    <div class="o_kanban_card_header">
+                        <div class="o_kanban_card_header_title">
+                            <span class="font-weight-bold"><field name="partner_id"/></span>
+                        </div>
+                    </div>
+                    <div class="o_kanban_card_content mt0 d-flex flex-column">
+                        <span>
+                            <i class="fa fa-folder mr-2" aria-label="Open folder"></i>
+                            <a type="object" name="action_open_rated_object" t-att-title="record.res_name.raw_value">
+                                <field name="res_name"/>
+                            </a>
+                        </span>
+                        <span><i class="fa fa-clock-o mr-2" aria-label="Create date"/> <field name="create_date" /></span>
+                        <div class="d-flex mt-2">
+                            <span t-esc="record.feedback.raw_value"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
     <record id="rating_rating_action_slide_channel" model="ir.actions.act_window">
         <field name="name">Rating</field>
         <field name="res_model">rating.rating</field>
@@ -107,6 +147,23 @@
         <field name="context">{}</field>
         <field name="search_view_id" ref="rating_rating_view_search_slide_channel"/>
         <field name="view_id" ref="rating_rating_view_kanban_slide_channel"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                There are no ratings for these courses at the moment
+            </p>
+        </field>
+    </record>
+
+    <record id="rating_rating_action_slide_channel_review" model="ir.actions.act_window">
+        <field name="name">Review</field>
+        <field name="res_model">rating.rating</field>
+        <field name="view_mode">kanban,tree,graph,pivot,form</field>
+        <field name="domain">[('consumed', '=', True), ('res_model', '=', 'slide.channel'), ('feedback', '!=', '')]</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" ref="rating_rating_view_search_slide_channel"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('rating_rating_view_kanban_slide_channel_review')}),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('rating.rating_rating_view_tree')}),]"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 There are no ratings for these courses at the moment

@@ -18,7 +18,7 @@ class MailThread(models.AbstractModel):
         if rating_value:
             ir_model = self.env['ir.model'].sudo().search([('model', '=', self._name)])
             self.env['rating.rating'].sudo().create({
-                'rating': float(rating_value) if rating_value is not None else False,
+                'rating': float(rating_value) if rating_value is not None and rating_value != 'false' else False,
                 'feedback': rating_feedback,
                 'res_model_id': ir_model.id,
                 'res_id': self.id,
