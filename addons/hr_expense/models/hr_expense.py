@@ -175,6 +175,17 @@ class HrExpense(models.Model):
         for expense in self:
             expense.employee_id = self.env.user.with_company(expense.company_id).employee_id
 
+    @api.onchange('product_id', 'date', 'account_id')
+    def _onchange_product_id_date_account_id(self):
+        rec = self.env['account.analytic.default'].sudo().account_get(
+            product_id=self.product_id.id,
+            account_id=self.account_id.id,
+            company_id=self.company_id.id,
+            date=self.date
+        )
+        self.analytic_account_id = self.analytic_account_id or rec.analytic_id.id
+        self.analytic_tag_ids = self.analytic_tag_ids or rec.analytic_tag_ids.ids
+
     @api.constrains('product_id', 'product_uom_id')
     def _check_product_uom_category(self):
         if self.product_id and self.product_uom_id.category_id != self.product_id.uom_id.category_id:
