@@ -9,6 +9,6 @@ class ResConfigSettings(models.TransientModel):
 
     stock_move_sms_validation = fields.Boolean(
         related='company_id.stock_move_sms_validation',
-        string='SMS Validation with stock move', readonly=False)
+        string='SMS Validation', readonly=False)
     stock_sms_confirmation_template_id = fields.Many2one(
         related='company_id.stock_sms_confirmation_template_id', readonly=False)
