@@ -19,6 +19,15 @@
                 <xpath expr="//page/field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
                     <attribute name="attrs">{'readonly': ['|', ('product_updatable', '=', False), ('purchase_line_count', '&gt;', 0)], 'required': [('display_type', '=', False)],}</attribute>
                 </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button type="object"
+                        name="action_view_purchase_dropshipping"
+                        class="oe_stat_button"
+                        icon="fa-shopping-cart"
+                        attrs="{'invisible': [('purchase_dropshipping_count', '=', 0)]}" groups="purchase.group_purchase_user">
+                        <field name="purchase_dropshipping_count" widget="statinfo" string="Purchase"/>
+                    </button>
+                </xpath>
            </field>
         </record>
     </data>
