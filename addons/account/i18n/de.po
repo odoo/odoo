@@ -61,13 +61,13 @@
 # Philipp Fürstos <pfu@odoo.com>, 2019
 # JackTheHunter <Maximilian.N98@gmail.com>, 2019
 # Patrick Heuel <patrick.heuel@odoo-bs.com>, 2019
-# Philip Kuß <philip.kuss@gmx.de>, 2019
 # Ermin Trevisan <trevi@twanda.com>, 2020
 # Florian Pose <fp@igh.de>, 2020
 # Martin Trigaux, 2020
 # Leon Grill <leg@odoo.com>, 2020
 # Chris Egal <sodaswed@web.de>, 2020
 # UteHaus <j.v@posteo.de>, 2020
+# philku79 <philip.kuss@gmx.de>, 2020
 # 
 msgid ""
 msgstr ""
@@ -75,7 +75,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-02-13 08:33+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: UteHaus <j.v@posteo.de>, 2020\n"
+"Last-Translator: philku79 <philip.kuss@gmx.de>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,7 +122,7 @@ msgstr "#Münzen/Geldscheine"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "#Created by: %s"
-msgstr ""
+msgstr "#Erstellt von: \\: %s"
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
@@ -184,7 +184,7 @@ msgstr "%s (Rundung)"
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid "%s is not a stored field"
-msgstr ""
+msgstr "\\: %s Ist kein gespeichertes Feld"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -347,8 +347,8 @@ msgid ""
 "<span attrs=\"{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', "
 "'/')]}\">Draft</span>"
 msgstr ""
-"<span class=\"o_form_label\" attrs=\"{'invisible': "
-"['|',('state','=','draft'), ('type','!=','out_refund')]}\">Gutschrift</span>"
+"<span attrs=\"{'invisible'\\: ['|', ('state', '!=', 'draft'), ('name', '!=',"
+" '/')]}\">Entwurf</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -674,6 +674,9 @@ msgid ""
 "<span>This entry has been generated through the Invoicing app, before "
 "installing Accounting. Its balance has been imported separately.</span>"
 msgstr ""
+"<span>Dieser Datensatz wurde durch die Verkaufs App erstellt, bevor die "
+"Abrechnungsapp installiert wurde. Die Wertstellung wurde separat "
+"importiert.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -801,7 +804,7 @@ msgstr "<strong>Quelle:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "<strong>Starting Balance</strong>"
-msgstr "Eröffnungssaldo"
+msgstr "<strong>Eröffnungssaldo</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -816,7 +819,7 @@ msgstr "<strong>Filter Buchungen:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_transfer_accounts_wizard
 msgid "<strong>The following journal entry will be generated</strong>"
-msgstr ""
+msgstr "<strong>Der folgende Journaleintrag wird erzeugt</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
@@ -845,7 +848,7 @@ msgstr "<strong>Lieferant: </strong>"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "@From: "
-msgstr ""
+msgstr "@Von:"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -975,7 +978,7 @@ msgstr "Eine Warnung kann auf einem Partner (Konto) gelegt werden"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_transfer_wizard__aml_preview_data
 msgid "AML Preview Data"
-msgstr ""
+msgstr "AML Vorschau Daten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__access_warning
@@ -11479,6 +11482,14 @@ msgid ""
 msgstr ""
 "In dem zu sperrenden Zeitraum sind noch nicht gebuchte Einträge vorhanden. "
 "Sie sollten sie entweder buchen oder löschen."
+
+#. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"There is more than one receivable/payable account in the concerned invoices."
+" You cannot group payments in that case."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0

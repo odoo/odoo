@@ -3,7 +3,6 @@
 # 	* stock
 # 
 # Translators:
-# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
 # fanha99 <fanha99@hotmail.com>, 2020
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # Dao Nguyen <trucdao.uel@gmail.com>, 2020
@@ -234,7 +233,14 @@ msgid ""
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            %if object.carrier_tracking_url:\n"
-"                <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"                % set multiple_carrier_tracking = object.get_multiple_carrier_tracking()\n"
+"                %if multiple_carrier_tracking:\n"
+"                    % for line in multiple_carrier_tracking:\n"
+"                        <br/><a href=\"${line[1]}\" target=\"_blank\">${line[0]}</a>\n"
+"                    % endfor\n"
+"                %else:\n"
+"                    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"                %endif\n"
 "            %else:\n"
 "                ${object.carrier_tracking_ref}.\n"
 "            %endif\n"
@@ -250,29 +256,6 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Xin chào ${object.partner_id.name},<br/><br/>\n"
-"        Đơn hàng của bạn đã được vận chuyển.\n"
-"        %if object.carrier_tracking_ref:\n"
-"            Mã số truy vết của bạn là:\n"
-"            <strong>\n"
-"            %if object.carrier_tracking_url:\n"
-"                <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
-"            %else:\n"
-"                ${object.carrier_tracking_ref}.\n"
-"            %endif\n"
-"            </strong>\n"
-"        %endif\n"
-"        <br/><br/>\n"
-"        Thông tin chi tiết trên phiếu giao hàng được đính kèm.<br/><br/>\n"
-"        Cảm ơn,<br/>\n"
-"        % if user and user.signature:\n"
-"          ${user.signature | safe}\n"
-"        % endif\n"
-"    </p>\n"
-"</div>\n"
-"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_view_kanban
