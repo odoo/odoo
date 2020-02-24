@@ -1239,9 +1239,9 @@
 
 <div t-name="SearchView" class="o_searchview" role="search" aria-autocomplete="list">
     <t t-if="widget.isMobile">
+        <button class="o_enable_searchview btn btn-link fa fa-search"/>
         <t t-call="MobileSearchView"/>
         <button class="o_toggle_searchview_full o_hidden btn fa fa-filter"/>
-        <button class="o_enable_searchview btn btn-link fa fa-search"/>
     </t>
     <t t-else="">
         <span class="o_searchview_more fa" title="Advanced Search..." role="img" aria-label="Advanced Search..."/>
