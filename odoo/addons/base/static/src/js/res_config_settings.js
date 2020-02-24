@@ -2,6 +2,7 @@ odoo.define('base.settings', function (require) {
 "use strict";
 
 var BasicModel = require('web.BasicModel');
+var config = require('web.config');
 var core = require('web.core');
 var FormView = require('web.FormView');
 var FormController = require('web.FormController');
@@ -41,8 +42,10 @@ var BaseSettingRenderer = FormRenderer.extend({
      */
     on_attach_callback: function () {
         this._super.apply(this, arguments);
-        // set default focus on searchInput
-        this.searchInput.focus();
+        // set default focus on searchInput (in devices larger than mobile)
+        if (!config.device.isMobile) {
+            this.searchInput.focus();
+        }
     },
 
     /**
@@ -149,7 +152,9 @@ var BaseSettingRenderer = FormRenderer.extend({
     },
 
     _onSettingTabClick: function (event) {
-        this.searchInput.focus();
+        if (!config.device.isMobile) {
+            this.searchInput.focus();
+        }
         if (this.searchText.length > 0) {
             this.searchInput.val('');
             this.searchText = "";

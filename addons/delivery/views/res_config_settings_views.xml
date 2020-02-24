@@ -8,9 +8,12 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@id='delivery_carrier']" position="after">
                 <div class="content-group">
-                    <div class="mt8" attrs="{'invisible': [('module_delivery','=',False)]}">
-                        <button name="%(delivery.action_delivery_carrier_form)d" icon="fa-arrow-right" type="action" string="Shipping Methods" class="btn-link"/>
-                    </div>
+                    <button type="action"
+                        name="%(delivery.action_delivery_carrier_form)d"
+                        string="Shipping Methods"
+                        icon="fa-arrow-right"
+                        class="btn-link mt8"
+                        attrs="{'invisible': [('module_delivery','=',False)]}"/>
                  </div>
              </xpath>
         </field>

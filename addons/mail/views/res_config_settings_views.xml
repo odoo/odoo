@@ -17,9 +17,7 @@
                                     Configure your activity types
                                 </div>
                                 <div class="content-group">
-                                    <div class="mt8">
-                                        <button name="%(mail.mail_activity_type_action)d" string="Activity Types" type="action" class="oe_link" icon="fa-arrow-right"/>
-                                    </div>
+                                    <button name="%(mail.mail_activity_type_action)d" string="Activity Types" type="action" class="oe_link mt8" icon="fa-arrow-right"/>
                                 </div>
                             </div>
                         </div>
@@ -36,8 +34,10 @@
                                 </div>
                                 <div class="content-group"  attrs="{'invisible': [('external_email_server_default', '=', False)]}">
                                     <div class="row mt16" id="mail_alias_domain">
-                                        <label for="alias_domain" class="col-lg-3 o_light_label"/>
-                                        <field name="alias_domain" placeholder="mycompany.odoo.com"/>
+                                        <label for="alias_domain" class="col-md-3 o_light_label"/>
+                                        <div class="col-md-9">
+                                            <field name="alias_domain" placeholder="mycompany.odoo.com"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
