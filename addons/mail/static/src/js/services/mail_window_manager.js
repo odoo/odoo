@@ -658,11 +658,13 @@ MailManager.include({
      */
     _onNewChannel: function (channel, proms) {
         if (channel.isDetached()) {
-            var prom = this.openThreadWindow(channel.getID(), {
-                keepFoldState: true,
-                passively: true,
-            });
-            proms.push(prom);
+            if (!config.device.isMobile) {
+                var prom = this.openThreadWindow(channel.getID(), {
+                    keepFoldState: true,
+                    passively: true,
+                });
+                proms.push(prom);
+            }
         } else {
             this._closeThreadWindow(channel.getID());
         }
