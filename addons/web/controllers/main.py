@@ -19,6 +19,7 @@ import re
 import sys
 import tempfile
 import time
+from urllib.parse import urlparse
 
 import werkzeug
 import werkzeug.exceptions
@@ -875,12 +876,13 @@ class Home(http.Controller):
     def web_login(self, redirect=None, **kw):
         ensure_db()
         request.params['login_success'] = False
+        request.params['error'] = None
         if request.httprequest.method == 'GET' and redirect and request.session.uid:
             return http.redirect_with_hash(redirect)
 
         if not request.uid:
             request.uid = odoo.SUPERUSER_ID
-
+        
         values = request.params.copy()
         try:
             values['databases'] = http.db_list()
@@ -1267,6 +1269,8 @@ class Session(http.Controller):
 
     @http.route('/web/session/logout', type='http', auth="none")
     def logout(self, redirect='/web'):
+        if bool(urlparse(redirect).netloc):
+            redirect = '/web'
         request.session.logout(keep_db=True)
         return werkzeug.utils.redirect(redirect, 303)
 
