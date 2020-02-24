@@ -29,6 +29,9 @@ odoo.define('point_of_sale.PosComponent', function(require) {
             });
         }
         /**
+         * TODO jcb: This is useless! It doesn't correctly return the target.
+         *      The target is still Proxy.
+         *
          * Returns the target object of the proxy instance created by the
          * useState hook. (This is kinda hack.)
          *

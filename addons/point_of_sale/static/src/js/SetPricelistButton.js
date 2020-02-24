@@ -18,14 +18,37 @@ odoo.define('point_of_sale.SetPricelistButton', function(require) {
             this.env.pos.get('orders').off('add remove change', null, this);
             this.env.pos.off('change:selectedOrder', null, this);
         }
+        get currentOrder() {
+            return this.env.pos.get_order();
+        }
         get currentPricelistName() {
-            const order = this.env.pos.get_order();
+            const order = this.currentOrder;
             return order && order.pricelist
                 ? order.pricelist.display_name
                 : this.env._t('Pricelist');
         }
-        onClick() {
-            alert('SetPricelistButton clicked!');
+        async onClick() {
+            // Create the list to be passed to the SelectionPopup.
+            // Pricelist object is passed as item in the list because it
+            // is the object that will be returned when the popup is confirmed.
+            const selectionList = this.env.pos.pricelists.map(pricelist => ({
+                id: pricelist.id,
+                label: pricelist.name,
+                isSelected: pricelist.id === this.currentOrder.pricelist.id,
+                item: pricelist,
+            }));
+
+            const { confirmed, payload: selectedPricelist } = await this.showPopup(
+                'SelectionPopup',
+                {
+                    title: this.env._t('Select the pricelist'),
+                    list: selectionList,
+                }
+            );
+
+            if (confirmed) {
+                this.currentOrder.set_pricelist(selectedPricelist);
+            }
         }
     }
 

@@ -18,14 +18,39 @@ odoo.define('point_of_sale.SetFiscalPositionButton', function(require) {
             this.env.pos.get('orders').off('add remove change', null, this);
             this.env.pos.off('change:selectedOrder', null, this);
         }
+        get currentOrder() {
+            return this.env.pos.get_order();
+        }
         get currentFiscalPositionName() {
-            const order = this.env.pos.get_order();
-            return order && order.fiscal_position
-                ? order.fiscal_position.display_name
+            return this.currentOrder && this.currentOrder.fiscal_position
+                ? this.currentOrder.fiscal_position.display_name
                 : this.env._t('Tax');
         }
-        onClick() {
-            alert('SetFiscalPositionButton clicked!');
+        async onClick() {
+            const selectionList = this.env.pos.fiscal_positions.map(fiscalPosition => {
+                return {
+                    id: fiscalPosition.id,
+                    label: fiscalPosition.name,
+                    isSelected: fiscalPosition.id === this.currentOrder.fiscal_position.id,
+                    item: fiscalPosition,
+                };
+            });
+            const { confirmed, payload: selectedFiscalPosition } = await this.showPopup(
+                'SelectionPopup',
+                {
+                    title: this.env._t('Select Fiscal Position'),
+                    list: selectionList,
+                }
+            );
+            if (confirmed) {
+                this.currentOrder.fiscal_position = selectedFiscalPosition;
+                // TODO jcb: The following is the old implementation and I believe
+                // there could be a better way of doing it.
+                for (let line of this.currentOrder.orderlines.models) {
+                    line.set_quantity(line.quantity);
+                }
+                this.currentOrder.trigger('change');
+            }
         }
     }
 
