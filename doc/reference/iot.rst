@@ -1,3 +1,4 @@
+:banner: banners/iot.jpg
 
 ==================
 Internet of Things
@@ -128,7 +129,12 @@ with `self.data` as argument.
 
     from odoo.addons.hw_drivers.controllers.driver import event_manager
 
-    self.data = {
-        'value': 0.5
-    }
-    event_manager.device_changed(self)
+    class DriverName(Driver):
+        connection_type = 'ConnectionType'
+
+        def methodName(self):
+            self.data = {
+                'value': 0.5,
+                ...
+            }
+            event_manager.device_changed(self)
