@@ -28,6 +28,8 @@ def setup(app):
     app.connect('html-page-context', update_meta)
 
 def update_meta(app, pagename, templatename, context, doctree):
+    if not context.get('meta'):
+        context['meta'] = {}
     meta = context.setdefault('meta', {})
     meta.setdefault('banner', app.config.odoo_cover_default)
 
