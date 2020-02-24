@@ -2231,7 +2231,7 @@ class AccountMove(models.Model):
         self.write({'state': 'draft'})
 
     def button_cancel(self):
-        self.write({'state': 'cancel'})
+        self.write({'auto_post': False, 'state': 'cancel'})
 
     def action_invoice_sent(self):
         """ Open a window to compose an email, with the edi invoice template
