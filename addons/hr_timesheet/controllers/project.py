@@ -22,4 +22,5 @@ class ProjectCustomerPortal(CustomerPortal):
             timesheets_by_subtask[timesheet.task_id] |= timesheet
         values['timesheets'] = timesheets
         values['timesheets_by_subtask'] = timesheets_by_subtask
+        values['is_uom_day'] = request.env['account.analytic.line']._is_timesheet_encode_uom_day()
         return values
