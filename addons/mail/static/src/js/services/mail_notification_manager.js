@@ -389,6 +389,14 @@ MailManager.include({
      */
     _handlePartnerMessageDeletionNotification: function (data) {
         var self = this;
+        if (data.res_model && data.res_id) {
+            var documentThread = this.getDocumentThread(data.res_model, data.res_id)
+            if (documentThread) {
+                documentThread._messageIDs = _.reject(documentThread._messageIDs, function (msgID) {
+                    return _.contains(data.message_ids, msgID);
+                })
+            }
+        }
         _.each(data.message_ids, function (messageID) {
             var message = self.getMessage(messageID);
             if (message) {
