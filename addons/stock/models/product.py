@@ -587,10 +587,8 @@ class ProductTemplate(models.Model):
         compute='_compute_nbr_reordering_rules', compute_sudo=False)
     reordering_max_qty = fields.Float(
         compute='_compute_nbr_reordering_rules', compute_sudo=False)
-    # TDE FIXME: seems only visible in a view - remove me ?
     route_from_categ_ids = fields.Many2many(
-        relation="stock.location.route", string="Category Routes",
-        related='categ_id.total_route_ids', readonly=False)
+        string="Category Routes", related='categ_id.total_route_ids')
 
     @api.depends(
         'product_variant_ids',
