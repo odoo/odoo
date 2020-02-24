@@ -11,4 +11,7 @@
     ],
     'installable': True,
     'auto_install': False,
+    'qweb': [
+        'static/src/xml/js_templates.xml',
+    ]
 }

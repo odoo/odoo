@@ -7,7 +7,7 @@ import io
 import odoo
 from odoo.tests import common, tagged
 from odoo.tools.misc import file_open, mute_logger
-from odoo.tools.translate import _, _lt, TranslationFileReader
+from odoo.tools.translate import _, _lt, TranslationFileReader, TranslationModuleReader
 
 
 TRANSLATED_TERM = _lt("Klingon")
@@ -319,3 +319,17 @@ class TestTranslationFlow(common.TransactionCase):
         ])
 
         self.assertEqual(init_translation_count, len(import_translation))
+
+    def test_export_static_templates(self):
+        trans_static = []
+        po_reader = TranslationModuleReader(self.env.cr, ['test_translation_import'])
+        for line in po_reader:
+            module, ttype, name, res_id, source, value, comments = line
+            if name == "addons/test_translation_import/static/src/xml/js_templates.xml":
+                trans_static.append(source)
+
+        self.assertNotIn('no export', trans_static)
+        self.assertIn('do export', trans_static)
+        self.assertIn('text node', trans_static)
+        self.assertIn('slot', trans_static)
+        self.assertIn('slot 2', trans_static)
