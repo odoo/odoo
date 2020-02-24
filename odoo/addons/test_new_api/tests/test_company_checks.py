@@ -73,6 +73,14 @@ class TestCompanyCheck(common.TransactionCase):
             'company_id': self.company_b.id,
         })
 
+    def test_company_check_5(self):
+        """ Check you can create a record without a nonrequired company"""
+        self.env['test_new_api.model_child_norequired'].create({
+            'name': 'M1',
+            'company_id': False,
+            'parent_id': self.parent_company_a_id.id,
+        })
+
     def test_company_environment(self):
         """ Check the company context on the environment is verified. """
 

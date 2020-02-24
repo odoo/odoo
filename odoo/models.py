@@ -3152,6 +3152,8 @@ Fields:
             # with the company of the origin document, i.e. `self.account_id.company_id == self.company_id`
             for name in regular_fields:
                 corecord = record.sudo()[name]
+                if not company and corecord._name != self._name:
+                    continue
                 # Special case with `res.users` since an user can belong to multiple companies.
                 if corecord._name == 'res.users' and corecord.company_ids:
                     if not (company <= corecord.company_ids):

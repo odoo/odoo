@@ -710,6 +710,16 @@ class ModelChildNoCheck(models.Model):
     parent_id = fields.Many2one('test_new_api.model_parent', check_company=False)
 
 
+class ModelChildNoRequired(models.Model):
+    _name = 'test_new_api.model_child_norequired'
+    _description = 'Model Multicompany child'
+    _check_company_auto = True
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company')
+    parent_id = fields.Many2one('test_new_api.model_parent', check_company=True)
+
+
 class ModelPrivateAddressOnchange(models.Model):
     _name = 'test_new_api.model_private_address_onchange'
     _description = 'Model Private Address Onchange'
