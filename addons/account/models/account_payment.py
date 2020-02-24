@@ -2,7 +2,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_is_zero
 
 from itertools import groupby
 
@@ -347,8 +347,18 @@ class account_register_payments(models.TransientModel):
         :param invoices: The invoices that should have the same commercial partner and the same type.
         :return: The payment values as a dictionary.
         '''
-        amount = self._compute_payment_amount(invoices=invoices) if self.multi else self.amount
-        payment_type = ('inbound' if amount > 0 else 'outbound') if self.multi else self.payment_type
+        # Partial payment cannot be divided in serveral payments for a single partner (multi=False) and the amount set
+        # in the wizard must be kept
+        # active_ids and active_model ensure that invoices have been selected
+        active_ids = self._context.get('active_ids')
+        active_model = self._context.get('active_model')
+        if active_ids and active_model == 'account.invoice':
+            total_amount = self.default_get(['amount']).get('amount', self.amount)
+            partial_payment = float_is_zero(total_amount - self.amount, precision_rounding=self.currency_id.rounding)
+        else:
+            partial_payment = False
+        amount = self._compute_payment_amount(invoices=invoices) if (self.multi or (not self.group_invoices and partial_payment)) else self.amount
+        payment_type = ('inbound' if amount > 0 else 'outbound') if (self.multi or (not self.group_invoices and partial_payment)) else self.payment_type
         bank_account = self.multi and invoices[0].partner_bank_id or self.partner_bank_account_id
         pmt_communication = self.show_communication_field and self.communication \
                             or self.group_invoices and ' '.join([inv.reference or inv.number for inv in invoices]) \
@@ -385,7 +395,16 @@ class account_register_payments(models.TransientModel):
 
         :return: a list of payment values (dictionary).
         '''
-        if self.multi:
+        # Partial payment cannot be divided in serveral payments for a single partner (multi=False)
+        # active_ids and active_model ensure that invoices have been selected
+        active_ids = self._context.get('active_ids')
+        active_model = self._context.get('active_model')
+        if active_ids and active_model == 'account.invoice':
+            total_amount = self.default_get(['amount'])['amount']
+            partial_payment = float_is_zero(total_amount - self.amount, precision_rounding=self.currency_id.rounding)
+        else:
+            partial_payment = False
+        if self.multi or (not self.group_invoices and partial_payment):
             groups = self._groupby_invoices()
             return [self._prepare_payment_vals(invoices) for invoices in groups.values()]
         return [self._prepare_payment_vals(self.invoice_ids)]
