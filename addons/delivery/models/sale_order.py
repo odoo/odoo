@@ -127,6 +127,8 @@ class SaleOrder(models.Model):
     def _get_invoice_status(self):
         super()._get_invoice_status()
         for order in self:
+            if order.invoice_status in ['no', 'invoiced']:
+                continue
             order_lines = order.order_line.filtered(lambda x: not x.is_delivery and not x.is_downpayment and not x.display_type)
             if all(line.product_id.invoice_policy == 'delivery' and line.invoice_status == 'no' for line in order_lines):
                 order.invoice_status = 'no'
