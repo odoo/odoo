@@ -863,7 +863,7 @@ class Picking(models.Model):
             if pickings_without_moves:
                 raise UserError(_('Please add some items to move.'))
             if pickings_without_quantities:
-                raise UserError(_('You cannot validate a transfer if no quantities are reserved nor done. To force the transfer, switch in edit mode and encode the done quantities.'))
+                raise UserError(self._get_without_quantities_error_message())
             if pickings_without_lots:
                 raise UserError(_('You need to supply a Lot/Serial number for products %s.') % ', '.join(products_without_lots.mapped('display_name')))
         else:
@@ -911,6 +911,18 @@ class Picking(models.Model):
     def _should_show_transfers(self):
         """Whether the different transfers should be displayed on the pre action done wizards."""
         return len(self) > 1
+
+    def _get_without_quantities_error_message(self):
+        """ Returns the error message raised in validation if no quantities are reserved or done.
+        The purpose of this method is to be overridden in case we want to adapt this message.
+
+        :return: Translated error message
+        :rtype: str
+        """
+        return _(
+            'You cannot validate a transfer if no quantities are reserved nor done. '
+            'To force the transfer, switch in edit mode and encode the done quantities.'
+        )
 
     def _action_generate_backorder_wizard(self, show_transfers=False):
         view = self.env.ref('stock.view_backorder_confirmation')
@@ -1320,4 +1332,3 @@ class Picking(models.Model):
             body=message,
         )
         return True
-
