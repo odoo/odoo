@@ -4,7 +4,7 @@
 from ast import literal_eval
 
 from odoo import api, fields, models
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, float_round
 
 
 class MrpProductionWorkcenterLineTime(models.Model):
@@ -23,6 +23,23 @@ class MrpProduction(models.Model):
         for order in self:
             order.show_valuation = any(m.state == 'done' for m in order.move_finished_ids)
 
+    def _get_detail_lines_extra_cost(self, qty_done):
+        detail_lines = []
+        currency_id = self.company_id.currency_id
+        for work_order in self.workorder_ids:
+            time_lines = work_order.time_ids.filtered(lambda x: x.date_end)
+            duration = sum(time_lines.mapped('duration'))
+            cost_hour = work_order.workcenter_id.costs_hour
+            work_center_cost = (duration / 60.0) * cost_hour
+            detail_lines.append("- %s - %.4f hours - %s %s/h - %.3f %s" % (
+                work_order.operation_id.display_name, float_round(duration / 60.0, precision_digits=4),
+                currency_id.round(cost_hour), currency_id.symbol,
+                float_round(work_center_cost, precision_digits=currency_id.decimal_places + 1), currency_id.symbol
+            ))
+        if detail_lines:
+            detail_lines = ['Operations:'] + detail_lines
+        return detail_lines
+
     def _cal_price(self, consumed_moves):
         """Set a price unit on the finished move according to `consumed_moves`.
         """
@@ -36,10 +53,14 @@ class MrpProduction(models.Model):
                 duration = sum(time_lines.mapped('duration'))
                 time_lines.write({'cost_already_recorded': True})
                 work_center_cost += (duration / 60.0) * work_order.workcenter_id.costs_hour
+            qty_done = finished_move.product_uom._compute_quantity(finished_move.quantity_done, finished_move.product_id.uom_id)
             if finished_move.product_id.cost_method in ('fifo', 'average'):
-                qty_done = finished_move.product_uom._compute_quantity(finished_move.quantity_done, finished_move.product_id.uom_id)
                 extra_cost = self.extra_cost * qty_done
                 finished_move.price_unit = (sum([-m.stock_valuation_layer_ids.value for m in consumed_moves.sudo()]) + work_center_cost + extra_cost) / qty_done
+            details = self._get_detail_lines_extra_cost(qty_done)
+            if details:
+                finished_move.note = '\n'.join(details)
+            self.extra_cost = work_center_cost + (self.extra_cost * qty_done)
         return True
 
     def _prepare_wc_analytic_line(self, wc_line):

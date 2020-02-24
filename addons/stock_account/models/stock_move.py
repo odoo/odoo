@@ -438,7 +438,7 @@ class StockMove(models.Model):
         self.ensure_one()
         AccountMove = self.env['account.move'].with_context(default_journal_id=journal_id)
 
-        move_lines = self._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id, description)
+        move_lines = self._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id, description.split('\n')[0])
         if move_lines:
             date = self._context.get('force_period_date', fields.Date.context_today(self))
             new_account_move = AccountMove.sudo().create({

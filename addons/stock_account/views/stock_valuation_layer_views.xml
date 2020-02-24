@@ -25,7 +25,7 @@
                         </page>
                         <page string="Other Info">
                             <group>
-                                <field name="description" />
+                                <field name="description" widget="text" />
                                 <field name="account_move_id" attrs="{'invisible': [('account_move_id', '=', False)]}" />
                                 <field name="company_id" groups="base.group_multi_company" />
                                 <field name="stock_valuation_layer_id" attrs="{'invisible': [('stock_valuation_layer_id', '=', False)]}" />
