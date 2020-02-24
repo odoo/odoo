@@ -2,9 +2,10 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
     'use strict';
 
     const { Component, hooks } = owl;
-    const { useExternalListener } = hooks;
+    const { useExternalListener, useState } = hooks;
     const { useListener } = require('web.custom_hooks');
     const { BarcodeEvents } = require('barcodes.BarcodeEvents');
+    const { parse } = require('web.field_utils');
 
     /**
      * When this hook is used inside a component, a keyup listener is started
@@ -52,7 +53,7 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
         const component = Component.current;
 
         // contains the number buffer
-        const state = { buffer: '' };
+        const state = useState({ buffer: '' });
 
         // Needed to monitor fast inputs.
         // We want to limit speed of input. Useful for
@@ -68,6 +69,7 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
             const isEmpty = val => {
                 return val === '' || val === null;
             };
+            if (input === undefined || input === null) return;
             let isFirstInput = isEmpty(state.buffer);
             if (input === decimalPoint) {
                 if (isFirstInput) {
@@ -95,6 +97,13 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
                 } else {
                     state.buffer = '-' + state.buffer;
                 }
+            } else if (input[0] === '+' && !isNaN(parseFloat(input))) {
+                // when input is like '+10', '+50', etc
+                const inputValue = parse.float(input.slice(1));
+                const currentBufferValue = parse.float(state.buffer);
+                state.buffer = component.env.pos.format_currency_no_symbol(
+                    inputValue + currentBufferValue
+                );
             } else if (!isNaN(parseInt(input, 10))) {
                 if (isFirstInput) {
                     state.buffer = '' + input;
@@ -119,6 +128,8 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
                 return 'CLEAR';
             } else if (key === 'Backspace') {
                 return 'BACKSPACE';
+            } else if (key.length > 1 && key[0] === '+') {
+                return key;
             }
         }
 
@@ -175,6 +186,7 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
         }
 
         return {
+            state,
             pause() {
                 isPaused = true;
             },

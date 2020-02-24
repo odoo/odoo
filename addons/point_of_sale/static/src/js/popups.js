@@ -129,39 +129,6 @@ var TextAreaPopupWidget = TextInputPopupWidget.extend({
 });
 gui.define_popup({name:'textarea', widget: TextAreaPopupWidget});
 
-var NumberPopupWidget = PopupWidget.extend({
-    template: 'NumberPopupWidget',
-    show: function(options){
-        options = options || {};
-        this._super(options);
-
-        this.inputbuffer = '' + (options.value   || '');
-        this.decimal_separator = _t.database.parameters.decimal_point;
-        this.renderElement();
-        this.firstinput = true;
-    },
-    click_numpad: function(event){
-        var newbuf = this.gui.numpad_input(
-            this.inputbuffer, 
-            $(event.target).data('action'), 
-            {'firstinput': this.firstinput});
-
-        this.firstinput = (newbuf.length === 0);
-        
-        if (newbuf !== this.inputbuffer) {
-            this.inputbuffer = newbuf;
-            this.$('.value').text(this.inputbuffer);
-        }
-    },
-    click_confirm: function(){
-        this.gui.close_popup();
-        if( this.options.confirm ){
-            this.options.confirm.call(this,this.inputbuffer);
-        }
-    },
-});
-gui.define_popup({name:'number', widget: NumberPopupWidget});
-
 var PasswordPopupWidget = NumberPopupWidget.extend({
     renderElement: function(){
         this._super();

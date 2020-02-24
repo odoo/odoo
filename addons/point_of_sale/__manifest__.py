@@ -92,6 +92,7 @@
         'static/src/xml/SelectionPopup.xml',
         'static/src/xml/EditListInput.xml',
         'static/src/xml/EditListPopup.xml',
+        'static/src/xml/NumberPopup.xml',
         'static/src/xml/SetPricelistButton.xml',
         'static/src/xml/SetFiscalPositionButton.xml',
     ],

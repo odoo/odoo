@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="NumberPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup popup-number">
+                    <DraggablePart>
+                        <header class="title">
+                            <t t-esc="props.title" />
+                        </header>
+                    </DraggablePart>
+                    <div class="popup-input value active">
+                        <t t-esc="numberBuffer.state.buffer" />
+                    </div>
+                    <div class="popup-numpad">
+                        <button class="input-button number-char" t-on-click="sendInput('1')">1</button>
+                        <button class="input-button number-char" t-on-click="sendInput('2')">2</button>
+                        <button class="input-button number-char" t-on-click="sendInput('3')">3</button>
+                        <t t-if="props.cheap">
+                            <button class="mode-button add" t-on-click="sendInput('+1')">+1</button>
+                        </t>
+                        <t t-if="!props.cheap">
+                            <button class="mode-button add" t-on-click="sendInput('+10')">+10</button>
+                        </t>
+                        <br />
+                        <button class="input-button number-char" t-on-click="sendInput('4')">4</button>
+                        <button class="input-button number-char" t-on-click="sendInput('5')">5</button>
+                        <button class="input-button number-char" t-on-click="sendInput('6')">6</button>
+                        <t t-if="props.cheap">
+                            <button class="mode-button add" t-on-click="sendInput('+2')">+2</button>
+                        </t>
+                        <t t-if="!props.cheap">
+                            <button class="mode-button add" t-on-click="sendInput('+20')">+20</button>
+                        </t>
+                        <br />
+                        <button class="input-button number-char" t-on-click="sendInput('7')">7</button>
+                        <button class="input-button number-char" t-on-click="sendInput('8')">8</button>
+                        <button class="input-button number-char" t-on-click="sendInput('9')">9</button>
+                        <t t-if="props.cheap">
+                            <button class="mode-button add" t-on-click="sendInput('+5')">+5</button>
+                        </t>
+                        <t t-if="!props.cheap">
+                            <button class="mode-button add" t-on-click="sendInput('+50')">+50</button>
+                        </t>
+                        <br />
+                        <button class="input-button numpad-char" t-on-click="sendInput('Delete')">C</button>
+                        <button class="input-button number-char" t-on-click="sendInput('0')">0</button>
+                        <button class="input-button number-char dot" t-on-click="sendInput('props.decimalSeparator')">
+                            <t t-esc='props.decimalSeparator' /></button>
+                        <button class="input-button numpad-backspace" t-on-click="sendInput('Backspace')">
+                            <img style="pointer-events: none;"
+                                 src="/point_of_sale/static/src/img/backspace.png" width="24"
+                                 height="21" alt="Backspace" />
+                        </button>
+                        <br />
+                    </div>
+                    <footer class="footer centered">
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText" />
+                        </div>
+                        <div class="button confirm" t-on-click="confirm">
+                            <t t-esc="props.confirmText" />
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+
+        </div>
+    </t>
+
+</templates>

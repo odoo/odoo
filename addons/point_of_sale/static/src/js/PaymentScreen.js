@@ -121,9 +121,8 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
         openCashbox() {
             this.env.pos.proxy.printer.open_cashbox();
         }
-        addTip() {
+        async addTip() {
             // click_tip
-            const self = this;
             const tip = this.currentOrder.get_tip();
             const change = this.currentOrder.get_change();
             let value = tip;
@@ -132,13 +131,14 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 value = change;
             }
 
-            this.env.pos.gui.show_popup('number', {
-                title: tip ? _t('Change Tip') : _t('Add Tip'),
-                value: this.env.pos.format_currency_no_symbol(value),
-                confirm: value => {
-                    self.currentOrder.set_tip(parse.float(value));
-                },
+            const { confirmed, payload } = await this.showPopup('NumberPopup', {
+                title: tip ? this.env._t('Change Tip') : this.env._t('Add Tip'),
+                startingValue: value,
             });
+
+            if (confirmed) {
+                this.currentOrder.set_tip(parse.float(payload));
+            }
         }
         deletePaymentLine(event) {
             const { cid } = event.detail;
