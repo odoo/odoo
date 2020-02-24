@@ -243,11 +243,11 @@
                                                             <t t-esc="employee['employee_name']"/>
                                                         </a>
                                                     </td>
-                                                    <td style="width: 10%">
+                                                    <td class="text-right pr-5" style="width: 10%">
                                                         <t t-esc="employee['total']" t-options="{'widget': 'float_time'}"/>
                                                     </td>
                                                     <td>
-                                                        <div t-if="repartition_employee_max" class="progress" t-attf-style="width: {{employee['total'] / repartition_employee_max * 100}}%">
+                                                        <div t-if="repartition_employee_max" class="progress" t-attf-style="width: {{max(0, employee['total'] / repartition_employee_max * 100)}}%">
 
                                                             <t t-set="total" t-value="employee['total'] or 1.0" />
                                                             <t t-call="sale_timesheet.progressbar">
@@ -385,7 +385,7 @@
 
     <template id="progressbar" name="project overview progressbar segments">
         <t t-set="amount" t-value="employee[key]"/>
-        <t t-if="amount">
+        <t t-if="amount &gt; 0">
             <t t-set="title"><t t-esc="label"/>: <t t-esc="amount" t-options="{'widget': 'float_time'}"/></t>
             <a t-attf-class="progress-bar o_progress_{{key}}"
                t-attf-style="width: {{amount / total * 100}}%"
