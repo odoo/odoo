@@ -526,6 +526,14 @@ actual arch.
             ['active', '=', True],
         ]
 
+    @api.model
+    def _get_filter_xmlid_query(self):
+        """This method is meant to be overridden by other modules.
+        """
+        return """SELECT res_id FROM ir_model_data
+                  WHERE res_id IN %(res_ids)s AND model = 'ir.ui.view' AND module IN %(modules)s
+               """
+
     def get_inheriting_views_arch(self, model):
         """Retrieves the sets of views that should currently be used in the
            system in the right order. During the module upgrade phase it
@@ -571,11 +579,8 @@ actual arch.
             ids_to_check = [vid for vid in view_ids if vid not in check_view_ids]
             if ids_to_check:
                 loaded_modules = tuple(self.pool._init_modules) + (self._context.get('install_module'),)
-                query = """
-                    SELECT res_id FROM ir_model_data
-                    WHERE res_id IN %s AND model = 'ir.ui.view' AND module IN %s
-                """
-                self.env.cr.execute(query, [tuple(ids_to_check), loaded_modules])
+                query = self._get_filter_xmlid_query()
+                self.env.cr.execute(query, {'res_ids': tuple(ids_to_check), 'modules': loaded_modules})
                 valid_view_ids = [r[0] for r in self.env.cr.fetchall()] + check_view_ids
                 view_ids = [vid for vid in view_ids if vid in valid_view_ids]
 
