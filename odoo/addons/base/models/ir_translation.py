@@ -187,6 +187,8 @@ class IrTranslation(models.Model):
         res = super(IrTranslation, self)._auto_init()
         # Add separate hash index on src (no size limit on values, and good performance).
         tools.create_index_using(self._cr, 'ir_translation_src_hash', self._table, ['src'], 'hash')
+        if not tools.index_exists(self._cr, 'ir_translation_value_set_idx'):
+            self._cr.execute("CREATE INDEX ir_translation_value_set_idx ON ir_translation (name, lang, res_id, id DESC) WHERE value != ''")
 
         if not tools.index_exists(self._cr, 'ir_translation_unique'):
             self._cr.execute("CREATE UNIQUE INDEX ir_translation_unique ON ir_translation (type, name, lang, res_id, md5(src)) WHERE type = 'model_terms'")
@@ -194,6 +196,7 @@ class IrTranslation(models.Model):
             self._cr.execute("CREATE UNIQUE INDEX ir_translation_code_unique ON ir_translation (type, lang, md5(src)) WHERE type = 'code'")
         if not tools.index_exists(self._cr, 'ir_translation_model_unique'):
             self._cr.execute("CREATE UNIQUE INDEX ir_translation_model_unique ON ir_translation (type, lang, name, res_id) WHERE type = 'model'")
+
 
         return res
 
