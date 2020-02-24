@@ -4,7 +4,7 @@
 from ast import literal_eval
 
 from odoo import api, fields, models
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, float_round
 
 
 class MrpProductionWorkcenterLineTime(models.Model):
@@ -16,7 +16,8 @@ class MrpProductionWorkcenterLineTime(models.Model):
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
-    extra_cost = fields.Float(copy=False, help='Extra cost per produced unit')
+    extra_cost = fields.Float(copy=False, help='Extra cost of subcontracting and workorder cost')
+    extra_cost_details = fields.Text(copy=False, help='Extra cost details, using in cost analysis')
     show_valuation = fields.Boolean(compute='_compute_show_valuation')
 
     def _compute_show_valuation(self):
@@ -27,6 +28,8 @@ class MrpProduction(models.Model):
         """Set a price unit on the finished move according to `consumed_moves`.
         """
         super(MrpProduction, self)._cal_price(consumed_moves)
+        detail_lines = []
+        currency_id = self.company_id.currency_id
         work_center_cost = 0
         finished_move = self.move_finished_ids.filtered(lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel') and x.quantity_done > 0)
         if finished_move:
@@ -35,11 +38,27 @@ class MrpProduction(models.Model):
                 time_lines = work_order.time_ids.filtered(lambda x: x.date_end and not x.cost_already_recorded)
                 duration = sum(time_lines.mapped('duration'))
                 time_lines.write({'cost_already_recorded': True})
-                work_center_cost += (duration / 60.0) * work_order.workcenter_id.costs_hour
+                cost_wo = (duration / 60.0) * work_order.workcenter_id.costs_hour
+                work_center_cost += cost_wo
+                detail_lines.append("- %s - %.4f hours - %s %s/h - %.3f %s" % (
+                    work_order.operation_id.display_name, float_round(duration / 60.0, precision_digits=4),
+                    currency_id.round(work_order.workcenter_id.costs_hour), currency_id.symbol,
+                    float_round(cost_wo, precision_digits=currency_id.decimal_places + 1), currency_id.symbol
+                ))
+            qty_done = finished_move.product_uom._compute_quantity(finished_move.quantity_done, finished_move.product_id.uom_id)
+            if self.extra_cost:
+                detail_lines.append("Subcontracting cost: %.2f %s/%s - %.2f %s" % (
+                    currency_id.round(self.extra_cost), currency_id.symbol,
+                    self.product_uom_id.name, currency_id.round(self.extra_cost * qty_done),
+                    currency_id.symbol
+                ))
+            # Add the workcenter cost in the extra cost
+            self.extra_cost = self.extra_cost * qty_done + work_center_cost
             if finished_move.product_id.cost_method in ('fifo', 'average'):
-                qty_done = finished_move.product_uom._compute_quantity(finished_move.quantity_done, finished_move.product_id.uom_id)
-                extra_cost = self.extra_cost * qty_done
-                finished_move.price_unit = (sum([-m.stock_valuation_layer_ids.value for m in consumed_moves.sudo()]) + work_center_cost + extra_cost) / qty_done
+                finished_move.price_unit = (sum([-m.stock_valuation_layer_ids.value for m in consumed_moves.sudo()]) + self.extra_cost) / qty_done
+
+        if detail_lines:
+            self.extra_cost_details = "\n".join(["Operations:"] + detail_lines)
         return True
 
     def _prepare_wc_analytic_line(self, wc_line):
