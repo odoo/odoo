@@ -433,6 +433,9 @@ var NumpadWidget = PosBaseWidget.extend({
         this.$el.find('.numpad-minus').click(_.bind(this.clickSwitchSign, this));
         this.$el.find('.number-char').click(_.bind(this.clickAppendNewChar, this));
         this.$el.find('.mode-button').click(_.bind(this.clickChangeMode, this));
+        if (!this.pos.config.manual_discount) {
+            this.$el.find('.mode-button[data-mode=discount]').prop("disabled",true);
+        }
     },
     applyAccessRights: function() {
         var cashier = this.pos.get('cashier') || this.pos.get_cashier();
@@ -544,7 +547,7 @@ var OrderWidget = PosBaseWidget.extend({
             var mode = this.numpad_state.get('mode');
             if( mode === 'quantity'){
                 order.get_selected_orderline().set_quantity(val);
-            }else if( mode === 'discount'){
+            }else if( mode === 'discount' && this.pos.config.manual_discount){
                 order.get_selected_orderline().set_discount(val);
             }else if( mode === 'price'){
                 var selected_orderline = order.get_selected_orderline();
