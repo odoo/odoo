@@ -124,13 +124,6 @@
             </field>
         </record>
 
-        <record id="action_account_template_form" model="ir.actions.act_window">
-            <field name="name">Account Templates</field>
-            <field name="res_model">account.account.template</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_account_template_search"/>
-        </record>
-
         <!-- Account Tax Templates -->
 
         <record id="view_account_tax_template_form" model="ir.ui.view">
@@ -279,18 +272,6 @@
                 <tree string="Fiscal Position">
                     <field name="name"/>
                 </tree>
-            </field>
-        </record>
-
-        <record id="action_account_fiscal_position_template_form" model="ir.actions.act_window">
-            <field name="name">Fiscal Position</field>
-            <field name="res_model">account.fiscal.position.template</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_account_position_template_search"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new fiscal position
-              </p>
             </field>
         </record>
 
