@@ -73,17 +73,22 @@ class SaleOrder(models.Model):
         - invoiced: if all SO lines are invoiced, the SO is invoiced.
         - upselling: if all SO lines are invoiced or upselling, the status is upselling.
         """
-        # Ignore the status of the deposit product
-        deposit_product_id = self.env['sale.advance.payment.inv']._default_product_id()
-        line_data = self.env['sale.order.line'].read_group(
-            domain=[('order_id', 'in', self.ids), ('product_id', '!=', deposit_product_id.id)],
-            fields=['order_id', 'invoice_status'],
-            groupby=['order_id', 'invoice_status'],
-            lazy=False)
-        line_invoice_status_all = [(d['order_id'][0], d['invoice_status']) for d in line_data]
-        for order in self:
-            order_id = order.id or order._origin and order._origin.id
-            line_invoice_status = [d[1] for d in line_invoice_status_all if d[0] == order_id]
+        unconfirmed_orders = self.filtered(lambda so: so.state not in ['sale', 'done'])
+        unconfirmed_orders.invoice_status = 'no'
+        confirmed_orders = self - unconfirmed_orders
+        if not confirmed_orders:
+            return
+        line_invoice_status_all = [
+            (d['order_id'][0], d['invoice_status'])
+            for d in self.env['sale.order.line'].read_group([
+                    ('order_id', 'in', confirmed_orders.ids),
+                    ('is_downpayment', '=', False),
+                    ('display_type', '=', False),
+                ],
+                ['order_id', 'invoice_status'],
+                ['order_id', 'invoice_status'], lazy=False)]
+        for order in confirmed_orders:
+            line_invoice_status = [d[1] for d in line_invoice_status_all if d[0] == order.id]
             if order.state not in ('sale', 'done'):
                 order.invoice_status = 'no'
             elif any(invoice_status == 'to invoice' for invoice_status in line_invoice_status):
@@ -181,7 +186,7 @@ class SaleOrder(models.Model):
     pricelist_id = fields.Many2one(
         'product.pricelist', string='Pricelist', check_company=True,  # Unrequired company
         required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=1, 
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=1,
         help="If you change the pricelist, only newly added lines will be affected.")
     currency_id = fields.Many2one("res.currency", related='pricelist_id.currency_id', string="Currency", readonly=True, required=True)
     analytic_account_id = fields.Many2one(
