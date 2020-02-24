@@ -248,7 +248,16 @@ class View(models.Model):
         if not self._context.get('website_id'):
             return super(View, self).get_inheriting_views_arch(view_id, model)
 
-        inheriting_views = super(View, self.with_context(active_test=False)).get_inheriting_views_arch(view_id, model)
+        get_inheriting_self = self.with_context(active_test=False)
+        if self.pool._init and not self._context.get('load_all_views'):
+            view = self.browse(view_id)
+            if view.website_id:
+                original_view = view._get_original_view()
+                original_keys = self.with_context(website_id=False)._get_inheriting_views(original_view.id, model).mapped('key')
+                specific_views = self.search([('key', 'in', original_keys), ('website_id', '=', self._context.get('website_id'))])
+                check_view_ids = list(self._context.get('check_view_ids') or ()) + specific_views.ids
+                get_inheriting_self = self.with_context(check_view_ids=check_view_ids)
+        inheriting_views = super(View, get_inheriting_self).get_inheriting_views_arch(view_id, model)
 
         # prefer inactive website-specific views over active generic ones
         inheriting_views = self.browse([view[1] for view in inheriting_views]).filter_duplicate().filtered('active')
