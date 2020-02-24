@@ -157,7 +157,7 @@ class IrTranslation(models.Model):
     _log_access = False
 
     name = fields.Char(string='Translated field', required=True)
-    res_id = fields.Integer(string='Record ID')
+    res_id = fields.Integer(string='Record ID', index=True)
     lang = fields.Selection(selection='_get_languages', string='Language', validate=False)
     type = fields.Selection(TRANSLATION_TYPE, string='Type', index=True)
     src = fields.Text(string='Internal Source')  # stored in database, kept for backward compatibility
