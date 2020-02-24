@@ -7,28 +7,36 @@ from odoo import models, fields, _
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    purchase_dropshipping_count = fields.Integer(compute='_get_purchase_dropshipping_count',
-                                                 groups='purchase.group_purchase_user')
+    purchase_order_count = fields.Integer(compute='_compute_purchase_order_count',
+                                          groups='purchase.group_purchase_user')
 
-    def _get_purchase_dropshipping_count(self):
+    @api.depends('order_line.purchase_line_ids.order_id')
+    def _compute_purchase_order_count(self):
         for sale in self:
-            sale.purchase_dropshipping_count = self.env['purchase.order'].search_count(
-                [('order_line', 'in', sale.order_line.mapped('purchase_line_ids').ids)])
+            sale.purchase_order_count = len(sale._get_purchase_order())
 
-    def action_view_purchase_dropshipping(self):
+    def _get_purchase_order(self):
+        return self.order_line.purchase_line_ids.order_id
+
+    def action_view_purchases(self):
         self.ensure_one()
-        purchases = self.env['purchase.order'].search(
-            [('order_line', 'in', self.order_line.mapped('purchase_line_ids').ids)])
-        return {
-            'name': _('Dropshipping Purchase'),
-            'view_type': 'form',
-            'view_mode': 'tree,form',
+        purchases = self._get_purchase_order()
+        action = {
             'res_model': 'purchase.order',
             'type': 'ir.actions.act_window',
-            'domain': [('id', 'in', purchases.ids)],
-            'target': 'current',
-            'context': self.env.context,
         }
+        if len(purchases) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': purchases.id,
+            })
+        else:
+            action.update({
+                'name': _('Sources Purchase Orders %s' % self.name),
+                'domain': [('id', 'in', purchases.ids)],
+                'view_mode': 'tree,form',
+            })
+        return action
 
 
 class SaleOrderLine(models.Model):
