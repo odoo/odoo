@@ -200,7 +200,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self.assertAlmostEqual(pos_receivable_line_bank.balance, 836.79)
 
         pos_receivable_line_cash = session_move.line_ids.filtered(
-            lambda line: self.cash_pm.name in line.name and line.account_id == self.bank_pm.receivable_account_id
+            lambda line: self.cash_pm.name in line.name and line.account_id == self.cash_pm.receivable_account_id
         )
         self.assertAlmostEqual(pos_receivable_line_cash.balance, 156.11)
         self.assertTrue(pos_receivable_line_cash.full_reconcile_id)

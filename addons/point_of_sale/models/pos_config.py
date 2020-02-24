@@ -86,7 +86,20 @@ class PosConfig(models.Model):
         return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
 
     def _default_payment_methods(self):
-        return self.env['pos.payment.method'].search([('split_transactions', '=', False), ('company_id', '=', self.env.company.id)])
+        methods = self.env['pos.payment.method'].search([('split_transactions', '=', False), ('is_cash_count', '=', False), ('company_id', '=', self.env.company.id)])
+        if self.env.company.account_default_pos_receivable_account_id:
+            sequence = len(self.env['pos.payment.method'].search([('split_transactions', '=', False), ('is_cash_count', '=', True), ('company_id', '=', self.env.company.id)]))
+            cash_journal = self.env['account.journal'].create({
+                'name': 'Cash %d' % sequence,
+                'type': 'cash',
+            })
+            new_cash = self.env['pos.payment.method'].create({
+                'name': 'Cash %d' % sequence,
+                'is_cash_count': True,
+                'cash_journal_id': cash_journal.id,
+            })
+            methods += new_cash
+        return methods
 
     def _default_pricelist(self):
         return self.env['product.pricelist'].search([('company_id', 'in', (False, self.env.company.id)), ('currency_id', '=', self.env.company.currency_id.id)], limit=1)

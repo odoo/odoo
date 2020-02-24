@@ -265,7 +265,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertAlmostEqual(pos_receivable_line_bank.balance, 540.0, msg='Bank receivable should be equal to the total bank payments.')
 
         pos_receivable_line_cash = session_move.line_ids.filtered(
-            lambda line: self.cash_pm.name in line.name and line.account_id == self.bank_pm.receivable_account_id
+            lambda line: self.cash_pm.name in line.name and line.account_id == self.cash_pm.receivable_account_id
         )
         self.assertAlmostEqual(pos_receivable_line_cash.balance, 150.0, msg='Cash receivable should be equal to the total cash payments.')
 
