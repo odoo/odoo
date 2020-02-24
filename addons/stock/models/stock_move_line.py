@@ -17,6 +17,7 @@ class StockMoveLine(models.Model):
     picking_id = fields.Many2one(
         'stock.picking', 'Transfer', auto_join=True,
         check_company=True,
+        index=True,
         help='The stock operation where the packing has been made')
     move_id = fields.Many2one(
         'stock.move', 'Stock Move',
