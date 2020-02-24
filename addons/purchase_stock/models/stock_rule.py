@@ -49,6 +49,7 @@ class StockRule(models.Model):
             schedule_date = (procurement_date_planned - relativedelta(days=procurement.company_id.po_lead))
 
             supplier = procurement.product_id._select_seller(
+                partner_id=procurement.values.get("supplier_id"),
                 quantity=procurement.product_qty,
                 date=schedule_date.date(),
                 uom_id=procurement.product_uom)
