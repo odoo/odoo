@@ -1487,8 +1487,7 @@ for editing and merging PO/POT files.
            :menuselection:`Settings --> Activate the developer mode`
            )
         #. Install whichever language you want (
-           :menuselection:`Settings --> Translations --> Load a
-           Translation`)
+           :menuselection:`Settings --> Translations --> Languages`)
         #. Generate the missing terms (:menuselection:`Settings -->
            Translations --> Application Terms --> Generate Missing Terms`)
         #. Create a template translation file by exporting (
