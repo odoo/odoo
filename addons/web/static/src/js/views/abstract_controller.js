@@ -553,7 +553,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      */
     _onSearch: function (ev) {
         ev.stopPropagation();
-        this.reload(_.extend({offset: 0}, ev.data));
+        this.reload(_.extend({offset: 0, groupsOffset: 0}, ev.data));
     },
     /**
      * Intercepts the 'switch_view' event to add the controllerID into the data,
