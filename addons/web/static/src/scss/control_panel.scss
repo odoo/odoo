@@ -1,13 +1,14 @@
 
 .o_control_panel {
     border-bottom: 1px solid darken($o-control-panel-background-color, 20%);
-    @include o-webclient-padding($top: 10px, $bottom: 10px);
+    @include o-webclient-padding($top: 5px, $bottom: 5px);
     background-color: $o-control-panel-background-color;
 
     > div {
         display: flex;
         justify-content: space-between;
         min-height: 30px;
+        margin: 5px 0px;
     }
 
     .breadcrumb, .o_cp_left {
@@ -43,7 +44,6 @@
     .o_cp_left {
         display: flex;
         justify-content: space-between;
-        margin-top: 5px;
 
         > .o_cp_sidebar {
             padding-right: 10px;
@@ -76,7 +76,6 @@
 
     .o_cp_right {
         display: flex;
-        margin-top: 5px;
 
         > .o_cp_pager {
             margin: auto 0 auto auto;
