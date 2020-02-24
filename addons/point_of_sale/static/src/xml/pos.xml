@@ -107,26 +107,6 @@
         </div>
     </t>
 
-    <t t-name="TextAreaPopupWidget">
-        <div role="dialog" class="modal-dialog">
-            <div class="popup popup-textinput">
-                <header class="title">
-                    <t t-esc=" widget.options.title || '' " />
-                </header>
-                <textarea><t t-esc="widget.options.value" /></textarea>
-                <footer class="footer">
-                    <div class="button confirm">
-                        Ok
-                    </div>
-                    <div class="button cancel">
-                        Cancel
-                    </div>
-                </footer>
-            </div>
-        </div>
-    </t>
-
-
     <t t-name="OrderImportPopupWidget">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-import">

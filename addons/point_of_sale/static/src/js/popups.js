@@ -124,11 +124,6 @@ var ErrorTracebackPopupWidget = ErrorPopupWidget.extend({
 });
 gui.define_popup({name:'error-traceback', widget: ErrorTracebackPopupWidget});
 
-var TextAreaPopupWidget = TextInputPopupWidget.extend({
-    template: 'TextAreaPopupWidget',
-});
-gui.define_popup({name:'textarea', widget: TextAreaPopupWidget});
-
 var OrderImportPopupWidget = PopupWidget.extend({
     template: 'OrderImportPopupWidget',
 });
