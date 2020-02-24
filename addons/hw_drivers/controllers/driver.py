@@ -77,7 +77,7 @@ class StatusController(http.Controller):
         """
         server = helpers.get_odoo_server_url()
         image = get_resource_path('hw_drivers', 'static/img', 'False.jpg')
-        if server == '':
+        if not server:
             credential = b64decode(token).decode('utf-8').split('|')
             url = credential[0]
             token = credential[1]

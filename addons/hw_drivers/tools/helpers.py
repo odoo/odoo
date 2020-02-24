@@ -134,6 +134,9 @@ def get_ssid():
     return subprocess.check_output(['sed', 's/.*"\\(.*\\)"/\\1/'], stdin=process_grep.stdout).decode('utf-8').rstrip()
 
 def get_odoo_server_url():
+    ap = subprocess.call(['systemctl', 'is-active', 'hostapd']) # if service is active return 0 else inactive
+    if not ap:
+        return False
     return read_file_first_line('odoo-remote-server.conf')
 
 def get_token():
