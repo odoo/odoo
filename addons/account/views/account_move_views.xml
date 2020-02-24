@@ -1151,12 +1151,6 @@
             context="{'search_default_account_id': [active_id]}"
             res_model="account.move.line"/>
 
-        <act_window
-            id="action_move_line_select_by_partner"
-            name="Journal Items"
-            context="{'search_default_partner_id': [active_id]}"
-            res_model="account.move.line"/>
-
         <record id="action_accrual_entry" model="ir.actions.server">
             <field name="name">Create Accrual Entries</field>
             <field name="model_id" ref="account.model_account_move_line"/>
@@ -1165,13 +1159,6 @@
             <field name="state">code</field>
             <field name="code">action = records.action_accrual_entry()</field>
         </record>
-
-        <act_window
-            id="action_move_line_select_tax_audit"
-            name="Journal Items for Tax Audit"
-            context="{'search_default_account_id': [active_id]}"
-            res_model="account.move.line"
-            view_id="account.view_move_line_tax_audit_tree"/>
 
         <record id="action_account_moves_all_a" model="ir.actions.act_window">
             <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'search_default_posted':1, 'name_groupby':1, 'create':0}</field>
@@ -1253,24 +1240,6 @@
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note')), ('move_id.state', '!=', 'cancel')]</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="view_mode">tree,pivot,graph,form,kanban</field>
-        </record>
-
-        <record id="action_move_line_graph" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
-            <field name="view_mode">graph,pivot</field>
-            <field name="view_id" ref="account_move_line_graph_date"/>
-            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
-            <field name="context">{'search_default_account_id': [active_id]}</field>
-            <field name="res_model">account.move.line</field>
-        </record>
-
-        <record id="action_move_line_graph_posted" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
-            <field name="view_mode">graph,pivot</field>
-            <field name="view_id" ref="account_move_line_graph_date"/>
-            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
-            <field name="context">{'search_default_account_id': [active_id], 'search_default_posted': 1}</field>
-            <field name="res_model">account.move.line</field>
         </record>
 
         <!-- account.move (Journal Entry) -->

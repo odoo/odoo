@@ -23,7 +23,6 @@ from . import test_settings
 from . import test_tax
 from . import test_invoice_taxes
 from . import test_templates_consistency
-from . import test_account_fiscal_year
 from . import test_account_all_l10n
 from . import test_reconciliation_matching_rules
 from . import test_account_onboarding
