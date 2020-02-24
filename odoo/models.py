@@ -330,7 +330,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     _needaction = False         # whether the model supports "need actions" (Old API)
     _translate = True           # False disables translations export for this model (Old API)
-    _check_company_auto = False
+    _check_company_auto = None
     """On write and create, call ``_check_company`` to ensure companies
     consistency on the relational fields having ``check_company=True``
     as attribute.
@@ -601,6 +601,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls._log_access = cls._auto
         cls._inherits = {}
         cls._sql_constraints = {}
+        cls._check_company_auto = None
 
         for base in reversed(cls.__bases__):
             if not getattr(base, 'pool', None):
@@ -612,6 +613,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 cls._table = base._table or cls._table
                 cls._sequence = base._sequence or cls._sequence
                 cls._log_access = getattr(base, '_log_access', cls._log_access)
+                cls._check_company_auto = base._check_company_auto
 
             cls._inherits.update(base._inherits)
 
@@ -2739,6 +2741,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # register constraints and onchange methods
         cls._init_constraints_onchanges()
+
+        # all models should have _check_company_auto as True or False
+        if cls._check_company_auto is None:
+            cls._check_company_auto = False
+        if cls._check_company_auto and 'company_id' not in cls._fields and self._name != 'res.company':
+            _logger.warning("%s._check_company_auto attribute will be ignored because it doesn't have a company_id field", self._name)
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):

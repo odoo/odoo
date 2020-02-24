@@ -2338,6 +2338,9 @@ class Many2one(_Relational):
         # determine self.delegate
         if not self.delegate:
             self.delegate = name in model._inherits.values()
+        # determine which models should have _check_company_auto
+        if name == 'company_id' and type(model)._check_company_auto is None:
+            type(model)._check_company_auto = True
 
     def _setup_regular_base(self, model):
         super()._setup_regular_base(model)

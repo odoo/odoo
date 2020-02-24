@@ -28,6 +28,10 @@ class TestCompanyCheck(common.TransactionCase):
         """ Check the option _check_company_auto is well set on records"""
         m1 = self.env['test_new_api.model_child'].create({'company_id': self.company_a.id})
         self.assertTrue(m1._check_company_auto)
+        m2 = self.env['test_new_api.model_parent'].create({'company_id': self.company_a.id})
+        self.assertFalse(m2._check_company_auto)
+        m3 = self.env['test_new_api.model_child_nocheck'].create({'company_id': self.company_a.id})
+        self.assertTrue(m3._check_company_auto)
 
     def test_company_check_1(self):
         """ Check you can create an object if the company are consistent"""
