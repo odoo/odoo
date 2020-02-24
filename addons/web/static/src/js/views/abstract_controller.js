@@ -600,7 +600,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      */
     _onSearch: function (ev) {
         ev.stopPropagation();
-        this.reload(_.extend({offset: 0}, ev.data));
+        this.reload(_.extend({offset: 0, groupsOffset: 0}, ev.data));
     },
     /**
      * @private
