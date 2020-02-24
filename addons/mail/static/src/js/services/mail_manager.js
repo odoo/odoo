@@ -903,11 +903,6 @@ var MailManager =  AbstractService.extend({
                 args: [[channelID]],
             })
             .then(function (result) {
-                // Prevent to automatically open chat window when a new message
-                // is received on mobile.
-                if (config.device.isMobile) {
-                    options.silent = true;
-                }
                 return self._addChannel(result, options);
             });
     },
@@ -1234,11 +1229,6 @@ var MailManager =  AbstractService.extend({
         var self = this;
         var proms = [];
         const options = {};
-
-        // Prevent to automatically open all chat windows at initial loading.
-        if (config.device.isMobile) {
-            options.silent = true;
-        }
 
         _.each(data.channel_slots, function (channels) {
             _.each(channels, function (channel) {
