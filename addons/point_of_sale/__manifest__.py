@@ -89,6 +89,7 @@
         'static/src/xml/ConfirmPopup.xml',
         'static/src/xml/TextInputPopup.xml',
         'static/src/xml/ErrorTracebackPopup.xml',
+        'static/src/xml/SelectionPopup.xml',
         'static/src/xml/EditListInput.xml',
         'static/src/xml/EditListPopup.xml',
         'static/src/xml/SetPricelistButton.xml',

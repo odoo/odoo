@@ -36,7 +36,7 @@
                 </div>
                 <div class="popups">
                     <t t-if="popup.isShow" t-component="popup.component"
-                       t-props="popup.props" t-key="popup.name" />
+                       t-props="popupProps" t-key="popup.name" />
                 </div>
             </t>
 
@@ -129,29 +129,6 @@
                     <div class="button confirm">
                         Ok
                     </div>
-                    <div class="button cancel">
-                        Cancel
-                    </div>
-                </footer>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="SelectionPopupWidget">
-        <div role="dialog" class="modal-dialog">
-            <div class="popup popup-selection">
-                <header class="title">
-                    <t t-esc=" widget.options.title || 'Select' " />
-                </header>
-                <div class='selection scrollable-y touch-scrollable'>
-                    <t t-foreach="widget.list || []" t-as="item">
-                        <div t-attf-class="selection-item {{ widget.is_selected.call(widget, item.item) ? 'selected' : '' }}"
-                             t-att-data-item-index='item_index'>
-                            <t t-esc='item.label' />
-                        </div>
-                    </t>
-                </div>
-                <footer class="footer">
                     <div class="button cancel">
                         Cancel
                     </div>

@@ -355,7 +355,8 @@ class Chrome extends PosComponent {
             isShowDebugWidget: true,
             screen: this.getDefaultScreen(),
         });
-        this.popup = useState({ isShow: false, name: null, component: null, props: {} });
+        this.popup = useState({ isShow: false, name: null, component: null });
+        this.popupProps = {}; // We want to avoid making the props to become Proxy!
 
         this.chrome = this; // So that chrome's childs have chrome set automatically
 
@@ -376,7 +377,7 @@ class Chrome extends PosComponent {
         this.popup.isShow = true;
         this.popup.name = name;
         this.popup.component = this.constructor.components[name];
-        this.popup.props = { ...props, __theOneThatWaits };
+        this.popupProps = { ...props, __theOneThatWaits };
     }
 
     __closePopup() {
