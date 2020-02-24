@@ -273,6 +273,31 @@ class View(models.Model):
         return views.filter_duplicate().filtered('active')
 
     @api.model
+    def _get_filter_xmlid_query(self):
+        """This method add some specific view that do not have XML ID
+        """
+        if not self._context.get('website_id'):
+            return super()._get_filter_xmlid_query()
+        else:
+            return """SELECT res_id
+                    FROM   ir_model_data
+                    WHERE  res_id IN %(res_ids)s
+                        AND model = 'ir.ui.view'
+                        AND module  IN %(modules)s
+                    UNION
+                    SELECT sview.id
+                    FROM   ir_ui_view sview
+                        INNER JOIN ir_ui_view oview USING (key)
+                        INNER JOIN ir_model_data d
+                                ON oview.id = d.res_id
+                                    AND d.model = 'ir.ui.view'
+                                    AND d.module  IN %(modules)s
+                    WHERE  sview.id IN %(res_ids)s
+                        AND sview.website_id IS NOT NULL
+                        AND oview.website_id IS NULL;
+                    """
+
+    @api.model
     @tools.ormcache_context('self.env.uid', 'self.env.su', 'xml_id', keys=('website_id',))
     def get_view_id(self, xml_id):
         """If a website_id is in the context and the given xml_id is not an int
