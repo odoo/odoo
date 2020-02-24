@@ -527,6 +527,26 @@ actual arch.
     # Inheritance mecanism
     #------------------------------------------------------
     @api.model
+    def _get_inheriting_views(self, view_id, model):
+        conditions = self._get_inheriting_views_arch_domain(view_id, model)
+
+        if self.pool._init and not self._context.get('load_all_views'):
+            # Module init currently in progress, only consider views from
+            # modules whose code is already loaded
+
+            # Search terms inside an OR branch in a domain
+            # cannot currently use relationships that are
+            # not required. The root cause is the INNER JOIN
+            # used to implement it.
+            modules = tuple(self.pool._init_modules) + (self._context.get('install_module'),)
+            views = self.search(conditions + [('model_ids.module', 'in', modules)])
+            views_cond = [('id', 'in', list(self._context.get('check_view_ids') or (0,)) + views.ids)]
+            views = self.search(conditions + views_cond, order=INHERIT_ORDER)
+        else:
+            views = self.search(conditions, order=INHERIT_ORDER)
+        return views
+
+    @api.model
     def _get_inheriting_views_arch_domain(self, view_id, model):
         return [
             ['inherit_id', '=', view_id],
@@ -549,23 +569,9 @@ actual arch.
            :rtype: list of tuples
            :return: [(view_arch,view_id), ...]
         """
+
         user_groups = self.env.user.groups_id
-        conditions = self._get_inheriting_views_arch_domain(view_id, model)
-
-        if self.pool._init and not self._context.get('load_all_views'):
-            # Module init currently in progress, only consider views from
-            # modules whose code is already loaded
-
-            # Search terms inside an OR branch in a domain
-            # cannot currently use relationships that are
-            # not required. The root cause is the INNER JOIN
-            # used to implement it.
-            modules = tuple(self.pool._init_modules) + (self._context.get('install_module'),)
-            views = self.search(conditions + [('model_ids.module', 'in', modules)])
-            views_cond = [('id', 'in', list(self._context.get('check_view_ids') or (0,)) + views.ids)]
-            views = self.search(conditions + views_cond, order=INHERIT_ORDER)
-        else:
-            views = self.search(conditions, order=INHERIT_ORDER)
+        views = self._get_inheriting_views(view_id, model)
 
         return [(view.arch, view.id)
                 for view in views.sudo()
