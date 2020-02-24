@@ -6960,6 +6960,64 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('add filter in a grouped list with a pager', async function (assert) {
+        assert.expect(11);
+
+        const actionManager = await createActionManager({
+            data: this.data,
+            actions: [{
+                id: 11,
+                name: 'Action 11',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[3, 'list']],
+                search_view_id: [9, 'search'],
+                flags: {
+                    context: { group_by: ['int_field'] },
+                },
+            }],
+            archs: {
+               'foo,3,list': '<tree groups_limit="3"><field name="foo"/></tree>',
+               'foo,9,search': `
+                    <search>
+                        <filter string="Not Bar" name="not bar" domain="[['bar','=',False]]"/>
+                    </search>`,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'web_read_group') {
+                    assert.step(JSON.stringify(args.kwargs.domain) + ', ' + args.kwargs.offset);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await actionManager.doAction(11);
+
+        assert.containsOnce(actionManager, '.o_list_view');
+        assert.strictEqual(actionManager.$('.o_pager_counter').text().trim(), '1-3 / 4');
+        assert.containsN(actionManager, '.o_group_header', 3); // page 1
+
+        await testUtils.dom.click(actionManager.$('.o_pager_next')); // switch to page 2
+
+        assert.strictEqual(actionManager.$('.o_pager_counter').text().trim(), '4-4 / 4');
+        assert.containsN(actionManager, '.o_group_header', 1); // page 2
+
+        // toggle a filter -> there should be only one group left (on page 1)
+        await testUtils.dom.click(actionManager.$('.o_control_panel .o_search_options .o_filters_menu_button'));
+        await testUtils.dom.click(actionManager.$('.o_control_panel .o_search_options .o_filters_menu .o_menu_item:first'));
+
+        assert.strictEqual(actionManager.$('.o_pager_counter').text().trim(), '1-1 / 1');
+        assert.containsN(actionManager, '.o_group_header', 1); // page 1
+
+        assert.verifySteps([
+            '[], undefined',
+            '[], 3',
+            '[["bar","=",false]], undefined',
+        ]);
+
+        actionManager.destroy();
+    });
+
     QUnit.test('editable grouped lists', async function (assert) {
         assert.expect(4);
 
