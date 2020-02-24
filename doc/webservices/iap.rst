@@ -178,6 +178,7 @@ The service has *four* important fields:
 * :samp:`name` - :class:`ServiceName`: this will identify your service in the
   client's :ref:`app <iap-odoo-app>` communicates directly with IAP, choose it 
   carefully!
+
 .. warning::
     The :class:`ServiceName` is unique and should usually match the name of your 
     Odoo Client App.
@@ -189,6 +190,7 @@ The service has *four* important fields:
   IAP (see :ref:`your service <iap-service>`) and allows to draw credits from
   the client's account. It will be shown only once upon creation of the service
   and can be regenerated at will.
+
 .. danger:: 
     Your :class:`ServiceKey` *is a secret*, leaking your service key
     allows other application developers to draw credits bought for
