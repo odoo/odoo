@@ -1,0 +1,1233 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+
+	<record id="tax_report_yearly" model="account.tax.report">
+        <field name="name">Yearly Tax Report</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_assessment_taxable_turnover" model="account.tax.report.line">
+        <field name="name">I. ASSESSMENT OF TAXABLE TURNOVER</field>
+        <field name="sequence" eval="1"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1a_overall_turnover" model="account.tax.report.line">
+        <field name="name">I.A. Overall turnover (012)</field>
+        <field name="tag_name">012</field>
+        <field name="sequence" eval="1"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_assessment_taxable_turnover"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1a_vat_acc_scheme" model="account.tax.report.line">
+        <field name="name">I.A.1. VAT accounting scheme</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1a_overall_turnover"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1a_total_sale" model="account.tax.report.line">
+        <field name="name">I.A.2. Total Sales / Receipts</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1a_overall_turnover"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1a_supp_prof_margin" model="account.tax.report.line">
+        <field name="name">I.A.2.a). Supply and profit margin</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1a_total_sale"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_1a_supp_of_inhouse" model="account.tax.report.line">
+        <field name="name">I.A.2.a)1) Supply of inhouse manufactured goods (001)</field>
+        <field name="tag_name">001</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1a_supp_prof_margin"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_1a_supp_of_non_inhouse" model="account.tax.report.line">
+        <field name="name">I.A.2.a)2) Supply of goods not manufactured inhouse (002)</field>
+        <field name="tag_name">002</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1a_supp_prof_margin"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_1a_net_prof_margin" model="account.tax.report.line">
+        <field name="name">I.A.2.a)3) Net profit margin (003)</field>
+        <field name="tag_name">003</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1a_supp_prof_margin"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_1a_supp_of_service" model="account.tax.report.line">
+        <field name="name">I.A.2.b). Supply of services (004)</field>
+        <field name="tag_name">004</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1a_total_sale"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_1a_dispsl_of_tengi" model="account.tax.report.line">
+        <field name="name">I.A.2.c). Disposal of tangible and intangible capital assets when those transactions... (005)</field>
+        <field name="tag_name">005</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1a_total_sale"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1a_telecom_services" model="account.tax.report.line">
+        <field name="name">I.A.2.d). Telecommunications services, radio and television broadcasting services... (471)</field>
+        <field name="tag_name">471</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1a_total_sale"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1a_other_assimi" model="account.tax.report.line">
+        <field name="name">I.A.3. Other assimilated supplies</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1a_overall_turnover"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_1a_appli_of_goods" model="account.tax.report.line">
+        <field name="name">I.A.3.a). Application of goods for private use or for that of the staff (008)</field>
+        <field name="tag_name">008</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1a_other_assimi"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_1a_appli_for_purpose" model="account.tax.report.line">
+        <field name="name">I.A.3.b). Application for the purpose of business of goods produced in the course of the business  (009)</field>
+        <field name="tag_name">009</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1a_other_assimi"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_1a_use_of_goods" model="account.tax.report.line">
+        <field name="name">I.A.3.c). Use of goods considered business assets for purposes other than those of the business (010)</field>
+        <field name="tag_name">010</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1a_other_assimi"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_1a_supp_of_services_carried" model="account.tax.report.line">
+        <field name="name">I.A.3.d). Supply of services carried out free of charge for purposes other than those of the business  (011)</field>
+        <field name="tag_name">011</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1a_other_assimi"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1b_exemptions_deduct" model="account.tax.report.line">
+        <field name="name">I.B. Exemptions and deductible amounts (021)</field>
+        <field name="tag_name">021</field>
+        <field name="sequence" eval="2"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_assessment_taxable_turnover"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1b_intra_commu" model="account.tax.report.line">
+        <field name="name">I.B.1. Intra-Community supply</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1b_exemptions_deduct"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_1b_goods_persons" model="account.tax.report.line">
+        <field name="name">I.B.1.a). of goods (Art.43(1)(d) and (f)) to persons identified for VAT purposes in... (013)</field>
+        <field name="tag_name">013</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1b_intra_commu"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_1b_transport" model="account.tax.report.line">
+        <field name="name">I.B.1.b). of new means of transport (Art. 43(1)(e)) to persons not identified for VAT... (202)</field>
+        <field name="tag_name">202</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1b_intra_commu"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1b_exports" model="account.tax.report.line">
+        <field name="name">I.B.2. Exports (Art.43(1)(a) and (b)) (014)</field>
+        <field name="tag_name">014</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1b_exemptions_deduct"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+        <field name="code">LUTAX_014</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1b_other_exempps_art43" model="account.tax.report.line">
+        <field name="name">I.B.3. Other exemptions (Art.43 and 60bis) (015)</field>
+        <field name="tag_name">015</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1b_exemptions_deduct"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+        <field name="code">LUTAX_015</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1b_other_exempps_art44" model="account.tax.report.line">
+        <field name="name">I.B.4. Other exemptions (Art.44 and 56quater) (016)</field>
+        <field name="tag_name">016</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1b_exemptions_deduct"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+        <field name="code">LUTAX_016</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1b_manu_tobacco" model="account.tax.report.line">
+        <field name="name">I.B.5. Manufactured tobacco whose VAT was collected at the source or at the exit of... (017)</field>
+        <field name="tag_name">017</field>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1b_exemptions_deduct"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+        <field name="code">LUTAX_017</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1b_trans_carr_out" model="account.tax.report.line">
+        <field name="name">I.B.6. Transactions carried out (for which the place of supply is) abroad</field>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1b_exemptions_deduct"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1b_supp_subseq" model="account.tax.report.line">
+        <field name="name">I.B.6.a) Supply, subsequent to intra-Community acquisitions of goods, in the context of triangular transactions... (018)</field>
+        <field name="tag_name">018</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1b_trans_carr_out"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+        <field name="code">LUTAX_018</field>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_1b_supp_of_goods" model="account.tax.report.line">
+        <field name="name">I.B.6.b) Supply of goods (other than new means of transport and products subject to exise duty), dispatched... (203)</field>
+        <field name="tag_name">203</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1b_trans_carr_out"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1b_supp_of_service" model="account.tax.report.line">
+        <field name="name">I.B.6.c) Supply of services, other than exempted from VAT in the customer's MS, to customers identified... (423)</field>
+        <field name="tag_name">423</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1b_trans_carr_out"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+        <field name="code">LUTAX_423</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1b_supp_of_service_costomer" model="account.tax.report.line">
+        <field name="name">I.B.6.d) Supply of services to customers identified for VAT purposes in another MS, exempt in the customer's MS (424)</field>
+        <field name="tag_name">424</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1b_trans_carr_out"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1b_supp_carr_within" model="account.tax.report.line">
+        <field name="name">I.B.6.e) Supplies carried out within the scope of the special arrangement of art. 56sexies (226)</field>
+        <field name="tag_name">226</field>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1b_trans_carr_out"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1b_other_supp_carr_out" model="account.tax.report.line">
+        <field name="name">I.B.6.f) Other supplies carried out (for which the place of supply is) abroad (019)</field>
+        <field name="tag_name">019</field>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1b_trans_carr_out"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+        <field name="code">LUTAX_019</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1b_inland" model="account.tax.report.line">
+        <field name="name">I.B.7. Inland supplies for which the customer is liable for the payment of VAT (419)</field>
+        <field name="tag_name">419</field>
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_1b_exemptions_deduct"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_1c_taxable_turnover" model="account.tax.report.line">
+        <field name="name">I.C. Taxable turnover (022)</field>
+        <field name="tag_name">022</field>
+        <field name="sequence" eval="3"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_assessment_taxable_turnover"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2_assesment_of_tax_due" model="account.tax.report.line">
+      <field name="name">II. ASSESSMENT OF TAX DUE (output tax)</field>
+      <field name="sequence">2</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2b_intra_community_acqui_of_goods_base" model="account.tax.report.line">
+      <field name="name">II.B. Intra-Community acquisitions of goods – base (051)</field>
+      <field name="sequence">3</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2_assesment_of_tax_due"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2b_base_3" model="account.tax.report.line">
+      <field name="name">II.B. base 3% (049)</field>
+      <field name="tag_name">049</field>
+      <field name="sequence">9</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2b_intra_community_acqui_of_goods_base"/>
+    </record>
+
+
+    <record id="account_yearly_tax_report_line_2b_base_exempt" model="account.tax.report.line">
+      <field name="name">II.B. base exempt (194)</field>
+      <field name="tag_name">194</field>
+      <field name="sequence">10</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2b_intra_community_acqui_of_goods_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2b_base_17" model="account.tax.report.line">
+      <field name="name">II.B. base 17% (711)</field>
+      <field name="tag_name">711</field>
+      <field name="sequence">6</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2b_intra_community_acqui_of_goods_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2b_base_14" model="account.tax.report.line">
+      <field name="name">II.B. base 14% (713)</field>
+      <field name="tag_name">713</field>
+      <field name="sequence">7</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2b_intra_community_acqui_of_goods_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2b_base_8" model="account.tax.report.line">
+      <field name="name">II.B. base 8% (715)</field>
+      <field name="tag_name">715</field>
+      <field name="sequence">8</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2b_intra_community_acqui_of_goods_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_importation_of_goods_base" model="account.tax.report.line">
+      <field name="name">II.D. Importation of goods – base (065)</field>
+      <field name="sequence">6</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2_assesment_of_tax_due"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_2_base_exempt" model="account.tax.report.line">
+      <field name="name">II.D.2. for non-business purposes: base exempt (196)</field>
+      <field name="tag_name">196</field>
+      <field name="sequence">12</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2d_importation_of_goods_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_1_base_17" model="account.tax.report.line">
+      <field name="name">II.D.1. for business purposes: base 17% (721)</field>
+      <field name="tag_name">721</field>
+      <field name="sequence">3</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2d_importation_of_goods_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_1_base_14" model="account.tax.report.line">
+      <field name="name">II.D.1. for business purposes: base 14% (723)</field>
+      <field name="tag_name">723</field>
+      <field name="sequence">4</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2d_importation_of_goods_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_1_base_8" model="account.tax.report.line">
+      <field name="name">II.D.1. for business purposes: base 8% (725)</field>
+      <field name="tag_name">725</field>
+      <field name="sequence">5</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2d_importation_of_goods_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_2_base_17" model="account.tax.report.line">
+      <field name="name">II.D.2. for non-business purposes: base 17% (731)</field>
+      <field name="tag_name">731</field>
+      <field name="sequence">8</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2d_importation_of_goods_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_2_base_14" model="account.tax.report.line">
+      <field name="name">II.D.2. for non-business purposes: base 14% (733)</field>
+      <field name="tag_name">733</field>
+      <field name="sequence">9</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2d_importation_of_goods_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_2_base_8" model="account.tax.report.line">
+      <field name="name">II.D.2. for non-business purposes: base 8% (735)</field>
+      <field name="tag_name">735</field>
+      <field name="sequence">10</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2d_importation_of_goods_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_1_base_3" model="account.tax.report.line">
+      <field name="name">II.D.1. for business purposes: base 3% (059)</field>
+      <field name="tag_name">059</field>
+      <field name="sequence">6</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2d_importation_of_goods_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_2_base_3" model="account.tax.report.line">
+      <field name="name">II.D.2. for non-business purposes: base 3% (063)</field>
+      <field name="tag_name">063</field>
+      <field name="sequence">11</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2d_importation_of_goods_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_1_base_exempt" model="account.tax.report.line">
+      <field name="name">II.D.1. for business purposes: base exempt (195)</field>
+      <field name="tag_name">195</field>
+      <field name="sequence">7</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2d_importation_of_goods_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2c_acquisitions_triangular_transactions_base" model="account.tax.report.line">
+      <field name="name">II.C. Acquisitions, in the context of triangular transactions – base (152)</field>
+      <field name="tag_name">152</field>
+      <field name="sequence">5</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2_assesment_of_tax_due"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_supply_of_service_for_customer" model="account.tax.report.line">
+      <field name="name">II.E. Supply of services for which the customer is liable for the payment of VAT – base (409)</field>
+      <field name="sequence">8</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2_assesment_of_tax_due"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_1_base" model="account.tax.report.line">
+      <field name="name">II.E.1. base (436)</field>
+      <field name="sequence">1</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2e_supply_of_service_for_customer"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_1_a_base_3" model="account.tax.report.line">
+      <field name="name">II.E.1.a) not exempt within the territory: base 3% (431)</field>
+      <field name="tag_name">431</field>
+      <field name="sequence">9</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2e_1_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_1_b_exempt" model="account.tax.report.line">
+      <field name="name">II.E.1.b) exempt within the territory: exempt (435)</field>
+      <field name="tag_name">435</field>
+      <field name="sequence">10</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2e_1_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_1_a_base_17" model="account.tax.report.line">
+      <field name="name">II.E.1.a) not exempt within the territory: base 17% (741)</field>
+      <field name="tag_name">741</field>
+      <field name="sequence">6</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2e_1_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_1_a_base_14" model="account.tax.report.line">
+      <field name="name">II.E.1.a) not exempt within the territory: base 14% (743)</field>
+      <field name="tag_name">743</field>
+      <field name="sequence">7</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2e_1_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_1_a_base_8" model="account.tax.report.line">
+      <field name="name">II.E.1.a) not exempt within the territory: base 8% (745)</field>
+      <field name="tag_name">745</field>
+      <field name="sequence">8</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2e_1_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_2_base" model="account.tax.report.line">
+      <field name="name">II.E.2. base (463)</field>
+      <field name="sequence">2</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2e_supply_of_service_for_customer"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_2_base_3" model="account.tax.report.line">
+      <field name="name">II.E.2. not established or residing within the Community: base 3% (441)</field>
+      <field name="tag_name">441</field>
+      <field name="sequence">9</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2e_2_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_2_exempt" model="account.tax.report.line">
+      <field name="name">II.E.2. not established or residing within the Community: exempt (445)</field>
+      <field name="tag_name">445</field>
+      <field name="sequence">10</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2e_2_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_2_base_17" model="account.tax.report.line">
+      <field name="name">II.E.2. not established or residing within the Community: base 17% (751)</field>
+      <field name="tag_name">751</field>
+      <field name="sequence">6</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2e_2_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_2_base_14" model="account.tax.report.line">
+      <field name="name">II.E.2. not established or residing within the Community: base 14% (753)</field>
+      <field name="tag_name">753</field>
+      <field name="sequence">7</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2e_2_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_2_base_8" model="account.tax.report.line">
+      <field name="name">II.E.2. not established or residing within the Community: base 8% (755)</field>
+      <field name="tag_name">755</field>
+      <field name="sequence">8</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2e_2_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_3_base" model="account.tax.report.line">
+      <field name="name">II.E.3. base (765)</field>
+      <field name="sequence">3</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2e_supply_of_service_for_customer"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_3_base_17" model="account.tax.report.line">
+      <field name="name">II.E.3. suppliers established within the territory: base 17% (761)</field>
+      <field name="tag_name">761</field>
+      <field name="sequence">1</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2e_3_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2a_breakdown_taxable_turnover_base" model="account.tax.report.line">
+      <field name="name">II.A. Breakdown of taxable turnover – base (037)</field>
+      <field name="sequence">1</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2_assesment_of_tax_due"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2a_base_3" model="account.tax.report.line">
+      <field name="name">II.A. base 3% (031)</field>
+      <field name="tag_name">031</field>
+      <field name="sequence">9</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2a_breakdown_taxable_turnover_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2a_base_17" model="account.tax.report.line">
+      <field name="name">II.A. base 17% (701)</field>
+      <field name="tag_name">701</field>
+      <field name="sequence">6</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2a_breakdown_taxable_turnover_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2a_base_14" model="account.tax.report.line">
+      <field name="name">II.A. base 14% (703)</field>
+      <field name="tag_name">703</field>
+      <field name="sequence">7</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2a_breakdown_taxable_turnover_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2a_base_8" model="account.tax.report.line">
+      <field name="name">II.A. base 8% (705)</field>
+      <field name="tag_name">705</field>
+      <field name="sequence">8</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2a_breakdown_taxable_turnover_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2f_supply_goods_base" model="account.tax.report.line">
+      <field name="name">II.F. Supply of goods for which the purchaser is liable for the payment of VAT - base (767)</field>
+      <field name="sequence">10</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2_assesment_of_tax_due"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2f_supply_goods_base_8" model="account.tax.report.line">
+      <field name="name">II.F. base 8% (763)</field>
+      <field name="tag_name">763</field>
+      <field name="sequence">1</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2f_supply_goods_base"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2f_supply_goods_tax" model="account.tax.report.line">
+      <field name="name">II.F. Supply of goods for which the purchaser is liable for the payment of VAT - tax (768)</field>
+      <field name="sequence">11</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2_assesment_of_tax_due"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2f_supply_goods_tax_8" model="account.tax.report.line">
+      <field name="name">II.F. tax 8% (764)</field>
+      <field name="tag_name">764</field>
+      <field name="sequence">1</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2f_supply_goods_tax"/>
+      <field name="code">LUTAX_764</field>
+  </record>
+
+    <record id="account_yearly_tax_report_line_2g_special_arrangement" model="account.tax.report.line">
+      <field name="name">II.G. Special arrangement for tax suspension: adjustment (Art.60bis, (5) and (8)) (227)</field>
+      <field name="tag_name">227</field>
+      <field name="sequence">12</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2_assesment_of_tax_due"/>
+      <field name="code">LUTAX_227</field>
+    </record>
+
+    <!-- Note: any change in formula here should be reflected in section `IV.A. Total tax due (103)` below -->
+    <record id="account_yearly_tax_report_line_2h_total_tax_due" model="account.tax.report.line">
+      <field name="name">II.H. Total tax due (076)</field>
+      <field name="sequence">13</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2_assesment_of_tax_due"/>
+      <field name="formula">LUTAX_702+LUTAX_704+LUTAX_706+LUTAX_040+LUTAX_712+LUTAX_714+LUTAX_716+LUTAX_054+LUTAX_722+LUTAX_724+LUTAX_726+LUTAX_068+LUTAX_732+LUTAX_734+LUTAX_736+LUTAX_073+LUTAX_742+LUTAX_744+LUTAX_746+LUTAX_432+LUTAX_752+LUTAX_754+LUTAX_756+LUTAX_442+LUTAX_762+LUTAX_764+LUTAX_227</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2a_breakdown_taxable_turnover_tax" model="account.tax.report.line">
+      <field name="name">II.A. Breakdown of taxable turnover – tax (046)</field>
+      <field name="sequence">2</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2_assesment_of_tax_due"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2a_tax_3" model="account.tax.report.line">
+      <field name="name">II.A. tax 3% (040)</field>
+      <field name="tag_name">040</field>
+      <field name="sequence">9</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2a_breakdown_taxable_turnover_tax"/>
+      <field name="code">LUTAX_040</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2a_tax_17" model="account.tax.report.line">
+      <field name="name">II.A. tax 17% (702)</field>
+      <field name="tag_name">702</field>
+      <field name="sequence">6</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2a_breakdown_taxable_turnover_tax"/>
+      <field name="code">LUTAX_702</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2a_tax_14" model="account.tax.report.line">
+      <field name="name">II.A. tax 14% (704)</field>
+      <field name="tag_name">704</field>
+      <field name="sequence">7</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2a_breakdown_taxable_turnover_tax"/>
+      <field name="code">LUTAX_704</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2a_tax_8" model="account.tax.report.line">
+      <field name="name">II.A. tax 8% (706)</field>
+      <field name="tag_name">706</field>
+      <field name="sequence">8</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2a_breakdown_taxable_turnover_tax"/>
+      <field name="code">LUTAX_706</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2b_intra_community_acquisitions_goods_tax" model="account.tax.report.line">
+      <field name="name">II.B. Intra-Community acquisitions of goods – tax (056)</field>
+      <field name="sequence">4</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2_assesment_of_tax_due"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2b_tax_3" model="account.tax.report.line">
+      <field name="name">II.B. tax 3% (054)</field>
+      <field name="tag_name">054</field>
+      <field name="sequence">8</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2b_intra_community_acquisitions_goods_tax"/>
+      <field name="code">LUTAX_054</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2b_tax_17" model="account.tax.report.line">
+      <field name="name">II.B. tax 17% (712)</field>
+      <field name="tag_name">712</field>
+      <field name="sequence">5</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2b_intra_community_acquisitions_goods_tax"/>
+      <field name="code">LUTAX_712</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2b_tax_14" model="account.tax.report.line">
+      <field name="name">II.B. tax 14% (714)</field>
+      <field name="tag_name">714</field>
+      <field name="sequence">6</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2b_intra_community_acquisitions_goods_tax"/>
+      <field name="code">LUTAX_714</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2b_tax_8" model="account.tax.report.line">
+      <field name="name">II.B. tax 8% (716)</field>
+      <field name="tag_name">716</field>
+      <field name="sequence">7</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2b_intra_community_acquisitions_goods_tax"/>
+      <field name="code">LUTAX_716</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_importation_of_goods_tax" model="account.tax.report.line">
+      <field name="name">II.D. Importation of goods – tax (407)</field>
+      <field name="sequence">7</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_2_assesment_of_tax_due"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_1_tax_14" model="account.tax.report.line">
+      <field name="name">II.D.1. for business purposes: tax 14% (724)</field>
+      <field name="tag_name">724</field>
+      <field name="sequence">2</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2d_importation_of_goods_tax"/>
+      <field name="code">LUTAX_724</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_1_tax_8" model="account.tax.report.line">
+      <field name="name">II.D.1. for business purposes: tax 8% (726)</field>
+      <field name="tag_name">726</field>
+      <field name="sequence">3</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2d_importation_of_goods_tax"/>
+      <field name="code">LUTAX_726</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_2_tax_17" model="account.tax.report.line">
+      <field name="name">II.D.2. for non-business purposes: tax 17% (732)</field>
+      <field name="tag_name">732</field>
+      <field name="sequence">5</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2d_importation_of_goods_tax"/>
+      <field name="code">LUTAX_732</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_2_tax_14" model="account.tax.report.line">
+      <field name="name">II.D.2. for non-business purposes: tax 14% (734)</field>
+      <field name="tag_name">734</field>
+      <field name="sequence">6</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2d_importation_of_goods_tax"/>
+      <field name="code">LUTAX_734</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_2_tax_8" model="account.tax.report.line">
+      <field name="name">II.D.2. for non-business purposes: tax 8% (736)</field>
+      <field name="tag_name">736</field>
+      <field name="sequence">7</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2d_importation_of_goods_tax"/>
+      <field name="code">LUTAX_736</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_1_tax_3" model="account.tax.report.line">
+      <field name="name">II.D.1. for business purposes: tax 3% (068)</field>
+      <field name="tag_name">068</field>
+      <field name="sequence">4</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2d_importation_of_goods_tax"/>
+      <field name="code">LUTAX_068</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_2_tax_3" model="account.tax.report.line">
+      <field name="name">II.D.2. for non-business purposes: tax 3% (073)</field>
+      <field name="tag_name">073</field>
+      <field name="sequence">8</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2d_importation_of_goods_tax"/>
+      <field name="code">LUTAX_073</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2d_1_tax_17" model="account.tax.report.line">
+      <field name="name">II.D.1. for business purposes: tax 17% (722)</field>
+      <field name="tag_name">722</field>
+      <field name="sequence">1</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2d_importation_of_goods_tax"/>
+      <field name="code">LUTAX_722</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_supply_of_service_for_customer_liable_for_payment_tax" model="account.tax.report.line">
+      <field name="name">II.E. Supply of services for which the customer is liable for the payment of VAT – tax (410)</field>
+      <field name="sequence">9</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2_assesment_of_tax_due"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_1_a_tax" model="account.tax.report.line">
+      <field name="name">II.E.1.a) tax (462)</field>
+      <field name="sequence">1</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2e_supply_of_service_for_customer_liable_for_payment_tax"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_1_a_tax_3" model="account.tax.report.line">
+      <field name="name">II.E.1.a) not exempt within the territory: tax 3% (432)</field>
+      <field name="tag_name">432</field>
+      <field name="sequence">8</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2e_1_a_tax"/>
+      <field name="code">LUTAX_432</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_1_a_tax_17" model="account.tax.report.line">
+      <field name="name">II.E.1.a) not exempt within the territory: tax 17% (742)</field>
+      <field name="tag_name">742</field>
+      <field name="sequence">5</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2e_1_a_tax"/>
+      <field name="code">LUTAX_742</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_1_a_tax_14" model="account.tax.report.line">
+      <field name="name">II.E.1.a) not exempt within the territory: tax 14% (744)</field>
+      <field name="tag_name">744</field>
+      <field name="sequence">6</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2e_1_a_tax"/>
+      <field name="code">LUTAX_744</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_1_a_tax_8" model="account.tax.report.line">
+      <field name="name">II.E.1.a) not exempt within the territory: tax 8% (746)</field>
+      <field name="tag_name">746</field>
+      <field name="sequence">7</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2e_1_a_tax"/>
+      <field name="code">LUTAX_746</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_2_tax" model="account.tax.report.line">
+      <field name="name">II.E.2. tax (464)</field>
+      <field name="sequence">2</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2e_supply_of_service_for_customer_liable_for_payment_tax"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_2_tax_3" model="account.tax.report.line">
+      <field name="name">II.E.2. not established or residing within the Community: tax 3% (442)</field>
+      <field name="tag_name">442</field>
+      <field name="sequence">8</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2e_2_tax"/>
+      <field name="code">LUTAX_442</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_2_tax_17" model="account.tax.report.line">
+      <field name="name">II.E.2. not established or residing within the Community: tax 17% (752)</field>
+      <field name="tag_name">752</field>
+      <field name="sequence">5</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2e_2_tax"/>
+      <field name="code">LUTAX_752</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_2_tax_14" model="account.tax.report.line">
+      <field name="name">II.E.2. not established or residing within the Community: tax 14% (754)</field>
+      <field name="tag_name">754</field>
+      <field name="sequence">6</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2e_2_tax"/>
+      <field name="code">LUTAX_754</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_2_tax_8" model="account.tax.report.line">
+      <field name="name">II.E.2. not established or residing within the Community: tax 8% (756)</field>
+      <field name="tag_name">756</field>
+      <field name="sequence">7</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2e_2_tax"/>
+      <field name="code">LUTAX_756</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_3_tax" model="account.tax.report.line">
+      <field name="name">II.E.3. tax (766)</field>
+      <field name="sequence">3</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2e_supply_of_service_for_customer_liable_for_payment_tax"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_2e_3_tax_17" model="account.tax.report.line">
+      <field name="name">II.E.3. suppliers established within the territory: tax 17% (762)</field>
+      <field name="tag_name">762</field>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_2e_3_tax"/>
+      <field name="code">LUTAX_762</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_3_assessment_deducible_tax" model="account.tax.report.line">
+      <field name="name">III. ASSESSMENT OF DEDUCTIBLE TAX (input tax)</field>
+      <field name="sequence">3</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_3a_total_input_tax" model="account.tax.report.line">
+      <field name="name">III.A. Total input tax (093)</field>
+      <field name="tag_name">093</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_3_assessment_deducible_tax"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3a_total_of_vat" model="account.tax.report.line">
+      <field name="name">III.A.1. Total of VAT on stock entries (080)</field>
+      <field name="tag_name">080</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_3a_total_input_tax"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3a_vat_invoiced_by_taxable" model="account.tax.report.line">
+        <field name="name">III.A.1.a) VAT invoiced by other taxable persons for goods or services supplied (077)</field>
+        <field name="tag_name">077</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_3a_total_of_vat"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3a_vat_intra_community" model="account.tax.report.line">
+        <field name="name">III.A.1.b) VAT due in respect of intra-Community acquisitions of goods other than manufactured tobacco... (078)</field>
+        <field name="tag_name">078</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_3a_total_of_vat"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3a_vat_paid_importation" model="account.tax.report.line">
+        <field name="name">III.A.1.c) VAT due or paid in respect of importations of goods other than manufactured tobacco and goods for... (079)</field>
+        <field name="tag_name">079</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_3a_total_of_vat"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3a_vat_reverse_charge" model="account.tax.report.line">
+        <field name="name">III.A.1.d) VAT due under the reverse charge (cf points II.E and F) (404)</field>
+        <field name="tag_name">404</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_3a_total_of_vat"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3a_total_vat_cap_expend" model="account.tax.report.line">
+      <field name="name">III.A.2. Total of VAT on capital expenditures (084)</field>
+      <field name="tag_name">084</field>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_3a_total_input_tax"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3a_vat_by_taxable" model="account.tax.report.line">
+        <field name="name">III.A.2.a) VAT invoiced by other taxable persons for goods or services supplied (081)</field>
+        <field name="tag_name">081</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_3a_total_vat_cap_expend"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3a_respect_of_intra_comm" model="account.tax.report.line">
+        <field name="name">III.A.2.b) VAT due in respect of intra-Community acquisitions of goods other than manufactured tobacco (082)</field>
+        <field name="tag_name">082</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_3a_total_vat_cap_expend"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3a_paid_respect_import" model="account.tax.report.line">
+        <field name="name">III.A.2.c) VAT due or paid in respect of importations of goods other than manufactured tobacco and goods... (083)</field>
+        <field name="tag_name">083</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_3a_total_vat_cap_expend"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3a_reverse_charge_vat" model="account.tax.report.line">
+        <field name="name">III.A.2.d) VAT due under the reverse charge (cf points II.E and F) (405)</field>
+        <field name="tag_name">405</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_3a_total_vat_cap_expend"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3a_tot_vat_on_opera_expend" model="account.tax.report.line">
+      <field name="name">III.A.3. Total of VAT on operational expenditures (088)</field>
+      <field name="tag_name">088</field>
+      <field name="sequence">3</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_3a_total_input_tax"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3a_other_taxa_person" model="account.tax.report.line">
+        <field name="name">III.A.3.a) VAT invoiced by other taxable persons for goods or services supplied (085)</field>
+        <field name="tag_name">085</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_3a_tot_vat_on_opera_expend"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3a_resp_of_intra_comm" model="account.tax.report.line">
+        <field name="name">III.A.3.b) VAT due in respect of intra-Community acquisitions of goods other than manufactured tobacco (086)</field>
+        <field name="tag_name">086</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_3a_tot_vat_on_opera_expend"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3a_due_or_paid_respect_import" model="account.tax.report.line">
+        <field name="name">III.A.3.c) VAT due or paid in respect of importations of goods other than manufactured tobacco and goods for non-business purposes (087)</field>
+        <field name="tag_name">087</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_3a_tot_vat_on_opera_expend"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3a_under_reverse_charge" model="account.tax.report.line">
+        <field name="name">III.A.3.d) VAT due under the reverse charge (cf points II.E and F) (406)</field>
+        <field name="tag_name">406</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_3a_tot_vat_on_opera_expend"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3a_other" model="account.tax.report.line">
+      <field name="name">III.A.4. Other (179)</field>
+      <field name="tag_name">179</field>
+      <field name="sequence">4</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_3a_total_input_tax"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_3a_4a_appl_of_goods" model="account.tax.report.line">
+        <field name="name">III.A.4.a) Tax due in respect of the application of goods for business purposes as referred to in... (090)</field>
+        <field name="tag_name">090</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_3a_other"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_3a_tax_paid_as_joint" model="account.tax.report.line">
+        <field name="name">III.A.4.b) Tax paid as joint and several guarantee in accordance with the conditions laid down in Art. 48 (092)</field>
+        <field name="tag_name">092</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_3a_other"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_3a_adjusted_tax" model="account.tax.report.line">
+        <field name="name">III.A.4.c) Adjusted tax - special arrangement for tax suspension (Art.60bis(9), subpar. 2) (228)</field>
+        <field name="tag_name">228</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_3a_other"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_3b_total_input_tax_non_deductable" model="account.tax.report.line">
+      <field name="name">III.B. Total input tax non-deductible (097)</field>
+      <field name="tag_name">097</field>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_3_assessment_deducible_tax"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_3b_non_recoverable_input_tax" model="account.tax.report.line">
+      <field name="name">III.B.1. Non recoverable input tax relating to supplies exempt pursuant to Art. 44 and 56quater (094)</field>
+      <field name="tag_name">094</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_3b_total_input_tax_non_deductable"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_3b_non_recoverable_proportion_input_tax" model="account.tax.report.line">
+      <field name="name">III.B.2. Non recoverable proportion of input tax determined in accordance with Art. 50 (095)</field>
+      <field name="tag_name">095</field>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_3b_total_input_tax_non_deductable"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3b_non_recoverable_input_tax_in_accor" model="account.tax.report.line">
+      <field name="name">III.B.3. Non recoverable input tax in accordance with Art. 56ter-1(7) and 56ter-2(7) (when applying the margin scheme) (096)</field>
+      <field name="tag_name">096</field>
+      <field name="sequence">3</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_3b_total_input_tax_non_deductable"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3c_adjustment_of_deductions_101" model="account.tax.report.line">
+      <field name="name">III.C. Adjustment of deductions (101)</field>
+      <field name="tag_name">101</field>
+      <field name="sequence">3</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_3_assessment_deducible_tax"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_3c_adjustment_of_deductions" model="account.tax.report.line">
+      <field name="name">III.C.1. Adjustment of deductions</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_3c_adjustment_of_deductions_101"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3c_in_accordance_with_53" model="account.tax.report.line">
+      <field name="name">III.C.1.a) in accordance with provisions of Art. 53 (098)</field>
+      <field name="tag_name">098</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_3c_adjustment_of_deductions"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_3c_in_accordance_with_grand_ducal" model="account.tax.report.line">
+      <field name="name">III.C.1.b) in accordance with provisions of the grand-ducal Regulation of 7 March 1980 - option to tax land (099)</field>
+      <field name="tag_name">099</field>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_3c_adjustment_of_deductions"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_3d_total_input_tax_deductable" model="account.tax.report.line">
+      <field name="name">III.D. Total input tax deductible (102)</field>
+      <field name="tag_name">102</field>
+      <field name="sequence">4</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_3_assessment_deducible_tax"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_4_reclaimed" model="account.tax.report.line">
+      <field name="name">IV. TAX TO BE PAID OR TO BE RECLAIMED</field>
+      <field name="sequence">4</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_4a_total_tax_due" model="account.tax.report.line">
+      <field name="name">IV.A. Total tax due (brought forward from point II.H) (103)</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_4_reclaimed"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+      <field name="formula">LUTAX_702+LUTAX_704+LUTAX_706+LUTAX_040+LUTAX_712+LUTAX_714+LUTAX_716+LUTAX_054+LUTAX_722+LUTAX_724+LUTAX_726+LUTAX_068+LUTAX_732+LUTAX_734+LUTAX_736+LUTAX_073+LUTAX_742+LUTAX_744+LUTAX_746+LUTAX_432+LUTAX_752+LUTAX_754+LUTAX_756+LUTAX_442+LUTAX_762+LUTAX_764+LUTAX_227</field>
+    </record>
+
+    <record id="account_yearly_tax_report_line_4b_total_input_tax_deductable" model="account.tax.report.line">
+      <field name="name">IV.B. Total input tax deductible (brought forward from point III.D.) (104)</field>
+      <field name="tag_name">104</field>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_4_reclaimed"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_4c_exceeding_amount" model="account.tax.report.line">
+      <field name="name">IV.C. Exceeding amount (a surplus of deductible tax must be preceded by a minus sign) (103-104) (105)</field>
+      <field name="sequence">3</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_4_reclaimed"/>
+      <field name="formula">(LUTAX_702+LUTAX_704+LUTAX_706+LUTAX_040+LUTAX_712+LUTAX_714+LUTAX_716+LUTAX_054+LUTAX_722+LUTAX_724+LUTAX_726+LUTAX_068+LUTAX_732+LUTAX_734+LUTAX_736+LUTAX_073+LUTAX_742+LUTAX_744+LUTAX_746+LUTAX_432+LUTAX_752+LUTAX_754+LUTAX_756+LUTAX_442+LUTAX_762+LUTAX_764+LUTAX_227)</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_5_additional" model="account.tax.report.line">
+      <field name="name">V. ADDITIONAL INFORMATION</field>
+      <field name="sequence">5</field>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_5a_declaring_person" model="account.tax.report.line">
+      <field name="name">V.A. Declaring person</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_5_additional"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_5a_phone_number" model="account.tax.report.line">
+        <field name="name">V.A.1. Phone number for contacting the declaring person (237)</field>
+        <field name="tag_name">237</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_5a_declaring_person"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_5b_persons_employed" model="account.tax.report.line">
+      <field name="name">V.B. Persons employed</field>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_5_additional"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_5b_number_of_persons_employed" model="account.tax.report.line">
+        <field name="name">V.B.1. Number of persons employed (average for the year) (110)</field>
+        <field name="tag_name">110</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_5b_persons_employed"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_5b_with_salary_wage" model="account.tax.report.line">
+        <field name="name">V.B.1.a) with salary or wage (108)</field>
+        <field name="tag_name">108</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_5b_number_of_persons_employed"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+    <!--TODO: To be referred -->
+    <record id="account_yearly_tax_report_line_5b_with_no_salary" model="account.tax.report.line">
+        <field name="name">V.B.1.b) with no salary (family members) (109)</field>
+        <field name="tag_name">109</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_5b_number_of_persons_employed"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_5c_books_records_documents" model="account.tax.report.line">
+      <field name="name">V.C. Books, records and documents</field>
+      <field name="sequence">3</field>
+      <field name="parent_id" ref="account_yearly_tax_report_line_5_additional"/>
+      <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+    <record id="account_yearly_tax_report_line_5c_taxable_persons_established" model="account.tax.report.line">
+        <field name="name">V.C.1. Taxable persons established in Luxemburg: place of storage of books, records and documents the keeping... (238)</field>
+        <field name="tag_name">238</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_yearly_tax_report_line_5c_books_records_documents"/>
+        <field name="report_id" ref="tax_report_yearly"/>
+    </record>
+
+</odoo>

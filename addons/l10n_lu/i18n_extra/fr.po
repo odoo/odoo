@@ -3,11 +3,10 @@
 # 	* l10n_lu
 #
 msgid ""
-msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5+e\n"
+msgstr "Project-Id-Version: Odoo Server 14.0alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-30 08:44+0000\n"
-"PO-Revision-Date: 2019-08-30 08:44+0000\n"
+"POT-Creation-Date: 2020-01-01 10:14+0000\n"
+"PO-Revision-Date: 2020-01-01 10:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -211,7 +210,7 @@ msgstr "Accident"
 #. module: l10n_lu
 #: model:ir.model,name:l10n_lu.model_account_chart_template
 msgid "Account Chart Template"
-msgstr ""
+msgstr "Modèle de plan comptable"
 
 #. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2011_account_61342
@@ -327,12 +326,8 @@ msgstr "Créances sur des entreprises avec lesquelles l'entreprise a un lien de 
 "participation"
 
 #. module: l10n_lu
-#: model:account.account.template,name:l10n_lu.lu_2011_account_4723
-msgid "Amounts payable to directors, managers, statutory auditors and similar"
-msgstr "Dettes envers administrateurs, gérants, commissaires et organes assimilés"
-
-#. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2011_account_4713
+#: model:account.account.template,name:l10n_lu.lu_2011_account_4723
 msgid "Amounts payable to directors, managers, statutory auditors and similar"
 msgstr "Dettes envers administrateurs, gérants, commissaires et organes assimilés"
 
@@ -631,13 +626,9 @@ msgstr "Transports collectifs du personnel"
 
 #. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2020_account_6131
-msgid "Commissions and brokerage fees"
-msgstr "Commissions et courtages"
-
-#. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2020_account_705
 msgid "Commissions and brokerage fees"
-msgstr "Commissions et courtages obtenus"
+msgstr "Commissions et courtages"
 
 #. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2020_account_7453
@@ -1117,13 +1108,9 @@ msgstr "Impôts étrangers "
 
 #. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2020_account_65411
-msgid "From affiliated undertakings"
-msgstr "Sur des entreprises liées"
-
-#. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2020_account_755231
 msgid "From affiliated undertakings"
-msgstr "Intérêts sur leasings financiers - entreprises liées"
+msgstr "Sur des entreprises liées"
 
 #. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2020_account_755232
@@ -1206,23 +1193,36 @@ msgstr "Chauffage, gaz, électricité"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_1_assessment_taxable_turnover
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_assessment_taxable_turnover
 msgid "I. ASSESSMENT OF TAXABLE TURNOVER"
 msgstr "I. CALCUL DU CHIFFRE D'AFFAIRES IMPOSABLE"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_1a_overall_turnover
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1a_overall_turnover
 msgid "I.A. Overall turnover (012)"
 msgstr "I.A. Chiffre d'affaires global (012)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_1a_vat_acc_scheme
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1a_vat_acc_scheme
 msgid "I.A.1. VAT accounting scheme"
 msgstr "I.A.1. Régime d'imposition"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1a_total_sale
+msgid "I.A.2. Total Sales / Receipts"
+msgstr "I.A.2. Total des Ventes / Recettes"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_1a_total_sale
 msgid "I.A.2. Total Sales / Receipts (454)"
 msgstr "I.A.2. Total des Ventes / Recettes (454)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1a_supp_prof_margin
+msgid "I.A.2.a). Supply and profit margin"
+msgstr "I.A.2.a). Ventes et marge bénéficiaire"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_1a_telecom_service
@@ -1232,15 +1232,77 @@ msgstr "I.A.2.a). Prestations de services de télécommunication, de radiodiffus
 " de télévision... (471)"
 
 #. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1a_supp_of_inhouse
+msgid "I.A.2.a)1) Supply of inhouse manufactured goods (001)"
+msgstr "I.A.2.a)1) Ventes de produits fabriqués dans l'entreprise (001)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1a_supp_of_non_inhouse
+msgid "I.A.2.a)2) Supply of goods not manufactured inhouse (002)"
+msgstr "I.A.2.a)2) Ventes de marchandises revendues en l'état (002)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1a_net_prof_margin
+msgid "I.A.2.a)3) Net profit margin (003)"
+msgstr "I.A.2.a)3) Marge bénéficiaire nette (003)"
+
+#. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_1a_other_sales
 msgid "I.A.2.b). Other sales / receipts (472)"
 msgstr "I.A.2.b). Autres ventes / recettes (472)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1a_supp_of_service
+msgid "I.A.2.b). Supply of services (004)"
+msgstr "I.A.2.b). Prestations de services (004)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1a_dispsl_of_tengi
+msgid "I.A.2.c). Disposal of tangible and intangible capital assets when those "
+"transactions... (005)"
+msgstr "I.A.2.c). Cessions de biens d'investissements corporels ou incorporels qui constituent des opérations accessoires (005)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1a_telecom_services
+msgid "I.A.2.d). Telecommunications services, radio and television broadcasting "
+"services... (471)"
+msgstr "I.A.2.d). Prestations de services de télécommunication, de radiodiffusion et de télévision ainsi que... (471)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_1a_app_goods_non_bus
 msgid "I.A.3. Application of goods for non-business use and for business purposes "
 "(Art.13) (455)"
 msgstr "I.A.3. Prélèvements privés de biens et affectation de biens (art.13) (455)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1a_other_assimi
+msgid "I.A.3. Other assimilated supplies"
+msgstr "I.A.3. Autres opérations assimilées"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1a_appli_of_goods
+msgid "I.A.3.a). Application of goods for private use or for that of the staff "
+"(008)"
+msgstr "I.A.3.a). Prélèvement de biens pour l'usage privé ou celui du personnel "
+"(008)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1a_appli_for_purpose
+msgid "I.A.3.b). Application for the purpose of business of goods produced in the "
+"course of the business  (009)"
+msgstr "I.A.3.b). Affectation à l'entreprise de biens produits dans l'entreprise  (009)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1a_use_of_goods
+msgid "I.A.3.c). Use of goods considered business assets for purposes other than "
+"those of the business (010)"
+msgstr "I.A.3.c).Utilisation de biens de l'entreprise à des fins étrangères à l'entreprise (010)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1a_supp_of_services_carried
+msgid "I.A.3.d). Supply of services carried out free of charge for purposes other "
+"than those of the business  (011)"
+msgstr "I.A.3.d). Prestations de services effectuées à des fins étrangères à l'entreprise (011)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_1a_non_bus_gs
@@ -1251,8 +1313,14 @@ msgstr "I.A.4. Utilisation privée de biens et prélèvements privés de service
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_1b_exemptions_deductible_amounts
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1b_exemptions_deduct
 msgid "I.B. Exemptions and deductible amounts (021)"
 msgstr "I.B. Exonérations et montants déductibles (021)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1b_intra_commu
+msgid "I.B.1. Intra-Community supply"
+msgstr "I.B.1. Livraisons intracommunautaires"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_1b_1_intra_community_goods_pi_vat
@@ -1262,12 +1330,26 @@ msgstr "I.B.1. Livraisons intracommunautaires de biens à des personnes identifi
 " la TVA dans un autre Etat membre (art.43/1/d,e et f) (3) (457)"
 
 #. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1b_goods_persons
+msgid "I.B.1.a). of goods (Art.43(1)(d) and (f)) to persons identified for VAT "
+"purposes in... (013)"
+msgstr "I.B.1.a). de biens (art.43/1/d et f) à des personnes identifiées à la TVA dans un autre Etat membre (013)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1b_transport
+msgid "I.B.1.b). of new means of transport (Art. 43(1)(e)) to persons not "
+"identified for VAT... (202)"
+msgstr "I.B.1.b). de moyens de transport neufs (art.43/1/e) effectuées à des personnes non identifiées à la TVA établies ou domiciliées... (202)"
+
+#. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_1b_2_export
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1b_exports
 msgid "I.B.2. Exports (Art.43(1)(a) and (b)) (014)"
 msgstr "I.B.2. Exportations (art.43/1/a et b) (014)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_1b_3_other_exemptions_art_43
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1b_other_exempps_art43
 msgid "I.B.3. Other exemptions (Art.43 and 60bis) (015)"
 msgstr "I.B.3. Autres exonérations (art.43 et 60bis) (015)"
 
@@ -1277,6 +1359,7 @@ msgstr ""
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_1b_4_other_exemptions_art_44_et_56quater
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1b_other_exempps_art44
 msgid "I.B.4. Other exemptions (Art.44 and 56quater) (016)"
 msgstr "I.B.4. Autres exonérations (art.44 et 56quater) (016)"
 
@@ -1288,11 +1371,34 @@ msgstr "I.B.5. Tabacs fabriqués dont la TVA a été perçue à la source "
 "respectivement... (017)"
 
 #. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1b_manu_tobacco
+msgid "I.B.5. Manufactured tobacco whose VAT was collected at the source or at the "
+"exit of... (017)"
+msgstr "I.B.5. Tabacs fabriqués dont la TVA a été perçue à la source respectivement à la sortie de l'entrepôt... (017)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1b_trans_carr_out
+msgid "I.B.6. Transactions carried out (for which the place of supply is) abroad"
+msgstr "I.B.6. Opérations réalisées (imposables) à l'étranger"
+
+#. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_1b_6_a_subsequent_to_intra_community
 msgid "I.B.6.a) Supply, subsequent to intra-Community acquisitions of goods, in the"
 " context of triangular transactions, when the customer identified,... (018)"
 msgstr "I.B.6.a) Livraisons subséquentes à des acquisitions intracommunautaires dans"
 " le cadre d'opérations triangulaires,... (018)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1b_supp_subseq
+msgid "I.B.6.a) Supply, subsequent to intra-Community acquisitions of goods, in the"
+" context of triangular transactions... (018)"
+msgstr "I.B.6.a) Livraisons subséquentes à des acquisitions intracommunautaires dans le cadre d'opérations triangulaires... (018)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1b_supp_of_goods
+msgid "I.B.6.b) Supply of goods (other than new means of transport and products "
+"subject to exise duty), dispatched... (203)"
+msgstr "I.B.6.b) Livraisons de biens, expédiés ou transportés par le déclarant ou pour son compte, effectuées à des personnes non identifiées... (203)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_1b_6_b1_non_exempt_customer_vat
@@ -1314,59 +1420,92 @@ msgstr "I.B.6.c) Opérations réalisées dans le cadre du régime particulier de
 "l'article 56sexies (226)"
 
 #. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1b_supp_of_service
+msgid "I.B.6.c) Supply of services, other than exempted from VAT in the customer's "
+"MS, to customers identified... (423)"
+msgstr "I.B.6.c) Prestations de services effectuées à des identifiés à la TVA dans un autre Etat membre, non exonérées dans l'Etat... (423)"
+
+#. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_1b_6_d_supplies_other_referred
 msgid "I.B.6.d) Supplies other than referred to in (6)(a) and (6)(b) (019)"
 msgstr "I.B.6.d) Autres opérations réalisées (imposables) à l'étranger (019)"
 
 #. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1b_supp_of_service_costomer
+msgid "I.B.6.d) Supply of services to customers identified for VAT purposes in "
+"another MS, exempt in the customer's MS (424)"
+msgstr "I.B.6.d) Prestations de services effectuées à des identifiés à la TVA dans un autre Etat membre, exonérées dans l'Etat membre du preneur (424)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1b_supp_carr_within
+msgid "I.B.6.e) Supplies carried out within the scope of the special arrangement of"
+" art. 56sexies (226)"
+msgstr "I.B.6.e) Opérations réalisées dans le cadre du régime particulier de l'article 56sexies (226)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1b_other_supp_carr_out
+msgid "I.B.6.f) Other supplies carried out (for which the place of supply is) "
+"abroad (019)"
+msgstr "I.B.6.f) Autres opérations réalisées (imposables) à l'étranger (019)"
+
+#. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_1b_7_inland_supplies_for_customer
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1b_inland
 msgid "I.B.7. Inland supplies for which the customer is liable for the payment of "
-"VA (419)"
+"VAT (419)"
 msgstr "I.B.7. Opérations à l'intérieur du pays pour lesquelles le preneur est le "
 "redevable (419)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_1c_taxable_turnover
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_1c_taxable_turnover
 msgid "I.C. Taxable turnover (022)"
 msgstr "I.C. Chiffre d'affaires imposable (022)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2_assesment_of_tax_due
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2_assesment_of_tax_due
 msgid "II. ASSESSMENT OF TAX DUE (output tax)"
 msgstr "II. CALCUL DE LA TAXE DUE (taxe en aval)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2a_breakdown_taxable_turnover_base
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2a_breakdown_taxable_turnover_base
 msgid "II.A. Breakdown of taxable turnover – base (037)"
 msgstr "II.A. Ventilation du chiffre d'affaires imposable – base (037)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2a_breakdown_taxable_turnover_tax
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2a_breakdown_taxable_turnover_tax
 msgid "II.A. Breakdown of taxable turnover – tax (046)"
 msgstr "II.A. Ventilation du chiffre d'affaires imposable - taxe (046)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2a_base_0
 msgid "II.A. base 0%"
-msgstr ""
+msgstr "II.A. base 0%"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2a_base_14
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2a_base_14
 msgid "II.A. base 14% (703)"
 msgstr ""
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2a_base_17
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2a_base_17
 msgid "II.A. base 17% (701)"
 msgstr ""
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2a_base_3
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2a_base_3
 msgid "II.A. base 3% (031)"
 msgstr ""
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2a_base_8
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2a_base_8
 msgid "II.A. base 8% (705)"
 msgstr ""
 
@@ -1377,186 +1516,223 @@ msgstr "II.A. taxe 0%"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2a_tax_14
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2a_tax_14
 msgid "II.A. tax 14% (704)"
 msgstr "II.A. taxe 14% (704)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2a_tax_17
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2a_tax_17
 msgid "II.A. tax 17% (702)"
 msgstr "II.A. taxe 17% (702)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2a_tax_3
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2a_tax_3
 msgid "II.A. tax 3% (040)"
 msgstr "II.A. taxe 3% (040)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2a_tax_8
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2a_tax_8
 msgid "II.A. tax 8% (706)"
 msgstr "II.A. taxe 8% (706)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2b_intra_community_acqui_of_goods_base
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2b_intra_community_acqui_of_goods_base
 msgid "II.B. Intra-Community acquisitions of goods – base (051)"
 msgstr "II.B. Acquisitions intracommunautaires de biens – base (051)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2b_intra_community_acquisitions_goods_tax
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2b_intra_community_acquisitions_goods_tax
 msgid "II.B. Intra-Community acquisitions of goods – tax (056)"
 msgstr "II.B. Acquisitions intracommunautaires de biens – taxe (056)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2b_base_14
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2b_base_14
 msgid "II.B. base 14% (713)"
 msgstr ""
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2b_base_17
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2b_base_17
 msgid "II.B. base 17% (711)"
 msgstr ""
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2b_base_3
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2b_base_3
 msgid "II.B. base 3% (049)"
 msgstr ""
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2b_base_8
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2b_base_8
 msgid "II.B. base 8% (715)"
 msgstr ""
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2b_base_exempt
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2b_base_exempt
 msgid "II.B. base exempt (194)"
 msgstr "II.B. exonérées (194)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2b_tax_14
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2b_tax_14
 msgid "II.B. tax 14% (714)"
 msgstr "II.B. taxe 14% (714)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2b_tax_17
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2b_tax_17
 msgid "II.B. tax 17% (712)"
 msgstr "II.B. taxe 17% (712)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2b_tax_3
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2b_tax_3
 msgid "II.B. tax 3% (054)"
 msgstr "II.B. taxe 3% (054)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2b_tax_8
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2b_tax_8
 msgid "II.B. tax 8% (716)"
 msgstr "II.B. taxe 8% (716)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2c_acquisitions_triangular_transactions_base
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2c_acquisitions_triangular_transactions_base
 msgid "II.C. Acquisitions, in the context of triangular transactions – base (152)"
 msgstr "II.C. Acquisitions effectuées dans le cadre d'opérations triangulaires (152)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_importation_of_goods_base
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_importation_of_goods_base
 msgid "II.D. Importation of goods – base (065)"
 msgstr "II.D. Importations de biens – base (065)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_importation_of_goods_tax
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_importation_of_goods_tax
 msgid "II.D. Importation of goods – tax (407)"
 msgstr "II.D. Importations de biens – taxe (407)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_1_base_14
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_1_base_14
 msgid "II.D.1. for business purposes: base 14% (723)"
 msgstr "II.D.1. à des fins de l'entreprise: base 14% (723)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_1_base_17
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_1_base_17
 msgid "II.D.1. for business purposes: base 17% (721)"
 msgstr "II.D.1. à des fins de l'entreprise: base 17% (721)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_1_base_3
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_1_base_3
 msgid "II.D.1. for business purposes: base 3% (059)"
 msgstr "II.D.1. à des fins de l'entreprise: base 3% (059)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_1_base_8
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_1_base_8
 msgid "II.D.1. for business purposes: base 8% (725)"
 msgstr "II.D.1. à des fins de l'entreprise: base 8% (725)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_1_base_exempt
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_1_base_exempt
 msgid "II.D.1. for business purposes: base exempt (195)"
 msgstr "II.D.1. à des fins de l'entreprise: exonérées (195)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_1_tax_14
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_1_tax_14
 msgid "II.D.1. for business purposes: tax 14% (724)"
 msgstr "II.D.1. à des fins de l'entreprise: taxe 14% (724)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_1_tax_17
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_1_tax_17
 msgid "II.D.1. for business purposes: tax 17% (722)"
 msgstr "II.D.1. à des fins de l'entreprise: taxe 17% (722)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_1_tax_3
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_1_tax_3
 msgid "II.D.1. for business purposes: tax 3% (068)"
 msgstr "II.D.1. à des fins de l'entreprise: taxe 3% (068)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_1_tax_8
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_1_tax_8
 msgid "II.D.1. for business purposes: tax 8% (726)"
 msgstr "II.D.1. à des fins de l'entreprise: taxe 8% (726)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_2_base_14
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_2_base_14
 msgid "II.D.2. for non-business purposes: base 14% (733)"
 msgstr "II.D.2. à des fins étrangères à l'entreprise: base 14% (733)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_2_base_17
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_2_base_17
 msgid "II.D.2. for non-business purposes: base 17% (731)"
 msgstr "II.D.2. à des fins étrangères à l'entreprise: base 17% (731)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_2_base_3
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_2_base_3
 msgid "II.D.2. for non-business purposes: base 3% (063)"
 msgstr "II.D.2. à des fins étrangères à l'entreprise: base 3% (063)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_2_base_8
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_2_base_8
 msgid "II.D.2. for non-business purposes: base 8% (735)"
 msgstr "II.D.2. à des fins étrangères à l'entreprise: base 8% (735)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_2_base_exempt
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_2_base_exempt
 msgid "II.D.2. for non-business purposes: base exempt (196)"
 msgstr "II.D.2. à des fins étrangères à l'entreprise: exonérées (196)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_2_tax_14
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_2_tax_14
 msgid "II.D.2. for non-business purposes: tax 14% (734)"
 msgstr "II.D.2. à des fins étrangères à l'entreprise: taxe 14% (734)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_2_tax_17
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_2_tax_17
 msgid "II.D.2. for non-business purposes: tax 17% (732)"
 msgstr "II.D.2. à des fins étrangères à l'entreprise: taxe 17% (732)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_2_tax_3
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_2_tax_3
 msgid "II.D.2. for non-business purposes: tax 3% (073)"
 msgstr "II.D.2. à des fins étrangères à l'entreprise: taxe 3% (073)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2d_2_tax_8
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2d_2_tax_8
 msgid "II.D.2. for non-business purposes: tax 8% (736)"
 msgstr "II.D.2. à des fins étrangères à l'entreprise: taxe 8% (736)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_supply_of_service_for_customer
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_supply_of_service_for_customer
 msgid "II.E. Supply of services for which the customer is liable for the payment of"
 " VAT – base (409)"
 msgstr "II.E. Prestations de services à déclarer par le preneur redevable de la taxe"
@@ -1564,6 +1740,7 @@ msgstr "II.E. Prestations de services à déclarer par le preneur redevable de l
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_supply_of_service_for_customer_liable_for_payment_tax
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_supply_of_service_for_customer_liable_for_payment_tax
 msgid "II.E. Supply of services for which the customer is liable for the payment of"
 " VAT – tax (410)"
 msgstr "II.E. Prestations de services à déclarer par le preneur redevable de la taxe"
@@ -1571,136 +1748,163 @@ msgstr "II.E. Prestations de services à déclarer par le preneur redevable de l
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_1_base
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_1_base
 msgid "II.E.1. base (436)"
 msgstr ""
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_1_a_base_14
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_1_a_base_14
 msgid "II.E.1.a) not exempt within the territory: base 14% (743)"
 msgstr "II.E.1.a) non exonérées à l'intérieur du pays: base 14% (743)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_1_a_base_17
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_1_a_base_17
 msgid "II.E.1.a) not exempt within the territory: base 17% (741)"
 msgstr "II.E.1.a) non exonérées à l'intérieur du pays: base 17% (741)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_1_a_base_3
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_1_a_base_3
 msgid "II.E.1.a) not exempt within the territory: base 3% (431)"
 msgstr "II.E.1.a) non exonérées à l'intérieur du pays: base 3% (431)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_1_a_base_8
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_1_a_base_8
 msgid "II.E.1.a) not exempt within the territory: base 8% (745)"
 msgstr "II.E.1.a) non exonérées à l'intérieur du pays: base 8% (745)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_1_a_tax_14
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_1_a_tax_14
 msgid "II.E.1.a) not exempt within the territory: tax 14% (744)"
 msgstr "II.E.1.a) non exonérées à l'intérieur du pays: taxe 14% (744)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_1_a_tax_17
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_1_a_tax_17
 msgid "II.E.1.a) not exempt within the territory: tax 17% (742)"
 msgstr "II.E.1.a) non exonérées à l'intérieur du pays: taxe 17% (742)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_1_a_tax_3
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_1_a_tax_3
 msgid "II.E.1.a) not exempt within the territory: tax 3% (432)"
 msgstr "II.E.1.a) non exonérées à l'intérieur du pays: taxe 3% (432)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_1_a_tax_8
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_1_a_tax_8
 msgid "II.E.1.a) not exempt within the territory: tax 8% (746)"
 msgstr "II.E.1.a) non exonérées à l'intérieur du pays: taxe 8% (746)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_1_a_tax
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_1_a_tax
 msgid "II.E.1.a) tax (462)"
 msgstr "II.E.1.a) taxe (462)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_1_b_exempt
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_1_b_exempt
 msgid "II.E.1.b) exempt within the territory: exempt (435)"
 msgstr "II.E.1.b) exonérées à l'intérieur du pays: exonérées (435)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_2_base
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_2_base
 msgid "II.E.2. base (463)"
 msgstr ""
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_2_base_14
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_2_base_14
 msgid "II.E.2. not established or residing within the Community: base 14% (753)"
 msgstr "II.E.2. établis ou ayant leur domicile en dehors de la Communauté: base 14% (753)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_2_base_17
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_2_base_17
 msgid "II.E.2. not established or residing within the Community: base 17% (751)"
 msgstr "II.E.2. établis ou ayant leur domicile en dehors de la Communauté: base 17% (751)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_2_base_3
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_2_base_3
 msgid "II.E.2. not established or residing within the Community: base 3% (441)"
 msgstr "II.E.2. établis ou ayant leur domicile en dehors de la Communauté: base 3% (441)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_2_base_8
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_2_base_8
 msgid "II.E.2. not established or residing within the Community: base 8% (755)"
 msgstr "II.E.2. établis ou ayant leur domicile en dehors de la Communauté: base 8% (755)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_2_exempt
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_2_exempt
 msgid "II.E.2. not established or residing within the Community: exempt (445)"
 msgstr "II.E.2. établis ou ayant leur domicile en dehors de la Communauté: exonérées (445)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_2_tax_14
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_2_tax_14
 msgid "II.E.2. not established or residing within the Community: tax 14% (754)"
 msgstr "II.E.2. établis ou ayant leur domicile en dehors de la Communauté: taxe 14% (754)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_2_tax_17
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_2_tax_17
 msgid "II.E.2. not established or residing within the Community: tax 17% (752)"
 msgstr "II.E.2. établis ou ayant leur domicile en dehors de la Communauté: taxe 17% (752)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_2_tax_3
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_2_tax_3
 msgid "II.E.2. not established or residing within the Community: tax 3% (442)"
 msgstr "II.E.2. établis ou ayant leur domicile en dehors de la Communauté: taxe 3% (442)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_2_tax_8
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_2_tax_8
 msgid "II.E.2. not established or residing within the Community: tax 8% (756)"
 msgstr "II.E.2. établis ou ayant leur domicile en dehors de la Communauté: taxe 8% (756)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_2_tax
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_2_tax
 msgid "II.E.2. tax (464)"
 msgstr "II.E.2. taxe (464)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_3_base
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_3_base
 msgid "II.E.3. base (765)"
 msgstr ""
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_3_base_17
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_3_base_17
 msgid "II.E.3. suppliers established within the territory: base 17% (761)"
 msgstr "II.E.3. assujettis établis à l'intérieur du pays: base 17% (761)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_3_tax_17
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_3_tax_17
 msgid "II.E.3. suppliers established within the territory: tax 17% (762)"
 msgstr "II.E.3. assujettis établis à l'intérieur du pays: taxe 17% (762)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2e_3_tax
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2e_3_tax
 msgid "II.E.3. tax (766)"
 msgstr "II.E.3. taxe (766)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2f_supply_goods_base
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2f_supply_goods_base
 msgid "II.F. Supply of goods for which the purchaser is liable for the payment of "
 "VAT - base (767)"
 msgstr "II.F. Livraisons de biens à déclarer par l'acquéreur redevable de la taxe - "
@@ -1708,38 +1912,45 @@ msgstr "II.F. Livraisons de biens à déclarer par l'acquéreur redevable de la 
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2f_supply_goods_tax
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2f_supply_goods_tax
 msgid "II.F. Supply of goods for which the purchaser is liable for the payment of "
 "VAT - tax (768)"
 msgstr "II.F. Livraisons de biens à déclarer par l'acquéreur redevable de la taxe - taxe (768)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2f_supply_goods_base_8
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2f_supply_goods_base_8
 msgid "II.F. base 8% (763)"
 msgstr ""
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2f_supply_goods_tax_8
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2f_supply_goods_tax_8
 msgid "II.F. tax 8% (764)"
 msgstr "II.F. taxe 8% (764)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2g_special_arrangement
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2g_special_arrangement
 msgid "II.G. Special arrangement for tax suspension: adjustment (Art.60bis, (5) and"
 " (8)) (227)"
 msgstr "II.G. Régime particulier suspensif: régularisation (art.60bis, par.5 et 8) (227)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_2h_total_tax_due
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_2h_total_tax_due
 msgid "II.H. Total tax due (076)"
 msgstr "II.H. Total de la taxe en aval (076)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_3_assessment_deducible_tax
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3_assessment_deducible_tax
 msgid "III. ASSESSMENT OF DEDUCTIBLE TAX (input tax)"
 msgstr "III. CALCUL DE LA TAXE DEDUCTIBLE (taxe en amont)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_3a_total_input_tax
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_total_input_tax
 msgid "III.A. Total input tax (093)"
 msgstr "III.A. Total de la taxe en amont (093)"
 
@@ -1750,10 +1961,66 @@ msgid "III.A.1. Invoiced by other taxable persons for goods or services supplied
 msgstr "III.A.1. Achats de biens et de services à l'intérieur du pays (Art.48(1)(a)) (458)"
 
 #. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_total_of_vat
+msgid "III.A.1. Total of VAT on stock entries (080)"
+msgstr "III.A.1. Total taxe en amont sur entrées de marchandises (080)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_vat_invoiced_by_taxable
+msgid "III.A.1.a) VAT invoiced by other taxable persons for goods or services "
+"supplied (077)"
+msgstr "III.A.1.a) Taxe facturée par d'autres assujettis pour des biens et des services fournis (077)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_vat_intra_community
+msgid "III.A.1.b) VAT due in respect of intra-Community acquisitions of goods other"
+" than manufactured tobacco... (078)"
+msgstr "III.A.1.b) Taxe déclarée ou payée sur des acquisitions intracommunautaires de biens, à l'exclusion des acquisitions... (078)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_vat_paid_importation
+msgid "III.A.1.c) VAT due or paid in respect of importations of goods other than "
+"manufactured tobacco and goods for... (079)"
+msgstr "III.A.1.c) Taxe déclarée ou payée sur des biens importés, à l'exclusion des importations de tabacs fabriqués et des importations... (079)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_vat_reverse_charge
+msgid "III.A.1.d) VAT due under the reverse charge (cf points II.E and F) (404)"
+msgstr "III.A.1.d) Taxe déclarée comme débiteur (cf points II.E et F) (404)"
+
+#. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_3a_2_due_respect_intra_comm_goods
 msgid "III.A.2. Due in respect of intra-Community acquisitions of goods "
 "(Art.48(1)(b)) (459)"
 msgstr "III.A.2. Acquisitions intracommunautaires de biens (art.48/1/a) (459)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_total_vat_cap_expend
+msgid "III.A.2. Total of VAT on capital expenditures (084)"
+msgstr "III.A.2. Total taxe en amont sur acquisitions d'immobilisations (084)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_vat_by_taxable
+msgid "III.A.2.a) VAT invoiced by other taxable persons for goods or services "
+"supplied (081)"
+msgstr "III.A.2.a) Taxe facturée par d'autres assujettis pour des biens et des services fournis (081)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_respect_of_intra_comm
+msgid "III.A.2.b) VAT due in respect of intra-Community acquisitions of goods other"
+" than manufactured tobacco (082)"
+msgstr "III.A.2.b) Taxe déclarée ou payée sur des acquisitions intracommunautaires de biens, à l'exclusion des acquisitions... (082)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_paid_respect_import
+msgid "III.A.2.c) VAT due or paid in respect of importations of goods other than "
+"manufactured tobacco and goods... (083)"
+msgstr "III.A.2.c) Taxe déclarée ou payée sur des biens importés, à l'exclusion des importations de tabacs fabriqués et des importations pour des besoins privés... (083)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_reverse_charge_vat
+msgid "III.A.2.d) VAT due under the reverse charge (cf points II.E and F) (405)"
+msgstr "III.A.2.d) Taxe déclarée comme débiteur (cf points II.E et F) (405)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_3a_3_due_paid_respect_importation_goods
@@ -1761,10 +2028,61 @@ msgid "III.A.3. Due or paid in respect of importation of goods (Art.48(1)(c)) (4
 msgstr "III.A.3. Importations de biens (taxe déclarée ou payée) (art.48/1/c) (460)"
 
 #. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_tot_vat_on_opera_expend
+msgid "III.A.3. Total of VAT on operational expenditures (088)"
+msgstr "III.A.3. Total taxe en amont sur frais généraux (088)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_other_taxa_person
+msgid "III.A.3.a) VAT invoiced by other taxable persons for goods or services "
+"supplied (085)"
+msgstr "III.A.3.a) Taxe facturée par d'autres assujettis pour des biens et des services fournis (085)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_resp_of_intra_comm
+msgid "III.A.3.b) VAT due in respect of intra-Community acquisitions of goods other"
+" than manufactured tobacco (086)"
+msgstr "III.A.3.b) Taxe déclarée ou payée sur des acquisitions intracommunautaires de biens, à l'exclusion des acquisitions... (086)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_due_or_paid_respect_import
+msgid "III.A.3.c) VAT due or paid in respect of importations of goods other than "
+"manufactured tobacco and goods for non-business purposes (087)"
+msgstr "III.A.3.c) Taxe déclarée ou payée sur des biens importés, à l'exclusion des importations de tabacs fabriqués et des importations... (087)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_under_reverse_charge
+msgid "III.A.3.d) VAT due under the reverse charge (cf points II.E and F) (406)"
+msgstr "III.A.3.d) Taxe déclarée comme débiteur (cf points II.E et F) (406)"
+
+#. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_3a_4_due_respect_application_goods
 msgid "III.A.4. Due in respect of the application of goods for business purposes "
 "(Art.48(1)(d)) (090)"
 msgstr "III.A.4. Affectations de biens (art.48/1/d) (090)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_other
+msgid "III.A.4. Other (179)"
+msgstr "III.A.4. Autres (179)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_4a_appl_of_goods
+msgid "III.A.4.a) Tax due in respect of the application of goods for business "
+"purposes as referred to in... (090)"
+msgstr "III.A.4.a) Taxe déclarée pour l'affectation de biens à l'entreprise, telle que visée à l'article 13/b... (090)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_tax_paid_as_joint
+msgid "III.A.4.b) Tax paid as joint and several guarantee in accordance with the "
+"conditions laid down in Art. 48 (092)"
+msgstr "III.A.4.b) TTaxe acquittée comme caution solidaire dans les conditions visées à l'article 48  (092)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3a_adjusted_tax
+msgid "III.A.4.c) Adjusted tax - special arrangement for tax suspension "
+"(Art.60bis(9), subpar. 2) (228)"
+msgstr "III.A.4.c) Taxe régularisée - régime particulier suspensif (art.60bis/9, alinéa 2) (228)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_3a_5_due_under_reverse_charge
@@ -1785,8 +2103,15 @@ msgstr "III.A.7. Taxe régularisée - régime particulier suspensif (art.60bis/9
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_3b_total_input_tax_nd
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3b_total_input_tax_non_deductable
 msgid "III.B. Total input tax non-deductible (097)"
 msgstr "III.B. Total de la taxe en amont non déductible (097)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3b_non_recoverable_input_tax
+msgid "III.B.1. Non recoverable input tax relating to supplies exempt pursuant to "
+"Art. 44 and 56quater (094)"
+msgstr "III.B.1. Taxe non déductible en rapport avec des opérations exonérées en vertu des articles 44 et 56quater (094)"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_3b1_rel_trans
@@ -1796,15 +2121,53 @@ msgstr "III.B.1. en rapport avec des opérations exonérées en vertu des art. 4
 "56quater (094)"
 
 #. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3b_non_recoverable_proportion_input_tax
+msgid "III.B.2. Non recoverable proportion of input tax determined in accordance "
+"with Art. 50 (095)"
+msgstr "III.B.2. Taxe non déductible en application du prorata visé à l'article 50 (095)"
+
+#. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_3b2_ded_prop
 msgid "III.B.2. where the deductible proportion determined in accordance to article"
 " 50 is applied (095)"
 msgstr "III.B.2. en application du prorata visé à l'article 50 (095)"
 
 #. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3b_non_recoverable_input_tax_in_accor
+msgid "III.B.3. Non recoverable input tax in accordance with Art. 56ter-1(7) and "
+"56ter-2(7) (when applying the margin scheme) (096)"
+msgstr "III.B.3. Taxe non déductible en application des articles 56ter-1/7 et 56ter-2/7 (en cas d'option pour le régime d'imposition de la marge bénéficiaire) (096)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3c_adjustment_of_deductions_101
+msgid "III.C. Adjustment of deductions (101)"
+msgstr "III.C. Régularisation des déductions (101)"
+
+#. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_3c_total_input_tax_deductible
 msgid "III.C. Total input tax deductible (102)"
 msgstr "III.C. Total de la taxe en amont déductible (102)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3c_adjustment_of_deductions
+msgid "III.C.1. Adjustment of deductions"
+msgstr "III.C.1. Régularisation des déductions"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3c_in_accordance_with_53
+msgid "III.C.1.a) in accordance with provisions of Art. 53 (098)"
+msgstr "III.C.1.a) par application des dispositions de l'article 53 (098)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3c_in_accordance_with_grand_ducal
+msgid "III.C.1.b) in accordance with provisions of the grand-ducal Regulation of 7 "
+"March 1980 - option to tax land (099)"
+msgstr III.C.1.b) par application des dispositions du règlement grand-ducal du 7 mars 1980 - droit d'option en matière immobilière (099)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_3d_total_input_tax_deductable
+msgid "III.D. Total input tax deductible (102)"
+msgstr "III.D. . Total de la taxe en amont déductible (102)"
 
 #. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2011_account_6132
@@ -1813,6 +2176,7 @@ msgstr "Services informatiques"
 
 #. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_4_tax_tobe_paid_or_reclaimed
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_4_reclaimed
 msgid "IV. TAX TO BE PAID OR TO BE RECLAIMED"
 msgstr "IV. CALCUL DE L'EXCEDENT"
 
@@ -1822,14 +2186,30 @@ msgid "IV.A. Total tax due (103)"
 msgstr "IV.A. Total de la taxe en aval (103)"
 
 #. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_4a_total_tax_due
+msgid "IV.A. Total tax due (brought forward from point II.H) (103)"
+msgstr "IV.A. Total de la taxe en aval (report du point II.H.) (103)"
+
+#. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_4a_total_input_tax_deductible
 msgid "IV.B. Total input tax deductible (104)"
 msgstr "IV.B. Total de la taxe en amont déductible (104)"
 
 #. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_4b_total_input_tax_deductable
+msgid "IV.B. Total input tax deductible (brought forward from point III.D.) (104)"
+msgstr "IV.B. Total de la taxe en amont déductible (report du point III.D.) (104)"
+
+#. module: l10n_lu
 #: model:account.tax.report.line,name:l10n_lu.account_tax_report_line_4c_exceeding_amount
 msgid "IV.C. Exceeding amount (105)"
 msgstr "IV.C. Excédent (105)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_4c_exceeding_amount
+msgid "IV.C. Exceeding amount (a surplus of deductible tax must be preceded by a "
+"minus sign) (103-104) (105)"
+msgstr "IV.C. Excédent (un éventuel excédent de taxe en amont est à marquer d'un signe négatif) (103-104) (105)"
 
 #. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2011_account_62114
@@ -1894,9 +2274,19 @@ msgstr "Intérêts sur des entreprises avec lesquelles l'entreprise a un lien de
 "participation"
 
 #. module: l10n_lu
+#: model:account.account.template,name:l10n_lu.lu_2011_account_75521
+msgid "Interest on bank accounts"
+msgstr "Intérêts sur comptes bancaires"
+
+#. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2011_account_65511
 msgid "Interest on debenture loans - affiliated undertakings"
 msgstr "Intérêts sur emprunts obligataires - entreprises liées"
+
+#. module: l10n_lu
+#: model:account.account.template,name:l10n_lu.lu_2011_account_65512
+msgid "Interest on debenture loans - other"
+msgstr "Intérêts sur emprunts obligataires - autres"
 
 #. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2020_account_655231
@@ -1924,6 +2314,11 @@ msgid "Interest on trade payables"
 msgstr "Intérêts sur dettes commerciales"
 
 #. module: l10n_lu
+#: model:account.account.template,name:l10n_lu.lu_2011_account_7553
+msgid "Interest on trade receivables"
+msgstr "Intérêts sur créances commerciales"
+
+#. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2020_account_65581
 msgid "Interest payable on other loans and debts - affiliated undertakings"
 msgstr "Intérêts sur autres emprunts et dettes - entreprises liées"
@@ -1949,21 +2344,6 @@ msgstr "Intérêts sur des entreprises avec lesquelles l'entreprise a un lien de
 #: model:account.account.template,name:l10n_lu.lu_2020_account_7452
 msgid "Interest subsidies"
 msgstr "Bonifications d'intérêt"
-
-#. module: l10n_lu
-#: model:account.account.template,name:l10n_lu.lu_2011_account_75521
-msgid "Interest on bank accounts"
-msgstr "Intérêts sur comptes bancaires"
-
-#. module: l10n_lu
-#: model:account.account.template,name:l10n_lu.lu_2011_account_65512
-msgid "Interest on debenture loans - other"
-msgstr "Intérêts sur emprunts obligataires - autres"
-
-#. module: l10n_lu
-#: model:account.account.template,name:l10n_lu.lu_2011_account_7553
-msgid "Interest on trade receivables"
-msgstr "Intérêts sur créances commerciales"
 
 #. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2011_account_15
@@ -2173,16 +2553,12 @@ msgstr "Prêts"
 #: model:account.account.template,name:l10n_lu.lu_2011_account_41122
 #: model:account.account.template,name:l10n_lu.lu_2011_account_41212
 #: model:account.account.template,name:l10n_lu.lu_2011_account_41222
-msgid "Loans and advances"
-msgstr "Prêts et avances"
-
-#. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2011_account_45112
 #: model:account.account.template,name:l10n_lu.lu_2011_account_45122
 #: model:account.account.template,name:l10n_lu.lu_2011_account_45212
 #: model:account.account.template,name:l10n_lu.lu_2011_account_45222
 msgid "Loans and advances"
-msgstr "Emprunts et avances"
+msgstr "Prêts et avances"
 
 #. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2011_account_61332
@@ -2192,10 +2568,6 @@ msgstr "Frais sur émission d'emprunts"
 #. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2011_account_75116
 #: model:account.account.template,name:l10n_lu.lu_2020_account_65216
-msgid "Loans, deposits and claims held as fixed assets"
-msgstr "Prêts, dépôts et créances immobilisés"
-
-#. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2020_account_75216
 msgid "Loans, deposits and claims held as fixed assets"
 msgstr "Prêts, dépôts et créances immobilisés"
@@ -2495,13 +2867,9 @@ msgstr "Autres installations"
 
 #. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2011_account_7223
-msgid "Other fixtures and fittings, tools and equipment (included motor vehicles)"
-msgstr "Autres installations, outillage et mobilier (y compris matériel roulant)"
-
-#. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2011_account_7333
 msgid "Other fixtures and fittings, tools and equipment (included motor vehicles)"
-msgstr "RCV sur autres installations, outillage et mobilier (y compris matériel roulant)"
+msgstr "Autres installations, outillage et mobilier (y compris matériel roulant)"
 
 #. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2011_account_2243
@@ -2606,14 +2974,10 @@ msgstr "Autres achats de matériel incorporés aux ouvrages et produits"
 #: model:account.account.template,name:l10n_lu.lu_2011_account_41128
 #: model:account.account.template,name:l10n_lu.lu_2011_account_41218
 #: model:account.account.template,name:l10n_lu.lu_2011_account_41228
+#: model:account.account.template,name:l10n_lu.lu_2011_account_42168
 #: model:account.account.template,name:l10n_lu.lu_2020_account_6454
 msgid "Other receivables"
 msgstr "Autres créances"
-
-#. module: l10n_lu
-#: model:account.account.template,name:l10n_lu.lu_2011_account_42168
-msgid "Other receivables"
-msgstr "AED – Autres créances"
 
 #. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2011_account_64658
@@ -3146,11 +3510,6 @@ msgid "Rent"
 msgstr "Loyer"
 
 #. module: l10n_lu
-#: model:account.account.template,name:l10n_lu.lu_2020_account_703001
-msgid "Sale of Services"
-msgstr "Prestations de services"
-
-#. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2020_account_70322
 msgid "Rental income from movable property"
 msgstr "Revenus de location mobilière"
@@ -3267,6 +3626,11 @@ msgstr "Reprises de provisions pour impôts"
 #: model:account.account.template,name:l10n_lu.lu_2011_account_61412
 msgid "Rolling stock"
 msgstr "Matériel roulant"
+
+#. module: l10n_lu
+#: model:account.account.template,name:l10n_lu.lu_2020_account_703001
+msgid "Sale of Services"
+msgstr "Prestations de services"
 
 #. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2020_account_7063
@@ -3635,12 +3999,8 @@ msgid "Temporary staff"
 msgstr "Personnel intérimaire"
 
 #. module: l10n_lu
-#: model:account.account.template,name:l10n_lu.lu_2011_account_6146
-msgid "Third-party insurance"
-msgstr "Assurance responsabilité civile"
-
-#. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2011_account_106144
+#: model:account.account.template,name:l10n_lu.lu_2011_account_6146
 msgid "Third-party insurance"
 msgstr "Responsabilité civile"
 
@@ -3654,13 +4014,9 @@ msgstr "Outillage"
 #: model:account.account.template,name:l10n_lu.lu_2011_account_41121
 #: model:account.account.template,name:l10n_lu.lu_2011_account_41211
 #: model:account.account.template,name:l10n_lu.lu_2011_account_41221
-msgid "Trade receivables"
-msgstr "Ventes et prestations de services"
-
-#. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2011_account_6451
 msgid "Trade receivables"
-msgstr "Créances résultant de ventes et de prestations de services"
+msgstr "Ventes et prestations de services"
 
 #. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2011_account_6414
@@ -3720,6 +4076,52 @@ msgstr "Obligations – Titres non cotés"
 #: model:account.account.template,name:l10n_lu.lu_2020_account_235112
 msgid "Unlisted shares"
 msgstr "Actions non cotées"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_5_additional
+msgid "V. ADDITIONAL INFORMATION"
+msgstr "V. INDICATIONS SUPPLEMENTAIRES"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_5a_declaring_person
+msgid "V.A. Declaring person"
+msgstr "V.A. Déclarant"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_5a_phone_number
+msgid "V.A.1. Phone number for contacting the declaring person (237)"
+msgstr "V.A.1. N° téléphone où le déclarant peut être contacté en cas de besoin: (237)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_5b_persons_employed
+msgid "V.B. Persons employed"
+msgstr "V.B. Personnes occupées"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_5b_number_of_persons_employed
+msgid "V.B.1. Number of persons employed (average for the year) (110)"
+msgstr "V.B.1. Nombre de personnes occupées (moyenne de l'année) (110)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_5b_with_salary_wage
+msgid "V.B.1.a) with salary or wage (108)"
+msgstr "V.B.1.a) avec salaire ou traitement (108)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_5b_with_no_salary
+msgid "V.B.1.b) with no salary (family members) (109)"
+msgstr "V.B.1.b) sans salaire (membres de famille) (109)"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_5c_books_records_documents
+msgid "V.C. Books, records and documents"
+msgstr "V.C. Livres et documents"
+
+#. module: l10n_lu
+#: model:account.tax.report.line,name:l10n_lu.account_yearly_tax_report_line_5c_taxable_persons_established
+msgid "V.C.1. Taxable persons established in Luxemburg: place of storage of books, "
+"records and documents the keeping... (238)"
+msgstr "V.C.1. Assujettis établis au Grand-Duché du Luxembourg: lieu de stockage des livres et documents dont la tenue, la rédaction... (238)"
 
 #. module: l10n_lu
 #: model:account.account.template,name:l10n_lu.lu_2011_account_461418

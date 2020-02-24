@@ -12,7 +12,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exempt')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exempt'), ref('account_yearly_tax_report_line_2d_1_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -23,7 +23,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exempt')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exempt'), ref('account_yearly_tax_report_line_2d_1_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -45,7 +45,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_14'), ref('account_yearly_tax_report_line_2d_1_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -57,14 +57,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_14'), ref('account_yearly_tax_report_line_2d_1_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_14'), ref('account_yearly_tax_report_line_2d_1_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -76,7 +76,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_14'), ref('account_yearly_tax_report_line_2d_1_tax_14')],
 		    }),
 		]"/>
 	</record>
@@ -94,7 +94,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_17'), ref('account_yearly_tax_report_line_2d_1_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -106,14 +106,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_17'), ref('account_yearly_tax_report_line_2d_1_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_17'), ref('account_yearly_tax_report_line_2d_1_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -125,7 +125,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_17'), ref('account_yearly_tax_report_line_2d_1_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -143,7 +143,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_3'), ref('account_yearly_tax_report_line_2d_1_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -155,14 +155,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_3'), ref('account_yearly_tax_report_line_2d_1_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_3'), ref('account_yearly_tax_report_line_2d_1_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -174,7 +174,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_3'), ref('account_yearly_tax_report_line_2d_1_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -192,7 +192,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_8'), ref('account_yearly_tax_report_line_2d_1_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -204,14 +204,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_8'), ref('account_yearly_tax_report_line_2d_1_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_8'), ref('account_yearly_tax_report_line_2d_1_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -223,7 +223,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_8'), ref('account_yearly_tax_report_line_2d_1_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -241,7 +241,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exempt')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exempt'), ref('account_yearly_tax_report_line_2d_2_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -252,7 +252,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exempt')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exempt'), ref('account_yearly_tax_report_line_2d_2_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -274,7 +274,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_14')]
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_14'), ref('account_yearly_tax_report_line_2d_2_base_14')]
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -286,14 +286,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_14')]
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_14'), ref('account_yearly_tax_report_line_2d_2_tax_14')]
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_14')]
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_14'), ref('account_yearly_tax_report_line_2d_2_base_14')]
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -305,7 +305,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_14')]
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_14'), ref('account_yearly_tax_report_line_2d_2_tax_14')]
 		    }),
 		]"/>
 	</record>
@@ -323,7 +323,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_17'), ref('account_yearly_tax_report_line_2d_2_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -335,14 +335,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_17'), ref('account_yearly_tax_report_line_2d_2_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_17'), ref('account_yearly_tax_report_line_2d_2_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -354,7 +354,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_17'), ref('account_yearly_tax_report_line_2d_2_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -372,7 +372,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_3')]
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_3'), ref('account_yearly_tax_report_line_2d_2_base_3')]
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -384,14 +384,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_3')]
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_3'), ref('account_yearly_tax_report_line_2d_2_tax_3')]
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_3')]
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_3'), ref('account_yearly_tax_report_line_2d_2_base_3')]
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -403,7 +403,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_3')]
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_3'), ref('account_yearly_tax_report_line_2d_2_tax_3')]
 		    }),
 		]"/>
 	</record>
@@ -421,7 +421,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_8'), ref('account_yearly_tax_report_line_2d_2_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -433,14 +433,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_8')]
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_8'), ref('account_yearly_tax_report_line_2d_2_tax_8')]
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_8'), ref('account_yearly_tax_report_line_2d_2_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -452,7 +452,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_8')]
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_8'), ref('account_yearly_tax_report_line_2d_2_tax_8')]
 		    }),
 		]"/>
 	</record>
@@ -470,7 +470,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_exempt')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_exempt'), ref('account_yearly_tax_report_line_2b_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -481,7 +481,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_exempt')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_exempt'), ref('account_yearly_tax_report_line_2b_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -503,7 +503,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_14'), ref('account_yearly_tax_report_line_2b_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -515,14 +515,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_14')]
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_14'), ref('account_yearly_tax_report_line_2b_tax_14')]
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_14'), ref('account_yearly_tax_report_line_2b_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -534,7 +534,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_14')]
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_14'), ref('account_yearly_tax_report_line_2b_tax_14')]
 		    }),
 		]"/>
 	</record>
@@ -552,7 +552,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_17'), ref('account_yearly_tax_report_line_2b_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -564,14 +564,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_17')]
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_17'), ref('account_yearly_tax_report_line_2b_tax_17')]
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_17'), ref('account_yearly_tax_report_line_2b_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -583,7 +583,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_17')]
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_17'), ref('account_yearly_tax_report_line_2b_tax_17')]
 		    }),
 		]"/>
 	</record>
@@ -601,7 +601,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_3')]
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_3'), ref('account_yearly_tax_report_line_2b_base_3')]
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -613,14 +613,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_3')]
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_3'), ref('account_yearly_tax_report_line_2b_tax_3')]
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_3')]
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_3'), ref('account_yearly_tax_report_line_2b_base_3')]
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -632,7 +632,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_3'), ref('account_yearly_tax_report_line_2b_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -650,7 +650,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_8'), ref('account_yearly_tax_report_line_2b_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -662,14 +662,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_8'), ref('account_yearly_tax_report_line_2b_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_8'), ref('account_yearly_tax_report_line_2b_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -681,7 +681,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_8'), ref('account_yearly_tax_report_line_2b_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -871,7 +871,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_exempt')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_exempt'), ref('account_yearly_tax_report_line_2e_2_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -882,7 +882,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_exempt')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_exempt'), ref('account_yearly_tax_report_line_2e_2_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -904,7 +904,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_14'), ref('account_yearly_tax_report_line_2e_2_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -916,14 +916,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_14'), ref('account_yearly_tax_report_line_2e_2_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_14'), ref('account_yearly_tax_report_line_2e_2_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -935,7 +935,8 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_14'),
+		        ref('account_yearly_tax_report_line_2e_2_tax_14')],
 		    }),
 		]"/>
 	</record>
@@ -953,7 +954,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_17'), ref('account_yearly_tax_report_line_2e_2_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -965,14 +966,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_17'), ref('account_yearly_tax_report_line_2e_2_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_17'), ref('account_yearly_tax_report_line_2e_2_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -984,7 +985,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_17'), ref('account_yearly_tax_report_line_2e_2_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -1002,7 +1003,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_3'), ref('account_yearly_tax_report_line_2e_2_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1014,14 +1015,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_3'), ref('account_yearly_tax_report_line_2e_2_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_3'), ref('account_yearly_tax_report_line_2e_2_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1033,7 +1034,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_3'), ref('account_yearly_tax_report_line_2e_2_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -1051,7 +1052,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_8'), ref('account_yearly_tax_report_line_2e_2_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1063,14 +1064,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_8'), ref('account_yearly_tax_report_line_2e_2_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_8'), ref('account_yearly_tax_report_line_2e_2_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1082,7 +1083,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_8'), ref('account_yearly_tax_report_line_2e_2_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -1100,7 +1101,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exempt')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exempt'), ref('account_yearly_tax_report_line_2e_1_b_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -1111,7 +1112,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exempt')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exempt'), ref('account_yearly_tax_report_line_2e_1_b_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -1133,7 +1134,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_14'), ref('account_yearly_tax_report_line_2e_1_a_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1145,14 +1146,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_14'), ref('account_yearly_tax_report_line_2e_1_a_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_14'), ref('account_yearly_tax_report_line_2e_1_a_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1164,7 +1165,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_14'), ref('account_yearly_tax_report_line_2e_1_a_tax_14')],
 		    }),
 		]"/>
 	</record>
@@ -1182,7 +1183,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_17'), ref('account_yearly_tax_report_line_2e_1_a_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1194,14 +1195,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_17'), ref('account_yearly_tax_report_line_2e_1_a_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_17'), ref('account_yearly_tax_report_line_2e_1_a_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1213,7 +1214,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_17'), ref('account_yearly_tax_report_line_2e_1_a_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -1231,7 +1232,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_3'), ref('account_yearly_tax_report_line_2e_1_a_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1243,14 +1244,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_3'), ref('account_yearly_tax_report_line_2e_1_a_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_3'), ref('account_yearly_tax_report_line_2e_1_a_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1262,7 +1263,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_3'), ref('account_yearly_tax_report_line_2e_1_a_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -1280,7 +1281,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_8'), ref('account_yearly_tax_report_line_2e_1_a_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1292,14 +1293,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_8'), ref('account_yearly_tax_report_line_2e_1_a_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_8'), ref('account_yearly_tax_report_line_2e_1_a_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1311,7 +1312,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_8'), ref('account_yearly_tax_report_line_2e_1_a_tax_8')],
 		    }),
 		]"/>
 	</record>
@@ -1500,7 +1501,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exempt')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exempt'), ref('account_yearly_tax_report_line_2d_1_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -1511,7 +1512,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exempt')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exempt'), ref('account_yearly_tax_report_line_2d_1_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -1534,7 +1535,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_14'), ref('account_yearly_tax_report_line_2d_1_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1546,14 +1547,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_14'), ref('account_yearly_tax_report_line_2d_1_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_14'), ref('account_yearly_tax_report_line_2d_1_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1565,7 +1566,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_14'), ref('account_yearly_tax_report_line_2d_1_tax_14')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -1584,7 +1585,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_17'), ref('account_yearly_tax_report_line_2d_1_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1596,14 +1597,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_17'), ref('account_yearly_tax_report_line_2d_1_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_17'), ref('account_yearly_tax_report_line_2d_1_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1615,7 +1616,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_17'), ref('account_yearly_tax_report_line_2d_1_tax_17')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -1634,7 +1635,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_3'), ref('account_yearly_tax_report_line_2d_1_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1646,14 +1647,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_3'), ref('account_yearly_tax_report_line_2d_1_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_3'), ref('account_yearly_tax_report_line_2d_1_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1665,7 +1666,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_3'), ref('account_yearly_tax_report_line_2d_1_tax_3')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -1684,7 +1685,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_8'), ref('account_yearly_tax_report_line_2d_1_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1696,14 +1697,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_8'), ref('account_yearly_tax_report_line_2d_1_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_8'), ref('account_yearly_tax_report_line_2d_1_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1715,7 +1716,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_8'), ref('account_yearly_tax_report_line_2d_1_tax_8')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -1734,7 +1735,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exempt')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exempt'), ref('account_yearly_tax_report_line_2d_2_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -1745,7 +1746,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exempt')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exempt'), ref('account_yearly_tax_report_line_2d_2_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -1768,7 +1769,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_14'), ref('account_yearly_tax_report_line_2d_2_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1780,14 +1781,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_14'), ref('account_yearly_tax_report_line_2d_2_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_14'), ref('account_yearly_tax_report_line_2d_2_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1799,7 +1800,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_14'), ref('account_yearly_tax_report_line_2d_2_tax_14')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -1818,7 +1819,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_17'), ref('account_yearly_tax_report_line_2d_2_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1830,14 +1831,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_17'), ref('account_yearly_tax_report_line_2d_2_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_17'), ref('account_yearly_tax_report_line_2d_2_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1849,7 +1850,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_17'), ref('account_yearly_tax_report_line_2d_2_tax_17')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -1868,7 +1869,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_3'), ref('account_yearly_tax_report_line_2d_2_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1880,14 +1881,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_3'), ref('account_yearly_tax_report_line_2d_2_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_3'), ref('account_yearly_tax_report_line_2d_2_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1899,7 +1900,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_3'), ref('account_yearly_tax_report_line_2d_2_tax_3')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -1918,7 +1919,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_8'), ref('account_yearly_tax_report_line_2d_2_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1930,14 +1931,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_8'), ref('account_yearly_tax_report_line_2d_2_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_8'), ref('account_yearly_tax_report_line_2d_2_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -1949,7 +1950,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_8'), ref('account_yearly_tax_report_line_2d_2_tax_8')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -1968,7 +1969,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_exempt')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_exempt'), ref('account_yearly_tax_report_line_2b_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -1979,7 +1980,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_exempt')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_exempt'), ref('account_yearly_tax_report_line_2b_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -2002,7 +2003,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_14'), ref('account_yearly_tax_report_line_2b_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2014,14 +2015,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_14'), ref('account_yearly_tax_report_line_2b_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_14'), ref('account_yearly_tax_report_line_2b_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2033,7 +2034,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_14'), ref('account_yearly_tax_report_line_2b_tax_14')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -2052,7 +2053,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_17'), ref('account_yearly_tax_report_line_2b_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2064,14 +2065,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_17'), ref('account_yearly_tax_report_line_2b_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_17'), ref('account_yearly_tax_report_line_2b_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2083,7 +2084,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_17'), ref('account_yearly_tax_report_line_2b_tax_17')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -2102,7 +2103,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_3'), ref('account_yearly_tax_report_line_2b_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2114,14 +2115,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_3'), ref('account_yearly_tax_report_line_2b_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_3'), ref('account_yearly_tax_report_line_2b_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2133,7 +2134,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_3'), ref('account_yearly_tax_report_line_2b_tax_3')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -2152,7 +2153,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_8'), ref('account_yearly_tax_report_line_2b_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2164,14 +2165,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_8'), ref('account_yearly_tax_report_line_2b_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_8'), ref('account_yearly_tax_report_line_2b_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2183,7 +2184,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_8'), ref('account_yearly_tax_report_line_2b_tax_8')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -2378,7 +2379,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_exempt')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_exempt'), ref('account_yearly_tax_report_line_2e_2_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -2389,7 +2390,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_exempt')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_exempt'), ref('account_yearly_tax_report_line_2e_2_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -2412,7 +2413,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_14'), ref('account_yearly_tax_report_line_2e_2_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2424,14 +2425,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_14'), ref('account_yearly_tax_report_line_2e_2_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_14'), ref('account_yearly_tax_report_line_2e_2_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2443,7 +2444,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_14'), ref('account_yearly_tax_report_line_2e_2_tax_14')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -2462,7 +2463,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_17'), ref('account_yearly_tax_report_line_2e_2_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2474,14 +2475,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_17'), ref('account_yearly_tax_report_line_2e_2_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_17'), ref('account_yearly_tax_report_line_2e_2_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2493,7 +2494,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_17'), ref('account_yearly_tax_report_line_2e_2_tax_17')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -2512,7 +2513,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_3'), ref('account_yearly_tax_report_line_2e_2_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2524,14 +2525,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_3'), ref('account_yearly_tax_report_line_2e_2_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_3'), ref('account_yearly_tax_report_line_2e_2_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2543,7 +2544,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_3'), ref('account_yearly_tax_report_line_2e_2_tax_3')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -2562,7 +2563,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_8'), ref('account_yearly_tax_report_line_2e_2_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2574,14 +2575,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_8'), ref('account_yearly_tax_report_line_2e_2_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_8'), ref('account_yearly_tax_report_line_2e_2_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2593,7 +2594,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_8'), ref('account_yearly_tax_report_line_2e_2_tax_8')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -2612,7 +2613,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exempt')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exempt'), ref('account_yearly_tax_report_line_2e_1_b_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -2623,7 +2624,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exempt')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exempt'), ref('account_yearly_tax_report_line_2e_1_b_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -2646,7 +2647,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_14'), ref('account_yearly_tax_report_line_2e_1_a_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2658,14 +2659,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_14'), ref('account_yearly_tax_report_line_2e_1_a_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_14'), ref('account_yearly_tax_report_line_2e_1_a_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2677,7 +2678,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_14'), ref('account_yearly_tax_report_line_2e_1_a_tax_14')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -2696,7 +2697,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_17'), ref('account_yearly_tax_report_line_2e_1_a_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2708,14 +2709,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_17'), ref('account_yearly_tax_report_line_2e_1_a_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_17'), ref('account_yearly_tax_report_line_2e_1_a_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2727,7 +2728,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_17'), ref('account_yearly_tax_report_line_2e_1_a_tax_17')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -2746,7 +2747,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_3'), ref('account_yearly_tax_report_line_2e_1_a_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2758,14 +2759,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_3'), ref('account_yearly_tax_report_line_2e_1_a_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_3'), ref('account_yearly_tax_report_line_2e_1_a_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2777,7 +2778,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_3'), ref('account_yearly_tax_report_line_2e_1_a_tax_3')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -2796,7 +2797,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_8'), ref('account_yearly_tax_report_line_2e_1_a_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2808,14 +2809,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_8'), ref('account_yearly_tax_report_line_2e_1_a_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_8'), ref('account_yearly_tax_report_line_2e_1_a_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -2827,7 +2828,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_8'), ref('account_yearly_tax_report_line_2e_1_a_tax_8')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -3022,7 +3023,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exempt')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exempt'), ref('account_yearly_tax_report_line_2d_1_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -3033,7 +3034,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exempt')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_exempt'), ref('account_yearly_tax_report_line_2d_1_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -3056,7 +3057,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_14'), ref('account_yearly_tax_report_line_2d_1_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3068,14 +3069,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_14'), ref('account_yearly_tax_report_line_2d_1_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_14'), ref('account_yearly_tax_report_line_2d_1_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3087,7 +3088,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_14'), ref('account_yearly_tax_report_line_2d_1_tax_14')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -3106,7 +3107,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_17'), ref('account_yearly_tax_report_line_2d_1_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3118,14 +3119,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_17'), ref('account_yearly_tax_report_line_2d_1_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_17'), ref('account_yearly_tax_report_line_2d_1_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3137,7 +3138,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_17'), ref('account_yearly_tax_report_line_2d_1_tax_17')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -3156,7 +3157,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_3'), ref('account_yearly_tax_report_line_2d_1_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3168,14 +3169,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_3'), ref('account_yearly_tax_report_line_2d_1_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_3'), ref('account_yearly_tax_report_line_2d_1_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3187,7 +3188,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_3'), ref('account_yearly_tax_report_line_2d_1_tax_3')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -3206,7 +3207,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_base_8'), ref('account_yearly_tax_report_line_2d_1_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3218,14 +3219,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_8'), ref('account_yearly_tax_report_line_2d_1_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_base_8'), ref('account_yearly_tax_report_line_2d_1_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3237,7 +3238,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_1_tax_8'), ref('account_yearly_tax_report_line_2d_1_tax_8')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -3256,7 +3257,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exempt')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exempt'), ref('account_yearly_tax_report_line_2d_2_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -3267,7 +3268,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exempt')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_exempt'), ref('account_yearly_tax_report_line_2d_2_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -3290,7 +3291,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_14'), ref('account_yearly_tax_report_line_2d_2_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3302,14 +3303,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_14'), ref('account_yearly_tax_report_line_2d_2_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_14'), ref('account_yearly_tax_report_line_2d_2_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3321,7 +3322,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_14'), ref('account_yearly_tax_report_line_2d_2_tax_14')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -3340,7 +3341,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_17'), ref('account_yearly_tax_report_line_2d_2_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3352,14 +3353,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_17'), ref('account_yearly_tax_report_line_2d_2_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_17'), ref('account_yearly_tax_report_line_2d_2_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3371,7 +3372,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_17'), ref('account_yearly_tax_report_line_2d_2_tax_17')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -3390,7 +3391,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_3'), ref('account_yearly_tax_report_line_2d_2_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3402,14 +3403,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_3'), ref('account_yearly_tax_report_line_2d_2_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_3'), ref('account_yearly_tax_report_line_2d_2_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3421,7 +3422,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_3'), ref('account_yearly_tax_report_line_2d_2_tax_3')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -3440,7 +3441,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_base_8'), ref('account_yearly_tax_report_line_2d_2_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3452,14 +3453,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_8'), ref('account_yearly_tax_report_line_2d_2_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_base_8'), ref('account_yearly_tax_report_line_2d_2_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3471,7 +3472,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2d_2_tax_8'), ref('account_yearly_tax_report_line_2d_2_tax_8')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -3490,7 +3491,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_exempt')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_exempt'), ref('account_yearly_tax_report_line_2b_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -3501,7 +3502,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_exempt')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_exempt'), ref('account_yearly_tax_report_line_2b_base_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -3524,7 +3525,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_14'), ref('account_yearly_tax_report_line_2b_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3536,14 +3537,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_14'), ref('account_yearly_tax_report_line_2b_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_14'), ref('account_yearly_tax_report_line_2b_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3555,7 +3556,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_14'), ref('account_yearly_tax_report_line_2b_tax_14')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -3574,7 +3575,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_17'), ref('account_yearly_tax_report_line_2b_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3586,14 +3587,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_17'), ref('account_yearly_tax_report_line_2b_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_17'), ref('account_yearly_tax_report_line_2b_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3605,7 +3606,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_17'), ref('account_yearly_tax_report_line_2b_tax_17')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -3624,7 +3625,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_3'), ref('account_yearly_tax_report_line_2b_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3636,14 +3637,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_3'), ref('account_yearly_tax_report_line_2b_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_3'), ref('account_yearly_tax_report_line_2b_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3655,7 +3656,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_3'), ref('account_yearly_tax_report_line_2b_tax_3')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -3674,7 +3675,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_base_8'), ref('account_yearly_tax_report_line_2b_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3686,14 +3687,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2b_tax_8'), ref('account_yearly_tax_report_line_2b_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_base_8'), ref('account_yearly_tax_report_line_2b_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3705,7 +3706,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2b_tax_8'), ref('account_yearly_tax_report_line_2b_tax_8')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -3900,7 +3901,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_exempt')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_exempt'), ref('account_yearly_tax_report_line_2e_2_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -3911,7 +3912,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_exempt')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_exempt'), ref('account_yearly_tax_report_line_2e_2_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -3934,7 +3935,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_14'), ref('account_yearly_tax_report_line_2e_2_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3946,14 +3947,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_14'), ref('account_yearly_tax_report_line_2e_2_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_14'), ref('account_yearly_tax_report_line_2e_2_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3965,7 +3966,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_14'), ref('account_yearly_tax_report_line_2e_2_tax_14')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -3984,7 +3985,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_17'), ref('account_yearly_tax_report_line_2e_2_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -3996,14 +3997,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_17'), ref('account_yearly_tax_report_line_2e_2_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_17'), ref('account_yearly_tax_report_line_2e_2_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -4015,7 +4016,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_17'), ref('account_yearly_tax_report_line_2e_2_tax_17')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -4034,7 +4035,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_3'), ref('account_yearly_tax_report_line_2e_2_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -4046,14 +4047,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_3'), ref('account_yearly_tax_report_line_2e_2_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_3'), ref('account_yearly_tax_report_line_2e_2_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -4065,7 +4066,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_3'), ref('account_yearly_tax_report_line_2e_2_tax_3')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -4084,7 +4085,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_base_8'), ref('account_yearly_tax_report_line_2e_2_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -4096,14 +4097,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_8'), ref('account_yearly_tax_report_line_2e_2_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_base_8'), ref('account_yearly_tax_report_line_2e_2_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -4115,7 +4116,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_2_tax_8'), ref('account_yearly_tax_report_line_2e_2_tax_8')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -4134,7 +4135,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exempt')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exempt'), ref('account_yearly_tax_report_line_2e_1_b_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4145,7 +4146,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exempt')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_b_exempt'), ref('account_yearly_tax_report_line_2e_1_b_exempt')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4168,7 +4169,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_14'), ref('account_yearly_tax_report_line_2e_1_a_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -4180,14 +4181,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_14'), ref('account_yearly_tax_report_line_2e_1_a_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_14'), ref('account_yearly_tax_report_line_2e_1_a_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -4199,7 +4200,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_14'), ref('account_yearly_tax_report_line_2e_1_a_tax_14')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -4218,7 +4219,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_17'), ref('account_yearly_tax_report_line_2e_1_a_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -4230,14 +4231,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_17'), ref('account_yearly_tax_report_line_2e_1_a_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_17'), ref('account_yearly_tax_report_line_2e_1_a_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -4249,7 +4250,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_17'), ref('account_yearly_tax_report_line_2e_1_a_tax_17')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -4268,7 +4269,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_3'), ref('account_yearly_tax_report_line_2e_1_a_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -4280,14 +4281,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_3'), ref('account_yearly_tax_report_line_2e_1_a_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_3'), ref('account_yearly_tax_report_line_2e_1_a_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -4299,7 +4300,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_3'), ref('account_yearly_tax_report_line_2e_1_a_tax_3')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -4318,7 +4319,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_8'), ref('account_yearly_tax_report_line_2e_1_a_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -4330,14 +4331,14 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_8'), ref('account_yearly_tax_report_line_2e_1_a_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_base_8'), ref('account_yearly_tax_report_line_2e_1_a_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': -100,
@@ -4349,7 +4350,7 @@
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_421611'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2e_1_a_tax_8'), ref('account_yearly_tax_report_line_2e_1_a_tax_8')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -4544,7 +4545,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_3_other_exemptions_art_43')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_3_other_exemptions_art_43'), ref('account_yearly_tax_report_line_1b_other_exempps_art43')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4555,7 +4556,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_3_other_exemptions_art_43')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_3_other_exemptions_art_43'), ref('account_yearly_tax_report_line_1b_other_exempps_art43')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4578,7 +4579,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_4_other_exemptions_art_44_et_56quater')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_4_other_exemptions_art_44_et_56quater'), ref('account_yearly_tax_report_line_1b_other_exempps_art44')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4589,7 +4590,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_4_other_exemptions_art_44_et_56quater')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_4_other_exemptions_art_44_et_56quater'), ref('account_yearly_tax_report_line_1b_other_exempps_art44')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4612,7 +4613,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_2_export')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_2_export'), ref('account_yearly_tax_report_line_1b_exports')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4623,7 +4624,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_2_export')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_2_export'), ref('account_yearly_tax_report_line_1b_exports')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4646,7 +4647,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_5_manufactured_tobacco_vat_collected')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_5_manufactured_tobacco_vat_collected'), ref('account_yearly_tax_report_line_1b_manu_tobacco')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4657,7 +4658,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_5_manufactured_tobacco_vat_collected')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_5_manufactured_tobacco_vat_collected'), ref('account_yearly_tax_report_line_1b_manu_tobacco')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4714,7 +4715,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_5_manufactured_tobacco_vat_collected')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_5_manufactured_tobacco_vat_collected'), ref('account_yearly_tax_report_line_1b_manu_tobacco')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4725,7 +4726,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_5_manufactured_tobacco_vat_collected')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_5_manufactured_tobacco_vat_collected'), ref('account_yearly_tax_report_line_1b_manu_tobacco')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4782,26 +4783,26 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_base_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_base_14'), ref('account_yearly_tax_report_line_2a_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_461411'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_14'), ref('account_yearly_tax_report_line_2a_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_base_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_base_14'), ref('account_yearly_tax_report_line_2a_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_461411'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_14'), ref('account_yearly_tax_report_line_2a_tax_14')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -4820,26 +4821,26 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_base_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_base_17'), ref('account_yearly_tax_report_line_2a_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_461411'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_17'), ref('account_yearly_tax_report_line_2a_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_base_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_base_17'), ref('account_yearly_tax_report_line_2a_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_461411'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_17'), ref('account_yearly_tax_report_line_2a_tax_17')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -4858,26 +4859,26 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_base_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_base_3'), ref('account_yearly_tax_report_line_2a_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_461411'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_3'), ref('account_yearly_tax_report_line_2a_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_base_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_base_3'), ref('account_yearly_tax_report_line_2a_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_461411'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_3'), ref('account_yearly_tax_report_line_2a_tax_3')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -4896,26 +4897,26 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_base_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_base_8'), ref('account_yearly_tax_report_line_2a_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_461411'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_8'), ref('account_yearly_tax_report_line_2a_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_base_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_base_8'), ref('account_yearly_tax_report_line_2a_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_461411'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_8'), ref('account_yearly_tax_report_line_2a_tax_8')],
 		    }),
 		]"/>
 		<field name="active" eval="False"/>
@@ -4934,7 +4935,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_5_manufactured_tobacco_vat_collected')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_5_manufactured_tobacco_vat_collected'), ref('account_yearly_tax_report_line_1b_manu_tobacco')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4945,7 +4946,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_5_manufactured_tobacco_vat_collected')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_5_manufactured_tobacco_vat_collected'), ref('account_yearly_tax_report_line_1b_manu_tobacco')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4968,7 +4969,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_6_a_subsequent_to_intra_community')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_6_a_subsequent_to_intra_community'), ref('account_yearly_tax_report_line_1b_supp_subseq')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -4979,7 +4980,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_6_a_subsequent_to_intra_community')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_6_a_subsequent_to_intra_community'), ref('account_yearly_tax_report_line_1b_supp_subseq')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -5002,7 +5003,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_6_d_supplies_other_referred')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_6_d_supplies_other_referred'), ref('account_yearly_tax_report_line_1b_other_supp_carr_out')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -5013,7 +5014,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_6_d_supplies_other_referred')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_6_d_supplies_other_referred'), ref('account_yearly_tax_report_line_1b_other_supp_carr_out')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -5035,7 +5036,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_6_b1_non_exempt_customer_vat')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_6_b1_non_exempt_customer_vat'), ref('account_yearly_tax_report_line_1b_supp_of_service')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -5046,7 +5047,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_6_b1_non_exempt_customer_vat')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_6_b1_non_exempt_customer_vat'), ref('account_yearly_tax_report_line_1b_supp_of_service')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -5068,7 +5069,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_1b_6_b2_exempt_ms_customer')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_1b_6_b2_exempt_ms_customer'), ref('account_yearly_tax_report_line_1b_supp_of_service_costomer')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -5079,7 +5080,7 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_1b_6_b2_exempt_ms_customer')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_1b_6_b2_exempt_ms_customer'), ref('account_yearly_tax_report_line_1b_supp_of_service_costomer')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
@@ -5134,26 +5135,26 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_base_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_base_14'), ref('account_yearly_tax_report_line_2a_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_461411'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_14')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_14'), ref('account_yearly_tax_report_line_2a_tax_14')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_base_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_base_14'), ref('account_yearly_tax_report_line_2a_base_14')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_461411'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_14')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_14'), ref('account_yearly_tax_report_line_2a_tax_14')],
 		    }),
 		]"/>
 	</record>
@@ -5171,26 +5172,26 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_base_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_base_17'), ref('account_yearly_tax_report_line_2a_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_461411'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_17')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_17'), ref('account_yearly_tax_report_line_2a_tax_17')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_base_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_base_17'), ref('account_yearly_tax_report_line_2a_base_17')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_461411'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_17')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_17'), ref('account_yearly_tax_report_line_2a_tax_17')],
 		    }),
 		]"/>
 	</record>
@@ -5208,26 +5209,26 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_base_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_base_3'), ref('account_yearly_tax_report_line_2a_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_461411'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_3')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_3'), ref('account_yearly_tax_report_line_2a_tax_3')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_base_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_base_3'), ref('account_yearly_tax_report_line_2a_base_3')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_461411'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_3')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_3'), ref('account_yearly_tax_report_line_2a_tax_3')],
 		    }),
 		]"/>
 	</record>
@@ -5245,26 +5246,26 @@
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_base_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_base_8'), ref('account_yearly_tax_report_line_2a_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_461411'),
-		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_8')],
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_8'), ref('account_yearly_tax_report_line_2a_tax_8')],
 		    }),
 		]"/>
 		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'base',
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_base_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_base_8'), ref('account_yearly_tax_report_line_2a_base_8')],
 		    }),
 		    (0,0, {
 		        'factor_percent': 100,
 		        'repartition_type': 'tax',
 		        'account_id': ref('lu_2020_account_461411'),
-		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_8')],
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_8'), ref('account_yearly_tax_report_line_2a_tax_8')],
 		    }),
 		]"/>
 	</record>
