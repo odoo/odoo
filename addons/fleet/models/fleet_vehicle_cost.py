@@ -257,6 +257,7 @@ class FleetVehicleLogContract(models.Model):
                     'vehicle_id': contract.vehicle_id.id,
                     'cost_subtype_id': contract.cost_subtype_id.id,
                     'contract_id': contract.id,
+                    'company_id': contract.company_id.id,
                     'auto_generated': True
                 }
                 self.env['fleet.vehicle.cost'].create(data)
