@@ -896,6 +896,54 @@ class TestCowViewSaving(common.TransactionCase):
         # 5  | Extension   |  , extended content   |     1      |     4    |  website.extension_view
         # 3  | Extension 2 |  , extended content 2 |     1      |     5    |  website.extension_view_2
 
+    def test_cow_extension_with_install(self):
+        View = self.env['ir.ui.view']
+        # Base
+        v1 = View.create({
+            'name': 'Base',
+            'type': 'qweb',
+            'arch': '<div>base content</div>',
+            'key': 'website.base_view_v1',
+        }).with_context(load_all_views=True)
+        self.env['ir.model.data'].create({
+            'module': 'website',
+            'name': 'base_view_v1',
+            'model': v1._name,
+            'res_id': v1.id,
+        })
+
+        # Extension
+        v2 = View.create({
+            'name': 'Extension',
+            'mode': 'extension',
+            'inherit_id': v1.id,
+            'arch': '<div position="inside"><ooo>extended content</ooo></div>',
+            'key': 'website.extension_view_v2',
+        })
+        self.env['ir.model.data'].create({
+            'module': 'website',
+            'name': 'extension_view_v2',
+            'model': v2._name,
+            'res_id': v2.id,
+        })
+
+        # multiwebsite specific
+        v1.with_context(website_id=1).write({'name': 'Extension Specific'})
+
+        original_pool_init = View.pool._init
+        View.pool._init = True
+
+        try:
+            # Simulate module install
+            View._load_records([dict(xml_id='website.extension2_view', values={
+                'name': ' ---',
+                'mode': 'extension',
+                'inherit_id': v1.id,
+                'arch': '<ooo position="replace"><p>EXTENSION</p></ooo>',
+                'key': 'website.extension2_view',
+            })])
+        finally:
+            View.pool._init = original_pool_init
 
 class Crawler(HttpCase):
     def setUp(self):
