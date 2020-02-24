@@ -54,17 +54,6 @@
         </div>
     </t>
 
-    <t t-name="PosCloseWarning">
-        <div>There are pending operations that could not be saved into the database, are you sure
-            you want to exit?</div>
-    </t>
-
-    <t t-name="ActionButtonWidget">
-        <div class='control-button'>
-            <t t-esc='widget.label' />
-        </div>
-    </t>
-
     <t t-name="ScaleScreenWidget">
         <div class="scale-screen screen">
             <div class="screen-content">
@@ -183,22 +172,6 @@
                     </div>
                 </footer>
             </div>
-        </div>
-    </t>
-
-    <!-- TODO jcb Unused? -->
-    <t t-name="Paymentline">
-        <div t-attf-class="paymentline #{line.selected ? 'selected' : ''}">
-            <div class='paymentline-name'>
-                <t t-esc="line.payment_method.name" />
-            </div>
-            <input class='paymentline-input'
-                   t-att-type="widget.decimal_point === '.' ? 'number' : 'text'"
-                   t-attf-pattern="[0-9]+([\\#{widget.decimal_point || '.' }][0-9]+)?" step="0.01"
-                   t-att-value="line.get_amount_str()" />
-            <span class='paymentline-delete'>
-                <img src="/point_of_sale/static/src/img/search_reset.gif" alt="Delete" />
-            </span>
         </div>
     </t>
 
