@@ -19,8 +19,10 @@ class Image(models.AbstractModel):
                 res_id = int(res_id)
                 res_model = model._name
                 attachment = self.env['ir.attachment'].search([
+                    '&', '|', '&',
                     ('res_model', '=', res_model),
                     ('res_id', '=', res_id),
+                    ('public', '=', True),
                     ('url', '=', url_object.path),
                 ], limit=1)
                 return attachment.datas
