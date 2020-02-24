@@ -20,15 +20,19 @@
 
                     <div class="row" style="margin-top:10px;">
                         <div class="col-lg-12">
+                            <t t-set='is_uom_day' t-value='docs._is_timesheet_encode_uom_day()'/>
                             <table class="table table-sm">
                                 <thead>
                                     <tr>
-                                        <th><span>Date</span></th>
-                                        <th><span>Responsible</span></th>
-                                        <th><span>Description</span></th>
-                                        <th t-if="show_project"><span>Project</span></th>
-                                        <th t-if="show_task"><span>Task</span></th>
-                                        <th class="text-right"><span>Time</span></th>
+                                        <th class="align-middle"><span>Date</span></th>
+                                        <th class="align-middle"><span>Responsible</span></th>
+                                        <th class="align-middle"><span>Description</span></th>
+                                        <th class="align-middle" t-if="show_project"><span>Project</span></th>
+                                        <th class="align-middle" t-if="show_task"><span>Task</span></th>
+                                        <th class="text-right">
+                                            <span t-if="is_uom_day">Time Spent (Days)</span>
+                                            <span t-else="">Time Spent (Hours)</span>
+                                        </th>
                                     </tr>
                                </thead>
                                <tbody>
@@ -49,16 +53,24 @@
                                             <t t-if="l.task_id"><span t-field="l.task_id.name"/></t>
                                         </td>
                                         <td class="text-right">
-                                            <span t-field="l.unit_amount" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}"/>
+                                            <span t-if="is_uom_day" t-esc="l._get_timesheet_time_day()" t-options="{'widget': 'timesheet_uom'}"/>
+                                            <span t-else="" t-field="l.unit_amount" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}"/>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td />
-                                        <td />
-                                        <td t-if="show_project"/>
-                                        <td t-if="show_task"/>
-                                        <td class="text-right"><strong>Total</strong></td>
-                                        <td class="text-right"><strong t-esc="sum(docs.mapped('unit_amount'))" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}"/></td>
+                                        <t t-set="nbCols" t-value="4"/>
+                                        <t t-if="show_project" t-set="nbCols" t-value="nbCols + 1"/>
+                                        <t t-if="show_task" t-set="nbCols" t-value="nbCols + 1"/>
+                                        <td class="text-right" t-attf-colspan="{{nbCols}}">
+                                            <strong t-if="is_uom_day">
+                                                <span style="margin-right: 15px;">Total (Days)</span>
+                                                <t t-esc="docs._convert_hours_to_days(sum(docs.mapped('unit_amount')))" t-options="{'widget': 'timesheet_uom'}"/>
+                                            </strong>
+                                            <strong t-else="">
+                                                <span style="margin-right: 15px;">Total (Hours)</span>
+                                                <t t-esc="sum(docs.mapped('unit_amount'))" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}"/>
+                                            </strong>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

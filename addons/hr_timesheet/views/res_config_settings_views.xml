@@ -38,6 +38,7 @@
                                 <div class="content-group">
                                     <div class="mt16">
                                         <field name="timesheet_encode_uom_id" options="{'no_create': True, 'no_open': True}" required="1" class="col-lg-5"/>
+                                        <field name="is_encode_uom_days" invisible="1"/>
                                     </div>
                                 </div>
                             </div>
@@ -72,7 +73,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('module_project_timesheet_synchro', '=', False), ('is_encode_uom_days', '=', True)]}">
                             <div class="o_setting_right_pane">
                                 <strong>Round Timesheets</strong>
                                 <div class="o_row w-30">
