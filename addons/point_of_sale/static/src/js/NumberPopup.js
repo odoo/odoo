@@ -18,6 +18,16 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
                 this.numberBuffer.set(this.props.startingValue.toString());
             }
         }
+        get inputBuffer() {
+            if (this.numberBuffer.state.buffer === null) {
+                return '';
+            }
+            if (this.props.isPassword) {
+                return this.numberBuffer.state.buffer.replace(/./g, '•');
+            } else {
+                return this.numberBuffer.state.buffer;
+            }
+        }
         sendInput(key) {
             this.trigger('numpad-click-input', { key });
         }
@@ -32,6 +42,7 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
         body: '',
         cheap: false,
         startingValue: null,
+        isPassword: false,
     };
 
     Chrome.addComponents([NumberPopup]);

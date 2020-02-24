@@ -4,14 +4,14 @@
     <t t-name="NumberPopup" owl="1">
         <div role="dialog" class="modal-dialog">
             <Draggable>
-                <div class="popup popup-number">
+                <div class="popup popup-number" t-att-class="{ 'popup-password': props.isPassword }">
                     <DraggablePart>
                         <header class="title">
                             <t t-esc="props.title" />
                         </header>
                     </DraggablePart>
                     <div class="popup-input value active">
-                        <t t-esc="numberBuffer.state.buffer" />
+                        <t t-esc="inputBuffer" />
                     </div>
                     <div class="popup-numpad">
                         <button class="input-button number-char" t-on-click="sendInput('1')">1</button>
