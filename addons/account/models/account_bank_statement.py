@@ -596,6 +596,7 @@ class AccountBankStatementLine(models.Model):
             'journal_id': self.statement_id.journal_id.id,
             'currency_id': self.statement_id.currency_id.id,
             'date': self.statement_id.accounting_date or self.date,
+            'partner_id': self.partner_id.id,
             'ref': ref,
         }
         if self.move_name:
