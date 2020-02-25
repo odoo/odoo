@@ -107,7 +107,7 @@ class TestMailPerformance(BaseMailPerformance):
         records = self.env['test_performance.mail'].search([])
         self.assertEqual(len(records), 5)
 
-        with self.assertQueryCount(__system__=3, demo=3):
+        with self.assertQueryCount(__system__=2, demo=2):
             records.write({'name': 'X'})
 
     @users('__system__', 'demo')
@@ -117,7 +117,7 @@ class TestMailPerformance(BaseMailPerformance):
         records = self.env['test_performance.mail'].search([])
         self.assertEqual(len(records), 5)
 
-        with self.assertQueryCount(__system__=3, demo=3):
+        with self.assertQueryCount(__system__=2, demo=2):
             records.write({'value': 42})
 
     @users('__system__', 'demo')
@@ -678,7 +678,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
 
-        with self.assertQueryCount(__system__=35, emp=36):
+        with self.assertQueryCount(__system__=34, emp=35):
             rec.write({
                 'name': 'Test2',
                 'customer_id': customer_id,
@@ -855,7 +855,7 @@ class TestTrackingPerformance(BaseMailPerformance):
             record.write({'field_%s' % (i): 'Tracked Char Fields %s' % (i) for i in range(3)})
             record.flush()
 
-        with self.assertQueryCount(__system__=10, demo=10):
+        with self.assertQueryCount(__system__=6, demo=6):
             record.write({'field_%s' % (i): 'Field Without Cache %s' % (i) for i in range(3)})
             record.flush()
             record.write({'field_%s' % (i): 'Field With Cache %s' % (i) for i in range(3)})
