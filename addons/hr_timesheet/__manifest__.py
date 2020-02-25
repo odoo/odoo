@@ -3,7 +3,7 @@
 
 
 {
-    'name': 'Task Logs',
+    'name': 'Timesheets',
     'version': '1.0',
     'category': 'Operations/Timesheets',
     'sequence': 23,
