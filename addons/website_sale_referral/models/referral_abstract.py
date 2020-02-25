@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, SUPERUSER_ID
+from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.osv import expression
 
 
@@ -87,7 +87,7 @@ class ReferralAbstract(models.AbstractModel):
             template = self.env.ref('website_sale_referral.referral_won_email_template')
             mail_body = template.render({'referred_name': self.referred_name, 'referrer_name': partner}, engine='ir.qweb', minimal_qcontext=True)
             mail = self.env['mail.mail'].sudo().create({
-                'subject': 'Referral won !',
+                'subject': _('Referral won !'),
                 'email_to': referral_tracking.referrer_email,
                 'email_from': None,
                 'body_html': mail_body,

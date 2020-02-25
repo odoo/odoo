@@ -17,16 +17,14 @@ class SaleOrder(models.Model):
         for order in self:
             order.referred_company_name = order.partner_id.company_id.name if order.partner_id.company_id else ''
 
-    def is_fully_paid(self):
+    def _is_fully_paid(self):
         self.ensure_one()
         if self.invoice_status != 'invoiced':
             return False
-        else:
-            amount_paid = 0
-            for inv in self.invoice_ids:
-                if inv.state == 'posted' and inv.payment_state == 'paid':
-                    amount_paid += inv.currency_id._convert(inv.amount_total, self.currency_id, self.company_id, self.date_order)
-            return 0 == self.currency_id.compare_amounts(self.amount_total, amount_paid)
+        amount_paid = 0.0
+        for inv in self.invoice_ids.filtered(lambda inv: inv.state == 'posted' and inv.payment_state == 'paid'):
+            amount_paid += inv.currency_id._convert(inv.amount_total, self.currency_id, self.company_id, self.date_order)
+        return not self.currency_id.compare_amounts(self.amount_total, amount_paid)
 
     def get_referral_statuses(self, utm_source_id, referred_email=None):
         sales_orders = self.find_others(utm_source_id, referred_email)
@@ -39,16 +37,15 @@ class SaleOrder(models.Model):
 
         if referred_email:
             return result.get(referred_email, None)
-        else:
-            return result
+        return result
 
     def _get_state_for_referral(self):
         self.ensure_one()
         if self.state == 'draft':
             return 'new'
-        elif self.is_fully_paid():
+        if self._is_fully_paid():
             return 'done'
-        elif self.state == 'cancel':
+        if self.state == 'cancel':
             return 'cancel'
         return 'in_progress'
 
@@ -69,6 +66,7 @@ class SaleOrder(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        # YTI FIX ME Check vals after create
         for vals in vals_list:
             if vals.get('campaign_id', None) == self.env.ref('website_sale_referral.utm_campaign_referral').id:
                 if 'user_id' not in vals:
