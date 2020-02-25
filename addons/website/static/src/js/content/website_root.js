@@ -164,7 +164,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
             if (result) {
                 self.displayNotification({
                     type: 'success',
-                    title: _t("Congratulation"),
+                    title: _t("Congratulations"),
                     message: $data.data('description') ?
                         _.str.sprintf(_t("You've published your %s."), $data.data('description')) :
                         _t("Published with success."),
