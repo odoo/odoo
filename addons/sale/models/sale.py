@@ -89,9 +89,7 @@ class SaleOrder(models.Model):
                 ['order_id', 'invoice_status'], lazy=False)]
         for order in confirmed_orders:
             line_invoice_status = [d[1] for d in line_invoice_status_all if d[0] == order.id]
-            if order.state not in ('sale', 'done'):
-                order.invoice_status = 'no'
-            elif any(invoice_status == 'to invoice' for invoice_status in line_invoice_status):
+            if any(invoice_status == 'to invoice' for invoice_status in line_invoice_status):
                 order.invoice_status = 'to invoice'
             elif line_invoice_status and all(invoice_status == 'invoiced' for invoice_status in line_invoice_status):
                 order.invoice_status = 'invoiced'
@@ -1039,7 +1037,7 @@ class SaleOrderLine(models.Model):
             else:
                 line.qty_to_invoice = 0
 
-    @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity', 'untaxed_amount_to_invoice')
+    @api.depends('product_uom', 'untaxed_amount_to_invoice', 'invoice_lines.move_id.state', 'invoice_lines.quantity', 'invoice_lines.product_uom_id')
     def _get_invoice_qty(self):
         """
         Compute the quantity invoiced. If case of a refund, the quantity invoiced is decreased. Note
@@ -1047,16 +1045,41 @@ class SaleOrderLine(models.Model):
         a refund made would automatically decrease the invoiced quantity, then there is a risk of reinvoicing
         it automatically, which may not be wanted at all. That's why the refund has to be created from the SO
         """
+        origin_lines = self._origin
+        if origin_lines:
+            # PSQL ROUND does round sometimes down, which isn't the rounding_method we want.
+            # We therefore use CEIL, but as CEIL doesn't support decimal rounding,
+            # we divide by the uom rounding, before ceiling and multiply after to preserve the decimal places.
+            # (and the default rounding method of UOM _compute_quantity)
+            self.flush(['product_uom', 'untaxed_amount_to_invoice', 'is_downpayment'])
+            self.env['account.move'].flush(['state'])
+            self.env['account.move.line'].flush(['quantity', 'product_uom_id'])
+            self.env.cr.execute('''
+                SELECT
+                    rel.order_line_id as id,
+                    SUM(CASE WHEN am.type = 'out_invoice' THEN
+                        CEIL(aml.quantity / aml_uom.factor * sol_uom.factor / sol_uom.rounding) * sol_uom.rounding
+                        ELSE 0 END) as out_invoice,
+                    SUM(CASE WHEN am.type = 'out_refund' AND
+                        (sol.untaxed_amount_to_invoice = 0 OR sol.is_downpayment IS FALSE OR sol.is_downpayment IS NULL) THEN
+                        CEIL(aml.quantity / aml_uom.factor * sol_uom.factor / sol_uom.rounding) * sol_uom.rounding
+                        ELSE 0 END) as out_refund
+                FROM sale_order_line_invoice_rel rel
+                JOIN sale_order_line sol on sol.id = rel.order_line_id
+                JOIN account_move_line aml on aml.id = rel.invoice_line_id
+                JOIN account_move am on am.id = aml.move_id
+                JOIN uom_uom sol_uom on (sol_uom.id=sol.product_uom)
+                JOIN uom_uom aml_uom on (aml_uom.id=aml.product_uom_id)
+                WHERE rel.order_line_id IN %s AND am.state != 'cancel'
+                GROUP BY rel.order_line_id
+            ''', [tuple(origin_lines.ids)])
+
+            query_res = self._cr.fetchall()
+        else:
+            query_res = []
+        results = {res[0]: res[1]-res[2] for res in query_res}
         for line in self:
-            qty_invoiced = 0.0
-            for invoice_line in line.invoice_lines:
-                if invoice_line.move_id.state != 'cancel':
-                    if invoice_line.move_id.type == 'out_invoice':
-                        qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
-                    elif invoice_line.move_id.type == 'out_refund' :
-                        if not line.is_downpayment or line.untaxed_amount_to_invoice == 0 :
-                            qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
-            line.qty_invoiced = qty_invoiced
+            line.qty_invoiced = results.get(line._origin.id, 0.0)
 
     @api.depends('price_unit', 'discount')
     def _get_price_reduce(self):
