@@ -95,6 +95,7 @@ class TestPayment(AccountingTestCase):
             'payment_date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
+            'group_invoices': True,
         })
         register_payments.create_payments()
         payment = self.payment_model.search([], order="id desc", limit=1)
@@ -243,11 +244,20 @@ class TestPayment(AccountingTestCase):
         # Test Vendor Bill
         inv_2 = self.create_invoice(amount=500, type='in_invoice', partner=self.partner_china_exp.id)
         ids = [inv_2.id]
+<<<<<<< HEAD
         payment_register = Form(self.env['account.payment'].with_context(active_model='account.invoice', active_ids=ids))
         with payment_register as pr:
             pr.payment_date = time.strftime('%Y') + '-07-15'
             pr.journal_id = self.bank_journal_euro
             pr.payment_method_id = self.payment_method_manual_in
+=======
+        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'journal_id': self.bank_journal_euro.id,
+            'payment_method_id': self.payment_method_manual_in.id,
+            'group_invoices': True,
+        })
+>>>>>>> ef201bd66a6... temp
 
             # Perform the partial payment by setting the amount at 300 instead of 500
             pr.amount = 300
@@ -509,6 +519,44 @@ class TestPayment(AccountingTestCase):
         # The invoice should now be paid
         self.assertEqual(invoice.state, 'paid', "Invoice should be in 'paid' state after having reconciled the two payments with a bank statement")
 
+<<<<<<< HEAD
+=======
+    def test_register_payments_multi_invoices(self):
+        inv1 = self.create_invoice(amount=40)
+        inv2 = inv1.copy()
+        inv2.action_invoice_open()
+
+        batch_payment = self.env['account.register.payments'].with_context(active_ids=(inv1 + inv2).ids).create({
+            'amount': 70,
+            'group_invoices': True,
+            'partner_id': inv1.partner_id.id,
+            'journal_id': self.bank_journal_usd.id,
+            'invoice_ids': [(6, False, (inv1 + inv2).ids)],
+            'partner_type': 'customer',
+            'payment_difference_handling': 'reconcile',
+            'payment_type': 'inbound',
+            'payment_method_id': self.payment_method_manual_in.id,
+            'writeoff_account_id': self.account_revenue.id,
+            'writeoff_label': "why can't we live together"})
+
+        payment_id = batch_payment.create_payments()['res_id']
+        payment_id = self.env['account.payment'].browse(payment_id)
+
+        self.assertEqual(inv1.state, 'paid')
+        self.assertEqual(inv2.state, 'paid')
+
+        receivable_inv1 = inv1.move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
+        receivable_inv2 = inv2.move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
+        receivable_payment = payment_id.move_line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
+
+        self.assertEqual(
+            receivable_inv1.full_reconcile_id.reconciled_line_ids,
+            receivable_inv1 + receivable_inv2 + receivable_payment
+        )
+        write_off_line = payment_id.move_line_ids.filtered(lambda l: l.account_id == payment_id.writeoff_account_id)
+        self.assertEqual(write_off_line.debit, 10)
+
+>>>>>>> ef201bd66a6... temp
     def test_payment_cancel_keep_name(self):
         self.bank_journal_euro.update_posted = True
 
