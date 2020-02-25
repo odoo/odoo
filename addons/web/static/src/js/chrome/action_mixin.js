@@ -20,9 +20,9 @@ odoo.define('web.ActionMixin', function (require) {
      * @module web.ActionMixin
      */
 
-    var core = require('web.core');
+    const core = require('web.core');
 
-    var ActionMixin = {
+    const ActionMixin = {
         template: 'Action',
 
         /**
@@ -79,7 +79,7 @@ odoo.define('web.ActionMixin', function (require) {
         renderElement: function () {
             this._super.apply(this, arguments);
             if (this.contentTemplate) {
-                var content = core.qweb.render(this.contentTemplate, { widget: this });
+                const content = core.qweb.render(this.contentTemplate, { widget: this });
                 this.$('.o_content').append(content);
             }
         },
@@ -223,7 +223,7 @@ odoo.define('web.ActionMixin', function (require) {
          */
         _onGetControllerQueryParams: function (ev) {
             ev.stopPropagation();
-            var state = this.getOwnedQueryParams();
+            const state = this.getOwnedQueryParams();
             ev.data.callback(state || {});
         },
     };

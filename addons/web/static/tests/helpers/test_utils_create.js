@@ -10,70 +10,68 @@ odoo.define('web.test_utils_create', function (require) {
      * testUtils file.
      */
 
-    var ActionManager = require('web.ActionManager');
-    var config = require('web.config');
-    var ControlPanelView = require('web.ControlPanelView');
-    var concurrency = require('web.concurrency');
-    var DebugManager = require('web.DebugManager.Backend');
-    var dom = require('web.dom');
-    var testUtilsMock = require('web.test_utils_mock');
-    var Widget = require('web.Widget');
+    const ActionManager = require('web.ActionManager');
+    const concurrency = require('web.concurrency');
+    const config = require('web.config');
+    const ControlPanelView = require('web.ControlPanelView');
+    const DebugManager = require('web.DebugManager.Backend');
+    const dom = require('web.dom');
+    const testUtilsMock = require('web.test_utils_mock');
+    const Widget = require('web.Widget');
 
     /**
-     * create and return an instance of ActionManager with all rpcs going through a
+     * Create and return an instance of ActionManager with all rpcs going through a
      * mock method using the data, actions and archs objects as sources.
      *
-     * @param {Object} [params]
+     * @param {Object} [params={}]
      * @param {Object} [params.actions] the actions given to the mock server
      * @param {Object} [params.archs] this archs given to the mock server
      * @param {Object} [params.data] the business data given to the mock server
      * @param {function} [params.mockRPC]
-     * @returns {ActionManager}
+     * @returns {Promise<ActionManager>}
      */
-    async function createActionManager(params) {
-        params = params || {};
+    async function createActionManager(params = {}) {
         const target = prepareTarget(params.debug);
 
-        var widget = new Widget();
+        const widget = new Widget();
         // when 'document' addon is installed, the sidebar does a 'search_read' on
         // model 'ir_attachment' each time a record is open, so we monkey-patch
         // 'mockRPC' to mute those RPCs, so that the tests can be written uniformly,
         // whether or not 'document' is installed
-        var mockRPC = params.mockRPC;
-        _.extend(params, {
-            mockRPC: function (route, args) {
+        const mockRPC = params.mockRPC;
+        Object.assign(params, {
+            async mockRPC(route, args) {
                 if (args.model === 'ir.attachment') {
-                    return Promise.resolve([]);
+                    return [];
                 }
                 if (mockRPC) {
                     return mockRPC.apply(this, arguments);
                 }
-                return this._super.apply(this, arguments);
+                return this._super(...arguments);
             },
         });
-        testUtilsMock.addMockEnvironment(widget, _.defaults(params, { debounce: false }));
+        testUtilsMock.addMockEnvironment(widget, Object.assign({ debounce: false }, params));
         await widget.prependTo(target);
-        widget.$el.addClass('o_web_client');
+        widget.el.classList.add('o_web_client');
         if (config.device.isMobile) {
-            widget.$el.addClass('o_touch_device');
+            widget.el.classList.add('o_touch_device');
         }
 
-        var userContext = params.context && params.context.user_context || {};
-        var actionManager = new ActionManager(widget, userContext);
+        const userContext = params.context && params.context.user_context || {};
+        const actionManager = new ActionManager(widget, userContext);
 
-        var originalDestroy = ActionManager.prototype.destroy;
+        const originalDestroy = ActionManager.prototype.destroy;
         actionManager.destroy = function () {
             actionManager.destroy = originalDestroy;
             widget.destroy();
         };
-        var fragment = document.createDocumentFragment();
-        return actionManager.appendTo(fragment).then(function () {
-            dom.append(widget.$el, fragment, {
-                callbacks: [{ widget: actionManager }],
-                in_DOM: true,
-            });
-            return actionManager;
+        const fragment = document.createDocumentFragment();
+        await actionManager.appendTo(fragment);
+        dom.append(widget.el, fragment, {
+            callbacks: [{ widget: actionManager }],
+            in_DOM: true,
         });
+        return actionManager;
     }
 
     /**
@@ -85,21 +83,22 @@ odoo.define('web.test_utils_create', function (require) {
      * makes the calendar scroll to 6:00 in a setTimeout(0), which might have an
      * impact according to where we want to trigger positional clicks.
      *
-     * @param {Object} params see @createView
+     * @param {Object} params @see createView
      * @param {Object} [options]
      * @param {boolean} [options.positionalClicks=false]
      * @returns {Promise<CalendarController>}
      */
     async function createCalendarView(params, options) {
-        var calendar = await createView(params);
+        const calendar = await createView(params);
         if (!options || !options.positionalClicks) {
             return calendar;
         }
-        var $view = $('#qunit-fixture').contents();
-        $view.prependTo('body');
-        var destroy = calendar.destroy;
-        calendar.destroy = function () {
-            $view.remove();
+        const viewElements = [...document.getElementById('qunit-fixture').children];
+        viewElements.forEach(el => document.body.prepend(el));
+
+        const destroy = calendar.destroy;
+        calendar.destroy = () => {
+            viewElements.forEach(el => el.remove());
             destroy();
         };
         await concurrency.delay(0);
@@ -107,7 +106,7 @@ odoo.define('web.test_utils_create', function (require) {
     }
 
     /**
-     * create a controlPanel from various parameters.
+     * Create a controlPanel from various parameters.
      *
      * It returns an instance of ControlPanelController
      *
@@ -138,17 +137,17 @@ odoo.define('web.test_utils_create', function (require) {
      *
      * @returns {Promise<ControlPanel>} resolves with an instance of the ControlPanelController
      */
-    function createControlPanel(params) {
+    async function createControlPanel(params) {
         params = params || {};
         const target = prepareTarget(params.debug);
         // reproduce the DOM environment of a view control panel
-        var $webClient = $('<div>').addClass('o_web_client').prependTo(target);
-        var $actionManager = $('<div>').addClass('o_action_manager').appendTo($webClient);
-        var $action = $('<div>').addClass('o_action').appendTo($actionManager);
+        const $webClient = $('<div>').addClass('o_web_client').prependTo(target);
+        const $actionManager = $('<div>').addClass('o_action_manager').appendTo($webClient);
+        const $action = $('<div>').addClass('o_action').appendTo($actionManager);
 
-        var widget = new Widget();
+        const widget = new Widget();
         // add mock environment: mock server, session, fieldviewget, ...
-        var mockServer = testUtilsMock.addMockEnvironment(widget, params);
+        const mockServer = testUtilsMock.addMockEnvironment(widget, params);
         if (!params.viewInfo) {
             try {
                 params.viewInfo = testUtilsMock.fieldsViewGet(mockServer, params);
@@ -159,37 +158,35 @@ odoo.define('web.test_utils_create', function (require) {
             }
         }
 
-        var viewOptions = _.defaults({}, params.viewOptions, {
+        const viewOptions = Object.assign({
             context: params.context,
             modelName: params.model,
             searchMenuTypes: params.searchMenuTypes,
             viewInfo: params.viewInfo,
-        });
-        var controlPanelView = new ControlPanelView(viewOptions);
-        return controlPanelView.getController(widget).then(function (controlPanel) {
-            // override the controlPanel's 'destroy' so that it calls 'destroy' on
-            // the widget instead, as the widget is the parent of the controlPanel
-            // and the mockServer.
-            controlPanel.__destroy = controlPanel.destroy;
-            controlPanel.destroy = function () {
-                // remove the override to properly destroy the controlPanel and its
-                // children when it will be called the second time (by its parent)
-                delete controlPanel.destroy;
-                widget.destroy();
-                $webClient.remove();
-            };
+        }, params.viewOptions);
+        const controlPanelView = new ControlPanelView(viewOptions);
+        const controlPanel = await controlPanelView.getController(widget);
+        // override the controlPanel's 'destroy' so that it calls 'destroy' on
+        // the widget instead, as the widget is the parent of the controlPanel
+        // and the mockServer.
+        controlPanel.__destroy = controlPanel.destroy;
+        controlPanel.destroy = function () {
+            // remove the override to properly destroy the controlPanel and its
+            // children when it will be called the second time (by its parent)
+            delete controlPanel.destroy;
+            widget.destroy();
+            $webClient.remove();
+        };
 
-            // render the controlPanel in a fragment as it must be able to render
-            // correctly without being in the DOM
-            var fragment = document.createDocumentFragment();
-            return controlPanel.appendTo(fragment).then(function () {
-                dom.prepend($action, fragment, {
-                    callbacks: [{ widget: controlPanel }],
-                    in_DOM: true,
-                });
-                return controlPanel;
-            });
+        // render the controlPanel in a fragment as it must be able to render
+        // correctly without being in the DOM
+        const fragment = document.createDocumentFragment();
+        await controlPanel.appendTo(fragment);
+        dom.prepend($action, fragment, {
+            callbacks: [{ widget: controlPanel }],
+            in_DOM: true,
         });
+        return controlPanel;
     }
 
     /**
@@ -197,39 +194,39 @@ odoo.define('web.test_utils_create', function (require) {
      * mock method, assuming that the user has access rights, and is an admin.
      *
      * @param {Object} [params={}]
+     * @returns {DebugManager}
      */
-    var createDebugManager = function (params) {
-        params = params || {};
-        var mockRPC = params.mockRPC;
-        _.extend(params, {
-            mockRPC: function (route, args) {
+    function createDebugManager(params = {}) {
+        const mockRPC = params.mockRPC;
+        Object.assign(params, {
+            async mockRPC(route, args) {
                 if (args.method === 'check_access_rights') {
-                    return Promise.resolve(true);
+                    return true;
                 }
                 if (args.method === 'xmlid_to_res_id') {
-                    return Promise.resolve(true);
+                    return true;
                 }
                 if (mockRPC) {
                     return mockRPC.apply(this, arguments);
                 }
-                return this._super.apply(this, arguments);
+                return this._super(...arguments);
             },
             session: {
-                user_has_group: function (group) {
+                async user_has_group(group) {
                     if (group === 'base.group_no_one') {
-                        return Promise.resolve(true);
+                        return true;
                     }
-                    return this._super.apply(this, arguments);
+                    return this._super(...arguments);
                 },
             },
         });
-        var debugManager = new DebugManager();
+        const debugManager = new DebugManager();
         testUtilsMock.addMockEnvironment(debugManager, params);
         return debugManager;
-    };
+    }
 
     /**
-     * create a model from given parameters.
+     * Create a model from given parameters.
      *
      * @param {Object} params This object will be given to addMockEnvironment, so
      *   any parameters from that method applies
@@ -237,9 +234,9 @@ odoo.define('web.test_utils_create', function (require) {
      * @returns {Model}
      */
     function createModel(params) {
-        var widget = new Widget();
+        const widget = new Widget();
 
-        var model = new params.Model(widget);
+        const model = new params.Model(widget);
 
         testUtilsMock.addMockEnvironment(widget, params);
 
@@ -256,20 +253,20 @@ odoo.define('web.test_utils_create', function (require) {
     }
 
     /**
-     * create a widget parent from given parameters.
+     * Create a widget parent from given parameters.
      *
      * @param {Object} params This object will be given to addMockEnvironment, so
      *   any parameters from that method applies
      * @returns {Widget}
      */
     function createParent(params) {
-        var widget = new Widget();
+        const widget = new Widget();
         testUtilsMock.addMockEnvironment(widget, params);
         return widget;
     }
 
     /**
-     * create a view from various parameters.  Here, a view means a javascript
+     * Create a view from various parameters.  Here, a view means a javascript
      * instance of an AbstractView class, such as a form view, a list view or a
      * kanban view.
      *
@@ -291,37 +288,42 @@ odoo.define('web.test_utils_create', function (require) {
      *   Note that this is particularly useful if you want to intercept events going
      *   up in the init process of the view, because there are no other way to do it
      *   after this method returns
-     *  @param {Boolean} [params.doNotDisableAHref=false] will not preventDefault on the A elements of the view if true.
+     * @param {Boolean} [params.doNotDisableAHref=false] will not preventDefault on the A elements of the view if true.
      *    Default is false.
-     * @returns {Promise<AbstractController>} resolves with the instance of the view
+     * @returns {Promise<AbstractController>} the instance of the view
      */
     async function createView(params) {
         const target = prepareTarget(params.debug);
-        var widget = new Widget();
+        const widget = new Widget();
         // reproduce the DOM environment of views
-        var $webClient = $('<div>').addClass('o_web_client').prependTo(target);
-        var $actionManager = $('<div>').addClass('o_action_manager').appendTo($webClient);
-
+        const webClient = Object.assign(document.createElement('div'), {
+            className: 'o_web_client',
+        });
+        const actionManager = Object.assign(document.createElement('div'), {
+            className: 'o_action_manager',
+        });
+        target.prepend(webClient);
+        webClient.append(actionManager);
 
         // add mock environment: mock server, session, fieldviewget, ...
-        var mockServer = testUtilsMock.addMockEnvironment(widget, params);
-        var viewInfo = testUtilsMock.fieldsViewGet(mockServer, params);
+        const mockServer = testUtilsMock.addMockEnvironment(widget, params);
+        const viewInfo = testUtilsMock.fieldsViewGet(mockServer, params);
 
         // create the view
-        var View = params.View;
-        var viewOptions = _.defaults({}, params.viewOptions, {
+        const View = params.View;
+        const viewOptions = Object.assign({
             modelName: params.model || 'foo',
             ids: 'res_id' in params ? [params.res_id] : undefined,
             currentId: 'res_id' in params ? params.res_id : undefined,
             domain: params.domain || [],
             context: params.context || {},
             hasSidebar: false,
-        });
+        }, params.viewOptions);
         // patch the View to handle the groupBy given in params, as we can't give it
         // in init (unlike the domain and context which can be set in the action)
         testUtilsMock.patch(View, {
-            _updateMVCParams: function () {
-                this._super.apply(this, arguments);
+            _updateMVCParams() {
+                this._super(...arguments);
                 this.loadParams.groupedBy = params.groupBy || viewOptions.groupBy || [];
                 testUtilsMock.unpatch(View);
             },
@@ -330,7 +332,7 @@ odoo.define('web.test_utils_create', function (require) {
             viewOptions.hasSelectors = params.hasSelectors;
         }
 
-        var view;
+        let view;
         if (viewInfo.type === 'controlpanel' || viewInfo.type === 'search') {
             // TODO: probably needs to create an helper just for that
             view = new params.View({
@@ -347,42 +349,40 @@ odoo.define('web.test_utils_create', function (require) {
         }
 
         if (params.interceptsPropagate) {
-            _.each(params.interceptsPropagate, function (cb, name) {
-                testUtilsMock.intercept(widget, name, cb, true);
-            });
+            for (const name in params.interceptsPropagate) {
+                testUtilsMock.intercept(widget, name, params.interceptsPropagate[name], true);
+            }
         }
 
-        return view.getController(widget).then(function (view) {
-            // override the view's 'destroy' so that it calls 'destroy' on the widget
-            // instead, as the widget is the parent of the view and the mockServer.
-            view.__destroy = view.destroy;
-            view.destroy = function () {
-                // remove the override to properly destroy the view and its children
-                // when it will be called the second time (by its parent)
-                delete view.destroy;
-                widget.destroy();
-                $webClient.remove();
-            };
+        const viewController = await view.getController(widget);
+        // override the view's 'destroy' so that it calls 'destroy' on the widget
+        // instead, as the widget is the parent of the view and the mockServer.
+        viewController.__destroy = viewController.destroy;
+        viewController.destroy = function () {
+            // remove the override to properly destroy the viewController and its children
+            // when it will be called the second time (by its parent)
+            delete viewController.destroy;
+            widget.destroy();
+            webClient.remove();
+        };
 
-            // render the view in a fragment as they must be able to render correctly
-            // without being in the DOM
-            var fragment = document.createDocumentFragment();
-            return view.appendTo(fragment).then(() => {
-                dom.prepend($actionManager, fragment, {
-                    callbacks: [{ widget: view }],
-                    in_DOM: true,
-                });
-
-                if (!params.doNotDisableAHref) {
-                    [...view.el.getElementsByTagName('A')].forEach((elem) => {
-                        elem.addEventListener('click', (ev) => {
-                            ev.preventDefault();
-                        });
-                    });
-                }
-                return view;
-            });
+        // render the viewController in a fragment as they must be able to render correctly
+        // without being in the DOM
+        const fragment = document.createDocumentFragment();
+        await viewController.appendTo(fragment);
+        dom.prepend(actionManager, fragment, {
+            callbacks: [{ widget: viewController }],
+            in_DOM: true,
         });
+
+        if (!params.doNotDisableAHref) {
+            [...viewController.el.getElementsByTagName('A')].forEach(elem => {
+                elem.addEventListener('click', ev => {
+                    ev.preventDefault();
+                });
+            });
+        }
+        return viewController;
     }
 
     /**
@@ -395,17 +395,17 @@ odoo.define('web.test_utils_create', function (require) {
      */
     function prepareTarget(debug = false) {
         document.body.classList.toggle('debug', debug);
-        return debug ? document.body : document.querySelector("#qunit-fixture");
+        return debug ? document.body : document.getElementById('qunit-fixture');
     }
 
     return {
-        createActionManager: createActionManager,
-        createCalendarView: createCalendarView,
-        createControlPanel: createControlPanel,
-        createDebugManager: createDebugManager,
-        createModel: createModel,
-        createParent: createParent,
-        createView: createView,
-        prepareTarget: prepareTarget,
+        createActionManager,
+        createCalendarView,
+        createControlPanel,
+        createDebugManager,
+        createModel,
+        createParent,
+        createView,
+        prepareTarget,
     };
 });

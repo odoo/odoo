@@ -10,8 +10,14 @@ odoo.define('web.test_utils_fields', function (require) {
      * testUtils file.
      */
 
-    var concurrency = require('web.concurrency');
-    var domUtils = require('web.test_utils_dom');
+    const testUtilsDom = require('web.test_utils_dom');
+
+    const ARROW_KEYS_MAPPING = {
+        down: 'ArrowDown',
+        left: 'ArrowLeft',
+        right: 'ArrowRight',
+        up: 'ArrowUp',
+    };
 
     //-------------------------------------------------------------------------
     // Public functions
@@ -23,13 +29,13 @@ odoo.define('web.test_utils_fields', function (require) {
      * @param {string} fieldName
      * @param {[string]} selector if set, this will restrict the search for the m2o
      *    input
+     * @returns {Promise}
      */
-    function clickM2OHighlightedItem(fieldName, selector) {
-        var m2oSelector = `${selector || ''} .o_field_many2one[name=${fieldName}] input`;
-        var $dropdown = $(m2oSelector).autocomplete('widget');
+    async function clickM2OHighlightedItem(fieldName, selector) {
+        const m2oSelector = `${selector || ''} .o_field_many2one[name=${fieldName}] input`;
+        const $dropdown = $(m2oSelector).autocomplete('widget');
         // clicking on an li (no matter which one), will select the focussed one
-        $dropdown.find('li:first()').click();
-        return concurrency.delay(0);
+        return testUtilsDom.click($dropdown[0].querySelector('li'));
     }
 
     /**
@@ -44,17 +50,15 @@ odoo.define('web.test_utils_fields', function (require) {
      * @param {string} searchText
      * @returns {Promise}
      */
-    function clickM2OItem(fieldName, searchText) {
-        var m2oSelector = `.o_field_many2one[name=${fieldName}] input`;
-        var $dropdown = $(m2oSelector).autocomplete('widget');
-        var $target = $dropdown.find(`li:contains(${searchText})`).first();
+    async function clickM2OItem(fieldName, searchText) {
+        const m2oSelector = `.o_field_many2one[name=${fieldName}] input`;
+        const $dropdown = $(m2oSelector).autocomplete('widget');
+        const $target = $dropdown.find(`li:contains(${searchText})`).first();
         if ($target.length !== 1 || !$target.is(':visible')) {
-            throw new Error('Menu item should be unique and visible');
+            throw new Error('Menu item should be visible');
         }
-        $target.mouseenter();
-        $target.click();
-
-        return concurrency.delay(0);
+        $target.mouseenter(); // This is NOT a mouseenter event. See jquery.js:5516 for more headaches.
+        return testUtilsDom.click($target);
     }
 
     /**
@@ -63,16 +67,16 @@ odoo.define('web.test_utils_fields', function (require) {
      * @param {string} fieldName
      * @param {[string]} selector if set, this will restrict the search for the m2o
      *    input
-     * @returns {HTMLInputElement} the main many2one input
+     * @returns {Promise<HTMLInputElement>} the main many2one input
      */
     async function clickOpenM2ODropdown(fieldName, selector) {
-        var m2oSelector = `${selector || ''} .o_field_many2one[name=${fieldName}] input`;
-        var matches = document.querySelectorAll(m2oSelector);
+        const m2oSelector = `${selector || ''} .o_field_many2one[name=${fieldName}] input`;
+        const matches = document.querySelectorAll(m2oSelector);
         if (matches.length !== 1) {
             throw new Error(`cannot open m2o: selector ${selector} has been found ${matches.length} instead of 1`);
         }
 
-        await domUtils.click(matches[0]);
+        await testUtilsDom.click(matches[0]);
         return matches[0];
     }
 
@@ -88,7 +92,7 @@ odoo.define('web.test_utils_fields', function (require) {
      * @param {string[]} events
      * @returns {Promise}
      */
-    function editAndTrigger(el, value, events) {
+    async function editAndTrigger(el, value, events) {
         if (el instanceof jQuery) {
             if (el.length !== 1) {
                 throw new Error(`target ${el.selector} has length ${el.length} instead of 1`);
@@ -97,7 +101,7 @@ odoo.define('web.test_utils_fields', function (require) {
         } else {
             el.value = value;
         }
-        return domUtils.triggerEvents(el, events);
+        return testUtilsDom.triggerEvents(el, events);
     }
 
     /**
@@ -112,7 +116,7 @@ odoo.define('web.test_utils_fields', function (require) {
      * @param {string|number} value
      * @returns {Promise}
      */
-    function editInput(el, value) {
+    async function editInput(el, value) {
         return editAndTrigger(el, value, ['input']);
     }
 
@@ -143,30 +147,22 @@ odoo.define('web.test_utils_fields', function (require) {
      *    testUtils.fields.many2one.searchAndClickM2OItem('partner_id', {search: 'George'});
      *
      * @param {string} fieldName
-     * @param {[Object]} options
-     * @param {[string]} options.selector
-     * @param {[string]} options.search
-     * @param {[string]} options.item
+     * @param {[Object]} [options = {}]
+     * @param {[string]} [options.selector]
+     * @param {[string]} [options.search]
+     * @param {[string]} [options.item]
      * @returns {Promise}
      */
-    function searchAndClickM2OItem(fieldName, options) {
-        options = options || {};
-
-        return clickOpenM2ODropdown(fieldName, options.selector).then(function (input) {
-            var def;
-            if (options.search) {
-                input.value = options.search;
-                input.dispatchEvent(new Event('input'));
-                def = concurrency.delay(0);
-            }
-            return Promise.resolve(def).then(function () {
-                if (options.item) {
-                    return clickM2OItem(fieldName, options.item);
-                } else {
-                    return clickM2OHighlightedItem(fieldName, options.selector);
-                }
-            });
-        });
+    async function searchAndClickM2OItem(fieldName, options = {}) {
+        const input = await clickOpenM2ODropdown(fieldName, options.selector);
+        if (options.search) {
+            await editInput(input, options.search);
+        }
+        if (options.item) {
+            return clickM2OItem(fieldName, options.item);
+        } else {
+            return clickM2OHighlightedItem(fieldName, options.selector);
+        }
     }
 
     /**
@@ -181,7 +177,15 @@ odoo.define('web.test_utils_fields', function (require) {
      */
     function triggerKey(type, $el, keyCode) {
         type = 'key' + type;
+        const params = {};
         if (typeof keyCode === 'string') {
+            // Key (new API)
+            if (keyCode in ARROW_KEYS_MAPPING) {
+                params.key = ARROW_KEYS_MAPPING[keyCode];
+            } else {
+                params.key = keyCode[0].toUpperCase() + keyCode.slice(1).toLowerCase();
+            }
+            // KeyCode/which (jQuery)
             if (keyCode.length > 1) {
                 keyCode = keyCode.toUpperCase();
                 keyCode = $.ui.keyCode[keyCode];
@@ -189,8 +193,9 @@ odoo.define('web.test_utils_fields', function (require) {
                 keyCode = keyCode.charCodeAt(0);
             }
         }
-        $el.trigger({ type: type, which: keyCode, keyCode: keyCode });
-        return concurrency.delay(0);
+        params.keyCode = keyCode;
+        params.which = keyCode;
+        return testUtilsDom.triggerEvent($el, type, params);
     }
 
     /**
@@ -216,15 +221,15 @@ odoo.define('web.test_utils_fields', function (require) {
     }
 
     return {
-        clickM2OHighlightedItem: clickM2OHighlightedItem,
-        clickM2OItem: clickM2OItem,
-        clickOpenM2ODropdown: clickOpenM2ODropdown,
-        editAndTrigger: editAndTrigger,
-        editInput: editInput,
-        editSelect: editSelect,
-        searchAndClickM2OItem: searchAndClickM2OItem,
-        triggerKey: triggerKey,
-        triggerKeydown: triggerKeydown,
-        triggerKeyup: triggerKeyup,
+        clickM2OHighlightedItem,
+        clickM2OItem,
+        clickOpenM2ODropdown,
+        editAndTrigger,
+        editInput,
+        editSelect,
+        searchAndClickM2OItem,
+        triggerKey,
+        triggerKeydown,
+        triggerKeyup,
     };
 });

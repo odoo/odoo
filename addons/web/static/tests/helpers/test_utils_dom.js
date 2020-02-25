@@ -1,7 +1,7 @@
 odoo.define('web.test_utils_dom', function (require) {
     "use strict";
 
-    var concurrency = require('web.concurrency');
+    const concurrency = require('web.concurrency');
 
     /**
      * DOM Test Utils
@@ -13,40 +13,29 @@ odoo.define('web.test_utils_dom', function (require) {
      */
 
     //-------------------------------------------------------------------------
-    // Private
+    // Private functions
     //-------------------------------------------------------------------------
 
-    function keyboardEventBubble(args) {
-        return Object.assign({}, args, { bubbles: true, keyCode: args.which });
-    }
-
-    function mouseEventMapping(args) {
-        return Object.assign({}, args, {
-            view: window,
-            bubbles: true,
-            cancelable: true,
-            clientX: args ? args.pageX : undefined,
-            clientY: args ? args.pageY : undefined,
-        });
-    }
-
-    function mouseEventNoBubble(args) {
-        return Object.assign({}, args, {
-            view: window,
-            bubbles: false,
-            cancelable: false,
-            clientX: args ? args.pageX : undefined,
-            clientY: args ? args.pageY : undefined,
-        });
-    }
-
-    function onlyBubble(args) {
-        return Object.assign({}, args, {
-            bubbles: true
-        });
-    }
-
-    const eventTypes = {
+    // TriggerEvent helpers
+    const keyboardEventBubble = args => Object.assign({}, args, { bubbles: true, keyCode: args.which });
+    const mouseEventMapping = args => Object.assign({}, args, {
+        bubbles: true,
+        cancelable: true,
+        clientX: args ? args.pageX : undefined,
+        clientY: args ? args.pageY : undefined,
+        view: window,
+    });
+    const mouseEventNoBubble = args => Object.assign({}, args, {
+        bubbles: false,
+        cancelable: false,
+        clientX: args ? args.pageX : undefined,
+        clientY: args ? args.pageY : undefined,
+        view: window,
+    });
+    const noBubble = args => Object.assign({}, args, { bubbles: false });
+    const onlyBubble = args => Object.assign({}, args, { bubbles: true });
+    // TriggerEvent constructor/args processor mapping
+    const EVENT_TYPES = {
         auxclick: { constructor: MouseEvent, processParameters: mouseEventMapping },
         click: { constructor: MouseEvent, processParameters: mouseEventMapping },
         contextmenu: { constructor: MouseEvent, processParameters: mouseEventMapping },
@@ -60,17 +49,9 @@ odoo.define('web.test_utils_dom', function (require) {
         mouseover: { constructor: MouseEvent, processParameters: mouseEventMapping },
         mouseout: { constructor: MouseEvent, processParameters: mouseEventMapping },
 
-        focus: {
-            constructor: FocusEvent, processParameters: (args) => {
-                return Object.assign({}, args, { bubbles: false });
-            }
-        },
+        focus: { constructor: FocusEvent, processParameters: noBubble },
         focusin: { constructor: FocusEvent, processParameters: onlyBubble },
-        blur: {
-            constructor: FocusEvent, processParameters: (args) => {
-                return Object.assign({}, args, { bubbles: false });
-            }
-        },
+        blur: { constructor: FocusEvent, processParameters: noBubble },
 
         cut: { constructor: ClipboardEvent, processParameters: onlyBubble },
         copy: { constructor: ClipboardEvent, processParameters: onlyBubble },
@@ -95,7 +76,10 @@ odoo.define('web.test_utils_dom', function (require) {
      * @param {Object} node
      * @returns {boolean}
      */
-    function isEventTarget(node) {
+    function _isEventTarget(node) {
+        if (!node) {
+            throw new Error(`Provided node is ${node}.`);
+        }
         if (node instanceof window.top.EventTarget) {
             return true;
         }
@@ -105,7 +89,7 @@ odoo.define('web.test_utils_dom', function (require) {
     }
 
     //-------------------------------------------------------------------------
-    // Public
+    // Public functions
     //-------------------------------------------------------------------------
 
     /**
@@ -126,7 +110,7 @@ odoo.define('web.test_utils_dom', function (require) {
         if (typeof el === 'string') {
             el = $(el);
         }
-        if (isEventTarget(el)) {
+        if (_isEventTarget(el)) {
             // EventTarget
             matches = [el];
         } else {
@@ -174,8 +158,8 @@ odoo.define('web.test_utils_dom', function (require) {
      *   element event if it is invisible
      * @returns {Promise}
      */
-    function clickFirst(el, options) {
-        return click(el, _.extend({}, options, { first: true }));
+    async function clickFirst(el, options) {
+        return click(el, Object.assign({}, options, { first: true }));
     }
 
     /**
@@ -189,12 +173,12 @@ odoo.define('web.test_utils_dom', function (require) {
      *   element event if it is invisible
      * @returns {Promise}
      */
-    function clickLast(el, options) {
-        return click(el, _.extend({}, options, { last: true }));
+    async function clickLast(el, options) {
+        return click(el, Object.assign({}, options, { last: true }));
     }
 
     /**
-     * simulate a drag and drop operation between 2 jquery nodes: $el and $to.
+     * Simulate a drag and drop operation between 2 jquery nodes: $el and $to.
      * This is a crude simulation, with only the mousedown, mousemove and mouseup
      * events, but it is enough to help test drag and drop operations with jqueryUI
      * sortable.
@@ -225,25 +209,25 @@ odoo.define('web.test_utils_dom', function (require) {
      */
     async function dragAndDrop($el, $to, options) {
         let el = null;
-        if (isEventTarget($el)) {
+        if (_isEventTarget($el)) {
             el = $el;
             $el = $(el);
         }
-        if (isEventTarget($to)) {
+        if (_isEventTarget($to)) {
             $to = $($to);
         }
         options = options || {};
-        var position = options.position || 'center';
-        var elementCenter = $el.offset();
-        var toOffset = $to.offset();
+        const position = options.position || 'center';
+        const elementCenter = $el.offset();
+        const toOffset = $to.offset();
 
-        if (_.isObject(position)) {
+        if (typeof position === 'object') {
             toOffset.top += position.top + 1;
             toOffset.left += position.left + 1;
         } else {
             toOffset.top += $to.outerHeight() / 2;
             toOffset.left += $to.outerWidth() / 2;
-            var vertical_offset = (toOffset.top < elementCenter.top) ? -1 : 1;
+            const vertical_offset = (toOffset.top < elementCenter.top) ? -1 : 1;
             if (position === 'top') {
                 toOffset.top -= $to.outerHeight() / 2 + vertical_offset;
             } else if (position === 'bottom') {
@@ -257,7 +241,7 @@ odoo.define('web.test_utils_dom', function (require) {
 
         if ($to[0].ownerDocument !== document) {
             // we are in an iframe
-            var bound = $('iframe')[0].getBoundingClientRect();
+            const bound = $('iframe')[0].getBoundingClientRect();
             toOffset.left += bound.left;
             toOffset.top += bound.top;
         }
@@ -301,11 +285,11 @@ odoo.define('web.test_utils_dom', function (require) {
     }
 
     /**
-     * Opens the datepicker of a given element.
+     * Open the datepicker of a given element.
      *
      * @param {jQuery} $datepickerEl element to which a datepicker is attached
      */
-    function openDatepicker($datepickerEl) {
+    async function openDatepicker($datepickerEl) {
         return click($datepickerEl.find('.o_datepicker_input'));
     }
 
@@ -325,7 +309,7 @@ odoo.define('web.test_utils_dom', function (require) {
     }
 
     /**
-     * Triggers an event on the specified target.
+     * Trigger an event on the specified target.
      * This function will dispatch a native event to an EventTarget or a
      * jQuery event to a jQuery object. This behaviour can be overridden by the
      * jquery option.
@@ -340,7 +324,7 @@ odoo.define('web.test_utils_dom', function (require) {
     async function triggerEvent(el, eventType, eventAttrs = {}, fast = false) {
         let matches;
         let selectorMsg = "";
-        if (isEventTarget(el)) {
+        if (_isEventTarget(el)) {
             matches = [el];
         } else {
             matches = [...el];
@@ -353,15 +337,15 @@ odoo.define('web.test_utils_dom', function (require) {
         const target = matches[0];
         let event;
 
-        if (!eventTypes[eventType] && !eventTypes[eventType.type]) {
+        if (!EVENT_TYPES[eventType] && !EVENT_TYPES[eventType.type]) {
             event = new Event(eventType, Object.assign({}, eventAttrs, { bubbles: true }));
         } else {
             if (typeof eventType === "object") {
-                const { constructor, processParameters } = eventTypes[eventType.type];
+                const { constructor, processParameters } = EVENT_TYPES[eventType.type];
                 const eventParameters = processParameters(eventType);
                 event = new constructor(eventType.type, eventParameters);
             } else {
-                const { constructor, processParameters } = eventTypes[eventType];
+                const { constructor, processParameters } = EVENT_TYPES[eventType];
                 event = new constructor(eventType, processParameters(eventAttrs));
             }
         }
@@ -370,7 +354,7 @@ odoo.define('web.test_utils_dom', function (require) {
     }
 
     /**
-     * Triggers multiple events on the specified element.
+     * Trigger multiple events on the specified element.
      *
      * @param {EventTarget|EventTarget[]} el
      * @param {string[]} events the events you want to trigger
@@ -387,8 +371,30 @@ odoo.define('web.test_utils_dom', function (require) {
         }
 
         for (let e = 0; e < events.length; e++) {
-            await triggerEvent(el, events[e], {});
+            await triggerEvent(el, events[e]);
         }
+    }
+
+    /**
+     * Simulate a keypress event for a given character
+     *
+     * @param {string} char the character, or 'ENTER'
+     * @returns {Promise}
+     */
+    async function triggerKeypressEvent(char) {
+        let keycode;
+        if (char === 'Enter') {
+            keycode = $.ui.keyCode.ENTER;
+        } else if (char === "Tab") {
+            keycode = $.ui.keyCode.TAB;
+        } else {
+            keycode = char.charCodeAt(0);
+        }
+        return triggerEvent(document.body, 'keypress', {
+            key: char,
+            keyCode: keycode,
+            which: keycode,
+        });
     }
 
     /**
@@ -400,7 +406,7 @@ odoo.define('web.test_utils_dom', function (require) {
      * @param {string} type a mouse event type, such as 'mousedown' or 'mousemove'
      * @returns {Promise}
      */
-    function triggerMouseEvent($el, type) {
+    async function triggerMouseEvent($el, type) {
         const el = $el instanceof jQuery ? $el[0] : $el;
         if (!el) {
             throw new Error(`no target found to trigger MouseEvent`);
@@ -426,9 +432,9 @@ odoo.define('web.test_utils_dom', function (require) {
      * @param {string} type a mouse event type, such as 'mousedown' or 'mousemove'
      * @returns {HTMLElement}
      */
-    function triggerPositionalMouseEvent(x, y, type) {
-        var ev = document.createEvent("MouseEvent");
-        var el = document.elementFromPoint(x, y);
+    async function triggerPositionalMouseEvent(x, y, type) {
+        const ev = document.createEvent("MouseEvent");
+        const el = document.elementFromPoint(x, y);
         ev.initMouseEvent(
             type,
             true /* bubble */,
@@ -442,39 +448,17 @@ odoo.define('web.test_utils_dom', function (require) {
         return el;
     }
 
-    /**
-     * simulate a keypress event for a given character
-     *
-     * @param {string} char the character, or 'ENTER'
-     * @returns {Promise}
-     */
-    function triggerKeypressEvent(char) {
-        var keycode;
-        if (char === 'Enter') {
-            keycode = $.ui.keyCode.ENTER;
-        } else if (char === "Tab") {
-            keycode = $.ui.keyCode.TAB;
-        } else {
-            keycode = char.charCodeAt(0);
-        }
-        return triggerEvent(document.body, 'keypress', {
-            key: char,
-            keyCode: keycode,
-            which: keycode,
-        });
-    }
-
     return {
-        click: click,
-        clickFirst: clickFirst,
-        clickLast: clickLast,
-        dragAndDrop: dragAndDrop,
-        openDatepicker: openDatepicker,
-        returnAfterNextAnimationFrame: returnAfterNextAnimationFrame,
-        triggerEvent: triggerEvent,
-        triggerEvents: triggerEvents,
-        triggerKeypressEvent: triggerKeypressEvent,
-        triggerMouseEvent: triggerMouseEvent,
-        triggerPositionalMouseEvent: triggerPositionalMouseEvent,
+        click,
+        clickFirst,
+        clickLast,
+        dragAndDrop,
+        openDatepicker,
+        returnAfterNextAnimationFrame,
+        triggerEvent,
+        triggerEvents,
+        triggerKeypressEvent,
+        triggerMouseEvent,
+        triggerPositionalMouseEvent,
     };
 });
