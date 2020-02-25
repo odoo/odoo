@@ -318,6 +318,9 @@ class HolidaysRequest(models.Model):
             self.date_to = False
             return
 
+        if self.request_date_from > self.request_date_to:
+            self.request_date_to = self.request_date_from
+
         resource_calendar_id = self.employee_id.resource_calendar_id or self.env.company.resource_calendar_id
         domain = [('calendar_id', '=', resource_calendar_id.id), ('display_type', '=', False)]
         attendances = self.env['resource.calendar.attendance'].read_group(domain, ['ids:array_agg(id)', 'hour_from:min(hour_from)', 'hour_to:max(hour_to)', 'week_type', 'dayofweek', 'day_period'], ['week_type', 'dayofweek', 'day_period'], lazy=False)

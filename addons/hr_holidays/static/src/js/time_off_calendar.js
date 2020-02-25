@@ -2,6 +2,7 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
     'use strict';
 
     var core = require('web.core');
+    var CalendarPopover = require('web.CalendarPopover');
     var CalendarController = require("web.CalendarController");
     var CalendarRenderer = require("web.CalendarRenderer");
     var CalendarView = require("web.CalendarView");
@@ -10,6 +11,18 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
     var _t = core._t;
     var QWeb = core.qweb;
 
+    var TimeOffCalendarPopover = CalendarPopover.extend({
+        template: 'hr_holidays.calendar.popover',
+
+        init: function (parent, eventInfo) {
+            this._super.apply(this, arguments);
+            const state = this.event.extendedProps.record.state;
+            this.canDelete = state && ['validate', 'refuse'].indexOf(state) === -1;
+            this.canEdit = state !== undefined;
+            this.display_name = this.event.extendedProps.record.display_name;
+            this.displayFields = [];
+        },
+    });
 
     var TimeOffCalendarController = CalendarController.extend({
         events: _.extend({}, CalendarController.prototype.events, {
@@ -83,7 +96,32 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
             });
         },
     });
-    var TimeOffCalendarRenderer = CalendarRenderer.extend({
+
+    var TimeOffPopoverRenderer = CalendarRenderer.extend({
+        config: _.extend({}, CalendarRenderer.prototype.config, {
+            CalendarPopover: TimeOffCalendarPopover,
+        }),
+
+        _getPopoverParams: function (eventData) {
+            let params = this._super.apply(this, arguments);
+            let calendarIcon;
+            let state = eventData.extendedProps.record.state;
+
+            if (state === 'validate') {
+                calendarIcon = 'fa-calendar-check-o';
+            } else if (state === 'refuse') {
+                calendarIcon = 'fa-calendar-times-o';
+            } else if(state) {
+                calendarIcon = 'fa-calendar-o';
+            }
+
+            params['title'] = eventData.extendedProps.record.display_name.split(':').slice(0, -1).join(':');
+            params['template'] = QWeb.render('hr_holidays.calendar.popover.placeholder', {color: this.getColor(eventData.color_index), calendarIcon: calendarIcon});
+            return params;
+        },
+    });
+
+    var TimeOffCalendarRenderer = TimeOffPopoverRenderer.extend({
         _render: function () {
             var self = this;
             return this._super.apply(this, arguments).then(function () {
@@ -108,5 +146,15 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
         }),
     });
 
+    /**
+     * Calendar shown in the "Everyone" menu
+     */
+    var TimeOffCalendarAllView = CalendarView.extend({
+        config: _.extend({}, CalendarView.prototype.config, {
+            Renderer: TimeOffPopoverRenderer,
+        }),
+    });
+
     viewRegistry.add('time_off_calendar', TimeOffCalendarView);
+    viewRegistry.add('time_off_calendar_all', TimeOffCalendarAllView);
 });
