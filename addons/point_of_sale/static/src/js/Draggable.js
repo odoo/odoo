@@ -13,9 +13,9 @@ odoo.define('point_of_sale.Draggable', function(require) {
      * ```
      * <Draggable>
      *   <div class="popup">
-     *     <DraggablePart>
+     *     <DraggableHandle>
      *       <Header />
-     *     </DraggablePart>
+     *     </DraggableHandle>
      *   </div>
      *   <div class="popup body">
      *   </div>
@@ -24,13 +24,13 @@ odoo.define('point_of_sale.Draggable', function(require) {
      *
      * In the above snippet, if the popup div is { position: absolute },
      * then it becomes draggable around the screen if it is dragged thru its
-     * Header -- the element inside DraggablePart.
+     * Header -- the element inside DraggableHandle.
      *
-     * DraggablePart is basically the handle to hold in order to move the
+     * DraggableHandle is basically the handle to hold in order to move the
      * Draggable component around.
      *
-     * Without DraggablePart, the Draggable component can still be moved around
-     * by pressing Ctrl key while dragging. Useful when the DraggablePart gets
+     * Without DraggableHandle, the Draggable component can still be moved around
+     * by pressing Ctrl key while dragging. Useful when the DraggableHandle gets
      * out of the screen.
      */
     class Draggable extends PosComponent {

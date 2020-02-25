@@ -5,9 +5,9 @@
         <div role="dialog" class="modal-dialog">
             <Draggable>
                 <div class="popup popup-import">
-                    <DraggablePart>
+                    <DraggableHandle>
                         <header class="title">Finished Importing Orders</header>
-                    </DraggablePart>
+                    </DraggableHandle>
                     <ul class="body">
                         <li>Successfully imported <b><t t-esc="props.report.paid or 0" /></b> paid orders</li>
                         <li>Successfully  imported <b><t t-esc="props.report.unpaid or 0" /></b> unpaid orders</li>

@@ -5,13 +5,13 @@
         <div role="dialog" class="modal-dialog">
             <Draggable>
                 <div class="popup popup-barcode">
-                    <DraggablePart>
+                    <DraggableHandle>
                         <header class="title">Unknown Barcode
                             <br />
                             <span class="barcode">
                                 <t t-esc="props.code" /></span>
                         </header>
-                    </DraggablePart>
+                    </DraggableHandle>
                     <main class="body">
                         <t t-esc="translatedMessage" />
                     </main>

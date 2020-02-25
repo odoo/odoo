@@ -84,7 +84,7 @@
         'static/src/xml/SaleDetailsButton.xml',
         'static/src/xml/SaleDetailsReport.xml',
         'static/src/xml/Draggable.xml',
-        'static/src/xml/DraggablePart.xml',
+        'static/src/xml/DraggableHandle.xml',
         'static/src/xml/DebugWidget.xml',
         'static/src/xml/ErrorPopup.xml',
         'static/src/xml/ErrorBarcodePopup.xml',

@@ -5,11 +5,11 @@
         <div role="dialog" class="modal-dialog">
             <Draggable>
                 <div class="popup popup-selection">
-                    <DraggablePart>
+                    <DraggableHandle>
                         <header class="title">
                             <t t-esc="props.title" />
                         </header>
-                    </DraggablePart>
+                    </DraggableHandle>
                     <div class="selection scrollable-y touch-scrollable">
                         <t t-foreach="props.list" t-as="item" t-key="item._id">
                             <div class="selection-item" t-att-class="{ selected: item.isSelected }"
