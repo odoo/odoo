@@ -46,8 +46,6 @@ class MailChannel(models.Model):
         for record in self:
             if record.channel_type == 'livechat':
                 record.is_chat = True
-            else:
-                record.is_chat = False
 
     def _channel_message_notifications(self, message, message_format=False):
         """ When a anonymous user create a mail.channel, the operator is not notify (to avoid massive polling when
