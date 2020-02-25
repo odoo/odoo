@@ -3,7 +3,7 @@
 
 import logging
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, tools
 from odoo.addons.bus.models.bus_presence import AWAY_TIMER
 from odoo.addons.bus.models.bus_presence import DISCONNECTION_TIMER
 from odoo.osv import expression
@@ -34,6 +34,22 @@ class Partner(models.Model):
             'email_to': False,
             'email_cc': False}
             for r in self}
+
+    @api.model
+    def find_or_create(self, email, assert_valid_email=False):
+        """ Override to use the email_normalized field. """
+        if not email:
+            raise ValueError(_('An email is required for find_or_create to work'))
+
+        parsed_name, parsed_email = self._parse_partner_name(email)
+        if parsed_email:
+            email_normalized = tools.email_normalize(parsed_email)
+            if email_normalized:
+                partners = self.search([('email_normalized', '=', email_normalized)], limit=1)
+                if partners:
+                    return partners
+
+        return super(Partner, self).find_or_create(email, assert_valid_email=assert_valid_email)
 
     @api.model
     def get_needaction_count(self):
