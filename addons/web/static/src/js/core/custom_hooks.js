@@ -14,18 +14,18 @@ odoo.define('web.custom_hooks', function () {
      */
     function useFocusOnUpdate() {
         const component = Component.current;
-        component.__willFocus = null;
+        let willFocus = null;
 
         function _focusSelector() {
-            if (component.__willFocus) {
-                const target = component.el.querySelector(component.__willFocus);
+            if (willFocus) {
+                const target = component.el.querySelector(willFocus);
                 if (target) {
                     target.focus();
                     if (['INPUT', 'TEXTAREA'].includes(target.tagName)) {
                         target.selectionStart = target.selectionEnd = target.value.length;
                     }
                 }
-                component.__willFocus = null;
+                willFocus = null;
             }
         }
 
@@ -33,7 +33,7 @@ odoo.define('web.custom_hooks', function () {
         onPatched(_focusSelector);
 
         return function focusOnUpdate(selector = '[autofocus]') {
-            component.__willFocus = selector;
+            willFocus = selector;
         };
     }
 
