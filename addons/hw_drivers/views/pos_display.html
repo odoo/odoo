@@ -60,7 +60,7 @@
                 <tbody>
                     {% for display_iface in display_ifaces -%}
                         <tr>
-                            <td><i class="fa fa-{{ display_iface.icon }}"></i></td>
+                            <td><i class="fa fa-{{ display_iface.icon }}"/> {{ display_iface.essid }}</td>
                             <td>{{ display_iface.addr }}</td>
                         </tr>
                     {%- endfor %}

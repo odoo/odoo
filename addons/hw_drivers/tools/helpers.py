@@ -129,6 +129,9 @@ def get_mac_address():
         return netifaces.ifaddresses('wlan0')[netifaces.AF_LINK][0]['addr']
 
 def get_ssid():
+    ap = subprocess.call(['systemctl', 'is-active', 'hostapd']) # if service is active return 0 else inactive
+    if not ap:
+        return subprocess.check_output(['grep', '-oP', '(?<=ssid=).*', '/etc/hostapd/hostapd.conf']).decode('utf-8').rstrip()
     process_iwconfig = subprocess.Popen(['iwconfig'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     process_grep = subprocess.Popen(['grep', 'ESSID:"'], stdin=process_iwconfig.stdout, stdout=subprocess.PIPE)
     return subprocess.check_output(['sed', 's/.*"\\(.*\\)"/\\1/'], stdin=process_grep.stdout).decode('utf-8').rstrip()
