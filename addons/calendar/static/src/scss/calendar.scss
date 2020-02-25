@@ -3,13 +3,14 @@
     width: 10px;
     height: 10px;
     border-radius: 5px;
+    vertical-align: middle;
 
     &.accepted {
         background-color: theme-color('success');
     }
 
-    &.needsAction {
-        background-color: $o-brand-secondary;
+    &.tentative {
+        background-color: $o-main-color-muted;
     }
 
     &.declined {
