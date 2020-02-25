@@ -262,6 +262,7 @@ class SaleOrderLine(models.Model):
         grouped_lines = defaultdict(lambda: self.env['sale.order.line'])
         # We first loop over the SO lines to group them by warehouse and schedule
         # date in order to batch the read of the quantities computed field.
+        now = fields.Datetime.now()
         for line in self:
             if not line.display_qty_widget:
                 continue
@@ -269,7 +270,7 @@ class SaleOrderLine(models.Model):
             if line.order_id.commitment_date:
                 date = line.order_id.commitment_date
             else:
-                confirm_date = line.order_id.date_order if line.order_id.state in ['sale', 'done'] else datetime.now()
+                confirm_date = line.order_id.date_order if line.order_id.state in ['sale', 'done'] else now
                 date = confirm_date + timedelta(days=line.customer_lead or 0.0)
             grouped_lines[(line.warehouse_id.id, date)] |= line
 
