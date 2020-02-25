@@ -134,8 +134,7 @@ odoo.define('point_of_sale.DebugWidget', function(require) {
             const file = event.target.files[0];
             if (file) {
                 const report = this.env.pos.import_orders(await getFileAsText(file));
-                // TODO jcb: popups doesn't work yet.
-                // this.props.gui.show_popup('orderimport', { report });
+                await this.showPopup('OrderImportPopup', { report });
             }
         }
         refreshDisplay() {
