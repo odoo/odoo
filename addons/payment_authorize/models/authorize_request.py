@@ -3,6 +3,7 @@ import json
 import logging
 import requests
 
+from collections import OrderedDict
 from uuid import uuid4
 
 from odoo import _
@@ -72,37 +73,37 @@ class AuthorizeAPI():
                  newly created customer profile and payment profile
         :rtype: dict
         """
-        values = {
-            'createCustomerProfileRequest': {
-                'merchantAuthentication': {
-                    'name': self.name,
-                    'transactionKey': self.transaction_key
-                },
-                'profile': {
-                    'description': ('ODOO-%s-%s' % (partner.id, uuid4().hex[:8]))[:20],
-                    'email': partner.email or '',
-                    'paymentProfiles': {
-                        'customerType': 'business' if partner.is_company else 'individual',
-                        'billTo': {
-                            'firstName': '' if partner.is_company else _partner_split_name(partner.name)[0],
-                            'lastName':  _partner_split_name(partner.name)[1],
-                            'address': (partner.street or '' + (partner.street2 if partner.street2 else '')) or None,
-                            'city': partner.city,
-                            'state': partner.state_id.name or None,
-                            'zip': partner.zip or '',
-                            'country': partner.country_id.name or None
-                        },
-                        'payment': {
-                            'opaqueData': {
-                                'dataDescriptor': opaqueData.get('dataDescriptor'),
-                                'dataValue': opaqueData.get('dataValue')
-                            }
-                        }
-                    }
-                },
-                'validationMode': 'liveMode' if self.state == 'enabled' else 'testMode'
-            }
-        }
+        values = OrderedDict([
+            ('createCustomerProfileRequest', [
+                ('merchantAuthentication', [
+                    ('name', self.name),
+                    ('transactionKey', self.transaction_key),
+                ]),
+                ('profile', [
+                    ('description', ('ODOO-%s-%s' % (partner.id, uuid4().hex[:8]))[:20]),
+                    ('email', partner.email or ''),
+                    ('paymentProfiles', [
+                        ('customerType', 'business' if partner.is_company else 'individual'),
+                        ('billTo', [
+                            ('firstName', '' if partner.is_company else _partner_split_name(partner.name)[0]),
+                            ('lastName',  _partner_split_name(partner.name)[1]),
+                            ('address', (partner.street or '' + (partner.street2 if partner.street2 else '')) or None),
+                            ('city', partner.city),
+                            ('state', partner.state_id.name or None),
+                            ('zip', partner.zip or ''),
+                            ('country', partner.country_id.name or None),
+                        ]),
+                        ('payment', [
+                            ('opaqueData', [
+                                ('dataDescriptor', opaqueData.get('dataDescriptor')),
+                                ('dataValue', opaqueData.get('dataValue')),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+                ('validationMode', 'liveMode' if self.state == 'enabled' else 'testMode'),
+            ]),
+        ])
 
         response = self._authorize_request(values)
 
@@ -137,19 +138,19 @@ class AuthorizeAPI():
                  last digits of the card number
         :rtype: dict
         """
-        values = {
-            'createCustomerProfileFromTransactionRequest': {
-                "merchantAuthentication": {
-                    "name": self.name,
-                    "transactionKey": self.transaction_key
-                },
-                'transId': transaction_id,
-                'customer': {
-                    'merchantCustomerId': ('ODOO-%s-%s' % (partner.id, uuid4().hex[:8]))[:20],
-                    'email': partner.email or ''
-                }
-            }
-        }
+        values = OrderedDict([
+            ('createCustomerProfileFromTransactionRequest', OrderedDict([
+                ("merchantAuthentication", OrderedDict([
+                    ("name", self.name),
+                    ("transactionKey", self.transaction_key),
+                ])),
+                ('transId', transaction_id),
+                ('customer', OrderedDict([
+                    ('merchantCustomerId', ('ODOO-%s-%s' % (partner.id, uuid4().hex[:8]))[:20]),
+                    ('email', partner.email or ''),
+                ])),
+            ])),
+        ])
 
         response = self._authorize_request(values)
 
@@ -165,16 +166,16 @@ class AuthorizeAPI():
             'payment_profile_id': response.get('customerPaymentProfileIdList')[0]
         }
 
-        values = {
-            'getCustomerPaymentProfileRequest': {
-                "merchantAuthentication": {
-                    "name": self.name,
-                    "transactionKey": self.transaction_key
-                },
-                'customerProfileId': res['profile_id'],
-                'customerPaymentProfileId': res['payment_profile_id'],
-            }
-        }
+        values = OrderedDict([
+            ('getCustomerPaymentProfileRequest', OrderedDict([
+                "merchantAuthentication", OrderedDict([
+                    ("name", self.name),
+                    ("transactionKey", self.transaction_key),
+                ]),
+                ('customerProfileId', res['profile_id']),
+                ('customerPaymentProfileId', res['payment_profile_id']),
+            ]))
+        ])
 
         response = self._authorize_request(values)
 
@@ -195,28 +196,28 @@ class AuthorizeAPI():
         :return: a dict containing the response code, transaction id and transaction type
         :rtype: dict
         """
-        values = {
-            'createTransactionRequest': {
-                "merchantAuthentication": {
-                    "name": self.name,
-                    "transactionKey": self.transaction_key
-                },
-                'transactionRequest': {
-                    'transactionType': 'authCaptureTransaction',
-                    'amount': str(amount),
-                    'profile': {
-                        'customerProfileId': token.authorize_profile,
-                        'paymentProfile': {
-                            'paymentProfileId': token.acquirer_ref,
-                        }
-                    },
-                    'order': {
-                        'invoiceNumber': reference[:20]
-                    }
-                }
+        values = OrderedDict([
+            ('createTransactionRequest', OrderedDict([
+                ("merchantAuthentication", OrderedDict([
+                    ("name", self.name),
+                    ("transactionKey", self.transaction_key),
+                ])),
+                ('transactionRequest', OrderedDict([
+                    ('transactionType', 'authCaptureTransaction'),
+                    ('amount', str(amount)),
+                    ('profile', OrderedDict([
+                        ('customerProfileId', token.authorize_profile),
+                        ('paymentProfile', OrderedDict([
+                            ('paymentProfileId', token.acquirer_ref),
+                        ])),
+                    ])),
+                    'order', OrderedDict([
+                        'invoiceNumber', reference[:20],
+                    ]),
+                ])),
 
-            }
-        }
+            ])),
+        ])
         response = self._authorize_request(values)
 
         if response and response.get('err_code'):
@@ -244,28 +245,28 @@ class AuthorizeAPI():
         :return: a dict containing the response code, transaction id and transaction type
         :rtype: dict
         """
-        values = {
-            'createTransactionRequest': {
-                "merchantAuthentication": {
-                    "name": self.name,
-                    "transactionKey": self.transaction_key
-                },
-                'transactionRequest': {
-                    'transactionType': 'authOnlyTransaction',
-                    'amount': str(amount),
-                    'profile': {
-                        'customerProfileId': token.authorize_profile,
-                        'paymentProfile': {
-                            'paymentProfileId': token.acquirer_ref,
-                        }
-                    },
-                    'order': {
-                        'invoiceNumber': reference[:20]
-                    }
-                }
+        values = OrderedDict([
+            ('createTransactionRequest', OrderedDict([
+                ("merchantAuthentication", OrderedDict([
+                    ("name", self.name),
+                    ("transactionKey", self.transaction_key),
+                ])),
+                ('transactionRequest', OrderedDict([
+                    ('transactionType', 'authOnlyTransaction'),
+                    ('amount', str(amount)),
+                    ('profile', OrderedDict([
+                        ('customerProfileId', token.authorize_profile),
+                        ('paymentProfile', OrderedDict([
+                            ('paymentProfileId', token.acquirer_ref),
+                        ])),
+                    ])),
+                    'order', OrderedDict([
+                        'invoiceNumber', reference[:20],
+                    ]),
+                ])),
 
-            }
-        }
+            ])),
+        ])
         response = self._authorize_request(values)
 
         if response and response.get('err_code'):
@@ -293,19 +294,19 @@ class AuthorizeAPI():
         :return: a dict containing the response code, transaction id and transaction type
         :rtype: dict
         """
-        values = {
-            'createTransactionRequest': {
-                "merchantAuthentication": {
-                    "name": self.name,
-                    "transactionKey": self.transaction_key
-                },
-                'transactionRequest': {
-                    'transactionType': 'priorAuthCaptureTransaction',
-                    'refTransId': transaction_id,
-                    'amount': str(amount)
-                }
-            }
-        }
+        values = OrderedDict([
+            ('createTransactionRequest', OrderedDict([
+                ("merchantAuthentication", OrderedDict([
+                    ("name", self.name),
+                    ("transactionKey", self.transaction_key),
+                ])),
+                ('transactionRequest', OrderedDict([
+                    ('transactionType', 'priorAuthCaptureTransaction'),
+                    ('amount', str(amount)),
+                    ('refTransId', transaction_id),
+                ])),
+            ])),
+        ])
 
         response = self._authorize_request(values)
 
@@ -330,18 +331,18 @@ class AuthorizeAPI():
         :return: a dict containing the response code, transaction id and transaction type
         :rtype: dict
         """
-        values = {
-            'createTransactionRequest': {
-                "merchantAuthentication": {
-                    "name": self.name,
-                    "transactionKey": self.transaction_key
-                },
-                'transactionRequest': {
-                    'transactionType': 'voidTransaction',
-                    'refTransId': transaction_id
-                }
-            }
-        }
+        values = OrderedDict([
+            ('createTransactionRequest', OrderedDict([
+                ("merchantAuthentication", OrderedDict([
+                    ("name", self.name),
+                    ("transactionKey", self.transaction_key),
+                ])),
+                ('transactionRequest', OrderedDict([
+                    ('transactionType', 'voidTransaction'),
+                    ('refTransId', transaction_id),
+                ])),
+            ])),
+        ])
 
         response = self._authorize_request(values)
 
@@ -364,14 +365,14 @@ class AuthorizeAPI():
         :return: True if authentication was successful, else False (or throws an error)
         :rtype: bool
         """
-        values = {
-            'authenticateTestRequest': {
-                "merchantAuthentication": {
-                    "name": self.name,
-                    "transactionKey": self.transaction_key
-                },
-            }
-        }
+        values = OrderedDict([
+            ("authenticateTestRequest", OrderedDict([
+                ("merchantAuthentication", OrderedDict([
+                    ("name", self.name),
+                    ("transactionKey", self.transaction_key),
+                ])),
+            ])),
+        ])
 
         response = self._authorize_request(values)
         if response and response.get('err_code'):
@@ -381,14 +382,14 @@ class AuthorizeAPI():
     # Client Key
     def get_client_secret(self):
         """ Create a client secret that will be needed for the AcceptJS integration. """
-        values = {
-            "getMerchantDetailsRequest": {
-                "merchantAuthentication": {
-                    "name": self.name,
-                    "transactionKey": self.transaction_key,
-                }
-            }
-        }
+        values = OrderedDict([
+            ("getMerchantDetailsRequest", OrderedDict([
+                ("merchantAuthentication", OrderedDict([
+                    ("name", self.name),
+                    ("transactionKey", self.transaction_key),
+                ])),
+            ])),
+        ])
         response = self._authorize_request(values)
         client_secret = response.get('publicClientKey')
         return client_secret
