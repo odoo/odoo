@@ -23,4 +23,6 @@ class User(models.Model):
         return self.employee_id.action_get_claim_report()
 
     def action_open_employee_cars(self):
-        return self.employee_id.action_open_employee_cars()
+        # YTI TODO: Remove sudo in master, define mobility_card field
+        # on employee public instead
+        return self.sudo().employee_id.action_open_employee_cars()
