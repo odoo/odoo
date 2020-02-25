@@ -1,7 +1,7 @@
 odoo.define('web_editor.rte', function (require) {
 'use strict';
 
-var base = require('web_editor.base');
+var base = require('wysiwyg.fonts');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Widget = require('web.Widget');
