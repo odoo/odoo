@@ -84,7 +84,7 @@ class PosPaymentMethod(models.Model):
         }
 
     @api.model
-    def proxy_adyen_request(self, data, test_mode, api_key):
+    def proxy_adyen_request(self, data, test_mode, api_key, test_endpoint=None, live_endpoint=False):
         '''Necessary because Adyen's endpoints don't have CORS enabled. This is an
         @api.model function to avoid concurrent update errors. Adyen's
         async endpoint can still take well over a second to complete a
@@ -95,9 +95,14 @@ class PosPaymentMethod(models.Model):
         pos.payment.method.
         '''
         TIMEOUT = 10
-        endpoint = 'https://terminal-api-live.adyen.com/async'
+        if not test_endpoint:
+            test_endpoint = 'https://terminal-api-test.adyen.com/async'
+        if not live_endpoint:
+            live_endpoint = 'https://terminal-api-live.adyen.com/async'
+
+        endpoint = live_endpoint
         if test_mode:
-            endpoint = 'https://terminal-api-test.adyen.com/async'
+            endpoint = test_endpoint
 
         _logger.info('request to adyen\n%s', pprint.pformat(data))
         headers = {

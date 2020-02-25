@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="pos_config_view_form_inherit" model="ir.ui.view">
+        <field name="name">pos.config.form.inherit.restaurant</field>
+        <field name="model">pos.config</field>
+        <field name="priority">15</field>  <!-- put this option first -->
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='iface_tipproduct']//div[hasclass('content-group')]" position="inside">
+                <div class="mt16">
+                    <div class="row">
+                        <field name="handle_tip_adjustments" class="col-lg-1 ml16"/>
+                        <label class="o_light_label" for="handle_tip_adjustments" string="Add tip after payment (North America specific)"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

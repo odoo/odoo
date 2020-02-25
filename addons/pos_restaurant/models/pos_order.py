@@ -122,20 +122,20 @@ class PosOrder(models.Model):
 
     def _get_fields_for_draft_order(self):
         return [
-                    'id',
-                    'pricelist_id',
-                    'partner_id',
-                    'sequence_number',
-                    'session_id',
-                    'pos_reference',
-                    'create_uid',
-                    'create_date',
-                    'customer_count',
-                    'fiscal_position_id',
-                    'table_id',
-                    'to_invoice',
-                    'multiprint_resume',
-                    ]
+            'id',
+            'pricelist_id',
+            'partner_id',
+            'sequence_number',
+            'session_id',
+            'pos_reference',
+            'create_uid',
+            'create_date',
+            'customer_count',
+            'fiscal_position_id',
+            'table_id',
+            'to_invoice',
+            'multiprint_resume',
+        ]
 
     @api.model
     def get_table_draft_orders(self, table_id):

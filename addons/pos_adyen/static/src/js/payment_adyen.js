@@ -163,6 +163,11 @@ var PaymentAdyen = PaymentInterface.extend({
         }, '');
     },
 
+    _set_notification_data_on_line: function (line, additional_response) {
+        line.transaction_id = additional_response.get('pspReference');
+        line.card_type = additional_response.get('cardType');
+    },
+
     _poll_for_response: function (resolve, reject) {
         var self = this;
         if (this.was_cancelled) {
@@ -220,8 +225,7 @@ var PaymentAdyen = PaymentInterface.extend({
                         line.set_amount(payment_result.AmountsResp.AuthorizedAmount);
                     }
 
-                    line.transaction_id = additional_response.get('pspReference');
-                    line.card_type = additional_response.get('cardType');
+                    self._set_notification_data_on_line(line, additional_response);
                     resolve(true);
                 } else {
                     var message = additional_response.get('message');
@@ -275,7 +279,9 @@ var PaymentAdyen = PaymentInterface.extend({
             // refactored so it calls render_paymentlines whenever a
             // paymentline changes. This way the call to
             // set_payment_status would re-render it automatically.
-            this.pos.chrome.gui.current_screen.render_paymentlines();
+            if (this.pos.chrome.gui.current_screen.render_paymentlines) {
+                this.pos.chrome.gui.current_screen.render_paymentlines();
+            }
 
             var self = this;
             var res = new Promise(function (resolve, reject) {
