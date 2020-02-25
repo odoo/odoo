@@ -233,15 +233,8 @@ class PrinterDriver(Driver):
         mac = ''
         homepage = ''
 
-        hosting_ap = os.system('pgrep hostapd') == 0
         ssid = helpers.get_ssid()
-        if hosting_ap:
-            with open('/root_bypass_ramdisks/etc/hostapd/hostapd.conf') as config_file:
-                lines = config_file.readlines()
-            ssid = lines[1].split("=")[1].replace("\n", "")
-            wlan = '\nWireless network:\n%s\n\n' % ssid
-        elif ssid:
-            wlan = '\nWireless network:\n%s\n\n' % ssid
+        wlan = '\nWireless network:\n%s\n\n' % ssid
 
         interfaces = ni.interfaces()
         ips = []
