@@ -1,54 +1,80 @@
-odoo.define('website.s_share', function (require) {
-'use strict';
+/** @odoo-module */
 
-const publicWidget = require('web.public.widget');
+import publicWidget from 'web.public.widget';
 
 const ShareWidget = publicWidget.Widget.extend({
     selector: '.s_share, .oe_share', // oe_share for compatibility
+    events: {
+        'click a': '_onShareLinkClick',
+    },
 
     /**
      * @override
      */
-    start: function () {
-        const urlRegex = /(\?(?:|.*&)(?:u|url|body)=)(.*?)(&|#|$)/;
-        const titleRegex = /(\?(?:|.*&)(?:title|text|subject|description)=)(.*?)(&|#|$)/;
-        const mediaRegex = /(\?(?:|.*&)(?:media)=)(.*?)(&|#|$)/;
+    async start() {
+        this.URL_REGEX = /(\?(?:|.*&)(?:u|url|body)=)(.*?)(&|#|$)/;
+        this.TITLE_REGEX = /(\?(?:|.*&)(?:title|text|subject|description)=)(.*?)(&|#|$)/;
+        this.MEDIA_REGEX = /(\?(?:|.*&)(?:media)=)(.*?)(&|#|$)/;
+
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Everything is done on click here (even changing the href) as the URL we
+     * want to share may be updated during the page use (like when updating
+     * variant on a product page then clicking on a share link).
+     *
+     * @private
+     */
+    _onShareLinkClick(ev) {
+        const aEl = ev.currentTarget;
+        const currentHref = aEl.href;
+
+        // Try and support old use of share snippet as a social link snippet:
+        // if the URL does not look like a sharer, then do nothing. This
+        // obviously won't cover all cases (people may have added URL that look
+        // like sharer but are not but in that case, it was probably already
+        // broken before).
+        if (!this.URL_REGEX.test(currentHref)
+                && !this.TITLE_REGEX.test(currentHref)
+                && !this.MEDIA_REGEX.test(currentHref)) {
+            return;
+        }
+
+        ev.preventDefault();
+        ev.stopPropagation();
+
         const url = encodeURIComponent(window.location.href);
-        const title = encodeURIComponent($('title').text());
-        const media = encodeURIComponent($('meta[property="og:image"]').attr('content'));
+        const title = encodeURIComponent(document.title);
+        const media = encodeURIComponent(document.querySelector('meta[property="og:image"]').content);
 
-        this.$('a').each((index, element) => {
-            const $a = $(element);
-            $a.attr('href', (i, href) => {
-                return href.replace(urlRegex, (match, a, b, c) => {
-                    return a + url + c;
-                }).replace(titleRegex, function (match, a, b, c) {
-                    if ($a.hasClass('s_share_whatsapp')) {
-                        // WhatsApp does not support the "url" GET parameter.
-                        // Instead we need to include the url within the passed "text" parameter, merging everything together.
-                        // e.g of output:
-                        // https://wa.me/?text=%20OpenWood%20Collection%20Online%20Reveal%20%7C%20My%20Website%20http%3A%2F%2Flocalhost%3A8888%2Fevent%2Fopenwood-collection-online-reveal-2021-06-21-2021-06-23-8%2Fregister
-                        // see https://faq.whatsapp.com/general/chats/how-to-use-click-to-chat/ for more details
-                        return a + title + url + c;
-                    }
-                    return a + title + c;
-                }).replace(mediaRegex, (match, a, b, c) => {
-                    return a + media + c;
-                });
+        aEl.href = currentHref
+            .replace(this.URL_REGEX, (match, a, b, c) => {
+                return a + url + c;
+            })
+            .replace(this.TITLE_REGEX, function (match, a, b, c) {
+                if (aEl.classList.contains('s_share_whatsapp')) {
+                    // WhatsApp does not support the "url" GET parameter.
+                    // Instead we need to include the url within the passed "text"
+                    // parameter, merging everything together, e.g of output:
+                    // https://wa.me/?text=%20OpenWood%20Collection%20Online%20Reveal%20%7C%20My%20Website%20http%3A%2F%2Flocalhost%3A8888%2Fevent%2Fopenwood-collection-online-reveal-2021-06-21-2021-06-23-8%2Fregister
+                    // For more details, see https://faq.whatsapp.com/general/chats/how-to-use-click-to-chat/
+                    return a + title + url + c;
+                }
+                return a + title + c;
+            })
+            .replace(this.MEDIA_REGEX, (match, a, b, c) => {
+                return a + media + c;
             });
-            if ($a.attr('target') && $a.attr('target').match(/_blank/i) && !$a.closest('.o_editable').length) {
-                $a.on('click', function () {
-                    window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
-                    return false;
-                });
-            }
-        });
 
-        return this._super.apply(this, arguments);
+        window.open(aEl.href, aEl.target, 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
     },
 });
 
 publicWidget.registry.share = ShareWidget;
 
-return ShareWidget;
-});
+export default ShareWidget;
