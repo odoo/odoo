@@ -328,10 +328,14 @@ var DocumentThread = Thread.extend({
         var resID = this.getDocumentID();
         return this._super.apply(this, arguments)
             .then(function (messageData) {
+                var lastMessageSubtype = "mail.mt_comment"
+                if (self._messages.length) {
+                    lastMessageSubtype = self._messages[self._messages.length -1]._isNote ? "mail.mt_note" : "mail.mt_comment";
+                }
                 _.extend(messageData, {
                     context: data.context,
                     message_type: data.message_type,
-                    subtype: data.subtype || "mail.mt_comment",
+                    subtype: data.subtype || lastMessageSubtype,
                     subtype_id: data.subtype_id,
                 });
                 return self._rpc({
