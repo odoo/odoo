@@ -645,6 +645,9 @@ class TestSaleStock(TestSale):
         self.assertEqual(line.warehouse_id, warehouse1)
         self.assertEqual(line.qty_to_deliver, 1)
         so.warehouse_id = warehouse2
+        # invalidate product cache to ensure qty_available is recomputed
+        # bc warehouse isn't in the depends_context of qty_available
+        line.product_id.invalidate_cache()
         self.assertEqual(line.virtual_available_at_date, 5)
         self.assertEqual(line.free_qty_today, 5)
         self.assertEqual(line.qty_available_today, 5)
