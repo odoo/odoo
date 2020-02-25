@@ -4,7 +4,7 @@
     <t t-name="OrderSelector" owl="1">
         <div class="order-selector">
             <span class="orders touch-scrollable">
-                <t t-foreach="env.pos.get_order_list()" t-as="order" t-key="order.uid">
+                <t t-foreach="env.pos.get_order_list()" t-as="order" t-key="order.cid">
                     <t t-if="order === env.pos.get_order()">
                         <span class="order-button select-order selected">
                             <span class="order-sequence">
