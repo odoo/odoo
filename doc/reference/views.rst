@@ -939,12 +939,14 @@ take the following attributes:
   name of the field that describes if the task has to be excluded
   from the consolidation
   if set to true it displays a striped zone in the consolidation line
-``create``, ``edit``, ``delete``, ``plan``
+``create``, ``cell_create``, ``edit``, ``delete``, ``plan``
     allows *dis*\ abling the corresponding action in the view by setting the
-    corresponding attribute to ``false``.
+    corresponding attribute to ``false`` (default: ``true``).
 
-    * ``create``: If enabled, a "**+**" button will be displayed
-      while hovering on a time slot to create a new record in that slots.
+    * ``create``: If enabled, an ``Add`` button will be available in the control
+      panel to create records.
+    * ``cell_create``: If enabled and ``create`` enabled, a "**+**" button will be
+      displayed while hovering on a time slot cell to create a new record on that slot.
     * ``edit``: If enabled, the opened records will be in edit mode (thus editable).
     * ``plan``: If enabled and ``edit`` enabled, a "magnifying glass" button will be displayed
       on time slots to plan unassigned records into that time slot.
