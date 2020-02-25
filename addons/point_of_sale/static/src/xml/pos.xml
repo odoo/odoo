@@ -86,27 +86,6 @@
         </div>
     </t>
 
-    <t t-name="SyncErrorPopupWidget">
-        <div role="dialog" class="modal-dialog">
-            <div class="popup popup-error">
-                <header class="title">
-                    <t t-esc=" widget.options.title || 'Error' " />
-                </header>
-                <main class="body traceback">
-                    <t t-esc=" widget.options.body || '' " />
-                </main>
-                <footer class="footer">
-                    <div class="button cancel">
-                        Ok
-                    </div>
-                    <div class="button stop_showing_sync_errors">
-                        Don't show again
-                    </div>
-                </footer>
-            </div>
-        </div>
-    </t>
-
     <t t-name="CustomerFacingDisplayHead">
         <div class="resources">
             <base t-att-href="origin" />
