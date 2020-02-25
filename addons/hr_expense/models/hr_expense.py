@@ -561,7 +561,7 @@ class HrExpense(models.Model):
         product_code = expense_description.split(' ')[0]
         product = self.env['product.product'].search([('can_be_expensed', '=', True), ('default_code', '=ilike', product_code)], limit=1)
         if product:
-            expense_description = expense_description.replace(product_code, '')
+            expense_description = expense_description.replace(product_code, '', 1)
 
         return product, expense_description
 
