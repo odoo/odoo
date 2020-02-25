@@ -207,6 +207,16 @@ class WebsiteSale(http.Controller):
         '''/shop/category/<model("product.public.category"):category>/page/<int:page>'''
     ], type='http', auth="public", website=True, sitemap=sitemap_shop)
     def shop(self, page=0, category=None, search='', ppg=False, **post):
+        values = self._get_shop_qcontext(page, category, search, ppg, **post)
+        if category:
+            values['main_object'] = category
+        return request.render("website_sale.products", values)
+
+    def _get_shop_qcontext(self, page=0, category=None, search='', ppg=False, **post):
+        """
+        Prepares values that used to render product grid/list in the shop.
+        """
+
         add_qty = int(post.get('add_qty', 1))
         Category = request.env['product.public.category']
         if category:
@@ -279,7 +289,16 @@ class WebsiteSale(http.Controller):
             else:
                 layout_mode = 'grid'
 
-        values = {
+        params = {
+            **post,
+            'page': page,
+            'category': category and category.id or None,
+            'search': search,
+            'ppg': ppg,
+            'ppr': ppr
+        }
+        shop_context = {'data-' + k: params[k] for k in params if params[k]}
+        return {
             'search': search,
             'category': category,
             'attrib_values': attrib_values,
@@ -297,10 +316,8 @@ class WebsiteSale(http.Controller):
             'keep': keep,
             'search_categories_ids': search_categories.ids,
             'layout_mode': layout_mode,
+            'shop_context': shop_context,
         }
-        if category:
-            values['main_object'] = category
-        return request.render("website_sale.products", values)
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
     def product(self, product, category='', search='', **kwargs):
@@ -1100,6 +1117,14 @@ class WebsiteSale(http.Controller):
     @http.route(['/shop/change_ppr'], type='json', auth='user')
     def change_ppr(self, ppr):
         request.env['website'].get_current_website().shop_ppr = ppr
+
+    @http.route(['/shop/render_grid'], type='json', auth='user', website=True)
+    def render_grid(self, shop_context={}):
+        if shop_context.get('category'):
+            shop_context['category'] = request.env['product.public.category'].browse(shop_context['category'])
+        shop_context.pop('ppg')
+        values = self._get_shop_qcontext(**shop_context)
+        return request.env['ir.ui.view'].render_template("website_sale.product_grid", values)
 
     def order_lines_2_google_api(self, order_lines):
         """ Transforms a list of order lines into a dict for google analytics """

@@ -56,9 +56,11 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var options = require('web_editor.snippets.options');
 var publicWidget = require('web.public.widget');
+var editorMenu = require('website.editor.menu');
 
 var _t = core._t;
 var qweb = core.qweb;
+var showConfirmDialog = true;
 
 publicWidget.registry.websiteSaleCurrency = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
@@ -79,15 +81,74 @@ publicWidget.registry.websiteSaleCurrency = publicWidget.Widget.extend({
     },
 });
 
-function reload() {
-    if (window.location.href.match(/\?enable_editor/)) {
-        window.location.reload();
-    } else {
-        window.location.href = window.location.href.replace(/\?(enable_editor=1&)?|#.*|$/, '?enable_editor=1&');
-    }
-}
+var shopGridOptionsCommon = {
+    /**
+     * Displays confirmation dialog  if the user tries to change product grid.
+     *
+     * @private
+     * @param {function} callback - the action to do on dialog confirmation
+     * @returns {Promise}
+     */
+    _confirmWithDialogThen: function (callback) {
+        var self = this;
 
-options.registry.WebsiteSaleGridLayout = options.Class.extend({
+        function doThenUpdateShopGrid() {
+            return Promise.resolve(callback.call(self)).then(function () {
+                self.trigger_up('deactivate_snippet');
+                return self._updateShopGrid();
+            });
+        }
+
+        return new Promise(function (resolve, reject) {
+            if (showConfirmDialog) {
+                Dialog.confirm(this, undefined, {
+                    $content: $(qweb.render('website_sale.dialog_confirmation')),
+                    'confirm_callback': function () {
+                        showConfirmDialog = !this.$('#dialogShow').is(":checked");
+                        return doThenUpdateShopGrid().then(resolve).guardedCatch(reject);
+                    },
+                    'cancel_callback': resolve,
+                });
+            } else {
+                doThenUpdateShopGrid().then(resolve).guardedCatch(reject);
+            }
+        });
+    },
+    /**
+     * @private
+     * @param {jQuery} $productGrid
+     */
+    _getShopContext: function ($productGrid) {
+        return _.pick($productGrid.children('.table').data(), function (value) {
+            return _.isNumber(value) || _.isString(value);
+        });
+    },
+    /**
+     * @private
+     */
+    _updateShopGrid: function () {
+        var self = this;
+        var $productGrid = this.$target.closest('#wsale_product_grid');
+        return this._rpc({
+            route: '/shop/render_grid',
+            params: {
+                'shop_context': this._getShopContext($productGrid),
+            },
+        }).then(function (grid_body) {
+            var $shopGrid = $(grid_body);
+            self.trigger_up('force_destroy', {
+                $el: $productGrid
+            });
+            self.trigger_up('make_editable', {
+                $el: $shopGrid,
+                reloadOnCancel: true,
+            });
+            $productGrid.replaceWith($shopGrid);
+        });
+    }
+};
+
+options.registry.WebsiteSaleGridLayout = options.Class.extend(shopGridOptionsCommon, {
     xmlDependencies: ['/website_sale/static/src/xml/website_sale.editor.xml'],
 
     /**
@@ -119,24 +180,28 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
             return false;
         }
         this.ppg = ppg;
-        return this._rpc({
-            route: '/shop/change_ppg',
-            params: {
-                'ppg': ppg,
-            },
-        }).then(() => reload());
+        return this._confirmWithDialogThen(() => {
+            return this._rpc({
+                route: '/shop/change_ppg',
+                params: {
+                    'ppg': this.ppg,
+                },
+            });
+        });
     },
     /**
      * @see this.selectClass for params
      */
     setPpr: function (previewMode, widgetValue, params) {
         this.ppr = parseInt(widgetValue);
-        this._rpc({
-            route: '/shop/change_ppr',
-            params: {
-                'ppr': this.ppr,
-            },
-        }).then(reload);
+        return this._confirmWithDialogThen(() => {
+            return this._rpc({
+                route: '/shop/change_ppr',
+                params: {
+                    'ppr': this.ppr,
+                },
+            })
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -159,7 +224,8 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     },
 });
 
-options.registry.WebsiteSaleProductsItem = options.Class.extend({
+options.registry.WebsiteSaleProductsItem = options.Class.extend(shopGridOptionsCommon, {
+    xmlDependencies: ['/website_sale/static/src/xml/website_sale.editor.xml'],
     events: _.extend({}, options.Class.prototype.events || {}, {
         'mouseenter .o_wsale_soptions_menu_sizes table': '_onTableMouseEnter',
         'mouseleave .o_wsale_soptions_menu_sizes table': '_onTableMouseLeave',
@@ -205,13 +271,15 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @see this.selectClass for params
      */
     changeSequence: function (previewMode, widgetValue, params) {
-        this._rpc({
-            route: '/shop/change_sequence',
-            params: {
-                id: this.productTemplateID,
-                sequence: widgetValue,
-            },
-        }).then(reload);
+        return this._confirmWithDialogThen(() => {
+            return this._rpc({
+                route: '/shop/change_sequence',
+                params: {
+                    id: this.productTemplateID,
+                    sequence: widgetValue
+                },
+            });
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -312,14 +380,16 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         var $td = $(ev.currentTarget);
         var x = $td.index() + 1;
         var y = $td.parent().index() + 1;
-        this._rpc({
-            route: '/shop/change_size',
-            params: {
-                id: this.productTemplateID,
-                x: x,
-                y: y,
-            },
-        }).then(reload);
+        return this._confirmWithDialogThen(function () {
+            return this._rpc({
+                route: '/shop/change_size',
+                params: {
+                    id: this.productTemplateID,
+                    x: x,
+                    y: y,
+                },
+            });
+        });
     },
 });
 
@@ -382,4 +452,36 @@ options.registry.ProductsSearchBar = options.Class.extend({
         }).open();
     },
 });
+
+editorMenu.include({
+    custom_events: _.extend({}, editorMenu.prototype.custom_events || {}, {
+        'make_editable': '_onMakeEditable',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    cancel: function (reload) {
+        return this._super(this.reloadOnCancel || reload);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     *
+     * @private
+     */
+    _onMakeEditable: function (ev) {
+        var $el = ev.data.$el;
+        this.reloadOnCancel = ev.data.reloadOnCancel;
+        this.editable($el).addClass('o_editable');
+    },
+});
+
 });
