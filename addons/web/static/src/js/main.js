@@ -1,4 +1,5 @@
 odoo.define('web.web_client', function (require) {
+    "use strict";
 
     const env = require('web.env');
     const session = require("web.session");

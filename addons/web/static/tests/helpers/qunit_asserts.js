@@ -11,7 +11,7 @@ odoo.define('web.qunit_asserts', function (require) {
      * matches exactly one element.
      */
 
-    var Widget = require('web.Widget');
+    const Widget = require('web.Widget');
 
     //-------------------------------------------------------------------------
     // Private functions
@@ -56,8 +56,8 @@ odoo.define('web.qunit_asserts', function (require) {
      */
     function _checkVisible(w, shouldBeVisible, msg) {
         if (w instanceof jQuery && w.length !== 1) {
-            const assertion = shouldHaveClass ? 'hasClass' : 'doesNotHaveClass';
-            QUnit.assert.ok(false, `Assertion '${assertion} ${className}' targets ${w.length} elements instead of 1`);
+            const assertion = shouldBeVisible ? 'isVisible' : 'isNotVisible';
+            QUnit.assert.ok(false, `Assertion '${assertion}' targets ${w.length} elements instead of 1`);
         }
 
         const el = w instanceof Widget || w instanceof owl.Component ? w.el :
@@ -184,12 +184,12 @@ odoo.define('web.qunit_asserts', function (require) {
      * @param {string} [msg]
      */
     function hasAttrValue(w, attr, value, msg) {
-        var $el = w instanceof Widget ? w.$el :
+        const $el = w instanceof Widget ? w.$el :
             w instanceof HTMLElement ? $(w) :
                 w;  // jquery element
 
         if ($el.length !== 1) {
-            var descr = `hasAttrValue (${attr}: ${value})`;
+            const descr = `hasAttrValue (${attr}: ${value})`;
             QUnit.assert.ok(false,
                 `Assertion '${descr}' targets ${$el.length} elements instead of 1`
             );

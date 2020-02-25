@@ -465,7 +465,7 @@ function intercept(widget, eventName, fn, propagate) {
  * @param {integer} hours the digits for hours (24h)
  * @param {integer} minutes
  * @param {integer} seconds
- * @returns {function} a callback to unpatch window.Date.
+ * @returns {Function} a callback to unpatch window.Date.
  */
 function patchDate(year, month, day, hours, minutes, seconds) {
     var RealDate = window.Date;
