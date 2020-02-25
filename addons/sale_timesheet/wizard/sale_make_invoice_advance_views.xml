@@ -9,8 +9,9 @@
                 <field name="date_invoice_timesheet" class="oe_inline" string="Invoice Timesheets up to" data-toggle="tooltip" data-placement="bottom"
                     title="Only timesheets not yet invoiced (and validated, if applicable) up to this date included will be invoiced. If no date is indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction."
                     attrs="{
-                        'invisible': [
+                        'invisible': [ '|',
                             ('invoicing_timesheet_enabled', '=', False),
+                            ('advance_payment_method', '!=', 'delivered'),
                         ]
                     }"
                 />
