@@ -1,0 +1,64 @@
+@include media-breakpoint-down(sm) {
+    .o_kanban_view.o_kanban_grouped {
+        display: block;
+        position: relative;
+        overflow-x: hidden;
+        &.o_renderer_with_searchpanel {
+            width: 100%;
+        }
+
+        .o_kanban_mobile_tabs {
+            display:flex;
+            width: 100%;
+            height: $o-kanban-mobile-tabs-height;
+            position: relative;
+            overflow-x: auto;
+            background-color: #5E5E5E;
+
+            .o_kanban_mobile_tab {
+                height: $o-kanban-mobile-tabs-height;
+                padding: 10px 20px;
+                font-size: 14px;
+                color: white;
+
+                &.o_current {
+                    font-weight: bold;
+                    border-bottom: 3px solid $o-brand-primary;
+                }
+                .o_column_title {
+                    white-space: nowrap;
+                    text-transform: uppercase;
+                }
+            }
+        }
+
+        // [class] to get same specificity as elsewhere (kanban_view.less)
+        &[class] .o_kanban_group:not(.o_column_folded) {
+            @include o-position-absolute($top: $o-kanban-mobile-tabs-height, $left: 0, $bottom: 0);
+            width: 100%;
+            padding: 0;
+            margin-left: 0; // override the margin-left: -1px of the desktop mode
+            border: none;
+
+            &.o_current {
+                position: inherit;
+                top: 0;
+
+                &.o_kanban_no_records {
+                    // set a default height for clarity when embedded in another view
+                    min-height: $o-kanban-mobile-empty-height;
+                }
+            }
+
+            .o_kanban_header {
+                display: none;
+            }
+            .o_kanban_record, .o_kanban_quick_create {
+                border: none;
+                border-bottom: 1px solid lightgray;
+                padding: 10px 16px;
+                margin: 0;
+            }
+        }
+    }
+}
