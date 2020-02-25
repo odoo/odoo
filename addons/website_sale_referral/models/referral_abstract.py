@@ -51,11 +51,9 @@ class ReferralAbstract(models.AbstractModel):
     def _get_referral_statuses(self, utm_source_id, referred_email=None):
         referrals = self._get_referrals(utm_source_id, referred_email)
         statuses = {k: v._get_state_for_referral() for k, v in referrals.items()}
-
         if referred_email:
             return statuses.get(referred_email, None)
-        else:
-            return statuses
+        return statuses
 
     @api.model
     def _get_referral_infos(self, utm_source_id):
@@ -71,13 +69,14 @@ class ReferralAbstract(models.AbstractModel):
 
         return infos
 
+    # Maybe find another name
     def _check_referral_progress(self, old_state, new_state):
         self.ensure_one()
         if new_state == old_state or not self.referred_email:
             return
 
         others_deserve_reward = self._find_other_referrals(self.source_id, referred_email=self.referred_email, deserve_reward=True)
-        if len(others_deserve_reward):
+        if others_deserve_reward:
             return
 
         referral_tracking = self._get_referral_tracking()
@@ -95,8 +94,8 @@ class ReferralAbstract(models.AbstractModel):
             })
             mail.send()
 
-            responsible_id = self.env.company.responsible_id or SUPERUSER_ID
-            activity = self.activity_schedule(
+            responsible_id = self.env.company.responsible_id.id or SUPERUSER_ID
+            self.activity_schedule(
                 act_type_xmlid='website_sale_referral.mail_act_data_referral_reward',
                 summary='The referrer for this lead deserves a reward',
                 user_id=responsible_id)

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, fields, api
+
 from ast import literal_eval
-from odoo.osv import expression
+from odoo import models, fields, api
 
 
 class Lead(models.Model):
     _name = 'crm.lead'
-    _inherit = ['crm.lead', 'referral.abstract', 'mail.activity.mixin']
+    _inherit = ['crm.lead', 'referral.abstract']
 
     referred_email = fields.Char(related='email_from')
     referred_name = fields.Char(related='contact_name')
@@ -16,42 +16,41 @@ class Lead(models.Model):
     def _get_state_for_referral(self):
         self.ensure_one()
         first_stage = self.env['crm.stage'].search([], limit=1).id
+        # YTI FIXME call _stage_find with the lead.team_id instead
         if not self.active and self.probability == 0:
             return 'cancel'
-        elif self.type == 'lead' or self.stage_id.id == first_stage:
+        if self.type == 'lead' or self.stage_id.id == first_stage:
             return 'new'
-        elif self.stage_id.is_won:
+        if self.stage_id.is_won:
             return 'done'
         return 'in_progress'
 
     def write(self, vals):
         if self.env.user.has_group('website_crm_referral.group_lead_referral') and \
-           any([elem in vals for elem in ['stage_id', 'type', 'active', 'probability']]):
-            leads = list(filter(lambda l: l.campaign_id == self.env.ref('website_sale_referral.utm_campaign_referral') and not l.deserve_reward, self))
-            old_states = {}
-            for lead in leads:
-                old_states[lead] = lead._get_referral_statuses(lead.source_id, lead.referred_email)
+                any([elem in vals for elem in ['stage_id', 'type', 'active', 'probability']]):
+            referral_campaign = self.env.ref('website_sale_referral.utm_campaign_referral')
+            leads = self.filtered(lambda l: l.campaign_id == referral_campaign and not l.deserve_reward)
+            old_states = {lead: lead._get_referral_statuses(lead.source_id, lead.referred_email) for lead in leads}
             r = super().write(vals)
+            new_states = {lead: lead._get_referral_statuses(lead.source_id, lead.referred_email) for lead in leads}
             for lead in leads:
-                new_state = lead._get_referral_statuses(lead.source_id, lead.referred_email)
-                lead._check_referral_progress(old_states[lead], new_state)
+                lead._check_referral_progress(old_states[lead], new_states[lead])
             return r
-        else:
-            return super().write(vals)
+        return super().write(vals)
 
     @api.model_create_multi
     def create(self, vals_list):
-        for vals in vals_list:
-            if vals.get('campaign_id', None) == self.env.ref('website_sale_referral.utm_campaign_referral').id:
-                if 'user_id' not in vals:
-                    vals['user_id'] = self.env.company.salesperson_id.id
-                if 'team_id' not in vals:
-                    vals['team_id'] = self.env.company.salesteam_id.id
-
-                tags = [(6, 0, literal_eval(self.env['ir.config_parameter'].sudo().get_param('website_sale_referral.lead_tag_ids') or '[]'))]
-                if tags:
-                    if 'tag_ids' in vals:
-                        vals['tag_ids'].extend(tags)
-                    else:
-                        vals['tag_ids'] = tags
-        return super(Lead, self).create(vals)
+        res = super().create(vals_list)
+        campaign = self.env.ref('website_sale_referral.utm_campaign_referral')
+        referral_leads = res.filtered(lambda lead: lead.campaign_id == campaign)
+        if referral_leads:
+            vals = {}
+            if self.env.company.salesperson_id:
+                vals['user_id'] = self.env.company.salesperson_id.id
+            if self.env.company.salesteam_id:
+                vals['team_id'] = self.env.company.salesteam_id.id
+            tag_ids = literal_eval(self.env['ir.config_parameter'].sudo().get_param('website_sale_referral.lead_tag_ids') or '[]')
+            if tag_ids:
+                vals['tag_ids'] = [(4, tag_id) for tag_id in tag_ids]
+            referral_leads.write(vals)
+        return res

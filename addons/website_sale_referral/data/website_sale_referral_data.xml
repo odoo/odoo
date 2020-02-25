@@ -16,12 +16,13 @@
             <field name="auto_delete" eval="True"/>
             <field name="email_to">${object.referrer_email}</field>
             <field name="subject">Referral created !</field>
-            <field name="body_html"><![CDATA[
-                Dear ${ctx.get('referrer_name')}, <br/> <br/>
-                Your referral ${ctx.get('referred_name')} is registered and we hope you will be rewarded soon thanks to him/her. <br/>
-                You can track the status of the referral via this link: ${object.get_tracking_link()} <br/> ]]>
+            <field name="body_html" type="xml">
+                <span>
+                    Dear ${ctx.get('referrer_name')}, <br/> <br/>
+                    Your referral ${ctx.get('referred_name')} is registered and we hope you will be rewarded soon thanks to him/her. <br/>
+                    You can track the status of the referral via this link: ${object.get_tracking_link()}<br/>
+                </span>
             </field>
-            <field name="user_signature" eval="False"/>
         </record>
 
         <template id="referral_won_email_template">
@@ -53,5 +54,4 @@
             <field name="icon">fa-gift</field>
         </record>
      </data>
-
 </odoo>

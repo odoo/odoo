@@ -23,17 +23,13 @@ class Referral(Controller):
     @route(['/referral/register'], type='http', auth='public', method='POST', website=True)
     def referral_register(self, referrer_email, token=None, **post):
         if token:
-            referral_tracking = request.env['referral.tracking'].search([('token', '=', token)], limit=1)
+            referral_tracking = request.env['referral.tracking'].sudo().search([('token', '=', token)], limit=1)
             if referral_tracking:
                 if referral_tracking.referrer_email != referrer_email:
                     raise Forbidden()  # Mismatch between email and token
-                else:
-                    return request.redirect('/referral/' + referral_tracking.token)
+                return request.redirect('/referral/' + referral_tracking.token)
         else:
-            existing_token = True
-            while(existing_token):  # check that this token doesn't already exists
-                token = uuid.uuid4().hex[:-1]  # to avoid conflict with saas token
-                existing_token = request.env['referral.tracking'].search([('token', '=', token)], limit=1)
+            token = uuid.uuid4().hex[:-1]  # to avoid conflict with saas token
 
         utm_name = ('%s-%s') % (referrer_email, str(uuid.uuid4())[:6])
         utm_source_id = request.env['utm.source'].sudo().create({'name': utm_name})
@@ -48,7 +44,7 @@ class Referral(Controller):
 
     @route(['/referral/<string:token>'], type='http', auth='public', website=True)
     def referral(self, token, **post):
-        referral_tracking = request.env['referral.tracking'].search([('token', '=', token)], limit=1)
+        referral_tracking = request.env['referral.tracking'].sudo().search([('token', '=', token)], limit=1)
         if not referral_tracking:
             return request.not_found()  # incorrect token
 
@@ -69,7 +65,7 @@ class Referral(Controller):
                 'reward_value': reward_value,
             }
 
-        referral_tracking = request.env['referral.tracking'].search([('token', '=', token)], limit=1)
+        referral_tracking = request.env['referral.tracking'].sudo().search([('token', '=', token)], limit=1)
         if not referral_tracking:
             return request.not_found()  # incorrect token
         my_referrals = self._get_referral_infos(referral_tracking.sudo().utm_source_id)
@@ -93,10 +89,10 @@ class Referral(Controller):
         return {'link': self._get_link_tracker_url(link_tracker, post.get('channel'))}
 
     def _get_utm_source_id(self, token):
-        referral_tracking = request.env['referral.tracking'].search([('token', '=', token)], limit=1)
+        referral_tracking = request.env['referral.tracking'].sudo().search([('token', '=', token)], limit=1)
         if not referral_tracking:
             return BadRequest("Token doesn't exist")
-        return referral_tracking.sudo().utm_source_id.id
+        return referral_tracking.utm_source_id.id
 
     def _get_referral_infos(self, utm_source_id):
         return request.env['sale.order'].sudo()._get_referral_infos(utm_source_id)

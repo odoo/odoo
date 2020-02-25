@@ -6,6 +6,7 @@ from odoo import models
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
+    # Missing call to super.
     def action_invoice_paid(self):
         # OVERRIDE
         for invoice in self:

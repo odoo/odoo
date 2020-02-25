@@ -34,8 +34,7 @@ class CrmReferral(Referral):
             template.sudo().with_context(ctx).send_mail(referral_tracking.id, force_send=True)
 
             return {}
-        else:
-            return super(CrmReferral, self).referral_send(token, **post)
+        return super(CrmReferral, self).referral_send(token, **post)
 
     def _get_referral_infos(self, utm_source_id):
         # OVERRIDE
