@@ -302,8 +302,8 @@ class MailTemplate(models.Model):
                 if records_company:
                     Partner = Partner.with_context(default_company_id=records_company[res_id])
                 for mail in mails:
-                    partner_id = Partner.find_or_create(mail)
-                    partner_ids.append(partner_id)
+                    partner = Partner.find_or_create(mail)
+                    partner_ids.append(partner.id)
             partner_to = values.pop('partner_to', '')
             if partner_to:
                 # placeholders could generate '', 3, 2 due to some empty field values

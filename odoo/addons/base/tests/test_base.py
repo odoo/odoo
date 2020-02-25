@@ -76,7 +76,7 @@ SAMPLES = [
 class TestBase(TransactionCase):
 
     def _check_find_or_create(self, test_string, expected_name, expected_email, check_partner=False, should_create=False):
-        partner = self.env['res.partner'].browse(self.env['res.partner'].find_or_create(test_string))
+        partner = self.env['res.partner'].find_or_create(test_string)
         if should_create and check_partner:
             self.assertTrue(partner.id > check_partner.id, 'find_or_create failed - should have found existing')
         elif check_partner:
@@ -89,11 +89,11 @@ class TestBase(TransactionCase):
         res_partner = self.env['res.partner']
         parse = res_partner._parse_partner_name
         for text, name, mail in SAMPLES:
-            self.assertEqual((name, mail), parse(text))
+            self.assertEqual((name, mail.lower()), parse(text))
             partner_id, dummy = res_partner.name_create(text)
             partner = res_partner.browse(partner_id)
-            self.assertEqual(name or mail, partner.name)
-            self.assertEqual(mail or False, partner.email)
+            self.assertEqual(name or mail.lower(), partner.name)
+            self.assertEqual(mail.lower() or False, partner.email)
 
         # name_create supports default_email fallback
         partner = self.env['res.partner'].browse(
@@ -102,7 +102,7 @@ class TestBase(TransactionCase):
             ).name_create('"Raoulette Vachette" <Raoul@Grosbedon.fr>')[0]
         )
         self.assertEqual(partner.name, 'Raoulette Vachette')
-        self.assertEqual(partner.email, 'Raoul@Grosbedon.fr')
+        self.assertEqual(partner.email, 'raoul@grosbedon.fr')
 
         partner = self.env['res.partner'].browse(
             self.env['res.partner'].with_context(
@@ -128,7 +128,7 @@ class TestBase(TransactionCase):
         )
 
         new = self._check_find_or_create(
-            SAMPLES[1][0], SAMPLES[1][2], SAMPLES[1][2],
+            SAMPLES[1][0], SAMPLES[1][2].lower(), SAMPLES[1][2].lower(),
             check_partner=found_2, should_create=True
         )
 
