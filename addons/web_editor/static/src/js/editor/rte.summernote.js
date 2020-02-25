@@ -428,7 +428,7 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
               ($editable.data('options') && $editable.data('options').noVideos),
         },
         onSave: function (media) {
-            if(!document.body.contains(media)) {
+            if(media && !document.body.contains(media)) {
             r.insertNode(media);
             };
         },
