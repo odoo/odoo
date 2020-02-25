@@ -104,6 +104,7 @@ class account_abstract_payment(models.AbstractModel):
             or inv.account_id != invoices[0].account_id
             or inv.partner_bank_id != invoices[0].partner_bank_id
             for inv in invoices)
+        multi = multi or (len(invoices.mapped('partner_id')) == 1 and len(invoices) > 1)
 
         currency = invoices[0].currency_id
 
