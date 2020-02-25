@@ -14,17 +14,14 @@
                     <div class="button cancel" t-on-click="confirm">
                         <t t-esc="props.confirmText" />
                     </div>
-                    <a>
-                        <div class="button icon download_error_file">
-                            <i class="fa fa-arrow-down" role="img" aria-label="Download error"
-                               title="Download error"></i>
+                    <a t-att-download="tracebackFilename" t-att-href="tracebackUrl">
+                        <div class="button icon download">
+                            <i class="fa fa-download" role="img"
+                               aria-label="Download error traceback"
+                               title="Download error traceback"></i>
                         </div>
                     </a>
-                    <div class="button icon download">
-                        <i class="fa fa-download" role="img" aria-label="Download"
-                           title="Download"></i>
-                    </div>
-                    <div class="button icon email">
+                    <div class="button icon email" t-on-click="emailTraceback">
                         <i class="fa fa-paper-plane" role="img" aria-label="Send by email"
                            title="Send by email"></i>
                     </div>

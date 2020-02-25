@@ -102,27 +102,5 @@ var SyncErrorPopupWidget = ErrorPopupWidget.extend({
 });
 gui.define_popup({name:'error-sync', widget: SyncErrorPopupWidget});
 
-
-var ErrorTracebackPopupWidget = ErrorPopupWidget.extend({
-    template:'ErrorTracebackPopupWidget',
-    show: function(opts) {
-        var self = this;
-        this._super(opts);
-
-        this.$('.download').off('click').click(function(){
-            self.gui.prepare_download_link(self.options.body,
-                _t('error') + ' ' + moment().format('YYYY-MM-DD-HH-mm-ss') + '.txt',
-                '.download', '.download_error_file');
-        });
-
-        this.$('.email').off('click').click(function(){
-            self.gui.send_email( self.pos.company.email,
-                _t('IMPORTANT: Bug Report From Odoo Point Of Sale'),
-                self.options.body);
-        });
-    }
-});
-gui.define_popup({name:'error-traceback', widget: ErrorTracebackPopupWidget});
-
 return PopupWidget;
 });
