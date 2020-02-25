@@ -423,7 +423,7 @@ class Chrome extends PosComponent {
      * @param {Object} error
      */
     catchError(error) {
-        if (this.isReady) {
+        if (this.state.isReady) {
             if (error instanceof Error) {
                 this.showPopup('ErrorTracebackPopup', { title: error.message, body: error.stack });
             } else {
@@ -475,7 +475,7 @@ class Chrome extends PosComponent {
     // popup.
     show_error(error) {
         this.showPopup('ErrorTracebackPopup',{
-            'title': error.message,
+            'title': error.type,
             'body':  error.message + '\n' + error.data.debug + '\n',
         });
     }
