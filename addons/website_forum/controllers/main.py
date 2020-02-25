@@ -164,20 +164,26 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route(['/forum/<model("forum.forum"):forum>/tag', '/forum/<model("forum.forum"):forum>/tag/<string:tag_char>'], type='http', auth="public", website=True, sitemap=False)
     def tags(self, forum, tag_char=None, **post):
+        Tag = request.env['forum.tag']
         # build the list of tag first char, with their value as tag_char param Ex : [('All', 'all'), ('C', 'c'), ('G', 'g'), ('Z', z)]
         first_char_tag = forum.get_tags_first_char()
         first_char_list = [(t, t.lower()) for t in first_char_tag if t.isalnum()]
         first_char_list.insert(0, (_('All'), 'all'))
 
+        domain = [('forum_id', '=', forum.id), ('posts_count', '>', 0)]
         active_char_tag = tag_char and tag_char.lower() or 'all'
 
+        # perf issue, fixed in master, to remove in master
+        if active_char_tag == 'all' and Tag.search_count(domain) > 200:
+            redirect_url = "/forum/%s/tag/%s" % (slug(forum), first_char_list[1][1])
+            return werkzeug.utils.redirect(redirect_url, 302)
+
         # generate domain for searched tags
-        domain = [('forum_id', '=', forum.id), ('posts_count', '>', 0)]
         order_by = 'name'
         if active_char_tag and active_char_tag != 'all':
             domain.append(('name', '=ilike', tools.escape_psql(active_char_tag) + '%'))
             order_by = 'posts_count DESC'
-        tags = request.env['forum.tag'].search(domain, limit=None, order=order_by)
+        tags = Tag.search(domain, limit=None, order=order_by)
         # prepare values and render template
         values = self._prepare_user_values(forum=forum, searches={'tags': True}, **post)
 
