@@ -7,8 +7,13 @@ odoo.define('point_of_sale.AbstractAwaitablePopup', function(require) {
      */
 
     const { PosComponent } = require('point_of_sale.PosComponent');
+    const { useExternalListener } = owl.hooks;
 
     class AbstractAwaitablePopup extends PosComponent {
+        constructor() {
+            super(...arguments);
+            useExternalListener(window, 'keyup', this._cancelAtEscape);
+        }
         confirm() {
             this.props.__theOneThatWaits.resolve({ confirmed: true, payload: this.getPayload() });
             this.trigger('close-popup');
@@ -16,6 +21,11 @@ odoo.define('point_of_sale.AbstractAwaitablePopup', function(require) {
         cancel() {
             this.props.__theOneThatWaits.resolve({ confirmed: false, payload: null });
             this.trigger('close-popup');
+        }
+        _cancelAtEscape(event) {
+            if (event.key === 'Escape') {
+                this.cancel();
+            }
         }
         /**
         * TODO jcb: Establish in this docs that it is very important to override
