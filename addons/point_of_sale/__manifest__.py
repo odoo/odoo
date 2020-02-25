@@ -81,6 +81,8 @@
         'static/src/xml/ProxyStatus.xml',
         'static/src/xml/SyncNotification.xml',
         'static/src/xml/HeaderButton.xml',
+        'static/src/xml/SaleDetailsButton.xml',
+        'static/src/xml/SaleDetailsReport.xml',
         'static/src/xml/Draggable.xml',
         'static/src/xml/DraggablePart.xml',
         'static/src/xml/DebugWidget.xml',
