@@ -199,8 +199,8 @@ class SurveyInvite(models.TransientModel):
 
     def _send_mail(self, answer):
         """ Create mail specific for recipient containing notably its access token """
-        subject = self.env['mail.template']._render_template(self.subject, 'survey.user_input', answer.ids, post_process=True)[answer.id]
-        body = self.env['mail.template']._render_template(self.body, 'survey.user_input', answer.ids, post_process=True)[answer.id]
+        subject = self.env['mail.render.mixin']._render_template(self.subject, 'survey.user_input', answer.ids, post_process=True)[answer.id]
+        body = self.env['mail.render.mixin']._render_template(self.body, 'survey.user_input', answer.ids, post_process=True)[answer.id]
         # post the message
         mail_values = {
             'email_from': self.email_from,

@@ -107,8 +107,3 @@ class SMSTemplate(models.Model):
             template = self.with_context(lang=lang)
             all_bodies.update(template._render_template(template.body, self.model, rids))
         return all_bodies
-
-    @api.model
-    def _render_template(self, template_txt, model, res_ids):
-        """ Render the jinja template """
-        return self.env['mail.template']._render_template(template_txt, model, res_ids)
