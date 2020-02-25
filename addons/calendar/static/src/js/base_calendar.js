@@ -8,7 +8,7 @@ var relationalFields = require('web.relational_fields');
 var session = require('web.session');
 var WebClient = require('web.WebClient');
 
-var FieldMany2ManyTags = relationalFields.FieldMany2ManyTags;
+const FieldMany2ManyTagsAvatar = relationalFields.FieldMany2ManyTagsAvatar;
 
 var CalendarNotification = Notification.extend({
     template: "CalendarNotification",
@@ -137,7 +137,7 @@ BasicModel.include({
     },
 });
 
-var Many2ManyAttendee = FieldMany2ManyTags.extend({
+const Many2ManyAttendee = FieldMany2ManyTagsAvatar.extend({
     // as this widget is model dependant (rpc on res.partner), use it in another
     // context probably won't work
     // supportedFieldTypes: ['many2many'],
