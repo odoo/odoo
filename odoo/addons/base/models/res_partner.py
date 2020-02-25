@@ -647,16 +647,33 @@ class Partner(models.Model):
             res.append((partner.id, name))
         return res
 
-    def _parse_partner_name(self, text, context=None):
-        """ Supported syntax:
-            - 'Raoul <raoul@grosbedon.fr>': will find name and email address
-            - otherwise: default, everything is set as the name """
-        emails = tools.email_split(text.replace(' ', ','))
-        if emails:
-            email = emails[0]
-            name = text[:text.index(email)].replace('"', '').replace('<', '').strip()
+    def _parse_partner_name(self, text):
+        """ Parse partner name (given by text) in order to find a name and an
+        email. Supported syntax:
+
+          * Raoul <raoul@grosbedon.fr>
+          * "Raoul le Grand" <raoul@grosbedon.fr>
+          * Raoul raoul@grosbedon.fr (strange fault tolerant support from df40926d2a57c101a3e2d221ecfd08fbb4fea30e)
+
+        Otherwise: default, everything is set as the name. Starting from 13.3
+        returned email will be normalized to have a coherent encoding.
+         """
+        name, email = '', ''
+        split_results = tools.email_split_tuples(text)
+        if split_results:
+            name, email = split_results[0]
+
+        if email and not name:
+            fallback_emails = tools.email_split(text.replace(' ', ','))
+            if fallback_emails:
+                email = fallback_emails[0]
+                name = text[:text.index(email)].replace('"', '').replace('<', '').strip()
+
+        if email:
+            email = tools.email_normalize(email)
         else:
             name, email = text, ''
+
         return name, email
 
     @api.model
@@ -670,9 +687,11 @@ class Partner(models.Model):
         name, email = self._parse_partner_name(name)
         if self._context.get('force_email') and not email:
             raise UserError(_("Couldn't create contact without email address!"))
-        if not name and email:
-            name = email
-        partner = self.create({self._rec_name: name or email, 'email': email or self.env.context.get('default_email', False)})
+
+        create_values = {self._rec_name: name or email}
+        if email:  # keep default_email in context
+            create_values['email'] = email
+        partner = self.create(create_values)
         return partner.name_get()[0]
 
     @api.model
@@ -752,22 +771,30 @@ class Partner(models.Model):
         return super(Partner, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     @api.model
-    def find_or_create(self, email):
+    def find_or_create(self, email, assert_valid_email=False):
         """ Find a partner with the given ``email`` or use :py:method:`~.name_create`
-            to create one
+        to create a new one.
 
-            :param str email: email-like string, which should contain at least one email,
-                e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``"""
-        assert email, 'an email is required for find_or_create to work'
-        emails = tools.email_split(email)
-        name_emails = tools.email_split_and_format(email)
-        if emails:
-            email = emails[0]
-            name_email = name_emails[0]
-        else:
-            name_email = email
-        partners = self.search([('email', '=ilike', email)], limit=1)
-        return partners.id or self.name_create(name_email)[0]
+        :param str email: email-like string, which should contain at least one email,
+            e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``
+        :param boolean assert_valid_email: raise if no valid email is found
+        :return: newly created record
+        """
+        if not email:
+            raise ValueError(_('An email is required for find_or_create to work'))
+
+        parsed_name, parsed_email = self._parse_partner_name(email)
+        if not parsed_email and assert_valid_email:
+            raise ValueError(_('A valid email is required for find_or_create to work properly.'))
+
+        partners = self.search([('email', '=ilike', parsed_email)], limit=1)
+        if partners:
+            return partners
+
+        create_values = {self._rec_name: parsed_name or parsed_email}
+        if parsed_email:  # keep default_email in context
+            create_values['email'] = parsed_email
+        return self.create(create_values)
 
     def _get_gravatar_image(self, email):
         email_hash = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
