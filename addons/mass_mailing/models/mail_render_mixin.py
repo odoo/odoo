@@ -4,13 +4,13 @@
 from odoo import api, models
 
 
-class MailTemplate(models.Model):
-    _inherit = "mail.template"
+class MailRenderMixin(models.AbstractModel):
+    _inherit = "mail.render.mixin"
 
     @api.model
     def _render_template_postprocess(self, rendered):
         # super will transform relative url to absolute
-        rendered = super(MailTemplate, self)._render_template_postprocess(rendered)
+        rendered = super(MailRenderMixin, self)._render_template_postprocess(rendered)
 
         # apply shortener after
         if self.env.context.get('post_convert_links'):

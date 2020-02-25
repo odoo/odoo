@@ -281,7 +281,7 @@ class SendSMS(models.TransientModel):
         if self.template_id and self.body == self.template_id.body:
             all_bodies = self.template_id._get_translated_bodies(records.ids)
         else:
-            all_bodies = self.env['mail.template']._render_template(self.body, records._name, records.ids)
+            all_bodies = self.env['mail.render.mixin']._render_template(self.body, records._name, records.ids)
         return all_bodies
 
     def _prepare_mass_sms_values(self, records):
