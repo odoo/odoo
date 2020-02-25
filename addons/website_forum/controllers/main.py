@@ -90,7 +90,7 @@ class WebsiteForum(WebsiteProfile):
 
         Post = request.env['forum.post']
 
-        domain = [('forum_id', '=', forum.id), ('parent_id', '=', False), ('state', '=', 'active')]
+        domain = [('forum_id', '=', forum.id), ('parent_id', '=', False), ('state', '=', 'active'), ('can_view', '=', True)]
         if search:
             domain += ['|', ('name', 'ilike', search), ('content', 'ilike', search)]
         if tag:
