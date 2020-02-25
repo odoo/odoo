@@ -69,8 +69,7 @@ class ReferralAbstract(models.AbstractModel):
 
         return infos
 
-    # Maybe find another name
-    def _check_referral_progress(self, old_state, new_state):
+    def _check_and_apply_progress(self, old_state, new_state):
         self.ensure_one()
         if new_state == old_state or not self.referred_email:
             return

@@ -6,7 +6,7 @@ from hashlib import md5
 import uuid
 from datetime import timedelta
 
-DEST_SERVER_URL = 'http://cfd8db33.ngrok.io'
+DEST_SERVER_URL = 'https://www.odoo.com'
 
 
 class Users(models.Model):

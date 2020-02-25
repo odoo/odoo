@@ -25,7 +25,7 @@ odoo.define('systray.systray_odoo_referral', function(require) {
             this._rpc({
                 route:'/referral/go/'
             }).then(function (result) {
-                self.$('.o_notification_counter').text(0);
+                self.$('.o_notification_counter').text('');
                 window.open(result.link);
             });
         },

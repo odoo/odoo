@@ -15,8 +15,7 @@ class Lead(models.Model):
 
     def _get_state_for_referral(self):
         self.ensure_one()
-        first_stage = self.env['crm.stage'].search([], limit=1).id
-        # YTI FIXME call _stage_find with the lead.team_id instead
+        first_stage = self._stage_find(team_id=self.team_id.id)
         if not self.active and self.probability == 0:
             return 'cancel'
         if self.type == 'lead' or self.stage_id.id == first_stage:
@@ -34,7 +33,7 @@ class Lead(models.Model):
             r = super().write(vals)
             new_states = {lead: lead._get_referral_statuses(lead.source_id, lead.referred_email) for lead in leads}
             for lead in leads:
-                lead._check_referral_progress(old_states[lead], new_states[lead])
+                lead._check_and_apply_progress(old_states[lead], new_states[lead])
             return r
         return super().write(vals)
 

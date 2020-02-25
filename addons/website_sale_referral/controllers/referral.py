@@ -29,7 +29,7 @@ class Referral(Controller):
                     raise Forbidden()  # Mismatch between email and token
                 return request.redirect('/referral/' + referral_tracking.token)
         else:
-            token = uuid.uuid4().hex[:-1]  # to avoid conflict with saas token
+            token = uuid.uuid4().hex[:-1]  # to avoid conflict with internal token
 
         utm_name = ('%s-%s') % (referrer_email, str(uuid.uuid4())[:6])
         utm_source_id = request.env['utm.source'].sudo().create({'name': utm_name})

@@ -51,26 +51,26 @@ class SaleOrder(models.Model):
 
     def write(self, vals):
         if not self.env.user.has_group('website_crm_referral.group_lead_referral') and \
-           any([elem in vals for elem in ['state', 'invoice_status', 'amount_total']]):
+                any([elem in vals for elem in ['state', 'invoice_status', 'amount_total']]):
             orders = list(filter(lambda o: o.campaign_id == self.env.ref('website_sale_referral.utm_campaign_referral') and not o.deserve_reward, self))
-            old_states = {}
-            for order in orders:
-                old_states[order] = order._get_referral_statuses(self.source_id, self.partner_id.email)
+            old_states = {order: order._get_referral_statuses(self.source_id, self.partner_id.email) for order in orders}
             r = super().write(vals)
+            new_states = {order: order._get_referral_statuses(self.source_id, self.partner_id.email) for order in orders}
             for order in orders:
-                new_state = order._get_referral_statuses(self.source_id, self.partner_id.email)
-                order._check_referral_progress(old_states[order], new_state)
+                order._check_and_apply_progress(old_states[order], new_states[order])
             return r
-        else:
-            return super().write(vals)
+        return super().write(vals)
 
     @api.model_create_multi
     def create(self, vals_list):
-        # YTI FIX ME Check vals after create
-        for vals in vals_list:
-            if vals.get('campaign_id', None) == self.env.ref('website_sale_referral.utm_campaign_referral').id:
-                if 'user_id' not in vals:
-                    vals['user_id'] = self.env.company.salesperson_id.id
-                if 'team_id' not in vals:
-                    vals['team_id'] = self.env.company.salesteam_id.id
-        return super(SaleOrder, self).create(vals)
+        res = super().create(vals_list)
+        campaign = self.env.ref('website_sale_referral.utm_campaign_referral')
+        referral_orders = res.filtered(lambda order: order.campaign_id == campaign)
+        if referral_orders:
+            vals = {}
+            if self.env.company.salesperson_id:
+                vals['user_id'] = self.env.company.salesperson_id.id
+            if self.env.company.salesteam_id:
+                vals['team_id'] = self.env.company.salesteam_id.id
+            referral_orders.write(vals)
+        return res
