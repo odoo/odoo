@@ -25,7 +25,7 @@
                 <td><t t-esc="timesheet.date" t-options='{"widget": "date"}'/></td>
                 <td><t t-esc="timesheet.name"/></td>
                 <td><t t-esc="timesheet.employee_id.name"/></td>
-                <td class="text-right"><span t-field="timesheet.unit_amount" t-options='{"widget": "duration", "unit": "hour", "round": "minute"}'/></td>
+                <td class="text-right"><span t-field="timesheet.unit_amount" t-options='{"widget": "float_time"}'/></td>
             </tr>
         </table>
     </template>
