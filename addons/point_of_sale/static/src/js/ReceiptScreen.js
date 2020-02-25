@@ -2,6 +2,7 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
     'use strict';
 
     const core = require('web.core');
+    const { useRef } = owl.hooks;
     const { PosComponent } = require('point_of_sale.PosComponent');
     const { OrderReceipt } = require('point_of_sale.OrderReceipt');
 
@@ -15,6 +16,7 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
         constructor() {
             super(...arguments);
             this.receiptRenderEnv = this._receiptRenderEnv();
+            this.orderReceipt = useRef('order-receipt');
         }
         mounted() {
             this.env.pos.on(
@@ -126,12 +128,8 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
             }
         }
         async _printHtml() {
-            const orderReceipt = this.env.qweb.render('OrderReceipt', {
-                pos: this.env.pos,
-                receiptEnv: this.receiptRenderEnv,
-            });
             // Important to await because we want to catch the error
-            await this.env.pos.proxy.printer.print_receipt(orderReceipt);
+            await this.env.pos.proxy.printer.print_receipt(this.orderReceipt.el.outerHTML);
         }
     }
     ReceiptScreen.components = { OrderReceipt };
