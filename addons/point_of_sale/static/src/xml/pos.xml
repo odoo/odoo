@@ -15,7 +15,7 @@
                         <CashierName />
                         <SaleDetailsButton t-if="env.pos.proxy.printer" />
                         <ProxyStatus t-if="env.pos.config.use_proxy" />
-                        <!-- <ClientScreen t-if="env.pos.config.use_proxy" /> -->
+                        <ClientScreenButton t-if="isShowClientScreenButton" />
                         <SyncNotification />
                         <HeaderButton />
                     </div>

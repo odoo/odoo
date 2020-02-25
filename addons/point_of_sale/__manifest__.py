@@ -99,6 +99,7 @@
         'static/src/xml/OrderImportPopup.xml',
         'static/src/xml/SetPricelistButton.xml',
         'static/src/xml/SetFiscalPositionButton.xml',
+        'static/src/xml/ClientScreenButton.xml',
     ],
     'website': 'https://www.odoo.com/page/point-of-sale-shop',
 }

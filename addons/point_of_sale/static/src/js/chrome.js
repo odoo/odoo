@@ -384,6 +384,10 @@ class Chrome extends PosComponent {
         this.popup.isShow = false;
     }
 
+    get isShowClientScreenButton() {
+        return this.env.pos.config.use_proxy && this.env.pos.config.iface_customer_facing_display;
+    }
+
     mounted() {
         // We want the loading of pos models to be done when this root component
         // is already mounted. This way, we are able to use the state of this component
