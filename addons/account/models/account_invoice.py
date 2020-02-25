@@ -936,6 +936,10 @@ class AccountInvoice(models.Model):
                             biggest_tax_line = tax_line
                     biggest_tax_line.amount_rounding += rounding_amount
                 elif self.cash_rounding_id.strategy == 'add_invoice_line':
+                    if rounding_amount > 0.0:
+                        account_id = self.cash_rounding_id._get_loss_account_id().id
+                    else:
+                        account_id = self.cash_rounding_id._get_profit_account_id().id
                     # Create a new invoice line to perform the rounding
                     rounding_line = self.env['account.invoice.line'].new({
                         'name': self.cash_rounding_id.name,
@@ -1068,7 +1072,7 @@ class AccountInvoice(models.Model):
         tax_grouped = {}
         round_curr = self.currency_id.round
         for line in self.invoice_line_ids:
-            if not line.account_id:
+            if not line.account_id or line.display_type:
                 continue
             price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity, line.product_id, self.partner_id)['taxes']
@@ -1430,6 +1434,8 @@ class AccountInvoice(models.Model):
         invoice_ids = []
         if name:
             invoice_ids = self._search([('number', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        if not invoice_ids:
+            invoice_ids = self._search([('number', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
         if not invoice_ids:
             invoice_ids = self._search([('name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
         return self.browse(invoice_ids).name_get()

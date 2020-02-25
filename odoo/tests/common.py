@@ -16,7 +16,6 @@ import os
 import platform
 import re
 import requests
-import resource
 import shutil
 import signal
 import socket
@@ -549,6 +548,7 @@ class ChromeBrowser():
                 # the memory reservation algorithm requires more than 8GiB of virtual mem for alignment
                 # this exceeds our default memory limits.
                 # OSX already reserve huge memory for processes
+                import resource
                 resource.setrlimit(resource.RLIMIT_AS, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
             # redirect browser stderr to /dev/null
             with open(os.devnull, 'wb', 0) as stderr_replacement:

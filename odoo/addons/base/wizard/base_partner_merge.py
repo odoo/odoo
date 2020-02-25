@@ -293,10 +293,11 @@ class MergePartnerAutomatic(models.TransientModel):
         if extra_checks and 'account.move.line' in self.env and self.env['account.move.line'].sudo().search([('partner_id', 'in', [partner.id for partner in src_partners])]):
             raise UserError(_("Only the destination contact may be linked to existing Journal Items. Please ask the Administrator if you need to merge several contacts linked to existing Journal Items."))
 
-        # Make the company of all related users consistent
-        for user in partner_ids.mapped('user_ids'):
-            user.sudo().write({'company_ids': [(6, 0, [dst_partner.company_id.id])],
-                        'company_id': dst_partner.company_id.id})
+        # Make the company of all related users consistent with destination partner company
+        if dst_partner.company_id:
+            for user in partner_ids.mapped('user_ids'):
+                user.sudo().write({'company_ids': [(6, 0, [dst_partner.company_id.id])],
+                            'company_id': dst_partner.company_id.id})
 
         # call sub methods to do the merge
         self._update_foreign_keys(src_partners, dst_partner)

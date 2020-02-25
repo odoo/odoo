@@ -107,6 +107,7 @@ class WebsiteForm(http.Controller):
 
     # Extract all data sent by the form and sort its on several properties
     def extract_data(self, model, values):
+        dest_model = request.env[model.sudo().model]
 
         data = {
             'record': {},        # Values to create record
@@ -129,7 +130,8 @@ class WebsiteForm(http.Controller):
                 # If it's not, we'll use attachments instead
                 if field_name in authorized_fields and authorized_fields[field_name]['type'] == 'binary':
                     data['record'][field_name] = base64.b64encode(field_value.read())
-                    if authorized_fields[field_name]['manual']:
+                    field_value.stream.seek(0) # do not consume value forever
+                    if authorized_fields[field_name]['manual'] and field_name + "_filename" in dest_model:
                         data['record'][field_name + "_filename"] = field_value.filename
                 else:
                     field_value.field_name = field_name
@@ -163,7 +165,6 @@ class WebsiteForm(http.Controller):
         # def website_form_input_filter(self, values):
         #     values['name'] = '%s\'s Application' % values['partner_name']
         #     return values
-        dest_model = request.env[model.sudo().model]
         if hasattr(dest_model, "website_form_input_filter"):
             data['record'] = dest_model.website_form_input_filter(request, data['record'])
 
