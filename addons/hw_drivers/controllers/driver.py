@@ -427,7 +427,6 @@ class Manager(Thread):
         while 1:
             updated_devices = self.usb_loop()
             updated_devices.update(self.video_loop())
-            updated_devices.update(mpdm.devices)
             updated_devices.update(display_devices)
             updated_devices.update(bt_devices)
             updated_devices.update(socket_devices)
@@ -494,41 +493,10 @@ class SocketManager(Thread):
             except OSError as e:
                 _logger.error(_('Error in SocketManager: %s') % (e.strerror))
 
-class MPDManager(Thread):
-    def __init__(self):
-        super(MPDManager, self).__init__()
-        self.devices = {}
-        self.mpd_session = ctypes.c_void_p()
-
-    def run(self):
-        eftapi.EFT_CreateSession(ctypes.byref(self.mpd_session))
-        while True:
-            if self.terminal_connected(terminal_id):
-                self.devices[terminal_id] = IoTDevice(terminal_id, 'mpd')
-            elif terminal_id in self.devices:
-                self.devices = {}
-            time.sleep(20)
-
-    def terminal_connected(self, terminal_id):
-        eftapi.EFT_QueryStatus(self.mpd_session)
-        device_status = ctypes.c_long()
-        eftapi.EFT_GetDeviceStatusCode(self.mpd_session, ctypes.byref(device_status))
-        return device_status.value in [0, 1]
-
-
 conn = cups_connection()
 PPDs = conn.getPPDs()
 printers = conn.getPrinters()
 cups_lock = Lock()  # We can only make one call to Cups at a time
-
-mpdm = MPDManager()
-terminal_id = helpers.read_file_first_line('odoo-six-payment-terminal.conf')
-subprocess.call(["pkill", "-9", "eftdvs"])  # Kill any running MPD server
-if terminal_id:
-    subprocess.Popen(["eftdvs", "/ConfigDir", "/usr/share/eftdvs/", "/TID", terminal_id])  # Start MPD server
-    eftapi = ctypes.CDLL("eftapi.so")  # Library given by Six
-    mpdm.daemon = True
-    mpdm.start()
 
 m = Manager()
 m.daemon = True
