@@ -94,6 +94,7 @@ options.registry.gallery = options.Class.extend({
                         class: 'img img-fluid',
                         src: attachments[i].image_src,
                         'data-index': ++index,
+                        alt: attachments[i].description || '',
                     }).appendTo($container);
                 }
                 this.mode('reset', this.getMode());
@@ -254,12 +255,13 @@ options.registry.gallery = options.Class.extend({
      */
     slideshow: function () {
         var imgStyle = this.$el.find('.active[data-styling]').data('styling') || '';
-        var urls = _.map(this._getImages(), function (img) {
-            return $(img).attr('src');
-        });
+        var images = _.map(this._getImages(), img => ({
+            src: img.getAttribute('src'),
+            alt: img.getAttribute('alt'),
+        }));
         var currentInterval = this.$target.find('.carousel:first').attr('data-interval');
         var params = {
-            srcs: urls,
+            images: images,
             index: 0,
             title: "",
             interval: currentInterval || this.$target.data('interval') || 0,
