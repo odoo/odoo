@@ -12,7 +12,7 @@ class PaymentRegister(models.TransientModel):
 
         """
         if invoices[0]._is_isr_supplier_invoice():
-            return invoices[0].invoice_payment_ref
+            return invoices[0].invoice_payment_ref or invoices[0].ref
         else:
             return super()._prepare_communication(invoices)
 
@@ -25,6 +25,7 @@ class PaymentRegister(models.TransientModel):
         to bank in batch.
         """
         if inv._is_isr_supplier_invoice():
-            return (inv.commercial_partner_id, inv.currency_id, inv.invoice_partner_bank_id, inv.invoice_payment_ref)
+            ref = inv.invoice_payment_ref or inv.ref
+            return (inv.commercial_partner_id, inv.currency_id, inv.invoice_partner_bank_id, ref)
         else:
             return super()._get_payment_group(inv)

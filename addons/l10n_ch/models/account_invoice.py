@@ -219,11 +219,14 @@ class AccountMove(models.Model):
     def _is_isr_supplier_invoice(self):
         """Check for payments that a supplier invoice has a bank account
         that can issue ISR and that the reference is an ISR reference number"""
+        # We consider a structured ref can be set either in invoice_payment_ref
+        # or ref field
+        ref = self.invoice_payment_ref or self.ref
         if (
+            ref and
             not self.invoice_partner_bank_id.is_isr_issuer() and
-            self.invoice_payment_ref and
-            re.match(r'^(\d{2,27}|\d{2}( \d{5}){5})$', self.invoice_payment_ref)
+            re.match(r'^(\d{2,27}|\d{2}( \d{5}){5})$', ref)
         ):
-            ref = self.invoice_payment_ref.replace(' ', '')
+            ref = ref.replace(' ', '')
             return ref == mod10r(ref[:-1])
         return False

@@ -82,8 +82,13 @@ class PaymentISR(AccountingTestCase):
             | self.create_supplier_invoice(self.supplier_iban, '1234')
             | self.create_supplier_invoice(self.supplier_iban, '5678')
         )
+        # create an invoice where ref is set instead of invoice_payment_ref
+        inv_ref = self.create_supplier_invoice(self.supplier_isrb1, False)
+        inv_ref.ref = '120000000000234478943216899'
+        invoices |= inv_ref
         inv_no_ref = self.create_supplier_invoice(self.supplier_iban, False)
         invoices |= inv_no_ref
+        # create an invoice where ref is set instead of invoice_payment_ref
         PaymentRegister = self.env['account.payment.register']
         register = PaymentRegister.with_context(active_ids=invoices.ids).create({
             'group_payment': True,
@@ -93,8 +98,8 @@ class PaymentISR(AccountingTestCase):
         self.assertEqual(len(vals), 4)
         expected_vals = [
             # ref, partner, invoice count, amount
-            # 2 invoice 2 and 3 grouped in one payment with a single ref
-            ('120000000000234478943216899', self.supplier_isrb1.id, 2, 84.0),
+            # 3 invoices #2, #3 and inv_ref grouped in one payment with a single ref
+            ('120000000000234478943216899', self.supplier_isrb1.id, 3, 126.0),
             # different partner, different payment
             ('120000000000234478943216899', self.supplier_isrb2.id, 1, 42.0),
             # not ISR, standard grouping
