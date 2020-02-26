@@ -25,4 +25,4 @@ done
 
 sudo mount -o remount,ro /
 sudo mount -o remount,rw /root_bypass_ramdisks/etc/cups
-(sleep 5 && sudo service odoo reboot) &
+(sleep 5 && sudo reboot) &
