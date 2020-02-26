@@ -25,16 +25,23 @@
             </field>
         </record>
 
-        <template id="referral_won_email_template">
-            <div>
-                <p>
-                    Dear <t t-esc='referrer_name' />,<br/><br/>
-                    Good news, your referral <t t-esc='referred_name' /> subscribed to our product/service. <br/>
-                    You will be contacted soon on this mail address to get your reward. <br />
+        <record id="referral_won_email_template" model="mail.template">
+            <field name="name">Referral won email</field>
+            <field name="model_id" ref="website_sale_referral.model_referral_tracking" />
+            <field name="auto_delete" eval="True"/>
+            <field name="email_to">${object.referrer_email}</field>
+            <field name="subject">Referral won !</field>
+            <field name="body_html" type="xml">
+                <span>
+                    Dear ${ctx.get('referrer_name')}, <br/> <br/>
+                    Good news, your referral ${ctx.get('referred_name')} subscribed to our product/service. <br/>
+                    You will be contacted soon on this mail address to get your reward.<br/>
                     Have a nice day!
-                </p>
-            </div>
-         </template>
+                </span>
+            </field>
+        </record>
+
+
 
         <!-- UTM -->
         <record model="utm.tag" id="utm_campaign_tag_referral">

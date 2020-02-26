@@ -18,7 +18,7 @@ class Lead(models.Model):
         first_stage = self._stage_find(team_id=self.team_id.id)
         if not self.active and self.probability == 0:
             return 'cancel'
-        if self.type == 'lead' or self.stage_id.id == first_stage:
+        if self.type == 'lead' or self.stage_id == first_stage:
             return 'new'
         if self.stage_id.is_won:
             return 'done'

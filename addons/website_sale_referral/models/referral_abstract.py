@@ -81,17 +81,11 @@ class ReferralAbstract(models.AbstractModel):
         referral_tracking = self._get_referral_tracking()
         referral_tracking.updates_count += 1
         if new_state == 'done':
-            partner = self.env['res.partner'].search([('referral_tracking_id', '=', referral_tracking.id)])
-            partner = partner.name if partner else referral_tracking.referrer_email
-            template = self.env.ref('website_sale_referral.referral_won_email_template')
-            mail_body = template.render({'referred_name': self.referred_name, 'referrer_name': partner}, engine='ir.qweb', minimal_qcontext=True)
-            mail = self.env['mail.mail'].sudo().create({
-                'subject': _('Referral won !'),
-                'email_to': referral_tracking.referrer_email,
-                'email_from': None,
-                'body_html': mail_body,
-            })
-            mail.send()
+            referrer_partner_id = self.env['res.partner'].search([('referral_tracking_id', '=', referral_tracking.id)])
+            referrer_name = referrer_partner_id.name if referrer_partner_id else referral_tracking.referrer_email
+            template = self.env.ref('website_sale_referral.referral_won_email_template', False)
+            ctx = {'referrer_name': referrer_name, 'referred_name': self.referred_name}
+            template.sudo().with_context(ctx).send_mail(referral_tracking.id, force_send=True)
 
             responsible_id = self.env.company.responsible_id.id or SUPERUSER_ID
             self.activity_schedule(
@@ -109,7 +103,7 @@ class ReferralAbstract(models.AbstractModel):
             domain = expression.AND([domain, [('referred_email', '=', referred_email)]])
         if deserve_reward:
             domain = expression.AND([domain, [('deserve_reward', '=', deserve_reward)]])
-        return self.search(domain)
+        return self.with_context(active_test=False).search(domain)
 
     def _get_referral_tracking(self):
         self.ensure_one()
