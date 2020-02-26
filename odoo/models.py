@@ -4876,8 +4876,9 @@ Record ids: %(records)s
 
     def toggle_active(self):
         """ Inverse the value of the field ``(x_)active`` on the records in ``self``. """
-        for record in self:
-            record[self._active_name] = not record[self._active_name]
+        active_recs = self.filtered(self._active_name)
+        active_recs[self._active_name] = False
+        (self - active_recs)[self._active_name] = True
 
     def action_archive(self):
         """ Set (x_)active=False on a recordset, by calling toggle_active to
