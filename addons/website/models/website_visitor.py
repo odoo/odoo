@@ -193,9 +193,9 @@ class WebsiteVisitor(models.Model):
         if request.httprequest.cookies.get('visitor_uuid', '') != visitor_sudo.access_token:
             expiration_date = datetime.now() + timedelta(days=365)
             response.set_cookie('visitor_uuid', visitor_sudo.access_token, expires=expiration_date)
-        self._handle_website_page_visit(response, website_page, visitor_sudo)
+        self._handle_website_page_visit(website_page, visitor_sudo)
 
-    def _handle_website_page_visit(self, response, website_page, visitor_sudo):
+    def _handle_website_page_visit(self, website_page, visitor_sudo):
         """ Called on dispatch. This will create a website.visitor if the http request object
         is a tracked website page or a tracked view. Only on tracked elements to avoid having
         too much operations done on every page or other http requests.
@@ -223,8 +223,8 @@ class WebsiteVisitor(models.Model):
             self.env['website.track'].create(website_track_values)
         self._update_visitor_last_visit()
 
-    def _create_visitor(self, website_track_values=None):
-        """ Create a visitor and add a track to it if website_track_values is set."""
+    def _create_visitor(self):
+        """ Create a visitor. Tracking is added after the visitor has been created."""
         country_code = request.session.get('geoip', {}).get('country_code', False)
         country_id = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).id if country_code else False
         vals = {
@@ -235,8 +235,6 @@ class WebsiteVisitor(models.Model):
         if not self.env.user._is_public():
             vals['partner_id'] = self.env.user.partner_id.id
             vals['name'] = self.env.user.partner_id.name
-        if website_track_values:
-            vals['website_track_ids'] = [(0, 0, website_track_values)]
         return self.sudo().create(vals)
 
     def _cron_archive_visitors(self):
