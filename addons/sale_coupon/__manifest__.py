@@ -6,7 +6,7 @@
     'description': """Integrate coupon mechanism in sales orders.""",
     'category': 'Sales/Sales',
     'version': '1.0',
-    'depends': ['sale_management'],
+    'depends': ['sale'],
     'data': [
         'security/sale_coupon_security.xml',
         'security/ir.model.access.csv',
