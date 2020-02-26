@@ -113,6 +113,7 @@ class Web_Unsplash(http.Controller):
                 'public': res_model == 'ir.ui.view',
                 'res_id': res_id,
                 'res_model': res_model,
+                'description': value.get('description'),
             })
             attachment.generate_access_token()
             uploads.append(attachment._get_media_info())
