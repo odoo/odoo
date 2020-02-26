@@ -62,6 +62,9 @@
                 <field name="name"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group string="Group By">
+                  <filter string="Category" name="group_by_category" context="{'group_by': 'category_id'}"/>
+                </group>
             </search>
         </field>
     </record>
