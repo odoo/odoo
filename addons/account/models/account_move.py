@@ -3100,7 +3100,7 @@ class AccountMoveLine(models.Model):
 
             #computing the `reconciled` field.
             reconciled = False
-            digits_rounding_precision = line.company_id.currency_id.rounding
+            digits_rounding_precision = line.move_id.company_id.currency_id.rounding
             if float_is_zero(amount, precision_rounding=digits_rounding_precision):
                 if line.currency_id and line.amount_currency:
                     if float_is_zero(amount_residual_currency, precision_rounding=line.currency_id.rounding):
