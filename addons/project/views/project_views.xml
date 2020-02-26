@@ -602,7 +602,7 @@
             <field name="name">project.task.kanban</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create" quick_create_view="project.quick_create_task_form" examples="project">
+                <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create" quick_create_view="project.quick_create_task_form" examples="project" js_class="project_kanban">
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="stage_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
@@ -876,6 +876,7 @@
             <field name="arch" type="xml">
                 <search string="Tasks Stages">
                    <field name="name" string="Tasks Stages"/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 </search>
             </field>
         </record>
@@ -884,8 +885,10 @@
             <field name="name">project.task.type.form</field>
             <field name="model">project.task.type</field>
             <field name="arch" type="xml">
-                <form string="Task Stage">
+                <form string="Task Stage" delete="0">
+                    <field name="active" invisible="1" />
                     <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}" />
                         <group>
                             <group>
                                 <field name="name"/>
@@ -932,7 +935,7 @@
             <field name="name">project.task.type.tree</field>
             <field name="model">project.task.type</field>
             <field name="arch" type="xml">
-                <tree string="Task Stage">
+                <tree string="Task Stage" delete="0">
                     <field name="sequence" widget="handle" groups="base.group_no_one"/>
                     <field name="name"/>
                     <field name="fold"/>
@@ -983,6 +986,15 @@
                 solving a task or an issue.
               </p>
             </field>
+        </record>
+
+        <record id="unlink_task_type_action" model="ir.actions.server">
+            <field name="name">Delete</field>
+            <field name="model_id" ref="project.model_project_task_type"/>
+            <field name="binding_model_id" ref="project.model_project_task_type"/>
+            <field name="binding_view_types">form,list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.unlink_wizard(stage_view=True)</field>
         </record>
 
         <menuitem id="menu_tasks_config" name="GTD" parent="menu_project_config" sequence="2"/>

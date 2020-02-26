@@ -18,6 +18,7 @@ class ProjectTaskType(models.Model):
         default_project_id = self.env.context.get('default_project_id')
         return [default_project_id] if default_project_id else None
 
+    active = fields.Boolean('Active', default=True)
     name = fields.Char(string='Stage Name', required=True, translate=True)
     description = fields.Text(translate=True)
     sequence = fields.Integer(default=1)
@@ -49,16 +50,35 @@ class ProjectTaskType(models.Model):
             " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
             " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n")
 
-    def unlink(self):
-        stages = self
-        default_project_id = self.env.context.get('default_project_id')
-        if default_project_id:
-            shared_stages = self.filtered(lambda x: len(x.project_ids) > 1 and default_project_id in x.project_ids.ids)
-            tasks = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', default_project_id), ('stage_id', 'in', self.ids)])
-            if shared_stages and not tasks:
-                shared_stages.write({'project_ids': [(3, default_project_id)]})
-                stages = self.filtered(lambda x: x not in shared_stages)
-        return super(ProjectTaskType, stages).unlink()
+    def unlink_wizard(self, stage_view=False):
+        self = self.with_context(active_test=False)
+        # retrieves all the projects with a least 1 task in that stage
+        # a task can be in a stage even if the project is not assigned to the stage
+        readgroup = self.with_context(active_test=False).env['project.task'].read_group([('stage_id', 'in', self.ids)], ['project_id'], ['project_id'])
+        project_ids = list(set([project['project_id'][0] for project in readgroup] + self.project_ids.ids))
+
+        wizard = self.with_context(project_ids=project_ids).env['project.task.type.delete.wizard'].create({
+            'project_ids': project_ids,
+            'stage_ids': self.ids
+        })
+
+        context = dict(self.env.context)
+        context['stage_view'] = stage_view
+        return {
+            'name': _('Delete Stage'),
+            'view_mode': 'form',
+            'res_model': 'project.task.type.delete.wizard',
+            'views': [(self.env.ref('project.view_project_task_type_delete_wizard').id, 'form')],
+            'type': 'ir.actions.act_window',
+            'res_id': wizard.id,
+            'target': 'new',
+            'context': context,
+        }
+
+    def write(self, vals):
+        if 'active' in vals and not vals['active']:
+            self.env['project.task'].search([('stage_id', 'in', self.ids)]).write({'active': False})
+        return super(ProjectTaskType, self).write(vals)
 
 
 class Project(models.Model):
