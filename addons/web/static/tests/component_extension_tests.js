@@ -45,6 +45,29 @@ odoo.define('web.component_extension_tests', function (require) {
             assert.ok(true, "Promise should still be pending");
         });
 
+        QUnit.test("Component lazy load template", async function (assert) {
+            assert.expect(1);
+            const fixture = document.body.querySelector('#qunit-fixture');
+
+            class Parent extends Component {}
+            Parent.env = makeTestEnvironment({}, () => Promise.reject());
+            Parent.template = 'Parent.test1';
+            Parent.xmlDependencies = [
+                '/web/static/tests/component_extension_tests_1.xml',
+                '/web/static/tests/component_extension_tests_2.xml',
+            ];
+
+            const parent = new Parent();
+            await parent.mount(fixture);
+
+            assert.strictEqual(
+                fixture.innerHTML,
+                `<div><div> lazy loaded 2 </div></div>`
+            );
+
+            parent.destroy();
+        });
+
         QUnit.module("Custom Hooks");
 
         QUnit.test("useListener handler type", async function (assert) {
