@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_task" inherit_id="project.portal_my_task" priority="40">
+
+        <!-- add a button to the right of the 'description' title according to the mode (edit/read) -->
+        <xpath expr="//div[@t-if='task.description']//div[hasclass('d-flex')]" position="inside">
+            <t t-if="task._use_portal_pad()">
+                <t t-if="request.params.get('edit')">
+                    <a role="button" class="btn btn-primary btn-sm ml-auto" t-attf-href="/my/task/#{task.id}">Save</a>
+                </t>
+                <t t-else="">
+                    <a role="button" class="btn btn-primary btn-sm ml-auto" t-attf-href="/my/task/#{task.id}?edit=1">Edit</a>
+                </t>
+            </t>
+        </xpath>
+
+        <!-- show the description (read mode) or a pad (edit mode) -->
+        <xpath expr="//div[@t-field='task.description']" position="replace">
+            <t t-if="task._use_portal_pad()">
+                <t t-if="request.params.get('edit')">
+                    <div class="o_pad_project_container">
+                        <iframe width="100%" height="100%" frameborder="0" t-att-src="task.description_pad + '?showChat=false&amp;userName=' + request.env.user.name"/>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="py-1 px-2 bg-100 small" t-raw="task._get_pad_content()"/>
+                </t>
+            </t>
+            <t t-else="">
+                <t>$0</t>
+            </t>
+        </xpath>
+    </template>
+</odoo>
