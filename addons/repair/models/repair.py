@@ -503,14 +503,14 @@ class Repair(models.Model):
                 available_quantity = self.env['stock.quant']._get_available_quantity(
                     move.product_id,
                     move.location_id,
-                    lot_id=operation.lot_id.id,
+                    lot_id=operation.lot_id,
                     strict=False,
                 )
                 move._update_reserved_quantity(
                     product_qty,
                     available_quantity,
                     move.location_id,
-                    lot_id=operation.lot_id.id,
+                    lot_id=operation.lot_id,
                     strict=False,
                 )
                 # Then, set the quantity done. If the required quantity was not reserved, negative

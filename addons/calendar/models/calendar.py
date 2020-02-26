@@ -1235,7 +1235,7 @@ class Meeting(models.Model):
         """
         if self.interval <= 0:
             raise UserError(_('The interval cannot be negative.'))
-        if self.end_type == 'count' and self.count <= 0:
+        if self.end_type == 'count' and self.count < 0:
             raise UserError(_('The number of repetitions  cannot be negative.'))
 
         def get_week_string(freq):
@@ -1260,7 +1260,7 @@ class Meeting(models.Model):
         def get_end_date():
             final_date = fields.Date.to_string(self.final_date)
             end_date_new = ''.join((re.compile('\d')).findall(final_date)) + 'T235959Z' if final_date else False
-            return (self.end_type == 'count' and (';COUNT=' + str(self.count)) or '') +\
+            return (self.end_type == 'count' and (';COUNT=' + str(max(1, self.count))) or '') +\
                 ((end_date_new and self.end_type == 'end_date' and (';UNTIL=' + end_date_new)) or '')
 
         freq = self.rrule_type  # day/week/month/year

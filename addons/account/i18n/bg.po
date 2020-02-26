@@ -14,10 +14,10 @@
 # Alexander Androv <alexanderandrov@gmail.com>, 2020
 # Boris Stefanov <borkata@gmail.com>, 2020
 # Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2020
-# Igor Sheludko <igor.sheludko@gmail.com>, 2020
 # aleksandar ivanov, 2020
 # Albena Mincheva <albena_vicheva@abv.bg>, 2020
 # Maria Boyadjieva <marabo2000@gmail.com>, 2020
+# Igor Sheludko <igor.sheludko@gmail.com>, 2020
 # Ivan Goychev <igoychev.projects@gmail.com>, 2020
 # 
 msgid ""
@@ -158,7 +158,7 @@ msgstr ""
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
 msgid "45 Days"
-msgstr ""
+msgstr "45 дни"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -3151,7 +3151,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Конфиг Настройки"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_configuration
@@ -3332,7 +3332,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_bank_journal_form
 msgid "Create a bank account"
-msgstr ""
+msgstr "Създайте банкова сметка"
 
 #. module: account
 #. openerp-web
@@ -4161,7 +4161,7 @@ msgstr "Разлика между изчисленото крайно салдо
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Публикация"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6055,7 +6055,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__printed
 msgid "Is Printed"
-msgstr ""
+msgstr "Отпечатано"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_rounding_line
@@ -8030,7 +8030,7 @@ msgstr "Условия за плащане: 15 дни"
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_2months
 msgid "Payment terms: 2 Months"
-msgstr ""
+msgstr "Срок на плащане: 2 месеца"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_21days
@@ -8055,7 +8055,7 @@ msgstr ""
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_45days
 msgid "Payment terms: 45 Days"
-msgstr ""
+msgstr "Срок за плащане: 45 дни"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_end_following_month
@@ -8225,7 +8225,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
-msgstr ""
+msgstr "Моля изплозвайте този референтен номер за Вашето плащане:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__plus_report_line_ids
@@ -8360,7 +8360,7 @@ msgstr "Предварителен преглед"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Preview as a PDF"
-msgstr ""
+msgstr "Преглед като PDF"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -8389,7 +8389,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_is_print
 msgid "Print by default"
-msgstr ""
+msgstr "Печат по подразбиране"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9403,7 +9403,7 @@ msgstr "Изпратете"
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Send & Print"
-msgstr ""
+msgstr "Запис и Печат"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.invoice_send
@@ -11169,6 +11169,14 @@ msgid ""
 msgstr ""
 "There are still unposted entries in the period you want to lock. You should "
 "either post or delete them."
+
+#. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"There is more than one receivable/payable account in the concerned invoices."
+" You cannot group payments in that case."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0

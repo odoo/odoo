@@ -16,9 +16,7 @@
                 <group name="first" position="after">
                     <group string="Logistics">
                         <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
-                        <div colspan="2" attrs="{'invisible': [('parent_id', '=', False)]}">
-                            <field name="total_route_ids" nolabel="1" widget="many2many_tags"/>
-                        </div>
+                        <field name="total_route_ids" widget="many2many_tags" groups="stock.group_adv_location" attrs="{'invisible': [('parent_id', '=', False)]}"/>
                         <field name="removal_strategy_id" options="{'no_create': True}"/>
                     </group>
                 </group>

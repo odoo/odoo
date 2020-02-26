@@ -105,7 +105,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         return self._waitBeforeTourStart().then(function () {
             return Promise.all(_.map(self.tours, function (tour, name) {
                 return self._register(do_update, tour, name);
-            }));
+            })).then(() => self.update());
         });
     },
     _register: function (do_update, tour, name) {
@@ -128,7 +128,6 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
 
             if (do_update && (this.running_tour === name || (!this.running_tour && !tour.test && !tour_is_consumed))) {
                 this._to_next_step(name, 0);
-                this.update(name);
             }
         }).bind(this));
     },
@@ -365,7 +364,6 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 });
                 console.log(document.body.parentElement.outerHTML);
                 console.error(error); // will be displayed as error info
-                console.error("test failed"); // browser_js wait for error message "test failed"
             } else {
                 console.log(_.str.sprintf("Tour %s succeeded", tour_name));
                 console.log("test successful"); // browser_js wait for message "test successful"

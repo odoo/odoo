@@ -22,6 +22,7 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2019
 # Yedigen, 2019
 # Ediz Duman <neps1192@gmail.com>, 2019
+# abc Def <hdogan1974@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -29,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2019\n"
+"Last-Translator: abc Def <hdogan1974@gmail.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1053,7 +1054,7 @@ msgstr "Hesap Yevmiyesi"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_group
 msgid "Account Journal Group"
-msgstr ""
+msgstr "Muhasebe Günlüğü Grubu"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_journal
@@ -1385,20 +1386,20 @@ msgstr "Mali Durumun Hesap Haritalandırması"
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "Accrual Adjusting Entry (%s recognized) for invoice: %s"
-msgstr ""
+msgstr "Tahakkuk Ayarlama Kaydı"
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "Accrual Adjusting Entry ({percent}% recognized) for invoice:"
-msgstr ""
+msgstr "Fatura için Tahakkuk Ayarlama Girdisi (yüzde {%} tanındı)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrual_accounting_wizard__journal_id
 #: model:ir.model.fields,field_description:account.field_res_company__accrual_default_journal_id
 msgid "Accrual Default Journal"
-msgstr ""
+msgstr "Tahakkuk Eden Varsayılan Yevmiye"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_accrual_accounting_wizard_form_view
@@ -1923,6 +1924,8 @@ msgid ""
 "An error occured when computing the inalterability. Impossible to get the "
 "unique previous posted journal entry."
 msgstr ""
+"Değiştirilemezliği hesaplarken bir hata oluştu. Önceki yayınlanan benzersiz "
+"yevmiye kaydını almak imkansız."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -2680,7 +2683,7 @@ msgstr "İptal Edilen Fatura"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Cannot create an invoice of type %s with a journal having %s as type."
-msgstr ""
+msgstr "Bu yevmiyeye ait kayıt türüne göre%s fatura %soluşturulamaz."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -2689,6 +2692,8 @@ msgid ""
 "Cannot create unbalanced journal entry. Ids: %s\n"
 "Differences debit - credit: %s"
 msgstr ""
+"Dengesiz günlük girdisi oluşturulamaz. Kimlikler: %s\n"
+"Borç ve Alacak Farkları %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -3352,7 +3357,7 @@ msgstr "Kontrol-Hesap"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Corrupted data on journal entry with id %s."
-msgstr ""
+msgstr "Id ile yevmiye girdisindeki bozuk veriler"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_direct_costs
@@ -3423,17 +3428,19 @@ msgstr "Oluştur"
 #. module: account
 #: model:ir.actions.server,name:account.action_accrual_entry
 msgid "Create Accrual Entry"
-msgstr ""
+msgstr "Gerçekleştirme girdisi oluştur."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_accrual_accounting_wizard_action
 msgid "Create Accrual Entry for the expense/revenue recognition"
 msgstr ""
+"Giderlerin / gelirlerin muhasebeleştirilmesi için Gerçekleştirme Girdisi "
+"Oluştur"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_accrual_accounting_wizard_form_view
 msgid "Create Journal Entry"
-msgstr ""
+msgstr "Yevmiye Girdisi Oluştur"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form_multi
@@ -3542,7 +3549,7 @@ msgstr "Bir tedarikçi iade/fiyat farkı oluştur"
 #. module: account
 #: model:ir.model,name:account.model_account_accrual_accounting_wizard
 msgid "Create accrual entry."
-msgstr ""
+msgstr "Bir gerçekleştirme girdisi oluştur"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -4851,7 +4858,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "First Entry"
-msgstr ""
+msgstr "İlk Girdi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -5541,6 +5548,8 @@ msgid ""
 "If this checkbox is ticked, this entry will be automatically posted at its "
 "date."
 msgstr ""
+"Bu onay kutusu işaretlenirse, bu giriş otomatik olarak kendi tarihine "
+"gönderilir."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__restrict_mode_hash_table
@@ -5549,6 +5558,8 @@ msgid ""
 "If ticked, the accounting entry or invoice receives a hash as soon as it is "
 "posted and cannot be modified anymore."
 msgstr ""
+"İşaretlenirse, muhasebe girişi veya fatura kaydedilir kaydedilmez bir "
+"karmaşa alır ve artık değiştirilemez."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5589,6 +5600,8 @@ msgid ""
 "If you want to use \"Off-Balance Sheet\" accounts, all the accounts of the "
 "journal entry must be of this type"
 msgstr ""
+"\"Bilanço Dışı\" hesaplar kullanmak istiyorsanız, yevmiye girdisinin tüm "
+"hesapları bu türde olmalıdır"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6394,6 +6407,7 @@ msgstr "Eşleşen numaranın ayarlanmadığı yevmiye kalemleri"
 #: model:ir.model.fields,help:account.field_res_company__accrual_default_journal_id
 msgid "Journal used by default for moving the period of an entry"
 msgstr ""
+"Bir girdinin devresini taşımak için varsayılan olarak kullanılan yevmiye"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_journal_id
@@ -6527,7 +6541,7 @@ msgstr "Faturalarda Etiket"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Last Entry"
-msgstr ""
+msgstr "Son Girdi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -9097,7 +9111,7 @@ msgstr "Ters Kayıt Girişi"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse Journal Entry"
-msgstr ""
+msgstr "Yevmiye Düzeltme Girdisi"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -11267,6 +11281,14 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid ""
+"There is more than one receivable/payable account in the concerned invoices."
+" You cannot group payments in that case."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
 "There is no Transfer Account defined in the accounting settings. Please "
 "define one to be able to confirm this transfer."
 msgstr ""
@@ -12607,7 +12629,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft an exchange difference journal entry."
-msgstr ""
+msgstr "Bir yevmiye girdisi kur farkında ödeme emrini sıfırlayamazsınız."
 
 #. module: account
 #: code:addons/account/models/account.py:0

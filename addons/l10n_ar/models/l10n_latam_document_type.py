@@ -38,7 +38,7 @@ class L10nLatamDocumentType(models.Model):
         if self.country_id != self.env.ref('base.ar'):
             return values
 
-        values.update({'padding': 8, 'implementation': 'no_gap', 'prefix': "%04i-" % (journal.l10n_ar_afip_pos_number),
+        values.update({'padding': 8, 'implementation': 'no_gap', 'prefix': "%05i-" % (journal.l10n_ar_afip_pos_number),
                        'l10n_latam_journal_id': journal.id})
         if journal.l10n_ar_share_sequences:
             values.update({'name': '%s - Letter %s Documents' % (journal.name, self.l10n_ar_letter),
@@ -85,9 +85,7 @@ class L10nLatamDocumentType(models.Model):
                 failed = True
             elif len(number) > 8 or not number.isdigit():
                 failed = True
-            if len(pos) == 5 and pos[0] == '0':
-                pos = pos[1:]
-            document_number = '{:>04s}-{:>08s}'.format(pos, number)
+            document_number = '{:>05s}-{:>08s}'.format(pos, number)
         if failed:
             raise UserError(msg % (document_number, self.name, _(
                 'The document number must be entered with a dash (-) and a maximum of 5 characters for the first part'

@@ -164,11 +164,15 @@ class AccountJournal(models.Model):
 
     @api.constrains('l10n_ar_afip_pos_number')
     def _check_afip_pos_number(self):
-        missing_pos_number = self.filtered(
-            lambda x: x.type == 'sale' and x.l10n_latam_use_documents and x.company_id.country_id == self.env.ref('base.ar')
-                      and x.l10n_ar_afip_pos_number == 0)
-        if missing_pos_number:
-            raise ValidationError(_('Please define a valid AFIP POS number'))
+        to_review = self.filtered(
+            lambda x: x.type == 'sale' and x.l10n_latam_use_documents and
+            x.company_id.country_id == self.env.ref('base.ar'))
+
+        if to_review.filtered(lambda x: x.l10n_ar_afip_pos_number == 0):
+            raise ValidationError(_('Please define an AFIP POS number'))
+
+        if to_review.filtered(lambda x: x.l10n_ar_afip_pos_number > 99999):
+            raise ValidationError(_('Please define a valid AFIP POS number (5 digits max)'))
 
     @api.onchange('l10n_ar_afip_pos_system')
     def _onchange_l10n_ar_afip_pos_system(self):
@@ -189,5 +193,4 @@ class AccountJournal(models.Model):
         we add or not a prefix to identify sales journal.
         """
         if self.type == 'sale' and self.l10n_ar_afip_pos_number:
-            pos_num = str(self.l10n_ar_afip_pos_number)
-            self.code = pos_num if len(pos_num) > 4 else _('S') + "%04d" % self.l10n_ar_afip_pos_number
+            self.code = "%05i" % self.l10n_ar_afip_pos_number

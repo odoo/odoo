@@ -4,8 +4,10 @@ access_sale_order_line,sale.order.line,model_sale_order_line,sales_team.group_sa
 access_sale_order_line_accountant,sale.order.line accountant,model_sale_order_line,account.group_account_user,1,1,0,0
 access_sale_order_portal,sale.order.portal,sale.model_sale_order,base.group_portal,1,0,0,0
 access_sale_order_line_portal,sale.order.line.portal,sale.model_sale_order_line,base.group_portal,1,0,0,0
-access_account_move_salesman,account_move salesman,account.model_account_move,sales_team.group_sale_salesman,1,1,1,0
-access_account_move_manager,account_move manager,account.model_account_move,sales_team.group_sale_manager,1,1,1,1
+access_account_move_manager,account_move manager,account.model_account_move,sales_team.group_sale_manager,1,0,0,0
+access_account_move_salesman,account_move salesman,account.model_account_move,sales_team.group_sale_salesman,1,0,0,0
+access_account_move_line_salesman,account_move_line salesman,account.model_account_move_line,sales_team.group_sale_salesman,1,0,0,0
+access_account_partial_reconcile_salesman,account_partial_reconcile salesman,account.model_account_partial_reconcile,sales_team.group_sale_salesman,1,0,0,0
 access_account_payment_term_salesman,account_payment_term salesman,account.model_account_payment_term,sales_team.group_sale_salesman,1,0,0,0
 access_account_account_tag_sale_salesman,account.account.tag.sale.salesman,account.model_account_account_tag,sales_team.group_sale_salesman,1,0,0,0
 access_account_account_type_sale_salesman,account.account.type.sale.salesman,account.model_account_account_type,sales_team.group_sale_salesman,1,0,0,0
@@ -32,7 +34,6 @@ access_product_supplierinfo_user,product.supplierinfo.user,product.model_product
 access_product_supplierinfo_sale_manager,product.supplierinfo salemanager,product.model_product_supplierinfo,sales_team.group_sale_manager,1,1,1,1
 access_product_pricelist_sale_manager,product.pricelist salemanager,product.model_product_pricelist,sales_team.group_sale_manager,1,1,1,1
 access_product_group_res_partner_sale_manager,res_partner group_sale_manager,base.model_res_partner,sales_team.group_sale_manager,1,1,1,0
-access_account_move_line_salesman,account.move.line invoice,account.model_account_move_line,sales_team.group_sale_salesman,1,0,0,0
 access_sale_order_invoicing_payments,sale.order,model_sale_order,account.group_account_invoice,1,1,0,0
 access_sale_order_line_invoicing_payments,sale.order.line,model_sale_order_line,account.group_account_invoice,1,1,0,0
 access_product_pricelist_item_sale_manager,product.pricelist.item salemanager,product.model_product_pricelist_item,sales_team.group_sale_manager,1,1,1,1

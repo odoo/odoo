@@ -636,8 +636,8 @@
                                     <field name="user_id"/>
                                     <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" options="{'no_create': True}"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                    <field name="require_signature" groups="base.group_no_one"/>
-                                    <field name="require_payment" groups="base.group_no_one"/>
+                                    <field name="require_signature"/>
+                                    <field name="require_payment"/>
                                     <field name="reference" readonly="1" attrs="{'invisible': [('reference', '=', False)]}"/>
                                     <field name="client_order_ref"/>
                                 </group>

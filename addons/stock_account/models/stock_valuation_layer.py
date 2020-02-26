@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, tools
 
 
 class StockValuationLayer(models.Model):
@@ -28,6 +28,12 @@ class StockValuationLayer(models.Model):
     description = fields.Char('Description', readonly=True)
     stock_valuation_layer_id = fields.Many2one('stock.valuation.layer', 'Linked To', readonly=True, check_company=True)
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_valuation_layer_id')
-    stock_move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True, check_company=True)
+    stock_move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True, check_company=True, index=True)
     account_move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True, check_company=True)
+
+    def init(self):
+        tools.create_index(
+            self._cr, 'stock_valuation_layer_index',
+            self._table, ['product_id', 'remaining_qty', 'stock_move_id', 'company_id', 'create_date']
+        )
 

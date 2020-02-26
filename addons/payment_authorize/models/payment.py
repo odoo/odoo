@@ -253,15 +253,15 @@ class TxAuthorize(models.Model):
                               'Please make sure the token has a valid acquirer reference.'))
 
         if not self.acquirer_id.capture_manually:
-            res = transaction.auth_and_capture(self.payment_token_id, self.amount, self.reference)
+            res = transaction.auth_and_capture(self.payment_token_id, round(self.amount, self.currency_id.decimal_places), self.reference)
         else:
-            res = transaction.authorize(self.payment_token_id, self.amount, self.reference)
+            res = transaction.authorize(self.payment_token_id, round(self.amount, self.currency_id.decimal_places), self.reference)
         return self._authorize_s2s_validate_tree(res)
 
     def authorize_s2s_capture_transaction(self):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
-        tree = transaction.capture(self.acquirer_reference or '', self.amount)
+        tree = transaction.capture(self.acquirer_reference or '', round(self.amount, self.currency_id.decimal_places))
         return self._authorize_s2s_validate_tree(tree)
 
     def authorize_s2s_void_transaction(self):

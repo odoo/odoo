@@ -40,7 +40,6 @@ def ad_paths():
                     'removed in the next version.',
                     exc_info=DeprecationWarning(), stack_info=True)
     return odoo.addons.__path__
-hooked = False
 
 # Modules already loaded
 loaded = []
@@ -115,26 +114,43 @@ def initialize_sys_path():
     ``import odoo.addons.crm``) works even if the addons are not in the
     PYTHONPATH.
     """
-    global hooked
+    initialize_sys_path.called = True
 
+    # hook odoo.addons on data dir
     dd = os.path.normcase(tools.config.addons_data_dir)
     if os.access(dd, os.R_OK) and dd not in odoo.addons.__path__:
         odoo.addons.__path__.append(dd)
 
+    # hook odoo.addons on addons paths
     for ad in tools.config['addons_path'].split(','):
         ad = os.path.normcase(os.path.abspath(tools.ustr(ad.strip())))
         if ad not in odoo.addons.__path__:
             odoo.addons.__path__.append(ad)
 
-    # add base module path
+    # hook odoo.addons on base module path
     base_path = os.path.normcase(os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons')))
     if base_path not in odoo.addons.__path__ and os.path.isdir(base_path):
         odoo.addons.__path__.append(base_path)
 
-    if not hooked:
+    # hook odoo.upgrade on upgrade-path
+    from odoo import upgrade
+    legacy_upgrade_path = os.path.join(base_path, 'base', 'maintenance', 'migrations')
+    for up in (tools.config['upgrade_path'] or legacy_upgrade_path).split(','):
+        up = os.path.normcase(os.path.abspath(tools.ustr(up.strip())))
+        if up not in upgrade.__path__:
+            upgrade.__path__.append(up)
+
+    # create decrecated module alias from odoo.addons.base.maintenance.migrations to odoo.upgrade
+    spec = importlib.machinery.ModuleSpec("odoo.addons.base.maintenance", None, is_package=True)
+    maintenance_pkg = importlib.util.module_from_spec(spec)
+    maintenance_pkg.migrations = upgrade
+    sys.modules["odoo.addons.base.maintenance"] = maintenance_pkg
+    sys.modules["odoo.addons.base.maintenance.migrations"] = upgrade
+
+    if getattr(initialize_sys_path, 'called', False): # only initialize once
         sys.meta_path.insert(0, OdooHook())
         sys.meta_path.insert(0, AddonsHook())
-        hooked = True
+
 
 def get_module_path(module, downloaded=False, display_warning=True):
     """Return the path of the given module.

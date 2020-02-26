@@ -122,6 +122,7 @@
             <field name="model">website.page</field>
             <field name="arch" type="xml">
                 <search string="Website Pages" >
+                    <field name="url"/>
                     <filter string="Published" name="published" domain="[('website_published', '=', True)]"/>
                     <filter string="Not published" name="not_published" domain="[('website_published', '=', False)]"/>
                     <separator/>

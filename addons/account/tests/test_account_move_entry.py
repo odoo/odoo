@@ -310,6 +310,23 @@ class TestAccountMove(InvoiceTestCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             draft_moves.unlink()
 
+    def test_misc_always_balanced_move(self):
+        ''' Ensure there is no way to make '''
+        # You can't remove a journal item making the journal entry unbalanced.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.line_ids[0].unlink()
+
+        # Same check using write instead of unlink.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            balance = self.test_move.line_ids[0].balance + 5
+            self.test_move.line_ids[0].write({
+                'debit': balance if balance > 0.0 else 0.0,
+                'credit': -balance if balance < 0.0 else 0.0,
+            })
+
+        # You can remove journal items if the related journal entry is still balanced.
+        self.test_move.line_ids.unlink()
+
     def test_misc_unique_sequence_number(self):
         ''' Ensure two journal entries can't share the same name when using the same sequence. '''
         self.test_move.post()
@@ -338,12 +355,10 @@ class TestAccountMove(InvoiceTestCommon):
 
         move = self.test_move.with_user(user)
         partner = self.env['res.partner'].create({'name': 'Belouga'})
-        commercial_partner = self.env['res.partner'].create({'name': 'Rorqual'})
         move.partner_id = partner
-        move.commercial_partner_id = commercial_partner
 
         move.post()
-        self.assertEqual(move.message_partner_ids, self.env.user.partner_id | existing_partners | partner | commercial_partner)
+        self.assertEqual(move.message_partner_ids, self.env.user.partner_id | existing_partners | partner)
 
     def test_misc_move_onchange(self):
         ''' Test the behavior on onchanges for account.move having 'entry' as type. '''

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="CrashManager.BaseAutomationError" t-extend="CrashManager.error">
+        <t t-jquery=".alert.alert-warning" t-operation="append">
+            <t t-if="widget.base_automation.id">
+                <p>
+                    The error occurred during the execution of the automated action
+                    "<t t-esc="widget.base_automation.name"/>"
+                    (ID: <t t-esc="widget.base_automation.id"/>).
+                    <br/>
+                </p>
+                <p t-if="!widget.is_admin">
+                    You can ask an administrator to disable or correct this automated action.
+                </p>
+                <p t-if="widget.is_admin">
+                    You can disable this automated action or edit it to solve the issue.<br/>
+                    Disabling this automated action will enable you to continue your workflow
+                    but any data created after this could potentially be corrupted,
+                    as you are effectively disabling a customization that may set
+                    important and/or required fields.
+                </p>
+            </t>
+        </t>
+        <t t-jquery=".alert.alert-warning button" t-operation="after">
+            <t t-if="widget.base_automation.id &amp;&amp; widget.is_admin">
+                <button class="btn btn-secondary mt4 o_disable_action_button">
+                    <i class="fa fa-ban mr8"/>Disable Action
+                </button>
+                <button class="btn btn-secondary mt4 o_edit_action_button">
+                    <i class="fa fa-edit mr8"/>Edit action
+                </button>
+            </t>
+        </t>
+    </t>
+</templates>

@@ -89,10 +89,10 @@ class AccountBankStmtCashWizard(models.Model):
 
     def _validate_cashbox(self):
         for cashbox in self:
-            if self.start_bank_stmt_ids:
-                self.start_bank_stmt_ids.write({'balance_start': self.total})
-            if self.end_bank_stmt_ids:
-                self.end_bank_stmt_ids.write({'balance_end_real': self.total})
+            if cashbox.start_bank_stmt_ids:
+                cashbox.start_bank_stmt_ids.write({'balance_start': cashbox.total})
+            if cashbox.end_bank_stmt_ids:
+                cashbox.end_bank_stmt_ids.write({'balance_end_real': cashbox.total})
 
 
 class AccountBankStmtCloseCheck(models.TransientModel):
@@ -493,6 +493,7 @@ class AccountBankStatementLine(models.Model):
             'journal_id': self.statement_id.journal_id.id,
             'currency_id': self.statement_id.currency_id.id,
             'date': self.statement_id.accounting_date or self.date,
+            'partner_id': self.partner_id.id,
             'ref': ref,
         }
         if self.move_name:

@@ -71,7 +71,7 @@ class StockMove(models.Model):
                     float_compare(self.quantity_done, self.product_uom_qty, precision_rounding=rounding) < 0:
                 return self._action_record_components()
         action = super(StockMove, self).action_show_details()
-        if self.is_subcontract:
+        if self.is_subcontract and self._has_tracked_subcontract_components():
             action['views'] = [(self.env.ref('stock.view_stock_move_operations').id, 'form')]
             action['context'].update({
                 'show_lots_m2o': self.has_tracking != 'none',

@@ -6,12 +6,13 @@ from odoo import fields, models, api
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
+    _check_company_auto = True
 
     optional_product_ids = fields.Many2many(
         'product.template', 'product_optional_rel', 'src_id', 'dest_id',
         string='Optional Products', help="Optional Products are suggested "
         "whenever the customer hits *Add to Cart* (cross-sell strategy, "
-        "e.g. for computers: warranty, software, etc.).")
+        "e.g. for computers: warranty, software, etc.).", check_company=True)
 
     @api.depends('attribute_line_ids.value_ids.is_custom', 'attribute_line_ids.attribute_id.create_variant')
     def _compute_has_configurable_attributes(self):

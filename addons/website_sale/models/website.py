@@ -3,7 +3,7 @@
 
 import logging
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, tools, SUPERUSER_ID
 
 from odoo.http import request
 from odoo.addons.website.models import ir_http
@@ -252,7 +252,7 @@ class Website(models.Model):
                 sale_order_id = last_order.pricelist_id in available_pricelists and last_order.id
 
         # Test validity of the sale_order_id
-        sale_order = self.env['sale.order'].sudo().browse(sale_order_id).exists() if sale_order_id else None
+        sale_order = self.env['sale.order'].with_context(force_company=request.website.company_id.id).sudo().browse(sale_order_id).exists() if sale_order_id else None
 
         if not (sale_order or force_create or code):
             if request.session.get('sale_order_id'):
@@ -274,7 +274,7 @@ class Website(models.Model):
             # TODO cache partner_id session
             pricelist = self.env['product.pricelist'].browse(pricelist_id).sudo()
             so_data = self._prepare_sale_order_values(partner, pricelist)
-            sale_order = self.env['sale.order'].with_context(force_company=request.website.company_id.id).sudo().create(so_data)
+            sale_order = self.env['sale.order'].with_context(force_company=request.website.company_id.id).with_user(SUPERUSER_ID).create(so_data)
 
             # set fiscal position
             if request.website.partner_id.id != partner.id:

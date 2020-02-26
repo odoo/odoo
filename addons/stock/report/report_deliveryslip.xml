@@ -44,11 +44,8 @@
                             <tr t-foreach="lines" t-as="move">
                                 <td>
                                     <span t-field="move.product_id"/>
-                                    <p t-if="o.picking_type_code == 'outgoing'">
-                                        <span t-field="move.product_id.sudo().description_pickingout"/>
-                                    </p>
-                                    <p t-if="o.picking_type_code == 'incoming'">
-                                        <span t-field="move.product_id.sudo().description_pickingin"/>
+                                    <p>
+                                        <span t-field="move.description_picking"/>
                                     </p>
                                 </td>
                                 <td>
@@ -73,11 +70,8 @@
                             <tr t-foreach="o.move_line_ids" t-as="move_line">
                                 <td>
                                     <span t-field="move_line.product_id"/>
-                                    <p t-if="o.picking_type_code == 'outgoing'">
-                                        <span t-field="move_line.product_id.sudo().description_pickingout"/>
-                                    </p>
-                                    <p t-if="o.picking_type_code == 'incoming'">
-                                        <span t-field="move_line.product_id.sudo().description_pickingin"/>
+                                    <p>
+                                        <span t-field="move_line.move_id.description_picking"/>
                                     </p>
                                 </td>
                                 <td t-if="has_serial_number and move_line.lot_name" groups="stock.group_lot_on_delivery_slip">

@@ -117,7 +117,7 @@ class WebsiteEventController(http.Controller):
             'country_id': ("all", _("All Countries"))
         })
 
-        step = 10  # Number of events per page
+        step = 12  # Number of events per page
         event_count = Event.search_count(dom_without("none"))
         pager = website.pager(
             url="/event",

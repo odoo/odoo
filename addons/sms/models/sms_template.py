@@ -157,3 +157,7 @@ class SMSTemplate(models.Model):
     def _render_template(self, template_txt, model, res_ids):
         """ Render the jinja template """
         return self.env['mail.template']._render_template(template_txt, model, res_ids)
+
+    def unlink(self):
+        self.sudo().mapped('sidebar_action_id').unlink()
+        return super(SMSTemplate, self).unlink()

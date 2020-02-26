@@ -35,6 +35,7 @@ class AccountMoveReversal(models.TransientModel):
         res['residual'] = len(move_ids) == 1 and move_ids.amount_residual or 0
         res['currency_id'] = len(move_ids.currency_id) == 1 and move_ids.currency_id.id or False
         res['move_type'] = len(move_ids) == 1 and move_ids.type or False
+        res['move_id'] = move_ids[0].id if move_ids else False
         return res
 
     @api.depends('move_id')
@@ -45,20 +46,23 @@ class AccountMoveReversal(models.TransientModel):
             record.currency_id = len(move_ids.currency_id) == 1 and move_ids.currency_id or False
             record.move_type = len(move_ids) == 1 and move_ids.type or False
 
+    def _prepare_default_reversal(self, move):
+        return {
+            'ref': _('Reversal of: %s, %s') % (move.name, self.reason) if self.reason else _('Reversal of: %s') % (move.name),
+            'date': self.date or move.date,
+            'invoice_date': move.is_invoice(include_receipts=True) and (self.date or move.date) or False,
+            'journal_id': self.journal_id and self.journal_id.id or move.journal_id.id,
+            'invoice_payment_term_id': None,
+            'auto_post': True if self.date > fields.Date.context_today(self) else False,
+        }
+
     def reverse_moves(self):
         moves = self.env['account.move'].browse(self.env.context['active_ids']) if self.env.context.get('active_model') == 'account.move' else self.move_id
 
         # Create default values.
         default_values_list = []
         for move in moves:
-            default_values_list.append({
-                'ref': _('Reversal of: %s, %s') % (move.name, self.reason) if self.reason else _('Reversal of: %s') % (move.name),
-                'date': self.date or move.date,
-                'invoice_date': move.is_invoice(include_receipts=True) and (self.date or move.date) or False,
-                'journal_id': self.journal_id and self.journal_id.id or move.journal_id.id,
-                'invoice_payment_term_id': None,
-                'auto_post': True if self.date > fields.Date.context_today(self) else False,
-            })
+            default_values_list.append(self._prepare_default_reversal(move))
 
         # Handle reverse method.
         if self.refund_method == 'cancel':

@@ -6,6 +6,7 @@ import logging
 
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -202,7 +203,9 @@ class ProductTemplate(models.Model):
             partner = self.env.context.get('partner')
             quantity = self.env.context.get('quantity', 1.0)
 
-            # Support context pricelists specified as display_name or ID for compatibility
+            # Support context pricelists specified as list, display_name or ID for compatibility
+            if isinstance(pricelist_id_or_name, list):
+                pricelist_id_or_name = pricelist_id_or_name[0]
             if isinstance(pricelist_id_or_name, str):
                 pricelist_data = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
                 if pricelist_data:
@@ -277,9 +280,9 @@ class ProductTemplate(models.Model):
         get_param = self.env['ir.config_parameter'].sudo().get_param
         product_weight_in_lbs_param = get_param('product.weight_in_lbs')
         if product_weight_in_lbs_param == '1':
-            return self.env.ref('uom.product_uom_lb')
+            return self.env.ref('uom.product_uom_lb', False) or self.env['uom.uom'].search([('measure_type', '=' , 'weight'), ('uom_type', '=', 'reference')], limit=1)
         else:
-            return self.env.ref('uom.product_uom_kgm')
+            return self.env.ref('uom.product_uom_kgm', False) or self.env['uom.uom'].search([('measure_type', '=' , 'weight'), ('uom_type', '=', 'reference')], limit=1)
 
     @api.model
     def _get_weight_uom_name_from_ir_config_parameter(self):
@@ -897,10 +900,15 @@ class ProductTemplate(models.Model):
         Use sudo because the same result should be cached for all users.
         """
         self.ensure_one()
-        return self.env['product.product'].sudo().with_context(active_test=False).search([
-            ('product_tmpl_id', '=', self.id),
-            ('combination_indices', '=', filtered_combination._ids2str())
-        ], order='active DESC', limit=1).id
+        domain = [('product_tmpl_id', '=', self.id)]
+        combination_indices_ids = filtered_combination._ids2str()
+
+        if combination_indices_ids:
+            domain = expression.AND([domain, [('combination_indices', '=', combination_indices_ids)]])
+        else:
+            domain = expression.AND([domain, [('combination_indices', 'in', ['', False])]])
+
+        return self.env['product.product'].sudo().with_context(active_test=False).search(domain, order='active DESC', limit=1).id
 
     @tools.ormcache('self.id')
     def _get_first_possible_variant_id(self):

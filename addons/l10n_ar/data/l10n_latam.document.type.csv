@@ -39,11 +39,11 @@ dc_m_nvc,370,55,NOTAS DE VENTA AL CONTADO M,M,,,,base.ar,not_zero,False
 dc_m_rg1415,380,56,COMPROBANTES M DEL ANEXO I  APARTADO A  INC F   R G  N  1415,M,,invoice,,base.ar,not_zero,False
 dc_m_o_rg1415,390,57,OTROS COMPROBANTES M QUE CUMPLAN CON LA R G  N  1415,M,,invoice,,base.ar,not_zero,False
 dc_m_cvl,400,58,CUENTAS DE VENTA Y LIQUIDO PRODUCTO M,M,,invoice,,base.ar,not_zero,False
-dc_m_l,410,59,LIQUIDACIONES M,M,LIQUIDACION,invoice,,base.ar,not_zero,False
+dc_m_l,410,59,LIQUIDACIONES M,M,LIQUIDACION,invoice,LI-M,base.ar,not_zero,False
 dc_a_cvl,420,60,CUENTAS DE VENTA Y LIQUIDO PRODUCTO A,A,,invoice,,base.ar,not_zero,False
 dc_b_cvl,430,61,CUENTAS DE VENTA Y LIQUIDO PRODUCTO B,B,,invoice,,base.ar,zero,False
-dc_a_l,440,63,LIQUIDACIONES A,A,LIQUIDACION,invoice,,base.ar,not_zero,False
-dc_b_l,450,64,LIQUIDACIONES B,B,LIQUIDACION,invoice,,base.ar,zero,False
+dc_a_l,440,63,LIQUIDACIONES A,A,LIQUIDACION,invoice,LI-A,base.ar,not_zero,True
+dc_b_l,450,64,LIQUIDACIONES B,B,LIQUIDACION,invoice,LI-B,base.ar,zero,True
 dc_nc,460,65,"NOTAS DE CREDITO DE COMPROBANTES CON COD. 34, 39, 58, 59, 60, 63, 96, 97,",,,credit_note,,base.ar,,False
 dc_desp_imp,470,66,DESPACHO DE IMPORTACION,,,invoice,DI,base.ar,not_zero,True
 dc_imp_serv,480,67,IMPORTACION DE SERVICIOS,,,invoice,IS,base.ar,,False

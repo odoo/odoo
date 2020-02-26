@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, RedirectWarning
 from dateutil.relativedelta import relativedelta
 from lxml import etree
 import logging
@@ -132,14 +132,23 @@ class AccountMove(models.Model):
             res_code = rec.partner_id.l10n_ar_afip_responsibility_type_id.code
             domain = [('company_id', '=', rec.company_id.id), ('l10n_latam_use_documents', '=', True), ('type', '=', 'sale')]
             journal = self.env['account.journal']
-            if res_code in ['8', '9', '10'] and rec.journal_id.l10n_ar_afip_pos_system not in expo_journals:
+            partner_type = journal_type = False
+            if res_code in ['9', '10'] and rec.journal_id.l10n_ar_afip_pos_system not in expo_journals:
                 # if partner is foregin and journal is not of expo, we try to change to expo journal
                 journal = journal.search(domain + [('l10n_ar_afip_pos_system', 'in', expo_journals)], limit=1)
-            elif res_code not in ['8', '9', '10'] and rec.journal_id.l10n_ar_afip_pos_system in expo_journals:
+                partner_type, journal_type = (_('foreign partner'), _('exportation'))
+            elif res_code not in ['9', '10'] and rec.journal_id.l10n_ar_afip_pos_system in expo_journals:
                 # if partner is NOT foregin and journal is for expo, we try to change to local journal
                 journal = journal.search(domain + [('l10n_ar_afip_pos_system', 'not in', expo_journals)], limit=1)
+                partner_type, journal_type = (_('domestic partner'), _('domestic market'))
             if journal:
                 rec.journal_id = journal.id
+            elif partner_type and journal_type:
+                # Throw an error to user in order to proper configure the journal for the type of operation
+                action = self.env.ref('account.action_account_journal_form')
+                msg = _('You are trying to create an invoice for %s but you dont have an %s journal') % (
+                    partner_type, journal_type)
+                raise RedirectWarning(msg, action.id, _('Go to Journals'))
 
     def post(self):
         ar_invoices = self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.ar') and x.l10n_latam_use_documents)

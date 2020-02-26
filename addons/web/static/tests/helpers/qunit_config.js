@@ -50,7 +50,7 @@ QUnit.done(function(result) {
     if (!result.failed) {
         console.log('test successful');
     } else {
-        console.error('test failed');
+        console.error(result.failed, "/", result.total, "tests failed");
     }
 
     if (!sortButtonAppended) {

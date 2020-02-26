@@ -134,7 +134,6 @@ class PaymentTransaction(models.Model):
                     """))
         return True
 
-    @api.model
     def write(self, vals):
         if vals.get('currency_id') or vals.get('acquirer_id'):
             for payment in self:

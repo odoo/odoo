@@ -25,13 +25,14 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
-# Felix Yang - Elico Corp <felix.yang@elico-corp.com>, 2019
 # Qin LIU <liu.qin@falinwa.com>, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
 # yuan wenpu <1140021222@qq.com>, 2019
 # Frank Liu <liuchunbo@gmail.com>, 2019
 # 开源智造OSCG-老杨 <yangxunbo@163.com>, 2020
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# Felix Yang/杨孟泽 <felixyangsh@aliyun.com>, 2020
+# 笔 陈 <cowboycb@qq.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -39,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
+"Last-Translator: 笔 陈 <cowboycb@qq.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,7 +76,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
 msgid "# of Digits"
-msgstr "# 数字"
+msgstr "# 小数位数"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line__number
@@ -90,7 +91,7 @@ msgstr "${(object.name or '').replace('/','-')}"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.name or 'n/a'})"
-msgstr "${object.company_id.name} 发票 (参考${object.name or 'n/a'})"
+msgstr "${object.company_id.name} 发货单 (参考${object.name or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -309,7 +310,7 @@ msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-download\"/> Download"
-msgstr "<i class=\"fa fa-download\"/> 下载"
+msgstr "<i class=\"fa fa-download\"/> 已下载"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7075,7 +7076,7 @@ msgstr "移动行"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__move_line_count
 msgid "Move Line Count"
-msgstr "凭证明细数"
+msgstr "凭证明细计数"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__move_reconciled
@@ -7085,7 +7086,7 @@ msgstr "凭证已核销"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__move_type
 msgid "Move Type"
-msgstr ""
+msgstr "移动类型"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8940,7 +8941,7 @@ msgstr "撤销日期"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__reversed_entry_id
 msgid "Reversal of"
-msgstr ""
+msgstr "冲销"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -9813,7 +9814,7 @@ msgstr "步骤已完成!"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__string_to_hash
 msgid "String To Hash"
-msgstr ""
+msgstr "字符串哈希值"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__subject
@@ -10044,7 +10045,7 @@ msgstr "税收锁定日期"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__tax_lock_date_message
 msgid "Tax Lock Date Message"
-msgstr ""
+msgstr "税务锁定日期信息"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_ids
@@ -10345,7 +10346,7 @@ msgstr "技术领域用于确定在何时进行核销需要显示在应收/应�
 msgid ""
 "Technical field used to display a message when the invoice's accounting date"
 " is prior of the tax lock date."
-msgstr ""
+msgstr "当发票的会计日期是在税收锁定日期之前技术字段用来显示一个信息。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__invoice_has_matching_suspense_amount
@@ -10364,7 +10365,7 @@ msgstr "用于从表单视图中的invoice_line_ids选项卡中排除某些行�
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__user_id
 msgid "Technical field used to fit the generic behavior in mail templates."
-msgstr ""
+msgstr "技术字段，用于适应邮件模板中的通用行为。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__invoice_filter_type_domain
@@ -10522,7 +10523,7 @@ msgstr "科目 %s (%s) 是废弃的."
 msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
-msgstr ""
+msgstr "该科目已经在“销售”或“购买”日记账中使用。这意味着该科目的类型不能是“应收”或“应付”。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10530,7 +10531,7 @@ msgstr ""
 msgid ""
 "The account selected on your journal entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
-msgstr ""
+msgstr "在您的日记账条目中选择的科目被强制提供外币。您应该在科目上删除外币。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10538,7 +10539,7 @@ msgstr ""
 msgid ""
 "The accounting date is prior to the tax lock date which is set on %s. Then, "
 "this will be moved to the next available one during the invoice validation."
-msgstr ""
+msgstr "会计日期早于设定的税务锁定日期%s。然后，这将被移动到下一个可用的发票验证期间。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
@@ -10575,7 +10576,7 @@ msgid ""
 " is debited and negative when account is credited. Moreover, the currency "
 "field has to be left empty when the amount is expressed in the company "
 "currency."
-msgstr ""
+msgstr "借记账户时外币表示的金额必须为正，贷记账户时外币金额为负。此外，当金额以公司本币表示时，货币金额必须为空。"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -10791,6 +10792,8 @@ msgid ""
 "The hash chain is compliant: it is not possible to alter the\n"
 "                                            data without breaking the hash chain for subsequent parts."
 msgstr ""
+"哈希值链是连续的：它不可能被修改\n"
+"                                在后续哈希链部分不被破坏的情况下。"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -10858,7 +10861,7 @@ msgid ""
 "The operation is refused as it would impact an already issued tax statement."
 " Please change the journal entry date or the tax lock date set in the "
 "settings (%s) to proceed."
-msgstr ""
+msgstr "该操作被拒绝，因为它将影响已经发布的税务报表。请更改日记帐的日期或设置中的税务锁定日期（%s）以继续。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__report_action_id
@@ -11094,7 +11097,7 @@ msgstr "用于浮点运算的搭配规则"
 msgid ""
 "The type of the journal's default credit/debit account shouldn't be "
 "'receivable' or 'payable'."
-msgstr ""
+msgstr "凭证类型中默认的借方或贷方科目类型不应该是“应收”或“应付”。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -11114,6 +11117,14 @@ msgid ""
 "There are still unposted entries in the period you want to lock. You should "
 "either post or delete them."
 msgstr "在您要锁定的时间段中仍有未过账的分录。您应该过账或删除它们。"
+
+#. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"There is more than one receivable/payable account in the concerned invoices."
+" You cannot group payments in that case."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -11159,7 +11170,7 @@ msgstr "没有需要核销的."
 msgid ""
 "There isn't any journal entry flagged for data inalterability yet for this "
 "journal."
-msgstr ""
+msgstr "还没有任何凭证明细被标记为数据不可更改。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -11302,7 +11313,7 @@ msgstr "这个日记账已经包含明细账，因此你不能更改它的简称
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
-msgstr ""
+msgstr "这个日记账不是严格模式。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__to_check
@@ -12740,7 +12751,7 @@ msgstr "→ 计数"
 msgid ""
 "You can't change the company of your account since there are some journal "
 "items linked to it."
-msgstr ""
+msgstr "您不能修改您公司已经记账的凭证明细科目。"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12748,7 +12759,7 @@ msgstr ""
 msgid ""
 "You can't change the company of your journal since there are some journal "
 "entries linked to it."
-msgstr ""
+msgstr "您不能修改您公司的已经关联凭证明细的凭证类型！"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12756,7 +12767,7 @@ msgstr ""
 msgid ""
 "You can't change the company of your tax since there are some journal items "
 "linked to it."
-msgstr ""
+msgstr "您不能修改您公司已经关联凭证明细税率！"
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -12764,7 +12775,7 @@ msgstr ""
 msgid ""
 "You can't set a different company on your analytic account since there are "
 "some journal items linked to it."
-msgstr ""
+msgstr "您不能在您的分析账户上设置一个不同的公司，因为有一些与之相关的凭证明细。"
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -12772,4 +12783,4 @@ msgstr ""
 msgid ""
 "You can't set a different company on your analytic tags since there are some"
 " journal items linked to it."
-msgstr ""
+msgstr "您不能在您的分析标签上设置一个不同的公司，因为有一些与之相关的凭证明细。"

@@ -86,7 +86,9 @@ class AccountInvoiceSend(models.TransientModel):
         if self.is_email:
             self.composer_id.send_mail()
             if self.env.context.get('mark_invoice_as_sent'):
-                self.mapped('invoice_ids').write({'invoice_sent': True})
+                #Salesman send posted invoice, without the right to write
+                #but they should have the right to change this flag
+                self.mapped('invoice_ids').sudo().write({'invoice_sent': True})
 
     def _print_document(self):
         """ to override for each type of models that will use this composer."""
@@ -120,6 +122,7 @@ class AccountInvoiceSend(models.TransientModel):
     def save_as_template(self):
         self.ensure_one()
         self.composer_id.save_as_template()
+        self.template_id = self.composer_id.template_id.id
         action = _reopen(self, self.id, self.model, context=self._context)
         action.update({'name': _('Send Invoice')})
         return action

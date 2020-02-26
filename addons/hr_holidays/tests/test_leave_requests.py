@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime
+from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
+from pytz import timezone, UTC
 
 from odoo import fields
 from odoo.exceptions import ValidationError
@@ -307,3 +308,53 @@ class TestLeaveRequests(TestHrHolidaysBase):
         self.assertEqual(leave1.number_of_hours_display, 24)
         leave1.action_validate()
         self.assertEqual(leave1.number_of_hours_display, 24)
+
+    def _test_leave_with_tz(self, tz, local_date_from, local_date_to, number_of_days):
+        self.user_employee.tz = tz
+        tz = timezone(tz)
+
+        # Mimic what is done by the calendar widget when clicking on a day. It
+        # will take the local datetime from 7:00 to 19:00 and then convert it
+        # to UTC before sending it. Values here are for PST (UTC -8) and
+        # represent a leave on 2019/1/1 from 7:00 to 19:00 local time.
+        values = {
+            'date_from': tz.localize(local_date_from).astimezone(UTC).replace(tzinfo=None),
+            'date_to': tz.localize(local_date_to).astimezone(UTC).replace(tzinfo=None),  # note that this can be the next day in UTC
+        }
+        values.update(self.env['hr.leave'].with_user(self.user_employee_id)._default_get_request_parameters(values))
+
+        # Dates should be local to the user
+        self.assertEqual(values['request_date_from'], local_date_from.date())
+        self.assertEqual(values['request_date_to'], local_date_to.date())
+
+        values.update({
+            'name': 'Test',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_1.id,
+        })
+        leave = self.env['hr.leave'].with_user(self.user_employee_id).new(values)
+        leave._onchange_request_parameters()
+        self.assertEqual(leave.number_of_days, number_of_days)
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_leave_defaults_with_timezones(self):
+        """ Make sure that leaves start with correct defaults for non-UTC timezones """
+        timezones_to_test = ('UTC', 'Pacific/Midway', 'US/Pacific', 'Asia/Taipei', 'Pacific/Kiritimati')  # UTC, UTC -11, UTC -8, UTC +8, UTC +14
+
+        #     January 2020
+        # Su Mo Tu We Th Fr Sa
+        #           1  2  3  4
+        #  5  6  7  8  9 10 11
+        # 12 13 14 15 16 17 18
+        # 19 20 21 22 23 24 25
+        # 26 27 28 29 30 31
+        local_date_from = datetime(2019, 1, 1, 7, 0, 0)
+        local_date_to = datetime(2019, 1, 1, 19, 0, 0)
+        for tz in timezones_to_test:
+            self._test_leave_with_tz(tz, local_date_from, local_date_to, 1)
+
+        # We, Th, Fr, Mo, Tu, We => 6 days
+        local_date_from = datetime(2019, 1, 1, 7, 0, 0)
+        local_date_to = datetime(2019, 1, 8, 19, 0, 0)
+        for tz in timezones_to_test:
+            self._test_leave_with_tz(tz, local_date_from, local_date_to, 6)

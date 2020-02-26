@@ -5,6 +5,7 @@ var mailUtils = require('mail.utils');
 
 var AbstractField = require('web.AbstractField');
 var BasicModel = require('web.BasicModel');
+var config = require('web.config');
 var core = require('web.core');
 var field_registry = require('web.field_registry');
 var session = require('web.session');
@@ -711,7 +712,9 @@ var KanbanActivity = BasicActivity.extend({
      */
     _renderDropdown: function () {
         var self = this;
-        this.$('.o_activity').html(QWeb.render('mail.KanbanActivityLoading'));
+        this.$('.o_activity')
+            .toggleClass('dropdown-menu-right', config.device.isMobile)
+            .html(QWeb.render('mail.KanbanActivityLoading'));
         return _readActivities(this, this.value.res_ids).then(function (activities) {
             activities = setFileUploadID(activities);
             self.$('.o_activity').html(QWeb.render('mail.KanbanActivityDropdown', {

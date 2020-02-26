@@ -134,9 +134,9 @@
                                 <div class="col-2"/>
                                 <div class="col-10">
                                     <span class="text-muted">from </span>
-                                    <t t-esc="moment(record.date_from.raw_value).format('L')"/>
+                                    <field name="date_from" widget="date"/>
                                     <span class="text-muted">to </span>
-                                    <t t-esc="moment(record.date_to.raw_value).format('L')"/>
+                                    <field name="date_to" widget="date"/>
                                 </div>
                             </div>
                             <div class="row no-gutters" t-if="['validate', 'refuse'].includes(record.state.raw_value)">

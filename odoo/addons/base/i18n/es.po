@@ -50,7 +50,6 @@
 # Raquel Iciarte <ric@odoo.com>, 2019
 # JOSE ALEJANDRO ECHEVERRI VALENCIA <josealejandroeche@gmail.com>, 2019
 # ced903afe967c2a46d1036224972db9d, 2019
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
 # Sergio Flores <vitavitae1@gmail.com>, 2019
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2019
@@ -70,6 +69,8 @@
 # Nicolás Broggi <rnbroggi@gmail.com>, 2019
 # Pablo Rojas <rojaspablo88@gmail.com>, 2019
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
+# Marco Alejandro Martinez <martinezsuarezmarcoalejandro@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -77,7 +78,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-01 12:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2019\n"
+"Last-Translator: Marco Alejandro Martinez <martinezsuarezmarcoalejandro@gmail.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -386,6 +387,13 @@ msgid ""
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Este módulo agrega diversas funcionalidades al Punto de Venta que son específicas para la administración de un restaurante:\n"
+"- Impresión de Cuenta: Permite imprimir la cuenta antes de que la orden sea pagada.\n"
+"- Dividir la Cuenta: Permite dividir la cuenta en diferentes órdenes.\n"
+"- Impresión de Comanda en la Cocina: Permite imprimir las comandas y actualizaciones en las impresoras de la cocina o el bar.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
@@ -396,6 +404,9 @@ msgid ""
 "discount to a customer.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Este módulo permite al cajero de forma rápida dar un descuento basado en porcentaje al cliente.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_loyalty
@@ -407,6 +418,12 @@ msgid ""
 "and get rewards.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Este módulo te permite definir un programa de lealtad\n"
+"en el punto de venta, donde los clienten ganan puntos de lealtad\n"
+"y obtienen premios.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer_restaurant
@@ -622,6 +639,8 @@ msgid ""
 "\n"
 "        Bridge module for website_sale / sale_product_configurator"
 msgstr ""
+"\n"
+"        Módulo puente para  website_sale / sale_product_configurator"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_stock_product_configurator
@@ -629,6 +648,8 @@ msgid ""
 "\n"
 "        Bridge module for website_sale_stock / sale_product_configurator"
 msgstr ""
+"\n"
+"        Módulo puente para website_sale_stock / sale_product_configurator"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_product_configurator
@@ -637,6 +658,9 @@ msgid ""
 "        Bridge module to make the website e-commerce compatible with the product configurator\n"
 "    "
 msgstr ""
+"\n"
+"        Módulo puente que permite que el comercio electrónico sea compatible con el configurador de productos\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_stock_product_configurator
@@ -645,6 +669,9 @@ msgid ""
 "        Bridge module to make the website e-commerce stock management compatible with the product configurator\n"
 "    "
 msgstr ""
+"\n"
+"        Módulo puente que permite que la administración de almacén con comercio electrónico sea compatible con el configurador de productos\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_fsm
@@ -7331,6 +7358,12 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>"
 msgstr ""
+"<b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Domicilio de la compañía</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Domicilio de facturación</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Dirección de entrega</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Otra dirección</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Domicilio privado</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Dirección</b>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
@@ -8585,7 +8618,7 @@ msgstr "Formato de dirección..."
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Address separator"
-msgstr ""
+msgstr "Separador de direcciones"
 
 #. module: base
 #: model:ir.module.module,description:base.module_contacts_enterprise
@@ -9400,7 +9433,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_autocomplete_address_extended
 msgid "Autocomplete extended addresses"
-msgstr ""
+msgstr "Autocompletar direcciones extendidas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
@@ -10048,7 +10081,7 @@ msgstr "Por"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "By default the widget uses the field informations"
-msgstr ""
+msgstr "Por defecto el widget usa la información del campo"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_C
@@ -10079,12 +10112,12 @@ msgstr "Chat en vivo CRM"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_enterprise
 msgid "CRM enterprise"
-msgstr ""
+msgstr "CRM Empresarial"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_crm
 msgid "CRM statistics on social"
-msgstr ""
+msgstr "estadísticas sociales en CRM"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__format__csv
@@ -10115,7 +10148,7 @@ msgstr "Calendario"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_calendar_sms
 msgid "Calendar - SMS"
-msgstr ""
+msgstr "Calendario - SMS"
 
 #. module: base
 #: model:res.country,name:base.kh
@@ -10723,7 +10756,7 @@ msgstr "Diseño de documentos de la empresa"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__favicon
 msgid "Company Favicon"
-msgstr ""
+msgstr "Favicon de la Compañía"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_document_layout__logo
@@ -10954,7 +10987,7 @@ msgstr "¡Prueba de conexión exitosa!"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_consolidation
 msgid "Consolidation"
-msgstr ""
+msgstr "Consolidación"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__name
@@ -11043,7 +11076,7 @@ msgstr "Contactos y direcciones"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_contacts_enterprise
 msgid "Contacts Enterprise"
-msgstr ""
+msgstr "Contactos Enterprise"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_partner_check_name
@@ -11235,17 +11268,17 @@ msgstr "Crear menú"
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create
 msgid "Create Menu Wizard"
-msgstr ""
+msgstr "Crear Menú de Asistente"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm_report
 msgid "Create Reports for Field service workers"
-msgstr ""
+msgstr "Crea Informes para Trabajadores en Campo"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_helpdesk
 msgid "Create Tickets from Leads"
-msgstr ""
+msgstr "Crea tiquetes desde iniciativas"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_menu_create
@@ -11333,7 +11366,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_approvals
 msgid "Create and validate approvals requests"
-msgstr ""
+msgstr "Crea y valida solicitudes de aprobación"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_livechat
@@ -11763,7 +11796,7 @@ msgstr "D. SUMINISTRO DE ELECTRICIDAD, GAS, VAPOR Y AIRE ACONDICIONADO"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl
 msgid "DHL Express Shipping"
-msgstr ""
+msgstr "Envio DHL Express"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__dle
@@ -11854,18 +11887,19 @@ msgstr "Formato de Fecha"
 #, python-format
 msgid "Date to compare with the field value, by default use the current date."
 msgstr ""
+"Fecha comparar con el valor del campo, por defecto usa la fecha actual."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Date unit"
-msgstr ""
+msgstr "Unidad de Fecha"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Date unit used for comparison and formatting"
-msgstr ""
+msgstr "Unidad de fecha utilizada para comparar y dar formato"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -11874,6 +11908,8 @@ msgid ""
 "Date unit used for the rounding. The value must be smaller than 'hour' if "
 "you use the digital formatting."
 msgstr ""
+"Unidad de fecha utilizada para el redondeo. Este valor debe ser menor que la"
+" 'hora' si utiliza el formato digital."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -11882,6 +11918,8 @@ msgid ""
 "Date used for the original currency (only used for t-esc). by default use "
 "the current date."
 msgstr ""
+"Fecha utilizada para la moneda original (solamente usada para t-esc). por "
+"defecto utiliza la fecha actual."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__datetime
@@ -11984,7 +12022,7 @@ msgstr "Informes definidos"
 #. module: base
 #: model:ir.module.module,summary:base.module_web_map
 msgid "Defines the map view for odoo enterprise"
-msgstr ""
+msgstr "Define la vista de mapa para odoo enterprise"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__definition
@@ -12035,7 +12073,7 @@ msgstr "Datos de ejemplo"
 #. module: base
 #: model:ir.model,name:base.model_ir_demo_failure_wizard
 msgid "Demo Failure wizard"
-msgstr ""
+msgstr "Asistente demo de error"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure_wizard__failure_ids
@@ -12115,11 +12153,13 @@ msgid ""
 "Design great quotation templates with building blocks to significantly boost"
 " your success rate."
 msgstr ""
+"Diseña un gran presupuesto con plantillas y bloques de construcción, para "
+"incrementar significativamente tu probabilidad de éxito."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_sms
 msgid "Design, send and track SMS"
-msgstr ""
+msgstr "Diseña, envia y rastrea  SMS"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing
@@ -12422,7 +12462,7 @@ msgstr "Mostrar la imagen del país si el campo está presente en el registro"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display the phone icons even if no_marker is True"
-msgstr ""
+msgstr "Muestra los íconos de teléfono aún cuando no_marker es Verdadero"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -12433,7 +12473,7 @@ msgstr "Campos mostrados"
 #. module: base
 #: model:ir.module.module,summary:base.module_event_enterprise
 msgid "Displays cohort analysis on attendees."
-msgstr ""
+msgstr "Muestra análisis de grupo en asistencias."
 
 #. module: base
 #: model:res.country,name:base.dj
@@ -12492,22 +12532,22 @@ msgstr "Documentos - Contabilidad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_contract
 msgid "Documents - Contracts"
-msgstr ""
+msgstr "Documentos - Contactos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_fleet
 msgid "Documents - Fleet"
-msgstr ""
+msgstr "Documentos - Flotilla"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr
 msgid "Documents - HR"
-msgstr ""
+msgstr "Documentos - RH"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_payroll
 msgid "Documents - Payroll"
-msgstr ""
+msgstr "Documentos - Nómina"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_product
@@ -12532,7 +12572,7 @@ msgstr "Documentos - Firmas"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_holidays
 msgid "Documents - Time Off"
-msgstr ""
+msgstr "Documentos - Tiempos libres"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__domain
@@ -12565,7 +12605,7 @@ msgstr "República Dominicana - Contabilidad"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Don't display the font awesome marker"
-msgstr ""
+msgstr "No mostrar marcador de font awesome"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_todo__state__done
@@ -12592,14 +12632,14 @@ msgstr "Menú desplegable"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_dropshipping
 msgid "Dropship and Subcontracting Management"
-msgstr ""
+msgstr "Administración de Dropship y Sub-contratación"
 
 #. module: base
 #: code:addons/base/models/res_company.py:0
 #, python-format
 msgid ""
 "Duplicating a company is not allowed. Please create a new company instead."
-msgstr ""
+msgstr "No es permitido duplicar una compañía. Por favor crea una nueva."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_E
@@ -12637,12 +12677,12 @@ msgstr "¡Cada modelo debe ser único!"
 #: model:ir.module.module,description:base.module_social
 #: model:ir.module.module,summary:base.module_social
 msgid "Easily manage your social media and website visitors"
-msgstr ""
+msgstr "Administra facilmente tus redes sociales y visitantes del sitio web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_easypost
 msgid "Easypost Shipping"
-msgstr ""
+msgstr "Envios Easypost"
 
 #. module: base
 #: model:res.country,name:base.ec
@@ -12813,7 +12853,7 @@ msgstr "Dependencia vacía en %r"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_cache
 msgid "Enable a cache on products for a lower POS loading time."
-msgstr ""
+msgstr "Activa caché en productos para menor tiempo de carga del TPV."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
@@ -12829,6 +12869,8 @@ msgstr "Suministro de Energía"
 #: model:ir.module.module,summary:base.module_crm_iap_lead_enrich
 msgid "Enrich Leads/Opportunities using email address domain"
 msgstr ""
+"Enriquezca iniciativas / oportunidades utilizando el dominio de correo "
+"electrónico"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -12847,6 +12889,10 @@ msgid ""
 "* Traceability report\n"
 "* Cost Structure report (mrp_account)"
 msgstr ""
+"ExtensiónEnterprise para MRP\n"
+"* Planeación de órdenes de trabajo.  Revisión de planeación utilizando vista de Gantt agrupado por orden de producción / centro de trabajo\n"
+"* Informe de trazabilidad\n"
+"* Informe de Estructura de Costo (mrp_account)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_contacts_enterprise
@@ -13258,6 +13304,9 @@ msgid ""
 "from mail header:\n"
 "%s"
 msgstr ""
+"Falló al interpretar la dirección %s\n"
+"desde el encabezado del correo:\n"
+"%s"
 
 #. module: base
 #: model:ir.actions.server,name:base.demo_failure_action
@@ -15788,6 +15837,8 @@ msgid ""
 "Invoice & Delivery addresses are used in sales orders. Private addresses are"
 " only visible by authorized users."
 msgstr ""
+"Las direcciones de facturación y de entrega son usadas en órdenes de venta. "
+"Las direcciones privadas sólo son visibles por usuarios autorizados."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__invoice
@@ -20119,7 +20170,7 @@ msgstr "Otro"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__other
 msgid "Other Address"
-msgstr ""
+msgstr "Otra dirección"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra
@@ -20917,7 +20968,7 @@ msgstr "Dirección Privada"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
 msgid "Private Address Form"
-msgstr ""
+msgstr "Formulario de domicilio privado"
 
 #. module: base
 #: code:addons/models.py:0

@@ -1973,5 +1973,54 @@ QUnit.test('save filter discuss', async function (assert) {
     discuss.destroy();
 });
 
+QUnit.test('no crash on receiving needaction channel message notif with messaging not ready', async function (assert) {
+    assert.expect(1);
+
+    const message = {
+        author_id: [5, 'Demo User'],
+        body: '<p>test</p>',
+        channel_ids: [1],
+        id: 100,
+        model: 'mail.channel',
+        needaction: true,
+        needaction_partner_ids: [3],
+        res_id: 1,
+    };
+
+    const discuss = await createDiscuss({
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        session: {
+            partner_id: 3
+        },
+        async mockRPC(route, args) {
+            if (route === '/mail/init_messaging') {
+                // infinite messaging not ready
+                await new Promise(() => {});
+            }
+            return this._super(...arguments);
+        },
+    });
+
+    // simulate new needaction message posted on channnel
+    this.data['mail.message'].records.push(message);
+    // simulate receiving channel notification
+    discuss.call('bus_service', 'trigger', 'notification', [
+        [['myDB', 'mail.channel', 1], message]
+    ]);
+    // short delay after receiving needaction notification
+    await testUtils.nextTick();
+    // simulate receiving needaction message notification after a short delay
+    discuss.call('bus_service', 'trigger', 'notification', [
+        [['myDB', 'ir.needaction', 3], message]
+    ]);
+    await testUtils.nextTick();
+    assert.ok(true, "should not crash on receiving new needaction message when messaging is not ready");
+
+    discuss.destroy();
+});
+
 });
 });

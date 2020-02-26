@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0alpha1+e\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-22 13:00+0000\n"
-"PO-Revision-Date: 2019-08-22 13:00+0000\n"
+"POT-Creation-Date: 2020-01-29 15:07+0000\n"
+"PO-Revision-Date: 2020-01-29 15:07+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -86,12 +86,12 @@ msgid "Created on"
 msgstr ""
 
 #. module: l10n_latam_invoice_document
-#: selection:l10n_latam.document.type,internal_type:0
+#: model:ir.model.fields.selection,name:l10n_latam_invoice_document.selection__l10n_latam_document_type__internal_type__credit_note
 msgid "Credit Notes"
 msgstr ""
 
 #. module: l10n_latam_invoice_document
-#: selection:l10n_latam.document.type,internal_type:0
+#: model:ir.model.fields.selection,name:l10n_latam_invoice_document.selection__l10n_latam_document_type__internal_type__debit_note
 msgid "Debit Notes"
 msgstr ""
 
@@ -137,8 +137,8 @@ msgstr ""
 #: code:addons/l10n_latam_invoice_document/models/account_move.py:0
 #, python-format
 msgid ""
-"Duplicated invoice number detected. You probably added twice the same vendor "
-"bill/debit note."
+"Duplicated invoice number detected. You probably added twice the same vendor"
+" bill/debit note."
 msgstr ""
 
 #. module: l10n_latam_invoice_document
@@ -169,7 +169,7 @@ msgid "Internal Type"
 msgstr ""
 
 #. module: l10n_latam_invoice_document
-#: selection:l10n_latam.document.type,internal_type:0
+#: model:ir.model.fields.selection,name:l10n_latam_invoice_document.selection__l10n_latam_document_type__internal_type__invoice
 msgid "Invoices"
 msgstr ""
 
@@ -192,11 +192,6 @@ msgstr ""
 #. module: l10n_latam_invoice_document
 #: model:ir.model,name:l10n_latam_invoice_document.model_account_move_line
 msgid "Journal Item"
-msgstr ""
-
-#. module: l10n_latam_invoice_document
-#: model:ir.model.fields,field_description:l10n_latam_invoice_document.field_account_move__l10n_latam_amount_tax
-msgid "L10N Latam Amount Tax"
 msgstr ""
 
 #. module: l10n_latam_invoice_document
@@ -356,6 +351,12 @@ msgid "Vendor bill number must be unique per vendor and company."
 msgstr ""
 
 #. module: l10n_latam_invoice_document
+#: code:addons/l10n_latam_invoice_document/models/account_move.py:0
+#, python-format
+msgid "We do not accept the usage of document types on receipts yet. "
+msgstr ""
+
+#. module: l10n_latam_invoice_document
 #: code:addons/l10n_latam_invoice_document/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -373,4 +374,12 @@ msgstr ""
 #: code:addons/l10n_latam_invoice_document/models/account_move.py:0
 #, python-format
 msgid "You can not use a %s document type with a refund invoice"
+msgstr ""
+
+#. module: l10n_latam_invoice_document
+#: code:addons/l10n_latam_invoice_document/wizards/account_move_reversal.py:0
+#, python-format
+msgid ""
+"You can only reverse documents with legal invoicing documents from Latin America one at a time.\n"
+"Problematic documents: %s"
 msgstr ""

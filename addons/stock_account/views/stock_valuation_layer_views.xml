@@ -59,6 +59,7 @@
         <field name="model">stock.valuation.layer</field>
         <field name="arch" type="xml">
             <search string="Valuation Layer?">
+                <field name="product_id"/>
                 <filter string="Product" name="group_by_product_id" context="{'group_by':'product_id'}"/>
             </search>
         </field>

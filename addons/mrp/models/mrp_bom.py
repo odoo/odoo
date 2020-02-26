@@ -85,8 +85,6 @@ class MrpBom(models.Model):
             for bom_line in bom.bom_line_ids:
                 if bom.product_id and bom_line.product_id == bom.product_id:
                     raise ValidationError(_("BoM line product %s should not be the same as BoM product.") % bom.display_name)
-                if bom_line.product_tmpl_id == bom.product_tmpl_id:
-                    raise ValidationError(_("BoM line product %s should not be the same as BoM product.") % bom.display_name)
                 if bom.product_id and bom_line.bom_product_template_attribute_value_ids:
                     raise ValidationError(_("BoM cannot concern product %s and have a line with attributes (%s) at the same time.")
                         % (bom.product_id.display_name, ", ".join([ptav.display_name for ptav in bom_line.bom_product_template_attribute_value_ids])))

@@ -11,8 +11,8 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # Melroy van den Berg <webmaster1989@gmail.com>, 2019
 # Martin Trigaux, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +56,7 @@ msgid ""
 msgstr ""
 "* Klaar: het materiaal is beschikbaar om de productie ervan te starten.\n"
 "* Wachtend: het materiaal is nog niet beschikbaar om de productie ervan te starten.\n"
-"De beschikbaarheid van het materiaal is beïnvloed door de productiegereedheid geconfigureerd op de materiaallijst."
+"De beschikbaarheid van het materiaal is beïnvloed door de productiegereedheid geconfigureerd op de stuklijst."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
@@ -356,8 +356,8 @@ msgstr "<strong>Werkplek:</strong>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "A BoM of type kit is used to split the product into its components."
 msgstr ""
-"Een materiaallijst van het soort kit wordt gebruikt om het product op te "
-"splitsen in componenten."
+"Een stuklijst van het soort kit wordt gebruikt om het product op te splitsen"
+" in componenten."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -457,6 +457,7 @@ msgstr "Voeg kwaliteitscontroles toe aan uw werkorders"
 #, python-format
 msgid "Add some materials to consume before marking this MO as to do."
 msgstr ""
+"Voeg materialen toe om te verbruiken voordat u deze MO als te doen aanduid."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -551,7 +552,7 @@ msgstr "Bij het aanmaken van een productieorder."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "At the creation of a Stock Transfer."
-msgstr "Bij het aanmaken van een voorraadmutatie."
+msgstr "Bij het aanmaken van een levering."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_attachment_count
@@ -1052,7 +1053,7 @@ msgstr "Verbruikte producten"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__operation_id
 msgid "Consumed in Operation"
-msgstr "Verbruikt bij bewerkingen"
+msgstr "Wordt gebruikt bij bewerking"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_abstract_workorder__consumption
@@ -3560,7 +3561,7 @@ msgstr "Toon alle records welke een actiedatum voor vandaag hebben"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
 msgid "Slot into workcenter calendar once planned"
-msgstr ""
+msgstr "Slot in werkcentrum wanneer gepland"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_head
@@ -3990,6 +3991,8 @@ msgid ""
 "The unit of measure you choose is in a different category than the product "
 "unit of measure."
 msgstr ""
+"De maateenheid die u gekozen heeft is een andere categorie dan de "
+"maateenheid van het product."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
@@ -4030,7 +4033,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
 msgid "This is a BoM of type Kit!"
-msgstr "Dit is een materiaallijst van het soort kit!"
+msgstr "Dit is een stuklijst van het soort kit!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -4915,7 +4918,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "You cannot create a new Bill of Material from here."
-msgstr "U kan geen nieuwe materiaallijst aanmaken van hieruit"
+msgstr "U kan geen nieuwe stuklijst aanmaken van hieruit"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0

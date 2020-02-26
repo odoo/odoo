@@ -379,6 +379,7 @@ class PricelistItem(models.Model):
     _name = "product.pricelist.item"
     _description = "Pricelist Rule"
     _order = "applied_on, min_quantity desc, categ_id desc, id desc"
+    _check_company_auto = True
     # NOTE: if you change _order on this model, make sure it matches the SQL
     # query built in _compute_price_rule() above in this file to avoid
     # inconstencies and undeterministic issues.
@@ -389,10 +390,10 @@ class PricelistItem(models.Model):
             ('company_id', '=', self.env.company.id)], limit=1)
 
     product_tmpl_id = fields.Many2one(
-        'product.template', 'Product', ondelete='cascade',
+        'product.template', 'Product', ondelete='cascade', check_company=True,
         help="Specify a template if this rule only applies to one product template. Keep empty otherwise.")
     product_id = fields.Many2one(
-        'product.product', 'Product Variant', ondelete='cascade',
+        'product.product', 'Product Variant', ondelete='cascade', check_company=True,
         help="Specify a product if this rule only applies to one product. Keep empty otherwise.")
     categ_id = fields.Many2one(
         'product.category', 'Product Category', ondelete='cascade',
@@ -418,7 +419,7 @@ class PricelistItem(models.Model):
              'Sales Price: The base price will be the Sales Price.\n'
              'Cost Price : The base price will be the cost price.\n'
              'Other Pricelist : Computation of the base price based on another Pricelist.')
-    base_pricelist_id = fields.Many2one('product.pricelist', 'Other Pricelist')
+    base_pricelist_id = fields.Many2one('product.pricelist', 'Other Pricelist', check_company=True)
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', index=True, ondelete='cascade', required=True, default=_default_pricelist_id)
     price_surcharge = fields.Float(
         'Price Surcharge', digits='Product Price',

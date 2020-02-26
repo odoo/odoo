@@ -175,7 +175,7 @@ var KeywordList = Widget.extend({
     exists: function (word) {
         return _.contains(this.keywords(), word);
     },
-    add: function (candidate, language) {
+    add: async function (candidate, language) {
         var self = this;
         // TODO Refine
         var word = candidate ? candidate.replace(/[,;.:<>]+/g, ' ').replace(/ +/g, ' ').trim().toLowerCase() : '';
@@ -192,7 +192,7 @@ var KeywordList = Widget.extend({
             keyword.on('selected', self, function (word, language) {
                 self.trigger('selected', word, language);
             });
-            keyword.appendTo(self.$el);
+            await keyword.appendTo(self.$el);
         }
         if (self.isFull()) {
             self.trigger('list-full');

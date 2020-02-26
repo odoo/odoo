@@ -310,13 +310,13 @@ class IrHttp(models.AbstractModel):
                 # eg: Allow to download an attachment on a task from /my/task/task_id
                 record.check('read')
                 record = record_sudo
+
+        # check read access
+        try:
             # We have prefetched some fields of record, among which the field
             # 'write_date' used by '__last_update' below. In order to check
             # access on record, we have to invalidate its cache first.
             record._cache.clear()
-
-        # check read access
-        try:
             record['__last_update']
         except AccessError:
             return None, 403

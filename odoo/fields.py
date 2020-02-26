@@ -161,15 +161,28 @@ class Field(MetaField('DummyField', (object,), {})):
 
         Supported aggregate functions are:
 
-            * ``array_agg`` : values, including nulls, concatenated into an array
-            * ``count`` : number of rows
-            * ``count_distinct`` : number of distinct rows
-            * ``bool_and`` : true if all values are true, otherwise false
-            * ``bool_or`` : true if at least one value is true, otherwise false
-            * ``max`` : maximum value of all values
-            * ``min`` : minimum value of all values
-            * ``avg`` : the average (arithmetic mean) of all values
-            * ``sum`` : sum of all values
+        * ``array_agg`` : values, including nulls, concatenated into an array
+        * ``count`` : number of rows
+        * ``count_distinct`` : number of distinct rows
+        * ``bool_and`` : true if all values are true, otherwise false
+        * ``bool_or`` : true if at least one value is true, otherwise false
+        * ``max`` : maximum value of all values
+        * ``min`` : minimum value of all values
+        * ``avg`` : the average (arithmetic mean) of all values
+        * ``sum`` : sum of all values
+
+    :param str group_expand: function used to expand read_group results when grouping on
+        the current field.
+
+        .. code-block:: python
+
+            @api.model
+            def _read_group_selection_field(self, values, domain, order):
+                return ['choice1', 'choice2', ...] # available selection choices.
+
+            @api.model
+            def _read_group_many2one_field(self, records, domain, order):
+                return records + self.search([custom_domain])
 
     .. rubric:: Computed Fields
 
@@ -647,6 +660,11 @@ class Field(MetaField('DummyField', (object,), {})):
                 return get_context('active_test', self.context.get('active_test', True))
             else:
                 v = get_context(key)
+                # The web client may set a list in the context:
+                # https://github.com/odoo/odoo/blob/4b06fe19fa68255b7982d15e5847da2f6d6209fd/addons/web/static/src/js/views/control_panel/control_panel_model.js#L962
+                # Therefore, we automatically convert lists into tuples
+                if type(v) is list:
+                    v = tuple(v)
                 try: hash(v)
                 except TypeError:
                     raise TypeError(
@@ -877,7 +895,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 model.flush([self.name])
 
         if self.required and not has_notnull:
-            sql.set_not_null(model._cr, model._table, self.name)
+            model.pool.post_constraint(sql.set_not_null, model._cr, model._table, self.name)
         elif not self.required and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)
 
@@ -1163,10 +1181,10 @@ class Integer(Field):
 
 
 class Float(Field):
-    """The precision digits are given by the attribute
+    """The precision digits are given by the (optional) digits attribute.
 
-    :param digits: a pair (total, decimal) or a
-        string referencing a `decimal.precision` record.
+    :param digits: a pair (total, decimal) or a string referencing a
+        :class:`~odoo.addons.base.models.decimal_precision.DecimalPrecision` record name.
     :type digits: tuple(int,int) or str
     """
 
@@ -3278,10 +3296,9 @@ class Many2many(_RelationalMulti):
             for ys1 in new_relation.values():
                 ys1 -= ys
 
-        to_create = []                  # line vals to create
-        to_delete = []                  # line ids to delete
-
         for recs, commands in records_commands_list:
+            to_create = []  # line vals to create
+            to_delete = []  # line ids to delete
             for command in (commands or ()):
                 if not isinstance(command, (list, tuple)) or not command:
                     continue
@@ -3500,9 +3517,9 @@ class Id(Field):
         # the code below is written to make record.id as quick as possible
         ids = record._ids
         size = len(ids)
-        if size is 0:
+        if size == 0:
             return False
-        elif size is 1:
+        elif size == 1:
             return ids[0]
         raise ValueError("Expected singleton: %s" % record)
 

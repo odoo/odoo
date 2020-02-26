@@ -13,13 +13,23 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         self.product1 = self.create_product('Product 1', self.categ_basic, 10.0, 5)
         self.product2 = self.create_product('Product 2', self.categ_basic, 20.0, 10)
         self.product3 = self.create_product('Product 3', self.categ_basic, 30.0, 15)
-        self.adjust_inventory([self.product1, self.product2, self.product3], [100, 50, 50])
+        self.product4 = self.create_product('Product 4', self.categ_anglo, 100, 50)
+        self.product5 = self.create_product('Product 5', self.categ_anglo, 200, 70)
+        self.product6 = self.create_product('Product 6', self.categ_anglo, 45.3, 10.73)
+        self.product7 = self.create_product('Product 7', self.categ_basic, 7, 7, tax_ids=self.taxes['tax7'].ids)
+        self.adjust_inventory(
+            [self.product1, self.product2, self.product3, self.product4, self.product5, self.product6, self.product7],
+            [100, 50, 50, 100, 100, 100, 100]
+        )
         # change the price of product2 to 12.99 fixed. No need to convert.
         pricelist_item = self.env['product.pricelist.item'].create({
             'product_tmpl_id': self.product2.product_tmpl_id.id,
             'fixed_price': 12.99,
         })
         self.config.pricelist_id.write({'item_ids': [(6, 0, (self.config.pricelist_id.item_ids | pricelist_item).ids)]})
+
+        self.output_account = self.categ_anglo.property_stock_account_output_categ_id
+        self.expense_account = self.categ_anglo.property_account_expense_categ_id
 
     def test_01_check_product_cost(self):
         # Product price should be half of the original price because currency rate is 0.5.
@@ -28,6 +38,10 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product1, 1, self.customer), 5.00)
         self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product2, 1, self.customer), 12.99)
         self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product3, 1, self.customer), 15.00)
+        self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product4, 1, self.customer), 50)
+        self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product5, 1, self.customer), 100)
+        self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product6, 1, self.customer), 22.65)
+        self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product7, 1, self.customer), 3.50)
 
     def test_02_orders_without_invoice(self):
         """ orders without invoice
@@ -168,3 +182,110 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         invoice_receivable_line = session_move.line_ids.filtered(lambda line: line.account_id == self.receivable_account)
         self.assertAlmostEqual(invoice_receivable_line.balance, -459.8)
         self.assertAlmostEqual(invoice_receivable_line.amount_currency, -229.9)
+
+    def test_04_anglo_saxon_products(self):
+        """
+        ======
+        Orders
+        ======
+        +---------+----------+-----------+----------+-----+----------+------------+
+        | order   | payments | invoiced? | product  | qty |    total | total cost |
+        |         |          |           |          |     |          |            |
+        +---------+----------+-----------+----------+-----+----------+------------+
+        | order 1 | cash     | no        | product4 |   7 |      700 |        350 |
+        |         |          |           | product5 |   7 |     1400 |        490 |
+        +---------+----------+-----------+----------+-----+----------+------------+
+        | order 2 | cash     | no        | product5 |   6 |     1200 |        420 |
+        |         |          |           | product4 |   6 |      600 |        300 |
+        |         |          |           | product6 |  49 |   2219.7 |     525.77 |
+        +---------+----------+-----------+----------+-----+----------+------------+
+        | order 3 | cash     | no        | product5 |   2 |      400 |        140 |
+        |         |          |           | product6 |  13 |    588.9 |     139.49 |
+        +---------+----------+-----------+----------+-----+----------+------------+
+        | order 4 | cash     | no        | product6 |   1 |     45.3 |      10.73 |
+        +---------+----------+-----------+----------+-----+----------+------------+
+
+        ===============
+        Expected Result
+        ===============
+        +---------------------+------------+-----------------+
+        | account             |    balance | amount_currency |
+        +---------------------+------------+-----------------+
+        | sale_account        |   -7153.90 |        -3576.95 |
+        | pos_receivable-cash |    7153.90 |         3576.95 |
+        | expense_account     |    2375.99 |            0.00 |
+        | output_account      |   -2375.99 |            0.00 |
+        +---------------------+------------+-----------------+
+        | Total balance       |       0.00 |            0.00 |
+        +---------------------+------------+-----------------+
+        """
+        self.open_new_session()
+
+        # create orders
+        orders = []
+        orders.append(self.create_ui_order_data([(self.product4, 7), (self.product5, 7)]))
+        orders.append(self.create_ui_order_data([(self.product5, 6), (self.product4, 6), (self.product6, 49)]))
+        orders.append(self.create_ui_order_data([(self.product5, 2), (self.product6, 13)]))
+        orders.append(self.create_ui_order_data([(self.product6, 1)]))
+
+        # sync orders
+        order = self.env['pos.order'].create_from_ui(orders)
+
+        # close the session
+        self.pos_session.action_pos_session_validate()
+
+        # check values after the session is closed
+        session_account_move = self.pos_session.move_id
+
+        self.assertEqual(len(session_account_move.line_ids), 4, msg='There should exactly be 4 account move lines.')
+
+        sales_line = session_account_move.line_ids.filtered(lambda line: line.account_id == self.sale_account)
+        self.assertAlmostEqual(sales_line.balance, -7153.90, msg='Sales line balance should be equal to total orders amount.')
+        self.assertAlmostEqual(sales_line.amount_currency, -3576.95)
+
+        receivable_line_cash = session_account_move.line_ids.filtered(lambda line: self.pos_receivable_account == line.account_id and self.cash_pm.name in line.name)
+        self.assertAlmostEqual(receivable_line_cash.balance, 7153.90, msg='Cash receivable should be equal to the total cash payments.')
+        self.assertAlmostEqual(receivable_line_cash.amount_currency, 3576.95)
+
+        expense_line = session_account_move.line_ids.filtered(lambda line: line.account_id == self.expense_account)
+        self.assertAlmostEqual(expense_line.balance, 2375.99)
+        self.assertFalse(expense_line.currency_id, msg='Should be no currency in the stock expense line.')
+        self.assertAlmostEqual(
+            expense_line.amount_currency, 0.00,
+            msg="Should be zero because the balance is calculated from amounts in company's currency.",
+        )
+
+        output_line = session_account_move.line_ids.filtered(lambda line: line.account_id == self.output_account)
+        self.assertAlmostEqual(output_line.balance, -2375.99)
+        self.assertFalse(output_line.currency_id, msg='Should be no currency in the stock output line.')
+        self.assertAlmostEqual(
+            output_line.amount_currency, 0.00,
+            msg="Should be zero because the balance is calculated from amounts in company's currency.",
+        )
+
+        self.assertTrue(receivable_line_cash.full_reconcile_id, msg='Cash receivable line should be fully-reconciled.')
+        self.assertTrue(output_line.full_reconcile_id, msg='The stock output account line should be fully-reconciled.')
+
+    def test_05_tax_base_amount(self):
+        self.open_new_session()
+
+        order = self.env['pos.order'].create_from_ui(
+            [self.create_ui_order_data([(self.product7, 7)])]
+        )
+        self.pos_session.action_pos_session_validate()
+        session_account_move = self.pos_session.move_id
+
+        self.assertEqual(len(session_account_move.line_ids), 3, msg='There should exactly be 3 account move lines.')
+
+        sales_line = session_account_move.line_ids.filtered(lambda line: line.account_id == self.sale_account)
+        self.assertAlmostEqual(sales_line.balance, -49)
+        self.assertAlmostEqual(sales_line.amount_currency, -24.5)
+
+        receivable_line_cash = session_account_move.line_ids.filtered(lambda line: self.pos_receivable_account == line.account_id and self.cash_pm.name in line.name)
+        self.assertAlmostEqual(receivable_line_cash.balance, 52.44)
+        self.assertAlmostEqual(receivable_line_cash.amount_currency, 26.22)
+
+        tax_line = session_account_move.line_ids.filtered(lambda line: line.account_id == self.tax_received_account)
+        self.assertAlmostEqual(tax_line.balance, -3.44)
+        self.assertAlmostEqual(tax_line.amount_currency, -1.72)
+        self.assertAlmostEqual(tax_line.tax_base_amount, 49, msg="Value should be in company's currency.")

@@ -985,7 +985,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     # Failed to write, log to messages, rollback savepoint (to
                     # avoid broken transaction) and keep going
                 except Exception as e:
-                    _logger.exception("Error while loading record")
+                    _logger.debug("Error while loading record", exc_info=True)
                     info = rec_data['info']
                     message = (_(u'Unknown error during import:') + u' %s: %s' % (type(e), e))
                     moreinfo = _('Resolve other errors first')
@@ -1710,10 +1710,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             _logger.warning("Cannot execute name_search, no _rec_name defined on %s", self._name)
         elif not (name == '' and operator == 'ilike'):
             args += [(self._rec_name, operator, name)]
-        access_rights_uid = name_get_uid or self._uid
-        ids = self._search(args, limit=limit, access_rights_uid=access_rights_uid)
+        ids = self._search(args, limit=limit, access_rights_uid=name_get_uid)
         recs = self.browse(ids)
-        return lazy_name_get(recs.with_user(access_rights_uid))
+        return lazy_name_get(recs.with_user(name_get_uid))
 
     @api.model
     def _add_missing_default_values(self, values):
@@ -2515,22 +2514,20 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cr = self._cr
         foreign_key_re = re.compile(r'\s*foreign\s+key\b.*', re.I)
 
-        def process(key, definition):
+        for (key, definition, message) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
             current_definition = tools.constraint_definition(cr, self._table, conname)
-            if not current_definition:
-                # constraint does not exists
-                tools.add_constraint(cr, self._table, conname, definition)
-            elif current_definition != definition:
+            if current_definition == definition:
+                continue
+
+            if current_definition:
                 # constraint exists but its definition may have changed
                 tools.drop_constraint(cr, self._table, conname)
-                tools.add_constraint(cr, self._table, conname, definition)
 
-        for (key, definition, _) in self._sql_constraints:
             if foreign_key_re.match(definition):
-                self.pool.post_init(process, key, definition)
+                self.pool.post_init(tools.add_constraint, cr, self._table, conname, definition)
             else:
-                process(key, definition)
+                self.pool.post_constraint(tools.add_constraint, cr, self._table, conname, definition)
 
     def _execute_sql(self):
         """ Execute the SQL code from the _sql attribute (if any)."""
@@ -4282,8 +4279,14 @@ Record ids: %(records)s
         return order_by_clause and (' ORDER BY %s ' % order_by_clause) or ''
 
     @api.model
-    def _flush_search(self, domain, fields=None, order=None):
+    def _flush_search(self, domain, fields=None, order=None, seen=None):
         """ Flush all the fields appearing in `domain`, `fields` and `order`. """
+        if seen is None:
+            seen = set()
+        elif self._name in seen:
+            return
+        seen.add(self._name)
+
         to_flush = defaultdict(set)             # {model_name: field_names}
         if fields:
             to_flush[self._name].update(fields)
@@ -4329,8 +4332,11 @@ Record ids: %(records)s
         order_spec = order or self._order
         for order_part in order_spec.split(','):
             order_field = order_part.split()[0]
-            if order_field in self._fields:
+            field = self._fields.get(order_field)
+            if field is not None:
                 to_flush[self._name].add(order_field)
+                if field.relational:
+                    self.env[field.comodel_name]._flush_search([], seen=seen)
 
         if 'active' in self:
             to_flush[self._name].add('active')
@@ -5036,6 +5042,8 @@ Record ids: %(records)s
         non-superuser mode, unless `user` is the superuser (by convention, the
         superuser is always in superuser mode.)
         """
+        if not user:
+            return self
         return self.with_env(self.env(user=user, su=False))
 
     def with_context(self, *args, **kwargs):
@@ -5172,10 +5180,10 @@ Record ids: %(records)s
             records.mapped('name')
 
             # returns a recordset of partners
-            record.mapped('partner_id')
+            records.mapped('partner_id')
 
             # returns the union of all partner banks, with duplicates removed
-            record.mapped('partner_id.bank_ids')
+            records.mapped('partner_id.bank_ids')
         """
         if not func:
             return self                 # support for an empty path of fields

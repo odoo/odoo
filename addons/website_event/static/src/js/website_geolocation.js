@@ -18,6 +18,10 @@ publicWidget.registry.visitor = publicWidget.Widget.extend({
         defs.push(this._rpc({route: '/event/get_country_event_list'}).then(function (data) {
             if (data) {
                 self._$loadedContent = $(data);
+
+                self._$loadedContent.addClass('o_temp_auto_element');
+                self._$loadedContent.attr('data-temp-auto-element-original-content', self._originalContent);
+
                 $eventList.replaceWith(self._$loadedContent);
             }
         }));
@@ -28,7 +32,9 @@ publicWidget.registry.visitor = publicWidget.Widget.extend({
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        this._$loadedContent.replaceWith(this._originalContent);
+        if (this._$loadedContent) {
+            this._$loadedContent.replaceWith(this._originalContent);
+        }
     },
 });
 });

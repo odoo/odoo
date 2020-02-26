@@ -487,7 +487,9 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
         options: {
             lastFilters: ['background'],
             onUpload: $editable.data('callbacks').onUpload,
-            noVideos: $editable.data('oe-model') === "mail.compose.message",
+            noVideos:
+              $editable.data('oe-model') === "mail.compose.message" ||
+              ($editable.data('options') && $editable.data('options').noVideos),
         },
         onSave: function (media) {
             if(!document.body.contains(media)) {
