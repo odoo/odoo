@@ -1368,6 +1368,41 @@ class TestViews(ViewCase):
                 'arch': arch % ('', '<field name="model"/>'),
             })
 
+    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    def test_check_xml_on_reenable(self):
+        view1 = self.View.create({
+            'name': 'valid _check_xml',
+            'model': 'ir.ui.view',
+            'arch': """
+                <form string="View">
+                    <field name="name"/>
+                </form>
+            """,
+        })
+        view2 = self.View.create({
+            'name': 'valid _check_xml',
+            'model': 'ir.ui.view',
+            'inherit_id': view1.id,
+            'active': False,
+            'arch': """
+                <field name="foo" position="after">
+                    <field name="bar"/>
+                </field>
+            """
+        })
+        with self.assertRaises(ValidationError):
+            view2.active = True
+
+        # Re-enabling the view and correcting it at the same time should not raise the `_check_xml` constraint.
+        view2.write({
+            'active': True,
+            'arch': """
+                <field name="name" position="after">
+                    <span>bar</span>
+                </field>
+            """,
+        })
+
 
 class ViewModeField(ViewCase):
     """
