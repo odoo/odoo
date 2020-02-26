@@ -79,7 +79,8 @@ class SurveyQuestion(models.Model):
         ('datetime', 'Datetime'),
         ('simple_choice', 'Multiple choice: only one answer'),
         ('multiple_choice', 'Multiple choice: multiple answers allowed'),
-        ('matrix', 'Matrix')], string='Question Type')
+        ('matrix', 'Matrix')], string='Question Type',
+        compute='_compute_question_type', readonly=False, store=True)
     is_scored_question = fields.Boolean(
         'Scored', compute='_compute_is_scored_question',
         readonly=False, store=True, copy=True,
@@ -170,15 +171,11 @@ class SurveyQuestion(models.Model):
             'All "Is a scored question = True" and "Question Type: Date" questions need an answer')
     ]
 
-    @api.onchange('validation_email')
-    def _onchange_validation_email(self):
-        if self.validation_email:
-            self.validation_required = False
-
-    @api.onchange('is_page')
-    def _onchange_is_page(self):
-        if self.is_page:
-            self.question_type = False
+    @api.depends('is_page')
+    def _compute_question_type(self):
+        for question in self:
+            if not question.question_type or question.is_page:
+                question.question_type = False
 
     @api.depends('survey_id.question_and_page_ids.is_page', 'survey_id.question_and_page_ids.sequence')
     def _compute_question_ids(self):

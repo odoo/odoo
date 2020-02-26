@@ -106,9 +106,10 @@ class Survey(models.Model):
                                          compute="_compute_is_attempts_limited", store=True, readonly=False)
     attempts_limit = fields.Integer('Number of attempts', default=1)
     is_time_limited = fields.Boolean('The survey is limited in time')
-    time_limit = fields.Float("Time limit (minutes)")
+    time_limit = fields.Float("Time limit (minutes)", default=10)
     # certification
-    certification = fields.Boolean('Is a Certification')
+    certification = fields.Boolean('Is a Certification', compute='_compute_certification',
+                                   readonly=False, store=True)
     certification_mail_template_id = fields.Many2one(
         'mail.template', 'Email Template',
         domain="[('model', '=', 'survey.user_input')]",
@@ -126,7 +127,8 @@ class Survey(models.Model):
     #   - If the certification badge is not set, show certification_badge_id and only display create option in the m2o
     #   - If the certification badge is set, show certification_badge_id_dummy in 'no create' mode.
     #       So it can be edited but not removed or replaced.
-    certification_give_badge = fields.Boolean('Give Badge')
+    certification_give_badge = fields.Boolean('Give Badge', compute='_compute_certification_give_badge',
+                                              readonly=False, store=True)
     certification_badge_id = fields.Many2one('gamification.badge', 'Certification Badge')
     certification_badge_id_dummy = fields.Many2one(related='certification_badge_id', string='Certification Badge ')
     # live sessions
@@ -157,6 +159,8 @@ class Survey(models.Model):
         ('session_code_unique', 'unique(session_code)', 'Session code should be unique'),
         ('certification_check', "CHECK( scoring_type!='no_scoring' OR certification=False )",
             'You can only create certifications for surveys that have a scoring mechanism.'),
+        ('scoring_success_min_check', "CHECK( scoring_success_min IS NULL OR (scoring_success_min>=0 AND scoring_success_min<=100) )",
+            'The percentage of success has to be defined between 0 and 100.'),
         ('time_limit_check', "CHECK( (is_time_limited=False) OR (time_limit is not null AND time_limit > 0) )",
             'The time limit needs to be a positive number if the survey is time limited.'),
         ('attempts_limit_check', "CHECK( (is_attempts_limited=False) OR (attempts_limit is not null AND attempts_limit > 0) )",
@@ -207,9 +211,9 @@ class Survey(models.Model):
     @api.depends('question_and_page_ids.is_conditional', 'users_login_required', 'access_mode')
     def _compute_is_attempts_limited(self):
         for survey in self:
-            if any(question.is_conditional for question in survey.question_and_page_ids)\
-                    or (survey.access_mode == 'public' and not survey.users_login_required)\
-                    or survey.is_attempts_limited is None:
+            if not survey.is_attempts_limited or \
+               (survey.access_mode == 'public' and not survey.users_login_required) or \
+               any(question.is_conditional for question in survey.question_and_page_ids):
                 survey.is_attempts_limited = False
 
     @api.depends('session_start_time', 'user_input_ids')
@@ -276,35 +280,23 @@ class Survey(models.Model):
         for survey in self:
             survey.has_conditional_questions = any(question.is_conditional for question in survey.question_and_page_ids)
 
-    @api.onchange('scoring_success_min')
-    def _onchange_scoring_success_min(self):
-        if self.scoring_success_min < 0 or self.scoring_success_min > 100:
-            self.scoring_success_min = 80.0
+    @api.depends('scoring_type')
+    def _compute_certification(self):
+        for survey in self:
+            if not survey.certification or survey.scoring_type == 'no_scoring':
+                survey.certification = False
 
-    @api.onchange('scoring_type')
-    def _onchange_scoring_type(self):
-        if self.scoring_type == 'no_scoring':
-            self.certification = False
-            self.is_time_limited = False
-
-    @api.onchange('attempts_limit')
-    def _onchange_attempts_limit(self):
-        if self.attempts_limit <= 0:
-            self.attempts_limit = 1
-
-    @api.onchange('is_time_limited', 'time_limit')
-    def _onchange_time_limit(self):
-        if self.is_time_limited and (not self.time_limit or self.time_limit <= 0):
-            self.time_limit = 10
+    @api.depends('users_login_required', 'certification')
+    def _compute_certification_give_badge(self):
+        for survey in self:
+            if not survey.certification_give_badge or \
+               not survey.users_login_required or \
+               not survey.certification:
+                survey.certification_give_badge = False
 
     def _read_group_states(self, values, domain, order):
         selection = self.env['survey.survey'].fields_get(allfields=['state'])['state']['selection']
         return [s[0] for s in selection]
-
-    @api.onchange('users_login_required', 'certification')
-    def _onchange_set_certification_give_badge(self):
-        if not self.users_login_required or not self.certification:
-            self.certification_give_badge = False
 
     # ------------------------------------------------------------
     # CRUD
