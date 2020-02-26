@@ -37,7 +37,7 @@
                         <div class="media mt-3">
                             <a t-attf-href="/customers/#{slug(partner)}"
                                t-field="partner.image_128"
-                               t-options='{"widget": "image", "class": "mr-3"}'
+                               t-options='{"widget": "image", "class": "mr-3 o_image_128_max"}'
                             ></a>
                             <div class="media-body" style="min-height: 64px;">
                                 <a t-attf-href="/customers/#{slug(partner)}">
@@ -218,7 +218,7 @@
             <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media mt-3">
               <t t-if="reference.website_published">
                 <a t-attf-href="/customers/#{slug(reference)}">
-                    <span t-field="reference.image_128" t-options='{"widget": "image", "class": "d-block mr-3"}'/>
+                    <span t-field="reference.image_128" t-options='{"widget": "image", "class": "d-block mr-3 o_image_128_max"}'/>
                 </a>
                 <div class="media-body" style="min-height: 64px;">
                     <a t-attf-href="/customers/#{slug(reference)}">
