@@ -1478,7 +1478,9 @@ var ManualModel = StatementModel.extend({
             });
 
         var domainReconcile = [];
-        var company_ids = context && context.company_ids || [session.company_id];
+        var session_allowed_company_ids = session.user_context.allowed_company_ids || []
+        var company_ids = context && context.company_ids || session_allowed_company_ids.slice(0, 1);
+
         if (company_ids) {
             domainReconcile.push(['company_id', 'in', company_ids]);
         }
@@ -1541,6 +1543,20 @@ var ManualModel = StatementModel.extend({
             }
         });
     },
+
+    /**
+     * Reload data by calling load
+     * It overrides super.reload() because
+     * it is not adapted for this model.
+     *
+     * Use case: coming back to manual reconcilation
+     *           in breadcrumb
+     */
+    reload: function () {
+        this.lines = {};
+        return this.load(this.context);
+    },
+
     /**
      * Load more partners/accounts
      * overridden in ManualModel

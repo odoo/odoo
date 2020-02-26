@@ -4279,8 +4279,14 @@ Record ids: %(records)s
         return order_by_clause and (' ORDER BY %s ' % order_by_clause) or ''
 
     @api.model
-    def _flush_search(self, domain, fields=None, order=None):
+    def _flush_search(self, domain, fields=None, order=None, seen=None):
         """ Flush all the fields appearing in `domain`, `fields` and `order`. """
+        if seen is None:
+            seen = set()
+        elif self._name in seen:
+            return
+        seen.add(self._name)
+
         to_flush = defaultdict(set)             # {model_name: field_names}
         if fields:
             to_flush[self._name].update(fields)
@@ -4326,8 +4332,11 @@ Record ids: %(records)s
         order_spec = order or self._order
         for order_part in order_spec.split(','):
             order_field = order_part.split()[0]
-            if order_field in self._fields:
+            field = self._fields.get(order_field)
+            if field is not None:
                 to_flush[self._name].add(order_field)
+                if field.relational:
+                    self.env[field.comodel_name]._flush_search([], seen=seen)
 
         if 'active' in self:
             to_flush[self._name].add('active')
@@ -5611,11 +5620,17 @@ Record ids: %(records)s
             (:class:`Field` instance), including ``self``.
             Return at most ``limit`` records.
         """
+        # This method returns records that are either all real, or all new.
+        # Those records are aimed at being either fetched, or computed.  But the
+        # method '_fetch_field' is not correct with new records: it considers
+        # them as forbidden records, and clears their cache!  On the other hand,
+        # compute methods are not invoked with a mix of real and new records for
+        # the sake of code simplicity.
+        kind = bool(self.id)
         recs = self.browse(unique(self._prefetch_ids))
         ids = [self.id]
         for record_id in self.env.cache.get_missing_ids(recs - self, field):
-            if not record_id:
-                # Do not prefetch `NewId`
+            if bool(record_id) != kind:
                 continue
             ids.append(record_id)
             if limit and limit <= len(ids):
