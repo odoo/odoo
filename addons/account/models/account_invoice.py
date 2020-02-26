@@ -1374,7 +1374,7 @@ class AccountInvoice(models.Model):
                 invoice.message_subscribe([invoice.partner_id.id])
 
             # Auto-compute reference, if not already existing and if configured on company
-            if not invoice.reference and invoice.type == 'out_invoice':
+            if not invoice.reference and (invoice.type == 'out_invoice' or invoice.type == 'out_refund'):
                 invoice.reference = invoice._get_computed_reference()
 
             # DO NOT FORWARD-PORT.
