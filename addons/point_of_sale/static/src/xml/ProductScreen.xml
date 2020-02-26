@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="ProductScreen" owl="1">
-        <div class="product-screen screen">
+        <div class="product-screen screen" t-att-class="{ oe_hidden: !props.isShow }">
             <div class="leftpane">
                 <div class="window">
                     <div class="subwindow">

@@ -329,6 +329,8 @@ class Chrome extends PosComponent {
         useListener('toggle-debug-widget', this.onToggleDebugWidget);
         useListener('show-popup', this.__showPopup);
         useListener('close-popup', this.__closePopup);
+        useListener('show-temp-screen', this.__showTempScreen);
+        useListener('close-temp-screen', this.__closeTempScreen);
         this.$ = $;
 
         this.ready    = new $.Deferred(); // resolves when the whole GUI has been loaded
@@ -353,10 +355,13 @@ class Chrome extends PosComponent {
         this.state = useState({
             isReady: false,
             isShowDebugWidget: true,
-            screen: this.getDefaultScreen(),
         });
+        this.mainScreen = useState(this._getDefaultScreen())
+        this.mainScreenProps = {};
         this.popup = useState({ isShow: false, name: null, component: null });
         this.popupProps = {}; // We want to avoid making the props to become Proxy!
+        this.tempScreen = useState({ isShow: false, name: null, component: null});
+        this.tempScreenProps = {};
 
         this.chrome = this; // So that chrome's childs have chrome set automatically
 
@@ -414,10 +419,27 @@ class Chrome extends PosComponent {
         })();
     }
 
+    __showTempScreen(event) {
+        const { name, props, __theOneThatWaits } = event.detail;
+        this.tempScreen.isShow = true;
+        this.tempScreen.name = name;
+        this.tempScreen.component = this.constructor.components[name];
+        this.tempScreenProps = { ...props, __theOneThatWaits };
+        // hide main screen
+        this.mainScreen.isShow = false;
+    }
+
+    __closeTempScreen() {
+        this.tempScreen.isShow = false;
+        // show main screen
+        this.mainScreen.isShow = true;
+    }
+
     showScreen({ detail: { name, props } }) {
-        this.state.screen.name = name;
-        this.state.screen.component = this.constructor.components[name];
-        this.state.screen.props = props || {};
+        this.mainScreen.isShow = true;
+        this.mainScreen.name = name;
+        this.mainScreen.component = this.constructor.components[name];
+        this.mainScreenProps = props || {};
     }
 
     /**
@@ -433,9 +455,8 @@ class Chrome extends PosComponent {
             } else {
                 this.showPopup('ErrorPopup', { title: error.message });
             }
-        } else {
-            console.error(error);
         }
+        console.error(error);
     }
 
     /**
@@ -629,11 +650,10 @@ class Chrome extends PosComponent {
         this.pos.destroy();
     }
 
-    getDefaultScreen() {
+    _getDefaultScreen() {
         const name = 'ProductScreen';
         const component = this.constructor.components[name];
-        const props = {};
-        return { name, component, props };
+        return { name, component };
     }
 }
 

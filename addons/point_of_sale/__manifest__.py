@@ -76,6 +76,7 @@
         'static/src/xml/WrappedProductNameLines.xml',
         'static/src/xml/OrderReceipt.xml',
         'static/src/xml/ReceiptScreen.xml',
+        'static/src/xml/ScaleScreen.xml',
         'static/src/xml/OrderSelector.xml',
         'static/src/xml/CashierName.xml',
         'static/src/xml/ProxyStatus.xml',

@@ -28,6 +28,11 @@ odoo.define('point_of_sale.PosComponent', function(require) {
                 this.trigger('show-popup', { name, props, __theOneThatWaits: { resolve } });
             });
         }
+        showTempScreen(name, props) {
+            return new Promise(resolve => {
+                this.trigger('show-temp-screen', { name, props, __theOneThatWaits: { resolve } });
+            });
+        }
         /**
          * TODO jcb: This is useless! It doesn't correctly return the target.
          *      The target is still Proxy.

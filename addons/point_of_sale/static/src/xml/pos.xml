@@ -25,8 +25,10 @@
                         <div class="subwindow">
                             <div class="subwindow-container">
                                 <div class="subwindow-container-fix screens">
-                                    <t t-component="state.screen.component"
-                                       t-props="state.screen.props" t-key="state.screen.name" />
+                                    <t t-component="mainScreen.component" isShow="mainScreen.isShow"
+                                       t-props="mainScreenProps" t-key="mainScreen.name" />
+                                    <t t-component="tempScreen.component" t-if="tempScreen.isShow"
+                                       t-props="tempScreenProps" t-key="tempScreen.name" />
                                 </div>
                             </div>
                         </div>
@@ -47,38 +49,6 @@
                     </div>
                     <div class="oe_hidden button skip">
                         Skip
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="ScaleScreenWidget">
-        <div class="scale-screen screen">
-            <div class="screen-content">
-                <div class="top-content">
-                    <span class='button back'>
-                        <i class='fa fa-angle-double-left'></i>
-                        Back
-                    </span>
-                    <h1 class='product-name'>
-                        <t t-esc="widget.get_product_name()" />
-                    </h1>
-                </div>
-                <div class="centered-content">
-                    <div class='weight js-weight'>
-                        <t t-esc="widget.get_product_weight_string()" />
-                    </div>
-                    <div class='product-price'>
-                        <t
-                           t-esc="widget.format_currency(widget.get_product_price()) + '/' + widget.get_product_uom()" />
-                    </div>
-                    <div class='computed-price'>
-                        123.14 €
-                    </div>
-                    <div class='buy-product'>
-                        Order
-                        <i class='fa fa-angle-double-right'></i>
                     </div>
                 </div>
             </div>

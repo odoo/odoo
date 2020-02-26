@@ -108,13 +108,19 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
 
             // Take the weight if necessary.
             if (product.to_weight && this.env.pos.config.iface_electronic_scale) {
-                // Show the ScaleScreen (or ScalePopup) to get the weight.
-                // const { confirmed: userAgreed, data } = await this.gui.show_screen('scale', {
-                //     product,
-                // });
-                // if (userAgreed) {
-                //     weight = data.weight;
-                // }
+                // Show the ScaleScreen to weigh the product.
+                this.numberBuffer.pause();
+                const { confirmed, payload } = await this.showTempScreen('ScaleScreen', {
+                    product,
+                });
+                this.numberBuffer.resume();
+
+                if (confirmed) {
+                    weight = payload.weight;
+                } else {
+                    // do not add the product;
+                    return;
+                }
             }
 
             // Add the product after having the extra information.
