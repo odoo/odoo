@@ -402,11 +402,11 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
         self._rpc({
             model: 'survey.survey',
             method: 'read',
-            args: [[self.surveyId], ['answer_count']],
+            args: [[self.surveyId], ['session_answer_count']],
         }).then(function (result) {
             if (result && result.length === 1){
                 self.$('.o_survey_session_attendees_count').text(
-                    result[0].answer_count
+                    result[0].session_answer_count
                 );
             }
         }, function () {

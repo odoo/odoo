@@ -77,7 +77,8 @@ class UserInputSession(http.Controller):
 
         user_input_lines = request.env['survey.user_input.line'].search([
             ('survey_id', '=', survey.id),
-            ('question_id', '=', survey.session_question_id.id)
+            ('question_id', '=', survey.session_question_id.id),
+            ('create_date', '>=', survey.session_start_time)
         ])
 
         return self._prepare_question_results_values(survey, user_input_lines)
