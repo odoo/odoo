@@ -1813,7 +1813,7 @@ class Form(object):
             )
         self._changed.clear()
         self._model.flush()
-        self._model.invalidate_cache()
+        self._model.env.clear()  # discard cache and pending recomputations
         return r
 
     def _values_to_save(self, all_fields=False):
@@ -1901,7 +1901,7 @@ class Form(object):
         record = self._model.browse(self._values.get('id'))
         result = record.onchange(self._onchange_values(), fields, spec)
         self._model.flush()
-        self._model.invalidate_cache()
+        self._model.env.clear()  # discard cache and pending recomputations
         if result.get('warning'):
             _logger.getChild('onchange').warning("%(title)s %(message)s" % result.get('warning'))
         values = result.get('value', {})
