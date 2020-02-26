@@ -1541,6 +1541,20 @@ var ManualModel = StatementModel.extend({
             }
         });
     },
+
+    /**
+     * Reload data by calling load
+     * It overrides super.reload() because
+     * it is not adapted for this model.
+     *
+     * Use case: coming back to manual reconcilation
+     *           in breadcrumb
+     */
+    reload: function () {
+        this.lines = {};
+        return this.load(this.context);
+    },
+
     /**
      * Load more partners/accounts
      * overridden in ManualModel
