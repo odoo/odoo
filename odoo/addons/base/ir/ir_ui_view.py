@@ -421,7 +421,21 @@ actual arch.
             custom_view.unlink()
 
         self.clear_caches()
-        return super(View, self).write(self._compute_defaults(vals))
+
+        res = super(View, self).write(self._compute_defaults(vals))
+
+        # Check the xml of the view if it gets re-activated.
+        # Ideally, `active` shoud have been added to the `api.constrains` of `_check_xml`,
+        # but the ORM writes and validates regular field (such as `active`) before inverse fields (such as `arch`),
+        # and therefore when writing `active` and `arch` at the same time, `_check_xml` is called twice,
+        # and the first time it tries to validate the view without the modification to the arch,
+        # which is problematic if the user corrects the view at the same time he re-enables it.
+        if vals.get('active'):
+            # Call `_validate_fields` instead of `_check_xml` to have the regular constrains error dialog
+            # instead of the traceback dialog.
+            self._validate_fields(['arch_db'])
+
+        return res
 
     def unlink(self):
         # if in uninstall mode and has children views, emulate an ondelete cascade
