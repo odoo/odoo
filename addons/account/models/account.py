@@ -1423,11 +1423,15 @@ class AccountTax(models.Model):
                     store_included_tax_total = False
             i -= 1
 
-        total_excluded = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount)
+        # These amounts include the tax included but do not include the tax excluded.
+        # Therefore, we need to later:
+        # - subtract the included taxes from total_excluded
+        # - add the excluded taxes to total_included
+        total_included = total_excluded = base
 
         # 5) Iterate the taxes in the sequence order to compute missing tax amounts.
         # Start the computation of accumulated amounts at the total_excluded value.
-        base = total_included = total_void = total_excluded
+        base = total_void = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount)
 
         taxes_vals = []
         i = 0
@@ -1502,7 +1506,11 @@ class AccountTax(models.Model):
             if tax.include_base_amount:
                 base += factorized_tax_amount
 
-            total_included += factorized_tax_amount
+            # Adjust the totals
+            if tax.price_include:
+                total_excluded -= factorized_tax_amount
+            else:
+                total_included += factorized_tax_amount
             i += 1
 
         return {
