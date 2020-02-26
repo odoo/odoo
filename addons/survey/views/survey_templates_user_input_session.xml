@@ -37,7 +37,7 @@
                             <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey_url" />
                         </h2>
                         <h2 class="font-weight-normal"><span>Waiting for attendees...</span>
-                            <span class="ml-1 font-weight-bold o_survey_session_attendees_count" t-esc="survey.answer_count" />
+                            <span class="ml-1 font-weight-bold o_survey_session_attendees_count" t-esc="survey.session_answer_count" />
                         </h2>
                     </div>
                     <a role="button"
@@ -62,7 +62,7 @@
             t-att-style="'display: none;' if is_rpc_call else ''"
             t-att-data-is-rpc-call="is_rpc_call"
             t-att-data-survey-id="survey.id"
-            t-att-data-attendees-count="survey.answer_count"
+            t-att-data-attendees-count="survey.session_answer_count"
             t-att-data-survey-access-token="survey.access_token"
             t-att-data-timer="survey.session_question_start_time.isoformat()"
             t-att-data-time-limit-minutes="question.time_limit / 60"
@@ -118,7 +118,7 @@
                                 <span>
                                     <span class="o_survey_session_answer_count">0</span>
                                      / 
-                                    <span t-esc="survey.answer_count" />
+                                    <span t-esc="survey.session_answer_count" />
                                 </span>
                             </h2>
                             <div class="progress">
