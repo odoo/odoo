@@ -413,7 +413,7 @@ class IrHttp(models.AbstractModel):
             headers.append(('ETag', filehash))
             if etag == filehash and status == 200:
                 status = 304
-        headers.append(('Cache-Control', 'max-age=%s' % (http.STATIC_CACHE_LONG if unique else 0)))
+        headers.append(('Cache-Control', 'max-age=%s' % (http.STATIC_CACHE_LONG if (not unique) else 0)))
         # content-disposition default name
         if download:
             headers.append(('Content-Disposition', content_disposition(filename)))
