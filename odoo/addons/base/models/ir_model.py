@@ -220,7 +220,10 @@ class IrModel(models.Model):
                         WHERE type IN ('model', 'model_terms') AND name LIKE %s
                     """, [model.model + ',%'])
             else:
-                _logger.warning('The model %s could not be dropped because it did not exist in the registry.', model.model)
+                # do not warn in the case of a test module
+                module = self.env.context.get('module', '')
+                if not module.startswith('test_'):
+                    _logger.warning('The model %s could not be dropped because it did not exist in the registry.', model.model)
         return True
 
     def unlink(self):
@@ -2018,7 +2021,9 @@ class IrModelData(models.Model):
                     _logger.info('Deleting %s@%s (%s)', res_id, model, xmlid)
                     record = self.env[model].browse(res_id)
                     if record.exists():
-                        if record._name == 'ir.model.fields':
+                        module = xmlid.split('.', 1)[0]
+                        record = record.with_context(module=module)
+                        if record._name == 'ir.model.fields' and not module.startswith('test_'):
                             _logger.warning(
                                 "Deleting field %s.%s (hint: fields should be"
                                 " explicitly removed by an upgrade script)",
