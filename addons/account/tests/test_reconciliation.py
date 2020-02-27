@@ -1093,38 +1093,28 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         for cb_move in cash_basis_moves:
             expected = expected_move_amounts[index]
             move_lines = cb_move.line_ids
-            base_amount_tax_lines20per = move_lines.filtered(lambda l: l.account_id == self.tax_base_amount_account and '20%' in l.name)
-            base_amount_tax_lines10per = move_lines.filtered(lambda l: l.account_id == self.tax_base_amount_account and '10%' in l.name)
-            self.assertEqual(len(base_amount_tax_lines20per), 2)
+            base_amount_tax_lines = move_lines.filtered(lambda l: l.account_id == self.tax_base_amount_account)
+            base_amount_tax_lines20per = base_amount_tax_lines.filtered(lambda l: self.tax_cash_basis in l.tax_ids)
+            base_amount_tax_lines10per = base_amount_tax_lines.filtered(lambda l: tax_cash_basis10percent in l.tax_ids)
+            counterpart_base_lines = base_amount_tax_lines - base_amount_tax_lines20per - base_amount_tax_lines10per
 
-            self.assertAlmostEqual(sum(base_amount_tax_lines20per.mapped('credit')), expected['base_20'])
+            self.assertAlmostEqual(sum(counterpart_base_lines.mapped('credit')), expected['base_10'] + expected['base_20'])
             self.assertAlmostEqual(sum(base_amount_tax_lines20per.mapped('debit')), expected['base_20'])
-
-            self.assertEqual(len(base_amount_tax_lines10per), 2)
-            self.assertAlmostEqual(sum(base_amount_tax_lines10per.mapped('credit')), expected['base_10'])
             self.assertAlmostEqual(sum(base_amount_tax_lines10per.mapped('debit')), expected['base_10'])
 
-            self.assertAlmostEqual(
-                (move_lines - base_amount_tax_lines20per - base_amount_tax_lines10per)
-                .filtered(lambda l: l.account_id == self.tax_waiting_account).credit,
-                expected['tax_20']
-            )
-            self.assertAlmostEqual(
-                (move_lines - base_amount_tax_lines20per - base_amount_tax_lines10per)
-                .filtered(lambda l: 'TaxLine1' in l.name).debit,
-                expected['tax_20']
-            )
+            tax_lines = move_lines - base_amount_tax_lines
+            lines20per = tax_lines.filtered(lambda l: l.tax_repartition_line_id in self.tax_cash_basis.invoice_repartition_line_ids)
+            lines10per = tax_lines.filtered(lambda l: l.tax_repartition_line_id in tax_cash_basis10percent.invoice_repartition_line_ids)
 
-            self.assertAlmostEqual(
-                (move_lines - base_amount_tax_lines20per - base_amount_tax_lines10per)
-                .filtered(lambda l: l.account_id == tax_waiting_account10).credit,
-                expected['tax_10']
-            )
-            self.assertAlmostEqual(
-                (move_lines - base_amount_tax_lines20per - base_amount_tax_lines10per)
-                .filtered(lambda l: 'TaxLine0' in l.name).debit,
-                expected['tax_10']
-            )
+            self.assertAlmostEqual(lines20per.debit, expected['tax_20'])
+            self.assertAlmostEqual(lines10per.debit, expected['tax_10'])
+
+            counterpart_tax_lines = tax_lines - lines20per - lines10per
+            counterpart_tax10_line = counterpart_tax_lines.filtered(lambda l: l.account_id == tax_waiting_account10)
+            counterpart_tax20_line = counterpart_tax_lines.filtered(lambda l: l.account_id == self.tax_waiting_account)
+
+            self.assertAlmostEqual(counterpart_tax10_line.credit, expected['tax_10'])
+            self.assertAlmostEqual(counterpart_tax20_line.credit, expected['tax_20'])
             index += 1
 
     def test_reconciliation_to_check(self):
