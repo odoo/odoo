@@ -162,6 +162,9 @@ class WebsiteSale(ProductConfiguratorController):
 
     def _get_search_domain(self, search, category, attrib_values):
         domain = request.website.sale_product_domain()
+        # if company_share_product is false then only displays the products of the website's company
+        if request.env.ref('product.product_comp_rule').sudo().active:
+            domain += [('company_id', 'in', (False, request.website.company_id.id))]
         if search:
             for srch in search.split(" "):
                 domain += [
