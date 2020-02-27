@@ -223,7 +223,6 @@ def module_boot(db=None):
     addons = serverside + dbside
     return addons
 
-
 def fs2web(path):
     """convert FS path into web path"""
     return '/'.join(path.split(os.path.sep))
@@ -248,7 +247,6 @@ def manifest_glob(extension, addons=None, db=None, include_remotes=False):
                 for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
                     r.append((path, fs2web(path[len(addons_path):]), addon))
     return r
-
 
 def manifest_list(extension, mods=None, db=None, debug=None):
     """ list resources to load specifying either:
@@ -1033,24 +1031,6 @@ class WebClient(http.Controller):
     def benchmarks(self, mod=None, **kwargs):
         return request.render('web.benchmark_suite')
 
-
-class Proxy(http.Controller):
-
-    @http.route('/web/proxy/post/<path:path>', type='http', auth='user', methods=['GET'])
-    def post(self, path):
-        """Effectively execute a POST request that was hooked through user login"""
-        with request.session.load_request_data() as data:
-            if not data:
-                raise werkzeug.exceptions.BadRequest()
-            from werkzeug.test import Client
-            from werkzeug.wrappers import BaseResponse
-            base_url = request.httprequest.base_url
-            query_string = request.httprequest.query_string
-            client = Client(request.httprequest.app, BaseResponse)
-            headers = {'X-Openerp-Session-Id': request.session.sid}
-            return client.post('/' + path, base_url=base_url, query_string=query_string,
-                               headers=headers, data=data)
-
 class Database(http.Controller):
 
     def _render_template(self, **d):
@@ -1267,7 +1247,6 @@ class Session(http.Controller):
     def logout(self, redirect='/web'):
         request.session.logout(keep_db=True)
         return werkzeug.utils.redirect(redirect, 303)
-
 
 class DataSet(http.Controller):
 
@@ -1945,7 +1924,6 @@ class ExcelExport(ExportFormat, http.Controller):
                     xlsx_writer.write_cell(row_index + 1, cell_index, cell_value)
 
         return xlsx_writer.value
-
 
 class ReportController(http.Controller):
 

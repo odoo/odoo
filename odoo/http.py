@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 #----------------------------------------------------------
-# OpenERP HTTP layer
+# Odoo HTTP layer
 #----------------------------------------------------------
 import ast
 import collections
 import contextlib
-import copy
 import datetime
 import functools
 import hashlib
@@ -21,13 +20,9 @@ import sys
 import threading
 import time
 import traceback
-import warnings
-from os.path import join as opj
-from zlib import adler32
+import zlib
 
 import babel.core
-from datetime import datetime, date
-import passlib.utils
 import psycopg2
 import json
 import werkzeug.contrib.sessions
@@ -38,7 +33,16 @@ import werkzeug.routing
 import werkzeug.wrappers
 import werkzeug.wsgi
 from werkzeug import urls
-from werkzeug.wsgi import wrap_file
+
+try:
+    # werkzeug >= 0.15
+    from werkzeug.middleware.proxy_fix import ProxyFix as ProxyFix_
+    # 0.15 also supports port and prefix, but 0.14 only forwarded for, proto
+    # and host so replicate that
+    ProxyFix = lambda app: ProxyFix_(app, x_for=1, x_proto=1, x_host=1)
+except ImportError:
+    # werkzeug < 0.15
+    from werkzeug.contrib.fixers import ProxyFix
 
 try:
     import psutil
@@ -47,17 +51,22 @@ except ImportError:
 
 import odoo
 from odoo import fields
+from .modules.module import module_manifest
 from .service.server import memory_info
 from .service import security, model as service_model
 from .tools.func import lazy_property
 from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
 from .tools.mimetypes import guess_mimetype
 
-from .modules.module import module_manifest
-
 _logger = logging.getLogger(__name__)
-rpc_request = logging.getLogger(__name__ + '.rpc.request')
-rpc_response = logging.getLogger(__name__ + '.rpc.response')
+_logger_rpc_request = logging.getLogger(__name__ + '.rpc.request')
+_logger_rpc_response = logging.getLogger(__name__ + '.rpc.response')
+_logger_rpc_request_flag = _logger_rpc_request.isEnabledFor(logging.DEBUG)
+_logger_rpc_response_flag = _logger_rpc_response.isEnabledFor(logging.DEBUG) # should rather be named rpc content
+
+#----------------------------------------------------------
+# Constants
+#----------------------------------------------------------
 
 # One week cache for static content (static files in apps, library files, ...)
 # Safe resources may use what google page speed recommends (1 year)
@@ -83,84 +92,20 @@ babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
 """
 ALLOWED_DEBUG_MODES = ['', '1', 'assets', 'tests']
 
-#----------------------------------------------------------
-# RequestHandler
-#----------------------------------------------------------
-# Thread local global request object
-_request_stack = werkzeug.local.LocalStack()
-request = _request_stack()
-"""
-    A global proxy that always redirect to the current request object.
-"""
-
-def replace_request_password(args):
-    # password is always 3rd argument in a request, we replace it in RPC logs
-    # so it's easier to forward logs for diagnostics/debugging purposes...
-    if len(args) > 2:
-        args = list(args)
-        args[2] = '*'
-    return tuple(args)
-
-
 # don't trigger debugger for those exceptions, they carry user-facing warnings
 # and indications, they're not necessarily indicative of anything being
 # *broken*
-NO_POSTMORTEM = (odoo.exceptions.except_orm,
-                 odoo.exceptions.AccessDenied,
-                 odoo.exceptions.Warning,
-                 odoo.exceptions.RedirectWarning)
+NO_POSTMORTEM = (
+    odoo.exceptions.except_orm,
+    odoo.exceptions.AccessDenied,
+    odoo.exceptions.Warning,
+    odoo.exceptions.RedirectWarning,
+)
 
-
-def dispatch_rpc(service_name, method, params):
-    """ Handle a RPC call.
-
-    This is pure Python code, the actual marshalling (from/to XML-RPC) is done
-    in a upper layer.
-    """
-    try:
-        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
-        rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
-        if rpc_request_flag or rpc_response_flag:
-            start_time = time.time()
-            start_memory = 0
-            if psutil:
-                start_memory = memory_info(psutil.Process(os.getpid()))
-            if rpc_request and rpc_response_flag:
-                odoo.netsvc.log(rpc_request, logging.DEBUG, '%s.%s' % (service_name, method), replace_request_password(params))
-
-        threading.current_thread().uid = None
-        threading.current_thread().dbname = None
-        if service_name == 'common':
-            dispatch = odoo.service.common.dispatch
-        elif service_name == 'db':
-            dispatch = odoo.service.db.dispatch
-        elif service_name == 'object':
-            dispatch = odoo.service.model.dispatch
-        result = dispatch(method, params)
-
-        if rpc_request_flag or rpc_response_flag:
-            end_time = time.time()
-            end_memory = 0
-            if psutil:
-                end_memory = memory_info(psutil.Process(os.getpid()))
-            logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_memory / 1024, end_memory / 1024, (end_memory - start_memory)/1024)
-            if rpc_response_flag:
-                odoo.netsvc.log(rpc_response, logging.DEBUG, logline, result)
-            else:
-                odoo.netsvc.log(rpc_request, logging.DEBUG, logline, replace_request_password(params), depth=1)
-
-        return result
-    except NO_POSTMORTEM:
-        raise
-    except odoo.exceptions.DeferredException as e:
-        _logger.exception(odoo.tools.exception_to_unicode(e))
-        odoo.tools.debugger.post_mortem(odoo.tools.config, e.traceback)
-        raise
-    except Exception as e:
-        _logger.exception(odoo.tools.exception_to_unicode(e))
-        odoo.tools.debugger.post_mortem(odoo.tools.config, sys.exc_info())
-        raise
-
+#----------------------------------------------------------
+# Helpers
+#----------------------------------------------------------
+# TODO move to request method as helper ?
 def local_redirect(path, query=None, keep_hash=False, code=303):
     # FIXME: drop the `keep_hash` param, now useless
     url = path
@@ -177,10 +122,102 @@ def redirect_with_hash(url, code=303):
     #           https://tools.ietf.org/html/rfc7231#section-7.1.2
     return werkzeug.utils.redirect(url, code)
 
+def serialize_exception(e):
+    tmp = {
+        "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
+        "debug": traceback.format_exc(),
+        "message": ustr(e),
+        "arguments": e.args,
+        "exception_type": "internal_error",
+        "context": getattr(e, 'context', {}),
+    }
+    if isinstance(e, odoo.exceptions.UserError):
+        tmp["exception_type"] = "user_error"
+    elif isinstance(e, odoo.exceptions.Warning):
+        tmp["exception_type"] = "warning"
+    elif isinstance(e, odoo.exceptions.RedirectWarning):
+        tmp["exception_type"] = "warning"
+    elif isinstance(e, odoo.exceptions.AccessError):
+        tmp["exception_type"] = "access_error"
+    elif isinstance(e, odoo.exceptions.MissingError):
+        tmp["exception_type"] = "missing_error"
+    elif isinstance(e, odoo.exceptions.AccessDenied):
+        tmp["exception_type"] = "access_denied"
+    elif isinstance(e, odoo.exceptions.ValidationError):
+        tmp["exception_type"] = "validation_error"
+    elif isinstance(e, odoo.exceptions.except_orm):
+        tmp["exception_type"] = "except_orm"
+    return tmp
+
+#----------------------------------------------------------
+# Request and Response
+#----------------------------------------------------------
+# Thread local global request object
+_request_stack = werkzeug.local.LocalStack()
+request = _request_stack() # global proxy that always redirect to the current request object.
+
+class Response(werkzeug.wrappers.Response):
+    """ Response object passed through controller route chain.
+
+    In addition to the :class:`werkzeug.wrappers.Response` parameters, this
+    class's constructor can take the following additional parameters
+    for QWeb Lazy Rendering.
+
+    :param basestring template: template to render
+    :param dict qcontext: Rendering context to use
+    :param int uid: User id to use for the ir.ui.view render call,
+                    ``None`` to use the request's user (the default)
+
+    these attributes are available as parameters on the Response object and
+    can be altered at any time before rendering
+
+    Also exposes all the attributes and methods of
+    :class:`werkzeug.wrappers.Response`.
+    """
+    default_mimetype = 'text/html'
+    def __init__(self, *args, **kw):
+        template = kw.pop('template', None)
+        qcontext = kw.pop('qcontext', None)
+        uid = kw.pop('uid', None)
+        super(Response, self).__init__(*args, **kw)
+        self.set_default(template, qcontext, uid)
+
+    def set_default(self, template=None, qcontext=None, uid=None):
+        self.template = template
+        self.qcontext = qcontext or dict()
+        self.qcontext['response_template'] = self.template
+        self.uid = uid
+        # Support for Cross-Origin Resource Sharing
+        if request.endpoint and 'cors' in request.endpoint.routing:
+            self.headers.set('Access-Control-Allow-Origin', request.endpoint.routing['cors'])
+            methods = 'GET, POST'
+            if request.endpoint.routing['type'] == 'json':
+                methods = 'POST'
+            elif request.endpoint.routing.get('methods'):
+                methods = ', '.join(request.endpoint.routing['methods'])
+            self.headers.set('Access-Control-Allow-Methods', methods)
+
+    @property
+    def is_qweb(self):
+        return self.template is not None
+
+    def render(self):
+        """ Renders the Response's template, returns the result
+        """
+        env = request.env(user=self.uid or request.uid or odoo.SUPERUSER_ID)
+        self.qcontext['request'] = request
+        return env["ir.ui.view"].render_template(self.template, self.qcontext)
+
+    def flatten(self):
+        """ Forces the rendering of the response's template, sets the result
+        as response body and unsets :attr:`.template`
+        """
+        if self.template:
+            self.response.append(self.render())
+            self.template = None
+
 class WebRequest(object):
-    """ Parent class for all Odoo Web request types, mostly deals with
-    initialization and setup of the request object (the dispatching itself has
-    to be handled by the subclasses)
+    """ Odoo Web request.
 
     :param httprequest: a wrapped werkzeug Request object
     :type httprequest: :class:`werkzeug.wrappers.BaseRequest`
@@ -192,9 +229,8 @@ class WebRequest(object):
 
     .. attribute:: params
 
-        :class:`~collections.Mapping` of request parameters, not generally
-        useful as they're provided directly to the handler method as keyword
-        arguments
+        :class:`~collections.Mapping` of request parameters, also provided
+        directly to the handler method as keyword arguments
     """
     def __init__(self, httprequest):
         self.httprequest = httprequest
@@ -203,6 +239,7 @@ class WebRequest(object):
         self.endpoint = None
         self.endpoint_arguments = None
         self.auth_method = None
+        self._request_type = None
         self._cr = None
         self._uid = None
         self._context = None
@@ -212,7 +249,7 @@ class WebRequest(object):
         self._failed = None
 
         # set db/uid trackers - they're cleaned up at the WSGI
-        # dispatching phase in odoo.service.wsgi_server.application
+        # dispatching phase in odoo.http.application
         if self.db:
             threading.current_thread().dbname = self.db
         if self.session.uid:
@@ -255,6 +292,26 @@ class WebRequest(object):
         self._env = None
 
     @property
+    def db(self):
+        """
+        The database linked to this request. Can be ``None``
+        if the current request uses the ``none`` authentication.
+        """
+        return self.session.db if not self.disable_db else None
+
+    @property
+    def registry(self):
+        """
+        The registry to the database linked to this request. Can be ``None``
+        if the current request uses the ``none`` authentication.
+
+        .. deprecated:: 8.0
+
+            use :attr:`.env`
+        """
+        return odoo.registry(self.db)
+
+    @property
     def env(self):
         """ The :class:`~odoo.api.Environment` bound to current request. """
         if self._env is None:
@@ -289,33 +346,9 @@ class WebRequest(object):
         self.disable_db = True
         self.uid = None
 
-    def set_handler(self, endpoint, arguments, auth):
-        # is this needed ?
-        arguments ={k: v for k, v in arguments.items()
-                         if not k.startswith("_ignored_")}
-        self.endpoint_arguments = arguments
-        self.endpoint = endpoint
-        self.auth_method = auth
-
-    def _handle_exception(self, exception):
-        """Called within an except block to allow converting exceptions
-           to abitrary responses. Anything returned (except None) will
-           be used as response."""
-        self._failed = exception  # prevent tx commit
-        if not isinstance(exception, NO_POSTMORTEM) \
-                and not isinstance(exception, werkzeug.exceptions.HTTPException):
-            odoo.tools.debugger.post_mortem(
-                odoo.tools.config, sys.exc_info())
-
-        # WARNING: do not inline or it breaks: raise...from evaluates strictly
-        # LTR so would first remove traceback then copy lack of traceback
-        new_cause = Exception().with_traceback(exception.__traceback__)
-        # tries to provide good chained tracebacks, just re-raising exception
-        # generates a weird message as stacks just get concatenated, exceptions
-        # not guaranteed to copy.copy cleanly & we want `exception` as leaf (for
-        # callers to check & look at)
-        raise exception.with_traceback(None) from new_cause
-
+    #------------------------------------------------------
+    # Common helpers
+    #------------------------------------------------------
     def _call_function(self, *args, **kwargs):
         request = self
         if self.endpoint.routing['type'] != self._request_type:
@@ -353,30 +386,181 @@ class WebRequest(object):
             return checked_call(self.db, *args, **kwargs)
         return self.endpoint(*args, **kwargs)
 
-    @contextlib.contextmanager
-    def registry_cr(self):
-        warnings.warn('please use request.registry and request.cr directly', DeprecationWarning)
-        yield (self.registry, self.cr)
+    def _handle_exception(self, exception):
+        """Called within an except block to allow converting exceptions
+           to abitrary responses. Anything returned (except None) will
+           be used as response."""
+        self._failed = exception  # prevent tx commit
+        if not isinstance(exception, NO_POSTMORTEM) and not isinstance(exception, werkzeug.exceptions.HTTPException):
+            odoo.tools.debugger.post_mortem( odoo.tools.config, sys.exc_info())
 
-    @property
-    def registry(self):
-        """
-        The registry to the database linked to this request. Can be ``None``
-        if the current request uses the ``none`` authentication.
+        # WARNING: do not inline or it breaks: raise...from evaluates strictly
+        # LTR so would first remove traceback then copy lack of traceback
+        new_cause = Exception().with_traceback(exception.__traceback__)
+        # tries to provide good chained tracebacks, just re-raising exception
+        # generates a weird message as stacks just get concatenated, exceptions
+        # not guaranteed to copy.copy cleanly & we want `exception` as leaf (for
+        # callers to check & look at)
+        raise exception.with_traceback(None) from new_cause
 
-        .. deprecated:: 8.0
+        # HTTP
+        """Called within an except block to allow converting exceptions
+           to abitrary responses. Anything returned (except None) will
+           be used as response."""
+        try:
+            return super(HttpRequest, self)._handle_exception(exception)
+        except SessionExpiredException:
+            if not request.params.get('noredirect'):
+                query = werkzeug.urls.url_encode({ 'redirect': self.httprequest.url, })
+                return werkzeug.utils.redirect('/web/login?%s' % query)
 
-            use :attr:`.env`
-        """
-        return odoo.registry(self.db)
+        except werkzeug.exceptions.HTTPException as e:
+            return e
+        # JSON
 
-    @property
-    def db(self):
+        """Called within an except block to allow converting exceptions
+           to arbitrary responses. Anything returned (except None) will
+           be used as response."""
+        try:
+            return super(JsonRequest, self)._handle_exception(exception)
+        except Exception:
+            if not isinstance(exception, SessionExpiredException):
+                if exception.args and exception.args[0] == "bus.Bus not available in test mode":
+                    _logger.info(exception)
+                elif isinstance(exception, (odoo.exceptions.Warning, odoo.exceptions.except_orm,
+                                          werkzeug.exceptions.NotFound)):
+                    _logger.warning(exception)
+                else:
+                    _logger.exception("Exception during JSON request handling.")
+            error = {
+                'code': 200,
+                'message': "Odoo Server Error",
+                'data': serialize_exception(exception),
+            }
+            if isinstance(exception, werkzeug.exceptions.NotFound):
+                error['http_status'] = 404
+                error['code'] = 404
+                error['message'] = "404: Not Found"
+            if isinstance(exception, AuthenticationError):
+                error['code'] = 100
+                error['message'] = "Odoo Session Invalid"
+            if isinstance(exception, SessionExpiredException):
+                error['code'] = 100
+                error['message'] = "Odoo Session Expired"
+            return self._json_response(error=error)
+
+    def rpc_debug_pre(self, params, model=None, method=None):
+        # For Odoo service RPC params is a list or a tuple, for call_kw style it is a dict
+        if _logger_rpc_request_flag or _logger_rpc_response_flag:
+            endpoint = self.endpoint.method.__name__
+            model = model or params.get('model')
+            method = method or params.get('method')
+
+            # For Odoo service RPC call password is always 3rd argument in a
+            # request, we replace it in logs so it's easier to forward logs for
+            # diagnostics/debugging purposes...
+            if isinstance(params, (tuple, list)):
+                if len(params) > 2:
+                    log_params = list(params)
+                    log_params[2] = '*'
+
+            start_time = time.time()
+            start_memory = 0
+            if psutil:
+                start_memory = memory_info(psutil.Process(os.getpid()))
+            _logger_rpc_request.debug('%s: request %s.%s: %s', endpoint, model, method, pprint.pformat(params))
+            return (endpoint, model, method, start_time, start_memory)
+
+    def rpc_debug_post(self, t0, result):
+        if _logger_rpc_request_flag or _logger_rpc_response_flag:
+            endpoint, model, method, start_time, start_memory = t0
+            end_time = time.time()
+            end_memory = 0
+            if psutil:
+                end_memory = memory_info(psutil.Process(os.getpid()))
+            logline = '%s: response %s.%s: time:%.3fs mem: %sk -> %sk (diff: %sk)' % (name, model, method, end_time - start_time, start_memory / 1024, end_memory / 1024, (end_memory - start_memory)/1024)
+            if _logger_rpc_response_flag:
+                rpc_response.debug('%s, response: %s', logline, pprint.pformat(result))
+            else:
+                rpc_request.debug(logline)
+
+    def rpc_service(service_name, method, args):
+        """ Handle an Odoo Service RPC call.  """
+        try:
+            threading.current_thread().uid = None
+            threading.current_thread().dbname = None
+
+            t0 = self.rpc_debug_pre(args, service_name, method)
+
+            result = False
+            if service_name == 'common':
+                result = odoo.service.common.dispatch(method, args)
+            elif service_name == 'db':
+                result = odoo.service.db.dispatch(method, args)
+            elif service_name == 'object':
+                result = odoo.service.model.dispatch(method, args)
+
+            t0 = self.rpc_debug_post(t0, result)
+
+            return result
+        except NO_POSTMORTEM:
+            raise
+        except odoo.exceptions.DeferredException as e:
+            _logger.exception(odoo.tools.exception_to_unicode(e))
+            odoo.tools.debugger.post_mortem(odoo.tools.config, e.traceback)
+            raise
+        except Exception as e:
+            _logger.exception(odoo.tools.exception_to_unicode(e))
+            odoo.tools.debugger.post_mortem(odoo.tools.config, sys.exc_info())
+            raise
+
+    #------------------------------------------------------
+    # Plain HTTP Helpers and Handler
+    #------------------------------------------------------
+    def render(self, template, qcontext=None, lazy=True, **kw):
+        """ Lazy render of a QWeb template.
+
+        The actual rendering of the given template will occur at then end of
+        the dispatching. Meanwhile, the template and/or qcontext can be
+        altered or even replaced by a static response.
+
+        :param basestring template: template to render
+        :param dict qcontext: Rendering context to use
+        :param bool lazy: whether the template rendering should be deferred
+                          until the last possible moment
+        :param kw: forwarded to werkzeug's Response object
         """
-        The database linked to this request. Can be ``None``
-        if the current request uses the ``none`` authentication.
+        response = Response(template=template, qcontext=qcontext, **kw)
+        if not lazy:
+            return response.render()
+        return response
+
+    def not_found(self, description=None):
+        """ Shortcut for a `HTTP 404
+        <http://tools.ietf.org/html/rfc7231#section-6.5.4>`_ (Not Found)
+        response
         """
-        return self.session.db if not self.disable_db else None
+        return werkzeug.exceptions.NotFound(description)
+
+    def make_response(self, data, headers=None, cookies=None):
+        """ Helper for non-HTML responses, or HTML responses with custom
+        response headers or cookies.
+
+        While handlers can just return the HTML markup of a page they want to
+        send as a string if non-HTML data is returned they need to create a
+        complete response object, or the returned data will not be correctly
+        interpreted by the clients.
+
+        :param basestring data: response body
+        :param headers: HTTP headers to set on the response
+        :type headers: ``[(name, value)]``
+        :param collections.Mapping cookies: cookies to set on the client
+        """
+        response = Response(data, headers=headers)
+        if cookies:
+            for k, v in cookies.items():
+                response.set_cookie(k, v)
+        return response
 
     def csrf_token(self, time_limit=3600):
         """ Generates and returns a CSRF token for the current session
@@ -420,6 +604,143 @@ class WebRequest(object):
         hm_expected = hmac.new(secret.encode('ascii'), msg.encode('utf-8'), hashlib.sha1).hexdigest()
         return consteq(hm, hm_expected)
 
+    def handle_http(self):
+        """ Handle ``http`` request type.
+
+        Matched routing arguments, query string and form parameters (including
+        files) are passed to the handler method as keyword arguments. In case
+        of name conflict, routing parameters have priority.
+
+        The handler method's result can be:
+
+        * a falsy value, in which case the HTTP response will be an `HTTP 204`_ (No Content)
+        * a werkzeug Response object, which is returned as-is
+        * a ``str`` or ``unicode``, will be wrapped in a Response object and returned as HTML
+        """
+
+        # TODO why not use .values ?
+        params = collections.OrderedDict(self.httprequest.args)
+        params.update(self.httprequest.form)
+        params.update(self.httprequest.files)
+
+        params.pop('session_id', None)
+        self.params = params
+
+        # Reply to CORS requests
+        if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
+            headers = {
+                'Access-Control-Max-Age': 60 * 60 * 24,
+                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+            }
+            return Response(status=200, headers=headers)
+
+        # Check for CSRF token for relevent requests
+        if request.httprequest.method not in ('GET', 'HEAD', 'OPTIONS', 'TRACE') and request.endpoint.routing.get('csrf', True):
+            token = self.params.pop('csrf_token', None)
+            if not self.validate_csrf(token):
+                if token is not None:
+                    _logger.warning("CSRF validation failed on path '%s'", request.httprequest.path)
+                else:
+                    _logger.warning("""No CSRF token provided for path '%s' https://www.odoo.com/documentation/13.0/reference/http.html#csrf for more details.""", request.httprequest.path)
+                raise werkzeug.exceptions.BadRequest('Session expired (invalid CSRF token)')
+
+        # Handle normal requests
+        r = self._call_function(**self.params)
+        if not r:
+            r = Response(status=204)  # no content
+        return r
+
+    #------------------------------------------------------
+    # JSON-RPC2
+    #------------------------------------------------------
+    def _json_response(self, result=None, error=None):
+        response = { 'jsonrpc': '2.0', 'id': self.request_id }
+        if error is not None:
+            response['error'] = error
+        if result is not None:
+            response['result'] = result
+
+        body = json.dumps(response, default=date_utils.json_default)
+
+        return Response(
+            body, status=error and error.pop('http_status', 200) or 200,
+            headers=[('Content-Type', 'application/json'), ('Content-Length', len(body))]
+        )
+
+    def handle_json(self):
+        """ Parser handler for `JSON-RPC 2 <http://www.jsonrpc.org/specification>`_ over HTTP
+
+        * ``method`` is ignored
+        * ``params`` must be a JSON object (not an array) and is passed as keyword arguments to the handler method
+        * the handler method's result is returned as JSON-RPC ``result`` and wrapped in the `JSON-RPC Response <http://www.jsonrpc.org/specification#response_object>`_
+
+        Sucessful request::
+
+          --> {"jsonrpc": "2.0", "method": "call", "params": {"context": {}, "arg1": "val1" }, "id": null}
+
+          <-- {"jsonrpc": "2.0", "result": { "res1": "val1" }, "id": null}
+
+        Request producing a error::
+
+          --> {"jsonrpc": "2.0", "method": "call", "params": {"context": {}, "arg1": "val1" }, "id": null}
+
+          <-- {"jsonrpc": "2.0", "error": {"code": 1, "message": "End user error message.", "data": {"code": "codestring", "debug": "traceback" } }, "id": null}
+
+        """
+        # Fake JSON-RPC2 where id and params are www-form encoded instead of plain JSON
+        # TODO decide yes or not ? because it is a CSRF security issue
+        if self.httprequest.content_type == "application/x-www-form-urlencoded":
+            self.request_id = self.httprequest.values.get('id')
+            try:
+                www_form_params = self.httprequest.values.get('params')
+                params = json.loads(www_form_params)
+            except ValueError:
+                _logger.info('%s: JSON-RPC www-form error parsing params: %r', self.httprequest.path, www_form_params)
+                raise werkzeug.exceptions.BadRequest()
+
+        # Regular JSON-RPC2
+        else:
+            json_request = self.httprequest.get_data().decode(self.httprequest.charset)
+            try:
+                self.jsonrequest = json.loads(json_request)
+            except ValueError:
+                _logger.info('%s: Invalid JSON data: %r', self.httprequest.path, json_request)
+                raise werkzeug.exceptions.BadRequest()
+            self.request_id = self.jsonrequest.get("id")
+            params = dict(self.jsonrequest.get("params", {}))
+
+        self.params = params
+        self.context = self.params.pop('context', dict(self.session.context))
+
+        # Call the endpoint
+        t0 = self.rpc_debug_pre(self.params)
+        result = self._call_function(**self.params)
+        self.rpc_debug_post(t0, result)
+
+        return self._json_response(result)
+
+    #------------------------------------------------------
+    # Entry point
+    #------------------------------------------------------
+    def dispatch(self, endpoint, args, auth='none'):
+        self.endpoint = endpoint
+        self.endpoint_arguments = args
+        self.auth_method = auth
+
+        # Plain HTTP endpoint
+        if self.endpoint.routing_type == 'http':
+            return self.handle_http()
+
+        # JSON-RPC2 endpoint
+        elif self.endpoint.routing_type == 'json':
+            return self.handle_json()
+
+#----------------------------------------------------------
+# Controller and routes
+#----------------------------------------------------------
+addons_manifest = {}
+controllers_per_module = collections.defaultdict(list)
+
 def route(route=None, **kw):
     """Decorator marking the decorated method as being a handler for
     requests. The method must be part of a subclass of ``Controller``.
@@ -445,7 +766,6 @@ def route(route=None, **kw):
                     specified, all methods are allowed.
     :param cors: The Access-Control-Allow-Origin cors directive value.
     :param bool csrf: Whether CSRF protection should be enabled for the route.
-
                       Defaults to ``True``. See :ref:`CSRF Protection
                       <csrf>` for more.
 
@@ -541,331 +861,6 @@ def route(route=None, **kw):
         return response_wrap
     return decorator
 
-class JsonRequest(WebRequest):
-    """ Request handler for `JSON-RPC 2
-    <http://www.jsonrpc.org/specification>`_ over HTTP
-
-    * ``method`` is ignored
-    * ``params`` must be a JSON object (not an array) and is passed as keyword
-      arguments to the handler method
-    * the handler method's result is returned as JSON-RPC ``result`` and
-      wrapped in the `JSON-RPC Response
-      <http://www.jsonrpc.org/specification#response_object>`_
-
-    Sucessful request::
-
-      --> {"jsonrpc": "2.0",
-           "method": "call",
-           "params": {"context": {},
-                      "arg1": "val1" },
-           "id": null}
-
-      <-- {"jsonrpc": "2.0",
-           "result": { "res1": "val1" },
-           "id": null}
-
-    Request producing a error::
-
-      --> {"jsonrpc": "2.0",
-           "method": "call",
-           "params": {"context": {},
-                      "arg1": "val1" },
-           "id": null}
-
-      <-- {"jsonrpc": "2.0",
-           "error": {"code": 1,
-                     "message": "End user error message.",
-                     "data": {"code": "codestring",
-                              "debug": "traceback" } },
-           "id": null}
-
-    """
-    _request_type = "json"
-
-    def __init__(self, *args):
-        super(JsonRequest, self).__init__(*args)
-
-        self.params = {}
-
-        args = self.httprequest.args
-        request = None
-        request_id = args.get('id')
-
-        # regular jsonrpc2
-        request = self.httprequest.get_data().decode(self.httprequest.charset)
-
-        # Read POST content or POST Form Data named "request"
-        try:
-            self.jsonrequest = json.loads(request)
-        except ValueError:
-            msg = 'Invalid JSON data: %r' % (request,)
-            _logger.info('%s: %s', self.httprequest.path, msg)
-            raise werkzeug.exceptions.BadRequest(msg)
-
-        self.params = dict(self.jsonrequest.get("params", {}))
-        self.context = self.params.pop('context', dict(self.session.context))
-
-    def _json_response(self, result=None, error=None):
-        response = {
-            'jsonrpc': '2.0',
-            'id': self.jsonrequest.get('id')
-            }
-        if error is not None:
-            response['error'] = error
-        if result is not None:
-            response['result'] = result
-
-        mime = 'application/json'
-        body = json.dumps(response, default=date_utils.json_default)
-
-        return Response(
-            body, status=error and error.pop('http_status', 200) or 200,
-            headers=[('Content-Type', mime), ('Content-Length', len(body))]
-        )
-
-    def _handle_exception(self, exception):
-        """Called within an except block to allow converting exceptions
-           to arbitrary responses. Anything returned (except None) will
-           be used as response."""
-        try:
-            return super(JsonRequest, self)._handle_exception(exception)
-        except Exception:
-            if not isinstance(exception, SessionExpiredException):
-                if exception.args and exception.args[0] == "bus.Bus not available in test mode":
-                    _logger.info(exception)
-                elif isinstance(exception, (odoo.exceptions.Warning, odoo.exceptions.except_orm,
-                                          werkzeug.exceptions.NotFound)):
-                    _logger.warning(exception)
-                else:
-                    _logger.exception("Exception during JSON request handling.")
-            error = {
-                'code': 200,
-                'message': "Odoo Server Error",
-                'data': serialize_exception(exception),
-            }
-            if isinstance(exception, werkzeug.exceptions.NotFound):
-                error['http_status'] = 404
-                error['code'] = 404
-                error['message'] = "404: Not Found"
-            if isinstance(exception, AuthenticationError):
-                error['code'] = 100
-                error['message'] = "Odoo Session Invalid"
-            if isinstance(exception, SessionExpiredException):
-                error['code'] = 100
-                error['message'] = "Odoo Session Expired"
-            return self._json_response(error=error)
-
-    def dispatch(self):
-        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
-        rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
-        if rpc_request_flag or rpc_response_flag:
-            endpoint = self.endpoint.method.__name__
-            model = self.params.get('model')
-            method = self.params.get('method')
-            args = self.params.get('args', [])
-
-            start_time = time.time()
-            start_memory = 0
-            if psutil:
-                start_memory = memory_info(psutil.Process(os.getpid()))
-            if rpc_request and rpc_response_flag:
-                rpc_request.debug('%s: %s %s, %s',
-                    endpoint, model, method, pprint.pformat(args))
-
-        result = self._call_function(**self.params)
-
-        if rpc_request_flag or rpc_response_flag:
-            end_time = time.time()
-            end_memory = 0
-            if psutil:
-                end_memory = memory_info(psutil.Process(os.getpid()))
-            logline = '%s: %s %s: time:%.3fs mem: %sk -> %sk (diff: %sk)' % (
-                endpoint, model, method, end_time - start_time, start_memory / 1024, end_memory / 1024, (end_memory - start_memory)/1024)
-            if rpc_response_flag:
-                rpc_response.debug('%s, %s', logline, pprint.pformat(result))
-            else:
-                rpc_request.debug(logline)
-
-        return self._json_response(result)
-
-
-def serialize_exception(e):
-    tmp = {
-        "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
-        "debug": traceback.format_exc(),
-        "message": ustr(e),
-        "arguments": e.args,
-        "exception_type": "internal_error",
-        "context": getattr(e, 'context', {}),
-    }
-    if isinstance(e, odoo.exceptions.UserError):
-        tmp["exception_type"] = "user_error"
-    elif isinstance(e, odoo.exceptions.Warning):
-        tmp["exception_type"] = "warning"
-    elif isinstance(e, odoo.exceptions.RedirectWarning):
-        tmp["exception_type"] = "warning"
-    elif isinstance(e, odoo.exceptions.AccessError):
-        tmp["exception_type"] = "access_error"
-    elif isinstance(e, odoo.exceptions.MissingError):
-        tmp["exception_type"] = "missing_error"
-    elif isinstance(e, odoo.exceptions.AccessDenied):
-        tmp["exception_type"] = "access_denied"
-    elif isinstance(e, odoo.exceptions.ValidationError):
-        tmp["exception_type"] = "validation_error"
-    elif isinstance(e, odoo.exceptions.except_orm):
-        tmp["exception_type"] = "except_orm"
-    return tmp
-
-
-class HttpRequest(WebRequest):
-    """ Handler for the ``http`` request type.
-
-    matched routing parameters, query string parameters, form_ parameters
-    and files are passed to the handler method as keyword arguments.
-
-    In case of name conflict, routing parameters have priority.
-
-    The handler method's result can be:
-
-    * a falsy value, in which case the HTTP response will be an
-      `HTTP 204`_ (No Content)
-    * a werkzeug Response object, which is returned as-is
-    * a ``str`` or ``unicode``, will be wrapped in a Response object and
-      interpreted as HTML
-
-    .. _form: http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.2
-    .. _HTTP 204: http://tools.ietf.org/html/rfc7231#section-6.3.5
-    """
-    _request_type = "http"
-
-    def __init__(self, *args):
-        super(HttpRequest, self).__init__(*args)
-        params = collections.OrderedDict(self.httprequest.args)
-        params.update(self.httprequest.form)
-        params.update(self.httprequest.files)
-        params.pop('session_id', None)
-        self.params = params
-
-    def _handle_exception(self, exception):
-        """Called within an except block to allow converting exceptions
-           to abitrary responses. Anything returned (except None) will
-           be used as response."""
-        try:
-            return super(HttpRequest, self)._handle_exception(exception)
-        except SessionExpiredException:
-            redirect = None
-            req = request.httprequest
-            if req.method == 'POST':
-                request.session.save_request_data()
-                redirect = '/web/proxy/post{r.full_path}'.format(r=req)
-            elif not request.params.get('noredirect'):
-                redirect = req.url
-            if redirect:
-                query = werkzeug.urls.url_encode({
-                    'redirect': redirect,
-                })
-                return werkzeug.utils.redirect('/web/login?%s' % query)
-        except werkzeug.exceptions.HTTPException as e:
-            return e
-
-    def dispatch(self):
-        if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
-            headers = {
-                'Access-Control-Max-Age': 60 * 60 * 24,
-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
-            }
-            return Response(status=200, headers=headers)
-
-        if request.httprequest.method not in ('GET', 'HEAD', 'OPTIONS', 'TRACE') \
-                and request.endpoint.routing.get('csrf', True): # csrf checked by default
-            token = self.params.pop('csrf_token', None)
-            if not self.validate_csrf(token):
-                if token is not None:
-                    _logger.warning("CSRF validation failed on path '%s'",
-                                 request.httprequest.path)
-                else:
-                    _logger.warning("""No CSRF validation token provided for path '%s'
-
-Odoo URLs are CSRF-protected by default (when accessed with unsafe
-HTTP methods). See
-https://www.odoo.com/documentation/13.0/reference/http.html#csrf for
-more details.
-
-* if this endpoint is accessed through Odoo via py-QWeb form, embed a CSRF
-  token in the form, Tokens are available via `request.csrf_token()`
-  can be provided through a hidden input and must be POST-ed named
-  `csrf_token` e.g. in your form add:
-
-      <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-
-* if the form is generated or posted in javascript, the token value is
-  available as `csrf_token` on `web.core` and as the `csrf_token`
-  value in the default js-qweb execution context
-
-* if the form is accessed by an external third party (e.g. REST API
-  endpoint, payment gateway callback) you will need to disable CSRF
-  protection (and implement your own protection if necessary) by
-  passing the `csrf=False` parameter to the `route` decorator.
-                    """, request.httprequest.path)
-
-                raise werkzeug.exceptions.BadRequest('Session expired (invalid CSRF token)')
-
-        r = self._call_function(**self.params)
-        if not r:
-            r = Response(status=204)  # no content
-        return r
-
-    def make_response(self, data, headers=None, cookies=None):
-        """ Helper for non-HTML responses, or HTML responses with custom
-        response headers or cookies.
-
-        While handlers can just return the HTML markup of a page they want to
-        send as a string if non-HTML data is returned they need to create a
-        complete response object, or the returned data will not be correctly
-        interpreted by the clients.
-
-        :param basestring data: response body
-        :param headers: HTTP headers to set on the response
-        :type headers: ``[(name, value)]``
-        :param collections.Mapping cookies: cookies to set on the client
-        """
-        response = Response(data, headers=headers)
-        if cookies:
-            for k, v in cookies.items():
-                response.set_cookie(k, v)
-        return response
-
-    def render(self, template, qcontext=None, lazy=True, **kw):
-        """ Lazy render of a QWeb template.
-
-        The actual rendering of the given template will occur at then end of
-        the dispatching. Meanwhile, the template and/or qcontext can be
-        altered or even replaced by a static response.
-
-        :param basestring template: template to render
-        :param dict qcontext: Rendering context to use
-        :param bool lazy: whether the template rendering should be deferred
-                          until the last possible moment
-        :param kw: forwarded to werkzeug's Response object
-        """
-        response = Response(template=template, qcontext=qcontext, **kw)
-        if not lazy:
-            return response.render()
-        return response
-
-    def not_found(self, description=None):
-        """ Shortcut for a `HTTP 404
-        <http://tools.ietf.org/html/rfc7231#section-6.5.4>`_ (Not Found)
-        response
-        """
-        return werkzeug.exceptions.NotFound(description)
-
-#----------------------------------------------------------
-# Controller and route registration
-#----------------------------------------------------------
-addons_manifest = {}
-controllers_per_module = collections.defaultdict(list)
-
 class ControllerType(type):
     def __init__(cls, name, bases, attrs):
         super(ControllerType, cls).__init__(name, bases, attrs)
@@ -918,7 +913,6 @@ class EndPoint(object):
     def __call__(self, *args, **kw):
         return self.method(*args, **kw)
 
-
 def _generate_routing_rules(modules, nodb_only, converters=None):
     def get_subclasses(klass):
         def valid(c):
@@ -959,7 +953,6 @@ def _generate_routing_rules(modules, nodb_only, converters=None):
                         endpoint = EndPoint(mv, routing)
                         for url in routing['routes']:
                             yield (url, endpoint, routing)
-
 
 #----------------------------------------------------------
 # HTTP Sessions
@@ -1118,46 +1111,6 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         saved_actions = self.get('saved_actions', {})
         return saved_actions.get("actions", {}).get(key)
 
-    def save_request_data(self):
-        import uuid
-        req = request.httprequest
-        files = werkzeug.datastructures.MultiDict()
-        # NOTE we do not store files in the session itself to avoid loading them in memory.
-        #      By storing them in the session store, we ensure every worker (even ones on other
-        #      servers) can access them. It also allow stale files to be deleted by `session_gc`.
-        for f in req.files.values():
-            storename = 'werkzeug_%s_%s.file' % (self.sid, uuid.uuid4().hex)
-            path = os.path.join(root.session_store.path, storename)
-            with open(path, 'w') as fp:
-                f.save(fp)
-            files.add(f.name, (storename, f.filename, f.content_type))
-        self['serialized_request_data'] = {
-            'form': req.form,
-            'files': files,
-        }
-
-    @contextlib.contextmanager
-    def load_request_data(self):
-        data = self.pop('serialized_request_data', None)
-        files = werkzeug.datastructures.MultiDict()
-        try:
-            if data:
-                # regenerate files filenames with the current session store
-                for name, (storename, filename, content_type) in data['files'].items():
-                    path = os.path.join(root.session_store.path, storename)
-                    files.add(name, (path, filename, content_type))
-                yield werkzeug.datastructures.CombinedMultiDict([data['form'], files])
-            else:
-                yield None
-        finally:
-            # cleanup files
-            for f, _, _ in files.values():
-                try:
-                    os.unlink(f)
-                except IOError:
-                    pass
-
-
 def session_gc(session_store):
     if random.random() < 0.001:
         # we keep session one week
@@ -1180,66 +1133,6 @@ mimetypes.add_type('application/x-font-ttf', '.ttf')
 # Add potentially missing (detected on windows) svg mime types
 mimetypes.add_type('image/svg+xml', '.svg')
 
-class Response(werkzeug.wrappers.Response):
-    """ Response object passed through controller route chain.
-
-    In addition to the :class:`werkzeug.wrappers.Response` parameters, this
-    class's constructor can take the following additional parameters
-    for QWeb Lazy Rendering.
-
-    :param basestring template: template to render
-    :param dict qcontext: Rendering context to use
-    :param int uid: User id to use for the ir.ui.view render call,
-                    ``None`` to use the request's user (the default)
-
-    these attributes are available as parameters on the Response object and
-    can be altered at any time before rendering
-
-    Also exposes all the attributes and methods of
-    :class:`werkzeug.wrappers.Response`.
-    """
-    default_mimetype = 'text/html'
-    def __init__(self, *args, **kw):
-        template = kw.pop('template', None)
-        qcontext = kw.pop('qcontext', None)
-        uid = kw.pop('uid', None)
-        super(Response, self).__init__(*args, **kw)
-        self.set_default(template, qcontext, uid)
-
-    def set_default(self, template=None, qcontext=None, uid=None):
-        self.template = template
-        self.qcontext = qcontext or dict()
-        self.qcontext['response_template'] = self.template
-        self.uid = uid
-        # Support for Cross-Origin Resource Sharing
-        if request.endpoint and 'cors' in request.endpoint.routing:
-            self.headers.set('Access-Control-Allow-Origin', request.endpoint.routing['cors'])
-            methods = 'GET, POST'
-            if request.endpoint.routing['type'] == 'json':
-                methods = 'POST'
-            elif request.endpoint.routing.get('methods'):
-                methods = ', '.join(request.endpoint.routing['methods'])
-            self.headers.set('Access-Control-Allow-Methods', methods)
-
-    @property
-    def is_qweb(self):
-        return self.template is not None
-
-    def render(self):
-        """ Renders the Response's template, returns the result
-        """
-        env = request.env(user=self.uid or request.uid or odoo.SUPERUSER_ID)
-        self.qcontext['request'] = request
-        return env["ir.ui.view"].render_template(self.template, self.qcontext)
-
-    def flatten(self):
-        """ Forces the rendering of the response's template, sets the result
-        as response body and unsets :attr:`.template`
-        """
-        if self.template:
-            self.response.append(self.render())
-            self.template = None
-
 class DisableCacheMiddleware(object):
     def __init__(self, app):
         self.app = app
@@ -1261,8 +1154,7 @@ class DisableCacheMiddleware(object):
         return self.app(environ, start_wrapped)
 
 class Root(object):
-    """Root WSGI application for the OpenERP Web Client.
-    """
+    """Root WSGI application for Odoo.  """
     def __init__(self):
         self._loaded = False
 
@@ -1282,14 +1174,6 @@ class Root(object):
             routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods']))
         return routing_map
 
-    def __call__(self, environ, start_response):
-        """ Handle a WSGI request
-        """
-        if not self._loaded:
-            self._loaded = True
-            self.load_addons()
-        return self.dispatch(environ, start_response)
-
     def load_addons(self):
         """ Load all addons from addons path containing static files and
         controllers and configure them.  """
@@ -1298,9 +1182,9 @@ class Root(object):
         for addons_path in odoo.addons.__path__:
             for module in sorted(os.listdir(str(addons_path))):
                 if module not in addons_manifest:
-                    mod_path = opj(addons_path, module)
+                    mod_path = os.path.join(addons_path, module)
                     manifest_path = module_manifest(mod_path)
-                    path_static = opj(addons_path, module, 'static')
+                    path_static = os.path.join(addons_path, module, 'static')
                     if manifest_path and os.path.isdir(path_static):
                         with open(manifest_path, 'rb') as fd:
                             manifest_data = fd.read()
@@ -1360,13 +1244,6 @@ class Root(object):
                 lang = 'en_US'
             httprequest.session.context["lang"] = lang
 
-    def get_request(self, httprequest):
-        # deduce type of request
-        if httprequest.mimetype in ("application/json", "application/json-rpc"):
-            return JsonRequest(httprequest)
-        else:
-            return HttpRequest(httprequest)
-
     def get_response(self, httprequest, result, explicit_session):
         if isinstance(result, Response) and result.is_qweb:
             try:
@@ -1406,6 +1283,20 @@ class Root(object):
 
         return response
 
+    def get_db_router(self, db):
+        if not db:
+            return self.nodb_routing_map
+        return request.registry['ir.http'].routing_map()
+
+    def dispatch_nodb(self, request):
+        try:
+            func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()
+        except werkzeug.exceptions.HTTPException as e:
+            return request._handle_exception(e)
+        request.set_handler(func, arguments, "none")
+        result = request.dispatch()
+                return result
+
     def dispatch(self, environ, start_response):
         """
         Performs the actual WSGI dispatching for the application.
@@ -1425,16 +1316,7 @@ class Root(object):
             self.setup_db(httprequest)
             self.setup_lang(httprequest)
 
-            request = self.get_request(httprequest)
-
-            def _dispatch_nodb():
-                try:
-                    func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()
-                except werkzeug.exceptions.HTTPException as e:
-                    return request._handle_exception(e)
-                request.set_handler(func, arguments, "none")
-                result = request.dispatch()
-                return result
+            request = WebRequest(httprequest)
 
             with request:
                 db = request.session.db
@@ -1455,11 +1337,11 @@ class Root(object):
                         if request.httprequest.path == '/web':
                             result = werkzeug.utils.redirect('/web/database/selector')
                         else:
-                            result = _dispatch_nodb()
+                            result = self.dispatch_nodb(request)
                     else:
                         result = ir_http._dispatch()
                 else:
-                    result = _dispatch_nodb()
+                    result = self.dispatch_nodb(request)
 
                 response = self.get_response(httprequest, result, explicit_session)
             return response(environ, start_response)
@@ -1467,10 +1349,34 @@ class Root(object):
         except werkzeug.exceptions.HTTPException as e:
             return e(environ, start_response)
 
-    def get_db_router(self, db):
-        if not db:
-            return self.nodb_routing_map
-        return request.registry['ir.http'].routing_map()
+    def __call__(self, environ, start_response):
+        """ WSGI entry point."""
+        # cleanup db/uid trackers - they're set in WebRequest or in
+        # for servie rpc in odoo.service.*.dispatch().
+        # /!\ The cleanup cannot be done at the end of this `application`
+        # method because werkzeug still produces relevant logging afterwards
+        if hasattr(threading.current_thread(), 'uid'):
+            del threading.current_thread().uid
+        if hasattr(threading.current_thread(), 'dbname'):
+            del threading.current_thread().dbname
+        if hasattr(threading.current_thread(), 'url'):
+            del threading.current_thread().url
+
+        # Lazy load addons
+        if not self._loaded:
+            self._loaded = True
+            self.load_addons()
+
+        with odoo.api.Environment.manage():
+            result = self.dispatch(environ, start_response)
+            if result is not None:
+                return result
+
+        # We never returned from the loop.
+        return werkzeug.exceptions.NotFound("No handler found.\n")(environ, start_response)
+
+#  main wsgi handler
+root = Root()
 
 def db_list(force=False, httprequest=None):
     dbs = odoo.service.db.list_dbs(force)
@@ -1580,7 +1486,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
         headers.add('Content-Disposition', 'attachment', filename=filename)
         headers['Content-Length'] = size
 
-    data = wrap_file(request.httprequest.environ, file)
+    data = werkzeug.wsgi.wrap_file(request.httprequest.environ, file)
     rv = Response(data, mimetype=mimetype, headers=headers,
                                     direct_passthrough=True)
 
@@ -1602,7 +1508,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
         rv.set_etag('odoo-%s-%s-%s' % (
             mtime,
             size,
-            adler32(
+            zlib.adler32(
                 filename.encode('utf-8') if isinstance(filename, str)
                 else filename
             ) & 0xffffffff
@@ -1621,7 +1527,6 @@ def content_disposition(filename):
 
     return "attachment; filename*=UTF-8''%s" % escaped
 
-
 def set_safe_image_headers(headers, content):
     """Return new headers based on `headers` but with `Content-Length` and
     `Content-Type` set appropriately depending on the given `content` only if it
@@ -1632,7 +1537,6 @@ def set_safe_image_headers(headers, content):
         headers = set_header_field(headers, 'Content-Type', content_type)
     set_header_field(headers, 'Content-Length', len(content))
     return headers
-
 
 def set_header_field(headers, name, value):
     """ Return new headers based on `headers` but with `value` set for the
@@ -1654,6 +1558,14 @@ def set_header_field(headers, name, value):
     dictheaders[name] = value
     return list(dictheaders.items())
 
+def application(environ, start_response):
+    # FIXME: is checking for the presence of HTTP_X_FORWARDED_HOST really useful?
+    #        we're ignoring the user configuration, and that means we won't
+    #        support the standardised Forwarded header once werkzeug supports
+    #        it
+    if odoo.tools.config['proxy_mode'] and 'HTTP_X_FORWARDED_HOST' in environ:
+        return ProxyFix(root)(environ, start_response)
+    else:
+        return root(environ, start_response)
 
-#  main wsgi handler
-root = Root()
+#
