@@ -148,13 +148,13 @@
                         <page string="Inventory" name="inventory" groups="product.group_stock_packaging" attrs="{'invisible':[('type', '=', 'service')]}">
                             <group name="inventory">
                                 <group name="group_lots_and_weight" string="Logistics" attrs="{'invisible': [('type', 'not in', ['product', 'consu'])]}">
-                                    <label for="weight"/>
-                                    <div class="o_row" name="weight">
+                                    <label for="weight" attrs="{'invisible':[('product_variant_count', '>', 1)]}"/>
+                                    <div class="o_row" name="weight" attrs="{'invisible':[('product_variant_count', '>', 1)]}">
                                         <field name="weight"/>
                                         <span><field name="weight_uom_name"/></span>
                                     </div>
-                                    <label for="volume"/>
-                                    <div class="o_row" name="volume">
+                                    <label for="volume" attrs="{'invisible':[('product_variant_count', '>', 1)]}"/>
+                                    <div class="o_row" name="volume" attrs="{'invisible':[('product_variant_count', '>', 1)]}">
                                         <field name="volume" string="Volume"/>
                                         <span>m³</span>
                                     </div>
