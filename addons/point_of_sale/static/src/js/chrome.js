@@ -12,7 +12,6 @@ const { useState } = owl;
 const { PosComponent } = require('point_of_sale.PosComponent');
 const { useListener } = require('web.custom_hooks');
 
-var _t = core._t;
 var QWeb = core.qweb;
 
 /*--------------------------------------*\
@@ -46,6 +45,7 @@ class Chrome extends PosComponent {
         useListener('close-popup', this.__closePopup);
         useListener('show-temp-screen', this.__showTempScreen);
         useListener('close-temp-screen', this.__closeTempScreen);
+        useListener('close-pos', this._closePos);
         this.$ = $;
 
         this.ready    = new $.Deferred(); // resolves when the whole GUI has been loaded
@@ -383,6 +383,47 @@ class Chrome extends PosComponent {
         const name = 'ProductScreen';
         const component = this.constructor.components[name];
         return { name, component };
+    }
+
+    async _closePos() {
+        const close = async () => {
+            this.loading_show();
+            this.loading_message(this.env._t('Closing ...'));
+            try {
+                await this.env.pos.push_order();
+            } catch (error) {
+                console.warn(error);
+            } finally {
+                window.location = '/web#action=point_of_sale.action_client_pos_menu';
+            }
+        };
+        const pendingOrders = this.env.pos.db.get_orders().length;
+        if (!pendingOrders) {
+            await close();
+        } else {
+            const reason = this.env.pos.get('failed')
+                ? this.env._t(
+                      'Some orders could not be submitted to ' +
+                          'the server due to configuration errors. ' +
+                          'You can exit the Point of Sale, but do ' +
+                          'not close the session before the issue ' +
+                          'has been resolved.'
+                  )
+                : this.env._t(
+                      'Some orders could not be submitted to ' +
+                          'the server due to internet connection issues. ' +
+                          'You can exit the Point of Sale, but do ' +
+                          'not close the session before the issue ' +
+                          'has been resolved.'
+                  );
+            const { confirmed } = await this.showPopup('ConfirmPopup', {
+                title: this.env._t('Offline Orders'),
+                body: reason,
+            });
+            if (confirmed) {
+                await close();
+            }
+        }
     }
 }
 
