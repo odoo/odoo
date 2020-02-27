@@ -29,7 +29,7 @@ var ColorpickerDialog = Dialog.extend({
         options = options || {};
 
         this._super(parent, _.extend({
-            size: 'medium',
+            size: 'small',
             title: _t('Pick a color'),
             buttons: [
                 {text: _t('Choose'), classes: 'btn-primary', close: true, click: this._onFinalPick.bind(this)},
