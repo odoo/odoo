@@ -215,14 +215,18 @@
     </t>
     <t t-name="ImportView.error.multi.body">
         <span class="oe_import_report_message">
-            <t t-esc="at_multi(error.rows)"/>
+            <t t-set="raw_index" t-value="error.index ? error.index : 0"/>
+            <t t-set="batch_skip" t-value="errors.skip ? errors.skip : 0"/>
+            <t t-esc="at_multi(error.rows, raw_index, batch_skip)"/>
         </span>
     </t>
     <t t-name="ImportView.error.single">
         <span class="oe_import_report_message">
             <t t-esc="error.message"/>
         </span>
-        <t t-if="error.rows"  t-esc="at(error.rows)"/>
+        <t t-set="raw_index" t-value="error.index ? error.index : 0"/>
+        <t t-set="batch_skip" t-value="errors.skip ? errors.skip : 0"/>
+        <t t-if="error.rows"  t-esc="at(error.rows, raw_index, batch_skip)"/>
         <t t-if="error.moreinfo" t-raw="info(error.moreinfo)"/>
     </t>
 </templates>

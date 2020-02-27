@@ -70,6 +70,9 @@ class IrFieldsConverter(models.AbstractModel):
 
         def fn(record, log):
             converted = {}
+            index = -1
+            if 'index' in record.keys():
+                index = record.pop('index')
             for field, value in record.items():
                 if field in REFERENCING_FIELDS:
                     continue
@@ -85,6 +88,8 @@ class IrFieldsConverter(models.AbstractModel):
                             w = ImportWarning(w)
                         log(field, w)
                 except ValueError as e:
+                    if index > -1 and len(e.args) > 1:
+                        e.args[1]['index'] = index
                     log(field, e)
             return converted
 
@@ -462,9 +467,12 @@ class IrFieldsConverter(models.AbstractModel):
 
         convert = self.for_model(self.env[field.comodel_name])
 
+        index = -1
         for record in records:
+            index += 1
             id = None
             refs = only_ref_fields(record)
+            record['index'] = index
             writable = convert(exclude_ref_fields(record), log)
             if refs:
                 subfield, w1 = self._referencing_subfield(refs)
