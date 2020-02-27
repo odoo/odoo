@@ -33,6 +33,7 @@ import operator
 import pytz
 import re
 import uuid
+import random
 from collections import defaultdict, MutableMapping, OrderedDict
 from contextlib import closing
 from inspect import getmembers, currentframe
@@ -59,6 +60,7 @@ from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_F
 from .tools.safe_eval import safe_eval
 from .tools.translate import _
 from .tools import date_utils
+from .tools import populate
 
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__ + '.schema')
@@ -5550,6 +5552,105 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             result['warning'] = dict(title=title, message=message)
 
         return result
+
+    def _populate_factories(self):
+        """ Return a list of pairs ``(field_name, factory)``, ``factory`` is a function that creates
+        a generator of values (dict of field values).  Its API suggested by::
+
+            # generator yield values by iterating on base_generator and adding a value
+            # for the given field in the dicts yielded by base_generator
+            generator = factory(base_generator, field_name, model_name)
+            # suggested usage
+            for values in generator:
+                model.create(values)
+        """
+        return []
+
+    @property
+    def _populate_sizes(self):
+        """ Return a dict mapping symbolic sizes (``'small'``, ``'medium'``, ``'large'``) to integers,
+        giving the minimal number of records that method ``_populate`` should create.
+        """
+        return {
+            'small': 10,  # minimal representative set
+            'medium': 100,  # average database load
+            'large': 1000, # maxi database load
+        }
+
+    @property
+    def _populate_dependencies(self):
+        """ Return a list of model names to populate before this model.  The base implementation
+        automatically determines dependencies based on the comodels of the many2one fields
+        on this model.  A field's comodel is omitted if it create a cycle in dependencies.
+        This property should be overridden to add missing dependencies.
+        """
+        deps = []
+        field_black_list = ('create_uid', 'write_uid')
+        def is_electible_dependency(field):
+            return field.type == 'many2one' and field.store and not field.compute and field.name not in field_black_list
+
+        processed = set()
+        init_model = None
+
+        # this has an awfull complexity since this will be used on all models.
+        # A nice solution would be to precompute all loop in model graph, and check if loops containing
+        # self._name also contains field.comodel_name
+        # in other words, store all field that participate to a cycle and and blacklist them
+
+        def check_loops(field):
+            model = self.env[field.comodel_name]
+            if model == init_model: # loop to initial model
+                raise ValueError('Cyclic dependency detected for %s' % model)
+            if model._name in processed: # already visited, stop iteration
+                return
+            processed.add(model._name)
+
+            for field in model._fields.values():
+                if not is_electible_dependency(field):
+                    continue
+                check_loops(field)
+
+        for field in self._fields.values():
+            if is_electible_dependency(field):
+                processed = set()
+                init_model = self
+                try:
+                    check_loops(field)
+                    deps.append(field.comodel_name)
+                except ValueError:
+                    pass
+        return deps
+
+    def _populate(self, size):
+        """ Create records to populate this model.
+        
+        :param size: symbolic size for the number of records: ``'small'``, ``'medium'`` or ``'large'``
+        """
+        batch_size = 1000
+        min_size = self._populate_sizes[size]
+
+        record_count = 0
+        create_values = []
+        complete = False
+        field_generators = self._populate_factories()
+        if not field_generators:
+            return self.browse() # maybe create an automatic generator?
+        records_batches = []
+        generator = populate.chain_factories(field_generators, self._name)
+        while record_count <= min_size or not complete:
+            values = next(generator)
+            complete = values.pop('__complete')
+            create_values.append(values)
+            record_count += 1
+            if len(create_values) >= batch_size:
+                _logger.info('Batch: %s/%s', record_count, min_size)
+                records_batches.append(self.create(create_values))
+                create_values = []
+
+        if create_values:
+            records_batches.append(self.create(create_values))
+        return self.concat(*records_batches)
+
 
 collections.Set.register(BaseModel)
 # not exactly true as BaseModel doesn't have __reversed__, index or count
