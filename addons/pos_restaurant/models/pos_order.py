@@ -145,11 +145,14 @@ class PosOrder(models.Model):
         front end application.
 
         :param table_id: Id of the selected table.
-        :type table_id: int.
+        :type table_id: int, falsy for all orders
         :returns: list -- list of dict representing the table orders
         """
+        domain = [('state', '=', 'draft')]
+        if table_id:
+            domain += [('table_id', '=', table_id)]
         table_orders = self.search_read(
-                domain = [('state', '=', 'draft'), ('table_id', '=', table_id)],
+                domain = domain,
                 fields = self._get_fields_for_draft_order())
 
         self._get_order_lines(table_orders)

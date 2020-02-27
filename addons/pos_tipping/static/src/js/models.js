@@ -23,7 +23,7 @@ models.load_models({
     ],
     order: [{ name: "date_order" }],
     domain: function(self) {
-        return [["session_id", "=", self.pos_session.id]];
+        return [["session_id", "=", self.pos_session.id], ["state", "in", ["paid", "done", "invoiced"]]];
     },
     loaded: function(self, orders) {
         orders.forEach(function(order) {
@@ -50,6 +50,9 @@ models.load_models({
                 table: order.table_name
             });
         });
+
+        // this loads all unpaid orders on all tables, needed for the order switcher
+        return self.sync_to_server();
     }
 });
 

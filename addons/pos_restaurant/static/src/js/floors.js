@@ -957,7 +957,7 @@ models.PosModel = models.PosModel.extend({
         clearInterval(this.table_longpolling);
 
         this.set_synch('connecting', 1);
-        return this._get_from_server(table.id).then(function (server_orders) {
+        return this._get_from_server(table && table.id).then(function (server_orders) {
             var orders = self.get_order_list();
             orders.forEach(function(order){
                 if (order.server_id){
@@ -971,7 +971,7 @@ models.PosModel = models.PosModel.extend({
                     self.get("orders").add(new_order);
                     new_order.save_to_db();
                 }
-            })
+            });
             if (!ids_to_remove.length) {
                 self.set_synch('connected');
             } else {
@@ -980,7 +980,9 @@ models.PosModel = models.PosModel.extend({
         }).catch(function(reason){
             self.set_synch('error');
         }).finally(function(){
-            self.set_order_on_table();
+            if (table) {
+                self.set_order_on_table();
+            }
         });
     },
 
