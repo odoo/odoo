@@ -1024,7 +1024,12 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         if (typeof this._previewColor === 'string') {
             return this._previewColor;
         }
-        return this._super(...arguments);
+        let value = this._super(...arguments);
+        if (value && this.options.dataAttributes.hasOwnProperty('cssCompatible') &&
+            !ColorpickerDialog.isCSSColor(value)) {
+            value = `var(--${value})`;
+        }
+        return value;
     },
     /**
      * @override
@@ -1879,7 +1884,15 @@ const SnippetOptionWidget = Widget.extend({
                 const styles = window.getComputedStyle(this.$target[0]);
                 const cssProps = weUtils.CSS_SHORTHANDS[params.cssProperty] || [params.cssProperty];
                 const cssValues = cssProps.map(cssProp => {
-                    return styles[cssProp].trim();
+                    let value = styles[cssProp].trim();
+                    if (cssProp === 'box-shadow') {
+                        const inset = value.includes('inset');
+                        let values = value.replace(/,\s/g, ',').replace('inset', '').trim().split(/\s+/g);
+                        const color = values.find(s => !s.match(/^\d/));
+                        values = values.join(' ').replace(color, '').trim();
+                        value = `${color} ${values}${inset ? ' inset' : ''}`;
+                    }
+                    return value;
                 });
                 if (cssValues.length === 4 && weUtils.areCssValuesEqual(cssValues[3], cssValues[1], params.cssProperty, this.$target)) {
                     cssValues.pop();

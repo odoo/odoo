@@ -1622,6 +1622,47 @@ options.registry.anchor = options.Class.extend({
     },
 });
 
+/**
+ * Controls box properties.
+ */
+options.registry.Box = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    setShadow(previewMode, widgetValue, params) {
+        this.$target.toggleClass(params.shadowClass, !!widgetValue);
+        if (widgetValue) {
+            const inset = widgetValue === 'inset' ? widgetValue : '';
+            const values = this.$target.css('box-shadow').replace('inset', '') + ` ${inset}`;
+            this.$target[0].style.setProperty('box-shadow', values, 'important');
+        } else {
+            this.$target.css('box-shadow', '');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName === 'setShadow') {
+            if (!this.$target[0].classList.contains(params.shadowClass)) {
+                return '';
+            }
+            return this.$target.css('box-shadow').includes('inset') ? 'inset' : 'outset';
+        }
+        return this._super(...arguments);
+    },
+});
+
 options.registry.CookiesBar = options.registry.SnippetPopup.extend({
     xmlDependencies: (options.registry.SnippetPopup.prototype.xmlDependencies || []).concat(
         ['/website/static/src/xml/website.cookies_bar.xml']
