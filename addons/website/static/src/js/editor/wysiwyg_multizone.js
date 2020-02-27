@@ -414,49 +414,8 @@ var WysiwygMultizone = Wysiwyg.extend({
      * @returns {$.Promise}
      */
     _saveCroppedImages: function () {
-        var self = this;
         var $editable = this._getEditableArea();
-        var defs = $editable.find('.o_cropped_img_to_save').map(function () {
-            var $croppedImg = $(this);
-            $croppedImg.removeClass('o_cropped_img_to_save');
-            var resModel = $croppedImg.data('crop:resModel');
-            var resID = $croppedImg.data('crop:resID');
-            var cropID = $croppedImg.data('crop:id');
-            var mimetype = $croppedImg.data('crop:mimetype');
-            var originalSrc = $croppedImg.data('crop:originalSrc');
-            var datas = $croppedImg.attr('src').split(',')[1];
-            if (!cropID) {
-                var name = originalSrc + '.crop';
-                return self._rpc({
-                    model: 'ir.attachment',
-                    method: 'create',
-                    args: [{
-                        res_model: resModel,
-                        res_id: resID,
-                        name: name,
-                        datas_fname: name,
-                        datas: datas,
-                        mimetype: mimetype,
-                        url: originalSrc, // To save the original image that was cropped
-                    }],
-                }).then(function (attachmentID) {
-                    return self._rpc({
-                        model: 'ir.attachment',
-                        method: 'generate_access_token',
-                        args: [[attachmentID]],
-                    }).then(function (access_token) {
-                        $croppedImg.attr('src', '/web/image/' + attachmentID + '?access_token=' + access_token[0]);
-                    });
-                });
-            } else {
-                return self._rpc({
-                    model: 'ir.attachment',
-                    method: 'write',
-                    args: [[cropID], {datas: datas}],
-                });
-            }
-        }).get();
-        return Promise.all(defs);
+        return this.saveCroppedImages($editable);
     },
     /**
      * Saves one (dirty) element of the page.
