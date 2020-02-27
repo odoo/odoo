@@ -3251,6 +3251,7 @@ class Many2many(_RelationalMulti):
         if not records_commands_list:
             return
 
+<<<<<<< HEAD
         comodel = records_commands_list[0][0].env[self.comodel_name].with_context(**self.context)
         cr = records_commands_list[0][0].env.cr
 
@@ -3270,6 +3271,27 @@ class Many2many(_RelationalMulti):
 
         old_relation = {record.id: set(record[self.name]._ids) for record in records}
         new_relation = {x: set(ys) for x, ys in old_relation.items()}
+=======
+        model = records_commands_list[0][0].browse()
+        comodel = model.env[self.comodel_name].with_context(**self.context)
+        cr = model.env.cr
+
+        # determine old relation {x: ys}
+        old_relation = defaultdict(set)
+        if not create:
+            domain = self.domain if isinstance(self.domain, list) else []
+            wquery = comodel._where_calc(domain)
+            comodel._apply_ir_rules(wquery, 'read')
+            from_c, where_c, where_params = wquery.get_sql()
+            query = """ SELECT {rel}.{id1}, {rel}.{id2} FROM {rel}, {from_c}
+                        WHERE {where_c} AND {rel}.{id1} IN %s AND {rel}.{id2} = {tbl}.id
+                    """.format(rel=self.relation, id1=self.column1, id2=self.column2,
+                               tbl=comodel._table, from_c=from_c, where_c=where_c or '1=1')
+            ids = {rid for recs, cs in records_commands_list for rid in recs.ids}
+            cr.execute(query, where_params + [tuple(ids)])
+            for x, y in cr.fetchall():
+                old_relation[x].add(y)
+>>>>>>> 387233f9969... temp
 
         # determine new relation {x: ys}
         new_relation = defaultdict(set)
