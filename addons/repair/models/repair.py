@@ -47,13 +47,13 @@ class Repair(models.Model):
     default_address_id = fields.Many2one('res.partner', compute='_compute_default_address_id')
     state = fields.Selection([
         ('draft', 'Quotation'),
-        ('cancel', 'Cancelled'),
         ('confirmed', 'Confirmed'),
         ('under_repair', 'Under Repair'),
         ('ready', 'Ready to Repair'),
         ('2binvoiced', 'To be Invoiced'),
         ('invoice_except', 'Invoice Exception'),
-        ('done', 'Repaired')], string='Status',
+        ('done', 'Repaired'),
+        ('cancel', 'Cancelled')], string='Status',
         copy=False, default='draft', readonly=True, tracking=True,
         help="* The \'Draft\' status is used when a user is encoding a new and unconfirmed repair order.\n"
              "* The \'Confirmed\' status is used when a user confirms the repair order.\n"
@@ -111,6 +111,7 @@ class Repair(models.Model):
     amount_tax = fields.Float('Taxes', compute='_amount_tax', store=True)
     amount_total = fields.Float('Total', compute='_amount_total', store=True)
     tracking = fields.Selection(string='Product Tracking', related="product_id.tracking", readonly=False)
+    invoice_state = fields.Selection(string='Invoice State', related='invoice_id.state')
 
     @api.depends('partner_id')
     def _compute_default_address_id(self):
@@ -191,6 +192,14 @@ class Repair(models.Model):
         else:
             self.location_id = False
 
+    def unlink(self):
+        for order in self:
+            if order.state not in ('draft', 'cancel'):
+                raise UserError(_('You can not delete a repair order once it has been confirmed. You must first cancel it.'))
+            if order.state == 'cancel' and order.invoice_id and order.invoice_id.posted_before:
+                raise UserError(_('You can not delete a repair order which is linked to an invoice which has been posted once.'))
+        return super().unlink()
+
     def button_dummy(self):
         # TDE FIXME: this button is very interesting
         return True
@@ -199,7 +208,7 @@ class Repair(models.Model):
         if self.filtered(lambda repair: repair.state != 'cancel'):
             raise UserError(_("Repair must be canceled in order to reset it to draft."))
         self.mapped('operations').write({'state': 'draft'})
-        return self.write({'state': 'draft'})
+        return self.write({'state': 'draft', 'invoice_id': False})
 
     def action_validate(self):
         self.ensure_one()
@@ -251,10 +260,9 @@ class Repair(models.Model):
         return True
 
     def action_repair_cancel(self):
-        if self.filtered(lambda repair: repair.state == 'done'):
-            raise UserError(_("Cannot cancel completed repairs."))
-        if any(repair.invoiced for repair in self):
-            raise UserError(_('The repair order is already invoiced.'))
+        invoice_to_cancel = self.filtered(lambda repair: repair.invoice_id.state == 'draft').invoice_id
+        if invoice_to_cancel:
+            invoice_to_cancel.button_cancel()
         self.mapped('operations').write({'state': 'cancel'})
         return self.write({'state': 'cancel'})
 
@@ -475,7 +483,7 @@ class Repair(models.Model):
             repair.write({'repaired': True})
             vals = {'state': 'done'}
             vals['move_id'] = repair.action_repair_done().get(repair.id)
-            if not repair.invoiced and repair.invoice_method == 'after_repair':
+            if not repair.invoice_id and repair.invoice_method == 'after_repair':
                 vals['state'] = '2binvoiced'
             repair.write(vals)
         return True
