@@ -12,7 +12,7 @@ class AccountPaymentTerm(models.Model):
     _order = "sequence, id"
 
     def _default_line_ids(self):
-        return [(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 9, 'days': 0, 'option': 'day_after_invoice_date'})]
+        return [(0, 0, {'value': 'balance', 'value_amount': 0.0, 'days': 0, 'option': 'day_after_invoice_date'})]
 
     name = fields.Char(string='Payment Terms', translate=True, required=True)
     active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment terms without removing it.")
@@ -20,6 +20,20 @@ class AccountPaymentTerm(models.Model):
     line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True, default=_default_line_ids)
     company_id = fields.Many2one('res.company', string='Company')
     sequence = fields.Integer(required=True, default=10)
+
+    @api.onchange('line_ids')
+    def _onchange_line_ids(self):
+        balance_line = self.line_ids.filtered(lambda r: r.value == 'balance')
+        if len(balance_line) != 1:
+            raise UserError(_('A Payment Term should have one and only one line of type Balance.'))
+        # Ensure that the balance is the last line
+        max_days = max(self.line_ids.mapped('days'))
+        balance_line.days = max_days if max_days == balance_line.days else max_days + 1
+        # Reorder while keeping the NewId records, and not the real cached ids
+        lines = [next(l for l in self.line_ids if l.id == id) for id in [k[3] for k in sorted((l.days, l.id.origin or 0, l.id.ref or '', l.id) for l in self.line_ids)]]
+        self.line_ids = self.env['account.payment.term.line']
+        for line in lines:
+            self.line_ids += line
 
     @api.constrains('line_ids')
     def _check_lines(self):
@@ -79,13 +93,13 @@ class AccountPaymentTerm(models.Model):
 class AccountPaymentTermLine(models.Model):
     _name = "account.payment.term.line"
     _description = "Payment Terms Line"
-    _order = "sequence, id"
+    _order = "days, id"
 
     value = fields.Selection([
             ('balance', 'Balance'),
             ('percent', 'Percent'),
             ('fixed', 'Fixed Amount')
-        ], string='Type', required=True, default='balance',
+        ], string='Type', required=True, default='percent',
         help="Select here the kind of valuation related to this payment terms line.")
     value_amount = fields.Float(string='Value', digits='Payment Terms', help="For percent enter a ratio between 0-100.")
     days = fields.Integer(string='Number of Days', required=True, default=0)
@@ -98,7 +112,6 @@ class AccountPaymentTermLine(models.Model):
         default='day_after_invoice_date', required=True, string='Options'
         )
     payment_id = fields.Many2one('account.payment.term', string='Payment Terms', required=True, index=True, ondelete='cascade')
-    sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of payment terms lines.")
 
     @api.constrains('value', 'value_amount')
     def _check_percent(self):
@@ -118,3 +131,8 @@ class AccountPaymentTermLine(models.Model):
     def _onchange_option(self):
         if self.option in ('day_current_month', 'day_following_month'):
             self.days = 0
+
+    @api.onchange('value')
+    def _onchange_value(self):
+        if self.value == 'balance':
+            self.value = self._fields['value'].default(self)

@@ -1274,8 +1274,7 @@ action = model.setting_init_bank_account_action()
             <field name="model">account.payment.term.line</field>
             <field name="arch" type="xml">
                 <tree string="Payment Terms">
-                    <field name="sequence" widget="handle"/>
-                    <field name="value" string="Due Type"/>
+                    <field name="value" string="Due Type" attrs="{'readonly':[('value','=','balance')]}"/>
                     <field name="value_amount" attrs="{'readonly':[('value','=','balance')]}"/>
                     <field name="days"/>
                     <field name="option" string=""/>
@@ -1292,7 +1291,7 @@ action = model.setting_init_bank_account_action()
                     <h2>Term Type</h2>
                     <group>
                         <group>
-                            <field name="value" widget="radio"/>
+                            <field name="value" widget="radio" attrs="{'readonly':[('value','=','balance')]}"/>
                         </group>
 
                         <group>
@@ -1303,8 +1302,6 @@ action = model.setting_init_bank_account_action()
                             </div>
                         </group>
                     </group>
-
-                    <field name="sequence" invisible="1"/>
 
                     <h2>Due Date Computation</h2>
                     <div colspan="2">
