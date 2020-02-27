@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from datetime import date, datetime, timedelta
+
 from odoo.addons.product.tests import common
+from odoo.tests.common import Form
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 class TestCreatePicking(common.TestProductCommon):
@@ -468,3 +470,43 @@ class TestCreatePicking(common.TestProductCommon):
         # Now check scheduled date of delivery order is changed or not.
         self.assertNotEquals(purchase_order_line.date_planned, delivery_order.scheduled_date,
             'Delivery order schedule date should not changed.')
+
+    def test_06_differed_schedule_date(self):
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+
+        # mark all rules as propagate_date so that push rules will use it
+        self.env['stock.rule'].search([]).write({
+            'propagate_date': True,
+            'propagate_date_minimum_delta': 5,
+        })
+
+        with Form(warehouse) as w:
+            w.reception_steps = 'three_steps'
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_id_1
+            line.date_planned = datetime.today()
+            line.product_qty = 1.0
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_id_1
+            line.date_planned = datetime.today() + timedelta(days=7)
+            line.product_qty = 1.0
+        po = po_form.save()
+
+        # mark the po line as propagate_date so that the created moves will use it
+        po.order_line.write({
+            'propagate_date': True,
+            'propagate_date_minimum_delta': 5,
+        })
+
+        po.button_approve()
+
+        po.picking_ids.move_line_ids.write({
+            'qty_done': 1.0
+        })
+        po.picking_ids.button_validate()
+
+        pickings = self.env['stock.picking'].search([('group_id', '=', po.group_id.id)])
+        for picking in pickings:
+            self.assertEqual(picking.scheduled_date.date(), date.today())
