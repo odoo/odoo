@@ -642,7 +642,13 @@
         <field name="res_model">hr.leave</field>
         <field name="binding_model_id" eval="False"/>
         <field name="view_mode">tree,kanban,form,calendar,activity</field>
-        <field name="context">{'form_view_ref': 'hr_holidays.hr_leave_view_form_manager'}</field>
+        <field name="context">{}</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree'}),
+            (0, 0, {'view_mode': 'kanban'}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('hr_holidays.hr_leave_view_form_manager')}),
+            (0, 0, {'view_mode': 'calendar'}),
+            (0, 0, {'view_mode': 'activity'})]"/>
         <field name="domain">[]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
