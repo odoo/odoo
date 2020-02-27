@@ -4,12 +4,10 @@ odoo.define('web_editor.ColorPalette', function (require) {
 const core = require('web.core');
 const session = require('web.session');
 const ColorpickerDialog = require('web.ColorpickerDialog');
-const Dialog = require('web.Dialog');
 const Widget = require('web.Widget');
 const summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
 
 const qweb = core.qweb;
-const _t = core._t;
 
 let templatePromise;
 
@@ -367,30 +365,7 @@ const ColorPaletteWidget = Widget.extend({
     },
 });
 
-const ColorPaletteDialog = Dialog.extend({
-    /**
-     * @override
-     */
-    init: function (parent, options) {
-        this.options = options;
-        this._super(parent, {
-            size: 'small',
-            title: _t('Pick a color'),
-        });
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        const proms = [this._super(...arguments)];
-        const colorPalette = new ColorPaletteWidget(this, this.options);
-        proms.push(colorPalette.appendTo(this.$el));
-        return Promise.all(proms);
-    },
-});
-
 return {
     ColorPaletteWidget: ColorPaletteWidget,
-    ColorPaletteDialog: ColorPaletteDialog,
 };
 });
