@@ -38,12 +38,14 @@
             <field name="sequence">20</field>
             <field name="name">Done</field>
             <field name="fold" eval="True"/>
+            <field name="is_closed" eval="True"/>
         </record>
         <record id="project_stage_3" model="project.task.type">
             <field name="sequence">30</field>
             <field name="name">Cancelled</field>
             <field name="legend_done">Ready to reopen</field>
             <field name="fold" eval="True"/>
+            <field name="is_closed" eval="True"/>
         </record>
 
         <record id="project_project_1" model="project.project">
