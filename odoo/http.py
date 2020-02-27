@@ -1000,6 +1000,18 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             uid = odoo.registry(db)['res.users'].authenticate(db, login, password, env)
         else:
             security.check(db, uid, password)
+
+        # udes-13.0
+        # Session fixation:
+        # If the user has successfully logged in, forcefully create a new
+        # session as part of this request. This prevents session hijacking
+        # prior to authentication being effective.
+        if uid:
+            request.httprequest.session = root.session_store.new()
+            request.session = request.httprequest.session
+            self = request.httprequest.session
+        # end udes-13.0 session fixation change
+
         self.rotate = True
         self.db = db
         self.uid = uid
