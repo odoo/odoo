@@ -41,8 +41,15 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
                 $cell.removeClass('o_invisible_modifier');
                 return $cell.addClass('o_hidden');
             }
+        } else if (isNote === false && isSection === false) { // 3rd condition, none isSection and none isNote
+            if (node.attrs.name === "name" &&
+                node.attrs.widget === 'section_and_note_text') {
+                $cell.attr('title', record.data.name); // set title
+                $cell.children().addClass('text-nowrap'); // set text-nowrap
+            }
+            return $cell;
         }
-
+        
         return $cell;
     },
     /**
