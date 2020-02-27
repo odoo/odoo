@@ -2762,19 +2762,16 @@ class Many2many(_RelationalMulti):
         # determine old relation {x: ys}
         old_relation = defaultdict(set)
         if not create:
-            clauses, params, tables = comodel.env['ir.rule'].domain_get(comodel._name)
-            if '"%s"' % self.relation not in tables:
-                tables.append('"%s"' % self.relation)
-            query = """
-                SELECT {rel}.{id1}, {rel}.{id2} FROM {tables}
-                WHERE {rel}.{id1} IN %s AND {rel}.{id2}={table}.id AND {cond}
-            """.format(
-                rel=self.relation, id1=self.column1, id2=self.column2,
-                table=comodel._table, tables=",".join(tables),
-                cond=" AND ".join(clauses) if clauses else "1=1",
-            )
+            domain = self.domain if isinstance(self.domain, list) else []
+            wquery = comodel._where_calc(domain)
+            comodel._apply_ir_rules(wquery, 'read')
+            from_c, where_c, where_params = wquery.get_sql()
+            query = """ SELECT {rel}.{id1}, {rel}.{id2} FROM {rel}, {from_c}
+                        WHERE {where_c} AND {rel}.{id1} IN %s AND {rel}.{id2} = {tbl}.id
+                    """.format(rel=self.relation, id1=self.column1, id2=self.column2,
+                               tbl=comodel._table, from_c=from_c, where_c=where_c or '1=1')
             ids = {rid for recs, cs in records_commands_list for rid in recs.ids}
-            cr.execute(query, [tuple(ids)] + params)
+            cr.execute(query, where_params + [tuple(ids)])
             for x, y in cr.fetchall():
                 old_relation[x].add(y)
 
