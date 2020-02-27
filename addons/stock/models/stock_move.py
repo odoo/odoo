@@ -475,7 +475,10 @@ class StockMove(models.Model):
                     move_dest_ids._delay_alert_log_activity('manual', move)
                     continue
                 for move_dest in move_dest_ids:
-                    move_dest.date_expected += relativedelta.relativedelta(days=delta_days)
+                    # We want to propagate a negative delta, but not propagate an expected date
+                    # in the past.
+                    new_move_date = max(move_dest.date_expected + relativedelta.relativedelta(days=delta_days or 0), fields.Datetime.now())
+                    move_dest.date_expected = new_move_date
                 move_dest_ids._delay_alert_log_activity('auto', move)
 
         # Manual tracking of the `state` field for the stock.picking records.
