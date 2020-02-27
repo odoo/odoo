@@ -65,8 +65,8 @@ class ProductPricelist(models.Model):
         self.clear_cache()
         return res
 
-    def _get_partner_pricelist_multi_search_domain_hook(self):
-        domain = super(ProductPricelist, self)._get_partner_pricelist_multi_search_domain_hook()
+    def _get_partner_pricelist_multi_search_domain_hook(self, company_id):
+        domain = super(ProductPricelist, self)._get_partner_pricelist_multi_search_domain_hook(company_id)
         website = ir_http.get_request_website()
         if website:
             domain += self._get_website_pricelists_domain(website.id)
