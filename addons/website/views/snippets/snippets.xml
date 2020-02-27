@@ -149,18 +149,41 @@
               data-unit="px" data-extra-class="rounded"/>
 </template>
 
+<template id="website.snippet_options_shadow">
+    <we-select string="Shadow" data-no-preview="true" data-shadow-class="shadow">
+        <we-button data-set-shadow="">None</we-button>
+        <we-button data-set-shadow="outset" data-name="shadow_active_opt">Outset</we-button>
+        <we-button data-set-shadow="inset" data-name="shadow_inset_opt">Inset</we-button>
+    </we-select>
+    <we-multi data-css-property="box-shadow" data-dependencies="shadow_active_opt, shadow_inset_opt">
+        <we-colorpicker class="w-100 my-1" string="Color" data-select-style="" data-css-compatible=""/>
+        <we-row class="my-1">
+            <we-input string="X" data-select-style="" data-unit="px"/>
+            <we-input string="Y" data-select-style="" data-unit="px"/>
+        </we-row>
+        <we-row class="my-1">
+            <we-input string="Blur" data-select-style="" data-unit="px"/>
+            <we-input string="Spread" data-select-style="" data-unit="px"/>
+        </we-row>
+        <!-- Inset parameter always hidden (as controlled above) but needed -->
+        <!-- for the we-multi widget to work properly. -->
+        <we-checkbox data-select-style="inset" style="display: none;"/>
+    </we-multi>
+</template>
+
 <template id="snippet_options">
     <t t-call="web_editor.snippet_options"/>
 
     <!-- COLOR, BORDER, SHADOW | .s_three_columns | .s_comparisons -->
-    <div data-selector=".s_three_columns .row > div, .s_comparisons .row > div"
+    <div data-js="Box"
+         data-selector=".s_three_columns .row > div, .s_comparisons .row > div"
          data-target=".card">
         <we-colorpicker string="Background Color"
             data-select-style="true"
             data-css-property="background-color"
             data-color-prefix="bg-"/>
         <t t-call="website.snippet_options_border"/>
-        <we-checkbox string="Shadow" data-select-class="shadow"/>
+        <t t-call="website.snippet_options_shadow"/>
     </div>
 
     <!-- COLOR | .s_cards -->
@@ -323,10 +346,11 @@
     </div>
 
     <!-- Border | Columns -->
-    <div data-selector="section .row > div"
-        data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
+    <div data-js="Box"
+         data-selector="section .row > div"
+         data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
         <t t-call="website.snippet_options_border"/>
-        <we-checkbox string="Shadow" data-select-class="shadow"/>
+        <t t-call="website.snippet_options_shadow"/>
     </div>
 
     <div data-js="sizing_y"
