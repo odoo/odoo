@@ -22,24 +22,19 @@
                         <div class="paymentmethods">
                             <t t-foreach="env.pos.payment_methods" t-as="paymentMethod"
                                t-key="paymentMethod.id">
-                                <PaymentMethodButton paymentMethod="paymentMethod"
-                                                     t-on-new-payment-line="addNewPaymentLine(paymentMethod)" />
+                                <PaymentMethodButton paymentMethod="paymentMethod" />
                             </t>
                         </div>
                     </div>
                 </div>
                 <div class="right-content pc60 touch-scrollable scrollable-y">
 
-                    <section class="paymentlines-container"
-                             t-on-delete-payment-line="deletePaymentLine"
-                             t-on-select-payment-line="selectPaymentLine">
-                        <PaymentScreenPaymentLines paymentLines="paymentLines"
-                                                   inputBuffer="inputBuffer" />
+                    <section class="paymentlines-container">
+                        <PaymentScreenPaymentLines paymentLines="paymentLines" />
                     </section>
 
                     <section class="payment-numpad">
-                        <PaymentScreenNumpad decimalPoint="decimalPoint"
-                                             t-on-input-from-numpad="inputFromNumpad" />
+                        <PaymentScreenNumpad />
                     </section>
 
                     <div class="payment-buttons">

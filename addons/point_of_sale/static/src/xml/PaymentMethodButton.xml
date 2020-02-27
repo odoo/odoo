@@ -2,7 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="PaymentMethodButton" owl="1">
-        <div class="button paymentmethod" t-on-click="trigger('new-payment-line')">
+        <div class="button paymentmethod"
+             t-on-click="trigger('new-payment-line', props.paymentMethod)">
             <t t-esc="props.paymentMethod.name" />
         </div>
     </t>

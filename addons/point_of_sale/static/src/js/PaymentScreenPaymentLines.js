@@ -8,6 +8,9 @@ odoo.define('point_of_sale.PaymentScreenPaymentLines', function(require) {
     } = require('point_of_sale.PaymentScreenElectronicPayment');
 
     class PaymentScreenPaymentLines extends PosComponent {
+        formatLineAmount(paymentline) {
+            return this.env.pos.format_currency_no_symbol(paymentline.get_amount());
+        }
         get changeText() {
             return this.env.pos.format_currency(this.currentOrder.get_change());
         }
@@ -23,11 +26,6 @@ odoo.define('point_of_sale.PaymentScreenPaymentLines', function(require) {
         }
         get currentOrder() {
             return this.env.pos.get_order();
-        }
-        get formattedInputBuffer() {
-            return this.env.pos.format_currency_no_symbol(
-                parse.float(this.props.inputBuffer)
-            );
         }
     }
 
