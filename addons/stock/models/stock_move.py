@@ -433,7 +433,10 @@ class StockMove(models.Model):
                 delta_days = (new_date - move.date_expected).total_seconds() / 86400
                 if move.propagate_date and abs(delta_days) >= move.propagate_date_minimum_delta and move_dest_ids:
                     for move_dest in move_dest_ids:
-                        move_dest.date_expected += relativedelta.relativedelta(days=delta_days)
+                        # We want to propagate a negative delta, but not propagate an expected date
+                        # in the past.
+                        new_move_date = max(move_dest.date_expected + relativedelta.relativedelta(days=delta_days or 0), fields.Datetime.now())
+                        move_dest.date_expected = new_move_date
                     move_dest_ids.filtered(lambda m: m.delay_alert)._propagate_date_log_activity(move)
                 if move.delay_alert:
                     move._delay_alert_check(new_date)
