@@ -483,7 +483,10 @@ class Users(models.Model):
     def create(self, vals_list):
         users = super(Users, self).create(vals_list)
         for user in users:
-            user.partner_id.write({'company_id': user.company_id.id, 'active': user.active})
+            # if partner is global we keep it that way
+            if user.partner_id.company_id:
+                user.partner_id.company_id = user.company_id
+            user.partner_id.active = user.active
         return users
 
     def write(self, values):
