@@ -95,7 +95,7 @@
                         <t t-call="portal.chatter_internal_toggle" t-if="widget.options['is_user_employee']"/>
 
                         <div class="o_portal_chatter_message_title">
-                            <h5><t t-esc="message.author_id[1]"/></h5>
+                            <h5 class='mb-1'><t t-esc="message.author_id[1]"/></h5>
                             <p class="o_portal_chatter_puslished_date"><t t-esc="message.published_date_str"/></p>
                         </div>
                         <t t-raw="message.body"/>
