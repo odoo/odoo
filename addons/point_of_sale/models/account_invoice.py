@@ -16,7 +16,7 @@ class AccountInvoiceLine(models.Model):
                 .sorted(lambda x: x.date)
             )
             quantity = self.uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
-            average_price_unit = self._compute_average_price(0.0, quantity, moves)
+            average_price_unit = self.product_id._compute_average_price(0.0, quantity, moves)
             price_unit = average_price_unit or price_unit
             price_unit = self.product_id.uom_id._compute_price(price_unit, self.uom_id)
 
