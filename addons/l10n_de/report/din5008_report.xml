@@ -49,6 +49,9 @@
                                 <t t-raw="address"/>
                             </div>
                         </t>
+                        <t t-else="fallback_address">
+                            <div name="invoice_address" class="invoice_address" t-raw="fallback_address" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}' />
+                        </t>
                         <div class="company_address">
                             <div>
                                 <strong t-field="company.partner_id.name"/>
