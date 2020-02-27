@@ -18,9 +18,9 @@
             <field name="arch" type="xml">
                 <pivot string="timesheet attendance" disable_linking="True">
                     <field name="date" interval="month" type="row"/>
-                    <field name="total_attendance" type="measure" widget="float_time"/>
-                    <field name="total_timesheet" type="measure" widget="float_time"/>
-                    <field name="total_difference" type="measure" widget="float_time"/>
+                    <field name="total_attendance" type="measure" widget="timesheet_uom"/>
+                    <field name="total_timesheet" type="measure" widget="timesheet_uom"/>
+                    <field name="total_difference" type="measure" widget="timesheet_uom"/>
                 </pivot>
             </field>
         </record>
