@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, models, _
 
 from odoo.tools import float_round
+from odoo.exceptions import UserError
 
 
 class MrpProduction(models.Model):
@@ -39,6 +40,9 @@ class MrpProduction(models.Model):
         """ Generates moves and work orders
         @return: Newly generated picking Id.
         """
+        for production in self:
+            if production.product_id in production.bom_id.sub_products.mapped('product_id'):
+                raise UserError(_("You cannot have %s  as the finished product and in the Byproducts") % production.product_id.name)
         res = super(MrpProduction, self)._generate_moves()
         for production in self.filtered(lambda production: production.bom_id):
             for sub_product in production.bom_id.sub_products:
