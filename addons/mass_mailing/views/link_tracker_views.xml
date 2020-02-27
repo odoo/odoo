@@ -27,36 +27,6 @@
         </field>
     </record>
 
-    <record id="link_tracker_action_mass_mailing" model="ir.actions.act_window">
-        <field name="name">Statistics of Clicks</field>
-        <field name="res_model">link.tracker</field>
-        <field name="view_mode">tree,form,graph</field>
-        <field name="view_id" ref="link_tracker.link_tracker_view_tree"/>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a link tracker
-            </p><p>
-                Trackers are used to collect count stat about click on links and generate short URLs.
-            </p>
-        </field>
-        <field name="context">{'search_default_mass_mailing_id': active_id}</field>
-    </record>
-
-    <record id="link_tracker_action_mass_mailing_campaign" model="ir.actions.act_window">
-        <field name="name">Statistics of Clicks</field>
-        <field name="res_model">link.tracker</field>
-        <field name="view_mode">tree,form,graph</field>
-        <field name="view_id" ref="link_tracker.link_tracker_view_tree"/>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a link tracker
-            </p><p>
-                Trackers are used to collect count stat about click on links and generate short URLs.
-            </p>
-        </field>
-        <field name="context">{'id="link_tracker_action_mass_mailing"': active_id}</field>
-    </record>
-
     <!-- LINK.TRACKER.CLICK VIEWS -->
     <record id="link_tracker_click_view_search" model="ir.ui.view">
         <field name="name">link.tracker.click.view.search.inherit.mass_mailing</field>
