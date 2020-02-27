@@ -303,7 +303,7 @@ class WebsiteEventController(http.Controller):
             if field_name not in registration_fields:
                 continue
             elif isinstance(registration_fields[field_name], (fields.Many2one, fields.Integer)):
-                value = int(value)
+                value = int(value) or False  # 0 is considered as a void many2one aka False
             else:
                 value = value
 
