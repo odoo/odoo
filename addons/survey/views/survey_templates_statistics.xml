@@ -27,9 +27,9 @@
     </template>
 
     <template id="survey_page_statistics_inner" name="Survey: result statistics content">
-        <div t-if="survey.session_show_ranking" class="o_survey_session_ranking mb-5 mt-1">
-            <h2 class="mt16 text-uppercase text-muted">Ranking</h2>
-            <t t-call="survey.user_input_session_ranking" />
+        <div t-if="survey.session_show_leaderboard" class="o_survey_session_leaderboard mb-5 mt-1">
+            <h2 class="mt16 text-uppercase text-muted">Leaderboard</h2>
+            <t t-call="survey.user_input_session_leaderboard" />
         </div>
         <div t-if="question_and_page_data" class="card d-print-none">
             <div class="card-header"><span class="fa fa-filter"></span>  Filters <span t-if="search_filters" class="float-right text-primary clear_survey_filter"><i class="fa fa-times"></i> Clear All Filters</span></div>

@@ -117,12 +117,14 @@ class Survey(models.Model):
     # live sessions - current question fields
     session_question_id = fields.Many2one('survey.question', string="Current Question", copy=False,
         help="The current question of the survey session.")
+    session_start_time = fields.Datetime("Current Session Start Time", copy=False)
     session_question_start_time = fields.Datetime("Current Question Start Time", copy=False,
         help="The time at which the current question has started, used to handle the timer for attendees.")
-    session_question_answer_count = fields.Integer("Answers Count", compute='_compute_session_question_answer_count')
+    session_answer_count = fields.Integer("Answers Count", compute='_compute_session_answer_count')
+    session_question_answer_count = fields.Integer("Question Answers Count", compute='_compute_session_question_answer_count')
     # live sessions - settings
-    session_show_ranking = fields.Boolean("Show Session Ranking", compute='_compute_session_show_ranking',
-        help="This mode will display a ranking chart of all attendees.")
+    session_show_leaderboard = fields.Boolean("Show Session Leaderboard", compute='_compute_session_show_leaderboard',
+        help="Whether or not we want to show the attendees leaderboard for this survey.")
     session_speed_rating = fields.Boolean("Reward quick answers", help="Attendees get more points if they answer quickly")
 
     _sql_constraints = [
@@ -176,27 +178,47 @@ class Survey(models.Model):
             survey.page_ids = survey.question_and_page_ids.filtered(lambda question: question.is_page)
             survey.question_ids = survey.question_and_page_ids - survey.page_ids
 
-    @api.depends('session_question_id', 'user_input_ids.user_input_line_ids')
+    @api.depends('session_start_time', 'user_input_ids')
+    def _compute_session_answer_count(self):
+        """ We have to loop since our result is dependent of the survey.session_start_time.
+        This field is currently used to display the count about a single survey, in the
+        context of sessions, so it should not matter too much. """
+        for survey in self:
+            answer_count = 0
+            input_count = self.env['survey.user_input'].read_group(
+                [('survey_id', '=', survey.id), ('create_date', '>=', survey.session_start_time)],
+                ['create_uid:count'],
+                ['survey_id'],
+            )
+            if input_count:
+                answer_count = input_count[0].get('create_uid', 0)
+
+            survey.session_answer_count = answer_count
+
+    @api.depends('session_question_id', 'session_start_time', 'user_input_ids.user_input_line_ids')
     def _compute_session_question_answer_count(self):
-        """ We have to loop since our result is dependent of the survey.session_question_id.
+        """ We have to loop since our result is dependent of the survey.session_question_id and
+        the survey.session_start_time.
         This field is currently used to display the count about a single survey, in the
         context of sessions, so it should not matter too much. """
         for survey in self:
             answer_count = 0
             input_line_count = self.env['survey.user_input.line'].read_group(
-                [('question_id', '=', survey.session_question_id.id), ('survey_id', '=', survey.id)],
+                [('question_id', '=', survey.session_question_id.id),
+                 ('survey_id', '=', survey.id),
+                 ('create_date', '>=', survey.session_start_time)],
                 ['user_input_id:count_distinct'],
                 ['question_id'],
             )
             if input_line_count:
-                answer_count = input_line_count[0].get('user_input_id')
+                answer_count = input_line_count[0].get('user_input_id', 0)
 
             survey.session_question_answer_count = answer_count
 
     @api.depends('scoring_type', 'question_and_page_ids.save_as_nickname')
-    def _compute_session_show_ranking(self):
+    def _compute_session_show_leaderboard(self):
         for survey in self:
-            survey.session_show_ranking = survey.scoring_type != 'no_scoring' and \
+            survey.session_show_leaderboard = survey.scoring_type != 'no_scoring' and \
                 any(question.save_as_nickname for question in survey.question_and_page_ids)
 
     @api.onchange('scoring_success_min')
@@ -563,12 +585,14 @@ class Survey(models.Model):
             'type': 'next_question'
         })
 
-    def _prepare_ranking_values(self):
-        """" The ranking is descending and takes the total of the attendee points up to the current question. """
+    def _prepare_leaderboard_values(self):
+        """" The leaderboard is descending and takes the total of the attendee points up to the current question. """
         self.ensure_one()
 
-        return self.env['survey.user_input'].search([('survey_id', '=', self.id)],
-            limit=25, order="scoring_total desc")
+        return self.env['survey.user_input'].search([
+            ('survey_id', '=', self.id),
+            ('create_date', '>=', self.session_start_time)
+        ], limit=25, order="scoring_total desc")
 
     # ------------------------------------------------------------
     # ACTIONS
@@ -699,6 +723,7 @@ class Survey(models.Model):
         self.ensure_one()
         self.sudo().write({
             'questions_layout': 'page_per_question',
+            'session_start_time': fields.Datetime.now(),
             'session_question_id': None,
             'session_state': 'ready'
         })
