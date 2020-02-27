@@ -8,7 +8,17 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
     const { parse } = require('web.field_utils');
 
     /**
-     * When this hook is used inside a component, a keyup listener is started
+     * This hook introduces a `numberBuffer` field in the current component.
+     * The following functions (state) can be accessed to the `numberBuffer`
+     * field:
+     *      - get(): returns the recent value of the buffer.
+     *      - set(valStr): sets `valStr` as value of the buffer.
+     *      - reset(): set the buffer to empty string.
+     *      - pause(): pauses the recording of buffer
+     *      - resume(): resume on recording number buffer
+     *      - state: contains the string buffer
+     *
+     * When this hook is activate in a component, a keyup listener is started
      * in window. If the input is not from barcode or the input is not happening
      * inside an editable (`input` or `textarea`) elements, then, any valid
      * number input will be intercepted and registered to the buffer inside this
@@ -29,6 +39,7 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
      * @param {String} obj.triggerAtInput Event triggered for every accepted input.
      * @param {String} obj.nonKeyboardEvent Event to trigger when input from other event
      *      that is different from keyup occurs.
+     *      /!\ Should be unique as this is assigned as listener to window.
      *      e.g. Clicking a numpad button can trigger an event and if it triggered
      *          `nonKeyboardEvent` then that event is intercepted here via
      *          `onNonKeyboardInput`. The event should carry a payload { key } that will
@@ -36,14 +47,10 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
      * @param {Integer} obj.maxTimeBetweenKeys Barcode's max time between keys in ms.
      *
      * @return {Object} object with the following methods
-     *      - get(): returns the recent value of the buffer.
-     *      - set(valStr): sets `valStr` as value of the buffer.
-     *      - reset(): set the buffer to empty string.
-     *      - pause(): pauses the recording of buffer
-     *      - resume(): resume on recording number buffer
+
      */
     function useNumberBuffer({
-        decimalPoint = '.',
+        decimalPoint = null,
         triggerAtEnter = null,
         triggerAtInput = null,
         nonKeyboardEvent = null,
@@ -51,6 +58,7 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
     }) {
         // used for triggering events on the component
         const component = Component.current;
+        decimalPoint = decimalPoint || component.env._t.database.parameters.decimal_point;
 
         // contains the number buffer
         const state = useState({ buffer: '' });
@@ -82,9 +90,13 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
             } else if (input === 'CLEAR') {
                 state.buffer = isEmpty(state.buffer) ? null : '';
             } else if (input === 'BACKSPACE') {
-                state.buffer = isEmpty(state.buffer)
-                    ? null
-                    : state.buffer.substring(0, state.buffer.length - 1);
+                const buffer = state.buffer;
+                if (isEmpty(buffer)) {
+                    state.buffer = null;
+                } else {
+                    const nCharToRemove = buffer[buffer.length - 1] === decimalPoint ? 2 : 1;
+                    state.buffer = buffer.substring(0, buffer.length - nCharToRemove);
+                }
             } else if (input === '+') {
                 if (state.buffer[0] === '-') {
                     state.buffer = state.buffer.substring(1, state.buffer.length);
@@ -101,9 +113,7 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
                 // when input is like '+10', '+50', etc
                 const inputValue = parse.float(input.slice(1));
                 const currentBufferValue = parse.float(state.buffer);
-                state.buffer = component.env.pos.format_currency_no_symbol(
-                    inputValue + currentBufferValue
-                );
+                state.buffer = component.env.pos.formatFixed(inputValue + currentBufferValue);
             } else if (!isNaN(parseInt(input, 10))) {
                 if (isFirstInput) {
                     state.buffer = '' + input;
@@ -111,7 +121,7 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
                     state.buffer += input;
                 }
             }
-            if (state.buffer === '-') {
+            if (state.buffer === '-' || /^(0)\1+$/.test(state.buffer)) {
                 state.buffer = '';
             }
         }
@@ -175,6 +185,7 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
                 const input = getInput(event.detail.key);
                 updateBuffer(input);
                 event.preventDefault();
+                event.stopPropagation();
                 triggerEvents(event.detail.key);
             }
             eventsBuffer = [];
@@ -185,7 +196,7 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
             useListener(nonKeyboardEvent, bufferEvents(onNonKeyboardInput));
         }
 
-        return {
+        component.numberBuffer = {
             state,
             pause() {
                 isPaused = true;
@@ -201,6 +212,9 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
             },
             set(val) {
                 state.buffer = !isNaN(parseFloat(val)) ? val : '';
+            },
+            getFloat() {
+                return parse.float(state.buffer);
             },
         };
     }

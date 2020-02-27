@@ -378,15 +378,21 @@ class Chrome extends PosComponent {
     }
 
     __showPopup(event) {
-        const { name, props, __theOneThatWaits } = event.detail;
+        const { name, props, resolve, numberBuffer } = event.detail;
         this.popup.isShow = true;
         this.popup.name = name;
         this.popup.component = this.constructor.components[name];
-        this.popupProps = { ...props, __theOneThatWaits };
+        this.popupProps = { ...props, resolve, numberBuffer };
+        if (numberBuffer) {
+            numberBuffer.pause();
+        }
     }
 
     __closePopup() {
         this.popup.isShow = false;
+        if (this.popupProps.numberBuffer) {
+            this.popupProps.numberBuffer.resume();
+        }
     }
 
     get isShowClientScreenButton() {
@@ -420,19 +426,27 @@ class Chrome extends PosComponent {
     }
 
     __showTempScreen(event) {
-        const { name, props, __theOneThatWaits } = event.detail;
+        const { name, props, resolve, numberBuffer } = event.detail;
         this.tempScreen.isShow = true;
         this.tempScreen.name = name;
         this.tempScreen.component = this.constructor.components[name];
-        this.tempScreenProps = { ...props, __theOneThatWaits };
+        this.tempScreenProps = { ...props, resolve, numberBuffer };
         // hide main screen
         this.mainScreen.isShow = false;
+        // pause numberBuffer
+        if (numberBuffer) {
+            numberBuffer.pause();
+        }
     }
 
     __closeTempScreen() {
         this.tempScreen.isShow = false;
         // show main screen
         this.mainScreen.isShow = true;
+        // resume numberBuffer
+        if (this.tempScreenProps.numberBuffer) {
+            this.tempScreenProps.numberBuffer.resume();
+        }
     }
 
     showScreen({ detail: { name, props } }) {

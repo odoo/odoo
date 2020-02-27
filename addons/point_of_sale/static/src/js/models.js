@@ -1277,18 +1277,14 @@ exports.PosModel = Backbone.Model.extend({
         return value.toFixed(decimals);
     },
 
-    format_fixed: function(value, integer_width, decimal_width) {
-        value = value.toFixed(decimal_width || 0);
-        var width = value.indexOf('.');
-        if (width < 0) {
-            width = value.length;
-        }
-        var missing = integer_width - width;
-        while (missing > 0) {
-            value = '0' + value;
-            missing--;
-        }
-        return value;
+    /**
+     * (value = 1.0000, decimals = 2) => '1'
+     * (value = 1.1234, decimals = 2) => '1.12'
+     * @param {number} value amount to format
+     */
+    formatFixed: function(value) {
+        const currency = this.currency || { decimals: 2 };
+        return `${Number(value.toFixed(currency.decimals || 0))}`;
     },
 });
 

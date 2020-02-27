@@ -46,8 +46,8 @@
                         <br />
                         <button class="input-button numpad-char" t-on-click="sendInput('Delete')">C</button>
                         <button class="input-button number-char" t-on-click="sendInput('0')">0</button>
-                        <button class="input-button number-char dot" t-on-click="sendInput('props.decimalSeparator')">
-                            <t t-esc='props.decimalSeparator' /></button>
+                        <button class="input-button number-char dot" t-on-click="sendInput(decimalSeparator)">
+                            <t t-esc="decimalSeparator" /></button>
                         <button class="input-button numpad-backspace" t-on-click="sendInput('Backspace')">
                             <img style="pointer-events: none;"
                                  src="/point_of_sale/static/src/img/backspace.png" width="24"

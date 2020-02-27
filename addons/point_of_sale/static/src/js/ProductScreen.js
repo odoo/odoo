@@ -16,8 +16,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             useListener('update-selected-orderline', this.updateSelectedOrderline);
             useListener('new-orderline-selected', this.newOrderlineSelected);
             useListener('set-numpad-mode', this.setNumpadMode);
-            this.numberBuffer = useNumberBuffer({
-                decimalPoint: this.env._t.database.parameters.decimal_point,
+            useNumberBuffer({
                 nonKeyboardEvent: 'numpad-click-input',
                 triggerAtInput: 'update-selected-orderline',
             });
@@ -77,19 +76,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                         packLotLinesToEdit = [];
                     }
                 }
-                // When the popup is shown, pause the buffer so that the selected orderline
-                // is not modified when the popup is displayed.
-                this.numberBuffer.pause();
-
                 const { confirmed, payload } = await this.showPopup('EditListPopup', {
                     title: this.env._t('Lot/Serial Number(s) Required'),
                     isSingleItem: isAllowOnlyOneLot,
                     array: packLotLinesToEdit,
                 });
-
-                // Resume the buffer.
-                this.numberBuffer.resume();
-
                 if (confirmed) {
                     // Segregate the old and new packlot lines
                     const modifiedPackLotLines = Object.fromEntries(
@@ -109,12 +100,9 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             // Take the weight if necessary.
             if (product.to_weight && this.env.pos.config.iface_electronic_scale) {
                 // Show the ScaleScreen to weigh the product.
-                this.numberBuffer.pause();
                 const { confirmed, payload } = await this.showTempScreen('ScaleScreen', {
                     product,
                 });
-                this.numberBuffer.resume();
-
                 if (confirmed) {
                     weight = payload.weight;
                 } else {

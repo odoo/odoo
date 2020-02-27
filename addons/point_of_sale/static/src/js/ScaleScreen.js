@@ -28,11 +28,11 @@ odoo.define('point_of_sale.ScaleScreen', function(require) {
             this.env.pos.proxy_queue.clear();
         }
         back() {
-            this.props.__theOneThatWaits.resolve({ confirmed: false, payload: null });
+            this.props.resolve({ confirmed: false, payload: null });
             this.trigger('close-temp-screen');
         }
         confirm() {
-            this.props.__theOneThatWaits.resolve({
+            this.props.resolve({
                 confirmed: true,
                 payload: { weight: this.state.weight },
             });

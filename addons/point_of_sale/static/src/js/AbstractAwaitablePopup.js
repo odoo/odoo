@@ -15,11 +15,11 @@ odoo.define('point_of_sale.AbstractAwaitablePopup', function(require) {
             useExternalListener(window, 'keyup', this._cancelAtEscape);
         }
         confirm() {
-            this.props.__theOneThatWaits.resolve({ confirmed: true, payload: this.getPayload() });
+            this.props.resolve({ confirmed: true, payload: this.getPayload() });
             this.trigger('close-popup');
         }
         cancel() {
-            this.props.__theOneThatWaits.resolve({ confirmed: false, payload: null });
+            this.props.resolve({ confirmed: false, payload: null });
             this.trigger('close-popup');
         }
         _cancelAtEscape(event) {

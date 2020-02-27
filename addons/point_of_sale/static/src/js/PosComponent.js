@@ -22,15 +22,24 @@ odoo.define('point_of_sale.PosComponent', function(require) {
          * @param {String} name Name of the popup component
          * @param {Object} props Object that will be used to render to popup
          */
-        showPopup(name, props, forceResponse) {
-            if (forceResponse) return Promise.resolve(forceResponse);
+        showPopup(name, props) {
             return new Promise(resolve => {
-                this.trigger('show-popup', { name, props, __theOneThatWaits: { resolve } });
+                this.trigger('show-popup', {
+                    name,
+                    props,
+                    resolve,
+                    numberBuffer: this.numberBuffer,
+                });
             });
         }
         showTempScreen(name, props) {
             return new Promise(resolve => {
-                this.trigger('show-temp-screen', { name, props, __theOneThatWaits: { resolve } });
+                this.trigger('show-temp-screen', {
+                    name,
+                    props,
+                    resolve,
+                    numberBuffer: this.numberBuffer,
+                });
             });
         }
         /**
