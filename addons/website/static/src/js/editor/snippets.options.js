@@ -1831,6 +1831,31 @@ options.registry.CoverProperties = options.Class.extend({
     },
 });
 
+options.registry.ContainerWidth = options.Class.extend({
+    /**
+     * @override
+     */
+    cleanForSave: function () {
+        this.$target.removeClass('o_container_preview');
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    selectClass: async function (previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        if (previewMode === 'reset') {
+            this.$target.removeClass('o_container_preview');
+        } else if (previewMode) {
+            this.$target.addClass('o_container_preview');
+        }
+    },
+});
+
 /**
  * Allows snippets to be moved before the preceding element or after the following.
  */
