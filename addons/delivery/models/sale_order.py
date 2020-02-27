@@ -76,7 +76,7 @@ class SaleOrder(models.Model):
             delivery_line.name += _(' (Estimated Cost: %s )') % self._format_currency_amount(res['price'])
         else:
             delivery_line.price_unit = res['price']
-        if self.carrier_id.free_over and self._compute_amount_total_without_delivery() >= res['price']:
+        if self.carrier_id.free_over and self._compute_amount_total_without_delivery() >= self.carrier_id.amount:
             delivery_line.name += '\nFree Shipping'
         self.recompute_delivery_price = False
 
@@ -113,7 +113,7 @@ class SaleOrder(models.Model):
             values['name'] += _(' (Estimated Cost: %s )') % self._format_currency_amount(price_unit)
         else:
             values['price_unit'] = price_unit
-        if carrier.free_over and self._compute_amount_total_without_delivery() >= price_unit:
+        if carrier.free_over and self._compute_amount_total_without_delivery() >= carrier.amount:
             values['name'] += '\n' + 'Free Shipping'
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
