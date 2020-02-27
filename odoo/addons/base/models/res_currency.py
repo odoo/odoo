@@ -236,7 +236,7 @@ class CurrencyRate(models.Model):
     name = fields.Date(string='Date', required=True, index=True,
                            default=lambda self: fields.Date.today())
     rate = fields.Float(digits=0, default=1.0, help='The rate of the currency to the currency of rate 1')
-    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, required=True, ondelete="cascade")
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env.company)
 
