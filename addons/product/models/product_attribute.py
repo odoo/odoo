@@ -145,6 +145,17 @@ class ProductTemplateAttributeLine(models.Model):
     def write(self, values):
         res = super(ProductTemplateAttributeLine, self).write(values)
         self._update_product_template_attribute_values()
+
+        if 'attribute_id' in values:
+            # delete remaining product.template.attribute.value that are not used on any line
+            product_template_attribute_values_to_remove = self.env['product.template.attribute.value']
+            for product_template in self.mapped('product_tmpl_id'):
+                product_template_attribute_values_to_remove += product_template_attribute_values_to_remove.search([
+                    ('product_tmpl_id', '=', product_template.id),
+                    ('product_attribute_value_id', 'not in', product_template.attribute_line_ids.mapped('value_ids').ids),
+                ])
+            product_template_attribute_values_to_remove.unlink()
+
         return res
 
     @api.depends('value_ids')
