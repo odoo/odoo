@@ -93,7 +93,7 @@ odoo.define('web.OwlCompatibility', function () {
                         propsStr += ` ${p}="props.${p}"`;
                     }
                 }
-                template = tags.xml`<t t-component="props.Component"${propsStr}/>`;
+                template = tags.xml`<t t-component="props.Component"${propsStr} t-ref="component"/>`;
             }
             ComponentAdapter.template = template;
             super(...arguments);
@@ -101,6 +101,7 @@ odoo.define('web.OwlCompatibility', function () {
             ComponentAdapter.template = null;
 
             this.widget = null; // widget instance, if Component is a legacy widget
+            this.componentRef = useRef('component'); // component ref, if Component is an Owl Component
         }
 
         /**
@@ -149,7 +150,7 @@ odoo.define('web.OwlCompatibility', function () {
             if (this.__owl__.classObj && !this._classObjHandeld) {
                 const _replaceElement = this.widget._replaceElement;
                 this.widget._replaceElement = ($el) => {
-                    const res =_replaceElement.apply(this.widget, $el);
+                    const res = _replaceElement.apply(this.widget, $el);
                     const classObj = this.__owl__.classObj;
                     for (let cls in classObj) {
                         if (classObj[cls]) {
