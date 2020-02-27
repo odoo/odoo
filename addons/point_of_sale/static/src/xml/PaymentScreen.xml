@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="PaymentScreen" owl="1">
-        <div class="payment-screen screen">
+        <div class="payment-screen screen" t-att-class="{ oe_hidden: !props.isShow }">
             <div class="screen-content">
                 <div class="top-content">
                     <span class="button back"
@@ -43,7 +43,7 @@
                     </section>
 
                     <div class="payment-buttons">
-                        <div class="button js_set_customer">
+                        <div class="button" t-on-click="selectClient">
                             <i class="fa fa-user" role="img" aria-label="Customer"
                                title="Customer" />
                             <span class="js_customer_name">

@@ -54,7 +54,14 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         willUnmount() {
             this.env.pos.off('change:selectedOrder', null, this);
         }
-
+        back() {
+            this.props.resolve({ confirmed: false, payload: false });
+            this.trigger('close-temp-screen');
+        }
+        confirm() {
+            this.props.resolve({ confirmed: true, payload: true });
+            this.trigger('close-temp-screen');
+        }
         // Getters
 
         get currentOrderClient() {
@@ -117,14 +124,17 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             } else if (this.nextButton.command === 'deselect') {
                 this.env.pos.get_order().set_client(null);
             }
-            this.trigger('show-screen', { name: 'ProductScreen' });
+            this.back();
         }
         activateEditMode(event) {
             const { isNewClient } = event.detail;
             this.state.isEditMode = true;
             this.state.isShowDetails = true;
             if (!isNewClient) {
-                this.state.editModeProps = { partner: this.state.selectedClient, pos: this.env.pos };
+                this.state.editModeProps = {
+                    partner: this.state.selectedClient,
+                    pos: this.env.pos,
+                };
             }
             this.render();
         }

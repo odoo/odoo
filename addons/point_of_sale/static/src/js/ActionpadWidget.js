@@ -52,8 +52,8 @@ odoo.define('point_of_sale.ActionpadWidget', function(require) {
             // implementation.
             this.trigger('show-screen', { name: 'PaymentScreen' });
         }
-        selectCustomer() {
-            this.trigger('show-screen', { name: 'ClientListScreen' });
+        async selectCustomer() {
+            await this.showTempScreen('ClientListScreen');
         }
     }
 

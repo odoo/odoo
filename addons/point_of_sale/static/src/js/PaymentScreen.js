@@ -54,6 +54,9 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
         get selectedPaymentLine() {
             return this.currentOrder.selected_paymentline;
         }
+        async selectClient() {
+            await this.showTempScreen('ClientListScreen');
+        }
         addNewPaymentLine(paymentMethod) {
             // original function: click_paymentmethods
             if (this.currentOrder.electronic_payment_in_progress()) {
