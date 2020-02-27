@@ -43,6 +43,7 @@ odoo.define('web.OwlDialog', function () {
 
             this.modalRef = useRef('modal');
             this.footerRef = useRef('modal-footer');
+            this.headerRef = useRef('modal-header');
 
             useExternalListener(window, 'keydown', this._onKeydown);
         }

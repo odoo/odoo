@@ -481,7 +481,7 @@
                 >
                 <div class="modal-dialog" t-att-class="size">
                     <div class="modal-content" t-att-class="props.contentClass">
-                        <header t-if="props.renderHeader" class="modal-header">
+                        <header t-if="props.renderHeader" class="modal-header" t-ref="modal-header">
                             <h4 class="modal-title">
                                 <t t-esc="props.title"/>
                                 <span t-if="props.subtitle" class="o_subtitle text-muted small" t-esc="props.subtitle"/>
