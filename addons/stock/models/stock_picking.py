@@ -1261,7 +1261,7 @@ class Picking(models.Model):
                     res = self._put_in_pack(move_line_ids)
                 return res
             else:
-                raise UserError(_("Please add 'Done' qantitites to the picking to create a new pack."))
+                raise UserError(_("Please add 'Done' quantities to the picking to create a new pack."))
 
     def button_scrap(self):
         self.ensure_one()
