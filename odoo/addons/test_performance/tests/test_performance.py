@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from collections import defaultdict
 import json
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.tests.common import TransactionCase, users, warmup, tagged
 from odoo.tools import mute_logger
+
+_logger = logging.getLogger(__name__)
 
 
 class TestPerformance(SavepointCaseWithUserDemo):
@@ -522,3 +526,25 @@ class TestIrPropertyOptimizations(TransactionCase):
 
         with self.assertQueryCount(5):
             self.Bacon.create({'property_eggs': False})
+
+@tagged('psql_performance')
+class TestPsqlPerformance(TransactionCase):
+    def test_m2m_query_issue_46407(self):
+        users = self.env['res.users'].search([])
+        query = """SELECT res_groups_users_rel.uid, res_groups_users_rel.gid
+            FROM res_groups_users_rel,
+                        "res_groups"
+            WHERE 1=1 AND
+                res_groups_users_rel.uid IN %s AND
+                res_groups_users_rel.gid = res_groups.id
+            """
+        self.env.cr.execute(query, (tuple(users.ids),))
+        res = self.env.cr.fetchall()
+        _logger.info("Query\n%s\nOutput\n%s", query, res)
+        self.assertTrue(res)
+        query_explain = "EXPLAIN (ANALYZE, VERBOSE, BUFFERS) %s" % query
+        self.env.cr.execute(query_explain, (tuple(users.ids),))
+        res = self.env.cr.fetchall()
+        res_str = '\n'.join([i[0] for i in res])
+        _logger.info("QUERY:\n%s\nOUTPUT:\n%s", query_explain, res_str)
+        self.assertNotIn('Seq Scan on ', res_str, "It is using an extra seq scan.")
