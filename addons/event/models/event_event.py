@@ -185,12 +185,16 @@ class EventEvent(models.Model):
         for event in self:
             event.seats_unconfirmed = event.seats_reserved = event.seats_used = event.seats_available = 0
         # aggregate registrations by event and by state
+        state_field = {
+            'draft': 'seats_unconfirmed',
+            'open': 'seats_reserved',
+            'done': 'seats_used',
+        }
+        results = dict(
+            (event_id, dict((fname, 0) for fname in state_field.values()))
+            for event_id in self.ids
+        )
         if self.ids:
-            state_field = {
-                'draft': 'seats_unconfirmed',
-                'open': 'seats_reserved',
-                'done': 'seats_used',
-            }
             query = """ SELECT event_id, state, count(event_id)
                         FROM event_registration
                         WHERE event_id IN %s AND state IN ('draft', 'open', 'done')
@@ -198,14 +202,17 @@ class EventEvent(models.Model):
                     """
             self.env['event.registration'].flush(['event_id', 'state'])
             self._cr.execute(query, (tuple(self.ids),))
-            for event_id, state, num in self._cr.fetchall():
-                event = self.browse(event_id)
-                event[state_field[state]] += num
+            res = self._cr.fetchall()
+            for event_id, state, num in res:
+                results[event_id][state_field[state]] += num
+
         # compute seats_available
         for event in self:
+            event.update(results[event._origin.id or event.id])
             if event.seats_max > 0:
                 event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
-            event.seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
+            seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
+            event.seats_expected = seats_expected
 
     @api.depends('date_end', 'seats_available', 'seats_availability', 'event_ticket_ids.sale_available')
     def _compute_event_registrations_open(self):
