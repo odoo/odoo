@@ -11,4 +11,10 @@
             <link rel="stylesheet" href="/pos_tipping/static/src/css/tipping.css"/>
         </xpath>
     </template>
+
+    <template id="assets_tests" name="Tipping Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/pos_tipping/static/tests/tours/pos_tipping.js"></script>
+        </xpath>
+    </template>
 </odoo>
