@@ -31,10 +31,10 @@ class EventRegistration(models.Model):
         states={'done': [('readonly', True)]})
     name = fields.Char(
         string='Attendee Name', index=True,
-        compute='_compute_contact_info', copy=True, readonly=False, store=True, tracking=True)
-    email = fields.Char(string='Email', compute='_compute_contact_info', copy=True, readonly=False, store=True)
-    phone = fields.Char(string='Phone', compute='_compute_contact_info', copy=True, readonly=False, store=True)
-    mobile = fields.Char(string='Mobile', compute='_compute_contact_info', copy=True, readonly=False, store=True)
+        compute='_compute_contact_info', copy=True, readonly=False, store=True, tracking=10)
+    email = fields.Char(string='Email', compute='_compute_contact_info', copy=True, readonly=False, store=True, tracking=11)
+    phone = fields.Char(string='Phone', compute='_compute_contact_info', copy=True, readonly=False, store=True, tracking=12)
+    mobile = fields.Char(string='Mobile', compute='_compute_contact_info', copy=True, readonly=False, store=True, tracking=13)
     # organization
     date_open = fields.Datetime(string='Registration Date', readonly=True, default=lambda self: fields.Datetime.now())  # weird crash is directly now
     date_closed = fields.Datetime(
@@ -49,6 +49,26 @@ class EventRegistration(models.Model):
         ('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),
         ('open', 'Confirmed'), ('done', 'Attended')],
         string='Status', default='draft', readonly=True, copy=False, tracking=True)
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        """ Keep an explicit onchange on partner_id. Rationale : if user explicitly
+        changes the partner in interface, he want to update the whole customer
+        information. If partner_id is updated in code (e.g. updating your personal
+        information after having registered in website_event_sale) fields with a
+        value should not be reset as we don't know which one is the right one.
+
+        In other words
+          * computed fields based on partner_id should only update missing
+            information. Indeed automated code cannot decide which information
+            is more accurate;
+          * interface should allow to update all customer related information
+            at once. We consider event users really want to update all fields
+            related to the partner;
+        """
+        for registration in self:
+            if registration.partner_id:
+                registration.update(registration._synchronize_partner_values(registration.partner_id))
 
     @api.depends('partner_id')
     def _compute_contact_info(self):
