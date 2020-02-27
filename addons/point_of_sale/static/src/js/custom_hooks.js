@@ -72,6 +72,8 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
         // for pausing the mutation of buffer
         let isPaused = false;
 
+        let isReset = false;
+
         // Responsible for mutating the buffer based on valid input.
         function updateBuffer(input) {
             const isEmpty = val => {
@@ -88,8 +90,18 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
                     state.buffer = state.buffer + decimalPoint;
                 }
             } else if (input === 'CLEAR') {
+                if (isReset) {
+                    state.buffer = '';
+                    isReset = false;
+                    return;
+                }
                 state.buffer = isEmpty(state.buffer) ? null : '';
             } else if (input === 'BACKSPACE') {
+                if (isReset) {
+                    state.buffer = '';
+                    isReset = false;
+                    return;
+                }
                 const buffer = state.buffer;
                 if (isEmpty(buffer)) {
                     state.buffer = null;
@@ -162,6 +174,20 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
         function bufferEvents(handler) {
             return event => {
                 if (['INPUT', 'TEXTAREA'].includes(event.target.tagName)) return;
+                // Ignore input if modifier key is pressed.
+                if (
+                    event instanceof KeyboardEvent &&
+                    (event.getModifierState('Fn') ||
+                        event.getModifierState('Hyper') ||
+                        event.getModifierState('OS') ||
+                        event.getModifierState('Super') ||
+                        event.getModifierState('Win') ||
+                        event.getModifierState('Control') ||
+                        event.getModifierState('Alt'))
+                ) {
+                    return;
+                }
+
                 clearTimeout(timeout);
                 eventsBuffer.push(event);
                 timeout = setTimeout(handler, maxTimeBetweenKeys);
@@ -208,13 +234,14 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
                 return state.buffer;
             },
             reset() {
+                isReset = true;
                 state.buffer = '';
             },
             set(val) {
                 state.buffer = !isNaN(parseFloat(val)) ? val : '';
             },
             getFloat() {
-                return parse.float(state.buffer);
+                return parse.float(this.get());
             },
         };
     }

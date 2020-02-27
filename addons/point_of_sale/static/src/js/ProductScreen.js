@@ -13,9 +13,9 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     class ProductScreen extends PosComponent {
         constructor() {
             super(...arguments);
-            useListener('update-selected-orderline', this.updateSelectedOrderline);
-            useListener('new-orderline-selected', this.newOrderlineSelected);
-            useListener('set-numpad-mode', this.setNumpadMode);
+            useListener('update-selected-orderline', this._updateSelectedOrderline);
+            useListener('new-orderline-selected', this._newOrderlineSelected);
+            useListener('set-numpad-mode', this._setNumpadMode);
             useNumberBuffer({
                 nonKeyboardEvent: 'numpad-click-input',
                 triggerAtInput: 'update-selected-orderline',
@@ -39,8 +39,6 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 discount: this._barcodeDiscountAction.bind(this),
                 error: this._barcodeErrorAction.bind(this),
             });
-
-            this._setBuffer();
         }
         willUnmount() {
             this.env.pos.off('change:selectedOrder', null, this);
@@ -117,26 +115,20 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 quantity: weight,
             });
 
-            this._setBuffer();
+            this.numberBuffer.reset();
         }
-        async setNumpadMode(event) {
+        async _setNumpadMode(event) {
             const { mode } = event.detail;
             this.numpadMode = mode;
             this.numberBuffer.reset();
         }
-        async updateSelectedOrderline(event) {
+        async _updateSelectedOrderline(event) {
             let { buffer } = event.detail;
             let val = buffer === null ? 'remove' : buffer;
             this._setValue(val);
         }
-        async newOrderlineSelected() {
-            this._setBuffer();
-        }
-        _setBuffer() {
-            const selectedOrderline = this.currentOrder.get_selected_orderline();
-            if (selectedOrderline) {
-                this.numberBuffer.set(`${selectedOrderline.quantity}`);
-            }
+        async _newOrderlineSelected() {
+            this.numberBuffer.reset();
         }
         _setValue(val) {
             if (this.currentOrder.get_selected_orderline()) {

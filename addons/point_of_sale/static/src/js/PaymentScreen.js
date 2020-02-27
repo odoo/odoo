@@ -79,7 +79,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 return false;
             } else {
                 this.currentOrder.add_paymentline(paymentMethod);
-                this.numberBuffer.set(this._getAmountString());
+                this.numberBuffer.reset();
                 if (paymentMethod.payment_terminal) {
                     this.currentOrder.selected_paymentline.set_payment_status('pending');
                 }
@@ -155,7 +155,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             const { cid } = event.detail;
             const line = this.paymentLines.find(line => line.cid === cid);
             this.currentOrder.select_paymentline(line);
-            this.numberBuffer.set(this._getAmountString());
+            this.numberBuffer.reset();
             this.render();
         }
         async validateOrder(isForceValidate) {
