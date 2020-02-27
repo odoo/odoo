@@ -198,7 +198,7 @@ class Date(models.AbstractModel):
             attrs['data-oe-type'] = 'datetime'
             return attrs
 
-        lg = self.env['res.lang']._lang_get(self.env.user.lang)
+        lg = self.env['res.lang']._lang_get(self.env.user.lang or env.context.get('lang') or 'en_US')
         locale = babel.Locale.parse(lg.code)
         babel_format = value_format = posix_to_ldml(lg.date_format, locale=locale)
 
@@ -215,7 +215,7 @@ class Date(models.AbstractModel):
         if not value:
             return False
 
-        lg = self.env['res.lang']._lang_get(self.env.user.lang)
+        lg = self.env['res.lang']._lang_get(self.env.user.lang or env.context.get('lang') or 'en_US')
         date = datetime.strptime(value, lg.date_format)
         return fields.Date.to_string(date)
 
@@ -229,7 +229,7 @@ class DateTime(models.AbstractModel):
         attrs = super(DateTime, self).attributes(record, field_name, options, values)
         value = record[field_name]
 
-        lg = self.env['res.lang']._lang_get(self.env.user.lang)
+        lg = self.env['res.lang']._lang_get(self.env.user.lang or env.context.get('lang') or 'en_US')
         locale = babel.Locale.parse(lg.code)
         babel_format = value_format = posix_to_ldml('%s %s' % (lg.date_format, lg.time_format), locale=locale)
         tz = record.env.context.get('tz') or self.env.user.tz
@@ -255,7 +255,7 @@ class DateTime(models.AbstractModel):
             return False
 
         # parse from string to datetime
-        lg = self.env['res.lang']._lang_get(self.env.user.lang)
+        lg = self.env['res.lang']._lang_get(self.env.user.lang or env.context.get('lang') or 'en_US')
         dt = datetime.strptime(value, '%s %s' % (lg.date_format, lg.time_format))
 
         # convert back from user's timezone to UTC
