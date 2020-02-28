@@ -274,8 +274,18 @@ class TestApplyInheritanceSpecs(ViewCase):
         self.base_arch = E.form(
             E.field(name="target"),
             string="Title")
+        self.adv_arch = E.form(
+            E.field(
+                "TEXT1",
+                E.field(name="subtarget"),
+                "TEXT2",
+                E.field(name="anothersubtarget"),
+                "TEXT3",
+                name="target",
+            ),
+            string="Title")
 
-    def test_replace(self):
+    def test_replace_outer(self):
         spec = E.field(
                 E.field(name="replacement"),
                 name="target", position="replace")
@@ -339,6 +349,39 @@ class TestApplyInheritanceSpecs(ViewCase):
                     E.field(name="inserted 2"),
                     name="target"),
                 string="Title"))
+
+    def test_replace_inner(self):
+        spec = E.field(
+            "TEXT 4",
+            E.field(name="replacement"),
+            "TEXT 5",
+            E.field(name="replacement2"),
+            "TEXT 6",
+            name="target", position="replace", mode="inner")
+
+        expected = E.form(
+            E.field(
+                "TEXT 4",
+                E.field(name="replacement"),
+                "TEXT 5",
+                E.field(name="replacement2"),
+                "TEXT 6",
+                name="target"),
+            string="Title")
+
+        self.View.apply_inheritance_specs(self.base_arch, spec)
+
+        self.assertEqual(
+            self.base_arch,
+            expected,
+        )
+
+        self.View.apply_inheritance_specs(self.adv_arch, spec)
+
+        self.assertEqual(
+            self.adv_arch,
+            expected,
+        )
 
     def test_unpack_data(self):
         spec = E.data(
