@@ -39,33 +39,33 @@
         }
         originalTrigger.call(this, component, evType, payload);
     };
+
     /**
-     * Patch owl.Component.willStart to handle
-     * xmlDependencies class member
-     * i.e. lazy loaded templates
-     * It may prove useful for Odoo's frontend
+     * Patch owl.Component.willStart method to handle xmlDependencies class
+     * member, i.e. to lazy load templates. It may prove useful for Odoo's
+     * frontend.
      */
     const originalWillStart = owl.Component.prototype.willStart;
-    owl.Component.prototype.willStart = async function() {
-        if (!(this.constructor.template in this.env.qweb.templates) && this.constructor.xmlDependencies) {
-            const proms = [];
-            for (const xml of this.constructor.xmlDependencies) {
-                const prom = owl.utils.loadFile(xml).then((doc) => {
-                    if (!doc) { return; }
+    owl.Component.prototype.willStart = async function () {
+        const unknownTemplate = !(this.constructor.template in this.env.qweb.templates);
+        if (unknownTemplate && this.constructor.xmlDependencies) {
+            const proms = this.constructor.xmlDependencies.map(xml => {
+                return owl.utils.loadFile(xml).then(doc => {
+                    if (!doc) {
+                        return;
+                    }
                     const frag = document.createElement('t');
                     frag.innerHTML = doc;
                     const owlTemplates = [];
                     for (let child of frag.querySelectorAll("templates > [owl]")) {
                         child.removeAttribute('owl');
                         owlTemplates.push(child.outerHTML);
-                        child.remove();
                     }
                     this.env.qweb.addTemplates(`<templates> ${owlTemplates.join('\n')} </templates>`);
                 });
-                proms.push(prom);
-            }
+            });
             await Promise.all(proms);
         }
         return originalWillStart.apply(this, ...arguments);
-    }
+    };
 })();
