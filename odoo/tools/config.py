@@ -166,7 +166,7 @@ class configmanager(object):
                          dest='test_enable',
                          help="Enable unit tests.")
         group.add_option("--test-tags", dest="test_tags",
-                         help="""Comma separated list of spec to filter which tests to execute. Enable unit tests if set.
+                         help="""Comma-separated list of spec to filter which tests to execute. Enable unit tests if set.
                          A filter spec has the format: [-][tag][/module][:class][.method]
                          The '-' specifies if we want to include or exclude tests matching this spec.
                          The tag will match tags added on a class with a @tagged decorator. By default tag value is 'standard' when not
