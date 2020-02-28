@@ -35,6 +35,38 @@
             <field name="binding_model_id" ref="base.model_res_users"/>
         </record>
 
+        <record id="identity_check_wizard" model="ir.ui.view">
+            <field name="model">res.users.identitycheck</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="row container">
+                            <div class="col-8 offset-2">
+                              <div class="card bg-dark my-b mx-5">
+                                <div class="card-header">
+                                    <span class="fa fa-bell mx-2" t-translation="off">&amp;nbsp;</span>
+                                    <span class="text-uppercase">Security Control</span>
+                                </div>
+                                <div class="card-body">
+                                  <a href="/web/reset_password/" class="float-right">Forgot password?</a>
+                                  <h4 class="card-title">Please confirm your password to continue</h4>
+                                  <p class="card-text">
+                                    This is necessary for security-related changes. The authorization will last for a few minutes.
+                                  </p>
+                                  <div>
+                                    <label for="password"/><field class="col-4" name="password" autocomplete="current-password" password="True"/>
+                                  </div>
+                                  <button string="Confirm Password" type="object" name="run_check" class="btn btn-primary mt-3"/>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                        <footer><!-- no buttons --></footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <!-- res.groups -->
         <record id="view_groups_search" model="ir.ui.view">
             <field name="name">res.groups.search</field>
