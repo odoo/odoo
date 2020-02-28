@@ -351,7 +351,7 @@ class PosSession(models.Model):
         """
         journal = self.config_id.journal_id
         # Passing default_journal_id for the calculation of default currency of account move
-        # See _get_default_currency in the account/account_move.py.
+        # See default_get in the account/account_move.py.
         account_move = self.env['account.move'].with_context(default_journal_id=journal.id).create({
             'journal_id': journal.id,
             'date': fields.Date.context_today(self),

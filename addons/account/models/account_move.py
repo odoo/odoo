@@ -92,10 +92,17 @@ class AccountMove(models.Model):
         return fields.Date.today() if self._context.get('default_move_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') else False
 
     @api.model
-    def _get_default_currency(self):
-        ''' Get the default currency from either the journal, either the default journal's company. '''
-        journal = self._get_default_journal()
-        return journal.currency_id or journal.company_id.currency_id
+    def default_get(self, default_fields):
+        values = super(AccountMove, self).default_get(default_fields)
+        if not values.get('journal_id'):
+            values['journal_id'] = self.env.context.get('default_journal_id') or self._get_default_journal().id
+        if not values.get('currency_id') and (values.get('partner_id') or self.env.context.get('default_partner_id')) and values.get('move_type', 'entry') in self.get_purchase_types():
+            partner_id = self.env['res.partner'].browse(values.get('partner_id') or self.env.context.get('default_partner_id'))
+            values['currency_id'] = partner_id.property_purchase_currency_id.id
+        if not values.get('currency_id') and values.get('journal_id'):
+            journal_id = self.env['account.journal'].browse(values['journal_id'])
+            values['currency_id'] = journal_id.currency_id.id or journal_id.company_id.currency_id.id
+        return values
 
     @api.model
     def _get_default_invoice_incoterm(self):
@@ -133,16 +140,14 @@ class AccountMove(models.Model):
         help='If this checkbox is ticked, it means that the user was not sure of all the related informations at the time of the creation of the move and that the move needs to be checked again.')
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, readonly=True,
         states={'draft': [('readonly', False)]},
-        domain="[('company_id', '=', company_id)]",
-        default=_get_default_journal)
+        domain="[('company_id', '=', company_id)]")
     company_id = fields.Many2one(string='Company', store=True, readonly=True,
         related='journal_id.company_id', change_default=True)
     company_currency_id = fields.Many2one(string='Company Currency', readonly=True,
         related='journal_id.company_id.currency_id')
     currency_id = fields.Many2one('res.currency', store=True, readonly=True, tracking=True, required=True,
         states={'draft': [('readonly', False)]},
-        string='Currency',
-        default=_get_default_currency)
+        string='Currency')
     line_ids = fields.One2many('account.move.line', 'move_id', string='Journal Items', copy=True, readonly=True,
         states={'draft': [('readonly', False)]})
     partner_id = fields.Many2one('res.partner', readonly=True, tracking=True,
@@ -323,6 +328,8 @@ class AccountMove(models.Model):
                 if p.invoice_warn == 'block':
                     self.partner_id = False
                     return {'warning': warning}
+            if self.is_purchase_document():
+                self.currency_id = self.partner_id.property_purchase_currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
         for line in self.line_ids:
             line.partner_id = self.partner_id.commercial_partner_id
         if self.is_sale_document(include_receipts=True) and self.partner_id.property_payment_term_id:
