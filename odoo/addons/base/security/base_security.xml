@@ -171,6 +171,12 @@
             <field name="domain_force">[(1,'=',1)]</field>
         </record>
 
+        <record id="res_users_identity_check" model="ir.rule">
+            <field name="name">users can only access their own id check</field>
+            <field name="model_id" ref="model_res_users_identitycheck"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        </record>
+
         <!-- Record Rule For User -->
         <record id="res_users_rule" model="ir.rule">
             <field name="name">user rule</field>
