@@ -44,12 +44,13 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
         } else if (isNote === false && isSection === false) { // 3rd condition, none isSection and none isNote
             if (node.attrs.name === "name" &&
                 node.attrs.widget === 'section_and_note_text') {
-                $cell.attr('title', record.data.name); // set title
-                $cell.children().addClass('text-nowrap'); // set text-nowrap
+                if (options.mode !== 'edit') { // in edit mode make it as is
+                    $cell.attr('title', record.data.name); // set title
+                    $cell.children().addClass('text-nowrap'); // set text-nowrap
+                }
             }
             return $cell;
         }
-        
         return $cell;
     },
     /**
