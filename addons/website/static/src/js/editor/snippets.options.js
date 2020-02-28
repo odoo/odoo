@@ -1347,6 +1347,7 @@ options.registry.topMenuColor = options.Class.extend({
     /**
      * @override
      */
+<<<<<<< HEAD
     _computeVisibility: async function () {
         const show = await this._super(...arguments);
         if (!show) {
@@ -1358,6 +1359,18 @@ options.registry.topMenuColor = options.Class.extend({
                 params: ['header_overlay'],
                 onSuccess: value => resolve(!!value),
             });
+=======
+    onFocus: function () {
+        this.trigger_up('action_demand', {
+            actionName: 'get_page_option',
+            params: ['header_overlay'],
+            onSuccess: value => {
+                this.$el.toggleClass('d-none', !value);
+                if (!value) {
+                    this.$el.find('button.selected').removeClass('selected');
+                }
+            },
+>>>>>>> ac19070851e... temp
         });
     },
 
