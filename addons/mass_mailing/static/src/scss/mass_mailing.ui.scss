@@ -199,6 +199,10 @@ body.editor_enable.o_basic_theme.o_in_iframe {
 
 .oe_structure {
     width: 100%;
+    @media (max-width: map-get($grid-breakpoints, 'lg')) {
+        width: auto;
+        margin-left: $o-we-sidebar-width;
+    }  
 }
 
 :root {
