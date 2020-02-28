@@ -788,9 +788,9 @@ class TestOrmComputeReadwrite(models.Model):
             record.bar = record.foo
 
 
-class TestOrmComputeOnchange(models.Model):
-    _name = 'test_orm.compute.onchange'
-    _description = "Compute method as an onchange"
+class TestOrmComputeOnchangeAbstract(models.AbstractModel):
+    _name = 'test_orm.compute.onchange.abstract'
+    _description = "Compute method as an onchange on abstract model"
 
     active = fields.Boolean()
     foo = fields.Char()
@@ -799,12 +799,8 @@ class TestOrmComputeOnchange(models.Model):
     quux = fields.Char(compute='_compute_quux')
     count = fields.Integer(default=0)
     line_ids = fields.One2many(
-        'test_orm.compute.onchange.line', 'record_id',
+        'test_orm.compute.onchange.line.abstract', 'record_id',
         compute='_compute_line_ids', store=True, readonly=False,
-    )
-    tag_ids = fields.Many2many(
-        'test_orm.multi.tag',
-        compute='_compute_tag_ids', store=True, readonly=False,
     )
 
     @api.depends('foo')
@@ -832,6 +828,35 @@ class TestOrmComputeOnchange(models.Model):
             # add a line with the same value as 'foo'
             record.line_ids = [Command.create({'foo': record.foo})]
 
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, foo=self.env._("%s (copy)", record.foo)) for record, vals in zip(self, vals_list)]
+
+
+class TestOrmComputeOnchange(models.Model):
+    _name = 'test_orm.compute.onchange'
+    _inherit = ['test_orm.compute.onchange.abstract']
+    _description = "Compute method as an onchange"
+
+    line_ids = fields.One2many(
+        'test_orm.compute.onchange.line', 'record_id',
+        compute='_compute_line_ids', store=True, readonly=False,
+    )
+    tag_ids = fields.Many2many(
+        'test_orm.multi.tag',
+        compute='_compute_tag_ids', store=True, readonly=False,
+    )
+
+    @api.depends('foo')
+    def _compute_line_ids(self):
+        for record in self:
+            if not record.foo:
+                continue
+            if any(line.foo == record.foo for line in record.line_ids):
+                continue
+            # add a line with the same value as 'foo'
+            record.line_ids = [Command.create({'foo': record.foo})]
+
     @api.depends('foo')
     def _compute_tag_ids(self):
         Tag = self.env['test_orm.multi.tag']
@@ -839,16 +864,12 @@ class TestOrmComputeOnchange(models.Model):
             if record.foo:
                 record.tag_ids = Tag.search([('name', '=', record.foo)])
 
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        return [dict(vals, foo=self.env._("%s (copy)", record.foo)) for record, vals in zip(self, vals_list)]
 
+class TestOrmComputeOnchangeLineAbstract(models.AbstractModel):
+    _name = 'test_orm.compute.onchange.line.abstract'
+    _description = "Line-like model for test_orm.compute.onchange.abstract"
 
-class TestOrmComputeOnchangeLine(models.Model):
-    _name = 'test_orm.compute.onchange.line'
-    _description = "Line-like model for test_orm.compute.onchange"
-
-    record_id = fields.Many2one('test_orm.compute.onchange', ondelete='cascade')
+    record_id = fields.Many2one('test_orm.compute.onchange.abstract', ondelete='cascade')
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar')
 
@@ -856,6 +877,14 @@ class TestOrmComputeOnchangeLine(models.Model):
     def _compute_bar(self):
         for line in self:
             line.bar = (line.foo or "") + "r"
+
+
+class TestOrmComputeOnchangeLine(models.Model):
+    _name = 'test_orm.compute.onchange.line'
+    _inherit = ['test_orm.compute.onchange.line.abstract']
+    _description = "Line-like model for test_orm.compute.onchange"
+
+    record_id = fields.Many2one('test_orm.compute.onchange', ondelete='cascade')
 
 
 class TestOrmComputeDynamicDepends(models.Model):
