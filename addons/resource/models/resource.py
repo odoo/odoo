@@ -159,18 +159,32 @@ class ResourceCalendar(models.Model):
         if not res.get('name') and res.get('company_id'):
             res['name'] = _('Working Hours of %s') % self.env['res.company'].browse(res['company_id']).name
         if 'attendance_ids' in fields and not res.get('attendance_ids'):
-            res['attendance_ids'] = [
-                (0, 0, {'name': _('Monday Morning'), 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': _('Monday Afternoon'), 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'name': _('Tuesday Morning'), 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': _('Tuesday Afternoon'), 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'name': _('Wednesday Morning'), 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': _('Wednesday Afternoon'), 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'name': _('Thursday Morning'), 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': _('Thursday Afternoon'), 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'name': _('Friday Morning'), 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': _('Friday Afternoon'), 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
-            ]
+            company_id = res.get('company_id', self.company_id.id)
+            if company_id:
+                company_attendance_ids = self.env['res.company'].browse(company_id).resource_calendar_id.attendance_ids
+                res['attendance_ids'] = [
+                    (0, 0, {
+                        'name': attendance.name,
+                        'dayofweek': attendance.dayofweek,
+                        'hour_from': attendance.hour_from,
+                        'hour_to': attendance.hour_to,
+                        'day_period': attendance.day_period,
+                    })
+                    for attendance in company_attendance_ids
+                ]
+            else:
+                res['attendance_ids'] = [
+                    (0, 0, {'name': _('Monday Morning'), 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': _('Monday Afternoon'), 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': _('Tuesday Morning'), 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': _('Tuesday Afternoon'), 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': _('Wednesday Morning'), 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': _('Wednesday Afternoon'), 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': _('Thursday Morning'), 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': _('Thursday Afternoon'), 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': _('Friday Morning'), 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': _('Friday Afternoon'), 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+                ]
         return res
 
     name = fields.Char(required=True)
@@ -185,7 +199,12 @@ class ResourceCalendar(models.Model):
     global_leave_ids = fields.One2many(
         'resource.calendar.leaves', 'calendar_id', 'Global Time Off',
         domain=[('resource_id', '=', False)]
-        )
+    )
+    company_global_leave_ids = fields.One2many(
+        'resource.calendar.leaves',
+        string='Company Global Leaves',
+        related='company_id.resource_calendar_id.global_leave_ids',
+    )
     hours_per_day = fields.Float("Average Hour per Day", default=HOURS_PER_DAY,
                                  help="Average hours per day a resource is supposed to work with this calendar.")
     tz = fields.Selection(
@@ -194,6 +213,16 @@ class ResourceCalendar(models.Model):
         help="This field is used in order to define in which timezone the resources will work.")
     two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
     two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
+
+    is_company_default_calendar = fields.Boolean(compute='_compute_is_company_default_calender')
+
+    @api.depends('company_id.resource_calendar_id')
+    def _compute_is_company_default_calender(self):
+        for calendar in self:
+            if calendar.id == calendar.company_id.resource_calendar_id.id:
+                calendar.is_company_default_calendar = True
+            else:
+                calendar.is_company_default_calendar = False
 
     @api.depends('two_weeks_calendar')
     def _compute_two_weeks_explanation(self):
@@ -378,8 +407,13 @@ class ResourceCalendar(models.Model):
         if domain is None:
             domain = [('time_type', '=', 'leave')]
         domain = domain + [
-            ('calendar_id', '=', self.id),
-            ('resource_id', 'in', resource_ids),
+            '|',
+                '&',
+                ('calendar_id', '=', self.id),
+                ('resource_id', 'in', resource_ids),
+                '&',
+                ('calendar_id', '=', self.company_id.resource_calendar_id.id),
+                ('resource_id', '=', False),
             ('date_from', '<=', datetime_to_string(end_dt)),
             ('date_to', '>=', datetime_to_string(start_dt)),
         ]

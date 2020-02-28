@@ -17,3 +17,9 @@ class ResourceCalendarLeave(models.Model):
     _inherit = 'resource.calendar.leaves'
 
     work_entry_type_id = fields.Many2one('hr.work.entry.type', 'Work Entry Type')
+
+    _sql_constraints = [
+        ('check_calendar_leave',
+         'CHECK (work_entry_type_id IS NOT NULL or resource_id IS NOT NULL)',
+         'Work entry type and resource cannot be empty at the same time'),
+    ]
