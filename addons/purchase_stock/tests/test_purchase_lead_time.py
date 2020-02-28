@@ -24,7 +24,6 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         date_planned = fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10))
         self._create_make_procurement(self.product_1, 15.00, date_planned=date_planned)
         purchase = self.env['purchase.order.line'].search([('product_id', '=', self.product_1.id)], limit=1).order_id
-        
 
         # Confirm purchase order
         purchase.button_confirm()
