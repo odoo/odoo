@@ -1,7 +1,7 @@
 odoo.define('web.SwitchCompanyMenu_tests', function (require) {
 "use strict";
 
-var SwitchCompanyMenu = require('web.SwitchCompanyMenu');
+const { SwitchCompanyMenu } = require('web.SwitchCompanyMenu');
 var testUtils = require('web.test_utils');
 
 
@@ -17,12 +17,12 @@ async function createSwitchCompanyMenu(params) {
 
 async function initMockCompanyMenu(assert, params) {
     var menu = await createSwitchCompanyMenu({
-        session: {
-            ...params.session,
-            setCompanies: function (mainCompanyId, companyIds) {
-                assert.equal(mainCompanyId, params.assertMainCompany[0], params.assertMainCompany[1]);
-                assert.equal(_.intersection(companyIds, params.asserCompanies[0]).length, params.asserCompanies[0].length, params.asserCompanies[1]);
-            },
+        session: params.session,
+    });
+    testUtils.mock.patch(SwitchCompanyMenu,  {
+        _setSessionCompanies() {
+            assert.equal(this.mainCompanyId, params.assertMainCompany[0], params.assertMainCompany[1]);
+            assert.equal(_.intersection(this.allowedCompanyIds, params.asserCompanies[0]).length, params.asserCompanies[0].length, params.asserCompanies[1]);
         }
     })
     await testUtils.dom.click(menu.$('.dropdown-toggle'));  // open company switcher dropdown
@@ -32,14 +32,16 @@ async function initMockCompanyMenu(assert, params) {
 async function testSwitchCompany(assert, params) {
     assert.expect(2);
     var menu = await initMockCompanyMenu(assert, params);
-    await testUtils.dom.click(menu.$(`div[data-company-id=${params.company}] div.log_into`));
+    await testUtils.dom.click(menu.$(`div.log_into:nth(${params.company-1})`));
+    testUtils.mock.unpatch(SwitchCompanyMenu);
     menu.destroy();
 }
 
 async function testToggleCompany(assert, params) {
     assert.expect(2);
     var menu = await initMockCompanyMenu(assert, params);
-    await testUtils.dom.click(menu.$(`div[data-company-id=${params.company}] div.toggle_company`));
+    await testUtils.dom.click(menu.$(`div.toggle_company:nth(${params.company-1})`));
+    testUtils.mock.unpatch(SwitchCompanyMenu);
     menu.destroy();
 }
 
@@ -71,10 +73,9 @@ QUnit.module('widgets', {
             assert.equal(menu.$('.company_label:contains(Company 1)').length, 1, "it should display Company 1")
             assert.equal(menu.$('.company_label:contains(Company 2)').length, 1, "it should display Company 2")
             assert.equal(menu.$('.company_label:contains(Company 3)').length, 1, "it should display Company 3")
-
-            assert.equal(menu.$('div[data-company-id=1] .fa-check-square').length, 1, "Company 1 should be checked")
-            assert.equal(menu.$('div[data-company-id=2] .fa-square-o').length, 1, "Company 2 should not be checked")
-            assert.equal(menu.$('div[data-company-id=3] .fa-check-square').length, 1, "Company 3 should be checked")
+            assert.hasClass(menu.$('.toggle_company i')[0], 'fa-check-square', "Company 1 should be checked")
+            assert.hasClass(menu.$('.toggle_company i')[1], 'fa-square-o', "Company 2 should not be checked")
+            assert.hasClass(menu.$('.toggle_company i')[2], 'fa-check-square', "Company 3 should be checked")
             menu.destroy();
         });
     });
