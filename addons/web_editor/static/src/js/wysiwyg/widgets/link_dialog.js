@@ -271,7 +271,6 @@ var LinkDialog = Dialog.extend({
             (shape ? (' ' + shape) : '') +
             (size ? (' btn-' + size) : '');
         var isNewWindow = this.$('input[name="is_new_window"]').prop('checked');
-
         if (url.indexOf('@') >= 0 && url.indexOf('mailto:') < 0 && !url.match(/^http[s]?/i)) {
             url = ('mailto:' + url);
         } else if (url.indexOf(location.origin) === 0 && this.$('#o_link_dialog_url_strip_domain').prop("checked")) {
