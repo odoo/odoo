@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 import json
 
+from dateutil.relativedelta import relativedelta
 from werkzeug.exceptions import NotFound
 from werkzeug.urls import url_join
 
-from odoo import http
+from odoo import fields, http
 from odoo.http import request
 
 
@@ -57,10 +59,25 @@ class UserInputSession(http.Controller):
         if survey.session_state == 'ready':
             survey._session_open()
 
-        survey._session_trigger_next_question()
-        template_values = self._prepare_manage_session_values(survey)
-        template_values['is_rpc_call'] = True
-        return request.env.ref('survey.user_input_session_manage_content').render(template_values)
+        next_question = survey._get_session_next_question()
+
+        # using datetime.datetime because we want the millis portion
+        if next_question:
+            now = datetime.datetime.now()
+            survey.sudo().write({
+                'session_question_id': next_question.id,
+                'session_question_start_time': fields.Datetime.now() + relativedelta(seconds=2)
+            })
+            request.env['bus.bus'].sendone(survey.access_token, {
+                'question_start': now.timestamp(),
+                'type': 'next_question'
+            })
+
+            template_values = self._prepare_manage_session_values(survey)
+            template_values['is_rpc_call'] = True
+            return request.env.ref('survey.user_input_session_manage_content').render(template_values)
+        else:
+            return False
 
     @http.route('/survey/session/results/<string:survey_token>', type='json', auth='user', website=True)
     def survey_session_results(self, survey_token, **kwargs):
