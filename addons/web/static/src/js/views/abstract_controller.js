@@ -242,7 +242,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
                 if (self._controlPanel && cpUpdateIndex !== self._controlPanel.updateIndex) {
                     return;
                 }
-                return self._update(state).then(function(){
+                return self._update(state, params).then(function(){
                     self.renderer.setLocalState(localState);
                 });
             });
