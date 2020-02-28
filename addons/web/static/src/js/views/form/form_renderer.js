@@ -178,7 +178,9 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {Object} a map from notebook name to the active tab index
      */
     getLocalState: function () {
-        var state = {};
+        var state = {
+            notebooks: {}
+        };
         this.$('div.o_notebook').each(function () {
             var $notebook = $(this);
             var name = $notebook.data('name');
@@ -188,8 +190,9 @@ var FormRenderer = BasicRenderer.extend({
                     index = i;
                 }
             });
-            state[name] = index;
+            state.notebooks[name] = index;
         });
+        state.scrollTop = $('.o_content').scrollTop();
         return state;
     },
     /**
@@ -216,13 +219,14 @@ var FormRenderer = BasicRenderer.extend({
         this.$('div.o_notebook').each(function () {
             var $notebook = $(this);
             var name = $notebook.data('name');
-            if (name in state) {
-                var $page = $notebook.find('> ul > li').eq(state[name]);
+            if (name in state.notebooks) {
+                var $page = $notebook.find('> ul > li').eq(state.notebooks[name]);
                 if (!$page.hasClass('o_invisible_modifier')) {
                     $page.find('a[data-toggle="tab"]').click();
                 }
             }
         });
+        $('.o_content').scrollTop(state.scrollTop);
     },
     /**
      * Called each time the form view is attached into the DOM
