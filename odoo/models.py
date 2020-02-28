@@ -4346,7 +4346,7 @@ Record ids: %(records)s
                             to_flush[model._name].add(f)
                             if rfield.type in ('many2one', 'one2many', 'many2many'):
                                 model = self.env[rfield.comodel_name]
-                                if rfield.type == 'one2many':
+                                if rfield.type == 'one2many' and rfield.inverse_name:
                                     to_flush[rfield.comodel_name].add(rfield.inverse_name)
                 if field.comodel_name:
                     model_name = field.comodel_name
