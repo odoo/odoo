@@ -433,7 +433,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         if (params.isSelect === 'true') {
             value = parseInt(value);
         }
-        this.addHiddenField(value, fieldName);
+        this._addHiddenField(value, fieldName);
     },
     /**
      * Changes the onSuccess event.
@@ -489,7 +489,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             case 'selectAction':
                 return this.activeForm.id;
             case 'addActionField': {
-                const value = this.$target.find(`.s_website_form_field.d-none input[name="${params.fieldName}"]`).val();
+                const value = this.$target.find(`.s_website_form_dnone input[name="${params.fieldName}"]`).val();
                 if (value) {
                     return value;
                 } else {
@@ -535,7 +535,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                 if (field.required) {
                     // Get default value or for many2one fields the first option.
                     const defaultValue = field.defaultValue || field.records[0].id;
-                    this.addHiddenField(defaultValue, field.name);
+                    this._addHiddenField(defaultValue, field.name);
                 }
                 uiFragment.insertBefore(option, firstOption);
             });
@@ -544,11 +544,12 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
     /**
      * Add a hidden field to the form
      *
+     * @private
      * @param {string} value
      * @param {string} fieldName
      */
-    addHiddenField: function (value, fieldName) {
-        this.$target.find(`.s_website_form_field.d-none:has(input[name="${fieldName}"])`).remove();
+    _addHiddenField: function (value, fieldName) {
+        this.$target.find(`.s_website_form_dnone:has(input[name="${fieldName}"])`).remove();
         if (value) {
             const hiddenField = qweb.render('website_form.field_hidden', {
                 field: {
