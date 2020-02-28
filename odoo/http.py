@@ -350,19 +350,8 @@ class WebRequest(object):
     # Common helpers
     #------------------------------------------------------
     def _call_function(self, *args, **kwargs):
-        request = self
-        if self.endpoint.routing['type'] != self._request_type:
-            msg = "%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'"
-            params = (self.endpoint.original, self.httprequest.path, self.endpoint.routing['type'], self._request_type)
-            _logger.info(msg, *params)
-            raise werkzeug.exceptions.BadRequest(msg % params)
-
         if self.endpoint_arguments:
             kwargs.update(self.endpoint_arguments)
-
-        # Backward for 7.0
-        if self.endpoint.first_arg_is_req:
-            args = (request,) + args
 
         first_time = True
 
@@ -484,7 +473,7 @@ class WebRequest(object):
             else:
                 rpc_request.debug(logline)
 
-    def rpc_service(service_name, method, args):
+    def rpc_service(self, service_name, method, args):
         """ Handle an Odoo Service RPC call.  """
         try:
             threading.current_thread().uid = None
@@ -604,7 +593,7 @@ class WebRequest(object):
         hm_expected = hmac.new(secret.encode('ascii'), msg.encode('utf-8'), hashlib.sha1).hexdigest()
         return consteq(hm, hm_expected)
 
-    def handle_http(self):
+    def http_setup(self):
         """ Handle ``http`` request type.
 
         Matched routing arguments, query string and form parameters (including
@@ -625,7 +614,9 @@ class WebRequest(object):
 
         params.pop('session_id', None)
         self.params = params
+        return self.params
 
+    def http_dispatch(self):
         # Reply to CORS requests
         if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
             headers = {
@@ -667,7 +658,7 @@ class WebRequest(object):
             headers=[('Content-Type', 'application/json'), ('Content-Length', len(body))]
         )
 
-    def handle_json(self):
+    def json_setup(self):
         """ Parser handler for `JSON-RPC 2 <http://www.jsonrpc.org/specification>`_ over HTTP
 
         * ``method`` is ignored
@@ -712,6 +703,9 @@ class WebRequest(object):
         self.params = params
         self.context = self.params.pop('context', dict(self.session.context))
 
+        return self.params
+
+    def json_dispatch(self):
         # Call the endpoint
         t0 = self.rpc_debug_pre(self.params)
         result = self._call_function(**self.params)
@@ -722,18 +716,21 @@ class WebRequest(object):
     #------------------------------------------------------
     # Entry point
     #------------------------------------------------------
-    def dispatch(self, endpoint, args, auth='none'):
+    def setup(self, endpoint, args, auth='none'):
         self.endpoint = endpoint
         self.endpoint_arguments = args
         self.auth_method = auth
 
-        # Plain HTTP endpoint
-        if self.endpoint.routing_type == 'http':
-            return self.handle_http()
+        if self.endpoint.routing['type'] == 'http':
+            return self.http_setup()
+        elif self.endpoint.routing['type'] == 'json':
+            return self.json_setup()
 
-        # JSON-RPC2 endpoint
-        elif self.endpoint.routing_type == 'json':
-            return self.handle_json()
+    def dispatch(self):
+        if self.endpoint.routing['type'] == 'http':
+            return self.http_dispatch()
+        elif self.endpoint.routing['type'] == 'json':
+            return self.json_dispatch()
 
 #----------------------------------------------------------
 # Controller and routes
@@ -878,11 +875,6 @@ class ControllerType(type):
                                     " Will use original type: %r" % (cls.__module__, cls.__name__, k, parent_routing_type))
                 v.original_func.routing_type = routing_type or parent_routing_type
 
-                sign = inspect.signature(v.original_func)
-                first_arg = list(sign.parameters)[1] if len(sign.parameters) >= 2 else None
-                if first_arg in ["req", "request"]:
-                    v._first_arg_is_req = True
-
         # store the controller in the controllers list
         name_class = ("%s.%s" % (cls.__module__, cls.__name__), cls)
         class_path = name_class[0].split(".")
@@ -904,11 +896,6 @@ class EndPoint(object):
         self.original = getattr(method, 'original_func', method)
         self.routing = routing
         self.arguments = {}
-
-    @property
-    def first_arg_is_req(self):
-        # Backward for 7.0
-        return getattr(self.method, '_first_arg_is_req', False)
 
     def __call__(self, *args, **kw):
         return self.method(*args, **kw)
@@ -1293,9 +1280,9 @@ class Root(object):
             func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()
         except werkzeug.exceptions.HTTPException as e:
             return request._handle_exception(e)
-        request.set_handler(func, arguments, "none")
+        request.setup(func, arguments, "none")
         result = request.dispatch()
-                return result
+        return result
 
     def dispatch(self, environ, start_response):
         """
@@ -1343,7 +1330,9 @@ class Root(object):
                 else:
                     result = self.dispatch_nodb(request)
 
+                print ('root disspathc response', httprequest, result, explicit_session)
                 response = self.get_response(httprequest, result, explicit_session)
+                print ('root disspathc response2', response)
             return response(environ, start_response)
 
         except werkzeug.exceptions.HTTPException as e:

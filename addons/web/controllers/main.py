@@ -41,7 +41,7 @@ from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlsxwriter, file_open
 from odoo.tools.safe_eval import safe_eval
 from odoo import http, tools
-from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception, Response
+from odoo.http import content_disposition, request, serialize_exception as _serialize_exception, Response
 from odoo.exceptions import AccessError, UserError, AccessDenied
 from odoo.models import check_method_name
 from odoo.service import db, security
@@ -1068,7 +1068,7 @@ class Database(http.Controller):
                 raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
             # country code could be = "False" which is actually True in python
             country_code = post.get('country_code') or False
-            dispatch_rpc('db', 'create_database', [master_pwd, name, bool(post.get('demo')), lang, password, post['login'], country_code, post['phone']])
+            request.rpc_service('db', 'create_database', [master_pwd, name, bool(post.get('demo')), lang, password, post['login'], country_code, post['phone']])
             request.session.authenticate(name, post['login'], password)
             return http.local_redirect('/web/')
         except Exception as e:
@@ -1080,7 +1080,7 @@ class Database(http.Controller):
         try:
             if not re.match(DBNAME_PATTERN, new_name):
                 raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
-            dispatch_rpc('db', 'duplicate_database', [master_pwd, name, new_name])
+            request.rpc_service('db', 'duplicate_database', [master_pwd, name, new_name])
             request._cr = None  # duplicating a database leads to an unusable cursor
             return http.local_redirect('/web/database/manager')
         except Exception as e:
@@ -1090,7 +1090,7 @@ class Database(http.Controller):
     @http.route('/web/database/drop', type='http', auth="none", methods=['POST'], csrf=False)
     def drop(self, master_pwd, name):
         try:
-            dispatch_rpc('db','drop', [master_pwd, name])
+            request.rpc_service('db','drop', [master_pwd, name])
             request._cr = None  # dropping a database leads to an unusable cursor
             return http.local_redirect('/web/database/manager')
         except Exception as e:
@@ -1134,7 +1134,7 @@ class Database(http.Controller):
     @http.route('/web/database/change_password', type='http', auth="none", methods=['POST'], csrf=False)
     def change_password(self, master_pwd, master_pwd_new):
         try:
-            dispatch_rpc('db', 'change_admin_password', [master_pwd, master_pwd_new])
+            request.rpc_service('db', 'change_admin_password', [master_pwd, master_pwd_new])
             return http.local_redirect('/web/database/manager')
         except Exception as e:
             error = "Master password update error: %s" % (str(e) or repr(e))
@@ -1187,7 +1187,7 @@ class Session(http.Controller):
     @http.route('/web/session/get_lang_list', type='json', auth="none")
     def get_lang_list(self):
         try:
-            return dispatch_rpc('db', 'list_lang', []) or []
+            return request.rpc_service('db', 'list_lang', []) or []
         except Exception as e:
             return {"error": e, "title": _("Languages")}
 
