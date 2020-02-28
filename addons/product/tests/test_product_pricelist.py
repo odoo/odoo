@@ -3,7 +3,6 @@
 
 from odoo.tests.common import TransactionCase
 from odoo.tools import float_compare, test_reports
-from odoo.exceptions import UserError
 
 
 class TestProductPricelist(TransactionCase):
