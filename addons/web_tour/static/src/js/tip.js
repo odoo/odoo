@@ -185,6 +185,8 @@ var Tip = Widget.extend({
         // be one of its children (or the element itself)
         if (this.consume_event === "drag") {
             this.$consumeEventAnchor = this.$anchor.closest('.ui-draggable');
+        } else if (this.consume_event.includes('apply.daterangepicker')) {
+            this.$consumeEventAnchor = this.$anchor.parent().children('.o_field_date_range');
         }
         this.$consumeEventAnchor.on(this.consume_event + ".anchor", (function (e) {
             if (e.type !== "mousedown" || e.which === 1) { // only left click
