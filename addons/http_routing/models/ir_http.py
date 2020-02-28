@@ -376,7 +376,7 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _geoip_resolve(cls):
-        if 'geoip' not in request.session:
+        if not request.session.get('geoip', False):
             record = {}
             if odoo._geoip_resolver and request.httprequest.remote_addr:
                 record = odoo._geoip_resolver.resolve(request.httprequest.remote_addr) or {}
