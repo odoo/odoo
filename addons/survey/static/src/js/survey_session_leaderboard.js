@@ -24,14 +24,21 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
      *
      * The width of the progress bars is set after the rendering to enable a width css animation.
      */
-    showLeaderboard: function () {
+    showLeaderboard: function (fadeOut) {
         var self = this;
 
         var resolveFadeOut;
-        var fadeOutPromise = new Promise(function (resolve, reject) { resolveFadeOut = resolve; });
-        self.$sessionResults.fadeOut(400, function () {
-            resolveFadeOut();
-        });
+        var fadeOutPromise;
+        if (fadeOut) {
+            fadeOutPromise = new Promise(function (resolve, reject) { resolveFadeOut = resolve; });
+            self.$sessionResults.fadeOut(400, function () {
+                resolveFadeOut();
+            });
+        } else {
+            fadeOutPromise = Promise.resolve();
+            self.$sessionResults.hide();
+            self.$('.o_survey_session_leaderboard_container').empty();
+        }
 
         var leaderboardPromise = this._rpc({
             route: _.str.sprintf('/survey/session/leaderboard/%s', this.surveyAccessToken)
