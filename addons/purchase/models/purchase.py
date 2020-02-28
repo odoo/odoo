@@ -96,10 +96,11 @@ class PurchaseOrder(models.Model):
         ('to invoice', 'Waiting Bills'),
         ('invoiced', 'Fully Billed'),
     ], string='Billing Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
-
-    # There is no inverse function on purpose since the date may be different on each line
-    date_planned = fields.Datetime(string='Receipt Date', index=True,
-                                   help='This is the Receipt Date promised by the supplier. If set, the receipt will be scheduled at this date.')
+    date_planned = fields.Datetime(
+        string='Receipt Date', index=True, copy=False,
+        help="Delivery date promised by vendor. This date is used to determine expected arrival of products.")
+    expected_date = fields.Datetime("Expected Date", compute='_compute_expected_date', store=True,
+        help="Delivery date expected by vendor, computed from the minimum lead time of the order lines.")
     date_calendar_start = fields.Datetime(compute='_compute_date_calendar_start', readonly=True, store=True)
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=True)
@@ -149,6 +150,13 @@ class PurchaseOrder(models.Model):
         for order in self:
             order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
 
+    @api.depends('order_line.date_planned')
+    def _compute_expected_date(self):
+        """ expected_date = the earliest date_planned across all order lines. """
+        for order in self:
+            dates_list = order.order_line.mapped('date_planned')
+            order.expected_date = fields.Datetime.to_string(min(dates_list)) if dates_list else False
+
     @api.depends('name', 'partner_ref')
     def name_get(self):
         result = []
@@ -170,12 +178,6 @@ class PurchaseOrder(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('purchase.order', sequence_date=seq_date) or '/'
         return super(PurchaseOrder, self).create(vals)
 
-    def write(self, vals):
-        res = super(PurchaseOrder, self).write(vals)
-        if vals.get('date_planned'):
-            self.order_line.filtered(lambda line: not line.display_type).date_planned = vals['date_planned']
-        return res
-
     def unlink(self):
         for order in self:
             if not order.state == 'cancel':
@@ -188,9 +190,7 @@ class PurchaseOrder(models.Model):
         self = self.with_context(ctx)
         new_po = super(PurchaseOrder, self).copy(default=default)
         for line in new_po.order_line:
-            if new_po.date_planned:
-                line.date_planned = new_po.date_planned
-            elif line.product_id:
+            if line.product_id:
                 seller = line.product_id._select_seller(
                     partner_id=line.partner_id, quantity=line.product_qty,
                     date=line.order_id.date_order and line.order_id.date_order.date(), uom_id=line.product_uom)
@@ -539,7 +539,8 @@ class PurchaseOrderLine(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     product_qty = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True)
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
-    date_planned = fields.Datetime(string='Scheduled Date', index=True)
+    date_planned = fields.Datetime(string='Scheduled Date', index=True,
+        help="Delivery date expected from vendor. This date respectively defaults to vendor pricelist lead time then today's date.")
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')

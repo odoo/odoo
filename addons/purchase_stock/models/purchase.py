@@ -27,6 +27,7 @@ class PurchaseOrder(models.Model):
         help="Technical field used to display the Drop Ship Address", readonly=True)
     group_id = fields.Many2one('procurement.group', string="Procurement Group", copy=False)
     is_shipped = fields.Boolean(compute="_compute_is_shipped")
+    effective_date = fields.Date("Effective Date", compute='_compute_effective_date', help="Completion date of the first receipt order.")
 
     @api.depends('order_line.move_ids.returned_move_ids',
                  'order_line.move_ids.state',
@@ -41,6 +42,13 @@ class PurchaseOrder(models.Model):
                 pickings |= moves.mapped('picking_id')
             order.picking_ids = pickings
             order.picking_count = len(pickings)
+
+    @api.depends('picking_ids.date_done')
+    def _compute_effective_date(self):
+        for order in self:
+            pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'internal' and x.date_done)
+            dates_list = pickings.mapped('date_done')
+            order.effective_date = min(dates_list).date() if dates_list else False
 
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_is_shipped(self):
@@ -78,6 +86,14 @@ class PurchaseOrder(models.Model):
                         to_log[order_line] = (order_line.product_qty, pre_order_line_qty[order_line])
                 if to_log:
                     order._log_decrease_ordered_quantity(to_log)
+        # if date_planned value is set, use this to set move line expected dates
+        if vals.get('date_planned'):
+            new_date = fields.Datetime.to_datetime(vals['date_planned'])
+            # let's make sure it's not "no date"
+            if new_date:
+                order_lines_to_update = self.order_line.filtered(lambda l: l.propagate_date)
+                for order_line in order_lines_to_update:
+                    order_line._update_move_expected_date(new_date)
         return res
 
     # --------------------------------------------------
@@ -287,16 +303,10 @@ class PurchaseOrderLine(models.Model):
 
     def write(self, values):
         for line in self.filtered(lambda l: not l.display_type):
-            if values.get('date_planned') and line.propagate_date:
+            # PO date_planned overrides any PO line date_planned values
+            if not line.order_id.date_planned and values.get('date_planned') and line.propagate_date:
                 new_date = fields.Datetime.to_datetime(values['date_planned'])
-                delta_days = (new_date - line.date_planned).total_seconds() / 86400
-                if abs(delta_days) < line.propagate_date_minimum_delta:
-                    continue
-                moves_to_update = line.move_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
-                if not moves_to_update:
-                    moves_to_update = line.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
-                for move in moves_to_update:
-                    move.date_expected = move.date_expected + relativedelta.relativedelta(days=delta_days)
+                self._update_move_expected_date(new_date)
         result = super(PurchaseOrderLine, self).write(values)
         if 'product_qty' in values:
             self.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
@@ -305,6 +315,16 @@ class PurchaseOrderLine(models.Model):
     # --------------------------------------------------
     # Business methods
     # --------------------------------------------------
+
+    def _update_move_expected_date(self, new_date):
+        """ Updates corresponding move picking line expected dates that are not yet completed. """
+        moves_to_update = self.move_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
+        if not moves_to_update:
+            moves_to_update = self.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
+        for move in moves_to_update:
+            delta_days = (new_date - move.date_expected).total_seconds() / 86400
+            if abs(delta_days) >= self.propagate_date_minimum_delta:
+                move.date_expected = move.date_expected + relativedelta.relativedelta(days=delta_days)
 
     def _create_or_update_picking(self):
         for line in self:
@@ -396,7 +416,7 @@ class PurchaseOrderLine(models.Model):
             'name': (self.name or '')[:2000],
             'product_id': self.product_id.id,
             'date': self.order_id.date_order,
-            'date_expected': self.date_planned,
+            'date_expected': self.order_id.date_planned or self.date_planned,
             'location_id': self.order_id.partner_id.property_stock_supplier.id,
             'location_dest_id': (self.orderpoint_id and not (self.move_ids | self.move_dest_ids)) and self.orderpoint_id.location_id.id or self.order_id._get_destination_location(),
             'picking_id': picking.id,
