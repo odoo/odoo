@@ -28,39 +28,28 @@
                 <p>You must be <a t-attf-href="/web/login?redirect=#{discussion_url}">logged in</a> to post a comment.</p>
             </t>
             <t t-if="widget.options['display_composer']">
+                <div class="alert alert-danger mb8 d-none o_portal_chatter_composer_error" role="alert">
+                    Oops! Something went wrong. Try to reload the page and log in.
+                </div>
                 <div class="media">
                     <img alt="Avatar" class="o_portal_chatter_avatar" t-attf-src="/web/image/res.partner/#{widget.options['partner_id']}/image_128/50x50"
                          t-if="!widget.options['is_user_public'] or !widget.options['token']"/>
                     <div class="media-body">
-                        <form class="o_portal_chatter_composer_form" t-attf-action="/mail/chatter_post" method="POST">
-                            <input type="hidden" name="csrf_token" t-att-value="widget.options['csrf_token']"/>
-                            <div class="mb32">
+                        <div class="o_portal_chatter_composer_input">
+                            <div class="o_portal_chatter_composer_body mb32">
                                 <textarea rows="4" name="message" class="form-control" placeholder="Write a message..."></textarea>
-                                <input type="hidden" name="res_model" t-att-value="widget.options['res_model']"/>
-                                <input type="hidden" name="res_id" t-att-value="widget.options['res_id']"/>
-                                <input type="hidden" name="token" t-att-value="widget.options['token']" t-if="widget.options['token']"/>
-                                <input type='hidden' name="pid" t-att-value="widget.options['pid']" t-if="widget.options['pid']"/>
-                                <input type='hidden' name="hash" t-att-value="widget.options['hash']" t-if="widget.options['hash']"/>
-                                <input type="hidden" name="sha_in" t-att-value="widget.options['sha_in']" t-if="widget.options['sha_in']"/>
-                                <input type="hidden" name="sha_time" t-att-value="widget.options['sha_time']" t-if="widget.options['sha_time']"/>
-                                <input type="hidden" name="redirect" t-att-value="discussion_url"/>
-                                <input type="hidden" name="attachment_ids" class="o_portal_chatter_attachment_ids"/>
-                                <input type="hidden" name="attachment_tokens" class="o_portal_chatter_attachment_tokens"/>
-                                <div class="alert alert-danger mt8 mb0 o_portal_chatter_composer_error" style="display:none;" role="alert">
-                                    Oops! Something went wrong. Try to reload the page and log in.
-                                </div>
                                 <div class="o_portal_chatter_attachments mt-3"/>
                                 <div class="mt8">
-                                    <button t-attf-class="o_portal_chatter_composer_btn btn btn-primary" type="submit">Send</button>
+                                    <button t-attf-data-action="/mail/chatter_post" class="o_portal_chatter_composer_btn btn btn-primary" type="submit">Send</button>
                                     <button class="o_portal_chatter_attachment_btn btn btn-secondary" type="button" title="Add attachment">
                                         <i class="fa fa-paperclip"/>
                                     </button>
                                 </div>
                             </div>
-                        </form>
-                        <form class="d-none">
+                        </div>
+                        <div class="d-none">
                             <input type="file" class="o_portal_chatter_file_input" multiple="multiple"/>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </t>

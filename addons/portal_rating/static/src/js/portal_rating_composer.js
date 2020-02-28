@@ -23,8 +23,8 @@ var RatingPopupComposer = publicWidget.Widget.extend({
 
     init: function (parent, options) {
         this._super.apply(this, arguments);
-        this.rating_avg = Math.round(options['ratingAvg'] * 100) / 100 || 0.0;
-        this.rating_total = options['ratingTotal'] || 0.0;
+        this.rating_avg = Math.round(options['rating_avg'] * 100) / 100 || 0.0;
+        this.rating_count = options['rating_count'] || 0.0;
 
         this.options = _.defaults({}, options, {
             'token': false,
@@ -54,18 +54,54 @@ var RatingPopupComposer = publicWidget.Widget.extend({
 
 publicWidget.registry.RatingPopupComposer = publicWidget.Widget.extend({
     selector: '.o_rating_popup_composer',
+    custom_events: {
+        reload_rating_popup_composer: '_onReloadRatingPopupComposer',
+    },
 
     /**
      * @override
      */
     start: function () {
-        var ratingPopupData = this.$el.data();
-        var ratingPopup = new RatingPopupComposer(this, ratingPopupData);
+        this.ratingPopupData = this.$el.data();
+        this.ratingPopupData.display_composer = !this.ratingPopupData.disable_composer && !session.is_website_user;
+        this.ratingPopup = new RatingPopupComposer(this, this.ratingPopupData);
         return Promise.all([
             this._super.apply(this, arguments),
-            ratingPopup.appendTo(this.$el)
+            this.ratingPopup.appendTo(this.$el)
         ]);
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Destroy existing ratingPopup and insert new ratingPopup widget
+     *
+     * @private
+     * @param {Object} data
+     */
+    _reloadRatingPopupComposer: function (data) {
+        if (this.ratingPopup) {
+            this.ratingPopup.destroy();
+        }
+        if (this.ratingPopupData.display_composer) {
+            this.ratingPopup = new RatingPopupComposer(this, Object.assign(this.ratingPopupData, data));
+            this.ratingPopup.appendTo(this.$el);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onReloadRatingPopupComposer: function (ev) {
+        this._reloadRatingPopupComposer(ev.data);
+    }
 });
 
 return RatingPopupComposer;

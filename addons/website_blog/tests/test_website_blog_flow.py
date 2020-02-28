@@ -82,8 +82,8 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
                 'blog.post',
                 self.test_blog_post.id,
                 'Test message blog post',
-                attachment_ids=str(attachment.id),
-                attachment_tokens=attachment.access_token
+                attachment_ids=[attachment.id],
+                attachment_tokens=[attachment.access_token]
             )
 
         self.assertTrue(self.env['mail.message'].sudo().search(
@@ -102,8 +102,8 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
                 'blog.post',
                 self.test_blog_post.id,
                 'Test message blog post',
-                attachment_ids=str(second_attachment.id),
-                attachment_tokens='wrong_token'
+                attachment_ids=[second_attachment.id],
+                attachment_tokens=['wrong_token']
             )
 
         self.assertFalse(self.env['mail.message'].sudo().search(

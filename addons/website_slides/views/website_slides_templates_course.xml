@@ -143,7 +143,7 @@
                             <div class="d-flex flex-column justify-content-center h5 flex-grow-1 mb-md-5" t-if="channel.allow_comment">
                                 <t t-call="portal_rating.rating_stars_static_popup_composer">
                                     <t t-set="rating_avg" t-value="rating_avg"/>
-                                    <t t-set="rating_total" t-value="rating_count"/>
+                                    <t t-set="rating_count" t-value="rating_count"/>
                                     <t t-set="object" t-value="channel"/>
                                     <t t-set="token" t-value="channel.access_token"/>
                                     <t t-set="hash" t-value="message_post_hash"/>
