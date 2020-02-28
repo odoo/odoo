@@ -1436,6 +1436,9 @@ options.registry.topMenuColor = options.registry.colorpicker.extend({
             },
         });
         this.$el.toggleClass('d-none', !enabled);
+        if (!enabled) {
+            this.$el.find('button.selected').removeClass('selected');
+        }
     },
 
     //--------------------------------------------------------------------------
