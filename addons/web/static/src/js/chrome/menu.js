@@ -226,9 +226,9 @@ var Menu = Widget.extend({
         var $target = $(ev.currentTarget);
         var $opened = $target.siblings('.show');
         if ($opened.length) {
-            $opened.find('[data-toggle="dropdown"]').dropdown('toggle');
+            $opened.find('[data-toggle="dropdown"]:first').dropdown('toggle');
             $opened.removeClass('show');
-            $target.find('[data-toggle="dropdown"]').dropdown('toggle');
+            $target.find('[data-toggle="dropdown"]:first').dropdown('toggle');
             $target.addClass('show');
         }
     },
