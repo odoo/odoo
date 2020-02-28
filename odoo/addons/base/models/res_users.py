@@ -1,30 +1,33 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import contextlib
 
 import base64
-import pytz
+import contextlib
 import datetime
+import hmac
 import ipaddress
 import itertools
+import json
 import logging
-import hmac
-
+import time
 from collections import defaultdict
 from hashlib import sha256
 from itertools import chain, repeat
+
+import decorator
+import passlib.context
+import pytz
 from lxml import etree
 from lxml.builder import E
-import passlib.context
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request
+from odoo.modules.module import get_module_resource
 from odoo.osv import expression
 from odoo.service.db import check_super
 from odoo.tools import partition, collections, frozendict, lazy_property, image_process
-from odoo.modules.module import get_module_resource
 
 _logger = logging.getLogger(__name__)
 
@@ -82,6 +85,38 @@ def parse_m2m(commands):
         else:
             ids.append(command)
     return ids
+
+@decorator.decorator
+def check_identity(fn, self):
+    """ Wrapped method should be an *action method* (called from a button
+    type=object), and requires extra security to be executed. This decorator
+    checks if the identity (password) has been checked in the last 10mn, and
+    pops up an identity check wizard if not.
+
+    Prevents access outside of interactive contexts (aka with a request)
+    """
+    if not request:
+        raise UserError(_("This method can only be accessed over HTTP"))
+
+    if request.session.get('identity-check-last', 0) > time.time() - 10 * 60:
+        # update identity-check-last like github?
+        return fn(self)
+
+    w = self.sudo().env['res.users.identitycheck'].create({
+        'request': json.dumps([ # assume self.env.context can be serialised to json
+            self.env.context,
+            self._name,
+            self.ids,
+            fn.__name__
+        ])
+    })
+    return {
+        'type': 'ir.actions.act_window',
+        'res_model': 'res.users.identitycheck',
+        'res_id': w.id,
+        'target': 'new',
+        'views': [(False, 'form')],
+    }
 
 #----------------------------------------------------------
 # Basic res.groups and res.users
@@ -1419,6 +1454,29 @@ class UsersView(models.Model):
                         'selectable': False,
                     }
         return res
+
+class CheckIdentity(models.TransientModel):
+    _name = 'res.users.identitycheck'
+    _description = """ Wizard used to re-check the user's credentials (password)
+
+Might be useful before the more security-sensitive operations, users might be
+leaving their computer unlocked & unattended. Re-checking credentials mitigates
+some of the risk of a third party using such an unattended device to manipulate
+the account.
+"""
+
+    request = fields.Char(readonly=True, groups='.')
+    password = fields.Char(required=True)
+
+    def run_check(self):
+        if not request:
+            raise UserError(_("This method can only be accessed over HTTP"))
+        self.create_uid._check_credentials(self.password, {'interactive': True})
+        self.password = False
+
+        request.session['identity-check-last'] = time.time()
+        ctx, model, ids, method = json.loads(self.sudo().request)
+        return getattr(self.env(context=ctx)[model].browse(ids), method)()
 
 #----------------------------------------------------------
 # change password wizard
