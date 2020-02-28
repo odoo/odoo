@@ -1088,9 +1088,92 @@ class TestComputeOnchange2(TransactionCase):
         self.assertEqual(record.bar, "foo3r")
         self.assertEqual(record.baz, "baz4")
 
+    def test_set_new_abstract(self):
+        model = self.env['test_new_api.compute.onchange.abstract']
+        record = model.new({'active': True})
+        self.assertEqual(record.bar, "r")
+        self.assertEqual(record.baz, "z")
+
+        # recompute 'bar' (readonly) and 'baz' (editable)
+        record.foo = "foo1"
+        self.assertEqual(record.bar, "foo1r")
+        self.assertEqual(record.baz, "foo1z")
+
+        # do not recompute 'baz'
+        record.baz = "baz2"
+        self.assertEqual(record.bar, "foo1r")
+        self.assertEqual(record.baz, "baz2")
+
+        # recompute 'baz', but do not change its value
+        record.active = False
+        self.assertEqual(record.bar, "foo1r")
+        self.assertEqual(record.baz, "baz2")
+
+        # recompute 'baz', but do not change its value
+        record.foo = "foo3"
+        self.assertEqual(record.bar, "foo3r")
+        self.assertEqual(record.baz, "baz2")
+
+        # do not recompute 'baz'
+        record.baz = "baz4"
+        self.assertEqual(record.bar, "foo3r")
+        self.assertEqual(record.baz, "baz4")
+
     def test_onchange(self):
         # check computations of 'bar' (readonly) and 'baz' (editable)
         form = Form(self.env['test_new_api.compute.onchange'])
+        self.assertEqual(form.bar, "r")
+        self.assertEqual(form.baz, False)
+        form.active = True
+        self.assertEqual(form.bar, "r")
+        self.assertEqual(form.baz, "z")
+        form.foo = "foo1"
+        self.assertEqual(form.bar, "foo1r")
+        self.assertEqual(form.baz, "foo1z")
+        form.baz = "baz2"
+        self.assertEqual(form.bar, "foo1r")
+        self.assertEqual(form.baz, "baz2")
+        form.active = False
+        self.assertEqual(form.bar, "foo1r")
+        self.assertEqual(form.baz, "baz2")
+        form.foo = "foo3"
+        self.assertEqual(form.bar, "foo3r")
+        self.assertEqual(form.baz, "baz2")
+        form.active = True
+        self.assertEqual(form.bar, "foo3r")
+        self.assertEqual(form.baz, "foo3z")
+
+        with form.line_ids.new() as line:
+            # check computation of 'bar' (readonly)
+            self.assertEqual(line.foo, False)
+            self.assertEqual(line.bar, "r")
+            line.foo = "foo"
+            self.assertEqual(line.foo, "foo")
+            self.assertEqual(line.bar, "foor")
+
+        record = form.save()
+        self.assertEqual(record.bar, "foo3r")
+        self.assertEqual(record.baz, "foo3z")
+
+        form = Form(record)
+        self.assertEqual(form.bar, "foo3r")
+        self.assertEqual(form.baz, "foo3z")
+        form.foo = "foo4"
+        self.assertEqual(form.bar, "foo4r")
+        self.assertEqual(form.baz, "foo4z")
+        form.baz = "baz5"
+        self.assertEqual(form.bar, "foo4r")
+        self.assertEqual(form.baz, "baz5")
+        form.active = False
+        self.assertEqual(form.bar, "foo4r")
+        self.assertEqual(form.baz, "baz5")
+        form.foo = "foo6"
+        self.assertEqual(form.bar, "foo6r")
+        self.assertEqual(form.baz, "baz5")
+
+    def test_onchange_abstract(self):
+        # check computations of 'bar' (readonly) and 'baz' (editable)
+        form = Form(self.env['test_new_api.compute.onchange.abstract'])
         self.assertEqual(form.bar, "r")
         self.assertEqual(form.baz, False)
         form.active = True
