@@ -190,10 +190,8 @@ class EventEvent(models.Model):
             'open': 'seats_reserved',
             'done': 'seats_used',
         }
-        results = dict(
-            (event_id, dict((fname, 0) for fname in state_field.values()))
-            for event_id in self.ids
-        )
+        base_vals = dict((fname, 0) for fname in state_field.values())
+        results = dict((event_id, dict(base_vals)) for event_id in self.ids)
         if self.ids:
             query = """ SELECT event_id, state, count(event_id)
                         FROM event_registration
@@ -208,7 +206,7 @@ class EventEvent(models.Model):
 
         # compute seats_available
         for event in self:
-            event.update(results[event._origin.id or event.id])
+            event.update(results.get(event._origin.id or event.id, base_vals))
             if event.seats_max > 0:
                 event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
             seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
