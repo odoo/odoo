@@ -130,7 +130,7 @@
                 <div class="o_survey_session_leaderboard w-100 flex-column flex-grow-1" style="display: none;">
                     <div class="d-flex">
                         <h1 class="o_survey_session_leaderboard_title flex-grow-1">Leaderboard</h1>
-                        <div t-if="is_last_question" class="o_survey_leaderboard_buttons font-weight-bold">
+                        <div t-att-class="'o_survey_leaderboard_buttons font-weight-bold %s' % 'd-none' if not is_last_question else ''">
                             <a href="#" role="button" class="o_survey_session_close btn btn-primary mr-4"><i class="fa fa-close"/> Close</a>
                             <a href="#" role="button" class="o_survey_session_close btn btn-primary" t-att-data-show-results="True"><i class="fa fa-bar-chart"/> Results</a>
                         </div>

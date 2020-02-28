@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
 import json
 import random
 import uuid
 import werkzeug
-
-from dateutil.relativedelta import relativedelta
 
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import AccessError
@@ -566,7 +563,7 @@ class Survey(models.Model):
             self.sudo().write({'session_state': 'in_progress'})
             self.sudo().flush(['session_state'])
 
-    def _session_trigger_next_question(self):
+    def _get_session_next_question(self):
         """ Triggers the next question of the session.
 
         We artificially add 2 seconds to the 'current_question_start_time' to account for server delay.
@@ -585,27 +582,51 @@ class Survey(models.Model):
             return
 
         if not self.session_question_id:
-            question = self.question_ids[0]
+            next_question = self.question_ids[0]
         else:
-            questions = list(enumerate(self.question_ids))
-            current_question_index = questions.index(
-                next(question for question in questions if question[1] == self.session_question_id)
-            )
-            if current_question_index < len(self.question_ids) - 1:
-                question = self.question_ids[current_question_index + 1]
-            else:
-                question = self.session_question_id
+            most_voted_answers = self._get_session_most_voted_answers()
+            next_question = self._get_next_page_or_question(most_voted_answers, self.session_question_id.id)
 
-        # using datetime.datetime because we want the millis portion
-        now = datetime.datetime.now()
-        self.sudo().write({
-            'session_question_id': question.id,
-            'session_question_start_time': fields.Datetime.now() + relativedelta(seconds=2)
+        return next_question
+
+    def _get_session_most_voted_answers(self):
+        """ In sessions of survey that has conditional questions, as the survey is passed at the same time by
+        many users, we need to extract the most chosen answers, to determine the next questions to display. """
+
+        # get user_inputs from current session
+        current_user_inputs = self.user_input_ids.filtered(lambda input: input.create_date > self.session_start_time)
+        current_user_input_lines = current_user_inputs.mapped('user_input_line_ids').filtered(lambda answer: answer.suggested_answer_id)
+
+        # count the number of vote per answer
+        votes_by_answer = dict.fromkeys(current_user_input_lines.mapped('suggested_answer_id'), 0)
+        for answer in current_user_input_lines:
+            votes_by_answer[answer.suggested_answer_id] += 1
+
+        # extract most voted answer for each question
+        most_voted_answer_by_questions = dict.fromkeys(current_user_input_lines.mapped('question_id'))
+        for question in most_voted_answer_by_questions.keys():
+            for answer in votes_by_answer.keys():
+                if answer.question_id != question:
+                    continue
+                most_voted_answer = most_voted_answer_by_questions[question]
+                if not most_voted_answer or votes_by_answer[most_voted_answer] < votes_by_answer[answer]:
+                    most_voted_answer_by_questions[question] = answer
+
+        # return a fake 'audiance' user_input
+        fake_user_input = self.env['survey.user_input'].new({
+            'survey_id': self.id,
         })
-        self.env['bus.bus'].sendone(self.access_token, {
-            'question_start': now.timestamp(),
-            'type': 'next_question'
-        })
+
+        fake_user_input_lines = self.env['survey.user_input.line']
+        for question, answer in most_voted_answer_by_questions.items():
+            fake_user_input_lines |= self.env['survey.user_input.line'].new({
+                'question_id': question.id,
+                'suggested_answer_id': answer.id,
+                'survey_id': self.id,
+                'user_input_id': fake_user_input.id
+            })
+
+        return fake_user_input
 
     def _prepare_leaderboard_values(self):
         """" The leaderboard is descending and takes the total of the attendee points up to the current question. """
