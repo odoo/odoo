@@ -116,7 +116,7 @@ class PortalChatter(http.Controller):
     @http.route(['/mail/chatter_post'], type='json', methods=['POST'], auth='public', website=True)
     def portal_chatter_post(self, res_model, res_id, message, redirect=None, attachment_ids='', attachment_tokens='', **kw):
         """Create a new `mail.message` with the given `message` and/or
-        `attachment_ids` and redirect the user to the newly created message.
+        `attachment_ids`.
 
         The message will be associated to the record `res_id` of the model
         `res_model`. The user must have access rights on this target document or
