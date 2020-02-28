@@ -213,7 +213,6 @@
                             <!-- Title -->
                             <h5 t-attf-class="card-title mt-2 mb-0 text-truncate #{(not event.website_published) and 'text-danger'}">
                                 <span t-field="event.name" itemprop="name"/>
-                                <div class="badge badge-pill badge-info ml-2 mt-2 pt4 pb4" t-if="event.is_online">Online</div>
                             </h5>
                             <!-- Start Date & Time -->
                             <time itemprop="startDate" t-att-datetime="event.date_begin">
@@ -225,8 +224,7 @@
                                 <small class="text-muted text-truncate">Organizer: <span t-field="event.organizer_id" itemprop="organizer"/></small>
                             </div>
                             <!-- Location -->
-                            <div t-if="not event.is_online" itemprop="location" t-field="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
-                            <div t-else="" class="invisible">online</div>
+                            <div itemprop="location" t-field="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
                             <div class="mt8 d-flex align-items-center">
                                 <t t-foreach="event.tag_ids" t-as="tag">
                                     <span t-attf-class="badge mr8 #{'badge-primary' if tag in search_tags else 'badge-light'}">
@@ -466,31 +464,24 @@
                             </div>
                         </div>
                         <!-- Location -->
-                        <t t-if="not event.is_online">
-                            <div t-if="event.address_id" class="o_wevent_sidebar_block">
-                                <h6 class="o_wevent_sidebar_title">Location</h6>
-                                <h4 t-field="event.address_id" class="" t-options='{
-                                    "widget": "contact",
-                                    "fields": ["name"]
-                                }'/>
-                                <div itemprop="location" class="mb-2" t-field="event.address_id" t-options='{
-                                    "widget": "contact",
-                                    "fields": ["address"],
-                                    "no_marker": True
-                                }'/>
-                                <div class="mb-3" t-field="event.address_id" t-options='{
-                                    "widget": "contact",
-                                    "fields": ["phone", "mobile", "email"]
-                                }'/>
-                                <i class="fa fa-map-marker fa-fw" role="img"/>
-                                <a t-att-href="event.google_map_link()" target="_blank">Get the direction</a>
-                            </div>
-                        </t>
-                        <t t-else="">
-                            <div class="o_wevent_sidebar_block">
-                                <h6 class="o_wevent_sidebar_title">Online Event</h6>
-                            </div>
-                        </t>
+                        <div t-if="event.address_id" class="o_wevent_sidebar_block">
+                            <h6 class="o_wevent_sidebar_title">Location</h6>
+                            <h4 t-field="event.address_id" class="" t-options='{
+                                "widget": "contact",
+                                "fields": ["name"]
+                            }'/>
+                            <div itemprop="location" class="mb-2" t-field="event.address_id" t-options='{
+                                "widget": "contact",
+                                "fields": ["address"],
+                                "no_marker": True
+                            }'/>
+                            <div class="mb-3" t-field="event.address_id" t-options='{
+                                "widget": "contact",
+                                "fields": ["phone", "mobile", "email"]
+                            }'/>
+                            <i class="fa fa-map-marker fa-fw" role="img"/>
+                            <a t-att-href="event.google_map_link()" target="_blank">Get the direction</a>
+                        </div>
                         <!-- Organizer -->
                         <div t-if="event.organizer_id" class="o_wevent_sidebar_block">
                             <h6 class="o_wevent_sidebar_title">Organizer</h6>
