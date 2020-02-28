@@ -1,282 +1,321 @@
-odoo.define('point_of_sale.chrome', function (require) {
-"use strict";
+odoo.define('point_of_sale.chrome', function(require) {
+    'use strict';
 
-var gui = require('point_of_sale.gui');
-var models = require('point_of_sale.models');
-var core = require('web.core');
-var ajax = require('web.ajax');
-var CrashManager = require('web.CrashManager').CrashManager;
-var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
+    const { useState, useRef } = owl.hooks;
+    const { debounce } = owl.utils;
+    const { PosComponent } = require('point_of_sale.PosComponent');
+    const { PosModel } = require('point_of_sale.models');
+    const { useListener } = require('web.custom_hooks');
+    const { CrashManager } = require('web.CrashManager');
+    const { BarcodeEvents } = require('barcodes.BarcodeEvents');
+    const { loadCSS } = require('web.ajax');
 
-const { useState } = owl;
-const { PosComponent } = require('point_of_sale.PosComponent');
-const { useListener } = require('web.custom_hooks');
+    /**
+     * Chrome is the root component of the PoS App.
+     */
+    class Chrome extends PosComponent {
+        constructor() {
+            super(...arguments);
+            useListener('show-screen', this.showScreen);
+            useListener('pos-error', this.onPosError);
+            useListener('toggle-debug-widget', debounce(this._toggleDebugWidget, 100));
+            useListener('show-popup', this.__showPopup);
+            useListener('close-popup', this.__closePopup);
+            useListener('show-temp-screen', this.__showTempScreen);
+            useListener('close-temp-screen', this.__closeTempScreen);
+            useListener('close-pos', this._closePos);
+            useListener('loading-skip-callback', () => this._loadingSkipCallback());
 
-var QWeb = core.qweb;
+            this.state = useState({
+                uiState: 'LOADING', // 'LOADING' | 'READY' | 'CLOSING'
+                isShowDebugWidget: true,
+                hasBigScrollBars: false,
+            });
 
-/*--------------------------------------*\
- |             THE CHROME               |
-\*======================================*/
+            this.loading = useState({
+                message: 'Loading',
+                isShowSkipButton: false,
+            });
 
-// The Chrome is the main widget that contains 
-// all other widgets in the PointOfSale.
-//
-// It is the first object instanciated and the
-// starting point of the point of sale code.
-//
-// It is mainly composed of :
-// - a header, containing the list of orders
-// - a leftpane, containing the list of bought 
-//   products (orderlines) 
-// - a rightpane, containing the screens 
-//   (see pos_screens.js)
-// - popups
-// - an onscreen keyboard
-// - .gui which controls the switching between 
-//   screens and the showing/closing of popups
+            this.mainScreen = useState({
+                name: 'ProductScreen',
+                component: this.constructor.components.ProductScreen,
+            });
+            this.mainScreenProps = {};
 
-class Chrome extends PosComponent {
-    constructor() {
-        super(...arguments);
-        useListener('show-screen', this.showScreen);
-        useListener('pos-error', this.onPosError);
-        useListener('toggle-debug-widget', this.onToggleDebugWidget);
-        useListener('show-popup', this.__showPopup);
-        useListener('close-popup', this.__closePopup);
-        useListener('show-temp-screen', this.__showTempScreen);
-        useListener('close-temp-screen', this.__closeTempScreen);
-        useListener('close-pos', this._closePos);
-        this.$ = $;
+            this.popup = useState({ isShow: false, name: null, component: null });
+            this.popupProps = {}; // We want to avoid making the props to become Proxy!
 
-        this.ready    = new $.Deferred(); // resolves when the whole GUI has been loaded
-        this.webClient = this.props.webClient;
+            this.tempScreen = useState({ isShow: false, name: null, component: null });
+            this.tempScreenProps = {};
 
-        // Instead of passing chrome to the instantiation the PosModel,
-        // we inject functions needed by pos.
-        // This way, we somehow decoupled Chrome from PosModel.
-        // We can then test PosModel independently from Chrome by supplying
-        // mocked version of these default attributes.
-        const posModelDefaultAttributes = {
-            rpc: this.rpc.bind(this),
-            session: this.env.session,
-            do_action: this.webClient.do_action.bind(this.webClient),
-            loading_message: this.loading_message.bind(this),
-            loading_skip: this.loading_skip.bind(this),
-            loading_progress: this.loading_progress.bind(this),
-        };
+            this.progressbar = useRef('progressbar');
 
-        this.pos = new models.PosModel(posModelDefaultAttributes);
-        // states
-        this.state = useState({
-            isReady: false,
-            isShowDebugWidget: true,
-        });
-        this.mainScreen = useState(this._getDefaultScreen())
-        this.mainScreenProps = {};
-        this.popup = useState({ isShow: false, name: null, component: null });
-        this.popupProps = {}; // We want to avoid making the props to become Proxy!
-        this.tempScreen = useState({ isShow: false, name: null, component: null});
-        this.tempScreenProps = {};
-
-        this.chrome = this; // So that chrome's childs have chrome set automatically
-
-        this.logo_click_time  = 0;
-        this.logo_click_count = 0;
-
-        this.previous_touch_y_coordinate = -1;
-
-        this.widget = {};   // contains references to subwidgets instances
-        this.widgets = [
-        ];
-
-        this.cleanup_dom();
-    }
-
-    __showPopup(event) {
-        const { name, props, resolve, numberBuffer } = event.detail;
-        this.popup.isShow = true;
-        this.popup.name = name;
-        this.popup.component = this.constructor.components[name];
-        this.popupProps = { ...props, resolve, numberBuffer };
-        if (numberBuffer) {
-            numberBuffer.pause();
+            this.previous_touch_y_coordinate = -1;
         }
-    }
 
-    __closePopup() {
-        this.popup.isShow = false;
-        if (this.popupProps.numberBuffer) {
-            this.popupProps.numberBuffer.resume();
+        // OVERLOADED METHODS //
+
+        mounted() {
+            // remove default webclient handlers that induce click delay
+            $(document).off();
+            $(window).off();
+            $('html').off();
+            $('body').off();
+            // The above lines removed the bindings, but we really need them for the barcode
+            BarcodeEvents.start();
         }
-    }
+        willUnmount() {
+            BarcodeEvents.stop();
+        }
+        destroy() {
+            super.destroy(...arguments);
+            this.env.pos.destroy();
+        }
+        catchError(error) {
+            console.error(error);
+        }
 
-    get isShowClientScreenButton() {
-        return this.env.pos.config.use_proxy && this.env.pos.config.iface_customer_facing_display;
-    }
+        // GETTERS //
 
-    mounted() {
-        // We want the loading of pos models to be done when this root component
-        // is already mounted. This way, we are able to use the state of this component
-        // to rerender changes in the app.
-        (async () => {
+        get isShowClientScreenButton() {
+            return (
+                this.env.pos.config.use_proxy && this.env.pos.config.iface_customer_facing_display
+            );
+        }
+
+        // CONTROL METHODS //
+
+        /**
+         * Call this function after the Chrome component is mounted.
+         * This will load pos and assign it to the environment.
+         */
+        async start() {
             try {
-                await this.pos.ready;
-                this.env.pos = this.pos;
-                this.build_chrome();
-                this.gui = new gui.Gui({pos: this.pos, chrome: this});
-                this.pos.gui = this.gui;
-                this.disable_rubberbanding();
-                this.disable_backpace_back();
-                await this.ready.resolve();
-                this.loading_hide();
-                this.replace_crashmanager();
-                this.state.isReady = true;
-                this.trigger('show-screen', { name: 'ProductScreen' })
-                await this.pos.push_order();
-                // await this.build_widgets();
+                // Instead of passing chrome to the instantiation the PosModel,
+                // we inject functions needed by pos.
+                // This way, we somehow decoupled Chrome from PosModel.
+                // We can then test PosModel independently from Chrome by supplying
+                // mocked version of these default attributes.
+                const posModelDefaultAttributes = {
+                    rpc: this.rpc.bind(this),
+                    session: this.env.session,
+                    do_action: this.props.webClient.do_action.bind(this.props.webClient),
+                    setLoadingMessage: this.setLoadingMessage.bind(this),
+                    showLoadingSkip: this.showLoadingSkip.bind(this),
+                    setLoadingProgress: this.setLoadingProgress.bind(this),
+                };
+                this.env.pos = new PosModel(posModelDefaultAttributes);
+                await this.env.pos.ready;
+                this._buildChrome();
+                this.state.uiState = 'READY';
+                this.trigger('show-screen', { name: 'ProductScreen' });
+                this.env.pos.push_order(); // push order in the background, no need to await
             } catch (error) {
-                this.loading_error(error)
-            }
-        })();
-    }
+                let title = 'Unknown Error',
+                    body;
 
-    __showTempScreen(event) {
-        const { name, props, resolve, numberBuffer } = event.detail;
-        this.tempScreen.isShow = true;
-        this.tempScreen.name = name;
-        this.tempScreen.component = this.constructor.components[name];
-        this.tempScreenProps = { ...props, resolve, numberBuffer };
-        // hide main screen
-        this.mainScreen.isShow = false;
-        // pause numberBuffer
-        if (numberBuffer) {
-            numberBuffer.pause();
-        }
-    }
-
-    __closeTempScreen() {
-        this.tempScreen.isShow = false;
-        // show main screen
-        this.mainScreen.isShow = true;
-        // resume numberBuffer
-        if (this.tempScreenProps.numberBuffer) {
-            this.tempScreenProps.numberBuffer.resume();
-        }
-    }
-
-    showScreen({ detail: { name, props } }) {
-        this.mainScreen.isShow = true;
-        this.mainScreen.name = name;
-        this.mainScreen.component = this.constructor.components[name];
-        this.mainScreenProps = props || {};
-    }
-
-    /**
-     * This is the generic function the handles the rendering error and triggerred
-     * `pos-error` events.
-     *
-     * @param {Object} error
-     */
-    catchError(error) {
-        if (this.state.isReady) {
-            if (error instanceof Error) {
-                this.showPopup('ErrorTracebackPopup', { title: error.message, body: error.stack });
-            } else {
-                this.showPopup('ErrorPopup', { title: error.message });
-            }
-        }
-        console.error(error);
-    }
-
-    /**
-     * This is responsible on catching error outside the rendering context
-     * of owl. What we do is trigger a `pos-error` event in the place where
-     * we caught an error.
-     *
-     * @param {Event} event
-     */
-    onPosError(event) {
-        const { error } = event.detail
-        this.catchError(error);
-    }
-
-    cleanup_dom() {
-        // remove default webclient handlers that induce click delay
-        $(document).off();
-        $(window).off();
-        $('html').off();
-        $('body').off();
-        // The above lines removed the bindings, but we really need them for the barcode
-        BarcodeEvents.start();
-    }
-
-    build_chrome() {
-        var self = this;
-
-        if ($.browser.chrome) {
-            var chrome_version = $.browser.version.split('.')[0];
-            if (parseInt(chrome_version, 10) >= 50) {
-                ajax.loadCSS('/point_of_sale/static/src/css/chrome50.css');
-            }
-        }
-
-        if(this.pos.config.iface_big_scrollbars){
-            this.$el.addClass('big-scrollbars');
-        }
-    }
-
-    // displays a system error with the error-traceback
-    // popup.
-    show_error(error) {
-        this.showPopup('ErrorTracebackPopup',{
-            'title': error.type,
-            'body':  error.message + '\n' + error.data.debug + '\n',
-        });
-    }
-
-    // replaces the error handling of the existing crashmanager which
-    // uses jquery dialog to display the error, to use the pos popup
-    // instead
-    replace_crashmanager() {
-        var self = this;
-        CrashManager.include({
-            show_error: function(error) {
-                if (self.env.pos) {
-                    self.show_error(error);
-                } else {
-                    this._super(error);
+                if (error.message && [100, 200, 404, -32098].includes(error.message.code)) {
+                    // this is the signature of rpc error
+                    if (error.message.code === -32098) {
+                        title = 'Network Failure (XmlHttpRequestError)';
+                        body =
+                            'The Point of Sale could not be loaded due to a network problem.\n' +
+                            'Please check your internet connection.';
+                    } else if (error.message.code === 200) {
+                        title = error.message.data.message || this.env._t('Server Error');
+                        body =
+                            error.message.data.debug ||
+                            this.env._t(
+                                'The server encountered an error while receiving your order.'
+                            );
+                    }
+                } else if (error instanceof Error) {
+                    title = error.message;
+                    body = error.stack;
                 }
-            },
-        });
-    }
 
-    onToggleDebugWidget() {
-        this.state.isShowDebugWidget = !this.state.isShowDebugWidget;
-    }
-
-    _scrollable(element, scrolling_down){
-        var $element = $(element);
-        var scrollable = true;
-
-        if (! scrolling_down && $element.scrollTop() <= 0) {
-            scrollable = false;
-        } else if (scrolling_down && $element.scrollTop() + $element.height() >= element.scrollHeight) {
-            scrollable = false;
+                await this.showPopup('ErrorTracebackPopup', {
+                    title,
+                    body,
+                    isShowExitButton: true,
+                });
+            }
         }
 
-        return scrollable;
-    }
+        // EVENT HANDLERS //
 
-    disable_rubberbanding(){
+        __showPopup(event) {
+            const { name, props, resolve, numberBuffer } = event.detail;
+            this.popup.isShow = true;
+            this.popup.name = name;
+            this.popup.component = this.constructor.components[name];
+            this.popupProps = { ...props, resolve, numberBuffer };
+            if (numberBuffer) {
+                numberBuffer.pause();
+            }
+        }
+        __closePopup() {
+            this.popup.isShow = false;
+            if (this.popupProps.numberBuffer) {
+                this.popupProps.numberBuffer.resume();
+            }
+        }
+        __showTempScreen(event) {
+            const { name, props, resolve, numberBuffer } = event.detail;
+            this.tempScreen.isShow = true;
+            this.tempScreen.name = name;
+            this.tempScreen.component = this.constructor.components[name];
+            this.tempScreenProps = { ...props, resolve, numberBuffer };
+            // hide main screen
+            this.mainScreen.isShow = false;
+            // pause numberBuffer
+            if (numberBuffer) {
+                numberBuffer.pause();
+            }
+        }
+        __closeTempScreen() {
+            this.tempScreen.isShow = false;
+            // show main screen
+            this.mainScreen.isShow = true;
+            // resume numberBuffer
+            if (this.tempScreenProps.numberBuffer) {
+                this.tempScreenProps.numberBuffer.resume();
+            }
+        }
+        showScreen({ detail: { name, props } }) {
+            this.mainScreen.isShow = true;
+            this.mainScreen.name = name;
+            this.mainScreen.component = this.constructor.components[name];
+            this.mainScreenProps = props || {};
+        }
+        async _closePos() {
+            // If pos is not properly loaded, we just go back to /web without
+            // doing anything in the order data.
+            if (!this.env.pos) {
+                window.location = '/web#action=point_of_sale.action_client_pos_menu';
+            }
+
+            this.state.uiState = 'CLOSING';
+            this.loading.isShowSkipButton = false;
+            this.setLoadingMessage(this.env._t('Closing ...'));
+
+            if (this.env.pos.db.get_orders().length) {
+                // If there are orders in the db left unsynced, we try to sync them.
+                try {
+                    await this.env.pos.push_order();
+                } catch (error) {
+                    console.warn(error);
+                }
+                const reason = this.env.pos.get('failed')
+                    ? this.env._t(
+                          'Some orders could not be submitted to ' +
+                              'the server due to configuration errors. ' +
+                              'You can exit the Point of Sale, but do ' +
+                              'not close the session before the issue ' +
+                              'has been resolved.'
+                      )
+                    : this.env._t(
+                          'Some orders could not be submitted to ' +
+                              'the server due to internet connection issues. ' +
+                              'You can exit the Point of Sale, but do ' +
+                              'not close the session before the issue ' +
+                              'has been resolved.'
+                      );
+                const { confirmed } = await this.showPopup('ConfirmPopup', {
+                    title: this.env._t('Offline Orders'),
+                    body: reason,
+                });
+                if (confirmed) {
+                    window.location = '/web#action=point_of_sale.action_client_pos_menu';
+                } else {
+                    this.state.uiState = 'READY';
+                }
+            } else {
+                window.location = '/web#action=point_of_sale.action_client_pos_menu';
+            }
+        }
+        _toggleDebugWidget() {
+            this.state.isShowDebugWidget = !this.state.isShowDebugWidget;
+        }
+        onPosError(event) {
+            console.log(event.detail.error);
+        }
+
+        // TO PASS AS PARAMETERS //
+
+        setLoadingProgress(fac) {
+            if (this.progressbar.el) {
+                this.progressbar.el.style.width = `${Math.floor(fac * 100)}%`;
+            }
+        }
+        setLoadingMessage(msg, progress) {
+            this.loading.message = msg;
+            if (typeof progress !== 'undefined') {
+                this.setLoadingProgress(progress);
+            }
+        }
+        /**
+         * Show Skip button in the loading screen and allow to assign callback
+         * when the button is pressed.
+         *
+         * @param {Function} callback function to call when Skip button is pressed.
+         */
+        showLoadingSkip(callback) {
+            if (callback) {
+                this.loading.isShowSkipButton = true;
+                this._loadingSkipCallback = callback;
+            }
+        }
+
+        // MISC METHODS //
+
+        _buildChrome() {
+            if ($.browser.chrome) {
+                var chrome_version = $.browser.version.split('.')[0];
+                if (parseInt(chrome_version, 10) >= 50) {
+                    loadCSS('/point_of_sale/static/src/css/chrome50.css');
+                }
+            }
+
+            if (this.env.pos.config.iface_big_scrollbars) {
+                this.state.uiState.hasBigScrollBars = true;
+            }
+
+            this._disableRubberbanding();
+            this._disableBackspaceBack();
+            this._replaceCrashmanager();
+        }
+        // replaces the error handling of the existing crashmanager which
+        // uses jquery dialog to display the error, to use the pos popup
+        // instead
+        _replaceCrashmanager() {
+            var self = this;
+            CrashManager.include({
+                show_error: function(error) {
+                    if (self.env.pos) {
+                        // self == this component
+                        self.showPopup('ErrorTracebackPopup', {
+                            title: error.type,
+                            body: error.message + '\n' + error.data.debug + '\n',
+                        });
+                    } else {
+                        // this == CrashManager instance
+                        this._super(error);
+                    }
+                },
+            });
+        }
+        _disableRubberbanding() {
             var self = this;
 
-            document.body.addEventListener('touchstart', function(event){
+            document.body.addEventListener('touchstart', function(event) {
                 self.previous_touch_y_coordinate = event.touches[0].clientY;
             });
 
-        // prevent the pos body from being scrollable. 
-        document.body.addEventListener('touchmove',function(event){
-            var node = event.target;
+            // prevent the pos body from being scrollable.
+            document.body.addEventListener('touchmove', function(event) {
+                var node = event.target;
                 var current_touch_y_coordinate = event.touches[0].clientY;
                 var scrolling_down;
 
@@ -286,146 +325,43 @@ class Chrome extends PosComponent {
                     scrolling_down = false;
                 }
 
-            while(node){
-                if(node.classList && node.classList.contains('touch-scrollable') && self._scrollable(node, scrolling_down)){
-                    return;
+                while (node) {
+                    if (
+                        node.classList &&
+                        node.classList.contains('touch-scrollable') &&
+                        self._scrollable(node, scrolling_down)
+                    ) {
+                        return;
+                    }
+                    node = node.parentNode;
                 }
-                node = node.parentNode;
-            }
-            event.preventDefault();
-        });
-    }
-
-    // prevent backspace from performing a 'back' navigation
-    disable_backpace_back() {
-       $(document).on("keydown", function (e) {
-           if (e.which === 8 && !$(e.target).is("input, textarea")) {
-               e.preventDefault();
-           }
-       });
-    }
-
-    loading_error(err){
-        var self = this;
-
-        if (err.popup) {
-            self.gui.show_popup('alert', {
-                title: err.title,
-                body: err.body,
+                event.preventDefault();
             });
-            return;
         }
-
-        var title = err.message;
-        var body  = err.stack;
-
-        if(err.message === 'XmlHttpRequestError '){
-            title = 'Network Failure (XmlHttpRequestError)';
-            body  = 'The Point of Sale could not be loaded due to a network problem.\n Please check your internet connection.';
-        }else if(err.code === 200){
-            title = err.data.message;
-            body  = err.data.debug;
-        }
-
-        if( typeof body !== 'string' ){
-            body = 'Traceback not available.';
-        }
-
-        var popup = $(QWeb.render('ErrorTracebackPopupWidget',{
-            widget: { options: {title: title , body: body }},
-        }));
-
-        popup.find('.button').click(function(){
-            self.gui.close();
-        });
-
-        popup.css({ zindex: 9001 });
-
-        popup.appendTo(this.$el);
-    }
-    loading_progress(fac){
-        this.$('.loader .loader-feedback').removeClass('oe_hidden');
-        this.$('.loader .progress').removeClass('oe_hidden').css({'width': ''+Math.floor(fac*100)+'%'});
-    }
-    loading_message(msg, progress) {
-        this.$('.loader .loader-feedback').removeClass('oe_hidden');
-        this.$('.loader .message').text(msg);
-        if (typeof progress !== 'undefined') {
-            this.loading_progress(progress);
-        } else {
-            this.$('.loader .progress').addClass('oe_hidden');
-        }
-    }
-    loading_skip(callback){
-        if(callback){
-            this.$('.loader .loader-feedback').removeClass('oe_hidden');
-            this.$('.loader .button.skip').removeClass('oe_hidden');
-            this.$('.loader .button.skip').off('click');
-            this.$('.loader .button.skip').click(callback);
-        }else{
-            this.$('.loader .button.skip').addClass('oe_hidden');
-        }
-    }
-    loading_hide(){
-        var self = this;
-        this.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').addClass('oe_hidden');});
-    }
-    loading_show(){
-        this.$('.loader').removeClass('oe_hidden').animate({opacity:1},150,'swing');
-    }
-
-    destroy() {
-        super.destroy(...arguments);
-        this.pos.destroy();
-    }
-
-    _getDefaultScreen() {
-        const name = 'ProductScreen';
-        const component = this.constructor.components[name];
-        return { name, component };
-    }
-
-    async _closePos() {
-        const close = async () => {
-            this.loading_show();
-            this.loading_message(this.env._t('Closing ...'));
-            try {
-                await this.env.pos.push_order();
-            } catch (error) {
-                console.warn(error);
-            } finally {
-                window.location = '/web#action=point_of_sale.action_client_pos_menu';
-            }
-        };
-        const pendingOrders = this.env.pos.db.get_orders().length;
-        if (!pendingOrders) {
-            await close();
-        } else {
-            const reason = this.env.pos.get('failed')
-                ? this.env._t(
-                      'Some orders could not be submitted to ' +
-                          'the server due to configuration errors. ' +
-                          'You can exit the Point of Sale, but do ' +
-                          'not close the session before the issue ' +
-                          'has been resolved.'
-                  )
-                : this.env._t(
-                      'Some orders could not be submitted to ' +
-                          'the server due to internet connection issues. ' +
-                          'You can exit the Point of Sale, but do ' +
-                          'not close the session before the issue ' +
-                          'has been resolved.'
-                  );
-            const { confirmed } = await this.showPopup('ConfirmPopup', {
-                title: this.env._t('Offline Orders'),
-                body: reason,
+        // prevent backspace from performing a 'back' navigation
+        _disableBackspaceBack() {
+            $(document).on('keydown', function(e) {
+                if (e.which === 8 && !$(e.target).is('input, textarea')) {
+                    e.preventDefault();
+                }
             });
-            if (confirmed) {
-                await close();
+        }
+        _scrollable(element, scrolling_down) {
+            var $element = $(element);
+            var scrollable = true;
+
+            if (!scrolling_down && $element.scrollTop() <= 0) {
+                scrollable = false;
+            } else if (
+                scrolling_down &&
+                $element.scrollTop() + $element.height() >= element.scrollHeight
+            ) {
+                scrollable = false;
             }
+
+            return scrollable;
         }
     }
-}
 
-return { Chrome };
+    return { Chrome };
 });

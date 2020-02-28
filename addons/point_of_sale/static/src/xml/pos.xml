@@ -2,12 +2,12 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="Chrome" owl="1">
-        <div class="pos">
+        <div class="pos" t-att-class="{ 'big-scrollbars': state.uiState.hasBigScrollBars }">
             <div class="pos-receipt-print"></div>
-            <t t-if="state.isReady">
+            <t t-if="state.uiState === 'READY'">
                 <div class="pos-topheader">
                     <div class="pos-branding">
-                        <img class="pos-logo" t-on-click="onToggleDebugWidget"
+                        <img class="pos-logo" t-on-click="trigger('toggle-debug-widget')"
                              src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
                     </div>
                     <div class="pos-rightheader">
@@ -25,32 +25,37 @@
                         <div class="subwindow">
                             <div class="subwindow-container">
                                 <div class="subwindow-container-fix screens">
-                                    <t t-component="mainScreen.component" isShow="mainScreen.isShow"
+                                    <t isShow="mainScreen.isShow" t-component="mainScreen.component"
                                        t-props="mainScreenProps" t-key="mainScreen.name" />
-                                    <t t-component="tempScreen.component" t-if="tempScreen.isShow"
+                                    <t t-if="tempScreen.isShow" t-component="tempScreen.component"
                                        t-props="tempScreenProps" t-key="tempScreen.name" />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <DebugWidget t-if="env.isDebug() and state.isShowDebugWidget" t-transition="fade" />
-                </div>
-                <div class="popups">
-                    <t t-if="popup.isShow" t-component="popup.component"
-                       t-props="popupProps" t-key="popup.name" />
+                    <DebugWidget t-if="env.isDebug() and state.isShowDebugWidget"
+                                 t-transition="fade" />
                 </div>
             </t>
 
-            <div class="loader">
-                <div class="loader-feedback oe_hidden">
-                    <h1 class="message">Loading</h1>
-                    <div class="progressbar">
-                        <div class="progress" width="50%"></div>
+            <div t-if="['LOADING', 'CLOSING'].includes(state.uiState)" class="loader" t-transition="swing">
+                <div class="loader-feedback">
+                    <h1 class="message">
+                        <t t-esc="loading.message" />
+                    </h1>
+                    <div t-if="state.uiState === 'LOADING'" class="progressbar">
+                        <div class="progress" t-ref="progressbar"></div>
                     </div>
-                    <div class="oe_hidden button skip">
+                    <div t-if="loading.isShowSkipButton" class="button skip" t-on-click="trigger('loading-skip-callback')">
                         Skip
                     </div>
                 </div>
+            </div>
+
+            <!-- Allow popups to be visible at any state of the ui. -->
+            <div t-if="popup.isShow" class="popups">
+                <t t-component="popup.component" t-props="popupProps"
+                   t-key="popup.name" />
             </div>
         </div>
     </t>

@@ -14,7 +14,8 @@ odoo.define('point_of_sale.main', function(require) {
         await webClient.setElement(document.body);
         await webClient.start();
         const chrome = new Chrome(null, { webClient });
-        chrome.mount(document.getElementsByClassName('o_action_manager')[0]);
+        await chrome.mount(document.querySelector('.o_action_manager'));
+        await chrome.start();
     }
 
     return { startPosApp };

@@ -9,7 +9,11 @@ odoo.define('point_of_sale.ProxyStatus', function(require) {
     class ProxyStatus extends PosComponent {
         constructor() {
             super(...arguments);
-            this.state = useState({ status: 'connected', msg: 0 });
+            const initialProxyStatus = this.env.pos.proxy.get('status');
+            this.state = useState({
+                status: initialProxyStatus.status,
+                msg: initialProxyStatus.msg,
+            });
             this.statuses = ['connected', 'connecting', 'disconnected', 'warning'];
             this.index = 0;
         }

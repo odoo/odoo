@@ -26,9 +26,9 @@ odoo.define('point_of_sale.test_setup_pos', async function(require) {
                 rpc: env.services.rpc,
                 session: env.session,
                 do_action: async () => {},
-                loading_message: () => {},
-                loading_progress: () => {},
-                loading_skip: () => {},
+                setLoadingMessage: () => {},
+                setLoadingProgress: () => {},
+                showLoadingSkip: () => {},
             });
             await posContainer.pos.ready;
             this.pos = posContainer.pos;

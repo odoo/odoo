@@ -9,7 +9,8 @@ odoo.define('point_of_sale.SyncNotification', function(require) {
     class SyncNotification extends PosComponent {
         constructor() {
             super(...arguments);
-            this.state = useState({ status: 'connected', msg: 0 });
+            const synch = this.env.pos.get('synch');
+            this.state = useState({ status: synch.status, msg: synch.pending });
         }
         mounted() {
             this.env.pos.on(

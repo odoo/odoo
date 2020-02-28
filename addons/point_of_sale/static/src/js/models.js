@@ -39,9 +39,9 @@ exports.PosModel = Backbone.Model.extend({
         this.rpc = this.get('rpc');
         this.session = this.get('session');
         this.do_action = this.get('do_action');
-        this.loading_message = this.get('loading_message');
-        this.loading_progress = this.get('loading_progress');
-        this.loading_skip = this.get('loading_skip');
+        this.setLoadingMessage = this.get('setLoadingMessage');
+        this.setLoadingProgress = this.get('setLoadingProgress');
+        this.showLoadingSkip = this.get('showLoadingSkip');
 
         this.proxy = new devices.ProxyDevice(this);              // used to communicate to the hardware devices via a local proxy
         this.barcode_reader = new BarcodeReader({'pos': this, proxy:this.proxy});
@@ -125,14 +125,14 @@ exports.PosModel = Backbone.Model.extend({
         var self = this;
         return new Promise(function (resolve, reject) {
             self.barcode_reader.disconnect_from_proxy();
-            self.loading_message(_t('Connecting to the IoT Box'), 0);
-            self.loading_skip(function () {
+            self.setLoadingMessage(_t('Connecting to the IoT Box'), 0);
+            self.showLoadingSkip(function () {
                 self.proxy.stop_searching();
             });
             self.proxy.autoconnect({
                 force_ip: self.config.proxy_ip || undefined,
                 progress: function(prog){
-                    self.loading_progress(prog);
+                    self.setLoadingProgress(prog);
                 },
             }).then(
                 function () {
@@ -566,7 +566,7 @@ exports.PosModel = Backbone.Model.extend({
                     resolve();
                 } else {
                     var model = self.models[index];
-                    self.loading_message(_t('Loading')+' '+(model.label || model.model || ''), progress);
+                    self.setLoadingMessage(_t('Loading')+' '+(model.label || model.model || ''), progress);
 
                     var cond = typeof model.condition === 'function'  ? model.condition(self,tmp) : true;
                     if (!cond) {

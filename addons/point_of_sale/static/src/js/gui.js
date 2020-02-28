@@ -26,7 +26,7 @@ var Gui = core.Class.extend({
         this.current_screen = null;
         this.show_sync_errors = true;
 
-        this.chrome.pos.ready.then(function(){
+        this.pos.ready.then(function(){
             self.close_other_tabs();
         });
     },
@@ -290,7 +290,7 @@ var Gui = core.Class.extend({
     _close: function() {
         var self = this;
         this.chrome.loading_show();
-        this.chrome.loading_message(_t('Closing ...'));
+        this.chrome.setLoadingMessage(_t('Closing ...'));
 
         this.pos.push_order().then(function(){
             window.location = "/web#action=point_of_sale.action_client_pos_menu";
