@@ -474,7 +474,10 @@ class Channel(models.Model):
         for partner in self.env['res.partner'].browse(partner_ids):
             user_id = partner.user_ids and partner.user_ids[0] or False
             if user_id:
-                for channel_info in self.with_user(user_id).channel_info():
+                user_channels = self.with_user(user_id).with_context(
+                    allowed_company_ids=user_id.company_ids.ids
+                )
+                for channel_info in user_channels.channel_info():
                     notifications.append([(self._cr.dbname, 'res.partner', partner.id), channel_info])
         return notifications
 
