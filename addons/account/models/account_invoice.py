@@ -1197,7 +1197,7 @@ class AccountInvoice(models.Model):
                     tax_grouped[key]['base'] = round_curr(val['base'])
                 else:
                     for field in default_tax_group_fields:
-                        tax_grouped[key][field] += round_curr(val.get(field)) or 0
+                        tax_grouped[key][field] += round_curr(val.get(field, 0)) if field != 'amount' else val.get(field, 0)
 
         return tax_grouped
 
