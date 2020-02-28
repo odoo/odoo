@@ -50,7 +50,7 @@
         </div>
 
         <!-- Add Field -->
-        <div data-js="AddField" data-selector=".s_website_form_field">
+        <div data-js="AddField" data-selector=".s_website_form_field" data-exclude=".s_website_form_dnone">
             <we-button class="fa fa-fw fa-plus"
                 title="Add a new field after this one"
                 data-add-field=""
@@ -58,7 +58,8 @@
         </div>
 
         <!-- Field -->
-        <div data-js='WebsiteFieldEditor' data-selector=".s_website_form_field" data-drop-near=".s_website_form_field">
+        <div data-js='WebsiteFieldEditor' data-selector=".s_website_form_field"
+             data-exclude=".s_website_form_dnone" data-drop-near=".s_website_form_field">
             <we-select data-name="type_opt" string="Type" data-no-preview="true">
                 <we-title>Custom field</we-title>
                 <we-button data-custom-field="char">Text</we-button>
