@@ -735,8 +735,8 @@ class AccountReconciliation(models.AbstractModel):
             AND (%s IS NULL AND b.account_id = %s)
             AND (%s IS NULL AND NOT b.reconciled OR b.id = %s)
             AND (%s is NULL OR (a.partner_id = %s AND b.partner_id = %s))
-            AND a.id IN (SELECT id FROM {0})
-            AND b.id IN (SELECT id FROM {0})
+            AND a.id IN (SELECT "account_move_line".id FROM {0})
+            AND b.id IN (SELECT "account_move_line".id FROM {0})
             ORDER BY a.date desc
             LIMIT 1
             """.format(from_clause + where_str)
