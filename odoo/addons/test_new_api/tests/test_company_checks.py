@@ -41,12 +41,26 @@ class TestCompanyCheck(common.TransactionCase):
         self.assertTrue(m1._check_company_auto)
 
     def test_company_check_1(self):
-        """ Check you can create an object if the company are consistent"""
+        """ Check you can create an object if the company are consistent
+            but you cannot change its company later"""
+        child = self.env['test_new_api.model_child'].create({
+            'name': 'M1',
+            'company_id': self.company_a.id,
+            'parent_id': self.parent_company_a_id.id,
+        })
+        with self.assertRaises(UserError):
+            child.company_id = self.company_b
+
+    def test_company_check_1B(self):
+        """ Check you can create an object if the company are consistent
+            but you cannot change the parent's company later"""
         self.env['test_new_api.model_child'].create({
             'name': 'M1',
             'company_id': self.company_a.id,
             'parent_id': self.parent_company_a_id.id,
         })
+        with self.assertRaises(UserError):
+            self.parent_company_a_id.company_id = self.company_b
 
     def test_company_check_2(self):
         """ Check you cannot create a record if the company is inconsistent"""
