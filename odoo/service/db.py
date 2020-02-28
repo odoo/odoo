@@ -111,6 +111,15 @@ def _create_empty_database(name):
                 (name, collate, chosen_template)
             )
 
+    if odoo.tools.config['unaccent']:
+        try:
+            db = odoo.sql_db.db_connect(name)
+            with closing(db.cursor()) as cr:
+                cr.execute("CREATE EXTENSION unaccent")
+                cr.commit()
+        except psycopg2.Error:
+            pass
+
 @check_db_management_enabled
 def exp_create_database(db_name, demo, lang, user_password='admin', login='admin', country_code=None, phone=None):
     """ Similar to exp_create but blocking."""
@@ -301,13 +310,6 @@ def restore_db(db, dump_file, copy=False):
             if filestore_path:
                 filestore_dest = env['ir.attachment']._filestore()
                 shutil.move(filestore_path, filestore_dest)
-
-            if odoo.tools.config['unaccent']:
-                try:
-                    with cr.savepoint(flush=False):
-                        cr.execute("CREATE EXTENSION unaccent")
-                except psycopg2.Error:
-                    pass
 
     _logger.info('RESTORE DB: %s', db)
 
