@@ -39,6 +39,11 @@ var SystrayMenu = Widget.extend({
             return Promise.all(proms);
         });
     },
+    on_attach_callback() {
+        this.widgets
+            .filter(widget => widget.on_attach_callback)
+            .forEach(widget => widget.on_attach_callback());
+    },
     /**
      * Add the instanciated items, using the object located in this.wisgets
      */
