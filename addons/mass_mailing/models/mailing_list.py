@@ -129,7 +129,7 @@ class MassMailingList(models.Model):
         self.flush()
         self.invalidate_cache()
         if archive:
-            (src_lists - self).write({'active': False})
+            (src_lists - self).action_archive()
 
     def close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
