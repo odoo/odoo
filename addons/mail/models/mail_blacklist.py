@@ -73,7 +73,7 @@ class MailBlackList(models.Model):
         normalized = tools.email_normalize(email)
         record = self.env["mail.blacklist"].with_context(active_test=False).search([('email', '=', normalized)])
         if len(record) > 0:
-            record.write({'active': True})
+            record.action_unarchive()
         else:
             record = self.create({'email': email})
         return record
@@ -89,7 +89,7 @@ class MailBlackList(models.Model):
         normalized = tools.email_normalize(email)
         record = self.env["mail.blacklist"].with_context(active_test=False).search([('email', '=', normalized)])
         if len(record) > 0:
-            record.write({'active': False})
+            record.action_archive()
         else:
             record = record.create({'email': email, 'active': False})
         return record
