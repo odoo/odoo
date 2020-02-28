@@ -1583,6 +1583,9 @@ options.registry.topMenuColor = options.registry.colorpicker.extend({
             params: ['header_overlay'],
             onSuccess: value => {
                 this.$el.toggleClass('d-none', !value);
+                if (!value) {
+                    this.$el.find('button.selected').removeClass('selected');
+                }
             },
         });
     },
