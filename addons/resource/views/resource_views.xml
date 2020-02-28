@@ -271,7 +271,7 @@
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="hours_per_day" widget="float_time"/>
+                            <field name="hours_per_day" widget="float_time" groups="base.group_no_one"/>
                             <field name="tz"/>
                         </group>
                     </group>
@@ -288,12 +288,23 @@
                         </page>
                         <page string="Global Time Off" name="global_leaves">
                             <field name="global_leave_ids">
-                                <tree editable="top">
+                                <tree name="global_leaves" editable="top">
                                     <field name="name"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                 </tree>
                             </field>
+                            <field name="is_company_default_calendar" invisible="1" />
+                            <div attrs="{'invisible': [('is_company_default_calendar', '=', True)]}" >
+                                <label for="company_global_leave_ids" string="Company Gobal Time Off"/>
+                                <field name="company_global_leave_ids" >
+                                    <tree name="company_global_leaves">
+                                        <field name="name"/>
+                                        <field name="date_from"/>
+                                        <field name="date_to"/>
+                                    </tree>
+                                </field>
+                            </div>
                         </page>
                     </notebook>
                 </sheet>
@@ -308,6 +319,7 @@
             <tree string="Working Time">
                 <field name="name" string="Working Time"/>
                 <field name="company_id" groups="base.group_multi_company"/>
+                <field name="is_company_default_calendar" string="Default Company Working Time" />
             </tree>
         </field>
     </record>
