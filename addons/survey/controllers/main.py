@@ -472,8 +472,7 @@ class Survey(http.Controller):
         if errors and not (answer_sudo.survey_time_limit_reached or answer_sudo.question_time_limit_reached):
             return {'error': 'validation', 'fields': errors}
 
-        if not answer_sudo.is_session_answer:  # Ignore conditional configurations during survey session.
-            answer_sudo._clear_inactive_conditional_answers()
+        answer_sudo._clear_inactive_conditional_answers()
 
         if answer_sudo.survey_time_limit_reached or survey_sudo.questions_layout == 'one_page':
             answer_sudo._mark_done()
