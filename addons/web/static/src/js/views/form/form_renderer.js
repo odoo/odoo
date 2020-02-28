@@ -220,7 +220,7 @@ var FormRenderer = BasicRenderer.extend({
             var $notebook = $(this);
             var name = $notebook.data('name');
             if (name in state.notebooks) {
-                var $page = $notebook.find('> ul > li').eq(state.notebooks[name]);
+                var $page = $notebook.find('> .o_notebook_headers > .nav-tabs > .nav-item').eq(state.notebooks[name]);
                 if (!$page.hasClass('o_invisible_modifier')) {
                     $page.find('a[data-toggle="tab"]').click();
                 }
