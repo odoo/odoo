@@ -486,8 +486,17 @@ class Lead(models.Model):
     # ------------------------------------------------------------
 
     def toggle_active(self):
+        """ When archiving: mark probability as 0. When re-activating
+        update probability again, for leads and opportunities. """
         res = super(Lead, self).toggle_active()
-        self.filtered(lambda lead: lead.active)._update_probability()
+        activated = self.filtered(lambda lead: lead.active)
+        archived = self.filtered(lambda lead: not lead.active)
+        if activated:
+            activated.write({'lost_reason': False})
+            activated._update_probability()
+        if archived:
+            archived.write({'probability': 0, 'automated_probability': 0})
+            archived._rebuild_pls_frequency_table_threshold()
         return res
 
     def _rebuild_pls_frequency_table_threshold(self):
@@ -506,12 +515,14 @@ class Lead(models.Model):
 
     def action_set_lost(self, **additional_values):
         """ Lost semantic: probability = 0 or active = False """
-        result = self.write({'active': False, 'probability': 0, 'automated_probability': 0, **additional_values})
-        self._rebuild_pls_frequency_table_threshold()
-        return result
+        res = self.action_archive()
+        if additional_values:
+            self.write(dict(additional_values))
+        return res
 
     def action_set_won(self):
         """ Won semantic: probability = 100 (active untouched) """
+        self.action_unarchive()
         for lead in self:
             stage_id = lead._stage_find(domain=[('is_won', '=', True)])
             lead.write({'stage_id': stage_id.id, 'probability': 100})
@@ -1039,12 +1050,14 @@ class Lead(models.Model):
         self.ensure_one()
         if 'stage_id' in init_values and self.probability == 100 and self.stage_id:
             return self.env.ref('crm.mt_lead_won')
-        elif 'lost_reason' in init_values:
+        elif 'lost_reason' in init_values and self.lost_reason:
             return self.env.ref('crm.mt_lead_lost')
         elif 'stage_id' in init_values:
             return self.env.ref('crm.mt_lead_stage')
         elif 'active' in init_values and self.active:
             return self.env.ref('crm.mt_lead_restored')
+        elif 'active' in init_values and not self.active:
+            return self.env.ref('crm.mt_lead_lost')
         return super(Lead, self)._track_subtype(init_values)
 
     def _notify_get_groups(self):
