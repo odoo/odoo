@@ -46,7 +46,7 @@
                             <field name="recipients" attrs="{'invisible': [['mode', '!=', 'chat']]}" widget="radio"/>
                             <field name="location_ids" widget="many2many_tags" required="1"/>
                             <field name="until"/>
-                            <field name="active"/>
+                            <field name="active" widget="boolean_toggle"/>
                         </group>
                         <group>
                             <field name="recurrency_monday"/>
