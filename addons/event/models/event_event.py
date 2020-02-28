@@ -44,8 +44,6 @@ class EventType(models.Model):
         help="Events and registrations will automatically be confirmed "
              "upon creation, easing the flow for simple events.")
     # location
-    is_online = fields.Boolean(
-        'Online Event', help='Online events like webinars do not require a specific location and are hosted online.')
     use_timezone = fields.Boolean('Use Default Timezone')
     default_timezone = fields.Selection(
         _tz_get, string='Timezone', default=lambda self: self.env.user.tz or 'UTC')
@@ -162,8 +160,9 @@ class EventEvent(models.Model):
         compute_sudo=True, readonly=True, compute='_compute_seats')
     # Registration fields
     auto_confirm = fields.Boolean(
-        string='Autoconfirm Registrations',
-        compute='_compute_from_event_type', copy=True, readonly=False, store=True)
+        string='Autoconfirmation',
+        compute='_compute_from_event_type', copy=True, readonly=False, store=True,
+        help = 'Autoconfirm Registrations. Registrations will automatically be confirmed upon creation.')
     registration_ids = fields.One2many('event.registration', 'event_id', string='Attendees')
     event_registrations_open = fields.Boolean('Registration open', compute='_compute_event_registrations_open')
     event_ticket_ids = fields.One2many(
@@ -181,13 +180,9 @@ class EventEvent(models.Model):
     is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
     start_sale_date = fields.Date('Start sale date', compute='_compute_start_sale_date')
     # Location and communication
-    is_online = fields.Boolean(
-        string='Online Event', compute='_compute_from_event_type',
-        copy=True, readonly=False, store=True)
     address_id = fields.Many2one(
-        'res.partner', string='Venue', compute='_compute_address_id',
-        copy=True, readonly=False, store=True, tracking=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
+        tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     country_id = fields.Many2one(
         'res.country', 'Country', related='address_id.country_id',
         copy=True, readonly=False, store=True)
@@ -301,14 +296,6 @@ class EventEvent(models.Model):
         for event in self:
             start_dates = [ticket.start_sale_date for ticket in event.event_ticket_ids if ticket.start_sale_date]
             event.start_sale_date = min(start_dates) if start_dates else False
-
-    @api.depends('is_online')
-    def _compute_address_id(self):
-        for event in self:
-            if event.is_online:
-                event.address_id = False
-            elif not event.address_id:
-                event.address_id = self.env.company.partner_id.id
 
     @api.depends('event_type_id')
     def _compute_date_tz(self):
