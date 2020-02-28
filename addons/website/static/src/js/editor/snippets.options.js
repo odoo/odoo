@@ -1508,9 +1508,10 @@ options.registry.anchor = options.Class.extend({
         clipboard.on('success', () => {
             const anchor = decodeURIComponent(this._getAnchorLink());
             this.displayNotification({
+              type: 'success',
               title: _t("Copied !"),
               message: _.str.sprintf(_t("The anchor has been copied to your clipboard.<br>Link: %s"), anchor),
-              buttons: [{text: _t("edit"), click: () => this.openAnchorDialog()}],
+              buttons: [{text: _t("Edit"), click: () => this.openAnchorDialog(), primary: true}],
             });
         });
 
@@ -1608,7 +1609,7 @@ options.registry.anchor = options.Class.extend({
             }
             this._setAnchorName(anchorName + n);
         }
-        return `#${this.$target[0].id}`;
+        return `${window.location.pathname}#${this.$target[0].id}`;
     },
     /**
      * Creates a safe id/anchor from text.
