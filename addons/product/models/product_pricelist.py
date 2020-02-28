@@ -186,6 +186,7 @@ class Pricelist(models.Model):
             # if Public user try to access standard price from website sale, need to call price_compute.
             # TDE SURPRISE: product can actually be a template
             price = product.price_compute('list_price')[product.id]
+            standard_price = product.price_compute('standard_price')[product.id]
 
             price_uom = self.env['uom.uom'].browse([qty_uom_id])
             for rule in items:
@@ -229,7 +230,6 @@ class Pricelist(models.Model):
                         price = (price - (price * (rule.percent_price / 100))) or 0.0
                     else:
                         # complete formula
-                        price_limit = price
                         price = (price - (price * (rule.price_discount / 100))) or 0.0
                         if rule.price_round:
                             price = tools.float_round(price, precision_rounding=rule.price_round)
@@ -239,12 +239,10 @@ class Pricelist(models.Model):
                             price += price_surcharge
 
                         if rule.price_min_margin:
-                            price_min_margin = convert_to_price_uom(rule.price_min_margin)
-                            price = max(price, price_limit + price_min_margin)
+                            price = max(price, standard_price + (standard_price * rule.price_min_margin))
 
                         if rule.price_max_margin:
-                            price_max_margin = convert_to_price_uom(rule.price_max_margin)
-                            price = min(price, price_limit + price_max_margin)
+                            price = min(price, standard_price + (standard_price * rule.price_max_margin))
                     suitable_rule = rule
                 break
             # Final price conversion into pricelist currency
@@ -435,10 +433,10 @@ class PricelistItem(models.Model):
              "To have prices that end in 9.99, set rounding 10, surcharge -0.01")
     price_min_margin = fields.Float(
         'Min. Price Margin', digits='Product Price',
-        help='Specify the minimum amount of margin over the base price.')
+        help='Specify the minimum percentage of margin based on cost.', widget='percentage')
     price_max_margin = fields.Float(
         'Max. Price Margin', digits='Product Price',
-        help='Specify the maximum amount of margin over the base price.')
+        help='Specify the maximum percentage of margin based on cost.', widget='percentage')
     company_id = fields.Many2one(
         'res.company', 'Company',
         readonly=True, related='pricelist_id.company_id', store=True)
@@ -473,7 +471,7 @@ class PricelistItem(models.Model):
 
     @api.constrains('price_min_margin', 'price_max_margin')
     def _check_margin(self):
-        if any(item.price_min_margin > item.price_max_margin for item in self):
+        if any(item.price_max_margin and item.price_min_margin > item.price_max_margin for item in self):
             raise ValidationError(_('The minimum margin should be lower than the maximum margin.'))
         return True
 
