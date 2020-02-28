@@ -503,9 +503,11 @@ var KanbanRenderer = BasicRenderer.extend({
         // - is a date or datetime since we group by month or
         // - is readonly (on the field attrs or in the view)
         var draggable = true;
+        var grouped_by_date = false;
         if (groupByFieldAttrs) {
             if (groupByFieldAttrs.type === "date" || groupByFieldAttrs.type === "datetime") {
                 draggable = false;
+                grouped_by_date = true;
             } else if (groupByFieldAttrs.readonly !== undefined) {
                 draggable = !(groupByFieldAttrs.readonly);
             }
@@ -523,6 +525,7 @@ var KanbanRenderer = BasicRenderer.extend({
             group_by_tooltip: groupByTooltip,
             groupedBy: groupByField,
             grouped_by_m2o: this.groupedByM2O,
+            grouped_by_date: grouped_by_date,
             relation: relation,
             quick_create: this.quickCreateEnabled && viewUtils.isQuickCreateEnabled(state),
         });
