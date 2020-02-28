@@ -89,7 +89,7 @@ $canceled-color: gray;
             border-radius: 3px;
         }
 
-        >.o_timesheet_plan_badge {
+        .o_timesheet_plan_badge {
             margin-bottom: 10px;
             > .badge {
                 border: none;
@@ -100,13 +100,15 @@ $canceled-color: gray;
             }
         }
 
-        .table {
-            margin-top:15px;
-        }
-        .table > thead > tr > th, .table > thead > tr > td,
+        .table > thead > tr > td,
         .table > tbody > tr > th, .table > tbody > tr > td {
             border: none;
             padding: 0px;
+        }
+
+        .table > thead > tr > th {
+            border: none;
+            padding-left: 0px;;
         }
     }
 

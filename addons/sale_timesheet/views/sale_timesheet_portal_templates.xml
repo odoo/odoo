@@ -36,7 +36,8 @@
                                     <th t-if="nr_projects &gt; 1">Project</th>
                                     <th t-if="nr_tasks &gt; 0">Task</th>
                                     <th>Description</th>
-                                    <th class="text-right">Duration</th>
+                                    <th t-if="timesheets[0]._is_timesheet_encode_uom_day()" class="text-right">Duration (days)</th>
+                                    <th t-else="" class="text-right">Duration (hours)</th>
                                   </tr>
                                 </thead>
                                 <tr t-foreach="timesheets" t-as="timesheet">
@@ -45,7 +46,10 @@
                                     <td t-if="nr_projects &gt; 1"><span t-field="timesheet.project_id"/></td>
                                     <td t-if="nr_tasks &gt; 0"><span t-field="timesheet.task_id"/></td>
                                     <td><t t-esc="timesheet.name"/></td>
-                                    <td class="text-right"><span t-field="timesheet.unit_amount" t-options='{"widget": "float_time"}'/></td>
+                                    <td class="text-right">
+                                        <span t-if="timesheet._is_timesheet_encode_uom_day()" t-esc="timesheet._get_timesheet_time_day()" t-options='{"widget": "timesheet_uom"}'/>
+                                        <span t-else="" t-field="timesheet.unit_amount" t-options='{"widget": "float_time"}'/>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
