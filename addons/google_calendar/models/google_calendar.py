@@ -12,6 +12,7 @@ import pytz
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, _
+from odoo.osv import expression
 from odoo.tools import exception_to_unicode
 
 _logger = logging.getLogger(__name__)
@@ -81,7 +82,7 @@ class SyncEvent(object):
                 self.OP = Delete((self.OE.status and "OE") or (self.GG.status and "GG"),
                                  'The event has been deleted from one side, we delete on other side !')
             #If event is not deleted !
-            elif self.OE.status and (self.GG.status or not is_owner):
+            elif self.OE.status and (self.GG.status or (not is_owner and self.GG.update)):
                 if abs(self.OE.update - self.GG.update) > timedelta(seconds=1):
                     if self.OE.update < self.GG.update:
                         tmpSrc = 'GG'
@@ -398,7 +399,17 @@ class GoogleCalendar(models.AbstractModel):
         url = "/calendar/v3/calendars/%s/events/%s?access_token=%s" % ('primary', instance_id, self.get_token())
         headers = {'Content-type': 'application/json'}
 
-        data.update(recurringEventId=event_ori_google_id, originalStartTime=event_new.recurrent_id_date, sequence=self.get_sequence(instance_id))
+        _originalStartTime = dict()
+        if event_new.allday:
+            _originalStartTime['date'] = event_new.recurrent_id_date.strftime("%Y-%m-%d")
+        else:
+            _originalStartTime['dateTime'] = event_new.recurrent_id_date.strftime("%Y-%m-%dT%H:%M:%S.%fz")
+
+        data.update(
+            recurringEventId=event_ori_google_id,
+            originalStartTime=_originalStartTime,
+            sequence=self.get_sequence(instance_id)
+        )
         data_json = json.dumps(data)
         return self.env['google.service']._do_request(url, data_json, headers, type='PUT')
 
@@ -442,11 +453,12 @@ class GoogleCalendar(models.AbstractModel):
                 if google_attendee.get('found'):
                     continue
 
-                attendee = ResPartner.search([('email', '=', google_attendee['email'])], limit=1)
+                attendee = ResPartner.search([('email', '=ilike', google_attendee['email']), ('user_ids', '!=', False)], limit=1)
+                if not attendee:
+                    attendee = ResPartner.search([('email', '=ilike', google_attendee['email'])], limit=1)
                 if not attendee:
                     data = {
                         'email': partner_email,
-                        'customer': False,
                         'name': google_attendee.get("displayName", False) or partner_email
                     }
                     attendee = ResPartner.create(data)
@@ -539,13 +551,21 @@ class GoogleCalendar(models.AbstractModel):
     @api.model
     def synchronize_events_cron(self):
         """ Call by the cron. """
-        users = self.env['res.users'].search([('google_calendar_last_sync_date', '!=', False)])
+        domain = [('google_calendar_last_sync_date', '!=', False)]
+        if self.env.context.get('last_sync_hours'):
+            last_sync_hours = self.env.context['last_sync_hours']
+            last_sync_date = datetime.now() - timedelta(hours=last_sync_hours)
+            domain = expression.AND([
+                domain,
+                [('google_calendar_last_sync_date', '<=', fields.Datetime.to_string(last_sync_date))]
+            ])
+        users = self.env['res.users'].search(domain, order='google_calendar_last_sync_date')
         _logger.info("Calendar Synchro - Started by cron")
 
         for user_to_sync in users.ids:
             _logger.info("Calendar Synchro - Starting synchronization for a new user [%s]", user_to_sync)
             try:
-                resp = self.sudo(user_to_sync).synchronize_events(lastSync=True)
+                resp = self.with_user(user_to_sync).synchronize_events(lastSync=True)
                 if resp.get("status") == "need_reset":
                     _logger.info("[%s] Calendar Synchro - Failed - NEED RESET  !", user_to_sync)
                 else:
@@ -559,7 +579,7 @@ class GoogleCalendar(models.AbstractModel):
         user_to_sync = self.ids and self.ids[0] or self.env.uid
         current_user = self.env['res.users'].sudo().browse(user_to_sync)
 
-        recs = self.sudo(user_to_sync)
+        recs = self.with_user(user_to_sync)
         status, current_google, ask_time = recs.get_calendar_primary_id()
         if current_user.google_calendar_cal_id:
             if current_google != current_user.google_calendar_cal_id:
@@ -664,8 +684,9 @@ class GoogleCalendar(models.AbstractModel):
                     else:
                         _logger.warning("Impossible to create event %s. [%s]", att.event_id.id, status)
                         _logger.debug("Response : %s", response)
-                except:
-                    pass
+                except Exception as e:
+                    _logger.warning("Exception when updating recurrent event exclusions on google: %s", e)
+
         return new_ids
 
     def update_events(self, lastSync=False):
@@ -818,10 +839,15 @@ class GoogleCalendar(models.AbstractModel):
                         recs.delete_an_event(current_event[0])
                     elif actSrc == 'GG':
                         new_google_event_id = event.GG.event['id'].rsplit('_', 1)[1]
+                        parent_oe = event_to_synchronize[base_event][0][1].OE.event
                         if 'T' in new_google_event_id:
                             new_google_event_id = new_google_event_id.replace('T', '')[:-1]
                         else:
-                            new_google_event_id = new_google_event_id + "000000"
+                            #allday event, need to match the changes that will be applied with _inverse_dates otherwise the exclusion will not occur
+                            if parent_oe:
+                                new_google_event_id = new_google_event_id + parent_oe.start.strftime("%H%M%S")
+                            else:
+                                new_google_event_id = new_google_event_id + "000000"
 
                         if event.GG.status:
                             parent_event = {}
@@ -835,9 +861,16 @@ class GoogleCalendar(models.AbstractModel):
                             else:
                                 recs.create_from_google(event, my_partner_id)
                         else:
-                            parent_oe_id = event_to_synchronize[base_event][0][1].OE.event_id
-                            if parent_oe_id:
-                                CalendarEvent.browse("%s-%s" % (parent_oe_id, new_google_event_id)).with_context(curr_attendee=event.OE.attendee_id).unlink(can_be_deleted=True)
+                            if parent_oe:
+                                CalendarEvent.browse("%s-%s" % (parent_oe.id, new_google_event_id)).with_context(curr_attendee=event.OE.attendee_id).unlink(can_be_deleted=True)
+                            else:
+                                main_att = CalendarAttendee.with_context(context_novirtual).search([('partner_id', '=', my_partner_id), ('google_internal_event_id', '=', event.GG.event['id'].rsplit('_', 1)[0])], limit=1)
+                                if main_att:
+                                    excluded_event_id = str(main_att.event_id.id) + '-' + new_google_event_id
+
+                                    CalendarEvent.browse(excluded_event_id).with_context(google_internal_event_id=event.GG.event.get('id'), oe_update_date=False).unlink(can_be_deleted=False)
+                                else:
+                                    _logger.warning("Could not create the correct exclusion for event")
 
                 elif isinstance(actToDo, Delete):
                     if actSrc == 'GG':

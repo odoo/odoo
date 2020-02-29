@@ -1,0 +1,26 @@
+.o-timer-button {
+    &:focus {
+        border: none !important;
+        outline: 0 !important;
+    }
+
+    & > i {
+        transition: 0.3s;
+
+        &.o-timer-play-button {
+            color: $link-color !important;
+        }
+
+        &.o-timer-stop-button {
+            color: $red !important;
+        }
+    }
+
+    &:hover > i.o-timer-play-button {
+        color: $link-hover-color !important;
+    }
+
+    &:hover > i.o-timer-stop-button {
+        color: darken($red, 15%) !important;
+    }
+}

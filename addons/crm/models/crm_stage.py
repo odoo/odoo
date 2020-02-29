@@ -34,20 +34,16 @@ class Stage(models.Model):
 
     name = fields.Char('Stage Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help="Used to order stages. Lower is better.")
-    probability = fields.Float('Probability (%)', required=True, default=10.0, help="This percentage depicts the default/average probability of the Case for this stage to be a success")
-    on_change = fields.Boolean('Change Probability Automatically', help="Setting this stage will change the probability automatically on the opportunity.")
+    is_won = fields.Boolean('Is Won Stage?')
     requirements = fields.Text('Requirements', help="Enter here the internal requirements for this stage (ex: Offer sent to customer). It will appear as a tooltip over the stage's name.")
     team_id = fields.Many2one('crm.team', string='Sales Team', ondelete='set null',
         help='Specific team that uses this stage. Other teams will not be able to see or use this stage.')
-    legend_priority = fields.Text('Priority Management Explanation', translate=True,
-        help='Explanation text to help users using the star and priority mechanism on stages or issues that are in this stage.')
     fold = fields.Boolean('Folded in Pipeline',
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
 
-    #This field for interface only
+    # This field for interface only
     team_count = fields.Integer('team_count', compute='_compute_team_count')
 
-    @api.multi
     def _compute_team_count(self):
         for stage in self:
             stage.team_count = self.env['crm.team'].search_count([])

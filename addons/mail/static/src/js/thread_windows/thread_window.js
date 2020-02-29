@@ -3,9 +3,12 @@ odoo.define('mail.ThreadWindow', function (require) {
 
 var AbstractThreadWindow = require('mail.AbstractThreadWindow');
 var BasicComposer = require('mail.composer.Basic');
+var ExtendedComposer = require('mail.composer.Extended');
 
+var config = require('web.config');
 var core = require('web.core');
 
+var QWeb = core.qweb;
 var _t = core._t;
 
 /**
@@ -63,25 +66,32 @@ var ThreadWindow = AbstractThreadWindow.extend({
         if (!this.hasThread()) {
             this._startWithoutThread();
         } else if (this.needsComposer()) {
-            var basicComposer = new BasicComposer(this, {
+            var composer;
+            var composerParams = {
                 mentionPartnersRestricted: this._thread.getType() !== 'document_thread',
-                isMini: true,
                 thread: this._thread,
-            });
-            basicComposer.on('post_message', this, this._postMessage);
-            basicComposer.once('input_focused', this, function () {
+            };
+            if (
+                config.device.isMobile &&
+                this._thread.isMassMailing()
+            ) {
+                composer = new ExtendedComposer(this, composerParams);
+            } else {
+                composer = new BasicComposer(this, _.extend({ isMini: true }, composerParams));
+            }
+            composer.on('post_message', this, this._postMessage);
+            composer.once('input_focused', this, function () {
                 var commands = this._thread.getCommands();
                 var partners = this._thread.getMentionPartnerSuggestions();
-                basicComposer.mentionSetCommands(commands);
-                basicComposer.mentionSetPrefetchedPartners(partners);
+                composer.mentionSetCommands(commands);
+                composer.mentionSetPrefetchedPartners(partners);
             });
-            composerDef = basicComposer.replace(this.$('.o_thread_composer'));
+            composerDef = composer.replace(this.$('.o_thread_composer'));
             composerDef.then(function () {
                 self.$input = self.$('.o_composer_text_field');
             });
         }
-
-        return $.when(superDef, composerDef);
+        return Promise.all([superDef, composerDef]);
     },
 
     //--------------------------------------------------------------------------
@@ -127,29 +137,27 @@ var ThreadWindow = AbstractThreadWindow.extend({
         return this._passive;
     },
     /**
-     * States whether the input of the thread window should be displayed or not.
-     * This is based on the type of the thread:
-     *
-     * Do not display the input in the following cases:
-     *
-     * - no thread related to this window
-     * - window of a mailbox (temp: let us have mailboxes in window mode)
-     * - window of a thread with mass mailing
-     *
-     * Any other threads show the input in the window.
-     *
-     * @override
-     * @returns {boolean}
-     */
-    needsComposer: function () {
-        return this._super() && !this._thread.isMassMailing();
-    },
-    /**
      * Turn the thread window in active mode, so that when the bottom of the
      * thread is visible, it is automatically marked as read.
      */
     removePassive: function () {
         this._passive = false;
+    },
+    renderOutOfOffice: function () {
+        var $outOfOffice = this.$('.o_out_of_office');
+        const thread = this.getThread();
+        if (!thread.hasOutOfOffice()) {
+            if ($outOfOffice.length) {
+                $outOfOffice.remove();
+            }
+            return;
+        }
+        const $newOutOfOffice = $(QWeb.render('mail.thread.OutOfOffice', { thread }));
+        if ($outOfOffice.length) {
+            $outOfOffice.replaceWith($newOutOfOffice);
+        } else {
+            $newOutOfOffice.insertAfter(this.$('.o_thread_window_header'));
+        }
     },
     /**
      * Update this thread window
@@ -236,9 +244,10 @@ var ThreadWindow = AbstractThreadWindow.extend({
         this.$el.addClass('o_thread_less');
         this.$('.o_thread_search_input input')
             .autocomplete({
+                autoFocus: true,
                 source: function (request, response) {
                     self.call('mail_service', 'searchPartner', request.term, 10)
-                        .done(response);
+                        .then(response);
                 },
                 select: function (event, ui) {
                     // remember partner ID so that we can replace this window
@@ -280,8 +289,10 @@ var ThreadWindow = AbstractThreadWindow.extend({
                 clear_breadcrumbs: false,
                 active_id: this.hasThread() ? this._getThreadID() : undefined,
                 on_reverse_breadcrumb: function () {
-                    self.call('mail_service', 'getMailBus')
-                        .trigger('discuss_open', false);
+                    var mailBus = self.call('mail_service', 'getMailBus');
+                    if (mailBus) {
+                        mailBus.trigger('discuss_open', false);
+                    }
                 },
             });
         }
@@ -315,10 +326,12 @@ var ThreadWindow = AbstractThreadWindow.extend({
      * @param {integer} channelID
      */
     _onRedirectToChannel: function (channelID) {
+        var self = this;
         var thread = this.call('mail_service', 'getThread', channelID);
         if (!thread) {
             this.call('mail_service', 'joinChannel', channelID)
-                .then(function (channel) {
+                .then(function (channelID) {
+                    var channel = self.call('mail_service', 'getThread', channelID);
                     channel.detach();
                 });
         } else {
@@ -375,6 +388,9 @@ var ThreadWindow = AbstractThreadWindow.extend({
      * @param {integer} channelID
      */
     _onUpdateChannel: function (channelID) {
+        if (!this.hasThread()) {
+            return;
+        }
         if (this._thread.getID() !== channelID) {
             return;
         }

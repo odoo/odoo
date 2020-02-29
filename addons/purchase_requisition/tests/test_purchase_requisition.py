@@ -11,13 +11,13 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertTrue(self.user_purchase_requisition_user, 'User Should be created')
 
     def test_01_cancel_purchase_requisition(self):
-        self.requisition1.sudo(self.user_purchase_requisition_user.id).action_cancel()
+        self.requisition1.with_user(self.user_purchase_requisition_user).action_cancel()
         # Check requisition after cancelled.
         self.assertEqual(self.requisition1.state, 'cancel', 'Requisition should be in cancelled state.')
         # I reset requisition as "New".
-        self.requisition1.sudo(self.user_purchase_requisition_user.id).action_draft()
+        self.requisition1.with_user(self.user_purchase_requisition_user).action_draft()
         # I duplicate requisition.
-        self.requisition1.sudo(self.user_purchase_requisition_user.id).copy()
+        self.requisition1.with_user(self.user_purchase_requisition_user).copy()
 
 
     def test_02_purchase_requisition(self):

@@ -13,7 +13,11 @@ David Tran david.tran@tvtmarine.com https://github.com/tvtma/
 List of contributors:
 
 David Tran david.tran@tvtmarine.com https://github.com/davidtranhp
-Long Do long.do@tvtmarine.com https://github.com/hoanglong87
+Phong Dao phong.dao@tvtmarine.com https://github.com/phongdao
 Hao Hoang hao.hoang@ma.tvtmarine.com https://github.com/hoanghao2001
 Tommy Tran tu.tran@tvtmarine.com https://github.com/tutran81
-Emily Ha emily.ha@tvtmarine.com https://github.com/emilyha
+Trinh Anh Ngoc ngoc.trinh@tvtmarine.com https://github.com/trinhanhngoc
+Bui Hoang Ha habh.hpit@gmail.com https://github.com/hoanghavb
+
+(up to 2019-07-14)
+Long Do long.do@tvtmarine.com https://github.com/hoanglong87

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+
 from collections import Counter
 from contextlib import contextmanager
 from functools import partial
@@ -10,10 +12,9 @@ from odoo.tests import common, new_test_user
 survey_new_test_user = partial(new_test_user, context={'mail_create_nolog': True, 'mail_create_nosubscribe': True, 'mail_notrack': True, 'no_reset_password': True})
 
 
-class SurveyCase(common.SavepointCase):
-
+class TestSurveyCommon(common.SavepointCase):
     def setUp(self):
-        super(SurveyCase, self).setUp()
+        super(TestSurveyCommon, self).setUp()
 
         """ Some custom stuff to make the matching between questions and answers
           :param dict _type_match: dict
@@ -21,13 +22,13 @@ class SurveyCase(common.SavepointCase):
             value: (answer type, answer field_name)
         """
         self._type_match = {
-            'free_text': ('free_text', 'value_free_text'),
-            'textbox': ('text', 'value_text'),
-            'numerical_box': ('number', 'value_number'),
+            'text_box': ('text_box', 'value_text_box'),
+            'char_box': ('char_box', 'value_char_box'),
+            'numerical_box': ('numerical_box', 'value_numerical_box'),
             'date': ('date', 'value_date'),
-            'simple_choice': ('suggestion', 'value_suggested'),  # TDE: still unclear
-            'multiple_choice': ('suggestion', 'value_suggested'),  # TDE: still unclear
-            'matrix': ('suggestion', ('value_suggested', 'value_suggested_row')),  # TDE: still unclear
+            'simple_choice': ('suggestion', 'suggested_answer_id'),  # TDE: still unclear
+            'multiple_choice': ('suggestion', 'suggested_answer_id'),  # TDE: still unclear
+            'matrix': ('suggestion', ('suggested_answer_id', 'matrix_row_id')),  # TDE: still unclear
         }
 
         """ Create test data: a survey with some pre-defined questions and various test users for ACL """
@@ -43,7 +44,7 @@ class SurveyCase(common.SavepointCase):
 
         self.user_emp = survey_new_test_user(
             self.env, name='Eglantine Employee', login='user_emp', email='employee@example.com',
-            groups='base.group_user'
+            groups='base.group_user', password='user_emp'
         )
 
         self.user_portal = survey_new_test_user(
@@ -59,33 +60,37 @@ class SurveyCase(common.SavepointCase):
         self.customer = self.env['res.partner'].create({
             'name': 'Caroline Customer',
             'email': 'customer@example.com',
-            'customer': True,
         })
 
-        self.survey = self.env['survey.survey'].sudo(self.survey_manager).create({
+        self.survey = self.env['survey.survey'].with_user(self.survey_manager).create({
             'title': 'Test Survey',
             'access_mode': 'public',
             'users_login_required': True,
             'users_can_go_back': False,
+            'state': 'open',
         })
-        self.page_0 = self.env['survey.page'].sudo(self.survey_manager).create({
+        self.page_0 = self.env['survey.question'].with_user(self.survey_manager).create({
             'title': 'First page',
             'survey_id': self.survey.id,
+            'sequence': 1,
+            'is_page': True,
         })
-        self.question_ft = self.env['survey.question'].sudo(self.survey_manager).create({
-            'question': 'Test Free Text',
-            'page_id': self.page_0.id,
-            'question_type': 'free_text',
+        self.question_ft = self.env['survey.question'].with_user(self.survey_manager).create({
+            'title': 'Test Free Text',
+            'survey_id': self.survey.id,
+            'sequence': 2,
+            'question_type': 'text_box',
         })
-        self.question_num = self.env['survey.question'].sudo(self.survey_manager).create({
-            'question': 'Test NUmerical Box',
-            'page_id': self.page_0.id,
+        self.question_num = self.env['survey.question'].with_user(self.survey_manager).create({
+            'title': 'Test NUmerical Box',
+            'survey_id': self.survey.id,
+            'sequence': 3,
             'question_type': 'numerical_box',
         })
 
     @contextmanager
-    def sudo(self, user):
-        """ Quick sudo environment """
+    def with_user(self, user):
+        """ Quick with_user environment """
         old_uid = self.uid
         try:
             self.uid = user.id
@@ -132,7 +137,10 @@ class SurveyCase(common.SavepointCase):
             else:
                 [value] = user_input['value']
                 answer_fname = self._type_match[question.question_type][1]
-                self.assertEqual(getattr(answer_lines, answer_fname), value)
+                if question.question_type == 'numerical_box':
+                    self.assertEqual(getattr(answer_lines, answer_fname), float(value))
+                else:
+                    self.assertEqual(getattr(answer_lines, answer_fname), value)
 
     def assertResponse(self, response, status_code, text_bits=None):
         self.assertEqual(response.status_code, status_code)
@@ -142,26 +150,34 @@ class SurveyCase(common.SavepointCase):
     def _add_question(self, page, name, qtype, **kwargs):
         constr_mandatory = kwargs.pop('constr_mandatory', True)
         constr_error_msg = kwargs.pop('constr_error_msg', 'TestError')
+
+        sequence = kwargs.pop('sequence', False)
+        if not sequence:
+            sequence = page.question_ids[-1].sequence + 1 if page.question_ids else page.sequence + 1
+
         base_qvalues = {
-            'page_id': page.id,
-            'question': name,
+            'sequence': sequence,
+            'title': name,
             'question_type': qtype,
             'constr_mandatory': constr_mandatory,
             'constr_error_msg': constr_error_msg,
         }
         if qtype in ('simple_choice', 'multiple_choice'):
-            base_qvalues['labels_ids'] = [
-                (0, 0, {'value': label['value'], 'quizz_mark': label.get('quizz_mark', 0)})
-                for label in kwargs.pop('labels')
+            base_qvalues['suggested_answer_ids'] = [
+                (0, 0, {
+                    'value': label['value'],
+                    'answer_score': label.get('answer_score', 0),
+                    'is_correct': label.get('is_correct', False)
+                }) for label in kwargs.pop('labels')
             ]
         elif qtype == 'matrix':
             base_qvalues['matrix_subtype'] = kwargs.pop('matrix_subtype', 'simple')
-            base_qvalues['labels_ids'] = [
-                (0, 0, {'value': label['value'], 'quizz_mark': label.get('quizz_mark', 0)})
+            base_qvalues['suggested_answer_ids'] = [
+                (0, 0, {'value': label['value'], 'answer_score': label.get('answer_score', 0)})
                 for label in kwargs.pop('labels')
             ]
-            base_qvalues['labels_ids_2'] = [
-                (0, 0, {'value': label['value'], 'quizz_mark': label.get('quizz_mark', 0)})
+            base_qvalues['matrix_row_ids'] = [
+                (0, 0, {'value': label['value'], 'answer_score': label.get('answer_score', 0)})
                 for label in kwargs.pop('labels_2')
             ]
         else:
@@ -175,7 +191,6 @@ class SurveyCase(common.SavepointCase):
             'survey_id': survey.id,
             'partner_id': partner.id if partner else False,
             'email': kwargs.pop('email', False),
-            'input_type': 'manually',
         }
         base_avals.update(kwargs)
         return self.env['survey.user_input'].create(base_avals)
@@ -193,4 +208,41 @@ class SurveyCase(common.SavepointCase):
         }
         base_alvals[answer_fname] = answer_value
         base_alvals.update(kwargs)
-        return self.env['survey.user_input_line'].create(base_alvals)
+        return self.env['survey.user_input.line'].create(base_alvals)
+
+    def _access_start(self, survey):
+        return self.url_open('/survey/start/%s' % survey.access_token)
+
+    def _access_page(self, survey, token):
+        return self.url_open('/survey/%s/%s' % (survey.access_token, token))
+
+    def _access_begin(self, survey, token):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        url = base_url + '/survey/begin/%s/%s' % (survey.access_token, token)
+        return self.opener.post(url=url, json={})
+
+    def _access_submit(self, survey, token, post_data):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        url = base_url + '/survey/submit/%s/%s' % (survey.access_token, token)
+        return self.opener.post(url=url, json={'params': post_data})
+
+    def _find_csrf_token(self, text):
+        csrf_token_re = re.compile("(input.+csrf_token.+value=\")([_a-zA-Z0-9]{51})", re.MULTILINE)
+        return csrf_token_re.search(text).groups()[1]
+
+    def _prepare_post_data(self, question, answers, post_data):
+        values = answers if isinstance(answers, list) else [answers]
+        if question.question_type == 'multiple_choice':
+            for value in values:
+                value = str(value)
+                if question.id in post_data:
+                    if isinstance(post_data[question.id], list):
+                        post_data[question.id].append(value)
+                    else:
+                        post_data[question.id] = [post_data[question.id], value]
+                else:
+                    post_data[question.id] = value
+        else:
+            [values] = values
+            post_data[question.id] = str(values)
+        return post_data

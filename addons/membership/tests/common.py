@@ -3,10 +3,10 @@
 import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.common import AccountTestCommon
 
 
-class TestMembershipCommon(AccountingTestCase):
+class TestMembershipCommon(AccountTestCommon):
 
     def setUp(self):
         super(TestMembershipCommon, self).setUp()

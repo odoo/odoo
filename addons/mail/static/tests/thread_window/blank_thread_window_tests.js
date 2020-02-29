@@ -53,8 +53,8 @@ QUnit.module('Blank', {
          * functions end.
          *
          * @param {Object} params
-         * @param {$.Deferred} params.selectDef
-         * @param {$.Deferred} params.sourceDef
+         * @param {Promise} params.selectDef
+         * @param {Promise} params.sourceDef
          */
         this.patchAutocomplete = function (params) {
             var selectDef = params.selectDef;
@@ -87,7 +87,7 @@ QUnit.module('Blank', {
     },
 });
 
-QUnit.test('basic rendering blank thread window', function (assert) {
+QUnit.test('basic rendering blank thread window', async function (assert) {
     assert.expect(5);
 
     var parent = this.createParent({
@@ -97,7 +97,7 @@ QUnit.test('basic rendering blank thread window', function (assert) {
 
     // open blank thread window
     parent.call('mail_service', 'openBlankThreadWindow');
-
+    await testUtils.nextMicrotaskTick();
     assert.strictEqual($('.o_thread_window').length, 1,
         "should have a thread window open");
     assert.strictEqual($('.o_thread_window_title').text().trim(),
@@ -114,7 +114,7 @@ QUnit.test('basic rendering blank thread window', function (assert) {
     parent.destroy();
 });
 
-QUnit.test('close blank thread window', function (assert) {
+QUnit.test('close blank thread window', async function (assert) {
     assert.expect(1);
 
     var parent = this.createParent({
@@ -124,8 +124,9 @@ QUnit.test('close blank thread window', function (assert) {
 
     // open blank thread window
     parent.call('mail_service', 'openBlankThreadWindow');
+    await testUtils.nextMicrotaskTick();
 
-    testUtils.dom.click($('.o_thread_window_close'));
+    await testUtils.dom.click($('.o_thread_window_close'));
 
     assert.strictEqual($('.o_thread_window').length, 0,
         "blank thread window should be closed");
@@ -133,10 +134,10 @@ QUnit.test('close blank thread window', function (assert) {
     parent.destroy();
 });
 
-QUnit.test('fold blank thread window', function (assert) {
+QUnit.test('fold blank thread window', async function (assert) {
     // This test requires full height of thread windows when they are open.
     // (e.g. 400px)
-    assert.expect(2);
+    assert.expect(3);
 
     var parent = this.createParent({
         data: this.data,
@@ -153,34 +154,37 @@ QUnit.test('fold blank thread window', function (assert) {
 
     // Open blank thread window
     parent.call('mail_service', 'openBlankThreadWindow');
+    await testUtils.nextTick();
+
+    assert.containsOnce(document.body, '.o_thread_window');
     assert.strictEqual($('.o_thread_window').css('height'), HEIGHT_OPEN,
         "blank thread window should be open");
     if ($('.o_thread_window').css('height') !== HEIGHT_OPEN) {
         console.warn('Assertion above may fail due to too narrow height of browser');
     }
 
-    testUtils.dom.click($('.o_thread_window_title'));
+    await testUtils.dom.click($('.o_thread_window_title'));
     assert.strictEqual($('.o_thread_window').css('height'), HEIGHT_FOLDED,
-        "blank thread window should be open");
+        "blank thread window should be folded");
 
     parent.destroy();
     testUtils.mock.unpatch(AbstractThreadWindow);
 });
 
-QUnit.test('open new DM chat from blank thread window', function (assert) {
+QUnit.test('open new DM chat from blank thread window', async function (assert) {
     assert.expect(6);
     var done = assert.async();
 
     var self = this;
-    var selectDef = $.Deferred();
-    var sourceDef = $.Deferred();
+    var selectDef = testUtils.makeTestPromise();
+    var sourceDef = testUtils.makeTestPromise();
 
     this.patchAutocomplete({
         selectDef: selectDef,
         sourceDef: sourceDef,
     });
 
-    var def = $.Deferred();
+    var def = testUtils.makeTestPromise();
 
     this.data['res.partner'] = {
         fields: {},
@@ -193,13 +197,13 @@ QUnit.test('open new DM chat from blank thread window', function (assert) {
         mockRPC: function (route, args) {
             if (args.method === 'im_search') {
                 def.resolve();
-                return $.when([
+                return Promise.resolve([
                     { id: 1, name: 'DemoUser1' },
                     { id: 2, name: 'DemoUser2', }
                 ]);
             }
             if (args.method === 'channel_get_and_minimize') {
-                return $.when({
+                return Promise.resolve({
                     channel_type: 'chat',
                     direct_partner: [{ id: args.args[0][0], name: 'DemoUser1', im_status: '' }],
                     id: 50,
@@ -213,19 +217,20 @@ QUnit.test('open new DM chat from blank thread window', function (assert) {
 
     // open blank thread window
     parent.call('mail_service', 'openBlankThreadWindow');
+    await testUtils.nextMicrotaskTick();
+    await testUtils.fields.editAndTrigger($('.o_thread_search_input input'), 'D', 'keydown');
+    await testUtils.nextTick();
+    await Promise.all([sourceDef, def]);
+    await testUtils.nextTick();
+    assert.strictEqual($('.ui-menu-item a').length, 2,
+        "should suggest 2 partners for DM");
+    assert.strictEqual($('.ui-menu-item a').eq(0).text(), "DemoUser1",
+        "first suggestion should be 'DemoUser1'");
+    assert.strictEqual($('.ui-menu-item a').eq(1).text(), "DemoUser2",
+        "second suggestion should be 'DemoUser2'");
 
-    $('.o_thread_search_input input').val("D").trigger('keydown');
-
-    $.when(sourceDef, def).then(function () {
-        assert.strictEqual($('.ui-menu-item a').length, 2,
-            "should suggest 2 partners for DM");
-        assert.strictEqual($('.ui-menu-item a').eq(0).text(), "DemoUser1",
-            "first suggestion should be 'DemoUser1'");
-        assert.strictEqual($('.ui-menu-item a').eq(1).text(), "DemoUser2",
-            "second suggestion should be 'DemoUser2'");
-
-        testUtils.dom.click($('.ui-menu-item a').eq(0));
-    });
+    await testUtils.dom.clickFirst($('.ui-menu-item a'),{allowInvisible:true});
+    await testUtils.nextTick();
     selectDef.then(function () {
         assert.strictEqual($('.o_thread_window').length, 1,
             "should be a single window");
@@ -240,22 +245,22 @@ QUnit.test('open new DM chat from blank thread window', function (assert) {
     });
 });
 
-QUnit.test('open already detached DM chat from blank thread window', function (assert) {
+QUnit.test('open already detached DM chat from blank thread window', async function (assert) {
     // when opening an already detach DM chat from the blank thread window,
     // the blank thread window should disappear
     assert.expect(6);
     var done = assert.async();
 
     var self = this;
-    var selectDef = $.Deferred();
-    var sourceDef = $.Deferred();
+    var selectDef = testUtils.makeTestPromise();
+    var sourceDef = testUtils.makeTestPromise();
 
     this.patchAutocomplete({
         selectDef: selectDef,
         sourceDef: sourceDef,
     });
 
-    var def = $.Deferred();
+    var def = testUtils.makeTestPromise();
 
     this.data['res.partner'] = {
         fields: {},
@@ -275,7 +280,7 @@ QUnit.test('open already detached DM chat from blank thread window', function (a
         mockRPC: function (route, args) {
             if (args.method === 'im_search') {
                 def.resolve();
-                return $.when([
+                return Promise.resolve([
                     { id: 1, name: 'DemoUser1' },
                 ]);
             }
@@ -283,6 +288,7 @@ QUnit.test('open already detached DM chat from blank thread window', function (a
         },
     });
 
+    await testUtils.nextTick();
     assert.strictEqual($('.o_thread_window').length, 1,
         "should be a single window");
     assert.strictEqual($('.o_thread_window_title').text().trim(), "DemoUser1",
@@ -292,15 +298,16 @@ QUnit.test('open already detached DM chat from blank thread window', function (a
 
     // open blank thread window
     parent.call('mail_service', 'openBlankThreadWindow');
-
+    await testUtils.nextMicrotaskTick();
     assert.strictEqual($('.o_thread_window').length, 2,
         "should have two thread windows open");
+    await testUtils.fields.editAndTrigger($('.o_thread_search_input input'), 'D', 'keydown');
 
-    $('.o_thread_search_input input').val("D").trigger('keydown');
 
-    $.when(sourceDef, def).then(function () {
-        testUtils.dom.click($('.ui-menu-item a').eq(0));
-    });
+    await Promise.all([sourceDef, def]);
+    await testUtils.nextTick();
+    await testUtils.dom.click($('.ui-menu-item a'),{allowInvisible:true});
+    await testUtils.nextTick();
     selectDef.then(function () {
         assert.strictEqual($('.o_thread_window').length, 1,
             "should now have a single thread window open");

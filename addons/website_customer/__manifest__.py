@@ -3,7 +3,7 @@
 
 {
     'name': 'Customer References',
-    'category': 'Website',
+    'category': 'Website/Website',
     'summary': 'Publish your customer references',
     'version': '1.0',
     'description': """

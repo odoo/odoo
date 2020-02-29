@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-extend="slides.course.unsubscribe.modal.leave">
+        <t t-jquery="p" t-operation="after">
+            <t t-if="widget.enroll === 'payment'">
+                <p class="alert alert-warning">
+                    <i class="fa fa-exclamation-triangle fa-3x float-left mr-3"></i>
+                    This course is paid.<br/>
+                    Leaving the course and re-enrolling afterwards means that you'll be charged again.
+                </p>
+            </t>
+        </t>
+    </t>
+
+</templates>

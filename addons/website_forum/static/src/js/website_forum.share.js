@@ -2,24 +2,24 @@ odoo.define('website_forum.share', function (require) {
 'use strict';
 
 var core = require('web.core');
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
 var qweb = core.qweb;
 
 // FIXME There is no reason to inherit from socialShare here
-var ForumShare = sAnimations.registry.socialShare.extend({
+var ForumShare = publicWidget.registry.socialShare.extend({
     selector: '',
-    xmlDependencies: sAnimations.registry.socialShare.prototype.xmlDependencies
+    xmlDependencies: publicWidget.registry.socialShare.prototype.xmlDependencies
         .concat(['/website_forum/static/src/xml/website_forum_share_templates.xml']),
-    read_events: {},
+    events: {},
 
     /**
      * @override
      * @param {Object} parent
-     * @param {boolean} editableMode
+     * @param {Object} options
      * @param {string} targetType
      */
-    init: function (parent, editableMode, targetType) {
+    init: function (parent, options, targetType) {
         this._super.apply(this, arguments);
         this.targetType = targetType;
     },
@@ -47,12 +47,17 @@ var ForumShare = sAnimations.registry.socialShare.extend({
      * @private
      */
     _render: function () {
+        var $question = this.$('article.question');
         if (!this.targetType) {
             this._super.apply(this, arguments);
         } else if (this.targetType === 'social-alert') {
-            $('.row .question').before(qweb.render('website.social_alert', {medias: this.socialList}));
+            $question.before(qweb.render('website.social_alert', {medias: this.socialList}));
         } else {
-            $('body').append(qweb.render('website.social_modal', {medias: this.socialList, target_type: this.targetType}));
+            $('body').append(qweb.render('website.social_modal', {
+                medias: this.socialList,
+                target_type: this.targetType,
+                state: $question.data('state'),
+            }));
             $('#oe_social_share_modal').modal('show');
         }
     },
@@ -69,9 +74,9 @@ var ForumShare = sAnimations.registry.socialShare.extend({
     },
 });
 
-sAnimations.registry.websiteForumShare = sAnimations.Class.extend({
+publicWidget.registry.websiteForumShare = publicWidget.Widget.extend({
     selector: '.website_forum',
-    read_events: {
+    events: {
         'click :not(.karma_required).oe_social_share_call': '_onShareCallClick',
     },
 

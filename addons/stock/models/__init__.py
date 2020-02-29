@@ -10,11 +10,11 @@ from . import stock_inventory
 from . import stock_location
 from . import stock_move
 from . import stock_move_line
+from . import stock_orderpoint
 from . import stock_production_lot
 from . import stock_picking
 from . import stock_quant
 from . import stock_rule
-from . import stock_traceability
 from . import stock_warehouse
 from . import stock_scrap
 from . import product

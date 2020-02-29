@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
+    <data>
+
         <!-- Chart template for Taxes -->
         <record id="tax_0_sale" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -11,9 +12,31 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
             <field eval="0" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_V_EXENTA')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('account_tax_report_2A3_ingrs_local_vnts')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_2A3_ingrs_local_vnts')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
         </record>
+
         <record id="tax_0_purch" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">10</field>
@@ -23,9 +46,29 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field eval="0" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_C_EXENTA')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
         </record>
+
         <record id="tax_18_sale" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">1</field>
@@ -34,12 +77,36 @@
             <field name="amount">18</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
-            <field name="account_id" ref="do_niif_21030102"/>
-            <field name="refund_account_id" ref="do_niif_21030102"/>
             <field eval="0" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_V_ITBIS_18')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('account_tax_report_2b6_grvd')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030102'),
+                    'plus_report_line_ids': [ref('account_tax_report_itbs_18_casilla')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_2b6_grvd')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030102'),
+                    'minus_report_line_ids': [ref('account_tax_report_itbs_18_casilla')],
+                }),
+            ]"/>
         </record>
+
         <record id="tax_18_sale_incl" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">2</field>
@@ -48,12 +115,36 @@
             <field name="amount">18</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
-            <field name="account_id" ref="do_niif_21030102"/>
-            <field name="refund_account_id" ref="do_niif_21030102"/>
             <field eval="1" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_V_ITBIS_18')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('account_tax_report_2b6_grvd')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030102'),
+                    'plus_report_line_ids': [ref('account_tax_report_itbs_18_casilla')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_2b6_grvd')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030102'),
+                    'minus_report_line_ids': [ref('account_tax_report_itbs_18_casilla')],
+                }),
+            ]"/>
         </record>
+
         <record id="tax_tip_sale" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">3</field>
@@ -62,11 +153,32 @@
             <field name="amount">10</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
-            <field name="account_id" ref="do_niif_21030503"/>
-            <field name="refund_account_id" ref="do_niif_21030503"/>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="tax_group_tip"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030503'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030503'),
+                }),
+            ]"/>
         </record>
+
         <record id="tax_18_purch" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="name">18% ITBIS Compras</field>
@@ -75,12 +187,34 @@
             <field name="amount">18</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_11080101"/>
-            <field name="refund_account_id" ref="do_niif_11080101"/>
             <field eval="0" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_C_ITBIS_18')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080101'),
+                    'plus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080101'),
+                    'minus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
+                }),
+            ]"/>
         </record>
+
         <record id="tax_18_purch_incl" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">12</field>
@@ -89,12 +223,34 @@
             <field name="amount">18</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_11080101"/>
-            <field name="refund_account_id" ref="do_niif_11080101"/>
             <field eval="1" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_C_ITBIS_18_Incluido')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080101'),
+                    'plus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080101'),
+                    'minus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
+                }),
+            ]"/>
         </record>
+
         <record id="tax_16_purch" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="name">16% ITBIS Compras</field>
@@ -103,11 +259,32 @@
             <field name="amount">16</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_11080101"/>
-            <field name="refund_account_id" ref="do_niif_11080101"/>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080101'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080101'),
+                }),
+            ]"/>
         </record>
+
         <record id="tax_16_purch_incl" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="name">16% ITBIS Incl. Compras</field>
@@ -116,11 +293,32 @@
             <field name="amount">16</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_11080101"/>
-            <field name="refund_account_id" ref="do_niif_11080101"/>
             <field eval="1" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080101'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080101'),
+                }),
+            ]"/>
         </record>
+
         <record id="tax_9_purch" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="name">9% ITBIS Compras</field>
@@ -129,11 +327,32 @@
             <field name="amount">9</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_11080101"/>
-            <field name="refund_account_id" ref="do_niif_11080101"/>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080101'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080101'),
+                }),
+            ]"/>
         </record>
+
         <record id="tax_9_purch_incl" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="name">9% ITBIS Incl. Compras</field>
@@ -142,11 +361,32 @@
             <field name="amount">9</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_11080101"/>
-            <field name="refund_account_id" ref="do_niif_11080101"/>
             <field eval="1" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080101'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080101'),
+                }),
+            ]"/>
         </record>
+
         <record id="tax_8_purch" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="name">8% ITBIS Compras</field>
@@ -155,11 +395,32 @@
             <field name="amount">8</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_11080101"/>
-            <field name="refund_account_id" ref="do_niif_11080101"/>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080101'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080101'),
+                }),
+            ]"/>
         </record>
+
         <record id="tax_8_purch_incl" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="name">8% ITBIS Incl. Compras</field>
@@ -168,11 +429,32 @@
             <field name="amount">8</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_11080101"/>
-            <field name="refund_account_id" ref="do_niif_11080101"/>
             <field eval="1" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080101'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080101'),
+                }),
+            ]"/>
         </record>
+
         <record id="tax_tip_purch" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">19</field>
@@ -181,11 +463,32 @@
             <field name="amount">10</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_52080900"/>
-            <field name="refund_account_id" ref="do_niif_52080900"/>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="tax_group_tip"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_52080900'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_52080900'),
+                }),
+            ]"/>
         </record>
+
         <record id="tax_18_purch_serv" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">20</field>
@@ -194,12 +497,34 @@
             <field name="amount">18</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_11080102"/>
-            <field name="refund_account_id" ref="do_niif_11080102"/>
             <field eval="0" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_C_ITBIS_18')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080102'),
+                    'plus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080102'),
+                    'minus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
+                }),
+            ]"/>
         </record>
+
         <record id="tax_18_purch_serv_incl" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">20</field>
@@ -208,12 +533,34 @@
             <field name="amount">18</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_11080102"/>
-            <field name="refund_account_id" ref="do_niif_11080102"/>
             <field eval="1" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_C_ITBIS_18_Incluido')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080102'),
+                    'plus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080102'),
+                    'minus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
+                }),
+            ]"/>
         </record>
+
         <record id="tax_18_importation" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">20</field>
@@ -222,12 +569,34 @@
             <field name="amount">18</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_11080103"/>
-            <field name="refund_account_id" ref="do_niif_11080103"/>
             <field eval="0" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_IMP_ITBIS_18')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080103'),
+                    'plus_report_line_ids': [ref('account_tax_report_itbs_pgdo_imptcn')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080103'),
+                    'minus_report_line_ids': [ref('account_tax_report_itbs_pgdo_imptcn')],
+                }),
+            ]"/>
         </record>
+
         <record id="tax_18_of_10" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">20</field>
@@ -236,11 +605,32 @@
             <field name="amount">1.8</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
-            <field name="account_id" ref="do_niif_21030102"/>
-            <field name="refund_account_id" ref="do_niif_21030102"/>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030102'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030102'),
+                }),
+            ]"/>
         </record>
+
         <record id="tax_0015_bank" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">30</field>
@@ -249,11 +639,32 @@
             <field name="amount">0.0015</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="do_niif_52070200"/>
-            <field name="refund_account_id" ref="do_niif_52070200"/>
             <field eval="1" name="price_include"/>
             <field name="tax_group_id" ref="group_tax"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_52070200'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_52070200'),
+                }),
+            ]"/>
         </record>
+
         <record id="tax_10_telco" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">30</field>
@@ -262,12 +673,32 @@
             <field name="amount">10</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_52020200"/>
-            <field name="refund_account_id" ref="do_niif_52020200"/>
             <field eval="0" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_TELE_ISC')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="tax_group_isc"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_52020200'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_52020200'),
+                }),
+            ]"/>
         </record>
+
         <record id="tax_2_telco" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">30</field>
@@ -276,22 +707,43 @@
             <field name="amount">2</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_52020200"/>
-            <field name="refund_account_id" ref="do_niif_52020200"/>
             <field eval="0" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_TELE_CDT')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_tax"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_52020200'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_52020200'),
+                }),
+            ]"/>
         </record>
+
         <record id="tax_group_telco" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">30</field>
             <field name="name">Impuestos a las Telecomunicaciones</field>
-            <field eval="0" name="amount"/>
+            <field eval="18" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
             <field eval="[(6, 0, [ref('tax_18_purch'), ref('tax_10_telco'), ref('tax_2_telco')])]" name="children_tax_ids"/>
             <field name="tax_group_id" ref="group_tax"/>
         </record>
+
         <record id="ret_100_tax_security" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">40</field>
@@ -300,11 +752,32 @@
             <field name="amount">-18</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_21030201"/>
-            <field name="refund_account_id" ref="do_niif_21030201"/>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030201'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030201'),
+                }),
+            ]"/>
         </record>
+
         <record id="ret_100_tax_nonprofit" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">41</field>
@@ -313,12 +786,36 @@
             <field name="amount">-18</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_21030203"/>
-            <field name="refund_account_id" ref="do_niif_21030203"/>
             <field eval="0" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_R_ITBIS_18')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('account_tax_report_retcn_prsn')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030203'),
+                    'minus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_retcn_prsn')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030203'),
+                    'plus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
+                }),
+            ]"/>
         </record>
+
         <record id="ret_100_tax_person" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">42</field>
@@ -327,12 +824,36 @@
             <field name="amount">-18</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_21030202"/>
-            <field name="refund_account_id" ref="do_niif_21030202"/>
             <field eval="0" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_R_ITBIS_18')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('account_tax_report_retcn_prsn')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030202'),
+                    'minus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_retcn_prsn')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030202'),
+                    'plus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
+                }),
+            ]"/>
         </record>
+
         <record id="ret_30_tax_moral" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">43</field>
@@ -341,11 +862,32 @@
             <field name="amount">-5.4</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_21030201"/>
-            <field name="refund_account_id" ref="do_niif_21030201"/>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030201'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030201'),
+                }),
+            ]"/>
         </record>
+
         <record id="ret_30_tax_freelance" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="active">False</field>
@@ -355,11 +897,32 @@
             <field name="amount">-5.4</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
-            <field name="account_id" ref="do_niif_21030201"/>
-            <field name="refund_account_id" ref="do_niif_21030201"/>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030201'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030201'),
+                }),
+            ]"/>
         </record>
+
         <record id="ret_75_tax_nonformal" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">44</field>
@@ -368,11 +931,32 @@
             <field name="amount">-13.5</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_21030205"/>
-            <field name="refund_account_id" ref="do_niif_21030205"/>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030205'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030205'),
+                }),
+            ]"/>
         </record>
+
         <record id="ret_10_income_person" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">40</field>
@@ -381,12 +965,32 @@
             <field name="amount">-10</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_21030301"/>
-            <field name="refund_account_id" ref="do_niif_21030301"/>
             <field eval="0" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_R_ISR_10')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_isr"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030301'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030301'),
+                }),
+            ]"/>
         </record>
+
         <record id="ret_10_income_rent" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">50</field>
@@ -395,12 +999,32 @@
             <field name="amount">-10</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_21030302"/>
-            <field name="refund_account_id" ref="do_niif_21030302"/>
             <field eval="0" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_R_ISR_10')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_isr"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030302'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030302'),
+                }),
+            ]"/>
         </record>
+
         <record id="ret_10_income_dividend" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">51</field>
@@ -409,12 +1033,32 @@
             <field name="amount">-10</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_21030303"/>
-            <field name="refund_account_id" ref="do_niif_21030303"/>
             <field eval="0" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_R_ISR_10')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_isr"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030303'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030303'),
+                }),
+            ]"/>
         </record>
+
         <record id="ret_2_income_person" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">52</field>
@@ -423,12 +1067,32 @@
             <field name="amount">-2</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_21030308"/>
-            <field name="refund_account_id" ref="do_niif_21030308"/>
             <field eval="0" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_R_ISR_2')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_isr"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030308'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030308'),
+                }),
+            ]"/>
         </record>
+
         <record id="ret_2_income_transfer" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">53</field>
@@ -437,12 +1101,32 @@
             <field name="amount">-2</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_21030306"/>
-            <field name="refund_account_id" ref="do_niif_21030306"/>
             <field eval="0" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_R_ISR_2')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_isr"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030306'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030306'),
+                }),
+            ]"/>
         </record>
+
         <record id="ret_27_income_remittance" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">49</field>
@@ -451,11 +1135,32 @@
             <field name="amount">-27</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_21030307"/>
-            <field name="refund_account_id" ref="do_niif_21030307"/>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_isr"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030307'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030307'),
+                }),
+            ]"/>
         </record>
+
         <record id="ret_5_income_gov" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">50</field>
@@ -464,76 +1169,93 @@
             <field name="amount">-5</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
-            <field name="account_id" ref="do_niif_21030308"/>
-            <field name="refund_account_id" ref="do_niif_21030308"/>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_isr"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030308'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_21030308'),
+                }),
+            ]"/>
         </record>
+
         <record id="tax_group_nonformal" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">60</field>
             <field name="name">Retención a Proveedores Informales de Bienes (75%)</field>
             <field name="amount_type">group</field>
-            <field eval="0" name="amount"/>
+            <field eval="18" name="amount"/>
             <field name="type_tax_use">purchase</field>
-            <field eval="[(6, 0, [ref('tax_18_purch'), ref('ret_75_tax_nonformal')])]" name="children_tax_ids"/>
             <field name="tax_group_id" ref="group_ret"/>
+            <field eval="[(6, 0, [ref('tax_18_purch'), ref('ret_75_tax_nonformal')])]" name="children_tax_ids"/>
         </record>
+
         <record id="tax_group_person_construction" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">61</field>
             <field name="name">Retención a Físicas por Servicios con Materiales (2%)</field>
             <field name="amount_type">group</field>
-            <field eval="0" name="amount"/>
+            <field eval="18" name="amount"/>
             <field name="type_tax_use">purchase</field>
             <field eval="[(6, 0, [ref('tax_18_purch'), ref('ret_100_tax_person'), ref('ret_2_income_person')])]" name="children_tax_ids"/>
             <field name="tax_group_id" ref="group_ret"/>
         </record>
-        <record id="tax_group_moral_construction" model="account.tax.template">
-            <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">62</field>
-            <field name="name">Retención a Jurídica (Servicios Construcción con Materiales)</field>
-            <field name="amount_type">group</field>
-            <field eval="0" name="amount"/>
-            <field name="type_tax_use">none</field>
-            <field name="tax_group_id" ref="group_ret"/>
-        </record>
+
         <record id="tax_group_person_services" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">58</field>
             <field name="name">Retención a Físicas por Honorarios por Servicios (10%)</field>
             <field name="amount_type">group</field>
-            <field eval="0" name="amount"/>
+            <field eval="18" name="amount"/>
             <field name="type_tax_use">purchase</field>
             <field eval="[(6, 0, [ref('tax_18_purch'), ref('ret_100_tax_person'), ref('ret_10_income_person')])]" name="children_tax_ids"/>
             <field name="tax_group_id" ref="group_ret"/>
         </record>
+
         <record id="tax_group_moral_services" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">58</field>
             <field name="name">Retención a Jurídicas por Servicios Profesionales (30%)</field>
             <field name="amount_type">group</field>
-            <field eval="0" name="amount"/>
+            <field eval="18" name="amount"/>
             <field name="type_tax_use">purchase</field>
             <field eval="[(6, 0, [ref('tax_18_purch'), ref('ret_30_tax_moral')])]" name="children_tax_ids"/>
             <field name="tax_group_id" ref="group_ret"/>
         </record>
+
         <record id="tax_group_restaurant_sale" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">64</field>
             <field name="name">Ventas del Restaurante</field>
             <field name="amount_type">group</field>
-            <field eval="0" name="amount"/>
+            <field eval="18" name="amount"/>
             <field name="type_tax_use">sale</field>
             <field eval="[(6, 0, [ref('tax_18_sale'), ref('tax_tip_sale')])]" name="children_tax_ids"/>
             <field name="tax_group_id" ref="group_ret"/>
         </record>
+
         <record id="tax_group_restaurant_purch" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">65</field>
             <field name="name">Compras a Restaurantes</field>
             <field name="amount_type">group</field>
-            <field eval="0" name="amount"/>
+            <field eval="18" name="amount"/>
             <field name="type_tax_use">purchase</field>
             <field eval="[(6, 0, [ref('tax_18_purch'), ref('tax_tip_purch')])]" name="children_tax_ids"/>
             <field name="tax_group_id" ref="group_ret"/>

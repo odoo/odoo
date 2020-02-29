@@ -26,14 +26,13 @@ Index: addons/openacademy/views/session_board.xml
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
 +++ addons/openacademy/views/session_board.xml	2014-08-26 17:26:21.531783052 +0200
-@@ -0,0 +1,66 @@
+@@ -0,0 +1,62 @@
 +<?xml version="1.0"?>
 +<odoo>
 +
 +        <record model="ir.actions.act_window" id="act_session_graph">
 +            <field name="name">Attendees by course</field>
 +            <field name="res_model">openacademy.session</field>
-+            <field name="view_type">form</field>
 +            <field name="view_mode">graph</field>
 +            <field name="view_id"
 +                   ref="openacademy.openacademy_session_graph_view"/>
@@ -41,14 +40,12 @@ Index: addons/openacademy/views/session_board.xml
 +        <record model="ir.actions.act_window" id="act_session_calendar">
 +            <field name="name">Sessions</field>
 +            <field name="res_model">openacademy.session</field>
-+            <field name="view_type">form</field>
 +            <field name="view_mode">calendar</field>
 +            <field name="view_id" ref="openacademy.session_calendar_view"/>
 +        </record>
 +        <record model="ir.actions.act_window" id="act_course_list">
 +            <field name="name">Courses</field>
 +            <field name="res_model">openacademy.course</field>
-+            <field name="view_type">form</field>
 +            <field name="view_mode">tree,form</field>
 +        </record>
 +        <record model="ir.ui.view" id="board_session_form">
@@ -80,7 +77,6 @@ Index: addons/openacademy/views/session_board.xml
 +        <record model="ir.actions.act_window" id="open_board_session">
 +          <field name="name">Session Dashboard</field>
 +          <field name="res_model">board.board</field>
-+          <field name="view_type">form</field>
 +          <field name="view_mode">form</field>
 +          <field name="usage">menu</field>
 +          <field name="view_id" ref="board_session_form"/>

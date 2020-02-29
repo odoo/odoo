@@ -1,24 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import models, fields, api, SUPERUSER_ID
 from odoo.http import request
 
 
 class website_form_config(models.Model):
     _inherit = 'website'
 
-    website_form_enable_metadata = fields.Boolean('Technical data on contact form', help="You can choose to log technical data like IP, User Agent ,...")
-
     def _website_form_last_record(self):
         if request and request.session.form_builder_model_model:
             return request.env[request.session.form_builder_model_model].browse(request.session.form_builder_id)
         return False
-
-
-class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
-    website_form_enable_metadata = fields.Boolean(related="website_id.website_form_enable_metadata", readonly=False)
 
 
 class website_form_model(models.Model):
@@ -29,6 +22,7 @@ class website_form_model(models.Model):
     website_form_access = fields.Boolean('Allowed to use in forms', help='Enable the form builder feature for this model.')
     website_form_default_field_id = fields.Many2one('ir.model.fields', 'Field for custom form data', domain="[('model', '=', model), ('ttype', '=', 'text')]", help="Specify the field which will contain meta and custom form fields datas.")
     website_form_label = fields.Char("Label for form action", help="Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue could be 'Create an Issue'.")
+    website_form_key = fields.Char(help='Used in FormBuilder Registry')
 
     def _get_form_writable_fields(self):
         """
@@ -59,14 +53,18 @@ class website_form_model(models.Model):
             fields_get.pop(val, None)
 
         # Unrequire fields with default values
-        default_values = model.default_get(list(fields_get))
+        default_values = model.with_user(SUPERUSER_ID).default_get(list(fields_get))
         for field in [f for f in fields_get if f in default_values]:
             fields_get[field]['required'] = False
 
         # Remove readonly and magic fields
+        # Remove string domains which are supposed to be evaluated
+        # (e.g. "[('product_id', '=', product_id)]")
         MAGIC_FIELDS = models.MAGIC_COLUMNS + [model.CONCURRENCY_CHECK_FIELD]
         for field in list(fields_get):
-            if fields_get[field]['readonly'] or field in MAGIC_FIELDS:
+            if 'domain' in fields_get[field] and isinstance(fields_get[field]['domain'], str):
+                del fields_get[field]['domain']
+            if fields_get[field]['readonly'] or field in MAGIC_FIELDS or fields_get[field]['type'] == 'many2one_reference':
                 del fields_get[field]
 
         return fields_get
@@ -78,7 +76,6 @@ class website_form_model_fields(models.Model):
     _description = 'Fields'
     _inherit = 'ir.model.fields'
 
-    @api.model_cr
     def init(self):
         # set all existing unset website_form_blacklisted fields to ``true``
         #  (so that we can use it as a whitelist rather than a blacklist)

@@ -74,7 +74,7 @@ CalendarController.include({
                                     local_context: context,
                                 },
                             })
-                            .done(function(o) {
+                            .then(function(o) {
                                 if (o.status === "OK") {
                                     Dialog.alert(self, _t("All events have been disconnected from your previous account. You can now restart the synchronization"), {
                                         title: _t('Event disconnection success'),
@@ -89,9 +89,7 @@ CalendarController.include({
                     title: _t('Accounts'),
                 });
             }
-        }).always(function () {
-            event.data.on_always();
-        });
+        }).then(event.data.on_always, event.data.on_always);
     }
 });
 

@@ -57,7 +57,13 @@
                         <td colspan="4">
                             <p t-if="field.relation"><span>- relation = <span t-field="field.relation"/></span></p>
                             <p t-if="field.relation_field"><span>- field = <span t-field="field.relation_field"/></span></p>
-                            <div t-if="field.selection"><span>- selection = <span t-field="field.selection"/></span></div>
+                            <div t-if="field.selection_ids">
+                                <span>- selection = [
+                                    <t t-foreach="field.selection_ids" t-as="selection">
+                                        (<span t-field="selection.value"/>, <span t-field="selection.name"/>),
+                                    </t>]
+                                </span>
+                            </div>
                             <div t-if="field.size"><span>- size = <span t-field="field.size"/></span></div>
                             <div t-if="field.on_delete"><span>- ondelete = <span t-field="field.on_delete"/></span></div>
                             <div t-if="field.domain"><span>- domain = <span t-field="field.domain"/></span></div>

@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * project
+# 	* project
 # 
 # Translators:
-# Jakub Lohnisky <jakub@lepremier.cz>, 2018
-# Ladislav Tomm <tomm@helemik.cz>, 2018
-# Chris <krystof.reklamy13@gmail.com>, 2018
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2018
-# Michal Veselý <michal@veselyberanek.net>, 2018
-# Martin Trigaux, 2018
-# trendspotter <j.podhorecky@volny.cz>, 2018
+# Jakub Lohnisky <jakub@lepremier.cz>, 2019
+# Chris <krystof.reklamy13@gmail.com>, 2019
+# Ladislav Tomm <tomm@helemik.cz>, 2019
+# Jakub Snášel <jakub@potisk-tricek.cz>, 2019
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2019
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
+# Michal Veselý <michal@veselyberanek.net>, 2019
+# Martin Trigaux, 2019
+# trendspotter <j.podhorecky@volny.cz>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2018\n"
+"POT-Creation-Date: 2019-09-23 13:48+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,7 @@ msgstr "Počet dní do konečného termínu"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner__task_count
+#: model:ir.model.fields,field_description:project.field_res_users__task_count
 msgid "# Tasks"
 msgstr "# úkolů"
 
@@ -54,46 +56,41 @@ msgstr "Počet úkolů"
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Satisfaction Survey"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: Průzkum spokojenosti"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "% On"
-msgstr ""
+msgstr "% na"
 
 #. module: project
-#: code:addons/project/models/project.py:302
-#: code:addons/project/models/project.py:624
+#: code:addons/project/models/project.py:0
+#: code:addons/project/models/project.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid ""
-"(Un)archiving a project automatically (un)archives its tasks. Do you want to"
-" proceed?"
-msgstr ""
-
-#. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:91
+#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
 "<b>Assign the task</b> to someone. <i>You can create and invite a new user "
 "on the fly.</i>"
 msgstr ""
+"<b>Přiřadit úkol</b> někomu. <i>Můžete vytvořit a pozvat nového uživatele za"
+" chodu.</i>"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:102
+#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "<b>Click the save button</b> to apply your changes to the task."
-msgstr ""
+msgstr "<b>Klepnutím na tlačítko Uložit</b> provedete změny v úkolu."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:71
+#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
 msgstr ""
@@ -176,78 +173,116 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "<i class=\"fa fa-arrow-circle-right \"/> See the feedbacks"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-circle-right \"/> Viz zpětné vazby"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "<i class=\"fa fa-calendar\"/> End date :"
+msgstr "<i class=\"fa fa-calendar\"/> Datum ukončení :"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr ""
+"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" "
+"title=\"Manage\"/>Prodej"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
+"title=\"Domain Alias\"/>"
 msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "<i class=\"fa fa-envelope\"/> Email :"
+msgstr "<i class=\"fa fa-envelope\"/> Email :"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid ""
+"<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
+"satisfaction\" title=\"Percentage of satisfaction\"/>"
 msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
-msgstr ""
+msgstr "<i class=\"fa fa-smile-o\"/> Zatím žádné hodnocení"
 
 #. module: project
-#: code:addons/project/models/project.py:121
+#: code:addons/project/models/project.py:0
 #, python-format
 msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Documents are attached to the tasks and issues of your project.</p><p>\n"
+"                        Documents are attached to the tasks of your project.</p><p>\n"
 "                        Send messages or log internal notes with attachments to link\n"
 "                        documents to your project.\n"
 "                    </p>"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:149
+#: code:addons/project/models/project.py:0
 #, python-format
 msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Create a new project</p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Vytvořit nový projekt</p>"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:66
+#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "<p>Once your task is ready, you can save it.</p>"
-msgstr ""
+msgstr "<p>Jakmile je váš úkol připraven, můžete jej uložit.</p>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 msgid "<small class=\"text-muted\">Project - </small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Projekt - </small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-right\">Status:</small>"
+msgstr "<small class=\"text-right\">Stav:</small>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_project
+msgid "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Tasks\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid "<span class=\"o_label\">Profitability</span>"
 msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong class=\"d-block mb-2\">Attachments</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-2\">Přílohy</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong class=\"d-block mb-2\">Description</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-2\">Popis</strong>"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "<strong style=\"font-size: 16px;\">Try the mail gateway</strong>"
-msgstr ""
+msgstr "<strong style=\"font-size: 16px;\">Zkusit poštovní bránu</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Assigned to</strong>"
-msgstr ""
+msgstr "<strong>Přiřazeno</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -257,17 +292,17 @@ msgstr "<strong>Datum:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Deadline:</strong>"
-msgstr ""
+msgstr "<strong>Termín:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Message and communication history</strong>"
-msgstr ""
+msgstr "<strong>Historie zpráv a komunikace</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Project:</strong>"
-msgstr ""
+msgstr "<strong>Projekt:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
@@ -297,7 +332,7 @@ msgstr "Akceptovat emaily od"
 #: model:ir.model.fields,field_description:project.field_project_project__access_warning
 #: model:ir.model.fields,field_description:project.field_project_task__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Upozornění na přístup"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_needaction
@@ -317,9 +352,14 @@ msgid "Activities"
 msgstr "Aktivity"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_state
 msgid "Activity State"
-msgstr "Stav činností"
+msgstr "Stav aktivity"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
@@ -334,13 +374,18 @@ msgstr "Přidat popis..."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:40
-#: code:addons/project/static/src/js/tour.js:47
+#: code:addons/project/static/src/js/tours/project.js:0
+#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. New - In "
 "Progress - Done</i>"
 msgstr ""
+
+#. module: project
+#: model:res.groups,name:project.group_project_manager
+msgid "Administrator"
+msgstr "Administrátor"
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_2
@@ -349,10 +394,10 @@ msgstr "Pokročilý"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:34
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Agile"
-msgstr ""
+msgstr "Agilní"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_id
@@ -380,7 +425,7 @@ msgid "Aliased Model"
 msgstr "Model s aliasem"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:111
+#: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "All"
 msgstr "Vše"
@@ -388,14 +433,32 @@ msgstr "Vše"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_management
 msgid "All Tasks"
+msgstr "Všechny úkoly"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
+msgid "All employees"
 msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:35
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Analysis"
 msgstr "Analýza"
+
+#. module: project
+#: model:ir.model,name:project.model_account_analytic_account
+#: model:ir.model.fields,field_description:project.field_project_project__analytic_account_id
+msgid "Analytic Account"
+msgstr "Analytický účet"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__analytic_account_id
+msgid ""
+"Analytic account to which this project is linked for financial management. "
+"Use an analytic account to record cost and revenue on your project."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -409,10 +472,17 @@ msgid "Assign to Me"
 msgstr "Přiřadit ke mě"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_report_project_task_user__date_start
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__date_assign
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Assignation Date"
 msgstr "Datum přidělení"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#, python-format
+msgid "Assigned"
+msgstr "Přiřazeno"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -443,13 +513,9 @@ msgid ""
 "                                You can define here labels that will be displayed for the state instead\n"
 "                                of the default labels."
 msgstr ""
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/xml/project.xml:7
-#, python-format
-msgid "Attachment"
-msgstr "Příloha"
+"V každé fázi mohou zaměstnanci zablokovat nebo připravit úkol / problém na další fázi.\n"
+"Zde můžete definovat štítky, které se místo toho zobrazí pro daný stav\n"
+"namísto výchozích štítků."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_attachment_count
@@ -463,7 +529,7 @@ msgid "Attachment that don't come from message."
 msgstr "Příloha, která nepochází ze zprávy."
 
 #. module: project
-#: code:addons/project/models/project.py:114
+#: code:addons/project/models/project.py:0
 #, python-format
 msgid "Attachments"
 msgstr "Přílohy"
@@ -480,6 +546,9 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Automaticky upraví stav kanban, když zákazník odpoví na zpětnou vazbu pro tuto fázi.\n"
+"* Dobrá zpětná vazba od zákazníka aktualizuje stav kanban na „připraven na novou fázi“ (zelený bod).\n"
+"* Střední nebo špatná zpětná vazba nastaví stav kanban na „zablokován“ (červený bod).\n"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -488,8 +557,8 @@ msgstr "Průměrný"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:29
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:35
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Backlog"
 msgstr "Nedodělávky"
@@ -505,11 +574,8 @@ msgid "Basic"
 msgstr "Základní"
 
 #. module: project
-#: code:addons/project/models/project.py:29
-#: model:project.task,legend_blocked:project.project_task_19
-#: model:project.task,legend_blocked:project.project_task_24
-#: model:project.task,legend_blocked:project.project_task_3
-#: model:project.task,legend_blocked:project.project_task_8
+#: code:addons/project/models/project.py:0
+#: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__blocked
 #: model:project.task,legend_blocked:project.project_task_data_0
 #: model:project.task,legend_blocked:project.project_task_data_1
 #: model:project.task,legend_blocked:project.project_task_data_11
@@ -522,36 +588,19 @@ msgstr "Základní"
 #: model:project.task,legend_blocked:project.project_task_data_6
 #: model:project.task,legend_blocked:project.project_task_data_7
 #: model:project.task,legend_blocked:project.project_task_data_9
-#: model:project.task.type,legend_blocked:project.project_stage_2
-#: model:project.task.type,legend_blocked:project.project_stage_3
 #: model:project.task.type,legend_blocked:project.project_stage_data_0
 #: model:project.task.type,legend_blocked:project.project_stage_data_1
 #: model:project.task.type,legend_blocked:project.project_stage_data_2
-#: selection:report.project.task.user,state:0
 #, python-format
 msgid "Blocked"
 msgstr "Blokováno"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:61
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Brainstorm"
-msgstr ""
-
-#. module: project
-#: model:project.task,legend_done:project.project_task_10
-#: model:project.task,legend_done:project.project_task_11
-#: model:project.task,legend_done:project.project_task_2
-#: model:project.task,legend_done:project.project_task_21
-#: model:project.task,legend_done:project.project_task_22
-#: model:project.task,legend_done:project.project_task_4
-#: model:project.task,legend_done:project.project_task_5
-#: model:project.task,legend_done:project.project_task_6
-#: model:project.task,legend_done:project.project_task_7
-#: model:project.task.type,legend_done:project.project_stage_1
-msgid "Buzz or set as done"
-msgstr "Buzz nebo nastaveno jako hotovo"
+msgstr "Brainstorming"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
@@ -559,25 +608,23 @@ msgid "By Responsible"
 msgstr "Od odpovědného"
 
 #. module: project
-#: model:project.task.type,name:project.project_stage_3
-msgid "Cancelled"
-msgstr "Zrušeno"
-
-#. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:29
+#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
 "Choose a <b>project name</b>. (e.g. Website Launch, Product Development, "
 "Office Party, etc.)"
 msgstr ""
+"Vyberte <b>název projektu.</b> (např. spuštění webových stránek, vývoj "
+"produktů, kancelářská párty atd.)"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:61
+#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Choose a <b>task name</b>. (e.g. Website Design, Purchase Goods etc.)"
 msgstr ""
+"Vyberte <b>název úkolu</b>. (např. návrh webových stránek, nákup zboží atd.)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -585,19 +632,9 @@ msgid "Choose a Project Email"
 msgstr "Vybrat e-mail projektu"
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_project__subtask_project_id
-#: model:ir.model.fields,help:project.field_project_task__subtask_project_id
-msgid ""
-"Choosing a sub-tasks project will both enable sub-tasks and set their "
-"default project (possibly the project itself)"
-msgstr ""
-"Volba dílčích úkolů projektu  umožní jak dílčí úkoly, tak nastavení "
-"výchozího projektu (případně samotného projektu)"
-
-#. module: project
-#: constraint:project.task:0
-msgid "Circular references are not permitted between tasks and sub-tasks"
-msgstr ""
+#: model:ir.model.fields,field_description:project.field_project_task__partner_city
+msgid "City"
+msgstr "Město"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -606,14 +643,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:76
-#, python-format
-msgid "Click on a card to get the details of the task."
-msgstr "Kliknutím na kartu získáte podrobnosti o úkolu."
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/tour.js:81
+#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
 "Click on the card to write more information about it and collaborate with "
@@ -622,7 +652,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:86
+#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Click on this button to modify the task."
 msgstr "Klepnutím na toto tlačítko změníte úkol."
@@ -636,7 +666,7 @@ msgstr "Barevný index"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:68
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid ""
 "Communicate with customers on the task using the email gateway. Attach logo "
@@ -670,13 +700,12 @@ msgstr "Nastavení konfigurace"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
-#: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Configuration"
 msgstr "Konfigurace"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:57
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Consulting"
 msgstr "Konzultace"
@@ -687,16 +716,15 @@ msgstr "Konzultace"
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_project
-#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Contact"
 msgstr "Kontakt"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:64
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Copywriting"
-msgstr ""
+msgstr "Copywriting"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__displayed_image_id
@@ -704,7 +732,7 @@ msgid "Cover Image"
 msgstr "Úvodní obrázek"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
+#: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
 msgid "Create"
 msgstr "Vytvořit"
 
@@ -717,17 +745,17 @@ msgstr "Vytvořit Projekt"
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "Create a new project"
-msgstr ""
+msgstr "Vytvořit nový projekt"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Create a new stage in the task pipeline"
-msgstr ""
+msgstr "Vytvořtit novou fázi v řetězci ṕracovních úloh"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Create a new tag"
-msgstr ""
+msgstr "Vytvořte novou značku"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_task
@@ -737,7 +765,7 @@ msgstr "Vytvořit nový úkol"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
 msgid "Created On"
-msgstr ""
+msgstr "Vytvořeno"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__create_uid
@@ -745,7 +773,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__create_uid
 #: model:ir.model.fields,field_description:project.field_project_task_type__create_uid
 msgid "Created by"
-msgstr "Vytvořil(a)"
+msgstr "Vytvořeno od"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__create_date
@@ -755,7 +783,7 @@ msgid "Created on"
 msgstr "Vytvořeno"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Creation Date"
 msgstr "Datum vytvoření"
 
@@ -780,7 +808,7 @@ msgid "Current stage of this task"
 msgstr "Současná fáze tohoto úkolu"
 
 #. module: project
-#: code:addons/project/models/project.py:879
+#: code:addons/project/models/project.py:0
 #: model:ir.model.fields,field_description:project.field_project_project__partner_id
 #: model:ir.model.fields,field_description:project.field_project_task__partner_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__partner_id
@@ -792,15 +820,15 @@ msgid "Customer"
 msgstr "Zákazník"
 
 #. module: project
-#: code:addons/project/models/project.py:879
-#: code:addons/project/models/project.py:882
+#: code:addons/project/models/project.py:0
+#: code:addons/project/models/project.py:0
 #, python-format
 msgid "Customer Email"
 msgstr "Zákaznický e-mail"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:44
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Customer Feedback"
 msgstr "Zákaznická zpětná vazba"
@@ -809,7 +837,7 @@ msgstr "Zákaznická zpětná vazba"
 #: model:ir.model.fields,help:project.field_project_project__access_url
 #: model:ir.model.fields,help:project.field_project_task__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "URL zákaznického portálu"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
@@ -835,7 +863,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:46
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and "
@@ -845,7 +873,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: selection:project.project,rating_status_period:0
+#: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
 msgid "Daily"
 msgstr "Denně"
 
@@ -875,13 +903,23 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_project__privacy_visibility
+msgid ""
+"Defines the visibility of the tasks of the project:\n"
+"- Invited employees: employees may only see the followed project and tasks.\n"
+"- All employees: employees may see all project and tasks.\n"
+"- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
+"   them or by someone of their company."
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Delete"
 msgstr "Smazat"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:29
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Delivered"
 msgstr "Dodáno"
@@ -895,15 +933,15 @@ msgstr "Popis"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:64
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Design"
 msgstr "Návrh"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:29
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:35
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Development"
 msgstr "Vývoj"
@@ -915,16 +953,13 @@ msgstr "Přehled"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:38
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Digital Marketing"
 msgstr ""
 
 #. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project.js:76
-#: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
-#, python-format
+#: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
 msgid "Discard"
 msgstr "Zrušit"
 
@@ -935,13 +970,13 @@ msgstr "Zrušit"
 #: model:ir.model.fields,field_description:project.field_project_task_type__display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný název"
+msgstr "Zobrazované jméno"
 
 #. module: project
-#: code:addons/project/models/digest.py:16
+#: code:addons/project/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "Nemáte přístup, přeskočte tato data pro e-mail uživatele"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -950,19 +985,19 @@ msgstr "Dokumenty"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:35
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:39
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:45
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:58
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:67
-#: model:project.task.type,name:project.project_stage_2
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Done"
 msgstr "Hotovo"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:61
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Draft"
 msgstr "Návrh"
@@ -988,18 +1023,20 @@ msgid ""
 "Edit project's stages and set an email template on the stages on which you "
 "want to activate the rating."
 msgstr ""
+"Upravte fáze projektu a nastavte e-mailovou šablonu ve fázích, na kterých "
+"chcete aktivovat hodnocení."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:39
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Editing"
-msgstr ""
+msgstr "Úpravy"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_from
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1010,6 +1047,11 @@ msgstr "Emailový alias"
 #: model:ir.model.fields,field_description:project.field_project_task_type__mail_template_id
 msgid "Email Template"
 msgstr "Šablona e-mailu"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__email_cc
+msgid "Email cc"
+msgstr "Kopie e-mailu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1023,20 +1065,20 @@ msgid "Ending Date"
 msgstr "Datum ukončení"
 
 #. module: project
-#: code:addons/project/models/project.py:631
+#: code:addons/project/models/project.py:0
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of task(s)."
-msgstr ""
+msgstr "Chyba! Nelze vytvořit rekurzivní hierarchii úkolu(ů)."
 
 #. module: project
-#: sql_constraint:project.project:0
+#: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
 msgid "Error! project start-date must be lower than project end-date."
 msgstr ""
 "Chyba! počáteční datum projektu musí být nižší než datum ukončení projektu."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:40
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid ""
 "Everyone can propose ideas, and the Editor marks the best ones as %s. Attach"
@@ -1045,18 +1087,14 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Exception Activities"
+msgstr "Výjimečné činnosti"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
 msgid "Expiration Date"
 msgstr "Datum platnosti"
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_task_type__legend_priority
-msgid ""
-"Explanation text to help users using the star on tasks or issues in this "
-"stage."
-msgstr ""
-"Vysvětlující text, který uživatelům pomáhá používat hvězdu na úkolech nebo "
-"problémech v této fázi."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -1070,7 +1108,7 @@ msgstr "Další informace"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:52
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid ""
 "Fill your Inbox easily with the email gateway. Periodically review your "
@@ -1078,18 +1116,22 @@ msgid ""
 "review the \"This Week\" column to move important tasks \"Today\". Every "
 "Monday, you review the \"This Month\" column."
 msgstr ""
+"Své e-mailové schránky snadno vyplňte pomocí e-mailové brány. Pravidelně "
+"kontrolujte složku Doručená pošta a naplánujte úkoly přesunutím do sloupců "
+"ostatních. Každý den si prohlížíte sloupec „Tento týden“ a přesunete "
+"důležité úkoly „Dnes“. Každé pondělí zkontrolujete sloupec „Tento měsíc“."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:61
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Final Document"
-msgstr ""
+msgstr "Závěrečný dokument"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
 msgid "Folded in Kanban"
-msgstr ""
+msgstr "Složený v Kanbanu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1102,7 +1144,12 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
-msgid "Followed by Me"
+msgid "Followed"
+msgstr "Sledován"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Followed Tasks"
 msgstr ""
 
 #. module: project
@@ -1115,13 +1162,13 @@ msgstr "Sledující"
 #: model:ir.model.fields,field_description:project.field_project_project__message_channel_ids
 #: model:ir.model.fields,field_description:project.field_project_task__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Sledující (Kanály)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_partner_ids
 #: model:ir.model.fields,field_description:project.field_project_task__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Sledující (Partneři)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast
@@ -1139,16 +1186,16 @@ msgid "GTD"
 msgstr "GTD"
 
 #. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:50
-#, python-format
-msgid "Getting Things Done (GTD)"
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Get customer feedback"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_project__label_tasks
-msgid "Gives label to tasks on project's kanban view."
-msgstr "Označuje úkoly na kanbanovém pohledu projektu."
+#. openerp-web
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#, python-format
+msgid "Getting Things Done (GTD)"
+msgstr "Getting Things Done (GTD)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__sequence
@@ -1161,7 +1208,7 @@ msgid "Gives the sequence order when displaying a list of tasks."
 msgstr "Poskytuje pořadí sekvencí při zobrazování seznamu úkolů."
 
 #. module: project
-#: selection:project.task,kanban_state:0
+#: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__done
 msgid "Green"
 msgstr "Zelená"
 
@@ -1171,7 +1218,7 @@ msgid "Green Kanban Label"
 msgstr "Zelený Kanban štítek"
 
 #. module: project
-#: selection:project.task,kanban_state:0
+#: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__normal
 msgid "Grey"
 msgstr "Šedá"
 
@@ -1188,19 +1235,20 @@ msgid "Group By"
 msgstr "Seskupit podle"
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#, python-format
+msgid ""
+"Handle your idea gathering within Tasks of your new Project and discuss them"
+" in the chatter of the tasks. Use the %s and %s to signalize what is the "
+"current status of your Idea"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
 msgid "Happy"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__percentage_satisfaction_project
-msgid "Happy % on Project"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__percentage_satisfaction_task
-msgid "Happy % on Task"
-msgstr ""
+msgstr "Spokojený"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
@@ -1209,20 +1257,9 @@ msgid "Happy face"
 msgstr "Smajlík"
 
 #. module: project
-#: selection:report.project.task.user,priority:0
+#: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__2
 msgid "High"
 msgstr "Vysoká"
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_project__privacy_visibility
-msgid ""
-"Holds visibility of the tasks or issues that belong to the current project:\n"
-"- On invitation only: Employees may only see the followed project, tasks or issues\n"
-"- Visible by all employees: Employees may see all project, tasks or issues\n"
-"- Visible by following customers: employees see everything;\n"
-"   if website is activated, portal users may see project, tasks or issues followed by\n"
-"   them or by someone of their company\n"
-msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1232,15 +1269,15 @@ msgstr "Hodiny"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_status
 msgid ""
-"How to get the customer's feedbacks?\n"
-"- Rating when changing stage: Email will be sent when a task/issue is pulled in another stage\n"
-"- Periodical Rating: Email will be sent periodically\n"
+"How to get customer feedback?\n"
+"- Rating when changing stage: an email will be sent when a task is pulled in another stage.\n"
+"- Periodical Rating: email will be sent periodically.\n"
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:808
+#: code:addons/project/models/project.py:0
 #, python-format
 msgid "I take it"
 msgstr "beru to"
@@ -1264,27 +1301,35 @@ msgstr ""
 "alias pro vytváření úkolů)"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__activity_exception_icon
+msgid "Icon"
+msgstr "Ikona"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikona označuje vyjímečnou aktivitu."
+
+#. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:39
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Ideas"
 msgstr "Nápady"
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_project__message_unread
-#: model:ir.model.fields,help:project.field_project_task__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
-
-#. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_needaction
+#: model:ir.model.fields,help:project.field_project_project__message_unread
 #: model:ir.model.fields,help:project.field_project_task__message_needaction
+#: model:ir.model.fields,help:project.field_project_task__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_has_error
+#: model:ir.model.fields,help:project.field_project_project__message_has_sms_error
 #: model:ir.model.fields,help:project.field_project_task__message_has_error
+#: model:ir.model.fields,help:project.field_project_task__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Pokud je zaškrtnuto, některé zprávy mají chybu při doručení."
 
@@ -1304,6 +1349,8 @@ msgid ""
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
 msgstr ""
+"Je-li nastaveno a pokud je nastavení hodnocení projektu 'Hodnocení při změně"
+" fáze', bude zákazníkovi zaslán e-mail, když úloha dosáhne tohoto kroku."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -1315,28 +1362,16 @@ msgstr ""
 "bez jeho odebrání."
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__priority__1
+msgid "Important"
+msgstr "Důležitý"
+
+#. module: project
 #. openerp-web
-#: code:addons/project/models/project.py:35
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:58
-#: model:project.task,legend_normal:project.project_task_1
-#: model:project.task,legend_normal:project.project_task_10
-#: model:project.task,legend_normal:project.project_task_11
-#: model:project.task,legend_normal:project.project_task_12
-#: model:project.task,legend_normal:project.project_task_19
-#: model:project.task,legend_normal:project.project_task_2
-#: model:project.task,legend_normal:project.project_task_20
-#: model:project.task,legend_normal:project.project_task_21
-#: model:project.task,legend_normal:project.project_task_22
-#: model:project.task,legend_normal:project.project_task_24
-#: model:project.task,legend_normal:project.project_task_25
-#: model:project.task,legend_normal:project.project_task_26
-#: model:project.task,legend_normal:project.project_task_3
-#: model:project.task,legend_normal:project.project_task_4
-#: model:project.task,legend_normal:project.project_task_5
-#: model:project.task,legend_normal:project.project_task_6
-#: model:project.task,legend_normal:project.project_task_7
-#: model:project.task,legend_normal:project.project_task_8
-#: model:project.task,legend_normal:project.project_task_9
+#: code:addons/project/models/project.py:0
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__normal
 #: model:project.task,legend_normal:project.project_task_data_0
 #: model:project.task,legend_normal:project.project_task_data_1
 #: model:project.task,legend_normal:project.project_task_data_11
@@ -1349,29 +1384,23 @@ msgstr ""
 #: model:project.task,legend_normal:project.project_task_data_6
 #: model:project.task,legend_normal:project.project_task_data_7
 #: model:project.task,legend_normal:project.project_task_data_9
-#: model:project.task.type,legend_normal:project.project_stage_0
-#: model:project.task.type,legend_normal:project.project_stage_1
-#: model:project.task.type,legend_normal:project.project_stage_2
-#: model:project.task.type,legend_normal:project.project_stage_3
 #: model:project.task.type,legend_normal:project.project_stage_data_0
 #: model:project.task.type,legend_normal:project.project_stage_data_1
 #: model:project.task.type,legend_normal:project.project_stage_data_2
-#: model:project.task.type,name:project.project_stage_1
-#: selection:report.project.task.user,state:0
 #, python-format
 msgid "In Progress"
 msgstr "Probíhá"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:45
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "In development"
-msgstr ""
+msgstr "Ve vývoji"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:51
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Inbox"
 msgstr "Příchozí zprávy"
@@ -1388,10 +1417,15 @@ msgstr ""
 "Tracker)."
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
+msgid "Invited employees"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
 #: model:ir.model.fields,field_description:project.field_project_task__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "je Sledující"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
@@ -1404,16 +1438,19 @@ msgid ""
 "It is the time planned to achieve the task. If this document has sub-tasks, "
 "it means the time needed to achieve this tasks and its childs."
 msgstr ""
+"Je to čas naplánovaný k dosažení tohoto úkolu. Pokud má tento dokument dílčí"
+" úkoly, znamená to čas potřebný k dosažení tohoto úkolu a jeho podřízených "
+"úkolů."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr ""
+msgstr "Blokované vysvětlení Kanban"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr ""
+msgstr "Kanban Pokračující vysvětlení"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__kanban_state
@@ -1429,7 +1466,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_done
 msgid "Kanban Valid Explanation"
-msgstr ""
+msgstr "Kanban Platné vysvětlení"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
@@ -1437,19 +1474,29 @@ msgid "Kpi Project Task Opened Value"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_project__label_tasks
+msgid "Label used for the tasks of the project."
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
 msgid "Last 3 months"
-msgstr ""
+msgstr "Poslední 3 měsíce"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
+msgid "Last 30 Days"
+msgstr "Posledních 30 dní"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
 msgid "Last 30 days"
-msgstr ""
+msgstr "Posledních 30 dní"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
 msgid "Last 7 days"
-msgstr ""
+msgstr "Posledních 7 dní"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project____last_update
@@ -1461,7 +1508,7 @@ msgid "Last Modified on"
 msgstr "Naposled změněno"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:108
+#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_last_stage_update
 #, python-format
@@ -1471,7 +1518,7 @@ msgstr "Poslední změna fáze"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
 msgid "Last Updated On"
-msgstr ""
+msgstr "Poslední aktualizace"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__write_uid
@@ -1501,28 +1548,23 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Not Satisfied"
-msgstr ""
+msgstr "Nejnovější hodnocení: Nespokojen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Satisfied"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.task_type_edit
-msgid "Legend priority"
-msgstr ""
+msgstr "Nejnovější hodnocení: Spokojeni"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:24
+#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first project."
 msgstr "Vytvořme váš první projekt."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:55
+#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first task."
 msgstr ""
@@ -1533,13 +1575,20 @@ msgid ""
 "Lets the company customize which Pad installation should be used to link to "
 "new pads (for example: http://etherpad.com/)."
 msgstr ""
+"Umožňuje společnosti přizpůsobit, která instalace Pad by měla být použita k "
+"propojení s novými podložkami (například: http://etherpad.com/)."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task__email_cc
+msgid "List of cc from incoming emails."
+msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:64
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Live"
-msgstr ""
+msgstr "Živě"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -1548,21 +1597,20 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:67
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Logo Design"
-msgstr ""
+msgstr "Vzhled loga"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:51
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Long Term"
 msgstr ""
 
 #. module: project
-#: selection:project.task,priority:0
-#: selection:report.project.task.user,priority:0
+#: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__0
 msgid "Low"
 msgstr "Nízké"
 
@@ -1578,9 +1626,14 @@ msgid "Main Attachments"
 msgstr ""
 
 #. module: project
-#: model:res.groups,name:project.group_project_manager
-msgid "Manager"
-msgstr "Manažer"
+#. openerp-web
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#, python-format
+msgid ""
+"Manage the lifecycle of your project using the kanban view. Add newly "
+"acquired project, assign them and use the %s and %s to define if the project"
+" is ready for the next step."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
@@ -1600,19 +1653,9 @@ msgid "Messages"
 msgstr "Zprávy"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-msgid "My Activities"
-msgstr "Moje činnosti"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Favorites"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-msgid "My Followed Tasks"
-msgstr ""
+msgstr "Moje oblíbené"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -1620,9 +1663,8 @@ msgid "My Tasks"
 msgstr "Moje úkoly"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:42
+#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_project__name
-#: model:ir.model.fields,field_description:project.field_project_tags__name
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 #, python-format
 msgid "Name"
@@ -1634,20 +1676,6 @@ msgid "Name of the tasks :"
 msgstr ""
 
 #. module: project
-#: model:project.task,legend_blocked:project.project_task_10
-#: model:project.task,legend_blocked:project.project_task_11
-#: model:project.task,legend_blocked:project.project_task_2
-#: model:project.task,legend_blocked:project.project_task_21
-#: model:project.task,legend_blocked:project.project_task_22
-#: model:project.task,legend_blocked:project.project_task_4
-#: model:project.task,legend_blocked:project.project_task_5
-#: model:project.task,legend_blocked:project.project_task_6
-#: model:project.task,legend_blocked:project.project_task_7
-#: model:project.task.type,legend_blocked:project.project_stage_1
-msgid "Need functional or technical help"
-msgstr ""
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
@@ -1655,7 +1683,8 @@ msgstr "Neutrální tvář"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:45
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:project.task.type,name:project.project_stage_data_0
 #, python-format
@@ -1664,14 +1693,14 @@ msgstr "Nové"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:67
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "New Orders"
 msgstr "Nové objednávky"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:58
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "New Projects"
 msgstr "Nové projekty"
@@ -1682,10 +1711,12 @@ msgid ""
 "New tasks can be generated from incoming emails. You just need to set email "
 "aliases on your projects.<br>"
 msgstr ""
+"Z příchozích e-mailů lze generovat nové úkoly. Stačí nastavit e-mailové "
+"aliasy na vašich projektech. <br>"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:41
-#: code:addons/project/controllers/portal.py:105
+#: code:addons/project/controllers/portal.py:0
+#: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Newest"
 msgstr "Nejnovější"
@@ -1698,20 +1729,20 @@ msgstr "Další aktivity"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Termín další aktivity"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Souhrn další aktivity"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Další typ aktivity"
 
 #. module: project
-#: code:addons/project/models/project.py:852
+#: code:addons/project/models/project.py:0
 #, python-format
 msgid "No Subject"
 msgstr "Bez předmětu"
@@ -1728,37 +1759,21 @@ msgid "No project rating published for now."
 msgstr ""
 
 #. module: project
-#: selection:project.project,rating_status:0
+#: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__no
 msgid "No rating"
-msgstr ""
+msgstr "Bez hodnocení"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:121
+#: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "None"
 msgstr "Nic"
 
 #. module: project
-#: selection:project.task,priority:0
-#: selection:report.project.task.user,priority:0
+#: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
+#: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__1
 msgid "Normal"
 msgstr "Normální"
-
-#. module: project
-#: model:project.task,legend_blocked:project.project_task_1
-#: model:project.task,legend_blocked:project.project_task_12
-#: model:project.task,legend_blocked:project.project_task_20
-#: model:project.task,legend_blocked:project.project_task_25
-#: model:project.task,legend_blocked:project.project_task_26
-#: model:project.task,legend_blocked:project.project_task_9
-#: model:project.task.type,legend_blocked:project.project_stage_0
-msgid "Not validated"
-msgstr "Neověřeno"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__notes
-msgid "Notes"
-msgstr "Poznámky"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_needaction_counter
@@ -1784,7 +1799,7 @@ msgstr "Počet připojených dokumentů"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error_counter
-msgid "Number of error"
+msgid "Number of errors"
 msgstr "Počet chyb"
 
 #. module: project
@@ -1813,24 +1828,9 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "On invitation only"
-msgstr "Pouze na pozvání"
-
-#. module: project
-#: selection:project.project,rating_status_period:0
+#: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
 msgid "Once a Month"
-msgstr ""
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:30
-#, python-format
-msgid ""
-"Once a task is specified, set it %s in the Specifications column, so that "
-"developers know they can pull it. If you work in sprints, use %s to mark "
-"tasks of the current sprint."
-msgstr ""
+msgstr "Jednou měsíčně"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
@@ -1863,15 +1863,10 @@ msgstr ""
 "faktur) pro interní, osobní nebo zákaznické projekty."
 
 #. module: project
-#: code:addons/project/controllers/portal.py:129
+#: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Others"
-msgstr ""
-
-#. module: project
-#: selection:project.task,activity_state:0
-msgid "Overdue"
-msgstr "Zpožděný"
+msgstr "Ostatní"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -1915,7 +1910,7 @@ msgstr "Majitel"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:64
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Page Ideas"
 msgstr ""
@@ -1931,7 +1926,7 @@ msgid "Parent Record Thread ID"
 msgstr "ID vlákna nadřízeného záznamu"
 
 #. module: project
-#: code:addons/project/models/project.py:919
+#: code:addons/project/models/project.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__parent_id
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #, python-format
@@ -1947,14 +1942,21 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
+msgid "Percentage of happy ratings"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
 msgstr ""
+"Procento spokojených hodnocení za posledních 30 dní. Detaily o hodnocení "
+"získáte z nabídky Další."
 
 #. module: project
-#: selection:project.project,rating_status:0
+#: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "Periodical Rating"
 msgstr ""
 
@@ -1965,14 +1967,18 @@ msgid "Placeholder"
 msgstr "Zástupce"
 
 #. module: project
-#: selection:project.task,activity_state:0
-msgid "Planned"
-msgstr ""
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__planned_hours
 msgid "Planned Hours"
 msgstr "Plánované hodiny"
+
+#. module: project
+#: code:addons/project/models/analytic_account.py:0
+#, python-format
+msgid ""
+"Please remove existing tasks in the project linked to the accounts you want "
+"to delete."
+msgstr ""
+"Odstraňte existující úlohy v projektu propojené s účty, které chcete smazat."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_contact
@@ -1987,6 +1993,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__access_url
 #: model:ir.model.fields,field_description:project.field_project_task__access_url
 msgid "Portal Access URL"
+msgstr "URL přístupu k portálu"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "Portal users and all employees"
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#, python-format
+msgid ""
+"Prioritize Tasks by using the %s icon.%s Use the %s button to signalize to "
+"your colleagues that a task is ready for the next stage.%s Use the %s to "
+"signalize a problem or a need for discussion on a task."
 msgstr ""
 
 #. module: project
@@ -1996,12 +2017,7 @@ msgid "Priority"
 msgstr "Přednost"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
-msgid "Privacy"
-msgstr "Soukromí"
-
-#. module: project
-#: code:addons/project/controllers/portal.py:122
+#: code:addons/project/controllers/portal.py:0
 #: model:ir.model,name:project.model_project_project
 #: model:ir.model.fields,field_description:project.field_project_task__project_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__project_id
@@ -2011,11 +2027,17 @@ msgstr "Soukromí"
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Project"
 msgstr "Projekt"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
+msgid "Project Count"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__user_id
@@ -2033,25 +2055,33 @@ msgstr "Projektový manažer"
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_project
-#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Project Name"
 msgstr "Název projektu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "Project Satisfaction"
-msgstr ""
+msgstr "Spokojenost projektu"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Project Tags"
-msgstr ""
+msgstr "Tagy Projektu"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_pivot
 msgid "Project Tasks"
 msgstr "Projektové úkoly"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__subtask_project_id
+#: model:ir.model.fields,help:project.field_project_task__subtask_project_id
+msgid ""
+"Project in which sub-tasks of the current project will be created. It can be"
+" the current project itself."
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -2068,14 +2098,16 @@ msgstr "Projekt: Aktivovat ukázkový projekt"
 #: model:ir.cron,cron_name:project.ir_cron_rating_project
 #: model:ir.cron,name:project.ir_cron_rating_project
 msgid "Project: Send rating"
-msgstr ""
+msgstr "Projekt: Odeslat hodnocení"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.actions.act_window,name:project.open_view_project_all_config
+#: model:ir.model.fields,field_description:project.field_account_analytic_account__project_ids
 #: model:ir.model.fields,field_description:project.field_project_task_type__project_ids
 #: model:ir.ui.menu,name:project.menu_projects
 #: model:ir.ui.menu,name:project.menu_projects_config
+#: model_terms:ir.ui.view,arch_db:project.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -2085,20 +2117,15 @@ msgid "Projects"
 msgstr "Projekty"
 
 #. module: project
-#: model:mail.channel,name:project.mail_channel_project_task
-msgid "Projects & Tasks"
-msgstr "Projekty a Úkoly"
-
-#. module: project
-#: selection:project.project,rating_status_period:0
+#: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__quarterly
 msgid "Quarterly"
-msgstr ""
+msgstr "Čtvrtletně"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
 msgid "Rated partner"
-msgstr ""
+msgstr "Hodnocený partner"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -2110,12 +2137,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__rating_ids
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Rating"
+msgstr "Hodnocení"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__rating_avg
+msgid "Rating Average"
 msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
 msgid "Rating Email Template"
-msgstr ""
+msgstr "Šablona hodnocení e-mailu"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status_period
@@ -2125,17 +2157,17 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "Hodnocení Poslední připomínky"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "Hodnocení Posledního obrázku"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "Hodnocení Poslední hodnoty"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
@@ -2143,42 +2175,39 @@ msgid "Rating Request Deadline"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
+msgid "Rating Satisfaction"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "Počet hodnocení"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__portal_show_rating
 msgid "Rating visible publicly"
-msgstr ""
+msgstr "Hodnocení je veřejně viditelné"
 
 #. module: project
-#: selection:project.project,rating_status:0
+#: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "Rating when changing stage"
-msgstr ""
+msgstr "Hodnocení při změně stupně"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__rating_ids
 #: model:mail.message.subtype,description:project.mt_task_rating
 msgid "Ratings"
-msgstr ""
+msgstr "Hodnocení"
 
 #. module: project
-#: code:addons/project/models/project.py:388
+#: code:addons/project/models/project.py:0
 #, python-format
 msgid "Ratings of %s"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:32
-#: model:project.task,legend_done:project.project_task_1
-#: model:project.task,legend_done:project.project_task_12
-#: model:project.task,legend_done:project.project_task_20
-#: model:project.task,legend_done:project.project_task_24
-#: model:project.task,legend_done:project.project_task_25
-#: model:project.task,legend_done:project.project_task_26
-#: model:project.task,legend_done:project.project_task_3
-#: model:project.task,legend_done:project.project_task_8
-#: model:project.task,legend_done:project.project_task_9
+#: code:addons/project/models/project.py:0
 #: model:project.task,legend_done:project.project_task_data_0
 #: model:project.task,legend_done:project.project_task_data_1
 #: model:project.task,legend_done:project.project_task_data_11
@@ -2191,30 +2220,22 @@ msgstr ""
 #: model:project.task,legend_done:project.project_task_data_6
 #: model:project.task,legend_done:project.project_task_data_7
 #: model:project.task,legend_done:project.project_task_data_9
-#: model:project.task.type,legend_done:project.project_stage_0
-#: model:project.task.type,legend_done:project.project_stage_2
 #: model:project.task.type,legend_done:project.project_stage_data_0
 #: model:project.task.type,legend_done:project.project_stage_data_1
 #: model:project.task.type,legend_done:project.project_stage_data_2
 #, python-format
 msgid "Ready for Next Stage"
-msgstr ""
+msgstr "Připraveno pro další fázi"
 
 #. module: project
-#: selection:report.project.task.user,state:0
+#: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__done
 msgid "Ready for next stage"
 msgstr "Připraveno na další fázi"
 
 #. module: project
-#: model:project.task,legend_done:project.project_task_19
-#: model:project.task.type,legend_done:project.project_stage_3
-msgid "Ready to reopen"
-msgstr ""
-
-#. module: project
 #: model:ir.model.fields,help:project.field_project_task__rating_last_feedback
 msgid "Reason of the rating"
-msgstr ""
+msgstr "Důvod hodnocení"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -2227,14 +2248,14 @@ msgid "Record Thread ID"
 msgstr "ID vlákna záznamu"
 
 #. module: project
-#: selection:project.task,kanban_state:0
+#: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__blocked
 msgid "Red"
 msgstr "Červená"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "Červená Kanban visačka"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
@@ -2243,17 +2264,10 @@ msgstr "Číslo"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:45
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Refused"
 msgstr "Odmítnuto"
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project.js:74
-#, python-format
-msgid "Remove Cover Image"
-msgstr "Odstranit  úvodní obrázek"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
@@ -2262,31 +2276,31 @@ msgstr "Sestavy"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:61
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Research"
 msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:60
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Research Project"
-msgstr ""
+msgstr "Výzkumný projekt"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:39
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Researching"
-msgstr ""
+msgstr "Výzkum"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:58
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Resources Allocation"
-msgstr ""
+msgstr "Přidělení zdrojů"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_user_id
@@ -2294,22 +2308,28 @@ msgid "Responsible User"
 msgstr "Zodpovědný uživatel"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__message_has_sms_error
+#: model:ir.model.fields,field_description:project.field_project_task__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Chyba doručení SMS"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
-msgstr ""
+msgstr "Smutný obličej"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid ""
 "Schedule your teams across projects and estimate deadlines more accurately."
-msgstr ""
+msgstr "Naplánujte své týmy napříč projekty a přesněji odhadněte termíny."
 
 #. module: project
-#: code:addons/project/controllers/portal.py:114
+#: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search <span class=\"nolabel\"> (in Content)</span>"
-msgstr ""
+msgstr "Hledat<span class=\"nolabel\"> (v obsahu)</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2317,25 +2337,25 @@ msgid "Search Project"
 msgstr "Hledat Projekt"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:118
+#: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in All"
 msgstr "Hledat ve všech"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:116
+#: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Customer"
 msgstr "Hledat mezi zákazníky"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:115
+#: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Messages"
 msgstr "Hledat ve Zprávách"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:117
+#: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Stages"
 msgstr "Hledat v etapách"
@@ -2344,14 +2364,7 @@ msgstr "Hledat v etapách"
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
 #: model:ir.model.fields,field_description:project.field_project_task__access_token
 msgid "Security Token"
-msgstr ""
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project.js:65
-#, python-format
-msgid "Select"
-msgstr "Vybrat"
+msgstr "Bezpečnostní token"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__sequence
@@ -2368,19 +2381,12 @@ msgstr "Nastavit úvodní obrázek"
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Set Email Aliases"
-msgstr ""
+msgstr "Nastavit aliasy e-mailu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set Email Template to Stages"
 msgstr ""
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project.js:64
-#, python-format
-msgid "Set a Cover Image"
-msgstr "Nastavit úvodní obrázek"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -2390,9 +2396,9 @@ msgid "Settings"
 msgstr "Nastavení"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.portal_share_action
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-#: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Share"
 msgstr "Sdílet"
@@ -2400,7 +2406,7 @@ msgstr "Sdílet"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
 msgid "Show Project on dashboard"
-msgstr "Zobrazit Projekt na řídícím panelu"
+msgstr "Zobrazit Projekt na Ovládacím panelu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -2410,17 +2416,17 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:28
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Software Development"
-msgstr ""
+msgstr "Vývoj softwaru"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:29
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Specifications"
-msgstr ""
+msgstr "Specifikace"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2428,7 +2434,7 @@ msgid "Split your tasks to organize your work into sub-milestones"
 msgstr "Rozdělte své úkoly, abyste uspořádali svou práci do dílčích milníků"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:107
+#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__stage_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__stage_id
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
@@ -2446,7 +2452,7 @@ msgstr "Změna fáze"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Stage Description and Tooltips"
-msgstr ""
+msgstr "Popis fáze a popisky"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__name
@@ -2470,18 +2476,8 @@ msgid "Starred"
 msgstr "Označeno hvězdičkou"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_type__legend_priority
-msgid "Starred Explanation"
-msgstr ""
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date_start
 msgid "Start Date"
-msgstr "Datum zahájení"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__date_start
-msgid "Starting Date"
 msgstr "Počáteční datum"
 
 #. module: project
@@ -2492,6 +2488,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Stav na základě aktivit\n"
+"Vypršeno: Datum již uplynulo\n"
+"Dnes: Datum aktivity je dnes\n"
+"Plánováno: Budoucí aktivity."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__subtask_project_id
@@ -2515,17 +2515,22 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_planned_hours
 msgid "Subtasks"
-msgstr ""
+msgstr "dílčí úkoly"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:66
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "T-shirt Printing"
-msgstr ""
+msgstr "Tisk trička"
 
 #. module: project
-#: sql_constraint:project.tags:0
+#: model:ir.model.fields,field_description:project.field_project_tags__name
+msgid "Tag Name"
+msgstr "Název značky"
+
+#. module: project
+#: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
 msgid "Tag name already exists!"
 msgstr ""
 
@@ -2534,19 +2539,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__tag_ids
 #: model:ir.ui.menu,name:project.menu_project_tags_act
 #: model_terms:ir.ui.view,arch_db:project.project_tags_form_view
+#: model_terms:ir.ui.view,arch_db:project.project_tags_tree_view
 msgid "Tags"
 msgstr "Štítky"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
-#: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Task"
 msgstr "Úloha"
 
 #. module: project
-#: code:addons/project/models/project.py:616
+#: code:addons/project/models/project.py:0
 #, python-format
 msgid "Task %s cannot have several subtask levels."
 msgstr ""
@@ -2565,7 +2570,7 @@ msgstr "Úkol blokován"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
 msgid "Task Count"
-msgstr ""
+msgstr "Počet úkolů"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
@@ -2577,7 +2582,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
 msgid "Task Logs"
-msgstr ""
+msgstr "Protokoly úloh"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
@@ -2588,13 +2593,13 @@ msgstr "Sada úkolů"
 #: model:mail.message.subtype,name:project.mt_project_task_rating
 #: model:mail.message.subtype,name:project.mt_task_rating
 msgid "Task Rating"
-msgstr ""
+msgstr "Hodnocení úkolů"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready"
-msgstr ""
+msgstr "Úkol připraven"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -2617,7 +2622,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task Title..."
-msgstr ""
+msgstr "Název úkolu ..."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
@@ -2627,7 +2632,7 @@ msgstr "Úkol blokován"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task in progress. Click to block or set as done."
-msgstr ""
+msgstr "Probíhá úloha. Klepnutím zablokujete nebo nastavíte jako hotovo."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -2640,12 +2645,12 @@ msgid "Task ready for Next Stage"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:189
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
 #: model:ir.model.fields,field_description:project.field_project_project__task_ids
 #: model:ir.model.fields,field_description:project.field_res_partner__task_ids
+#: model:ir.model.fields,field_description:project.field_res_users__task_ids
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
@@ -2654,10 +2659,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_partner_info_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_tree2
-#: model:project.project,label_tasks:project.project_project_1
-#: model:project.project,label_tasks:project.project_project_2
-#: model:project.project,label_tasks:project.project_project_data
-#, python-format
 msgid "Tasks"
 msgstr "Úkoly"
 
@@ -2684,14 +2685,14 @@ msgstr "Fáze úkolu"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:35
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Testing"
 msgstr "Testování"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:29
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Tests"
 msgstr "Testy"
@@ -2730,7 +2731,7 @@ msgstr ""
 "nalezen žádný uživatel systému."
 
 #. module: project
-#: code:addons/project/models/project.py:253
+#: code:addons/project/models/project.py:0
 #, python-format
 msgid ""
 "The project cannot be shared with the recipient(s) because the privacy of "
@@ -2739,7 +2740,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:571
+#: code:addons/project/models/project.py:0
 #, python-format
 msgid ""
 "The task cannot be shared with the recipient(s) because the privacy of the "
@@ -2758,23 +2759,9 @@ msgid "There are no tasks."
 msgstr "Neexistují žádné úkoly."
 
 #. module: project
-#. openerp-web
-#: code:addons/project/static/src/xml/project.xml:11
-#, python-format
-msgid "There is no available image to be set as cover."
-msgstr ""
-
-#. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There is no rating for this object at the moment"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_task__email_cc
-msgid ""
-"These email addresses will be added to the CC field of all inbound\n"
-"        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
-msgstr ""
+msgstr "V tuto chvíli zde není žádné hodnocení"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
@@ -2783,14 +2770,14 @@ msgstr "Tito lidé obdrží e-mail."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:51
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "This Month"
 msgstr "Tento měsíc"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:51
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "This Week"
 msgstr "Tento týden"
@@ -2818,14 +2805,14 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "This step is done. Click to block or set in progress."
-msgstr ""
+msgstr "Tento krok je proveden. Klikněte pro zablokování nebo nastavení."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:33
+#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "This will create a new project and redirect us to its stages."
-msgstr ""
+msgstr "To vytvoří nový projekt a přesměruje nás na jeho etapy."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2843,20 +2830,15 @@ msgid "Timetable working hours to adjust the gantt diagram report"
 msgstr "Soupis pracovní doby, pro přizpůsobení Gantova diagramu"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:106
+#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__name
 #, python-format
 msgid "Title"
 msgstr "Název"
 
 #. module: project
-#: model:project.task.type,name:project.project_stage_0
-msgid "To Do"
-msgstr "K udělání"
-
-#. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:67
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "To Print"
 msgstr ""
@@ -2870,8 +2852,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:51
-#: selection:project.task,activity_state:0
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Today"
 msgstr "Dnes"
@@ -2892,8 +2873,13 @@ msgid "Track customer satisfaction on tasks"
 msgstr ""
 
 #. module: project
-#: selection:project.project,rating_status_period:0
+#: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__bimonthly
 msgid "Twice a Month"
+msgstr "Dvakrát za měsíc"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task__activity_exception_decoration
+msgid "Type of the exception activity on record."
 msgstr ""
 
 #. module: project
@@ -2901,6 +2887,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unassigned"
 msgstr "Nepřiřazeno"
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Unknown Analytic Account"
+msgstr "Neznámý analytický účet"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_unread
@@ -2915,13 +2907,6 @@ msgstr "Nepřečtené zprávy"
 #: model:ir.model.fields,field_description:project.field_project_task__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Počítadlo nepřečtených zpráv"
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project.js:72
-#, python-format
-msgid "Upload and Set"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_rating
@@ -2946,15 +2931,11 @@ msgstr "Používejte sdílené poznámkové bloky pro spolupráci na úkolech"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:107
+#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
 msgstr ""
-
-#. module: project
-#: model:project.task.type,legend_priority:project.project_stage_0
-msgid "Use the star for tasks related to gold customers"
-msgstr "Použijte hvězdu pro úkoly spojené s nejlepšími zákazníky"
+"Použijte drobečkovou navigaci, <b>abyste se vrátili ke svému úkolu</b>."
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -2967,34 +2948,24 @@ msgid "User Email"
 msgstr "uživatelský e-mail"
 
 #. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Visible by all employees"
-msgstr ""
-
-#. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Visible by following customers"
-msgstr ""
+#: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
+msgid "Visibility"
+msgstr "Viditelnost"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:36
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Waiting for the next stage: use %s and %s bullets."
-msgstr ""
+msgstr "Čekání na další fázi: použijte %s a %s odrážky."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:13
-#: code:addons/project/static/src/js/tour.js:18
+#: code:addons/project/static/src/js/tours/project.js:0
+#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__email_cc
-msgid "Watchers Emails"
 msgstr ""
 
 #. module: project
@@ -3005,10 +2976,10 @@ msgstr "Zprávy Webové stránky"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:63
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Website Redesign"
-msgstr ""
+msgstr "Redesign stránek"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__website_message_ids
@@ -3017,14 +2988,14 @@ msgid "Website communication history"
 msgstr "Historie komunikace Webové stránky"
 
 #. module: project
-#: selection:project.project,rating_status_period:0
+#: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__weekly
 msgid "Weekly"
 msgstr "Týdně"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__is_favorite
-msgid "Whether this project should be displayed on the dashboard or not"
-msgstr "Zda tento projekt by měl být zobrazen na úvodním panelu nebo ne"
+msgid "Whether this project should be displayed on your dashboard."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
@@ -3034,7 +3005,7 @@ msgstr "Pracovní čas"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr ""
+msgstr "Pracovní čas pro přiřazení"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -3049,7 +3020,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_close
 msgid "Working days to close"
-msgstr ""
+msgstr "Pracovních dní k uzavření"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
@@ -3059,7 +3030,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
 msgid "Working hours to close"
-msgstr ""
+msgstr "Pracovní doba k uzavření"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
@@ -3068,13 +3039,13 @@ msgstr "Pracovní zátěž"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:39
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Writing"
-msgstr ""
+msgstr "Psaní"
 
 #. module: project
-#: selection:project.project,rating_status_period:0
+#: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__yearly
 msgid "Yearly"
 msgstr "Ročně"
 
@@ -3088,20 +3059,23 @@ msgstr ""
 "účel fáze."
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.task_type_edit
-msgid ""
-"You can also give a tooltip about the use of the stars available in the "
-"kanban and form views."
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot create recursive tasks."
 msgstr ""
-"Můžete také poskytnout nápovědu o použití hvězd dostupných v zobrazení "
-"kanban a formuláře."
 
 #. module: project
-#: code:addons/project/models/project.py:86
+#: code:addons/project/models/project.py:0
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either archive it or "
 "first delete all of its tasks."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Your task must be in the same company as its project."
 msgstr ""
 
 #. module: project
@@ -3112,22 +3086,22 @@ msgstr "aktivujte ukázkový projekt"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "average"
-msgstr ""
+msgstr "průměrný"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "bad"
-msgstr ""
+msgstr "špatný"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. Office Party"
-msgstr ""
+msgstr "např. Firemní večírek"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "for project:"
-msgstr ""
+msgstr "pro projekt:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
@@ -3135,15 +3109,10 @@ msgid "happy"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-msgid "oe_kanban_text_red"
-msgstr "oe_kanban_text_red"
-
-#. module: project
-#: code:addons/project/models/project.py:635
+#: code:addons/project/models/project.py:0
 #, python-format
 msgid "task"
-msgstr ""
+msgstr "úkol"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all

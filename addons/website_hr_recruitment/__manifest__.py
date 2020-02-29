@@ -3,7 +3,7 @@
 
 {
     'name': 'Online Jobs',
-    'category': 'Website',
+    'category': 'Website/Website',
     'sequence': 142,
     'version': '1.0',
     'summary': 'Manage your online hiring process',

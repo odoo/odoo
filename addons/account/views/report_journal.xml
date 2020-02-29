@@ -21,8 +21,8 @@
                         </div>
                         <div class="col-3">
                             <strong>Entries Sorted By:</strong>
-                            <p t-if="data['form'].get('sort_selection') != 'l.date'">Journal Entry Number</p>
-                            <p t-if="data['form'].get('sort_selection') == 'l.date'">Date</p>
+                            <p t-if="data['form'].get('sort_selection') == 'move_name'">Journal Entry Number</p>
+                            <p t-if="data['form'].get('sort_selection') == 'date'">Date</p>
                         </div>
                         <div class="col-3">
                             <strong>Target Moves:</strong>

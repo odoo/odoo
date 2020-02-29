@@ -20,12 +20,8 @@
     }
 }
 .o_stock_reports_page {
-    @include media-breakpoint-down(md) {
-        overflow-x:scroll;
-    }
     background-color: $o-view-background-color;
     &.o_stock_reports_no_print {
-        padding-bottom: 125px;
         margin: $o-horizontal-padding auto;
         @include o-webclient-padding($top: $o-sheet-vpadding, $bottom: $o-sheet-vpadding);
         .o_stock_reports_level0 {
@@ -33,7 +29,6 @@
         }
         .o_stock_reports_table {
             white-space: nowrap;
-            margin-bottom: 228px;
             margin-top: 30px;
         }
         .o_report_line_header {
@@ -55,9 +50,6 @@
     }
     a.o_stock_report_lot_action  {
         cursor: pointer;
-    }
-    table > tbody > tr > td ~ td > span {
-        margin-left: 10px;
     }
     .o_stock_reports_unfolded td + td {
         visibility: hidden;

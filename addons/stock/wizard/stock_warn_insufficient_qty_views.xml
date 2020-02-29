@@ -6,26 +6,23 @@
         <field name="arch" type="xml">
             <form>
                 <div>
-                    The product
-                    <strong><field name="product_id" readonly="True"/></strong> is not available in sufficient quantity
+                    The product is not available in sufficient quantity
                     <span class="oe_inline" groups="stock.group_stock_multi_locations"> in
                         <strong><field name="location_id" readonly="True"/></strong>.
                     </span>
                 </div>
                 <div attrs="{'invisible': [('quant_ids', '=', [])]}">
                     <br/>
-                    <strong>Here is your current inventory: </strong>
+                    <strong>Current Inventory: </strong>
                     <field name="quant_ids" style="margin-top:10px;">
                         <tree>
-                            <field name="product_id"/>
-                            <field name="location_id"/>
+                            <field name="location_id" options="{'no_create': True}"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
                             <field name="quantity"/>
                         </tree>
                     </field>
                 </div>
-                <div>
-                    Are you sure you want to confirm this operation? This may lead to inconsistencies in your inventory.
+                <div name="description">
                 </div>
                 <footer>
                     <button name="cancel_button" string="Discard" class="btn-primary" special="cancel"/>
@@ -41,8 +38,11 @@
         <field name="inherit_id" ref="stock.stock_warn_insufficient_qty_form_view"/>
          <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='product_id']" position="after">
-                <field name="scrap_id" invisible="1"/>
+            <xpath expr="//div[@name='description']" position="inside">
+                Do you confirm you want to scrap <strong><field name="quantity" readonly="True"/></strong><field name="product_uom_name" readonly="True" class="mx-1"/>from location <strong><field name="location_id" readonly="True"/></strong>? This may lead to inconsistencies in your inventory.
+            </xpath>
+            <xpath expr="//button[@name='cancel_button']" position="replace">
+                <button string="Discard" name="action_cancel" type="object" class="btn-primary"/>
             </xpath>
         </field>
     </record>

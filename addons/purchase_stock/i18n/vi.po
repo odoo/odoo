@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * purchase_stock
+# 	* purchase_stock
 # 
 # Translators:
-# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
-# Martin Trigaux, 2018
-# fanha99 <fanha99@hotmail.com>, 2018
-# Duy BQ <duybq86@gmail.com>, 2018
-# Minh Nguyen <ndminh210994@gmail.com>, 2018
+# Martin Trigaux, 2019
+# fanha99 <fanha99@hotmail.com>, 2019
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# Duy BQ <duybq86@gmail.com>, 2019
+# Dung Nguyen Thi <dungnt@trobz.com>, 2019
+# Dao Nguyen <trucdao.uel@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-24 09:34+0000\n"
-"PO-Revision-Date: 2018-10-24 09:34+0000\n"
-"Last-Translator: Minh Nguyen <ndminh210994@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: Dao Nguyen <trucdao.uel@gmail.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,8 +25,31 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+
+#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
-msgid "<span class=\"o_stat_text\">Purchase Orders</span>"
+msgid "<span class=\"o_stat_text\">Purchases</span>"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
+msgid "<strong>Shipping address:</strong>"
+msgstr "<strong>Địa chỉ giao hàng</strong>"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
+msgid ""
+"According to product configuration, the recieved quantity can be automatically computed by mechanism :\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 
 #. module: purchase_stock
@@ -33,10 +58,10 @@ msgid "Action"
 msgstr "Hành động"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/stock.py:127
+#: code:addons/purchase_stock/models/stock.py:0
+#: model:ir.model.fields.selection,name:purchase_stock.selection__stock_rule__action__buy
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_stock_rule
 #: model:stock.location.route,name:purchase_stock.route_warehouse0_buy
-#: selection:stock.rule,action:0
 #, python-format
 msgid "Buy"
 msgstr "Mua"
@@ -49,12 +74,12 @@ msgstr "Quy tắc mua"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
 msgid "Buy to Resupply"
-msgstr ""
+msgstr "Mua để tái cung ứng"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "Cấu hình thiết lập"
+msgstr "Cấu hình"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_id
@@ -64,24 +89,26 @@ msgstr "Chi tiết đơn hàng đã tạo"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_type_id
 msgid "Deliver To"
-msgstr "Giao tới"
+msgstr "Giao hàng đến"
 
 #. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_product_product__route_ids
 #: model:ir.model.fields,help:purchase_stock.field_product_template__route_ids
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
-"of the product: whether it will be bought, manufactured, MTO, etc."
+"of the product: whether it will be bought, manufactured, replenished on "
+"order, etc."
 msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Destination Location Type"
-msgstr "Kiểu Địa điểm Đích"
+msgstr "Loại địa điểm đích"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_dest_ids
 msgid "Downstream Moves"
-msgstr "Dịch chuyển Đầu ra"
+msgstr "Dịch chuyển đầu ra"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
@@ -91,17 +118,12 @@ msgstr "Vận chuyển giao hàng"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr ""
+msgstr "(Các) ngoại lệ xảy ra trên (các) đơn đặt mua:"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s):"
-msgstr ""
-
-#. module: purchase_stock
-#: model:ir.ui.menu,name:purchase_stock.menu_action_picking_tree_in_move
-msgid "Incoming  Products"
-msgstr "Hàng sắp về"
+msgstr "Các ngoại lệ:"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -111,7 +133,7 @@ msgstr "Lô hàng nhận"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_id
 msgid "Incoterm"
-msgstr "Incoterm"
+msgstr "Điều khoản thương mại quốc tế"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__incoterm_id
@@ -119,13 +141,8 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
-"Bộ Điều khoản Thương mại Quốc tế (Incoterms) là một chuỗi các điều khoản "
+"Bộ điều khoản thương mại Quốc tế (Incoterms) là một chuỗi các điều khoản "
 "thương mại được định nghĩa trước để sử dụng trong các giao dịch quốc tế."
-
-#. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_account_invoice
-msgid "Invoice"
-msgstr "Hóa đơn"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
@@ -135,27 +152,27 @@ msgstr "Đã giao"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__is_installed_sale
 msgid "Is the Sale Module Installed"
-msgstr "Module Kinh doanh đã cài đặt"
+msgstr "Phân hệ bán hàng đã cài đặt"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_account_move
+msgid "Journal Entries"
+msgstr "Bút toán phát sinh"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid "Logistics"
-msgstr "Tuyến hậu cần"
+msgstr "Kho vận"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "Lô/Số sê-ri"
+msgstr "Lô/Số serial"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Manual actions may be needed."
-msgstr ""
-
-#. module: purchase_stock
-#: selection:stock.rule,action:0
-msgid "Manufacture"
-msgstr "Sản xuất"
+msgstr "Có thể cần xử lý thủ công."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -164,7 +181,7 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
-"Biên độ lỗi cho thời gian chờ của nhà cung cấp. Khi hệ thống tạo Đơn đặt "
+"Biên độ lỗi cho thời gian chờ của nhà cung cấp. Khi hệ thống tạo đơn đặt "
 "hàng để cung ứng lại các sản phẩm, chúng sẽ được lên lịch trước đó nhiều "
 "ngày để đối phó với sự chậm trễ của nhà cung cấp không mong muốn."
 
@@ -181,7 +198,7 @@ msgstr "Ngày dự kiến giao hàng theo"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Next transfer(s) impacted:"
-msgstr ""
+msgstr "Các điều chuyển tiếp theo bị ảnh hưởng:"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__orderpoint_id
@@ -191,70 +208,70 @@ msgstr "Điểm đặt hàng"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_count
 msgid "Picking count"
-msgstr ""
+msgstr "Số đơn điều chuyển"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
 msgid "Procurement Group"
-msgstr "Nhóm Cung ứng"
+msgstr "Nhóm cung ứng"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_template
 msgid "Product Template"
-msgstr "Mẫu sản phẩm"
+msgstr "Bản mẫu sản phẩm"
 
 #. module: purchase_stock
-#: selection:stock.rule,action:0
-msgid "Pull & Push"
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_date
+msgid "Propagate Rescheduling"
 msgstr ""
 
 #. module: purchase_stock
-#: selection:stock.rule,action:0
-msgid "Pull From"
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_cancel
+msgid "Propagate cancellation"
 msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order
 msgid "Purchase Order"
-msgstr "Đơn hàng Mua"
+msgstr "Đơn mua hàng"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__purchase_line_id
 msgid "Purchase Order Line"
-msgstr "Dòng hàng Đơn hàng Mua"
+msgstr "Chi tiết mua hàng"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_ids
 #: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
 msgid "Purchase Orders"
-msgstr "Đơn hàng Mua"
+msgstr "Đơn mua hàng"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_report
 msgid "Purchase Report"
-msgstr ""
+msgstr "Báo cáo mua hàng"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_count
 msgid "Purchase order count"
-msgstr ""
-
-#. module: purchase_stock
-#: selection:stock.rule,action:0
-msgid "Push To"
-msgstr ""
+msgstr "Số đơn mua hàng"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receipt"
-msgstr "Phiếu thu"
+msgstr "Nhận hàng"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receive Products"
-msgstr "Nhận Sản phẩm"
+msgstr "Nhận sản phẩm"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
+msgid "Received Qty Method"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.actions.act_window,name:purchase_stock.purchase_open_picking
@@ -268,9 +285,14 @@ msgid "Request your vendors to deliver to your customers"
 msgstr "Yêu cầu nhà cung cấp của bạn phân phối tới khách hàng của bạn"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_date_minimum_delta
+msgid "Reschedule if Higher Than"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
 msgid "Reservation"
-msgstr "Xí trước"
+msgstr "Lấy trước"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_return_picking
@@ -278,6 +300,7 @@ msgid "Return Picking"
 msgstr "Trả hàng"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__route_ids
 #: model:ir.model.fields,field_description:purchase_stock.field_product_template__route_ids
 msgid "Routes"
 msgstr "Tuyến cung ứng"
@@ -290,9 +313,10 @@ msgstr "Lập lịch thu trước để tránh sự chậm trễ"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Dịch chuyển kho"
+msgstr "Hoạt động kho"
 
 #. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_line__qty_received_method__stock_moves
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
 msgid "Stock Moves"
 msgstr "Dịch chuyển kho"
@@ -300,20 +324,25 @@ msgstr "Dịch chuyển kho"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Tuyến cung ứng"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "Báo cáo quy tác kho"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr "Lĩnh vực kỹ thuật được sử dụng để hiển thị Địa chỉ Drop Ship"
+msgstr "Lĩnh vực kỹ thuật được sử dụng để hiển thị địa chỉ dropship"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:265
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__propagate_date_minimum_delta
+msgid "The change must be higher than this value to be propagated"
+msgstr ""
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
@@ -323,14 +352,18 @@ msgstr ""
 " Bạn nên yêu cầu hoàn lại tiền."
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/stock_rule.py:38
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__propagate_date
+msgid "The rescheduling is propagated to the next move."
+msgstr ""
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid ""
-"There is no vendor associated to the product %s. Please define a vendor for "
-"this product."
+"There is no matching vendor price to generate the purchase order for product"
+" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
+" Go on the product form and complete the list of vendors."
 msgstr ""
-"Chưa có nhà cung cấp được thiết lập cho sản phẩm %s. Vui lòng xác định một "
-"nhà cung cấp cho sản phẩm này."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -356,23 +389,23 @@ msgstr "Điều này sẽ xác định loại hoạt động của lô hàng đ�
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Dịch chuyển"
+msgstr "Điều chuyển"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:95
+#: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
 "done."
 msgstr ""
-"Không thể huỷ đơn hàng mua %s khi mà đã nhận một phần hay toàn bộ hàng hoá "
+"Không thể huỷ đơn mua hàng %s khi mà đã nhận một phần hay toàn bộ hàng hoá "
 "theo đơn hàng này."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__picking_type_id
 msgid "Warehouse"
-msgstr "Kho hàng"
+msgstr "Kho"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_stock_warehouse__buy_to_resupply
@@ -380,26 +413,30 @@ msgid "When products are bought, they can be delivered to this warehouse"
 msgstr "Khi sản phẩm được mua, chúng có thể được giao tới kho này"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/stock_rule.py:20
+#: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
 "created to fulfill the need."
 msgstr ""
+"Khi cần sản phẩm<b>%s</b>, <br/> một yêu cầu báo giá được tạo ra để đáp ứng "
+"nhu cầu."
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:257
+#: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
 "Create a return first."
 msgstr ""
+"Bạn không thể giảm số lượng đặt hàng nhỏ hơn số lượng nhận được.\n"
+" Đầu tiên hãy tạo phiếu trả hàng."
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:186
+#: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
-msgstr "Bạn phải thiết lập Địa điểm Nhà cung cấp cho đối tác này %s"
+msgstr "Bạn phải thiết lập địa điểm nhà cung cấp cho đối tác này %s"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -414,4 +451,4 @@ msgstr "của"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "ordered instead of"
-msgstr ""
+msgstr "đã đặt thay vì"

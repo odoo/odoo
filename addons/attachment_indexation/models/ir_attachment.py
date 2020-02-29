@@ -2,14 +2,24 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
 import logging
-import PyPDF2
 import xml.dom.minidom
 import zipfile
 
 from odoo import api, models
 
 _logger = logging.getLogger(__name__)
+
+try:
+    from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+    from pdfminer.converter import TextConverter
+    from pdfminer.pdfpage import PDFPage
+except ImportError:
+    PDFResourceManager = PDFPageInterpreter = TextConverter = PDFPage = None
+    _logger.warning("Attachment indexation of PDF documents is unavailable because the 'pdfminer' Python library cannot be found on the system. "
+                    "You may install it from https://pypi.org/project/pdfminer.six/ (e.g. `pip3 install pdfminer.six`)")
+
 FTYPES = ['docx', 'pptx', 'xlsx', 'opendoc', 'pdf']
+
 
 def textToString(element):
     buff = u""
@@ -91,23 +101,30 @@ class IrAttachment(models.Model):
 
     def _index_pdf(self, bin_data):
         '''Index PDF documents'''
-
+        if PDFResourceManager is None:
+            return
         buf = u""
         if bin_data.startswith(b'%PDF-'):
             f = io.BytesIO(bin_data)
             try:
-                pdf = PyPDF2.PdfFileReader(f, overwriteWarnings=False)
-                for page in pdf.pages:
-                    buf += page.extractText()
+                resource_manager = PDFResourceManager()
+                with io.StringIO() as content, TextConverter(resource_manager, content) as device:
+                    logging.getLogger("pdfminer").setLevel(logging.CRITICAL)
+                    interpreter = PDFPageInterpreter(resource_manager, device)
+
+                    for page in PDFPage.get_pages(f):
+                        interpreter.process_page(page)
+
+                    buf = content.getvalue()
             except Exception:
                 pass
         return buf
 
     @api.model
-    def _index(self, bin_data, datas_fname, mimetype):
+    def _index(self, bin_data, mimetype):
         for ftype in FTYPES:
             buf = getattr(self, '_index_%s' % ftype)(bin_data)
             if buf:
                 return buf
 
-        return super(IrAttachment, self)._index(bin_data, datas_fname, mimetype)
+        return super(IrAttachment, self)._index(bin_data, mimetype)

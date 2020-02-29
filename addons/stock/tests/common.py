@@ -3,98 +3,96 @@
 from odoo.tests import common
 
 
-class TestStockCommon(common.TransactionCase):
+class TestStockCommon(common.SavepointCase):
+    @classmethod
+    def setUpClass(cls):
+        super(TestStockCommon, cls).setUpClass()
 
-    def setUp(self):
-        super(TestStockCommon, self).setUp()
-
-        self.ProductObj = self.env['product.product']
-        self.UomObj = self.env['uom.uom']
-        self.PartnerObj = self.env['res.partner']
-        self.ModelDataObj = self.env['ir.model.data']
-        self.StockPackObj = self.env['stock.move.line']
-        self.StockQuantObj = self.env['stock.quant']
-        self.PickingObj = self.env['stock.picking']
-        self.MoveObj = self.env['stock.move']
-        self.InvObj = self.env['stock.inventory']
-        self.InvLineObj = self.env['stock.inventory.line']
-        self.LotObj = self.env['stock.production.lot']
+        cls.ProductObj = cls.env['product.product']
+        cls.UomObj = cls.env['uom.uom']
+        cls.PartnerObj = cls.env['res.partner']
+        cls.ModelDataObj = cls.env['ir.model.data']
+        cls.StockPackObj = cls.env['stock.move.line']
+        cls.StockQuantObj = cls.env['stock.quant']
+        cls.PickingObj = cls.env['stock.picking']
+        cls.MoveObj = cls.env['stock.move']
+        cls.InvObj = cls.env['stock.inventory']
+        cls.InvLineObj = cls.env['stock.inventory.line']
+        cls.LotObj = cls.env['stock.production.lot']
 
         # Model Data
-        self.partner_agrolite_id = self.ModelDataObj.xmlid_to_res_id('base.res_partner_2')
-        self.partner_delta_id = self.ModelDataObj.xmlid_to_res_id('base.res_partner_4')
-        self.picking_type_in = self.ModelDataObj.xmlid_to_res_id('stock.picking_type_in')
-        self.picking_type_out = self.ModelDataObj.xmlid_to_res_id('stock.picking_type_out')
-        self.supplier_location = self.ModelDataObj.xmlid_to_res_id('stock.stock_location_suppliers')
-        self.stock_location = self.ModelDataObj.xmlid_to_res_id('stock.stock_location_stock')
-        pack_location = self.env.ref('stock.location_pack_zone')
+        cls.picking_type_in = cls.ModelDataObj.xmlid_to_res_id('stock.picking_type_in')
+        cls.picking_type_out = cls.ModelDataObj.xmlid_to_res_id('stock.picking_type_out')
+        cls.supplier_location = cls.ModelDataObj.xmlid_to_res_id('stock.stock_location_suppliers')
+        cls.stock_location = cls.ModelDataObj.xmlid_to_res_id('stock.stock_location_stock')
+        pack_location = cls.env.ref('stock.location_pack_zone')
         pack_location.active = True
-        self.pack_location = pack_location.id
-        output_location = self.env.ref('stock.stock_location_output')
+        cls.pack_location = pack_location.id
+        output_location = cls.env.ref('stock.stock_location_output')
         output_location.active = True
-        self.output_location = output_location.id
-        self.customer_location = self.ModelDataObj.xmlid_to_res_id('stock.stock_location_customers')
-        self.categ_unit = self.ModelDataObj.xmlid_to_res_id('uom.product_uom_categ_unit')
-        self.categ_kgm = self.ModelDataObj.xmlid_to_res_id('uom.product_uom_categ_kgm')
+        cls.output_location = output_location.id
+        cls.customer_location = cls.ModelDataObj.xmlid_to_res_id('stock.stock_location_customers')
+        cls.categ_unit = cls.ModelDataObj.xmlid_to_res_id('uom.product_uom_categ_unit')
+        cls.categ_kgm = cls.ModelDataObj.xmlid_to_res_id('uom.product_uom_categ_kgm')
 
         # Product Created A, B, C, D
-        self.productA = self.ProductObj.create({'name': 'Product A', 'type': 'product'})
-        self.productB = self.ProductObj.create({'name': 'Product B', 'type': 'product'})
-        self.productC = self.ProductObj.create({'name': 'Product C', 'type': 'product'})
-        self.productD = self.ProductObj.create({'name': 'Product D', 'type': 'product'})
-        self.productE = self.ProductObj.create({'name': 'Product E', 'type': 'product'})
+        cls.productA = cls.ProductObj.create({'name': 'Product A', 'type': 'product'})
+        cls.productB = cls.ProductObj.create({'name': 'Product B', 'type': 'product'})
+        cls.productC = cls.ProductObj.create({'name': 'Product C', 'type': 'product'})
+        cls.productD = cls.ProductObj.create({'name': 'Product D', 'type': 'product'})
+        cls.productE = cls.ProductObj.create({'name': 'Product E', 'type': 'product'})
 
         # Configure unit of measure.
-        self.uom_kg = self.env['uom.uom'].search([('category_id', '=', self.categ_kgm), ('uom_type', '=', 'reference')], limit=1)
-        self.uom_kg.write({
+        cls.uom_kg = cls.env['uom.uom'].search([('category_id', '=', cls.categ_kgm), ('uom_type', '=', 'reference')], limit=1)
+        cls.uom_kg.write({
             'name': 'Test-KG',
             'rounding': 0.000001})
-        self.uom_tone = self.UomObj.create({
+        cls.uom_tone = cls.UomObj.create({
             'name': 'Test-Tone',
-            'category_id': self.categ_kgm,
+            'category_id': cls.categ_kgm,
             'uom_type': 'bigger',
             'factor_inv': 1000.0,
             'rounding': 0.001})
-        self.uom_gm = self.UomObj.create({
+        cls.uom_gm = cls.UomObj.create({
             'name': 'Test-G',
-            'category_id': self.categ_kgm,
+            'category_id': cls.categ_kgm,
             'uom_type': 'smaller',
             'factor': 1000.0,
             'rounding': 0.001})
-        self.uom_mg = self.UomObj.create({
+        cls.uom_mg = cls.UomObj.create({
             'name': 'Test-MG',
-            'category_id': self.categ_kgm,
+            'category_id': cls.categ_kgm,
             'uom_type': 'smaller',
             'factor': 100000.0,
             'rounding': 0.001})
         # Check Unit
-        self.uom_unit = self.env['uom.uom'].search([('category_id', '=', self.categ_unit), ('uom_type', '=', 'reference')], limit=1)
-        self.uom_unit.write({
+        cls.uom_unit = cls.env['uom.uom'].search([('category_id', '=', cls.categ_unit), ('uom_type', '=', 'reference')], limit=1)
+        cls.uom_unit.write({
             'name': 'Test-Unit',
             'rounding': 1.0})
-        self.uom_dozen = self.UomObj.create({
+        cls.uom_dozen = cls.UomObj.create({
             'name': 'Test-DozenA',
-            'category_id': self.categ_unit,
+            'category_id': cls.categ_unit,
             'factor_inv': 12,
             'uom_type': 'bigger',
             'rounding': 0.001})
-        self.uom_sdozen = self.UomObj.create({
+        cls.uom_sdozen = cls.UomObj.create({
             'name': 'Test-SDozenA',
-            'category_id': self.categ_unit,
+            'category_id': cls.categ_unit,
             'factor_inv': 144,
             'uom_type': 'bigger',
             'rounding': 0.001})
-        self.uom_sdozen_round = self.UomObj.create({
+        cls.uom_sdozen_round = cls.UomObj.create({
             'name': 'Test-SDozenA Round',
-            'category_id': self.categ_unit,
+            'category_id': cls.categ_unit,
             'factor_inv': 144,
             'uom_type': 'bigger',
             'rounding': 1.0})
 
         # Product for different unit of measure.
-        self.DozA = self.ProductObj.create({'name': 'Dozon-A', 'type': 'product', 'uom_id': self.uom_dozen.id, 'uom_po_id': self.uom_dozen.id})
-        self.SDozA = self.ProductObj.create({'name': 'SuperDozon-A', 'type': 'product', 'uom_id': self.uom_sdozen.id, 'uom_po_id': self.uom_sdozen.id})
-        self.SDozARound = self.ProductObj.create({'name': 'SuperDozenRound-A', 'type': 'product', 'uom_id': self.uom_sdozen_round.id, 'uom_po_id': self.uom_sdozen_round.id})
-        self.UnitA = self.ProductObj.create({'name': 'Unit-A', 'type': 'product'})
-        self.kgB = self.ProductObj.create({'name': 'kg-B', 'type': 'product', 'uom_id': self.uom_kg.id, 'uom_po_id': self.uom_kg.id})
-        self.gB = self.ProductObj.create({'name': 'g-B', 'type': 'product', 'uom_id': self.uom_gm.id, 'uom_po_id': self.uom_gm.id})
+        cls.DozA = cls.ProductObj.create({'name': 'Dozon-A', 'type': 'product', 'uom_id': cls.uom_dozen.id, 'uom_po_id': cls.uom_dozen.id})
+        cls.SDozA = cls.ProductObj.create({'name': 'SuperDozon-A', 'type': 'product', 'uom_id': cls.uom_sdozen.id, 'uom_po_id': cls.uom_sdozen.id})
+        cls.SDozARound = cls.ProductObj.create({'name': 'SuperDozenRound-A', 'type': 'product', 'uom_id': cls.uom_sdozen_round.id, 'uom_po_id': cls.uom_sdozen_round.id})
+        cls.UnitA = cls.ProductObj.create({'name': 'Unit-A', 'type': 'product'})
+        cls.kgB = cls.ProductObj.create({'name': 'kg-B', 'type': 'product', 'uom_id': cls.uom_kg.id, 'uom_po_id': cls.uom_kg.id})
+        cls.gB = cls.ProductObj.create({'name': 'g-B', 'type': 'product', 'uom_id': cls.uom_gm.id, 'uom_po_id': cls.uom_gm.id})

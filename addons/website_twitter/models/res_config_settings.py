@@ -5,21 +5,21 @@ import logging
 
 import requests
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, _lt
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
 TWITTER_EXCEPTION = {
-    304: _('There was no new data to return.'),
-    400: _('The request was invalid or cannot be otherwise served. Requests without authentication are considered invalid and will yield this response.'),
-    401: _('Authentication credentials were missing or incorrect. Maybe screen name tweets are protected.'),
-    403: _('The request is understood, but it has been refused or access is not allowed. Please check your Twitter API Key and Secret.'),
-    429: _('Request cannot be served due to the applications rate limit having been exhausted for the resource.'),
-    500: _('Twitter seems broken. Please retry later. You may consider posting an issue on Twitter forums to get help.'),
-    502: _('Twitter is down or being upgraded.'),
-    503: _('The Twitter servers are up, but overloaded with requests. Try again later.'),
-    504: _('The Twitter servers are up, but the request could not be serviced due to some failure within our stack. Try again later.')
+    304: _lt('There was no new data to return.'),
+    400: _lt('The request was invalid or cannot be otherwise served. Requests without authentication are considered invalid and will yield this response.'),
+    401: _lt('Authentication credentials were missing or incorrect. Maybe screen name tweets are protected.'),
+    403: _lt('The request is understood, but it has been refused or access is not allowed. Please check your Twitter API Key and Secret.'),
+    429: _lt('Request cannot be served due to the applications rate limit having been exhausted for the resource.'),
+    500: _lt('Twitter seems broken. Please retry later. You may consider posting an issue on Twitter forums to get help.'),
+    502: _lt('Twitter is down or being upgraded.'),
+    503: _lt('The Twitter servers are up, but overloaded with requests. Try again later.'),
+    504: _lt('The Twitter servers are up, but the request could not be serviced due to some failure within our stack. Try again later.')
 }
 
 
@@ -68,7 +68,6 @@ class ResConfigSettings(models.TransientModel):
             TwitterConfig._check_twitter_authorization()
         return TwitterConfig
 
-    @api.multi
     def write(self, vals):
         TwitterConfig = super(ResConfigSettings, self).write(vals)
         if vals.get('twitter_api_key') or vals.get('twitter_api_secret') or vals.get('twitter_screen_name'):

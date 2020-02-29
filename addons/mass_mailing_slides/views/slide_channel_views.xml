@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="slide_channel_view_form" model="ir.ui.view">
+        <field name="name">slide.channel.view.form.inherit.mass.mailing</field>
+        <field name="model">slide.channel</field>
+        <field name="inherit_id" ref="website_slides.view_slide_channel_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_redirect_to_done_members']" position="before">
+                <button class="oe_stat_button" type="object"
+                        name="action_mass_mailing_attendees"
+                        icon="fa-envelope-o"
+                        attrs="{'invisible': [('members_count', '=', 0)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Mail Attendees</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="slide_channel_view_kanban" model="ir.ui.view">
+        <field name="name">slide.channel.view.kanban.inherit.mass.mailing</field>
+        <field name="model">slide.channel</field>
+        <field name="inherit_id" ref="website_slides.slide_channel_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//a[@name='action_channel_invite']" position="after">
+                <a class="dropdown-item" name="action_mass_mailing_attendees" role="menuitem" type="object">
+                    Mail Attendees
+                </a>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -10,12 +10,11 @@ import io
 class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
-    @api.multi
     def _post_pdf(self, save_in_attachment, pdf_content=None, res_ids=None):
         # OVERRIDE
-        if self.model == 'account.invoice' and res_ids and len(res_ids) == 1:
-            invoice = self.env['account.invoice'].browse(res_ids)
-            if invoice.type in ('out_invoice', 'out_refund') and invoice.state != 'draft':
+        if self.model == 'account.move' and res_ids and len(res_ids) == 1:
+            invoice = self.env['account.move'].browse(res_ids)
+            if invoice.is_sale_document() and invoice.state != 'draft':
                 xml_content = invoice._export_as_facturx_xml()
 
                 # Add attachment.

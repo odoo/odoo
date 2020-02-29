@@ -2,6 +2,8 @@
 
 .. highlight:: xml
 
+.. _reference/reports:
+
 ============
 QWeb Reports
 ============
@@ -40,7 +42,10 @@ can take the following attributes:
     the model your report will be about
 ``report_type`` (mandatory)
     either ``qweb-pdf`` for PDF reports or ``qweb-html`` for HTML
-``report_name``
+``file``
+    The path to the main report file (depending on Report Type)
+    or empty if the content is in another field
+``print_report_name``
     the name of your report (which will be the name of the PDF output)
 ``groups``
     :class:`~odoo.fields.Many2many` field to the groups allowed to view/use
@@ -129,13 +134,13 @@ you need to define two templates:
 * The main report template
 * The translatable document
 
-You can then call the translatable document from your main template with the attribute 
+You can then call the translatable document from your main template with the attribute
 ``t-lang`` set to a language code (for example ``fr`` or ``en_US``) or to a record field.
 You will also need to re-browse the related records with the proper context if you use
 fields that are translatable (like country names, sales conditions, etc.)
 
 .. warning::
-    
+
     If your report template does not use translatable record fields, re-browsing the record
     in another language is *not* necessary and will impact performances.
 
@@ -153,7 +158,7 @@ For example, let's look at the Sale Order report from the Sale module::
     <!-- Translatable template -->
     <template id="report_saleorder_document">
         <!-- Re-browse of the record with the partner lang -->
-        <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
+        <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
         <t t-call="web.external_layout">
             <div class="page">
                 <div class="oe_structure"/>
@@ -169,10 +174,10 @@ For example, let's look at the Sale Order report from the Sale module::
     </template>
 
 
-The main template calls the translatable template with ``doc.partner_id.lang`` as a 
-``t-lang`` parameter, so it will be rendered in the language of the partner. This way, 
-each Sale Order will be printed in the language of the corresponding customer. If you wish 
-to translate only the body of the document, but keep the header and footer in a default 
+The main template calls the translatable template with ``doc.partner_id.lang`` as a
+``t-lang`` parameter, so it will be rendered in the language of the partner. This way,
+each Sale Order will be printed in the language of the corresponding customer. If you wish
+to translate only the body of the document, but keep the header and footer in a default
 language, you could call the report's external layout this way::
 
     <t t-call="web.external_layout" t-lang="en_US">
@@ -180,7 +185,7 @@ language, you could call the report's external layout this way::
 .. tip::
 
     Please take note that this works only when calling external templates, you will not be
-    able to translate part of a document by setting a ``t-lang`` attribute on an xml node other 
+    able to translate part of a document by setting a ``t-lang`` attribute on an xml node other
     than ``t-call``. If you wish to translate part of a template, you can create an external
     template with this partial template and call it from the main one with the ``t-lang``
     attribute.
@@ -282,7 +287,7 @@ named :samp:`report.{module.report_name}`. If it exists, it will use it to
 call the QWeb engine; otherwise a generic function will be used. If you wish
 to customize your reports by including more things in the template (like
 records of others models, for example), you can define this model, overwrite
-the function ``render_html`` and pass objects in the ``docargs`` dictionary:
+the function ``_get_report_values`` and pass objects in the ``docargs`` dictionary:
 
 .. code-block:: python
 
@@ -290,16 +295,49 @@ the function ``render_html`` and pass objects in the ``docargs`` dictionary:
 
     class ParticularReport(models.AbstractModel):
         _name = 'report.module.report_name'
+
         @api.model
-        def render_html(self, docids, data=None):
-            report_obj = self.env['report']
+        def _get_report_values(self, docids, data=None):
+            report_obj = self.env['ir.actions.report']
             report = report_obj._get_report_from_name('module.report_name')
             docargs = {
                 'doc_ids': docids,
                 'doc_model': report.model,
                 'docs': self,
             }
-            return report_obj.render('module.report_name', docargs)
+            return docargs
+
+.. _reference/reports/custom_fonts:
+
+Custom fonts
+============
+If you want to use custom fonts you will need to add your custom font and the related less/CSS to the ``web.reports_assets_common`` assets bundle. 
+Adding your custom font(s) to ``web.assets_common`` or ``web.assets_backend`` will not make your font available in QWeb reports.
+
+Example::
+
+    <template id="report_assets_common_custom_fonts" name="Custom QWeb fonts" inherit_id="web.report_assets_common">
+        <xpath expr="." position="inside">
+            <link href="/your_module/static/src/less/fonts.less" rel="stylesheet" type="text/less"/>
+        </xpath>
+    </template>
+
+You will need to define your ``@font-face`` within this less file, even if you've used in another assets bundle (other than ``web.reports_assets_common``).
+
+Example::
+
+    @font-face {
+        font-family: 'MonixBold';
+        src: local('MonixBold'), local('MonixBold'), url(/your_module/static/src/fonts/MonixBold-Regular.otf) format('opentype');
+    }
+
+    .h1-title-big {
+        font-family: MonixBold;
+        font-size: 60px;
+        color: #3399cc;
+    }
+
+After you've added the less into your assets bundle you can use the classes - in this example ``h1-title-big`` - in your custom QWeb report.
 
 Reports are web pages
 =====================
@@ -313,4 +351,4 @@ For example, you can access a Sale Order report in html mode by going to
 Or you can access the pdf version at
 \http://<server-address>/report/pdf/sale.report_saleorder/38
 
-.. _wkhtmltopdf: http://wkhtmltopdf.org
+.. _wkhtmltopdf: https://wkhtmltopdf.org

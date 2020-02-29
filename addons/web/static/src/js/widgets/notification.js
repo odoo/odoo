@@ -1,39 +1,40 @@
 odoo.define('web.Notification', function (require) {
-"use strict";
+'use strict';
+
+var Widget = require('web.Widget');
 
 /**
- * Notification
- *
- * This file contains the widget which is used to display a warning/information
- * message in the top right of the screen.
+ * Widget which is used to display a warning/information message on the top
+ * right of the screen.
  *
  * If you want to display such a notification, you probably do not want to do it
  * by importing this file. The proper way is to use the do_warn or do_notify
  * methods on the Widget class.
  */
-
-var Widget = require('web.Widget');
-
 var Notification = Widget.extend({
     template: 'Notification',
     events: {
-        'click > .o_close': '_onClose',
-        'click .o_buttons button': '_onClickButton'
+        'hidden.bs.toast': '_onClose',
+        'click .o_notification_buttons button': '_onClickButton',
+        'mouseenter': '_onMouseEnter',
+        'mouseleave': '_onMouseLeave',
     },
     _autoCloseDelay: 2500,
-    _animationDelay: 400,
+    _animation: true,
+
     /**
      * @override
      * @param {Widget} parent
      * @param {Object} params
-     * @param {string} params.title notification title
-     * @param {string} params.message notification main message
-     * @param {string} params.type 'notification' or 'warning'
-     * @param {boolean} [params.sticky=false] if true, the notification will stay
-     *   visible until the user clicks on it.
-     * @param {string} [params.className] className to add on the dom
+     * @param {string} params.title
+     * @param {string} params.subtitle
+     * @param {string} [params.message]
+     * @param {string} [params.type='warning'] 'info', 'success', 'warning', 'danger' or ''
+     * @param {boolean} [params.sticky=false] if true, the notification will
+     *      stay visible until the user clicks on it.
+     * @param {string} [params.className]
      * @param {function} [params.onClose] callback when the user click on the x
-     *   or when the notification is auto close (no sticky)
+     *      or when the notification is auto close (no sticky)
      * @param {Object[]} params.buttons
      * @param {function} params.buttons[0].click callback on click
      * @param {boolean} [params.buttons[0].primary] display the button as primary
@@ -43,35 +44,56 @@ var Notification = Widget.extend({
     init: function (parent, params) {
         this._super.apply(this, arguments);
         this.title = params.title;
+        this.subtitle = params.subtitle;
         this.message = params.message;
         this.buttons = params.buttons || [];
         this.sticky = !!this.buttons.length || !!params.sticky;
-        this.type = params.type || 'notification';
+        this.type = params.type === undefined ? 'warning' : params.type;
         this.className = params.className || '';
         this._closeCallback = params.onClose;
-        this.icon = 'fa-lightbulb-o';
+
+        if (this.type === 'danger') {
+            this.icon = 'fa-exclamation';
+            this.className += ' bg-danger';
+        } else if (this.type === 'warning') {
+            this.icon = 'fa-lightbulb-o';
+            this.className += ' bg-warning';
+        } else if (this.type === 'success') {
+            this.icon = 'fa-check';
+            this.className += ' bg-success';
+        } else if (this.type === 'info') {
+            this.icon = 'fa-info';
+            this.className += ' bg-info';
+        }
+
         if (this.buttons && this.buttons.length) {
             this.icon = 'fa-question-circle-o';
-        }
-        if (this.type === 'warning') {
-            this.icon = 'fa-exclamation';
-            this.className += ' o_error';
         }
     },
     /**
      * @override
      */
     start: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            self.$el.animate({opacity: 1.0}, self._animationDelay, "swing", function () {
-                if(!self.sticky) {
-                    setTimeout(function () {
-                        self.close();
-                    }, self._autoCloseDelay);
-                }
-            });
+        this.$el.toast({
+            animation: this._animation,
+            autohide: false,
         });
+        void this.$el[0].offsetWidth; // Force a paint refresh before showing the toast
+        if (!this.sticky) {
+            this.autohide = _.cancellableThrottleRemoveMeSoon(this.close, this._autoCloseDelay, {leading: false});
+            this.$el.on('shown.bs.toast', () => {
+                this.autohide();
+            });
+        }
+        this.$el.toast('show');
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this.$el.toast('dispose');
+        this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -79,22 +101,23 @@ var Notification = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * This method is used to destroy the widget with a nice animation. We
-     * first perform an animation, then call the real destroy method.
+     * Destroys the widget with a nice animation.
      *
      * @private
      * @param {boolean} [silent=false] if true, the notification does not call
      *   _closeCallback method
      */
     close: function (silent) {
+        this.silent = silent;
+        this.$el.toast('hide');
+
+        // Make 'close' work if the notification is not shown yet but will be.
+        // Should not be needed but the calendar notification system is an
+        // example of feature that does not work without this yet.
         var self = this;
-        this.trigger_up('close');
-        if (!silent && !this._buttonClicked) {
-            if (this._closeCallback) {
-                this._closeCallback();
-            }
-        }
-        this.$el.animate({opacity: 0.0, height: 0}, this._animationDelay, "swing", self.destroy.bind(self));
+        this.$el.one('shown.bs.toast', function () {
+            self.$el.toast('hide');
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -120,14 +143,34 @@ var Notification = Widget.extend({
     },
     /**
      * @private
-     * @param {MouseEvent} ev
+     * @param {Event} ev
      */
     _onClose: function (ev) {
-        ev.preventDefault();
-        this.close();
+        this.trigger_up('close');
+        if (!this.silent && !this._buttonClicked) {
+            if (this._closeCallback) {
+                this._closeCallback();
+            }
+        }
+        this.destroy();
+    },
+    /**
+     * @private
+     */
+    _onMouseEnter: function () {
+        if (!this.sticky) {
+            this.autohide.cancel();
+        }
+    },
+    /**
+     * @private
+     */
+    _onMouseLeave: function () {
+        if (!this.sticky) {
+            this.autohide();
+        }
     },
 });
 
 return Notification;
-
 });

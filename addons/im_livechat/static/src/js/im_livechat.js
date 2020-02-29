@@ -79,7 +79,7 @@ var LivechatButton = Widget.extend({
             ready = session.rpc('/im_livechat/init', {channel_id: this.options.channel_id})
                 .then(function (result) {
                     if (!result.available_for_me) {
-                        return $.Deferred().reject();
+                        return Promise.reject();
                     }
                     self._rule = result.rule;
                 });
@@ -105,6 +105,12 @@ var LivechatButton = Widget.extend({
             }
         }
         this.call('bus_service', 'onNotification', this, this._onNotification);
+        if (this.options.button_background_color) {
+            this.$el.css('background-color', this.options.button_background_color);
+        }
+        if (this.options.button_text_color) {
+            this.$el.css('color', this.options.button_text_color);
+        }
         return this._super();
     },
 
@@ -123,6 +129,14 @@ var LivechatButton = Widget.extend({
             serverURL: this._serverURL,
         });
         var message = new WebsiteLivechatMessage(this, data, options);
+
+        var hasAlreadyMessage = _.some(this._messages, function (msg) {
+            return message.getID() === msg.getID();
+        });
+        if (hasAlreadyMessage) {
+            return;
+        }
+
         if (this._livechat) {
             this._livechat.addMessage(message);
         }
@@ -178,6 +192,11 @@ var LivechatButton = Widget.extend({
                     this._livechat.unregisterTyping({ partnerID: partnerID });
                 }
             } else { // normal message
+                // If message from notif is already in chatter messages, stop handling
+                if (this._messages.some(message => message.getID() === notification[1].id)) {
+                    this._livechat.unregisterTyping({ partnerID: notification[1].author_id[0] });
+                    return;
+                }
                 this._addMessage(notification[1]);
                 this._renderMessages();
                 if (this._chatWindow.isFolded() || !this._chatWindow.isAtBottom()) {
@@ -190,15 +209,11 @@ var LivechatButton = Widget.extend({
      * @private
      */
     _loadQWebTemplate: function () {
-        var xml_files = ['/mail/static/src/xml/abstract_thread_window.xml',
-                         '/mail/static/src/xml/thread.xml',
-                         '/im_livechat/static/src/xml/im_livechat.xml'];
-        var defs = _.map(xml_files, function (tmpl) {
-            return session.rpc('/web/proxy/load', { path: tmpl }).then(function (xml) {
-                QWeb.add_template(xml);
+        return session.rpc('/im_livechat/load_templates').then(function (templates) {
+            _.each(templates, function (template) {
+                QWeb.add_template(template);
             });
         });
-        return $.when.apply($, defs);
     },
     /**
      * @private
@@ -213,47 +228,84 @@ var LivechatButton = Widget.extend({
         this._openingChat = true;
         clearTimeout(this._autoPopupTimeout);
         if (cookie) {
-            def = $.when(JSON.parse(cookie));
+            def = Promise.resolve(JSON.parse(cookie));
         } else {
             this._messages = []; // re-initialize messages cache
             def = session.rpc('/im_livechat/get_session', {
                 channel_id : this.options.channel_id,
                 anonymous_name : this.options.default_username,
+                previous_operator_id: this._get_previous_operator_id(),
             }, {shadow: true});
         }
         def.then(function (livechatData) {
             if (!livechatData || !livechatData.operator_pid) {
-                alert(_t("None of our collaborators seem to be available, please try again later."));
+                self.displayNotification({
+                    title: _t("Collaborators offline"),
+                    message: _t("None of our collaborators seem to be available, please try again later."),
+                    sticky: true
+                });
             } else {
                 self._livechat = new WebsiteLivechat({
                     parent: self,
                     data: livechatData
                 });
-                self._openChatWindow();
-                self._sendWelcomeMessage();
-                self._renderMessages();
+                return self._openChatWindow().then(function () {
+                    if (!self._history) {
+                        self._sendWelcomeMessage();
+                    }
+                    self._renderMessages();
+                    self.call('bus_service', 'addChannel', self._livechat.getUUID());
+                    self.call('bus_service', 'startPolling');
 
-                self.call('bus_service', 'addChannel', self._livechat.getUUID());
-                self.call('bus_service', 'startPolling');
-
-                utils.set_cookie('im_livechat_session', JSON.stringify(self._livechat.toData()), 60*60);
-                utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
+                    utils.set_cookie('im_livechat_session', JSON.stringify(self._livechat.toData()), 60*60);
+                    utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
+                    if (livechatData.operator_pid[0]) {
+                        // livechatData.operator_pid contains a tuple (id, name)
+                        // we are only interested in the id
+                        var operatorPidId = livechatData.operator_pid[0];
+                        var oneWeek = 7*24*60*60;
+                        utils.set_cookie('im_livechat_previous_operator_pid', operatorPidId, oneWeek);
+                    }
+                });
             }
-        }).always(function () {
+        }).then(function () {
+            self._openingChat = false;
+        }).guardedCatch(function() {
             self._openingChat = false;
         });
     }, 200, true),
     /**
+     * Will try to get a previous operator for this visitor.
+     * If the visitor already had visitor A, it's better for his user experience
+     * to get operator A again.
+     *
+     * The information is stored in the 'im_livechat_previous_operator_pid' cookie.
+     *
      * @private
+     * @return {integer} operator_id.partner_id.id if the cookie is set
+     */
+    _get_previous_operator_id: function () {
+        var cookie = utils.get_cookie('im_livechat_previous_operator_pid');
+        if (cookie) {
+            return cookie;
+        }
+
+        return null;
+    },
+    /**
+     * @private
+     * @return {Promise}
      */
     _openChatWindow: function () {
         var self = this;
         var options = {
             displayStars: false,
+            headerBackgroundColor: this.options.header_background_color,
             placeholder: this.options.input_placeholder || "",
+            titleColor: this.options.title_color,
         };
         this._chatWindow = new WebsiteLivechatWindow(this, this._livechat, options);
-        this._chatWindow.appendTo($('body')).then(function () {
+        return this._chatWindow.appendTo($('body')).then(function () {
             var cssProps = {bottom: 0};
             cssProps[_t.database.parameters.direction === 'rtl' ? 'left' : 'right'] = 0;
             self._chatWindow.$el.css(cssProps);
@@ -274,13 +326,21 @@ var LivechatButton = Widget.extend({
     /**
      * @private
      * @param {Object} message
-     * @return {$.Deferred}
+     * @return {Promise}
      */
     _sendMessage: function (message) {
         var self = this;
         return session
             .rpc('/mail/chat_post', {uuid: this._livechat.getUUID(), message_content: message.content})
-            .then(function () {
+            .then(function (messageId) {
+                if (!messageId) {
+                    self.displayNotification({
+                        title: _t("Session Expired"),
+                        message: _t("You took to long to send a message. Please refresh the page and try again."),
+                        sticky: true
+                    });
+                    self._closeChat();
+                }
                 self._chatWindow.scrollToBottom();
             });
     },
@@ -341,8 +401,8 @@ var LivechatButton = Widget.extend({
         ev.stopPropagation();
         var self = this;
         var messageData = ev.data.messageData;
-        this._sendMessage(messageData).fail(function (error, e) {
-            e.preventDefault();
+        this._sendMessage(messageData).guardedCatch(function (reason) {
+            reason.event.preventDefault();
             return self._sendMessage(messageData); // try again just in case
         });
     },
@@ -385,6 +445,8 @@ var Feedback = Widget.extend({
         'click .o_livechat_rating_choices img': '_onClickSmiley',
         'click .o_livechat_no_feedback span': '_onClickNoFeedback',
         'click .o_rating_submit_button': '_onClickSend',
+        'click .o_email_chat_button': '_onEmailChat',
+        'click .o_livechat_email_error .alert-link': '_onTryAgain',
     },
 
     /**
@@ -407,24 +469,30 @@ var Feedback = Widget.extend({
      * @private
      * @param {Object} options
      */
-    _sendFeedback: function (options) {
+    _sendFeedback: function (reason) {
         var self = this;
         var args = {
             uuid: this._livechat.getUUID(),
             rate: this.rating,
-            reason : options.reason
+            reason: reason,
         };
         this.dp.add(session.rpc('/im_livechat/feedback', args)).then(function () {
-            if (options.close) {
-                var emoji = RATING_TO_EMOJI[self.rating] || "??" ;
-                var content = _.str.sprintf(_t("Rating: %s"), emoji);
-                if (options.reason) {
-                    content += " \n" + options.reason;
-                }
-                self.trigger('send_message', { content: content });
-                self.trigger('feedback_sent'); // will close the chat
+            var emoji = RATING_TO_EMOJI[self.rating] || "??" ;
+            var content = _.str.sprintf(_t("Rating: %s"), emoji);
+            if (reason) {
+                content += " \n" + reason;
             }
+            self.trigger('send_message', { content: content });
         });
+    },
+    /**
+    * @private
+    */
+    _showThanksMessage: function () {
+        this.$('.o_livechat_rating_box').empty().append($('<div />', {
+            text: _t('Thank you for your feedback'),
+            class: 'text-muted'
+        }));
     },
 
     //--------------------------------------------------------------------------
@@ -441,8 +509,10 @@ var Feedback = Widget.extend({
      * @private
      */
     _onClickSend: function () {
+        this.$('.o_livechat_rating_reason').hide();
+        this._showThanksMessage();
         if (_.isNumber(this.rating)) {
-            this._sendFeedback({ reason: this.$('textarea').val(), close: true });
+            this._sendFeedback(this.$('textarea').val());
         }
     },
     /**
@@ -455,14 +525,48 @@ var Feedback = Widget.extend({
         this.$('.o_livechat_rating_choices img[data-value="'+this.rating+'"]').addClass('selected');
 
         // only display textearea if bad smiley selected
-        var shouldCloseChatWindow = false;
         if (this.rating !== 10) {
             this.$('.o_livechat_rating_reason').show();
         } else {
             this.$('.o_livechat_rating_reason').hide();
-            shouldCloseChatWindow = true;
+            this._showThanksMessage();
+            this._sendFeedback();
         }
-        this._sendFeedback({ close: shouldCloseChatWindow });
+    },
+    /**
+    * @private
+    */
+    _onEmailChat: function () {
+        var self = this;
+        var $email = this.$('#o_email');
+
+        if (utils.is_email($email.val())) {
+            $email.removeAttr('title').removeClass('is-invalid').prop('disabled', true);
+            this.$('.o_email_chat_button').prop('disabled', true);
+            this._rpc({
+                route: '/im_livechat/email_livechat_transcript',
+                params: {
+                    uuid: this._livechat.getUUID(),
+                    email: $email.val(),
+                }
+            }).then(function () {
+                self.$('.o_livechat_email').html($('<strong />', { text: _t('Conversation Sent') }));
+            }).guardedCatch(function () {
+                self.$('.o_livechat_email').hide();
+                self.$('.o_livechat_email_error').show();
+            });
+        } else {
+            $email.addClass('is-invalid').prop('title', _t('Invalid email address'));
+        }
+    },
+    /**
+    * @private
+    */
+    _onTryAgain: function () {
+        this.$('#o_email').prop('disabled', false);
+        this.$('.o_email_chat_button').prop('disabled', false);
+        this.$('.o_livechat_email_error').hide();
+        this.$('.o_livechat_email').show();
     },
 });
 

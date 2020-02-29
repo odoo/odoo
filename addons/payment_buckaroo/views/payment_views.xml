@@ -7,10 +7,10 @@
             <field name="model">payment.acquirer</field>
             <field name="inherit_id" ref="payment.acquirer_form"/>
             <field name="arch" type="xml">
-                <xpath expr='//group[@name="acquirer"]' position='after'>
+                <xpath expr='//group[@name="acquirer"]' position='inside'>
                     <group attrs="{'invisible': [('provider', '!=', 'buckaroo')]}">
-                        <field name="brq_websitekey"/>
-                        <field name="brq_secretkey"/>
+                        <field name="brq_websitekey" attrs="{'required':[ ('provider', '=', 'buckaroo'), ('state', '!=', 'disabled')]}"/>
+                        <field name="brq_secretkey" attrs="{'required':[ ('provider', '=', 'buckaroo'), ('state', '!=', 'disabled')]}"/>
                     </group>
                 </xpath>
             </field>

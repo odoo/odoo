@@ -4,7 +4,7 @@
 {
     'name': 'Sales',
     'version': '1.0',
-    'category': 'Sales',
+    'category': 'Sales/Sales',
     'sequence': 17,
     'summary': 'From quotations to invoices',
     'description': """
@@ -47,7 +47,6 @@ The Dashboard for the Sales Manager will include
         'views/sale_management_views.xml',
         'views/digest_views.xml',
         'views/sale_order_views.xml',
-        'views/assets.xml',
         'report/sale_report_templates.xml',
     ],
     'demo': [

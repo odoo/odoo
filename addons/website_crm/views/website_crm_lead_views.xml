@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="crm_lead_view_form" model="ir.ui.view">
+        <field name="name">crm.lead.view.form.inherit.website.crm</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_redirect_to_page_views" type="object" class="oe_stat_button" icon="fa-tags"
+                        attrs="{'invisible': [('visitor_page_count', '=', 0)]}">
+                    <field name="visitor_page_count" widget="statinfo" string="Page views"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</data></odoo>

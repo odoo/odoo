@@ -13,11 +13,13 @@ var ImportViewMixin = {
     /**
      * @override
      * @param {Object} params
-     * @param {boolean} [params.import_enabled=true] determine if the import
-     *   button is visible (in the control panel)
+     * @param {boolean} [params.import_enabled=true] set to false to disable
+     *   the Import feature (no 'Import' button in the control panel). Can also
+     *   be disabled with 'import' attrs set to '0' in the arch.
      */
     init: function (viewInfo, params) {
-        var importEnabled = 'import_enabled' in params ? params.import_enabled : true;
+        var importEnabled = !!JSON.parse(this.arch.attrs.import || '1') &&
+                            ('import_enabled' in params ? params.import_enabled : true);
         this.controllerParams.importEnabled = importEnabled && !config.device.isMobile;
     },
 };

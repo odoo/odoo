@@ -3,8 +3,8 @@
 
 {
     'name': 'Payment Acquirer',
-    'category': 'Accounting',
-    'summary': 'Payment Acquirer Base Module',
+    'category': 'Hidden',
+    'summary': 'Base Module for Payment Acquirers',
     'version': '1.0',
     'description': """Payment Acquirer Base Module""",
     'depends': ['account'],
@@ -23,6 +23,7 @@
         'views/res_partner_views.xml',
         'security/ir.model.access.csv',
         'security/payment_security.xml',
+        'wizards/payment_link_wizard_views.xml',
     ],
     'installable': True,
     'auto_install': True,

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="gamification_badge_form_view_simplified" model="ir.ui.view">
+        <field name="name">gamification.badge.form.view.simplified</field>
+        <field name="model">gamification.badge</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <form string="Badge">
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Badge Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="description" nolabel="1" placeholder="Badge Description"/>
+                    </group>
+                    <group string="Rewards for challenges">
+                        <field name="level"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</data></odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<!-- Products Search Bar autocomplete item -->
+<div t-name="website_sale.productsSearchBar.autocomplete"
+    class="dropdown-menu show w-100">
+    <t t-if="!products.length">
+        <span class="dropdown-item-text text-muted">No results found. Please try another search.</span>
+    </t>
+    <a t-foreach="products" t-as="product"
+        t-att-href="product['website_url']" class="dropdown-item p-2 text-wrap">
+        <div class="media align-items-center o_search_product_item">
+            <t t-if="widget.displayImage">
+                <img t-attf-src="/web/image/product.template/#{product['id']}/image_128"
+                    class="flex-shrink-0 o_image_64_contain"/>
+            </t>
+            <div class="media-body px-3">
+                <t t-set="description" t-value="widget.displayDescription and product['description_sale']"/>
+                <h6 t-attf-class="font-weight-bold #{description ? '' : 'mb-0'}" t-esc="product['name']"/>
+                <p t-if="description" class="mb-0" t-esc="description"/>
+            </div>
+            <div t-if="widget.displayPrice" class="flex-shrink-0">
+                <t t-if="product['has_discounted_price']">
+                    <span class="text-danger text-nowrap" style="text-decoration: line-through;">
+                        <t t-raw="product['list_price']"/>
+                    </span>
+                    <br/>
+                </t>
+                <b class="text-nowrap">
+                    <t t-raw="product['price']"/>
+                </b>
+            </div>
+        </div>
+    </a>
+    <t t-if="hasMoreProducts">
+        <button type="submit" class="dropdown-item text-center text-primary">All results</button>
+    </t>
+</div>
+
+</templates>

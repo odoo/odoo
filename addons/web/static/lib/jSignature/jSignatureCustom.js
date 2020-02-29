@@ -760,7 +760,7 @@ function jSignatureClass(parent, options, instanceExtensions) {
     // these, when enabled, will hover above the sig area. Hence we append them to DOM before canvas.
     this.$controlbarUpper = (function(){
         var controlbarstyle = 'padding:0 !important; margin:0 !important;'+
-            'width: 100% !important; height: 0 !important; -ms-touch-action: none;'+
+            'width: 100% !important; height: 0 !important; -ms-touch-action: none; touch-action: none;'+
             'margin-top:-1em !important; margin-bottom:1em !important;';
         return $('<div style="'+controlbarstyle+'"></div>').appendTo($parent);
     })();
@@ -771,7 +771,7 @@ function jSignatureClass(parent, options, instanceExtensions) {
 
     this.$controlbarLower = (function(){
         var controlbarstyle = 'padding:0 !important; margin:0 !important;'+
-            'width: 100% !important; height: 0 !important; -ms-touch-action: none;'+
+            'width: 100% !important; height: 0 !important; -ms-touch-action: none; touch-action: none;'+
             'margin-top:-1.5em !important; margin-bottom:1.5em !important; position: relative;';
         return $('<div style="'+controlbarstyle+'"></div>').appendTo($parent);
     })();
@@ -876,7 +876,7 @@ function jSignatureClass(parent, options, instanceExtensions) {
             $canvas.bind('mouseup.'+apinamespace, drawEndHandler);
             $canvas.bind('mousedown.'+apinamespace, drawStartHandler);
         } else {
-            canvas.ontouchstart = function(e) {
+            canvas.addEventListener('touchstart', function(e) {
                 canvas.onmousedown = canvas.onmouseup = canvas.onmousemove = undef;
 
                 this.fatFingerCompensation = (
@@ -886,19 +886,19 @@ function jSignatureClass(parent, options, instanceExtensions) {
 
                 drawStartHandler(e);
 
-                canvas.ontouchend = drawEndHandler;
-                canvas.ontouchstart = drawStartHandler;
-                canvas.ontouchmove = drawMoveHandler;
-            };
-            canvas.onmousedown = function(e) {
+                canvas.addEventListener('touchend', drawEndHandler);
+                canvas.addEventListener('touchstart', drawStartHandler);
+                canvas.addEventListener('touchmove', drawMoveHandler);
+            });
+            canvas.addEventListener('mousedown', function(e) {
                 canvas.ontouchstart = canvas.ontouchend = canvas.ontouchmove = undef;
 
                 drawStartHandler(e);
 
-                canvas.onmousedown = drawStartHandler;
-                canvas.onmouseup = drawEndHandler;
-                canvas.onmousemove = drawMoveHandler;
-            }
+                canvas.addEventListener('mousedown', drawStartHandler);
+                canvas.addEventListener('mouseup', drawEndHandler);
+                canvas.addEventListener('mousemove', drawMoveHandler);
+            });
             if (window.navigator.msPointerEnabled) {
                 canvas.onmspointerdown = drawStartHandler;
                 canvas.onmspointerup = drawEndHandler;
@@ -1084,28 +1084,16 @@ jSignatureClass.prototype.initializeCanvas = function(settings) {
         settings.width = '100%';
     }
 
-    $canvas.css(
-        'margin'
-        , 0
-    ).css(
-        'padding'
-        , 0
-    ).css(
-        'border'
-        , 'none'
-    ).css(
-        'height'
-        , settings.height === 'ratio' || !settings.height ? 1 : settings.height.toString(10)
-    ).css(
-        'width'
-        , settings.width === 'ratio' || !settings.width ? 1 : settings.width.toString(10)
-    ).css(
-        '-ms-touch-action'
-        , 'none'
-    ).css(
-        'background-color',
-        settings['background-color']
-    );
+    $canvas.css({
+        'margin': 0,
+        'padding': 0,
+        'border': 'none',
+        'height': settings.height === 'ratio' || !settings.height ? 1 : settings.height.toString(10),
+        'width': settings.width === 'ratio' || !settings.width ? 1 : settings.width.toString(10),
+        '-ms-touch-action': 'none',
+        'touch-action': 'none',
+        'background-color': settings['background-color'],
+    });
 
     $canvas.appendTo(this.$parent);
 

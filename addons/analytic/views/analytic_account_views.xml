@@ -6,6 +6,8 @@
             <field name="arch" type="xml">
                 <tree string="Analytic Tags">
                     <field name="name"/>
+                    <field name="display_name" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -16,17 +18,14 @@
             <field name="arch" type="xml">
                 <form string="Analytic Tags">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="name"/>
                             <field name="active_analytic_distribution" groups="analytic.group_analytic_accounting"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-                        <field name="analytic_distribution_ids" nolabel="1" widget="one2many_list"
+                        <field name="analytic_distribution_ids" nolabel="1" widget="one2many"
                             attrs="{'invisible': [('active_analytic_distribution', '=', False)]}" groups="analytic.group_analytic_accounting">
                             <tree string="Analytic Distribution" editable="bottom">
                                 <field name="account_id"/>
@@ -38,10 +37,21 @@
             </field>
         </record>
 
+        <record id="account_analytic_tag_view_search" model="ir.ui.view">
+            <field name="name">account.analytic.tag.view.search</field>
+            <field name="model">account.analytic.tag</field>
+            <field name="arch" type="xml">
+                <search string="Search Analytic Tags">
+                    <field name="name" />
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
         <record id="account_analytic_tag_action" model="ir.actions.act_window">
             <field name="name">Analytic Tags</field>
             <field name="res_model">account.analytic.tag</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -75,6 +85,7 @@
             <field name="arch" type="xml">
                 <tree string="Analytic Account Groups">
                     <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -82,7 +93,6 @@
         <record id="account_analytic_group_action" model="ir.actions.act_window">
             <field name="name">Analytic Account Groups</field>
             <field name="res_model">account.analytic.group</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -100,13 +110,16 @@
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
                 <tree string="Analytic Entries">
-                    <field name="date"/>
+                    <field name="date" optional="show"/>
                     <field name="name"/>
                     <field name="account_id"/>
                     <field name="currency_id" invisible="1"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="unit_amount" sum="Quantity"/>
-                    <field name="amount" sum="Total"/>
+                    <field name="unit_amount" sum="Quantity" optional="hide"/>
+                    <field name="product_uom_id" optional="hide"/>
+                    <field name="partner_id" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="amount" sum="Total" optional="show"/>
+                    <field name="tag_ids" optional="hide" widget="many2many_tags"/>
                 </tree>
             </field>
         </record>
@@ -118,7 +131,6 @@
             <field name="res_model">account.analytic.line</field>
             <field name="view_mode">tree,form,graph,pivot</field>
             <field name="view_id" ref="view_account_analytic_line_tree"/>
-            <field name="view_type">form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
                 No activity yet on this account
@@ -147,11 +159,8 @@
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" type="action" name="%(account_analytic_line_action)d"
                             icon="fa-usd"  string="Cost/Revenue" widget="statinfo"/>
-                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
-                                <field name="active" widget="boolean_button"
-                                options='{"terminology": "archive"}'/>
-                            </button>
                         </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
@@ -161,6 +170,7 @@
                         <div name="project"/>
                         <group name="main">
                             <group>
+                                <field name="active" invisible="1"/>
                                 <field name="code"/>
                                 <field name="partner_id"/>
                             </group>
@@ -208,14 +218,14 @@
                    <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                                <div class="text-center">
+                                <div t-attf-class="#{!selection_mode ? 'text-center' : ''}">
                                    <strong><span><field name="display_name"/></span></strong>
                                 </div>
                                 <hr class="mt8 mb8"/>
                                 <div class="row">
-                                    <div class="col-12 text-center">
+                                    <div t-attf-class="col-12 #{!selection_mode ? 'text-center' : ''}">
                                         <span>
-                                            <strong>Balance: <field name="balance" widget="monetary"/></strong>
+                                            Balance: <field name="balance" widget="monetary"/>
                                         </span>
                                     </div>
                                 </div>
@@ -231,11 +241,12 @@
             <field name="model">account.analytic.account</field>
             <field name="arch" type="xml">
                 <search string="Analytic Account">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Analytic Account"/>
+                    <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]" string="Analytic Account"/>
                     <field name="partner_id"/>
+                    <separator/>
                     <filter string="Archived" domain="[('active', '=', False)]" name="inactive"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Associated Partner" name="associatedpartner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Associated Partner" name="associatedpartner" domain="[]" context="{'group_by': 'partner_id'}"/>
                     </group>
                 </search>
             </field>
@@ -244,7 +255,6 @@
         <record id="action_analytic_account_form" model="ir.actions.act_window">
             <field name="name">Chart of Analytic Accounts</field>
             <field name="res_model">account.analytic.account</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_account_analytic_account_search"/>
             <field name="context">{'search_default_active':1}</field>
@@ -262,7 +272,6 @@
             <field name="res_model">account.analytic.account</field>
             <field name="search_view_id" ref="view_account_analytic_account_search"/>
             <field name="context">{'search_default_active':1}</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -270,7 +279,6 @@
               </p>
             </field>
         </record>
-
 
         <record id="view_account_analytic_line_form" model="ir.ui.view">
             <field name="name">account.analytic.line.form</field>
@@ -290,6 +298,7 @@
                         <group name="amount" string="Amount">
                             <field name="amount"/>
                             <field name="unit_amount"/>
+                            <field name="product_uom_category_id" invisible="1"/>
                             <field name="product_uom_id" class="oe_inline"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
@@ -298,6 +307,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_account_analytic_line_filter" model="ir.ui.view">
             <field name="name">account.analytic.line.select</field>
             <field name="model">account.analytic.line</field>
@@ -307,13 +317,15 @@
                     <field name="date"/>
                     <field name="account_id"/>
                     <field name="tag_ids" widget="many2many_tags"/>
+                    <filter string="Date" name="date" date="date"/>
                     <group string="Group By..." expand="0" name="groupby">
-                        <filter string="Analytic Account" context="{'group_by':'account_id'}" name="account_id"/>
-                        <filter string="Tasks Date" context="{'group_by':'date'}" name="group_date"/>
+                        <filter string="Analytic Account" name="account_id" context="{'group_by': 'account_id'}"/>
+                        <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>
                     </group>
                 </search>
             </field>
         </record>
+
         <record id="view_account_analytic_line_graph" model="ir.ui.view">
             <field name="name">account.analytic.line.graph</field>
             <field name="model">account.analytic.line</field>
@@ -325,6 +337,7 @@
                 </graph>
             </field>
         </record>
+
         <record id="view_account_analytic_line_pivot" model="ir.ui.view">
             <field name="name">account.analytic.line.pivot</field>
             <field name="model">account.analytic.line</field>
@@ -380,7 +393,6 @@
             <field name="res_model">account.analytic.line</field>
             <field name="view_mode">tree,kanban,form,graph,pivot</field>
             <field name="view_id" ref="view_account_analytic_line_tree"/>
-            <field name="view_type">form</field>
             <field name="search_view_id" ref="analytic.view_account_analytic_line_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">

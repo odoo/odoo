@@ -10,15 +10,18 @@ class PaymentWizard(models.TransientModel):
     _description = 'Payment acquire onboarding wizard'
 
     payment_method = fields.Selection([
-        ('paypal', "Pay with PayPal"),
-        ('stripe', "Pay with credit card (via Stripe)"),
-        ('other', "Pay with another payment acquirer"),
+        ('paypal', "PayPal"),
+        ('stripe', "Credit card (via Stripe)"),
+        ('other', "Other payment acquirer"),
         ('manual', "Custom payment instructions"),
     ], string="Payment Method", default=lambda self: self._get_default_payment_acquirer_onboarding_value('payment_method'))
 
-    paypal_email_account = fields.Char("PayPal Email ID", default=lambda self: self._get_default_payment_acquirer_onboarding_value('paypal_email_account'))
-    paypal_seller_account = fields.Char("Paypal Merchant ID", default=lambda self: self._get_default_payment_acquirer_onboarding_value('paypal_seller_account'))
-    paypal_pdt_token = fields.Char("Paypal PDT Token", default=lambda self: self._get_default_payment_acquirer_onboarding_value('paypal_pdt_token'))
+    paypal_user_type = fields.Selection([
+        ('new_user', "I don't have a Paypal account"),
+        ('existing_user', 'I have a Paypal account')], string="Paypal User Type", default='new_user')
+    paypal_email_account = fields.Char("Email", default=lambda self: self._get_default_payment_acquirer_onboarding_value('paypal_email_account'))
+    paypal_seller_account = fields.Char("Merchant Account ID", default=lambda self: self._get_default_payment_acquirer_onboarding_value('paypal_seller_account'))
+    paypal_pdt_token = fields.Char("PDT Identity Token", default=lambda self: self._get_default_payment_acquirer_onboarding_value('paypal_pdt_token'))
 
     stripe_secret_key = fields.Char(default=lambda self: self._get_default_payment_acquirer_onboarding_value('stripe_secret_key'))
     stripe_publishable_key = fields.Char(default=lambda self: self._get_default_payment_acquirer_onboarding_value('stripe_publishable_key'))
@@ -31,7 +34,7 @@ class PaymentWizard(models.TransientModel):
     @api.onchange('journal_name', 'acc_number')
     def _set_manual_post_msg_value(self):
         self.manual_post_msg = _('<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: %s</li><li>Account Holder: %s</li></ul>') %\
-                               (self.journal_name or _("Bank") , self.acc_number or _("Account"), self.env.user.company_id.name)
+                               (self.journal_name or _("Bank") , self.acc_number or _("Account"), self.env.company.name)
 
     _payment_acquirer_onboarding_cache = {}
     _data_fetched = False
@@ -41,10 +44,10 @@ class PaymentWizard(models.TransientModel):
             env = self.env
         module_id = env.ref('base.module_payment_transfer').id
         return env['payment.acquirer'].search([('module_id', '=', module_id),
-            ('company_id', '=', env.user.company_id.id)], limit=1)
+            ('company_id', '=', env.company.id)], limit=1)
 
     def _get_default_payment_acquirer_onboarding_value(self, key):
-        if not self.env.user._is_admin():
+        if not self.env.is_admin():
             raise UserError(_("Only administrators can access this data."))
 
         if self._data_fetched:
@@ -52,7 +55,7 @@ class PaymentWizard(models.TransientModel):
 
         self._data_fetched = True
 
-        self._payment_acquirer_onboarding_cache['payment_method'] = self.env.user.company_id.payment_onboarding_payment_method
+        self._payment_acquirer_onboarding_cache['payment_method'] = self.env.company.payment_onboarding_payment_method
 
         installed_modules = self.env['ir.module.module'].sudo().search([
             ('name', 'in', ('payment_paypal', 'payment_stripe')),
@@ -61,7 +64,7 @@ class PaymentWizard(models.TransientModel):
 
         if 'payment_paypal' in installed_modules:
             acquirer = self.env.ref('payment.payment_acquirer_paypal')
-            self._payment_acquirer_onboarding_cache['paypal_email_account'] = acquirer['paypal_email_account']
+            self._payment_acquirer_onboarding_cache['paypal_email_account'] = acquirer['paypal_email_account'] or self.env.user.email or ''
             self._payment_acquirer_onboarding_cache['paypal_seller_account'] = acquirer['paypal_seller_account']
             self._payment_acquirer_onboarding_cache['paypal_pdt_token'] = acquirer['paypal_pdt_token']
 
@@ -74,7 +77,7 @@ class PaymentWizard(models.TransientModel):
         journal = manual_payment.journal_id
 
         self._payment_acquirer_onboarding_cache['manual_name'] = manual_payment['name']
-        self._payment_acquirer_onboarding_cache['manual_post_msg'] = manual_payment['post_msg']
+        self._payment_acquirer_onboarding_cache['manual_post_msg'] = manual_payment['pending_msg']
         self._payment_acquirer_onboarding_cache['journal_name'] = journal.name if journal.name != "Bank" else ""
         self._payment_acquirer_onboarding_cache['acc_number'] = journal.bank_acc_number
 
@@ -88,7 +91,6 @@ class PaymentWizard(models.TransientModel):
     def _on_save_payment_acquirer(self):
         self._install_module('account_payment')
 
-    @api.multi
     def add_payment_methods(self):
         """ Install required payment acquiers, configure them and mark the
             onboarding step as done."""
@@ -103,7 +105,7 @@ class PaymentWizard(models.TransientModel):
 
             self._on_save_payment_acquirer()
 
-            self.env.user.company_id.payment_onboarding_payment_method = self.payment_method
+            self.env.company.payment_onboarding_payment_method = self.payment_method
 
             # create a new env including the freshly installed module(s)
             new_env = api.Environment(self.env.cr, self.env.uid, self.env.context)
@@ -113,15 +115,13 @@ class PaymentWizard(models.TransientModel):
                     'paypal_email_account': self.paypal_email_account,
                     'paypal_seller_account': self.paypal_seller_account,
                     'paypal_pdt_token': self.paypal_pdt_token,
-                    'website_published': True,
-                    'environment': 'prod',
+                    'state': 'enabled',
                 })
             if self.payment_method == 'stripe':
                 new_env.ref('payment.payment_acquirer_stripe').write({
                     'stripe_secret_key': self.stripe_secret_key,
                     'stripe_publishable_key': self.stripe_publishable_key,
-                    'website_published': True,
-                    'environment': 'prod',
+                    'state': 'enabled',
                 })
             if self.payment_method == 'manual':
                 manual_acquirer = self._get_manual_payment_acquirer(new_env)
@@ -131,9 +131,8 @@ class PaymentWizard(models.TransientModel):
                         'Please create one from the Payment Acquirer menu.'
                     ))
                 manual_acquirer.name = self.manual_name
-                manual_acquirer.post_msg = self.manual_post_msg
-                manual_acquirer.website_published = True
-                manual_acquirer.environment = 'prod'
+                manual_acquirer.pending_msg = self.manual_post_msg
+                manual_acquirer.state = 'enabled'
 
                 journal = manual_acquirer.journal_id
                 if journal:
@@ -143,13 +142,13 @@ class PaymentWizard(models.TransientModel):
                     raise UserError(_("You have to set a journal for your payment acquirer %s." % (self.manual_name,)))
 
             # delete wizard data immediately to get rid of residual credentials
-            self.unlink()
+            self.sudo().unlink()
         # the user clicked `apply` and not cancel so we can assume this step is done.
         self._set_payment_acquirer_onboarding_step_done()
         return {'type': 'ir.actions.act_window_close'}
 
     def _set_payment_acquirer_onboarding_step_done(self):
-        self.env.user.company_id.set_onboarding_step_done('payment_acquirer_onboarding_state')
+        self.env.company.sudo().set_onboarding_step_done('payment_acquirer_onboarding_state')
 
     def action_onboarding_other_payment_acquirer(self):
         self._set_payment_acquirer_onboarding_step_done()

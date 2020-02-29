@@ -1,0 +1,22 @@
+<templates id="template" xml:space="preserve">
+
+    <t t-name="website.slides.fullscreen.content">
+        <t t-if="_.contains(['document', 'presentation'], widget.get('slide').type)">
+            <div class="embed-responsive h-100">
+                <iframe t-att-src="widget.get('slide').embedUrl" class="o_wslides_iframe_viewer" allowFullScreen="true" frameborder="0"/>
+            </div>
+        </t>
+        <t t-if="widget.get('slide').type === 'infographic'">
+            <div class="o_wslides_fs_player w-100 h-100 overflow-auto d-flex align-items-start justify-content-center">
+                <img t-att-src="'/web/image/slide.slide/'+ widget.get('slide').id +'/image_1024'" class="img-fluid position-relative m-auto" alt="Slide image"/>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="website.slides.fullscreen.video">
+        <div class="player embed-responsive embed-responsive-16by9 embed-responsive-item h-100">
+            <iframe t-att-id="'youtube-player' + widget.slide.id" t-att-src="widget.slide.embedUrl" allowFullScreen="true" frameborder="0" enablejsapi="1" autoplay="1" allow="autoplay"></iframe>
+        </div>
+    </t>
+
+</templates>

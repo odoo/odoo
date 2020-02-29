@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import inspect
 import logging
 import hashlib
 import re
 
+
 from werkzeug import urls
+from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
 
 from odoo import api, fields, models, tools
@@ -14,6 +17,7 @@ from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import pager
 from odoo.http import request
+from odoo.modules.module import get_resource_path
 from odoo.osv.expression import FALSE_DOMAIN
 from odoo.tools.translate import _
 
@@ -44,18 +48,18 @@ class Website(models.Model):
 
     def _default_language(self):
         lang_code = self.env['ir.default'].get('res.partner', 'lang')
-        def_lang = self.env['res.lang'].search([('code', '=', lang_code)], limit=1)
-        return def_lang.id if def_lang else self._active_languages()[0]
+        def_lang_id = self.env['res.lang']._lang_get_id(lang_code)
+        return def_lang_id or self._active_languages()[0]
 
     name = fields.Char('Website Name', required=True)
     domain = fields.Char('Website Domain')
     country_group_ids = fields.Many2many('res.country.group', 'website_country_group_rel', 'website_id', 'country_group_id',
                                          string='Country Groups', help='Used when multiple websites have the same domain.')
-    company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.ref('base.main_company').id, required=True)
+    company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company, required=True)
     language_ids = fields.Many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages', default=_active_languages)
     default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
-    default_lang_code = fields.Char("Default language code", related='default_lang_id.code', store=True, readonly=False)
     auto_redirect_lang = fields.Boolean('Autoredirect Language', default=True, help="Should users be redirected to their browser's language")
+    cookies_bar = fields.Boolean('Cookies Bar', help="Display a customizable cookies bar on your website.")
 
     def _default_social_facebook(self):
         return self.env.ref('base.main_company').social_facebook
@@ -69,27 +73,30 @@ class Website(models.Model):
     def _default_social_youtube(self):
         return self.env.ref('base.main_company').social_youtube
 
-    def _default_social_googleplus(self):
-        return self.env.ref('base.main_company').social_googleplus
-
     def _default_social_instagram(self):
         return self.env.ref('base.main_company').social_instagram
 
     def _default_social_twitter(self):
         return self.env.ref('base.main_company').social_twitter
 
+    def _default_logo(self):
+        image_path = get_resource_path('website', 'static/src/img', 'website_logo.png')
+        with tools.file_open(image_path, 'rb') as f:
+            return base64.b64encode(f.read())
+
+    logo = fields.Binary('Website Logo', default=_default_logo, help="Display this logo on the website.")
     social_twitter = fields.Char('Twitter Account', default=_default_social_twitter)
     social_facebook = fields.Char('Facebook Account', default=_default_social_facebook)
     social_github = fields.Char('GitHub Account', default=_default_social_github)
     social_linkedin = fields.Char('LinkedIn Account', default=_default_social_linkedin)
     social_youtube = fields.Char('Youtube Account', default=_default_social_youtube)
-    social_googleplus = fields.Char('Google+ Account', default=_default_social_googleplus)
     social_instagram = fields.Char('Instagram Account', default=_default_social_instagram)
     social_default_image = fields.Binary(string="Default Social Share Image", help="If set, replaces the company logo as the default social share image.")
 
     google_analytics_key = fields.Char('Google Analytics Key')
     google_management_client_id = fields.Char('Google Client ID')
     google_management_client_secret = fields.Char('Google Client Secret')
+    google_search_console = fields.Char(help='Google key, or Enable to access first reply')
 
     google_maps_api_key = fields.Char('Google Maps API Key')
 
@@ -100,7 +107,17 @@ class Website(models.Model):
     partner_id = fields.Many2one(related='user_id.partner_id', relation='res.partner', string='Public Partner', readonly=False)
     menu_id = fields.Many2one('website.menu', compute='_compute_menu', string='Main Menu')
     homepage_id = fields.Many2one('website.page', string='Homepage')
-    favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.")
+    custom_code_head = fields.Text('Custom <head> code')
+    custom_code_footer = fields.Text('Custom end of <body> code')
+
+    robots_txt = fields.Text('Robots.txt', translate=False, groups='website.group_website_designer')
+
+    def _default_favicon(self):
+        img_path = get_resource_path('web', 'static/src/img/favicon.ico')
+        with tools.file_open(img_path, 'rb') as f:
+            return base64.b64encode(f.read())
+
+    favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.", default=_default_favicon)
     theme_id = fields.Many2one('ir.module.module', help='Installed theme')
 
     specific_user_account = fields.Boolean('Specific User Account', help='If True, new accounts will be associated to the current website')
@@ -111,10 +128,10 @@ class Website(models.Model):
 
     @api.onchange('language_ids')
     def _onchange_language_ids(self):
-        if self.language_ids and self.default_lang_id not in self.language_ids:
-            self.default_lang_id = self.language_ids[0]
+        language_ids = self.language_ids._origin
+        if language_ids and self.default_lang_id not in language_ids:
+            self.default_lang_id = language_ids[0]
 
-    @api.multi
     def _compute_menu(self):
         Menu = self.env['website.menu']
         for website in self:
@@ -122,6 +139,8 @@ class Website(models.Model):
 
     @api.model
     def create(self, vals):
+        self._handle_favicon(vals)
+
         if 'user_id' not in vals:
             company = self.env['res.company'].browse(vals.get('company_id'))
             vals['user_id'] = company._get_public_user().id if company else self.env.ref('base.public_user').id
@@ -136,23 +155,71 @@ class Website(models.Model):
 
         return res
 
-    @api.multi
     def write(self, values):
-        self._get_languages.clear_cache(self)
-        if 'company_id' in values and 'user_id' not in values:
-            company = self.env['res.company'].browse(values['company_id'])
-            values['user_id'] = company._get_public_user().id
+        public_user_to_change_websites = self.env['website']
+        self._handle_favicon(values)
 
-        result = super(Website, self).write(values)
+        self.clear_caches()
+
+        if 'company_id' in values and 'user_id' not in values:
+            public_user_to_change_websites = self.filtered(lambda w: w.sudo().user_id.company_id.id != values['company_id'])
+            if public_user_to_change_websites:
+                company = self.env['res.company'].browse(values['company_id'])
+                super(Website, public_user_to_change_websites).write(dict(values, user_id=company._get_public_user().id))
+
+        result = super(Website, self - public_user_to_change_websites).write(values)
         if 'cdn_activated' in values or 'cdn_url' in values or 'cdn_filters' in values:
             # invalidate the caches from static node at compile time
             self.env['ir.qweb'].clear_caches()
+
+        if 'cookies_bar' in values:
+            if values['cookies_bar']:
+                cookies_view = self.env.ref('website.cookie_policy', raise_if_not_found=False)
+                if cookies_view:
+                    cookies_view.with_context(website_id=self.id).write({'website_id': self.id})
+                    specific_cook_view = self.with_context(website_id=self.id).viewref('website.cookie_policy')
+                    self.env['website.page'].create({
+                        'is_published': True,
+                        'website_indexed': False,
+                        'url': '/cookie-policy',
+                        'website_id': self.id,
+                        'view_id': specific_cook_view.id,
+                    })
+            else:
+                self.env['website.page'].search([
+                    ('website_id', '=', self.id),
+                    ('url', '=', '/cookie-policy'),
+                ]).unlink()
+
         return result
+
+    @api.model
+    def _handle_favicon(self, vals):
+        if 'favicon' in vals:
+            vals['favicon'] = tools.image_process(vals['favicon'], size=(256, 256), crop='center', output_format='ICO')
+
+    def unlink(self):
+        # Do not delete invoices, delete what's strictly necessary
+        attachments_to_unlink = self.env['ir.attachment'].search([
+            ('website_id', 'in', self.ids),
+            '|', '|',
+            ('key', '!=', False),  # theme attachment
+            ('url', 'ilike', '.custom.'),  # customized theme attachment
+            ('url', 'ilike', '.assets\\_'),
+        ])
+        attachments_to_unlink.unlink()
+        return super(Website, self).unlink()
+
+    def create_and_redirect_to_theme(self):
+        self._force()
+        action = self.env.ref('website.theme_install_kanban_action')
+        return action.read()[0]
 
     # ----------------------------------------------------------
     # Page Management
     # ----------------------------------------------------------
     def _bootstrap_homepage(self):
+        Page = self.env['website.page']
         standard_homepage = self.env.ref('website.homepage', raise_if_not_found=False)
         if not standard_homepage:
             return
@@ -165,8 +232,19 @@ class Website(models.Model):
         </t>''' % (self.id)
         standard_homepage.with_context(website_id=self.id).arch_db = new_homepage_view
 
-        self.homepage_id = self.env['website.page'].search([('website_id', '=', self.id),
-                                                            ('key', '=', standard_homepage.key)])
+        homepage_page = Page.search([
+            ('website_id', '=', self.id),
+            ('key', '=', standard_homepage.key),
+        ])
+        if not homepage_page:
+            homepage_page = Page.create({
+                'website_published': True,
+                'url': '/',
+                'view_id': self.with_context(website_id=self.id).viewref('website.homepage').id,
+            })
+        # prevent /-1 as homepage URL
+        homepage_page.url = '/'
+        self.homepage_id = homepage_page
 
         # Bootstrap default menu hierarchy, create a new minimalist one if no default
         default_menu = self.env.ref('website.main_menu')
@@ -225,8 +303,9 @@ class Website(models.Model):
         if ispage:
             page = self.env['website.page'].create({
                 'url': page_url,
-                'website_id': website.id,  # remove it if only one webiste or not?
+                'website_id': website.id,  # remove it if only one website or not?
                 'view_id': view.id,
+                'track': True,
             })
             result['view_id'] = view.id
         if add_menu:
@@ -398,47 +477,42 @@ class Website(models.Model):
     # Languages
     # ----------------------------------------------------------
 
-    @api.multi
-    def get_languages(self):
+    def _get_alternate_languages(self, canonical_params):
         self.ensure_one()
-        return self._get_languages()
 
-    @tools.cache('self.id')
-    def _get_languages(self):
-        return [(lg.code, lg.name) for lg in self.language_ids]
+        if not self._is_canonical_url(canonical_params=canonical_params):
+            # no hreflang on non-canonical pages
+            return []
 
-    @api.multi
-    def get_alternate_languages(self, req=None):
+        languages = self.language_ids
+        if len(languages) <= 1:
+            # no hreflang if no alternate language
+            return []
+
         langs = []
-        if req is None:
-            req = request.httprequest
-        default = self.get_current_website().default_lang_code
         shorts = []
 
-        def get_url_localized(router, lang):
-            arguments = dict(request.endpoint_arguments)
-            for key, val in list(arguments.items()):
-                if isinstance(val, models.BaseModel):
-                    arguments[key] = val.with_context(lang=lang)
-            return router.build(request.endpoint, arguments)
-
-        router = request.httprequest.app.get_db_router(request.db).bind('')
-        for code, dummy in self.get_languages():
-            lg_path = ('/' + code) if code != default else ''
-            lg_codes = code.split('_')
-            shorts.append(lg_codes[0])
-            uri = get_url_localized(router, code) if request.endpoint else request.httprequest.path
-            if req.query_string:
-                uri += u'?' + req.query_string.decode('utf-8')
-            lang = {
+        for lg in languages:
+            lg_codes = lg.code.split('_')
+            short = lg_codes[0]
+            shorts.append(short)
+            langs.append({
                 'hreflang': ('-'.join(lg_codes)).lower(),
-                'short': lg_codes[0],
-                'href': req.url_root[0:-1] + lg_path + uri,
-            }
-            langs.append(lang)
+                'short': short,
+                'href': self._get_canonical_url_localized(lang=lg, canonical_params=canonical_params),
+            })
+
+        # if there is only one region for a language, use only the language code
         for lang in langs:
             if shorts.count(lang['short']) == 1:
                 lang['hreflang'] = lang['short']
+
+        # add the default
+        langs.append({
+            'hreflang': 'x-default',
+            'href': self._get_canonical_url_localized(lang=self.default_lang_id, canonical_params=canonical_params),
+        })
+
         return langs
 
     # ----------------------------------------------------------
@@ -448,13 +522,19 @@ class Website(models.Model):
     @api.model
     def get_current_website(self, fallback=True):
         if request and request.session.get('force_website_id'):
-            return self.browse(request.session['force_website_id'])
+            website_id = self.browse(request.session['force_website_id']).exists()
+            if not website_id:
+                # Don't crash is session website got deleted
+                request.session.pop('force_website_id')
+            else:
+                return website_id
 
         website_id = self.env.context.get('website_id')
         if website_id:
             return self.browse(website_id)
 
-        domain_name = request and request.httprequest.environ.get('HTTP_HOST', '').split(':')[0] or None
+        # The format of `httprequest.host` is `domain:port`
+        domain_name = request and request.httprequest.host or ''
 
         country = request.session.geoip.get('country_code') if request and request.session.geoip else False
         country_id = False
@@ -465,9 +545,64 @@ class Website(models.Model):
         return self.browse(website_id)
 
     @tools.cache('domain_name', 'country_id', 'fallback')
+    @api.model
     def _get_current_website_id(self, domain_name, country_id, fallback=True):
-        # sort on country_group_ids so that we fall back on a generic website (empty country_group_ids)
-        websites = self.search([('domain', '=', domain_name)]).sorted('country_group_ids')
+        """Get the current website id.
+
+        First find all the websites for which the configured `domain` (after
+        ignoring a potential scheme) is equal to the given
+        `domain_name`. If there is only one result, return it immediately.
+
+        If there are no website found for the given `domain_name`, either
+        fallback to the first found website (no matter its `domain`) or return
+        False depending on the `fallback` parameter.
+
+        If there are multiple websites for the same `domain_name`, we need to
+        filter them out by country. We return the first found website matching
+        the given `country_id`. If no found website matching `domain_name`
+        corresponds to the given `country_id`, the first found website for
+        `domain_name` will be returned (no matter its country).
+
+        :param domain_name: the domain for which we want the website.
+            In regard to the `url_parse` method, only the `netloc` part should
+            be given here, no `scheme`.
+        :type domain_name: string
+
+        :param country_id: id of the country for which we want the website
+        :type country_id: int
+
+        :param fallback: if True and no website is found for the specificed
+            `domain_name`, return the first website (without filtering them)
+        :type fallback: bool
+
+        :return: id of the found website, or False if no website is found and
+            `fallback` is False
+        :rtype: int or False
+
+        :raises: if `fallback` is True but no website at all is found
+        """
+        def _remove_port(domain_name):
+            return (domain_name or '').split(':')[0]
+
+        def _filter_domain(website, domain_name, ignore_port=False):
+            """Ignore `scheme` from the `domain`, just match the `netloc` which
+            is host:port in the version of `url_parse` we use."""
+            # Here we add http:// to the domain if it's not set because
+            # `url_parse` expects it to be set to correctly return the `netloc`.
+            website_domain = urls.url_parse(website._get_http_domain()).netloc
+            if ignore_port:
+                website_domain = _remove_port(website_domain)
+                domain_name = _remove_port(domain_name)
+            return website_domain.lower() == (domain_name or '').lower()
+
+        # Sort on country_group_ids so that we fall back on a generic website:
+        # websites with empty country_group_ids will be first.
+        found_websites = self.search([('domain', 'ilike', _remove_port(domain_name))]).sorted('country_group_ids')
+        # Filter for the exact domain (to filter out potential subdomains) due
+        # to the use of ilike.
+        websites = found_websites.filtered(lambda w: _filter_domain(w, domain_name))
+        # If there is no domain matching for the given port, ignore the port.
+        websites = websites or found_websites.filtered(lambda w: _filter_domain(w, domain_name, ignore_port=True))
 
         if not websites:
             if not fallback:
@@ -551,7 +686,7 @@ class Website(models.Model):
             view_id = View.get_view_id(template)
         if not view_id:
             raise NotFound
-        return View.browse(view_id)
+        return View.sudo().browse(view_id)
 
     @api.model
     def pager(self, url, total, page=1, step=30, scope=5, url_args=None):
@@ -575,16 +710,16 @@ class Website(models.Model):
                 return False
 
         # dont't list routes without argument having no default value or converter
-        spec = inspect.getargspec(endpoint.method.original_func)
-
-        # remove self and arguments having a default value
-        defaults_count = len(spec.defaults or [])
-        args = spec.args[1:(-defaults_count or None)]
+        sign = inspect.signature(endpoint.method.original_func)
+        params = list(sign.parameters.values())[1:]  # skip self
+        supported_kinds = (inspect.Parameter.POSITIONAL_ONLY,
+                           inspect.Parameter.POSITIONAL_OR_KEYWORD)
+        has_no_default = lambda p: p.default is inspect.Parameter.empty
 
         # check that all args have a converter
-        return all((arg in rule._converters) for arg in args)
+        return all(p.name in rule._converters for p in params
+                   if p.kind in supported_kinds and has_no_default(p))
 
-    @api.multi
     def enumerate_pages(self, query_string=None, force=False):
         """ Available pages in the website/CMS. This is mostly used for links
             generation and can be overridden by modules setting up new HTML
@@ -605,7 +740,7 @@ class Website(models.Model):
         sitemap_endpoint_done = set()
 
         for rule in router.iter_rules():
-            if 'sitemap' in rule.endpoint.routing:
+            if 'sitemap' in rule.endpoint.routing and rule.endpoint.routing['sitemap'] is not True:
                 if rule.endpoint in sitemap_endpoint_done:
                     continue
                 sitemap_endpoint_done.add(rule.endpoint)
@@ -620,9 +755,14 @@ class Website(models.Model):
             if not self.rule_is_enumerable(rule):
                 continue
 
+            if 'sitemap' not in rule.endpoint.routing:
+                logger.warning('No Sitemap value provided for controller %s (%s)' %
+                               (rule.endpoint.method, ','.join(rule.endpoint.routing['routes'])))
+
             converters = rule._converters or {}
             if query_string and not converters and (query_string not in rule.build([{}], append_unknown=False)[1]):
                 continue
+
             values = [{}]
             # converters with a domain are processed after the other ones
             convitems = sorted(
@@ -630,6 +770,9 @@ class Website(models.Model):
                 key=lambda x: (hasattr(x[1], 'domain') and (x[1].domain != '[]'), rule._trace.index((True, x[0]))))
 
             for (i, (name, converter)) in enumerate(convitems):
+                if 'website_id' in self.env[converter.model]._fields and (not converter.domain or converter.domain == '[]'):
+                    converter.domain = "[('website_id', 'in', (False, current_website_id))]"
+
                 newval = []
                 for val in values:
                     query = i == len(convitems) - 1 and query_string
@@ -638,22 +781,16 @@ class Website(models.Model):
                         query = sitemap_qs2dom(query, r, self.env[converter.model]._rec_name)
                         if query == FALSE_DOMAIN:
                             continue
-                    for value_dict in converter.generate(uid=self.env.uid, dom=query, args=val):
+
+                    for rec in converter.generate(uid=self.env.uid, dom=query, args=val):
                         newval.append(val.copy())
-                        value_dict[name] = value_dict['loc']
-                        del value_dict['loc']
-                        newval[-1].update(value_dict)
+                        newval[-1].update({name: rec})
                 values = newval
 
             for value in values:
                 domain_part, url = rule.build(value, append_unknown=False)
                 if not query_string or query_string.lower() in url.lower():
                     page = {'loc': url}
-                    for key, val in value.items():
-                        if key.startswith('__'):
-                            page[key[2:]] = val
-                    if url in ('/sitemap.xml',):
-                        continue
                     if url in url_set:
                         continue
                     url_set.add(url)
@@ -663,9 +800,12 @@ class Website(models.Model):
         # '/' already has a http.route & is in the routing_map so it will already have an entry in the xml
         domain = [('url', '!=', '/')]
         if not force:
-            domain += [('website_indexed', '=', True)]
+            domain += [('website_indexed', '=', True), ('visibility', '=', False)]
             # is_visible
-            domain += [('website_published', '=', True), '|', ('date_publish', '=', False), ('date_publish', '<=', fields.Datetime.now())]
+            domain += [
+                ('website_published', '=', True), ('visibility', '=', False),
+                '|', ('date_publish', '=', False), ('date_publish', '<=', fields.Datetime.now())
+            ]
 
         if query_string:
             domain += [('url', 'like', query_string)]
@@ -675,18 +815,16 @@ class Website(models.Model):
         for page in pages:
             record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
             if page.view_id and page.view_id.priority != 16:
-                record['__priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
+                record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
             if page['write_date']:
-                record['__lastmod'] = page['write_date'].date()
+                record['lastmod'] = page['write_date'].date()
             yield record
 
-    @api.multi
     def get_website_pages(self, domain=[], order='name', limit=None):
         domain += self.get_current_website().website_domain()
         pages = self.env['website.page'].search(domain, order='name', limit=limit)
         return pages
 
-    @api.multi
     def search_pages(self, needle=None, limit=None):
         name = slugify(needle, max_length=50, path=True)
         res = []
@@ -700,7 +838,7 @@ class Website(models.Model):
     def image_url(self, record, field, size=None):
         """ Returns a local url that points to the image field of a given browse record. """
         sudo_record = record.sudo()
-        sha = hashlib.sha1(str(getattr(sudo_record, '__last_update')).encode('utf-8')).hexdigest()[0:7]
+        sha = hashlib.sha512(str(getattr(sudo_record, '__last_update')).encode('utf-8')).hexdigest()[:7]
         size = '' if size is None else '/%s' % size
         return '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, field, size, sha)
 
@@ -728,3 +866,88 @@ class Website(models.Model):
             'url': '/',
             'target': 'self',
         }
+
+    def _get_http_domain(self):
+        """Get the domain of the current website, prefixed by http if no
+        scheme is specified.
+
+        Empty string if no domain is specified on the website.
+        """
+        self.ensure_one()
+        if not self.domain:
+            return ''
+        res = urls.url_parse(self.domain)
+        return 'http://' + self.domain if not res.scheme else self.domain
+
+    def get_base_url(self):
+        self.ensure_one()
+        return self._get_http_domain() or super(BaseModel, self).get_base_url()
+
+    def _get_canonical_url_localized(self, lang, canonical_params):
+        """Returns the canonical URL for the current request with translatable
+        elements appropriately translated in `lang`.
+
+        If `request.endpoint` is not true, returns the current `path` instead.
+
+        `url_quote_plus` is applied on the returned path.
+        """
+        self.ensure_one()
+        if request.endpoint:
+            router = request.httprequest.app.get_db_router(request.db).bind('')
+            arguments = dict(request.endpoint_arguments)
+            for key, val in list(arguments.items()):
+                if isinstance(val, models.BaseModel):
+                    if val.env.context.get('lang') != lang.url_code:
+                        arguments[key] = val.with_context(lang=lang.url_code)
+            path = router.build(request.endpoint, arguments)
+        else:
+            # The build method returns a quoted URL so convert in this case for consistency.
+            path = urls.url_quote_plus(request.httprequest.path, safe='/')
+        lang_path = ('/' + lang.url_code) if lang != self.default_lang_id else ''
+        canonical_query_string = '?%s' % urls.url_encode(canonical_params) if canonical_params else ''
+        return self.get_base_url() + lang_path + path + canonical_query_string
+
+    def _get_canonical_url(self, canonical_params):
+        """Returns the canonical URL for the current request."""
+        self.ensure_one()
+        return self._get_canonical_url_localized(lang=request.lang, canonical_params=canonical_params)
+
+    def _is_canonical_url(self, canonical_params):
+        """Returns whether the current request URL is canonical."""
+        self.ensure_one()
+        # Compare OrderedMultiDict because the order is important, there must be
+        # only one canonical and not params permutations.
+        params = request.httprequest.args
+        canonical_params = canonical_params or OrderedMultiDict()
+        if params != canonical_params:
+            return False
+        # Compare URL at the first rerouting iteration (if available) because
+        # it's the one with the language in the path.
+        # It is important to also test the domain of the current URL.
+        current_url = request.httprequest.url_root[:-1] + (hasattr(request, 'rerouting') and request.rerouting[0] or request.httprequest.path)
+        canonical_url = self._get_canonical_url_localized(lang=request.lang, canonical_params=None)
+        # A request path with quotable characters (such as ",") is never
+        # canonical because request.httprequest.base_url is always unquoted,
+        # and canonical url is always quoted, so it is never possible to tell
+        # if the current URL is indeed canonical or not.
+        return current_url == canonical_url
+
+
+class BaseModel(models.AbstractModel):
+    _inherit = 'base'
+
+    def get_base_url(self):
+        """
+        Returns baseurl about one given record.
+        If a website_id field exists in the current record we use the url
+        from this website as base url.
+
+        :return: the base url for this record
+        :rtype: string
+
+        """
+        self.ensure_one()
+        if 'website_id' in self and self.website_id.domain:
+            return self.website_id._get_http_domain()
+        else:
+            return super(BaseModel, self).get_base_url()

@@ -3,7 +3,7 @@
 
 {
     'name': 'Online Members Directory',
-    'category': 'Website',
+    'category': 'Website/Website',
     'summary': 'Publish your members directory',
     'version': '1.0',
     'description': """
@@ -12,6 +12,7 @@ Publish your members/association directory publicly.
     'depends': ['website_partner', 'website_google_map', 'association', 'website_sale'],
     'data': [
         'data/membership_data.xml',
+        'views/product_template_views.xml',
         'views/website_membership_templates.xml',
         'security/ir.model.access.csv',
         'security/website_membership.xml',

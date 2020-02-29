@@ -26,6 +26,10 @@ return AbstractModel.extend({
     init: function () {
         this._super.apply(this, arguments);
         this.end_date = null;
+        var week_start = _t.database.parameters.week_start;
+        // calendar uses index 0 for Sunday but Odoo stores it as 7
+        this.week_start = week_start !== undefined && week_start !== false ? week_start % 7 : moment().startOf('week').day();
+        this.week_stop = this.week_start + 6;
     },
 
     //--------------------------------------------------------------------------
@@ -60,10 +64,11 @@ return AbstractModel.extend({
             end.add(-1, 'days');
         }
 
+        var isDateEvent = this.fields[this.mapping.date_start].type === 'date';
         // An "allDay" event without the "all_day" option is not considered
         // as a 24h day. It's just a part of the day (by default: 7h-19h).
         if (event.allDay) {
-            if (!this.mapping.all_day) {
+            if (!this.mapping.all_day && !isDateEvent) {
                 if (event.r_start) {
                     start.hours(event.r_start.hours())
                          .minutes(event.r_start.minutes())
@@ -75,9 +80,11 @@ return AbstractModel.extend({
                        .utc();
                 } else {
                     // default hours in the user's timezone
-                    start.hours(7).add(-this.getSession().getTZOffset(start), 'minutes');
-                    end.hours(19).add(-this.getSession().getTZOffset(end), 'minutes');
+                    start.hours(7);
+                    end.hours(19);
                 }
+                start.add(-this.getSession().getTZOffset(start), 'minutes');
+                end.add(-this.getSession().getTZOffset(end), 'minutes');
             }
         } else {
             start.add(-this.getSession().getTZOffset(start), 'minutes');
@@ -102,7 +109,9 @@ return AbstractModel.extend({
         }
 
         if (this.mapping.date_delay) {
-            data[this.mapping.date_delay] = (end.diff(start) <= 0 ? end.endOf('day').diff(start) : end.diff(start)) / 1000 / 3600;
+            if (this.data.scale !== 'month' || (this.data.scale === 'month' && !event.drop)) {
+                data[this.mapping.date_delay] = (end.diff(start) <= 0 ? end.endOf('day').diff(start) : end.diff(start)) / 1000 / 3600;
+            }
         }
 
         return data;
@@ -177,7 +186,7 @@ return AbstractModel.extend({
     /**
      * @override
      * @param {any} params
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     load: function (params) {
         var self = this;
@@ -199,15 +208,18 @@ return AbstractModel.extend({
 
         // fields to display color, e.g.: user_id.partner_id
         this.fieldColor = params.fieldColor;
-        if (!this.preload_def) {
-            this.preload_def = $.Deferred();
-            $.when(
-                this._rpc({model: this.modelName, method: 'check_access_rights', args: ["write", false]}),
-                this._rpc({model: this.modelName, method: 'check_access_rights', args: ["create", false]}))
-            .then(function (write, create) {
-                self.write_right = write;
-                self.create_right = create;
-                self.preload_def.resolve();
+        if (!this.preloadPromise) {
+            this.preloadPromise = new Promise(function (resolve, reject) {
+                Promise.all([
+                    self._rpc({model: self.modelName, method: 'check_access_rights', args: ["write", false]}),
+                    self._rpc({model: self.modelName, method: 'check_access_rights', args: ["create", false]})
+                ]).then(function (result) {
+                    var write = result[0];
+                    var create = result[1];
+                    self.write_right = write;
+                    self.create_right = create;
+                    resolve();
+                }).guardedCatch(reject);
             });
         }
 
@@ -229,7 +241,7 @@ return AbstractModel.extend({
             }
         });
 
-        return this.preload_def.then(this._loadCalendar.bind(this));
+        return this.preloadPromise.then(this._loadCalendar.bind(this));
     },
     /**
      * Move the current date range to the next period
@@ -247,7 +259,7 @@ return AbstractModel.extend({
      * @override
      * @param {Object} [params.context]
      * @param {Array} [params.domain]
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     reload: function (handle, params) {
         if (params.domain) {
@@ -259,28 +271,57 @@ return AbstractModel.extend({
         return this._loadCalendar();
     },
     /**
-     * @param {Moment} start
+     * @param {Moment} start. in local TZ
      */
     setDate: function (start) {
         // keep highlight/target_date in localtime
         this.data.highlight_date = this.data.target_date = start.clone();
-        // set dates in UTC with timezone applied manually
         this.data.start_date = this.data.end_date = start;
-        this.data.start_date.utc().add(this.getSession().getTZOffset(this.data.start_date), 'minutes');
-
         switch (this.data.scale) {
             case 'month':
-                this.data.start_date = this.data.start_date.clone().startOf('month').startOf('week');
-                this.data.end_date = this.data.start_date.clone().add(5, 'week').endOf('week');
+                var monthStart = this.data.start_date.clone().startOf('month');
+
+                var monthStartDay;
+                if (monthStart.day() >= this.week_start) {
+                    // the month's first day is after our week start
+                    // Then we are in the right week
+                    monthStartDay = this.week_start;
+                } else {
+                    // The month's first day is before our week start
+                    // Then we should go back to the the previous week
+                    monthStartDay = this.week_start - 7;
+                }
+
+                this.data.start_date = monthStart.day(monthStartDay).startOf('day');
+                this.data.end_date = this.data.start_date.clone().add(5, 'week').day(this.week_stop).endOf('day');
                 break;
             case 'week':
-                this.data.start_date = this.data.start_date.clone().startOf('week');
-                this.data.end_date = this.data.end_date.clone().endOf('week');
+                var weekStart = this.data.start_date.clone().startOf('week');
+                var weekStartDay = this.week_start;
+                if (this.data.start_date.day() < this.week_start) {
+                    // The week's first day is after our current day
+                    // Then we should go back to the previous week
+                    weekStartDay -= 7;
+                }
+                this.data.start_date = this.data.start_date.clone().day(weekStartDay).startOf('day');
+                this.data.end_date = this.data.end_date.clone().day(weekStartDay + 6).endOf('day');
                 break;
             default:
                 this.data.start_date = this.data.start_date.clone().startOf('day');
                 this.data.end_date = this.data.end_date.clone().endOf('day');
         }
+        // We have set start/stop datetime as definite begin/end boundaries of a period (month, week, day)
+        // in local TZ (what is the begining of the week *I am* in ?)
+        // The following code:
+        // - converts those to UTC using our homemade method (testable)
+        // - sets the moment UTC flag to true, to ensure compatibility with third party libs
+        var manualUtcDateStart = this.data.start_date.clone().add(-this.getSession().getTZOffset(this.data.start_date), 'minutes');
+        var formattedUtcDateStart = manualUtcDateStart.format('YYYY-MM-DDTHH:mm:ss') + 'Z';
+        this.data.start_date = moment.utc(formattedUtcDateStart);
+
+        var manualUtcDateEnd = this.data.end_date.clone().add(-this.getSession().getTZOffset(this.data.start_date), 'minutes');
+        var formattedUtcDateEnd = manualUtcDateEnd.format('YYYY-MM-DDTHH:mm:ss') + 'Z';
+        this.data.end_date = moment.utc(formattedUtcDateEnd);
     },
     /**
      * @param {string} scale the scale to set
@@ -299,16 +340,9 @@ return AbstractModel.extend({
         this.setDate(moment(new Date()));
     },
     /**
-     * Toggle the sidebar (containing the mini calendar)
-     */
-    toggleFullWidth: function () {
-        var fullWidth = this.call('local_storage', 'getItem', 'calendar_fullWidth') !== 'true';
-        this.call('local_storage', 'setItem', 'calendar_fullWidth', fullWidth);
-    },
-    /**
      * @param {Object} record
      * @param {integer} record.id
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     updateRecord: function (record) {
         // Cannot modify actual name yet
@@ -357,10 +391,10 @@ return AbstractModel.extend({
                         authorizedValues[filter.fieldName].push(f.value);
                     }
                 } else {
-                    if (!avoidValues[filter.fieldName])
-                        avoidValues[filter.fieldName] = [];
-
                     if (!f.active) {
+                        if (!avoidValues[filter.fieldName])
+                            avoidValues[filter.fieldName] = [];
+
                         avoidValues[filter.fieldName].push(f.value);
                     }
                 }
@@ -385,9 +419,6 @@ return AbstractModel.extend({
      * @returns {Object}
      */
     _getFullCalendarOptions: function () {
-        var week_start = _t.database.parameters.week_start || 0;
-        // calendar uses index 0 for Sunday but Odoo stores it as 7
-        week_start = week_start % 7;
         return {
             defaultView: (this.mode === "month")? "month" : ((this.mode === "week")? "agendaWeek" : ((this.mode === "day")? "agendaDay" : "agendaWeek")),
             header: false,
@@ -400,14 +431,16 @@ return AbstractModel.extend({
             snapMinutes: 15,
             longPressDelay: 500,
             eventResizableFromStart: true,
+            nowIndicator: true,
             weekNumbers: true,
-            weekNumberTitle: _t("W"),
+            weekNumbersWithinDays: true,
+            weekNumberTitle: _t("Week") + " ",
             allDayText: _t("All day"),
             monthNames: moment.months(),
             monthNamesShort: moment.monthsShort(),
             dayNames: moment.weekdays(),
             dayNamesShort: moment.weekdaysShort(),
-            firstDay: week_start,
+            firstDay: this.week_start,
             slotLabelFormat: _t.database.parameters.time_format.search("%H") != -1 ? 'H:mm': 'h(:mm)a',
         };
     },
@@ -415,7 +448,8 @@ return AbstractModel.extend({
      * Return a domain from the date range
      *
      * @private
-     * @returns {Array}
+     * @returns {Array} A domain containing datetimes start and stop in UTC
+     *  those datetimes are formatted according to server's standards
      */
     _getRangeDomain: function () {
         // Build OpenERP Domain to filter object by this.mapping.date_start field
@@ -430,16 +464,15 @@ return AbstractModel.extend({
     },
     /**
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _loadCalendar: function () {
         var self = this;
-        this.data.fullWidth = this.call('local_storage', 'getItem', 'calendar_fullWidth') === 'true';
         this.data.fc_options = this._getFullCalendarOptions();
 
         var defs = _.map(this.data.filters, this._loadFilter.bind(this));
 
-        return $.when.apply($, defs).then(function () {
+        return Promise.all(defs).then(function () {
             return self._rpc({
                     model: self.modelName,
                     method: 'search_read',
@@ -450,10 +483,10 @@ return AbstractModel.extend({
             .then(function (events) {
                 self._parseServerData(events);
                 self.data.data = _.map(events, self._recordToCalendarEvent.bind(self));
-                return $.when(
+                return Promise.all([
                     self._loadColors(self.data, self.data.data),
                     self._loadRecordsToFilters(self.data, self.data.data)
-                );
+                ]);
             });
         });
     },
@@ -461,7 +494,7 @@ return AbstractModel.extend({
      * @private
      * @param {any} element
      * @param {any} events
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _loadColors: function (element, events) {
         if (this.fieldColor) {
@@ -472,16 +505,16 @@ return AbstractModel.extend({
             });
             this.model_color = this.fields[fieldName].relation || element.model;
         }
-        return $.Deferred().resolve();
+        return Promise.resolve();
     },
     /**
      * @private
      * @param {any} filter
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _loadFilter: function (filter) {
         if (!filter.write_model) {
-            return $.when();
+            return Promise.resolve();
         }
 
         var field = this.fields[filter.fieldName];
@@ -540,12 +573,14 @@ return AbstractModel.extend({
      * @private
      * @param {any} element
      * @param {any} events
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _loadRecordsToFilters: function (element, events) {
         var self = this;
         var new_filters = {};
         var to_read = {};
+        var defs = [];
+        var color_filter = {};
 
         _.each(this.data.filters, function (filter, fieldName) {
             var field = self.fields[fieldName];
@@ -559,10 +594,6 @@ return AbstractModel.extend({
                 }
                 return;
             }
-
-            _.each(filter.filters, function (filter) {
-                filter.display = !filter.active;
-            });
 
             var fs = [];
             var undefined_fs = [];
@@ -587,7 +618,7 @@ return AbstractModel.extend({
                 });
             });
             _.each(_.union(fs, undefined_fs), function (f) {
-                var f1 = _.findWhere(filter.filters, f);
+                var f1 = _.findWhere(filter.filters, _.omit(f, 'color_index'));
                 if (f1) {
                     f1.display = true;
                 } else {
@@ -595,9 +626,32 @@ return AbstractModel.extend({
                     filter.filters.push(f);
                 }
             });
+
+            if (filter.color_model && filter.field_color) {
+                var ids = filter.filters.reduce((acc, f) => {
+                    if (!f.color_index && f.value) {
+                        acc.push(f.value);
+                    }
+                    return acc;
+                }, []);
+                if (!color_filter[filter.color_model]) {
+                    color_filter[filter.color_model] = {};
+                }
+                if (ids.length) {
+                    defs.push(self._rpc({
+                        model: filter.color_model,
+                        method: 'read',
+                        args: [_.uniq(ids), [filter.field_color]],
+                    })
+                    .then(function (res) {
+                        _.each(res, function (c) {
+                            color_filter[filter.color_model][c.id] = c[filter.field_color];
+                        });
+                    }));
+                }
+            }
         });
 
-        var defs = [];
         _.each(to_read, function (ids, model) {
             defs.push(self._rpc({
                     model: model,
@@ -608,7 +662,7 @@ return AbstractModel.extend({
                     to_read[model] = _.object(res);
                 }));
         });
-        return $.when.apply($, defs).then(function () {
+        return Promise.all(defs).then(function () {
             _.each(self.data.filters, function (filter) {
                 if (filter.write_model) {
                     return;
@@ -616,6 +670,13 @@ return AbstractModel.extend({
                 if (filter.filters.length && (filter.filters[0].avatar_model in to_read)) {
                     _.each(filter.filters, function (f) {
                         f.label = to_read[f.avatar_model][f.value];
+                    });
+                }
+                if (filter.color_model && filter.field_color) {
+                    _.each(filter.filters, function (f) {
+                        if (!f.color_index) {
+                            f.color_index = color_filter[filter.color_model] && color_filter[filter.color_model][f.value];
+                        }
                     });
                 }
             });
@@ -674,8 +735,8 @@ return AbstractModel.extend({
             'record': evt,
             'start': date_start,
             'end': date_stop,
-            'r_start': date_start,
-            'r_end': date_stop,
+            'r_start': date_start.clone(),
+            'r_end': date_stop.clone(),
             'title': the_title,
             'allDay': all_day,
             'id': evt.id,
@@ -695,6 +756,7 @@ return AbstractModel.extend({
             r.allDay = true;
             r.start = date_start.format('YYYY-MM-DD');
             r.end = date_stop.startOf('day').format('YYYY-MM-DD');
+            r.showTime = true;
         }
 
         return r;

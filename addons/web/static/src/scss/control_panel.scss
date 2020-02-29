@@ -1,13 +1,24 @@
 
 .o_control_panel {
-    display: flex;
-    flex-flow: row wrap;
     border-bottom: 1px solid darken($o-control-panel-background-color, 20%);
     @include o-webclient-padding($top: 10px, $bottom: 10px);
     background-color: $o-control-panel-background-color;
 
-    > .breadcrumb {
-        width: 50%;
+    > div {
+        display: flex;
+        justify-content: space-between;
+        min-height: 30px;
+    }
+
+    .breadcrumb, .o_cp_left {
+        flex: 1 1 auto;
+    }
+
+    .o_cp_searchview, .o_cp_right {
+        flex: 0 0 50%;
+    }
+
+    .breadcrumb {
         font-size: 18px;
 
         > li {
@@ -19,8 +30,7 @@
         }
     }
 
-    > .o_cp_searchview {
-        width: 50%;
+    .o_cp_searchview {
         min-height: $o-cp-breadcrumb-height;
     }
 
@@ -30,10 +40,9 @@
         background: white;
     }
 
-    > .o_cp_left {
+    .o_cp_left {
         display: flex;
         justify-content: space-between;
-        width: 50%;
         margin-top: 5px;
 
         > .o_cp_sidebar {
@@ -65,9 +74,8 @@
         }
     }
 
-    > .o_cp_right {
+    .o_cp_right {
         display: flex;
-        width: 50%;
         margin-top: 5px;
 
         > .o_cp_pager {

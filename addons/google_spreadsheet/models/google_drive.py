@@ -35,7 +35,7 @@ class GoogleDrive(models.Model):
                 if not modifiers.get('invisible') and not modifiers.get('column_invisible'):
                     display_fields.append(node.get('name'))
         fields = " ".join(display_fields)
-        domain = domain.replace("'", r"\'").replace('"', "'")
+        domain = domain.replace("'", r"\'").replace('"', "'").replace('True', 'true').replace('False', 'false')
         if groupbys:
             fields = "%s %s" % (groupbys, fields)
             formula = '=oe_read_group("%s";"%s";"%s";"%s")' % (model, fields, groupbys, domain)
@@ -74,7 +74,7 @@ class GoogleDrive(models.Model):
 
         try:
             req = requests.post(
-                'https://spreadsheets.google.com/feeds/cells/%s/od6/private/full/batch?%s' % (spreadsheet_key, werkzeug.url_encode({'v': 3, 'access_token': access_token})),
+                'https://spreadsheets.google.com/feeds/cells/%s/od6/private/full/batch?%s' % (spreadsheet_key, werkzeug.urls.url_encode({'v': 3, 'access_token': access_token})),
                 data=request,
                 headers={'content-type': 'application/atom+xml', 'If-Match': '*'},
                 timeout=TIMEOUT,

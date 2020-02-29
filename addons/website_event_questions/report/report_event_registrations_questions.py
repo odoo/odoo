@@ -14,7 +14,6 @@ class ReportEventRegistrationQuestions(models.Model):
     answer_id = fields.Many2one(comodel_name='event.answer', string='Answer')
     event_id = fields.Many2one(comodel_name='event.event', string='Event')
 
-    @api.model_cr
     def init(self):
         """ Event Question main report """
         tools.drop_view_if_exists(self._cr, 'event_question_report')

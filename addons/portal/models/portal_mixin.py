@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import uuid
-import hashlib
-import hmac
 from werkzeug.urls import url_encode
-from odoo import api, exceptions, fields, models, tools, _
+from odoo import api, exceptions, fields, models, _
 
 
 class PortalMixin(models.AbstractModel):
@@ -23,7 +21,6 @@ class PortalMixin(models.AbstractModel):
         for mixin in self:
             mixin.access_warning = ''
 
-    @api.multi
     def _compute_access_url(self):
         for record in self:
             record.access_url = '#'
@@ -63,11 +60,10 @@ class PortalMixin(models.AbstractModel):
 
         return '%s?%s' % ('/mail/view' if redirect else self.access_url, url_encode(params))
 
-    @api.multi
-    def _notify_get_groups(self, message, groups):
+    def _notify_get_groups(self):
         access_token = self._portal_ensure_token()
         customer = self['partner_id']
-
+        groups = super(PortalMixin, self)._notify_get_groups()
         if access_token and customer:
             additional_params = {
                 'access_token': self.access_token,
@@ -80,15 +76,13 @@ class PortalMixin(models.AbstractModel):
                     'has_button_access': False,
                     'button_access': {
                         'url': access_link,
-                        'title': _('View %s') % self.env['ir.model']._get(message.model).display_name,
                     },
                 })
             ]
         else:
             new_group = []
-        return super(PortalMixin, self)._notify_get_groups(message, new_group + groups)
+        return new_group + groups
 
-    @api.multi
     def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to the online document for
         portal users or if force_website=True in the context. """
@@ -102,7 +96,7 @@ class PortalMixin(models.AbstractModel):
             except exceptions.AccessError:
                 return super(PortalMixin, self).get_access_action(access_uid)
             user = self.env['res.users'].sudo().browse(access_uid)
-            record = self.sudo(user)
+            record = self.with_user(user)
         if user.share or self.env.context.get('force_website'):
             try:
                 record.check_access_rights('read')
@@ -133,23 +127,6 @@ class PortalMixin(models.AbstractModel):
                              'active_model': self.env.context['active_model']}
         return action
 
-    @api.multi
-    def _sign_token(self, pid):
-        """Generate a secure hash for this record with the email of the recipient with whom the record have been shared.
-
-        This is used to determine who is opening the link
-        to be able for the recipient to post messages on the document's portal view.
-
-        :param str email:
-            Email of the recipient that opened the link.
-        """
-        self.ensure_one()
-        secret = self.env["ir.config_parameter"].sudo().get_param(
-            "database.secret")
-        token = (self.env.cr.dbname, self.access_token, pid)
-        return hmac.new(secret.encode('utf-8'), repr(token).encode('utf-8'), hashlib.sha256).hexdigest()
-
-    @api.multi
     def get_portal_url(self, suffix=None, report_type=None, download=None, query_string=None, anchor=None):
         """
             Get a portal url for this model, including access_token.

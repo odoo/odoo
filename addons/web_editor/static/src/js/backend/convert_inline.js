@@ -1,7 +1,6 @@
 odoo.define('web_editor.convertInline', function (require) {
 'use strict';
 
-var fonts = require('wysiwyg.fonts');
 var FieldHtml = require('web_editor.field.html');
 
 /**
@@ -176,7 +175,7 @@ function getMatchedCSSRules(a) {
                 break;
             }
             $el = $el.parent();
-        } while (!$el.is('html'));
+        } while ($el.length && !$el.is('html'));
     }
 
     return style;
@@ -189,6 +188,8 @@ function getMatchedCSSRules(a) {
  *                           converted to images
  */
 function fontToImg($editable) {
+    var fonts = odoo.__DEBUG__.services["wysiwyg.fonts"];
+
     $editable.find('.fa').each(function () {
         var $font = $(this);
         var icon, content;
@@ -204,7 +205,7 @@ function fontToImg($editable) {
         if (content) {
             var color = $font.css('color').replace(/\s/g, '');
             $font.replaceWith($('<img/>', {
-                src: _.str.sprintf('/web_editor/font_to_img/%s/%s/%s', content.charCodeAt(0), window.encodeURI(color), Math.max(1, $font.height())),
+                src: _.str.sprintf('/web_editor/font_to_img/%s/%s/%s', content.charCodeAt(0), window.encodeURI(color), Math.max(1, Math.round($font.height()))),
                 'data-class': $font.attr('class'),
                 'data-style': $font.attr('style'),
                 class: $font.attr('class').replace(new RegExp('(^|\\s+)' + icon + '(-[^\\s]+)?', 'gi'), ''), // remove inline font-awsome style
@@ -395,10 +396,7 @@ FieldHtml.include({
      * @override
      */
     commitChanges: function () {
-        if (!this.wysiwyg) {
-            return this._super();
-        }
-        if (this.nodeOptions['style-inline']) {
+        if (this.nodeOptions['style-inline'] && this.mode === "edit") {
             this._toInline();
         }
         return this._super();
@@ -454,7 +452,7 @@ FieldHtml.include({
      * @override
      */
     _onLoadWysiwyg: function () {
-        if (this.nodeOptions['style-inline']) {
+        if (this.nodeOptions['style-inline'] && this.mode === "edit") {
             this._fromInline();
         }
         this._super();

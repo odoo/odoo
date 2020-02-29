@@ -14,9 +14,11 @@ class ProductTemplate(models.Model):
     ]
 
     @api.onchange('type')
-    def _onchange_product_type(self):
+    def _onchange_type(self):
+        res = super(ProductTemplate, self)._onchange_type()
         if self.type != 'service':
             self.service_to_purchase = False
+        return res
 
     @api.onchange('expense_policy')
     def _onchange_expense_policy(self):

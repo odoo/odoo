@@ -60,7 +60,7 @@ QUnit.test('register timers once per ID', function (assert) {
     setTimeout(function () {
         assert.verifySteps(['function_called'], "should have called the function once");
         done();
-    }, 0);
+    }, 1);
 });
 
 QUnit.test('unregister timers', function (assert) {
@@ -82,7 +82,7 @@ QUnit.test('unregister timers', function (assert) {
     setTimeout(function () {
         assert.verifySteps([], "should not have called the function");
         done();
-    }, 0);
+    }, 1);
 });
 
 });

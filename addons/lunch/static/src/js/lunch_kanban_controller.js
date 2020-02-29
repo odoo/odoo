@@ -6,14 +6,12 @@ odoo.define('lunch.LunchKanbanController', function (require) {
  * override of the KanbanController.
  */
 
+var session = require('web.session');
 var core = require('web.core');
-var Domain = require('web.Domain');
 var KanbanController = require('web.KanbanController');
 var LunchKanbanWidget = require('lunch.LunchKanbanWidget');
 var LunchPaymentDialog = require('lunch.LunchPaymentDialog');
-var session = require('web.session');
 
-var qweb = core.qweb;
 var _t = core._t;
 
 var LunchKanbanController = KanbanController.extend({
@@ -21,11 +19,9 @@ var LunchKanbanController = KanbanController.extend({
         add_product: '_onAddProduct',
         change_location: '_onLocationChanged',
         change_user: '_onUserChanged',
-        edit_order: '_onEditOrder',
         open_wizard: '_onOpenWizard',
         order_now: '_onOrderNow',
         remove_product: '_onRemoveProduct',
-        save_order: '_onSaveOrder',
         unlink_order: '_onUnlinkOrder',
     }),
 
@@ -37,16 +33,33 @@ var LunchKanbanController = KanbanController.extend({
         this.editMode = false;
         this.updated = false;
         this.widgetData = null;
+        this.context = session.user_context;
         return this._super.apply(this, arguments);
     },
+    /**
+     * @override
+     */
     start: function () {
-        this.$el.addClass('o_lunch_kanban');
-        return this._super.apply(this, arguments);
+        // create a div inside o_content that will be used to wrap the lunch
+        // banner and kanban renderer (this is required to get the desired
+        // layout with the searchPanel to the left)
+        var self = this;
+        this.$('.o_content').append($('<div>').addClass('o_lunch_kanban'));
+        return this._super.apply(this, arguments).then(function () {
+            self.$('.o_lunch_kanban').append(self.$('.o_kanban_view'));
+        });
     },
 
-    _fetchPaymentInfo: function (){
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    _fetchPaymentInfo: function () {
         return this._rpc({
             route: '/lunch/payment_message',
+            params: {
+                context: this.context,
+            },
         });
     },
     _fetchWidgetData: function () {
@@ -56,12 +69,69 @@ var LunchKanbanController = KanbanController.extend({
             route: '/lunch/infos',
             params: {
                 user_id: this.userId,
+                context: this.context,
             },
         }).then(function (data) {
             self.widgetData = data;
-            self.model._updateLocation(data.user_location[0]);
+            return self.model._updateLocation(data.user_location[0]);
         });
     },
+    /**
+     * Override to add the location domain (coming from the lunchKanbanWidget)
+     * to the searchDomain (coming from the controlPanel).
+     *
+     * @override
+     * @private
+     */
+    _getSearchDomain: function () {
+        var searchDomain = this._super.apply(this, arguments) || [];
+        var locationId = this.model.getCurrentLocationId();
+        return searchDomain.concat([['is_available_at', 'in', [locationId]]]);
+    },
+    /**
+     * Renders and appends the lunch banner widget.
+     *
+     * @private
+     */
+    _renderLunchKanbanWidget: function () {
+        var self = this;
+        var oldWidget = this.widget;
+        this.widgetData.wallet = parseFloat(this.widgetData.wallet).toFixed(2);
+        this.widget = new LunchKanbanWidget(this, _.extend(this.widgetData, {edit: this.editMode}));
+        return this.widget.appendTo(document.createDocumentFragment()).then(function () {
+            self.$('.o_lunch_kanban').prepend(self.widget.$el);
+            if (oldWidget) {
+                oldWidget.destroy();
+            }
+        });
+    },
+    _showPaymentDialog: function (title) {
+        var self = this;
+
+        title = title || '';
+
+        this._fetchPaymentInfo().then(function (data) {
+            var paymentDialog = new LunchPaymentDialog(self, _.extend(data, {title: title}));
+            paymentDialog.open();
+        });
+    },
+    /**
+     * Override to fetch and display the lunch data. Because of the presence of
+     * the searchPanel, also wrap the lunch widget and the kanban renderer into
+     * a div, to get the desired layout.
+     *
+     * @override
+     * @private
+     */
+    _update: function () {
+        var def = this._fetchWidgetData().then(this._renderLunchKanbanWidget.bind(this));
+        return Promise.all([def, this._super.apply(this, arguments)]);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
     _onAddProduct: function (ev) {
         var self = this;
         ev.stopPropagation();
@@ -74,12 +144,6 @@ var LunchKanbanController = KanbanController.extend({
             self.reload();
         });
     },
-    _onEditOrder: function (ev) {
-        ev.stopPropagation();
-
-        this.editMode = true;
-        this.reload();
-    },
     _onLocationChanged: function (ev) {
         var self = this;
 
@@ -90,6 +154,7 @@ var LunchKanbanController = KanbanController.extend({
             params: {
                 user_id: this.userId,
                 location_id: ev.data.locationId,
+                context: this.context,
             },
         }).then(function () {
             self.model._updateLocation(ev.data.locationId).then(function () {
@@ -101,7 +166,7 @@ var LunchKanbanController = KanbanController.extend({
         var self = this;
         ev.stopPropagation();
 
-        var ctx = this.userId ? {default_user_id: this.userId}: {};
+        var ctx = this.userId ? {default_user_id: this.userId} : {};
 
         var options = {
             on_close: function () {
@@ -109,13 +174,26 @@ var LunchKanbanController = KanbanController.extend({
             },
         };
 
-        this.do_action({
-            res_model: 'lunch.order.temp',
+        // YTI TODO Maybe don't always pass the default_product_id
+        var action = {
+            res_model: 'lunch.order',
+            name: _t('Configure Your Order'),
             type: 'ir.actions.act_window',
             views: [[false, 'form']],
             target: 'new',
-            context: _.extend(ctx, {default_product_id: ev.data.productId, line_id: ev.data.lineId || false}),
-        }, options);
+            context: _.extend(ctx, {default_product_id: ev.data.productId}),
+        };
+
+        if (ev.data.lineId) {
+            action = _.extend(action, {
+                res_id: ev.data.lineId,
+                context: _.extend(action.context, {
+                    active_id: ev.data.lineId,
+                }),
+            });
+        }
+
+        this.do_action(action, options);
     },
     _onOrderNow: function (ev) {
         var self = this;
@@ -125,6 +203,7 @@ var LunchKanbanController = KanbanController.extend({
             route: '/lunch/pay',
             params: {
                 user_id: this.userId,
+                context: this.context,
             },
         }).then(function (isPaid) {
             if (isPaid) {
@@ -148,12 +227,6 @@ var LunchKanbanController = KanbanController.extend({
             self.reload();
         });
     },
-    _onSaveOrder: function (ev) {
-        ev.stopPropagation();
-
-        this.editMode = false;
-        this.reload();
-    },
     _onUserChanged: function (ev) {
         ev.stopPropagation();
 
@@ -172,39 +245,11 @@ var LunchKanbanController = KanbanController.extend({
             route: '/lunch/trash',
             params: {
                 user_id: this.userId,
+                context: this.context,
             },
         }).then(function () {
             self.reload();
         });
-    },
-    _orderPaid: function () {
-        Dialog.alert(this, _t('Your order has been paid have a nice day'), {'title': _t('Order Paid')});
-    },
-    _orderNotPaid: function () {
-        this._showPaymentDialog();
-    },
-    _showPaymentDialog: function (title) {
-        var self = this;
-
-        title = title || '';
-
-        this._fetchPaymentInfo().then(function (data) {
-            var paymentDialog = new LunchPaymentDialog(self, _.extend(data, {title: title}));
-            paymentDialog.open();
-        });
-    },
-    _update: function () {
-        var self = this;
-
-        this._fetchWidgetData().then(function () {
-            if (self.widget) {
-                self.widget.destroy();
-            }
-            self.widgetData.wallet = parseFloat(self.widgetData.wallet).toFixed(2);
-            self.widget = new LunchKanbanWidget(self, _.extend(self.widgetData, {edit: self.editMode}));
-            self.widget.insertBefore(self.$('.o_kanban_view'));
-        });
-        return this._super.apply(self, arguments);
     },
 });
 

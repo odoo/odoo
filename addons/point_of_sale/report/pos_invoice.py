@@ -15,8 +15,8 @@ class PosInvoiceReport(models.AbstractModel):
         ids_to_print = []
         invoiced_posorders_ids = []
         selected_orders = PosOrder.browse(docids)
-        for order in selected_orders.filtered(lambda o: o.invoice_id):
-            ids_to_print.append(order.invoice_id.id)
+        for order in selected_orders.filtered(lambda o: o.account_move):
+            ids_to_print.append(order.account_move.id)
             invoiced_posorders_ids.append(order.id)
         not_invoiced_orders_ids = list(set(docids) - set(invoiced_posorders_ids))
         if not_invoiced_orders_ids:
@@ -24,4 +24,4 @@ class PosInvoiceReport(models.AbstractModel):
             not_invoiced_orders_names = [a.name for a in not_invoiced_posorders]
             raise UserError(_('No link to an invoice for %s.') % ', '.join(not_invoiced_orders_names))
 
-        return {'docs': self.env['account.invoice'].sudo().browse(ids_to_print)}
+        return {'docs': self.env['account.move'].sudo().browse(ids_to_print)}

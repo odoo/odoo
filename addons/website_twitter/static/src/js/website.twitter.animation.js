@@ -2,13 +2,14 @@ odoo.define('website_twitter.animation', function (require) {
 'use strict';
 
 var core = require('web.core');
-var sAnimation = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
 var qweb = core.qweb;
 
-sAnimation.registry.twitter = sAnimation.Class.extend({
+publicWidget.registry.twitter = publicWidget.Widget.extend({
     selector: '.twitter',
     xmlDependencies: ['/website_twitter/static/src/xml/website.twitter.xml'],
+    disabledInEditableMode: false,
     events: {
         'mouseenter .wrap-row': '_onEnterRow',
         'mouseleave .wrap-row': '_onLeaveRow',
@@ -73,6 +74,7 @@ sAnimation.registry.twitter = sAnimation.Class.extend({
                         text: text,
                         href: url,
                         target: '_blank',
+                        rel: 'noreferrer noopener',
                     });
                     return c.prop('outerHTML');
                 }
@@ -99,7 +101,7 @@ sAnimation.registry.twitter = sAnimation.Class.extend({
             self._startScrolling();
         });
 
-        return $.when(this._super.apply(this, arguments), def);
+        return Promise.all([this._super.apply(this, arguments), def]);
     },
     /**
      * @override

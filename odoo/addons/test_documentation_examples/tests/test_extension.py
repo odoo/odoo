@@ -9,8 +9,9 @@ class TestBasicInheritance(common.TransactionCase):
 
         record = env['extension.0'].create({})
 
-        self.assertDictContainsSubset(
+        reference =\
         {'name': "A", 'description': "Extended"}
-        ,
+        values =\
         record.read()[0]
-        )
+
+        self.assertLess(reference.items(), values.items())

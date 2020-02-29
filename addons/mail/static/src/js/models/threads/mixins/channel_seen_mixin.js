@@ -1,8 +1,6 @@
 odoo.define('mail.model.ChannelSeenMixin', function (require) {
 "use strict";
 
-var CCThrottleFunction = require('mail.model.CCThrottleFunction');
-
 var session = require('web.session');
 
 /**
@@ -24,12 +22,6 @@ var ChannelSeenMixin = {
      */
     init: function (params) {
         this._seenPartnersInfo = params.data.seen_partners_info || [];
-
-        this._throttleNotifySeen = _.throttle(this._notifySeen.bind(this), 3000);
-        this._throttleNotifyFetched = CCThrottleFunction({
-            duration: 3000,
-            func: this._notifyFetched.bind(this),
-        });
 
         this.on('message_added', this, this._onSeenMessageAdded);
     },
@@ -221,34 +213,6 @@ var ChannelSeenMixin = {
     },
 
     //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _cancelThrottledNotifyFetched: function () {
-        this._throttleNotifyFetched.cancel();
-        this._throttleNotifyFetched.clear();
-    },
-    /**
-     * @abstract
-     * @private
-     * @returns {$.Promise}
-     */
-    _notifyFetched: function () {
-        return $.when();
-    },
-    /**
-     * @abstract
-     * @private
-     * @returns {$.Promise<integer>} resolved with ID of last seen message
-     */
-    _notifySeen: function () {
-        return $.when();
-    },
-
-    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -256,7 +220,7 @@ var ChannelSeenMixin = {
      * @private
      */
     _onSeenMessageAdded: function () {
-        this._throttleNotifyFetched();
+        this.call('mail_service', 'notifyChannelFetched', { channelID: this._id });
     },
 };
 

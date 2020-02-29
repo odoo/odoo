@@ -2,49 +2,35 @@
 <odoo>
     <data noupdate="1">
 
-        <!-- Account Tags -->
-
-        <record id="tag_iva23" model="account.account.tag">
-            <field name="name">IVA23</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_iva13" model="account.account.tag">
-            <field name="name">IVA13</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_iva6" model="account.account.tag">
-            <field name="name">IVA6</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_iva0" model="account.account.tag">
-            <field name="name">IVA0</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_compiva23" model="account.account.tag">
-            <field name="name">IVA23 compra</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_compiva13" model="account.account.tag">
-            <field name="name">IVA13 compra</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_compiva6" model="account.account.tag">
-            <field name="name">IVA6 compra</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_compiva0" model="account.account.tag">
-            <field name="name">IVA0 compra</field>
-            <field name="applicability">taxes</field>
-        </record>
-
         <record id="iva23" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA23</field>
             <field name="description">IVA23</field>
             <field name="amount">23</field>
             <field name="amount_type">percent</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tag_iva23')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_23"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
         </record>
 
         <record id="iva13" model="account.tax.template">
@@ -53,8 +39,29 @@
             <field name="description">IVA13</field>
             <field name="amount">13</field>
             <field name="amount_type">percent</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tag_iva13')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_13"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
         </record>
 
         <record id="iva6" model="account.tax.template">
@@ -63,8 +70,29 @@
             <field name="description">IVA6</field>
             <field name="amount">6</field>
             <field name="amount_type">percent</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tag_iva6')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_6"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
         </record>
 
         <record id="iva0" model="account.tax.template">
@@ -73,8 +101,29 @@
             <field name="description">IVA0</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tag_iva0')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
         </record>
 
         <record id="compiva23" model="account.tax.template">
@@ -84,8 +133,29 @@
             <field name="amount">23</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tag_compiva23')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_23"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
         </record>
 
         <record id="compiva13" model="account.tax.template">
@@ -95,8 +165,29 @@
             <field name="amount">13</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tag_compiva13')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_13"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
         </record>
 
         <record id="compiva6" model="account.tax.template">
@@ -106,8 +197,29 @@
             <field name="amount">6</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tag_compiva6')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_6"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
         </record>
 
         <record id="compiva0" model="account.tax.template">
@@ -117,8 +229,29 @@
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tag_compiva0')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
         </record>
 
     </data>

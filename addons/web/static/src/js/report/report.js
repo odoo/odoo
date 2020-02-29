@@ -8,7 +8,10 @@ if (window.self === window.top) {
     return;
 }
 
-$(document.body).addClass('o_in_iframe'); //  in order to apply css rules
+$(document.body)
+    .addClass('o_in_iframe')
+    .addClass('container-fluid')
+    .removeClass('container');
 
 var web_base_url = $('html').attr('web-base-url');
 var trusted_host = utils.get_host_from_url(web_base_url);
@@ -24,7 +27,6 @@ $('[res-id][res-model][view-type]')
         ev.preventDefault();
         var action = {
             'type': 'ir.actions.act_window',
-            'view_type': $(this).attr('view-type'),
             'view_mode': $(this).attr('view-mode') || $(this).attr('view-type'),
             'res_id': Number($(this).attr('res-id')),
             'res_model': $(this).attr('res-model'),

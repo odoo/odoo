@@ -4,6 +4,7 @@
 
 import json
 import logging
+import pprint
 import werkzeug
 
 from odoo import http
@@ -27,17 +28,19 @@ class SipsController(http.Controller):
 
     @http.route([
         '/payment/sips/ipn/'],
-        type='http', auth='none', methods=['POST'], csrf=False)
+        type='http', auth='public', methods=['POST'], csrf=False)
     def sips_ipn(self, **post):
         """ Sips IPN. """
+        _logger.info('Beginning Sips IPN form_feedback with post data %s', pprint.pformat(post))  # debug
         self.sips_validate_data(**post)
         return ''
 
     @http.route([
-        '/payment/sips/dpn'], type='http', auth="none", methods=['POST'], csrf=False)
+        '/payment/sips/dpn'], type='http', auth="public", methods=['POST'], csrf=False)
     def sips_dpn(self, **post):
         """ Sips DPN """
         try:
+            _logger.info('Beginning Sips DPN form_feedback with post data %s', pprint.pformat(post))  # debug
             self.sips_validate_data(**post)
         except:
             pass

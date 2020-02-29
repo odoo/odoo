@@ -5,18 +5,11 @@ var LunchKanbanController = require('lunch.LunchKanbanController');
 var LunchKanbanModel = require('lunch.LunchKanbanModel');
 var LunchKanbanRenderer = require('lunch.LunchKanbanRenderer');
 
-var config = require('web.config');
 var core = require('web.core');
 var KanbanView = require('web.KanbanView');
 var view_registry = require('web.view_registry');
 
 var _lt = core._lt;
-
-if (config.device.isMobile) {
-    // use the classical KanbanView in mobile
-    view_registry.add('lunch_kanban', KanbanView);
-    return;
-}
 
 var LunchKanbanView = KanbanView.extend({
     config: _.extend({}, KanbanView.prototype.config, {
@@ -26,11 +19,24 @@ var LunchKanbanView = KanbanView.extend({
     }),
     display_name: _lt('Lunch Kanban'),
 
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
+     * Injects an additional domain in the search panel
+     *
+     * @private
      * @override
      */
-    init: function () {
-        return this._super.apply(this, arguments);
+    _createSearchPanel: function (parent, params) {
+        var self = this;
+        var model = this.getModel(parent);
+        var _super = this._super.bind(this);
+        return model.getLocationDomain().then(function (domain) {
+            self.loadParams.domain = self.loadParams.domain.concat(domain);
+            return _super(parent, params);
+        });
     },
 });
 

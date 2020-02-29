@@ -7,7 +7,7 @@
 {
     'name': 'Accounting Consistency Tests',
     'version': '1.0',
-    'category': 'Accounting',
+    'category': 'Accounting/Accounting',
     'description': """
 Asserts on accounting.
 ======================

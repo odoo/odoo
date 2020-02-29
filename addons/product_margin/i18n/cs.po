@@ -1,18 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * product_margin
+# 	* product_margin
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2018
-# trendspotter, 2018
+# Martin Trigaux, 2019
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
+# trendspotter <j.podhorecky@volny.cz>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: trendspotter, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,17 +24,17 @@ msgstr ""
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__purchase_num_invoiced
 msgid "# Invoiced in Purchase"
-msgstr "poč. fakturovaných v prodejích"
+msgstr "počet fakturovaných v nákupu"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__sale_num_invoiced
 msgid "# Invoiced in Sale"
-msgstr "poč. fakturovaný při prodeji"
+msgstr "počet fakturovaných při prodeji"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "# Purchased"
-msgstr ""
+msgstr "počet nakoupeného"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -48,22 +49,22 @@ msgstr "Průměrná cena ve vydaných fakturách."
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__purchase_avg_price
 msgid "Avg. Price in Vendor Bills "
-msgstr ""
+msgstr "Průměrná cena ve fakturách dodavatele"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__purchase_avg_price
 msgid "Avg. Purchase Unit Price"
-msgstr ""
+msgstr "Průměrná nákupní jednotková cena"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__sale_avg_price
 msgid "Avg. Sale Unit Price"
-msgstr ""
+msgstr "Průměrná Prodejní Jednotková cena"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Avg. Unit Price"
-msgstr "Prům. jedn. cena"
+msgstr "Průměrná jednotková cena"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -78,7 +79,7 @@ msgstr "Katalogová cena"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__create_uid
 msgid "Created by"
-msgstr "Vytvořil(a)"
+msgstr "Vytvořeno od"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__create_date
@@ -88,11 +89,11 @@ msgstr "Vytvořeno"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný název"
+msgstr "Zobrazované jméno"
 
 #. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
+#: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__draft_open_paid
+#: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__draft_open_paid
 msgid "Draft, Open and Paid"
 msgstr "Koncept, otevřený a zaplacený"
 
@@ -180,34 +181,34 @@ msgstr "Marže"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__normal_cost
 msgid "Normal Cost"
-msgstr "Běžný náklad"
+msgstr "Běžná cena"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__purchase_gap
 msgid "Normal Cost - Total Cost"
-msgstr "Běžné náklady - celkové náklady"
+msgstr "Běžné ceny - celkové ceny"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "Open Margins"
-msgstr "Otevřené obraty"
+msgstr "Otevřené marže"
 
 #. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
+#: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__open_paid
+#: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__open_paid
 msgid "Open and Paid"
 msgstr "Otevřeno a zaplaceno"
 
 #. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
+#: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__paid
+#: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__paid
 msgid "Paid"
-msgstr "Uhrazeno"
+msgstr "Zaplaceno"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_product
 msgid "Product"
-msgstr "Výrobek"
+msgstr "Produkt"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
@@ -215,7 +216,7 @@ msgid "Product Margin"
 msgstr "Marže výrobku"
 
 #. module: product_margin
-#: code:addons/product_margin/wizard/product_margin.py:49
+#: code:addons/product_margin/wizard/product_margin.py:0
 #: model:ir.actions.act_window,name:product_margin.product_margin_act_window
 #: model:ir.ui.menu,name:product_margin.menu_action_product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -259,18 +260,18 @@ msgstr "Standardní cena"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
-msgstr ""
+msgstr "Součet násobku ceny a množství v účtech dodavatele"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__turnover
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
-msgstr "Suma násobku fakturované ceny a množství na vydaných fakturách"
+msgstr "Součet násobku fakturované ceny a množství na vydaných fakturách"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__total_cost
 msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
-msgstr ""
+msgstr "Součet násobku ceny faktury a množství faktur dodavatele"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_expected
@@ -278,17 +279,17 @@ msgid ""
 "Sum of Multiplication of Sale Catalog price and quantity of Customer "
 "Invoices"
 msgstr ""
-"Suma násobku prodejní katalogové ceny a množství ve vydaných fakturách"
+"Součet násobku prodejní katalogové ceny a množství ve vydaných fakturách"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_num_invoiced
 msgid "Sum of Quantity in Customer Invoices"
-msgstr "Suma množství ve vydaných fakturách"
+msgstr "Součet množství ve vydaných fakturách"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__purchase_num_invoiced
 msgid "Sum of Quantity in Vendor Bills"
-msgstr ""
+msgstr "Součet množství v účtech dodavatele"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__to_date
@@ -310,7 +311,7 @@ msgstr "Celková marže"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__total_margin_rate
 msgid "Total Margin Rate(%)"
-msgstr "Celková míra marže (%)"
+msgstr "Celková marže v(%)"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__total_margin_rate

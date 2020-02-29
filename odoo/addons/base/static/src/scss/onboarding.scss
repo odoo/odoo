@@ -35,6 +35,10 @@ $o-onboarding-violet-ui-2: #FBEEC8;
 
     .o_onboarding_wrap {
         padding: $o-horizontal-padding*2 $o-horizontal-padding;
+
+        @include media-breakpoint-down(sm) {
+            overflow-x: auto;
+        }
     }
     .o_onboarding_step_title, a.o_onboarding_all_done {
         cursor: pointer;
@@ -76,10 +80,6 @@ $o-onboarding-violet-ui-2: #FBEEC8;
     .o_onboarding_steps {
         flex-flow: row nowrap;
         justify-content: initial;
-
-        @include media-breakpoint-down(sm) {
-           flex-flow: column nowrap;
-        }
     }
 
     .o_onboarding_step {
@@ -91,7 +91,7 @@ $o-onboarding-violet-ui-2: #FBEEC8;
         opacity: 0.6;
 
         @include media-breakpoint-down(sm) {
-            text-align: left;
+            flex: 1 0 auto;
             margin-bottom: 16px;
             align-items: baseline;
 
@@ -112,6 +112,10 @@ $o-onboarding-violet-ui-2: #FBEEC8;
 
         .o_onboarding_step_content {
             @include media-breakpoint-up(lg) {
+                min-width: 230px;
+            }
+            /* Progressbar should not break in mobile view */
+            @include media-breakpoint-down(sm) {
                 min-width: 230px;
             }
             max-width: 230px;
@@ -140,6 +144,10 @@ $o-onboarding-violet-ui-2: #FBEEC8;
         }
 
         .o_onboarding_dot {
+            @include media-breakpoint-down(sm) {
+                margin-left: auto;
+                margin-right: auto;
+            }
             width: $o-onboarding-dot-size;
             height: $o-onboarding-dot-size;
             color: transparent;

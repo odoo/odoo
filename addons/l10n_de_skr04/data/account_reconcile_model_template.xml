@@ -3,57 +3,75 @@
     <data noupdate="1">
         <record id="reconcile_5731" model="account.reconcile.model.template">
             <field name="name">Skonto-EK-7%</field>
+            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+        </record>
+        <record id="reconcile_5731_line" model="account.reconcile.model.line.template">
+            <field name="model_id" ref="l10n_de_skr04.reconcile_5731"/>
             <field name="account_id" ref="chart_skr04_5731"/>
             <field name="amount_type">percentage</field>
-            <field name="tax_id" ref="tax_vst_7_taxinclusive_skr04"/>
-            <field name="amount">100</field>
+            <field name="tax_ids" eval="[(6, 0, [ref('l10n_de_skr04.tax_vst_7_taxinclusive_skr04')])]"/>
+            <field name="amount_string">100</field>
             <field name="label">Skonto-EK-7%</field>
-            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
         </record>
         <record id="reconcile_5736" model="account.reconcile.model.template">
             <field name="name">Skonto-EK-19%</field>
+            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+        </record>
+        <record id="reconcile_5736_line" model="account.reconcile.model.line.template">
+            <field name="model_id" ref="l10n_de_skr04.reconcile_5736"/>
             <field name="account_id" ref="chart_skr04_5736"/>
             <field name="amount_type">percentage</field>
-            <field name="tax_id" ref="tax_vst_19_taxinclusive_skr04"/>
-            <field name="amount">100</field>
+            <field name="tax_ids" eval="[(6, 0, [ref('l10n_de_skr04.tax_vst_19_taxinclusive_skr04')])]"/>
+            <field name="amount_string">100</field>
             <field name="label">Skonto-EK-19%</field>
-            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
         </record>
         <record id="reconcile_4731" model="account.reconcile.model.template">
             <field name="name">Skonto-VK-7%</field>
+            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+        </record>
+        <record id="reconcile_4731_line" model="account.reconcile.model.line.template">
+            <field name="model_id" ref="l10n_de_skr04.reconcile_4731"/>
             <field name="account_id" ref="chart_skr04_4731"/>
             <field name="amount_type">percentage</field>
-            <field name="tax_id" ref="tax_ust_7_taxinclusive_skr04"/>
-            <field name="amount">100</field>
+            <field name="tax_ids" eval="[(6, 0, [ref('l10n_de_skr04.tax_ust_7_taxinclusive_skr04')])]"/>
+            <field name="amount_string">100</field>
             <field name="label">Skonto-VK-7%</field>
-            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
         </record>
         <record id="reconcile_4736" model="account.reconcile.model.template">
             <field name="name">Skonto-VK-19%</field>
+            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+        </record>
+        <record id="reconcile_4736_line" model="account.reconcile.model.line.template">
+            <field name="model_id" ref="l10n_de_skr04.reconcile_4736"/>
             <field name="account_id" ref="chart_skr04_4736"/>
             <field name="amount_type">percentage</field>
-            <field name="tax_id" ref="tax_ust_19_taxinclusive_skr04"/>
-            <field name="amount">100</field>
+            <field name="tax_ids" eval="[(6, 0, [ref('l10n_de_skr04.tax_ust_19_taxinclusive_skr04')])]"/>
+            <field name="amount_string">100</field>
             <field name="label">Skonto-VK-19%</field>
-            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
         </record>
         <record id="reconcile_6931" model="account.reconcile.model.template">
             <field name="name">Forderungsverlust-7%</field>
+            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+        </record>
+        <record id="reconcile_6931_line" model="account.reconcile.model.line.template">
+            <field name="model_id" ref="l10n_de_skr04.reconcile_6931"/>
             <field name="account_id" ref="chart_skr04_6931"/>
             <field name="amount_type">percentage</field>
-            <field name="tax_id" ref="tax_ust_7_taxinclusive_skr04"/>
-            <field name="amount">100</field>
+            <field name="tax_ids" eval="[(6, 0, [ref('l10n_de_skr04.tax_ust_7_taxinclusive_skr04')])]"/>
+            <field name="amount_string">100</field>
             <field name="label">Forderungsverlust-7%</field>
-            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
         </record>
         <record id="reconcile_6936" model="account.reconcile.model.template">
             <field name="name">Forderungsverlust-19%</field>
+            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+        </record>
+        <record id="reconcile_6936_line" model="account.reconcile.model.line.template">
+            <field name="model_id" ref="l10n_de_skr04.reconcile_6936"/>
             <field name="account_id" ref="chart_skr04_6936"/>
             <field name="amount_type">percentage</field>
-            <field name="tax_id" ref="tax_ust_19_taxinclusive_skr04"/>
-            <field name="amount">100</field>
+            <field name="tax_ids" eval="[(6, 0, [ref('l10n_de_skr04.tax_ust_19_taxinclusive_skr04')])]"/>
+            <field name="amount_string">100</field>
             <field name="label">Forderungsverlust-19%</field>
-            <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
         </record>
     </data>
 </odoo>

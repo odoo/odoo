@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * account_analytic_default
+# 	* account_analytic_default
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Morten Schou <ms@msteknik.dk>, 2018
-# Jesper Carstensen <jc@danodoo.dk>, 2018
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2018
-# Ejner Sønniksen <ejner@vkdata.dk>, 2018
-# lhmflexerp <lhm@flexerp.dk>, 2018
-# Sanne Kristensen <sanne@vkdata.dk>, 2018
+# Martin Trigaux, 2019
+# Morten Schou <ms@msteknik.dk>, 2019
+# Jesper Carstensen <jc@danodoo.dk>, 2019
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
+# Sanne Kristensen <sanne@vkdata.dk>, 2019
+# Ejner Sønniksen <ejner@vkdata.dk>, 2019
+# lhmflexerp <lhm@flexerp.dk>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:15+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2019-08-26 09:07+0000\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,12 +41,18 @@ msgid "<strong>Product</strong>"
 msgstr "<strong>Produkt</strong>"
 
 #. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__account_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+msgid "Account"
+msgstr "Konto"
+
+#. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Accounts"
 msgstr "Konti"
 
 #. module: account_analytic_default
-#: code:addons/account_analytic_default/models/account_analytic_default.py:27
+#: code:addons/account_analytic_default/models/account_analytic_default.py:28
 #, python-format
 msgid ""
 "An analytic default requires at least an analytic account or an analytic "
@@ -59,7 +65,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_id
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Analytic Account"
-msgstr "Analyse konto"
+msgstr "Analysekonto"
+
+#. module: account_analytic_default
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+msgid "Analytic Default Rule"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
@@ -148,9 +159,9 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Fakturalinje"
+#: model:ir.model,name:account_analytic_default.model_account_move_line
+msgid "Journal Item"
+msgstr "Journalpost"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default____last_update
@@ -178,11 +189,6 @@ msgstr "Kontakt"
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Product"
 msgstr "Produkt"
-
-#. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_sale_order_line
-msgid "Sales Order Line"
-msgstr "Salgsordrelinje"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__company_id
@@ -224,6 +230,14 @@ msgid ""
 msgstr "Vælg en bruger som vil bruge analysekonto som standard."
 
 #. module: account_analytic_default
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__account_id
+msgid ""
+"Select an accounting account which will use analytic account specified in "
+"analytic default (e.g. create new customer invoice or Sales order if we "
+"select this account, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__sequence
 msgid "Sequence"
 msgstr "Sekvens"
@@ -232,6 +246,11 @@ msgstr "Sekvens"
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__date_start
 msgid "Start Date"
 msgstr "Start dato"
+
+#. module: account_analytic_default
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+msgid "Tags"
+msgstr "Tags"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__user_id

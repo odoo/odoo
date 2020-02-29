@@ -11,9 +11,21 @@ var session = require('web.session');
 
 var _t = core._t;
 
-var DEFAULT_TIMERANGE = controlPanelViewParameters.DEFAULT_TIMERANGE;
-var TIME_RANGE_OPTIONS = controlPanelViewParameters.TIME_RANGE_OPTIONS;
-var COMPARISON_TIME_RANGE_OPTIONS = controlPanelViewParameters.COMPARISON_TIME_RANGE_OPTIONS;
+const DEFAULT_TIMERANGE = controlPanelViewParameters.DEFAULT_TIMERANGE;
+let TIME_RANGE_OPTIONS = controlPanelViewParameters.TIME_RANGE_OPTIONS;
+let COMPARISON_TIME_RANGE_OPTIONS = controlPanelViewParameters.COMPARISON_TIME_RANGE_OPTIONS;
+const OPTION_GENERATORS = controlPanelViewParameters.OPTION_GENERATORS;
+const YEAR_OPTIONS = controlPanelViewParameters.YEAR_OPTIONS;
+const { rank } = controlPanelViewParameters;
+
+// Returns a predicate used to test if two arrays (of maximal length 2) have the same basic content.
+function isEqualTo (array1) {
+    if (array1.length === 1) {
+        return array2 => array2.length === 1 && array2[0] === array1[0];
+    } else {
+        return array2 => array2.length === 2 && array2[0] === array1[0] && array2[1] === array1[1];
+    }
+}
 
 var ControlPanelModel = mvc.Model.extend({
     /**
@@ -29,10 +41,10 @@ var ControlPanelModel = mvc.Model.extend({
 
         // Tricks to avoid losing information on filter descriptions in control panel model configuration
         TIME_RANGE_OPTIONS = TIME_RANGE_OPTIONS.map(function (option) {
-            return _.extend(option, {description: option.description.toString()});
+            return _.extend({}, option, {description: option.description.toString()});
         });
         COMPARISON_TIME_RANGE_OPTIONS = COMPARISON_TIME_RANGE_OPTIONS.map(function (option) {
-            return _.extend(option, {description: option.description.toString()});
+            return _.extend({}, option, {description: option.description.toString()});
         });
 
 
@@ -70,7 +82,7 @@ var ControlPanelModel = mvc.Model.extend({
         var group = this.groups[filter.groupId];
         var groupActive = group.activeFilterIds.length;
         if (groupActive) {
-            group.activeFilterIds = [filterId];
+            group.activeFilterIds = [[filterId]];
         } else {
             this.toggleFilter(filterId);
         }
@@ -138,7 +150,7 @@ var ControlPanelModel = mvc.Model.extend({
         filterIds.forEach(function (filterId) {
             var filter = self.filters[filterId];
             var group = self.groups[filter.groupId];
-            if (_.contains(group.activeFilterIds, filterId)) {
+            if (group.activeFilterIds.some(isEqualTo([filterId]))) {
                 self.toggleFilter(filterId);
             }
         });
@@ -151,11 +163,14 @@ var ControlPanelModel = mvc.Model.extend({
     deactivateGroup: function (groupId) {
         var self = this;
         var group = this.groups[groupId];
-        _.each(group.activeFilterIds, function (filterId) {
-            var filter = self.filters[filterId];
+        _.each(group.activeFilterIds, id => {
+            var filter = self.filters[id[0]];
             // TODO: put this logic in toggleFilter 'field' type
             if (filter.autoCompleteValues) {
                 filter.autoCompleteValues = [];
+            }
+            if (filter.currentOptionIds) {
+                filter.currentOptionIds.clear();
             }
         });
         // TODO: use toggleFilter here
@@ -172,8 +187,8 @@ var ControlPanelModel = mvc.Model.extend({
         var self = this;
         var filter = this.filters[filterId];
         var def = this.deleteFilter(filter.serverSideId).then(function () {
-            var activeFavoriteId = self.groups[filter.groupId].activeFilterIds[0];
-            var isActive = activeFavoriteId === filterId;
+            const groupOfFavorites = self.groups[filter.groupId];
+            const isActive = groupOfFavorites.activeFilterIds.some(isEqualTo([filterId]));
             if (isActive) {
                 self.toggleFilter(filterId);
             }
@@ -215,8 +230,11 @@ var ControlPanelModel = mvc.Model.extend({
         var favorites = [];
         Object.keys(this.filters).forEach(function (filterId) {
             var filter = _.extend({}, self.filters[filterId]);
+            if (filter.invisible) {
+                return;
+            }
             var group = self.groups[filter.groupId];
-            filter.isActive = group.activeFilterIds.indexOf(filterId) !== -1;
+            filter.isActive = group.activeFilterIds.some(id => id[0] === filterId);
             if (filter.type === 'field') {
                 filterFields.push(filter);
             }
@@ -233,16 +251,7 @@ var ControlPanelModel = mvc.Model.extend({
                 timeRanges.push(filter);
             }
         });
-        var facets = [];
-        // resolve active filters for facets
-        this.query.forEach(function (groupID) {
-            var group = self.groups[groupID];
-            var facet = _.extend({}, group);
-            facet.filters = facet.activeFilterIds.map(function (filterID) {
-                return self.filters[filterID];
-            });
-            facets.push(facet);
-        });
+        var facets = this._getFacets();
         favorites = _.sortBy(favorites, 'groupNumber');
         return {
             facets: facets,
@@ -325,7 +334,7 @@ var ControlPanelModel = mvc.Model.extend({
      * @param {string[]} [params.searchMenuTypes=[]]
      * @param {Object} [params.timeRanges]
      * @param {boolean} [params.withSearchBar]
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     load: function (params) {
         var self = this;
@@ -337,11 +346,11 @@ var ControlPanelModel = mvc.Model.extend({
             // and the info comming from arch put in params.groups (if any)
             // will be lost. This is not a problem because the state
             // won't be use elsewhere.
-            return $.when();
+            return Promise.resolve();
         }
         if (params.initialState) {
             this.importState(params.initialState);
-            return $.when();
+            return Promise.resolve();
         } else {
             var groups = params.groups || [];
             groups.forEach(function (group) {
@@ -351,7 +360,7 @@ var ControlPanelModel = mvc.Model.extend({
                 this._createEmptyGroup('groupBy');
             }
             this._createGroupOfTimeRanges();
-            return $.when.apply($, self._loadSearchDefaults()).then(function () {
+            return Promise.all(self._loadSearchDefaults()).then(function () {
                 return self._loadFavorites().then(function () {
                     if (self.query.length === 0) {
                         self._activateDefaultFilters();
@@ -376,8 +385,8 @@ var ControlPanelModel = mvc.Model.extend({
             filter.domain = this._getAutoCompletionFilterDomain(filter);
             // active the filter
             var group = this.groups[filter.groupId];
-            if (!group.activeFilterIds.includes(filter.id)) {
-                group.activeFilterIds.push(filter.id);
+            if (!group.activeFilterIds.some(isEqualTo([filter.id]))) {
+                group.activeFilterIds.push([filter.id]);
                 this.query.push(group.id);
             }
         } else {
@@ -398,17 +407,27 @@ var ControlPanelModel = mvc.Model.extend({
         var self = this;
         var filter = this.filters[filterId];
         var group = this.groups[filter.groupId];
-        var index = group.activeFilterIds.indexOf(filterId);
+        var index = group.activeFilterIds.findIndex(isEqualTo([filterId]));
         var initiaLength = group.activeFilterIds.length;
         if (index === -1) {
             // we need to deactivate all groups when activating a favorite
             if (filter.type === 'favorite') {
                 this.query.forEach(function (groupId) {
-                    self.groups[groupId].activeFilterIds = [];
+                    const group = self.groups[groupId];
+                    group.activeFilterIds.forEach(id => {
+                        const filter = self.filters[id[0]];
+                        if (filter.autoCompleteValues) {
+                            filter.autoCompleteValues = [];
+                        }
+                        if (filter.currentOptionIds) {
+                            filter.currentOptionIds.clear();
+                        }
+                    })
+                    group.activeFilterIds = [];
                 });
                 this.query = [];
             }
-            group.activeFilterIds.push(filterId);
+            group.activeFilterIds.push([filterId]);
             // if initiaLength is 0, the group was not active.
             if (filter.type === 'favorite' || initiaLength === 0) {
                 this.query.push(group.id);
@@ -431,19 +450,68 @@ var ControlPanelModel = mvc.Model.extend({
      * @param {string} [optionId]
      */
     toggleFilterWithOptions: function (filterId, optionId) {
-        var filter = this.filters[filterId];
-        var group = this.groups[filter.groupId];
-        var alreadyActive = group.activeFilterIds.indexOf(filterId) !== -1;
-        if (alreadyActive) {
-            if (filter.currentOptionId === optionId) {
-                this.toggleFilter(filterId);
-                filter.currentOptionId = false;
+        const filter = this.filters[filterId];
+        optionId = optionId || filter.defaultOptionId;
+        const group = this.groups[filter.groupId];
+
+        const selectedYears = () => YEAR_OPTIONS.reduce(
+            (acc, y) => {
+                if (filter.currentOptionIds.has(y.optionId)) {
+                    acc.push(y.optionId);
+                }
+                return acc;
+            },
+            []
+        );
+        const defaultYearId = (optionId) => {
+            const year = filter.options.find(o => o.optionId === optionId).defaultYear;
+            return filter.options.find(o => o.setParam.year === year).optionId;
+        };
+
+        if (filter.type === 'filter') {
+            const alreadyActive = group.activeFilterIds.some(isEqualTo([filterId]));
+            if (alreadyActive) {
+                if (filter.currentOptionIds.has(optionId)) {
+                    filter.currentOptionIds.delete(optionId);
+                    if (!selectedYears().length) {
+                        // This is the case where optionId was the last option of type 'year' to be there before being removed above.
+                        // Since other options of type 'month' or 'quarter' do not make sense without a year
+                        // we deactivate all options.
+                        filter.currentOptionIds.clear();
+                    }
+                    if (!filter.currentOptionIds.size) {
+                        // Here no option is selected so that the filter becomes inactive.
+                        this.toggleFilter(filterId);
+                    }
+                } else {
+                    filter.currentOptionIds.add(optionId);
+                }
             } else {
-                filter.currentOptionId = optionId || filter.defaultOptionId;
+                this.toggleFilter(filterId);
+                filter.currentOptionIds.add(optionId);
+                if (!selectedYears().length) {
+                    // Here we add 'this_year' as options if no option of type year is already selected.
+                    filter.currentOptionIds.add(defaultYearId(optionId));
+                }
             }
-        } else {
-            this.toggleFilter(filterId);
-            filter.currentOptionId = optionId || filter.defaultOptionId;
+        } else if (filter.type === 'groupBy') {
+            const combinationId = [filterId, optionId];
+            const initiaLength = group.activeFilterIds.length;
+            const index = group.activeFilterIds.findIndex(isEqualTo(combinationId));
+
+            if (index === -1) {
+                group.activeFilterIds = this._insert(group.activeFilterIds, combinationId);
+                filter.currentOptionIds.add(optionId);
+                if (initiaLength === 0) {
+                    this.query.push(group.id);
+                }
+            } else {
+                group.activeFilterIds.splice(index, 1);
+                filter.currentOptionIds.delete(optionId);
+                if (initiaLength === 1) {
+                    this.query.splice(this.query.indexOf(group.id), 1);
+                }
+            }
         }
     },
 
@@ -457,17 +525,16 @@ var ControlPanelModel = mvc.Model.extend({
      * @private
      */
     _activateDefaultFilters: function () {
-        var self = this;
-        Object.keys(this.filters).forEach(function (filterId) {
-            var filter = self.filters[filterId];
-            // if we are here, this means there is no favorite with isDefault set to true
-            if (filter.isDefault && filter.type !== 'favorite') {
-                if (filter.hasOptions) {
-                    self.toggleFilterWithOptions(filter.id);
+        Object.values(this.filters)
+            .filter(f => f.isDefault && f.type !== 'favorite')
+            .sort((f1, f2) => (f1.defaultRank || 100) - (f2.defaultRank || 100))
+            .forEach(f => {
+                if (f.hasOptions) {
+                    this.toggleFilterWithOptions(f.id);
                 } else {
-                    self.toggleFilter(filter.id);
+                    this.toggleFilter(f.id);
                 }
-        }});
+            });
     },
     /**
      * If defaultTimeRanges param is provided, activate the filter of type
@@ -483,15 +550,13 @@ var ControlPanelModel = mvc.Model.extend({
      * @param {'previous_period'|'previous_year'} [defaultTimeRanges.comparisonRange]
      */
     _activateDefaultTimeRanges: function (defaultTimeRanges) {
-        var self = this;
         if (defaultTimeRanges) {
-            var filterId = Object.keys(this.filters).find(function (filterId) {
-                var filter = self.filters[filterId];
+            var filter = _.find(this.filters, function (filter) {
                 return filter.type === 'timeRange' && filter.fieldName === defaultTimeRanges.field;
             });
-            if (filterId) {
+            if (filter) {
                 this.activateTimeRange(
-                    filterId,
+                    filter.id,
                     defaultTimeRanges.range,
                     defaultTimeRanges.comparisonRange
                 );
@@ -511,6 +576,35 @@ var ControlPanelModel = mvc.Model.extend({
         favorite.groupId = this._getGroupIdOfType('favorite');
         this.filters[id] = favorite;
         this.toggleFilter(favorite.id);
+    },
+    /**
+     * Computes the string representation of the current domain associated to a date filter
+     * starting from its currentOptionIds.
+     *
+     * @param {Object} filter
+     * @returns {string}
+     */
+    _computeDateFilterDomain: function (filter) {
+        const domains = [];
+        const p = _.partition([...filter.currentOptionIds], optionId =>
+            OPTION_GENERATORS.find(o => o.optionId === optionId).groupId === 1);
+        const yearIds = p[1];
+        const otherOptionIds = p[0];
+        // the following case corresponds to years selected only
+        if (otherOptionIds.length === 0) {
+            yearIds.forEach(yearId => {
+                const d = filter.basicDomains[yearId];
+                domains.push(d.domain);
+            });
+        } else {
+            otherOptionIds.forEach(optionId => {
+                yearIds.forEach(yearId => {
+                    const d = filter.basicDomains[yearId + '__' + optionId];
+                    domains.push(d.domain);
+                });
+            });
+        }
+        return pyUtils.assembleDomains(domains, 'OR');
     },
     /**
      * Add a new empty group to this.groups of a specified type.
@@ -638,6 +732,31 @@ var ControlPanelModel = mvc.Model.extend({
         return pyUtils.assembleDomains(domains, 'AND');
     },
     /**
+     * Return an array containing 'facets' used to create the content of the search bar.
+     *
+     * @returns {Object}
+     */
+    _getFacets: function () {
+        var self = this;
+        // resolve active filters for facets
+        return this.query.map(groupId => {
+            var group = self.groups[groupId];
+            var facet = _.extend({}, group);
+            if (group.type === 'groupBy') {
+                facet.filters = group.activeFilterIds.map(id => {
+                    let filter = _.extend({}, self.filters[id[0]]);
+                    if (filter.hasOptions) {
+                        filter.optionId = id[1];
+                    }
+                    return filter;
+                });
+            } else {
+                facet.filters = _.compact(group.activeFilterIds.map(id => self.filters[id[0]]));
+            }
+            return facet;
+        });
+    },
+    /**
      * Return the context of the provided filter.
      *
      * @private
@@ -683,21 +802,15 @@ var ControlPanelModel = mvc.Model.extend({
      * @returns {string|undefined} domain, string representation of a domain
      */
     _getFilterDomain: function (filter) {
-        var domain;
+        let domain;
         if (filter.type === 'filter') {
             domain = filter.domain;
-            if (filter.domain === undefined) {
-                domain = Domain.prototype.constructDomain(
-                    filter.fieldName,
-                    filter.currentOptionId,
-                    filter.fieldType
-                );
+            if (filter.hasOptions) {
+                domain = this._computeDateFilterDomain(filter);
             }
-        }
-        if (filter.type === 'favorite') {
+        } else if (filter.type === 'favorite') {
             domain = filter.domain;
-        }
-        if (filter.type === 'field') {
+        } else if (filter.type === 'field') {
             domain = filter.domain;
         }
         return domain;
@@ -706,15 +819,17 @@ var ControlPanelModel = mvc.Model.extend({
      * Compute the groupBys (if possible) of the provided filter.
      *
      * @private
-     * @param {Object} filter
+     * @param {Array} filterId
      * @returns {string[]|undefined} groupBys
      */
-    _getFilterGroupBys: function (filter) {
+    _getFilterGroupBys: function (filterId) {
         var groupBys;
+        var filter = this.filters[filterId[0]];
         if (filter.type === 'groupBy') {
+            var optionId = filterId[1];
             var groupBy = filter.fieldName;
-            if (filter.currentOptionId) {
-                groupBy = groupBy + ':' + filter.currentOptionId;
+            if (optionId) {
+                groupBy = groupBy + ':' + optionId;
             }
             groupBys = [groupBy];
         }
@@ -755,7 +870,7 @@ var ControlPanelModel = mvc.Model.extend({
     _getGroupContexts: function (group) {
         var self = this;
         var contexts = group.activeFilterIds.map(function (filterId) {
-            var filter = self.filters[filterId];
+            var filter = self.filters[filterId[0]];
             return self._getFilterContext(filter);
         });
         return _.compact(contexts);
@@ -772,13 +887,13 @@ var ControlPanelModel = mvc.Model.extend({
     _getGroupDomain: function (group) {
         var self = this;
         var domains = group.activeFilterIds.map(function (filterId) {
-            var filter = self.filters[filterId];
+            var filter = self.filters[filterId[0]];
             return self._getFilterDomain(filter);
         });
         return pyUtils.assembleDomains(_.compact(domains), 'OR');
     },
     /**
-     * Return the groupBys coming form the filtes active in the given group.
+     * Return the groupBys coming form the filters active in the given group.
      *
      * @private
      * @param {Object} group
@@ -788,8 +903,7 @@ var ControlPanelModel = mvc.Model.extend({
         var self = this;
         var groupBys = group.activeFilterIds.reduce(
             function (acc, filterId) {
-                var filter = self.filters[filterId];
-                acc = acc.concat(self._getFilterGroupBys(filter));
+                acc = acc.concat(self._getFilterGroupBys(filterId));
                 return acc;
             },
             []
@@ -805,7 +919,7 @@ var ControlPanelModel = mvc.Model.extend({
      */
     _getGroupIdOfType: function (type) {
         var self = this;
-        return Object.keys(this.groups).find(function (groupId) {
+        return _.find(Object.keys(this.groups), function (groupId) {
             var group = self.groups[groupId];
             return group.type === type;
         });
@@ -814,7 +928,7 @@ var ControlPanelModel = mvc.Model.extend({
      * Used to get the key orderedBy of a favorite.
      *
      * @private
-     * @returns {Object[]} orderedBy
+     * @returns {Object[]|undefined} orderedBy
      */
     _getOrderedBy: function () {
         var orderedBy;
@@ -823,9 +937,11 @@ var ControlPanelModel = mvc.Model.extend({
             // if we are here, this means that the group of favorite is
             // active and activeFilterIds is a list of length one.
             var group = this.groups[id];
-            var activeFavoriteId = group.activeFilterIds[0];
+            var activeFavoriteId = group.activeFilterIds[0][0];
             var favorite = this.filters[activeFavoriteId];
-            orderedBy = favorite.orderedBy;
+            if (favorite.orderedBy && favorite.orderedBy.length) {
+                orderedBy = favorite.orderedBy;
+            }
         }
         return orderedBy;
     },
@@ -864,7 +980,7 @@ var ControlPanelModel = mvc.Model.extend({
         // groupOfTimeRanges can be undefined in case with withSearchBar is false
         var groupOfTimeRanges = this.groups[this._getGroupIdOfType('timeRange')];
         if (groupOfTimeRanges && groupOfTimeRanges.activeFilterIds.length) {
-            var filter = this.filters[groupOfTimeRanges.activeFilterIds[0]];
+            var filter = this.filters[groupOfTimeRanges.activeFilterIds[0][0]];
 
             var comparisonTimeRange = "[]";
             var comparisonTimeRangeDescription;
@@ -874,7 +990,7 @@ var ControlPanelModel = mvc.Model.extend({
                     filter.timeRangeId,
                     filter.fieldType
                 );
-            var timeRangeDescription = filter.timeRangeOptions.find(function (option) {
+            var timeRangeDescription = _.find(filter.timeRangeOptions, function (option) {
                 return option.optionId === filter.timeRangeId;
             }).description.toString();
             if (filter.comparisonTimeRangeId) {
@@ -882,10 +998,9 @@ var ControlPanelModel = mvc.Model.extend({
                     filter.fieldName,
                     filter.timeRangeId,
                     filter.fieldType,
-                    null,
                     filter.comparisonTimeRangeId
                 );
-                comparisonTimeRangeDescription = filter.comparisonTimeRangeOptions.find(function (comparisonOption) {
+                comparisonTimeRangeDescription = _.find(filter.comparisonTimeRangeOptions, function (comparisonOption) {
                     return comparisonOption.optionId === filter.comparisonTimeRangeId;
                 }).description.toString();
             }
@@ -895,6 +1010,7 @@ var ControlPanelModel = mvc.Model.extend({
             }
             context = {
                 timeRangeMenuData: {
+                    comparisonField: filter.fieldName,
                     timeRange: timeRange,
                     timeRangeDescription: timeRangeDescription,
                     comparisonTimeRange: comparisonTimeRange,
@@ -905,6 +1021,49 @@ var ControlPanelModel = mvc.Model.extend({
         return context;
     },
     /**
+     * Insert a combination of type [filterId, optionId] in activeFilterIds for
+     * a corresponding filter of type 'groupBy' with options.
+     * The array activeFilterIds is by construction of the form
+     *
+     * A1 'concat' A2 'concat' A3
+     *
+     * where filterId does not occur in the arrays A1 and A3 (possibly empty) and
+     * A2 = [[filterId, optionId_1], ..., [filterId, optionId_n]] (possibly empty).
+     *
+     * The idea of the function below is to insert [filterId, optionId] at the end
+     * of activeFilterIds if A2 is empty and inside A2 otherwise while keeping A2 ordered
+     * for the natural order on option ids: 'year' < 'quarter' < ... < 'day'.
+     *
+     * @private
+     * @param {Array[]} activeFilterIds
+     * @param {Array} combinationId
+     * @returns {Array[]}
+     */
+    _insert(activeFilterIds, combinationId) {
+        const filterId = combinationId[0];
+        let firstIndex = -1;
+        let lastIndex = -1;
+        activeFilterIds.forEach((cId, i) => {
+            if (cId[0] === filterId) {
+                firstIndex = firstIndex === -1 ? i : firstIndex;
+                lastIndex = i;
+            }
+        });
+        if (firstIndex === -1) { // case A2 empty
+            activeFilterIds.push(combinationId);
+        } else { // case A2 non empty
+            const a1 = activeFilterIds.slice(0, firstIndex);
+            const a2 = activeFilterIds.slice(firstIndex, lastIndex + 1);
+            const a3 = activeFilterIds.slice(lastIndex + 1);
+
+            a2.push(combinationId);
+            a2.sort((c1, c2) => rank(c1[1]) - rank(c2[1]));
+
+            activeFilterIds = [].concat(a1, a2, a3);
+        }
+        return activeFilterIds;
+    },
+    /**
      * Load custom filters in db, then create a group of type 'favorite' and a
      * filter of type 'favorite' for each loaded custom filters.
      * The new filters are put in the new group.
@@ -912,7 +1071,7 @@ var ControlPanelModel = mvc.Model.extend({
      * if this.activateDefaultFavorite is true.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _loadFavorites: function () {
         var self = this;
@@ -929,10 +1088,21 @@ var ControlPanelModel = mvc.Model.extend({
                     }
                     var sort = JSON.parse(favorite.sort);
                     var orderedBy = sort.map(function (order) {
-                        var orderTerms = order.split(' ');
+                        var fieldName;
+                        var asc;
+                        var sqlNotation = order.split(' ');
+                        if (sqlNotation.length > 1) {
+                            // regex: \fieldName (asc|desc)?\
+                            fieldName = sqlNotation[0];
+                            asc = sqlNotation[1] === 'asc';
+                        } else {
+                            // legacy notation -- regex: \-?fieldName\
+                            fieldName = order[0] === '-' ? order.slice(1) : order;
+                            asc = order[0] === '-' ? false : true;
+                        }
                         return {
-                            name: orderTerms[0],
-                            asc: orderTerms.length === 2 && orderTerms[1] === 'asc',
+                            name: fieldName,
+                            asc: asc,
                         };
                     });
                     return {
@@ -952,12 +1122,11 @@ var ControlPanelModel = mvc.Model.extend({
                 });
                 self._createGroupOfFilters(favorites);
                 if (self.activateDefaultFavorite) {
-                    var defaultFavoriteId = Object.keys(self.filters).find(function (filterId) {
-                        var filter = self.filters[filterId];
+                    var defaultFavorite = _.find(self.filters, function (filter) {
                         return filter.type === 'favorite' && filter.isDefault;
                     });
-                    if (defaultFavoriteId) {
-                        self.toggleFilter(defaultFavoriteId);
+                    if (defaultFavorite) {
+                        self.toggleFilter(defaultFavorite.id);
                     }
                 }
             } else {
@@ -972,7 +1141,7 @@ var ControlPanelModel = mvc.Model.extend({
      * is asynchronous.
      *
      * @private
-     * @returns {Deferred[]}
+     * @returns {Promise[]}
      */
     _loadSearchDefaults: function () {
         var self = this;
@@ -1036,7 +1205,7 @@ var ControlPanelModel = mvc.Model.extend({
      *
      * @private
      * @param {Object} favorite
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _saveQuery: function (favorite) {
         var self = this;

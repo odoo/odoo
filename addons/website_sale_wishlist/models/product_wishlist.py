@@ -7,7 +7,7 @@ from odoo.http import request
 class ProductWishlist(models.Model):
     _name = 'product.wishlist'
     _description = 'Product Wishlist'
-    _sql_constrains = [
+    _sql_constraints = [
         ("product_unique_partner_id",
          "UNIQUE(product_id, partner_id)",
          "Duplicated wishlisted product for this partner."),
@@ -17,8 +17,8 @@ class ProductWishlist(models.Model):
     product_id = fields.Many2one('product.product', string='Product', required=True)
     currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', help='Pricelist when added')
-    price = fields.Monetary(digits=0, currency_field='currency_id', string='Price', help='Price of the product when it has been added in the wishlist')
-    website_id = fields.Many2one('website', required=True)
+    price = fields.Monetary(currency_field='currency_id', string='Price', help='Price of the product when it has been added in the wishlist')
+    website_id = fields.Many2one('website', ondelete='cascade', required=True)
     active = fields.Boolean(default=True, required=True)
 
     @api.model
@@ -31,9 +31,9 @@ class ProductWishlist(models.Model):
         if request.website.is_public_user():
             wish = self.sudo().search([('id', 'in', request.session.get('wishlist_ids', []))])
         else:
-            wish = self.search([("partner_id", "=", self.env.user.partner_id.id)])
+            wish = self.search([("partner_id", "=", self.env.user.partner_id.id), ('website_id', '=', request.website.id)])
 
-        return wish.filtered('product_id.product_tmpl_id.website_published')
+        return wish.filtered(lambda x: x.sudo().product_id.product_tmpl_id.website_published)
 
     @api.model
     def _add_to_wishlist(self, pricelist_id, currency_id, website_id, price, product_id, partner_id=False):
@@ -79,7 +79,6 @@ class ResPartner(models.Model):
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    @api.multi
     def _is_in_wishlist(self):
         self.ensure_one()
         return self in self.env['product.wishlist'].current().mapped('product_id.product_tmpl_id')
@@ -88,7 +87,6 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    @api.multi
     def _is_in_wishlist(self):
         self.ensure_one()
         return self in self.env['product.wishlist'].current().mapped('product_id')

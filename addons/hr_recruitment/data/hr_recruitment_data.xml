@@ -26,9 +26,9 @@
                 our hiring team reviewed your application and <b>did not
                 select it for further consideration</b>.
                 <br/><br/>
-                Please note that recruiting is hard, and we can do
-                mistake. Do not hesitate to reply to this email if you
-                think we did a mistake, or if you want more information
+                Please note that recruiting is hard, and we can make
+                mistakes. Do not hesitate to reply to this email if you
+                think we made a mistake, or if you want more information
                 about our decision.
                 <br/><br/>
                 We will, however, keep your resume on record and get in
@@ -57,7 +57,6 @@
     </tr>
 </table>
         </field>
-        <field name="user_signature" eval="False"/>
         <field name="auto_delete" eval="True"/>
         <field name="lang">${object.partner_id.lang or ''}</field>
     </record>
@@ -95,7 +94,7 @@
                     <table>
                         <tr>
                             <td width="75">
-                                <img src="/web/image/res.users/${object.user_id.id}/image_small" alt="Avatar" style="vertical-align:baseline;max-width:64px;" />
+                                <img src="/web/image/res.users/${object.user_id.id}/image_128" alt="Avatar" style="vertical-align:baseline; width: 64px; height: 64px; object-fit: cover;" />
                             </td>
                             <td>
                                 <strong>${object.user_id.name}</strong><br/>
@@ -167,13 +166,12 @@
         </td>
     </tr>
 </table></field>
-        <field name="user_signature" eval="False"/>
         <field name="auto_delete" eval="True"/>
         <field name="lang">${object.partner_id.lang or ''}</field>
     </record>
 
     <record id="email_template_data_applicant_congratulations" model="mail.template">
-        <field name="name">Applicant: Acknowledgment</field>
+        <field name="name">Applicant: Acknowledgement</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="subject">Your Job Application: ${object.job_id.name | safe}</field>
         <field name="email_to">${(not object.partner_id and object.email_from or '') | safe}</field>
@@ -185,7 +183,7 @@
             <div style="font-size: 13px; margin: 0px; padding: 0px;">
                 Hello,
                 <br/><br/>
-                We confirm we successfully received your application to the job
+                We confirm we successfully received your application for the job
                 "<a href="${object.job_id.website_url or ''}" style="color:#9A6C8E;"><strong>${object.job_id.name}</strong></a>" at <strong>${object.company_id.name}</strong>.
                 <br/><br/>
                 We will come back to you shortly.
@@ -203,7 +201,7 @@
                     <table>
                         <tr>
                             <td width="75">
-                                <img src="/web/image/res.users/${object.user_id.id}/image_small" alt="Avatar" style="vertical-align:baseline;max-width:64px;" />
+                                <img src="/web/image/res.users/${object.user_id.id}/image_128" alt="Avatar" style="vertical-align:baseline; width: 64px; height: 64px; object-fit: cover;" />
                             </td>
                             <td>
                                 <strong>${object.user_id.name}</strong><br/>
@@ -261,7 +259,6 @@
         </td>
     </tr>
 </table></field>
-        <field name="user_signature" eval="False"/>
         <field name="auto_delete" eval="True"/>
         <field name="lang">${object.partner_id.lang or ''}</field>
     </record>
@@ -322,14 +319,14 @@
         <field name="name">Applicant Stage Changed</field>
         <field name="res_model">hr.job</field>
         <field name="default" eval="False"/>
-        <field name="parent_id" eval="ref('mt_applicant_stage_changed')"/>
+        <field name="parent_id" ref="mt_applicant_stage_changed"/>
         <field name="relation_field">job_id</field>
     </record>
     <record id="mt_job_applicant_hired" model="mail.message.subtype">
         <field name="name">Applicant Hired</field>
         <field name="res_model">hr.job</field>
         <field name="default" eval="True"/>
-        <field name="parent_id" eval="ref('mt_applicant_hired')"/>
+        <field name="parent_id" ref="mt_applicant_hired"/>
         <field name="relation_field">job_id</field>
     </record>
 
@@ -338,7 +335,7 @@
         <field name="name">Job Position Created</field>
         <field name="res_model">hr.department</field>
         <field name="sequence" eval="1"/>
-        <field name="parent_id" eval="ref('mt_job_new')"/>
+        <field name="parent_id" ref="mt_job_new"/>
         <field name="relation_field">department_id</field>
     </record>
 
@@ -381,6 +378,17 @@
         <field name="sequence">5</field>
         <field name="fold" eval="True"/>
     </record>
+
+    <!-- applicant refuse reason -->
+        <record id="refuse_reason_1" model="hr.applicant.refuse.reason">
+            <field name="name">Doesn't fit the job requirements</field>
+        </record>
+        <record id="refuse_reason_2" model="hr.applicant.refuse.reason">
+            <field name="name">The applicant is not interested anymore</field>
+        </record>
+        <record id="refuse_reason_3" model="hr.applicant.refuse.reason">
+            <field name="name">The applicant gets a better offer</field>
+        </record>
 
 </data>
 </odoo>

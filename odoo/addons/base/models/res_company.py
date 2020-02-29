@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import base64
+import io
+import logging
 import os
 import re
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.modules.module import get_resource_path
+
+from random import randrange
+from PIL import Image
+
+_logger = logging.getLogger(__name__)
 
 
 class Company(models.Model):
@@ -13,21 +22,40 @@ class Company(models.Model):
     _description = 'Companies'
     _order = 'sequence, name'
 
-    @api.multi
     def copy(self, default=None):
         raise UserError(_('Duplicating a company is not allowed. Please create a new company instead.'))
 
     def _get_logo(self):
         return base64.b64encode(open(os.path.join(tools.config['root_path'], 'addons', 'base', 'static', 'img', 'res_company_logo.png'), 'rb') .read())
 
-    @api.model
-    def _get_euro(self):
-        return self.env['res.currency.rate'].search([('rate', '=', 1)], limit=1).currency_id
+    def _default_currency_id(self):
+        return self.env.user.company_id.currency_id
 
-    @api.model
-    def _get_user_currency(self):
-        currency_id = self.env['res.users'].browse(self._uid).company_id.currency_id
-        return currency_id or self._get_euro()
+    def _get_default_favicon(self, original=False):
+        img_path = get_resource_path('web', 'static/src/img/favicon.ico')
+        with tools.file_open(img_path, 'rb') as f:
+            if original:
+                return base64.b64encode(f.read())
+            # Modify the source image to add a colored bar on the bottom
+            # This could seem overkill to modify the pixels 1 by 1, but
+            # Pillow doesn't provide an easy way to do it, and this 
+            # is acceptable for a 16x16 image.
+            color = (randrange(32, 224, 24), randrange(32, 224, 24), randrange(32, 224, 24))
+            original = Image.open(f)
+            new_image = Image.new('RGBA', original.size)
+            height = original.size[1]
+            width = original.size[0]
+            bar_size = 1
+            for y in range(height):
+                for x in range(width):
+                    pixel = original.getpixel((x, y))
+                    if height - bar_size <= y + 1 <= height:
+                        new_image.putpixel((x, y), (color[0], color[1], color[2], 255))
+                    else:
+                        new_image.putpixel((x, y), (pixel[0], pixel[1], pixel[2], pixel[3]))
+            stream = io.BytesIO()
+            new_image.save(stream, format="ICO")
+            return base64.b64encode(stream.getvalue())
 
     name = fields.Char(related='partner_id.name', string='Company Name', required=True, store=True, readonly=False)
     sequence = fields.Integer(help='Used to order Companies in the company switcher', default=10)
@@ -36,18 +64,20 @@ class Company(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)
     report_header = fields.Text(string='Company Tagline', help="Appears by default on the top right corner of your printed documents (report header).")
     report_footer = fields.Text(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
-    logo = fields.Binary(related='partner_id.image', default=_get_logo, string="Company Logo", readonly=False)
+    logo = fields.Binary(related='partner_id.image_1920', default=_get_logo, string="Company Logo", readonly=False)
     # logo_web: do not store in attachments, since the image is retrieved in SQL for
     # performance reasons (see addons/web/controllers/main.py, Binary.company_logo)
     logo_web = fields.Binary(compute='_compute_logo_web', store=True, attachment=False)
-    currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self._get_user_currency())
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self._default_currency_id())
     user_ids = fields.Many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', string='Accepted Users')
-    account_no = fields.Char(string='Account No.')
     street = fields.Char(compute='_compute_address', inverse='_inverse_street')
     street2 = fields.Char(compute='_compute_address', inverse='_inverse_street2')
     zip = fields.Char(compute='_compute_address', inverse='_inverse_zip')
     city = fields.Char(compute='_compute_address', inverse='_inverse_city')
-    state_id = fields.Many2one('res.country.state', compute='_compute_address', inverse='_inverse_state', string="Fed. State")
+    state_id = fields.Many2one(
+        'res.country.state', compute='_compute_address', inverse='_inverse_state',
+        string="Fed. State", domain="[('country_id', '=?', country_id)]"
+    )
     bank_ids = fields.One2many('res.partner.bank', 'company_id', string='Bank Accounts', help='Bank accounts related to this company')
     country_id = fields.Many2one('res.country', compute='_compute_address', inverse='_inverse_country', string="Country")
     email = fields.Char(related='partner_id.email', store=True, readonly=False)
@@ -57,14 +87,16 @@ class Company(models.Model):
     company_registry = fields.Char()
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('base.paperformat_euro', raise_if_not_found=False))
     external_report_layout_id = fields.Many2one('ir.ui.view', 'Document Template')
+    base_onboarding_company_state = fields.Selection([
+        ('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding company step", default='not_done')
+    favicon = fields.Binary(string="Company Favicon", help="This field holds the image used to display a favicon for a given company.", default=_get_default_favicon)
+    font = fields.Selection([("Lato", "Lato"), ("Roboto", "Roboto"), ("Open_Sans", "Open Sans"), ("Montserrat", "Montserrat"), ("Oswald", "Oswald"), ("Raleway", "Raleway")], default="Lato")
+    primary_color = fields.Char()
+    secondary_color = fields.Char()
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
 
-    base_onboarding_company_state = fields.Selection([
-        ('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding company step", default='not_done')
-
-    @api.model_cr
     def init(self):
         for company in self.search([('paperformat_id', '=', False)]):
             paperformat_euro = self.env.ref('base.paperformat_euro', False)
@@ -74,15 +106,14 @@ class Company(models.Model):
         if hasattr(sup, 'init'):
             sup.init()
 
-    def _get_company_address_fields(self, partner):
-        return {
-            'street'     : partner.street,
-            'street2'    : partner.street2,
-            'city'       : partner.city,
-            'zip'        : partner.zip,
-            'state_id'   : partner.state_id,
-            'country_id' : partner.country_id,
-        }
+    def _get_company_address_field_names(self):
+        """ Return a list of fields coming from the address partner to match
+        on company address fields. Fields are labeled same on both models. """
+        return ['street', 'street2', 'city', 'zip', 'state_id', 'country_id']
+
+    def _get_company_address_update(self, partner):
+        return dict((fname, partner[fname])
+                    for fname in self._get_company_address_field_names())
 
     # TODO @api.depends(): currently now way to formulate the dependency on the
     # partner's contact address
@@ -91,7 +122,7 @@ class Company(models.Model):
             address_data = company.partner_id.sudo().address_get(adr_pref=['contact'])
             if address_data['contact']:
                 partner = company.partner_id.browse(address_data['contact']).sudo()
-                company.update(company._get_company_address_fields(partner))
+                company.update(company._get_company_address_update(partner))
 
     def _inverse_street(self):
         for company in self:
@@ -117,33 +148,20 @@ class Company(models.Model):
         for company in self:
             company.partner_id.country_id = company.country_id
 
-    @api.depends('partner_id', 'partner_id.image')
+    @api.depends('partner_id.image_1920')
     def _compute_logo_web(self):
         for company in self:
-            company.logo_web = tools.image_resize_image(company.partner_id.image, (180, None))
+            company.logo_web = tools.image_process(company.partner_id.image_1920, size=(180, 0))
 
     @api.onchange('state_id')
     def _onchange_state(self):
-        self.country_id = self.state_id.country_id
-
-    @api.multi
-    def on_change_country(self, country_id):
-        # This function is called from account/models/chart_template.py, hence decorated with `multi`.
-        self.ensure_one()
-        currency_id = self._get_user_currency()
-        if country_id:
-            currency_id = self.env['res.country'].browse(country_id).currency_id
-        return {'value': {'currency_id': currency_id.id}}
+        if self.state_id.country_id:
+            self.country_id = self.state_id.country_id
 
     @api.onchange('country_id')
-    def _onchange_country_id_wrapper(self):
-        res = {'domain': {'state_id': []}}
+    def _onchange_country_id(self):
         if self.country_id:
-            res['domain']['state_id'] = [('country_id', '=', self.country_id.id)]
-        values = self.on_change_country(self.country_id.id)['value']
-        for fname, value in values.items():
-            setattr(self, fname, value)
-        return res
+            self.currency_id = self.country_id.currency_id
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
@@ -154,7 +172,7 @@ class Company(models.Model):
             # select only the currently visible companies (according to rules,
             # which are probably to allow to see the child companies) even if
             # she belongs to some other companies.
-            companies = self.env.user.company_id + self.env.user.company_ids
+            companies = self.env.user.company_ids
             args = (args or []) + [('id', 'in', companies.ids)]
             newself = newself.sudo()
         return super(Company, newself.with_context(context))._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
@@ -162,36 +180,11 @@ class Company(models.Model):
     @api.model
     @api.returns('self', lambda value: value.id)
     def _company_default_get(self, object=False, field=False):
-        """ Returns the default company (usually the user's company).
-        The 'object' and 'field' arguments are ignored but left here for
-        backward compatibility and potential override.
+        """ Returns the user's company
+            - Deprecated
         """
-        return self.env['res.users']._get_company()
-
-    @api.model
-    @tools.ormcache('self.env.uid', 'company')
-    def _get_company_children(self, company=None):
-        if not company:
-            return []
-        return self.search([('parent_id', 'child_of', [company])]).ids
-
-    @api.multi
-    def _get_partner_hierarchy(self):
-        self.ensure_one()
-        parent = self.parent_id
-        if parent:
-            return parent._get_partner_hierarchy()
-        else:
-            return self._get_partner_descendance([])
-
-    @api.multi
-    def _get_partner_descendance(self, descendance):
-        self.ensure_one()
-        descendance.append(self.partner_id.id)
-        for child_id in self._get_company_children(self.id):
-            if child_id != self.id:
-                descendance = self.browse(child_id)._get_partner_descendance(descendance)
-        return descendance
+        _logger.warning(_("The method '_company_default_get' on res.company is deprecated and shouldn't be used anymore"))
+        return self.env.company
 
     # deprecated, use clear_caches() instead
     def cache_restart(self):
@@ -199,25 +192,27 @@ class Company(models.Model):
 
     @api.model
     def create(self, vals):
+        if not vals.get('favicon'):
+            vals['favicon'] = self._get_default_favicon()
         if not vals.get('name') or vals.get('partner_id'):
             self.clear_caches()
             return super(Company, self).create(vals)
         partner = self.env['res.partner'].create({
             'name': vals['name'],
             'is_company': True,
-            'image': vals.get('logo'),
-            'customer': False,
+            'image_1920': vals.get('logo'),
             'email': vals.get('email'),
             'phone': vals.get('phone'),
             'website': vals.get('website'),
             'vat': vals.get('vat'),
         })
+        # compute stored fields, for example address dependent fields
+        partner.flush()
         vals['partner_id'] = partner.id
         self.clear_caches()
         company = super(Company, self).create(vals)
         # The write is made on the user to set it automatically in the multi company group.
         self.env.user.write({'company_ids': [(4, company.id)]})
-        partner.write({'company_id': company.id})
 
         # Make sure that the selected currency is enabled
         if vals.get('currency_id'):
@@ -226,7 +221,6 @@ class Company(models.Model):
                 currency.write({'active': True})
         return company
 
-    @api.multi
     def write(self, values):
         self.clear_caches()
         # Make sure that the selected currency is enabled
@@ -235,38 +229,39 @@ class Company(models.Model):
             if not currency.active:
                 currency.write({'active': True})
 
-        return super(Company, self).write(values)
+        res = super(Company, self).write(values)
+
+        # invalidate company cache to recompute address based on updated partner
+        company_address_fields = self._get_company_address_field_names()
+        company_address_fields_upd = set(company_address_fields) & set(values.keys())
+        if company_address_fields_upd:
+            self.invalidate_cache(fnames=company_address_fields)
+        return res
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
             raise ValidationError(_('You cannot create recursive companies.'))
 
-    @api.multi
     def open_company_edit_report(self):
         self.ensure_one()
         return self.env['res.config.settings'].open_company()
 
-    @api.multi
-    def write_company_and_print_report(self, values):
-        res = self.write(values)
-
-        report_name = values.get('default_report_name')
-        active_ids = values.get('active_ids')
-        active_model = values.get('active_model')
+    def write_company_and_print_report(self):
+        context = self.env.context
+        report_name = context.get('default_report_name')
+        active_ids = context.get('active_ids')
+        active_model = context.get('active_model')
         if report_name and active_ids and active_model:
             docids = self.env[active_model].browse(active_ids)
             return (self.env['ir.actions.report'].search([('report_name', '=', report_name)], limit=1)
-                        .with_context(values)
                         .report_action(docids))
-        else:
-            return res
 
     @api.model
     def action_open_base_onboarding_company(self):
         """ Onboarding step for company basic information. """
         action = self.env.ref('base.action_open_base_onboarding_company').read()[0]
-        action['res_id'] = self.env.user.company_id.id
+        action['res_id'] = self.env.company.id
         return action
 
     def set_onboarding_step_done(self, step_name):
@@ -292,7 +287,6 @@ class Company(models.Model):
             self[onboarding_state] = 'done'
         return old_values
 
-    @api.multi
     def action_save_onboarding_company_step(self):
         if bool(self.street):
             self.set_onboarding_step_done('base_onboarding_company_state')
@@ -305,3 +299,27 @@ class Company(models.Model):
             main_company = self.env['res.company'].sudo().search([], limit=1, order="id")
 
         return main_company
+
+    def update_scss(self):
+        """ update the company scss stylesheet """
+        scss_properties = []
+        if self.primary_color:
+            scss_properties.append('$o-company-primary-color:%s;' % self.primary_color)
+        if self.secondary_color:
+            scss_properties.append('$o-company-secondary-color:%s;' % self.secondary_color)
+        if self.font:
+            scss_properties.append('$o-company-font:%s;' % self.font)
+        scss_string = '\n'.join(scss_properties)
+
+        if not len(scss_string):
+            scss_string = ""
+
+        scss_data = base64.b64encode((scss_string).encode('utf-8'))
+
+        attachment = self.env['ir.attachment'].search([('name', '=', 'res.company.scss')])
+        if attachment.datas != scss_data:
+            # this invalidates the corresponding asset (write_date is modified),
+            # so we do it only when necessary
+            attachment.write({'datas': scss_data})
+
+        return ''

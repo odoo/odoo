@@ -21,14 +21,12 @@ class Users(models.Model):
     alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="set null", required=False,
             help="Email address internally associated with this user. Incoming "\
                  "emails will appear in the user's notifications.", copy=False, auto_join=True)
-    alias_contact = fields.Selection([
-        ('everyone', 'Everyone'),
-        ('partners', 'Authenticated Partners'),
-        ('followers', 'Followers only')], string='Alias Contact Security', related='alias_id.alias_contact', readonly=False)
+    alias_contact = fields.Selection(
+        string='Alias Contact Security', related='alias_id.alias_contact', readonly=False)
     notification_type = fields.Selection([
         ('email', 'Handle by Emails'),
         ('inbox', 'Handle in Odoo')],
-        'Notification Management', required=True, default='email',
+        'Notification', required=True, default='email',
         help="Policy on how to handle Chatter notifications:\n"
              "- Handle by Emails: notifications are sent to your email address\n"
              "- Handle in Odoo: notifications appear in your Odoo Inbox")
@@ -40,7 +38,6 @@ class Users(models.Model):
         string='Moderated channels')
 
     @api.depends('moderation_channel_ids.moderation', 'moderation_channel_ids.moderator_ids')
-    @api.multi
     def _compute_is_moderator(self):
         moderated = self.env['mail.channel'].search([
             ('id', 'in', self.mapped('moderation_channel_ids').ids),
@@ -51,7 +48,6 @@ class Users(models.Model):
         for user in self:
             user.is_moderator = user in user_ids
 
-    @api.multi
     def _compute_moderation_counter(self):
         self._cr.execute("""
 SELECT channel_moderator.res_users_id, COUNT(msg.id)
@@ -92,7 +88,6 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
         self.env['mail.channel'].search([('group_ids', 'in', user.groups_id.ids)])._subscribe_users()
         return user
 
-    @api.multi
     def write(self, vals):
         write_res = super(Users, self).write(vals)
         sel_groups = [vals[k] for k in vals if is_selection_groups(k) and vals[k]]
@@ -158,7 +153,6 @@ class res_groups_mail_channel(models.Model):
     _inherit = 'res.groups'
     _description = 'Access Groups'
 
-    @api.multi
     def write(self, vals, context=None):
         write_res = super(res_groups_mail_channel, self).write(vals)
         if vals.get('users'):

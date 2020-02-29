@@ -2,65 +2,64 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import users
-from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.addons.test_mass_mailing.tests import common
 from odoo.exceptions import AccessError
 
 
-class TestBLAccessRights(common.MassMailingCase):
+class TestBLAccessRights(common.TestMailCommon):
 
-    def setUp(self):
-        super(TestBLAccessRights, self).setUp()
-        self.bl_rec = self.env['mail.blacklist'].create([
+    @classmethod
+    def setUpClass(cls):
+        super(TestBLAccessRights, cls).setUpClass()
+        cls._create_portal_user()
+
+        cls.bl_rec = cls.env['mail.blacklist'].create([
             {'email': 'Not A Stark <john.snow@example.com>'},
         ])
+        cls.bl_previous = cls.env['mail.blacklist'].search([])
 
-        self.user_portal = mail_new_test_user(self.env, login='port', groups='base.group_portal')
-
-        self.bl_previous = self.env['mail.blacklist'].search([])
-
-    @users('emp')
+    @users('employee')
     def test_bl_crud_employee(self):
         with self.assertRaises(AccessError):
             self.env['mail.blacklist'].create([{'email': 'Arya.Stark@example.com'}])
 
         with self.assertRaises(AccessError):
-            self.bl_rec.sudo(self.env.user).read([])
+            self.bl_rec.with_user(self.env.user).read([])
 
         with self.assertRaises(AccessError):
-            self.bl_rec.sudo(self.env.user).write({'email': 'jaimie.lannister@example.com'})
+            self.bl_rec.with_user(self.env.user).write({'email': 'jaimie.lannister@example.com'})
 
         with self.assertRaises(AccessError):
-            self.bl_rec.sudo(self.env.user).unlink()
+            self.bl_rec.with_user(self.env.user).unlink()
 
-    @users('port')
+    @users('portal_test')
     def test_bl_crud_portal(self):
         with self.assertRaises(AccessError):
             self.env['mail.blacklist'].create([{'email': 'Arya.Stark@example.com'}])
 
         with self.assertRaises(AccessError):
-            self.bl_rec.sudo(self.env.user).read([])
+            self.bl_rec.with_user(self.env.user).read([])
 
         with self.assertRaises(AccessError):
-            self.bl_rec.sudo(self.env.user).write({'email': 'jaimie.lannister@example.com'})
+            self.bl_rec.with_user(self.env.user).write({'email': 'jaimie.lannister@example.com'})
 
         with self.assertRaises(AccessError):
-            self.bl_rec.sudo(self.env.user).unlink()
+            self.bl_rec.with_user(self.env.user).unlink()
 
     @users('marketing')
     def test_bl_crud_marketing(self):
         self.env['mail.blacklist'].create([{'email': 'Arya.Stark@example.com'}])
 
-        read_res = self.bl_rec.sudo(self.env.user).read([])
+        read_res = self.bl_rec.with_user(self.env.user).read([])
         self.assertEqual(read_res[0]['id'], self.bl_rec.id)
 
-        self.bl_rec.sudo(self.env.user).write({'email': 'jaimie.lannister@example.com'})
+        self.bl_rec.with_user(self.env.user).write({'email': 'jaimie.lannister@example.com'})
         self.assertEqual(self.bl_rec.email, 'jaimie.lannister@example.com')
 
-        self.bl_rec.sudo(self.env.user).unlink()
+        self.bl_rec.with_user(self.env.user).unlink()
 
 
-class TestBLConsistency(common.MassMailingCase):
+class TestBLConsistency(common.TestMailCommon):
     _base_list = ['Arya.Stark@example.com', 'ned.stark@example.com']
 
     def setUp(self):

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="view_event_registration_ticket_tree" model="ir.ui.view">
+        <field name="name">event.registration.tree.inherit</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_tree" />
+        <field name="arch" type="xml">
+            <field name="event_id" position="after">
+                <field name="origin"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="event_registration_view_kanban" model="ir.ui.view">
+        <field name="name">event.registration.kanban.inherit</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.event_registration_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='event_id']" position="after">
+                <br/>
+                <field name="event_ticket_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_event_registration_ticket_form" model="ir.ui.view">
+        <field name="name">event.registration.form.inherit</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_sale_order" type="object"
+                            class="oe_stat_button" icon="fa-usd" string="Sale Order">
+                    </button>
+                </div>
+                <field name="is_paid" invisible="1"/>
+                <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': [('is_paid', '=', False)]}"/>
+            </xpath>
+            <group name="event" position="after">
+                <group string="Origin" groups="base.group_no_one">
+                    <field name="sale_order_id"/>
+                    <field name="origin" attrs="{'invisible': [('sale_order_id', '!=', False)]}"/>
+                    <field name="sale_order_line_id" readonly="1" attrs="{'invisible': [('sale_order_id', '=', False)]}"/>
+                </group>
+                <group string="Marketing" name="utm_link" groups="base.group_no_one">
+                    <field name="campaign_id"/>
+                    <field name="medium_id"/>
+                    <field name="source_id"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</data></odoo>

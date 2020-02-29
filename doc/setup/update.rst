@@ -20,7 +20,7 @@ definitions:
 
 Updating (an Odoo installation)
   Refers to the process of obtaining the latest revision of the source code for
-  your current Odoo Edition. For example, updating your Odoo Enterprise 12.0 to the
+  your current Odoo Edition. For example, updating your Odoo Enterprise 13.0 to the
   latest revision.
   This does not directly cause any change to the contents of your Odoo database, and
   can be undone by reinstalling the previous revision of the source code.
@@ -110,7 +110,7 @@ to replace the installation directory with a newer version. First download the l
 from Odoo.com. They are updated daily and include the latest security fixes (see step #1)
 After downloading the package, extract it to a temporary location on your server.
 
-You will get a folder labelled with the version of the source code, for example "odoo-12.0+e.20180719",
+You will get a folder labelled with the version of the source code, for example "odoo-13.0+e.20190719",
 that contains a folder "odoo.egg-info" and the actual source code folder named "odoo" (for Odoo 10
 and later) or "openerp" for older versions.
 You can ignore the odoo.egg-info folder. Locate the folder where your current installation is deployed,

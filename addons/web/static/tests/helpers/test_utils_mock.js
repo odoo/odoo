@@ -10,14 +10,16 @@ odoo.define('web.test_utils_mock', function (require) {
  * testUtils file.
  */
 
-var basic_fields = require('web.basic_fields');
-var config = require('web.config');
-var core = require('web.core');
-var dom = require('web.dom');
-var MockServer = require('web.MockServer');
-var session = require('web.session');
+const basic_fields = require('web.basic_fields');
+const config = require('web.config');
+const core = require('web.core');
+const dom = require('web.dom');
+const makeTestEnvironment = require('web.test_env');
+const MockServer = require('web.MockServer');
+const session = require('web.session');
 
-var DebouncedField = basic_fields.DebouncedField;
+const DebouncedField = basic_fields.DebouncedField;
+
 
 //------------------------------------------------------------------------------
 // Private functions
@@ -45,7 +47,7 @@ function _observe(widget) {
  * and optionally triggers an rpc with the src url as route on a widget.
  * This method is critical and must be fastest (=> no jQuery, no underscore)
  *
- * @param {DOM Node} el
+ * @param {HTMLElement} el
  * @param {[Widget]} widget the widget on which the rpc should be performed
  */
 function removeSrcAttribute(el, widget) {
@@ -124,7 +126,7 @@ function removeSrcAttribute(el, widget) {
  *   is completely removed by default.
  *
  * @returns {MockServer} the instance of the mock server, created by this
- *   function. It is necessary for createAsyncView so that method can call some
+ *   function. It is necessary for createView so that method can call some
  *   other methods on it.
  */
 function addMockEnvironment(widget, params) {
@@ -161,7 +163,7 @@ function addMockEnvironment(widget, params) {
     var initialSession, initialConfig, initialParameters, initialDebounce, initialThrottle;
     initialSession = _.extend({}, session);
     session.getTZOffset = function () {
-        return 0; // by default, but may be overriden in specific tests
+        return 0; // by default, but may be overridden in specific tests
     };
     if ('session' in params) {
         _.extend(session, params.session);
@@ -173,7 +175,7 @@ function addMockEnvironment(widget, params) {
             _.extend(config.device, params.config.device);
         }
         if ('debug' in params.config) {
-            config.debug = params.config.debug;
+            odoo.debug = params.config.debug;
         }
     }
     if ('translateParameters' in params) {
@@ -198,6 +200,12 @@ function addMockEnvironment(widget, params) {
         // clear the caches (e.g. data_manager, ModelFieldSelector) when the
         // widget is destroyed, at the end of each test to avoid collisions
         core.bus.trigger('clear_cache');
+
+        Object.keys(services).forEach(function(s) {
+            var service = services[s];
+            if (service && !service.isDestroyed())
+                service.destroy();
+        });
 
         DebouncedField.prototype.DEBOUNCE = initialDebounceValue;
         dom.DEBOUNCE = initialDOMDebounceValue;
@@ -245,7 +253,7 @@ function addMockEnvironment(widget, params) {
             var service = services[ev.data.service];
             args = (ev.data.args || []);
             result = service[ev.data.method].apply(service, args);
-        } else if (ev.data.service === 'ajax') {
+        } else if (ev.data.service === 'ajax' && ev.data.method === 'rpc') {
             // use ajax service that is mocked by the server
             var route = ev.data.args[0];
             args = ev.data.args[1];
@@ -353,6 +361,66 @@ function fieldsViewGet(server, params) {
 }
 
 /**
+ * Returns a mocked environment to be used by OWL components in tests.
+ *
+ * @param {Object} [params]
+ * @param {Object} [params.actions] the actions given to the mock server
+ * @param {Object} [params.archs] this archs given to the mock server
+ * @param {Object} [params.data] the business data given to the mock server
+ * @param {boolean} [params.debug]
+ * @param {function} [params.mockRPC]
+ * @returns {Object}
+ */
+function getMockedOwlEnv(params) {
+    params = params || {};
+    let Server = MockServer;
+    if (params.mockRPC) {
+        Server = MockServer.extend({ _performRpc: params.mockRPC });
+    }
+    const server = new Server(params.data, {
+        actions: params.actions,
+        archs: params.archs,
+        debug: params.debug,
+    });
+    const env = {
+        dataManager: {
+            load_action: (actionID, context) => {
+                return server.performRpc('/web/action/load', {
+                    kwargs: {
+                        action_id: actionID,
+                        additional_context: context,
+                    },
+                });
+            },
+            load_views: (params, options) => {
+                return server.performRpc('/web/dataset/call_kw/' + params.model, {
+                    args: [],
+                    kwargs: {
+                        context: params.context,
+                        options: options,
+                        views: params.views_descr,
+                    },
+                    method: 'load_views',
+                    model: params.model,
+                }).then(function (views) {
+                    return _.mapObject(views, viewParams => {
+                        return fieldsViewGet(server, viewParams);
+                    });
+                });
+            },
+            load_filters: params => {
+                if (params.debug) {
+                    console.log('[mock] load_filters', params);
+                }
+                return Promise.resolve([]);
+            },
+        },
+        session: params.session || {},
+    };
+    return makeTestEnvironment(env, server.performRpc.bind(server));
+}
+
+/**
  * intercepts an event bubbling up the widget hierarchy. The event intercepted
  * must be a "custom event", i.e. an event generated by the method 'trigger_up'.
  *
@@ -440,7 +508,13 @@ function patchDate(year, month, day, hours, minutes, seconds) {
         }
 
         // Copy "native" methods explicitly; they may be non-enumerable
-        Date.now = NativeDate.now;
+        // exception: 'now' uses fake date as reference
+        Date.now = function () {
+            var date = new NativeDate();
+            var time = date.getTime();
+            time -= timeInterval;
+            return time;
+        };
         Date.UTC = NativeDate.UTC;
         Date.prototype = NativeDate.prototype;
         Date.prototype.constructor = Date;
@@ -538,14 +612,34 @@ function unpatch(target) {
     delete target.__patchID;
 }
 
+window.originalSetTimeout = window.setTimeout;
+function patchSetTimeout() {
+    var original = window.setTimeout;
+    var self = this;
+    window.setTimeout = function (handler, delay) {
+        console.log("calling setTimeout on " + (handler.name || "some function") + "with delay of " + delay);
+        console.trace();
+        var handlerArguments = Array.prototype.slice.call(arguments, 1);
+        return original(function () {
+            handler.bind(self, handlerArguments)();
+            console.log('after doing the action of the setTimeout');
+        }, delay);
+    };
+
+    return function () {
+        window.setTimeout = original;
+    };
+}
 
 return {
     addMockEnvironment: addMockEnvironment,
     fieldsViewGet: fieldsViewGet,
+    getMockedOwlEnv: getMockedOwlEnv,
     intercept: intercept,
     patchDate: patchDate,
     patch: patch,
     unpatch: unpatch,
+    patchSetTimeout: patchSetTimeout,
 };
 
 });

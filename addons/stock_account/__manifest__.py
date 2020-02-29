@@ -25,12 +25,13 @@ Dashboard / Reports for Warehouse Management includes:
     'data': [
         'security/stock_account_security.xml',
         'security/ir.model.access.csv',
-        'wizard/stock_change_standard_price_views.xml',
         'data/stock_account_data.xml',
         'views/stock_account_views.xml',
         'views/res_config_settings_views.xml',
         'data/product_data.xml',
         'views/product_views.xml',
+        'views/stock_quant_views.xml',
+        'views/stock_valuation_layer_views.xml',
     ],
     'test': [
     ],

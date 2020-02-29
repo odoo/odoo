@@ -49,7 +49,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      *        the url to load when manually running the tour
      * @param {boolean} [options.rainbowMan=true]
      *        whether or not the rainbowman must be shown at the end of the tour
-     * @param {Deferred} [options.wait_for]
+     * @param {Promise} [options.wait_for]
      *        indicates when the tour can be started
      * @param {Object[]} steps - steps' descriptions, each step being an object
      *                     containing a tip description
@@ -70,7 +70,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             url: options.url,
             rainbowMan: options.rainbowMan === undefined ? true : !!options.rainbowMan,
             test: options.test,
-            wait_for: options.wait_for || $.when(),
+            wait_for: options.wait_for || Promise.resolve(),
         };
         if (options.skip_enabled) {
             tour.skip_link = '<p><span class="o_skip_tour">' + _t('Skip tour') + '</span></p>';
@@ -81,14 +81,35 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         }
         this.tours[name] = tour;
     },
+    /**
+     * Returns a promise which is resolved once the tour can be started. This
+     * is when the DOM is ready and at the end of the execution stack so that
+     * all tours have potentially been extended by all apps.
+     *
+     * @private
+     * @returns {Promise}
+     */
+    _waitBeforeTourStart: function () {
+        return new Promise(function (resolve) {
+            $(function () {
+                setTimeout(resolve);
+            });
+        });
+    },
     _register_all: function (do_update) {
-        if (this._all_registered) return;
-        this._all_registered = true;
-
-        _.each(this.tours, this._register.bind(this, do_update));
+        var self = this;
+        if (this._allRegistered) {
+            return Promise.resolve();
+        }
+        this._allRegistered = true;
+        return self._waitBeforeTourStart().then(function () {
+            return Promise.all(_.map(self.tours, function (tour, name) {
+                return self._register(do_update, tour, name);
+            })).then(() => self.update());
+        });
     },
     _register: function (do_update, tour, name) {
-        if (tour.ready) return $.when();
+        if (tour.ready) return Promise.resolve();
 
         var tour_is_consumed = _.contains(this.consumed_tours, name);
 
@@ -107,7 +128,6 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
 
             if (do_update && (this.running_tour === name || (!this.running_tour && !tour.test && !tour_is_consumed))) {
                 this._to_next_step(name, 0);
-                this.update(name);
             }
         }).bind(this));
     },
@@ -142,8 +162,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 this.update();
             }).bind(this));
 
-            var url = session.debug ? $.param.querystring(tour.url, {debug: session.debug}) : tour.url;
-            window.location.href = window.location.origin + url;
+            window.location.href = window.location.origin + tour.url;
         } else {
             this.update();
         }
@@ -193,7 +212,9 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      * @returns {boolean} true if a tip was found and activated/updated
      */
     _check_for_tooltip: function (tip, tour_name) {
-
+        if (tip === undefined) {
+            return true;
+        }
         if ($('body').hasClass('o_ui_blocked')) {
             this._deactivate_tip(tip);
             this._log.push("blockUI is preventing the tip to be consumed");
@@ -343,10 +364,9 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 });
                 console.log(document.body.parentElement.outerHTML);
                 console.error(error); // will be displayed as error info
-                console.log("error"); // phantomJS wait for message starting by error to stop
             } else {
                 console.log(_.str.sprintf("Tour %s succeeded", tour_name));
-                console.log("ok"); // phantomJS wait for exact message "ok"
+                console.log("test successful"); // browser_js wait for message "test successful"
             }
             this._log = [];
         } else {
@@ -392,11 +412,14 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             var action_helper = new RunningTourActionHelper(tip.widget);
             do_before_unload(self._consume_tip.bind(self, tip, tour_name));
 
+            var tour = self.tours[tour_name];
             if (typeof tip.run === "function") {
                 tip.run.call(tip.widget, action_helper);
             } else if (tip.run !== undefined) {
                 var m = tip.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
                 action_helper[m[1]](m[2]);
+            } else if (tour.current_step === tour.steps.length - 1) {
+                console.log('Tour %s: ignoring action (auto) of last step', tour_name);
             } else {
                 action_helper.auto();
             }

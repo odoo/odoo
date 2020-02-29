@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<odoo><data>
+
+    <record id="event_registration_0_0" model="event.registration">
+        <field name="event_id" ref="event.event_0"/>
+        <field name="event_ticket_id" ref="event.event_0_ticket_1"/>
+        <field name="partner_id" ref="base.res_partner_address_1"/>
+    </record>
+    <record id="event_registration_0_1" model="event.registration">
+        <field name="event_id" ref="event.event_0"/>
+        <field name="event_ticket_id" ref="event.event_0_ticket_1"/>
+        <field name="partner_id" ref="base.res_partner_address_2"/>
+    </record>
+    <record id="event_registration_0_2" model="event.registration">
+        <field name="event_id" ref="event.event_0"/>
+        <field name="event_ticket_id" ref="event.event_0_ticket_0"/>
+        <field name="name">Tucker Carlson</field>
+        <field name="name">tuck@test.example.com</field>
+        <field name="partner_id" eval="False"/>
+    </record>
+
+    <record id="event_registration_4_0" model="event.registration">
+        <field name="event_id" ref="event.event_4"/>
+        <field name="event_ticket_id" ref="event.event_4_ticket_0"/>
+        <field name="partner_id" ref="base.res_partner_address_7"/>
+    </record>
+    <record id="event_registration_4_1" model="event.registration">
+        <field name="event_id" ref="event.event_4"/>
+        <field name="event_ticket_id" ref="event.event_4_ticket_0"/>
+        <field name="partner_id" ref="base.res_partner_address_13"/>
+    </record>
+    <record id="event_registration_4_2" model="event.registration">
+        <field name="event_id" ref="event.event_4"/>
+        <field name="event_ticket_id" ref="event.event_4_ticket_0"/>
+        <field name="partner_id" ref="base.res_partner_address_14"/>
+    </record>
+
+    <function model="event.registration"
+        name="action_confirm"
+        eval="[[ref('event_registration_0_0'), ref('event_registration_0_1'),
+                ref('event_registration_4_0'), ref('event_registration_4_1'), ref('event_registration_4_2')]]"
+    />
+
+</data></odoo>

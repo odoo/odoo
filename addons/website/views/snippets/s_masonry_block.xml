@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Template -->
+<template id="s_masonry_block" name="Masonry">
+    <section class="s_masonry_block" data-vcss="001">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-6 bg-600 oe_img_bg text-center pb216 pt224" data-name="Masonry block"
+                     style="background-image: url(/web/image/website.s_masonry_block_default_image_1);">
+                    <h2>A great title</h2>
+                    <p>And a great subtitle</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="row h-100">
+                        <div class="col-lg-6 text-center bg-alpha" data-name="Masonry block">
+                            <h3>A great title</h3>
+                            <p>And a great subtitle</p>
+                        </div>
+                        <div class="col-lg-6 text-center bg-200" data-name="Masonry block">
+                            <h3>A great title</h3>
+                            <p>And a great subtitle</p>
+                        </div>
+                        <div class="col-lg-6 text-center bg-200" data-name="Masonry block">
+                            <h3>A great title</h3>
+                            <p>And a great subtitle</p>
+                        </div>
+                        <div class="col-lg-6 text-center bg-beta" data-name="Masonry block">
+                            <h3>A great title</h3>
+                            <p>And a great subtitle</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<!-- Options -->
+<template id="s_masonry_block_options" inherit_id="website.snippet_options">
+    <xpath expr="//div[@data-js='background']" position="attributes">
+        <attribute name="data-selector" separator="," add=".s_masonry_block .row > *"/>
+    </xpath>
+    <xpath expr="//div[@data-js='BackgroundPosition']" position="attributes">
+        <attribute name="data-selector" separator="," add=".s_masonry_block .row > *"/>
+    </xpath>
+</template>
+
+<!-- Assets -->
+<template id="_assets_snippet_s_masonry_block_css_000_variables" inherit_id="website._assets_primary_variables">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_masonry_block/000_variables.scss"/>
+    </xpath>
+</template>
+<template id="assets_snippet_s_masonry_block_css_000" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_masonry_block/000.scss"/>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_masonry_block_css_001" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_masonry_block/001.scss"/>
+    </xpath>
+</template>
+
+</odoo>

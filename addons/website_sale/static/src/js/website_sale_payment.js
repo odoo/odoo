@@ -1,15 +1,48 @@
 odoo.define('website_sale.payment', function (require) {
 'use strict';
 
-require('web.dom_ready');
+var publicWidget = require('web.public.widget');
 
-var $checkbox = $("#checkbox_cgv");
-if (!$checkbox.length) {
-    return;
-}
+publicWidget.registry.WebsiteSalePayment = publicWidget.Widget.extend({
+    selector: '#wrapwrap:has(#checkbox_cgv)',
+    events: {
+        'change #checkbox_cgv': '_onCGVCheckboxClick',
+    },
 
-$checkbox.on('change', function (ev) {
-    $('button#o_payment_form_pay').prop('disabled', !ev.target.checked);
+    /**
+     * @override
+     */
+    start: function () {
+        this.$checkbox = this.$('#checkbox_cgv');
+        this.$payButton = $('button#o_payment_form_pay');
+        this.$checkbox.trigger('change');
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _adaptPayButton: function () {
+        var disabledReasons = this.$payButton.data('disabled_reasons') || {};
+        disabledReasons.cgv = !this.$checkbox.prop('checked');
+        this.$payButton.data('disabled_reasons', disabledReasons);
+
+        this.$payButton.prop('disabled', _.contains(disabledReasons, true));
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onCGVCheckboxClick: function () {
+        this._adaptPayButton();
+    },
 });
-$checkbox.change();
 });

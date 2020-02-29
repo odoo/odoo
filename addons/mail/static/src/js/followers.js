@@ -6,6 +6,7 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var field_registry = require('web.field_registry');
+var session = require('web.session');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -36,14 +37,13 @@ var Followers = AbstractField.extend({
     init: function (parent, name, record, options) {
         this._super.apply(this, arguments);
 
-        this.image = this.attrs.image || 'image_small';
+        this.image = this.attrs.image || 'image_128';
         this.comment = this.attrs.help || false;
 
         this.followers = [];
         this.subtypes = [];
         this.data_subtype = {};
         this._isFollower = undefined;
-        var session = this.getSession();
         this.partnerID = session.partner_id;
 
         this.dp = new concurrency.DropPrevious();
@@ -55,14 +55,14 @@ var Followers = AbstractField.extend({
         // note: the rendering of this widget is asynchronous as it needs to
         // fetch the details of the followers, but it performs a first rendering
         // synchronously (_displayGeneric), and updates its rendering once it
-        // has fetched the required data, so this function doesn't return a deferred
+        // has fetched the required data, so this function doesn't return a promise
         // as we don't want to wait to the data to be loaded to display the widget
         var self = this;
         var fetch_def = this.dp.add(this._readFollowers());
 
         concurrency.rejectAfter(concurrency.delay(0), fetch_def).then(this._displayGeneric.bind(this));
 
-        fetch_def.then(function () {
+        return fetch_def.then(function () {
             self._displayButtons();
             self._displayFollowers(self.followers);
             if (self.subtypes) { // current user is follower
@@ -113,8 +113,14 @@ var Followers = AbstractField.extend({
         $(QWeb.render('mail.Followers.add_more', {widget: this})).appendTo($followers_list);
         var $follower_li;
         _.each(this.followers, function (record) {
+            if (!record.is_active) {
+                record.title = _.str.sprintf(_t('%s \n(inactive)'), record.name);
+            } else {
+                record.title = record.name;
+            }
+
             $follower_li = $(QWeb.render('mail.Followers.partner', {
-                'record': _.extend(record, {'avatar_url': '/web/image/' + record.res_model + '/' + record.res_id + '/image_small'}),
+                'record': record,
                 'widget': self})
             );
             $follower_li.appendTo($followers_list);
@@ -168,7 +174,6 @@ var Followers = AbstractField.extend({
             type: 'ir.actions.act_window',
             res_model: 'mail.wizard.invite',
             view_mode: 'form',
-            view_type: 'form',
             views: [[false, 'form']],
             name: _t("Invite Follower"),
             target: 'new',
@@ -194,28 +199,37 @@ var Followers = AbstractField.extend({
         return str;
     },
     _readFollowers: function () {
-        var self = this;
         var missing_ids = _.difference(this.value.res_ids, _.pluck(this.followers, 'id'));
         var def;
         if (missing_ids.length) {
             def = this._rpc({
                     route: '/mail/read_followers',
-                    params: { follower_ids: missing_ids, res_model: this.model }
+                    params: { follower_ids: missing_ids, context: {} } // empty context to be overridden in session.js with 'allowed_company_ids'
                 });
         }
-        return $.when(def).then(function (results) {
+        return Promise.resolve(def).then((results) => {
             if (results) {
-                self.followers = _.uniq(results.followers.concat(self.followers), 'id');
+                // Preprocess records
+                _.each(results.followers, (record) => {
+                    var resModel = record.partner_id ? 'res.partner' : 'mail.channel';
+                    var resId = record.partner_id ? record.partner_id : record.channel_id;
+                    record.res_id = resId;
+                    record.res_model = resModel;
+                    record.avatar_url = '/web/image/' + resModel + '/' + resId + '/image_128';
+                });
+                this.followers = _.uniq(results.followers.concat(this.followers), 'id');
                 if (results.subtypes) { //read_followers will return False if current user is not in the list
-                    self.subtypes = results.subtypes;
+                    this.subtypes = results.subtypes;
                 }
             }
             // filter out previously fetched followers that are no longer following
-            self.followers = _.filter(self.followers, function (follower) {
-                return _.contains(self.value.res_ids, follower.id);
+            this.followers = _.filter(this.followers, (follower) => {
+                return _.contains(this.value.res_ids, follower.id);
             });
-            var user_follower = _.filter(self.followers, function (rec) { return rec.is_uid; });
-            self._isFollower = user_follower.length >= 1;
+            var userFollower = _.filter(this.followers, (rec) => {
+                return this.partnerID === rec.partner_id;
+            });
+            this._isFollower = userFollower.length >= 1;
         });
     },
     _reload: function () {
@@ -236,32 +250,42 @@ var Followers = AbstractField.extend({
     },
     /**
      * Remove partners or channels from the followers
+     *
+     * @private
+     * @param {Object} ids
+     * @param {Array} [ids.partner_ids] the partner ids
+     * @param {Array} [ids.channel_ids] the channel ids
+     */
+    _messageUnsubscribe: function (ids) {
+        return this._rpc({
+            model: this.model,
+            method: 'message_unsubscribe',
+            args: [[this.res_id], ids.partner_ids, ids.channel_ids],
+        }).then(this._reload.bind(this));
+    },
+    /**
+     * Remove partners or channels from the followers
      * @param {Array} [ids.partner_ids] the partner ids
      * @param {Array} [ids.channel_ids] the channel ids
      */
     _unfollow: function (ids) {
         var self = this;
-        var def = $.Deferred();
-        var text = _t("Warning! \n If you remove a follower, he won't be notified of any email or discussion on this document.\n Do you really want to remove this follower ?");
-        Dialog.confirm(this, text, {
-            confirm_callback: function () {
-                var args = [
-                    [self.res_id],
-                    ids.partner_ids,
-                    ids.channel_ids,
-                    {}, // FIXME
-                ];
-                self._rpc({
-                        model: self.model,
-                        method: 'message_unsubscribe',
-                        args: args
-                    })
-                    .then(self._reload.bind(self));
-                def.resolve();
-            },
-            cancel_callback: def.reject.bind(def),
+        // do not prompt confirmation dialog on unsubscribe of current user.
+        if (_.isEqual(ids.partner_ids, [this.partnerID]) && _.isEmpty(ids.channel_ids)) {
+            return this._messageUnsubscribe(ids);
+        }
+        return new Promise(function (resolve, reject) {
+            var follower = _.find(self.followers, { res_id: ids.partner_ids ? ids.partner_ids[0] : ids.channel_ids[0] });
+            var text = _.str.sprintf(_t("If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove %s?"), follower.name);
+            Dialog.confirm(this, text, {
+                title: _t("Warning"),
+                confirm_callback: function () {
+                    self._messageUnsubscribe(ids);
+                    resolve();
+                },
+                cancel_callback: reject,
+            });
         });
-        return def;
     },
     _updateSubscription: function (event, followerID, isChannel) {
         var ids = {};
@@ -290,7 +314,7 @@ var Followers = AbstractField.extend({
 
         // If no more subtype followed, unsubscribe the follower
         if (!checklist.length) {
-            this._unfollow(ids).fail(function () {
+            this._unfollow(ids).guardedCatch(function () {
                 $(event.currentTarget).find('input').addBack('input').prop('checked', true);
             });
         } else {
@@ -346,7 +370,7 @@ var Followers = AbstractField.extend({
         var follower_id = $currentTarget.data('follower-id'); // id of model mail_follower
         this._rpc({
                 route: '/mail/read_subscription_data',
-                params: {res_model: this.model, follower_id: follower_id},
+                params: {follower_id: follower_id},
             })
             .then(function (data) {
                 var res_id = $currentTarget.data('oe-id'); // id of model res_partner or mail_channel
@@ -394,7 +418,6 @@ var Followers = AbstractField.extend({
         var $target = $(ev.target);
         this.do_action({
             type: 'ir.actions.act_window',
-            view_type: 'form',
             view_mode: 'form',
             res_model: $target.data('oe-model'),
             views: [[false, 'form']],

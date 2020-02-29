@@ -39,8 +39,8 @@
                         <br/><br/>
                         If this was a mistake or you did not requested this action, please ignore this message.
                         % if user.signature
-                        <br/>
-                        ${user.signature | safe}
+                            <br/>
+                            ${user.signature | safe}
                         % endif
                     </div>
                 </td></tr>
@@ -86,7 +86,6 @@
 </table>
             </field>
             <field name="auto_delete" eval="True"/>
-            <field name="user_signature" eval="False"/>
         </record>
 
         <record id="mail_template_list_unsubscribe" model="mail.template">
@@ -126,8 +125,8 @@
                         <br/><br/>
                         If this was a mistake or you did not requested this action, please ignore this message.
                         % if user.signature:
-                        <br/>
-                        ${user.signature | safe}
+                            <br/>
+                            ${user.signature | safe}
                         % endif
                     </div>
                 </td></tr>
@@ -173,7 +172,6 @@
 </table>
             </field>
             <field name="auto_delete" eval="True"/>
-            <field name="user_signature" eval="False"/>
         </record>
     </data>
 

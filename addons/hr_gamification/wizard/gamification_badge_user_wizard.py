@@ -10,9 +10,8 @@ class GamificationBadgeUserWizard(models.TransientModel):
 
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id',
-        store=False, readonly=True)
+        store=False, readonly=True, compute_sudo=True)
 
-    @api.multi
     def action_grant_badge(self):
         """Wizard action for sending a badge to a chosen employee"""
         if not self.user_id:

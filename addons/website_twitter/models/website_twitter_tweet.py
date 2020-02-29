@@ -8,7 +8,7 @@ class WebsiteTwitterTweet(models.Model):
     _name = 'website.twitter.tweet'
     _description = 'Website Twitter'
 
-    website_id = fields.Many2one('website', string='Website')
+    website_id = fields.Many2one('website', string='Website', ondelete='cascade')
     screen_name = fields.Char(string='Screen Name')
     tweet = fields.Text(string='Tweets')
 

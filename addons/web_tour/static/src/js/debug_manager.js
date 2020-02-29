@@ -1,8 +1,8 @@
-odoo.define('web_tour.DebugManager', function (require) {
+odoo.define('web_tour.DebugManager.Backend', function (require) {
 "use strict";
 
 var core = require("web.core");
-var DebugManager = require('web.DebugManager');
+var DebugManager = require('web.DebugManager.Backend');
 var Dialog = require("web.Dialog");
 
 var tour = require('web_tour.tour');

@@ -4,10 +4,16 @@ odoo.define('website.editor.menu', function (require) {
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var core = require('web.core');
-var wContext = require('website.context');
-var WysiwygMultizone = require('web_editor.wysiwyg.multizone');
+var Wysiwyg = require('web_editor.wysiwyg.root');
 
 var _t = core._t;
+
+var WysiwygMultizone = Wysiwyg.extend({
+    assetLibs: Wysiwyg.prototype.assetLibs.concat(['website.compiled_assets_wysiwyg']),
+    _getWysiwygContructor: function () {
+        return odoo.__DEBUG__.services['web_editor.wysiwyg.multizone'];
+    }
+});
 
 var EditorMenu = Widget.extend({
     template: 'website.editorbar',
@@ -18,9 +24,8 @@ var EditorMenu = Widget.extend({
     },
     custom_events: {
         request_save: '_onSnippetRequestSave',
+        get_clean_html: '_onGetCleanHTML',
     },
-
-    LOCATION_SEARCH: 'enable_editor',
 
     /**
      * @override
@@ -34,7 +39,6 @@ var EditorMenu = Widget.extend({
                 $wrapwrap.removeClass('o_editable'); // clean the dom before edition
                 self.editable($wrapwrap).addClass('o_editable');
                 self.wysiwyg = self._wysiwygInstance();
-                return self.wysiwyg.attachTo($wrapwrap);
             });
     },
     /**
@@ -43,7 +47,7 @@ var EditorMenu = Widget.extend({
     start: function () {
         var self = this;
         this.$el.css({width: '100%'});
-        return this._super().then(function () {
+        return this.wysiwyg.attachTo($('#wrapwrap')).then(function () {
             self.trigger_up('edit_mode');
             self.$el.css({width: ''});
         });
@@ -71,20 +75,23 @@ var EditorMenu = Widget.extend({
      */
     cancel: function (reload) {
         var self = this;
-        var def = $.Deferred();
-        if (!this.wysiwyg.isDirty()) {
-            def.resolve();
-        } else {
-            var confirm = Dialog.confirm(this, _t("If you discard the current edition, all unsaved changes will be lost. You can cancel to return to the edition mode."), {
-                confirm_callback: def.resolve.bind(def),
-            });
-            confirm.on('closed', def, def.reject);
-        }
+        var def = new Promise(function (resolve, reject) {
+            if (!self.wysiwyg.isDirty()) {
+                resolve();
+            } else {
+                var confirm = Dialog.confirm(self, _t("If you discard the current edition, all unsaved changes will be lost. You can cancel to return to the edition mode."), {
+                    confirm_callback: resolve,
+                });
+                confirm.on('closed', self, reject);
+            }
+        });
+
         return def.then(function () {
             self.trigger_up('edition_will_stopped');
             var $wrapwrap = $('#wrapwrap');
             self.editable($wrapwrap).removeClass('o_editable');
             if (reload !== false) {
+                window.onbeforeunload = null;
                 self.wysiwyg.destroy();
                 return self._reload();
             } else {
@@ -106,10 +113,10 @@ var EditorMenu = Widget.extend({
     save: function (reload) {
         var self = this;
         this.trigger_up('edition_will_stopped');
-        return this.wysiwyg.save().then(function (dirty) {
+        return this.wysiwyg.save(false).then(function (result) {
             var $wrapwrap = $('#wrapwrap');
             self.editable($wrapwrap).removeClass('o_editable');
-            if (dirty && reload !== false) {
+            if (result.isDirty && reload !== false) {
                 // remove top padding because the connected bar is not visible
                 $('body').removeClass('o_connected_user');
                 return self._reload();
@@ -130,12 +137,14 @@ var EditorMenu = Widget.extend({
         return $wrapwrap.find('[data-oe-model]')
             .not('.o_not_editable')
             .filter(function () {
-                return !$(this).closest('.o_not_editable').length;
+                var $parent = $(this).closest('.o_editable, .o_not_editable');
+                return !$parent.length || $parent.hasClass('o_editable');
             })
             .not('link, script')
             .not('[data-oe-readonly]')
             .not('img[data-oe-field="arch"], br[data-oe-field="arch"], input[data-oe-field="arch"]')
             .not('.oe_snippet_editor')
+            .not('hr, br, input, textarea')
             .add('.o_editable');
     },
 
@@ -147,12 +156,18 @@ var EditorMenu = Widget.extend({
      * @private
      */
     _wysiwygInstance: function () {
+        var context;
+        this.trigger_up('context_get', {
+            callback: function (ctx) {
+                context = ctx;
+            },
+        });
         return new WysiwygMultizone(this, {
             snippets: 'website.snippets',
             recordInfo: {
-                context: wContext.get(),
+                context: context,
                 data_res_model: 'website',
-                data_res_id: wContext.get().website_id,
+                data_res_id: context.website_id,
             }
         });
     },
@@ -165,14 +180,10 @@ var EditorMenu = Widget.extend({
     _reload: function () {
         $('body').addClass('o_wait_reload');
         this.wysiwyg.destroy();
+        this.$el.hide();
         window.location.hash = 'scrollTop=' + window.document.body.scrollTop;
-        if (window.location.search.indexOf(this.LOCATION_SEARCH) >= 0) {
-            var regExp = new RegExp('[&?]' + this.LOCATION_SEARCH + '(=[^&]*)?', 'g');
-            window.location.href = window.location.href.replace(regExp, '?');
-        } else {
-            window.location.reload(true);
-        }
-        return $.Deferred();
+        window.location.reload(true);
+        return new Promise(function () {});
     },
 
     //--------------------------------------------------------------------------
@@ -185,7 +196,16 @@ var EditorMenu = Widget.extend({
      * @private
      */
     _onCancelClick: function () {
-        this.cancel(false);
+        this.cancel(true);
+    },
+    /**
+     * Get the cleaned value of the editable element.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onGetCleanHTML: function (ev) {
+        ev.data.callback(this.wysiwyg.getValue({$layout: ev.data.$layout}));
     },
     /**
      * Snippet (menu_data) can request to save the document to leave the page

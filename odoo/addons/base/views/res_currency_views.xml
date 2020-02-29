@@ -17,7 +17,7 @@
             <field name="arch" type="xml">
                 <tree string="Currency Rates" editable="bottom">
                     <field name="name"/>
-                    <field name="rate"/>
+                    <field name="rate" digits="[12,12]"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -32,7 +32,7 @@
                         <group>
                             <group>
                                 <field name="name"/>
-                                <field name="rate"/>
+                                <field name="rate" digits="[12,12]"/>
                             </group>
                             <group>
                                 <field name="currency_id"/>
@@ -60,7 +60,6 @@
             <field name="arch" type="xml">
                 <search string="Currencies">
                     <field name="name" string="Currency"/>
-                    <field name="active"/>
                     <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active currencies"/>
                     <filter name="inactive" string="Inactive" domain="[('active','=',False)]" help="Show inactive currencies"/>
                 </search>
@@ -76,7 +75,7 @@
                     <field name="symbol"/>
                     <field name="rate_ids" invisible="1"/>
                     <field name="date"/>
-                    <field name="rate"/>
+                    <field name="rate" digits="[12,6]"/>
                     <field name="active" widget="boolean_toggle"/>
                 </tree>
             </field>
@@ -103,7 +102,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <strong><span>Current Rate: </span></strong>
-                                        <field name="rate"/>
+                                        <field name="rate" digits="[12,6]"/>
                                     </div>
                                 </div>
                             </div>
@@ -122,16 +121,12 @@
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" string="Rates" type="action" name="%(act_view_currency_rates)d"
                                 icon="fa-money" widget="statinfo" attrs="{'invisible': [('active', '=', False)]}"/>
-                            <button name="toggle_active" type="object"
-                                    class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button"
-                                    options='{"terminology": "active"}'/>
-                            </button>
                         </div>
                         <group>
                             <group>
                                 <field name="name"/>
-                                <field name="rate"/>
+                                <field name="rate" digits="[12,12]"/>
+                                <field name="active"/>
                             </group>
                             <group>
                                 <field name="currency_unit_label"/>
@@ -157,15 +152,13 @@
         <record id="action_currency_form" model="ir.actions.act_window">
             <field name="name">Currencies</field>
             <field name="res_model">res.currency</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_currency_search"/>
-            <field name="context">{'active_test': False, 'search_default_active': 1}</field>
+            <field name="context">{'active_test': False}</field>
         </record>
         <record id="action_currency_all_form" model="ir.actions.act_window">
             <field name="name">Currencies</field>
             <field name="res_model">res.currency</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_currency_search"/>
             <field name="context">{'active_test': False}</field>

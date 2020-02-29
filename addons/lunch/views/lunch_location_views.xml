@@ -21,6 +21,7 @@
                         <group>
                             <field name="name"/>
                             <field name="address"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
                 </sheet>
@@ -32,9 +33,10 @@
         <field name="name">lunch.location.view.form</field>
         <field name="model">lunch.location</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree editable="bottom">
                 <field name="name"/>
                 <field name="address"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>

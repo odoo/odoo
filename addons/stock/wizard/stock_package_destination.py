@@ -13,15 +13,15 @@ class ChooseDestinationLocation(models.TransientModel):
     location_dest_id = fields.Many2one('stock.location', 'Destination location', required=True)
     filtered_location = fields.One2many(comodel_name='stock.location', compute='_filter_location')
 
-    @api.one
     @api.depends('picking_id')
     def _compute_move_line_ids(self):
-        self.move_line_ids = self.picking_id.move_line_ids.filtered(lambda l: l.qty_done > 0 and not l.result_package_id)
+        for destination in self:
+            destination.move_line_ids = destination.picking_id.move_line_ids.filtered(lambda l: l.qty_done > 0 and not l.result_package_id)
 
-    @api.one
     @api.depends('move_line_ids')
     def _filter_location(self):
-        self.filtered_location = self.move_line_ids.mapped('location_dest_id')
+        for destination in self:
+            destination.filtered_location = destination.move_line_ids.mapped('location_dest_id')
 
     def action_done(self):
         # set the same location on each move line and pass again in _put_in_pack

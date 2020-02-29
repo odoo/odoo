@@ -4,7 +4,7 @@
 {
     'name': 'Purchase Requisition Stock',
     'version': '1.2',
-    'category': 'Purchases',
+    'category': 'Operations/Purchase',
     'sequence': 70,
     'summary': '',
     'description': "",

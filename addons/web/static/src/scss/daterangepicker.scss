@@ -1,0 +1,69 @@
+// Restore date range picker style
+.daterangepicker {
+    .drp-calendar {
+        .calendar-table {
+            thead {
+                tr:first-child {
+                    color: #FFFFFF;
+                    background-color: $o-brand-odoo;
+                    th {
+                        &.prev, &.next {
+                            span {
+                                color: #FFFFFF;
+                                border-color: #FFFFFF;
+                            }
+                            &:hover {
+                                background-color: darken($o-brand-odoo, 10%);
+                            }
+                        }
+                    }
+                }
+                tr:last-child {
+                    color: $o-datepicker-week-color;
+                    background-color: $o-datepicker-week-bg-color;
+                }
+                th {
+                    border-radius: 0;
+                }
+            }
+            tbody {
+                tr {
+                    border-bottom: 1px solid $o-datepicker-week-bg-color;
+                    td {
+                        border-width: 0px;
+                        &:not(.off) {
+                            &.in-range {
+                                background-color: gray('200');
+                            }
+                            &.available:hover {
+                                background-color: gray('200');
+                            }
+                            &.active, &.active:hover {
+                                background-color: $o-brand-primary;
+                            }
+                        }
+                        &.off:hover {
+                            background: #FFFFFF;
+                            color: #999;
+                        }
+                    }
+                }
+            }
+        }
+        .calendar-time {
+            select {
+                &.hourselect, &.minuteselect, &.secondselect, &.ampmselect {
+                    display: initial;
+                    -webkit-appearance: menulist-button;
+                    -moz-appearance: menulist-button;
+                    appearance: menulist-button;
+                }
+            }
+        }
+    }
+    .drp-buttons {
+        .drp-selected {
+            display: none;
+        }
+    }
+}

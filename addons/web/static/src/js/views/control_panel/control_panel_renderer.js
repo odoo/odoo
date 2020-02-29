@@ -18,7 +18,6 @@ var ControlPanelRenderer = Renderer.extend({
         get_action_info: '_onGetActionInfo',
     },
     events: _.extend({}, Renderer.prototype.events, {
-        'click.bs.dropdown .o_search_options .dropdown-menu': '_onDropdownClicked',
         'click .o_searchview_more': '_onMore',
     }),
 
@@ -51,6 +50,7 @@ var ControlPanelRenderer = Renderer.extend({
         this.$subMenus = null;
         this.action = params.action;
         this.displaySearchMenu = true;
+        this.isMobile = config.device.isMobile;
         this.menusSetup = false;
         this.searchMenuTypes = params.searchMenuTypes || [];
         this.subMenus = {};
@@ -86,7 +86,7 @@ var ControlPanelRenderer = Renderer.extend({
 
         var superDef = this._super.apply(this, arguments);
         var searchDef = this._renderSearch();
-        return $.when(superDef, searchDef).then(function () {
+        return Promise.all([superDef, searchDef]).then(function () {
             self._setSearchMenusVisibility();
         });
     },
@@ -95,6 +95,11 @@ var ControlPanelRenderer = Renderer.extend({
      */
     on_attach_callback: function () {
         this._focusSearchInput();
+    },
+    /**
+     * @override
+     */
+    on_detach_callback: function () {
     },
 
     //--------------------------------------------------------------------------
@@ -143,7 +148,7 @@ var ControlPanelRenderer = Renderer.extend({
      * Update the state of the renderer state. It retriggers a full rerendering.
      *
      * @param {Object} state
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     updateState: function (state) {
         this.state = state;
@@ -180,7 +185,7 @@ var ControlPanelRenderer = Renderer.extend({
      * @private
      */
     _focusSearchInput: function () {
-        if (this.withSearchBar && !config.device.isMobile) {
+        if (this.withSearchBar && !config.device.isMobileDevice) {
             // in mobile mode, we would rather not focus manually the
             // input, because it opens up the integrated keyboard, which is
             // not what you expect when you just selected a filter.
@@ -250,13 +255,19 @@ var ControlPanelRenderer = Renderer.extend({
                 self.trigger_up('breadcrumb_clicked', {controllerID: bc.controllerID});
             });
         }
+
+        var secondLast = index === length - 2;
+        if (secondLast) {
+            $bc.attr('accessKey', 'b');
+        }
+
         return $bc;
     },
     /**
      * Renderer the search bar and the search menus
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _renderSearch: function () {
         var defs = [];
@@ -269,11 +280,11 @@ var ControlPanelRenderer = Renderer.extend({
         if (this.withSearchBar) {
             defs.push(this._renderSearchBar());
         }
-        return $.when(this, defs).then(this._focusSearchInput.bind(this));
+        return Promise.all(defs).then(this._focusSearchInput.bind(this));
     },
     /**
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _renderSearchBar: function () {
         // TODO: might need a reload instead of a destroy/instantiate
@@ -282,9 +293,7 @@ var ControlPanelRenderer = Renderer.extend({
             context: this.context,
             facets: this.state.facets,
             fields: this.state.fields,
-            filters: this.state.filters,
             filterFields: this.state.filterFields,
-            groupBys: this.state.groupBys,
         });
         return this.searchBar.appendTo(this.$('.o_searchview')).then(function () {
             if (oldSearchBar) {
@@ -310,7 +319,7 @@ var ControlPanelRenderer = Renderer.extend({
      *
      * @private
      * @param {string} menuType
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _setupMenu: function (menuType) {
         var Menu;
@@ -340,7 +349,7 @@ var ControlPanelRenderer = Renderer.extend({
      * Instantiate the search menu determined by this.searchMenuTypes.
      *
      * @private
-     * @returns {Deferred[]}
+     * @returns {Promise[]}
      */
     _setupMenus: function () {
         this.$subMenus = this._getSubMenusPlace();
@@ -362,15 +371,6 @@ var ControlPanelRenderer = Renderer.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * Prevent the search dropdowns from closing when clicking inside them.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onDropdownClicked: function (ev) {
-        ev.stopPropagation();
-    },
     /**
      * Toggle the search menus visibility.
      *

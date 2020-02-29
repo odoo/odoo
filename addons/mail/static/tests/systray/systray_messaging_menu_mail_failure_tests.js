@@ -66,7 +66,7 @@ QUnit.module('MessagingMenu (Mail Failures)', {
     }
 });
 
-QUnit.test('preview of mail failure', function (assert) {
+QUnit.test('preview of mail failure', async function (assert) {
     assert.expect(4);
 
     this.data['mail.message'].records = [{
@@ -86,8 +86,8 @@ QUnit.test('preview of mail failure', function (assert) {
         data: this.data,
         services: this.services,
     });
-    messagingMenu.appendTo($('#qunit-fixture'));
-    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    await messagingMenu.appendTo($('#qunit-fixture'));
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
     assert.containsOnce(messagingMenu, '.o_mail_preview',
         "should display one preview for the mail failure");
@@ -101,7 +101,7 @@ QUnit.test('preview of mail failure', function (assert) {
     messagingMenu.destroy();
 });
 
-QUnit.test('preview grouped failures by document', function (assert) {
+QUnit.test('preview grouped failures by document', async function (assert) {
     // If some failures linked to a document refers to a same document, a single
     // preview should group all those failures
     assert.expect(3);
@@ -142,8 +142,8 @@ QUnit.test('preview grouped failures by document', function (assert) {
         data: this.data,
         services: this.services,
     });
-    messagingMenu.appendTo($('#qunit-fixture'));
-    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    await messagingMenu.appendTo($('#qunit-fixture'));
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
     assert.containsN(messagingMenu, '.o_mail_preview', 2,
         "should have a two messaging previews for the mail failures");
@@ -156,7 +156,7 @@ QUnit.test('preview grouped failures by document', function (assert) {
     messagingMenu.destroy();
 });
 
-QUnit.test('preview grouped failures by document model', function (assert) {
+QUnit.test('preview grouped failures by document model', async function (assert) {
     // If all failures linked to a document model refers to different documents,
     // a single preview should group all failures that are linked to this
     // document model
@@ -198,8 +198,8 @@ QUnit.test('preview grouped failures by document model', function (assert) {
         data: this.data,
         services: this.services,
     });
-    messagingMenu.appendTo($('#qunit-fixture'));
-    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    await messagingMenu.appendTo($('#qunit-fixture'));
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
     assert.containsN(messagingMenu, '.o_mail_preview', 2,
         "should have a two messaging previews for the mail failures");

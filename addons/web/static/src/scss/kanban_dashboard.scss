@@ -1,7 +1,9 @@
 
 .o_kanban_view.o_kanban_dashboard {
-    // correctly display the no_content_helper in dashboards
-    flex-flow: row wrap;
+    &:not(.o_kanban_grouped) {
+        // correctly display the no_content_helper in dashboards
+        flex-flow: row wrap;
+    }
 
     .o_kanban_record {
         position: relative;
@@ -32,7 +34,7 @@
 
             // Arbitrary value to place the dropdown-menu exactly below the
             // dropdown-toggle (height is forced so that it works on Firefox)
-            top: $o-kanban-manage-toggle-height - 1;
+            top: $o-kanban-manage-toggle-height;
 
             > div:not(.o_no_padding_kanban_colorpicker) {
                 padding: 3px 0 3px 20px;
@@ -187,7 +189,6 @@
 
         .o_dashboard_graph {
             overflow: hidden;
-            margin: ($o-kanban-dashboard-vpadding * 2) (-$o-kanban-dashboard-hpadding);
         }
     }
 

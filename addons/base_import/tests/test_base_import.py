@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import difflib
 import io
+import pprint
 import unittest
 
 from odoo.tests.common import TransactionCase, can_import
@@ -35,8 +37,12 @@ def sorted_fields(fields):
 class BaseImportCase(TransactionCase):
 
     def assertEqualFields(self, fields1, fields2):
-        self.assertEqual(sorted_fields(fields1), sorted_fields(fields2))
-
+        f1 = sorted_fields(fields1)
+        f2 = sorted_fields(fields2)
+        assert f1 == f2, '\n'.join(difflib.unified_diff(
+            pprint.pformat(f1).splitlines(),
+            pprint.pformat(f2).splitlines()
+        ))
 
 class TestBasicFields(BaseImportCase):
 
@@ -94,15 +100,34 @@ class TestO2M(BaseImportCase):
         return self.env['base_import.import'].get_fields('base_import.tests.models.' + field)
 
     def test_shallow(self):
-        self.assertEqualFields(self.get_fields('o2m'), make_field(field_type='one2many', fields=[
-            ID_FIELD,
-            # FIXME: should reverse field be ignored?
-            {'id': 'parent_id', 'name': 'parent_id', 'string': 'Parent', 'type': 'many2one', 'required': False, 'fields': [
-                {'id': 'parent_id', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': [], 'type': 'id'},
-                {'id': 'parent_id', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': [], 'type': 'id'},
-            ]},
-            {'id': 'value', 'name': 'value', 'string': 'Value', 'required': False, 'fields': [], 'type': 'integer'},
-        ]))
+        self.assertEqualFields(
+            self.get_fields('o2m'), [
+                ID_FIELD,
+                {'id': 'name', 'name': 'name', 'string': "Name", 'required': False, 'fields': [], 'type': 'char',},
+                {
+                    'id': 'value', 'name': 'value', 'string': 'Value',
+                    'required': False, 'type': 'one2many',
+                    'fields': [
+                        ID_FIELD,
+                        {
+                            'id': 'parent_id', 'name': 'parent_id',
+                            'string': 'Parent', 'type': 'many2one',
+                            'required': False, 'fields': [
+                                {'id': 'parent_id', 'name': 'id',
+                                 'string': 'External ID', 'required': False,
+                                 'fields': [], 'type': 'id'},
+                                {'id': 'parent_id', 'name': '.id',
+                                 'string': 'Database ID', 'required': False,
+                                 'fields': [], 'type': 'id'},
+                            ]
+                        },
+                        {'id': 'value', 'name': 'value', 'string': 'Value',
+                         'required': False, 'fields': [], 'type': 'integer'
+                        },
+                    ]
+                }
+            ]
+        )
 
 
 class TestMatchHeadersSingle(TransactionCase):
@@ -280,8 +305,6 @@ class TestPreview(TransactionCase):
             ['bar', '3', '4'],
             ['qux', '5', '6'],
         ])
-        # Ensure we only have the response fields we expect
-        self.assertItemsEqual(list(result), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'advanced_mode', 'debug'])
 
     @unittest.skipUnless(can_import('xlrd'), "XLRD module not available")
     def test_xls_success(self):
@@ -310,8 +333,6 @@ class TestPreview(TransactionCase):
             ['bar', '3', '4'],
             ['qux', '5', '6'],
         ])
-        # Ensure we only have the response fields we expect
-        self.assertItemsEqual(list(result), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'advanced_mode', 'debug'])
 
     @unittest.skipUnless(can_import('xlrd.xlsx'), "XLRD/XLSX not available")
     def test_xlsx_success(self):
@@ -340,8 +361,6 @@ class TestPreview(TransactionCase):
             ['bar', '3', '4'],
             ['qux', '5', '6'],
         ])
-        # Ensure we only have the response fields we expect
-        self.assertItemsEqual(list(result), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'advanced_mode', 'debug'])
 
     @unittest.skipUnless(can_import('odf'), "ODFPY not available")
     def test_ods_success(self):
@@ -370,9 +389,6 @@ class TestPreview(TransactionCase):
             ['bar', '3', '4'],
             ['aux', '5', '6'],
         ])
-        # Ensure we only have the response fields we expect
-        self.assertItemsEqual(list(result), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'advanced_mode', 'debug'])
-
 
 class test_convert_import_data(TransactionCase):
     """ Tests conversion of base_import.import input into data which
@@ -451,6 +467,27 @@ class test_convert_import_data(TransactionCase):
         # Check if the data 5,69 as been correctly parsed.
         self.assertEqual(float(result[0][-1]), 5.69)
         self.assertEqual(str(result[0][-2]), '2017-10-12')
+
+    def test_parse_scientific_notation(self):
+        """ Ensure that scientific notation is correctly converted to decimal """
+        import_wizard = self.env['base_import.import']
+
+        test_options = {}
+        test_data = [
+            ["1E+05"],
+            ["1.20E-05"],
+            ["1,9e5"],
+            ["9,5e-5"],
+        ]
+        expected_result = [
+            ["100000.000000"],
+            ["0.000012"],
+            ["190000.000000"],
+            ["0.000095"],
+        ]
+
+        import_wizard._parse_float_from_data(test_data, 0, 'test-name', test_options)
+        self.assertEqual(test_data, expected_result)
 
     def test_filtered(self):
         """ If ``False`` is provided as field mapping for a column,
@@ -569,6 +606,132 @@ class test_convert_import_data(TransactionCase):
 
         self.assertItemsEqual(data, [data_row])
 
+class TestBatching(TransactionCase):
+    def _makefile(self, rows):
+        f = io.BytesIO()
+        writer = pycompat.csv_writer(f, quoting=1)
+        writer.writerow(['name', 'counter'])
+        for i in range(rows):
+            writer.writerow(['n_%d' % i, str(i)])
+        return f.getvalue()
+
+    def test_recognize_batched(self):
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'base_import.tests.models.preview',
+            'file_type': 'text/csv',
+        })
+
+        import_wizard.file = self._makefile(10)
+        result = import_wizard.parse_preview({
+            'quoting': '"',
+            'separator': ',',
+            'headers': True,
+            'limit': 100,
+        })
+        self.assertIsNone(result.get('error'))
+        self.assertIs(result['batch'], False)
+
+        result = import_wizard.parse_preview({
+            'quoting': '"',
+            'separator': ',',
+            'headers': True,
+            'limit': 5,
+        })
+        self.assertIsNone(result.get('error'))
+        self.assertIs(result['batch'], True)
+
+    def test_limit_on_lines(self):
+        """ The limit option should be a limit on the number of *lines*
+        imported at at time, not the number of *records*. This is relevant
+        when it comes to embedded o2m.
+
+        A big question is whether we want to round up or down (if the limit
+        brings us inside a record). Rounding up (aka finishing up the record
+        we're currently parsing) seems like a better idea:
+
+        * if the first record has so many sub-lines it hits the limit we still
+          want to import it (it's probably extremely rare but it can happen)
+        * if we have one line per record, we probably want to import <limit>
+          records not <limit-1>, but if we stop in the middle of the "current
+          record" we'd always ignore the last record (I think)
+        """
+        f = io.BytesIO()
+        writer = pycompat.csv_writer(f, quoting=1)
+        writer.writerow(['name', 'value/value'])
+        for record in range(10):
+            writer.writerow(['record_%d' % record, '0'])
+            for row in range(1, 10):
+                writer.writerow(['', str(row)])
+
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'base_import.tests.models.o2m',
+            'file_type': 'text/csv',
+            'file_name': 'things.csv',
+            'file': f.getvalue(),
+        })
+        opts = {'quoting': '"', 'separator': ',', 'headers': True}
+        preview = import_wizard.parse_preview({**opts, 'limit': 15})
+        self.assertIs(preview['batch'], True)
+
+        results = import_wizard.do(
+            ['name', 'value/value'], [],
+            {**opts, 'limit': 5}
+        )
+        self.assertFalse(results['messages'])
+        self.assertEqual(len(results['ids']), 1, "should have imported the first record in full, got %s" % results['ids'])
+        self.assertEqual(results['nextrow'], 10)
+
+        results = import_wizard.do(
+            ['name', 'value/value'], [],
+            {**opts, 'limit': 15}
+        )
+        self.assertFalse(results['messages'])
+        self.assertEqual(len(results['ids']), 2, "should have importe the first two records, got %s" % results['ids'])
+        self.assertEqual(results['nextrow'], 20)
+
+
+    def test_batches(self):
+        partners_before = self.env['res.partner'].search([])
+        opts = {'headers': True, 'separator': ',', 'quoting': '"'}
+
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file_type': 'text/csv',
+            'file_name': 'clients.csv',
+            'file': b"""name,email
+a,a@example.com
+b,b@example.com
+,
+c,c@example.com
+d,d@example.com
+e,e@example.com
+f,f@example.com
+g,g@example.com
+"""
+        })
+
+        results = import_wizard.do(['name', 'email'], [], {**opts, 'limit': 1})
+        self.assertFalse(results['messages'])
+        self.assertEqual(len(results['ids']), 1)
+        # titlerow is ignored by lastrow's counter
+        self.assertEqual(results['nextrow'], 1)
+        partners_1 = self.env['res.partner'].search([]) - partners_before
+        self.assertEqual(partners_1.name, 'a')
+
+        results = import_wizard.do(['name', 'email'], [], {**opts, 'limit': 2, 'skip': 1})
+        self.assertFalse(results['messages'])
+        self.assertEqual(len(results['ids']), 2)
+        # empty row should also be ignored
+        self.assertEqual(results['nextrow'], 3)
+        partners_2 = self.env['res.partner'].search([]) - (partners_before | partners_1)
+        self.assertEqual(partners_2.mapped('name'), ['b', 'c'])
+
+        results = import_wizard.do(['name', 'email'], [], {**opts, 'limit': 10, 'skip': 3})
+        self.assertFalse(results['messages'])
+        self.assertEqual(len(results['ids']), 4)
+        self.assertEqual(results['nextrow'], 0)
+        partners_3 = self.env['res.partner'].search([]) - (partners_before | partners_1 | partners_2)
+        self.assertEqual(partners_3.mapped('name'), ['d', 'e', 'f', 'g'])
 
 class test_failures(TransactionCase):
     def test_big_attachments(self):

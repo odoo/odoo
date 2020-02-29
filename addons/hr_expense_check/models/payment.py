@@ -9,7 +9,7 @@ class HrExpenseRegisterPaymentWizard(models.TransientModel):
     check_amount_in_words = fields.Char(string="Amount in Words")
     check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing', readonly=False)
     # Note: a check_number == 0 means that it will be attributed when the check is printed
-    check_number = fields.Integer(string="Check Number", readonly=True, copy=False, default=0,
+    check_number = fields.Char(string="Check Number", readonly=True, copy=False, default=0,
         help="Number of the check corresponding to this payment. If your pre-printed check are not already numbered, "
              "you can manage the numbering in the journal configuration page.")
     payment_method_code_2 = fields.Char(related='payment_method_id.code',

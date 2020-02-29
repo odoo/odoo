@@ -9,41 +9,40 @@ from unittest.mock import DEFAULT
 import pytz
 
 from odoo import exceptions, tests
-from odoo.addons.test_mail.tests.common import BaseFunctionalTest
-from odoo.addons.test_mail.tests.common import mail_new_test_user
+from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
+from odoo.tools import mute_logger
 
 
-class TestActivityCommon(BaseFunctionalTest):
+class TestActivityCommon(TestMailCommon):
 
     @classmethod
     def setUpClass(cls):
         super(TestActivityCommon, cls).setUpClass()
-        cls.test_record = cls.env['mail.test.activity'].with_context(BaseFunctionalTest._test_context).create({'name': 'Test'})
+        cls.test_record = cls.env['mail.test.activity'].with_context(cls._test_context).create({'name': 'Test'})
         # reset ctx
-        cls.test_record = cls.test_record.with_context(
-            mail_create_nolog=False,
-            mail_create_nosubscribe=False,
-            mail_notrack=False
-        )
+        cls._reset_mail_context(cls.test_record)
 
 
 @tests.tagged('mail_activity')
 class TestActivityRights(TestActivityCommon):
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_security_user_access_other(self):
-        activity = self.test_record.sudo(self.user_employee).activity_schedule(
+        activity = self.test_record.with_user(self.user_employee).activity_schedule(
             'test_mail.mail_act_test_todo',
             user_id=self.user_admin.id)
         self.assertTrue(activity.can_write)
         activity.write({'user_id': self.user_employee.id})
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_security_user_access_own(self):
-        activity = self.test_record.sudo(self.user_employee).activity_schedule(
+        activity = self.test_record.with_user(self.user_employee).activity_schedule(
             'test_mail.mail_act_test_todo')
         self.assertTrue(activity.can_write)
         activity.write({'user_id': self.user_admin.id})
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_security_user_noaccess_automated(self):
         def _employee_crash(*args, **kwargs):
             """ If employee is test employee, consider he has no access on document """
@@ -81,7 +80,7 @@ class TestActivityRights(TestActivityCommon):
         # cannot create activities if no access to the document
         with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
             with self.assertRaises(exceptions.AccessError):
-                activity = self.test_record.sudo(self.user_employee).activity_schedule(
+                activity = self.test_record.with_user(self.user_employee).activity_schedule(
                     'test_mail.mail_act_test_todo',
                     user_id=self.user_admin.id)
 
@@ -90,7 +89,7 @@ class TestActivityRights(TestActivityCommon):
 class TestActivityFlow(TestActivityCommon):
 
     def test_activity_flow_employee(self):
-        with self.sudoAs('ernest'):
+        with self.with_user('employee'):
             test_record = self.env['mail.test.activity'].browse(self.test_record.id)
             self.assertEqual(test_record.activity_ids, self.env['mail.activity'])
 
@@ -118,23 +117,13 @@ class TestActivityFlow(TestActivityCommon):
             self.assertEqual(test_record.activity_ids, self.env['mail.activity'])
             self.assertEqual(test_record.message_ids[0].subtype_id, self.env.ref('mail.mt_activities'))
 
-    def test_activity_flow_portal(self):
-        portal_user = mail_new_test_user(self.env, login='chell', groups='base.group_portal', name='Chell Gladys')
-
-        with self.sudoAs('chell'):
-            test_record = self.env['mail.test.activity'].browse(self.test_record.id)
-            with self.assertRaises(exceptions.AccessError):
-                self.env['mail.activity'].create({
-                    'summary': 'Test Activity',
-                    'activity_type_id': self.env.ref('mail.mail_activity_data_email').id,
-                    'res_model_id': self.env['ir.model']._get(test_record._name).id,
-                    'res_id': test_record.id,
-                })
-
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_notify_other_user(self):
         self.user_admin.notification_type = 'email'
-        rec = self.test_record.sudo(self.user_employee)
-        with self.assertNotifications(partner_admin=(1, 'email', 'read')):
+        rec = self.test_record.with_user(self.user_employee)
+        with self.assertSinglePostNotifications(
+                [{'partner': self.partner_admin, 'type': 'email'}],
+                message_info={'content': 'assigned you an activity', 'subtype': 'mail.mt_note', 'message_type': 'user_notification'}):
             activity = rec.activity_schedule(
                 'test_mail.mail_act_test_todo',
                 user_id=self.user_admin.id)
@@ -143,28 +132,31 @@ class TestActivityFlow(TestActivityCommon):
 
     def test_activity_notify_same_user(self):
         self.user_employee.notification_type = 'email'
-        rec = self.test_record.sudo(self.user_employee)
-        with self.assertNotifications(partner_employee=(0, 'email', 'read')):
+        rec = self.test_record.with_user(self.user_employee)
+        with self.assertNoNotifications():
             activity = rec.activity_schedule(
                 'test_mail.mail_act_test_todo',
                 user_id=self.user_employee.id)
         self.assertEqual(activity.create_uid, self.user_employee)
         self.assertEqual(activity.user_id, self.user_employee)
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_dont_notify_no_user_change(self):
         self.user_employee.notification_type = 'email'
         activity = self.test_record.activity_schedule('test_mail.mail_act_test_todo', user_id=self.user_employee.id)
-        with self.assertNotifications(partner_employee=(0, 'email', 'read')):
-            activity.sudo(self.user_admin).write({'user_id': self.user_employee.id})
+        with self.assertNoNotifications():
+            activity.with_user(self.user_admin).write({'user_id': self.user_employee.id})
         self.assertEqual(activity.user_id, self.user_employee)
 
 
 @tests.tagged('mail_activity')
 class TestActivityMixin(TestActivityCommon):
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin(self):
         self.user_employee.tz = self.user_admin.tz
-        with self.sudoAs('ernest'):
+        with self.with_user('employee'):
+            self.test_record = self.env['mail.test.activity'].browse(self.test_record.id)
             self.assertEqual(self.test_record.env.user, self.user_employee)
 
             now_utc = datetime.now(pytz.UTC)
@@ -187,6 +179,11 @@ class TestActivityMixin(TestActivityCommon):
                 'test_mail.mail_act_test_meeting',
                 today_user + relativedelta(days=-1))
             self.assertEqual(self.test_record.activity_state, 'overdue')
+            # `activity_user_id` is defined as `fields.Many2one('res.users', 'Responsible User', related='activity_ids.user_id')`
+            # it therefore relies on the natural order of `activity_ids`, according to which activity comes first.
+            # As we just created the activity, its not yet in the right order.
+            # We force it by invalidating it so it gets fetched from database, in the right order.
+            self.test_record.invalidate_cache(['activity_ids'])
             self.assertEqual(self.test_record.activity_user_id, self.user_employee)
 
             act3 = self.test_record.activity_schedule(
@@ -194,6 +191,11 @@ class TestActivityMixin(TestActivityCommon):
                 today_user + relativedelta(days=3),
                 user_id=self.user_employee.id)
             self.assertEqual(self.test_record.activity_state, 'overdue')
+            # `activity_user_id` is defined as `fields.Many2one('res.users', 'Responsible User', related='activity_ids.user_id')`
+            # it therefore relies on the natural order of `activity_ids`, according to which activity comes first.
+            # As we just created the activity, its not yet in the right order.
+            # We force it by invalidating it so it gets fetched from database, in the right order.
+            self.test_record.invalidate_cache(['activity_ids'])
             self.assertEqual(self.test_record.activity_user_id, self.user_employee)
 
             self.test_record.invalidate_cache(ids=self.test_record.ids)
@@ -231,8 +233,9 @@ class TestActivityMixin(TestActivityCommon):
             self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
             self.assertEqual(len(self.test_record.message_ids), 2)
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_archive(self):
-        rec = self.test_record.sudo(self.user_employee)
+        rec = self.test_record.with_user(self.user_employee)
         new_act = rec.activity_schedule(
             'test_mail.mail_act_test_todo',
             user_id=self.user_admin.id)
@@ -244,8 +247,9 @@ class TestActivityMixin(TestActivityCommon):
         self.assertEqual(rec.active, True)
         self.assertEqual(rec.activity_ids, self.env['mail.activity'])
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_reschedule_user(self):
-        rec = self.test_record.sudo(self.user_employee)
+        rec = self.test_record.with_user(self.user_employee)
         rec.activity_schedule(
             'test_mail.mail_act_test_todo',
             user_id=self.user_admin.id)

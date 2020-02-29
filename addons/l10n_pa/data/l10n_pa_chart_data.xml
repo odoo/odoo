@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="account_account_type_NCLASIFICADO" model="account.account.type">
-        <field name="name">Cuentas No Clasificadas</field>
-    </record>
-
     <!-- Account Chart Templates -->
     <record id="l10npa_chart_template" model="account.chart.template">
         <field name="name">Panamá - Plan de Cuentas</field>
@@ -19,6 +15,7 @@
             <record id="115" model="account.account.template"><field name="name">Caja y Bancos - Valores a Depositar </field><field name="code">115</field><field name="reconcile" eval="False"/><field ref="account.data_account_type_current_assets" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
             <record id="116" model="account.account.template"><field name="name">Caja y Bancos - Recaudaciones a Depositar </field><field name="code">116</field><field name="reconcile" eval="False"/><field ref="account.data_account_type_current_assets" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
             <record id="121" model="account.account.template"><field name="name">Cuentas por Cobrar / Deudores por Ventas</field><field name="code">121</field><field name="reconcile" eval="True"/><field ref="account.data_account_type_receivable" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/><field name="reconcile">1</field></record>
+            <record id="121_01" model="account.account.template"><field name="name">Cuentas por Cobrar / Deudores por Ventas (PoS)</field><field name="code">121.01</field><field name="reconcile" eval="True"/><field ref="account.data_account_type_receivable" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/><field name="reconcile">1</field></record>
             <record id="122" model="account.account.template"><field name="name">Cuentas por Cobrar / Deudores Morosos</field><field name="code">122</field><field name="reconcile" eval="True"/><field ref="account.data_account_type_receivable" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/><field name="reconcile">1</field></record>
             <record id="123" model="account.account.template"><field name="name">Cuentas por Cobrar / Deudores en Gestión Judicial</field><field name="code">123</field><field name="reconcile" eval="True"/><field ref="account.data_account_type_receivable" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
             <record id="124" model="account.account.template"><field name="name">Cuentas por Cobrar / Deudores Varios</field><field name="code">124</field><field name="reconcile" eval="True"/><field ref="account.data_account_type_receivable" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
@@ -106,9 +103,9 @@
             <record id="513" model="account.account.template"><field name="name">Gastos en Amortización</field><field name="code">513</field><field name="reconcile" eval="False"/><field ref="account.data_account_type_expenses" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
             <record id="514" model="account.account.template"><field name="name">Gastos en Salarios</field><field name="code">514</field><field name="reconcile" eval="False"/><field ref="account.data_account_type_expenses" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
             <record id="515" model="account.account.template"><field name="name">Gastos en Cargas Sociales</field><field name="code">515</field><field name="reconcile" eval="False"/><field ref="account.data_account_type_expenses" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
-            <record id="516" model="account.account.template"><field name="name">Gastos en Impuestos</field><field name="code">516</field><field name="reconcile" eval="False"/><field ref="account_account_type_NCLASIFICADO" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
-            <record id="517" model="account.account.template"><field name="name">Gastos Bancarios</field><field name="code">517</field><field name="reconcile" eval="False"/><field ref="account_account_type_NCLASIFICADO" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
-            <record id="518" model="account.account.template"><field name="name">Gastos en Servicios Públicos</field><field name="code">518</field><field name="reconcile" eval="False"/><field ref="account_account_type_NCLASIFICADO" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
+            <record id="516" model="account.account.template"><field name="name">Gastos en Impuestos</field><field name="code">516</field><field name="reconcile" eval="False"/><field ref="account.data_account_off_sheet" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
+            <record id="517" model="account.account.template"><field name="name">Gastos Bancarios</field><field name="code">517</field><field name="reconcile" eval="False"/><field ref="account.data_account_off_sheet" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
+            <record id="518" model="account.account.template"><field name="name">Gastos en Servicios Públicos</field><field name="code">518</field><field name="reconcile" eval="False"/><field ref="account.data_account_off_sheet" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
             <record id="519" model="account.account.template"><field name="name">Gastos de Publicidad y Propaganda</field><field name="code">519</field><field name="reconcile" eval="False"/><field ref="account.data_account_type_expenses" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
             <record id="521" model="account.account.template"><field name="name">Gastos en Siniestros</field><field name="code">521</field><field name="reconcile" eval="False"/><field ref="account.data_account_type_expenses" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
             <record id="522" model="account.account.template"><field name="name">Donaciones Cedidas, Otorgadas</field><field name="code">522</field><field name="reconcile" eval="False"/><field ref="account.data_account_type_expenses" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
@@ -122,15 +119,15 @@
             <record id="64" model="account.account.template"><field name="name">Gastos de Administración</field><field name="code">64</field><field name="reconcile" eval="False"/><field ref="account.data_account_type_expenses" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
             <record id="65" model="account.account.template"><field name="name">Gastos de Comercialización</field><field name="code">65</field><field name="reconcile" eval="False"/><field ref="account.data_account_type_expenses" name="user_type_id"/><field name="chart_template_id" ref="l10npa_chart_template"/></record>
 
-            <record id="711" model="account.account.template"><field name="name">Mercaderias Recibidas en Consignación</field><field name="code">711</field><field name="reconcile" eval="False"/><field ref="account_account_type_NCLASIFICADO" name="user_type_id"/></record>
-            <record id="712" model="account.account.template"><field name="name">Depósito de Valores Recibos en Garantía</field><field name="code">712</field><field name="reconcile" eval="False"/><field ref="account_account_type_NCLASIFICADO" name="user_type_id"/></record>
-            <record id="713" model="account.account.template"><field name="name">Garantias Otorgadas</field><field name="code">713</field><field name="reconcile" eval="False"/><field ref="account_account_type_NCLASIFICADO" name="user_type_id"/></record>
-            <record id="714" model="account.account.template"><field name="name">Documentos Descontados</field><field name="code">714</field><field name="reconcile" eval="False"/><field ref="account_account_type_NCLASIFICADO" name="user_type_id"/></record>
-            <record id="715" model="account.account.template"><field name="name">Documentos Endosados</field><field name="code">715</field><field name="reconcile" eval="False"/><field ref="account_account_type_NCLASIFICADO" name="user_type_id"/></record>
+            <record id="711" model="account.account.template"><field name="name">Mercaderias Recibidas en Consignación</field><field name="code">711</field><field name="reconcile" eval="False"/><field ref="account.data_account_off_sheet" name="user_type_id"/></record>
+            <record id="712" model="account.account.template"><field name="name">Depósito de Valores Recibos en Garantía</field><field name="code">712</field><field name="reconcile" eval="False"/><field ref="account.data_account_off_sheet" name="user_type_id"/></record>
+            <record id="713" model="account.account.template"><field name="name">Garantias Otorgadas</field><field name="code">713</field><field name="reconcile" eval="False"/><field ref="account.data_account_off_sheet" name="user_type_id"/></record>
+            <record id="714" model="account.account.template"><field name="name">Documentos Descontados</field><field name="code">714</field><field name="reconcile" eval="False"/><field ref="account.data_account_off_sheet" name="user_type_id"/></record>
+            <record id="715" model="account.account.template"><field name="name">Documentos Endosados</field><field name="code">715</field><field name="reconcile" eval="False"/><field ref="account.data_account_off_sheet" name="user_type_id"/></record>
 
-            <record id="721" model="account.account.template"><field name="name">Comitente por Mercaderias Recibidas en Consignación</field><field name="code">721</field><field name="reconcile" eval="False"/><field ref="account_account_type_NCLASIFICADO" name="user_type_id"/></record>
-            <record id="722" model="account.account.template"><field name="name">Acreedor por Garantías Otorgadas</field><field name="code">722</field><field name="reconcile" eval="False"/><field ref="account_account_type_NCLASIFICADO" name="user_type_id"/></record>
-            <record id="723" model="account.account.template"><field name="name">Acreedor por Documentos Descontados</field><field name="code">723</field><field name="reconcile" eval="False"/><field ref="account_account_type_NCLASIFICADO" name="user_type_id"/></record>
+            <record id="721" model="account.account.template"><field name="name">Comitente por Mercaderias Recibidas en Consignación</field><field name="code">721</field><field name="reconcile" eval="False"/><field ref="account.data_account_off_sheet" name="user_type_id"/></record>
+            <record id="722" model="account.account.template"><field name="name">Acreedor por Garantías Otorgadas</field><field name="code">722</field><field name="reconcile" eval="False"/><field ref="account.data_account_off_sheet" name="user_type_id"/></record>
+            <record id="723" model="account.account.template"><field name="name">Acreedor por Documentos Descontados</field><field name="code">723</field><field name="reconcile" eval="False"/><field ref="account.data_account_off_sheet" name="user_type_id"/></record>
 
         <record id="gain81_01" model="account.account.template">
             <field name="code">81</field>
@@ -154,5 +151,6 @@
       <field name="property_account_income_categ_id" ref="411_01"/>
       <field name="income_currency_exchange_account_id" ref="gain81_01"/>
       <field name="expense_currency_exchange_account_id" ref="loss81_01"/>
+      <field name="default_pos_receivable_account_id" ref="121_01" />
     </record>
 </odoo>

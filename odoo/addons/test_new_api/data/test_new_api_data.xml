@@ -1,0 +1,54 @@
+<odoo>
+    <data>
+        <record id="category_0" model="test_new_api.category">
+            <field name="name">Chat</field>
+        </record>
+        <record id="category_0_0" model="test_new_api.category">
+            <field name="name">Foolish</field>
+            <field name="parent" ref="category_0"/>
+        </record>
+
+        <record id="discussion_0" model="test_new_api.discussion">
+            <field name="name">Stuff</field>
+            <field name="participants" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record id="message_0_0" model="test_new_api.message">
+            <field name="discussion" ref="discussion_0"/>
+            <field name="body">Hey dude!</field>
+            <field name="label">hello</field>
+        </record>
+        <record id="message_0_1" model="test_new_api.message">
+            <field name="discussion" ref="discussion_0"/>
+            <field name="body">What's up?</field>
+        </record>
+        <record id="message_0_2" model="test_new_api.message">
+            <field name="discussion" ref="discussion_0"/>
+            <field name="body">This is a much longer message</field>
+        </record>
+
+        <record id="emailmessage_0_0" model="test_new_api.emailmessage">
+            <field name="message" ref="message_0_0"/>
+            <field name="email_to">first@example.localhost</field>
+        </record>
+
+        <record id="bool_1" model="domain.bool">
+            <field name="bool_true" eval="True"/>
+        </record>
+        <record id="bool_2" model="domain.bool">
+            <field name="bool_false" eval="True"/>
+        </record>
+        <record id="bool_3" model="domain.bool">
+            <field name="bool_undefined" eval="True"/>
+        </record>
+        <record id="bool_4" model="domain.bool">
+            <field name="bool_undefined" eval="False"/>
+        </record>
+
+        <record id="decimal_new_api_number" model="decimal.precision">
+            <field name="name">New API Precision</field>
+            <field name="digits" eval="3"/>
+        </record>
+
+    </data>
+</odoo>

@@ -13,7 +13,6 @@ class grant_badge_wizard(models.TransientModel):
     badge_id = fields.Many2one("gamification.badge", string='Badge', required=True)
     comment = fields.Text('Comment')
 
-    @api.multi
     def action_grant_badge(self):
         """Wizard action for sending a badge to a chosen user"""
 

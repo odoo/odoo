@@ -1,16 +1,18 @@
 odoo.define('web.control_panel_tests', function (require) {
 "use strict";
 
-var ControlPanelView = require('web.ControlPanelView');
-var testUtils = require('web.test_utils');
+const AbstractAction = require('web.AbstractAction');
+const ControlPanelView = require('web.ControlPanelView');
+const core = require('web.core');
+const testUtils = require('web.test_utils');
 
-var createControlPanel = testUtils.createControlPanel;
+const createActionManager = testUtils.createActionManager;
+const createControlPanel = testUtils.createControlPanel;
 
-function createControlPanelFactory(arch, fields, params) {
-    params = params || {};
+function createControlPanelFactory(arch, fields) {
     arch = arch || "<search></search>";
     fields = fields || {};
-    var viewInfo = {arch:  arch, fields: fields};
+    var viewInfo = {arch: arch, fields: fields};
     var controlPanelFactory = new ControlPanelView({viewInfo: viewInfo, context: {}});
     return controlPanelFactory;
 }
@@ -143,7 +145,7 @@ QUnit.module('Views', {
             controlPanelFactory.loadParams.groups,
             [[
                 {
-                    currentOptionId: false,
+                    currentOptionIds: new Set(),
                     defaultOptionId: "day",
                     description: "Hi",
                     fieldName: "date_field",
@@ -153,19 +155,9 @@ QUnit.module('Views', {
                     isDefault: false,
                     options: [
                         {
-                          description: "Day",
+                          description: "Year",
                           groupId: 1,
-                          optionId: "day"
-                        },
-                        {
-                          description: "Week",
-                          groupId: 1,
-                          optionId: "week"
-                        },
-                        {
-                          description: "Month",
-                          groupId: 1,
-                          optionId: "month"
+                          optionId: "year"
                         },
                         {
                           description: "Quarter",
@@ -173,9 +165,19 @@ QUnit.module('Views', {
                           optionId: "quarter"
                         },
                         {
-                          description: "Year",
+                          description: "Month",
                           groupId: 1,
-                          optionId: "year"
+                          optionId: "month"
+                        },
+                        {
+                          description: "Week",
+                          groupId: 1,
+                          optionId: "week"
+                        },
+                        {
+                          description: "Day",
+                          groupId: 1,
+                          optionId: "day"
                         }
                       ],
                     type: "groupBy"
@@ -337,29 +339,6 @@ QUnit.module('Views', {
         );
     });
 
-    QUnit.module('Control Panel Rendering');
-
-    QUnit.test('invisible filters are not rendered', async function (assert) {
-        assert.expect(2);
-        var controlPanel = await createControlPanel({
-            model: 'partner',
-            arch: "<search>" +
-                        "<filter name=\"filterA\" string=\"A\" domain=\"[]\"/>" +
-                        "<filter name=\"filterB\" string=\"B\" invisible=\"1\" domain=\"[]\"/>" +
-                    "</search>",
-            data: this.data,
-            searchMenuTypes: ['filter'],
-            context: {
-                search_disable_custom_filters: true,
-            },
-        });
-        testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
-        assert.containsOnce(controlPanel, '.o_menu_item a:contains("A")');
-        assert.containsNone(controlPanel, '.o_menu_item a:contains("B")');
-
-        controlPanel.destroy();
-    });
-
     QUnit.module('Control Panel behaviour');
 
     QUnit.test('remove a facet with backspace', async function (assert) {
@@ -371,8 +350,8 @@ QUnit.module('Views', {
             data: this.data,
             searchMenuTypes: ['filter'],
         });
-        testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
-        testUtils.dom.click($('.o_menu_item a'));
+        await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
+        await testUtils.dom.click($('.o_menu_item a'));
         assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').text().trim(), 'A',
             'should have a facet with A');
 
@@ -381,37 +360,223 @@ QUnit.module('Views', {
             which: $.ui.keyCode.BACKSPACE,
             keyCode: $.ui.keyCode.BACKSPACE,
         }));
+        await testUtils.nextTick();
         assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').length, 0,
-            'there should be no facet');
+        'there should be no facet');
 
         // delete nothing (should not crash)
         controlPanel.$('input.o_searchview_input').trigger($.Event('keydown', {
             which: $.ui.keyCode.BACKSPACE,
             keyCode: $.ui.keyCode.BACKSPACE,
         }));
+        await testUtils.nextTick();
 
         controlPanel.destroy();
     });
 
     QUnit.module('Control Panel Rendering');
 
-    QUnit.test('invisible filters are not rendered', async function (assert) {
-        assert.expect(2);
+    QUnit.test('default breadcrumb in abstract action', async function (assert) {
+        assert.expect(1);
+
+        const ConcreteAction = AbstractAction.extend({
+            hasControlPanel: true,
+        });
+        core.action_registry.add('ConcreteAction', ConcreteAction);
+
+        const actionManager = await createActionManager();
+        await actionManager.doAction({id: 1,
+            name: 'A Concrete Action',
+            tag: 'ConcreteAction',
+            type: 'ir.actions.client',
+        });
+
+        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'A Concrete Action');
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('fiels and filters with groups/invisible attribute are not always rendered but activable as search default', async function (assert) {
+        assert.expect(13);
         var controlPanel = await createControlPanel({
             model: 'partner',
             arch: "<search>" +
-                        "<filter name=\"filterA\" string=\"A\" domain=\"[]\"/>" +
-                        "<filter name=\"filterB\" string=\"B\" invisible=\"1\" domain=\"[]\"/>" +
+                        "<field name=\"display_name\" string=\"Foo B\" invisible=\"1\"/>" +
+                        "<field name=\"foo\" string=\"Foo A\"/>" +
+                        "<filter name=\"filterA\" string=\"FA\" domain=\"[]\"/>" +
+                        "<filter name=\"filterB\" string=\"FB\" invisible=\"1\" domain=\"[]\"/>" +
+                        "<filter name=\"groupByA\" string=\"GA\" context=\"{'group_by': 'date_field:day'}\"/>" +
+                        "<filter name=\"groupByB\" string=\"GB\" context=\"{'group_by': 'date_field:day'}\" invisible=\"1\"/>" +
                     "</search>",
             data: this.data,
-            searchMenuTypes: ['filter'],
+            searchMenuTypes: ['filter', 'groupBy'],
             context: {
-                search_disable_custom_filters: true,
+                search_default_display_name: 'value',
+                search_default_filterB: true,
+                search_default_groupByB: true,
             },
         });
-        testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
-        assert.containsOnce(controlPanel, '.o_menu_item a:contains("A")');
-        assert.containsNone(controlPanel, '.o_menu_item a:contains("B")');
+
+        // default filters/fields should be activated even if invisible
+        assert.containsN(controlPanel, '.o_searchview_facet', 3);
+
+
+        await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
+        assert.containsOnce(controlPanel, '.o_menu_item a:contains("FA")');
+        assert.containsNone(controlPanel, '.o_menu_item a:contains("FB")');
+        // default filter should be activated even if invisible
+        assert.containsOnce(controlPanel, '.o_searchview_facet .o_facet_values:contains(FB)');
+
+        await testUtils.dom.click(controlPanel.$('button span.fa-bars'));
+        assert.containsOnce(controlPanel, '.o_menu_item a:contains("GA")');
+        assert.containsNone(controlPanel, '.o_menu_item a:contains("GB")');
+        // default filter should be activated even if invisible
+        assert.containsOnce(controlPanel, '.o_searchview_facet .o_facet_values:contains(GB)');
+
+        assert.strictEqual(controlPanel.$('.o_searchview_facet').eq(0).text().replace(/[\s\t]+/g, ""), "FooBvalue");
+
+
+        // 'a' key to filter nothing on bar
+        controlPanel.$('.o_searchview_input').val('a');
+        controlPanel.$('.o_searchview_input').trigger($.Event('keypress', { which: 65, keyCode: 65 }));
+        await testUtils.nextTick();
+        // the only item in autocomplete menu should be FooA: a
+        assert.strictEqual(controlPanel.$('div.o_searchview_autocomplete').text().replace(/[\s\t]+/g, ""), "SearchFooAfor:A");
+        controlPanel.$('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER, keyCode: $.ui.keyCode.ENTER }));
+        await testUtils.nextTick();
+
+
+        // The items in the Filters menu and the Group By menu should be the same as before
+        await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
+        assert.containsOnce(controlPanel, '.o_menu_item a:contains("FA")');
+        assert.containsNone(controlPanel, '.o_menu_item a:contains("FB")');
+
+        await testUtils.dom.click(controlPanel.$('button span.fa-bars'));
+        assert.containsOnce(controlPanel, '.o_menu_item a:contains("GA")');
+        assert.containsNone(controlPanel, '.o_menu_item a:contains("GB")');
+
+
+        controlPanel.destroy();
+    });
+
+    QUnit.test('Favorites Use by Default and Share are exclusive', async function (assert) {
+        assert.expect(11);
+        var controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: "<search></search>",
+            data: this.data,
+            searchMenuTypes: ['favorite'],
+        });
+        testUtils.dom.click(controlPanel.$('.o_favorites_menu_button'));
+        testUtils.dom.click(controlPanel.$('button.o_add_favorite'));
+        var $checkboxes = controlPanel.$('input[type="checkbox"]');
+
+        assert.strictEqual($checkboxes.length, 2,
+            '2 checkboxes are present')
+
+        assert.notOk($checkboxes[0].checked, 'Start: None of the checkboxes are checked (1)');
+        assert.notOk($checkboxes[1].checked, 'Start: None of the checkboxes are checked (2)');
+
+        testUtils.dom.click($checkboxes.eq(0));
+        assert.ok($checkboxes[0].checked, 'The first checkbox is checked');
+        assert.notOk($checkboxes[1].checked, 'The second checkbox is not checked');
+
+        testUtils.dom.click($checkboxes.eq(1));
+        assert.notOk($checkboxes[0].checked,
+            'Clicking on the second checkbox checks it, and unchecks the first (1)');
+        assert.ok($checkboxes[1].checked,
+            'Clicking on the second checkbox checks it, and unchecks the first (2)');
+
+        testUtils.dom.click($checkboxes.eq(0));
+        assert.ok($checkboxes[0].checked,
+            'Clicking on the first checkbox checks it, and unchecks the second (1)');
+        assert.notOk($checkboxes[1].checked,
+            'Clicking on the first checkbox checks it, and unchecks the second (2)');
+
+        testUtils.dom.click($checkboxes.eq(0));
+        assert.notOk($checkboxes[0].checked, 'End: None of the checkboxes are checked (1)');
+        assert.notOk($checkboxes[1].checked, 'End: None of the checkboxes are checked (2)');
+
+        controlPanel.destroy();
+    });
+
+    QUnit.test('load filter', async function (assert) {
+        assert.expect(1);
+
+        var controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: "<search></search>",
+            data: this.data,
+            searchMenuTypes: ['filter'],
+            intercepts: {
+                load_filters: function (ev) {
+                    ev.data.on_success([
+                        {
+                            user_id: [2,"Mitchell Admin"],
+                            name: 'sorted filter',
+                            id: 5,
+                            context: {},
+                            sort: "[\"foo\", \"-bar\"]",
+                            domain: "[('user_id', '=', uid)]",
+                        }
+                    ]);
+                }
+            }
+        });
+
+         _.each(controlPanel.exportState().filters, function (filter) {
+            if (filter.type === 'favorite') {
+                assert.deepEqual(filter.orderedBy, 
+                    [{
+                        name: 'foo',
+                        asc: true,
+                    }, {
+                        name: 'bar',
+                        asc: false,
+                    }],
+                    'the filter should have the right orderedBy values');
+            }
+        });
+
+        controlPanel.destroy();
+    });
+
+    QUnit.test('save filter', async function (assert) {
+        assert.expect(1);
+
+        var controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: "<search></search>",
+            data: this.data,
+            searchMenuTypes: ['filter'],
+            intercepts: {
+                create_filter: function (ev) {
+                    assert.strictEqual(ev.data.filter.sort, "[\"foo\",\"bar desc\"]",
+                        'The right format for the string "sort" should be sent to the server');
+                },
+                get_controller_query_params: function (ev) {
+                    ev.data.callback({
+                        orderedBy: [
+                            {
+                                name: 'foo',
+                                asc: true,
+                            }, {
+                                name: 'bar',
+                                asc: false,
+                            }
+                        ]
+                    });
+                }
+            }
+        });
+
+        controlPanel._onNewFavorite({
+            data: {
+                description: 'Morbier',
+                type: 'favorite',
+            },
+            stopPropagation: function () {return;}
+        });
 
         controlPanel.destroy();
     });

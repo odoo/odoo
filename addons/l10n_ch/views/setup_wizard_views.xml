@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="setup_bank_account_wizard_inherit" model="ir.ui.view">
+            <field name="name">account.setup.bank.manual.config.form.ch.inherit</field>
+            <field name="model">account.setup.bank.manual.config</field>
+            <field name="inherit_id" ref="account.setup_bank_account_wizard"/>
+            <field name="arch" type="xml">
+                <field name="new_journal_code" position="after">
+                    <field name="l10n_ch_show_subscription" invisible="1"/>
+                    <field name="l10n_ch_isr_subscription_chf" attrs="{'invisible': [('l10n_ch_show_subscription', '=', False)]}"/>
+                    <label for="l10n_ch_postal" string="ISR Client Identification Number" attrs="{'invisible': [('l10n_ch_show_subscription', '=', False)]}"/>
+                    <field name="l10n_ch_postal" nolabel="1" attrs="{'invisible': [('l10n_ch_show_subscription', '=', False)]}"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,41 @@
+.s_blockquote {
+    .s_blockquote_icon {
+        float: left;
+    }
+    .s_blockquote_content {
+        overflow: hidden;
+        padding: $grid-gutter-width/2;
+        text-align: left;
+        footer {
+            background-color: initial;
+        }
+    }
+    .blockquote-footer {
+        img {
+            max-height: 40px;
+        }
+    }
+    // Don't use `&:.s_blockquote_classic`, same but not retro-compatible
+    &:not(.s_blockquote_cover):not(.s_blockquote_minimalist) {
+        .blockquote-footer {
+            &:before {
+                display: none;
+            }
+        }
+    }
+    &.s_blockquote_minimalist {
+        border-radius: 5px;
+        .s_blockquote_content {
+            padding: $grid-gutter-width/2.5;
+            p {
+                margin: 0;
+                &:before {
+                    content: '\00AB\00a0';
+                }
+                &:after {
+                    content: '\00a0\00BB';
+                }
+            }
+        }
+    }
+}

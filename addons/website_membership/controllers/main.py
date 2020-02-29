@@ -29,7 +29,7 @@ class WebsiteMembership(http.Controller):
         '/members/association/<membership_id>/country/<int:country_id>',
         '/members/association/<membership_id>/country/<country_name>-<int:country_id>/page/<int:page>',
         '/members/association/<membership_id>/country/<int:country_id>/page/<int:page>',
-    ], type='http', auth="public", website=True)
+    ], type='http', auth="public", website=True, sitemap=True)
     def members(self, membership_id=None, country_name=None, country_id=0, page=1, **post):
         Product = request.env['product.product']
         Country = request.env['res.country']
@@ -155,7 +155,7 @@ class WebsiteMembership(http.Controller):
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'post': post,
-            'search': "?%s" % werkzeug.url_encode(post),
+            'search': "?%s" % werkzeug.urls.url_encode(post),
             'search_count': count_members,
             'google_maps_api_key': google_maps_api_key,
         }

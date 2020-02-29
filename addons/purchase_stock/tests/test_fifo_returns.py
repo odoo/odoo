@@ -2,16 +2,18 @@
 
 import time
 
-from .common import TestPurchase
+from .common import PurchaseTestCommon
+from odoo.tests.common import Form
+from odoo.addons.stock_account.tests.common import StockAccountTestCommon
 
 
-class TestFifoReturns(TestPurchase):
+class TestFifoReturns(PurchaseTestCommon, StockAccountTestCommon):
 
     def test_fifo_returns(self):
         """Test to create product and purchase order to test the FIFO returns of the product"""
-
-        self._load('account', 'test', 'account_minimal_test.xml')
-        self._load('stock_account', 'test', 'stock_valuation_account.xml')
+        res_partner_3 = self.env['res.partner'].create({
+            'name': 'Gemini Partner',
+        })
 
         # Set a product as using fifo price
         product_fiforet_icecream = self.env['product.product'].create({
@@ -26,12 +28,12 @@ class TestFifoReturns(TestPurchase):
         })
         product_fiforet_icecream.categ_id.property_cost_method = 'fifo'
         product_fiforet_icecream.categ_id.property_valuation = 'real_time'
-        product_fiforet_icecream.categ_id.property_stock_account_input_categ_id = self.ref('purchase.o_expense')
-        product_fiforet_icecream.categ_id.property_stock_account_output_categ_id = self.ref('purchase.o_income')
+        product_fiforet_icecream.categ_id.property_stock_account_input_categ_id = self.o_expense
+        product_fiforet_icecream.categ_id.property_stock_account_output_categ_id = self.o_income
 
         # I create a draft Purchase Order for first in move for 10 kg at 50 euro
         purchase_order_1 = self.env['purchase.order'].create({
-            'partner_id': self.ref('base.res_partner_3'),
+            'partner_id': res_partner_3.id,
             'order_line': [(0, 0, {
                 'name': 'FIFO Ice Cream',
                 'product_id': product_fiforet_icecream.id,
@@ -44,7 +46,7 @@ class TestFifoReturns(TestPurchase):
 
         # Create a draft Purchase Order for second shipment for 30kg at 80€/kg
         purchase_order_2 = self.env['purchase.order'].create({
-            'partner_id': self.ref('base.res_partner_3'),
+            'partner_id': res_partner_3.id,
             'order_line': [(0, 0, {
                 'name': 'FIFO Ice Cream',
                 'product_id': product_fiforet_icecream.id,
@@ -60,28 +62,32 @@ class TestFifoReturns(TestPurchase):
 
         # Process the reception of purchase order 1
         picking = purchase_order_1.picking_ids[0]
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
+        res = picking.button_validate()
+        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
 
         # Check the standard price of the product (fifo icecream)
-        self.assertEqual(product_fiforet_icecream.standard_price, 0.0, 'Standard price should not have changed!')
+        self.assertAlmostEqual(product_fiforet_icecream.standard_price, 50)
 
         # Confirm the second purchase order
         purchase_order_2.button_confirm()
         picking = purchase_order_2.picking_ids[0]
-        self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
+        res = picking.button_validate()
+        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
 
         # Return the goods of purchase order 2
         picking = purchase_order_2.picking_ids[0]
-        return_pick_wiz = self.env['stock.return.picking'].with_context(
-            active_model='stock.picking', active_id=picking.id).create({})
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking.ids, active_id=picking.ids[0],
+            active_model='stock.picking'))
+        return_pick_wiz = stock_return_picking_form.save()
         return_picking_id, dummy = return_pick_wiz.with_context(active_id=picking.id)._create_returns()
 
         # Important to pass through confirmation and assignation
         return_picking = self.env['stock.picking'].browse(return_picking_id)
         return_picking.action_confirm()
         return_picking.move_lines[0].quantity_done = return_picking.move_lines[0].product_uom_qty
-        return_picking.action_done()
+        return_picking._action_done()
 
         #  After the return only 10 of the second purchase order should still be in stock as it applies fifo on the return too
         self.assertEqual(product_fiforet_icecream.qty_available, 10.0, 'Qty available should be 10.0')
-        self.assertEqual(product_fiforet_icecream.stock_value, 800.0, 'Stock value should be 800')
+        self.assertEqual(product_fiforet_icecream.value_svl, 800.0, 'Stock value should be 800')

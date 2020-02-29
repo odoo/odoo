@@ -2,32 +2,35 @@ odoo.define('lunch.LunchKanbanWidget', function (require) {
 "use strict";
 
 var core = require('web.core');
-var dialogs = require('web.view_dialogs');
-var field_registry = require('web.field_registry');
+var relationalFields = require('web.relational_fields');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
 var _t = core._t;
-var qweb = core.qweb;
-var FieldMany2One = field_registry.get('many2one');
+var FieldMany2One = relationalFields.FieldMany2One;
+
+
+var LunchMany2One = FieldMany2One.extend({
+    start: function () {
+        this.$el.addClass('w-100');
+        return this._super.apply(this, arguments);
+    }
+});
 
 var LunchKanbanWidget = Widget.extend({
     template: 'LunchKanbanWidget',
     custom_events: {
-        'field_changed': '_onFieldChanged',
+        field_changed: '_onFieldChanged',
     },
     events: {
-        'click .o_add_money': '_onAddMoney',
         'click .o_add_product': '_onAddProduct',
         'click .o_lunch_widget_order_button': '_onOrderNow',
         'click .o_remove_product': '_onRemoveProduct',
-        'click .o_lunch_widget_save': '_onSaveOrder',
         'click .o_lunch_widget_unlink': '_onUnlinkOrder',
         'click .o_lunch_open_wizard': '_onLunchOpenWizard',
     },
 
     init: function (parent, params) {
-        var self = this;
         this._super.apply(this, arguments);
 
         this.is_manager = params.is_manager || false;
@@ -37,18 +40,6 @@ var LunchKanbanWidget = Widget.extend({
         this.lunchUserField = null;
 
         this.group_portal_id = undefined;
-
-        self._rpc({
-            model: 'ir.model.data',
-            method: 'xmlid_to_res_id',
-            kwargs: {xmlid: 'base.group_portal'},
-        }).then(function (id) {
-            self.group_portal_id = id;
-        });
-
-        if (this.is_manager) {
-            this.lunchUserField = this._createMany2One('users', 'res.users', this.username, function (params) { return [['groups_id', 'not in', [self.group_portal_id]]]; });
-        }
 
         this.locations = params.locations || [];
         this.userLocation = params.user_location[1] || '';
@@ -65,8 +56,26 @@ var LunchKanbanWidget = Widget.extend({
 
         this.currency = params.currency || session.get_currency(session.company_currency_id);
     },
-    renderElement: function () {
+    willStart: function () {
         var self = this;
+        var superDef = this._super.apply(this, arguments);
+
+        var def = this._rpc({
+            model: 'ir.model.data',
+            method: 'xmlid_to_res_id',
+            kwargs: {xmlid: 'base.group_portal'},
+        }).then(function (id) {
+            self.group_portal_id = id;
+
+            if (self.is_manager) {
+                self.lunchUserField = self._createMany2One('users', 'res.users', self.username, function () {
+                    return [['groups_id', 'not in', [self.group_portal_id]]];
+                });
+            }
+        });
+        return Promise.all([superDef, def]);
+    },
+    renderElement: function () {
         this._super.apply(this, arguments);
         if (this.lunchUserField) {
             this.lunchUserField.appendTo(this.$('.o_lunch_user_field'));
@@ -75,6 +84,10 @@ var LunchKanbanWidget = Widget.extend({
         }
         this.lunchLocationField.appendTo(this.$('.o_lunch_location_field'));
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
     _createMany2One: function (name, model, value, domain, context) {
         var fields = {};
@@ -91,8 +104,8 @@ var LunchKanbanWidget = Widget.extend({
                 default: fields,
             },
             data: data,
-            getDomain: domain || function (params) { return []; },
-            getContext: context || function (params) { return {}; },
+            getDomain: domain || function () { return []; },
+            getContext: context || function () { return {}; },
         };
         var options = {
             mode: 'edit',
@@ -104,11 +117,11 @@ var LunchKanbanWidget = Widget.extend({
         };
         return new LunchMany2One(this, name, record, options);
     },
-    _onAddMoney: function (ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        this.trigger_up('add_money', {});
-    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
     _onAddProduct: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
@@ -143,25 +156,12 @@ var LunchKanbanWidget = Widget.extend({
 
         this.trigger_up('remove_product', {lineId: $(ev.currentTarget).data('id')});
     },
-    _onSaveOrder: function (ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-
-        this.trigger_up('save_order', {});
-    },
     _onUnlinkOrder: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
 
         this.trigger_up('unlink_order', {});
     },
-});
-
-var LunchMany2One = FieldMany2One.extend({
-    start: function () {
-        this.$el.addClass('w-100');
-        return this._super.apply(this, arguments);
-    }
 });
 
 return LunchKanbanWidget;

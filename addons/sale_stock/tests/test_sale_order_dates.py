@@ -36,7 +36,7 @@ class TestSaleExpectedDate(common.TransactionCase):
         self.env['stock.quant']._update_available_quantity(product_B, self.env.ref('stock.stock_location_stock'), 10)
         self.env['stock.quant']._update_available_quantity(product_C, self.env.ref('stock.stock_location_stock'), 10)
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.ref('base.res_partner_3'),
+            'partner_id': self.env['res.partner'].create({'name': 'A Customer'}).id,
             'picking_policy': 'direct',
             'order_line': [
                 (0, 0, {'name': product_A.name, 'product_id': product_A.id, 'customer_lead': product_A.sale_delay, 'product_uom_qty': 5}),
@@ -55,7 +55,7 @@ class TestSaleExpectedDate(common.TransactionCase):
         # current date + longest lead time from all of it's order lines
         sale_order.write({'picking_policy': 'one'})
         expected_date = fields.Datetime.now() + timedelta(days=15)
-        self.assertAlmostEquals(expected_date, sale_order.expected_date,
+        self.assertAlmostEqual(expected_date, sale_order.expected_date,
             msg="Wrong expected date on sale order!", delta=timedelta(seconds=1))
 
         sale_order.action_confirm()
@@ -63,7 +63,7 @@ class TestSaleExpectedDate(common.TransactionCase):
         # Setting confirmation date of SO to 5 days from today so that the expected/effective date could be checked
         # against real confirmation date
         confirm_date = fields.Datetime.now() + timedelta(days=5)
-        sale_order.write({'confirmation_date': confirm_date})
+        sale_order.write({'date_order': confirm_date})
 
         # if Shipping Policy is set to `one`(when SO is confirmed) then expected date should be
         # SO confirmation date + longest lead time from all of it's order lines
@@ -82,15 +82,27 @@ class TestSaleExpectedDate(common.TransactionCase):
         picking = sale_order.picking_ids[0]
         for ml in picking.move_line_ids:
             ml.qty_done = ml.product_uom_qty
-        picking.action_done()
-        self.assertEquals(picking.state, 'done', "Picking not processed correctly!")
-        self.assertEquals(fields.Date.today(), sale_order.effective_date, "Wrong effective date on sale order!")
+        picking._action_done()
+        self.assertEqual(picking.state, 'done', "Picking not processed correctly!")
+        self.assertEqual(fields.Date.today(), sale_order.effective_date, "Wrong effective date on sale order!")
 
     def test_sale_order_commitment_date(self):
 
         # In order to test the Commitment Date feature in Sales Orders in Odoo,
         # I copy a demo Sales Order with committed Date on 2010-07-12
-        new_order = self.env.ref('sale.sale_order_6').copy({'commitment_date': '2010-07-12'})
+        new_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'A Partner'}).id,
+            'order_line': [(0, 0, {
+                'name': "A product",
+                'product_id': self.env['product.product'].create({
+                    'name': 'A product',
+                    'type': 'product',
+                }).id,
+                'product_uom_qty': 1,
+                'price_unit': 750,
+            })],
+            'commitment_date': '2010-07-12',
+        })
         # I confirm the Sales Order.
         new_order.action_confirm()
         # I verify that the Procurements and Stock Moves have been generated with the correct date

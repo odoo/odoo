@@ -1,17 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_sips
+# 	* payment_sips
 # 
 # Translators:
-# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
-# Duy BQ <duybq86@gmail.com>, 2018
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# Duy BQ <duybq86@gmail.com>, 2019
+# Dung Nguyen Thi <dungnt@trobz.com>, 2019
+# Chinh Chinh <trinhttp@trobz.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Chinh Chinh <trinhttp@trobz.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,40 +23,25 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:164
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
 msgid "; multiple order found"
 msgstr "; thấy một số đơn hàng"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:162
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
 msgid "; no order found"
 msgstr "; không tìm thấy đơn hàng"
 
 #. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
-msgstr "Adyen"
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
-msgstr "Authorize.Net"
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
-msgstr "Buckaroo"
-
-#. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:75
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
 msgid "Currency not supported by Wordline"
 msgstr ""
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:56
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
 msgid "Incorrect payment acquirer provider"
 msgstr ""
@@ -64,39 +52,19 @@ msgid "Interface Version"
 msgstr ""
 
 #. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
-msgstr "Cấu hình thủ công"
-
-#. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Merchant ID"
-msgstr ""
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
-msgstr ""
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "PayUmoney"
-msgstr ""
+msgstr "ID người bán"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Dịch vụ thanh toán"
+msgstr "NCC dịch vụ Thanh toán"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Giao dịch Thanh toán"
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Paypal"
-msgstr "Paypal"
+msgstr "Giao dịch thanh toán"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_prod_url
@@ -114,19 +82,14 @@ msgid "Secret Key"
 msgstr ""
 
 #. module: payment_sips
-#: selection:payment.acquirer,provider:0
+#: model:ir.model.fields.selection,name:payment_sips.selection__payment_acquirer__provider__sips
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:160
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
 msgid "Sips: received data for reference %s"
-msgstr ""
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
 msgstr ""
 
 #. module: payment_sips
@@ -138,8 +101,3 @@ msgstr ""
 #: model:ir.model.fields,help:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Used for production only"
 msgstr ""
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
-msgstr "Chuyển khoản ngân hàng"

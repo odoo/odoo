@@ -5,7 +5,8 @@
     <template id="report_assets_common">
         <t t-call="web._assets_helpers">
             <!-- FIXME web_editor ? -->
-            <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
+          <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_overridden_report.scss"/>
+          <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
         </t>
 
         <t t-call="web._assets_bootstrap"/>
@@ -17,14 +18,19 @@
 
         <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
 
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/fonts.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/report_styles.scss"/>
+
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/report.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_standard.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_background.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_boxed.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_clean.scss"/>
 
-        <script type="text/javascript" src="/web/static/src/js/chrome/public_root_widget.js"/>
         <script type="text/javascript" src="/web/static/src/js/services/session.js"/>
+        <script type="text/javascript" src="/web/static/src/js/public/public_root.js"/>
+        <script type="text/javascript" src="/web/static/src/js/public/public_root_instance.js"/>
+        <script type="text/javascript" src="/web/static/src/js/public/public_widget.js"/>
         <script type="text/javascript" src="/web/static/src/js/report/utils.js"/>
         <script type="text/javascript" src='/web/static/src/js/report/report.js' />
     </template>
@@ -203,9 +209,9 @@
         <div class="footer o_boxed_footer">
             <div class="text-center">
                 <ul class="list-inline">
-                    <li t-if="company.phone" class="list-inline-item">Tel: <span t-field="company.phone"/></li>
-                    <li t-if="company.email" class="list-inline-item">Mail: <span t-field="company.email"/></li>
-                    <li t-if="company.website" class="list-inline-item">Web: <span t-field="company.website"/></li>
+                    <li t-if="company.phone" class="list-inline-item"><span t-field="company.phone"/></li>
+                    <li t-if="company.email" class="list-inline-item"><span t-field="company.email"/></li>
+                    <li t-if="company.website" class="list-inline-item"><span t-field="company.website"/></li>
                     <li t-if="company.vat" class="list-inline-item"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
                 </ul>
                 <div t-field="company.report_footer"/>
@@ -292,10 +298,12 @@
         <div class="footer o_standard_footer">
             <div class="text-center" style="border-top: 1px solid black;">
                 <ul class="list-inline mb4">
-                    <li t-if="company.phone" class="list-inline-item">Phone: <span t-field="company.phone"/></li>
-                    <li t-if="company.email" class="list-inline-item">Email: <span t-field="company.email"/></li>
-                    <li t-if="company.website" class="list-inline-item">Web: <span t-field="company.website"/></li>
-                    <li t-if="company.vat" class="list-inline-item"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                    <!-- using the list-inline-item class from bootstrap causes weird behaviours in pdf report
+                         adding d-inline class fixes the problem-->
+                    <li t-if="company.phone" class="list-inline-item d-inline"><span t-field="company.phone"/></li>
+                    <li t-if="company.email" class="list-inline-item d-inline"><span t-field="company.email"/></li>
+                    <li t-if="company.website" class="list-inline-item d-inline"><span t-field="company.website"/></li>
+                    <li t-if="company.vat" class="list-inline-item d-inline"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
                 </ul>
 
                 <div name="financial_infos">
@@ -327,8 +335,10 @@
             </t>
         </t>
 
+        <t t-esc="company.update_scss()"/>
+
         <t t-if="company.external_report_layout_id" t-call="{{company.external_report_layout_id.key}}"><t t-raw="0"/></t>
-        <t t-else="else" t-raw="0"/>
+        <t t-else="else" t-call="web.external_layout_standard"><t t-raw="0"/></t>
 
     </template>
 
@@ -347,6 +357,8 @@
                 <t t-set="company" t-value="res_company"/>
             </t>
         </t>
+
+        <t t-esc="company.update_scss()"/>
 
         <div class="header">
             <div class="row">
@@ -400,6 +412,7 @@
             </t>
         </t>
     </template>
+
     <report id="action_report_internalpreview"
         model="res.company"
         name="web.preview_internalreport"

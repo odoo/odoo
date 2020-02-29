@@ -3,7 +3,7 @@
 
 import base64
 
-from .test_project_base import TestProjectBase
+from .test_project_base import TestProjectCommon
 from odoo.tools import mute_logger
 from odoo.modules.module import get_resource_path
 
@@ -34,10 +34,10 @@ Raoul Boitempoils
 Integrator at Agrolait"""
 
 
-class TestProjectFlow(TestProjectBase):
+class TestProjectFlow(TestProjectCommon):
 
     def test_project_process_project_manager_duplicate(self):
-        pigs = self.project_pigs.sudo(self.user_projectmanager)
+        pigs = self.project_pigs.with_user(self.user_projectmanager)
         dogs = pigs.copy()
         self.assertEqual(len(dogs.tasks), 2, 'project: duplicating a project must duplicate its tasks')
 
@@ -55,8 +55,10 @@ class TestProjectFlow(TestProjectBase):
         # Test: check partner in message followers
         self.assertIn(self.partner_2, task.message_partner_ids, "Partner in message cc is not added as a task followers.")
         # Test: messages
-        self.assertEqual(len(task.message_ids), 2,
-                         'project: message_process: newly created task should have 2 messages: creation and email')
+        self.assertEqual(len(task.message_ids), 1,
+                         'project: message_process: newly created task should have 1 message: email')
+        self.assertEqual(task.message_ids[0].subtype_id, self.env.ref('project.mt_task_new'),
+                         'project: message_process: first message of new task should have Task Created subtype')
         self.assertEqual(task.message_ids[0].author_id, self.user_projectuser.partner_id,
                          'project: message_process: second message should be the one from Agrolait (partner failed)')
         self.assertEqual(task.message_ids[0].subject, 'Frogs',
@@ -80,14 +82,14 @@ class TestProjectFlow(TestProjectBase):
         # Test: check partner in message followers
         self.assertIn(self.partner_2, task.message_partner_ids, "Partner in message cc is not added as a task followers.")
         # Test: messages
-        self.assertEqual(len(task.message_ids), 2,
-                         'project: message_process: newly created task should have 2 messages: creation and email')
-        self.assertEqual(task.message_ids[1].subtype_id, self.env.ref('project.mt_task_new'),
+        self.assertEqual(len(task.message_ids), 1,
+                         'project: message_process: newly created task should have 1 messages: email')
+        self.assertEqual(task.message_ids[0].subtype_id, self.env.ref('project.mt_task_new'),
                          'project: message_process: first message of new task should have Task Created subtype')
         self.assertEqual(task.message_ids[0].author_id, self.user_projectuser.partner_id,
-                         'project: message_process: second message should be the one from Agrolait (partner failed)')
+                         'project: message_process: first message should be the one from Agrolait (partner failed)')
         self.assertEqual(task.message_ids[0].subject, 'Cats',
-                         'project: message_process: second message should be the one from Agrolait (subject failed)')
+                         'project: message_process: first message should be the one from Agrolait (subject failed)')
         # Test: task content
         self.assertEqual(task.name, 'Cats', 'project_task: name should be the email subject')
         self.assertEqual(task.project_id.id, self.project_goats.id, 'project_task: incorrect project')
@@ -133,8 +135,7 @@ class TestProjectFlow(TestProjectBase):
 
         self.assertEqual(first_task.rating_count, 0, "Task should have no rating associated with it")
 
-        Rating = self.env['rating.rating']
-        rating_good = Rating.create({
+        rating_good = self.env['rating.rating'].create({
             'res_model_id': self.env['ir.model']._get('project.task').id,
             'res_id': first_task.id,
             'parent_res_model_id': self.env['ir.model']._get('project.project').id,
@@ -145,7 +146,7 @@ class TestProjectFlow(TestProjectBase):
             'consumed': False,
         })
 
-        rating_bad = Rating.create({
+        rating_bad = self.env['rating.rating'].create({
             'res_model_id': self.env['ir.model']._get('project.task').id,
             'res_id': first_task.id,
             'parent_res_model_id': self.env['ir.model']._get('project.project').id,

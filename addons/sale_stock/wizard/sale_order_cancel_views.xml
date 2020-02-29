@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_cancel_view_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.cancel.form.inherit</field>
+        <field name="model">sale.order.cancel</field>
+        <field name="inherit_id" ref="sale.sale_order_cancel_view_form"/>
+        <field name="arch" type="xml">
+            <field name="display_invoice_alert" position="after">
+                <field name="display_delivery_alert" invisible="1"/>
+                <div attrs="{'invisible': [('display_delivery_alert', '=', False)]}">
+                    Some products have already been delivered. Returns can be created from the Delivery Orders.
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>

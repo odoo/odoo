@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <template id="livechat_email_template">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: white; padding: 0; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <span style="font-size: 10px;">Livechat Conversation</span><br/>
+                    <span style="font-size: 20px; font-weight: bold;">
+                        <t t-esc="company.name"/>
+                    </span>
+                </td><td valign="middle" align="right">
+                    <img t-att-src="'/logo.png?company=%s' % company.id" style="padding: 0px; margin: 0px; height: 48px;" t-att-alt="'%s' % company.name"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <t t-set="top" t-value="'border-top: thin solid #dee2e6;'" />
+    <t t-set="bottom" t-value="'border-bottom: thin solid #dee2e6;'" />
+    <t t-set="right" t-value="'border-right: thin solid #dee2e6;'" />
+    <t t-set="left" t-value="'border-left: thin solid #dee2e6;'" />
+    <tr>
+        <td style="padding: 0 50px;">
+            <div style="font-size: 13px; padding: 10px 0;">
+                <span>Hello,</span><br />Here's a copy of your conversation with
+                <span t-field="channel.livechat_operator_id.name"/>, on the
+                <span t-field="channel.livechat_channel_id.create_date"/>
+            </div>
+            <table cellspacing="0" cellpadding="0" style="width:100%; border-collapse: collapse;">
+                <t t-foreach="channel.message_ids.sorted(key=lambda m: m.date)" t-as="message" >
+                    <t t-set="author_name" t-value="message.author_id.name if message.author_id else 'You'" />
+                    <tr>
+                        <td valign="top" align="center" rowspan="2" t-att-style="'width: 70px;' + top + bottom + left">
+                            <t t-if="message.author_avatar">
+                                <img  t-attf-alt="{{author_name}}" style="width: 64px; height: 64px; object-fit: cover;" t-attf-src="data:image/png;base64,{{message.author_avatar}}"/>
+                            </t>
+                            <t t-else="">
+                                <img  t-attf-alt="{{author_name}}" style="width: 64px; height: 64px; object-fit: cover;" src="/mail/static/src/img/smiley/avatar.jpg"/>
+                            </t>
+                        </td>
+                        <td t-att-style="'padding-left: 5px; margin: 0px;' + top">
+                            <strong t-esc="author_name"/>
+                        </td>
+                        <td  t-att-style="'font-size: 13px; padding: 5px;' + top + right" align="right"><span t-field="message.date"/></td>
+                    </tr>
+                    <tr>
+                        <td valign="top" colspan="2" t-att-style="'padding-left: 5px;' + bottom + right">
+                            <span t-field="message.body" style="font-size: 13px;"/>
+                        </td>
+                    </tr>
+                </t>
+            </table>
+            <div style="font-size: 13px; padding: 30px 0;">
+                <span>Best regards,</span><br /><br />
+                <span t-field="company.name"/>
+            </div>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px; padding: 0 8px 0 8px; font-size:11px;">
+            <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
+            <b t-esc="company.name"/><br/>
+            <div style="color: #999999;">
+                <t t-esc="company.phone"/>
+                <t t-if="company.email"> |
+                    <a t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;"><t t-esc="company.email"/></a>
+                </t>
+                <t t-if="company.website"> |
+                    <a t-att-href="'%s' % company.website" style="text-decoration:none; color: #999999;">
+                        <t t-esc="company.website"/>
+                    </a>
+                </t>
+            </div>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="color: #875A7B;">Odoo</a>
+</td></tr>
+</table>
+        </template>
+    </data>
+</odoo>

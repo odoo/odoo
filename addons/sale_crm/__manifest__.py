@@ -22,7 +22,8 @@ modules.
         'views/partner_views.xml',
         'views/sale_order_views.xml',
         'views/crm_lead_views.xml',
-        'views/crm_team_views.xml'
+        'views/crm_team_views.xml',
+        'wizard/crm_opportunity_to_quotation_views.xml'
     ],
     'auto_install': True,
     'uninstall_hook': 'uninstall_hook'

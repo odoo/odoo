@@ -1,0 +1,86 @@
+/* static stars */
+$o-w-rating-star-color: #FACC2E;
+.o_website_rating_static{
+    color: $o-w-rating-star-color;
+}
+
+.o_website_rating_card_container {
+
+    .o_message_counter {
+        color: gray('700');
+    }
+
+    /* progress bars */
+    table.o_website_rating_progress_table {
+        width: 100%;
+        overflow: visible;
+
+        .o_website_rating_table_star_num {
+            min-width: 50px;
+        }
+        .o_website_rating_select[style*="opacity: 1"] {
+            cursor: pointer;
+        }
+        .o_website_rating_table_progress{
+            min-width: 120px;
+            > .progress {
+                margin-bottom: 5px;
+                margin-left: 5px;
+                margin-right: 5px;
+            }
+            .o_rating_progressbar{
+                background-color: $o-w-rating-star-color;
+            }
+        }
+        .o_website_rating_table_percent {
+            text-align: right;
+            padding-left: 5px;
+            font-size: $font-size-sm;
+        }
+        .o_website_rating_table_reset {
+            .o_website_rating_select_text {
+                visibility: hidden;
+            }
+        }
+    }
+
+}
+
+/* Star Widget */
+.o_rating_star_card{
+    margin-bottom: 5px;
+    .stars {
+        display: inline-block;
+        color: #FACC2E;
+        margin-right: 15px;
+    }
+
+    .stars i {
+        margin-right: -3px;
+        text-align: center;
+    }
+
+    .stars.enabled{
+        cursor: pointer;
+    }
+
+    .rate_text{
+        display: inline-block;
+    }
+}
+
+/* Rating Popup Composer */
+.o_rating_popup_composer {
+
+    .o_rating_clickable {
+        cursor: pointer;
+    }
+
+    .o_portal_chatter_avatar {
+        margin-right: 10px;
+    }
+}
+
+.o_rating_popup_composer_label {
+    color: color-yiq(white);
+}

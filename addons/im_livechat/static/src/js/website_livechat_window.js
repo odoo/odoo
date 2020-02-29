@@ -16,12 +16,28 @@ var LivechatWindow = AbstractThreadWindow.extend({
      * @override
      * @param {im_livechat.im_livechat.LivechatButton} parent
      * @param {im_livechat.model.WebsiteLivechat} thread
+     * @param {Object} [options={}]
+     * @param {string} [options.headerBackgroundColor]
+     * @param {string} [options.titleColor]
      */
-    init: function (parent, thread) {
+    init(parent, thread, options={}) {
         this._super.apply(this, arguments);
-
         this._thread = thread;
     },
+    /**
+     * @override
+     * @return {Promise}
+     */
+    async start() {
+        await this._super(...arguments);
+        if (this.options.headerBackgroundColor) {
+            this.$('.o_thread_window_header').css('background-color', this.options.headerBackgroundColor);
+        }
+        if (this.options.titleColor) {
+            this.$('.o_thread_window_header').css('color', this.options.titleColor);
+        }
+    },
+
 
     //--------------------------------------------------------------------------
     // Public

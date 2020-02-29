@@ -25,7 +25,7 @@ class CrmTeam(models.Model):
 
     def _graph_date_column(self):
         if self.use_opportunities and self._context.get('in_sales_app'):
-            return 'confirmation_date'
+            return 'date'
         return super(CrmTeam,self)._graph_date_column()
 
     def _graph_y_query(self):

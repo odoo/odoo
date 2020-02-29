@@ -1,18 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * im_livechat_mail_bot
+# 	* im_livechat_mail_bot
 # 
 # Translators:
-# Minh Nguyen <ndminh210994@gmail.com>, 2018
-# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
-# Duy BQ <duybq86@gmail.com>, 2018
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# Minh Nguyen <ndminh210994@gmail.com>, 2019
+# Chinh Chinh <trinhttp@trobz.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-10-02 10:05+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:11+0000\n"
+"Last-Translator: Chinh Chinh <trinhttp@trobz.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,12 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: im_livechat_mail_bot
-#: selection:res.users,odoobot_state:0
-msgid "Disabled"
-msgstr "Đã vô hiệu"
-
-#. module: im_livechat_mail_bot
-#: code:addons/im_livechat_mail_bot/models/mail_bot.py:18
+#: code:addons/im_livechat_mail_bot/models/mail_bot.py:0
 #, python-format
 msgid ""
 "Good, you can customize canned responses in the live chat "
@@ -35,22 +31,12 @@ msgid ""
 msgstr ""
 
 #. module: im_livechat_mail_bot
-#: selection:res.users,odoobot_state:0
-msgid "Idle"
-msgstr "Rảnh rỗi"
-
-#. module: im_livechat_mail_bot
 #: model:ir.model,name:im_livechat_mail_bot.model_mail_bot
 msgid "Mail Bot"
 msgstr "Mail Bot"
 
 #. module: im_livechat_mail_bot
-#: selection:res.users,odoobot_state:0
-msgid "Not initialized"
-msgstr ""
-
-#. module: im_livechat_mail_bot
-#: code:addons/im_livechat_mail_bot/models/mail_bot.py:21
+#: code:addons/im_livechat_mail_bot/models/mail_bot.py:0
 #, python-format
 msgid ""
 "Not sure wat you are doing. Please press : and wait for the propositions. "
@@ -62,35 +48,15 @@ msgstr ""
 #. module: im_livechat_mail_bot
 #: model:ir.model.fields,field_description:im_livechat_mail_bot.field_res_users__odoobot_state
 msgid "OdooBot Status"
-msgstr ""
+msgstr "Trạng thái của OdooBot"
 
 #. module: im_livechat_mail_bot
-#: selection:res.users,odoobot_state:0
-msgid "Onboarding attachement"
-msgstr ""
-
-#. module: im_livechat_mail_bot
-#: selection:res.users,odoobot_state:0
+#: model:ir.model.fields.selection,name:im_livechat_mail_bot.selection__res_users__odoobot_state__onboarding_canned
 msgid "Onboarding canned"
-msgstr ""
+msgstr "Đóng gói"
 
 #. module: im_livechat_mail_bot
-#: selection:res.users,odoobot_state:0
-msgid "Onboarding command"
-msgstr ""
-
-#. module: im_livechat_mail_bot
-#: selection:res.users,odoobot_state:0
-msgid "Onboarding emoji"
-msgstr ""
-
-#. module: im_livechat_mail_bot
-#: selection:res.users,odoobot_state:0
-msgid "Onboarding ping"
-msgstr ""
-
-#. module: im_livechat_mail_bot
-#: code:addons/im_livechat_mail_bot/models/mail_bot.py:15
+#: code:addons/im_livechat_mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "That's me! 🎉<br/>Try to type \":\" to use canned responses."
 msgstr ""

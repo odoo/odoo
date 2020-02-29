@@ -1,20 +1,15 @@
 odoo.define('web_tour.tour', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
 var config = require('web.config');
-var core = require('web.core');
 var rootWidget = require('root.widget');
 var rpc = require('web.rpc');
 var session = require('web.session');
 var TourManager = require('web_tour.TourManager');
 
-var QWeb = core.qweb;
-
 if (config.device.isMobile) {
-    return $.Deferred().reject();
+    return Promise.reject();
 }
-
 /**
  * @namespace
  * @property {Object} active_tooltips
@@ -37,8 +32,8 @@ return session.is_bound.then(function () {
             });
         defs.push(def);
     }
-    return $.when.apply($, defs).then(function (consumed_tours) {
-        consumed_tours = session.is_frontend ? consumed_tours : session.web_tours;
+    return Promise.all(defs).then(function (results) {
+        var consumed_tours = session.is_frontend ? results[0] : session.web_tours;
         var tour_manager = new TourManager(rootWidget, consumed_tours);
 
         // Use a MutationObserver to detect DOM changes
@@ -61,17 +56,9 @@ return session.is_bound.then(function () {
         }, 500);
         var observer = new MutationObserver(check_tooltip);
         var start_service = (function () {
-
             return function (observe) {
-
-                var def = $.Deferred();
-                $(function () {
-                    /**
-                     * Once the DOM is ready, we still have to wait all the modules are loaded before completing the tours
-                     * registration and starting listening for DOM mutations.
-                     */
-                    _.defer(function () {
-                        tour_manager._register_all(observe);
+                return new Promise(function (resolve, reject) {
+                    tour_manager._register_all(observe).then(function () {
                         if (observe) {
                             observer.observe(document.body, {
                                 attributes: true,
@@ -79,10 +66,9 @@ return session.is_bound.then(function () {
                                 subtree: true,
                             });
                         }
-                        def.resolve();
+                        resolve();
                     });
                 });
-                return def;
             };
         })();
 
@@ -109,7 +95,8 @@ return session.is_bound.then(function () {
                 observer.disconnect();
             };
         }
-
+        // helper to start a tour manually (or from a python test with its counterpart start_tour function)
+        odoo.startTour = tour_manager.run.bind(tour_manager);
         return tour_manager;
     });
 });

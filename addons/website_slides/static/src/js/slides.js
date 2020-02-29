@@ -1,14 +1,11 @@
 odoo.define('website_slides.slides', function (require) {
 'use strict';
 
+var publicWidget = require('web.public.widget');
 var time = require('web.time');
-var sAnimations = require('website.content.snippets.animation');
 
-sAnimations.registry.websiteSlides = sAnimations.Class.extend({
+publicWidget.registry.websiteSlides = publicWidget.Widget.extend({
     selector: '#wrapwrap',
-    read_events: {
-        'click .o_slides_hide_channel_settings': '_onHideChannelSettings',
-    },
 
     /**
      * @override
@@ -31,25 +28,12 @@ sAnimations.registry.websiteSlides = sAnimations.Class.extend({
             $(el).text(displayStr);
         });
 
-        return $.when.apply($, defs);
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * To prevent showing channel settings alert box once user closed it.
-     *
-     * @private
-     * @param {Object} ev
-     */
-    _onHideChannelSettings: function (ev) {
-        ev.preventDefault();
-        var channelID = $(ev.currentTarget).data('channelId');
-        document.cookie = 'slides_channel_' + channelID + ' = closed';
+        return Promise.all(defs);
     },
 });
+
+return publicWidget.registry.websiteSlides;
+
 });
 
 //==============================================================================
@@ -57,11 +41,10 @@ sAnimations.registry.websiteSlides = sAnimations.Class.extend({
 odoo.define('website_slides.slides_embed', function (require) {
 'use strict';
 
-var Widget = require('web.Widget');
+var publicWidget = require('web.public.widget');
 require('website_slides.slides');
-var sAnimations = require('website.content.snippets.animation');
 
-var SlideSocialEmbed = Widget.extend({
+var SlideSocialEmbed = publicWidget.Widget.extend({
     events: {
         'change input': '_onChangePage',
     },
@@ -108,7 +91,7 @@ var SlideSocialEmbed = Widget.extend({
     },
 });
 
-sAnimations.registry.websiteSlidesEmbed = sAnimations.Class.extend({
+publicWidget.registry.websiteSlidesEmbed = publicWidget.Widget.extend({
     selector: '#wrapwrap',
 
     /**
@@ -118,7 +101,7 @@ sAnimations.registry.websiteSlidesEmbed = sAnimations.Class.extend({
     start: function (parent) {
         var defs = [this._super.apply(this, arguments)];
         $('iframe.o_wslides_iframe_viewer').on('ready', this._onIframeViewerReady.bind(this));
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 
     //--------------------------------------------------------------------------
@@ -137,4 +120,5 @@ sAnimations.registry.websiteSlidesEmbed = sAnimations.Class.extend({
         new SlideSocialEmbed(this, maxPage).attachTo($('.oe_slide_js_embed_code_widget'));
     },
 });
+
 });

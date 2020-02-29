@@ -37,7 +37,7 @@ class FetchmailServer(models.Model):
         ('pop', 'POP Server'),
         ('imap', 'IMAP Server'),
         ('local', 'Local Server'),
-    ], string='Server Type', index=True, required=True, default='pop', oldname='type')
+    ], string='Server Type', index=True, required=True, default='pop')
     is_ssl = fields.Boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP3S=995)")
     attach = fields.Boolean('Keep Attachments', help="Whether attachments should be downloaded. "
                                                      "If not enabled, incoming emails will be stripped of any attachments before being processed", default=True)
@@ -53,7 +53,7 @@ class FetchmailServer(models.Model):
     priority = fields.Integer(string='Server Priority', readonly=True, states={'draft': [('readonly', False)]}, help="Defines the order of processing, lower values mean higher priority", default=5)
     message_ids = fields.One2many('mail.mail', 'fetchmail_server_id', string='Messages', readonly=True)
     configuration = fields.Text('Configuration', readonly=True)
-    script = fields.Char(readonly=True, default='/mail/static/scripts/openerp_mailgate.py')
+    script = fields.Char(readonly=True, default='/mail/static/scripts/odoo-mailgate.py')
 
     @api.onchange('server_type', 'is_ssl', 'object_id')
     def onchange_server_type(self):
@@ -70,14 +70,12 @@ class FetchmailServer(models.Model):
             'uid': self.env.uid,
             'model': self.object_id.model if self.object_id else 'MODELNAME'
         }
-        self.configuration = """
-            Use the below script with the following command line options with your Mail Transport Agent (MTA)
-            openerp_mailgate.py --host=HOSTNAME --port=PORT -u %(uid)d -p PASSWORD -d %(dbname)s
-            Example configuration for the postfix mta running locally:
-            /etc/postfix/virtual_aliases:
-            @youdomain openerp_mailgate@localhost
-            /etc/aliases:
-            openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p PASSWORD -d %(dbname)s"
+        self.configuration = """Use the below script with the following command line options with your Mail Transport Agent (MTA)
+odoo-mailgate.py --host=HOSTNAME --port=PORT -u %(uid)d -p PASSWORD -d %(dbname)s
+Example configuration for the postfix mta running locally:
+/etc/postfix/virtual_aliases: @youdomain odoo_mailgate@localhost
+/etc/aliases:
+odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWORD -d %(dbname)s"
         """ % conf
 
     @api.model
@@ -86,24 +84,20 @@ class FetchmailServer(models.Model):
         self._update_cron()
         return res
 
-    @api.multi
     def write(self, values):
         res = super(FetchmailServer, self).write(values)
         self._update_cron()
         return res
 
-    @api.multi
     def unlink(self):
         res = super(FetchmailServer, self).unlink()
         self._update_cron()
         return res
 
-    @api.multi
     def set_draft(self):
         self.write({'state': 'draft'})
         return True
 
-    @api.multi
     def connect(self):
         self.ensure_one()
         if self.server_type == 'imap':
@@ -125,7 +119,6 @@ class FetchmailServer(models.Model):
         connection.sock.settimeout(MAIL_TIMEOUT)
         return connection
 
-    @api.multi
     def button_confirm_login(self):
         for server in self:
             try:
@@ -151,7 +144,6 @@ class FetchmailServer(models.Model):
         """ Method called by cron to fetch mails from servers """
         return self.search([('state', '=', 'done'), ('server_type', 'in', ['pop', 'imap'])]).fetch_mail()
 
-    @api.multi
     def fetch_mail(self):
         """ WARNING: meant for cron usage only - will commit() after each email! """
         additionnal_context = {
@@ -160,8 +152,7 @@ class FetchmailServer(models.Model):
         MailThread = self.env['mail.thread']
         for server in self:
             _logger.info('start checking for new emails on %s server %s', server.server_type, server.name)
-            additionnal_context['fetchmail_server_id'] = server.id
-            additionnal_context['server_type'] = server.server_type
+            additionnal_context['default_fetchmail_server_id'] = server.id
             count, failed = 0, 0
             imap_server = None
             pop_server = None

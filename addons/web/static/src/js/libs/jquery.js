@@ -17,6 +17,9 @@ $.extend($.expr[':'], {
     containsExact: function (element, index, matches){
         return $.trim(element.innerHTML) === matches[3];
     },
+    containsExactText: function (element, index, matches) {
+        return element.innerText.trim() === matches[3].trim();
+    },
     /**
      * Note all escaped characters need to be double escaped inside of the
      * expression, so "\(" needs to be "\\("

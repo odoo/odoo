@@ -21,14 +21,14 @@ class ActivityReport(models.Model):
     user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
     team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True)
     lead_id = fields.Many2one('crm.lead', "Opportunity", readonly=True)
-    body = fields.Html('Contents', readonly=True)
+    body = fields.Html('Activity Description', readonly=True)
     subtype_id = fields.Many2one('mail.message.subtype', 'Subtype', readonly=True)
     mail_activity_type_id = fields.Many2one('mail.activity.type', 'Activity Type', readonly=True)
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     stage_id = fields.Many2one('crm.stage', 'Stage', readonly=True)
     partner_id = fields.Many2one('res.partner', 'Customer', readonly=True)
-    lead_type = fields.Char(
+    lead_type = fields.Selection(
         string='Type',
         selection=[('lead', 'Lead'), ('opportunity', 'Opportunity')],
         help="Type is used to separate Leads and Opportunities")
@@ -75,7 +75,6 @@ class ActivityReport(models.Model):
                 m.model = 'crm.lead' AND (m.mail_activity_type_id IS NOT NULL OR m.subtype_id = %s)
         """ % (disccusion_subtype.id,)
 
-    @api.model_cr
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)
         self._cr.execute("""

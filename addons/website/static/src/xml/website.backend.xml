@@ -5,6 +5,15 @@
         <span class="o_stat_text">On Website</span>
     </div>
 
+    <t t-name="WidgetWebsiteButtonIcon">
+        <button type="button" class="btn oe_stat_button">
+            <i class="fa fa-fw o_button_icon fa-globe"/>
+            <div class="o_stat_info">
+                <span class="o_stat_text">Go to<br/>Website</span>
+            </div>
+        </button>
+    </t>
+
     <t t-name="website.WebsiteDashboardMain">
         <div class="o_dashboards">
             <div class="container-fluid o_website_dashboard">
@@ -80,26 +89,6 @@
                 </button>
             </t>
         </div>
-    </t>
-
-    <t t-name="website.SalesChartTooltip">
-        <table>
-            <thead>
-                <tr><td colspan="3"><strong><t t-esc="chartData.series[0].key"/></strong></td></tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="legend-color-guide"><div class="o_legend0"/></td>
-                    <td class="key o_tooltip_key"><t t-esc="format.date(moment(chartData.value))"/></td>
-                    <td class="value"><t t-esc="format.float(chartData.series[0].data[1])"/></td>
-                </tr>
-                <tr>
-                    <td class="legend-color-guide"><div class="o_legend1"/></td>
-                    <td class="key o_tooltip_key"><t t-esc="format.date(moment(chartData.value).subtract(1, dateRange))"/></td>
-                    <td class="value"><t t-esc="format.float(chartData.series[1].data[1])"/></td>
-                </tr>
-            </tbody>
-        </table>
     </t>
 
     <t t-name="website.GoToButtons">

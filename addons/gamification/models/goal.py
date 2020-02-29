@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import logging
 import time
 from datetime import date, datetime, timedelta
@@ -12,6 +13,7 @@ from odoo.tools.safe_eval import safe_eval
 _logger = logging.getLogger(__name__)
 
 
+DOMAIN_TEMPLATE = "[('store', '=', True), '|', ('model_id', '=', model_id), ('model_id', 'in', model_inherited_ids)%s]"
 class GoalDefinition(models.Model):
     """Goal definition
 
@@ -39,8 +41,15 @@ class GoalDefinition(models.Model):
         ('boolean', "Exclusive (done or not-done)"),
     ], default='progress', string="Displayed as", required=True)
     model_id = fields.Many2one('ir.model', string='Model', help='The model object for the field to evaluate')
-    field_id = fields.Many2one('ir.model.fields', string='Field to Sum', help='The field containing the value to evaluate')
-    field_date_id = fields.Many2one('ir.model.fields', string='Date Field', help='The date to use for the time period evaluated')
+    model_inherited_ids = fields.Many2many('ir.model', related='model_id.inherited_model_ids')
+    field_id = fields.Many2one(
+        'ir.model.fields', string='Field to Sum', help='The field containing the value to evaluate',
+        domain=DOMAIN_TEMPLATE % ''
+    )
+    field_date_id = fields.Many2one(
+        'ir.model.fields', string='Date Field', help='The date to use for the time period evaluated',
+        domain=DOMAIN_TEMPLATE % ", ('ttype', 'in', ('date', 'datetime'))"
+    )
     domain = fields.Char(
         "Filter Domain", required=True, default="[]",
         help="Domain for filtering records. General rule, not user depending,"
@@ -66,7 +75,7 @@ class GoalDefinition(models.Model):
             items = []
 
             if goal.monetary:
-                items.append(self.env.user.company_id.currency_id.symbol or u'¤')
+                items.append(self.env.company.currency_id.symbol or u'¤')
             if goal.suffix:
                 items.append(goal.suffix)
 
@@ -81,7 +90,7 @@ class GoalDefinition(models.Model):
             Obj = self.env[definition.model_id.model]
             try:
                 domain = safe_eval(definition.domain, {
-                    'user': self.env.user.sudo(self.env.user)
+                    'user': self.env.user.with_user(self.env.user)
                 })
                 # dummy search to make sure the domain is valid
                 Obj.search_count(domain)
@@ -117,7 +126,6 @@ class GoalDefinition(models.Model):
             definition._check_model_validity()
         return definition
 
-    @api.multi
     def write(self, vals):
         res = super(GoalDefinition, self).write(vals)
         if vals.get('computation_mode', 'count') in ('count', 'sum') and (vals.get('domain') or vals.get('model_id')):
@@ -126,19 +134,6 @@ class GoalDefinition(models.Model):
             self._check_model_validity()
         return res
 
-    @api.onchange('model_id')
-    def _change_model_id(self):
-        """Force domain for the `field_id` and `field_date_id` fields"""
-        if not self.model_id:
-            return {'domain': {'field_id': expression.FALSE_DOMAIN, 'field_date_id': expression.FALSE_DOMAIN}}
-        model_fields_domain = [
-            ('store', '=', True),
-            '|', ('model_id', '=', self.model_id.id),
-                 ('model_id', 'in', self.model_id.inherited_model_ids.ids)]
-        model_date_fields_domain = expression.AND([[('ttype', 'in', ('date', 'datetime'))], model_fields_domain])
-        return {'domain': {'field_id': model_fields_domain, 'field_date_id': model_date_fields_domain}}
-
-
 class Goal(models.Model):
     """Goal instance for a user
 
@@ -146,6 +141,7 @@ class Goal(models.Model):
 
     _name = 'gamification.goal'
     _description = 'Gamification Goal'
+    _rec_name = 'definition_id'
     _order = 'start_date desc, end_date desc, definition_id, id'
 
     definition_id = fields.Many2one('gamification.goal.definition', string="Goal Definition", required=True, ondelete="cascade")
@@ -183,9 +179,9 @@ class Goal(models.Model):
              "case of non-manual goal or goal not linked to a challenge.")
 
     definition_description = fields.Text("Definition Description", related='definition_id.description', readonly=True)
-    definition_condition = fields.Selection("Definition Condition", related='definition_id.condition', readonly=True)
+    definition_condition = fields.Selection(string="Definition Condition", related='definition_id.condition', readonly=True)
     definition_suffix = fields.Char("Suffix", related='definition_id.full_suffix', readonly=True)
-    definition_display = fields.Selection("Display Mode", related='definition_id.display_mode', readonly=True)
+    definition_display = fields.Selection(string="Display Mode", related='definition_id.display_mode', readonly=True)
 
     @api.depends('current', 'target_goal', 'definition_id.condition')
     def _get_completion(self):
@@ -195,7 +191,7 @@ class Goal(models.Model):
                 if goal.current >= goal.target_goal:
                     goal.completeness = 100.0
                 else:
-                    goal.completeness = round(100.0 * goal.current / goal.target_goal, 2)
+                    goal.completeness = round(100.0 * goal.current / goal.target_goal, 2) if goal.target_goal else 0
             elif goal.current < goal.target_goal:
                 # a goal 'lower than' has only two values possible: 0 or 100%
                 goal.completeness = 100.0
@@ -221,11 +217,11 @@ class Goal(models.Model):
                            .get_email_template(self.id)
         body_html = self.env['mail.template'].with_context(template._context)\
             ._render_template(template.body_html, 'gamification.goal', self.id)
-        self.env['mail.thread'].message_post(
+        self.message_notify(
             body=body_html,
             partner_ids=[self.user_id.partner_id.id],
-            subtype='mail.mt_comment',
-            notif_layout='mail.mail_notification_light',
+            subtype_xmlid='mail.mt_comment',
+            email_layout_xmlid='mail.mail_notification_light',
         )
 
         return {'to_update': True}
@@ -249,7 +245,6 @@ class Goal(models.Model):
 
         return {self: result}
 
-    @api.multi
     def update_goal(self):
         """Update the goals to recomputes values and change of states
 
@@ -298,7 +293,7 @@ class Goal(models.Model):
                 field_date_name = definition.field_date_id.name
                 if definition.computation_mode == 'count' and definition.batch_mode:
                     # batch mode, trying to do as much as possible in one request
-                    general_domain = safe_eval(definition.domain)
+                    general_domain = ast.literal_eval(definition.domain)
                     field_name = definition.batch_distinctive_field.name
                     subqueries = {}
                     for goal in goals:
@@ -361,7 +356,6 @@ class Goal(models.Model):
                 self.env.cr.commit()
         return True
 
-    @api.multi
     def action_start(self):
         """Mark a goal as started.
 
@@ -369,7 +363,6 @@ class Goal(models.Model):
         self.write({'state': 'inprogress'})
         return self.update_goal()
 
-    @api.multi
     def action_reach(self):
         """Mark a goal as reached.
 
@@ -377,14 +370,12 @@ class Goal(models.Model):
         Progress at the next goal update until the end date."""
         return self.write({'state': 'reached'})
 
-    @api.multi
     def action_fail(self):
         """Set the state of the goal to failed.
 
         A failed goal will be ignored in future checks."""
         return self.write({'state': 'failed'})
 
-    @api.multi
     def action_cancel(self):
         """Reset the completion after setting a goal as reached or failed.
 
@@ -397,7 +388,6 @@ class Goal(models.Model):
     def create(self, vals):
         return super(Goal, self.with_context(no_remind_goal=True)).create(vals)
 
-    @api.multi
     def write(self, vals):
         """Overwrite the write method to update the last_update field to today
 
@@ -416,7 +406,6 @@ class Goal(models.Model):
                     goal.challenge_id.sudo().report_progress(users=goal.user_id)
         return result
 
-    @api.multi
     def get_action(self):
         """Get the ir.action related to update the goal
 
@@ -428,7 +417,7 @@ class Goal(models.Model):
             action = self.definition_id.action_id.read()[0]
 
             if self.definition_id.res_id_field:
-                current_user = self.env.user.sudo(self.env.user)
+                current_user = self.env.user.with_user(self.env.user)
                 action['res_id'] = safe_eval(self.definition_id.res_id_field, {
                     'user': current_user
                 })

@@ -36,12 +36,17 @@ class TestEquipment(TransactionCase):
             groups_id=[(6, 0, [res_manager.id])]
         ))
 
+        self.equipment_monitor = self.env['maintenance.equipment.category'].create({
+            'name': 'Monitors',
+            'alias_id': self.env.ref('maintenance.mail_alias_equipment').id,
+        })
+
     def test_10_equipment_request_category(self):
 
         # Create a new equipment
-        equipment_01 = self.equipment.sudo(self.manager).create({
+        equipment_01 = self.equipment.with_user(self.manager).create({
             'name': 'Samsung Monitor "15',
-            'category_id': self.ref('maintenance.equipment_monitor'),
+            'category_id': self.equipment_monitor.id,
             'technician_user_id': self.ref('base.user_root'),
             'owner_user_id': self.user.id,
             'assign_date': time.strftime('%Y-%m-%d'),
@@ -54,7 +59,7 @@ class TestEquipment(TransactionCase):
         assert equipment_01, "Equipment not created"
 
         # Create new maintenance request
-        maintenance_request_01 = self.maintenance_request.sudo(self.user).create({
+        maintenance_request_01 = self.maintenance_request.with_user(self.user).create({
             'name': 'Resolution is bad',
             'user_id': self.user.id,
             'owner_user_id': self.user.id,
@@ -68,19 +73,19 @@ class TestEquipment(TransactionCase):
         assert maintenance_request_01, "Maintenance Request not created"
 
         # I check that Initially maintenance request is in the "New Request" stage
-        self.assertEquals(maintenance_request_01.stage_id.id, self.ref('maintenance.stage_0'))
+        self.assertEqual(maintenance_request_01.stage_id.id, self.ref('maintenance.stage_0'))
 
         # I check that change the maintenance_request stage on click statusbar
-        maintenance_request_01.sudo(self.user).write({'stage_id': self.ref('maintenance.stage_1')})
+        maintenance_request_01.with_user(self.user).write({'stage_id': self.ref('maintenance.stage_1')})
 
         # I check that maintenance request is in the "In Progress" stage
-        self.assertEquals(maintenance_request_01.stage_id.id, self.ref('maintenance.stage_1'))
+        self.assertEqual(maintenance_request_01.stage_id.id, self.ref('maintenance.stage_1'))
 
     def test_20_cron(self):
         """ Check the cron creates the necessary preventive maintenance requests"""
         equipment_cron = self.equipment.create({
             'name': 'High Maintenance Monitor because of Color Calibration',
-            'category_id': self.ref('maintenance.equipment_monitor'),
+            'category_id': self.equipment_monitor.id,
             'technician_user_id': self.ref('base.user_root'),
             'owner_user_id': self.user.id,
             'assign_date': time.strftime('%Y-%m-%d'),
@@ -113,7 +118,7 @@ class TestEquipment(TransactionCase):
         })
         equipment = self.equipment.create({
             'name': 'High Maintenance Monitor because of Color Calibration',
-            'category_id': self.ref('maintenance.equipment_monitor'),
+            'category_id': self.equipment_monitor.id,
             'technician_user_id': self.ref('base.user_root'),
             'owner_user_id': self.user.id,
             'assign_date': time.strftime('%Y-%m-%d'),

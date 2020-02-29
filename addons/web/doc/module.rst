@@ -412,7 +412,7 @@ responses":
 
 .. note::
 
-    By defaut, tests cases don't load templates either. We had not
+    By default, tests cases don't load templates either. We had not
     needed to perform any template rendering before here, so we must
     now enable templates loading via :js:attr:`the corresponding
     option <TestOptions.templates>`.

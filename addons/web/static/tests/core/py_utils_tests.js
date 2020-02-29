@@ -31,12 +31,14 @@ QUnit.module('core', function () {
     });
 
     QUnit.test('simple arithmetic', function(assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         var result = pyUtils.py_eval("1 + 2");
         assert.strictEqual(result, 3, "should properly evaluate sum");
         result = pyUtils.py_eval("42 % 5");
         assert.strictEqual(result, 2, "should properly evaluate modulo operator");
+        result = pyUtils.py_eval("2 ** 3");
+        assert.strictEqual(result, 8, "should properly evaluate power operator");
     });
 
 
@@ -526,6 +528,18 @@ QUnit.module('core', function () {
         assert.strictEqual(result, "2012-02-15 00:00:00");
     });
 
+    QUnit.test('conditional expressions', function (assert) {
+        assert.expect(2);
+        assert.strictEqual(
+            py.eval('1 if a else 2', {a: true}),
+            1
+        );
+        assert.strictEqual(
+            py.eval('1 if a else 2', {a: false}),
+            2
+        );
+    });
+
     QUnit.module('py_utils (eval domain contexts)', {
         beforeEach: function() {
             this.user_context = {
@@ -879,7 +893,7 @@ QUnit.module('core', function () {
         var result = pyUtils.eval('contexts', [{
             "__ref": "compound_context",
             "__contexts": [
-                {"__ref": "context", "__debug": "{'type':parent.type}",
+                {"__ref": "context", "__debug": "{'type':parent.move_type}",
                     "__id": "462b9dbed42f"}
             ],
             "__eval_context": {
@@ -887,7 +901,7 @@ QUnit.module('core', function () {
                 "__contexts": [{
                         "__ref": "compound_context",
                         "__contexts": [
-                            {"__ref": "context", "__debug": "{'type': type}",
+                            {"__ref": "context", "__debug": "{'type': move_type}",
                                 "__id": "16a04ed5a194"}
                         ],
                         "__eval_context": {
@@ -895,26 +909,26 @@ QUnit.module('core', function () {
                             "__contexts": [
                                 {"lang": "en_US", "tz": false, "uid": 1,
                                     "journal_type": "sale", "section_id": false,
-                                    "default_type": "out_invoice",
-                                    "type": "out_invoice", "department_id": false},
+                                    "default_move_type": "out_invoice",
+                                    "move_type": "out_invoice", "department_id": false},
                                 {"id": false, "journal_id": 10,
-                                    "number": false, "type": "out_invoice",
+                                    "number": false, "move_type": "out_invoice",
                                     "currency_id": 1, "partner_id": 4,
                                     "fiscal_position_id": false,
-                                    "date_invoice": false, "date": false,
+                                    "invoice_date": false, "date": false,
                                     "payment_term_id": false,
                                     "reference": false, "account_id": 440,
                                     "name": false, "invoice_line_ids": [],
                                     "tax_line_ids": [], "amount_untaxed": 0,
                                     "amount_tax": 0, "reconciled": false,
                                     "amount_total": 0, "state": "draft",
-                                    "residual": 0, "company_id": 1,
+                                    "amount_residual": 0, "company_id": 1,
                                     "date_due": false, "user_id": 1,
                                     "partner_bank_id": false, "origin": false,
                                     "move_id": false, "comment": false,
                                     "payment_ids": [[6, false, []]],
                                     "active_id": false, "active_ids": [],
-                                    "active_model": "account.invoice",
+                                    "active_model": "account.move",
                                     "parent": {}}
                     ], "__eval_context": null}
                 }, {
@@ -932,17 +946,17 @@ QUnit.module('core', function () {
                     "invoice_line_tax_ids": [[6, false, [1]]],
                     "active_id": false,
                     "active_ids": [],
-                    "active_model": "account.invoice.line",
+                    "active_model": "account.move.line",
                     "parent": {
                         "id": false, "journal_id": 10, "number": false,
-                        "type": "out_invoice", "currency_id": 1,
+                        "move_type": "out_invoice", "currency_id": 1,
                         "partner_id": 4, "fiscal_position_id": false,
-                        "date_invoice": false, "date": false,
+                        "invoice_date": false, "date": false,
                         "payment_term_id": false,
                         "reference": false, "account_id": 440, "name": false,
                         "tax_line_ids": [], "amount_untaxed": 0, "amount_tax": 0,
                         "reconciled": false, "amount_total": 0,
-                        "state": "draft", "residual": 0, "company_id": 1,
+                        "state": "draft", "amount_residual": 0, "company_id": 1,
                         "date_due": false, "user_id": 1,
                         "partner_bank_id": false, "origin": false,
                         "move_id": false, "comment": false,
@@ -1149,7 +1163,7 @@ QUnit.module('core', function () {
         assert.checkAST("1.4", "float value");
         assert.checkAST("-12", "negative integer value");
         assert.checkAST("True", "boolean");
-        assert.checkAST("'some string'", "a string");
+        assert.checkAST(`"some string"`, "a string");
         assert.checkAST("None", "None");
     });
 
@@ -1157,8 +1171,8 @@ QUnit.module('core', function () {
         assert.expect(3);
 
         assert.checkAST("{}", "empty dictionary");
-        assert.checkAST("{'a': 1}", "dictionary with a single key");
-        assert.checkAST("d['a']", "get a value in a dictionary");
+        assert.checkAST(`{"a": 1}`, "dictionary with a single key");
+        assert.checkAST(`d["a"]`, "get a value in a dictionary");
     });
 
     QUnit.test("list", function (assert) {
@@ -1206,6 +1220,13 @@ QUnit.module('core', function () {
         assert.checkAST("not a in b", "not prefix with expression");
     });
 
+    QUnit.test("conditional expression", function (assert) {
+        assert.expect(2);
+
+        assert.checkAST("1 if a else 2");
+        assert.checkAST("[] if a else 2");
+    });
+
     QUnit.test("other operators", function (assert) {
         assert.expect(7);
 
@@ -1225,14 +1246,14 @@ QUnit.module('core', function () {
 
     QUnit.test("strftime", function (assert) {
         assert.expect(3);
-        assert.checkAST("time.strftime('%Y')", "strftime with year");
-        assert.checkAST("time.strftime('%Y') + '-01-30'", "strftime with year");
-        assert.checkAST("time.strftime('%Y-%m-%d %H:%M:%S')", "strftime with year");
+        assert.checkAST(`time.strftime("%Y")`, "strftime with year");
+        assert.checkAST(`time.strftime("%Y") + "-01-30"`, "strftime with year");
+        assert.checkAST(`time.strftime("%Y-%m-%d %H:%M:%S")`, "strftime with year");
     });
 
     QUnit.test("context_today", function (assert) {
         assert.expect(1);
-        assert.checkAST("context_today().strftime('%Y-%m-%d')", "context today call");
+        assert.checkAST(`context_today().strftime("%Y-%m-%d")`, "context today call");
     });
 
 
@@ -1250,15 +1271,8 @@ QUnit.module('core', function () {
         assert.checkAST('(a - b).days', "substraction and .days");
         assert.checkAST('a + day == date(2002, 3, 3)');
 
-        var expr = "[('type', '=', 'in'), ('day', '<=', time.strftime('%Y-%m-%d')), ('day', '>', (context_today() - datetime.timedelta(days = 15)).strftime('%Y-%m-%d'))]";
+        var expr = `[("type", "=", "in"), ("day", "<=", time.strftime("%Y-%m-%d")), ("day", ">", (context_today() - datetime.timedelta(days = 15)).strftime("%Y-%m-%d"))]`;
         assert.checkAST(expr);
-    });
-
-    QUnit.test("parse escaped quoted strings", function (assert) {
-        assert.expect(2);
-
-        assert.checkAST(`'\"'`, "a string containing \"");
-        assert.checkAST(`'\'`, "a string containing \'");
     });
 
     QUnit.module('pyutils (_normalizeDomain)');
@@ -1278,23 +1292,23 @@ QUnit.module('core', function () {
         assert.expect(3);
 
         assert.checkNormalization("[]");
-        assert.checkNormalization("[('a', '=', 1)]");
-        assert.checkNormalization("['!', ('a', '=', 1)]");
+        assert.checkNormalization(`[("a", "=", 1)]`);
+        assert.checkNormalization(`["!", ("a", "=", 1)]`);
     });
 
     QUnit.test("properly add the & in a non normalized domain", function (assert) {
         assert.expect(1);
         assert.checkNormalization(
-            "[('a', '=', 1), ('b', '=', 2)]",
-            "['&', ('a', '=', 1), ('b', '=', 2)]"
+            `[("a", "=", 1), ("b", "=", 2)]`,
+            `["&", ("a", "=", 1), ("b", "=", 2)]`
         );
     });
 
     QUnit.test("normalize domain with ! operator", function (assert) {
         assert.expect(1);
         assert.checkNormalization(
-            "['!', ('a', '=', 1), ('b', '=', 2)]",
-            "['&', '!', ('a', '=', 1), ('b', '=', 2)]"
+            `["!", ("a", "=", 1), ("b", "=", 2)]`,
+            `["&", "!", ("a", "=", 1), ("b", "=", 2)]`
         );
     });
 

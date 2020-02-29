@@ -17,7 +17,7 @@
 <template id="partner_detail" name="Partner Details">
     <h1 class="col-lg-12 text-center" id="partner_name" t-field="partner.display_name"/>
     <div class="col-lg-4">
-        <div t-field="partner.image" t-options='{"widget": "image", "class": "d-block mx-auto mb16", "max_width": 512, "avoid_if_small": True}'/>
+        <div t-field="partner.image_1920" t-options='{"widget": "image", "preview_image": "image_512", "class": "d-block mx-auto mb16"}'/>
         <address>
              <div t-field="partner.self" t-options='{
                  "widget": "contact",

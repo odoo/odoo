@@ -2,13 +2,15 @@
 <odoo>
 
     <!-- Add action entry in the Action Menu for Events -->
-    <act_window id="sms_message_send_action_mutli"
+    <act_window id="calendar_event_act_window_sms_composer_single"
         name="Send SMS to attendees"
-        src_model="calendar.event"
-        res_model="sms.send_sms"
-        view_type="form"
+        binding_model="calendar.event"
+        res_model="sms.composer"
         view_mode="form"
-        key2="client_action_multi"
-        target="new"/>
+        target="new"
+        context="{
+            'default_composition_mode': 'comment',
+            'default_res_id': active_id,
+        }"/>
 
 </odoo>

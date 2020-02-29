@@ -1,3 +1,26 @@
+// Define left and right padding according to screen resolution
+@mixin o-form-sheet-inner-left-padding {
+    padding-left: $o-horizontal-padding;
+    @include media-breakpoint-between(lg, xl, $o-extra-grid-breakpoints) {
+        padding-left: $o-horizontal-padding*2;
+    }
+}
+@mixin o-form-sheet-inner-right-padding {
+    padding-right: $o-horizontal-padding;
+    @include media-breakpoint-between(lg, xl, $o-extra-grid-breakpoints) {
+        padding-right: $o-horizontal-padding*2;
+    }
+}
+// Compensate margins
+@mixin o-form-sheet-negative-margin {
+    margin-left: -$o-horizontal-padding;
+    margin-right: -$o-horizontal-padding;
+    @include media-breakpoint-between(lg, xl, $o-extra-grid-breakpoints) {
+        margin-left: -$o-horizontal-padding*2;
+        margin-right: -$o-horizontal-padding*2;
+    }
+}
+
 .o_form_view {
     background-color: $o-view-background-color;
 
@@ -42,7 +65,7 @@
             min-width: 50px;
             margin: 0 (-$o-form-spacing-unit/2);
 
-            > div, > span, > button, > label, > a, > input { // > * did not add a level of priority to the rule
+            > div, > span, > button, > label, > a, > input, > select { // > * did not add a level of priority to the rule
                 flex: 0 0 auto;
                 width: auto!important;
                 margin-right: $o-form-spacing-unit/2;
@@ -81,14 +104,19 @@
 
     .o_form_uri {
         display: inline-block;
-
-        color: $o-main-text-color;
-        &:first-line {
-            color: $link-color;
-        }
+        color: $link-color;
         &:hover {
-            color: darken($o-main-text-color, 1%); // hack required on chrome
-            &:first-line {
+            color: darken($link-color, 15%);
+        }
+        > span {
+            color: $o-main-text-color;
+            &:hover {
+                color: $o-main-text-color;
+            }
+        }
+        > span:first-child {
+            color: $link-color;
+            &:hover {
                 color: darken($link-color, 15%);
             }
         }
@@ -132,10 +160,6 @@
     // Non-chatter rules
     .o_form_sheet_bg {
         position: relative;
-
-        > .o_form_sheet {
-            margin: $o-sheet-vpadding*0.5 auto;
-        }
     }
 
     // Statusbar
@@ -273,13 +297,170 @@
 
     // Button box
     .oe_button_box {
-        .oe_stat_button {
+        position: relative;
+        display: block;
+        margin-bottom: $o-sheet-vpadding;
+        margin-top: -$o-sheet-vpadding;
+        @include o-form-sheet-negative-margin;
+        text-align: right;
+        // Use box-shadow instead of border-bottom because some button boxes are
+        // empty in some cases and we do not want to see a floating border in
+        // that cases.
+        box-shadow: inset 0 -1px 0 gray('400');
+
+        &.o_full .oe_stat_button:not(.o_invisible_modifier) ~ .oe_stat_button {
+            border-left: 1px solid gray('400');
+        }
+        &.o_not_full .oe_stat_button {
+            border-left: 1px solid gray('400');
+        }
+
+        > .btn.oe_stat_button, > .o_dropdown_more {
+            flex: 0 0 auto;
+            width: percentage(1/3); // Adapt the number of visible buttons for each screen width
+            @include media-breakpoint-up(md) {
+                width: percentage(1/5);
+            }
+            @include media-breakpoint-up(lg) {
+                width: percentage(1/7);
+            }
+            @include media-breakpoint-up(xl) {
+                width: percentage(1/8);
+            }
+        }
+
+        .btn.oe_stat_button {
+            color: $o-main-text-color;
+            height: $o-statbutton-height;
+            // Use !important to avoid touch_device style
+            padding: 0 $o-statbutton-spacing 0 0 !important; // padding-left will be achieved through margin-left of content
+            text-align: left;
+            white-space: nowrap;
+            background-color: transparent;
+            opacity: 0.8;
+            border-radius: 0px;
+            margin-bottom: 0; // If the button comes from a field
+
+            &:hover, &:focus {
+                background-color: rgba(black, 0.03);
+                color: inherit;
+                opacity: 1;
+            }
+
+            > .o_button_icon {
+                margin-left: $o-statbutton-spacing; // To create the button padding left (firefox bug)
+                display: inline-block;
+                vertical-align: middle;
+                line-height: $o-statbutton-height;
+                width: 30%;
+
+                &:before {
+                    font-size: 22px;
+                    vertical-align: middle;
+                }
+            }
+
+            > .o_field_percent_pie {
+                margin-left: $o-statbutton-spacing; // To create the button padding left (firefox bug)
+            }
+
+            // Some buttons only display text without using StatInfo template
+            > span {
+                @include o-text-overflow(block);
+                white-space: normal; // text on several lines if needed
+            }
+
+            > .o_stat_info, > span { // contains the value and text
+                display: inline-block;
+                vertical-align: middle;
+                font-weight: 500;
+
+                max-width: 70%;
+                padding-right: $o-statbutton-spacing;
+                line-height: 1.3;
+
+                > .o_stat_value, > .o_stat_text {
+                    @include o-text-overflow(block);
+                }
+
+                .o_stat_value {
+                    font-weight: 700;
+                    color: $o-brand-odoo;
+                    line-height: 1.2;
+                }
+                .o_stat_text {
+                    line-height: 1.2;
+                }
+            }
+
             &:not(:hover) .o_stat_info > .o_hover {
                 display: none !important;
             }
             &:hover .o_stat_info > .o_not_hover {
                 display: none !important
             }
+
+            &.o_button_more {
+                text-align: center;
+                &:after {
+                    margin-left: 5px;
+                    @include o-caret-down;
+                }
+                &[aria-expanded="true"]:after {
+                    margin-left: 5px;
+                    @include o-caret-up;
+                }
+            }
+        }
+
+        > .o_dropdown_more {
+            @include o-position-absolute(100%, 0);
+            min-width: 0;
+            border: none;
+            border: 1px solid gray('300');
+            margin: 0;
+            padding: 0;
+            @include media-breakpoint-down(sm) {
+                // avoid b4 drowdown inline style
+                position: relative !important;
+                transform: none !important;
+                will-change: inherit!important;
+                margin-bottom: 20px;
+                width: 100%;
+                border-width: 0px;
+            }
+            > .btn.oe_stat_button {
+                width: 100%;
+                border: none;
+                border-bottom: 1px solid gray('300');
+
+                @include media-breakpoint-down(sm) {
+                    display: inline-block;
+                    width: percentage(1/3);
+                }
+            }
+        }
+
+        @mixin dropdownButtonsFix {
+            .btn.oe_stat_button.dropdown-item {
+                height: 44px !important;
+                padding: 5px 0 5px 0 !important;
+                border-left: none !important;
+
+                > .o_button_icon {
+                    line-height: normal;
+                }
+            }
+        }
+
+        // IE 11 only
+        @media all and (-ms-high-contrast:none) {
+            @include dropdownButtonsFix
+        }
+
+        // Edge only
+        @supports (display:-ms-grid) {
+            @include dropdownButtonsFix
         }
     }
 
@@ -293,6 +474,19 @@
         }
         .o_priority > .o_priority_star {
             font-size: inherit;
+        }
+    }
+
+    // Avatar
+    .oe_avatar {
+        float: right;
+        margin-bottom: 10px;
+
+        > img {
+            max-width: $o-avatar-size;
+            max-height: $o-avatar-size;
+            vertical-align: top;
+            border: 1px solid $o-main-color-muted;
         }
     }
 
@@ -378,8 +572,8 @@
         clear: both; // For the notebook not to have alongside floating elements
         margin-top: $o-form-spacing-unit * 2;
 
-        .nav-tabs > .tab-pane {
-            min-height: 100px;
+        .tab-content > .tab-pane {
+            padding: $o-horizontal-padding 0;
         }
     }
 
@@ -402,13 +596,19 @@
     }
 
     // Translate icon
-    .o_field_translate {
-        padding: 0;
-        cursor: pointer;
-        width: 12px !important;
-        vertical-align: top;
-        &::before { // seems to be useful for some old browser
+    span.o_field_translate {
+            padding: 0 $o-form-spacing-unit 0 0 !important;
+            vertical-align: top;
             position: relative;
+            margin-left: -35px;
+            width: 35px !important; // important is usefull for textarea
+            display: inline-block;
+            text-align: right;
+            border: none;  // usefull for textarea
+    }
+    input, textarea {
+        &.o_field_translate {
+            padding-right: 25px;
         }
     }
 
@@ -552,7 +752,7 @@
         color: theme-color('danger');
         cursor: help;
         position: absolute;
-        margin-left: -40px;
+        margin-left: 10px;
         margin-top: 5px;
     }
 
@@ -576,13 +776,8 @@
     &.o_form_readonly .o_field_widget .o_list_view .o_row_handle {
         display: none;  // Hide the handler in non-edit mode
     }
-
-    // Attachments
-    .oe_attachment {
-        display: inline-block;
-        border: 1px solid $o-brand-lightsecondary;
-        margin: 0 $o-form-spacing-unit $o-form-spacing-unit 0;
-        padding: $o-form-spacing-unit;
+    .o_field_widget.o_readonly_modifier .o_list_view .o_row_handle {
+        display: none;  // Hide the handler on readonly fields
     }
 
     &.oe_form_configuration {
@@ -610,7 +805,7 @@
     }
 }
 
-// Overriden style when form view in modal
+// Overridden style when form view in modal
 .modal .modal-dialog {
     .o_form_view {
         .o_form_sheet_bg {
@@ -683,6 +878,11 @@
 
                 .o_field_widget {
                     margin-bottom: $o-form-spacing-unit * 2;
+
+                    > .o_field_widget {
+                        margin-bottom: 0;
+                    }
+
                     &.o_field_boolean {
                         margin-right: 0;
                     }
@@ -743,9 +943,14 @@
             }
             .o_field_widget {
                 width: 50%;
+                flex: 0 0 auto;
+
+                &.o_field_many2manytags > .o_field_widget {
+                    flex: 1 0 50px;
+                }
             }
             button.btn-link:first-child {
-                padding-left: 0;
+                padding: 0;
             }
             a.oe-link {
                 font-size: 12px;

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tax_ST1" model="account.tax.template">
+        <field name="description">ST1</field>
+        <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">10%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">10.0</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('a_2_122101'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('a_2_122101'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_PT1" model="account.tax.template">
+        <field name="description">PT1</field>
+        <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">10%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">10.0</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('a_2_122102'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('a_2_122102'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_ST0" model="account.tax.template">
+        <field name="description">ST0</field>
+        <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">0%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('a_2_122101'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('a_2_122101'),
+            }),
+        ]"/>
+        </record>
+
+    <record id="tax_ST2" model="account.tax.template">
+        <field name="description">ST2</field>
+        <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">Exempt</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('a_2_122101'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('a_2_122101'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_PT0" model="account.tax.template">
+        <field name="description">PT0</field>
+        <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Exempt</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('a_2_122102'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('a_2_122102'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_PT2" model="account.tax.template">
+        <field name="description">PT2</field>
+        <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">0%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('a_2_122102'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('a_2_122102'),
+            }),
+        ]"/>
+    </record>
+
+</odoo>

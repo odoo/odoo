@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models, tools
 from odoo.addons.rating.models.rating import RATING_LIMIT_SATISFIED, RATING_LIMIT_OK
+from odoo.osv import expression
 
 
 class RatingParentMixin(models.AbstractModel):
@@ -11,15 +12,21 @@ class RatingParentMixin(models.AbstractModel):
     _description = "Rating Parent Mixin"
     _rating_satisfaction_days = False  # Number of last days used to compute parent satisfaction. Set to False to include all existing rating.
 
-    rating_ids = fields.One2many('rating.rating', 'parent_res_id', string='Ratings', domain=lambda self: [('parent_res_model', '=', self._name)], auto_join=True)
-    rating_percentage_satisfaction = fields.Integer("Rating Satisfaction", compute="_compute_rating_percentage_satisfaction", store=False, help="Percentage of happy ratings")
+    rating_ids = fields.One2many(
+        'rating.rating', 'parent_res_id', string='Ratings',
+        auto_join=True, groups='base.group_user',
+        domain=lambda self: [('parent_res_model', '=', self._name)])
+    rating_percentage_satisfaction = fields.Integer(
+        "Rating Satisfaction",
+        compute="_compute_rating_percentage_satisfaction", compute_sudo=True,
+        store=False, help="Percentage of happy ratings")
 
     @api.depends('rating_ids.rating', 'rating_ids.consumed')
     def _compute_rating_percentage_satisfaction(self):
         # build domain and fetch data
         domain = [('parent_res_model', '=', self._name), ('parent_res_id', 'in', self.ids), ('rating', '>=', 1), ('consumed', '=', True)]
         if self._rating_satisfaction_days:
-            domain += [('create_date', '>=', fields.Datetime.to_string(fields.datetime.now() - timedelta(days=self._rating_satisfaction_days)))]
+            domain += [('write_date', '>=', fields.Datetime.to_string(fields.datetime.now() - timedelta(days=self._rating_satisfaction_days)))]
         data = self.env['rating.rating'].read_group(domain, ['parent_res_id', 'rating'], ['parent_res_id', 'rating'], lazy=False)
 
         # get repartition of grades per parent id
@@ -45,31 +52,28 @@ class RatingMixin(models.AbstractModel):
     _name = 'rating.mixin'
     _description = "Rating Mixin"
 
-    rating_ids = fields.One2many('rating.rating', 'res_id', string='Rating', domain=lambda self: [('res_model', '=', self._name)], auto_join=True)
-    rating_last_value = fields.Float('Rating Last Value', compute='_compute_rating_last_value', compute_sudo=True, store=True)
-    rating_last_feedback = fields.Text('Rating Last Feedback', related='rating_ids.feedback', readonly=False)
-    rating_last_image = fields.Binary('Rating Last Image', related='rating_ids.rating_image', readonly=False)
-    rating_count = fields.Integer('Rating count', compute="_compute_rating_count")
+    rating_ids = fields.One2many('rating.rating', 'res_id', string='Rating', groups='base.group_user', domain=lambda self: [('res_model', '=', self._name)], auto_join=True)
+    rating_last_value = fields.Float('Rating Last Value', groups='base.group_user', compute='_compute_rating_last_value', compute_sudo=True, store=True)
+    rating_last_feedback = fields.Text('Rating Last Feedback', groups='base.group_user', related='rating_ids.feedback')
+    rating_last_image = fields.Binary('Rating Last Image', groups='base.group_user', related='rating_ids.rating_image')
+    rating_count = fields.Integer('Rating count', compute="_compute_rating_stats", compute_sudo=True)
+    rating_avg = fields.Float("Rating Average", compute='_compute_rating_stats', compute_sudo=True)
 
-    @api.multi
     @api.depends('rating_ids.rating')
     def _compute_rating_last_value(self):
         for record in self:
             ratings = self.env['rating.rating'].search([('res_model', '=', self._name), ('res_id', '=', record.id)], limit=1)
-            if ratings:
-                record.rating_last_value = ratings.rating
+            record.rating_last_value = ratings and ratings.rating or 0
 
-    @api.multi
-    @api.depends('rating_ids')
-    def _compute_rating_count(self):
-        read_group_res = self.env['rating.rating'].read_group(
-            [('res_model', '=', self._name), ('res_id', 'in', self.ids), ('consumed', '=', True)],
-            ['res_id'], groupby=['res_id'])
-        result = dict.fromkeys(self.ids, 0)
-        for data in read_group_res:
-            result[data['res_id']] += data['res_id_count']
+    @api.depends('rating_ids.res_id', 'rating_ids.rating')
+    def _compute_rating_stats(self):
+        """ Compute avg and count in one query, as thoses fields will be used together most of the time. """
+        domain = self._rating_domain()
+        read_group_res = self.env['rating.rating'].read_group(domain, ['rating:avg'], groupby=['res_id'], lazy=False)  # force average on rating column
+        mapping = {item['res_id']: {'rating_count': item['__count'], 'rating_avg': item['rating']} for item in read_group_res}
         for record in self:
-            record.rating_count = result.get(record.id)
+            record.rating_count = mapping.get(record.id, {}).get('rating_count', 0)
+            record.rating_avg = mapping.get(record.id, {}).get('rating_avg', 0)
 
     def write(self, values):
         """ If the rated ressource name is modified, we should update the rating res_name too.
@@ -79,12 +83,9 @@ class RatingMixin(models.AbstractModel):
             for record in self:
                 if record._rec_name in values:  # set the res_name of ratings to be recomputed
                     res_name_field = self.env['rating.rating']._fields['res_name']
-                    record.rating_ids._recompute_todo(res_name_field)
+                    self.env.add_to_compute(res_name_field, record.rating_ids)
                 if record._rating_get_parent_field_name() in values:
-                    record.rating_ids.write({'parent_res_id': record[record._rating_get_parent_field_name()].id})
-
-        if self.env.recompute and self._context.get('recompute', True):  # trigger the recomputation of all field marked as "to recompute"
-            self.recompute()
+                    record.rating_ids.sudo().write({'parent_res_id': record[record._rating_get_parent_field_name()].id})
 
         return result
 
@@ -100,6 +101,12 @@ class RatingMixin(models.AbstractModel):
            Should return a Many2One"""
         return None
 
+    def _rating_domain(self):
+        """ Returns a normalized domain on rating.rating to select the records to
+            include in count, avg, ... computation of current model.
+        """
+        return ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', self.ids), ('consumed', '=', True)]
+
     def rating_get_partner_id(self):
         if hasattr(self, 'partner_id') and self.partner_id:
             return self.partner_id
@@ -111,23 +118,29 @@ class RatingMixin(models.AbstractModel):
         return self.env['res.partner']
 
     def rating_get_access_token(self, partner=None):
+        """ Return access token linked to existing ratings, or create a new rating
+        that will create the asked token. An explicit call to access rights is
+        performed as sudo is used afterwards as this method could be used from
+        different sources, notably templates. """
+        self.check_access_rights('read')
+        self.check_access_rule('read')
         if not partner:
             partner = self.rating_get_partner_id()
         rated_partner = self.rating_get_rated_partner_id()
-        ratings = self.rating_ids.filtered(lambda x: x.partner_id.id == partner.id and not x.consumed)
+        ratings = self.rating_ids.sudo().filtered(lambda x: x.partner_id.id == partner.id and not x.consumed)
         if not ratings:
             record_model_id = self.env['ir.model'].sudo().search([('model', '=', self._name)], limit=1).id
-            rating = self.env['rating.rating'].create({
+            rating = self.env['rating.rating'].sudo().create({
                 'partner_id': partner.id,
                 'rated_partner_id': rated_partner.id,
                 'res_model_id': record_model_id,
-                'res_id': self.id
+                'res_id': self.id,
+                'is_internal': False,
             })
         else:
             rating = ratings[0]
         return rating.access_token
 
-    @api.multi
     def rating_send_request(self, template, lang=False, subtype_id=False, force_send=True, composition_mode='comment', notif_layout=None):
         """ This method send rating request by email, using a template given
         in parameter.
@@ -147,33 +160,34 @@ class RatingMixin(models.AbstractModel):
         if subtype_id is False:
             subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
         if force_send:
-            self = self.with_context(mail_notify_force_send=True)
+            self = self.with_context(mail_notify_force_send=True)  # default value is True, should be set to false if not?
         for record in self:
             record.message_post_with_template(
                 template.id,
                 composition_mode=composition_mode,
-                notif_layout=notif_layout if notif_layout is not None else 'mail.mail_notification_light',
+                email_layout_xmlid=notif_layout if notif_layout is not None else 'mail.mail_notification_light',
                 subtype_id=subtype_id
             )
 
-    @api.multi
-    def rating_apply(self, rate, token=None, feedback=None, subtype=None):
+    def rating_apply(self, rate, token=None, feedback=None, subtype_xmlid=None):
         """ Apply a rating given a token. If the current model inherits from
-        mail.thread mixing, a message is posted on its chatter.
-        :param rate : the rating value to apply
-        :type rate : float
-        :param token : access token
-        :param feedback : additional feedback
-        :type feedback : string
-        :param subtype : subtype for mail
-        :type subtype : string
+        mail.thread mixin, a message is posted on its chatter. User going through
+        this method should have at least employee rights because of rating
+        manipulation (either employee, either sudo-ed in public controllers after
+        security check granting access).
+
+        :param float rate : the rating value to apply
+        :param string token : access token
+        :param string feedback : additional feedback
+        :param string subtype_xmlid : xml id of a valid mail.message.subtype
+
         :returns rating.rating record
         """
-        Rating, rating = self.env['rating.rating'], None
+        rating = None
         if token:
             rating = self.env['rating.rating'].search([('access_token', '=', token)], limit=1)
         else:
-            rating = Rating.search([('res_model', '=', self._name), ('res_id', '=', self.ids[0])], limit=1)
+            rating = self.env['rating.rating'].search([('res_model', '=', self._name), ('res_id', '=', self.ids[0])], limit=1)
         if rating:
             rating.write({'rating': rate, 'feedback': feedback, 'consumed': True})
             if hasattr(self, 'message_post'):
@@ -181,7 +195,7 @@ class RatingMixin(models.AbstractModel):
                 self.message_post(
                     body="<img src='/rating/static/src/img/rating_%s.png' alt=':%s/10' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s"
                     % (rate, rate, feedback),
-                    subtype=subtype or "mail.mt_comment",
+                    subtype_xmlid=subtype_xmlid or "mail.mt_comment",
                     author_id=rating.partner_id and rating.partner_id.id or None  # None will set the default author in mail_thread.py
                 )
             if hasattr(self, 'stage_id') and self.stage_id and hasattr(self.stage_id, 'auto_validation_kanban_state') and self.stage_id.auto_validation_kanban_state:
@@ -191,8 +205,7 @@ class RatingMixin(models.AbstractModel):
                     self.write({'kanban_state': 'blocked'})
         return rating
 
-    @api.multi
-    def rating_get_repartition(self, add_stats=False, domain=None):
+    def _rating_get_repartition(self, add_stats=False, domain=None):
         """ get the repatition of rating grade for the given res_ids.
             :param add_stats : flag to add stat to the result
             :type add_stats : boolean
@@ -204,7 +217,7 @@ class RatingMixin(models.AbstractModel):
                 otherwise, key is the value of the information (string) : either stat name (avg, total, ...) or 'repartition'
                 containing the same dict if add_stats was False.
         """
-        base_domain = [('res_model', '=', self._name), ('res_id', 'in', self.ids), ('rating', '>=', 1), ('consumed', '=', True)]
+        base_domain = expression.AND([self._rating_domain(), [('rating', '>=', 1)]])
         if domain:
             base_domain += domain
         data = self.env['rating.rating'].read_group(base_domain, ['rating'], ['rating', 'res_id'])
@@ -222,7 +235,6 @@ class RatingMixin(models.AbstractModel):
             return result
         return values
 
-    @api.multi
     def rating_get_grades(self, domain=None):
         """ get the repatition of rating grade for the given res_ids.
             :param domain : optional domain of the rating to include/exclude in grades computation
@@ -231,7 +243,7 @@ class RatingMixin(models.AbstractModel):
                                                 31-69%: Okay
                                                 70-100%: Great
         """
-        data = self.rating_get_repartition(domain=domain)
+        data = self._rating_get_repartition(domain=domain)
         res = dict.fromkeys(['great', 'okay', 'bad'], 0)
         for key in data:
             if key >= RATING_LIMIT_SATISFIED:
@@ -242,7 +254,6 @@ class RatingMixin(models.AbstractModel):
                 res['bad'] += data[key]
         return res
 
-    @api.multi
     def rating_get_stats(self, domain=None):
         """ get the statistics of the rating repatition
             :param domain : optional domain of the rating to include/exclude in statistic computation
@@ -251,7 +262,7 @@ class RatingMixin(models.AbstractModel):
                 - value is statistic value : 'percent' contains the repartition in percentage, 'avg' is the average rate
                   and 'total' is the number of rating
         """
-        data = self.rating_get_repartition(domain=domain, add_stats=True)
+        data = self._rating_get_repartition(domain=domain, add_stats=True)
         result = {
             'avg': data['avg'],
             'total': data['total'],

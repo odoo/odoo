@@ -28,6 +28,7 @@ var AbstractRenderer = require('web.AbstractRenderer');
 var AbstractController = require('web.AbstractController');
 var ControlPanelView = require('web.ControlPanelView');
 var mvc = require('web.mvc');
+var SearchPanel = require('web.SearchPanel');
 var viewUtils = require('web.viewUtils');
 
 var Factory = mvc.Factory;
@@ -50,11 +51,14 @@ var AbstractView = Factory.extend({
     searchMenuTypes: ['filter', 'groupBy', 'favorite'],
     // determines if a control panel should be instantiated
     withControlPanel: true,
+    // determines if a search panel could be instantiated
+    withSearchPanel: true,
     // determines the MVC components to use
     config: _.extend({}, Factory.prototype.config, {
         Model: AbstractModel,
         Renderer: AbstractRenderer,
         Controller: AbstractController,
+        SearchPanel: SearchPanel,
     }),
 
     /**
@@ -75,9 +79,11 @@ var AbstractView = Factory.extend({
      * @param {string} [params.controllerID]
      * @param {number} [params.count]
      * @param {number} [params.currentId]
-     * @param {string} [params.controllerState]
+     * @param {Object} [params.controllerState]
      * @param {string} [params.displayName]
      * @param {Array[]} [params.domain=[]]
+     * @param {Object[]} [params.dynamicFilters] transmitted to the
+     *   ControlPanelView
      * @param {number[]} [params.ids]
      * @param {boolean} [params.isEmbedded=false]
      * @param {Object} [params.searchQuery={}]
@@ -85,9 +91,12 @@ var AbstractView = Factory.extend({
      * @param {Array[]} [params.searchQuery.domain=[]]
      * @param {string[]} [params.searchQuery.groupBy=[]]
      * @param {Object} [params.userContext={}]
-     * @param {boolean} [params.withControlPanel=true]
+     * @param {boolean} [params.withControlPanel=AbstractView.prototype.withControlPanel]
+     * @param {boolean} [params.withSearchPanel=AbstractView.prototype.withSearchPanel]
      */
     init: function (viewInfo, params) {
+        this._super.apply(this, arguments);
+
         var action = params.action || {};
         params = _.defaults(params, this._extractParamsFromAction(action));
 
@@ -106,6 +115,9 @@ var AbstractView = Factory.extend({
         this.fields = this.fieldsView.viewFields;
         this.userContext = params.userContext || {};
         this.withControlPanel = this.withControlPanel && params.withControlPanel;
+        const searchPanelDisabled = 'search_panel' in params.context && !params.search_panel;
+        this.withSearchPanel = this.withSearchPanel && this.multi_record &&
+                               params.withSearchPanel && !searchPanelDisabled;
 
         // the boolean parameter 'isEmbedded' determines if the view should be
         // considered as a subview. For now this is only used by the graph
@@ -122,10 +134,10 @@ var AbstractView = Factory.extend({
         this.controllerParams = {
             actionViews: params.actionViews,
             activeActions: {
-                edit: this.arch.attrs.edit ? JSON.parse(this.arch.attrs.edit) : true,
-                create: this.arch.attrs.create ? JSON.parse(this.arch.attrs.create) : true,
-                delete: this.arch.attrs.delete ? JSON.parse(this.arch.attrs.delete) : true,
-                duplicate: this.arch.attrs.duplicate ? JSON.parse(this.arch.attrs.duplicate) : true,
+                edit: this.arch.attrs.edit ? !!JSON.parse(this.arch.attrs.edit) : true,
+                create: this.arch.attrs.create ? !!JSON.parse(this.arch.attrs.create) : true,
+                delete: this.arch.attrs.delete ? !!JSON.parse(this.arch.attrs.delete) : true,
+                duplicate: this.arch.attrs.duplicate ? !!JSON.parse(this.arch.attrs.duplicate) : true,
             },
             bannerRoute: this.arch.attrs.banner_route,
             controllerID: params.controllerID,
@@ -165,6 +177,7 @@ var AbstractView = Factory.extend({
         this.controlPanelParams = {
             action: action,
             activateDefaultFavorite: params.activateDefaultFavorite,
+            dynamicFilters: params.dynamicFilters,
             breadcrumbs: params.breadcrumbs,
             context: this.loadParams.context,
             domain: this.loadParams.domain,
@@ -174,6 +187,12 @@ var AbstractView = Factory.extend({
             viewInfo: params.controlPanelFieldsView,
             withBreadcrumbs: params.withBreadcrumbs,
             withSearchBar: params.withSearchBar,
+        };
+        this.searchPanelParams = {
+            defaultNoFilter: params.searchPanelDefaultNoFilter,
+            fields: this.fields,
+            model: this.loadParams.modelName,
+            state: controllerState.spState,
         };
     },
 
@@ -186,29 +205,38 @@ var AbstractView = Factory.extend({
      */
     getController: function (parent) {
         var self = this;
-        var def;
-        if (this.withControlPanel) {
-            def = this._createControlPanel(parent);
-        }
-        var _super = this._super.bind(this);
-        return $.when(def).then(function (controlPanel) {
-            if (controlPanel) {
-                var searchQuery = controlPanel.getSearchQuery();
-                self._updateMVCParams(searchQuery);
+        var cpDef = this.withControlPanel && this._createControlPanel(parent);
+        var spDef;
+        if (this.withSearchPanel) {
+            var spProto = this.config.SearchPanel.prototype;
+            var viewInfo = this.controlPanelParams.viewInfo;
+            var searchPanelParams = spProto.computeSearchPanelParams(viewInfo, this.viewType);
+            if (searchPanelParams.sections) {
+                this.searchPanelParams.sections = searchPanelParams.sections;
+                this.rendererParams.withSearchPanel = true;
+                spDef = Promise.resolve(cpDef).then(this._createSearchPanel.bind(this, parent, searchPanelParams));
             }
+        }
+
+        var _super = this._super.bind(this);
+        return Promise.all([cpDef, spDef]).then(function ([controlPanel, searchPanel]) {
             // get the parent of the model if it already exists, as _super will
             // set the new controller as parent, which we don't want
             var modelParent = self.model && self.model.getParent();
-            return _super(parent).done(function (controller) {
+            var prom = _super(parent);
+            prom.then(function (controller) {
                 if (controlPanel) {
                     controlPanel.setParent(controller);
+                }
+                if (searchPanel) {
+                    searchPanel.setParent(controller);
                 }
                 if (modelParent) {
                     // if we already add a model, restore its parent
                     self.model.setParent(modelParent);
                 }
             });
-
+            return prom;
         });
     },
     /**
@@ -241,7 +269,8 @@ var AbstractView = Factory.extend({
      *
      * @private
      * @param {Widget} parent
-     * @returns {ControlPanelController}
+     * @returns {Promise<ControlPanelController>} resolved when the controlPanel
+     *   is ready
      */
     _createControlPanel: function (parent) {
         var self = this;
@@ -249,9 +278,38 @@ var AbstractView = Factory.extend({
         return controlPanelView.getController(parent).then(function (controlPanel) {
             self.controllerParams.controlPanel = controlPanel;
             return controlPanel.appendTo(document.createDocumentFragment()).then(function () {
+                self._updateMVCParams(controlPanel.getSearchQuery());
                 return controlPanel;
             });
         });
+    },
+    /**
+     * @private
+     * @param {Widget} parent
+     * @returns {Promise<SearchPanel>} resolved when the searchPanel is ready
+     */
+    _createSearchPanel: async function (parent, params) {
+        var defaultValues = {};
+        Object.keys(this.loadParams.context).forEach((key) => {
+            let match = /^searchpanel_default_(.*)$/.exec(key);
+            if (match) {
+                defaultValues[match[1]] = this.loadParams.context[key];
+            }
+        });
+        var controlPanelDomain = this.loadParams.domain;
+        var spParams = _.extend({}, this.searchPanelParams, {
+            defaultValues: defaultValues,
+            searchDomain: controlPanelDomain,
+            classes: params.classes || [],
+        });
+        var searchPanel = new this.config.SearchPanel(parent, spParams);
+        this.controllerParams.searchPanel = searchPanel;
+        this.controllerParams.controlPanelDomain = controlPanelDomain;
+        await searchPanel.appendTo(document.createDocumentFragment());
+
+        var searchPanelDomain = searchPanel.getDomain();
+        this.loadParams.domain = controlPanelDomain.concat(searchPanelDomain);
+        return searchPanel;
     },
     /**
      * @private
@@ -291,6 +349,7 @@ var AbstractView = Factory.extend({
             withBreadcrumbs: 'no_breadcrumbs' in context ? !context.no_breadcrumbs : true,
             withControlPanel: this.withControlPanel,
             withSearchBar: inline ? false : this.withSearchBar,
+            withSearchPanel: this.withSearchPanel,
         };
     },
     /**
@@ -329,6 +388,7 @@ var AbstractView = Factory.extend({
         var timeRangeDescription = timeRangeMenuData.timeRangeDescription || '';
         this.loadParams = _.extend(this.loadParams, {
             compare: comparisonTimeRange.length > 0,
+            comparisonField: timeRangeMenuData.comparisonField,
             comparisonTimeRange: comparisonTimeRange,
             comparisonTimeRangeDescription: comparisonTimeRangeDescription,
             context: searchQuery.context,

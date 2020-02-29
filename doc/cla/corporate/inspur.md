@@ -15,3 +15,7 @@ List of contributors:
 Brain Wang wangbuke@inspur.com
 David Yu yudw@inspur.com
 Alex Aisin-Gioro wubai@inspur.com
+Colin Li lizheng02@inspur.com https://github.com/Colinliz
+Jack Sun sunpeng04@inspur.com 
+Jerry Pan panjianyu@inspur.com
+

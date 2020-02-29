@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * rating
+# 	* rating
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Levent Karakaş <levent@mektup.at>, 2018
-# Murat Kaplan <muratk@projetgrup.com>, 2018
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
+# Ediz Duman <neps1192@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Levent Karakaş <levent@mektup.at>, 2019
+# Murat Kaplan <muratk@projetgrup.com>, 2019
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,11 +30,20 @@ msgid ""
 "<br/>\n"
 "                            on our services on \""
 msgstr ""
+"<br/>\n"
+"                            hizmetlerimizde\""
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
+msgid ""
+"<i class=\"fa fa-check-circle fa-5x text-success\" role=\"img\" aria-"
+"label=\"Thank you!\" title=\"Thank you!\"/>"
+msgstr ""
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 msgid "<span class=\"o_stat_text\">Resource</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kaynak</span>"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__access_token
@@ -72,15 +82,16 @@ msgstr "Oluşturulma"
 #: model:ir.model.fields,field_description:rating.field_rating_rating__partner_id
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Customer"
-msgstr "Kayıtlı Müşteri"
+msgstr "Müşteri"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Date"
-msgstr "Tarih"
+msgstr "Mail"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__display_name
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__display_name
 #: model:ir.model.fields,field_description:rating.field_rating_rating__display_name
 msgid "Display Name"
 msgstr "Görünüm Adı"
@@ -88,7 +99,7 @@ msgstr "Görünüm Adı"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_id
 msgid "Document"
-msgstr "Doküman"
+msgstr "Belge"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_model
@@ -121,13 +132,14 @@ msgid "Group By"
 msgstr "Grupla"
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__highly_dissatisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
 msgid "Highly dissatisfied"
-msgstr ""
+msgstr "Hiç memnun değil"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__id
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__id
 #: model:ir.model.fields,field_description:rating.field_rating_rating__id
 msgid "ID"
 msgstr "ID"
@@ -144,6 +156,7 @@ msgstr "Görsel"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin____last_update
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin____last_update
 #: model:ir.model.fields,field_description:rating.field_rating_rating____last_update
 msgid "Last Modified on"
 msgstr "Son Güncelleme"
@@ -179,9 +192,9 @@ msgid "My Ratings"
 msgstr "Değerlendirmelerim"
 
 #. module: rating
-#: selection:rating.rating,rating_text:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__no_rating
 msgid "No Rating yet"
-msgstr ""
+msgstr "Henüz değerlendirilmedi"
 
 #. module: rating
 #: model_terms:ir.actions.act_window,help:rating.action_view_rating
@@ -189,10 +202,10 @@ msgid "No rating yet"
 msgstr "Henüz Değerlendirme Yok"
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__not_satisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
 msgid "Not satisfied"
-msgstr ""
+msgstr "Memnun değil"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__rated_partner_id
@@ -202,21 +215,26 @@ msgstr "Değerlendirilen kaynağın sahibi"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_id
 msgid "Parent Document"
-msgstr ""
+msgstr "Üst Belge"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model
 msgid "Parent Document Model"
-msgstr ""
+msgstr "Üste Belge Modeli"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_name
 msgid "Parent Document Name"
-msgstr ""
+msgstr "Üst Belge Adı"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model_id
 msgid "Parent Related Document Model"
+msgstr "İlgili Üst Belge Modeli"
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Percentage of happy ratings"
 msgstr ""
 
 #. module: rating
@@ -227,7 +245,7 @@ msgstr "Değerlendirilen Kullanıcı"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
 msgid "Rated person"
-msgstr ""
+msgstr "Değerlendirilen kişi"
 
 #. module: rating
 #: model:ir.actions.act_window,name:rating.action_view_rating
@@ -241,6 +259,7 @@ msgid "Rating"
 msgstr "Değerlendirme"
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
 msgid "Rating Average"
@@ -272,11 +291,20 @@ msgid "Rating Number"
 msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_value
+#: model:ir.model,name:rating.model_rating_parent_mixin
+msgid "Rating Parent Mixin"
+msgstr ""
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Rating Satisfaction"
+msgstr ""
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_value
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_value
 msgid "Rating Value"
-msgstr ""
+msgstr "Değerlendirme Puanı"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
@@ -284,7 +312,7 @@ msgid "Rating count"
 msgstr "Değerlendirme sayısı"
 
 #. module: rating
-#: sql_constraint:rating.rating:0
+#: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
 msgid "Rating should be between 0 to 10"
 msgstr "Değerlendirme 0 ile 10 arasında olmalı."
 
@@ -294,6 +322,7 @@ msgid "Rating value: 0=Unhappy, 10=Happy"
 msgstr "Değerlendirme değeri: 0=Memnun Değil, 10=Memnun"
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_ids
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Ratings"
 msgstr "Değerlendirmeler"
@@ -310,11 +339,10 @@ msgid "Related Document Model"
 msgstr "İlgili Döküman Modeli"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_ids
 msgid "Related ratings"
-msgstr ""
+msgstr "İlişkili değerlendirmeler"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -324,13 +352,13 @@ msgstr "Kaynak"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
 msgid "Resource name"
-msgstr ""
+msgstr "Kaynak adı"
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__satisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
 msgid "Satisfied"
-msgstr ""
+msgstr "Memnun"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__access_token
@@ -346,7 +374,7 @@ msgstr "Geri Bildirim Gönder"
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Submitted on"
-msgstr ""
+msgstr "Gönderildi"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
@@ -387,16 +415,16 @@ msgstr "Talebi karşılayan: "
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "for"
-msgstr ""
+msgstr "için"
 
 #. module: rating
-#: code:addons/rating/controllers/main.py:21
+#: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "highly dissatisfied"
 msgstr "Memnun değil"
 
 #. module: rating
-#: code:addons/rating/controllers/main.py:20
+#: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "not satisfied"
 msgstr "Nötr"
@@ -407,7 +435,7 @@ msgid "on"
 msgstr "açık"
 
 #. module: rating
-#: code:addons/rating/controllers/main.py:22
+#: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "satisfied"
 msgstr "Memnun"

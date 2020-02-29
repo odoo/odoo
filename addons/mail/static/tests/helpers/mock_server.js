@@ -49,6 +49,81 @@ MockServer.include({
         return previews;
     },
     /**
+     * Simulate the 'get_activity_method' on 'mail.activity'
+     *
+     * @private
+     * @return {Object}
+     */
+    _mockGetActivityData: function (args) {
+        var self = this;
+
+        var domain = args.kwargs.domain;
+        var model = args.kwargs.res_model;
+        var records = this._getRecords(model, domain);
+
+        var activityTypes = this._getRecords('mail.activity.type', []);
+        var activityIds = _.pluck(records, 'activity_ids').flat();
+
+        var groupedActivities = {};
+        var resIdToDeadline = {};
+        var groups = self._mockReadGroup('mail.activity', {
+            domain: [['id', 'in', activityIds]],
+            fields: ['res_id', 'activity_type_id', 'ids:array_agg(id)', 'date_deadline:min(date_deadline)'],
+            groupby: ['res_id', 'activity_type_id'],
+            lazy: false,
+        });
+        groups.forEach(function (group) {
+            // mockReadGroup doesn't correctly return all asked fields
+            var activites = self._getRecords('mail.activity', group.__domain);
+            group.activity_type_id = group.activity_type_id[0];
+            var minDate;
+            activites.forEach(function (activity) {
+                if (!minDate || moment(activity.date_deadline) < moment(minDate)) {
+                    minDate = activity.date_deadline;
+                }
+            });
+            group.date_deadline = minDate;
+            resIdToDeadline[group.res_id] = minDate;
+            var state;
+            if (group.date_deadline === moment().format("YYYY-MM-DD")) {
+                state = 'today';
+            } else if (moment(group.date_deadline) > moment()) {
+                state = 'planned';
+            } else {
+                state = 'overdue';
+            }
+            if (!groupedActivities[group.res_id]) {
+                groupedActivities[group.res_id] = {};
+            }
+            groupedActivities[group.res_id][group.activity_type_id] = {
+                count: group.__count,
+                state: state,
+                o_closest_deadline: group.date_deadline,
+                ids: _.pluck(activites, 'id'),
+            };
+        });
+
+        return {
+            activity_types: activityTypes.map(function (type) {
+                var mailTemplates = [];
+                if (type.mail_template_ids) {
+                    mailTemplates = type.mail_template_ids.map(function (id) {
+                        var template = _.findWhere(self.data['mail.template'].records, {id: id});
+                        return {
+                            id: id,
+                            name: template.name,
+                        };
+                    });
+                }
+                return [type.id, type.display_name, mailTemplates];
+            }),
+            activity_res_ids: _.sortBy(_.pluck(records, 'id'), function (id) {
+                return moment(resIdToDeadline[id]);
+            }),
+            grouped_activities: groupedActivities,
+        };
+    },
+    /**
      * Simulate the '/mail/init_messaging' route
      *
      * @private
@@ -183,29 +258,32 @@ MockServer.include({
     _performRpc: function (route, args) {
         // routes
         if (route === '/mail/init_messaging') {
-            return $.when(this._mockInitMessaging(args));
+            return Promise.resolve(this._mockInitMessaging(args));
         }
         // methods
         if (args.method === 'channel_fetch_listeners') {
-            return $.when([]);
+            return Promise.resolve([]);
         }
         if (args.method === 'channel_fetch_preview') {
-            return $.when(this._mockChannelFetchPreview(args));
+            return Promise.resolve(this._mockChannelFetchPreview(args));
         }
         if (args.method === 'channel_minimize') {
-            return $.when();
+            return Promise.resolve();
         }
         if (args.method === 'channel_seen') {
-            return $.when();
+            return Promise.resolve();
         }
         if (args.method === 'channel_fetched') {
-            return $.when();
+            return Promise.resolve();
+        }
+        if (args.method === 'get_activity_data') {
+            return Promise.resolve(this._mockGetActivityData(args));
         }
         if (args.method === 'message_fetch') {
-            return $.when(this._mockMessageFetch(args));
+            return Promise.resolve(this._mockMessageFetch(args));
         }
         if (args.method === 'message_format') {
-            return $.when(this._mockMessageFormat(args));
+            return Promise.resolve(this._mockMessageFormat(args));
         }
         if (args.method === 'activity_format') {
             var res = this._mockRead(args.model, args.args, args.kwargs);
@@ -217,19 +295,19 @@ MockServer.include({
                 }
                 return record;
             });
-            return $.when(res);
+            return Promise.resolve(res);
         }
         if (args.method === 'set_message_done') {
-            return $.when(this._mockSetMessageDone(args));
+            return Promise.resolve(this._mockSetMessageDone(args));
         }
         if (args.method === 'moderate') {
-            return $.when(this._mockModerate(args));
+            return Promise.resolve(this._mockModerate(args));
         }
         if (args.method === 'notify_typing') {
-            return $.when();
+            return Promise.resolve();
         }
         if (args.method === 'set_message_done') {
-            return $.when();
+            return Promise.resolve();
         }
         return this._super(route, args);
     },

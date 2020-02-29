@@ -7,8 +7,8 @@
     'summary': 'Link module between Point of Sale and HR',
 
     'description': """
-        This module adds the possibility to log in to the PoS with Employees using barcode, pin, or both.
-        The PoS still requires one user, but it can have an unlimited number of employees.
+This module allows Employees (and not users) to log in to the Point of Sale application using a barcode, a PIN number or both.
+The actual till still requires one user but an unlimited number of employees can log on to that till and process sales.
     """,
 
     'depends': ['point_of_sale', 'hr'],
@@ -20,6 +20,6 @@
         'views/pos_order_report_view.xml',
     ],
     'installable': True,
-    'auto-install': True,
+    'auto_install': True,
     'qweb': ['static/src/xml/pos.xml'],
 }

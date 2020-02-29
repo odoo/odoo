@@ -4,7 +4,7 @@
 {
     'name': 'Dashboards',
     'version': '1.0',
-    'category': 'Extra Tools',
+    'category': 'Tools',
     'summary': 'Build your own dashboards',
     'description': """
 Lets the user create a custom dashboard.

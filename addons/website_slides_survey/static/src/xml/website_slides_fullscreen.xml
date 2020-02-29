@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="website.slides.fullscreen.certification">
+        <div class="justify-content-center align-self-center">
+            <div t-if="widget.get('slide').type === 'certification' &amp;&amp; !widget.get('slide').completed" class="">
+                <a class="btn btn-primary" t-att-href="'/slides_survey/slide/get_certification_url?slide_id=' + widget.get('slide').id" target="_blank">
+                    <i class="fa fa-trophy"/>
+                    <span t-if="widget.get('slide').isMember"> Pass Certification</span>
+                    <span t-else="">Test Certification</span>
+                </a>
+            </div>
+            <div class="" t-if="widget.get('slide').type === 'certification' &amp;&amp; widget.get('slide').completed">
+                <a role="button" class="btn btn-primary" t-att-href="'/survey/' + widget.get('slide').certificationId + '/get_certification'">
+                    <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/> Download certification
+                </a>
+            </div>
+        </div>
+    </t>
+
+    <t t-extend="website.slides.fullscreen.title">
+        <t t-jquery=".o_wslides_fs_slide_title_span" t-operation="before">
+            <i t-if="widget.get('slide').type === 'certification'" class="fa fa-trophy mr-2 text"></i>
+        </t>
+    </t>
+</templates>

@@ -4,7 +4,7 @@
 {
     'name': 'CRM',
     'version': '1.0',
-    'category': 'Sales',
+    'category': 'Sales/CRM',
     'sequence': 5,
     'summary': 'Track leads and close opportunities',
     'description': "",
@@ -20,6 +20,7 @@
         'web_tour',
         'contacts',
         'digest',
+        'phone_validation',
     ],
     'data': [
         'security/crm_security.xml',
@@ -29,14 +30,17 @@
         'data/crm_stage_data.xml',
         'data/crm_lead_data.xml',
         'data/digest_data.xml',
+        'data/crm_lead_prediction_data.xml',
 
         'wizard/crm_lead_lost_views.xml',
         'wizard/crm_lead_to_opportunity_views.xml',
+        'wizard/crm_lead_to_opportunity_mass_views.xml',
         'wizard/crm_merge_opportunities_views.xml',
 
         'views/crm_templates.xml',
         'views/res_config_settings_views.xml',
         'views/crm_views.xml',
+        'views/crm_lost_reason_views.xml',
         'views/crm_stage_views.xml',
         'views/crm_lead_views.xml',
         'views/calendar_views.xml',
@@ -45,6 +49,7 @@
         'report/crm_opportunity_report_views.xml',
         'views/crm_team_views.xml',
         'views/digest_views.xml',
+        'views/utm_campaign_views.xml'
     ],
     'demo': [
         'data/crm_demo.xml',

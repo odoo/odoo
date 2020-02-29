@@ -64,20 +64,22 @@ var Menu = Widget.extend({
 
         // Apps Menu
         this._appsMenu = new AppsMenu(self, this.menu_data);
-        this._appsMenu.appendTo(this.$menu_apps);
+        var appsMenuProm = this._appsMenu.appendTo(this.$menu_apps);
 
         // Systray Menu
         this.systray_menu = new SystrayMenu(this);
-        this.systray_menu.attachTo(this.$('.o_menu_systray'));
-
-        dom.initAutoMoreMenu(this.$section_placeholder, {
+        var systrayMenuProm = this.systray_menu.attachTo(this.$('.o_menu_systray')).then(function() {
+            dom.initAutoMoreMenu(self.$section_placeholder, {
             maxWidth: function () {
                 return self.$el.width() - (self.$menu_apps.outerWidth(true) + self.$menu_brand_placeholder.outerWidth(true) + self.systray_menu.$el.outerWidth(true));
             },
             sizeClass: 'SM',
+            });
         });
 
-        return this._super.apply(this, arguments);
+
+
+        return Promise.all([this._super.apply(this, arguments), appsMenuProm, systrayMenuProm]);
     },
     change_menu_section: function (primary_menu_id) {
         if (!this.$menu_sections[primary_menu_id]) {
@@ -224,7 +226,10 @@ var Menu = Widget.extend({
         var $target = $(ev.currentTarget);
         var $opened = $target.siblings('.show');
         if ($opened.length) {
-            $target.find('[data-toggle="dropdown"]').dropdown('toggle');
+            $opened.find('[data-toggle="dropdown"]:first').dropdown('toggle');
+            $opened.removeClass('show');
+            $target.find('[data-toggle="dropdown"]:first').dropdown('toggle');
+            $target.addClass('show');
         }
     },
 });

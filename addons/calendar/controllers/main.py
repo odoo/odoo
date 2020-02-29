@@ -9,6 +9,7 @@ import odoo.http as http
 from odoo.http import request
 from odoo import SUPERUSER_ID
 from odoo import registry as registry_get
+from odoo.tools.misc import get_lang
 
 
 class CalendarController(http.Controller):
@@ -43,7 +44,7 @@ class CalendarController(http.Controller):
             if not attendee:
                 return request.not_found()
             timezone = attendee.partner_id.tz
-            lang = attendee.partner_id.lang or 'en_US'
+            lang = attendee.partner_id.lang or get_lang(request.env).code
             event = env['calendar.event'].with_context(tz=timezone, lang=lang).browse(int(id))
 
             # If user is internal and logged, redirect to form view of event
@@ -69,4 +70,4 @@ class CalendarController(http.Controller):
 
     @http.route('/calendar/notify_ack', type='json', auth="user")
     def notify_ack(self, type=''):
-        return request.env['res.partner']._set_calendar_last_notif_ack()
+        return request.env['res.partner'].sudo()._set_calendar_last_notif_ack()

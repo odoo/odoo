@@ -10,19 +10,20 @@
                 <xpath expr="//div[hasclass('settings')]" position="inside">
                     <div class="app_settings_block" data-string="Manufacturing" string="Manufacturing" data-key="mrp" groups="mrp.group_mrp_manager">
                         <h2>Operations</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-lg-6 col-12 o_setting_box" id="work_order" title="Work Order Operations allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required raw materials.">
+                        <div class="row mt16 o_settings_container" name="process_operations_setting_container">
+                            <div class="col-lg-6 col-12 o_setting_box" id="work_order" title="Work Order Operations allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required components.">
                                 <div class="o_setting_left_pane">
                                     <field name="group_mrp_routings"/>
                                     <field name="module_mrp_workorder" invisible="1"/>
                                 </div>
                                 <div class="o_setting_right_pane" id="workorder_settings">
                                     <label for="group_mrp_routings" string="Work Orders"/>
+                                    <a href="https://www.odoo.com/documentation/user/13.0/manufacturing/management/manufacturing_order.html#manage-manufacturing-with-routings-and-work-centers" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
                                     <div class="text-muted">
                                         Process operations at specific work centers based on the routing
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('group_mrp_routings','=',False)]}">
-                                        <div class="mt16">
+                                        <div class="mt8">
                                             <div>
                                                 <button name="%(mrp.mrp_routing_action)d" icon="fa-arrow-right" type="action" string="Routings" class="btn-link"/>
                                             </div>
@@ -33,26 +34,38 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-12 o_setting_box" attrs="{'invisible': [('group_mrp_routings', '=', False)]}" id="quality_control">
+                            <div class="col-lg-6 col-12 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_mrp_subcontracting"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_mrp_subcontracting"/>
+                                    <a href="https://www.odoo.com/documentation/user/13.0/manufacturing/management/subcontracting.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Subcontract the production of some products
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-12 o_setting_box" id="quality_control">
                                 <div class="o_setting_left_pane">
                                     <field name="module_quality_control" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="module_quality_control"/>
+                                    <a href="https://www.odoo.com/documentation/user/13.0/quality.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
                                     <div class="text-muted">
                                         Add quality checks to your work orders
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <h2>Products</h2>
                         <div class="row mt16 o_settings_container">
                             <div class="col-lg-6 col-12 o_setting_box" id="mrp_byproduct" title="Add by-products to bills of materials. This can be used to get several finished products as well. Without this option you only do: A + B = C. With the option: A + B = C + D.">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_mrp_byproduct"/>
+                                    <field name="group_mrp_byproducts"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label for="module_mrp_byproduct"/>
+                                    <label for="group_mrp_byproducts"/>
                                     <div class="text-muted">
                                         Produce residual products (A + B -> C + D)
                                     </div>
@@ -67,6 +80,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="module_mrp_mps"/>
+                                    <a href="https://www.odoo.com/documentation/user/13.0/manufacturing/management/use_mps.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
                                     <div class="text-muted">
                                         Plan manufacturing or purchase orders based on forecasts
                                     </div>
@@ -79,13 +93,13 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="Security Lead Time" for="use_manufacturing_lead"/>
+                                    <a href="https://www.odoo.com/documentation/user/13.0/inventory/management/planning/scheduled_date.html" title="Documentation" class="mr-2 fa fa-lg fa-book" target="_blank"></a>
                                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted">
                                         Schedule manufacturing orders earlier to avoid delays
                                      </div>
                                      <div class="content-group" attrs="{'invisible': [('use_manufacturing_lead','=',False)]}">
                                         <div class="mt16" >
-                                            Move forward deadline start dates by
                                             <field name="manufacturing_lead" class="oe_inline"/> days
                                         </div>
                                     </div>

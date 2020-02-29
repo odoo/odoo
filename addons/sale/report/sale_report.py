@@ -12,9 +12,12 @@ class SaleReport(models.Model):
     _rec_name = 'date'
     _order = 'date desc'
 
+    @api.model
+    def _get_done_states(self):
+        return ['sale', 'done', 'paid']
+
     name = fields.Char('Order Reference', readonly=True)
     date = fields.Datetime('Order Date', readonly=True)
-    confirmation_date = fields.Datetime('Confirmation Date', readonly=True)
     product_id = fields.Many2one('product.product', 'Product Variant', readonly=True)
     product_uom = fields.Many2one('uom.uom', 'Unit of Measure', readonly=True)
     product_uom_qty = fields.Float('Qty Ordered', readonly=True)
@@ -33,8 +36,9 @@ class SaleReport(models.Model):
     nbr = fields.Integer('# of Lines', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
-    team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True, oldname='section_id')
+    team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True)
     country_id = fields.Many2one('res.country', 'Customer Country', readonly=True)
+    industry_id = fields.Many2one('res.partner.industry', 'Customer Industry', readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', 'Customer Entity', readonly=True)
     state = fields.Selection([
         ('draft', 'Draft Quotation'),
@@ -48,6 +52,9 @@ class SaleReport(models.Model):
 
     discount = fields.Float('Discount %', readonly=True)
     discount_amount = fields.Float('Discount Amount', readonly=True)
+    campaign_id = fields.Many2one('utm.campaign', 'Campaign')
+    medium_id = fields.Many2one('utm.medium', 'Medium')
+    source_id = fields.Many2one('utm.source', 'Source')
 
     order_id = fields.Many2one('sale.order', 'Order #', readonly=True)
 
@@ -69,11 +76,13 @@ class SaleReport(models.Model):
             count(*) as nbr,
             s.name as name,
             s.date_order as date,
-            s.confirmation_date as confirmation_date,
             s.state as state,
             s.partner_id as partner_id,
             s.user_id as user_id,
             s.company_id as company_id,
+            s.campaign_id as campaign_id,
+            s.medium_id as medium_id,
+            s.source_id as source_id,
             extract(epoch from avg(date_trunc('day',s.date_order)-date_trunc('day',s.create_date)))/(24*60*60)::decimal(16,2) as delay,
             t.categ_id as categ_id,
             s.pricelist_id as pricelist_id,
@@ -81,11 +90,12 @@ class SaleReport(models.Model):
             s.team_id as team_id,
             p.product_tmpl_id,
             partner.country_id as country_id,
+            partner.industry_id as industry_id,
             partner.commercial_partner_id as commercial_partner_id,
             sum(p.weight * l.product_uom_qty / u.factor * u2.factor) as weight,
             sum(p.volume * l.product_uom_qty / u.factor * u2.factor) as volume,
             l.discount as discount,
-            sum((l.price_unit * l.discount / 100.0 / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END)) as discount_amount,
+            sum((l.price_unit * l.product_uom_qty * l.discount / 100.0 / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END)) as discount_amount,
             s.id as order_id
         """
 
@@ -111,16 +121,19 @@ class SaleReport(models.Model):
             t.categ_id,
             s.name,
             s.date_order,
-            s.confirmation_date,
             s.partner_id,
             s.user_id,
             s.state,
             s.company_id,
+            s.campaign_id,
+            s.medium_id,
+            s.source_id,
             s.pricelist_id,
             s.analytic_account_id,
             s.team_id,
             p.product_tmpl_id,
             partner.country_id,
+            partner.industry_id,
             partner.commercial_partner_id,
             l.discount,
             s.id %s
@@ -128,7 +141,6 @@ class SaleReport(models.Model):
 
         return '%s (SELECT %s FROM %s WHERE l.product_id IS NOT NULL GROUP BY %s)' % (with_, select_, from_, groupby_)
 
-    @api.model_cr
     def init(self):
         # self._table = sale_report
         tools.drop_view_if_exists(self.env.cr, self._table)
@@ -138,7 +150,7 @@ class SaleOrderReportProforma(models.AbstractModel):
     _name = 'report.sale.report_saleproforma'
     _description = 'Proforma Report'
 
-    @api.multi
+    @api.model
     def _get_report_values(self, docids, data=None):
         docs = self.env['sale.order'].browse(docids)
         return {

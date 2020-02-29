@@ -1,12 +1,5 @@
 {% extends "basic/layout.html" %}
 
-{% set script_files = script_files + [
-'_static/jquery.min.js',
-'_static/bootstrap.js',
-'_static/doc.js',
-'_static/jquery.noconflict.js',
-] %}
-
 {% set classes = [] %}
 {% if pagename == master_doc %}
   {% set classes = classes + ['index'] %}
@@ -23,6 +16,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css?family=Work+Sans:500,600" rel="stylesheet">
+  {{ super() }}
+{%- endblock -%}
+
+{%- block linktags -%}
+    <link rel="canonical" href="{{ canonical }}" />
   {{ super() }}
 {%- endblock -%}
 

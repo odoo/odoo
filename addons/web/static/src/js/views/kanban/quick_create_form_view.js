@@ -71,7 +71,7 @@ var QuickCreateFormController = FormController.extend({
      */
     commitChanges: function () {
         var mutexDef = this.mutex.getUnlockedDef();
-        return $.when(mutexDef, this.renderer.commitChanges(this.handle));
+        return Promise.all([mutexDef, this.renderer.commitChanges(this.handle)]);
     },
     /**
      * @returns {Object} the changes done on the current record

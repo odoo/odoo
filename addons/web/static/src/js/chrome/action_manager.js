@@ -12,7 +12,6 @@ odoo.define('web.ActionManager', function (require) {
 var AbstractAction = require('web.AbstractAction');
 var concurrency = require('web.concurrency');
 var Context = require('web.Context');
-var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
@@ -92,7 +91,7 @@ var ActionManager = Widget.extend({
      * will be restored. It ensures that the current controller can be left (for
      * instance, that it has no unsaved changes).
      *
-     * @returns {Deferred} resolved if the current controller can be left,
+     * @returns {Promise} resolved if the current controller can be left,
      *   rejected otherwise.
      */
     clearUncommittedChanges: function () {
@@ -100,7 +99,7 @@ var ActionManager = Widget.extend({
         if (currentController) {
             return currentController.widget.canBeRemoved();
         }
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * This is the entry point to execute Odoo actions, given as an ID in
@@ -123,7 +122,7 @@ var ActionManager = Widget.extend({
      *   is useful when we come from a loadState())
      * @param {boolean} [options.replace_last_action=false] set to true to
      *   replace last part of the breadcrumbs with the action
-     * @return {$.Deferred<Object>} resolved with the action when the action is
+     * @return {Promise<Object>} resolved with the action when the action is
      *   loaded and appended to the DOM ; rejected if the action can't be
      *   executed (e.g. if doAction has been called to execute another action
      *   before this one was complete).
@@ -155,7 +154,7 @@ var ActionManager = Widget.extend({
             });
         }
 
-        return this.dp.add($.when(def)).then(function () {
+        return this.dp.add(Promise.resolve(def)).then(function () {
             // action.target 'main' is equivalent to 'current' except that it
             // also clears the breadcrumbs
             options.clear_breadcrumbs = action.target === 'main' ||
@@ -171,6 +170,9 @@ var ActionManager = Widget.extend({
 
                 return action;
             });
+        }).then(function(action) {
+            odoo.isReady = true;
+            return action;
         });
     },
     /**
@@ -211,12 +213,12 @@ var ActionManager = Widget.extend({
      * @param {Object} state
      * @param {integer|string} [state.action] the action to execute (given its
      *   id or tag for client actions)
-     * @returns {Deferred} resolved when the UI has been updated
+     * @returns {Promise} resolved when the UI has been updated
      */
     loadState: function (state) {
         var action;
         if (!state.action) {
-            return $.when();
+            return Promise.resolve();
         }
         if (_.isString(state.action) && core.action_registry.contains(state.action)) {
             action = {
@@ -299,7 +301,7 @@ var ActionManager = Widget.extend({
      * @param {string} [action.target="current"] set to "new" to render the
      *   controller in a dialog
      * @param {Object} options @see doAction for details
-     * @returns {Deferred} resolved when the controller is started and appended
+     * @returns {Promise} resolved when the controller is started and appended
      */
     _executeAction: function (action, options) {
         var self = this;
@@ -338,7 +340,7 @@ var ActionManager = Widget.extend({
 
                 return action;
             })
-            .fail(function () {
+            .guardedCatch(function () {
                 self._removeAction(action.jsID);
             });
     },
@@ -349,7 +351,7 @@ var ActionManager = Widget.extend({
      * @private
      * @param {Object} action
      * @param {Object} options @see doAction for details
-     * @returns {Deferred} resolved when the controller is rendered inside a
+     * @returns {Promise} resolved when the controller is rendered inside a
      *   dialog appended to the DOM
      */
     _executeActionInDialog: function (action, options) {
@@ -401,7 +403,7 @@ var ActionManager = Widget.extend({
 
                 return action;
             });
-        }).fail(function () {
+        }).guardedCatch(function () {
             self._removeAction(action.jsID);
         });
     },
@@ -412,17 +414,14 @@ var ActionManager = Widget.extend({
      * @param {Object} action the description of the action to execute
      * @param {string} action.tag the key of the action in the action_registry
      * @param {Object} options @see doAction for details
-     * @returns {Deferred} resolved when the client action has been executed
+     * @returns {Promise} resolved when the client action has been executed
      */
     _executeClientAction: function (action, options) {
         var self = this;
         var ClientAction = core.action_registry.get(action.tag);
         if (!ClientAction) {
             console.error("Could not find client action " + action.tag, action);
-            return $.Deferred().reject();
-        }
-        if (!(ClientAction.prototype instanceof AbstractAction)) {
-            console.warn('The client action ' + action.tag + ' should be an instance of AbstractAction!');
+            return Promise.reject();
         }
         if (!(ClientAction.prototype instanceof Widget)) {
             // the client action might be a function, which is executed and
@@ -431,7 +430,10 @@ var ActionManager = Widget.extend({
             if (next) {
                 return this.doAction(next, options);
             }
-            return $.when();
+            return Promise.resolve();
+        }
+        if (!(ClientAction.prototype instanceof AbstractAction)) {
+            console.warn('The client action ' + action.tag + ' should be an instance of AbstractAction!');
         }
 
         var controllerID = _.uniqueId('controller_');
@@ -449,12 +451,11 @@ var ActionManager = Widget.extend({
         };
         this.controllers[controllerID] = controller;
         action.controllerID = controllerID;
-        return this._executeAction(action, options).done(function () {
-            // AAB: this should be done automatically in AbstractAction, so that
-            // it can be overriden by actions that have specific stuff to push
-            // (e.g. Discuss, Views)
+        var prom = this._executeAction(action, options);
+        prom.then(function () {
             self._pushState(controllerID, {});
         });
+        return prom;
     },
     /**
      * Executes actions of type 'ir.actions.act_window_close', i.e. closes the
@@ -469,7 +470,7 @@ var ActionManager = Widget.extend({
      * @param {Object} [action.effect] effect to show up, e.g. rainbow man.
      * @param {Object} [action.infos] infos on performing the close action.
      *   Useful for providing some context for the `on_close` handler.
-     * @returns {Deferred} resolved immediately
+     * @returns {Promise} resolved immediately
      */
     _executeCloseAction: function (action, options) {
         var result;
@@ -484,7 +485,7 @@ var ActionManager = Widget.extend({
             this.trigger_up('show_effect', action.effect);
         }
 
-        return $.when(result);
+        return Promise.resolve(result);
     },
     /**
      * Executes actions of type 'ir.actions.server'.
@@ -494,7 +495,7 @@ var ActionManager = Widget.extend({
      * @param {integer} action.id the db ID of the action to execute
      * @param {Object} [action.context]
      * @param {Object} options @see doAction for details
-     * @returns {Deferred} resolved when the action has been executed
+     * @returns {Promise} resolved when the action has been executed
      */
     _executeServerAction: function (action, options) {
         var self = this;
@@ -520,18 +521,15 @@ var ActionManager = Widget.extend({
      * @param {string} [action.target] set to 'self' to redirect in the current page,
      *   redirects to a new page by default
      * @param {Object} options @see doAction for details
-     * @returns {Deferred} resolved when the redirection is done (immediately
+     * @returns {Promise} resolved when the redirection is done (immediately
      *   when redirecting to a new page)
      */
     _executeURLAction: function (action, options) {
         var url = action.url;
-        if (config.debug && url && url.length && url[0] === '/') {
-            url = $.param.querystring(url, {debug: config.debug});
-        }
 
         if (action.target === 'self') {
             framework.redirect(url);
-            return $.Deferred();
+            return Promise.resolve();
         } else {
             var w = window.open(url, '_blank');
             if (!w || w.closed || typeof w.closed === 'undefined') {
@@ -544,7 +542,7 @@ var ActionManager = Widget.extend({
 
         options.on_close();
 
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * Returns a description of the controllers in the given  controller stack.
@@ -627,6 +625,7 @@ var ActionManager = Widget.extend({
                 state.active_ids = action.context.active_ids.join(',');
             }
         }
+        state = _.extend({}, controller.widget.getState(), state);
         return state;
     },
     /**
@@ -646,21 +645,21 @@ var ActionManager = Widget.extend({
     },
     /**
      * Dispatches the given action to the corresponding handler to execute it,
-     * according to its type. This function can be overriden to extend the
+     * according to its type. This function can be overridden to extend the
      * range of supported action types.
      *
      * @private
      * @param {Object} action
      * @param {string} action.type
      * @param {Object} options
-     * @returns {Deferred} resolved when the action has been executed ; rejected
+     * @returns {Promise} resolved when the action has been executed ; rejected
      *   if the type of action isn't supported, or if the action can't be
      *   executed
      */
     _handleAction: function (action, options) {
         if (!action.type) {
             console.error("No type for action", action);
-            return $.Deferred().reject();
+            return Promise.reject();
         }
         switch (action.type) {
             case 'ir.actions.act_url':
@@ -674,7 +673,7 @@ var ActionManager = Widget.extend({
             default:
                 console.error("The ActionManager can't handle actions of type " +
                     action.type, action);
-                return $.Deferred().reject();
+                return Promise.reject();
         }
     },
     /**
@@ -718,6 +717,9 @@ var ActionManager = Widget.extend({
             controller: controller,
         });
 
+        // close all dialogs when the current controller changes
+        core.bus.trigger('close_dialogs');
+
         // toggle the fullscreen mode for actions in target='fullscreen'
         this._toggleFullscreen();
     },
@@ -749,16 +751,17 @@ var ActionManager = Widget.extend({
      * @private
      * @param {integer|string} action's ID or xml ID
      * @param {Object} context
-     * @returns {Deferred<Object>} resolved with the description of the action
+     * @returns {Promise<Object>} resolved with the description of the action
      */
     _loadAction: function (actionID, context) {
-        var def = $.Deferred();
-        this.trigger_up('load_action', {
-            actionID: actionID,
-            context: context,
-            on_success: def.resolve.bind(def),
+        var self = this;
+        return new Promise(function (resolve, reject) {
+            self.trigger_up('load_action', {
+                actionID: actionID,
+                context: context,
+                on_success: resolve,
+            });
         });
-        return def;
     },
     /**
      * Preprocesses the action before it is handled by the ActionManager
@@ -815,20 +818,20 @@ var ActionManager = Widget.extend({
      *
      * @private
      * @param {string} controllerID
-     * @returns {Deferred} resolved when the controller has been restored
+     * @returns {Promise} resolved when the controller has been restored
      */
     _restoreController: function (controllerID) {
         var self = this;
         var controller = this.controllers[controllerID];
         // AAB: AbstractAction should define a proper hook to execute code when
-        // it is restored (other than do_show), and it should return a deferred
+        // it is restored (other than do_show), and it should return a promise
         var action = this.actions[controller.actionID];
         var def;
         if (action.on_reverse_breadcrumb) {
             def = action.on_reverse_breadcrumb();
         }
-        return $.when(def).then(function () {
-            return $.when(controller.widget.do_show()).then(function () {
+        return Promise.resolve(def).then(function () {
+            return Promise.resolve(controller.widget.do_show()).then(function () {
                 var index = _.indexOf(self.controllerStack, controllerID);
                 self._pushController(controller, index);
             });
@@ -844,7 +847,7 @@ var ActionManager = Widget.extend({
      *
      * @private
      * @param {Object} controller
-     * @returns {Deferred<Object>} resolved with the controller when it is ready
+     * @returns {Promise<Object>} resolved with the controller when it is ready
      */
     _startController: function (controller) {
         var fragment = document.createDocumentFragment();
@@ -923,7 +926,6 @@ var ActionManager = Widget.extend({
     _onRedirect: function (ev) {
         this.do_action({
             type:'ir.actions.act_window',
-            view_type: 'form',
             view_mode: 'form',
             res_model: ev.data.res_model,
             views: [[false, 'form']],

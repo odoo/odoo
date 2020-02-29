@@ -31,7 +31,7 @@ var AbstractModel = mvc.Model.extend({
      * @returns {Promise}
      */
     reload: function (params) {
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * Processes date(time) and selection field values sent by the server.

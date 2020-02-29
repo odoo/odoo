@@ -11,7 +11,11 @@ var QWeb = core.qweb;
 
 var KioskMode = AbstractAction.extend({
     events: {
-        "click .o_hr_attendance_button_employees": function(){ this.do_action('hr_attendance.hr_employee_attendance_action_kanban'); },
+        "click .o_hr_attendance_button_employees": function() {
+            this.do_action('hr_attendance.hr_employee_attendance_action_kanban', {
+                additional_context: {'no_group_by': true},
+            });
+        },
     },
 
     start: function () {
@@ -31,7 +35,7 @@ var KioskMode = AbstractAction.extend({
             });
         // Make a RPC call every day to keep the session alive
         self._interval = window.setInterval(this._callServer.bind(this), (60*60*1000*24));
-        return $.when(def, this._super.apply(this, arguments));
+        return Promise.all([def, this._super.apply(this, arguments)]);
     },
 
     _onBarcodeScanned: function(barcode) {

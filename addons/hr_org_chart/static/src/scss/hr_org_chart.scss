@@ -11,11 +11,11 @@
 
 // SMALL DESKTOP LAYOUT
 @include media-breakpoint-up(md) {
-    #o_employee_container {
+    #o_work_employee_container {
         display: flex;
         width: 100%;
     }
-    #o_employee_main {
+    #o_work_employee_main {
         flex: 1 1 60%;
     }
     #o_employee_right {
@@ -178,6 +178,7 @@
             box-shadow: 0 0 0 $o-hr-org-chart-entry-line-w darken($o-hr-org-chart-bg, 20%);
             background-size: cover;
             background-position: center center;
+            background-color: $o-view-background-color;
 
             &.card {
                 height: 20px;
@@ -255,6 +256,7 @@
 // POP OVER
 .o_org_chart_popup.popover {
     max-width: 400px;
+    margin-right: 5px;
 
     .popover-header {
         height: 47px;
@@ -277,5 +279,16 @@
     }
     .table {
         margin-bottom: 0;
+    }
+}
+
+// Right to Left specific style to flip the popover arrow
+.o_rtl {
+    .o_org_chart_popup.popover .arrow {
+        left: 100%;
+        -webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
+        -moz-transform: matrix(-1, 0, 0, 1, 0, 0);
+        -o-transform: matrix(-1, 0, 0, 1, 0, 0);
+        transform: matrix(-1, 0, 0, 1, 0, 0);
     }
 }

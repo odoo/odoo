@@ -31,11 +31,9 @@ class SnailmailLetterMissingRequiredFields(models.TransientModel):
         })
         return rec
 
-    @api.multi
     def update_address_cancel(self):
         self.letter_id.cancel()
 
-    @api.multi
     def update_address_save(self):
         address_data = {
             'street': self.street,

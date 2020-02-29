@@ -4,6 +4,8 @@
 import logging
 
 from ast import literal_eval
+from collections import defaultdict
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -46,7 +48,6 @@ class ResUsers(models.Model):
 
         return expression.TRUE_DOMAIN
 
-    @api.multi
     def _compute_state(self):
         for user in self:
             user.state = 'active' if user.login_date else 'new'
@@ -117,7 +118,6 @@ class ResUsers(models.Model):
                 raise SignupError(_('Signup is not allowed for uninvited users'))
         return self._create_user_from_template(values)
 
-    @api.multi
     def _notify_inviter(self):
         for user in self:
             invite_partner = user.create_uid.partner_id
@@ -144,7 +144,6 @@ class ResUsers(models.Model):
 
         # create a copy of the template user (attached to a specific partner_id if given)
         values['active'] = True
-        values['customer'] = True
         try:
             with self.env.cr.savepoint():
                 return template_user.with_context(no_reset_password=True).copy(values)
@@ -163,7 +162,6 @@ class ResUsers(models.Model):
             raise Exception(_('Reset password: invalid username or email'))
         return users.action_reset_password()
 
-    @api.multi
     def action_reset_password(self):
         """ create signup token for each user, and send their signup url by email """
         # prepare reset password signup
@@ -197,15 +195,38 @@ class ResUsers(models.Model):
         for user in self:
             if not user.email:
                 raise UserError(_("Cannot send email: user %s has no email address.") % user.name)
+            # TDE FIXME: make this template technical (qweb)
             with self.env.cr.savepoint():
-                template.with_context(lang=user.lang).send_mail(user.id, force_send=True, raise_exception=True)
+                force_send = not(self.env.context.get('import_file', False))
+                template.send_mail(user.id, force_send=force_send, raise_exception=True)
             _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
 
+    def send_unregistered_user_reminder(self, after_days=5):
+        datetime_min = fields.Datetime.today() - relativedelta(days=after_days)
+        datetime_max = datetime_min + relativedelta(hours=23, minutes=59, seconds=59)
+
+        res_users_with_details = self.env['res.users'].search_read([
+            ('share', '=', False),
+            ('create_uid.email', '!=', False),
+            ('create_date', '>=', datetime_min),
+            ('create_date', '<=', datetime_max),
+            ('log_ids', '=', False)], ['create_uid', 'name', 'login'])
+
+        # group by invited by
+        invited_users = defaultdict(list)
+        for user in res_users_with_details:
+            invited_users[user.get('create_uid')[0]].append("%s (%s)" % (user.get('name'), user.get('login')))
+
+        # For sending mail to all the invitors about their invited users
+        for user in invited_users:
+            template = self.env.ref('auth_signup.mail_template_data_unregistered_users').with_context(dbname=self._cr.dbname, invited_users=invited_users[user])
+            template.send_mail(user, notif_layout='mail.mail_notification_light', force_send=False)
+
     @api.model
-    def web_dashboard_create_users(self, emails):
+    def web_create_users(self, emails):
         inactive_users = self.search([('state', '=', 'new'), '|', ('login', 'in', emails), ('email', 'in', emails)])
         new_emails = set(emails) - set(inactive_users.mapped('email'))
-        res = super(ResUsers, self).web_dashboard_create_users(list(new_emails))
+        res = super(ResUsers, self).web_create_users(list(new_emails))
         if inactive_users:
             inactive_users.with_context(create_user=True).action_reset_password()
         return res
@@ -221,7 +242,6 @@ class ResUsers(models.Model):
                 user.partner_id.with_context(create_user=True).signup_cancel()
         return user
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()

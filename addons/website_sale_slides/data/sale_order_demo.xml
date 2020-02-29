@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+
+    <!-- CHANNEL 6: DIY Furniture -->
+    <!-- ================================================== -->
+
+    <record id="sale_order_course_1" model="sale.order">
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=31)"/>
+        <field name="partner_id" ref="base.partner_demo"/>
+        <field name="partner_invoice_id" ref="base.partner_demo"/>
+        <field name="partner_shipping_id" ref="base.partner_demo"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="pricelist_id" ref="product.list0"/>
+        <field name="date_order" eval="DateTime.now() - relativedelta(days=30)"/>
+        <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+        <field name="website_id" eval="1"/>
+        <field name="state">sale</field>
+    </record>
+    <record id="sale_order_course_1_line_1" model="sale.order.line">
+        <field name="order_id" ref="sale_order_course_1"/>
+        <field name="name" model="sale.order.line" eval="obj().env.ref('website_sale_slides.product_course_channel_6').get_product_multiline_description_sale()"/>
+        <field name="product_id" ref="website_sale_slides.product_course_channel_6"/>
+        <field name="product_uom_qty">1</field>
+        <field name="product_uom" ref="uom.product_uom_unit"/>
+        <field name="price_unit">100.0</field>
+    </record>
+
+    <record id="sale_order_course_2" model="sale.order">
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=100)"/>
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+        <field name="partner_invoice_id" ref="base.partner_demo_portal"/>
+        <field name="partner_shipping_id" ref="base.partner_demo_portal"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="pricelist_id" ref="product.list0"/>
+        <field name="date_order" eval="DateTime.now() - relativedelta(days=100)"/>
+        <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+        <field name="website_id" eval="1"/>
+        <field name="state">sale</field>
+    </record>
+    <record id="sale_order_course_2_line_1" model="sale.order.line">
+        <field name="order_id" ref="sale_order_course_2"/>
+        <field name="name" model="sale.order.line" eval="obj().env.ref('website_sale_slides.product_course_channel_6').get_product_multiline_description_sale()"/>
+        <field name="product_id" ref="website_sale_slides.product_course_channel_6"/>
+        <field name="product_uom_qty">1</field>
+        <field name="product_uom" ref="uom.product_uom_unit"/>
+        <field name="price_unit">100.0</field>
+    </record>
+
+    <!-- Confirm sales -->
+    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_course_1')]]"/>
+    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_course_2')]]"/>
+</data></odoo>

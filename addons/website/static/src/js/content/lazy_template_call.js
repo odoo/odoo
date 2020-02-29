@@ -1,10 +1,11 @@
 odoo.define('website.content.lazy_template_call', function (require) {
 'use strict';
 
-var Widget = require('web.Widget');
-var websiteRootData = require('website.WebsiteRoot');
+var publicWidget = require('web.public.widget');
 
-var LazyTemplateRenderer = Widget.extend({
+publicWidget.registry.LazyTemplateRenderer = publicWidget.Widget.extend({
+    selector: '#wrapwrap:has([data-oe-call])',
+
     /**
      * Lazy replaces the `[data-oe-call]` elements by their corresponding
      * template content.
@@ -12,18 +13,20 @@ var LazyTemplateRenderer = Widget.extend({
      * @override
      */
     start: function () {
+        var def = this._super.apply(this, arguments);
+
         var $oeCalls = this.$('[data-oe-call]');
         var oeCalls = _.uniq($oeCalls.map(function () {
             return $(this).data('oe-call');
         }).get());
         if (!oeCalls.length) {
-            return $.when(this._super.apply(this, arguments));
+            return def;
         }
 
-        var def = this._rpc({
+        var renderDef = this._rpc({
             route: '/website/multi_render',
             params: {
-                ids_or_xml_ids: oeCalls,
+                'ids_or_xml_ids': oeCalls,
             },
         }).then(function (data) {
             _.each(data, function (d, k) {
@@ -34,11 +37,7 @@ var LazyTemplateRenderer = Widget.extend({
             });
         });
 
-        return $.when(this._super.apply(this, arguments), def);
+        return Promise.all([def, renderDef]);
     },
 });
-
-websiteRootData.websiteRootRegistry.add(LazyTemplateRenderer, '#wrapwrap');
-
-return LazyTemplateRenderer;
 });

@@ -40,7 +40,6 @@
             <field name="name">Actions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.actions.actions</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="action_view_tree"/>
             <field name="search_view_id" ref="action_view_search"/>
         </record>
@@ -86,7 +85,6 @@
                             </page>
                             <page name='advanced' string="Advanced Properties">
                                 <group>
-                                    <field name="multi"/>
                                     <field name="attachment_use"/>
                                     <field name="attachment"/>
                                 </group>
@@ -130,7 +128,6 @@
             <field name="name">Reports</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.actions.report</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="act_report_xml_view_tree"/>
             <field name="search_view_id" ref="act_report_xml_search_view"/>
         </record>
@@ -145,7 +142,6 @@
                 <tree string="Open Window">
                     <field name="name"/>
                     <field name="res_model"/>
-                    <field name="view_type"/>
                     <field name="view_id"/>
                     <field name="domain"/>
                     <field name="context"/>
@@ -163,7 +159,6 @@
                             <field name="name"/>
                             <field name="xml_id" string="External ID"/>
                             <field name="res_model" string="Object"/>
-                            <field name="src_model" string="Source Object"/>
                         </group>
                         <group name="action_details">
                             <field name="usage"/>
@@ -183,9 +178,7 @@
                                     <field name="domain"/>
                                     <field name="context"/>
                                     <field name="limit"/>
-                                    <field name="auto_search"/>
                                     <field name="filter"/>
-                                    <field name="multi"/>
                                 </group>
                             </group>
                             <group name="help" string="Help">
@@ -201,14 +194,14 @@
                                         </group>
                                     </form>
                                     <tree string="Views">
-                                        <field name="sequence"/>
+                                        <field name="sequence" widget="handle"/>
                                         <field name="view_mode"/>
                                         <field name="view_id"/>
                                     </tree>
                                 </field>
                             </group>
                         </page>
-                        <page string="Security">
+                        <page string="Security" name="security">
                             <field name="groups_id"/>
                         </page>
                     </notebook>
@@ -222,10 +215,6 @@
             <field name="arch" type="xml">
                 <search string="Open a Window">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('res_model','ilike',self)]" string="Action"/>
-                    <field name="view_type"/>
-                    <group expand="0" string="Group By" colspan="4">
-                        <filter string="View Type" name="view_type" domain="[]" context="{'group_by':'view_type'}"/>
-                    </group>
                 </search>
             </field>
         </record>
@@ -233,7 +222,6 @@
             <field name="name">Window Actions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="search_view_id" ref="view_window_action_search"/>
         </record>
         <record id="ir_action_window_view1" model="ir.actions.act_window.view">
@@ -288,8 +276,10 @@
                                     attrs="{'invisible': [('state', '!=', 'object_create')], 'required': [('state', '=', 'object_create')]}"/>
                                 <field name="crud_model_name" invisible="1"/>
                                 <field name="link_field_id"
-                                    domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name), ('ttype', 'in', ['many2one'])]"
-                                    attrs="{'invisible': [('state', '!=', 'object_create')]}"/>
+                                    domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name),
+                                    ('ttype', 'in', ['many2one', 'one2many', 'many2many'])]"
+                                    attrs="{'invisible': [('state', '!=', 'object_create')]}"
+                                    context="{'default_model_id': model_id, 'default_relation': crud_model_name}"/>
                             </group>
                         </group>
                         <notebook>
@@ -313,7 +303,11 @@
                                 </field>
                             </page>
 
-                            <page string="Actions" autofocus="autofocus"
+                            <page name="security" string="Security">
+                                <field name="groups_id"/>
+                            </page>
+
+                            <page string="Actions" name="actions" autofocus="autofocus"
                                     attrs="{'invisible': [('state', '!=', 'multi')]}">
                                 <p class="oe_grey">
                                     If several child actions return an action, only the last one will be executed.
@@ -322,7 +316,7 @@
                                 <field name="child_ids" domain="[('model_id', '=', model_id)]"/>
                             </page>
 
-                            <page string="Help" autofocus="autofocus"
+                            <page string="Help" name="help_info" autofocus="autofocus"
                                     attrs="{'invisible': [('state', '!=', 'code')]}">
                                 <group>
                                     <div style="margin-top: 4px;">
@@ -386,7 +380,6 @@ env['res.partner'].create({'name': partner_name})
             <field name="name">Server Actions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.actions.server</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_server_action_tree"/>
             <field name="search_view_id" ref="view_server_action_search"/>
@@ -450,7 +443,6 @@ env['res.partner'].create({'name': partner_name})
             <field name="name">Configuration Wizards</field>
             <field name="res_model">ir.actions.todo</field>
             <field name="view_id" ref="ir_actions_todo_tree"/>
-            <field name="view_type">form</field>
             <field name="help">The configuration wizards are used to help you configure a new instance of Odoo. They are launched during the installation of new modules, but you can choose to restart some wizards manually from this menu.</field>
         </record>
         <menuitem id="menu_ir_actions_todo_form" action="act_ir_actions_todo_form" parent="base.next_id_6"/>

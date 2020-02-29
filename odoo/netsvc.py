@@ -6,14 +6,12 @@ import logging.handlers
 import os
 import platform
 import pprint
-from . import release
 import sys
 import threading
 import time
+import warnings
 
-import psycopg2
-
-import odoo
+from . import release
 from . import sql_db
 from . import tools
 
@@ -29,7 +27,7 @@ def log(logger, level, prefix, msg, depth=None):
 path_prefix = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
 
 class PostgreSQLHandler(logging.Handler):
-    """ PostgreSQL Loggin Handler will store logs in the database, by default
+    """ PostgreSQL Logging Handler will store logs in the database, by default
     the current database, can be set using --log-db=DBNAME
     """
     def emit(self, record):
@@ -39,7 +37,8 @@ class PostgreSQLHandler(logging.Handler):
         if not dbname:
             return
         with tools.ignore(Exception), tools.mute_logger('odoo.sql_db'), sql_db.db_connect(dbname, allow_uri=True).cursor() as cr:
-            cr.autocommit(True)
+            # preclude risks of deadlocks
+            cr.execute("SET LOCAL statement_timeout = 1000")
             msg = tools.ustr(record.msg)
             if record.args:
                 msg = msg % record.args
@@ -129,6 +128,16 @@ def init_logger():
     logging.addLevelName(25, "INFO")
     logging.captureWarnings(True)
 
+    # enable deprecation warnings (disabled by default)
+    warnings.filterwarnings('once', category=DeprecationWarning)
+    # ignore deprecation warnings from invalid escape (there's a ton and it's
+    # pretty likely a super low-value signal)
+    warnings.filterwarnings('ignore', r'^invalid escape sequence \\.', category=DeprecationWarning)
+    # ignore warning from older setuptools version using imp
+    warnings.filterwarnings('ignore', category=DeprecationWarning, module='setuptools.depends')
+    # ignore warning from zeep using defusedxml.lxml
+    warnings.filterwarnings('ignore', category=DeprecationWarning, module='zeep.loader')
+
     from .tools.translate import resetlocale
     resetlocale()
 
@@ -199,7 +208,7 @@ def init_logger():
 
     logging_configurations = DEFAULT_LOG_CONFIGURATION + pseudo_config + logconfig
     for logconfig_item in logging_configurations:
-        loggername, level = logconfig_item.split(':')
+        loggername, level = logconfig_item.strip().split(':')
         level = getattr(logging, level, logging.INFO)
         logger = logging.getLogger(loggername)
         logger.setLevel(level)

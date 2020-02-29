@@ -4,12 +4,12 @@
 from odoo.tests import common
 
 
-class TestMassMailingCommon(common.TransactionCase):
+class TestMailingListMerge(common.TransactionCase):
 
     def test_00_test_mass_mailing_list_merge(self):
         # Data set up
 
-        mailing_list_A = self.env['mail.mass_mailing.list'].create({
+        mailing_list_A = self.env['mailing.list'].create({
             'name': 'A',
             'contact_ids': [
                 (0, 0, {'name': 'Noel Flantier', 'email': 'noel.flantier@example.com'}),
@@ -18,7 +18,7 @@ class TestMassMailingCommon(common.TransactionCase):
             ]
         })
 
-        mailing_list_B = self.env['mail.mass_mailing.list'].create({
+        mailing_list_B = self.env['mailing.list'].create({
             'name': 'B',
             'contact_ids': [
                 (0, 0, {'name': 'Icallhimtest', 'email': 'icallhimtest@example.com'}),
@@ -27,7 +27,7 @@ class TestMassMailingCommon(common.TransactionCase):
             ]
         })
 
-        mailing_list_C = self.env['mail.mass_mailing.list'].create({
+        mailing_list_C = self.env['mailing.list'].create({
             'name': 'C',
             'contact_ids': [
                 (0, 0, {'name': 'Norberto', 'email': 'norbert@example.com'}),
@@ -39,7 +39,7 @@ class TestMassMailingCommon(common.TransactionCase):
         # This test ensure that the mailing lists are correctly merged and no
         # duplicates are appearing in C
 
-        result_list = self.env['mass.mailing.list.merge'].create({
+        result_list = self.env['mailing.list.merge'].create({
             'src_list_ids': [(4, list_id) for list_id in [mailing_list_A.id, mailing_list_B.id]],
             'dest_list_id': mailing_list_C.id,
             'merge_options': 'existing',

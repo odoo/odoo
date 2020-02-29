@@ -173,15 +173,38 @@
     }
 }
 
+// Odoo defines a limited Noto font-family for a small variety of unicode
+// characters that are not necessary defined in the user system or even defined
+// but not properly readable. This function allows to add this font family in a
+// given font list.
+//
+// @param {list} $font - a list of font names ending with the generic one.
+// @param {integer} [$index] - the position where to add the support font, if
+//        not given, it will be placed before the generic one.
+@function o-add-unicode-support-font($font, $index: false) {
+    @if $index == false {
+        $index: length($font);
+    }
+
+    $-with-support-font: ();
+    @for $i from 1 through length($font) {
+        @if $i == $index {
+            $-with-support-font: append($-with-support-font, 'Odoo Unicode Support Noto', $separator: comma);
+        }
+        $-with-support-font: append($-with-support-font, nth($font, $i), $separator: comma);
+    }
+
+    @return $-with-support-font;
+}
 
 // Mixin which allows to extend the BS4 bg-variant mixin
 @mixin o-bg-color-extension($color, $text-color, $with-muted) {}
 
-// Function to remove all falsy values of a map
+// Function to remove all null values of a map
 @function o-map-omit($map) {
     $-map: ();
     @each $key, $value in $map {
-        @if $value {
+        @if $value != null {
             $-map: map-merge($-map, (
                 $key: $value,
             ));
@@ -255,10 +278,9 @@
     margin-top: 0;
 }
 @mixin o-kanban-dropdown($padding-base: $o-kanban-inside-vgutter) {
-    margin: -1px -1px auto auto; // compensate border
     padding: $padding-base/2 $padding-base;
-    border: 1px solid transparent;
-    border-bottom: none;
+    border: none;
+    border-left: 1px solid transparent;
     vertical-align: top;
     color: $body-color;
 
@@ -338,4 +360,49 @@
     &:last-child {
         margin-bottom: 5px;
     }
+}
+
+// No content helper
+@mixin o-nocontent-empty {
+    pointer-events: auto;
+    max-width: 650px;
+    margin: auto;
+    padding: 15px;
+    z-index: 1000;
+    text-align: center;
+    color: $o-tooltip-text-color;
+    font-size: 115%;
+
+    > p:first-of-type {
+        margin-top: 0;
+        color: $o-tooltip-title-text-color;
+        font-weight: bold;
+        font-size: 125%;
+    }
+
+    a {
+        cursor: pointer;
+    }
+}
+
+// Scrollbar doesn't overlap with content
+@mixin o-scrollbar-overlay {
+    overflow-y: auto;
+    overflow-y: overlay;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+%o-nocontent-init-image {
+    content: "";
+    display: block;
+    margin: auto;
+    background-size: cover;
+}
+
+%o-nocontent-empty-document {
+    @extend %o-nocontent-init-image;
+    @include size(120px, 80px);
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background: transparent url(/web/static/src/img/empty_folder.svg) no-repeat center;
 }

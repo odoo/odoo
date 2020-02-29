@@ -10,7 +10,7 @@
                     <field name="state" invisible="1"/>
                     <group states="init">
                         <field name="lang"/>
-                        <field name="overwrite"/>
+                        <field name="overwrite" groups="base.group_no_one"/>
                     </group>
                     <group states="done" colspan="4">
                         <span class="o_form_label">The selected language has been successfully installed.
@@ -31,16 +31,9 @@ You must change the preferences of the user to view the changes.</span>
             <field name="name">Load a Translation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">base.language.install</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-
-        <menuitem
-            name="Load a Translation"
-            action="action_view_base_language_install"
-            id="menu_view_base_language_install"
-            parent="menu_translation" sequence="2"/>
     </data>
 </odoo>
 

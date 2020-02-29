@@ -6,7 +6,6 @@ var core = require('web.core');
 var Domain = require('web.Domain');
 var DropdownMenu = require('web.DropdownMenu');
 var search_filters = require('web.search_filters');
-var time = require('web.time');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -53,10 +52,10 @@ var FilterMenu = DropdownMenu.extend({
      * @override
      */
     start: function () {
-        this.$menu = this.$('.o_dropdown_menu');
+        var superProm = this._super.apply(this, arguments);
         this.$menu.addClass('o_filters_menu');
         this._renderGeneratorMenu();
-        return this._super.apply(this, arguments);
+        return superProm;
     },
 
     //--------------------------------------------------------------------------
@@ -67,14 +66,14 @@ var FilterMenu = DropdownMenu.extend({
      * Add a proposition inside the custom filter edition menu.
      *
      * @private
-     * @returns {$.Deferred}
+     * @returns {Promise}
      */
     _appendProposition: function () {
         // make modern sear_filters code!!! It works but...
         var prop = new search_filters.ExtendedSearchProposition(this, this.fields);
         this.propositions.push(prop);
         this.$('.o_apply_filter').prop('disabled', false);
-        prop.insertBefore(this.$addFilterMenu);
+        return prop.insertBefore(this.$addFilterMenu);
     },
     /**
      * Confirm a filter proposition, creates it and add it to the menu.
@@ -89,8 +88,6 @@ var FilterMenu = DropdownMenu.extend({
                 domain: Domain.prototype.arrayToString(preFilter.attrs.domain),
             };
         });
-        // TO DO intercepts 'new_filters' and decide what to do whith filters
-        //  rewrite web.search_filters?
         this.trigger_up('new_filters', {filters: filters});
         _.invoke(this.propositions, 'destroy');
         this.propositions = [];
@@ -111,37 +108,7 @@ var FilterMenu = DropdownMenu.extend({
         if (this.generatorMenuIsOpen && !this.propositions.length) {
             this._appendProposition();
         }
-    },
-    /**
-     * @override
-     * @private
-     */
-    _renderMenuItems: function () {
-        var self= this;
-        this._super.apply(this, arguments);
-        // the following code adds tooltip on date options in order
-        // to alert the user of the meaning of intervals
-        var $options = this.$('.o_item_option');
-        $options.each(function () {
-            var $option = $(this);
-            $option.tooltip({
-                delay: { show: 500, hide: 0 },
-                title: function () {
-                    var itemId = $option.attr('data-item_id');
-                    var optionId = $option.attr('data-option_id');
-                    var fieldName = _.findWhere(self.items, {id: itemId}).fieldName;
-                    var domain = Domain.prototype.constructDomain(fieldName, optionId, 'date', true);
-                    var evaluatedDomain = Domain.prototype.stringToArray(domain);
-                    var dateFormat = time.getLangDateFormat();
-                    var dateStart = moment(evaluatedDomain[1][2], "YYYY-MM-DD", 'en').format(dateFormat);
-                    var dateEnd = moment(evaluatedDomain[2][2], "YYYY-MM-DD", 'en').format(dateFormat);
-                    if (optionId === 'today' || optionId === 'yesterday') {
-                        return dateStart;
-                    }
-                    return _.str.sprintf(_t('From %s To %s'), dateStart, dateEnd);
-                }
-            });
-        });
+        this.$dropdownReference.dropdown('update');
     },
     /**
      * Hide and display the submenu which allows adding custom filters.

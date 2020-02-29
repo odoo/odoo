@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import json
 import math
-import os
 import re
 
 from werkzeug import urls
 
-from odoo import fields as odoo_fields, tools, _
+from odoo import fields as odoo_fields, http, tools, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError, AccessError, MissingError, UserError
 from odoo.http import content_disposition, Controller, request, route
 from odoo.tools import consteq
@@ -55,6 +55,10 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
             'url': get_url(page),
             'num': page
         },
+        "page_first": {
+            'url': get_url(1),
+            'num': 1
+        },
         "page_start": {
             'url': get_url(pmin),
             'num': pmin
@@ -70,6 +74,10 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
         "page_end": {
             'url': get_url(pmax),
             'num': pmax
+        },
+        "page_last": {
+            'url': get_url(page_count),
+            'num': page_count
         },
         "pages": [
             {'url': get_url(page_num), 'num': page_num} for page_num in range(pmin, pmax+1)
@@ -159,14 +167,17 @@ class CustomerPortal(Controller):
             'error_message': [],
         })
 
-        if post:
+        if post and request.httprequest.method == 'POST':
             error, error_message = self.details_form_validate(post)
             values.update({'error': error, 'error_message': error_message})
             values.update(post)
             if not error:
                 values = {key: post[key] for key in self.MANDATORY_BILLING_FIELDS}
                 values.update({key: post[key] for key in self.OPTIONAL_BILLING_FIELDS if key in post})
+                values.update({'country_id': int(values.pop('country_id', 0))})
                 values.update({'zip': values.pop('zipcode', '')})
+                if values.get('state_id') == '':
+                    values.update({'state_id': False})
                 partner.sudo().write(values)
                 if redirect:
                     return request.redirect(redirect)
@@ -188,26 +199,84 @@ class CustomerPortal(Controller):
         response.headers['X-Frame-Options'] = 'DENY'
         return response
 
-    @route(['/portal/sign/get_fonts'], type='json', auth='public')
-    def get_fonts(self):
-        """This route will return a list of base64 encoded fonts.
+    @http.route('/portal/attachment/add', type='http', auth='public', methods=['POST'], website=True)
+    def attachment_add(self, name, file, res_model, res_id, access_token=None, **kwargs):
+        """Process a file uploaded from the portal chatter and create the
+        corresponding `ir.attachment`.
 
-        Those fonts will be proposed to the user when creating a signature
-        using mode 'auto'.
+        The attachment will be created "pending" until the associated message
+        is actually created, and it will be garbage collected otherwise.
 
-        :return: base64 encoded fonts
-        :rtype: list
+        :param name: name of the file to save.
+        :type name: string
+
+        :param file: the file to save
+        :type file: werkzeug.FileStorage
+
+        :param res_model: name of the model of the original document.
+            To check access rights only, it will not be saved here.
+        :type res_model: string
+
+        :param res_id: id of the original document.
+            To check access rights only, it will not be saved here.
+        :type res_id: int
+
+        :param access_token: access_token of the original document.
+            To check access rights only, it will not be saved here.
+        :type access_token: string
+
+        :return: attachment data {id, name, mimetype, file_size, access_token}
+        :rtype: dict
         """
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        fonts_directory = os.path.join(current_dir, '..', 'static', 'font', 'sign')
-        font_filenames = sorted(os.listdir(fonts_directory))
+        try:
+            self._document_check_access(res_model, int(res_id), access_token=access_token)
+        except (AccessError, MissingError) as e:
+            raise UserError(_("The document does not exist or you do not have the rights to access it."))
 
-        fonts = []
-        for filename in font_filenames:
-            font_file = open(os.path.join(fonts_directory, filename), 'rb')
-            font = base64.b64encode(font_file.read())
-            fonts.append(font)
-        return fonts
+        IrAttachment = request.env['ir.attachment']
+        access_token = False
+
+        # Avoid using sudo or creating access_token when not necessary: internal
+        # users can create attachments, as opposed to public and portal users.
+        if not request.env.user.has_group('base.group_user'):
+            IrAttachment = IrAttachment.sudo().with_context(binary_field_real_user=IrAttachment.env.user)
+            access_token = IrAttachment._generate_access_token()
+
+        # At this point the related message does not exist yet, so we assign
+        # those specific res_model and res_is. They will be correctly set
+        # when the message is created: see `portal_chatter_post`,
+        # or garbage collected otherwise: see  `_garbage_collect_attachments`.
+        attachment = IrAttachment.create({
+            'name': name,
+            'datas': base64.b64encode(file.read()),
+            'res_model': 'mail.compose.message',
+            'res_id': 0,
+            'access_token': access_token,
+        })
+        return request.make_response(
+            data=json.dumps(attachment.read(['id', 'name', 'mimetype', 'file_size', 'access_token'])[0]),
+            headers=[('Content-Type', 'application/json')]
+        )
+
+    @http.route('/portal/attachment/remove', type='json', auth='public')
+    def attachment_remove(self, attachment_id, access_token=None):
+        """Remove the given `attachment_id`, only if it is in a "pending" state.
+
+        The user must have access right on the attachment or provide a valid
+        `access_token`.
+        """
+        try:
+            attachment_sudo = self._document_check_access('ir.attachment', int(attachment_id), access_token=access_token)
+        except (AccessError, MissingError) as e:
+            raise UserError(_("The attachment does not exist or you do not have the rights to access it."))
+
+        if attachment_sudo.res_model != 'mail.compose.message' or attachment_sudo.res_id != 0:
+            raise UserError(_("The attachment %s cannot be removed because it is not in a pending state.") % attachment_sudo.name)
+
+        if attachment_sudo.env['mail.message'].search([('attachment_ids', 'in', attachment_sudo.ids)]):
+            raise UserError(_("The attachment %s cannot be removed because it is linked to a message.") % attachment_sudo.name)
+
+        return attachment_sudo.unlink()
 
     def details_form_validate(self, data):
         error = dict()
@@ -255,14 +324,14 @@ class CustomerPortal(Controller):
 
     def _document_check_access(self, model_name, document_id, access_token=None):
         document = request.env[model_name].browse([document_id])
-        document_sudo = document.sudo().exists()
+        document_sudo = document.with_user(SUPERUSER_ID).exists()
         if not document_sudo:
-            raise MissingError("This document does not exist.")
+            raise MissingError(_("This document does not exist."))
         try:
             document.check_access_rights('read')
             document.check_access_rule('read')
         except AccessError:
-            if not access_token or not consteq(document_sudo.access_token, access_token):
+            if not access_token or not document_sudo.access_token or not consteq(document_sudo.access_token, access_token):
                 raise
         return document_sudo
 
@@ -271,6 +340,7 @@ class CustomerPortal(Controller):
             # if no_breadcrumbs = False -> force breadcrumbs even if access_token to `invite` users to register if they click on it
             values['no_breadcrumbs'] = no_breadcrumbs
             values['access_token'] = access_token
+            values['token'] = access_token  # for portal chatter
 
         # Those are used notably whenever the payment form is implied in the portal.
         if kwargs.get('error'):
@@ -292,12 +362,12 @@ class CustomerPortal(Controller):
 
     def _show_report(self, model, report_type, report_ref, download=False):
         if report_type not in ('html', 'pdf', 'text'):
-            raise UserError("Invalid report type: %s" % report_type)
+            raise UserError(_("Invalid report type: %s") % report_type)
 
         report_sudo = request.env.ref(report_ref).sudo()
 
         if not isinstance(report_sudo, type(request.env['ir.actions.report'])):
-            raise UserError("%s is not the reference of a report" % report_ref)
+            raise UserError(_("%s is not the reference of a report") % report_ref)
 
         method_name = 'render_qweb_%s' % (report_type)
         report = getattr(report_sudo, method_name)([model.id], data={'report_type': report_type})[0]

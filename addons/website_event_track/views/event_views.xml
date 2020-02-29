@@ -23,20 +23,21 @@
             <field name="inherit_id" ref="website_event.event_event_view_form_inherit_website"/>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <button name="website_publish_button" position="before">
+                <field name="is_published" position="before">
                     <button name="%(action_event_track_from_event)d"
                             type="action"
                             class="oe_stat_button"
-                            icon="fa-inbox">
+                            icon="fa-inbox"
+                            context="{'default_date': date_begin}">
                         <field name="track_count" string="Tracks" widget="statinfo"/>
                     </button>
-                    <button name="%(action_event_sponsor_from_event)d"
+                    <button name="%(event_sponsor_action_from_event)d"
                             type="action"
                             class="oe_stat_button"
                             icon="fa-users">
                         <field name="sponsor_count" string="Sponsors" widget="statinfo"/>
                     </button>
-                </button>
+                </field>
                 <label for="website_menu" position="after">
                     <field name="website_track" attrs="{'invisible': [('website_menu', '=', False)]}"/>
                     <label for="website_track" string="Tracks on Website" attrs="{'invisible': [('website_menu', '=', False)]}"/>
@@ -45,4 +46,16 @@
                 </label>
             </field>
         </record>
+
+    <record id="event_event_view_list_inherit_website_event_track" model="ir.ui.view">
+        <field name="name">event.event.view.list.inherit.website.event.track</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_tree"/>
+        <field name="arch" type="xml">
+            <field name="stage_id" position="after">
+                <field name="track_count" readonly="1" optional="hide"/>
+                <field name="sponsor_count" readonly="1" optional="hide"/>
+            </field>
+        </field>
+    </record>
 </odoo>

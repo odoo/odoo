@@ -3,6 +3,7 @@
 
 from odoo.tests.common import TransactionCase
 from odoo.tools import float_compare, test_reports
+from odoo.exceptions import UserError
 
 
 class TestProductPricelist(TransactionCase):
@@ -10,15 +11,62 @@ class TestProductPricelist(TransactionCase):
     def setUp(self):
         super(TestProductPricelist, self).setUp()
         self.ProductPricelist = self.env['product.pricelist']
-        self.res_partner_4 = self.env.ref('base.res_partner_4')
-        self.computer_SC234 = self.env.ref("product.product_product_3")
-        self.ipad_retina_display = self.env.ref('product.product_product_4')
-        self.custom_computer_kit = self.env.ref("product.product_product_5")
-        self.ipad_mini = self.env.ref("product.product_product_6")
-        self.apple_in_ear_headphones = self.env.ref("product.product_product_7")
-        self.laptop_E5023 = self.env.ref('product.product_delivery_01')
-        self.laptop_S3450 = self.env.ref("product.product_product_25")
-        self.category_5_id = self.ref('product.product_category_5')
+        self.res_partner_4 = self.env['res.partner'].create({'name': 'Ready Mat'})
+        self.res_partner_1 = self.env['res.partner'].create({'name': 'Wood Corner'})
+        self.category_5_id = self.env['product.category'].create({
+            'name': 'Office Furniture',
+            'parent_id': self.env.ref('product.product_category_1').id
+        }).id
+        self.computer_SC234 = self.env['product.product'].create({
+            'name': 'Desk Combination',
+            'categ_id': self.category_5_id,
+        })
+        self.ipad_retina_display = self.env['product.product'].create({
+            'name': 'Customizable Desk',
+        })
+        self.custom_computer_kit = self.env['product.product'].create({
+            'name': 'Corner Desk Right Sit',
+            'categ_id': self.category_5_id,
+        })
+        self.ipad_mini = self.env['product.product'].create({
+            'name': 'Large Cabinet',
+            'categ_id': self.category_5_id,
+            'standard_price': 800.0,
+        })
+        self.env['product.supplierinfo'].create([
+            {
+                'name': self.res_partner_1.id,
+                'product_tmpl_id': self.ipad_mini.product_tmpl_id.id,
+                'delay': 3,
+                'min_qty': 1,
+                'price': 750,
+            }, {
+                'name': self.res_partner_4.id,
+                'product_tmpl_id': self.ipad_mini.product_tmpl_id.id,
+                'delay': 3,
+                'min_qty': 1,
+                'price': 790,
+            }, {
+                'name': self.res_partner_4.id,
+                'product_tmpl_id': self.ipad_mini.product_tmpl_id.id,
+                'delay': 3,
+                'min_qty': 3,
+                'price': 785,
+            }
+        ])
+        self.apple_in_ear_headphones = self.env['product.product'].create({
+            'name': 'Storage Box',
+            'categ_id': self.category_5_id,
+        })
+        self.laptop_E5023 = self.env['product.product'].create({
+            'name': 'Office Chair',
+            'categ_id': self.category_5_id,
+        })
+        self.laptop_S3450 = self.env['product.product'].create({
+            'name': 'Acoustic Bloc Screens',
+            'categ_id': self.category_5_id,
+        })
+
         self.uom_unit_id = self.ref('uom.product_uom_unit')
         self.list0 = self.ref('product.list0')
 
@@ -33,14 +81,14 @@ class TestProductPricelist(TransactionCase):
             }), (0, 0, {
                 'name': '10% Discount on Assemble Computer',
                 'applied_on': '1_product',
-                'product_id': self.ipad_retina_display.id,
+                'product_tmpl_id': self.ipad_retina_display.product_tmpl_id.id,
                 'compute_price': 'formula',
                 'base': 'list_price',
                 'price_discount': 10
             }), (0, 0, {
                 'name': '1 surchange on Laptop',
                 'applied_on': '1_product',
-                'product_id': self.laptop_E5023.id,
+                'product_tmpl_id': self.laptop_E5023.product_tmpl_id.id,
                 'compute_price': 'formula',
                 'base': 'list_price',
                 'price_surcharge': 1
@@ -54,7 +102,7 @@ class TestProductPricelist(TransactionCase):
                 'price_discount': 5
             }), (0, 0, {
                 'name': '30% Discount on all products',
-                'applied_on': '0_product_variant',
+                'applied_on': '3_global',
                 'date_start': '2011-12-27',
                 'date_end': '2011-12-31',
                 'compute_price': 'formula',
@@ -113,15 +161,3 @@ class TestProductPricelist(TransactionCase):
         partner = self.res_partner_4.with_context(context)
         msg = "Wrong cost price: LCD Monitor if more than 3 Unit.should be 785 instead of %s" % ipad_mini._select_seller(partner_id=partner, quantity=3.0).price
         self.assertEqual(float_compare(ipad_mini._select_seller(partner_id=partner, quantity=3.0).price, 785, precision_digits=2), 0, msg)
-
-        # I print the sale prices report.
-        ctx = {'active_model': 'product.product', 'date': '2011-12-30', 'active_ids': [self.computer_SC234.id, self.ipad_retina_display.id, self.custom_computer_kit.id, self.ipad_mini.id]}
-        data_dict = {
-            'qty1': 1,
-            'qty2': 5,
-            'qty3': 10,
-            'qty4': 15,
-            'qty5': 30,
-            'price_list': self.customer_pricelist.id,
-        }
-        test_reports.try_report_action(self.cr, self.uid, 'action_product_price_list', wiz_data=data_dict, context=ctx, our_module='product')

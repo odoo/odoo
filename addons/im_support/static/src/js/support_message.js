@@ -14,7 +14,10 @@ var SupportMessage = Message.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        if (this._serverAuthorID !== this.call('mail_service', 'getOdoobotID')) {
+        if (
+            !this._serverAuthorID ||
+            this._serverAuthorID[0] !== this.call('mail_service', 'getOdoobotID')[0]
+        ) {
             if (!this._serverAuthorID[0]) {
                 // the author is the client
                 this._serverAuthorID = [session.partner_id, session.name];
@@ -51,10 +54,10 @@ var SupportMessage = Message.extend({
      * channel (which are records on the Support database).
      *
      * @override
-     * @returns {$.Promise}
+     * @returns {Promise}
      */
     toggleStarStatus: function () {
-        return $.when();
+        return Promise.resolve();
     },
 });
 

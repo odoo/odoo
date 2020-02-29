@@ -29,7 +29,7 @@ function addMockSupportEnvironment(widget, params) {
     var originalRPC = supportSession.rpc;
     var defaultMockSupportRPC = function (route, args) {
         if (route === '/odoo_im_support/get_support_channel') {
-            return $.when({
+            return Promise.resolve({
                 available: true,
                 channel_type: 'livechat',
                 public: 'private',
@@ -37,13 +37,13 @@ function addMockSupportEnvironment(widget, params) {
             });
         }
         if (route === '/odoo_im_support/fetch_messages') { // fetching history
-            return $.when([]);
+            return Promise.resolve([]);
         }
         if (route === '/odoo_im_support/chat_post') {
-            return $.when();
+            return Promise.resolve();
         }
         if (route === '/longpolling/support_poll') {
-            return $.Deferred();
+            return Promise.resolve();
         }
     };
     supportSession.rpc = function (route, args) {

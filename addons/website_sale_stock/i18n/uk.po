@@ -1,19 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_stock
+# 	* website_sale_stock
 # 
 # Translators:
-# Bohdan Lisnenko, 2018
-# Martin Trigaux, 2018
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# Martin Trigaux, 2019
+# Bohdan Lisnenko, 2019
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,11 +63,6 @@ msgstr "Повідомлення клієнта"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default Mode"
-msgstr "Режим за замовчуванням"
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
@@ -76,13 +71,8 @@ msgstr ""
 " можна зберігати. Це можна змінити на рівні товару."
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default threshold"
-msgstr "Порогове значення за замовчуванням"
-
-#. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:16
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "In stock"
 msgstr "На складі"
@@ -109,6 +99,11 @@ msgstr ""
 "веб-сайті."
 
 #. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Mode"
+msgstr "Режим"
+
+#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product"
 msgstr "Товар"
@@ -120,43 +115,52 @@ msgstr "Шаблон товару"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
-msgid "Sale Order"
-msgstr "Замовлення"
+msgid "Sales Order"
+msgstr "Замовлення на продаж"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Рядок замовлення"
+msgstr "Рядок замовлення на продаж"
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__never
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__never
 msgid "Sell regardless of inventory"
-msgstr "Продавати незалежно від запасу"
+msgstr "Продавайте незалежно від запасу"
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__threshold
 msgid "Show inventory below a threshold and prevent sales if not enough stock"
 msgstr ""
 "Покажіть запас нижче порогової величини та запобігайте продажам, якщо не "
 "вистачає запасів"
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__always
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__always
 msgid "Show inventory on website and prevent sales if not enough stock"
 msgstr ""
-"Показати запас на веб-сайті та запобігти продажам, якщо не вистачає запасів"
+"Показуйте запас на веб-сайті та запобігайте продажам, якщо не вистачає "
+"запасів"
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__threshold
+msgid ""
+"Show inventory when below the threshold and prevent sales if not enough "
+"stock"
+msgstr ""
+"Показуйте товарний запас, коли нижче порогового значення, і запобігайте "
+"продажу, якщо не вистачає запасів"
+
+#. module: website_sale_stock
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__custom
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__custom
 msgid "Show product-specific notifications"
 msgstr "Показати сповіщення про товар"
 
 #. module: website_sale_stock
-#: code:addons/website_sale_stock/models/sale_order.py:30
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry"
@@ -167,10 +171,15 @@ msgstr ""
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:22
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Temporarily out of stock"
 msgstr "Тимчасово немає в наявності"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Threshold"
+msgstr "Порогове значення"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -178,16 +187,23 @@ msgid "Transfer"
 msgstr "Переміщення"
 
 #. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__website_warehouse_id
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__warehouse_id
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Warehouse"
+msgstr "Склад"
+
+#. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:13
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:22
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__warning_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__warning_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
 #, python-format
 msgid "Warning"
-msgstr "Попередження"
+msgstr "Сповіщення"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
@@ -202,35 +218,35 @@ msgstr "Веб-сайт, до якого належить це комплект�
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:19
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added"
 msgstr "Ви вже додали"
 
 #. module: website_sale_stock
-#: code:addons/website_sale_stock/models/sale_order.py:27
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "You ask for %s products but only %s is available"
-msgstr "Ви запитували про %s товари, які %s є лише в наявності"
+msgstr "Ви запитували про %s товари, але в наявності є лише %s "
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:20
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "all"
 msgstr "всі"
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:9
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:14
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "available"
 msgstr "в наявності"
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:20
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "in your cart."
 msgstr "у вашому кошику."

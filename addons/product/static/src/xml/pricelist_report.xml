@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="product.report_pricelist_qty">
+        <span>
+            <div class="input-group">
+                <input type="number" name="qty_to_add" class="o_input o_product_qty form-control text-right" value="1" min="1"/>
+                <div class="input-group-append">
+                    <button class="btn btn-secondary o_add_qty text-right form-control" type="submit" title="Add a quantity">
+                        <i class="fa fa-plus"/>
+                    </button>
+                </div>
+            </div>
+            <span class="o_badges">
+                <t t-set="quantities" t-value="widget.quantities"/>
+                <t t-call="product.report_pricelist_qty_badges"/>
+            </span>
+        </span>
+    </t>
+
+    <t t-name="product.report_pricelist_search">
+        <form class="form-inline ml-4 o_pricelist_report_form">
+            <div class="form-group">
+                <label class="font-weight-bold">Pricelist:</label>
+                <div class="row">
+                    <div class="col mr-4">
+                        <span class="o_pricelist"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="font-weight-bold" for="qty_to_add">Quantities:</label>
+                <div class="row">
+                    <div class="col">
+                        <span class="o_product_qty"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </t>
+
+    <t t-name="product.report_pricelist_qty_badges">
+        <t t-foreach="quantities" t-as="qty">
+            <span class="badge badge-pill border" t-att-data-qty="qty">
+                <t t-esc="qty"/>
+                <i class="fa fa-close o_remove_qty" title="Remove quantity"/>
+            </span>
+        </t>
+    </t>
+
+</templates>

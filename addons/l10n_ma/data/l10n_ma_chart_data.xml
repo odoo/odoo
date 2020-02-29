@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-15"?>
 <odoo>
-        <!--     
+        <!--
         Plan comptable général pour le Maroc.
     Version du fichier : 13-10-2010
     Mis en place par la société Kazacube - partenaire OpenERP au Maroc
     Vérifié et validé par le cabinet SEDDIK d'expertise comptable, Casablanca.
-      --> 
-    <menuitem id="account_reports_ma_statements_menu" name="Morocco" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
+      -->
+    <menuitem id="account_reports_ma_statements_menu" name="Morocco" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_readonly"/>
 
     <record id="l10n_kzc_temp_chart" model="account.chart.template">
         <field name="name">Plan comptable marocain</field>
@@ -1190,13 +1190,15 @@
   <record id="pcg_34211" model="account.account.template">
     <field name="name">Clients - catégorie A</field>
     <field name="code">34211</field>
-    <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+    <field name="user_type_id" ref="account.data_account_type_receivable"/>
+    <field name="reconcile" eval='True'/>
     <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
   </record>
   <record id="pcg_34212" model="account.account.template">
     <field name="name">Clients - catégorie B</field>
     <field name="code">34212</field>
-    <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+    <field name="user_type_id" ref="account.data_account_type_receivable"/>
+    <field name="reconcile" eval='True'/>
     <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
   </record>
   <record id="pcg_3423" model="account.account.template">
@@ -1370,6 +1372,13 @@
   <record id="pcg_3488" model="account.account.template">
     <field name="name">Divers débiteurs</field>
     <field name="code">3488</field>
+    <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+    <field name="reconcile" eval='True'/>
+    <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
+  </record>
+  <record id="pcg_3489" model="account.account.template">
+    <field name="name">Divers débiteurs (PoS)</field>
+    <field name="code">3489</field>
     <field name="user_type_id" ref="account.data_account_type_receivable"/>
     <field name="reconcile" eval='True'/>
     <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
@@ -1515,7 +1524,8 @@
   <record id="pcg_4411" model="account.account.template">
     <field name="name">Fournisseurs</field>
     <field name="code">4411</field>
-    <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+    <field name="user_type_id" ref="account.data_account_type_payable"/>
+    <field name="reconcile" eval='True'/>
     <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
   </record>
   <record id="pcg_4413" model="account.account.template">
@@ -1761,7 +1771,7 @@
   <record id="pcg_4488" model="account.account.template">
     <field name="name">Divers créanciers</field>
     <field name="code">4488</field>
-    <field name="user_type_id" ref="account.data_account_type_payable"/>
+    <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
     <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
     <field name="reconcile" eval='True'/>
   </record>
@@ -2062,6 +2072,12 @@
   <record id="pcg_61262" model="account.account.template">
     <field name="name">Achats des études</field>
     <field name="code">61262</field>
+    <field name="user_type_id" ref="account.data_account_type_expenses"/>
+    <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
+  </record>
+  <record id="pcg_61263" model="account.account.template">
+    <field name="name">Achats des prestations de service</field>
+    <field name="code">61263</field>
     <field name="user_type_id" ref="account.data_account_type_expenses"/>
     <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
   </record>

@@ -114,7 +114,7 @@ var FieldAutocomplete = FieldChar.extend(AutocompleteMixin, {
         var self = this;
         this._getCreateData(company).then(function (data) {
             if (data.logo) {
-                var logoField = self.model === 'res.partner' ? 'image' : 'logo';
+                var logoField = self.model === 'res.partner' ? 'image_1920' : 'logo';
                 data.company[logoField] = data.logo;
             }
 
@@ -126,23 +126,21 @@ var FieldAutocomplete = FieldChar.extend(AutocompleteMixin, {
                 });
             }
 
-            self._setOne2ManyField('child_ids', data.company.child_ids);
-            delete data.company.child_ids;
-
             self._setOne2ManyField('bank_ids', data.company.bank_ids);
             delete data.company.bank_ids;
 
             self.trigger_up('field_changed', {
                 dataPointID: self.dataPointID,
                 changes: data.company,
+                onSuccess: function () {
+                    // update the input's value directly
+                    if (self.onlyVAT)
+                        self.$input.val(self._formatValue(company.vat));
+                    else
+                        self.$input.val(self._formatValue(company.name));
+                },
             });
         });
-
-        // update the input's value directly
-        if (this.onlyVAT)
-            this.$input.val(this._formatValue(company.vat));
-        else
-            this.$input.val(this._formatValue(company.name));
         this._removeDropdown();
     },
 

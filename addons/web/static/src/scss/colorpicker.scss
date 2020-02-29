@@ -53,6 +53,16 @@
         }
     }
     .o_color_picker_inputs {
+        display: flex;
+        flex-direction: column;
+        & > .form-row {
+            flex: 1;
+            .col {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+            }
+        }
         .o_color_preview_parent {
             background-image: url('/web_editor/static/src/img/transparent.png');
         }

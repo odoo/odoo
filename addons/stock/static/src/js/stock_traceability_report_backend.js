@@ -6,7 +6,6 @@ var core = require('web.core');
 var session = require('web.session');
 var ReportWidget = require('stock.ReportWidget');
 var framework = require('web.framework');
-var crash_manager = require('web.crash_manager');
 
 var QWeb = core.qweb;
 
@@ -29,11 +28,11 @@ var stock_report_generic = AbstractAction.extend({
         this.given_context.lot_name = action.context.lot_name || false;
     },
     willStart: function() {
-        return $.when(this._super.apply(this, arguments), this.get_html());
+        return Promise.all([this._super.apply(this, arguments), this.get_html()]);
     },
     set_html: function() {
         var self = this;
-        var def = $.when();
+        var def = Promise.resolve();
         if (!this.report_widget) {
             this.report_widget = new ReportWidget(this, this.given_context);
             def = this.report_widget.appendTo(this.$('.o_content'));
@@ -67,7 +66,7 @@ var stock_report_generic = AbstractAction.extend({
                 self.html = result.html;
                 self.renderButtons();
                 defs.push(self.update_cp());
-                return $.when.apply($, defs);
+                return Promise.all(defs);
             });
     },
     // Updates the control panel and render the elements that have yet to be rendered
@@ -104,7 +103,7 @@ var stock_report_generic = AbstractAction.extend({
                 url: url_data.replace('output_format', 'pdf'),
                 data: {data: JSON.stringify(dict)},
                 complete: framework.unblockUI,
-                error: crash_manager.rpc_error.bind(crash_manager),
+                error: (error) => self.call('crash_manager', 'rpc_error', error),
             });
         });
         return this.$buttons;

@@ -3,13 +3,19 @@ odoo.define('web_editor.field.html', function (require) {
 
 var ajax = require('web.ajax');
 var basic_fields = require('web.basic_fields');
+var config = require('web.config');
 var core = require('web.core');
-var Wysiwyg = require('web_editor.wysiwyg');
+var Wysiwyg = require('web_editor.wysiwyg.root');
 var field_registry = require('web.field_registry');
+// must wait for web/ to add the default html widget, otherwise it would override the web_editor one
+require('web._field_registry');
 
+var _lt = core._lt;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
-
 var QWeb = core.qweb;
+var assetsLoaded;
+
+var jinjaRegex = /(^|\n)\s*%\s(end|set\s)/;
 
 /**
  * FieldHtml Widget
@@ -25,6 +31,7 @@ var QWeb = core.qweb;
  *  - wrapper
  */
 var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
+    description: _lt("Html"),
     className: 'oe_form_field oe_form_field_html',
     supportedFieldTypes: ['html'],
 
@@ -39,9 +46,25 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @override
      */
     willStart: function () {
+        var self = this;
+        this.isRendered = false;
         this._onUpdateIframeId = 'onLoad_' + _.uniqueId('FieldHtml');
-        var defAsset = this.nodeOptions.cssReadonly && ajax.loadAsset(this.nodeOptions.cssReadonly);
-        return $.when(this._super().then(Wysiwyg.prepare.bind(Wysiwyg, this)), defAsset);
+        var defAsset;
+        if (this.nodeOptions.cssReadonly) {
+            defAsset = ajax.loadAsset(this.nodeOptions.cssReadonly);
+        }
+
+        if (!assetsLoaded) { // avoid flickering when begin to edit
+            assetsLoaded = new Promise(function (resolve) {
+                var wysiwyg = new Wysiwyg(self, {});
+                wysiwyg.attachTo($('<textarea>')).then(function () {
+                    wysiwyg.destroy();
+                    resolve();
+                });
+            });
+        }
+
+        return Promise.all([this._super(), assetsLoaded, defAsset]);
     },
     /**
      * @override
@@ -76,20 +99,27 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     commitChanges: function () {
         var self = this;
-        if (!this.wysiwyg) {
+        if (config.isDebug() && this.mode === 'edit') {
+            var layoutInfo = $.summernote.core.dom.makeLayoutInfo(this.wysiwyg.$editor);
+            $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
+        }
+        if (this.mode == "readonly" || !this.isRendered) {
             return this._super();
         }
         var _super = this._super.bind(this);
-        return this.wysiwyg.save().then(function (isDirty, html) {
-            self._isDirty = isDirty;
-            _super();
+        return this.wysiwyg.saveCroppedImages(this.$content).then(function () {
+            return self.wysiwyg.save().then(function (result) {
+                self._isDirty = result.isDirty;
+                _super();
+            });
         });
     },
     /**
      * @override
      */
     isSet: function () {
-        return this.value && this.value !== "<p><br/></p>" && this.value.match(/\S/);
+        var value = this.value && this.value.split('&nbsp;').join('').replace(/\s/g, ''); // Removing spaces & html spaces
+        return value && value !== "<p></p>" && value !== "<p><br></p>" && value.match(/\S/);
     },
     /**
      * @override
@@ -116,7 +146,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                 this.$content.html(value);
             }
         }
-        return $.when();
+        return Promise.resolve();
     },
 
     //--------------------------------------------------------------------------
@@ -147,8 +177,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         // by default this is synchronous because the assets are already loaded in willStart
         // but it can be async in the case of options such as iframe, snippets...
         return this.wysiwyg.attachTo(this.$target).then(function () {
-            self.$content = self.wysiwyg.$el;
+            self.$content = self.wysiwyg.$editor.closest('body, odoo-wysiwyg-container');
             self._onLoadWysiwyg();
+            self.isRendered = true;
         });
     },
     /**
@@ -158,7 +189,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @returns {Object}
      */
     _getWysiwygOptions: function () {
-        return {
+        var self = this;
+        return Object.assign({}, this.nodeOptions, {
             recordInfo: {
                 context: this.record.getContext(this.recordParams),
                 res_model: this.model,
@@ -169,25 +201,36 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             iframeCssAssets: this.nodeOptions.cssEdit,
             snippets: this.nodeOptions.snippets,
 
-            tabSize: 0,
-            keyMap: {
-                pc: {
-                    'TAB': null,
-                    'SHIFT+TAB': null,
-                },
-                mac: {
-                    'TAB': null,
-                    'SHIFT+TAB': null,
-                },
-            },
+            tabsize: 0,
+            height: 180,
             generateOptions: function (options) {
-                var para = _.find(options.toolbar, function (item) {
+                var toolbar = options.toolbar || options.airPopover || {};
+                var para = _.find(toolbar, function (item) {
                     return item[0] === 'para';
                 });
-                para[1].splice(2, 0, 'checklist');
+                if (para && para[1] && para[1].indexOf('checklist') === -1) {
+                    para[1].splice(2, 0, 'checklist');
+                }
+                if (config.isDebug()) {
+                    options.codeview = true;
+                    var view = _.find(toolbar, function (item) {
+                        return item[0] === 'view';
+                    });
+                    if (view) {
+                        if (!view[1].includes('codeview')) {
+                            view[1].splice(-1, 0, 'codeview');
+                        }
+                    } else {
+                        toolbar.splice(-1, 0, ['view', ['codeview']]);
+                    }
+                }
+                if ("mailing.mailing" === self.model) {
+                    options.noVideos = true;
+                }
+                options.prettifyHtml = false;
                 return options;
             },
-        };
+        });
     },
     /**
      * trigger_up 'field_changed' add record into the "ir.attachment" field found in the view.
@@ -253,8 +296,10 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         }
 
         this.$el.empty();
-
-        var def = $.Deferred();
+        var resolver;
+        var def = new Promise(function (resolve) {
+            resolver = resolve;
+        });
         if (this.nodeOptions.cssReadonly) {
             this.$iframe = $('<iframe class="o_readonly"/>');
             this.$iframe.appendTo(this.$el);
@@ -263,17 +308,17 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
 
             // inject content in iframe
 
-            this.$iframe.data('load-def', def); // for unit test
+            this.$iframe.data('loadDef', def); // for unit test
             window.top[this._onUpdateIframeId] = function (_avoidDoubleLoad) {
                 if (_avoidDoubleLoad !== avoidDoubleLoad) {
                     console.warn('Wysiwyg iframe double load detected');
                     return;
                 }
                 self.$content = $('#iframe_target', self.$iframe[0].contentWindow.document.body);
-                def.resolve();
+                resolver();
             };
 
-            this.$iframe.one('load', function onLoad() {
+            this.$iframe.on('load', function onLoad() {
                 var _avoidDoubleLoad = ++avoidDoubleLoad;
                 ajax.loadAsset(self.nodeOptions.cssReadonly).then(function (asset) {
                     if (_avoidDoubleLoad !== avoidDoubleLoad) {
@@ -311,7 +356,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         } else {
             this.$content = $('<div class="o_readonly"/>').html(value);
             this.$content.appendTo(this.$el);
-            def.resolve();
+            resolver();
         }
 
         def.then(function () {
@@ -325,7 +370,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _textToHtml: function (text) {
         var value = text || "";
-        if (/%\send/.test(value)) { // is jinja
+        if (jinjaRegex.test(value)) { // is jinja
             return value;
         }
         try {
@@ -416,6 +461,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         if (ev.offsetX > 0) {
             return;
         }
+        ev.stopPropagation();
+        ev.preventDefault();
         var checked = $(ev.target).hasClass('o_checked');
         var checklistId = parseInt(($(ev.target).attr('id') || '0').replace(/^checklist-id-/, ''));
 
@@ -443,10 +490,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             'font-size': '15px',
             position: 'absolute',
             right: '+5px',
+            top: '+5px',
         });
-        var $toolbar = this.$content.closest('.note-editor').find('.note-toolbar');
-        $toolbar.css('position', 'relative');
-        $toolbar.append($button);
+        this.$el.append($button);
     },
     /**
      * @private

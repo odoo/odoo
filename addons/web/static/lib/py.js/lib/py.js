@@ -133,10 +133,10 @@ var py = {};
         return this;
     };
     infix('if', 20, function (left) {
-        this.first = left;
-        this.second = expression();
+        this.ifTrue = left;
+        this.condition = expression();
         advance('else');
-        this.third = expression();
+        this.ifFalse = expression();
         return this;
     });
 
@@ -273,8 +273,7 @@ var py = {};
         var Special = '[:;.,`@]';
         var Funny = group(Operator, Bracket, Special);
 
-        var ContStr = group("([uU])?'([^']*)'", '([uU])?"([^"]*)"');
-
+        var ContStr = group("([uU])?'([^\n'\\\\]*(?:\\\\.[^\n'\\\\]*)*)'", '([uU])?"([^\n"\\\\]*(?:\\\\.[^\n"\\\\]*)*)"');
         var PseudoToken = Whitespace + group(Number, Funny, ContStr, Name);
 
         var number_pattern = new RegExp('^' + Number + '$');
@@ -282,9 +281,6 @@ var py = {};
         var name_pattern = new RegExp('^' + Name + '$');
         var strip = new RegExp('^' + Whitespace);
         return function tokenize(s) {
-            s = s
-                .replace(/\\\"/g, '\\u0022')   // for double quote
-                .replace(/\\\'/g, '\\u0027');  // for single quote
             var max=s.length, tokens = [], start, end;
             // /g flag makes repeated exec() have memory
             var pseudoprog = new RegExp(PseudoToken, 'g');
@@ -313,9 +309,6 @@ var py = {};
                 } else if (string_pattern.test(token)) {
                     var m = string_pattern.exec(token);
                     var value = (m[3] !== undefined ? m[3] : m[5]);
-                    value
-                        .replace(/\\u0022/g, '"')
-                        .replace(/\\u0027/g, "'");
                     tokens.push(create(symbols['(string)'], {
                         unicode: !!(m[2] || m[4]),
                         value: value
@@ -889,6 +882,12 @@ var py = {};
             }
             return py.float.fromJSON(this._value * other._value);
         },
+        __pow__: function (other) {
+            if (!py.PY_isInstance(other, py.float)) {
+                return py.NotImplemented;
+            }
+            return py.float.fromJSON(this._value ** other._value);
+        },
         __div__: function (other) {
             if (!py.PY_isInstance(other, py.float)) {
                 return py.NotImplemented;
@@ -1386,6 +1385,13 @@ var py = {};
                 return or_first
             }
             return py.evaluate(expr.second, context);
+        case 'if':
+            var cond = py.evaluate(expr.condition, context);
+            if (py.PY_isTrue(cond)) {
+                return py.evaluate(expr.ifTrue, context);
+            } else {
+                return py.evaluate(expr.ifFalse, context);
+            }
         case '(':
             if (expr.second) {
                 var callable = py.evaluate(expr.first, context);

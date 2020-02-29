@@ -1,34 +1,81 @@
 .o_graph_controller {
     .o_graph_renderer {
         height: 100%;
-        overflow: auto;
-        .o_graph_svg_container {
-            direction: ltr#{"/*rtl:ignore*/"};
+        .o_graph_canvas_container {
+            padding-top: 5px;
+            position: relative;
             height: 100%;
-            overflow: auto;
-            svg {
+            width: 100%;
+            top: 0px;
+            left: 0px;
+            canvas {
                 background-color: $o-view-background-color;
-                .nv-y {
-                    path.domain, g.tick.zero {
-                        // Hide y axis line and zero tick label
-                        display: none;
-                    }
-                }
-                .nv-axis.nv-x path.domain {
-                    stroke-opacity: 0.2;
-                }
-                .nv-groups g.nv-group {
-                    stroke-width:10px;
-                }
-                .nv-groups path.nv-area {
-                    // ligther area color
-                    fill-opacity: 0.1;
-                }
             }
         }
     }
-}
 
-.nvtooltip thead {
-    background-color: transparent;
+    div.o_tooltip_legend {
+        background-color: white;
+        color:black;
+        font-size: 12px;
+        border: black solid 0.5px;
+        border-radius: 3px;
+        opacity: 1;
+        position: absolute;
+        padding:10px;
+        z-index: 2;
+        pointer-events: none;
+        word-break: break-all;
+    }
+
+    div.o_graph_custom_tooltip {
+        border-radius: 3px;
+        background-color: white;
+        border: black solid 0.5px;
+        position: absolute;
+        z-index: 1;
+        padding: 6px;
+        pointer-events: none;
+        opacity: 0.9;
+        font-family: Arial;
+        table {
+            font-size: 12px;
+            overflow: hidden;
+            display: block;
+            border-collapse: collapse;
+        }
+        th.o_measure {
+            color: black;
+            font-weight: bolder;
+            vertical-align: baseline;
+            padding-bottom: 1px;
+        }
+        td {
+            span.o_square {
+                height: 12px;
+                width: 12px;
+                display: inline-block;
+                vertical-align: middle;
+            }
+            span.o_label {
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                color: black;
+                display: inline-block;
+                vertical-align: middle;
+            }
+            &.o_value {
+                color: black;
+                padding-left: 5px;
+                text-align: right;
+                font-weight: bold;
+            }
+        }
+        tr.o_show_more {
+            text-align: center;
+            color: black;
+            font-weight: bolder;
+        }
+    }
 }

@@ -11,16 +11,15 @@ class SnailmailLetterFormatError(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super(SnailmailLetterFormatError, self).default_get(fields)
-        snailmail_cover = self.env.user.company_id.snailmail_cover
+        snailmail_cover = self.env.company.snailmail_cover
         res.update({
             'message_id': self.env.context.get('message_id'),
             'snailmail_cover': snailmail_cover,
         })
         return res
 
-    @api.multi
     def update_resend_action(self):
-        self.env.user.company_id.write({'snailmail_cover': self.snailmail_cover})
+        self.env.company.write({'snailmail_cover': self.snailmail_cover})
         letters_to_resend = self.env['snailmail.letter'].search([
             ('error_code', '=', 'FORMAT_ERROR'),
         ])
@@ -29,6 +28,5 @@ class SnailmailLetterFormatError(models.TransientModel):
             letter.write({'cover': self.snailmail_cover})
             letter.snailmail_print()
 
-    @api.multi
     def cancel_letter_action(self):
         self.message_id.cancel_letter()

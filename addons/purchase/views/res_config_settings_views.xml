@@ -14,15 +14,16 @@
                     <field name="po_lock" invisible="1"/>
                     <h2>Orders</h2>
                     <div class="row mt16 o_settings_container" name="purchase_setting_container">
-                        <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box" id="po_order_approval">
                             <div class="o_setting_left_pane">
                                 <field name="po_order_approval"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="po_order_approval"/>
+                                <a href="https://www.odoo.com/documentation/user/13.0/purchase/purchases/rfq/approvals.html" title="Documentation" class="mr-2 fa fa-lg fa-book" target="_blank"></a>
                                 <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                 <div class="text-muted">
-                                    Managers must approve orders
+                                    Request managers to approve orders above a minimum amount
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('po_order_approval', '=', False)]}">
                                     <div class="row mt16">
@@ -32,34 +33,39 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box" id="automatic_lock_confirmed_orders">
                             <div class="o_setting_left_pane">
                                 <field name="lock_confirmed_po"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="lock_confirmed_po"/>
+                                <a href="https://www.odoo.com/documentation/user/13.0/purchase/purchases/rfq/lock_orders.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
                                 <div class="text-muted">
-                                    No longer edit orders once confirmed
+                                    Automatically lock confirmed orders to prevent edition
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box" id="get_order_warnings">
                             <div class="o_setting_left_pane">
                                 <field name="group_warning_purchase"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="group_warning_purchase" string="Warnings"/>
+                                <a href="https://www.odoo.com/documentation/user/13.0/purchase/purchases/rfq/warning.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
                                 <div class="text-muted">
                                     Get warnings in orders for products or vendors
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" title="Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products. You can configure per product if you directly do a Request for Quotation to one vendor or if you want a Call for Tenders to compare offers from several vendors.">
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            id="manage_purchase_agreements"
+                            title="Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products. You can configure per product if you directly do a Request for Quotation to one vendor or if you want a Call for Tenders to compare offers from several vendors.">
                             <div class="o_setting_left_pane">
                                 <field name="module_purchase_requisition"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="module_purchase_requisition"/>
+                                <a href="https://www.odoo.com/documentation/user/13.0/purchase/purchases/tender/call_for_tender.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
                                 <div class="text-muted">
                                     Manage your purchase agreements (call for tenders, blanket orders)
                                 </div>
@@ -70,11 +76,12 @@
                         </div>
                     </div>
                     <h2>Invoicing</h2>
-                    <div class="row mt16 o_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box" title="This default value is applied to any new product created. This can be changed in the product detail form.">
+                    <div class="row mt16 o_settings_container" name="invoicing_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="quantities_billed_vendor" title="This default value is applied to any new product created. This can be changed in the product detail form.">
                             <div class="o_setting_left_pane"/>
                             <div class="o_setting_right_pane">
                                 <label for="default_purchase_method"/>
+                                <a href="https://www.odoo.com/documentation/user/13.0/purchase/purchases/rfq/bills.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
                                 <div class="text-muted">
                                     Quantities billed by vendors
                                 </div>
@@ -85,12 +92,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" title="If enabled, activates 3-way matching on vendor bills : the items must be received in order to pay the invoice.">
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            id="three_way_matching"
+                            title="If enabled, activates 3-way matching on vendor bills : the items must be received in order to pay the invoice.">
                             <div class="o_setting_left_pane">
                                 <field name="module_account_3way_match" string="3-way matching" widget="upgrade_boolean"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="module_account_3way_match"/>
+                                <a href="https://www.odoo.com/documentation/user/13.0/purchase/purchases/rfq/3_way_matching.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
                                 <div class="text-muted">
                                     Make sure you only pay bills for which you received the goods you ordered
                                 </div>
@@ -98,23 +108,17 @@
                         </div>
                     </div>
                     <h2>Products</h2>
-                    <div class="row mt16 o_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box" title="By default, vendor prices can be set manually in the product detail form. If your vendors provide you with pricelist files, this option allows you to easily import them into the system from ‘Purchase > Vendor Pricelists’ menu.">
+                    <div class="row mt16 o_settings_container" name="matrix_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            id="product_matrix"
+                            title="If installed, the product variants will be added to purchase orders through a grid entry.">
                             <div class="o_setting_left_pane">
-                                <field name="group_manage_vendor_price"/>
+                                <field name="module_purchase_product_matrix"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="group_manage_vendor_price"/>
+                                <label for="module_purchase_product_matrix" string="Variant Grid Entry"/>
                                 <div class="text-muted">
-                                    Import vendor pricelists
-                                </div>
-                                <div class="content-group" attrs="{'invisible': [('group_manage_vendor_price', '=', False)]}">
-                                    <div class="mt16">
-                                        <a role="button" class="btn-link" target="_blank" href="https://www.odoo.com/documentation/user/12.0/general/base_import/import_faq.html">
-                                            <i class="fa fa-arrow-right"/>
-                                            How to import
-                                        </a>
-                                    </div>
+                                    Add several variants to the purchase order from a grid
                                 </div>
                             </div>
                         </div>

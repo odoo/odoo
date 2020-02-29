@@ -15,7 +15,7 @@ Index: coalroller/coalroller/models/res_partner.py
 ===================================================================
 --- /dev/null
 +++ coalroller/coalroller/models/res_partner.py
-@@ -0,0 +1,22 @@
+@@ -0,0 +1,21 @@
 +# -*- coding: utf-8 -*-
 +from odoo import api, models
 +from odoo.addons.iap import jsonrpc, InsufficientCreditError
@@ -25,7 +25,6 @@ Index: coalroller/coalroller/models/res_partner.py
 +DEFAULT_ENDPOINT = 'http://localhost:8070'
 +class Partner(models.Model):
 +    _inherit = 'res.partner'
-+    @api.multi
 +    def action_partner_coalroll(self):
 +        # fetch the user's token for our service
 +        user_token = self.env['iap.account'].get('coalroller')

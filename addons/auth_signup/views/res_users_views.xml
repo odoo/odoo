@@ -17,7 +17,7 @@
                     <field name="state" widget="statusbar"/>
                 </xpath>
 
-                <xpath expr="//sheet/div[@name='button_box']" position="after">
+                <xpath expr="//sheet" position="before">
                     <div class="alert alert-success text-center o_form_header" attrs="{'invisible': [('signup_valid', '!=', True)]}" role="status">
                         <a class="close" data-dismiss="alert" href="#" aria-label="Close">x</a>
                         <div attrs="{'invisible': [('state', '!=', 'active')]}">
@@ -30,6 +30,20 @@
                          <field name="signup_valid" invisible="1"/>
                      </div>
                  </xpath>
+            </field>
+        </record>
+
+        <record id="view_users_state_tree" model="ir.ui.view">
+            <field name="name">res.users.tree.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-info">state == 'new'</attribute>
+                </xpath>
+                <xpath expr="//field[@name='login_date']" position="after">
+                    <field name="state" invisible="1"/>
+                </xpath>
             </field>
         </record>
 

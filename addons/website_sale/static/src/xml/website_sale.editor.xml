@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<!-- Products Search Bar settings dialog -->
+<div t-name="website_sale.dialog.productsSearchBar">
+    <div class="form-group">
+        <label for="order_by">Search filter to use <b>by default</b></label>
+        <select class="custom-select" id="order_by">
+            <option value="" t-att-selected="!currentOrderBy ? 'selected' : undefined">Default order</option>
+            <option value="name asc" t-att-selected="currentOrderBy == 'name asc' ? 'selected' : undefined">Order by name (A-Z)</option>
+            <option value="name desc" t-att-selected="currentOrderBy == 'name desc' ? 'selected' : undefined">Order by name (Z-A)</option>
+            <option value="list_price asc" t-att-selected="currentOrderBy == 'list_price asc' ? 'selected' : undefined">Order by price: low to high</option>
+            <option value="list_price desc" t-att-selected="currentOrderBy == 'list_price desc' ? 'selected' : undefined">Order by price: high to low</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <div class="custom-control custom-switch" data-toggle="collapse" data-target="#use_autocomplete_options">
+            <input type="checkbox" class="custom-control-input" id="use_autocomplete" t-att-checked="currentLimit > 0 ? 'checked' : undefined"/>
+            <label class="custom-control-label" for="use_autocomplete">Add product suggestions</label>
+        </div>
+    </div>
+    <div id="use_autocomplete_options" t-attf-class="collapse #{currentLimit > 0 ? 'show' : ''}">
+        <div class="form-group">
+            <label for="limit">Maximum number of products to display</label>
+            <select class="custom-select" id="limit">
+                <option t-foreach="20" t-as="limit"
+                    t-esc="limit + 1" t-att-value="limit + 1"
+                    t-att-selected="currentLimit == (limit + 1) ? 'selected' : undefined"/>
+            </select>
+        </div>
+        <div class="form-group">
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="display_description" t-att-checked="currentDisplayDescription ? 'checked' : undefined"/>
+                <label class="custom-control-label" for="display_description">Display product <b>description</b> and allow to search in</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="display_price" t-att-checked="currentDisplayPrice ? 'checked' : undefined"/>
+                <label class="custom-control-label" for="display_price">Display product <b>price</b></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="display_image" t-att-checked="currentDisplayImage ? 'checked' : undefined"/>
+                <label class="custom-control-label" for="display_image">Display product <b>image</b></label>
+            </div>
+        </div>
+    </div>
+</div>
+
+</templates>

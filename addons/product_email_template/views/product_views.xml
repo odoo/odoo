@@ -5,19 +5,17 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='email_template_and_project']" position="attributes">
-                    <attribute name="string">Automatic Email at Invoice</attribute>
-                    <attribute name="invisible">0</attribute>
-                </xpath>
-                <xpath expr="//group[@name='email_template_and_project']" position="inside">
-                    <field name="email_template_id" string="Email Template" help="Send a product-specific email once the invoice is paid"
-                        domain="[('model','=','product.template')]"
-                        context="{
-                            'form_view_ref':'product_email_template.email_template_form_simplified',
-                            'default_model': 'product.template',
-                            'default_subject': name,
-                            'default_name': name,
-                        }"/>
+                <xpath expr="//page[@name='sales']//group[@name='sale']" position="inside">
+                    <group name="email_template" string="Automatic Email at Invoice">
+                        <field name="email_template_id" string="Email Template" help="Send a product-specific email once the invoice is validated"
+                            domain="[('model','=','product.template')]"
+                            context="{
+                                'form_view_ref':'product_email_template.email_template_form_simplified',
+                                'default_model': 'product.template',
+                                'default_subject': name,
+                                'default_name': name,
+                            }"/>
+                    </group>
                 </xpath>
             </field>
         </record>

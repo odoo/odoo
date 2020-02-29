@@ -3,6 +3,8 @@ odoo.define('mass_mailing.field_html_tests', function (require) {
 
 var ajax = require('web.ajax');
 var FormView = require('web.FormView');
+var FieldHtml = require('web_editor.field.html');
+var MassMailingFieldHtml = require('mass_mailing.FieldHtml');
 var testUtils = require('web.test_utils');
 var weTestUtils = require('web_editor.test_utils');
 var Wysiwyg = require('web_editor.wysiwyg');
@@ -12,7 +14,7 @@ QUnit.module('mass_mailing', {}, function () {
 QUnit.module('field html', {
     beforeEach: function () {
         this.data = weTestUtils.wysiwygData({
-            'mail.mass_mailing': {
+            'mailing.mailing': {
                 fields: {
                     display_name: {
                         string: "Displayed name",
@@ -39,14 +41,14 @@ QUnit.module('field html', {
         testUtils.mock.patch(ajax, {
             loadAsset: function (xmlId) {
                 if (xmlId === 'template.assets') {
-                    return $.when({
+                    return Promise.resolve({
                         cssLibs: [],
                         cssContents: ['.field_body {background-color: red;}']
                     });
                 }
                 if (xmlId === 'template.assets_all_style') {
-                    return $.when({
-                        cssLibs: $('head link[href]:not([type="image/x-icon"])').map(function () {
+                    return Promise.resolve({
+                        cssLibs: $('link[href]:not([type="image/x-icon"])').map(function () {
                             return $(this).attr('href');
                         }).get(),
                         cssContents: ['.field_body {background-color: red;}']
@@ -61,13 +63,12 @@ QUnit.module('field html', {
     },
 }, function () {
 
-QUnit.test('save arch and html', function (assert) {
-    var done = assert.async();
-    assert.expect(6);
+QUnit.test('save arch and html', async function (assert) {
+    assert.expect(4);
 
-    testUtils.createAsyncView({
+    var form = await testUtils.createView({
         View: FormView,
-        model: 'mail.mass_mailing',
+        model: 'mailing.mailing',
         data: this.data,
         arch: '<form>' +
             '   <field name="body_html" class="oe_read_only" widget="html"'+
@@ -77,60 +78,29 @@ QUnit.test('save arch and html', function (assert) {
             '   />'+
             '   <field name="body_arch" class="oe_edit_only" widget="mass_mailing_html"'+
             '       options="{'+
-            '                \'snippets\': \'template.assets\','+
+            '                \'snippets\': \'web_editor.snippets\','+
             '                \'cssEdit\': \'template.assets\','+
             '                \'inline-field\': \'body_html\''+
             '       }"'+
             '   />'+
             '</form>',
         res_id: 1,
-        mockRPC: function (route, args) {
-            if (args.method === "write") {
-                var values = args.args[1];
-                assert.strictEqual(values.body_html,
-                    '<div class="field_body" style="background-color:red;"><p>c<b>od</b>e to edit</p></div>',
-                    "should save the content");
-                assert.strictEqual(values.body_arch,
-                    '<div class="field_body"><p>c<b>od</b>e to edit</p></div>',
-                    "should save the content");
-
-            }
-            return this._super.apply(this, arguments);
-        },
-    }).then(function (form) {
-        var $fieldReadonly = form.$('.oe_form_field[name="body_html"]');
-        var $fieldEdit = form.$('.oe_form_field[name="body_arch"]');
-
-        assert.strictEqual($fieldReadonly.css('display'), 'block', "should display the readonly mode");
-        assert.strictEqual($fieldEdit.css('display'), 'none', "should hide the edit mode");
-
-        form.$buttons.find('.o_form_button_edit').click();
-
-        $fieldReadonly = form.$('.oe_form_field[name="body_html"]');
-        $fieldEdit = form.$('.oe_form_field[name="body_arch"]');
-
-        assert.strictEqual($fieldReadonly.css('display'), 'none', "should hide the readonly mode");
-        assert.strictEqual($fieldEdit.css('display'), 'block', "should display the edit mode");
-
-        var $iframe = $fieldEdit.find('iframe');
-
-        $iframe.data('load-def').then(function () {
-            var doc = $iframe.contents()[0];
-            var $content = $('#iframe_target', doc);
-
-            // select the text
-            var pText = $content.find('.note-editable p').first().contents()[0];
-            Wysiwyg.setRange(pText, 1, pText, 3);
-            // text is selected
-
-            $content.find('.note-toolbar .note-font .note-btn-bold').mousedown().click();
-
-            form.$buttons.find('.o_form_button_save').click();
-
-            form.destroy();
-            done();
-        });
     });
+    var $fieldReadonly = form.$('.oe_form_field[name="body_html"]');
+    var $fieldEdit = form.$('.oe_form_field[name="body_arch"]');
+
+    assert.strictEqual($fieldReadonly.css('display'), 'block', "should display the readonly mode");
+    assert.strictEqual($fieldEdit.css('display'), 'none', "should hide the edit mode");
+
+    await testUtils.form.clickEdit(form);
+
+    $fieldReadonly = form.$('.oe_form_field[name="body_html"]');
+    $fieldEdit = form.$('.oe_form_field[name="body_arch"]');
+
+    assert.strictEqual($fieldReadonly.css('display'), 'none', "should hide the readonly mode");
+    assert.strictEqual($fieldEdit.css('display'), 'block', "should display the edit mode");
+
+    form.destroy();
 });
 
 });

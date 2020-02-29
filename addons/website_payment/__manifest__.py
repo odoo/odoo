@@ -2,7 +2,7 @@
 
 {
     'name': 'Website Payment',
-    'category': 'Technical Settings',
+    'category': 'Hidden',
     'summary': 'Payment integration with website',
     'version': '1.0',
     'description': """

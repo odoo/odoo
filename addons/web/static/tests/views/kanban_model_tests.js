@@ -57,12 +57,13 @@ QUnit.module('Views', {
             openGroupByDefault: true,
             viewType: 'kanban',
         };
-    }
+    },
 }, function () {
 
     QUnit.module('KanbanModel');
 
-    QUnit.test('load grouped + add a new group', function (assert) {
+    QUnit.test('load grouped + add a new group', async function (assert) {
+        var done = assert.async();
         assert.expect(22);
 
         var calledRoutes = {};
@@ -84,7 +85,7 @@ QUnit.module('Views', {
             fieldNames: ['foo'],
         });
 
-        model.load(params).then(function (resultID) {
+        model.load(params).then(async function (resultID) {
             // various checks on the load result
             var state = model.get(resultID);
             assert.ok(_.isEqual(state.groupedBy, ['product_id']), 'should be grouped by "product_id"');
@@ -102,7 +103,7 @@ QUnit.module('Views', {
             assert.strictEqual(xphoneGroup.limit, 40, 'limit in a group should be 40');
 
             // add a new group
-            model.createGroup('xpod', resultID);
+            await model.createGroup('xpod', resultID);
             state = model.get(resultID);
             assert.strictEqual(state.data.length, 3, 'should now have 3 groups');
             assert.strictEqual(state.count, 2, 'there are still 2 records');
@@ -116,22 +117,31 @@ QUnit.module('Views', {
 
             // check the rpcs done
             assert.strictEqual(Object.keys(calledRoutes).length, 3, 'three different routes have been called');
-            var nbReadGroups = calledRoutes['/web/dataset/call_kw/partner/read_group'];
+            var nbReadGroups = calledRoutes['/web/dataset/call_kw/partner/web_read_group'];
             var nbSearchRead = calledRoutes['/web/dataset/search_read'];
             var nbNameCreate = calledRoutes['/web/dataset/call_kw/product/name_create'];
             assert.strictEqual(nbReadGroups, 1, 'should have done 1 read_group');
             assert.strictEqual(nbSearchRead, 2, 'should have done 2 search_read');
             assert.strictEqual(nbNameCreate, 1, 'should have done 1 name_create');
             model.destroy();
+            done();
         });
     });
 
-    QUnit.test('archive/restore a column', function (assert) {
+    QUnit.test('archive/restore a column', async function (assert) {
+        var done = assert.async();
         assert.expect(4);
 
         var model = createModel({
             Model: KanbanModel,
             data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/action_archive') {
+                    this.data.partner.records[0].active = false;
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         var params = _.extend(this.params, {
@@ -139,7 +149,7 @@ QUnit.module('Views', {
             fieldNames: ['foo'],
         });
 
-        model.load(params).then(function (resultID) {
+        model.load(params).then(async function (resultID) {
             var state = model.get(resultID);
             var xphoneGroup = _.findWhere(state.data, {res_id: 37});
             var xpadGroup = _.findWhere(state.data, {res_id: 41});
@@ -148,24 +158,26 @@ QUnit.module('Views', {
 
             // archive the column 'xphone'
             var recordIDs = _.pluck(xphoneGroup.data, 'id');
-            model.toggleActive(recordIDs, false, xphoneGroup.id);
+            await model.actionArchive(recordIDs, xphoneGroup.id);
             state = model.get(resultID);
             xphoneGroup = _.findWhere(state.data, {res_id: 37});
             assert.strictEqual(xphoneGroup.count, 0, 'xphone group has no record anymore');
             xpadGroup = _.findWhere(state.data, {res_id: 41});
             assert.strictEqual(xpadGroup.count, 1, 'xpad group still has one record');
             model.destroy();
+            done();
         });
     });
 
-    QUnit.test('kanban model does not allow nested groups', function (assert) {
+    QUnit.test('kanban model does not allow nested groups', async function (assert) {
+        var done = assert.async();
         assert.expect(2);
 
         var model = createModel({
             Model: KanbanModel,
             data: this.data,
             mockRPC: function (route, args) {
-                if (args.method === 'read_group') {
+                if (args.method === 'web_read_group') {
                     assert.deepEqual(args.kwargs.groupby, ['product_id'],
                         "the second level of groupBy should have been removed");
                 }
@@ -185,10 +197,11 @@ QUnit.module('Views', {
                 "the second level of groupBy should have been removed");
 
             model.destroy();
+            done();
         });
     });
 
-    QUnit.test('resequence columns and records', function (assert) {
+    QUnit.test('resequence columns and records', async function (assert) {
         var done = assert.async();
         assert.expect(8);
 
@@ -252,7 +265,8 @@ QUnit.module('Views', {
             });
     });
 
-    QUnit.test('add record to group', function (assert) {
+    QUnit.test('add record to group', async function (assert) {
+        var done = assert.async();
         assert.expect(8);
 
         var self = this;
@@ -289,9 +303,77 @@ QUnit.module('Views', {
                 assert.strictEqual(state.data[0].data[0].data.foo, 'new record',
                     "new record should have been fetched");
             });
+        }).then(function() {
+            model.destroy();
+            done();
+        })
+
+    });
+
+    QUnit.test('call get (raw: true) before loading x2many data', async function (assert) {
+        // Sometimes, get can be called on a datapoint that is currently being
+        // reloaded, and thus in a partially updated state (e.g. in a kanban
+        // view, the user interacts with the searchview, and before the view is
+        // fully reloaded, it clicks on CREATE). Ideally, this shouldn't happen,
+        // but with the sync API of get, we can't change that easily. So at most,
+        // we can ensure that it doesn't crash. Moreover, sensitive functions
+        // requesting the state for more precise information that, e.g., the
+        // count, can do that in the mutex to ensure that the state isn't
+        // currently being reloaded.
+        // In this test, we have a grouped kanban view with a one2many, whose
+        // relational data is loaded in batch, once for all groups. We call get
+        // when the search_read for the first group has returned, but not the
+        // second (and thus, the read of the one2many hasn't started yet).
+        // Note: this test can be removed as soon as search_reads are performed
+        // alongside read_group.
+        var done = assert.async();
+        assert.expect(2);
+
+        this.data.partner.records[1].product_ids = [37, 41];
+        this.params.fieldsInfo = {
+            kanban: {
+                product_ids: {
+                    fieldsInfo: {
+                        default: { display_name: {}, color: {} },
+                    },
+                    relatedFields: this.data.product.fields,
+                    viewType: 'default',
+                },
+            },
+        };
+        this.params.viewType = 'kanban';
+        this.params.groupedBy = ['foo'];
+
+        var block;
+        var def = testUtils.makeTestPromise();
+        var model = await createModel({
+            Model: KanbanModel,
+            data: this.data,
+            mockRPC: function (route) {
+                var result = this._super.apply(this, arguments);
+                if (route === '/web/dataset/search_read' && block) {
+                    block = false;
+                    return Promise.all([def]).then(_.constant(result));
+                }
+                return result;
+            },
         });
 
-        model.destroy();
+        model.load(this.params).then(function (handle) {
+            block = true;
+            model.reload(handle, {});
+
+            var state = model.get(handle, {raw: true});
+            assert.strictEqual(state.count, 2);
+
+            def.resolve();
+
+            state = model.get(handle, {raw: true});
+            assert.strictEqual(state.count, 2);
+        }).then(function() {
+            model.destroy();
+            done();
+        });
     });
 });
 

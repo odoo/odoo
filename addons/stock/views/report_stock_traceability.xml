@@ -13,9 +13,6 @@
             <tr t-att-data-unfold="a['unfoldable']" t-att-data-parent_id="a['parent_id']" t-att-data-id="a['id']" t-att-data-model_id="a['model_id']" t-att-data-model="a['model']" t-att-data-lot_name="a['lot_name']" t-att-data-lot_id="a['lot_id']" t-att-class="trclass">
                 <t t-set="tdclass" t-value="''" />
                 <t t-set="spanclass" t-value="''" />
-                <t t-set="span_color" t-value="'color: #666666;'"/>
-                <t t-if="a['usage'] == 'in'"><t t-set="span_color" t-value="'color: #3c763d;'"/></t>
-                <t t-if="a['usage'] == 'out'"><t t-set="span_color" t-value="'color: #a94442;'"/></t>
                 <t t-if="a.get('unfoldable')"><t t-set="tdclass" t-value="'o_stock_reports_unfoldable'" /></t>
                 <t t-if="not a.get('unfoldable')"><t t-set="spanclass" t-value="'o_stock_reports_nofoldable'" /></t>
                 <t t-set="column" t-value="0" />
@@ -41,9 +38,7 @@
                             </span>
                         </t>
                         <t t-else="">
-                            <span t-att-style="span_color">
                                 <t t-raw="c"/>
-                            </span>
                         </t>
                     </td>
                 </t>
@@ -52,7 +47,7 @@
     </template>
 
     <template id="report_stock_inventory">
-        <div class="container o_stock_reports_page o_stock_reports_no_print">
+        <div class="container-fluid o_stock_reports_page o_stock_reports_no_print">
             <span t-if="lines" class="o_report_heading text-left"><h1>Traceability Report</h1></span>
             <span><t t-esc="context"/></span>
             <div class="o_stock_reports_table table-responsive">
@@ -60,7 +55,7 @@
                     <span class="text-center"><h1>No operation made on this lot.</h1></span>
                 </t>
                 <t t-if="lines">
-                    <table width='100%' class="table">
+                    <table class="table">
                         <thead>
                             <tr class="o_report_header">
                                 <th class="o_report_line_header">Reference</th>
@@ -81,7 +76,7 @@
         </div>
     </template>
 
-    <template id="assets_stock_print_report" inherit_id="web.assets_common" active="True">
+    <template id="assets_stock_print_report" inherit_id="web.assets_common">
         <xpath expr="." position="inside">
             <link rel="stylesheet" type="text/scss" href="/stock/static/src/scss/stock_traceability_report.scss"/>
         </xpath>
@@ -98,8 +93,8 @@
     <template id="report_stock_body_print">
         <div class="container o_stock_reports_page o_stock_reports_no_print">
             <span class="text-left"><h3>Traceability Report</h3></span>
-            <div class="table-responsive">
-                <table width='100%' class="o_stock_reports_table table">
+            <div class="o_stock_reports_table table-responsive">
+                <table class="table">
                     <thead>
                         <tr class="o_report_header">
                             <th class="o_report_line_header">Reference</th>

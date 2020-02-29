@@ -108,8 +108,8 @@ var MrpBomReport = stock_report_generic.extend({
     },
     renderSearch: function () {
         this.$buttonPrint = $(QWeb.render('mrp.button'));
-        this.$buttonPrint.filter('.o_mrp_bom_print').on('click', this._onClickPrint.bind(this));
-        this.$buttonPrint.filter('.o_mrp_bom_print_unfolded').on('click', this._onClickPrint.bind(this));
+        this.$buttonPrint.find('.o_mrp_bom_print').on('click', this._onClickPrint.bind(this));
+        this.$buttonPrint.find('.o_mrp_bom_print_unfolded').on('click', this._onClickPrint.bind(this));
         this.$searchView = $(QWeb.render('mrp.report_bom_search', _.omit(this.data, 'lines')));
         this.$searchView.find('.o_mrp_bom_report_qty').on('change', this._onChangeQty.bind(this));
         this.$searchView.find('.o_mrp_bom_report_variants').on('change', this._onChangeVariants.bind(this));
@@ -120,10 +120,11 @@ var MrpBomReport = stock_report_generic.extend({
             return $(el).data('id');
         });
         framework.blockUI();
-        var reportname = 'mrp.report_bom_structure?docids=' + this.given_context.active_id + '&report_type=' + this.given_context.report_type;
+        var reportname = 'mrp.report_bom_structure?docids=' + this.given_context.active_id +
+                         '&report_type=' + this.given_context.report_type +
+                         '&quantity=' + (this.given_context.searchQty || 1);
         if (! $(ev.currentTarget).hasClass('o_mrp_bom_print_unfolded')) {
-            reportname += '&quantity=' + (this.given_context.searchQty || 1) +
-                          '&childs=' + JSON.stringify(childBomIDs);
+            reportname += '&childs=' + JSON.stringify(childBomIDs);
         }
         if (this.given_context.searchVariant) {
             reportname += '&variant=' + this.given_context.searchVariant;
@@ -168,6 +169,9 @@ var MrpBomReport = stock_report_generic.extend({
             type: 'ir.actions.act_window',
             res_model: $(ev.currentTarget).data('model'),
             res_id: $(ev.currentTarget).data('res-id'),
+            context: {
+                'active_id': $(ev.currentTarget).data('res-id')
+            },
             views: [[false, 'form']],
             target: 'current'
         });
@@ -195,10 +199,7 @@ var MrpBomReport = stock_report_generic.extend({
     _reload_report_type: function () {
         this.$('.o_mrp_bom_cost.o_hidden, .o_mrp_prod_cost.o_hidden').toggleClass('o_hidden');
         if (this.given_context.report_type === 'bom_structure') {
-            this.$('.o_mrp_bom_cost').toggleClass('o_hidden');
-        }
-        if (this.given_context.report_type === 'bom_cost') {
-            this.$('.o_mrp_prod_cost').toggleClass('o_hidden');
+           this.$('.o_mrp_bom_cost, .o_mrp_prod_cost').toggleClass('o_hidden');
         }
     },
     _removeLines: function ($el) {

@@ -1,0 +1,866 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="uae_sale_tax_5_dubai" model="account.tax.template">
+        <field name="name">VAT 5% (Dubai)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="description">VAT 5%</field>
+        <field name="tax_group_id" ref="ae_tax_group_5"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_base_dubai')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_dubai')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_base_dubai')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_dubai')],
+            }),
+        ]"/>
+    </record>
+    <record id="uae_sale_tax_5_abu_dhabi" model="account.tax.template">
+        <field name="name">VAT 5% (Abu Dhabi)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="description">VAT 5%</field>
+        <field name="tax_group_id" ref="ae_tax_group_5"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_base_abu_dhabi')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_abu_dhabi')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_base_abu_dhabi')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_abu_dhabi')],
+            }),
+        ]"/>
+    </record>
+    <record id="uae_sale_tax_5_sharjah" model="account.tax.template">
+        <field name="name">VAT 5% (Sharjah)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="description">VAT 5%</field>
+        <field name="tax_group_id" ref="ae_tax_group_5"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_base_sharjah')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_sharjah')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_base_sharjah')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_sharjah')],
+            }),
+        ]"/>
+    </record>
+    <record id="uae_sale_tax_5_ajman" model="account.tax.template">
+        <field name="name">VAT 5% (Ajman)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="description">VAT 5%</field>
+        <field name="tax_group_id" ref="ae_tax_group_5"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_base_ajman')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_ajman')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_base_ajman')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_ajman')],
+            }),
+        ]"/>
+    </record>
+    <record id="uae_sale_tax_5_umm_al_quwain" model="account.tax.template">
+        <field name="name">VAT 5% (Umm Al Quwain)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="description">VAT 5%</field>
+        <field name="tax_group_id" ref="ae_tax_group_5"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_base_umm_al_quwain')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_umm_al_quwain')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_base_umm_al_quwain')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_umm_al_quwain')],
+            }),
+        ]"/>
+    </record>
+    <record id="uae_sale_tax_5_ras_al_khaima" model="account.tax.template">
+        <field name="name">VAT 5% (Ras Al-Khaima)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="description">VAT 5%</field>
+        <field name="tax_group_id" ref="ae_tax_group_5"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_base_ras_al_khaima')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_ras_al_khaima')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_base_ras_al_khaima')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_ras_al_khaima')],
+            }),
+        ]"/>
+    </record>
+    <record id="uae_sale_tax_5_fujairah" model="account.tax.template">
+        <field name="name">VAT 5% (Fujairah)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="description">VAT 5%</field>
+        <field name="tax_group_id" ref="ae_tax_group_5"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_base_fujairah')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_fujairah')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_base_fujairah')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_fujairah')],
+            }),
+        ]"/>
+    </record>
+    <record id="uae_sale_tax_exempted" model="account.tax.template">
+        <field name="name">Exempted Tax</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="description">Exempted</field>
+        <field name="tax_group_id" ref="ae_tax_group_exempted"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_exempt_supplies_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_exempt_supplies_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="uae_sale_tax_0" model="account.tax.template">
+        <field name="name">VAT 0%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="description">VAT 0%</field>
+        <field name="tax_group_id" ref="ae_tax_group_0"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_zero_rated_supplies_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_zero_rated_supplies_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="uae_export_tax" model="account.tax.template">
+        <field name="name">Export Tax 0%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="description">Export Tax</field>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="uae_sale_tax_reverse_charge_dubai" model="account.tax.template">
+        <field name="name">Reverse Charge Provision (Dubai)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="description">Supplies subject to reverse charge provisions</field>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_dubai')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_dubai')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_dubai')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_dubai')],
+            }),
+        ]"/>
+    </record>
+    <record id="uae_sale_tax_reverse_charge_abu_dhabi" model="account.tax.template">
+        <field name="name">Reverse Charge Provision (Abu Dhabi)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="description">Supplies subject to reverse charge provisions</field>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_abu_dhabi')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_abu_dhabi')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_abu_dhabi')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_abu_dhabi')],
+            }),
+        ]"/>
+    </record>
+    <record id="uae_sale_tax_reverse_charge_sharjah" model="account.tax.template">
+        <field name="name">Reverse Charge Provision (Sharjah)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="description">Supplies subject to reverse charge provisions</field>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_sharjah')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_sharjah')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_sharjah')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_sharjah')],
+            }),
+        ]"/>
+    </record>
+    <record id="uae_sale_tax_reverse_charge_ajman" model="account.tax.template">
+        <field name="name">Reverse Charge Provision (Ajman)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="description">Supplies subject to reverse charge provisions</field>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_ajman')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_ajman')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_ajman')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_ajman')],
+            }),
+        ]"/>
+    </record>
+    <record id="uae_sale_tax_reverse_charge_umm_al_quwain" model="account.tax.template">
+        <field name="name">Reverse Charge Provision (Umm Al Quwain)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="description">Supplies subject to reverse charge provisions</field>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_umm_al_quwain')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_umm_al_quwain')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_umm_al_quwain')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_umm_al_quwain')],
+            }),
+        ]"/>
+    </record>
+    <record id="uae_sale_tax_reverse_charge_ras_al_khaima" model="account.tax.template">
+        <field name="name">Reverse Charge Provision (Ras Al-Khaima)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="description">Supplies subject to reverse charge provisions</field>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_ras_al_khaima')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_ras_al_khaima')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_ras_al_khaima')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_ras_al_khaima')],
+            }),
+        ]"/>
+    </record>
+    <record id="uae_sale_tax_reverse_charge_fujairah" model="account.tax.template">
+        <field name="name">Reverse Charge Provision (Fujairah)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="description">Supplies subject to reverse charge provisions</field>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_fujairah')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_fujairah')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_base'),ref('tax_report_line_standard_rated_supplies_base_fujairah')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'plus_report_line_ids': [ref('tax_report_line_supplies_reverse_charge_vat')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3785'),
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_supplies_vat_fujairah')],
+            }),
+        ]"/>
+    </record>
+    <record id="uae_sale_tax_tourist_refund" model="account.tax.template">
+        <field name="name">Tourist Refund scheme 5%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">5.0</field>
+        <field name="amount_type">percent</field>
+        <field name="description">Tax Refunds provided to Tourists under the Tax Refunds for Tourists Scheme</field>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_tax_refund_tourist_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'plus_report_line_ids': [ref('tax_report_line_tax_refund_tourist_vat')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_tax_refund_tourist_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'minus_report_line_ids': [ref('tax_report_line_tax_refund_tourist_vat')],
+            }),
+        ]"/>
+    </record>
+    <!-- purchase taxes -->
+    <record id="uae_purchase_tax_5" model="account.tax.template">
+        <field name="name">VAT 5%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="description">VAT 5%</field>
+        <field name="tax_group_id" ref="ae_tax_group_5"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_expense_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_expense_vat')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_expense_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_expense_vat')],
+            }),
+        ]"/>
+    </record>
+    <record id="uae_purchase_tax_exempted" model="account.tax.template">
+        <field name="name">Exempted Tax</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="description">Exempted Tax</field>
+        <field name="tax_group_id" ref="ae_tax_group_exempted"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="uae_purchase_tax_0" model="account.tax.template">
+        <field name="name">VAT 0%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="description">VAT 0%</field>
+        <field name="tax_group_id" ref="ae_tax_group_0"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="uae_import_tax" model="account.tax.template">
+        <field name="name">Import Tax 5%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="description">Import Tax</field>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_import_uae_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'plus_report_line_ids': [ref('tax_report_line_import_uae_vat')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_import_uae_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'minus_report_line_ids': [ref('tax_report_line_import_uae_vat')],
+            }),
+        ]"/>
+    </record>
+    <record id="uae_purchase_tax_reverse_charge" model="account.tax.template">
+        <field name="name">Reverse Charge Provision</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="description">Supplies subject to reverse charge provisions</field>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base'),ref('tax_report_line_standard_rated_expense_base')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'plus_report_line_ids': [ref('tax_report_line_standard_rated_expense_vat')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base'),ref('tax_report_line_standard_rated_expense_base')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_vat')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('uae_account_3726'),
+                'minus_report_line_ids': [ref('tax_report_line_standard_rated_expense_vat')],
+            }),
+        ]"/>
+    </record>
+</odoo>

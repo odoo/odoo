@@ -5,9 +5,9 @@
 diff --git a/openacademy/models.py b/openacademy/models.py
 --- a/openacademy/models.py
 +++ b/openacademy/models.py
-@@ -64,6 +64,9 @@ class Session(models.Model):
-     hours = fields.Float(string="Duration in hours",
-                          compute='_get_hours', inverse='_set_hours')
+@@ -60,6 +60,9 @@ class Session(models.Model):
+     end_date = fields.Date(string="End Date", store=True,
+         compute='_get_end_date', inverse='_set_end_date')
  
 +    attendees_count = fields.Integer(
 +        string="Attendees count", compute='_get_attendees_count', store=True)
@@ -15,9 +15,9 @@ diff --git a/openacademy/models.py b/openacademy/models.py
      @api.depends('seats', 'attendee_ids')
      def _taken_seats(self):
          for r in self:
-@@ -122,6 +125,11 @@ class Session(models.Model):
-         for r in self:
-             r.duration = r.hours / 24
+@@ -106,6 +109,11 @@ class Session(models.Model):
+             # so add one day to get 5 days instead
+             r.duration = (r.end_date - r.start_date).days + 1
  
 +    @api.depends('attendee_ids')
 +    def _get_attendees_count(self):
@@ -30,7 +30,7 @@ diff --git a/openacademy/models.py b/openacademy/models.py
 diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
 --- a/openacademy/views/openacademy.xml
 +++ b/openacademy/views/openacademy.xml
-@@ -155,11 +155,22 @@
+@@ -153,10 +153,21 @@
              </field>
          </record>
  
@@ -48,7 +48,6 @@ diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.x
          <record model="ir.actions.act_window" id="session_list_action">
              <field name="name">Sessions</field>
              <field name="res_model">openacademy.session</field>
-             <field name="view_type">form</field>
 -            <field name="view_mode">tree,form,calendar,gantt</field>
 +            <field name="view_mode">tree,form,calendar,gantt,graph</field>
          </record>

@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-import io
 import logging
+import mimetypes
 import requests
 import werkzeug.utils
 
-from PIL import Image
 from odoo import http, tools, _
 from odoo.http import request
+from odoo.tools.mimetypes import guess_mimetype
 from werkzeug.urls import url_encode
 
 logger = logging.getLogger(__name__)
@@ -89,8 +89,7 @@ class Web_Unsplash(http.Controller):
                     continue
 
                 # get mime-type of image url because unsplash url dosn't contains mime-types in url
-                mimetype = req.headers.get('Content-Type')
-                datas = req.content
+                image_base64 = base64.b64encode(req.content)
             except requests.exceptions.ConnectionError as e:
                 logger.exception("Connection Error: " + str(e))
                 continue
@@ -98,29 +97,25 @@ class Web_Unsplash(http.Controller):
                 logger.exception("Timeout: " + str(e))
                 continue
 
-            # optimized image before save
-            if mimetype in ('image/jpeg', 'image/png'):
-                image = Image.open(io.BytesIO(datas))
-                if image.format in ('PNG', 'JPEG'):
-                    datas = tools.image_save_for_web(image)
-                    # append image extension in name
-                    query += '.' + str.lower(image.format)
+            image_base64 = tools.image_process(image_base64, verify_resolution=True)
+            mimetype = guess_mimetype(base64.b64decode(image_base64))
+            # append image extension in name
+            query += mimetypes.guess_extension(mimetype) or ''
 
             # /unsplash/5gR788gfd/lion
             url_frags = ['unsplash', key, query]
 
             attachment = Attachments.create({
-                'name': query,
+                'name': '_'.join(url_frags),
                 'url': '/' + '/'.join(url_frags),
-                'datas_fname': '_'.join(url_frags),
                 'mimetype': mimetype,
-                'datas': base64.b64encode(datas),
+                'datas': image_base64,
                 'public': res_model == 'ir.ui.view',
                 'res_id': res_id,
                 'res_model': res_model,
             })
             attachment.generate_access_token()
-            uploads.extend(attachment.read(['name', 'mimetype', 'checksum', 'res_id', 'res_model', 'access_token', 'url']))
+            uploads.append(attachment._get_media_info())
 
             # Notifies Unsplash from an image download. (API requirement)
             self._notify_download(value.get('download_url'))

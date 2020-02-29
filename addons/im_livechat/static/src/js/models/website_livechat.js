@@ -130,7 +130,7 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @private
      * @param {Object} params
      * @param {boolean} params.typing
-     * @returns {$.Promise}
+     * @returns {Promise}
      */
     _notifyMyselfTyping: function (params) {
         return session.rpc('/im_livechat/notify_typing', {

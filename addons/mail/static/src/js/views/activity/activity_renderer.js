@@ -1,180 +1,208 @@
 odoo.define('mail.ActivityRenderer', function (require) {
 "use strict";
 
-var AbstractRenderer = require('web.AbstractRenderer');
-var core = require('web.core');
-var field_registry = require('web.field_registry');
+const AbstractRendererOwl = require('web.AbstractRendererOwl');
+const ActivityCell = require('mail.ActivityCell');
+const ActivityRecord = require('mail.ActivityRecord');
+const { ComponentAdapter } = require('web.OwlCompatibility');
+const core = require('web.core');
+const KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
+const QWeb = require('web.QWeb');
+const session = require('web.session');
+const utils = require('web.utils');
 
-var QWeb = core.qweb;
-var _t = core._t;
+const _t = core._t;
 
-var ActivityRenderer = AbstractRenderer.extend({
-    className: 'o_activity_view',
-    events: {
-        'click .o_res_name_cell': '_onResNameClicked',
-        'click .o_send_mail_template': '_onSenMailTemplateClicked',
-    },
+const { useState } = owl.hooks;
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+/**
+ * Owl Component Adapter for ActivityRecord which is KanbanRecord (Odoo Widget)
+ * TODO: Remove this adapter when ActivityRecord is a Component
+ */
+class ActivityRecordAdapter extends ComponentAdapter {
+    render() {
+        _.invoke(_.pluck(this.widget.subWidgets, '$el'), 'detach');
+        this.widget._render();
+    }
 
-    /**
-     * @override
-     * @private
-     */
-    _render: function () {
-        this.$el
-            .removeClass('table-responsive')
-            .empty();
+    update(nextProps) {
+        const state = nextProps.widgetArgs[0];
+        this.widget._setState(state);
+    }
+}
 
-        if (this.state.data.activity_types.length === 0) {
-            this.$el.append(QWeb.render('ActivityView.nodata'));
-        } else {
-            var $table = $('<table>')
-                .addClass('table-bordered')
-                .append(this._renderHeader())
-                .append(this._renderBody());
-            this.$el
-                .addClass('table-responsive')
-                .append($table);
+/**
+ * Owl Component Adapter for ActivityCell which is BasicActivity (AbstractField)
+ * TODO: Remove this adapter when ActivityCell is a Component
+ */
+class ActivityCellAdapter extends ComponentAdapter {
+    render() {
+        this.widget._render();
+    }
+
+    update(nextProps) {
+        const record = nextProps.widgetArgs[1];
+        this.widget._reset(record);
+    }
+}
+
+/**
+ * Owl Component Adapter for KanbanColumnProgressBar (Odoo Widget)
+ * TODO: Remove this adapter when KanbanColumnProgressBar is a Component
+ */
+class KanbanColumnProgressBarAdapter extends ComponentAdapter {
+    render() {
+        this.widget._render();
+    }
+
+    update(nextProps) {
+        const options = nextProps.widgetArgs[0];
+        const columnState = nextProps.widgetArgs[1];
+        
+        const columnId = options.columnID;
+        const nextActiveFilter = options.progressBarStates[columnId].activeFilter;
+        this.widget.activeFilter = nextActiveFilter ? this.widget.activeFilter : false;
+        this.widget.columnState = columnState;
+        this.widget.computeCounters();
+    }
+
+    _trigger_up(ev) {
+        // KanbanColumnProgressBar triggers 3 events before being mounted
+        // but we don't need to listen to them in our case.
+        if (this.el) {
+            super._trigger_up(ev);
         }
-        return this._super();
-    },
-    /**
-     * @private
-     * @returns {jQueryElement} a jquery element <tbody>
-     */
-    _renderBody: function () {
-        var $rows = _.map(this.state.data.res_ids, this._renderRow.bind(this));
-        return $('<tbody>').append($rows);
-    },
-    /**
-     * @private
-     * @returns {jQueryElement} a jquery element <thead>
-     */
-    _renderHeader: function () {
-        var $tr = $('<tr>')
-                .append($('<th>')) //empty cell for name
-                .append(_.map(this.state.data.activity_types, this._renderHeaderCell.bind(this)));
-        return $('<thead>').append($tr);
-    },
-    /**
-     * @private
-     * @param {Object} activity_type
-     * @returns {jQueryElement} a <th> element
-     */
-    _renderHeaderCell: function (activity_type) {
-        return QWeb.render('mail.ActivityViewHeaderCell', {
-            id: activity_type[0],
-            name: activity_type[1],
-            template_list: activity_type[2] || [],
+    }
+}
+
+class ActivityRenderer extends AbstractRendererOwl {
+    constructor(parent, props) {
+        super(...arguments);
+        this.qweb = new QWeb(this.env.isDebug(), {_s: session.origin});
+        this.qweb.add_template(utils.json_node_to_xml(props.templates));
+        this.activeFilter = useState({
+            state: null,
+            activityTypeId: null,
+            resIds: []
         });
-    },
+        this.widgetComponents = {
+            ActivityRecord,
+            ActivityCell,
+            KanbanColumnProgressBar,
+        };
+    }
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
     /**
-     * @private
-     * @param {Object} data
-     * @returns {jQueryElement} a <tr> element
+     * Gets all activity resIds in the view.
+     * 
+     * @returns filtered resIds first then the rest.
      */
-    _renderRow: function (data) {
-        var self = this;
-        var res_id = data[0];
-        var name = data[1];
-        var $nameTD = $('<td>')
-            .addClass("o_res_name_cell")
-            .html(name)
-            .data('res-id', res_id);
-        var $cells = _.map(this.state.data.activity_types, function (node) {
-            var $td = $('<td>').addClass("o_activity_summary_cell");
-            var activity_type_id = node[0];
-            var activity_group = self.state.data.grouped_activities[res_id][activity_type_id];
-            activity_group = activity_group || {count: 0, ids: [], state: false};
-            if (activity_group.state) {
-                $td.addClass(activity_group.state);
+    get activityResIds() {
+        const copiedActivityResIds = Array.from(this.props.activity_res_ids)
+        return copiedActivityResIds.sort((a, b) => this.activeFilter.resIds.includes(a) ? -1 : 0);
+    }
+
+    /**
+     * Gets all existing activity type ids.
+     */
+    get activityTypeIds() {
+        const activities = Object.values(this.props.grouped_activities);
+        const activityIds = activities.flatMap(Object.keys);
+        const uniqueIds = Array.from(new Set(activityIds));
+        return uniqueIds.map(Number);
+    }
+
+    getProgressBarOptions(typeId) {
+        return {
+            columnID: typeId,
+            progressBarStates: {
+                [typeId]: {
+                    activeFilter: this.activeFilter.activityTypeId === typeId,
+                },
+            },
+        };
+    }
+
+    getProgressBarColumnState(typeId) {
+        const counts = { planned: 0, today: 0, overdue: 0 };
+        for (let activities of Object.values(this.props.grouped_activities)) {
+            if (typeId in activities) {
+                counts[activities[typeId].state] += 1;
             }
-            // we need to create a fake record in order to instanciate the KanbanActivity
-            // this is the minimal information in order to make it work
-            // AAB: move this to a function
-            var record = {
-                data: {
-                    activity_ids: {
-                        model: 'mail.activity',
-                        res_ids: activity_group.ids,
-                    },
-                    activity_state: activity_group.state,
+        }
+        return {
+            count: Object.values(counts).reduce((x, y) => x + y),
+            fields: {
+                activity_state: {
+                    type: 'selection',
+                    selection: [
+                        ['planned', _t('Planned')],
+                        ['today', _t('Today')],
+                        ['overdue', _t('Overdue')],
+                    ],
                 },
-                fields: {
-                    activity_ids: {},
-                    activity_state: {
-                        selection: [
-                            ['overdue', "Overdue"],
-                            ['today', "Today"],
-                            ['planned', "Planned"],
-                        ],
-                    },
-                },
-                fieldsInfo: {},
-                model: self.state.data.model,
-                ref: res_id, // not necessary, i think
-                type: 'record',
-                res_id: res_id,
-                getContext: function () {
-                    return {}; // session.user_context
-                },
-                //todo intercept event or changes on record to update view
-            };
-            var KanbanActivity = field_registry.get('kanban_activity');
-            var widget = new KanbanActivity(self, "activity_ids", record, {});
-            widget.appendTo($td);
-            // replace clock by closest deadline
-            var $date = $('<div>');
-            var formated_date = moment(activity_group.o_closest_deadline).format('ll');
-            var current_year = (new Date()).getFullYear();
-            if (formated_date.endsWith(current_year)) { // Dummy logic to remove year (only if current year), we will maybe need to improve it
-                formated_date = formated_date.slice(0, -4);
-                formated_date = formated_date.replace(/( |,)*$/g, "");
-            }
-            $date
-                .text(formated_date)
-                .addClass('o_closest_deadline');
-            $td.find('a')
-                .empty()
-                .append($date);
-            return $td;
-        });
-        var $tr = $('<tr/>', {class: 'o_data_row'})
-            .append($nameTD)
-            .append($cells);
-        return $tr;
-    },
+            },
+            progressBarValues: {
+                field: 'activity_state',
+                colors: { planned: 'success', today: 'warning', overdue: 'danger' },
+                counts: counts,
+            },
+        };
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
     /**
      * @private
-     * @override
      * @param {MouseEvent} ev
      */
-    _onSenMailTemplateClicked: function (ev) {
-        var $target = $(ev.currentTarget);
-        var templateID = $target.data('template-id');
-        var activityTypeID = $target.closest('th').data('activity-type-id');
-        this.trigger_up('send_mail_template', {
-            activityTypeID: activityTypeID,
-            templateID: templateID,
+    _onEmptyCellClicked(ev) {
+        this.trigger('empty_cell_clicked', {
+            resId: parseInt(ev.currentTarget.dataset.resId, 10),
+            activityTypeId: parseInt(ev.currentTarget.dataset.activityTypeId, 10),
         });
-    },
+    }
     /**
      * @private
-     * @override
      * @param {MouseEvent} ev
      */
-    _onResNameClicked: function (ev) {
-        var resID = $(ev.currentTarget).data('res-id');
-        this.trigger_up('open_view_form', {resID: resID});
-    },
-});
+    _onSendMailTemplateClicked(ev) {
+        this.trigger('send_mail_template', {
+            activityTypeID: parseInt(ev.currentTarget.dataset.activityTypeId, 10),
+            templateID: parseInt(ev.currentTarget.dataset.templateId, 10),
+        });
+    }
+    /**
+     * @private
+     * @param {CustomEvent} ev
+     */
+    _onSetProgressBarState(ev) {
+        if (ev.detail.values.activeFilter) {
+            this.activeFilter.state = ev.detail.values.activeFilter;
+            this.activeFilter.activityTypeId = ev.detail.columnID;
+            this.activeFilter.resIds = Object.entries(this.props.grouped_activities)
+                .filter(([, resIds]) => ev.detail.columnID in resIds &&
+                    resIds[ev.detail.columnID].state === ev.detail.values.activeFilter)
+                .map(([key]) => parseInt(key));
+        } else {
+            this.activeFilter.state = null;
+            this.activeFilter.activityTypeId = null;
+            this.activeFilter.resIds = [];
+        }
+    }
+}
+
+ActivityRenderer.components = {
+    ActivityRecordAdapter,
+    ActivityCellAdapter,
+    KanbanColumnProgressBarAdapter,
+};
+ActivityRenderer.template = 'mail.ActivityRenderer';
 
 return ActivityRenderer;
 

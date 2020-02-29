@@ -8,4 +8,4 @@ import odoo.tests
 class IMSupportSuite(odoo.tests.HttpCase):
 
     def test_im_support_js(self):
-        self.phantom_js('/im_support/tests?mod=web&failfast', "", "", login='admin', timeout=180)
+        self.browser_js('/im_support/tests?mod=web&failfast', "", "", login='admin', timeout=180)

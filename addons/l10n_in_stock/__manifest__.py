@@ -5,13 +5,16 @@
     'name': 'Indian - Stock Report(GST)',
     'version': '1.0',
     'description': """GST Stock Report""",
-    'category': 'Accounting',
+    'category': 'Accounting/Accounting',
     'depends': [
         'l10n_in',
         'stock',
     ],
     'data': [
         'views/report_stockpicking_operations.xml',
+    ],
+    'demo': [
+        'data/product_demo.xml',
     ],
     'installable': True,
     'application': False,

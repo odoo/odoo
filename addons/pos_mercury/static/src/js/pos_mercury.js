@@ -13,31 +13,19 @@ var PopupWidget = require('point_of_sale.popups');
 var ScreenWidget = screens.ScreenWidget;
 var PaymentScreenWidget = screens.PaymentScreenWidget;
 
-pos_model.load_fields("account.journal", "pos_mercury_config_id");
+pos_model.load_fields('pos.payment.method', 'pos_mercury_config_id');
 
 pos_model.PosModel = pos_model.PosModel.extend({
-    getOnlinePaymentJournals: function () {
-        var self = this;
-        var online_payment_journals = [];
+    getOnlinePaymentMethods: function () {
+        var online_payment_methods = [];
 
-        $.each(this.journals, function (i, val) {
-            if (val.pos_mercury_config_id) {
-                online_payment_journals.push({label:self.getCashRegisterByJournalID(val.id).journal_id[1], item:val.id});
+        $.each(this.payment_methods, function (i, payment_method) {
+            if (payment_method.pos_mercury_config_id) {
+                online_payment_methods.push({label: payment_method.name, item: payment_method.id});
             }
         });
 
-        return online_payment_journals;
-    },
-    getCashRegisterByJournalID: function (journal_id) {
-        var cashregister_return;
-
-        $.each(this.cashregisters, function (index, cashregister) {
-            if (cashregister.journal_id[0] === journal_id) {
-                cashregister_return = cashregister;
-            }
-        });
-
-        return cashregister_return;
+        return online_payment_methods;
     },
     decodeMagtek: function (magtekInput) {
         // Regular expression to identify and extract data from the track 1 & 2 of the magnetic code
@@ -137,7 +125,19 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
         if (this.mercury_card_number) {
             this.name = this.mercury_card_brand + " (****" + this.mercury_card_number + ")";
         }
+    },
+    is_done: function () {
+        var res = _paylineproto.is_done.apply(this);
+        return res && !this.mercury_swipe_pending;
     }
+});
+
+var _order_super = pos_model.Order.prototype;
+pos_model.Order = pos_model.Order.extend({
+    electronic_payment_in_progress: function() {
+        var res = _order_super.electronic_payment_in_progress.apply(this, arguments);
+        return res || this.get_paymentlines().some(line => line.mercury_swipe_pending);
+    },
 });
 
 // Lookup table to store status and error messages
@@ -258,7 +258,7 @@ ScreenWidget.include({
 
     show: function () {
         this._super();
-        if(this.pos.getOnlinePaymentJournals().length !== 0) {
+        if(this.pos.getOnlinePaymentMethods().length !== 0) {
             this.pos.barcode_reader.set_action_callback('credit', _.bind(this.credit_error_action, this));
         }
     }
@@ -267,10 +267,10 @@ ScreenWidget.include({
 // On Payment screen, allow online payments
 PaymentScreenWidget.include({
     // How long we wait for the odoo server to deliver the response of
-    // a Mercury transaction
+    // a Vantiv transaction
     server_timeout_in_ms: 95000,
 
-    // How many Mercury transactions we send without receiving a
+    // How many Vantiv transactions we send without receiving a
     // response
     server_retries: 3,
 
@@ -325,7 +325,7 @@ PaymentScreenWidget.include({
                 message = "Error " + response.error + ": " + lookUpCodeTransaction["TimeoutError"][response.error] + "<br/>" + response.message;
             } else {
                 if (can_connect_to_server) {
-                    message = _t("No response from Mercury (Mercury down?)");
+                    message = _t("No response from Vantiv (Vantiv down?)");
                 } else {
                     message = _t("No response from server (connected to network?)");
                 }
@@ -348,7 +348,7 @@ PaymentScreenWidget.include({
             return;
         }
 
-        if(this.pos.getOnlinePaymentJournals().length === 0) {
+        if(this.pos.getOnlinePaymentMethods().length === 0) {
             return;
         }
 
@@ -379,7 +379,7 @@ PaymentScreenWidget.include({
             'transaction_code'  : 'Sale',
             'invoice_no'        : self.pos.get_order().uid.replace(/-/g,''),
             'purchase'          : purchase_amount,
-            'journal_id'        : parsed_result.journal_id,
+            'payment_method_id' : parsed_result.payment_method_id,
         };
 
         var def = old_deferred || new $.Deferred();
@@ -405,7 +405,7 @@ PaymentScreenWidget.include({
                 timeout: self.server_timeout_in_ms,
             })
             .then(function (data) {
-                // if not receiving a response from Mercury, we should retry
+                // if not receiving a response from Vantiv, we should retry
                 if (data === "timeout") {
                     self.retry_mercury_transaction(def, null, retry_nr, true, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
                     return;
@@ -413,7 +413,7 @@ PaymentScreenWidget.include({
 
                 if (data === "not setup") {
                     def.resolve({
-                        message: _t("Please setup your Mercury merchant account.")
+                        message: _t("Please setup your Vantiv merchant account.")
                     });
                     return;
                 }
@@ -426,7 +426,7 @@ PaymentScreenWidget.include({
                 }
 
                 var response = self.pos.decodeMercuryResponse(data);
-                response.journal_id = parsed_result.journal_id;
+                response.payment_method_id = parsed_result.payment_method_id;
 
                 if (response.status === 'Approved') {
                     // AP* indicates a duplicate request, so don't add anything for those
@@ -443,7 +443,7 @@ PaymentScreenWidget.include({
                         if (swipe_pending_line) {
                             order.select_paymentline(swipe_pending_line);
                         } else {
-                            order.add_paymentline(self.pos.getCashRegisterByJournalID(parsed_result.journal_id));
+                            order.add_paymentline(self.payment_methods_by_id[parsed_result.payment_method_id]);
                         }
 
                         order.selected_paymentline.paid = true;
@@ -491,7 +491,7 @@ PaymentScreenWidget.include({
                     }
                 }
 
-            }).fail(function (type, error) {
+            }).catch(function () {
                 self.retry_mercury_transaction(def, null, retry_nr, false, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
             });
     },
@@ -502,17 +502,17 @@ PaymentScreenWidget.include({
 
     credit_code_action: function (parsed_result) {
         var self = this;
-        var online_payment_journals = this.pos.getOnlinePaymentJournals();
+        var online_payment_methods = this.pos.getOnlinePaymentMethods();
 
-        if (online_payment_journals.length === 1) {
-            parsed_result.journal_id = online_payment_journals[0].item;
+        if (online_payment_methods.length === 1) {
+            parsed_result.payment_method_id = online_payment_methods[0].item;
             self.credit_code_transaction(parsed_result);
         } else { // this is for supporting another payment system like mercury
             this.gui.show_popup('selection',{
-                title:   'Pay ' + this.pos.get_order().get_due().toFixed(2) + ' with : ',
-                list:    online_payment_journals,
+                title:   _t('Pay with: '),
+                list:    online_payment_methods,
                 confirm: function (item) {
-                    parsed_result.journal_id = item;
+                    parsed_result.payment_method_id = item;
                     self.credit_code_transaction(parsed_result);
                 },
                 cancel:  self.credit_code_cancel,
@@ -606,7 +606,7 @@ PaymentScreenWidget.include({
                         });
                     }
                 }
-            }).fail(function (type, error) {
+            }).catch(function () {
                 self.retry_mercury_transaction(def, null, retry_nr, false, self.do_reversal, [line, is_voidsale, def, retry_nr + 1]);
             });
     },
@@ -626,67 +626,22 @@ PaymentScreenWidget.include({
 
     // make sure there is only one paymentline waiting for a swipe
     click_paymentmethods: function (id) {
-        var i;
         var order = this.pos.get_order();
-        var cashregister = null;
-        for (i = 0; i < this.pos.cashregisters.length; i++) {
-            if (this.pos.cashregisters[i].journal_id[0] === id){
-                cashregister = this.pos.cashregisters[i];
-                break;
-            }
-        }
-
-        if (cashregister.journal.pos_mercury_config_id) {
-            var already_swipe_pending = false;
-            var lines = order.get_paymentlines();
-
-            for (i = 0; i < lines.length; i++) {
-                if (lines[i].cashregister.journal.pos_mercury_config_id && lines[i].mercury_swipe_pending) {
-                    already_swipe_pending = true;
-                }
-            }
-
-            if (already_swipe_pending) {
-                this.gui.show_popup('error',{
-                    'title': _t('Error'),
-                    'body':  _t('One credit card swipe already pending.'),
-                });
-            } else {
-                this._super(id);
-                if (order.get_due(order.selected_paymentline) > 0) {
-                    order.selected_paymentline.mercury_swipe_pending = true;
-                    this.render_paymentlines();
-                    order.trigger('change', order); // needed so that export_to_JSON gets triggered
-                }
-            }
-        } else {
-            this._super(id);
+        var payment_method = this.pos.payment_methods_by_id[id];
+        var res = this._super(id);
+        if (res && payment_method.pos_mercury_config_id) {
+            order.selected_paymentline.mercury_swipe_pending = true;
+            this.render_paymentlines();
+            order.trigger('change', order); // needed so that export_to_JSON gets triggered
         }
     },
 
     show: function () {
         this._super();
-        if (this.pos.getOnlinePaymentJournals().length !== 0) {
+        if (this.pos.getOnlinePaymentMethods().length !== 0) {
             this.pos.barcode_reader.set_action_callback('credit', _.bind(this.credit_code_action, this));
         }
     },
-
-    // before validating, get rid of any paymentlines that are waiting
-    // on a swipe.
-    validate_order: function(force_validation) {
-        if (this.pos.get_order().is_paid() && ! this.invoicing) {
-            var lines = this.pos.get_order().get_paymentlines();
-
-            for (var i = 0; i < lines.length; i++) {
-                if (lines[i].mercury_swipe_pending) {
-                    this.pos.get_order().remove_paymentline(lines[i]);
-                    this.render_paymentlines();
-                }
-            }
-        }
-
-        this._super(force_validation);
-    }
 });
 
 });

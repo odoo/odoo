@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <template id="assets_frontend" inherit_id="website.assets_frontend" name="Buy course on quiz">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/website_sale_slides/static/src/js/slides_course_quiz.js"/>
+                <script type="text/javascript" src="/website_sale_slides/static/src/js/slides_course_unsubscribe.js"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

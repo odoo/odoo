@@ -1,27 +1,28 @@
 .o_kanban_view.o_event_kanban_view {
-
     .o_kanban_record {
-        position: relative;
-        padding: 0;
-
-        display: flex;
-
-        .o_event_left {
-            flex: 1 1 25%;
-            text-align: center;
-            color: white;
-            background-color: $o-brand-primary;
-            padding: 8px;
-
-            .o_day {
-                font-size: 26px;
-            }
+        min-height: 140px;
+    }
+    .o_kanban_content {
+        .o_event_fontweight_500 {
+            font-weight: 500;
         }
 
-        .o_event_right {
-            flex: 1 1 75%;
-            padding: 8px;
-            margin-left: 8px;
+        .o_event_fontsize_09 {
+            font-size: .9rem;
+        }
+
+        .o_event_fontsize_11 {
+            font-size: 1.1rem;
+        }
+
+        .o_event_fontsize_20 {
+            font-size: 2rem;
+        }
+
+        .o_event_fit_20 {
+            height: 20px;
+            object-fit: cover;
+            width: 20px;
         }
     }
 }

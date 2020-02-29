@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="base_iban_assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/base_iban/static/src/js/iban_widget.js"></script>
+                <link rel="stylesheet" type="text/scss" href="/base_iban/static/src/scss/iban_widget_view.scss"/>
+            </xpath>
+        </template>
+
+        <template id="qunit_suite" name="base_iban_widget_tests" inherit_id="web.qunit_suite">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/base_iban/static/src/tests/iban_widget_test.js"></script>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -28,10 +28,10 @@ var PasswordField = fields.InputField.extend({
         }).then(function (p) {
             _this._meter = new Meter(_this, new policy.Policy(p), policy.recommendations);
         });
-        return $.when(
+        return Promise.all([
             this._super.apply(this, arguments),
             getPolicy
-        );
+        ]);
     },
     /**
      * Add a <meter> next to the input (TODO: move to template?)
@@ -42,7 +42,7 @@ var PasswordField = fields.InputField.extend({
     _renderEdit: function () {
         var _this = this;
         var meter = this._meter;
-        return $.when(this._super.apply(this, arguments)).then(function () {
+        return Promise.resolve(this._super.apply(this, arguments)).then(function () {
             return meter._widgetRenderAndInsert(function (t) {
                 // insertAfter doesn't work and appendTo means the meter is
                 // ignored (as this.$el is an input[type=password])

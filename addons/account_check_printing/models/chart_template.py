@@ -6,7 +6,6 @@ from odoo import api, models
 class AccountChartTemplate(models.Model):
     _inherit = 'account.chart.template'
 
-    @api.multi
     def _create_bank_journals(self, company, acc_template_ref):
         '''
         When system automatically creates journals of bank and cash type when CoA is being installed

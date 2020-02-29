@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mail.tests.common import mail_new_test_user
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests.common import TransactionCase, users, warmup
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -41,16 +41,18 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
     @warmup
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.tests')
     def test_send_mailing(self):
-        mailing = self.env['mail.mass_mailing'].create({
+        mailing = self.env['mailing.mailing'].create({
             'name': 'Test',
+            'subject': 'Test',
             'body_html': '<p>Hello <a role="button" href="https://www.example.com/foo/bar?baz=qux">quux</a><a role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>',
             'reply_to_mode': 'email',
             'mailing_model_id': self.ref('test_mass_mailing.model_mass_mail_test'),
             'mailing_domain': [('id', 'in', self.mm_recs.ids)],
         })
 
-        with self.assertQueryCount(__system__=2435, marketing=3091):
-            mailing.send_mail()
+        # runbot needs +50 compared to local
+        with self.assertQueryCount(__system__=1912, marketing=1913):
+            mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
         self.assertEqual(mailing.delivered, 50)
@@ -73,21 +75,24 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
             self.env['mail.blacklist'].create({
                 'email': 'rec.%s@example.com' % (x * 5)
             })
+        self.env['mass.mail.test.bl'].flush()
 
     @users('__system__', 'marketing')
     @warmup
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.tests')
     def test_send_mailing_w_bl(self):
-        mailing = self.env['mail.mass_mailing'].create({
+        mailing = self.env['mailing.mailing'].create({
             'name': 'Test',
+            'subject': 'Test',
             'body_html': '<p>Hello <a role="button" href="https://www.example.com/foo/bar?baz=qux">quux</a><a role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>',
             'reply_to_mode': 'email',
             'mailing_model_id': self.ref('test_mass_mailing.model_mass_mail_test_bl'),
             'mailing_domain': [('id', 'in', self.mm_recs.ids)],
         })
 
-        with self.assertQueryCount(__system__=2807, marketing=3559):
-            mailing.send_mail()
+        # runbot needs +62 compared to local
+        with self.assertQueryCount(__system__=2239, marketing=2240):
+            mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
         self.assertEqual(mailing.delivered, 50)

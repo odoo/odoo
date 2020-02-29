@@ -13,9 +13,12 @@ var core = require('web.core');
 var dom = require('web.dom');
 var widgetRegistry = require('web.widget_registry');
 
+const { WidgetAdapterMixin } = require('web.OwlCompatibility');
+const FieldWrapper = require('web.FieldWrapper');
+
 var qweb = core.qweb;
 
-var BasicRenderer = AbstractRenderer.extend({
+var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
     custom_events: {
         navigation_move: '_onNavigationMove',
     },
@@ -31,7 +34,34 @@ var BasicRenderer = AbstractRenderer.extend({
         this.viewType = params.viewType;
         this.mode = params.mode || 'readonly';
         this.widgets = [];
+        // This attribute lets us know if there is a handle widget on a field,
+        // and on which field it is set.
+        this.handleField = null;
     },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+        WidgetAdapterMixin.destroy.call(this);
+    },
+    /**
+     * Called each time the renderer is attached into the DOM.
+     */
+    on_attach_callback: function () {
+        WidgetAdapterMixin.on_attach_callback.call(this);
+    },
+    /**
+     * Called each time the renderer is detached from the DOM.
+     */
+    on_detach_callback: function () {
+        WidgetAdapterMixin.on_detach_callback.call(this);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
     /**
      * This method has two responsabilities: find every invalid fields in the
      * current view, and making sure that they are displayed as invalid, by
@@ -61,13 +91,13 @@ var BasicRenderer = AbstractRenderer.extend({
      * before notifying them).
      *
      * @param {string} recordID
-     * @return {Deferred}
+     * @return {Promise}
      */
     commitChanges: function (recordID) {
         var defs = _.map(this.allFieldWidgets[recordID], function (widget) {
             return widget.commitChanges();
         });
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * Updates the internal state of the renderer to the new state. By default,
@@ -86,13 +116,13 @@ var BasicRenderer = AbstractRenderer.extend({
      * @param {string} id
      * @param {string[]} fields
      * @param {OdooEvent} ev
-     * @returns {Deferred<AbstractField[]>} resolved with the list of widgets
+     * @returns {Promise<AbstractField[]>} resolved with the list of widgets
      *                                      that have been reset
      */
     confirmChange: function (state, id, fields, ev) {
+        var self = this;
         this.state = state;
-
-        var record = state.id === id ? state : _.findWhere(state.data, {id: id});
+        var record = this._getRecord(id);
         if (!record) {
             return this._render().then(_.constant([]));
         }
@@ -104,12 +134,10 @@ var BasicRenderer = AbstractRenderer.extend({
 
         // Reset all the field widgets that are marked as changed and the ones
         // which are configured to always be reset on any change
-        var resetWidgets = [];
         _.each(this.allFieldWidgets[id], function (widget) {
             var fieldChanged = _.contains(fields, widget.name);
             if (fieldChanged || widget.resetOnAnyFieldChange) {
                 defs.push(widget.reset(record, ev, fieldChanged));
-                resetWidgets.push(widget);
             }
         });
 
@@ -118,8 +146,11 @@ var BasicRenderer = AbstractRenderer.extend({
         // state before evaluation
         defs.push(this._updateAllModifiers(record));
 
-        return $.when.apply($, defs).then(function () {
-            return resetWidgets;
+        return Promise.all(defs).then(function () {
+            return _.filter(self.allFieldWidgets[id], function (widget) {
+                var fieldChanged = _.contains(fields, widget.name);
+                return fieldChanged || widget.resetOnAnyFieldChange;
+            });
         });
     },
     /**
@@ -233,7 +264,7 @@ var BasicRenderer = AbstractRenderer.extend({
         $node.tooltip({
             title: function () {
                 return qweb.render('WidgetLabel.tooltip', {
-                    debug: config.debug,
+                    debug: config.isDebug(),
                     widget: widget,
                 });
             }
@@ -295,7 +326,7 @@ var BasicRenderer = AbstractRenderer.extend({
      *
      * @private
      * @param {AbstractField} widget
-     * @returns {boolean|Deferred<boolean>} @see AbstractField.isValid
+     * @returns {boolean|Promise<boolean>} @see AbstractField.isValid
      */
     _canWidgetBeSaved: function (widget) {
         var modifiers = this._getEvaluatedModifiers(widget.__node, widget.record);
@@ -351,6 +382,19 @@ var BasicRenderer = AbstractRenderer.extend({
         return _.findWhere(this.allModifiersData, {node: node});
     },
     /**
+     * This function is meant to be overridden in renderers. It takes a dataPoint
+     * id (for a dataPoint of type record), and should return the corresponding
+     * dataPoint.
+     *
+     * @abstract
+     * @private
+     * @param {string} [recordId]
+     * @returns {Object|null}
+     */
+    _getRecord: function (recordId) {
+        return null;
+    },
+    /**
      * @private
      * @param {jQueryElement} $el
      * @param {Object} node
@@ -365,6 +409,9 @@ var BasicRenderer = AbstractRenderer.extend({
         if (node.attrs.style) {
             $el.attr('style', node.attrs.style);
         }
+        if (node.attrs.placeholder) {
+            $el.attr('placeholder', node.attrs.placeholder);
+        }
     },
     /**
      * Used by list and kanban renderers to determine whether or not to display
@@ -377,6 +424,61 @@ var BasicRenderer = AbstractRenderer.extend({
         return this.state.count !== 0;
     },
     /**
+     * Force the resequencing of the records after moving one of them to a given
+     * index.
+     *
+     * @private
+     * @param {string} recordId datapoint id of the moved record
+     * @param {integer} toIndex new index of the moved record
+     */
+    _moveRecord: function (recordId, toIndex) {
+        var self = this;
+        var records = this.state.data;
+        var record = _.findWhere(records, {id: recordId});
+        var fromIndex = records.indexOf(record);
+        var lowerIndex = Math.min(fromIndex, toIndex);
+        var upperIndex = Math.max(fromIndex, toIndex) + 1;
+        var order = _.findWhere(this.state.orderedBy, {name: this.handleField});
+        var asc = !order || order.asc;
+        var reorderAll = false;
+        var sequence = (asc ? -1 : 1) * Infinity;
+
+        // determine if we need to reorder all records
+        _.each(records, function (record, index) {
+            if ((index < lowerIndex || index >= upperIndex) &&
+                ((asc && sequence >= record.data[self.handleField]) ||
+                 (!asc && sequence <= record.data[self.handleField]))) {
+                reorderAll = true;
+            }
+            sequence = record.data[self.handleField];
+        });
+
+        if (reorderAll) {
+            records = _.without(records, record);
+            records.splice(toIndex, 0, record);
+        } else {
+            records = records.slice(lowerIndex, upperIndex);
+            records = _.without(records, record);
+            if (fromIndex > toIndex) {
+                records.unshift(record);
+            } else {
+                records.push(record);
+            }
+        }
+
+        var sequences = _.pluck(_.pluck(records, 'data'), this.handleField);
+        var recordIds = _.pluck(records, 'id');
+        if (!asc) {
+            recordIds.reverse();
+        }
+
+        this.trigger_up('resequence_records', {
+            handleField: this.handleField,
+            offset: _.min(sequences),
+            recordIds: recordIds,
+        });
+    },
+    /**
      * This function is called each time a field widget is created, when it is
      * ready (after its willStart and Start methods are complete).  This is the
      * place where work having to do with $el should be done.
@@ -386,6 +488,7 @@ var BasicRenderer = AbstractRenderer.extend({
      * @param {Object} node the attrs coming from the arch
      */
     _postProcessField: function (widget, node) {
+        this._handleAttributes(widget.$el, node);
     },
     /**
      * Registers or updates the modifiers data associated to the given node.
@@ -444,6 +547,7 @@ var BasicRenderer = AbstractRenderer.extend({
      *   value (if not given, it is set to this.mode, the mode of the renderer)
      * @returns {Object} for code efficiency, returns the last evaluated
      *   modifiers for the given node and record.
+     * @throws {Error} if one of the modifier domains is not valid
      */
     _registerModifiers: function (node, record, element, options) {
         options = options || {};
@@ -472,7 +576,15 @@ var BasicRenderer = AbstractRenderer.extend({
 
         // Evaluate if necessary
         if (!modifiersData.evaluatedModifiers[record.id]) {
-            modifiersData.evaluatedModifiers[record.id] = record.evalModifiers(modifiersData.modifiers);
+            try {
+                modifiersData.evaluatedModifiers[record.id] = record.evalModifiers(modifiersData.modifiers);
+            } catch (e) {
+                throw new Error(_.str.sprintf(
+                    "While parsing modifiers for %s%s: %s",
+                    node.tag, node.tag === 'field' ? ' ' + node.attrs.name : '',
+                    e.message
+                ));
+            }
         }
 
         // Element might not be given yet (a second call to the function can
@@ -494,7 +606,7 @@ var BasicRenderer = AbstractRenderer.extend({
             }
             modifiersData.elementsByRecord[record.id].push(newElement);
 
-            this._applyModifiers(modifiersData, record, newElement, options);
+            this._applyModifiers(modifiersData, record, newElement);
         }
 
         return modifiersData.evaluatedModifiers[record.id];
@@ -503,24 +615,27 @@ var BasicRenderer = AbstractRenderer.extend({
      * Render the view
      *
      * @override
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _render: function () {
         var oldAllFieldWidgets = this.allFieldWidgets;
         this.allFieldWidgets = {}; // TODO maybe merging allFieldWidgets and allModifiersData into "nodesData" in some way could be great
         this.allModifiersData = [];
+        var oldWidgets = this.widgets;
+        this.widgets = [];
         return this._renderView().then(function () {
             _.each(oldAllFieldWidgets, function (recordWidgets) {
                 _.each(recordWidgets, function (widget) {
                     widget.destroy();
                 });
             });
+            _.invoke(oldWidgets, 'destroy');
         });
     },
     /**
      * Instantiates the appropriate AbstractField specialization for the given
      * node and prepares its rendering and addition to the DOM. Indeed, the
-     * rendering of the widget will be started and the associated deferred will
+     * rendering of the widget will be started and the associated promise will
      * be added to the 'defs' attribute. This is supposed to be created and
      * deleted by the calling code if necessary.
      *
@@ -546,10 +661,21 @@ var BasicRenderer = AbstractRenderer.extend({
         // Initialize and register the widget
         // Readonly status is known as the modifiers have just been registered
         var Widget = record.fieldsInfo[this.viewType][fieldName].Widget;
-        var widget = new Widget(this, fieldName, record, {
+        const legacy = !(Widget.prototype instanceof owl.Component);
+        const widgetOptions = {
             mode: modifiers.readonly ? 'readonly' : mode,
             viewType: this.viewType,
-        });
+        };
+        let widget;
+        if (legacy) {
+            widget = new Widget(this, fieldName, record, widgetOptions);
+        } else {
+            widget = new FieldWrapper(this, Widget, {
+                fieldName,
+                record,
+                options: widgetOptions,
+            });
+        }
 
         // Register the widget so that it can easily be found again
         if (this.allFieldWidgets[record.id] === undefined) {
@@ -559,28 +685,36 @@ var BasicRenderer = AbstractRenderer.extend({
 
         widget.__node = node; // TODO get rid of this if possible one day
 
-        // Prepare widget rendering and save the related deferred
-        var def = widget._widgetRenderAndInsert(function () {});
-        var async = def.state() === 'pending';
-        var $el = async ? $('<div>') : widget.$el;
-        if (async) {
-            this.defs.push(def);
+        // Prepare widget rendering and save the related promise
+        var $el = $('<div>');
+        let def;
+        if (legacy) {
+            def = widget._widgetRenderAndInsert(function () {});
+        } else {
+            def = widget.mount(document.createDocumentFragment());
         }
+
+        this.defs.push(def);
 
         // Update the modifiers registration by associating the widget and by
         // giving the modifiers options now (as the potential callback is
         // associated to new widget)
         var self = this;
         def.then(function () {
-            if (async) {
-                $el.replaceWith(widget.$el);
-            }
+            // when the caller of renderFieldWidget uses something like
+            // this.renderFieldWidget(...).addClass(...), the class is added on
+            // the temporary div and not on the actual element that will be
+            // rendered. As we do not return a promise and some callers cannot
+            // wait for this.defs, we copy those classnames to the final element.
+            widget.$el.addClass($el.attr('class'));
+
+            $el.replaceWith(widget.$el);
             self._registerModifiers(node, record, widget, {
                 callback: function (element, modifiers, record) {
                     element.$el.toggleClass('o_field_empty', !!(
-                        record.data.id
-                        && (modifiers.readonly || mode === 'readonly')
-                        && !element.widget.isSet()
+                        record.data.id &&
+                        (modifiers.readonly || mode === 'readonly') &&
+                        element.widget.isEmpty()
                     ));
                 },
                 keepBaseMode: !!options.keepBaseMode,
@@ -618,10 +752,10 @@ var BasicRenderer = AbstractRenderer.extend({
      * possible.
      *
      * @abstract
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _renderView: function () {
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * Instantiate custom widgets
@@ -637,22 +771,17 @@ var BasicRenderer = AbstractRenderer.extend({
 
         this.widgets.push(widget);
 
-        // Prepare widget rendering and save the related deferred
+        // Prepare widget rendering and save the related promise
         var def = widget._widgetRenderAndInsert(function () {});
-        var async = def.state() === 'pending';
-        if (async) {
-            this.defs.push(def);
-        }
-        var $el = async ? $('<div>') : widget.$el;
+        this.defs.push(def);
+        var $el = $('<div>');
 
         var self = this;
         def.then(function () {
             self._handleAttributes(widget.$el, node);
             self._registerModifiers(node, record, widget);
             widget.$el.addClass('o_widget');
-            if (async) {
-                $el.replaceWith(widget.$el);
-            }
+            $el.replaceWith(widget.$el);
         });
 
         return $el;
@@ -669,13 +798,23 @@ var BasicRenderer = AbstractRenderer.extend({
     _rerenderFieldWidget: function (widget, record, options) {
         // Render the new field widget
         var $el = this._renderFieldWidget(widget.__node, record, options);
-        widget.$el.replaceWith($el);
+        const def = this.defs[this.defs.length - 1]; // this is the widget's def, resolved when it is ready
+        const $div = $('<div>');
+        $div.append($el); // $el will be replaced when widget is ready (see _renderFieldWidget)
+        def.then(() => {
+            widget.$el.replaceWith($div.children());
 
-        // Destroy the old widget and position the new one at the old one's
-        var oldIndex = this._destroyFieldWidget(record.id, widget);
-        var recordWidgets = this.allFieldWidgets[record.id];
-        var newWidget = recordWidgets.pop();
-        recordWidgets.splice(oldIndex, 0, newWidget);
+            // Destroy the old widget and position the new one at the old one's
+            var oldIndex = this._destroyFieldWidget(record.id, widget);
+            var recordWidgets = this.allFieldWidgets[record.id];
+            let newWidget = recordWidgets.pop();
+            recordWidgets.splice(oldIndex, 0, newWidget);
+
+            // Mount new widget if necessary (mainly for Owl components)
+            if (this._isInDom && newWidget.on_attach_callback) {
+                newWidget.on_attach_callback();
+            }
+        });
     },
     /**
      * Unregisters an element of the modifiers data associated to the given
@@ -709,7 +848,7 @@ var BasicRenderer = AbstractRenderer.extend({
      *
      * @private
      * @param {Object} record
-     * @returns {Deferred} resolved once finished
+     * @returns {Promise} resolved once finished
      */
     _updateAllModifiers: function (record) {
         var self = this;
@@ -717,12 +856,16 @@ var BasicRenderer = AbstractRenderer.extend({
         var defs = [];
         this.defs = defs; // Potentially filled by widget rerendering
         _.each(this.allModifiersData, function (modifiersData) {
-            modifiersData.evaluatedModifiers[record.id] = record.evalModifiers(modifiersData.modifiers);
-            self._applyModifiers(modifiersData, record);
+            // `allModifiersData` might contain modifiers registered for other
+            // records than the given record (e.g. <groupby> in list)
+            if (record.id in modifiersData.evaluatedModifiers) {
+                modifiersData.evaluatedModifiers[record.id] = record.evalModifiers(modifiersData.modifiers);
+                self._applyModifiers(modifiersData, record);
+            }
         });
         delete this.defs;
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 
     //--------------------------------------------------------------------------

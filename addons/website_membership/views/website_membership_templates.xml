@@ -35,7 +35,7 @@
             <div class="col-lg-8" id="ref_content">
                 <div class='d-flex m-2'>
                     <t t-call="website.pager">
-                       <t t-set="classname">float-left</t>
+                       <t t-set="classname" t-valuef="float-left"/>
                     </t>
                     <form action="" method="get" class="navbar-search ml-auto pagination form-inline">
                         <t t-call="website.website_search_box">
@@ -54,8 +54,8 @@
                                 <t t-set="partner" t-value="partners[partner_id]"/>
                                 <div class="media mt-3">
                                     <a t-attf-href="/members/#{slug(partner)}"
-                                       t-field="partner.image_small"
-                                       t-options='{"widget": "image", "class": "media-object mr-3"}'
+                                       t-field="partner.image_128"
+                                       t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_64_cover mr-3"}'
                                     ></a>
                                     <div class="media-body" style="min-height: 64px;">
                                         <a t-attf-href="/members/#{slug(partner)}">

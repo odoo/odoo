@@ -2,39 +2,10 @@
 # Parent dba00a105dd2a82490394b8dec5fea5f1d8847e1
 # Parent  f4374b6e2e661e0782e396b24c57c1eb97d13288
 
-diff --git a/openacademy/models.py b/openacademy/models.py
---- a/openacademy/models.py
-+++ b/openacademy/models.py
-@@ -61,6 +61,9 @@ class Session(models.Model):
-     end_date = fields.Date(string="End Date", store=True,
-         compute='_get_end_date', inverse='_set_end_date')
- 
-+    hours = fields.Float(string="Duration in hours",
-+                         compute='_get_hours', inverse='_set_hours')
-+
-     @api.depends('seats', 'attendee_ids')
-     def _taken_seats(self):
-         for r in self:
-@@ -110,6 +113,15 @@ class Session(models.Model):
-             end_date = fields.Datetime.from_string(r.end_date)
-             r.duration = (end_date - start_date).days + 1
- 
-+    @api.depends('duration')
-+    def _get_hours(self):
-+        for r in self:
-+            r.hours = r.duration * 24
-+
-+    def _set_hours(self):
-+        for r in self:
-+            r.duration = r.hours / 24
-+
-     @api.constrains('instructor_id', 'attendee_ids')
-     def _check_instructor_not_in_attendees(self):
-         for r in self:
 diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
 --- a/openacademy/views/openacademy.xml
 +++ b/openacademy/views/openacademy.xml
-@@ -143,11 +143,23 @@
+@@ -142,10 +142,21 @@
              </field>
          </record>
  
@@ -43,9 +14,8 @@ diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.x
 +            <field name="model">openacademy.session</field>
 +            <field name="arch" type="xml">
 +                <gantt string="Session Gantt"
-+                       date_start="start_date" date_delay="hours"
++                       date_start="start_date" date_stop="end_date"
 +                       default_group_by='instructor_id'>
-+                    <!-- <field name="name"/> this is not required after Odoo 10.0 -->
 +                </gantt>
 +            </field>
 +        </record>
@@ -53,7 +23,6 @@ diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.x
          <record model="ir.actions.act_window" id="session_list_action">
              <field name="name">Sessions</field>
              <field name="res_model">openacademy.session</field>
-             <field name="view_type">form</field>
 -            <field name="view_mode">tree,form,calendar</field>
 +            <field name="view_mode">tree,form,calendar,gantt</field>
          </record>

@@ -1,9 +1,9 @@
-from odoo.addons.account.tests.account_test_users import AccountTestUsers
+from odoo.addons.account.tests.common import AccountTestUsersCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestSearch(AccountTestUsers):
+class TestSearch(AccountTestUsersCommon):
 
     """Tests for search on name_search (account.account)
 

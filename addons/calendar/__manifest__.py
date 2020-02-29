@@ -6,7 +6,7 @@
     'version': '1.0',
     'sequence': 130,
     'depends': ['base', 'mail'],
-    'summary': 'Schedule employees meetings',
+    'summary': "Schedule employees' meetings",
     'description': """
 This is a full-featured calendar system.
 ========================================
@@ -18,7 +18,7 @@ It supports:
 
 If you need to manage your meetings, you should install the CRM module.
     """,
-    'category': 'Extra Tools',
+    'category': 'Tools',
     'demo': [
         'data/calendar_demo.xml'
     ],
@@ -33,7 +33,7 @@ If you need to manage your meetings, you should install the CRM module.
         'views/calendar_views.xml',
         'data/mail_activity_data.xml',
     ],
-    'qweb': ['static/src/xml/*.xml'],
+    'qweb': ['static/src/xml/base_calendar.xml'],
     'installable': True,
     'application': True,
     'auto_install': False,

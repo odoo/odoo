@@ -34,18 +34,12 @@ class MergeOpportunity(models.TransientModel):
 
     opportunity_ids = fields.Many2many('crm.lead', 'merge_opportunity_rel', 'merge_id', 'opportunity_id', string='Leads/Opportunities')
     user_id = fields.Many2one('res.users', 'Salesperson', index=True)
-    team_id = fields.Many2one('crm.team', 'Sales Team', oldname='section_id', index=True)
+    team_id = fields.Many2one('crm.team', 'Sales Team', index=True)
 
-    @api.multi
     def action_merge(self):
         self.ensure_one()
         merge_opportunity = self.opportunity_ids.merge_opportunity(self.user_id.id, self.team_id.id)
-
-        # The newly created lead might be a lead or an opp: redirect toward the right view
-        if merge_opportunity.type == 'opportunity':
-            return merge_opportunity.redirect_opportunity_view()
-        else:
-            return merge_opportunity.redirect_lead_view()
+        return merge_opportunity.redirect_lead_opportunity_view()
 
     @api.onchange('user_id')
     def _onchange_user(self):

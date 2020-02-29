@@ -1,42 +1,46 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * fleet
+# 	* fleet
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Aleksandr Jadov <a.jadov@tata.lt>, 2017
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
-# Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
-# Paulius Sladkevičius <paulius@hbee.eu>, 2017
-# Rolandas <info@paninfo.lt>, 2017
+# Paulius Sladkevičius <paulius@versada.eu>, 2019
+# Aleksandr Jadov <a.jadov@tata.lt>, 2019
+# Martin Trigaux, 2019
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
+# Silvija Butko <silvija.butko@gmail.com>, 2019
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2019
+# Rolandas <info@paninfo.lt>, 2019
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2019
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Rolandas <info@paninfo.lt>, 2017\n"
+"POT-Creation-Date: 2019-09-09 12:19+0000\n"
+"PO-Revision-Date: 2019-08-26 09:10+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:198
-#, python-format
-msgid "%s %s has been added to the fleet!"
-msgstr "%s %s buvo pridėta prie automobilių parko!"
+#: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">End Date Contract Alert</span>"
+msgstr ""
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle_cost.py:274
-#, python-format
-msgid "%s contract(s) will expire soon and should be renewed and/or closed!"
+#: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
+msgid "<span> days before the end date</span>"
+msgstr ""
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
+msgid "<span>Send an alert </span>"
 msgstr ""
 
 #. module: fleet
@@ -50,41 +54,50 @@ msgid "<span>kW</span>"
 msgstr "<span>kW</span>"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_1
-msgid "A/C Compressor Replacement"
-msgstr "Kompresoriaus keitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_2
-msgid "A/C Condenser Replacement"
-msgstr "Kondensatoriaus keitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_3
-msgid "A/C Diagnosis"
-msgstr "Diagnozė"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_4
-msgid "A/C Evaporator Replacement"
-msgstr "Garintuvo keitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_5
-msgid "A/C Recharge"
-msgstr "Įkrovimas"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_needaction
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_needaction
+msgid "Action Needed"
+msgstr "Reikia veiksmo"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_tree
 msgid "Activation Cost"
 msgstr "Aktyvavimo mokestis"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_active
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_active
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__active
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__active
 msgid "Active"
 msgstr "Aktyvus"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_ids
+msgid "Activities"
+msgstr "Veiklos"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_exception_decoration
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_state
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_state
+msgid "Activity State"
+msgstr "Veiklos būsena"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.mail_activity_type_action_config_fleet
+#: model:ir.ui.menu,name:fleet.fleet_menu_config_activity_type
+msgid "Activity Types"
+msgstr "Veiklos tipai"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_tag_action
+msgid "Add a new tag"
+msgstr "Pridėti naują žymą"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
@@ -93,14 +106,9 @@ msgid "Additional Details"
 msgstr "Papildoma informacija"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "Additional Properties"
-msgstr "Papildomos savybės"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_6
-msgid "Air Filter Replacement"
-msgstr "Oro filtro keitimas"
+#: model:res.groups,name:fleet.fleet_group_manager
+msgid "Administrator"
+msgstr ""
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
@@ -108,254 +116,190 @@ msgid "All vehicles"
 msgstr "Visi automobiliai"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_7
-msgid "Alternator Replacement"
-msgstr "Generatoriaus keitimas"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_amount
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_cost_amount
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_cost_amount
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_amount
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__cost_amount
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__cost_amount
 msgid "Amount"
 msgstr "Suma"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Apply Change"
+msgstr ""
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Archived"
-msgstr "Archyvuojamas"
+msgstr "Archyvuotas"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_9
-msgid "Assistance"
-msgstr "Pagalba"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__next_assignation_date
+msgid "Assignation Date"
+msgstr "Priskyrimo data"
 
 #. module: fleet
-#: selection:fleet.vehicle,transmission:0
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__log_drivers
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_assignation_log_view_list
+msgid "Assignation Logs"
+msgstr "Priskyrimo žurnalai"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_attachment_count
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_attachment_count
+msgid "Attachment Count"
+msgstr "Prisegtukų skaičius"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
+msgid "Attention: renewal overdue"
+msgstr "Dėmesio: vėluojantis atnaujinimas"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__transmission__automatic
 msgid "Automatic"
 msgstr "Automatinis"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_auto_generated
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_auto_generated
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_auto_generated
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_auto_generated
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__auto_generated
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__auto_generated
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__auto_generated
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__auto_generated
 msgid "Automatically Generated"
 msgstr "Automatiškai sugeneruota"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_8
-msgid "Ball Joint Replacement"
-msgstr "Ašies rato traukės keitimas"
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Available"
+msgstr "Pasiekiamas"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_9
-msgid "Battery Inspection"
-msgstr "Akumuliatoriaus apžiūra"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_10
-msgid "Battery Replacement"
-msgstr "Akumuliatoriaus pakeitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_11
-msgid "Brake Caliper Replacement"
-msgstr "Stabdžių kaladėlių apkabos keitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_12
-msgid "Brake Inspection"
-msgstr "Stabdžių apžiūra"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_13
-msgid "Brake Pad(s) Replacement"
-msgstr "Stabdžių kaladėlės(-ių) keitimas"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__brand_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Brand"
+msgstr "Prekinis ženklas"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_model_brand
 msgid "Brand of the vehicle"
-msgstr ""
+msgstr "Automobilio markė"
 
 #. module: fleet
-#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_break
-msgid "Break"
-msgstr "Stamdžiai"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_co2
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2
 msgid "CO2 Emissions"
 msgstr "CO2 išmetimas"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_co2
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__co2
 msgid "CO2 emissions of the vehicle"
 msgstr "Automobilio CO2 išmetimas"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_1
-msgid "Calculation Benefit In Kind"
-msgstr "Apskaičiavimas išmokos natūra"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_14
-msgid "Car Wash"
-msgstr "Mašinos plovimas"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_car_value
-msgid "Catalog Value (VAT Incl.)"
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_action
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_model_brand_menu
+msgid "Car Manufacturers"
 msgstr ""
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_15
-msgid "Catalytic Converter Replacement"
-msgstr "Katalizatoriaus keitimas"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__car_value
+msgid "Catalog Value (VAT Incl.)"
+msgstr "Katalogo kaina (su PVM)"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_service_type_category
+#: model:ir.model.fields,field_description:fleet.field_fleet_service_type__category
 msgid "Category"
 msgstr "Kategorija"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_cost_type
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_type
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_cost_type
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_cost_type
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__cost_type
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_type
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__cost_type
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__cost_type
 msgid "Category of the cost"
 msgstr "Mokesčio kategorija"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_16
-msgid "Charging System Diagnosis"
-msgstr "Įkrovimo sistemos diagnozė"
+#: model:mail.message.subtype,description:fleet.mt_fleet_driver_updated
+#: model:mail.message.subtype,name:fleet.mt_fleet_driver_updated
+msgid "Changed Driver"
+msgstr "Pakeistas vairuotojas"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_vin_sn
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__vin_sn
 msgid "Chassis Number"
-msgstr "Važiuoklės numeris"
+msgstr "Kėbulo numeris"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_state
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__state
 msgid "Choose whether the contract is still valid or not"
-msgstr ""
+msgstr "Pasirinkite, ar sutartis vis dar galioja"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_service_type_category
+#: model:ir.model.fields,help:fleet.field_fleet_service_type__category
 msgid ""
 "Choose whether the service refer to contracts, vehicle services or both"
 msgstr ""
-
-#. module: fleet
-#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_tag_action
-msgid "Click to add a new tag."
-msgstr "Spauskite pridėti naują žymą."
-
-#. module: fleet
-#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
-msgid "Click to create a new contract."
-msgstr "Paspauskite, norėdami sukurti naują sutartį"
-
-#. module: fleet
-#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_costs_action
-msgid "Click to create a new cost."
-msgstr "Paspauskite, norėdami sukurti naują kainą."
-
-#. module: fleet
-#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_action
-msgid "Click to create a new fuel log."
-msgstr ""
-
-#. module: fleet
-#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_brand_action
-msgid "Click to create a new make."
-msgstr "Paspauskite, norėdami sukurti naują markę."
-
-#. module: fleet
-#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
-msgid "Click to create a new model."
-msgstr "Paspauskite, norėdami sukurti naują modelį."
-
-#. module: fleet
-#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
-msgid "Click to create a new odometer log."
-msgstr ""
-
-#. module: fleet
-#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
-msgid "Click to create a new service entry."
-msgstr ""
-
-#. module: fleet
-#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_contract_types_action
-msgid "Click to create a new type of contract."
-msgstr ""
-
-#. module: fleet
-#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
-msgid "Click to create a new type of service."
-msgstr ""
-
-#. module: fleet
-#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
-msgid "Click to create a new vehicle."
-msgstr "Paspauskite, norėdami sukurti naują automobilį."
-
-#. module: fleet
-#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_state_action
-msgid "Click to create a vehicle status."
-msgstr ""
+"Pasirinkite, ar paslauga nurodo į kontaktus, į automobilio paslaugas ar abu"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Close Contract"
-msgstr ""
+msgstr "Uždaryti sutartį"
 
 #. module: fleet
-#: selection:fleet.vehicle.log.contract,state:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__closed
 msgid "Closed"
 msgstr "Uždaryta"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_color
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__color
 msgid "Color"
 msgstr "Spalva"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_color
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__color
 msgid "Color Index"
 msgstr "Spalvos indeksas"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_color
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__color
 msgid "Color of the vehicle"
 msgstr "Automobilio spalva"
 
 #. module: fleet
-#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_compact
-msgid "Compact"
-msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_company_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__company_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__company_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__company_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__company_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__company_id
 msgid "Company"
 msgstr "Įmonė"
 
 #. module: fleet
-#: model:ir.ui.menu,name:fleet.fleet_configuration
-msgid "Configuration"
-msgstr "Nustatymai"
+#: model:ir.model,name:fleet.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigūracijos nustatymai"
 
 #. module: fleet
-#: selection:fleet.service.type,category:0
-#: selection:fleet.vehicle.cost,cost_type:0
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_contract_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_contract_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_contract_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_contract_id
+#: model:ir.ui.menu,name:fleet.fleet_configuration
+msgid "Configuration"
+msgstr "Konfigūracija"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_res_partner
+msgid "Contact"
+msgstr "Kontaktai"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__contract_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__contract_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__contract_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__contract_id
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_service_type__category__contract
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_cost__cost_type__contract
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Contract"
-msgstr "Darbo sutartis"
+msgstr "Sutartis"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_graph
@@ -363,17 +307,27 @@ msgid "Contract Costs Per Month"
 msgstr "Sutarties mokestis per mėnesį"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_expiration_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_count
+msgid "Contract Count"
+msgstr "Sutarčių skaičius"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__expiration_date
 msgid "Contract Expiration Date"
 msgstr "Sutarties galiojimo laiko pabaiga"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_ins_ref
-msgid "Contract Reference"
-msgstr "Numeris"
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+msgid "Contract Informations"
+msgstr ""
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_start_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__ins_ref
+msgid "Contract Reference"
+msgstr "Sutarties numeris"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__start_date
 msgid "Contract Start Date"
 msgstr "Sutarties pradžios data"
 
@@ -381,20 +335,15 @@ msgstr "Sutarties pradžios data"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_contract_types_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_contract_types_menu
 msgid "Contract Types"
-msgstr "Sutarties tipai"
+msgstr "Sutarčių tipai"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_contract_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_contract_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_contract_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_contract_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__contract_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__contract_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__contract_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__contract_id
 msgid "Contract attached to this cost"
-msgstr "Sutartis pridedam prie šio mokesčio"
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-msgid "Contract details"
-msgstr "Sutarties informacija"
+msgstr "Sutartis, pridedama prie šio mokesčio"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_contract
@@ -408,41 +357,36 @@ msgid "Contract logs"
 msgstr "Sutarties žurnalai"
 
 #. module: fleet
+#: model:mail.activity.type,name:fleet.mail_act_fleet_contract_to_renew
+msgid "Contract to Renew"
+msgstr "Sutartys atnaujinimui"
+
+#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Contract(s)"
-msgstr ""
+msgstr "Sutartis (-ys)"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_purchaser_id
-msgid "Contractor"
-msgstr "Sutarties dalyvis(rangovas)"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_count
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contracts
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__log_contracts
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Contracts"
-msgstr "Darbo sutartys"
+msgstr "Sutartys"
 
 #. module: fleet
-#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_convertible
-msgid "Convertible"
-msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_cost_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_cost_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__cost_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__cost_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_view_tree
 msgid "Cost"
-msgstr "Kaina"
+msgstr "Išlaidos"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_description
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_description
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_description
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_description
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__description
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__description
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__description
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__description
 msgid "Cost Description"
-msgstr ""
+msgstr "Kaštų aprašymas"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_form
@@ -462,23 +406,23 @@ msgstr "Išlaidų tipas"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_cost
 msgid "Cost related to a vehicle"
-msgstr "Išlaidos susijusios su automobiliu"
+msgstr "Su automobiliu susijusios išlaidos"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Cost that is paid only once at the creation of the contract"
-msgstr "Išlaidos, kurios sumokamos vieną kartą sukūrus sutartį."
+msgstr "Išlaidos, kurios sumokamos vieną kartą, sukuriant sutartį."
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_cost_subtype_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_cost_subtype_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_cost_subtype_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_cost_subtype_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__cost_subtype_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__cost_subtype_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__cost_subtype_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__cost_subtype_id
 msgid "Cost type purchased with this cost"
-msgstr "Išlaidos tipas pirktas su šiuo mokesčiu."
+msgstr "Su šiomis išlaidomis pirktų išlaidų tipas"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_count
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__cost_count
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting_costs
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Costs"
@@ -492,14 +436,22 @@ msgstr "Išlaidų analizė"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_graph
 msgid "Costs Per Month"
-msgstr "Mokesčiai per mėnesį"
+msgstr "Išlaidos per mėnesį"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_cost_generated
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__cost_generated
 msgid ""
-"Costs paid at regular intervals, depending on the cost frequency.If the cost"
-" frequency is set to unique, the cost will be logged at the start date"
+"Costs paid at regular intervals, depending on the cost frequency. If the "
+"cost frequency is set to unique, the cost will be logged at the start date"
 msgstr ""
+"Išlaidos, mokamos reguliariais intervalais, priklausomai nuo išlaidų "
+"dažnumo. Jeigu išlaidų dažnumas nustatytas kaip unikalus, mokesčiai bus "
+"užregistruoti periodo pradžios datoje."
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
+msgid "Create a new contract"
+msgstr "Sukurkite naują sutartį"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -507,135 +459,223 @@ msgid ""
 "Create a new contract automatically with all the same informations except "
 "for the date that will start at the end of current contract"
 msgstr ""
-"Sukurkite naują sutartį automatiškai su visa ta pačia inforamcija, išskyrus "
-"su data, kuri prasidės pasibaigus dabartinei sutarčiai"
+"Automatiškai sukurkite naują sutartį su visa ta pačia informacija, išskyrus "
+"datą, kuri prasidės pasibaigus esamai sutarčiai"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_service_type_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_create_uid
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_costs_action
+msgid "Create a new cost"
+msgstr "Sukurkite naujus kaštus"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_action
+msgid "Create a new fuel log"
+msgstr "Sukurkite naują kuro žurnalą"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_brand_action
+msgid "Create a new manufacturer"
+msgstr ""
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
+msgid "Create a new model"
+msgstr "Sukurkite naują modelį"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
+msgid "Create a new odometer log"
+msgstr "Sukurkite naują odometro žurnalą"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
+msgid "Create a new service entry"
+msgstr "Sukurkite naują paslaugos įrašą"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_contract_types_action
+msgid "Create a new type of contract"
+msgstr "Sukurkite naują sutarties tipą"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
+msgid "Create a new type of service"
+msgstr "Sukurkite naują paslaugos tipą"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
+msgid "Create a new vehicle"
+msgstr "Sukurkite naują automobilį"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_state_action
+msgid "Create a new vehicle status"
+msgstr "Sukurkite naują automobilio būseną"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_service_type__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_service_type_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_service_type__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__create_date
 msgid "Created on"
 msgstr "Sukurta"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__odometer
+msgid "Creation Contract Odometer"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__currency_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__currency_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__currency_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__currency_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__currency_id
+msgid "Currency"
+msgstr "Valiuta"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Current Driver"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__state_id
 msgid "Current state of the vehicle"
 msgstr "Dabartinė automobilio būsena"
 
 #. module: fleet
-#: selection:fleet.vehicle.log.contract,cost_frequency:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__daily
 msgid "Daily"
-msgstr "Kas dieną"
+msgstr "Kasdien"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__date
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 msgid "Date"
 msgstr "Data"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_date
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_date
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_date
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_date
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__date
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__date
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__date
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__date
 msgid "Date when the cost has been executed"
 msgstr "Data, kai mokestis buvo atliktas"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_start_date
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__start_date
 msgid "Date when the coverage of the contract begins"
-msgstr ""
+msgstr "Data, kai įsigalioja sutarties sąlygos"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_expiration_date
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__expiration_date
 msgid ""
 "Date when the coverage of the contract expirates (by default, one year after"
 " begin date)"
 msgstr ""
+"Data, kai sutarties sąlygos nustoja galioti (standartiškai, po metų nuo "
+"galiojimo pradžios)"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_acquisition_date
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
 msgid "Date when the vehicle has been immatriculated"
+msgstr "Data, kai automobilis buvo imatrikuliuotas"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_res_config_settings__delay_alert_contract
+msgid "Delay alert contract outdated"
 msgstr ""
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_2
-msgid "Depreciation and Interests"
-msgstr "Nusidėvėjimas ir suinteresuoti žmonės"
-
-#. module: fleet
-#: selection:fleet.vehicle,fuel_type:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__diesel
 msgid "Diesel"
 msgstr "Dyzelinas"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_service_type_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_service_type__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__display_name
 msgid "Display Name"
-msgstr "Vaizduojamas pavadinimas"
+msgstr "Rodomas pavadinimas"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_17
-msgid "Door Window Motor/Regulator Replacement"
-msgstr "Durų langų motriuko/reguliatoriaus keitimas"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_doors
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__doors
 msgid "Doors Number"
 msgstr "Durų skaičius"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_driver_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_driver_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__driver_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__driver_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__purchaser_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__driver_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Driver"
 msgstr "Vairuotojas"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_driver_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_driver_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__driver_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer__driver_id
 msgid "Driver of the vehicle"
 msgstr "Automobilio vairuotojas"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:216
-#, python-format
-msgid "Driver: from '%s' to '%s'"
-msgstr "Vairuotojas: nuo '%s' iki '%s'"
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Drivers"
+msgstr ""
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Drivers History"
+msgstr "Vairuotojo istorija"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__history_count
+msgid "Drivers History Count"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_assignation_log
+msgid "Drivers history on a vehicle"
+msgstr "Vairuotojo istorija transporto priemonėje"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
@@ -643,108 +683,128 @@ msgid ""
 "Each contract (e.g.: leasing) may include several services\n"
 "            (reparation, insurances, periodic maintenance)."
 msgstr ""
+"Kiekviena sutartis (pvz., lizingas) gali turėti kelias paslaugas\n"
+"(remontas, draudimai, periodinė priežiūra)."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
 msgid "Each service can used in contracts, as a standalone service or both."
 msgstr ""
+"Kiekviena paslauga gali būti naudojama kaip sutartinė, kaip atskira arba abi"
+" iš karto."
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 msgid "Effective Costs"
-msgstr "Efektyvus mokesčiai"
+msgstr "Efektyvios išlaidos"
 
 #. module: fleet
-#: selection:fleet.vehicle,fuel_type:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__electric
 msgid "Electric"
 msgstr "Elektrinis"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_17
-msgid "Emissions"
-msgstr "Išmetimas"
-
-#. module: fleet
-#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_leasing
-msgid "Employee Car"
-msgstr ""
-
-#. module: fleet
-#: code:addons/fleet/models/fleet_vehicle_cost.py:44
+#: code:addons/fleet/models/fleet_vehicle_cost.py:0
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
-msgstr "Odomotero duomenų nunulinimas yra negalimas automobiliui"
+msgstr "Automobilio odometro duomenų nunulinimas neleidžiamas."
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_18
-msgid "Engine Belt Inspection"
-msgstr "Variklio diržo apžiūra"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_19
-msgid "Engine Coolant Replacement"
-msgstr "Variklio aušinimo skysčio pakeitimas"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__date_end
+msgid "End Date"
+msgstr "Pabaigos data"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "Engine Options"
-msgstr "Variklio parinktys"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_20
-msgid "Engine/Drive Belt(s) Replacement"
-msgstr "Variklio/pavaros diržo(ų) pakeitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_13
-msgid "Entry into service tax"
+msgid "Engine"
 msgstr ""
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_21
-msgid "Exhaust Manifold Replacement"
-msgstr "Išmetimo kolektoriaus keitimas"
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Exception Activities"
+msgstr ""
 
 #. module: fleet
-#: selection:fleet.vehicle.log.contract,state:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__expired
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Expired"
 msgstr "Negalioja"
 
 #. module: fleet
-#: selection:fleet.vehicle.log.contract,state:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__diesoon
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Expiring Soon"
-msgstr ""
+msgstr "Greitai baigs galioti"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__first_contract_date
+msgid "First Contract Date"
+msgstr "Pirmosios sutarties data"
 
 #. module: fleet
 #: model:ir.module.category,name:fleet.module_fleet_category
 #: model:ir.ui.menu,name:fleet.menu_root
+#: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "Fleet"
 msgstr "Automobilių parkas"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
+msgid "Fleet Management"
+msgstr "Automobilių parko valdymas"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__manager_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__manager_id
+msgid "Fleet Manager"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_service_type
+msgid "Fleet Service Type"
+msgstr "Parko paslaugų tipas"
 
 #. module: fleet
 #: model:ir.actions.server,name:fleet.ir_cron_contract_costs_generator_ir_actions_server
 #: model:ir.cron,cron_name:fleet.ir_cron_contract_costs_generator
 #: model:ir.cron,name:fleet.ir_cron_contract_costs_generator
 msgid "Fleet: Generate contracts costs based on costs frequency"
-msgstr ""
+msgstr "Automobilių parkas: kurkite sutarčių išlaidas pagal išlaidų dažnumą"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_cost_type
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_cost_type
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_cost_type
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_cost_type
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_follower_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_follower_ids
+msgid "Followers"
+msgstr "Sekėjai"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_channel_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Sekėjai (kanalai)"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_partner_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Sekėjai (partneriai)"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__cost_type
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__cost_type
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__cost_type
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__cost_type
 msgid "For internal purpose only"
 msgstr "Tik vidiniams tikslams"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_cost_frequency
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__cost_frequency
 msgid "Frequency of the recuring cost"
 msgstr "Pasikartojančio mokesčio dažnumas"
 
 #. module: fleet
-#: selection:fleet.vehicle.cost,cost_type:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_cost__cost_type__fuel
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Fuel"
 msgstr "Kuras"
@@ -752,33 +812,27 @@ msgstr "Kuras"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_graph
 msgid "Fuel Costs Per Month"
-msgstr "Kuro mokesčiai per mėnesį"
+msgstr "Mėnesinės kuro išlaidos"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_22
-msgid "Fuel Injector Replacement"
-msgstr "Kuro purkštuko pakeitimas"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__fuel_logs_count
+msgid "Fuel Log Count"
+msgstr "Kuro žurnalo skaičius"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_fuel_logs_count
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__log_fuel
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_tree
 msgid "Fuel Logs"
-msgstr "Kuro žurnalas"
+msgstr "Kuro žurnalai"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_23
-msgid "Fuel Pump Replacement"
-msgstr "Kuro pompos pakeitimas"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_fuel_type
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__fuel_type
 msgid "Fuel Type"
 msgstr "Kuro tipas"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_fuel_type
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__fuel_type
 msgid "Fuel Used by the vehicle"
 msgstr "Šio automobilio naudojamas kuras"
 
@@ -788,19 +842,30 @@ msgid "Fuel log for vehicles"
 msgstr "Kuro žurnalas automobiliams"
 
 #. module: fleet
-#: selection:fleet.vehicle,fuel_type:0
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Future Activities"
+msgstr "Būsimos veiklos"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__future_driver_id
+msgid "Future Driver"
+msgstr ""
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
+msgid "Future Driver :"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__gasoline
 msgid "Gasoline"
 msgstr "Benzinas"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "General Properties"
-msgstr "Pagrindinės savybės"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_generated_cost_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__generated_cost_ids
 msgid "Generated Costs"
-msgstr "Pagrindiniai mokesčiai"
+msgstr "Sugeneruotos išlaidos"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -818,298 +883,260 @@ msgid "Group By"
 msgstr "Grupuoti pagal"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
-msgid "Has Alert(s)"
-msgstr "Turi įspejimą(-ai)"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_renewal_overdue
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_overdue
 msgid "Has Contracts Overdue"
-msgstr ""
+msgstr "Turi vėluojančių sutarčių"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_renewal_due_soon
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_due_soon
 msgid "Has Contracts to renew"
-msgstr "Yra sutarčių pratęsti"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_24
-msgid "Head Gasket(s) Replacement"
-msgstr "Galvutės tarpinės(-ių) pakeitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_25
-msgid "Heater Blower Motor Replacement"
-msgstr "Šildytuvo variklio pakeitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_26
-msgid "Heater Control Valve Replacement"
-msgstr "Šildytuvo valdymo sklendės pakeitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_27
-msgid "Heater Core Replacement"
-msgstr "Šildytuvo pagrindo keitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_28
-msgid "Heater Hose Replacement"
-msgstr "Šildytuvo žarnos keitimas"
+msgstr "Turi sutarčių atnaujinimui"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_action
-msgid ""
-"Here you can add refuelling entries for all vehicles.  You can\n"
-"            also filter logs of a particular vehicle using the search\n"
-"            field."
-msgstr ""
+msgid "Here you can add refuelling entries for all vehicles."
+msgstr "Čia galite pridėti kuro papildymo įrašus visiems automobiliams."
 
 #. module: fleet
-#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
-msgid ""
-"Here you can add various odometer entries for all vehicles.\n"
-"            You can also show odometer value for a particular vehicle using\n"
-"            the search field."
-msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_horsepower
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__horsepower
 msgid "Horsepower"
-msgstr "Arklio jėgos"
+msgstr "Arklio galios"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_horsepower_tax
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__horsepower_tax
 msgid "Horsepower Taxation"
-msgstr ""
+msgstr "Arklio galių apmokestinimas"
 
 #. module: fleet
-#: selection:fleet.vehicle,fuel_type:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__hybrid
 msgid "Hybrid"
 msgstr "Hibridinis"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_service_type_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_3068
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_3057
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2903
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_service_type__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__id
 msgid "ID"
 msgstr "ID"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_29
-msgid "Ignition Coil Replacement"
-msgstr "Degimo ritės pakeitimas"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_exception_icon
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_exception_icon
+msgid "Icon"
+msgstr "Piktograma"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_acquisition_date
-msgid "Immatriculation Date"
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_exception_icon
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_exception_icon
+msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: fleet
-#: selection:fleet.vehicle.log.contract,state:0
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_needaction
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_unread
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_needaction
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_error
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Jei pažymėta, yra žinučių, turinčių pristatymo klaidų."
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__acquisition_date
+msgid "Immatriculation Date"
+msgstr "Imatrikuliacijos data"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__open
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "In Progress"
 msgstr "Vykdoma"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_cost_ids
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_ids
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_cost_ids
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_cost_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__cost_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__cost_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__cost_ids
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Included Services"
 msgstr "Įtrauktos paslaugos"
 
 #. module: fleet
-#: selection:fleet.vehicle.log.contract,state:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__futur
 msgid "Incoming"
-msgstr "Atvykstančios prekės"
+msgstr "Atvykstanys"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Indicative Cost"
-msgstr "Preliminari kaina"
+msgstr "Preliminarios išlaidos"
 
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting_indicative_costs
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 msgid "Indicative Costs"
-msgstr "Preliminarūs mokesčiai"
+msgstr "Preliminarios išlaidos"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_costs_reporting_non_effective_action
 msgid "Indicative Costs Analysis"
-msgstr "Preliminarių mokesčių analizė"
+msgstr "Preliminarių išlaidų analizė"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_sum_cost
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__sum_cost
 msgid "Indicative Costs Total"
-msgstr "Išviso preliminarių mokesčių"
-
-#. module: fleet
-#: model:ir.model,name:fleet.model_fleet_vehicle
-msgid "Information on a vehicle"
-msgstr "Automobilio informacija"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_30
-msgid "Intake Manifold Gasket Replacement"
-msgstr "Įsiurbimo kolektoriaus tarpinės keitimas"
+msgstr "Viso preliminarių išlaidų"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Invoice Date"
-msgstr "Sąskaitos faktūros data"
+msgstr "Sąskaitos-faktūros data"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_inv_ref
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_inv_ref
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__inv_ref
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__inv_ref
 msgid "Invoice Reference"
-msgstr "Sąskaitos faktūros nuoroda"
+msgstr "Sąskaitos-faktūros numeris"
 
 #. module: fleet
-#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_junior
-msgid "Junior"
-msgstr ""
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_is_follower
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_is_follower
+msgid "Is Follower"
+msgstr "Yra sekėjas"
 
 #. module: fleet
-#: selection:fleet.vehicle,odometer_unit:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__odometer_unit__kilometers
 msgid "Kilometers"
 msgstr "Kilometrai"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_kanban
 msgid "Km"
+msgstr "Km"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__lpg
+msgid "LPG"
 msgstr ""
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_service_type___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag___last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_service_type____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__odometer
 msgid "Last Odometer"
 msgstr "Paskutiniai odometro parodymai"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_service_type_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_service_type__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__write_uid
 msgid "Last Updated by"
 msgstr "Paskutinį kartą atnaujino"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_service_type_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_service_type__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_contract_leasing
-msgid "Leasing"
-msgstr "Vieta"
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Late Activities"
+msgstr "Vėluojančios veiklos"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_license_plate
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__license_plate
 msgid "License Plate"
 msgstr "Valstybinis numeris"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:223
-#, python-format
-msgid "License Plate: from '%s' to '%s'"
-msgstr "Valstybinis numeris: nuo '%s' iki '%s'"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_license_plate
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__license_plate
 msgid "License plate number of the vehicle (i = plate number for a car)"
-msgstr ""
+msgstr "Automobilio valstybinis numeris"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_liter
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__liter
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_kanban
 msgid "Liter"
-msgstr "Litrai"
+msgstr "Litras"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_location
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__location
 msgid "Location"
 msgstr "Vieta"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_location
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__location
 msgid "Location of the vehicle (garage, ...)"
 msgstr "Automobolio dabartinė vieta (garažas, ...)"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_image
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_image
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_image
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__image_128
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__image_128
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__image_128
 msgid "Logo"
 msgstr "Logotipas"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_image_medium
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_image_medium
-msgid "Logo (medium)"
-msgstr "Logotipas (vidutinis)"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_main_attachment_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Pagrindinis prisegtukas"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_image_small
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_image_small
-msgid "Logo (small)"
-msgstr "Logotipas (mažas)"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__name
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Make"
 msgstr "Markė"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_id
-msgid "Make of the vehicle"
-msgstr "Automobilio markė"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
@@ -1118,48 +1145,65 @@ msgid ""
 "            their related services, costs. Odoo will automatically warn\n"
 "            you when some contracts have to be renewed."
 msgstr ""
+"Valdykite visas savo sutartis (lizingas, draudimai ir kt.),\n"
+"susijusias jų paslaugas, išlaidas. \"Odoo\" automatiškai\n"
+"praneš jums, kai sutartis reikės atnaujinti."
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_11
-msgid "Management Fee"
-msgstr "Valdymo mokestis"
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_costs_action
+msgid ""
+"Manage the costs for your different vehicles.\n"
+"                Costs are created automatically from services, contracts and fuel logs."
+msgstr ""
+"Valdykite išlaidas skirtingiems jūsų automobiliams.\n"
+"Išlaidos yra automatiškai generuojamos iš išlaidų, sutarčių ir kuro žurnalų."
 
 #. module: fleet
-#: model:res.groups,name:fleet.fleet_group_manager
-msgid "Manager"
-msgstr "Vadovas"
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
+msgid ""
+"Manage your fleet by keeping track of the contracts, services, odometers and"
+" fuel logs associated to each vehicle."
+msgstr ""
+"Valdykite savo parką sekdami sutartis, paslaugas, odometrus ir kuro "
+"žurnalus, susietus su kiekvienu automobiliu."
 
 #. module: fleet
-#: selection:fleet.vehicle,transmission:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__transmission__manual
 msgid "Manual"
 msgstr "Rankinis"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_image_medium
-msgid "Medium-sized image"
-msgstr "Vidutinio dydžio paveiksliukas"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__brand_id
+msgid "Manufacturer"
+msgstr "Gamintojas"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_image_medium
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_image_medium
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_image_medium
-msgid ""
-"Medium-sized logo of the brand. It is automatically resized as a 128x128px "
-"image, with aspect ratio preserved. Use this field in form views or some "
-"kanban views."
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__brand_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__brand_id
+msgid "Manufacturer of the vehicle"
 msgstr ""
-"Vidutinio dydžio markės logotipas. Paveiksliuko dydis automatiškai pakeistas"
-" į 128x128px paveiksliuką, su išlaikytu kraštinių santykiu. Naudokite šį "
-"laukelį formos arba kanban rodinyje."
 
 #. module: fleet
-#: selection:fleet.vehicle,odometer_unit:0
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_error
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_has_error
+msgid "Message Delivery error"
+msgstr "Žinutės pristatymo klaida"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_ids
+msgid "Messages"
+msgstr "Žinutės"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__odometer_unit__miles
 msgid "Miles"
 msgstr "Mylios"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__model_id
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Model"
 msgstr "Modelis"
@@ -1168,21 +1212,15 @@ msgstr "Modelis"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_tree
 msgid "Model Make"
-msgstr ""
+msgstr "Modelio markė"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_year
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__model_year
 msgid "Model Year"
-msgstr ""
+msgstr "Modelio metai"
 
 #. module: fleet
-#: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_action
-#: model:ir.ui.menu,name:fleet.fleet_vehicle_model_brand_menu
-msgid "Model make of Vehicle"
-msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__name
 msgid "Model name"
 msgstr "Modelis"
 
@@ -1192,86 +1230,141 @@ msgid "Model of a vehicle"
 msgstr "Automobilio modelis"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__model_id
 msgid "Model of the vehicle"
 msgstr "Automobilio modelis"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:212
-#, python-format
-msgid "Model: from '%s' to '%s'"
-msgstr "Modelis: nuo '%s' iki '%s'"
-
-#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_kanban
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_tree
 msgid "Models"
 msgstr "Modeliai"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
-msgid "Month"
-msgstr "Mėnuo"
-
-#. module: fleet
-#: selection:fleet.vehicle.log.contract,cost_frequency:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__monthly
 msgid "Monthly"
-msgstr "Kartą per mėnesį"
+msgstr "Kas mėnesį"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_service_type_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_service_type__name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__name
 msgid "Name"
-msgstr "Pavadinimas"
+msgstr "Vardas"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_renewal_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_name
 msgid "Name of contract to renew soon"
-msgstr "Sutarties pavadinimas kuriai reikės atnaujinimo neužilgo"
+msgstr "Netrukus atnaujinamos sutarties pavadinimas"
 
 #. module: fleet
-#: selection:fleet.vehicle.log.contract,cost_frequency:0
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Need Action"
+msgstr "Reikia veiksmo"
+
+#. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_new_request
+msgid "New Request"
+msgstr "Nauja užklausa"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_date_deadline
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Kito veiksmo terminas"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_summary
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_summary
+msgid "Next Activity Summary"
+msgstr "Kito veiksmo santrauka"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_id
+msgid "Next Activity Type"
+msgstr "Kito veiksmo tipas"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__future_driver_id
+msgid "Next Driver of the vehicle"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__no
 msgid "No"
 msgstr "Ne"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:211
-#: code:addons/fleet/models/fleet_vehicle.py:215
-#: code:addons/fleet/models/fleet_vehicle.py:219
-#: code:addons/fleet/models/fleet_vehicle.py:222
+#: code:addons/fleet/models/fleet_vehicle.py:0
 #, python-format
-msgid "None"
-msgstr "Nieko"
+msgid "No Plate"
+msgstr "Nėra numerio"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_notes
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_notes
+#: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
+#: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_non_effective_action
+msgid "No data for analysis"
+msgstr "Nėra duomenų analizei"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__notes
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__notes
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Notes"
 msgstr "Pastabos"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_doors
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_needaction_counter
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Veiksmų skaičius"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__doors
 msgid "Number of doors of the vehicle"
 msgstr "Automobilio durų skaičius"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_seats
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_error_counter
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_needaction_counter
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Žinučių, kurioms reikia jūsų veiksmo, skaičius"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_error_counter
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Žinučių su pristatymo klaida skaičius"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__seats
 msgid "Number of seats of the vehicle"
 msgstr "Automobilio sėdynių skaičius"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_odometer_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_count
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_unread_counter
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Neperskaitytų žinučių skaičius"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__odometer_count
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__odometer_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__odometer_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__odometer_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__odometer_id
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Odometer"
 msgstr "Odometras"
@@ -1289,32 +1382,22 @@ msgid "Odometer Logs"
 msgstr "Odometro žurnalai"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__odometer_unit
 msgid "Odometer Unit"
 msgstr "Odometro vienetai"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_odometer
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_value
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__odometer
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__odometer
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__odometer
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__value
 msgid "Odometer Value"
 msgstr "Odometro reikšmė"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_graph
 msgid "Odometer Values Per Vehicle"
-msgstr "Odometro parodymai kiekvienai mašinai"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer
-msgid "Odometer at creation"
-msgstr ""
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-msgid "Odometer details"
-msgstr "Odometro informacija"
+msgstr "Odometro parodymai atskiriems automobiliams"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_odometer
@@ -1322,37 +1405,21 @@ msgid "Odometer log for a vehicle"
 msgstr "Automobilio odometro žurnalas"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_odometer
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__odometer
 msgid "Odometer measure of the vehicle at the moment of the contract creation"
-msgstr ""
+msgstr "Automobilio odometro rodmenys sutarties sukūrimo metu"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_odometer
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_odometer_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_odometer_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_odometer
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_odometer_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_odometer
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_odometer_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__odometer
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__odometer
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__odometer_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__odometer_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__odometer
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__odometer_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__odometer
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__odometer_id
 msgid "Odometer measure of the vehicle at the moment of this log"
-msgstr "Automobilio odometro matas šiuo metu žurnale"
-
-#. module: fleet
-#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
-msgid ""
-"Odoo helps you keeping track of all the services done\n"
-"            on your vehicle. Services can be of many type: occasional\n"
-"            repair, fixed maintenance, etc."
-msgstr ""
-
-#. module: fleet
-#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_costs_action
-msgid ""
-"Odoo helps you managing the costs for your different\n"
-"                vehicles. Costs are created automatically from services,\n"
-"                contracts (fixed or recurring) and fuel logs."
-msgstr ""
+msgstr "Automobilio odometro parodymai šio įrašymo metu"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
@@ -1361,95 +1428,62 @@ msgid ""
 "Odoo helps you managing the costs for your different vehicles\n"
 "          Costs are generally created from services and contract and appears here."
 msgstr ""
+"\"Odoo\" padeda jums valdyti jūsų automobilių išlaidas\n"
+"Išlaidos yra dažniausiai sukuriamos iš paslaugų ir sutarčių, o atvaizduojamos čia."
 
 #. module: fleet
-#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
-msgid ""
-"Odoo will warn you when services or contract have to be\n"
-"            renewed."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
+msgid "Open"
+msgstr "Atidaryti"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_31
-msgid "Oil Change"
-msgstr "Tepalų pakeitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_32
-msgid "Oil Pump Replacement"
-msgstr "Tepalų siurblio pakeitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_contract_omnium
-msgid "Omnium"
-msgstr ""
-
-#. module: fleet
-#: sql_constraint:fleet.vehicle:0
-msgid "Only one car can be assigned to the same employee!"
-msgstr ""
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_16
-msgid "Options"
-msgstr "Pasirinkimai"
-
-#. module: fleet
-#: selection:fleet.vehicle.cost,cost_type:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_cost__cost_type__other
 msgid "Other"
-msgstr "Kitas"
+msgstr "Kita"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_33
-msgid "Other Maintenance"
-msgstr "Kita priežiūra"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_34
-msgid "Oxygen Sensor Replacement"
-msgstr "Deguonies jutiklio keitimas"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_parent_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_parent_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_parent_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_parent_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__parent_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__parent_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__parent_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__parent_id
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 msgid "Parent"
 msgstr "Tėvinis"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_parent_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_parent_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_parent_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_parent_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__parent_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__parent_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__parent_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__parent_id
 msgid "Parent cost to this current cost"
-msgstr "Pirminė išlaida priklauso šiai išlaidai"
+msgstr "Šios išlaidos tėvinė išlaida"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_purchaser_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__purchaser_id
 msgid "Person to which the contract is signed for"
-msgstr "Asmuo, dėl kurio ši sutartis pasirašyta"
+msgstr "Asmuo, kuriam ši sutartis yra pasirašyta"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_power
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__plan_to_change_car
+#: model:ir.model.fields,field_description:fleet.field_res_partner__plan_to_change_car
+#: model:ir.model.fields,field_description:fleet.field_res_users__plan_to_change_car
+msgid "Plan To Change Car"
+msgstr ""
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Planned for Change"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__power
 msgid "Power"
 msgstr "Galia"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_35
-msgid "Power Steering Hose Replacement"
-msgstr "Vairo stiprintuvo žarnelės pakeitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_36
-msgid "Power Steering Pump Replacement"
-msgstr "Vairo stiprintuvo pompos pakeitimas"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_power
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__power
 msgid "Power in kW of the vehicle"
-msgstr "Automobilio galia išreikšta kW"
+msgstr "Automobilio galia, išreikšta kW"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -1457,43 +1491,38 @@ msgstr "Automobilio galia išreikšta kW"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_tree
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Price"
-msgstr "Suma"
+msgstr "Kaina"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_price_per_liter
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__price_per_liter
 msgid "Price Per Liter"
 msgstr "Litro kaina"
 
 #. module: fleet
-#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
-msgid "Purchased"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__net_car_value
+msgid "Purchase Value"
 msgstr ""
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_purchaser_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_purchaser_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__net_car_value
+msgid "Purchase Value of the car"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__purchaser_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__purchaser_id
 msgid "Purchaser"
 msgstr "Pirkėjas"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_37
-msgid "Radiator Repair"
-msgstr "Radiatoriaus tvarkymas"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_generated
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_generated
 msgid "Recurring Cost Amount"
 msgstr "Pasikartojančių išlaidų kiekis"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_frequency
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_frequency
 msgid "Recurring Cost Frequency"
 msgstr "Pasikartorjančių išlaidų dažnumas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_refueling
-msgid "Refueling"
-msgstr "Degalų papildymas"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
@@ -1501,7 +1530,7 @@ msgid "Refueling Details"
 msgstr "Degalų papildymo informacija"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle_cost.py:200
+#: code:addons/fleet/models/fleet_vehicle_cost.py:0
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #, python-format
@@ -1509,88 +1538,45 @@ msgid "Renew Contract"
 msgstr "Atnaujinti sutartį"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_12
-msgid "Rent (Excluding VAT)"
-msgstr "Nuoma (be PVM)"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_8
-msgid "Repair and maintenance"
-msgstr "Remontas ir techninė priežiūra"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_contract_repairing
-msgid "Repairing"
-msgstr "Taisoma"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_10
-msgid "Replacement Vehicle"
-msgstr "Pakaitinis automobilis"
-
-#. module: fleet
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting
 msgid "Reporting"
 msgstr "Ataskaitos"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_residual_value
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__residual_value
 msgid "Residual Value"
 msgstr "Likutinė vertė"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_15
-msgid "Residual value (Excluding VAT)"
-msgstr "Likutinė vertė (be PVM)"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__user_id
+msgid "Responsible"
+msgstr "Atsakingas"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_19
-msgid "Residual value in %"
-msgstr "Likutinė vertė išreikšta %"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_user_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_user_id
+msgid "Responsible User"
+msgstr "Atsakingas vartotojas"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_38
-msgid "Resurface Rotors"
-msgstr "Stabdžių diskų tekinimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_39
-msgid "Rotate Tires"
-msgstr "Padangų keitimas vietomis"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_40
-msgid "Rotor Replacement"
-msgstr "Stabdžių diskų pakeitimas"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_seats
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__seats
 msgid "Seats Number"
 msgstr "Vietų skaičius"
 
 #. module: fleet
-#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_sedan
-msgid "Sedan"
-msgstr ""
-
-#. module: fleet
-#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_senior
-msgid "Senior"
-msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_sequence
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__sequence
 msgid "Sequence"
 msgstr "Seka"
 
 #. module: fleet
-#: selection:fleet.service.type,category:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_service_type__category__service
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Service"
 msgstr "Paslauga"
 
 #. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Service Type"
 msgstr "Paslaugos tipas"
@@ -1603,8 +1589,8 @@ msgid "Service Types"
 msgstr "Paslaugų tipai"
 
 #. module: fleet
-#: selection:fleet.vehicle.cost,cost_type:0
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_service_count
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__service_count
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_cost__cost_type__services
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Services"
 msgstr "Paslaugos"
@@ -1612,7 +1598,7 @@ msgstr "Paslaugos"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_graph
 msgid "Services Costs Per Month"
-msgstr "Paslaugų kaina per mėnesį"
+msgstr "Paslaugų išlaidos per mėnesį"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
@@ -1620,7 +1606,7 @@ msgid "Services Details"
 msgstr "Paslaugų informacija"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__log_services
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_tree
@@ -1630,7 +1616,7 @@ msgstr "Paslaugų žurnalai"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_services
 msgid "Services for vehicles"
-msgstr "Paslaugos teikiamos automobiliams"
+msgstr "Paslaugos automobiliams"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -1638,81 +1624,71 @@ msgid "Set Contract In Progress"
 msgstr "Nustatyti sutarties būseną į vykdomą"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_image_small
-msgid "Small-sized image"
-msgstr "Mažo dydžio paveiksliukas"
+#: model:ir.actions.act_window,name:fleet.fleet_config_settings_action
+#: model:ir.ui.menu,name:fleet.fleet_config_settings_menu
+msgid "Settings"
+msgstr "Nustatymai"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_image_small
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_image_small
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_image_small
-msgid ""
-"Small-sized logo of the brand. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Show all records which has next action date is before today"
 msgstr ""
+"Rodyti visus įrašus, kurių sekančio veiksmo data yra ankstesnė nei šiandiena"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_6
-msgid "Snow tires"
-msgstr "Žieminės padangos"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__date_start
+msgid "Start Date"
+msgstr "Pradžios data"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_41
-msgid "Spark Plug Replacement"
-msgstr "Uždegimo žvakės pakeitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_42
-msgid "Starter Replacement"
-msgstr "Starterio pakeitimas"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__state_id
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_state_view_tree
 msgid "State"
 msgstr "Būsena"
 
 #. module: fleet
-#: sql_constraint:fleet.vehicle.state:0
+#: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_state_fleet_state_name_unique
 msgid "State name already exists"
 msgstr "Būsenos pavadinimas jau egzistuojas"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:220
-#, python-format
-msgid "State: from '%s' to '%s'"
-msgstr "Būsena: nuo '%s' iki '%s'"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_state
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__state
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Status"
 msgstr "Būsena"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_5
-#: model:fleet.service.type,name:fleet.type_service_service_7
-msgid "Summer tires"
-msgstr "Vasarinės padangos"
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_state
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Būsena, paremta veiklomis\n"
+"Vėluojantis: Termino data jau praėjo\n"
+"Šiandien: Veikla turi būti baigta šiandien\n"
+"Suplanuotas: Ateities veiklos."
 
 #. module: fleet
-#: sql_constraint:fleet.vehicle.tag:0
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__name
+msgid "Tag Name"
+msgstr "Žymos pavadinimas"
+
+#. module: fleet
+#: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_tag_name_uniq
 msgid "Tag name already exists !"
 msgstr "Žymos pavadinimas jau egzistuoja!"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__tag_ids
 msgid "Tags"
 msgstr "Žymos"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_3
-msgid "Tax roll"
-msgstr "Moeksčių sąrašas"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_notes
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__notes
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Terms and Conditions"
 msgstr "Sąlygos"
@@ -1724,130 +1700,113 @@ msgid ""
 "Thanks to the different filters, Odoo can only print the effective\n"
 "          costs, sort them by type and by vehicle."
 msgstr ""
+"Dėl skirtingų filtrų \"Odoo\" gali atspausdinti tik efektyvias\n"
+"išlaidas, rūšiuoti jas pagal tipą ir automobilį."
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_43
-msgid "Thermostat Replacement"
-msgstr "Termopastos pakeitimas"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_image
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_image
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_image
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__next_assignation_date
 msgid ""
-"This field holds the image used as logo for the brand, limited to "
-"1024x1024px."
-msgstr "Šis laukelis laiko markės logotipą, dydis turi būti iki 1024x1024px."
+"This is the date at which the car will be available, if not set it means "
+"available instantly"
+msgstr ""
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_44
-msgid "Tie Rod End Replacement"
-msgstr "Vairo traukės pakeitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_45
-msgid "Tire Replacement"
-msgstr "Padangų keitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_46
-msgid "Tire Service"
-msgstr "Padangų aptarnavimas"
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Today Activities"
+msgstr "Šiandienos veiklos"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_tree
 msgid "Total"
-msgstr "Viso"
+msgstr "Suma"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_amount
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_amount
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_amount
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_amount
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__amount
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__amount
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__amount
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__amount
 msgid "Total Price"
 msgstr "Bendra kaina"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_14
-msgid "Total expenses (Excluding VAT)"
-msgstr "Iš viso išlaidų (be PVM)"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_renewal_total
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_total
 msgid "Total of contracts due or overdue minus one"
 msgstr "Iš viso sutarčių arba veluojančių minus viena"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_18
-msgid "Touring Assistance"
-msgstr "Turistinė pagalba"
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
+msgid ""
+"Track all the services done on your vehicle.\n"
+"            Services can be of many types: occasional repair, fixed maintenance, etc."
+msgstr ""
+"Sekite visas paslaugas, atliktas jūsų automobiliui.\n"
+"Paslaugos dali būti daugelio tipų: atsitiktiniai taisymai, priežiūra ir kt."
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_transmission
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__transmission
 msgid "Transmission"
 msgstr "Pavarų dėžė"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_47
-msgid "Transmission Filter Replacement"
-msgstr "Pavarų dėžės filtro pakeitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_48
-msgid "Transmission Fluid Replacement"
-msgstr "Pavarų dėžės skysčio pakeitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_49
-msgid "Transmission Replacement"
-msgstr "Pavarų dėžės keitimas"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_transmission
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__transmission
 msgid "Transmission Used by the vehicle"
 msgstr "Automobilio pavarų dėžė"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_cost_subtype_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_subtype_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_cost_subtype_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_cost_subtype_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__cost_subtype_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_subtype_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__cost_subtype_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__cost_subtype_id
 msgid "Type"
 msgstr "Tipas"
 
 #. module: fleet
-#: model:ir.model,name:fleet.model_fleet_service_type
-msgid "Type of services available on a vehicle"
-msgstr "Galimos paslaugos automobiliui"
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_exception_decoration
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_vin_sn
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__vin_sn
 msgid "Unique number written on the vehicle motor (VIN/SN number)"
 msgstr "Unikalus numeris, kuris parašytas ant motoro (VIN / SN numeris)"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2892
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__odometer_unit
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__odometer_unit
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__odometer_unit
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__odometer_unit
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__unit
 msgid "Unit"
 msgstr "Vienetas"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_odometer_unit
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_odometer_unit
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_odometer_unit
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_odometer_unit
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit_2892
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__odometer_unit
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__odometer_unit
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__odometer_unit
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__odometer_unit
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__odometer_unit
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer__unit
 msgid "Unit of the odometer "
 msgstr "Odometro vienetai "
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_sequence
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_unread
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_unread
+msgid "Unread Messages"
+msgstr "Neperskaitytos žinutės"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_unread_counter
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Neperskaitytų žinučių skaičiavimas"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state__sequence
 msgid "Used to order the note stages"
-msgstr "Naudojama užsakant pastabų stadijas."
+msgstr "Naudojama pastabų etapų rikiavimui"
 
 #. module: fleet
 #: model:res.groups,name:fleet.fleet_group_user
@@ -1855,37 +1814,38 @@ msgid "User"
 msgstr "Vartotojas"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_car_value
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__car_value
 msgid "Value of the bought vehicle"
 msgstr "Nupirkto automobilio vertė"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_vehicle_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_vehicle_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_vehicle_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_vehicle_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_vehicle_id
+#: model:ir.model,name:fleet.model_fleet_vehicle
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__vehicle_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__vehicle_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__vehicle_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__vehicle_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__vehicle_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__vehicle_id
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_tree
 msgid "Vehicle"
 msgstr "Automobilis"
 
 #. module: fleet
-#: model:ir.actions.act_window,name:fleet.fleet_vehicle_costs_action
-#: model:ir.ui.menu,name:fleet.fleet_vehicle_costs_menu
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_view_tree
 msgid "Vehicle Costs"
-msgstr "Automobilio išlaidos"
+msgstr "Automobilių išlaidos"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
-msgid "Vehicle Costs by Month"
-msgstr "Automobilio išlaidos pagal mėnesį"
+msgid "Vehicle Costs by Date"
+msgstr "Automobilių kaštai pagal datą"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
@@ -1893,50 +1853,64 @@ msgid "Vehicle Details"
 msgstr "Automobilio informacija"
 
 #. module: fleet
-#: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_action
-#: model:ir.ui.menu,name:fleet.fleet_vehicle_model_menu
-msgid "Vehicle Model"
-msgstr "Automobilio modelis"
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+msgid "Vehicle Informations"
+msgstr ""
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_state_action
+#: model:ir.model,name:fleet.model_fleet_vehicle_state
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_state_menu
 msgid "Vehicle Status"
 msgstr "Automobilio būsena"
 
 #. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_tag
+msgid "Vehicle Tag"
+msgstr "Automobilio žyma"
+
+#. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_tag_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_tag_menu
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_tag_view_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_tag_view_view_tree
 msgid "Vehicle Tags"
-msgstr ""
+msgstr "Automobilių žymos"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_vehicle_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_vehicle_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_vehicle_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_vehicle_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__vehicle_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__vehicle_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__vehicle_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__vehicle_id
 msgid "Vehicle concerned by this log"
-msgstr ""
+msgstr "Šio žurnalo automobilis"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_form
 msgid "Vehicle costs"
-msgstr "Automobilio mokesčiai"
+msgstr "Automobilių išlaidos"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_menu
 #: model:ir.ui.menu,name:fleet.fleet_vehicles
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_activity
 msgid "Vehicles"
 msgstr "Automobiliai"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_contract_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_contract_menu
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_activity
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Vehicles Contracts"
 msgstr "Automobilių sutartys"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_costs_action
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_costs_menu
+msgid "Vehicles Costs"
+msgstr "Automobilių kaštai"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_fuel_action
@@ -1946,10 +1920,16 @@ msgid "Vehicles Fuel Logs"
 msgstr "Automobilių kuro žurnalai"
 
 #. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_action
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_model_menu
+msgid "Vehicles Model"
+msgstr "Automobilių modelis"
+
+#. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_odometer_menu
 msgid "Vehicles Odometer"
-msgstr "Automobilių odometro parodymai"
+msgstr "Automobilių odometrai"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_services_action
@@ -1973,103 +1953,85 @@ msgid "Vehicles odometers"
 msgstr "Automobilių odometrai"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_insurer_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_vendor_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_vendor_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__insurer_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__vendor_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__vendor_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Vendor"
-msgstr "Pardavėjas"
+msgstr "Tiekėjas"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_vendors
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__vendors
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 msgid "Vendors"
-msgstr "Pardavėjai"
+msgstr "Tiekėjai"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_days_left
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__days_left
 msgid "Warning Date"
 msgstr "Įspėjimo data"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_50
-msgid "Water Pump Replacement"
-msgstr "Vandens pompos pakeitimas"
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
+msgid "Warning: renewal due soon"
+msgstr "Įspėjimas: atnaujinimo data arti"
 
 #. module: fleet
-#: selection:fleet.vehicle.log.contract,cost_frequency:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__weekly
 msgid "Weekly"
 msgstr "Kartą per savaitę"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_51
-msgid "Wheel Alignment"
-msgstr "Ratų suvedimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_52
-msgid "Wheel Bearing Replacement"
-msgstr "Rato guolio keitimas"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_53
-msgid "Windshield Wiper(s) Replacement"
-msgstr "Valytuvo (-ų) pakeitimas"
-
-#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Write here all other information relative to this contract"
-msgstr "Parašykite čia visą informaciją susijusią su šia sutartimi"
+msgstr "Čia įrašykite visą kitą informaciją, susijusią su šia sutartimi"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_notes
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__notes
 msgid "Write here all supplementary information relative to this contract"
-msgstr ""
+msgstr "Čia parašykite visą papildomą informaciją, susijusią su šia sutartimi"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
 msgid "Write here any other information"
-msgstr "Parašykite čia kitą svarbią informaciją"
+msgstr "Čia parašykite bet kokią kitą informaciją"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Write here any other information related to the service completed."
 msgstr ""
-"Čia parašykite kitą svarbią informaciją susijusią su šia atlikta paslauga."
+"Čia parašykite bet kokią kitą svarbią informaciją, susijusią su atlikta "
+"paslauga."
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
-msgid "Year"
-msgstr "Metai"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_year
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__model_year
 msgid "Year of the model"
-msgstr ""
+msgstr "Modelio metai"
 
 #. module: fleet
-#: selection:fleet.vehicle.log.contract,cost_frequency:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__yearly
 msgid "Yearly"
 msgstr "Kas metus"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
+msgid "You can add various odometer entries for all vehicles."
+msgstr "Galite pridėti įvairių odometro įrašų visiems automobiliams."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_state_action
 msgid ""
 "You can customize available status to track the evolution of\n"
-"            each vehicle. Example: Active, Being Repaired, Sold."
+"            each vehicle. Example: active, being repaired, sold."
 msgstr ""
+"Galite pritaikyti būseną kiekvieno automobilio\n"
+"procesams. Pavyzdžiui: aktyvus, remontuojamas, parduotas."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "You can define several models (e.g. A3, A4) for each make (Audi)."
 msgstr ""
-
-#. module: fleet
-#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
-msgid ""
-"You will be able to manage your fleet by keeping track of the\n"
-"            contracts, services, fixed and recurring costs, odometers and\n"
-"            fuel logs associated to each vehicle."
-msgstr ""
+"Jūs galite apibrėžti kelis modelius (pvz.: A3, A4) kiekvienai markei (Audi)."
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -2093,24 +2055,14 @@ msgid "e.g. Tesla"
 msgstr "pvz. Tesla"
 
 #. module: fleet
-#: model:ir.model,name:fleet.model_fleet_vehicle_state
-msgid "fleet.vehicle.state"
-msgstr ""
-
-#. module: fleet
-#: model:ir.model,name:fleet.model_fleet_vehicle_tag
-msgid "fleet.vehicle.tag"
-msgstr "Žymos"
-
-#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "show all the costs for this vehicle"
-msgstr "Parodyti visas šio automobilio išlaidas"
+msgstr "rodyti visas šio automobilio išlaidas"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "show the contract for this vehicle"
-msgstr "Parodyti visas sutartis su šiuo automobiliu"
+msgstr "rodyti šio automobilio sutartį"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form

@@ -20,7 +20,7 @@ BasicModel.include({
      * @private
      * @param {Object} record - an element from the localData
      * @param {string} fieldName
-     * @return {Deferred<Object>} the deferred is resolved with the
+     * @return {Promise<Object>} the promise is resolved with the
      *                            invalidPartnerIds
      */
     _setInvalidMany2ManyTagsEmail: function (record, fieldName) {
@@ -42,10 +42,10 @@ BasicModel.include({
             var changes = {operation: 'DELETE', ids: _.pluck(invalidPartnerIds, 'id')};
             def = this._applyX2ManyChange(record, fieldName, changes);
         }
-        return $.when(def).then(function () {
-            return $.when({
+        return Promise.resolve(def).then(function () {
+            return {
                 invalidPartnerIds: _.pluck(invalidPartnerIds, 'res_id'),
-            });
+            };
         });
     },
 });
@@ -65,7 +65,7 @@ var FieldMany2ManyTagsEmail = M2MTags.extend({
      * Open a popup for each invalid partners (without email) to fill the email.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _checkEmailPopup: function () {
         var self = this;
@@ -75,25 +75,25 @@ var FieldMany2ManyTagsEmail = M2MTags.extend({
 
         // propose the user to correct invalid partners
         _.each(this.record.specialData[this.name].invalidPartnerIds, function (resID) {
-            var def = $.Deferred();
-            popupDefs.push(def);
-
-            var pop = new form_common.FormViewDialog(self, {
-                res_model: self.field.relation,
-                res_id: resID,
-                context: self.record.context,
-                title: "",
-                on_saved: function (record) {
-                    if (record.data.email) {
-                        validPartners.push(record.res_id);
-                    }
-                },
-            }).open();
-            pop.on('closed', self, function () {
-                def.resolve();
+            var def = new Promise(function (resolve, reject) {
+                var pop = new form_common.FormViewDialog(self, {
+                    res_model: self.field.relation,
+                    res_id: resID,
+                    context: self.record.context,
+                    title: "",
+                    on_saved: function (record) {
+                        if (record.data.email) {
+                            validPartners.push(record.res_id);
+                        }
+                    },
+                }).open();
+                pop.on('closed', self, function () {
+                    resolve();
+                });
             });
+            popupDefs.push(def);
         });
-        return $.when.apply($, popupDefs).then(function() {
+        return Promise.all(popupDefs).then(function() {
             // All popups have been processed for the given ids
             // It is now time to set the final value with valid partners ids.
             validPartners = _.uniq(validPartners);
@@ -117,14 +117,14 @@ var FieldMany2ManyTagsEmail = M2MTags.extend({
      */
     _render: function () {
         var self = this;
-        var def = $.Deferred();
         var _super = this._super.bind(this);
-        if (this.record.specialData[this.name].invalidPartnerIds.length) {
-            def = this._checkEmailPopup();
-        } else {
-            def.resolve();
-        }
-        return def.then(function () {
+        return new Promise(function (resolve, reject) {
+            if (self.record.specialData[self.name].invalidPartnerIds.length) {
+                resolve(self._checkEmailPopup());
+            } else {
+                resolve();
+            }
+        }).then(function () {
             return _super.apply(self, arguments);
         });
     },

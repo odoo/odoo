@@ -23,6 +23,7 @@ KanbanRecord.include({
                 employee_id: this.record.id.raw_value,
                 employee_name: this.record.name.raw_value,
                 employee_state: this.record.attendance_state.raw_value,
+                employee_hours_today: this.record.hours_today.raw_value,
             };
             this.do_action(action);
         } else {

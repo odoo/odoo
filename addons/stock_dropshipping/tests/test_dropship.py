@@ -8,7 +8,7 @@ from odoo.tools import mute_logger
 class TestDropship(common.TransactionCase):
     def test_change_qty(self):
         # enable the dropship and MTO route on the product
-        prod = self.env.ref('product.product_product_8')
+        prod = self.env['product.product'].create({'name': 'Large Desk'})
         dropshipping_route = self.env.ref('stock_dropshipping.route_drop_shipping')
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         prod.write({'route_ids': [(6, 0, [dropshipping_route.id, mto_route.id])]})
@@ -45,11 +45,24 @@ class TestDropship(common.TransactionCase):
         self.assertAlmostEqual(po_line.product_qty, 1.00)
 
         # Update qty on SO and check PO
-        so.order_line.product_uom_qty = 2.00
+        so.write({'order_line': [[1, so.order_line.id, {'product_uom_qty': 2.00}]]})
         self.assertAlmostEqual(po_line.product_qty, 2.00)
 
-
-class TestDropship(common.TransactionCase):
+        # Create a new so line
+        sol2 = self.env['sale.order.line'].create({
+            'order_id': so.id,
+            'name': prod.name,
+            'product_id': prod.id,
+            'product_uom_qty': 3.00,
+            'product_uom': prod.uom_id.id,
+            'price_unit': 12,
+        })
+        # there is a new line
+        pol2 = po.order_line - po_line
+        # the first line is unchanged
+        self.assertAlmostEqual(po_line.product_qty, 2.00)
+        # the new line matches the new line on the so
+        self.assertAlmostEqual(pol2.product_qty, sol2.product_uom_qty)
 
     def test_00_dropship(self):
 
@@ -74,8 +87,8 @@ class TestDropship(common.TransactionCase):
 
         # Create a sales order with a line of 200 PCE incoming shipment, with route_id drop shipping
         so_form = Form(self.env['sale.order'])
-        so_form.partner_id = self.env.ref('base.res_partner_2')
-        so_form.payment_term_id = self.env.ref('account.account_payment_term')
+        so_form.partner_id = self.env['res.partner'].create({'name': 'My Test Partner'})
+        so_form.payment_term_id = self.env.ref('account.account_payment_term_end_following_month')
         with mute_logger('odoo.tests.common.onchange'):
             # otherwise complains that there's not enough inventory and
             # apparently that's normal according to @jco and @sle
@@ -96,8 +109,8 @@ class TestDropship(common.TransactionCase):
         purchase = self.env['purchase.order'].search([('partner_id', '=', supplier_dropship.id)])
         self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
         purchase.button_confirm()
-        self.assertEquals(purchase.state, 'purchase', 'Purchase order should be in the approved state')
-        self.assertEquals(len(purchase.ids), 1, 'There should be one picking')
+        self.assertEqual(purchase.state, 'purchase', 'Purchase order should be in the approved state')
+        self.assertEqual(len(purchase.ids), 1, 'There should be one picking')
 
         # Send the 200 pieces
         purchase.picking_ids.move_lines.quantity_done = purchase.picking_ids.move_lines.product_qty
@@ -107,4 +120,4 @@ class TestDropship(common.TransactionCase):
         move_line = self.env['stock.move.line'].search([
             ('location_dest_id', '=', self.env.ref('stock.stock_location_customers').id),
             ('product_id', '=', drop_shop_product.id)])
-        self.assertEquals(len(move_line.ids), 1, 'There should be exactly one move line')
+        self.assertEqual(len(move_line.ids), 1, 'There should be exactly one move line')

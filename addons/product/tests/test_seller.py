@@ -8,15 +8,17 @@ class TestSeller(TransactionCase):
 
     def setUp(self):
         super(TestSeller, self).setUp()
-        self.product_service = self.env.ref('product.product_product_2')
+        self.product_service = self.env['product.product'].create({
+            'name': 'Virtual Home Staging',
+        })
         self.product_service.default_code = 'DEFCODE'
         self.product_consu = self.env['product.product'].create({
             'name': 'Boudin',
             'type': 'consu',
         })
         self.product_consu.default_code = 'DEFCODE'
-        self.asustec = self.env.ref('base.res_partner_1')
-        self.camptocamp = self.env.ref('base.res_partner_12')
+        self.asustec = self.env['res.partner'].create({'name': 'Wood Corner'})
+        self.camptocamp = self.env['res.partner'].create({'name': 'Azure Interior'})
 
     def test_10_sellers(self):
         self.product_service.write({'seller_ids': [
@@ -33,7 +35,7 @@ class TestSeller(TransactionCase):
         self.assertEqual('C2CCODE', context_code, "Partner's code not used in product name with context set")
 
     def test_20_sellers_company(self):
-        company_a = self.env.user.company_id
+        company_a = self.env.company
         company_b = self.env['res.company'].create({
             'name': 'Saucisson Inc.',
         })

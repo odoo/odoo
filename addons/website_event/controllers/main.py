@@ -3,14 +3,16 @@
 import babel.dates
 import re
 import werkzeug
-import json
+from werkzeug.datastructures import OrderedMultiDict
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields, http, _
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.website.controllers.main import QueryURL
 from odoo.http import request
+from odoo.tools.misc import get_lang, format_date
 
 
 class WebsiteEventController(http.Controller):
@@ -24,46 +26,50 @@ class WebsiteEventController(http.Controller):
         Event = request.env['event.event']
         EventType = request.env['event.type']
 
+        searches.setdefault('search', '')
         searches.setdefault('date', 'all')
         searches.setdefault('type', 'all')
         searches.setdefault('country', 'all')
 
+        website = request.website
+        today = datetime.today()
 
         def sdn(date):
             return fields.Datetime.to_string(date.replace(hour=23, minute=59, second=59))
 
         def sd(date):
             return fields.Datetime.to_string(date)
-        today = datetime.today()
+
+        def get_month_filter_domain(filter_name, months_delta):
+            first_day_of_the_month = today.replace(day=1)
+            filter_string = _('This month') if months_delta == 0 \
+                else format_date(request.env, value=today + relativedelta(months=months_delta),
+                                 date_format='LLLL', lang_code=get_lang(request.env).code).capitalize()
+            return [filter_name, filter_string, [
+                ("date_end", ">=", sd(first_day_of_the_month + relativedelta(months=months_delta))),
+                ("date_begin", "<", sd(first_day_of_the_month + relativedelta(months=months_delta+1)))],
+                0]
+
         dates = [
-            ['all', _('Next Events'), [("date_end", ">", sd(today))], 0],
+            ['all', _('Upcoming Events'), [("date_end", ">", sd(today))], 0],
             ['today', _('Today'), [
                 ("date_end", ">", sd(today)),
                 ("date_begin", "<", sdn(today))],
                 0],
-            ['week', _('This Week'), [
-                ("date_end", ">=", sd(today + relativedelta(days=-today.weekday()))),
-                ("date_begin", "<", sdn(today + relativedelta(days=6-today.weekday())))],
-                0],
-            ['nextweek', _('Next Week'), [
-                ("date_end", ">=", sd(today + relativedelta(days=7-today.weekday()))),
-                ("date_begin", "<", sdn(today + relativedelta(days=13-today.weekday())))],
-                0],
-            ['month', _('This month'), [
-                ("date_end", ">=", sd(today.replace(day=1))),
-                ("date_begin", "<", (today.replace(day=1) + relativedelta(months=1)).strftime('%Y-%m-%d 00:00:00'))],
-                0],
-            ['nextmonth', _('Next month'), [
-                ("date_end", ">=", sd(today.replace(day=1) + relativedelta(months=1))),
-                ("date_begin", "<", (today.replace(day=1) + relativedelta(months=2)).strftime('%Y-%m-%d 00:00:00'))],
-                0],
+            get_month_filter_domain('month', 0),
+            get_month_filter_domain('nextmonth1', 1),
+            get_month_filter_domain('nextmonth2', 2),
             ['old', _('Past Events'), [
-                ("date_end", "<", today.strftime('%Y-%m-%d 00:00:00'))],
+                ("date_end", "<", sd(today))],
                 0],
         ]
 
         # search domains
-        domain_search = {'website_specific': request.website.website_domain()}
+        domain_search = {'website_specific': website.website_domain()}
+
+        if searches['search']:
+            domain_search['search'] = [('name', 'ilike', searches['search'])]
+
         current_date = None
         current_type = None
         current_country = None
@@ -72,6 +78,7 @@ class WebsiteEventController(http.Controller):
                 domain_search["date"] = date[2]
                 if date[0] != 'all':
                     current_date = date[1]
+
         if searches["type"] != 'all':
             current_type = EventType.browse(int(searches['type']))
             domain_search["type"] = [("event_type_id", "=", int(searches["type"]))]
@@ -83,7 +90,7 @@ class WebsiteEventController(http.Controller):
             domain_search["country"] = [("country_id", "=", False)]
 
         def dom_without(without):
-            domain = [('state', "in", ['draft', 'confirm', 'done'])]
+            domain = []
             for key, search in domain_search.items():
                 if key != without:
                     domain += search
@@ -108,11 +115,11 @@ class WebsiteEventController(http.Controller):
             'country_id': ("all", _("All Countries"))
         })
 
-        step = 10  # Number of events per page
+        step = 12  # Number of events per page
         event_count = Event.search_count(dom_without("none"))
-        pager = request.website.pager(
+        pager = website.pager(
             url="/event",
-            url_args={'date': searches.get('date'), 'type': searches.get('type'), 'country': searches.get('country')},
+            url_args=searches,
             total=event_count,
             page=page,
             step=step,
@@ -126,6 +133,8 @@ class WebsiteEventController(http.Controller):
         order = 'is_published desc, ' + order
         events = Event.search(dom_without("none"), limit=step, offset=pager['offset'], order=order)
 
+        keep = QueryURL('/event', **{key: value for key, value in searches.items() if (key == 'search' or value != 'all')})
+
         values = {
             'current_date': current_date,
             'current_country': current_country,
@@ -136,26 +145,31 @@ class WebsiteEventController(http.Controller):
             'countries': countries,
             'pager': pager,
             'searches': searches,
-            'search_path': "?%s" % werkzeug.url_encode(searches),
+            'keep': keep,
         }
+
+        if searches['date'] == 'old':
+            # the only way to display this content is to set date=old so it must be canonical
+            values['canonical_params'] = OrderedMultiDict([('date', 'old')])
 
         return request.render("website_event.index", values)
 
-    @http.route(['''/event/<model("event.event", "[('website_id', 'in', (False, current_website_id))]"):event>/page/<path:page>'''], type='http', auth="public", website=True, sitemap=False)
+    @http.route(['''/event/<model("event.event"):event>/page/<path:page>'''], type='http', auth="public", website=True, sitemap=False)
     def event_page(self, event, page, **post):
         if not event.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
 
         values = {
             'event': event,
-            'main_object': event
         }
 
         if '.' not in page:
             page = 'website_event.%s' % page
 
         try:
-            request.website.get_template(page)
+            # Every event page view should have its own SEO.
+            values['seo_object'] = request.website.get_template(page)
+            values['main_object'] = event
         except ValueError:
             # page not found
             values['path'] = re.sub(r"^website_event\.", '', page)
@@ -164,7 +178,7 @@ class WebsiteEventController(http.Controller):
 
         return request.render(page, values)
 
-    @http.route(['''/event/<model("event.event", "[('website_id', 'in', (False, current_website_id))]"):event>'''], type='http', auth="public", website=True)
+    @http.route(['''/event/<model("event.event"):event>'''], type='http', auth="public", website=True, sitemap=True)
     def event(self, event, **post):
         if not event.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
@@ -177,16 +191,19 @@ class WebsiteEventController(http.Controller):
             target_url += '?enable_editor=1'
         return request.redirect(target_url)
 
-    @http.route(['''/event/<model("event.event", "[('website_id', 'in', (False, current_website_id))]"):event>/register'''], type='http', auth="public", website=True, sitemap=False)
+    @http.route(['''/event/<model("event.event"):event>/register'''], type='http', auth="public", website=True, sitemap=False)
     def event_register(self, event, **post):
         if not event.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
 
+        urls = event._get_event_resource_urls()
         values = {
             'event': event,
             'main_object': event,
             'range': range,
-            'registrable': event.sudo()._is_event_registrable()
+            'registrable': event.sudo().event_registrations_open,
+            'google_url': urls.get('google_url'),
+            'iCal_url': urls.get('iCal_url'),
         }
         return request.render("website_event.event_description_full", values)
 
@@ -211,7 +228,7 @@ class WebsiteEventController(http.Controller):
     def get_formated_date(self, event):
         start_date = fields.Datetime.from_string(event.date_begin).date()
         end_date = fields.Datetime.from_string(event.date_end).date()
-        month = babel.dates.get_month_names('abbreviated', locale=event.env.context.get('lang') or 'en_US')[start_date.month]
+        month = babel.dates.get_month_names('abbreviated', locale=get_lang(event.env).code)[start_date.month]
         return ('%s %s%s') % (month, start_date.strftime("%e"), (end_date != start_date and ("-" + end_date.strftime("%e")) or ""))
 
     @http.route('/event/get_country_event_list', type='json', auth='public', website=True)
@@ -223,9 +240,9 @@ class WebsiteEventController(http.Controller):
         domain = request.website.website_domain()
         if country_code:
             country = request.env['res.country'].search([('code', '=', country_code)], limit=1)
-            events = Event.search(domain + ['|', ('address_id', '=', None), ('country_id.code', '=', country_code), ('date_begin', '>=', '%s 00:00:00' % fields.Date.today()), ('state', '=', 'confirm')], order="date_begin")
+            events = Event.search(domain + ['|', ('address_id', '=', None), ('country_id.code', '=', country_code), ('date_begin', '>=', '%s 00:00:00' % fields.Date.today())], order="date_begin")
         if not events:
-            events = Event.search(domain + [('date_begin', '>=', '%s 00:00:00' % fields.Date.today()), ('state', '=', 'confirm')], order="date_begin")
+            events = Event.search(domain + [('date_begin', '>=', '%s 00:00:00' % fields.Date.today())], order="date_begin")
         for event in events:
             if country_code and event.country_id.code == country_code:
                 result['country'] = country
@@ -235,25 +252,61 @@ class WebsiteEventController(http.Controller):
                 "url": event.website_url})
         return request.env['ir.ui.view'].render_template("website_event.country_events_list", result)
 
-    def _process_tickets_details(self, data):
-        nb_register = int(data.get('nb_register-0', 0))
-        if nb_register:
-            return [{'id': 0, 'name': 'Registration', 'quantity': nb_register, 'price': 0}]
-        return []
+    def _process_tickets_form(self, event, form_details):
+        """ Process posted data about ticket order. Generic ticket are supported
+        for event without tickets (generic registration).
+
+        :return: list of order per ticket: [{
+            'id': if of ticket if any (0 if no ticket),
+            'ticket': browse record of ticket if any (None if no ticket),
+            'name': ticket name (or generic 'Registration' name if no ticket),
+            'quantity': number of registrations for that ticket,
+        }, {...}]
+        """
+        ticket_order = {}
+        for key, value in form_details.items():
+            registration_items = key.split('nb_register-')
+            if len(registration_items) != 2:
+                continue
+            ticket_order[int(registration_items[1])] = int(value)
+
+        ticket_dict = dict((ticket.id, ticket) for ticket in request.env['event.event.ticket'].search([
+            ('id', 'in', [tid for tid in ticket_order.keys() if tid]),
+            ('event_id', '=', event.id)
+        ]))
+
+        return [{
+            'id': tid if ticket_dict.get(tid) else 0,
+            'ticket': ticket_dict.get(tid),
+            'name': ticket_dict[tid]['name'] if ticket_dict.get(tid) else _('Registration'),
+            'quantity': count,
+        } for tid, count in ticket_order.items() if count]
 
     @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'], website=True)
     def registration_new(self, event, **post):
-        tickets = self._process_tickets_details(post)
+        tickets = self._process_tickets_form(event, post)
         if not tickets:
             return False
         return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details", {'tickets': tickets, 'event': event})
 
-    def _process_registration_details(self, details):
-        ''' Process data posted from the attendee details form. '''
+    def _process_attendees_form(self, event, form_details):
+        """ Process data posted from the attendee details form.
+
+        :param details: posted data from frontend registration form, like
+            {'1-name': 'r', '1-email': 'r@r.com', '1-phone': '', '1-event_ticket_id': '1'}
+        """
+        registration_fields = request.env['event.registration']._fields
         registrations = {}
         global_values = {}
-        for key, value in details.items():
+        for key, value in form_details.items():
             counter, field_name = key.split('-', 1)
+            if field_name not in registration_fields:
+                continue
+            elif isinstance(registration_fields[field_name], (fields.Many2one, fields.Integer)):
+                value = int(value) or False  # 0 is considered as a void many2one aka False
+            else:
+                value = value
+
             if counter == '0':
                 global_values[field_name] = value
             else:
@@ -263,22 +316,28 @@ class WebsiteEventController(http.Controller):
                 registration[key] = value
         return list(registrations.values())
 
-    @http.route(['''/event/<model("event.event", "[('website_id', 'in', (False, current_website_id))]"):event>/registration/confirm'''], type='http', auth="public", methods=['POST'], website=True)
+    def _create_attendees_from_registration_post(self, event, registration_data):
+        attendees_sudo = request.env['event.registration'].sudo()
+
+        for registration_values in registration_data:
+            registration_values['event_id'] = event.id
+            if not registration_values.get('partner_id'):
+                registration_values['partner_id'] = request.env.user.partner_id.id
+            attendees_sudo += request.env['event.registration'].sudo().create(registration_values)
+
+        return attendees_sudo
+
+    @http.route(['''/event/<model("event.event"):event>/registration/confirm'''], type='http', auth="public", methods=['POST'], website=True)
     def registration_confirm(self, event, **post):
         if not event.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
 
-        Attendees = request.env['event.registration']
-        registrations = self._process_registration_details(post)
+        registrations = self._process_attendees_form(event, post)
+        attendees = self._create_attendees_from_registration_post(event, registrations)
 
-        for registration in registrations:
-            registration['event_id'] = event
-            Attendees += Attendees.sudo().create(
-                Attendees._prepare_attendee_values(registration))
-
-        urls = event._get_event_resource_urls(Attendees.ids)
+        urls = event._get_event_resource_urls()
         return request.render("website_event.registration_complete", {
-            'attendees': Attendees.sudo(),
+            'attendees': attendees,
             'event': event,
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url')

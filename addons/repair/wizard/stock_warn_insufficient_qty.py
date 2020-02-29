@@ -10,6 +10,9 @@ class StockWarnInsufficientQtyRepair(models.TransientModel):
 
     repair_id = fields.Many2one('repair.order', string='Repair')
 
+    def _get_reference_document_company_id(self):
+        return self.repair_id.company_id
+
     def action_done(self):
         self.ensure_one()
         return self.repair_id.action_repair_confirm()

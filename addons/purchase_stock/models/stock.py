@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
 
 
 class StockPicking(models.Model):
@@ -33,7 +32,6 @@ class StockMove(models.Model):
         keys_sorted += [move.purchase_line_id.id, move.created_purchase_line_id.id]
         return keys_sorted
 
-    @api.multi
     def _get_price_unit(self):
         """ Returns the unit price for the move"""
         self.ensure_one()
@@ -46,21 +44,31 @@ class StockMove(models.Model):
             if line.product_uom.id != line.product_id.uom_id.id:
                 price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
             if order.currency_id != order.company_id.currency_id:
+                # The date must be today, and not the date of the move since the move move is still
+                # in assigned state. However, the move date is the scheduled date until move is
+                # done, then date of actual move processing. See:
+                # https://github.com/odoo/odoo/blob/2f789b6863407e63f90b3a2d4cc3be09815f7002/addons/stock/models/stock_move.py#L36
                 price_unit = order.currency_id._convert(
-                    price_unit, order.company_id.currency_id, order.company_id, self.date, round=False)
+                    price_unit, order.company_id.currency_id, order.company_id, fields.Date.context_today(self), round=False)
             return price_unit
         return super(StockMove, self)._get_price_unit()
 
-    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id):
+    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description):
         """ Overridden from stock_account to support amount_currency on valuation lines generated from po
         """
         self.ensure_one()
 
-        rslt = super(StockMove, self)._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id)
+        rslt = super(StockMove, self)._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description)
         if self.purchase_line_id:
             purchase_currency = self.purchase_line_id.currency_id
             if purchase_currency != self.company_id.currency_id:
-                purchase_price_unit = self.purchase_line_id.price_unit
+                # Do not use price_unit since we want the price tax excluded. And by the way, qty
+                # is in the UOM of the product, not the UOM of the PO line.
+                purchase_price_unit = (
+                    self.purchase_line_id.price_subtotal / self.purchase_line_id.product_uom_qty
+                    if self.purchase_line_id.product_uom_qty
+                    else self.purchase_line_id.price_unit
+                )
                 currency_move_valuation = purchase_currency.round(purchase_price_unit * abs(qty))
                 rslt['credit_line_vals']['amount_currency'] = rslt['credit_line_vals']['credit'] and -currency_move_valuation or currency_move_valuation
                 rslt['credit_line_vals']['currency_id'] = purchase_currency.id
@@ -85,6 +93,8 @@ class StockMove(models.Model):
     def _get_upstream_documents_and_responsibles(self, visited):
         if self.created_purchase_line_id and self.created_purchase_line_id.state not in ('done', 'cancel'):
             return [(self.created_purchase_line_id.order_id, self.created_purchase_line_id.order_id.user_id, visited)]
+        elif self.purchase_line_id and self.purchase_line_id.state not in ('done', 'cancel'):
+            return[(self.purchase_line_id.order_id, self.purchase_line_id.order_id.user_id, visited)]
         else:
             return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 
@@ -92,7 +102,7 @@ class StockMove(models.Model):
         """ Overridden to return the vendor bills related to this stock move.
         """
         rslt = super(StockMove, self)._get_related_invoices()
-        rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.state not in ('draft', 'cancel'))
+        rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.state == 'posted')
         return rslt
 
 
@@ -114,24 +124,24 @@ class StockWarehouse(models.Model):
                     'picking_type_id': self.in_type_id.id,
                     'group_propagation_option': 'none',
                     'company_id': self.company_id.id,
-                    'route_id': self._find_global_route('purchase_stock.route_warehouse0_buy', _('Buy')).id
+                    'route_id': self._find_global_route('purchase_stock.route_warehouse0_buy', _('Buy')).id,
+                    'propagate_cancel': self.reception_steps != 'one_step',
                 },
                 'update_values': {
                     'active': self.buy_to_resupply,
                     'name': self._format_rulename(location_id, False, 'Buy'),
                     'location_id': location_id.id,
+                    'propagate_cancel': self.reception_steps != 'one_step',
                 }
             }
         })
         return rules
 
-    @api.multi
     def _get_all_routes(self):
-        routes = super(StockWarehouse, self).get_all_routes_for_wh()
+        routes = super(StockWarehouse, self)._get_all_routes()
         routes |= self.filtered(lambda self: self.buy_to_resupply and self.buy_pull_id and self.buy_pull_id.route_id).mapped('buy_pull_id').mapped('route_id')
         return routes
 
-    @api.multi
     def _update_name_and_code(self, name=False, code=False):
         res = super(StockWarehouse, self)._update_name_and_code(name, code)
         warehouse = self[0]
@@ -155,7 +165,7 @@ class Orderpoint(models.Model):
 
     def _quantity_in_progress(self):
         res = super(Orderpoint, self)._quantity_in_progress()
-        for poline in self.env['purchase.order.line'].search([('state','in',('draft','sent','to approve')),('orderpoint_id','in',self.ids)]):
+        for poline in self.env['purchase.order.line'].search([('state', 'in', ('draft', 'sent', 'to approve')), ('orderpoint_id', 'in', self.ids), ('move_dest_ids', '=', False)]):
             res[poline.orderpoint_id.id] += poline.product_uom._compute_quantity(poline.product_qty, poline.orderpoint_id.product_uom, round=False)
         return res
 
@@ -188,7 +198,8 @@ class ProductionLot(models.Model):
             stock_moves = self.env['stock.move.line'].search([
                 ('lot_id', '=', lot.id),
                 ('state', '=', 'done')
-            ]).mapped('move_id').filtered(
+            ]).mapped('move_id')
+            stock_moves = stock_moves.search([('id', 'in', stock_moves.ids)]).filtered(
                 lambda move: move.picking_id.location_id.usage == 'supplier' and move.state == 'done')
             lot.purchase_order_ids = stock_moves.mapped('purchase_line_id.order_id')
             lot.purchase_order_count = len(lot.purchase_order_ids)
@@ -197,4 +208,5 @@ class ProductionLot(models.Model):
         self.ensure_one()
         action = self.env.ref('purchase.purchase_form_action').read()[0]
         action['domain'] = [('id', 'in', self.mapped('purchase_order_ids.id'))]
+        action['context'] = dict(self._context, create=False)
         return action

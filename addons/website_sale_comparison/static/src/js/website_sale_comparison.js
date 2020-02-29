@@ -1,20 +1,20 @@
 odoo.define('website_sale_comparison.comparison', function (require) {
 'use strict';
 
+var concurrency = require('web.concurrency');
 var core = require('web.core');
+var publicWidget = require('web.public.widget');
 var utils = require('web.utils');
-var Widget = require('web.Widget');
-var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
-var sAnimations = require('website.content.snippets.animation');
+var VariantMixin = require('sale.VariantMixin');
 var website_sale_utils = require('website_sale.utils');
 
 var qweb = core.qweb;
 var _t = core._t;
 
-// ProductConfiguratorMixin events are overridden on purpose here
+// VariantMixin events are overridden on purpose here
 // to avoid registering them more than once since they are already registered
 // in website_sale.js
-var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
+var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     xmlDependencies: ['/website_sale_comparison/static/src/xml/comparison.xml'],
 
     template: 'product_comparison_template',
@@ -31,6 +31,7 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
         this.product_data = {};
         this.comparelist_product_ids = JSON.parse(utils.get_cookie('comparelist_product_ids') || '[]');
         this.product_compare_limit = 4;
+        this.guard = new concurrency.Mutex();
     },
     /**
      * @override
@@ -64,8 +65,10 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
         });
         $(document.body).on('click.product_comparaison_widget', '.o_comparelist_remove', function (ev) {
             self._removeFromComparelist(ev);
-            var new_link = '/shop/compare/?products=' + self.comparelist_product_ids.toString();
-            window.location.href = _.isEmpty(self.comparelist_product_ids) ? '/shop' : new_link;
+            self.guard.exec(function() {
+                var new_link = '/shop/compare/?products=' + self.comparelist_product_ids.toString();
+                window.location.href = _.isEmpty(self.comparelist_product_ids) ? '/shop' : new_link;
+            });
         });
 
         return this._super.apply(this, arguments);
@@ -96,27 +99,24 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
                 }
             }
 
-            var productReady = this.selectOrCreateProduct(
+            this.selectOrCreateProduct(
                 $elem.closest('form'),
                 productId,
                 $elem.closest('form').find('.product_template_id').val(),
                 false
-            );
-
-            productReady.done(function (productId) {
+            ).then(function (productId) {
                 productId = parseInt(productId, 10);
-
                 if (!productId) {
                     return;
                 }
-
-                self._addNewProducts(productId);
-                website_sale_utils.animateClone(
-                    $('#comparelist .o_product_panel_header'),
-                    $elem.closest('form'),
-                    -50,
-                    10
-                );
+                self._addNewProducts(productId).then(function () {
+                    website_sale_utils.animateClone(
+                        $('#comparelist .o_product_panel_header'),
+                        $elem.closest('form'),
+                        -50,
+                        10
+                    );
+                });
             });
         } else {
             this.$('.o_comparelist_limit_warning').show();
@@ -145,6 +145,13 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
             _.each(data, function (product) {
                 self.product_data[product.product.id] = product;
             });
+            if (product_ids.length > Object.keys(data).length) {
+                /* If some products have been archived
+                they are not displayed but the count & cookie
+                need to be updated.
+                */
+                self._updateCookie();
+            }
         });
     },
     /**
@@ -157,6 +164,9 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
      * @private
      */
     _addNewProducts: function (product_id) {
+        return this.guard.exec(this._addNewProductsImpl.bind(this, product_id));
+    },
+    _addNewProductsImpl: function (product_id) {
         var self = this;
         $('.o_product_feature_panel').addClass('d-md-block');
         if (!_.contains(self.comparelist_product_ids, product_id)) {
@@ -164,8 +174,9 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
             if (_.has(self.product_data, product_id)){
                 self._updateContent();
             } else {
-                self._loadProducts([product_id]).then(function () {
+                return self._loadProducts([product_id]).then(function () {
                     self._updateContent();
+                    self._updateCookie();
                 });
             }
         }
@@ -192,8 +203,12 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
      * @private
      */
     _removeFromComparelist: function (e) {
-        this.comparelist_product_ids = _.without(this.comparelist_product_ids, $(e.currentTarget).data('product_product_id'));
-        $(e.currentTarget).parents('.o_product_row').remove();
+        this.guard.exec(this._removeFromComparelistImpl.bind(this, e));
+    },
+    _removeFromComparelistImpl: function (e) {
+        var target = $(e.target.closest('.o_comparelist_remove, .o_remove'));
+        this.comparelist_product_ids = _.without(this.comparelist_product_ids, target.data('product_product_id'));
+        target.parents('.o_product_row').remove();
         this._updateCookie();
         $('.o_comparelist_limit_warning').hide();
         this._updateContent('show');
@@ -235,9 +250,9 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
     },
 });
 
-sAnimations.registry.ProductComparison = sAnimations.Class.extend({
+publicWidget.registry.ProductComparison = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
-    read_events: {
+    events: {
         'click .o_add_compare, .o_add_compare_dyn': '_onClickAddCompare',
         'click #o_comparelist_table tr': '_onClickComparelistTr',
     },
@@ -247,12 +262,8 @@ sAnimations.registry.ProductComparison = sAnimations.Class.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        if (this.editableMode) {
-            return def;
-        }
-
         this.productComparison = new ProductComparison(this);
-        return $.when(def, this.productComparison.appendTo(this.$el));
+        return Promise.all([def, this.productComparison.appendTo(this.$el)]);
     },
 
     //--------------------------------------------------------------------------

@@ -18,10 +18,11 @@ _logger = logging.getLogger(__name__)
 
 class PadCommon(models.AbstractModel):
     _name = 'pad.common'
+    _description = 'Pad Common'
 
     @api.model
     def pad_is_configured(self):
-        return bool(self.env.user.company_id.pad_server)
+        return bool(self.env.company.pad_server)
 
     @api.model
     def pad_generate_url(self):
@@ -99,7 +100,6 @@ class PadCommon(models.AbstractModel):
     # TODO
     # reverse engineer protocol to be setHtml without using the api key
 
-    @api.multi
     def write(self, vals):
         self._set_field_to_pad(vals)
         self._set_pad_to_field(vals)

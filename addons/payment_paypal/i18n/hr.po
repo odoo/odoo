@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_paypal
+# 	* payment_paypal
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
-# Bole <bole@dajmi5.com>, 2017
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2018
-# Tina Milas, 2018
+# Martin Trigaux, 2019
+# Bole <bole@dajmi5.com>, 2019
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Tina Milas, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Karolina Tonković <karolina.tonkovic@storm.hr>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,29 +23,23 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_access_token
-msgid "Access Token"
-msgstr "Token pristupa"
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid ""
+"<br/><br/>\n"
+"                Thanks,<br/>\n"
+"                <b>The Odoo Team</b>"
+msgstr ""
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_access_token_validity
-msgid "Access Token Validity"
-msgstr "Valjanost tokena za pristup"
+#: code:addons/payment_paypal/models/payment.py:0
+#, python-format
+msgid "Add your Paypal account to Odoo"
+msgstr ""
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
-msgstr "Adyen"
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
-msgstr "Authorize.Net"
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
-msgstr "Buckaroo"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
+msgid "Email"
+msgstr "E-pošta"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_fixed
@@ -58,23 +52,28 @@ msgid "Fixed international fees"
 msgstr "Fiksne međunarodne naknade"
 
 #. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid ""
+"Hello,\n"
+"                <br/><br/>\n"
+"                You have received a payment through PayPal.<br/>\n"
+"                Kindly follow the instructions given by PayPal to create your account.<br/>\n"
+"                Then, help us complete your Paypal credentials in Odoo.<br/><br/>"
+msgstr ""
+
+#. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
 msgid "How to configure your paypal account?"
 msgstr "Kako podesiti vaš PayPal račun?"
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
-msgstr "Ručna postava"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
+msgid "Merchant Account ID"
+msgstr ""
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
-msgstr "Ogone"
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "PayUmoney"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
+msgid "PDT Identity Token"
 msgstr ""
 
 #. module: payment_paypal
@@ -95,14 +94,9 @@ msgid "Payment Transaction"
 msgstr "Transakcija plaćanja"
 
 #. module: payment_paypal
-#: selection:payment.acquirer,provider:0
+#: model:ir.model.fields.selection,name:payment_paypal.selection__payment_acquirer__provider__paypal
 msgid "Paypal"
 msgstr "Paypal"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
-msgid "Paypal Email ID"
-msgstr "Paypal ID emaila"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_use_ipn
@@ -110,17 +104,7 @@ msgid "Paypal Instant Payment Notification"
 msgstr "Paypal obavjest o trenutnom plaćanju"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
-msgid "Paypal Merchant ID"
-msgstr "Paypal Merchant ID"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
-msgid "Paypal PDT Token"
-msgstr ""
-
-#. module: payment_paypal
-#: code:addons/payment_paypal/models/payment.py:138
+#: code:addons/payment_paypal/models/payment.py:0
 #, python-format
 msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
 msgstr ""
@@ -132,23 +116,8 @@ msgid "Provider"
 msgstr "Davatelj "
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_password
-msgid "Rest API Password"
-msgstr "Rest API zaporka"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_username
-msgid "Rest API Username"
-msgstr "Rest API korisničko ime"
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Sips"
-msgstr ""
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid "Set Paypal credentials"
 msgstr ""
 
 #. module: payment_paypal
@@ -170,11 +139,6 @@ msgid "Use IPN"
 msgstr "Koristi IPN"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_enabled
-msgid "Use Rest API"
-msgstr "Koristi Rest API"
-
-#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_var
 msgid "Variable domestic fees (in percents)"
 msgstr "Domaća varijabilna naknada (u postocima)"
@@ -183,8 +147,3 @@ msgstr "Domaća varijabilna naknada (u postocima)"
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_var
 msgid "Variable international fees (in percents)"
 msgstr "Međunarodna varijabilna naknada (u postocima)"
-
-#. module: payment_paypal
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
-msgstr "Bankovni nalog"

@@ -31,7 +31,7 @@ _logger = logging.getLogger(__name__)
 class CompileError(RuntimeError): pass
 def rjsmin(script):
     """ Minify js with a clever regex.
-    Taken from http://opensource.perlig.de/rjsmin
+    Taken from http://opensource.perlig.de/rjsmin (version 1.1.0)
     Apache License, Version 2.0 """
     def subber(match):
         """ Substitution callback """
@@ -39,37 +39,53 @@ def rjsmin(script):
         return (
             groups[0] or
             groups[1] or
+            (groups[3] and (groups[2] + '\n')) or
             groups[2] or
-            groups[3] or
-            (groups[4] and '\n') or
-            (groups[5] and ' ') or
-            (groups[6] and ' ') or
-            (groups[7] and ' ') or
+            (groups[5] and "%s%s%s" % (
+                groups[4] and '\n' or '',
+                groups[5],
+                groups[6] and '\n' or '',
+            )) or
+            (groups[7] and '\n') or
+            (groups[8] and ' ') or
+            (groups[9] and ' ') or
+            (groups[10] and ' ') or
             ''
         )
 
     result = re.sub(
-        r'([^\047"/\000-\040]+)|((?:(?:\047[^\047\\\r\n]*(?:\\(?:[^\r\n]|\r?'
-        r'\n|\r)[^\047\\\r\n]*)*\047)|(?:"[^"\\\r\n]*(?:\\(?:[^\r\n]|\r?\n|'
-        r'\r)[^"\\\r\n]*)*"))[^\047"/\000-\040]*)|(?:(?<=[(,=:\[!&|?{};\r\n]'
-        r')(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/'
-        r'))*((?:/(?![\r\n/*])[^/\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*'
-        r'(?:\\[^\r\n][^\\\]\r\n]*)*\]))[^/\\\[\r\n]*)*/)[^\047"/\000-\040]*'
-        r'))|(?:(?<=[\000-#%-,./:-@\[-^`{-~-]return)(?:[\000-\011\013\014\01'
-        r'6-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*((?:/(?![\r\n/*])[^/'
-        r'\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*(?:\\[^\r\n][^\\\]\r\n]'
-        r'*)*\]))[^/\\\[\r\n]*)*/)[^\047"/\000-\040]*))|(?<=[^\000-!#%&(*,./'
-        r':-@\[\\^`{|~])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/'
-        r'*][^*]*\*+)*/))*(?:((?:(?://[^\r\n]*)?[\r\n]))(?:[\000-\011\013\01'
-        r'4\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)+(?=[^\000-\040"#'
-        r'%-\047)*,./:-@\\-^`|-~])|(?<=[^\000-#%-,./:-@\[-^`{-~-])((?:[\000-'
-        r'\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=[^'
-        r'\000-#%-,./:-@\[-^`{-~-])|(?<=\+)((?:[\000-\011\013\014\016-\040]|'
-        r'(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=\+)|(?<=-)((?:[\000-\011\0'
-        r'13\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=-)|(?:[\0'
-        r'00-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))+|(?:'
-        r'(?:(?://[^\r\n]*)?[\r\n])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*'
-        r']*\*+(?:[^/*][^*]*\*+)*/))*)+', subber, '\n%s\n' % script
+        r'([^\047"\140/\000-\040]+)|((?:(?:\047[^\047\\\r\n]*(?:\\(?:[^'
+        r'\r\n]|\r?\n|\r)[^\047\\\r\n]*)*\047)|(?:"[^"\\\r\n]*(?:\\(?:[^'
+        r'\r\n]|\r?\n|\r)[^"\\\r\n]*)*")|(?:\140[^\140\\]*(?:\\(?:[^\r\n'
+        r']|\r?\n|\r)[^\140\\]*)*\140))[^\047"\140/\000-\040]*)|(?<=[(,='
+        r':\[!&|?{};\r\n+*-])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*'
+        r'\*+(?:[^/*][^*]*\*+)*/))*(?:(?:(?://[^\r\n]*)?[\r\n])(?:[\000-'
+        r'\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)*('
+        r'(?:/(?![\r\n/*])[^/\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*'
+        r'(?:\\[^\r\n][^\\\]\r\n]*)*\]))[^/\\\[\r\n]*)*/))((?:[\000-\011'
+        r'\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*(?:(?:('
+        r'?://[^\r\n]*)?[\r\n])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*'
+        r']*\*+(?:[^/*][^*]*\*+)*/))*)+(?=[^\000-\040&)+,.:;=?\]|}-]))?|'
+        r'(?<=[\000-#%-,./:-@\[-^\140{-~-]return)(?:[\000-\011\013\014\0'
+        r'16-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*(?:((?:(?://[^\r'
+        r'\n]*)?[\r\n]))(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?'
+        r':[^/*][^*]*\*+)*/))*)*((?:/(?![\r\n/*])[^/\\\[\r\n]*(?:(?:\\[^'
+        r'\r\n]|(?:\[[^\\\]\r\n]*(?:\\[^\r\n][^\\\]\r\n]*)*\]))[^/\\\[\r'
+        r'\n]*)*/))((?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/'
+        r'*][^*]*\*+)*/))*(?:(?:(?://[^\r\n]*)?[\r\n])(?:[\000-\011\013'
+        r'\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)+(?=[^\000'
+        r'-\040&)+,.:;=?\]|}-]))?|(?<=[^\000-!#%&(*,./:-@\[\\^{|~])(?:['
+        r'\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)'
+        r')*(?:((?:(?://[^\r\n]*)?[\r\n]))(?:[\000-\011\013\014\016-\040'
+        r']|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)+(?=[^\000-\040"#%-\047'
+        r')*,./:-@\\-^\140|-~])|(?<=[^\000-#%-,./:-@\[-^\140{-~-])((?:['
+        r'\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)'
+        r'))+(?=[^\000-#%-,./:-@\[-^\140{-~-])|(?<=\+)((?:[\000-\011\013'
+        r'\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=\+)|(?<'
+        r'=-)((?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]'
+        r'*\*+)*/)))+(?=-)|(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*'
+        r'+(?:[^/*][^*]*\*+)*/))+|(?:(?:(?://[^\r\n]*)?[\r\n])(?:[\000-'
+        r'\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)+', subber, '\n%s\n' % script
     ).strip()
     return result
 
@@ -86,8 +102,7 @@ class AssetsBundle(object):
     rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
     rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
 
-    # remains attribute is depreciated and will remove after v11
-    def __init__(self, name, files, remains=None, env=None):
+    def __init__(self, name, files, env=None):
         self.name = name
         self.env = request.env if env is None else env
         self.javascripts = []
@@ -95,8 +110,8 @@ class AssetsBundle(object):
         self.css_errors = []
         self._checksum = None
         self.files = files
-        self.user_direction = self.env['res.lang'].search(
-            [('code', '=', (self.env.context.get('lang') or self.env.user.lang))]
+        self.user_direction = self.env['res.lang']._lang_get(
+            self.env.context.get('lang') or self.env.user.lang
         ).direction
         for f in files:
             if f['atype'] == 'text/sass':
@@ -110,32 +125,12 @@ class AssetsBundle(object):
             elif f['atype'] == 'text/javascript':
                 self.javascripts.append(JavascriptAsset(self, url=f['url'], filename=f['filename'], inline=f['content']))
 
-    # depreciated and will remove after v11
-    def to_html(self, sep=None, css=True, js=True, debug=False, async_load=False, url_for=(lambda url: url)):
-        nodes = self.to_node(css=css, js=js, debug=debug, async_load=async_load)
-
-        if sep is None:
-            sep = u'\n            '
-        response = []
-        for tagName, attributes, content in nodes:
-            html = u"<%s " % tagName
-            for name, value in attributes.items():
-                if value or isinstance(value, str):
-                    html += u' %s="%s"' % (name, escape(to_text(value)))
-            if content is None:
-                html += u'/>'
-            else:
-                html += u'>%s</%s>' % (escape(to_text(content)), tagName)
-            response.append(html)
-
-        return sep + sep.join(response)
-
-    def to_node(self, css=True, js=True, debug=False, async_load=False):
+    def to_node(self, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False):
         """
         :returns [(tagName, attributes, content)] if the tag is auto close
         """
         response = []
-        if debug == 'assets':
+        if debug and 'assets' in debug:
             if css and self.stylesheets:
                 is_css_preprocessed, old_attachments = self.is_css_preprocessed()
                 if not is_css_preprocessed:
@@ -167,8 +162,9 @@ class AssetsBundle(object):
             if js and self.javascripts:
                 attr = OrderedDict([
                     ["async", "async" if async_load else None],
+                    ["defer", "defer" if defer_load or lazy_load else None],
                     ["type", "text/javascript"],
-                    ["src", self.js().url],
+                    ["data-src" if lazy_load else "src", self.js().url],
                 ])
                 response.append(("script", attr, None))
 
@@ -190,10 +186,10 @@ class AssetsBundle(object):
     def checksum(self):
         """
         Not really a full checksum.
-        We compute a SHA1 on the rendered bundle + max linked files last_modified date
+        We compute a SHA512/256 on the rendered bundle + max linked files last_modified date
         """
         check = u"%s%s" % (json.dumps(self.files, sort_keys=True), self.last_modified)
-        return hashlib.sha1(check.encode('utf-8')).hexdigest()
+        return hashlib.sha512(check.encode('utf-8')).hexdigest()[:64]
 
     def _get_asset_template_url(self):
         return "/web/content/{id}-{unique}/{extra}{name}{sep}{type}"
@@ -227,17 +223,22 @@ class AssetsBundle(object):
         url = self.get_asset_url(
             extra='%s' % ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
             name=self.name,
-            type=type
+            sep='',
+            type='.%s' % type
         )
         domain = [
             ('url', '=like', url),
             '!', ('url', '=like', self.get_asset_url(unique=self.version))
         ]
+        attachments = ira.sudo().search(domain)
+        # avoid to invalidate cache if it's already empty (mainly useful for test)
 
-        # force bundle invalidation on other workers
-        self.env['ir.qweb'].clear_caches()
+        if attachments:
+            attachments.unlink()
+            # force bundle invalidation on other workers
+            self.env['ir.qweb'].clear_caches()
 
-        return ira.sudo().search(domain).unlink()
+        return True
 
     def get_attachments(self, type, ignore_version=False):
         """ Return the ir.attachment records for a given bundle. This method takes care of mitigating
@@ -260,8 +261,8 @@ class AssetsBundle(object):
                FROM ir_attachment
               WHERE create_uid = %s
                 AND url like %s
-           GROUP BY datas_fname
-           ORDER BY datas_fname
+           GROUP BY name
+           ORDER BY name
          """, [SUPERUSER_ID, url_pattern])
         attachment_ids = [r[0] for r in self.env.cr.fetchall()]
         return self.env['ir.attachment'].sudo().browse(attachment_ids)
@@ -277,8 +278,7 @@ class AssetsBundle(object):
         fname = '%s.%s' % (self.name, type)
         mimetype = 'application/javascript' if type == 'js' else 'text/css'
         values = {
-            'name': "/web/content/%s" % type,
-            'datas_fname': fname,
+            'name': fname,
             'mimetype': mimetype,
             'res_model': 'ir.ui.view',
             'res_id': False,
@@ -286,7 +286,7 @@ class AssetsBundle(object):
             'public': True,
             'datas': base64.b64encode(content.encode('utf8')),
         }
-        attachment = ira.sudo().create(values)
+        attachment = ira.with_user(SUPERUSER_ID).create(values)
 
         url = self.get_asset_url(
             id=attachment.id,
@@ -297,7 +297,6 @@ class AssetsBundle(object):
             type=''
         )
         values = {
-            'name': url,
             'url': url,
         }
         attachment.write(values)
@@ -335,41 +334,77 @@ class AssetsBundle(object):
         return attachments
 
     def dialog_message(self, message):
+        """
+        Returns a JS script which shows a warning to the user on page load.
+        TODO: should be refactored to be a base js file whose code is extended
+              by related apps (web/website).
+        """
         return """
             (function (message) {
-                if (window.__assetsBundleErrorSeen) return;
+                'use strict';
+
+                if (window.__assetsBundleErrorSeen) {
+                    return;
+                }
                 window.__assetsBundleErrorSeen = true;
 
-                var loaded = function () {
-                    clearTimeout(loadedTimeout);
-                    var alertTimeout = setTimeout(alert.bind(window, message), 0);
-                    var odoo = window.top.odoo;
-                    if (!odoo || !odoo.define) return;
+                if (document.readyState !== 'loading') {
+                    onDOMContentLoaded();
+                } else {
+                    window.addEventListener('DOMContentLoaded', () => onDOMContentLoaded());
+                }
 
-                    odoo.define("AssetsBundle.ErrorMessage", function (require) {
-                        "use strict";
+                async function onDOMContentLoaded() {
+                    var odoo = window.top.odoo;
+                    if (!odoo || !odoo.define) {
+                        useAlert();
+                        return;
+                    }
+
+                    // Wait for potential JS loading
+                    await new Promise(resolve => {
+                        const noLazyTimeout = setTimeout(() => resolve(), 10); // 10 since need to wait for promise resolutions of odoo.define
+                        odoo.define('AssetsBundle.PotentialLazyLoading', function (require) {
+                            'use strict';
+
+                            const lazyloader = require('web.public.lazyloader');
+
+                            clearTimeout(noLazyTimeout);
+                            lazyloader.allScriptsLoaded.then(() => resolve());
+                        });
+                    });
+
+                    var alertTimeout = setTimeout(useAlert, 10); // 10 since need to wait for promise resolutions of odoo.define
+                    odoo.define('AssetsBundle.ErrorMessage', function (require) {
+                        'use strict';
 
                         require('web.dom_ready');
-                        var core = require("web.core");
-                        var Dialog = require("web.Dialog");
+                        var core = require('web.core');
+                        var Dialog = require('web.Dialog');
 
                         var _t = core._t;
 
                         clearTimeout(alertTimeout);
-
                         new Dialog(null, {
                             title: _t("Style error"),
-                            $content: $("<div/>")
-                                .append($("<p/>", {text: _t("The style compilation failed, see the error below. Your recent actions may be the cause, please try reverting the changes you made.")}))
-                                .append($("<pre/>", {html: message})),
+                            $content: $('<div/>')
+                                .append($('<p/>', {text: _t("The style compilation failed, see the error below. Your recent actions may be the cause, please try reverting the changes you made.")}))
+                                .append($('<pre/>', {html: message})),
                         }).open();
                     });
                 }
 
-                var loadedTimeout = setTimeout(loaded, 5000);
-                document.addEventListener("DOMContentLoaded", loaded);
+                function useAlert() {
+                    window.alert(message);
+                }
             })("%s");
         """ % message.replace('"', '\\"').replace('\n', '&NewLine;')
+
+    def _get_assets_domain_for_already_processed_css(self, assets):
+        """ Method to compute the attachments' domain to search the already process assets (css).
+        This method was created to be overridden.
+        """
+        return [('url', 'in', list(assets.keys()))]
 
     def is_css_preprocessed(self):
         preprocessed = True
@@ -382,7 +417,7 @@ class AssetsBundle(object):
             outdated = False
             assets = dict((asset.html_url, asset) for asset in self.stylesheets if isinstance(asset, atype))
             if assets:
-                assets_domain = [('url', 'in', list(assets.keys()))]
+                assets_domain = self._get_assets_domain_for_already_processed_css(assets)
                 attachments = self.env['ir.attachment'].sudo().search(assets_domain)
                 for attachment in attachments:
                     asset = assets[attachment.url]
@@ -446,9 +481,8 @@ class AssetsBundle(object):
                                 datas=base64.b64encode(asset.content.encode('utf8')),
                                 mimetype='text/css',
                                 type='binary',
-                                name=url,
+                                name=fname,
                                 url=url,
-                                datas_fname=fname,
                                 res_model=False,
                                 res_id=False,
                             ))
@@ -489,13 +523,15 @@ class AssetsBundle(object):
         compiled = compiled.strip()
 
         # Post process the produced css to add required vendor prefixes here
-        compiled = re.sub(r'(appearance: (\w+);)', r'-webkit-appearance: \2; -moz-appearance: \2; \1', compiled);
+        compiled = re.sub(r'(appearance: (\w+);)', r'-webkit-appearance: \2; -moz-appearance: \2; \1', compiled)
 
-        compiled = re.sub(r'(display: ((?:inline-)?)flex((?: ?!important)?);)', r'display: -webkit-\2box\3; display: -webkit-\2flex\3; \1', compiled)  # For PhantomJS tests and wkhtmltopdf
-        compiled = re.sub(r'(justify-content: flex-(\w+)((?: ?!important)?);)', r'-webkit-box-pack: \2\3; \1', compiled)  # For wkhtmltopdf
-        compiled = re.sub(r'(flex-flow: (\w+ \w+);)', r'-webkit-flex-flow: \2; \1', compiled) # For PhantomJS tests
-        compiled = re.sub(r'(flex-direction: (column);)', r'-webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: \2; \1', compiled)  # For wkhtmltopdf
-        compiled = re.sub(r'(flex: ((\d)+ \d+ (?:\d+|auto));)', r'-webkit-box-flex: \3; -webkit-flex: \2; \1', compiled)  # For PhantomJS tests and wkhtmltopdf
+        # Most of those are only useful for wkhtmltopdf (some for old PhantomJS)
+        compiled = re.sub(r'(display: ((?:inline-)?)flex((?: ?!important)?);)', r'display: -webkit-\2box\3; display: -webkit-\2flex\3; \1', compiled)
+        compiled = re.sub(r'(justify-content: flex-(\w+)((?: ?!important)?);)', r'-webkit-box-pack: \2\3; \1', compiled)
+        compiled = re.sub(r'(flex-flow: (\w+ \w+);)', r'-webkit-flex-flow: \2; \1', compiled)
+        compiled = re.sub(r'(flex-direction: (column);)', r'-webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: \2; \1', compiled)
+        compiled = re.sub(r'(flex-wrap: (\w+);)', r'-webkit-flex-wrap: \2; \1', compiled)
+        compiled = re.sub(r'(flex: ((\d)+ \d+ (?:\d+|auto));)', r'-webkit-box-flex: \3; -webkit-flex: \2; \1', compiled)
 
         return compiled
 
@@ -599,19 +635,6 @@ class WebAsset(object):
                 self._ir_attach = attach[0]
             except Exception:
                 raise AssetNotFound("Could not find %s" % self.name)
-
-    # depreciated and will remove after v11
-    def to_html(self):
-        tagName, attributes, content = self.to_node()
-        html = u"<%s " % tagName
-        for name, value in attributes.items():
-            if value or isinstance(value, str):
-                html += u' %s="%s"' % (name, escape(to_text(value)))
-        if content is None:
-            html += u'/>'
-        else:
-            html += u'>%s</%s>' % (escape(to_text(content)), tagName)
-        return html
 
     def to_node(self):
         raise NotImplementedError()

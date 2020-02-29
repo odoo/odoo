@@ -70,21 +70,34 @@ class ResPartnerBank(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('acc_number'):
-            vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
+            try:
+                validate_iban(vals['acc_number'])
+                vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
+            except ValidationError:
+                pass
         return super(ResPartnerBank, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         if vals.get('acc_number'):
-            vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
+            try:
+                validate_iban(vals['acc_number'])
+                vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
+            except ValidationError:
+                pass
         return super(ResPartnerBank, self).write(vals)
 
-    @api.one
     @api.constrains('acc_number')
     def _check_iban(self):
-        if self.acc_type == 'iban':
-            validate_iban(self.acc_number)
+        for bank in self:
+            if bank.acc_type == 'iban':
+                validate_iban(bank.acc_number)
 
+    def check_iban(self, iban=''):
+        try:
+            validate_iban(iban)
+            return True
+        except ValidationError:
+            return False
 
 # Map ISO 3166-1 -> IBAN template, as described here :
 # http://en.wikipedia.org/wiki/International_Bank_Account_Number#IBAN_formats_by_country
@@ -155,6 +168,7 @@ _map_iban_template = {
     'sm': 'SMkk KBBB BBSS SSSC CCCC CCCC CCC',  # San Marino
     'tn': 'TNkk BBSS SCCC CCCC CCCC CCCC',  # Tunisia
     'tr': 'TRkk BBBB BRCC CCCC CCCC CCCC CC',  # Turkey
+    'ua': 'UAkk BBBB BBCC CCCC CCCC CCCC CCCC C',  # Ukraine
     'vg': 'VGkk BBBB CCCC CCCC CCCC CCCC',  # Virgin Islands
     'xk': 'XKkk BBBB CCCC CCCC CCCC',  # Kosovo
 }

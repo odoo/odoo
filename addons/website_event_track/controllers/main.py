@@ -2,19 +2,21 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import babel
+import babel.dates
 import collections
 import datetime
 import pytz
+import base64
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http
 from odoo.http import request
-from odoo.tools import html_escape as escape, html2plaintext
+from odoo.tools import plaintext2html, html2plaintext
 
 
 class WebsiteEventTrackController(http.Controller):
 
-    @http.route(['''/event/<model("event.event", "[('website_id', 'in', (False, current_website_id))]"):event>/track/<model("event.track", "[('event_id','=',event[0])]"):track>'''], type='http', auth="public", website=True)
+    @http.route(['''/event/<model("event.event"):event>/track/<model("event.track", "[('event_id','=',event.id)]"):track>'''], type='http', auth="public", website=True, sitemap=True)
     def event_track_view(self, event, track, **post):
         if not event.can_access_from_current_website():
             raise NotFound()
@@ -70,7 +72,7 @@ class WebsiteEventTrackController(http.Controller):
             'dates': dates
         }
 
-    @http.route(['''/event/<model("event.event", "[('website_id', 'in', (False, current_website_id))]"):event>/agenda'''], type='http', auth="public", website=True, sitemap=False)
+    @http.route(['''/event/<model("event.event"):event>/agenda'''], type='http', auth="public", website=True, sitemap=False)
     def event_agenda(self, event, tag=None, **post):
         if not event.can_access_from_current_website():
             raise NotFound()
@@ -92,17 +94,18 @@ class WebsiteEventTrackController(http.Controller):
 
         return request.render("website_event_track.agenda", {
             'event': event,
+            'main_object': event,
             'days': days,
             'tracks_by_days': tracks_by_days,
             'tag': tag
         })
 
     @http.route([
-        '''/event/<model("event.event", "[('website_id', 'in', (False, current_website_id))]"):event>/track''',
-        '''/event/<model("event.event", "[('website_id', 'in', (False, current_website_id))]"):event>/track/tag/<model("event.track.tag"):tag>'''
+        '''/event/<model("event.event"):event>/track''',
+        '''/event/<model("event.event"):event>/track/tag/<model("event.track.tag"):tag>'''
     ], type='http', auth="public", website=True, sitemap=False)
     def event_tracks(self, event, tag=None, **post):
-        if not event.can_access_from_current_website():
+        if not event.can_access_from_current_website() or (tag and tag.color == 0):
             raise NotFound()
 
         event = event.with_context(tz=event.date_tz or 'UTC')
@@ -123,14 +126,14 @@ class WebsiteEventTrackController(http.Controller):
         }
         return request.render("website_event_track.tracks", values)
 
-    @http.route(['''/event/<model("event.event", "[('website_id', 'in', (False, current_website_id))]"):event>/track_proposal'''], type='http', auth="public", website=True, sitemap=False)
+    @http.route(['''/event/<model("event.event"):event>/track_proposal'''], type='http', auth="public", website=True, sitemap=False)
     def event_track_proposal(self, event, **post):
         if not event.can_access_from_current_website():
             raise NotFound()
 
-        return request.render("website_event_track.event_track_proposal", {'event': event})
+        return request.render("website_event_track.event_track_proposal", {'event': event, 'main_object': event})
 
-    @http.route(['''/event/<model("event.event", "[('website_id', 'in', (False, current_website_id))]"):event>/track_proposal/post'''], type='http', auth="public", methods=['POST'], website=True)
+    @http.route(['''/event/<model("event.event"):event>/track_proposal/post'''], type='http', auth="public", methods=['POST'], website=True)
     def event_track_proposal_post(self, event, **post):
         if not event.can_access_from_current_website():
             raise NotFound()
@@ -145,11 +148,12 @@ class WebsiteEventTrackController(http.Controller):
             'partner_name': post['partner_name'],
             'partner_email': post['email_from'],
             'partner_phone': post['phone'],
-            'partner_biography': escape(post['biography']),
+            'partner_biography': plaintext2html(post['biography']),
             'event_id': event.id,
             'tag_ids': [(6, 0, tags)],
             'user_id': False,
-            'description': escape(post['description'])
+            'description': plaintext2html(post['description']),
+            'image': base64.b64encode(post['image'].read()) if post.get('image') else False
         })
         if request.env.user != request.website.user_id:
             track.sudo().message_subscribe(partner_ids=request.env.user.partner_id.ids)
@@ -157,4 +161,4 @@ class WebsiteEventTrackController(http.Controller):
             partner = request.env['res.partner'].sudo().search([('email', '=', post['email_from'])])
             if partner:
                 track.sudo().message_subscribe(partner_ids=partner.ids)
-        return request.render("website_event_track.event_track_proposal_success", {'track': track, 'event': event})
+        return request.render("website_event_track.event_track_proposal", {'track': track, 'event': event})

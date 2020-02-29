@@ -15,9 +15,9 @@ class BaseLanguageExport(models.TransientModel):
 
     @api.model
     def _get_languages(self):
-        langs = self.env['res.lang'].search([('translatable', '=', True)])
+        langs = self.env['res.lang'].get_installed()
         return [(NEW_LANG_KEY, _('New Language (Empty translation template)'))] + \
-               [(lang.code, lang.name) for lang in langs]
+               langs
    
     name = fields.Char('File Name', readonly=True)
     lang = fields.Selection(_get_languages, string='Language', required=True, default=NEW_LANG_KEY)
@@ -29,7 +29,6 @@ class BaseLanguageExport(models.TransientModel):
     state = fields.Selection([('choose', 'choose'), ('get', 'get')], # choose language or get the file
                              default='choose')
 
-    @api.multi
     def act_getfile(self):
         this = self[0]
         lang = this.lang if this.lang != NEW_LANG_KEY else False
@@ -37,7 +36,7 @@ class BaseLanguageExport(models.TransientModel):
 
         with contextlib.closing(io.BytesIO()) as buf:
             tools.trans_export(lang, mods, buf, this.format, self._cr)
-            out = base64.encodestring(buf.getvalue())
+            out = base64.encodebytes(buf.getvalue())
 
         filename = 'new'
         if lang:
@@ -53,7 +52,6 @@ class BaseLanguageExport(models.TransientModel):
             'type': 'ir.actions.act_window',
             'res_model': 'base.language.export',
             'view_mode': 'form',
-            'view_type': 'form',
             'res_id': this.id,
             'views': [(False, 'form')],
             'target': 'new',

@@ -7,6 +7,15 @@ from odoo.tests.common import TransactionCase
 class TestPackingNeg(TransactionCase):
 
     def test_packing_neg(self):
+        res_partner_2 = self.env['res.partner'].create({
+            'name': 'Deco Addict',
+            'email': 'deco.addict82@example.com',
+        })
+
+        res_partner_4 = self.env['res.partner'].create({
+            'name': 'Ready Mat',
+            'email': 'ready.mat28@example.com',
+        })
 
         # Create a new "negative" storable product
         product_neg = self.env['product.product'].create({
@@ -17,7 +26,7 @@ class TestPackingNeg(TransactionCase):
             'standard_price': 70.0,
             'seller_ids': [(0, 0, {
                 'delay': 1,
-                'name': self.ref('base.res_partner_2'),
+                'name': res_partner_2.id,
                 'min_qty': 2.0,})],
             'uom_id': self.ref('uom.product_uom_unit'),
             'uom_po_id': self.ref('uom.product_uom_unit'),
@@ -26,7 +35,7 @@ class TestPackingNeg(TransactionCase):
         # Create an incoming picking for this product of 300 PCE from suppliers to stock
         vals = {
             'name': 'Incoming picking (negative product)',
-            'partner_id': self.ref('base.res_partner_2'),
+            'partner_id': res_partner_2.id,
             'picking_type_id': self.ref('stock.picking_type_in'),
             'location_id': self.ref('stock.stock_location_suppliers'),
             'location_dest_id': self.ref('stock.stock_location_stock'),
@@ -49,7 +58,7 @@ class TestPackingNeg(TransactionCase):
 
         # Put 120 pieces on Palneg 1 (package), 120 pieces on Palneg 2 with lot A and 60 pieces on Palneg 3
         # create lot A
-        lot_a = self.env['stock.production.lot'].create({'name': 'Lot neg', 'product_id': product_neg.id})
+        lot_a = self.env['stock.production.lot'].create({'name': 'Lot neg', 'product_id': product_neg.id, 'company_id': self.env.company.id})
         # create package
         package1 = self.env['stock.quant.package'].create({'name': 'Palneg 1'})
         package2 = self.env['stock.quant.package'].create({'name': 'Palneg 2'})
@@ -78,12 +87,12 @@ class TestPackingNeg(TransactionCase):
         })
 
         # Transfer the receipt
-        pick_neg.action_done()
+        pick_neg._action_done()
 
         # Make a delivery order of 300 pieces to the customer
         vals = {
             'name': 'outgoing picking (negative product)',
-            'partner_id': self.ref('base.res_partner_4'),
+            'partner_id': res_partner_4.id,
             'picking_type_id': self.ref('stock.picking_type_out'),
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
@@ -121,7 +130,7 @@ class TestPackingNeg(TransactionCase):
                 rec.result_package_id = False
 
         # Process this picking
-        delivery_order_neg.action_done()
+        delivery_order_neg._action_done()
 
         # Check the quants that you have -20 pieces pallet 2 in stock, and a total quantity
         # of 50 in stock from pallet 3 (should be 20+30, as it has been split by reservation)
@@ -140,7 +149,7 @@ class TestPackingNeg(TransactionCase):
         # Create a picking for reconciling the negative quant
         vals = {
             'name': 'reconciling_delivery',
-            'partner_id': self.ref('base.res_partner_4'),
+            'partner_id': res_partner_4.id,
             'picking_type_id': self.ref('stock.picking_type_in'),
             'location_id': self.ref('stock.stock_location_suppliers'),
             'location_dest_id': self.ref('stock.stock_location_stock'),
@@ -164,7 +173,7 @@ class TestPackingNeg(TransactionCase):
             ('name', '=', 'Lot neg')], limit=1)
         pack = self.env["stock.quant.package"].search([('name', '=', 'Palneg 2')], limit=1)
         delivery_reconcile.move_line_ids[0].write({'lot_id': lot.id, 'qty_done': 20.0, 'result_package_id': pack.id})
-        delivery_reconcile.action_done()
+        delivery_reconcile._action_done()
 
         # Check the negative quant was reconciled
         neg_quants = self.env['stock.quant'].search([

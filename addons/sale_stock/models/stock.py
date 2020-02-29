@@ -11,7 +11,7 @@ class StockLocationRoute(models.Model):
 
 class StockMove(models.Model):
     _inherit = "stock.move"
-    sale_line_id = fields.Many2one('sale.order.line', 'Sale Line')
+    sale_line_id = fields.Many2one('sale.order.line', 'Sale Line', index=True)
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
@@ -31,18 +31,21 @@ class StockMove(models.Model):
         related to this stock move.
         """
         rslt = super(StockMove, self)._get_related_invoices()
-        invoices = self.mapped('picking_id.sale_id.invoice_ids').filtered(lambda x: x.state not in ('draft', 'cancel'))
+        invoices = self.mapped('picking_id.sale_id.invoice_ids').filtered(lambda x: x.state == 'posted')
         rslt += invoices
-        #rslt += invoices.mapped('refund_invoice_ids')
+        #rslt += invoices.mapped('reverse_entry_ids')
         return rslt
 
     def _assign_picking_post_process(self, new=False):
         super(StockMove, self)._assign_picking_post_process(new=new)
-        if new and self.sale_line_id and self.sale_line_id.order_id:
-            self.picking_id.message_post_with_view(
-                'mail.message_origin_link',
-                values={'self': self.picking_id, 'origin': self.sale_line_id.order_id},
-                subtype_id=self.env.ref('mail.mt_note').id)
+        if new:
+            picking_id = self.mapped('picking_id')
+            sale_order_ids = self.mapped('sale_line_id.order_id')
+            for sale_order_id in sale_order_ids:
+                picking_id.message_post_with_view(
+                    'mail.message_origin_link',
+                    values={'self': picking_id, 'origin': sale_order_id},
+                    subtype_id=self.env.ref('mail.mt_note').id)
 
 
 class ProcurementGroup(models.Model):
@@ -120,7 +123,8 @@ class ProductionLot(models.Model):
             stock_moves = self.env['stock.move.line'].search([
                 ('lot_id', '=', lot.id),
                 ('state', '=', 'done')
-            ]).mapped('move_id').filtered(
+            ]).mapped('move_id')
+            stock_moves = stock_moves.search([('id', 'in', stock_moves.ids)]).filtered(
                 lambda move: move.picking_id.location_dest_id.usage == 'customer' and move.state == 'done')
             lot.sale_order_ids = stock_moves.mapped('sale_line_id.order_id')
             lot.sale_order_count = len(lot.sale_order_ids)
@@ -129,4 +133,5 @@ class ProductionLot(models.Model):
         self.ensure_one()
         action = self.env.ref('sale.action_orders').read()[0]
         action['domain'] = [('id', 'in', self.mapped('sale_order_ids.id'))]
+        action['context'] = dict(self._context, create=False)
         return action

@@ -15,7 +15,6 @@ class IrModelFields(models.Model):
              "This cannot be changed after creation.",
     )
 
-    @api.multi
     def write(self, vals):
         # Limitation: renaming a sparse field or changing the storing system is
         # currently not allowed
@@ -58,7 +57,7 @@ class IrModelFields(models.Model):
 
     def _instanciate_attrs(self, field_data):
         attrs = super(IrModelFields, self)._instanciate_attrs(field_data)
-        if field_data.get('serialization_field_id'):
+        if attrs and field_data.get('serialization_field_id'):
             serialization_record = self.browse(field_data['serialization_field_id'])
             attrs['sparse'] = serialization_record.name
         return attrs

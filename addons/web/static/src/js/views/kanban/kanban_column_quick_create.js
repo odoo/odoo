@@ -34,6 +34,7 @@ var ColumnQuickCreate = Widget.extend({
         this._super.apply(this, arguments);
         this.examples = options.examples;
         this.folded = true;
+        this.isMobile = false;
     },
     /**
      * @override
@@ -101,8 +102,8 @@ var ColumnQuickCreate = Widget.extend({
      */
     _cancel: function () {
         if (!this.folded) {
-            this.folded = true;
             this.$input.val('');
+            this.folded = true;
             this._update();
         }
     },
@@ -187,6 +188,16 @@ var ColumnQuickCreate = Widget.extend({
                 classes: 'btn-primary float-right',
                 close: true,
                 text: _t('Got it'),
+            }, {
+                classes: 'btn-secondary float-right',
+                text: _t('Use This For My Project'),
+                close: true,
+                click: function () {
+                    const activeExample = self.examples[this.$('.nav-link.active').data("exampleIndex")];
+                    activeExample.columns.forEach(column => {
+                        self.trigger_up('quick_create_add_column', {value: column.toString()});
+                    });
+                }
             }],
             size: "large",
             title: "Kanban Examples",

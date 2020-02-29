@@ -35,7 +35,6 @@ class TestCommonSalePurchaseNoChart(TestCommonSaleNoChart):
         cls.partner_vendor_service = cls.env['res.partner'].create({
             'name': 'Super Service Supplier',
             'email': 'supplier.serv@supercompany.com',
-            'supplier': True,
         })
 
         cls.service_purchase_1 = cls.env['product.product'].create({

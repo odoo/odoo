@@ -1,76 +1,131 @@
 odoo.define('website_mail.follow', function (require) {
 'use strict';
 
-var sAnimation = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimation.registry.follow = sAnimation.Class.extend({
-    selector: '.js_follow',
+publicWidget.registry.follow = publicWidget.Widget.extend({
+    selector: '#wrapwrap:has(.js_follow)',
+    disabledInEditableMode: false,
 
+    /**
+     * @override
+     */
     start: function () {
         var self = this;
-        this.is_user = false;
+        this.isUser = false;
+        var $jsFollowEls = this.$el.find('.js_follow');
+
+        var always = function (data) {
+            self.isUser = data[0].is_user;
+            const $jsFollowToEnable = $jsFollowEls.filter(function () {
+                const model = this.dataset.object;
+                return model in data[1] && data[1][model].includes(parseInt(this.dataset.id));
+            });
+            self._toggleSubscription(true, data[0].email, $jsFollowToEnable);
+            self._toggleSubscription(false, data[0].email, $jsFollowEls.not($jsFollowToEnable));
+            $jsFollowEls.removeClass('d-none');
+        };
+
+        const records = {};
+        for (const el of $jsFollowEls) {
+            const model = el.dataset.object;
+            if (!(model in records)) {
+                records[model] = [];
+            }
+            records[model].push(parseInt(el.dataset.id));
+        }
+
         this._rpc({
             route: '/website_mail/is_follower',
             params: {
-                model: this.$target.data('object'),
-                res_id: this.$target.data('id'),
+                records: records,
             },
-        }).always(function (data) {
-            self.is_user = data.is_user;
-            self.email = data.email;
-            self.toggle_subscription(data.is_follower, data.email);
-            self.$target.removeClass('d-none');
-        });
+        }).then(always).guardedCatch(always);
 
         // not if editable mode to allow designer to edit
         if (!this.editableMode) {
             $('.js_follow > .input-group-append.d-none').removeClass('d-none');
             this.$target.find('.js_follow_btn, .js_unfollow_btn').on('click', function (event) {
                 event.preventDefault();
-                self._onClick();
+                self._onClick(event);
             });
         }
         return this._super.apply(this, arguments);
     },
-    _onClick: function () {
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Toggles subscription state for every given records.
+     *
+     * @private
+     * @param {boolean} follow
+     * @param {string} email
+     * @param {jQuery} $jsFollowEls
+     */
+    _toggleSubscription: function (follow, email, $jsFollowEls) {
+        if (follow) {
+            this._updateSubscriptionDOM(follow, email, $jsFollowEls);
+        } else {
+            for (const el of $jsFollowEls) {
+                const follow = !email && el.getAttribute('data-unsubscribe');
+                this._updateSubscriptionDOM(follow, email, $(el));
+            }
+        }
+    },
+    /**
+     * Updates subscription DOM for every given records.
+     * This should not be called directly, use `_toggleSubscription`.
+     *
+     * @private
+     * @param {boolean} follow
+     * @param {string} email
+     * @param {jQuery} $jsFollowEls
+     */
+    _updateSubscriptionDOM: function (follow, email, $jsFollowEls) {
+        $jsFollowEls.find(".js_follow_btn").toggleClass('d-none', follow);
+        $jsFollowEls.find(".js_unfollow_btn").toggleClass('d-none', !follow);
+        $jsFollowEls.find('input.js_follow_email')
+            .val(email || "")
+            .attr("disabled", email && (follow || this.isUser) ? "disabled" : false);
+        $jsFollowEls.attr("data-follow", follow ? 'on' : 'off');
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClick: function (ev) {
         var self = this;
-        var $email = this.$target.find(".js_follow_email");
+        var $jsFollow = $(ev.currentTarget).closest('.js_follow');
+        var $email = $jsFollow.find(".js_follow_email");
 
         if ($email.length && !$email.val().match(/.+@.+/)) {
-            this.$target.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+            $jsFollow.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
             return false;
         }
-        this.$target.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+        $jsFollow.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
 
         var email = $email.length ? $email.val() : false;
-        if (email || this.is_user) {
+        if (email || this.isUser) {
             this._rpc({
                 route: '/website_mail/follow',
                 params: {
-                    'id': +this.$target.data('id'),
-                    'object': this.$target.data('object'),
-                    'message_is_follower': this.$target.attr("data-follow") || "off",
+                    'id': +$jsFollow.data('id'),
+                    'object': $jsFollow.data('object'),
+                    'message_is_follower': $jsFollow.attr("data-follow") || "off",
                     'email': email,
                 },
             }).then(function (follow) {
-                self.toggle_subscription(follow, email);
+                self._toggleSubscription(follow, email, $jsFollow);
             });
         }
-    },
-    toggle_subscription: function (follow, email) {
-        follow = follow || (!email && this.$target.attr('data-unsubscribe'));
-        if (follow) {
-            this.$target.find(".js_follow_btn").addClass('d-none');
-            this.$target.find(".js_unfollow_btn").removeClass('d-none');
-        }
-        else {
-            this.$target.find(".js_follow_btn").removeClass('d-none');
-            this.$target.find(".js_unfollow_btn").addClass('d-none');
-        }
-        this.$target.find('input.js_follow_email')
-            .val(email || "")
-            .attr("disabled", email && (follow || this.is_user) ? "disabled" : false);
-        this.$target.attr("data-follow", follow ? 'on' : 'off');
     },
 });
 });

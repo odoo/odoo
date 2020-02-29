@@ -15,13 +15,8 @@ description into a live application, able to interact with every model and
 records in the database.  It is even possible to use the web client to modify
 the interface of the web client.
 
-.. note:: An html version of all docstrings in Odoo is available at:
-
-    .. toctree::
-        :maxdepth: 2
-
-        javascript_api
-
+.. note:: An html version of all js docstrings in Odoo is available at:
+      :ref:`JS API <api/js>`
 
 Overview
 =========
@@ -299,6 +294,17 @@ The *odoo.define* method is given three arguments:
   extract them from the function by calling toString on it, then using a regexp
   to find all *require* statements.
 
+.. code-block:: javascript
+
+      odoo.define('module.Something', ['web.ajax'], function (require) {
+        "use strict";
+
+        var ajax = require('web.ajax');
+
+        // some code here
+        return something;
+    });
+
 - finally, the last argument is a function which defines the module. Its return
   value is the value of the module, which may be passed to other modules requiring
   it.  Note that there is a small exception for asynchronous modules, see the
@@ -312,7 +318,7 @@ If an error happens, it will be logged (in debug mode) in the console:
 * ``Failed modules``:
   A javascript error is detected
 * ``Rejected modules``:
-  The module returns a rejected deferred. It (and its dependent modules) is not
+  The module returns a rejected Promise. It (and its dependent modules) is not
   loaded.
 * ``Rejected linked modules``:
   Modules who depend on a rejected module
@@ -326,12 +332,12 @@ Asynchronous modules
 
 It can happen that a module needs to perform some work before it is ready.  For
 example, it could do a rpc to load some data.  In that case, the module can
-simply return a deferred (promise).  In that case, the module system will simply
-wait for the deferred to complete before registering the module.
+simply return a promise.  In that case, the module system will simply
+wait for the promise to complete before registering the module.
 
 .. code-block:: javascript
 
-    odoo.define('module.Something', ['web.ajax'], function (require) {
+    odoo.define('module.Something', function (require) {
         "use strict";
 
         var ajax = require('web.ajax');
@@ -351,11 +357,11 @@ Best practices
 - declare all your dependencies at the top of the module. Also, they should be
   sorted alphabetically by module name. This makes it easier to understand your module.
 - declare all exported values at the end
-- try to avoid exporting too much things from one module.  It is usually better
+- try to avoid exporting too many things from one module.  It is usually better
   to simply export one thing in one (small/smallish) module.
-- asynchronous modules can be used to simplify some use cases.  For example,
-  the *web.dom_ready* module returns a deferred which will be resolved when the
-  dom is actually ready.  So, another module that needs the DOM could simply have
+- asynchronous modules can be used to simplify some use cases. For example,
+  the *web.dom_ready* module returns a promise which will be resolved when the
+  dom is actually ready. So, another module that needs the DOM could simply have
   a *require('web.dom_ready')* statement somewhere, and the code will only be
   executed when the DOM is ready.
 - try to avoid defining more than one module in one file.  It may be convenient
@@ -562,7 +568,7 @@ rendering takes place, then *start* and finally *destroy*.
 
     this method will be called once by the framework when a widget is created
     and in the process of being appended to the DOM.  The *willStart* method is a
-    hook that should return a deferred.  The JS framework will wait for this deferred
+    hook that should return a promise.  The JS framework will wait for this promise
     to complete before moving on to the rendering step.  Note that at this point,
     the widget does not have a DOM root element.  The *willStart* hook is mostly
     useful to perform some asynchronous work, such as fetching data from the server
@@ -585,9 +591,9 @@ rendering takes place, then *start* and finally *destroy*.
     the *start* method.  This is useful to perform some specialized post-rendering
     work.  For example, setting up a library.
 
-    Must return a deferred to indicate when its work is done.
+    Must return a promise to indicate when its work is done.
 
-    :returns: deferred object
+    :returns: promise
 
 .. function:: Widget.destroy()
 
@@ -755,7 +761,7 @@ Inserting a widget in the DOM
     uses `.insertBefore()`_
 
 All of these methods accept whatever the corresponding jQuery method accepts
-(CSS selectors, DOM nodes or jQuery objects). They all return a deferred_
+(CSS selectors, DOM nodes or jQuery objects). They all return a promise
 and are charged with three tasks:
 
 * rendering the widget's root element via
@@ -805,6 +811,34 @@ Widget Guidelines
   or intercepting DOM events) must inherit from :class:`~Widget`
   and correctly implement and use its API and life cycle.
 
+* Make sure to wait for start to be finished before using $el e.g.:
+
+    .. code-block:: javascript
+
+        var Widget = require('web.Widget');
+
+        var AlmostCorrectWidget = Widget.extend({
+            start: function () {
+                this.$el.hasClass(....) // in theory, $el is already set, but you don't know what the parent will do with it, better call super first
+                return this._super.apply(arguments);
+            },
+        });
+
+        var IncorrectWidget = Widget.extend({
+            start: function () {
+                this._super.apply(arguments); // the parent promise is lost, nobody will wait for the start of this widget
+                this.$el.hasClass(....)
+            },
+        });
+
+        var CorrectWidget = Widget.extend({
+            start: function () {
+                var self = this;
+                return this._super.apply(arguments).then(function() {
+                    self.$el.hasClass(....) // this works, no promise is lost and the code executes in a controlled order: first super, then our code.
+                });
+            },
+        });
 
 .. _reference/javascript_reference/qweb:
 
@@ -879,7 +913,7 @@ Here is an example on how this event system could be used:
             this.counter = new Counter(this);
             this.counter.on('valuechange', this, this._onValueChange);
             var def = this.counter.appendTo(this.$el);
-            return $.when(def, this._super.apply(this, arguments);
+            return Promise.all([def, this._super.apply(this, arguments)]);
         },
         _onValueChange: function (val) {
             // do something with val
@@ -926,7 +960,7 @@ The previous example can be updated to use the custom event system:
         start: function () {
             this.counter = new Counter(this);
             var def = this.counter.appendTo(this.$el);
-            return $.when(def, this._super.apply(this, arguments);
+            return Promise.all([def, this._super.apply(this, arguments)]);
         },
         _onValueChange: function(event) {
             // do something with event.data.val
@@ -1179,6 +1213,10 @@ The notification system in Odoo is designed with the following components:
   destroy notifications whenever a request is done (with a custom_event). Note
   that the web client is a service provider.
 
+- a client action *display_notification*: this allows to trigger the display
+  of a notification from python (e.g. in the method called when the user
+  clicked on a button of type object).
+
 - two helper functions in *ServiceMixin*: *do_notify* and *do_warn*
 
 
@@ -1226,6 +1264,21 @@ Here are two examples on how to use these methods:
 
     this.do_warn(_t("Error"), _t("Filter name is required."));
 
+Here an example in python:
+
+.. code-block:: python
+
+    # note that we call _(string) on the text to make sure it is properly translated.
+    def show_notification(self):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Success'),
+                'message': _('Your signature request has been sent.'),
+                'sticky': False,
+            }
+        }
 
 Systray
 =======
@@ -1382,7 +1435,7 @@ the AbstractView, AbstractController, AbstractRenderer and AbstractModel classes
 .. raw:: html
 
     <svg width="550" height="173">
-        <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+        <!-- Created with Method Draw - https://github.com/duopixel/Method-Draw/ -->
         <path id="svg_1" d="m147.42498,79.79206c0.09944,-8.18859 -0.06363,-16.38812 0.81774,-24.5623c21.65679,2.68895 43.05815,7.08874 64.35,11.04543c1.14304,-4.01519 0.60504,-7.34585 1.59817,-11.05817c13.67878,7.81176 27.23421,15.73476 40.23409,24.03505c-12.47212,9.41539 -26.77809,17.592 -40.82272,25.96494c-0.4548,-3.89916 -0.90967,-7.79828 -1.36448,-11.69744c-20.69972,3.77225 -42.59036,7.6724 -63.42391,11.12096c-1.41678,-7.95741 -1.37514,-16.62327 -1.38888,-24.84846z" stroke-width="1.5" stroke="#000" fill="#fff"/>
         <rect id="svg_3" height="41" width="110" y="57.5" x="7" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="#fff"/>
         <rect stroke="#000" id="svg_5" height="41" width="135" y="20.5" x="328" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="#fff"/>
@@ -1427,6 +1480,8 @@ the AbstractView, AbstractController, AbstractRenderer and AbstractModel classes
     The JS code for the views has been designed to be usable outside of the
     context of a view manager/action manager.  They could be used in a client action,
     or, they could be displayed in the public website (with some work on the assets).
+
+.. _reference/js/widgets:
 
 Field Widgets
 =============
@@ -1500,15 +1555,15 @@ order.
 
     - type: setting the input type (*text* by default, can be set on *number*)
 
-    On edit mode, the field is rendered as an input with the HTML attribute type 
-    setted on *number* (so user can benefit the native support, especially on 
+    On edit mode, the field is rendered as an input with the HTML attribute type
+    setted on *number* (so user can benefit the native support, especially on
     mobile). In this case, the default formatting is disabled to avoid incompability.
 
     .. code-block:: xml
 
         <field name="int_value" options='{"type": "number"}'/>
 
-    - step: set the step to the value up and down when the user click on buttons 
+    - step: set the step to the value up and down when the user click on buttons
         (only for input of type number, 1 by default)
 
     .. code-block:: xml
@@ -1532,15 +1587,15 @@ order.
 
     - type: setting the input type (*text* by default, can be set on *number*)
 
-    On edit mode, the field is rendered as an input with the HTML attribute type 
-    setted on *number* (so user can benefit the native support, especially on 
+    On edit mode, the field is rendered as an input with the HTML attribute type
+    setted on *number* (so user can benefit the native support, especially on
     mobile). In this case, the default formatting is disabled to avoid incompability.
 
     .. code-block:: xml
 
         <field name="int_value" options='{"type": "number"}'/>
 
-    - step: set the step to the value up and down when the user click on buttons 
+    - step: set the step to the value up and down when the user click on buttons
         (only for input of type number, 1 by default)
 
     .. code-block:: xml
@@ -1612,6 +1667,23 @@ order.
 
         <field name="datetimefield" options='{"datepicker": {"daysOfWeekDisabled": [0, 6]}}'/>
 
+- daterange (FieldDateRange)
+    This widget allow user to select start and end date into single picker.
+
+    - Supported field types: *date*, *datetime*
+
+    Options:
+
+    - related_start_date: apply on end date field to get start date value which
+      is used to display range in the picker.
+    - related_end_date: apply on start date field to get end date value which
+      is used to display range in the picker.
+    - picker_options: extra settings for picker.
+
+    .. code-block:: xml
+
+        <field name="start_date" widget="daterange" options='{"related_end_date": "end_date"}'/>
+
 - monetary (FieldMonetary)
     This is the default field type for fields of type 'monetary'. It is used to
     display a currency.  If there is a currency fields given in option, it will
@@ -1634,9 +1706,10 @@ order.
 
 
 - handle (HandleWidget)
-    This field's job is to be displayed as a *handle* in a list view, and allows
-    reordering the various records by drag and dropping lines.
+    This field's job is to be displayed as a *handle*, and allows reordering the
+    various records by drag and dropping them.
 
+    .. warning:: It has to be specified on the field by which records are sorted.
     .. warning:: Having more than one field with a handle widget on the same list is not supported.
 
     - Supported field types: *integer*
@@ -1660,8 +1733,6 @@ order.
     This field displays an url (in readonly mode). The main reason to use it is
     that it is rendered as an anchor tag with the proper css classes and href.
 
-    - Supported field types: *char*
-
     Also, the text of the anchor tag can be customized with the *text* attribute
     (it won't change the href value).
 
@@ -1669,6 +1740,13 @@ order.
 
         <field name="foo" widget="url" text="Some URL"/>
 
+    Options:
+
+    - website_path: (default:false) by default, the widget forces (if not already
+    the case) the href value to begin with http:// except if this option is set
+    to true, thus allowing redirections to the database's own website.
+
+    - Supported field types: *char*
 
 - domain (FieldDomain)
     The "Domain" field allows the user to construct a technical-prefix domain
@@ -1704,14 +1782,22 @@ order.
       option is useful to inform the web client that the default field name is
       not the name of the current field, but the name of another field.
 
+    - accepted_file_extensions: the file extension the user can pick from the file input dialog box (default value is `image/\*`)
+      (cf: ``accept`` attribute on <input type="file"/>)
+
     .. code-block:: xml
 
-        <field name="image" widget='image' options='{"preview_image":"image_medium"}'/>
+        <field name="image" widget='image' options='{"preview_image":"image_128"}'/>
 
 - binary (FieldBinaryFile)
     Generic widget to allow saving/downloading a binary file.
 
     - Supported field types: *binary*
+
+    Options:
+
+    - accepted_file_extensions: the file extension the user can pick from the file input dialog box
+      (cf: ``accept`` attribute on <input type="file"/>)
 
     Attribute:
 
@@ -1870,7 +1956,6 @@ order.
 
     Options:
 
-    - title: title of the bar, displayed on top of the bar options
     - editable: boolean if value is editable
     - current_value: get the current_value from the field that must be present in the view
     - max_value: get the max_value from the field that must be present in the view
@@ -1928,9 +2013,9 @@ order.
 Relational fields
 -----------------
 
-.. autoclass:: web.relational_fields.FieldSelection
+.. class:: web.relational_fields.FieldSelection
 
-    Supported field types: *selection*, *many2one*
+    Supported field types: *selection*
 
     .. attribute:: placeholder
 
@@ -1971,7 +2056,7 @@ Relational fields
 - many2one (FieldMany2One)
     Default widget for many2one fields.
 
-    - Supported field types: *selection, many2one*
+    - Supported field types: *many2one*
 
     Attributes:
 
@@ -2005,6 +2090,17 @@ Relational fields
 
     - Supported field types: *many2one*
 
+- many2one_barcode (FieldMany2OneBarcode)
+    Widget for many2one fields allows to open the camera from a mobile device (Android/iOS) to scan a barcode.
+
+    Specialization of many2one field where the user is allowed to use the native camera to scan a barcode.
+    Then it uses name_search to search this value.
+
+    If this widget is set and user is not using the mobile application,
+    it will fallback to regular many2one (FieldMany2One)
+
+    - Supported field types: *many2one*
+
 - kanban.many2one (KanbanFieldMany2One)
     Default widget for many2one fields (in kanban view). We need to disable all
     edition in kanban views.
@@ -2034,6 +2130,11 @@ Relational fields
 
     - Supported field types: *many2many*
 
+    Options:
+
+    - accepted_file_extensions: the file extension the user can pick from the file input dialog box
+      (cf: ``accept`` attribute on <input type="file"/>)
+
 - many2many_tags (FieldMany2ManyTags)
     Display many2many as a list of tags.
 
@@ -2041,12 +2142,24 @@ Relational fields
 
     Options:
 
+    - create: domain determining whether or not new tags can be created (default: True).
+
+    .. code-block:: xml
+
+        <field name="category_id" widget="many2many_tags" options="{'create': [['some_other_field', '>', 24]]}"/>
+
     - color_field: the name of a numeric field, which should be present in the
       view.  A color will be chosen depending on its value.
 
     .. code-block:: xml
 
         <field name="category_id" widget="many2many_tags" options="{'color_field': 'color'}"/>
+
+    - no_edit_color: set to True to remove the possibility to change the color of the tags (default: False).
+
+    .. code-block:: xml
+
+        <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': True}"/>
 
 - form.many2many_tags (FormFieldMany2ManyTags)
     Specialization of many2many_tags widget for form views. It has some extra
@@ -2074,6 +2187,14 @@ Relational fields
 
     Options:
 
+    - create: domain determining whether or not related records can be created (default: True).
+
+    - delete: domain determining whether or not related records can be deleted (default: True).
+
+    .. code-block:: xml
+
+        <field name="turtles" options="{'create': [['some_other_field', '>', 24]]}"/>
+
     - create_text: a string that is used to customize the 'Add' label/text.
 
     .. code-block:: xml
@@ -2092,10 +2213,6 @@ Relational fields
     arbitrary model.
 
     - Supported field types: *char, reference*
-
-- one2many_list (FieldOne2Many)
-    This widget is exactly the same as a FieldOne2Many.  It is registered at this
-    key only for backward compatibility reasons.  Please avoid using this.
 
 
 Client actions
@@ -2214,20 +2331,18 @@ do that, several steps should be done.
 For more information, look into the *control_panel.js* file.
 
 .. _.appendTo():
-    http://api.jquery.com/appendTo/
+    https://api.jquery.com/appendTo/
 
 .. _.prependTo():
-    http://api.jquery.com/prependTo/
+    https://api.jquery.com/prependTo/
 
 .. _.insertAfter():
-    http://api.jquery.com/insertAfter/
+    https://api.jquery.com/insertAfter/
 
 .. _.insertBefore():
-    http://api.jquery.com/insertBefore/
+    https://api.jquery.com/insertBefore/
 
 .. _event delegation:
-    http://api.jquery.com/delegate/
+    https://api.jquery.com/delegate/
 
 .. _datepicker: https://github.com/Eonasdan/bootstrap-datetimepicker
-
-.. _deferred: http://api.jquery.com/category/deferred-object/

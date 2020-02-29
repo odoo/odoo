@@ -5,7 +5,7 @@ var AbstractRenderer = require('web.AbstractRenderer');
 var AbstractView = require('web.AbstractView');
 
 var testUtils = require('web.test_utils');
-var createAsyncView = testUtils.createAsyncView;
+var createView = testUtils.createView;
 
 var TestRenderer = AbstractRenderer.extend({
     _renderView: function () {
@@ -40,15 +40,35 @@ QUnit.module('Views', {
 
         QUnit.test("The banner should be fetched from the route", function (assert) {
             var done = assert.async();
-            assert.expect(5);
+            assert.expect(6);
 
-            var banner_html =
-                '<div>' +
-                    '<link type="text/css" href="' + test_css_url + '" rel="stylesheet">' +
-                    '<div class="hello_banner"/>' +
-                '</div>';
+            var banner_html =`
+                <div class="modal o_onboarding_modal o_technical_modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-footer">
+                                <a type="action" class="btn btn-primary" data-dismiss="modal"
+                                data-toggle="collapse" href=".o_onboarding_container">
+                                    Remove
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_onboarding_container collapse show">
+                    <div class="o_onboarding_wrap">
+                        <a href="#" data-toggle="modal" data-target=".o_onboarding_modal"
+                           class="float-right o_onboarding_btn_close">
+                            <i class="fa fa-times" title="Close the onboarding panel" />
+                        </a>
+                    </div>
+                    <div>
+                        <link type="text/css" href="` + test_css_url + `" rel="stylesheet">
+                        <div class="hello_banner">Here is the banner</div>
+                    </div>
+                </div>`;
 
-            createAsyncView({
+            createView({
                 View: TestView,
                 model: 'test_model',
                 data: this.data,
@@ -56,11 +76,11 @@ QUnit.module('Views', {
                 mockRPC: function (route, args) {
                     if (route === '/module/hello_banner') {
                         assert.step(route);
-                        return $.when({html: banner_html});
+                        return Promise.resolve({html: banner_html});
                     }
                     return this._super(route, args);
                 },
-            }).then(function (view) {
+            }).then(async function (view) {
                 var $banner = view.$('.hello_banner');
                 assert.strictEqual($banner.length, 1,
                     "The view should contain the response from the controller.");
@@ -73,6 +93,12 @@ QUnit.module('Views', {
                 var $banner_link = $('link[href$="' + test_css_url + '"]', $banner);
                 assert.strictEqual($banner_link.length, 0,
                     "The stylesheet should have been removed from the banner.");
+
+                await testUtils.dom.click(view.$('.o_onboarding_btn_close'));  // click on close to remove banner
+                await testUtils.dom.click(view.$('.o_technical_modal .btn-primary:contains("Remove")'));  // click on button remove from techinal modal
+                assert.strictEqual(view.$('.o_onboarding_container.show').length, 0,
+                    "Banner should be removed from the view");
+
                 view.destroy();
                 done();
             });

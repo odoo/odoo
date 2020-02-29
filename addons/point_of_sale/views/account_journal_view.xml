@@ -1,50 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="action_account_journal_form" model="ir.actions.act_window">
-        <field name="name">Payment Methods</field>
-        <field name="res_model">account.journal</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,kanban,form</field>
-        <field name="context" eval="{'default_journal_user': 1, 'default_type': 'cash'}"/>
-        <field name="domain">[('journal_user','=', 1)]</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Add a new payment method
-            </p><p>
-                Payment methods are defined by accounting journals having the
-                field <i>PoS Payment Method</i> checked. In order to be useable
-                from the touchscreen interface, you must set the payment method
-                on the <i>Point of Sale</i> configuration.
-            </p>
-        </field>
-    </record>
-
-    <menuitem id="menu_action_account_journal_form_open"
-         action="action_account_journal_form"
-         parent="point_of_sale.menu_point_config_product"
-         groups="base.group_no_one"
-         sequence="30"/>
-    <record id="view_account_journal_search_inherit_point_of_sale" model="ir.ui.view">
-        <field name="name">account.journal.filter</field>
-        <field name="model">account.journal</field>
-        <field name="inherit_id" ref="account.view_account_journal_search" />
-        <field name="arch" type="xml">
-            <xpath expr="//filter[@name='inactive']" position="before">
-                <filter name="available_in_pos" string="Available for Point of Sale" domain="[('journal_user', '=', True)]"/>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="account_journal_action_point_of_sale" model="ir.actions.act_window">
-        <field name="name">POS Journals</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">account.journal</field>
-        <field name="view_mode">tree,form,kanban</field>
-        <field name="search_view_id" ref="view_account_journal_search_inherit_point_of_sale"/>
-        <field name="domain">[('journal_user', '=', True ), ('type', 'in', ['bank', 'cash'])]</field>
-        <field name="context">{'search_default_available_in_pos': 1, 'default_type': 'cash'}</field>
-    </record>
-
 
     <!-- View Taxes -->
 

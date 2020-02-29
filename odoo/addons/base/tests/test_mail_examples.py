@@ -26,7 +26,7 @@ EDI_LIKE_HTML_SOURCE = u"""<div style="font-family: 'Lucida Grande', Ubuntu, Ari
        &nbsp;&nbsp;<strong>REFERENCES</strong><br />
        &nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br />
        &nbsp;&nbsp;Invoice total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />
-       &nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />
+       &nbsp;&nbsp;Invoice date: ${object.invoice_date}<br />
        &nbsp;&nbsp;Order reference: ${object.origin}<br />
        &nbsp;&nbsp;Your contact: <a href="mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}">${object.user_id.name}</a>
     </p>

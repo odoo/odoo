@@ -1,12 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="fleet_costs_reporting_action" model="ir.actions.act_window">
+    <record id="fleet_costs_report_view_search" model="ir.ui.view">
+        <field name="name">fleet.vehicle.cost.view.search</field>
+        <field name="model">fleet.vehicle.cost.report</field>
+        <field name="arch" type="xml">
+            <search string="Fleet Costs Analysis">
+                <field name="name" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="driver_id" filter_domain="[('driver_id', 'ilike', self)]"/>
+                <field name="date_start" />
+                <filter string="Service" name="service" domain="[('cost_type', '=', 'service')]"/>
+                <filter string="Contract" name="contract" domain="[('cost_type', '=', 'contract')]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Vehicle" name="vehicle" context="{'group_by':'vehicle_id'}"/>
+                    <filter string="Driver" name="driver" context="{'group_by':'driver_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="fleet_costs_report_view_pivot" model="ir.ui.view">
+        <field name="name">fleet.vehicle.cost.view.pivot</field>
+        <field name="model">fleet.vehicle.cost.report</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="date_start" type="col" interval="year" />
+                <field name="cost_type" type="col" />
+                <field name="vehicle_id" type="row" />
+                <field name="cost" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="fleet_costs_report_view_graph" model="ir.ui.view">
+        <field name="name">fleet.vehicle.cost.view.graph</field>
+        <field name="model">fleet.vehicle.cost.report</field>
+        <field name="arch" type="xml">
+            <graph string="Fleet Costs Analysis" type="bar">
+                <field name="date_start" type="row" interval="month"/>
+                <field name="cost_type" type="row"/>
+                <field name="cost" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+
+ <record id="fleet_costs_reporting_action" model="ir.actions.act_window">
       <field name="name">Costs Analysis</field>
-      <field name="res_model">fleet.vehicle.cost</field>
-      <field name="view_type">form</field>
+      <field name="res_model">fleet.vehicle.cost.report</field>
       <field name="view_mode">graph,pivot</field>
-      <field name="view_id"></field>  <!-- force empty -->
-      <field name="context">{"search_default_parent_false" : True,}</field>
+      <field name="view_id"></field>  
+      <field name="context">{ 'time_ranges': {'field':'date_start', 'range':'last_365_days'} }</field>
+      <field name="search_view_id" ref="fleet.fleet_costs_report_view_search"/>
       <field name="help" type="html">
         <p class="o_view_nocontent_empty_folder">
           No data for analysis
@@ -19,63 +63,11 @@
         </p>
       </field>
     </record>
-    <record id="fleet_reporting_pivot_action" model="ir.actions.act_window.view">
-        <field name="sequence" eval="2"/>
-        <field name="view_mode">pivot</field>
-        <field name="view_id" ref="fleet_vehicle_cost_view_pivot"/>
-        <field name="act_window_id" ref="fleet_costs_reporting_action"/>
-    </record>
-    <record id="fleet_reporting_graph_action" model="ir.actions.act_window.view">
-        <field name="sequence" eval="1"/>
-        <field name="view_mode">graph</field>
-        <field name="view_id" ref="fleet_vehicle_cost_view_graph"/>
-        <field name="act_window_id" ref="fleet_costs_reporting_action"/>
-    </record>
-
-    <record id="fleet_costs_reporting_non_effective_action" model="ir.actions.act_window">
-      <field name="name">Indicative Costs Analysis</field>
-      <field name="res_model">fleet.vehicle.cost</field>
-      <field name="view_type">form</field>
-      <field name="view_mode">graph,pivot</field>
-     <field name="view_id"></field>  <!-- force empty -->
-      <field name="context">{"search_default_parent_true" : True,}</field>
-      <field name="help" type="html">
-        <p class="o_view_nocontent_empty_folder">
-          No data for analysis
-        </p><p>
-          Odoo helps you managing the costs for your different vehicles
-          Costs are generally created from services and contract and appears here.
-        </p><p>
-          Thanks to the different filters, Odoo can only print the effective
-          costs, sort them by type and by vehicle.
-        </p>
-      </field>
-    </record>
-    <record id="view_fleet_non_effective_pivot_action" model="ir.actions.act_window.view">
-        <field name="sequence" eval="2"/>
-        <field name="view_mode">pivot</field>
-        <field name="view_id" ref="fleet_vehicle_cost_indicative_view_pivot"/>
-        <field name="act_window_id" ref="fleet_costs_reporting_non_effective_action"/>
-    </record>
-    <record id="view_fleet_non_effective_graph_action" model="ir.actions.act_window.view">
-        <field name="sequence" eval="1"/>
-        <field name="view_mode">graph</field>
-        <field name="view_id" ref="fleet_vehicle_cost_indicative_view_graph"/>
-        <field name="act_window_id" ref="fleet_costs_reporting_non_effective_action"/>
-    </record>
-    
     <menuitem name="Reporting" parent="menu_root" id="menu_fleet_reporting" sequence="99" groups="fleet_group_manager"/>
-
     <menuitem id="menu_fleet_reporting_costs"
               name="Costs"
               parent="menu_fleet_reporting"
               action="fleet_costs_reporting_action"
               sequence="1"
-              groups="fleet_group_manager"/>
-    <menuitem id="menu_fleet_reporting_indicative_costs"
-              name="Indicative Costs"
-              parent="menu_fleet_reporting"
-              action="fleet_costs_reporting_non_effective_action"
-              sequence="2"
               groups="fleet_group_manager"/>
 </odoo>

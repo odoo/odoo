@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="hr_skills_assets_backend" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/hr_skills/static/src/css/hr_skills.scss"/>
+            <script type="text/javascript" src="/hr_skills/static/src/js/resume_widget.js"></script>
+        </xpath>
+    </template>
+    <template id="qunit_suite" name="hr_skills_qunit_suite" inherit_id="web.qunit_suite">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/hr_skills/static/tests/widget_tests.js"></script>
+        </xpath>
+    </template>
+</odoo>

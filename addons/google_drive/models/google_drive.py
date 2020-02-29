@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import ast
 import logging
 import json
 import re
@@ -9,7 +10,6 @@ import werkzeug.urls
 
 from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError
-from odoo.tools.safe_eval import safe_eval
 from odoo.tools.translate import _
 
 from odoo.addons.google_account.models.google_service import GOOGLE_TOKEN_ENDPOINT, TIMEOUT
@@ -22,7 +22,6 @@ class GoogleDrive(models.Model):
     _name = 'google.drive.config'
     _description = "Google Drive templates config"
 
-    @api.multi
     def get_google_drive_url(self, res_id, template_id):
         self.ensure_one()
         self = self.sudo()
@@ -52,11 +51,11 @@ class GoogleDrive(models.Model):
     def get_access_token(self, scope=None):
         Config = self.env['ir.config_parameter'].sudo()
         google_drive_refresh_token = Config.get_param('google_drive_refresh_token')
-        user_is_admin = self.env['res.users'].browse(self.env.user.id)._is_admin()
+        user_is_admin = self.env.is_admin()
         if not google_drive_refresh_token:
             if user_is_admin:
                 dummy, action_id = self.env['ir.model.data'].get_object_reference('base_setup', 'action_general_configuration')
-                msg = _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it .")
+                msg = _("There is no refresh code set for Google Drive. You can set it up from the configuration panel.")
                 raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             else:
                 raise UserError(_("Google Drive is not yet configured. Please contact your administrator."))
@@ -166,8 +165,8 @@ class GoogleDrive(models.Model):
                 if config.filter_id.user_id and config.filter_id.user_id.id != self.env.user.id:
                     #Private
                     continue
-                domain = [('id', 'in', [res_id])] + safe_eval(config.filter_id.domain)
-                additionnal_context = safe_eval(config.filter_id.context)
+                domain = [('id', 'in', [res_id])] + ast.literal_eval(config.filter_id.domain)
+                additionnal_context = ast.literal_eval(config.filter_id.context)
                 google_doc_configs = self.env[config.filter_id.model_id].with_context(**additionnal_context).search(domain)
                 if google_doc_configs:
                     config_values.append({'id': config.id, 'name': config.name})
@@ -176,7 +175,7 @@ class GoogleDrive(models.Model):
         return config_values
 
     name = fields.Char('Template Name', required=True)
-    model_id = fields.Many2one('ir.model', 'Model', required=True)
+    model_id = fields.Many2one('ir.model', 'Model', required=True, ondelete='cascade')
     model = fields.Char('Related Model', related='model_id.model', readonly=True)
     filter_id = fields.Many2one('ir.filters', 'Filter', domain="[('model_id', '=', model)]")
     google_drive_template_url = fields.Char('Template URL', required=True)
@@ -191,7 +190,6 @@ class GoogleDrive(models.Model):
             return word.group(2)
         return None
 
-    @api.multi
     def _compute_ressource_id(self):
         result = {}
         for record in self:
@@ -202,7 +200,6 @@ class GoogleDrive(models.Model):
                 raise UserError(_("Please enter a valid Google Document URL."))
         return result
 
-    @api.multi
     def _compute_client_id(self):
         google_drive_client_id = self.env['ir.config_parameter'].sudo().get_param('google_drive_client_id')
         for record in self:

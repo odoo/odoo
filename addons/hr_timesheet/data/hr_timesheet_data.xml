@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-	<!-- For a perfect onboarding, we want the tour of project to be consumed
-	only by admin when installing hr_timesheet, to avoid confusing -->
-    <record id="web_tour_project_consumed_by_admin" model="web_tour.tour">
-        <field name="name">project_tour</field>
-        <field name="user_id" ref='base.user_admin'/>
-    </record>
-
     <!-- Set the JS widget -->
     <record id="uom.product_uom_day" model="uom.uom">
         <field name="timesheet_widget">float_toggle</field>
@@ -23,4 +15,12 @@
         name="_init_data_analytic_account"
         eval="[]"/>
 
+    <record id="ir_config_parameter_timesheet_rounding" model="ir.config_parameter">
+        <field name="key">hr_timesheet.timesheet_rounding</field>
+        <field name="value">15</field>
+    </record>
+    <record id="ir_config_parameter_timesheet_min_duration" model="ir.config_parameter">
+        <field name="key">hr_timesheet.timesheet_min_duration</field>
+        <field name="value">15</field>
+    </record>
 </odoo>

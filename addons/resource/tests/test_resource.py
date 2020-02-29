@@ -202,7 +202,7 @@ class TestCalendar(TestResourceCommon):
 
         # no timezone given should be converted to UTC
         # Should equal to a leave between 2018/04/03 10:00:00 and 2018/04/04 10:00:00
-        self.env['resource.calendar.leaves'].create({
+        leave = self.env['resource.calendar.leaves'].create({
             'name': 'no timezone',
             'calendar_id': self.calendar_patel.id,
             'resource_id': False,
@@ -221,6 +221,61 @@ class TestCalendar(TestResourceCommon):
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.patel.tz),
         )
         self.assertEqual(hours, 0)
+
+        leave.unlink()
+
+        # 2 weeks calendar week 1
+        hours = self.calendar_jules.get_work_hours_count(
+            datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jules.tz),
+            datetime_tz(2018, 4, 6, 23, 59, 59, tzinfo=self.jules.tz),
+        )
+        self.assertEqual(hours, 30)
+
+        # 2 weeks calendar week 1
+        hours = self.calendar_jules.get_work_hours_count(
+            datetime_tz(2018, 4, 16, 0, 0, 0, tzinfo=self.jules.tz),
+            datetime_tz(2018, 4, 20, 23, 59, 59, tzinfo=self.jules.tz),
+        )
+        self.assertEqual(hours, 30)
+
+        # 2 weeks calendar week 2
+        hours = self.calendar_jules.get_work_hours_count(
+            datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),
+            datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.jules.tz),
+        )
+        self.assertEqual(hours, 16)
+
+        # 2 weeks calendar week 2, leave during a day where he doesn't work this week
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'Leave Jules week 2',
+            'calendar_id': self.calendar_jules.id,
+            'resource_id': False,
+            'date_from': datetime_str(2018, 4, 11, 4, 0, 0, tzinfo=self.jules.tz),
+            'date_to': datetime_str(2018, 4, 13, 4, 0, 0, tzinfo=self.jules.tz),
+        })
+
+        hours = self.calendar_jules.get_work_hours_count(
+            datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),
+            datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.jules.tz),
+        )
+        self.assertEqual(hours, 16)
+
+        leave.unlink()
+
+        # 2 weeks calendar week 2, leave during a day where he works this week
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'Leave Jules week 2',
+            'calendar_id': self.calendar_jules.id,
+            'resource_id': False,
+            'date_from': datetime_str(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),
+            'date_to': datetime_str(2018, 4, 9, 23, 59, 0, tzinfo=self.jules.tz),
+        })
+
+        hours = self.calendar_jules.get_work_hours_count(
+            datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),
+            datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.jules.tz),
+        )
+        self.assertEqual(hours, 8)
 
         leave.unlink()
 
@@ -329,7 +384,7 @@ class TestResMixin(TestResourceCommon):
         # Looking at Jean's calendar
 
         # Viewing it as Jean
-        data = self.jean.get_work_days_data(
+        data = self.jean._get_work_days_data(
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 6, 16, 0, 0, tzinfo=self.jean.tz),
         )
@@ -337,7 +392,7 @@ class TestResMixin(TestResourceCommon):
 
         # Viewing it as Patel
         # Views from 2018/04/01 20:00:00 to 2018/04/06 12:00:00
-        data = self.jean.get_work_days_data(
+        data = self.jean._get_work_days_data(
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.patel.tz),
             datetime_tz(2018, 4, 6, 16, 0, 0, tzinfo=self.patel.tz),
         )
@@ -345,7 +400,7 @@ class TestResMixin(TestResourceCommon):
 
         # Viewing it as John
         # Views from 2018/04/02 09:00:00 to 2018/04/07 02:00:00
-        data = self.jean.get_work_days_data(
+        data = self.jean._get_work_days_data(
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2018, 4, 6, 16, 0, 0, tzinfo=self.john.tz),
         )
@@ -356,7 +411,7 @@ class TestResMixin(TestResourceCommon):
 
         # Viewing it as Jean
         # Views from 2018/04/01 15:00:00 to 2018/04/06 14:00:00
-        data = self.john.get_work_days_data(
+        data = self.john._get_work_days_data(
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.tz),
         )
@@ -364,21 +419,21 @@ class TestResMixin(TestResourceCommon):
 
         # Viewing it as Patel
         # Views from 2018/04/01 11:00:00 to 2018/04/06 10:00:00
-        data = self.john.get_work_days_data(
+        data = self.john._get_work_days_data(
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.patel.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.patel.tz),
         )
         self.assertEqual(data, {'days': 1.1875, 'hours': 10})
 
         # Viewing it as John
-        data = self.john.get_work_days_data(
+        data = self.john._get_work_days_data(
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.john.tz),
         )
         self.assertEqual(data, {'days': 2, 'hours': 20})
 
         # using Jean as a timezone reference
-        data = self.john.get_work_days_data(
+        data = self.john._get_work_days_data(
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.john.tz),
             calendar=self.calendar_jean,
@@ -394,14 +449,14 @@ class TestResMixin(TestResourceCommon):
             'date_to': datetime_str(2018, 4, 2, 14, 0, 0, tzinfo=self.jean.tz),
         })
 
-        data = self.jean.get_work_days_data(
+        data = self.jean._get_work_days_data(
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.tz),
         )
         self.assertEqual(data, {'days': 4.5, 'hours': 36})
 
         # using John as a timezone reference, leaves are outside attendances
-        data = self.john.get_work_days_data(
+        data = self.john._get_work_days_data(
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.john.tz),
             calendar=self.calendar_jean,
@@ -419,7 +474,7 @@ class TestResMixin(TestResourceCommon):
             'date_to': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
         })
 
-        data = self.jean.get_work_days_data(
+        data = self.jean._get_work_days_data(
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.tz),
         )
@@ -436,7 +491,7 @@ class TestResMixin(TestResourceCommon):
             'date_to': datetime_str(2018, 4, 2, 10, 0, 1, tzinfo=self.jean.tz),
         })
 
-        data = self.jean.get_work_days_data(
+        data = self.jean._get_work_days_data(
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.tz),
         )
@@ -463,7 +518,7 @@ class TestResMixin(TestResourceCommon):
         })
 
         # Jean asks to see how much leave he has taken
-        data = self.jean.get_leave_days_data(
+        data = self.jean._get_leave_days_data(
             datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.jean.tz),
         )
@@ -473,14 +528,14 @@ class TestResMixin(TestResourceCommon):
 
         # Patel Asks to see when Jean has taken some leaves
         # Patel should see the same
-        data = self.jean.get_leave_days_data(
+        data = self.jean._get_leave_days_data(
             datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.patel.tz),
             datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.patel.tz),
         )
         self.assertEqual(data, {'days': 1, 'hours': 8})
 
         # use Patel as a resource, jean's leaves are not visible
-        datas = self.patel.get_leave_days_data(
+        datas = self.patel._get_leave_days_data(
             datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.patel.tz),
             datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.patel.tz),
             calendar=self.calendar_jean,
@@ -510,7 +565,7 @@ class TestResMixin(TestResourceCommon):
 
         # John asks how much leaves he has
         # He sees that he has only 15 hours of leave in his attendances
-        data = self.john.get_leave_days_data(
+        data = self.john._get_leave_days_data(
             datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.john.tz),
         )
@@ -525,7 +580,7 @@ class TestResMixin(TestResourceCommon):
             'date_to': datetime_str(2018, 4, 2, 14, 0, 0, tzinfo=self.jean.tz),
         })
 
-        data = self.jean.get_leave_days_data(
+        data = self.jean._get_leave_days_data(
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.tz),
         )
@@ -542,7 +597,7 @@ class TestResMixin(TestResourceCommon):
             'date_to': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
         })
 
-        data = self.jean.get_leave_days_data(
+        data = self.jean._get_leave_days_data(
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.tz),
         )
@@ -559,7 +614,7 @@ class TestResMixin(TestResourceCommon):
             'date_to': datetime_str(2018, 4, 2, 10, 0, 1, tzinfo=self.jean.tz),
         })
 
-        data = self.jean.get_leave_days_data(
+        data = self.jean._get_leave_days_data(
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.tz),
         )
@@ -783,25 +838,51 @@ class TestTimezones(TestResourceCommon):
 
     def test_work_data(self):
         # 09-04-2018 10:00:00 - 13-04-2018 18:00:00
-        data = self.jean.get_work_days_data(
+        data = self.jean._get_work_days_data(
             datetime_tz(2018, 4, 9, 8, 0, 0),
             datetime_tz(2018, 4, 13, 16, 0, 0),
         )
         self.assertEqual(data, {'days': 4.75, 'hours': 38})
 
         # 09-04-2018 00:00:00 - 13-04-2018 08:00:00
-        data = self.jean.get_work_days_data(
+        data = self.jean._get_work_days_data(
             datetime_tz(2018, 4, 9, 8, 0, 0, tzinfo=self.tz3),
             datetime_tz(2018, 4, 13, 16, 0, 0, tzinfo=self.tz3),
         )
         self.assertEqual(data, {'days': 4, 'hours': 32})
 
         # 09-04-2018 08:00:00 - 14-04-2018 12:00:00
-        data = self.jean.get_work_days_data(
+        data = self.jean._get_work_days_data(
             datetime_tz(2018, 4, 9, 8, 0, 0, tzinfo=self.tz2),
             datetime_tz(2018, 4, 13, 16, 0, 0, tzinfo=self.tz4),
         )
         self.assertEqual(data, {'days': 5, 'hours': 40})
+
+        # Jules with 2 weeks calendar
+        # 02-04-2018 00:00:00 - 6-04-2018 23:59:59
+        data = self.jules._get_work_days_data(
+            datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jules.tz),
+            datetime_tz(2018, 4, 6, 23, 59, 59, tzinfo=self.jules.tz),
+        )
+        self.assertEqual(data, {'days': 4, 'hours': 30})
+
+        # Jules with 2 weeks calendar
+        # 02-04-2018 00:00:00 - 14-04-2018 23:59:59
+        data = self.jules._get_work_days_data(
+            datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jules.tz),
+            datetime_tz(2018, 4, 14, 23, 59, 59, tzinfo=self.jules.tz),
+        )
+        self.assertEqual(data, {'days': 6, 'hours': 46})
+
+        # Jules with 2 weeks calendar
+        # 12-29-2014 00:00:00 - 27-12-2019 23:59:59 => 261 weeks
+        # 130 weeks type 1: 131*4 = 524 days and 131*30 = 3930 hours
+        # 131 weeks type 2: 130*2 = 260 days and 130*16 = 2080 hours
+        data = self.jules._get_work_days_data(
+            datetime_tz(2014, 12, 29, 0, 0, 0, tzinfo=self.jules.tz),
+            datetime_tz(2019, 12, 27, 23, 59, 59, tzinfo=self.jules.tz),
+        )
+        self.assertEqual(data, {'days': 784, 'hours': 6010})
 
     def test_leave_data(self):
         self.env['resource.calendar.leaves'].create({
@@ -813,21 +894,21 @@ class TestTimezones(TestResourceCommon):
         })
 
         # 09-04-2018 10:00:00 - 13-04-2018 18:00:00
-        data = self.jean.get_leave_days_data(
+        data = self.jean._get_leave_days_data(
             datetime_tz(2018, 4, 9, 8, 0, 0),
             datetime_tz(2018, 4, 13, 16, 0, 0),
         )
         self.assertEqual(data, {'days': 0.5, 'hours': 4})
 
         # 09-04-2018 00:00:00 - 13-04-2018 08:00:00
-        data = self.jean.get_leave_days_data(
+        data = self.jean._get_leave_days_data(
             datetime_tz(2018, 4, 9, 8, 0, 0, tzinfo=self.tz3),
             datetime_tz(2018, 4, 13, 16, 0, 0, tzinfo=self.tz3),
         )
         self.assertEqual(data, {'days': 0.75, 'hours': 6})
 
         # 09-04-2018 08:00:00 - 14-04-2018 12:00:00
-        data = self.jean.get_leave_days_data(
+        data = self.jean._get_leave_days_data(
             datetime_tz(2018, 4, 9, 8, 0, 0, tzinfo=self.tz2),
             datetime_tz(2018, 4, 13, 16, 0, 0, tzinfo=self.tz4),
         )

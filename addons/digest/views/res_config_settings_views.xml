@@ -5,8 +5,10 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='access_rights']" position="before">
-                <div class="col-12 col-lg-6 o_setting_box" title="New users are automatically added as recipient of the following digest email.">
+            <xpath expr="//div[@id='statistics_div']" position="inside">
+                <div class="col-12 col-lg-6 o_setting_box"
+                    title="New users are automatically added as recipient of the following digest email."
+                    name="digest_email_setting_container">
                     <div class="o_setting_left_pane">
                         <field name="digest_emails"/>
                     </div>
@@ -20,7 +22,7 @@
                                 <label for="digest_id" class="o_light_label"/>
                                 <field name="digest_id" class="oe_inline"/>
                             </div>
-                            <div>
+                            <div class="mt8">
                                 <button type="action" name="%(digest.digest_digest_action)d" string="Configure Digest Emails" icon="fa-arrow-right" class="btn-link"/>
                             </div>
                         </div>

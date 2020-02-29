@@ -1,6 +1,6 @@
 # Please note that this Dockerfile is used for testing nightly builds and should
 # not be used to deploy Odoo
-FROM debian:stretch
+FROM debian:buster
 MAINTAINER Odoo S.A. <info@odoo.com>
 
 RUN apt-get update && \
@@ -20,7 +20,7 @@ RUN apt-get update -qq &&  \
 		postgresql-server-dev-all \
 		postgresql-client \
 		adduser \
-		libsass0 \
+		libsass1 \
 		libxml2-dev \
 		libxslt1-dev \
 		libldap2-dev \

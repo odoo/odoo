@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sequence_view" model="ir.ui.view">
+        <field name="name">ir.sequence.form</field>
+        <field name="model">ir.sequence</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.sequence_view"/>
+        <field name="arch" type="xml">
+            <field name="l10n_latam_journal_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="l10n_latam_journal_id" position="after">
+                <field name="l10n_cl_journal_ids" widget="many2many_tags"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="sequence_view_tree" model="ir.ui.view">
+        <field name="name">ir.sequence.tree</field>
+        <field name="model">ir.sequence</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.sequence_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="l10n_latam_journal_id" position="attributes">
+                <attribute name="attrs">{'column_invisible': True}</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_sequence_search" model="ir.ui.view">
+        <field name="name">ir.sequence.search</field>
+        <field name="model">ir.sequence</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_sequence_search"/>
+        <field name="arch" type="xml">
+            <field name="l10n_latam_journal_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="code" position="before">
+                <field name="l10n_cl_journal_ids"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

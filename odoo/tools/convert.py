@@ -5,6 +5,7 @@ import io
 import logging
 import os.path
 import re
+import subprocess
 import sys
 import time
 
@@ -13,6 +14,10 @@ from dateutil.relativedelta import relativedelta
 
 import pytz
 from lxml import etree, builder
+try:
+    import jingtrang
+except ImportError:
+    jingtrang = None
 
 import odoo
 from . import assertion_report, pycompat
@@ -27,15 +32,7 @@ from .safe_eval import safe_eval as s_eval
 safe_eval = lambda expr, ctx={}: s_eval(expr, ctx, nocopy=True)
 
 class ParseError(Exception):
-    def __init__(self, msg, text, filename, lineno):
-        self.msg = msg
-        self.text = text
-        self.filename = filename
-        self.lineno = lineno
-
-    def __str__(self):
-        return '"%s" while parsing %s:%s, near\n%s' \
-            % (self.msg, self.filename, self.lineno, self.text)
+    ...
 
 class RecordDictWrapper(dict):
     """
@@ -177,32 +174,26 @@ def _eval_xml(self, node, env):
                 return tuple(res)
             return res
     elif node.tag == "function":
-        a_eval = node.get('eval')
-        if a_eval:
-            self.idref['ref'] = self.id_get
-            # ensure the args are a list (sometimes folks eval a tuple which
-            # is inconvenient when trying to concatenate w/ a list)
-            args = list(safe_eval(a_eval, self.idref))
-        else:
-            args = [
-                r for r in (_eval_xml(self, n, env) for n in node)
-                if r is not None
-            ]
-
-        model = env[node.get('model')]
+        model_str = node.get('model')
+        model = env[model_str]
         method_name = node.get('name')
-        method = getattr(model, method_name)
+        # determine arguments
+        args = []
+        kwargs = {}
+        a_eval = node.get('eval')
 
-        # this mess is necessary to merge @context and a possible positional
-        # context parameter, as <function> works on the old API so ids and
-        # context are just args
-        ids, args = [], list(args)
-        if getattr(method, '_api', None) not in ('model', 'model_create'):
-            ids, args = args[:1], args[1:]
-        context, args, kwargs = api.split_context(method, args, {})
-        kwargs['context'] = {**env.context, **(context or {})}
-
-        return odoo.api.call_kw(model, method_name, ids + args, kwargs)
+        if a_eval:
+            idref2 = _get_idref(self, env, model_str, self.idref)
+            args = list(safe_eval(a_eval, idref2))
+        for child in node:
+            if child.tag == 'value' and child.get('name'):
+                kwargs[child.get('name')] = _eval_xml(self, child, env)
+            else:
+                args.append(_eval_xml(self, child, env))
+        # merge current context with context in kwargs
+        kwargs['context'] = {**env.context, **kwargs.get('context', {})}
+        # invoke method
+        return odoo.api.call_kw(model, method_name, args, kwargs)
     elif node.tag == "test":
         return node.text
 
@@ -336,14 +327,12 @@ form: module.record_id""" % (xml_id,)
         name = rec.get('name')
         xml_id = rec.get('id','')
         self._test_xml_id(xml_id)
-        type = rec.get('type') or 'ir.actions.act_window'
         view_id = False
         if rec.get('view_id'):
             view_id = self.id_get(rec.get('view_id'))
         domain = rec.get('domain') or '[]'
         res_model = rec.get('res_model')
-        src_model = rec.get('src_model')
-        view_type = rec.get('view_type') or 'form'
+        binding_model = rec.get('binding_model')
         view_mode = rec.get('view_mode') or 'tree,form'
         usage = rec.get('usage')
         limit = rec.get('limit')
@@ -367,16 +356,15 @@ form: module.record_id""" % (xml_id,)
         eval_context = {
             'name': name,
             'xml_id': xml_id,
-            'type': type,
+            'type': 'ir.actions.act_window',
             'view_id': view_id,
             'domain': domain,
             'res_model': res_model,
-            'src_model': src_model,
-            'view_type': view_type,
+            'src_model': binding_model,
             'view_mode': view_mode,
             'usage': usage,
             'limit': limit,
-            'uid' : uid,
+            'uid': uid,
             'active_id': active_id,
             'active_ids': active_ids,
             'active_model': active_model,
@@ -394,13 +382,11 @@ form: module.record_id""" % (xml_id,)
                 domain, xml_id or 'n/a', exc_info=True)
         res = {
             'name': name,
-            'type': type,
+            'type': 'ir.actions.act_window',
             'view_id': view_id,
             'domain': domain,
             'context': context,
             'res_model': res_model,
-            'src_model': src_model,
-            'view_type': view_type,
             'view_mode': view_mode,
             'usage': usage,
             'limit': limit,
@@ -420,15 +406,12 @@ form: module.record_id""" % (xml_id,)
 
         if rec.get('target'):
             res['target'] = rec.get('target','')
-        if rec.get('multi'):
-            res['multi'] = safe_eval(rec.get('multi', 'False'))
-        if src_model:
-            res['binding_model_id'] = self.env['ir.model']._get(src_model).id
-            res['binding_type'] = 'report' if rec.get('key2') == 'client_print_multi' else 'action'
-            if rec.get('key2') in (None, 'client_action_relate'):
-                if not res.get('multi'):
-                    res['binding_type'] = 'action_form_only'
-
+        if binding_model:
+            res['binding_model_id'] = self.env['ir.model']._get(binding_model).id
+            res['binding_type'] = rec.get('binding_type') or 'action'
+            views = rec.get('binding_views')
+            if views is not None:
+                res['binding_view_types'] = views
         xid = self.make_xml_id(xml_id)
         data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
         self.env['ir.actions.act_window']._load_records([data], self.mode == 'update')
@@ -501,7 +484,8 @@ form: module.record_id""" % (xml_id,)
         if self.xml_filename and rec_id:
             model = model.with_context(
                 install_module=self.module,
-                install_filename=self.xml_filename
+                install_filename=self.xml_filename,
+                install_xmlid=rec_id,
             )
 
         self._test_xml_id(rec_id)
@@ -571,11 +555,14 @@ form: module.record_id""" % (xml_id,)
             else:
                 f_val = _eval_xml(self, field, env)
                 if f_name in model._fields:
-                    if model._fields[f_name].type == 'integer':
+                    field_type = model._fields[f_name].type
+                    if field_type == 'many2one':
+                        f_val = int(f_val) if f_val else False
+                    elif field_type == 'integer':
                         f_val = int(f_val)
-                    elif model._fields[f_name].type in ['float', 'monetary']:
+                    elif field_type in ('float', 'monetary'):
                         f_val = float(f_val)
-                    elif model._fields[f_name].type == 'boolean' and isinstance(f_val, str):
+                    elif field_type == 'boolean' and isinstance(f_val, str):
                         f_val = str2bool(f_val)
             res[f_name] = f_val
 
@@ -621,6 +608,8 @@ form: module.record_id""" % (xml_id,)
         record.append(Field(name, name='name'))
         record.append(Field(full_tpl_id, name='key'))
         record.append(Field("qweb", name='type'))
+        if 'track' in el.attrib:
+            record.append(Field(el.get('track'), name='track'))
         if 'priority' in el.attrib:
             record.append(Field(el.get('priority'), name='priority'))
         if 'inherit_id' in el.attrib:
@@ -676,6 +665,14 @@ form: module.record_id""" % (xml_id,)
             self._noupdate.append(nodeattr2bool(el, 'noupdate', self.noupdate))
             try:
                 f(rec)
+            except ParseError:
+                raise
+            except Exception as e:
+                raise ParseError('while parsing %s:%s, near\n%s' % (
+                    rec.getroottree().docinfo.URL,
+                    rec.sourceline,
+                    etree.tostring(rec, encoding='unicode').rstrip()
+                ))
             finally:
                 self._noupdate.pop()
                 self.envs.pop()
@@ -712,18 +709,7 @@ form: module.record_id""" % (xml_id,)
 
     def parse(self, de):
         assert de.tag in self.DATA_ROOTS, "Root xml tag must be <openerp>, <odoo> or <data>."
-        try:
-            self._tag_root(de)
-        except Exception as e:
-            exc_info = sys.exc_info()
-            pycompat.reraise(
-                ParseError,
-                ParseError(
-                    ustr(e),
-                    etree.tostring(de, encoding='unicode').rstrip(),
-                    de.getroottree().docinfo.URL, de.sourceline),
-                exc_info[2]
-            )
+        self._tag_root(de)
     DATA_ROOTS = ['odoo', 'data', 'openerp']
 
 def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, report=None, pathname=None):
@@ -754,7 +740,6 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         encoding: utf-8'''
     filename, _ext = os.path.splitext(os.path.basename(fname))
     model = filename.split('-')[0]
-
     reader = pycompat.csv_reader(io.BytesIO(csvcontent), quotechar='"', delimiter=',')
     fields = next(reader)
 
@@ -784,13 +769,19 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
 
 def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=False, report=None):
     doc = etree.parse(xmlfile)
-    relaxng = etree.RelaxNG(
-        etree.parse(os.path.join(config['root_path'],'import_xml.rng' )))
+    schema = os.path.join(config['root_path'], 'import_xml.rng')
+    relaxng = etree.RelaxNG(etree.parse(schema))
     try:
         relaxng.assert_(doc)
     except Exception:
-        _logger.info("The XML file '%s' does not fit the required schema !", xmlfile.name, exc_info=True)
-        _logger.info(ustr(relaxng.error_log.last_error))
+        _logger.exception("The XML file '%s' does not fit the required schema !", xmlfile.name)
+        if jingtrang:
+            p = subprocess.run(['pyjing', schema, xmlfile.name], stdout=subprocess.PIPE)
+            _logger.warning(p.stdout.decode())
+        else:
+            for e in relaxng.error_log:
+                _logger.warning(e)
+            _logger.info("Install 'jingtrang' for more precise and useful validation messages.")
         raise
 
     if isinstance(xmlfile, str):

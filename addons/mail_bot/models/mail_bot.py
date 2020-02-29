@@ -30,7 +30,7 @@ class MailBot(models.AbstractModel):
             if answer:
                 message_type = values.get('message_type', 'comment')
                 subtype_id = values.get('subtype_id', self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'))
-                record.with_context({"mail_create_nosubscribe": True}).sudo().message_post(body=answer, author_id=odoobot_id, message_type=message_type, subtype_id=subtype_id)
+                record.with_context(mail_create_nosubscribe=True).sudo().message_post(body=answer, author_id=odoobot_id, message_type=message_type, subtype_id=subtype_id)
 
     def _get_answer(self, record, body, values, command=False):
         # onboarding
@@ -214,7 +214,7 @@ class MailBot(models.AbstractModel):
 
     def _is_bot_pinged(self, values):
         odoobot_id = self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")
-        return (4, odoobot_id) in values.get('partner_ids', [])
+        return odoobot_id in values.get('partner_ids', [])
 
     def _is_bot_in_private_channel(self, record):
         odoobot_id = self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")

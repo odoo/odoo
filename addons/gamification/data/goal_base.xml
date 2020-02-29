@@ -5,24 +5,26 @@
         <!--Email template -->
         
         <record id="email_template_goal_reminder" model="mail.template">
-            <field name="name">Reminder for Goal Update</field>
+            <field name="name">Goal: Reminder for Goal Update</field>
             <field name="model_id" ref="gamification.model_gamification_goal"/>
-            <field name="lang">${object.user_id.lang}</field>
+            <field name="partner_to">${object.user_id.partner_id.id}</field>
             <field name="body_html" type="html">
 <div>
     <strong>Reminder ${object.name}</strong><br/>
-You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.
-<br/><br/>
-Thank you,
-    <br/>
-    % if object.challenge_id.manager_id and object.challenge_id.manager_id.signature:
-    ${object.challenge_id.manager_id.signature | safe}
+    You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.
+    <br/><br/>
+    Thank you,
+    % if object.challenge_id.manager_id.signature:
+        <br />
+        ${object.challenge_id.manager_id.signature | safe}
     % endif
 </div></field>
+            <field name="lang">${object.user_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
         </record>
         
         <record id="simple_report_template" model="mail.template">
-            <field name="name">Simple Challenge Report Progress</field>
+            <field name="name">Challenge: Simple Challenge Report Progress</field>
             <field name="model_id" ref="gamification.model_gamification_challenge"/>
             <field name="body_html" type="html">
 <table cellspacing="0" cellpadding="0" width="100%" style="background-color: #EEE; border-collapse: collapse;">
@@ -142,7 +144,7 @@ Thank you,
                                                                 <div style="height:${heightA}px;">
                                                                     ${extra_div | safe}   
                                                                     <div style="height:55px;">
-                                                                        <img style="margin-bottom:5px;width:50px;height:50px;border-radius:50%;" t-att-src="image_data_uri(object.env['res.users'].browse(goal['user_id']).partner_id.image_small)" alt="${goal['name']}"/>
+                                                                        <img style="margin-bottom:5px;width:50px;height:50px;border-radius:50%;object-fit:cover;" t-att-src="image_data_uri(object.env['res.users'].browse(goal['user_id']).partner_id.image_128)" alt="${goal['name']}"/>
                                                                     </div>
                                                                     <div align="center" style ="color:${bgColor};height:20px">
                                                                         ${goal['name']}
@@ -229,9 +231,9 @@ Thank you,
             <field name="description">Configure your profile and specify your timezone</field>
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
-            <field name="model_id" eval="ref('base.model_res_users')" />
+            <field name="model_id" ref="base.model_res_users"/>
             <field name="domain">[('id','=',user.id),('partner_id.tz', '!=', False)]</field>
-            <field name="action_id" eval="ref('base.action_res_users_my')" />
+            <field name="action_id" ref="base.action_res_users_my"/>
             <field name="res_id_field">user.id</field>
         </record>
 
@@ -240,10 +242,10 @@ Thank you,
             <field name="description">Write some information about your company (specify at least a name)</field>
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
-            <field name="model_id" eval="ref('base.model_res_company')" />
+            <field name="model_id" ref="base.model_res_company"/>
             <field name="domain">[('user_ids', 'in', [user.id]), ('name', '=', 'YourCompany')]</field>
             <field name="condition">lower</field>
-            <field name="action_id" eval="ref('base.action_res_company_form')" />
+            <field name="action_id" ref="base.action_res_company_form"/>
             <field name="res_id_field">user.company_id.id</field>
         </record>
 
@@ -251,9 +253,9 @@ Thank you,
             <field name="name">Set your Company Logo</field>
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
-            <field name="model_id" eval="ref('base.model_res_company')" />
+            <field name="model_id" ref="base.model_res_company"/>
             <field name="domain">[('user_ids', 'in', user.id),('logo', '!=', False)]</field>
-            <field name="action_id" eval="ref('base.action_res_company_form')" />
+            <field name="action_id" ref="base.action_res_company_form"/>
             <field name="res_id_field">user.company_id.id</field>
         </record>
 
@@ -261,7 +263,6 @@ Thank you,
             <field name="name">Create User</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.users</field>
-            <field name="view_type">form</field>
             <field name="target">current</field>
             <field name="view_id" ref="base.view_users_simple_form"/>
             <field name="context">{}</field>
@@ -273,19 +274,10 @@ Thank you,
             <field name="description">Create at least another user</field>
             <field name="display_mode">boolean</field>
             <field name="computation_mode">count</field>
-            <field name="model_id" eval="ref('base.model_res_users')" />
+            <field name="model_id" ref="base.model_res_users"/>
             <field name="domain">[('id', '!=', user.id)]</field>
-            <field name="action_id" eval="ref('action_new_simplified_res_users')" />
+            <field name="action_id" ref="action_new_simplified_res_users"/>
         </record>
-
-        <record model="gamification.goal.definition" id="definition_nbr_following">
-            <field name="name">Mail Group Following</field>
-            <field name="description">Follow mail.channels to receive news</field>
-            <field name="computation_mode">python</field>
-            <field name="compute_code">result = env['mail.followers'].search_count([('res_model', '=', 'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])</field>
-            <field name="action_id" eval="ref('mail.mail_channel_action_view')" />
-        </record>
-
 
         <!-- challenges -->
         <record model="gamification.challenge" id="challenge_base_discover">
@@ -295,7 +287,7 @@ Thank you,
             <field name="report_message_frequency">never</field>
             <field name="user_domain" eval="str([('groups_id.id', '=', ref('base.group_user'))])" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="challenge_category">other</field>
         </record>
 
         <record model="gamification.challenge" id="challenge_base_configure">
@@ -305,30 +297,30 @@ Thank you,
             <field name="report_message_frequency">never</field>
             <field name="user_domain" eval="str([('groups_id.id', '=', ref('base.group_erp_manager'))])" />
             <field name="state">inprogress</field>
-            <field name="category">other</field>
+            <field name="challenge_category">other</field>
         </record>
 
         <!-- lines -->
         <record model="gamification.challenge.line" id="line_base_discover1">
-            <field name="definition_id" eval="ref('definition_base_timezone')" />
+            <field name="definition_id" ref="definition_base_timezone"/>
             <field name="target_goal">1</field>
-            <field name="challenge_id" eval="ref('challenge_base_discover')" />
+            <field name="challenge_id" ref="challenge_base_discover"/>
         </record>
 
         <record model="gamification.challenge.line" id="line_base_admin2">
-            <field name="definition_id" eval="ref('definition_base_company_logo')" />
+            <field name="definition_id" ref="definition_base_company_logo"/>
             <field name="target_goal">1</field>
-            <field name="challenge_id" eval="ref('challenge_base_configure')" />
+            <field name="challenge_id" ref="challenge_base_configure"/>
         </record>
         <record model="gamification.challenge.line" id="line_base_admin1">
-            <field name="definition_id" eval="ref('definition_base_company_data')" />
+            <field name="definition_id" ref="definition_base_company_data"/>
             <field name="target_goal">0</field>
-            <field name="challenge_id" eval="ref('challenge_base_configure')" />
+            <field name="challenge_id" ref="challenge_base_configure"/>
         </record>
         <record model="gamification.challenge.line" id="line_base_admin3">
-            <field name="definition_id" eval="ref('definition_base_invite')" />
+            <field name="definition_id" ref="definition_base_invite"/>
             <field name="target_goal">1</field>
-            <field name="challenge_id" eval="ref('challenge_base_configure')" />
+            <field name="challenge_id" ref="challenge_base_configure"/>
         </record>
     </data>
 

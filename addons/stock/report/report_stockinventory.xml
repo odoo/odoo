@@ -6,26 +6,15 @@
                 <t t-foreach="docs" t-as="o">
                     <t t-call="web.external_layout">
                         <div class="page">
-                            <h2>Stock Inventory</h2>
+                            <br/>
+                            <h2 t-field="o.name"/>
 
-                            <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th><strong>Inventory</strong></th>
-                                    <th><strong>Date</strong></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <span t-field="o.name"/>
-                                    </td>
-                                    <td>
-                                        <span t-field="o.date"/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                            </table>
+                            <div class="row mt32 mb32" id="informations">
+                                <div t-if="o.date" class="col-auto mw-100 mb-2">
+                                    <strong>Date:</strong>
+                                    <p class="m-0" t-field="o.date"/>
+                                </div>
+                            </div>
 
                             <t t-set="locations" t-value="o.line_ids.mapped('location_id')"/>
                             <table class="table table-sm">
@@ -33,9 +22,10 @@
                                     <tr>
                                         <th groups="stock.group_stock_multi_locations"><strong>Location</strong></th>
                                         <th><strong>Product</strong></th>
-                                        <th groups="stock.group_production_lot"><strong>Production Lot</strong></th>
+                                        <th groups="stock.group_production_lot"><strong>Lot/Serial Number</strong></th>
                                         <th groups="stock.group_tracking_lot"><strong>Package</strong></th>
-                                        <th class="text-right"><strong>Quantity</strong></th>
+                                        <th class="text-right"><strong>On Hand Quantity</strong></th>
+                                        <th class="text-right"><strong>Counted Quantity</strong></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -51,26 +41,12 @@
                                             <td><span t-field="line.product_id"/></td>
                                             <td groups="stock.group_production_lot"><span t-field="line.prod_lot_id"/></td>
                                             <td groups="stock.group_tracking_lot"><span t-field="line.package_id"/></td>
+                                            <td class="text-right"><span t-field="line.theoretical_qty"/> <span t-field="line.product_uom_id" groups="uom.group_uom"/></td>
                                             <td class="text-right"><span t-field="line.product_qty"/> <span t-field="line.product_uom_id" groups="uom.group_uom"/></td>
                                         </tr>
                                     </t>
                                 </tbody>
                             </table>
-
-                            <t t-if="o.filter == 'product' and o.product_id">
-                              <div class="row justify-content-end">
-                                <div class="col-4">
-                                     <table class="table table-sm">
-                                        <tr class="border-black">
-                                            <td><strong>Total Quantity</strong></td>
-                                            <td class="text-right">
-                                                <span t-field="o.total_qty"/> <span t-field="o.product_id.uom_id"/>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                              </div>
-                            </t>
                         </div>
                     </t>
                  </t>

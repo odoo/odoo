@@ -12,7 +12,7 @@ var CustomizeMenu = Widget.extend({
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
     events: {
         'show.bs.dropdown': '_onDropdownShow',
-        'click .dropdown-item[data-view-id]': '_onCustomizeOptionClick',
+        'click .dropdown-item[data-view-key]': '_onCustomizeOptionClick',
     },
 
     /**
@@ -44,20 +44,21 @@ var CustomizeMenu = Widget.extend({
      * Enables/Disables a view customization whose id is given.
      *
      * @private
-     * @param {integer} viewID
-     * @returns {Deferred}
+     * @param {string} viewKey
+     * @returns {Promise}
      *          Unresolved if the customization succeeded as the page will be
      *          reloaded.
      *          Rejected otherwise.
      */
-    _doCustomize: function (viewID) {
+    _doCustomize: function (viewKey) {
         return this._rpc({
-            model: 'ir.ui.view',
-            method: 'toggle',
-            args: [[viewID]],
+            route: '/website/toggle_switchable_view',
+            params: {
+                'view_key': viewKey,
+            },
         }).then(function () {
             window.location.reload();
-            return $.Deferred();
+            return new Promise(function () {});
         });
     },
     /**
@@ -65,11 +66,11 @@ var CustomizeMenu = Widget.extend({
      * the current page and shows them as switchable elements in the menu.
      *
      * @private
-     * @return {Deferred}
+     * @return {Promise}
      */
     _loadCustomizeOptions: function () {
         if (this.__customizeOptionsLoaded) {
-            return $.when();
+            return Promise.resolve();
         }
         this.__customizeOptionsLoaded = true;
 
@@ -81,12 +82,18 @@ var CustomizeMenu = Widget.extend({
             },
         }).then(function (result) {
             var currentGroup = '';
+            if (result.length) {
+                $menu.append($('<div/>', {
+                    class: 'dropdown-divider',
+                    role: 'separator',
+                }));
+            }
             _.each(result, function (item) {
                 if (currentGroup !== item.inherit_id[1]) {
                     currentGroup = item.inherit_id[1];
                     $menu.append('<li class="dropdown-header">' + currentGroup + '</li>');
                 }
-                var $a = $('<a/>', {href: '#', class: 'dropdown-item', 'data-view-id': item.id, role: 'menuitem'})
+                var $a = $('<a/>', {href: '#', class: 'dropdown-item', 'data-view-key': item.key, role: 'menuitem'})
                             .append(qweb.render('website.components.switch', {id: 'switch-' + item.id, label: item.name}));
                 $a.find('input').prop('checked', !!item.active);
                 $menu.append($a);
@@ -107,8 +114,8 @@ var CustomizeMenu = Widget.extend({
      */
     _onCustomizeOptionClick: function (ev) {
         ev.preventDefault();
-        var viewID = parseInt($(ev.currentTarget).data('view-id'), 10);
-        this._doCustomize(viewID);
+        var viewKey = $(ev.currentTarget).data('viewKey');
+        this._doCustomize(viewKey);
     },
     /**
      * @private
@@ -163,18 +170,20 @@ var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * which are used by the current page.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _launchAce: function () {
-        var def = $.Deferred();
-        this.trigger_up('action_demand', {
-            actionName: 'close_all_widgets',
-            onSuccess: def.resolve.bind(def),
+        var self = this;
+        var prom = new Promise(function (resolve, reject) {
+            self.trigger_up('action_demand', {
+                actionName: 'close_all_widgets',
+                onSuccess: resolve,
+            });
         });
-        return def.then((function () {
-            if (this.globalEditor) {
-                this.globalEditor.do_show();
-                return $.when();
+        prom.then(function () {
+            if (self.globalEditor) {
+                self.globalEditor.do_show();
+                return Promise.resolve();
             } else {
                 var currentHash = window.location.hash;
                 var indexOfView = currentHash.indexOf("?res=");
@@ -187,16 +196,19 @@ var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                     }
                 }
 
-                this.globalEditor = new WebsiteAceEditor(this, $(document.documentElement).data('view-xmlid'), {
+                self.globalEditor = new WebsiteAceEditor(self, $(document.documentElement).data('view-xmlid'), {
                     initialResID: initialResID,
                     defaultBundlesRestriction: [
-                        "web.assets_frontend",
-                        "website.assets_frontend",
+                        'web.assets_frontend',
+                        'web.assets_frontend_minimal',
+                        'web.assets_frontend_lazy',
                     ],
                 });
-                return this.globalEditor.appendTo(document.body);
+                return self.globalEditor.appendTo(document.body);
             }
-        }).bind(this));
+        });
+
+        return prom;
     },
 });
 

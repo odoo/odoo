@@ -31,22 +31,22 @@ class L10nInPaymentReport(models.AbstractModel):
     def _compute_l10n_in_tax(self, taxes, price_unit, currency=None, quantity=1.0, product=None, partner=None):
         """common method to compute gst tax amount base on tax group"""
         res = {'igst_amount': 0.0, 'sgst_amount': 0.0, 'cgst_amount': 0.0, 'cess_amount': 0.0}
-        AccountTax = self.env['account.tax']
-        igst_group = self.env.ref('l10n_in.igst_group', False)
-        cgst_group = self.env.ref('l10n_in.cgst_group', False)
-        sgst_group = self.env.ref('l10n_in.sgst_group', False)
-        cess_group = self.env.ref('l10n_in.cess_group', False)
+        AccountTaxRepartitionLine = self.env['account.tax.repartition.line']
+        tax_report_line_igst = self.env.ref('l10n_in.tax_report_line_igst', False)
+        tax_report_line_cgst = self.env.ref('l10n_in.tax_report_line_cgst', False)
+        tax_report_line_sgst = self.env.ref('l10n_in.tax_report_line_sgst', False)
+        tax_report_line_cess = self.env.ref('l10n_in.tax_report_line_cess', False)
         filter_tax = taxes.filtered(lambda t: t.type_tax_use != 'none')
         tax_compute = filter_tax.compute_all(price_unit, currency=currency, quantity=quantity, product=product, partner=partner)
         for tax_data in tax_compute['taxes']:
-            tax_group = AccountTax.browse(tax_data['id']).tax_group_id
-            if tax_group == sgst_group:
+            tax_report_lines = AccountTaxRepartitionLine.browse(tax_data['tax_repartition_line_id']).mapped('tag_ids.tax_report_line_ids')
+            if tax_report_line_sgst in tax_report_lines:
                 res['sgst_amount'] += tax_data['amount']
-            elif tax_group == cgst_group:
+            if tax_report_line_cgst in tax_report_lines:
                 res['cgst_amount'] += tax_data['amount']
-            elif tax_group == igst_group:
+            if tax_report_line_igst in tax_report_lines:
                 res['igst_amount'] += tax_data['amount']
-            elif tax_group == cess_group:
+            if tax_report_line_cess in tax_report_lines:
                 res['cess_amount'] += tax_data['amount']
         res.update(tax_compute)
         return res
@@ -62,10 +62,9 @@ class L10nInPaymentReport(models.AbstractModel):
             ap.id AS payment_id,
             ap.payment_type,
             tax.id as l10n_in_tax_id,
-            (CASE WHEN atr.parent_tax IS NOT NULL THEN parent_at.amount
-                ELSE tax.amount END) AS tax_rate,
+            tax.amount AS tax_rate,
             am.partner_id,
-            am.amount AS payment_amount,
+            am.amount_total AS payment_amount,
             ap.journal_id,
             aml.currency_id,
             (CASE WHEN ps.l10n_in_tin IS NOT NULL
@@ -95,16 +94,13 @@ class L10nInPaymentReport(models.AbstractModel):
             LEFT JOIN res_country_state ps ON ps.id = p.state_id
             LEFT JOIN res_partner cp ON cp.id = c.partner_id
             LEFT JOIN res_country_state cps ON cps.id = cp.state_id
-            LEFT JOIN account_tax_filiation_rel atr ON atr.child_tax = tax.id
-            LEFT JOIN account_tax parent_at ON parent_at.id = atr.parent_tax
             """
 
     def _where(self):
         return """WHERE aml.payment_id IS NOT NULL
-            AND tax.tax_group_id in (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name in ('cgst_group','sgst_group','igst_group','gst_group'))
+            AND tax.tax_group_id in (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name in ('igst_group','gst_group'))
             AND ac.internal_type IN ('receivable', 'payable') AND am.state = 'posted'"""
 
-    @api.model_cr
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute("""CREATE or REPLACE VIEW %s AS (
@@ -146,7 +142,7 @@ class AdvancesPaymentReport(models.Model):
                 WHERE (apr.credit_move_id = aml.id OR apr.debit_move_id = aml.id)
                 AND (to_char(apr.max_date, 'MM-YYYY') = to_char(aml.date_maturity, 'MM-YYYY'))
             ) AS reconcile_amount,
-            (am.amount - (SELECT (CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END) FROM account_partial_reconcile AS apr
+            (am.amount_total - (SELECT (CASE WHEN SUM(amount) IS NULL THEN 0 ELSE SUM(amount) END) FROM account_partial_reconcile AS apr
                 WHERE (apr.credit_move_id = aml.id OR apr.debit_move_id = aml.id)
                 AND (to_char(apr.max_date, 'MM-YYYY') = to_char(aml.date_maturity, 'MM-YYYY'))
             )) AS amount"""

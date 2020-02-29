@@ -1,18 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_hr_recruitment
+# 	* website_hr_recruitment
 # 
 # Translators:
-# Adam Kettner <cetnerix@gmail.com>, 2018
-# J. Podhorecky <j.podhorecky@volny.cz>, 2018
+# Martin Trigaux, 2019
+# Ladislav Tomm <tomm@helemik.cz>, 2019
+# trendspotter <j.podhorecky@volny.cz>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: J. Podhorecky <j.podhorecky@volny.cz>, 2018\n"
+"POT-Creation-Date: 2019-09-27 09:12+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +40,25 @@ msgstr "3 měsíce"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "50% YoY"
 msgstr "50% meziročně"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
+#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
+msgid "<br/><i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid ""
+"<i class=\"fa fa-clock-o\" title=\"Publication date\" role=\"img\" aria-"
+"label=\"Publication date\"/>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
+#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
+msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -74,6 +94,8 @@ msgid ""
 "<span class=\"fa fa-2x fa-futbol-o\"/>\n"
 "                    Sport Activity"
 msgstr ""
+"<span class=\"fa fa-2x fa-futbol-o\"/>\n"
+"                    Sportovní Aktivita"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -81,6 +103,8 @@ msgid ""
 "<span class=\"fa fa-2x fa-heart\"/>\n"
 "                    Benefits"
 msgstr ""
+"<span class=\"fa fa-2x fa-heart\"/>\n"
+"                    Benefity"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -97,6 +121,11 @@ msgid ""
 msgstr ""
 
 #. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
+msgid "<span class=\"o_recruitment_purple\">Published</span>"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 #: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid ""
@@ -109,22 +138,22 @@ msgstr ""
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "<strong>Challenges</strong>"
-msgstr ""
+msgstr "<strong>Výzvy</strong>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "<strong>Must Have</strong>"
-msgstr ""
+msgstr "<strong>Musí mít</strong>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "<strong>Responsibilities</strong>"
-msgstr ""
+msgstr "<strong>Odpovědnosti</strong>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "<strong>What's great in the job?</strong>"
-msgstr ""
+msgstr "<strong>Co je v té práci skvělé?</strong>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -152,9 +181,16 @@ msgid "Applicant"
 msgstr "Žadatel"
 
 #. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#, python-format
+msgid "Applied Job"
+msgstr "Aplikovaná práce"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Apply Job"
-msgstr ""
+msgstr "Uplatnit práci"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
@@ -183,7 +219,7 @@ msgstr "Růst společnosti:"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Company Maturity:"
-msgstr ""
+msgstr "Vyspělost společnosti:"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -207,6 +243,14 @@ msgstr "Pokračujte na náš web"
 msgid ""
 "Create new job pages from the <strong><i>+New</i></strong> top-right button."
 msgstr ""
+
+#. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+#, python-format
+msgid "Department"
+msgstr "Oddělení"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -242,9 +286,9 @@ msgid "In the meantime,"
 msgstr "Mezitím,"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__is_published
-msgid "Is published"
-msgstr "Je zveřejněno"
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid "Job"
+msgstr "Práce"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -255,6 +299,11 @@ msgstr "Formulář žádosti o zaměstnání"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Job Complexity:"
 msgstr "Složitost práce:"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
+msgid "Job Description"
+msgstr "Popis práce"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
@@ -272,7 +321,7 @@ msgid "Job Security:"
 msgstr "Bezpečnost práce:"
 
 #. module: website_hr_recruitment
-#: code:addons/website_hr_recruitment/controllers/main.py:77
+#: code:addons/website_hr_recruitment/controllers/main.py:0
 #, python-format
 msgid "Job Title"
 msgstr "Pracovní pozice"
@@ -318,11 +367,6 @@ msgid "Need More Info?"
 msgstr "Potřebujete další informace?"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.content_new_job_offer
-msgid "New Job Offer"
-msgstr "Nová pracovní naídka"
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "No outbound calls, you get leads and focus on providing value to them"
 msgstr ""
@@ -359,6 +403,13 @@ msgid "Personal Evolution:"
 msgstr "Osobní vývoj:"
 
 #. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/xml/website_hr_recruitment.xml:0
+#, python-format
+msgid "Phone Number"
+msgstr "Telefonní číslo"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Play any sport with colleagues and the bill is covered"
 msgstr "Zahrajte si nějaký sport s kolegy a účet bude zaplacen"
@@ -374,27 +425,23 @@ msgid "Profitable"
 msgstr "Ziskový"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_id
-msgid "Restrict publishing to this website."
-msgstr "Omezit publikování na tomto webu."
-
-#. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/xml/website_hr_recruitment.xml:0
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+#, python-format
 msgid "Resume"
 msgstr "Shrnutí"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__is_seo_optimized
-msgid "SEO optimized"
-msgstr "SEO optimalizováno"
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Sales Cycle:"
-msgstr ""
+msgstr "Prodejní cyklus:"
 
 #. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/xml/website_hr_recruitment.xml:0
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+#, python-format
 msgid "Short Introduction"
 msgstr "Krátké přestavení"
 
@@ -438,11 +485,6 @@ msgid "The founder’s story"
 msgstr "Příběh zakladatele"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_url
-msgid "The full URL to access the document through the website."
-msgstr "Celá adresa URL pro přístup k dokumentu prostřednictvím webu."
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid ""
 "Tuesday Dinners, Monthly Lunch Mixers, Monthly Happy Hour, Annual day event"
@@ -471,54 +513,14 @@ msgid "Variability of the Job:"
 msgstr "Variabilita práce:"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_published
-msgid "Visible on current website"
-msgstr "Viditelné na aktuálním webu"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_id
-msgid "Website"
-msgstr "Webová strana"
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
-msgid "Website Editor"
-msgstr ""
-
-#. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
 msgid "Website Recruitment Form"
 msgstr "Webový formulář pro nábor:"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_url
-msgid "Website URL"
-msgstr "URL Webové stránky"
-
-#. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_description
 msgid "Website description"
 msgstr "Popis webových stránek"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_description
-msgid "Website meta description"
-msgstr ""
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_keywords
-msgid "Website meta keywords"
-msgstr ""
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_title
-msgid "Website meta title"
-msgstr ""
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_og_img
-msgid "Website opengraph image"
-msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -535,12 +537,18 @@ msgstr ""
 "projekty a lidi"
 
 #. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/xml/website_hr_recruitment.xml:0
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+#, python-format
 msgid "Your Email"
 msgstr "Váš e-mail"
 
 #. module: website_hr_recruitment
+#. openerp-web
+#: code:addons/website_hr_recruitment/static/src/xml/website_hr_recruitment.xml:0
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+#, python-format
 msgid "Your Name"
 msgstr "Vaše jméno"
 

@@ -4,7 +4,7 @@
 {
     'name': 'Purchase',
     'version': '1.2',
-    'category': 'Purchase',
+    'category': 'Operations/Purchase',
     'sequence': 60,
     'summary': 'Purchase orders, tenders and agreements',
     'description': "",
@@ -13,7 +13,7 @@
     'data': [
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
-        'views/account_invoice_views.xml',
+        'views/account_move_views.xml',
         'data/purchase_data.xml',
         'report/purchase_reports.xml',
         'views/purchase_views.xml',

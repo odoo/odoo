@@ -14,7 +14,7 @@
                                 <label for="page-name" class="col-md-3 col-form-label">
                                     <t t-esc="field_name"/>:
                                 </label>
-                                <div class="col-md-8">
+                                <div class="col-md-9">
                                     <input t-if="field_type == 'input'" type="text" class="form-control" required="required"/>
                                     <textarea t-if="field_type == 'textarea'" class="form-control" required="required" rows="5"></textarea>
                                     <select t-if="field_type == 'select'" class="form-control"></select>
@@ -76,4 +76,26 @@
         </div>
         <t t-call="website.dependencies"/>
     </div>
+
+    <div t-name="website.duplicate_page_action_dialog">
+        <div class="form-group row">
+            <label class="col-form-label col-md-3" for="page_name">Page Name</label>
+            <div class="col-md-9">
+                <input type="text" class="form-control" id="page_name"/>
+            </div>
+        </div>
+    </div>
+
+    <t t-name="website.oe_applications_menu">
+        <t t-as="menu" t-foreach="menu_data.children">
+            <a role="menuitem" class="dropdown-item"
+               t-att-data-action-id="menu.action ? menu.action.split(',')[1] : undefined"
+               t-att-data-action-model="menu.action ? menu.action.split(',')[0] : undefined"
+               t-att-data-menu="menu.id"
+               t-att-data-menu-xmlid="menu.xmlid"
+               t-att-href="_.str.sprintf('/web#menu_id=%s&amp;action=%s', menu.id, menu.action ? menu.action.split(',')[1] : '')">
+                <span class="oe_menu_text" t-esc="menu.name"/>
+            </a>
+        </t>
+    </t>
 </templates>

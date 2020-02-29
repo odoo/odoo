@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_gallery" name="Image Gallery">
+    <section class="o_gallery o_spc-medium o_slideshow s_image_gallery" data-columns="3" style="height: 500px; overflow: hidden;">
+        <div class="container">
+            <div class="alert alert-info css_editable_mode_display text-center" role="status"><span class="o_add_images" style="cursor: pointer;"><i class="fa fa-plus-circle"/> Add Images</span></div>
+        </div>
+    </section>
+</template>
+
+<template id="s_image_gallery_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-js="gallery" data-selector=".o_gallery">
+            <we-button data-add-images="true" data-no-preview="true">Add images</we-button>
+            <we-button data-remove-all-images="true" data-no-preview="true">Remove all images</we-button>
+            <we-divider/>
+            <we-select string="Mode">
+                <we-button data-mode="nomode">Float</we-button>
+                <we-button data-mode="masonry" data-name="masonry_mode_opt">Masonry</we-button>
+                <we-button data-mode="grid" data-name="grid_mode_opt">Grid</we-button>
+                <we-button data-mode="slideshow" data-name="slideshow_mode_opt">Slideshow</we-button>
+            </we-select>
+            <we-select string="Slideshow speed" data-dependencies="slideshow_mode_opt">
+                <we-button data-interval="1000">1s</we-button>
+                <we-button data-interval="2000">2s</we-button>
+                <we-button data-interval="3000">3s</we-button>
+                <we-button data-interval="5000">5s</we-button>
+                <we-button data-interval="10000">10s</we-button>
+                <we-button data-interval="0">Disable autoplay</we-button>
+            </we-select>
+            <we-select string="Columns" data-dependencies="masonry_mode_opt, grid_mode_opt">
+                <we-button data-columns="1">1</we-button>
+                <we-button data-columns="2">2</we-button>
+                <we-button data-columns="3">3</we-button>
+                <we-button data-columns="4">4</we-button>
+                <we-button data-columns="6">6</we-button>
+                <we-button data-columns="12">12</we-button>
+            </we-select>
+            <we-select string="Images spacing" data-dependencies="!slideshow_mode_opt">
+                <we-button data-select-class="o_spc-none">None</we-button>
+                <we-button data-select-class="o_spc-small">Small</we-button>
+                <we-button data-select-class="o_spc-medium">Medium</we-button>
+                <we-button data-select-class="o_spc-big">Big</we-button>
+            </we-select>
+            <we-select string="Styling">
+                <we-button data-styling="">Square</we-button>
+                <we-button data-styling="rounded">Rounded corners</we-button>
+                <we-button data-styling="img-thumbnail">Thumbnails</we-button>
+                <we-button data-styling="rounded-circle">Circle</we-button>
+                <we-button data-styling="shadow">Shadows</we-button>
+            </we-select>
+        </div>
+        <div data-js="gallery_img" data-selector=".o_gallery img">
+            <div data-no-preview="true">
+                <we-title>Re-order</we-title>
+                <we-button data-position="first">Move to first</we-button>
+                <we-button data-position="prev">Move to previous</we-button>
+                <we-button data-position="next">Move to next</we-button>
+                <we-button data-position="last">Move to last</we-button>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_image_gallery_css_000" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_image_gallery/000.scss"/>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_image_gallery_js_000" inherit_id="website.assets_frontend">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website/static/src/snippets/s_image_gallery/000.js"/>
+    </xpath>
+</template>
+
+</odoo>

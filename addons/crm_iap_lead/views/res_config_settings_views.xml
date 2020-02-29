@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.crm.iap.lead</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="crm.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="crm_iap_lead_settings" position="inside">
+                <widget name="iap_buy_more_credits" service_name="reveal"/>
+            </div>
+        </field>
+    </record>
+</odoo>

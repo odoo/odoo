@@ -20,7 +20,6 @@ class AccountJournal(models.Model):
                   and journal_id = %(journal_id)s"""
         return (query, {'journal_id': self.id})
 
-    @api.multi
     def get_journal_dashboard_datas(self):
         res = super(AccountJournal, self).get_journal_dashboard_datas()
         #add the number and sum of expenses to pay to the json defining the accounting dashboard data
@@ -32,7 +31,6 @@ class AccountJournal(models.Model):
         res['sum_expenses_to_pay'] = formatLang(self.env, sum_to_pay or 0.0, currency_obj=self.currency_id or self.company_id.currency_id)
         return res
 
-    @api.multi
     def open_expenses_action(self):
         [action] = self.env.ref('hr_expense.action_hr_expense_sheet_all_all').read()
         action['context'] = {

@@ -1,21 +1,19 @@
 odoo.define('portal.PortalSidebar', function (require) {
-"use strict";
+'use strict';
 
-var config = require('web.config');
 var core = require('web.core');
-var Widget = require('web.Widget');
+var publicWidget = require('web.public.widget');
 var time = require('web.time');
 
 var _t = core._t;
 
-var PortalSidebar = Widget.extend({
+var PortalSidebar = publicWidget.Widget.extend({
     /**
      * @override
      */
     start: function () {
-        var self = this;
-        this._super.apply(this, arguments);
         this._setDelayLabel();
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -25,9 +23,10 @@ var PortalSidebar = Widget.extend({
     /**
      * Set the due/delay information according to the given date
      * like : <span class="o_portal_sidebar_timeago" t-att-datetime="invoice.date_due"/>
+     *
      * @private
      */
-    _setDelayLabel : function () {
+    _setDelayLabel: function () {
         var $sidebarTimeago = this.$el.find('.o_portal_sidebar_timeago');
         _.each($sidebarTimeago, function (el) {
             var dateTime = moment(time.auto_str_to_date($(el).attr('datetime'))),
@@ -35,7 +34,7 @@ var PortalSidebar = Widget.extend({
                 diff = dateTime.diff(today, 'days', true),
                 displayStr;
 
-            if (diff === 0){
+            if (diff === 0) {
                 displayStr = _t('Due today');
             } else if (diff > 0) {
                 displayStr = _.str.sprintf(_t('Due in %d days'), Math.abs(diff));
@@ -54,10 +53,10 @@ var PortalSidebar = Widget.extend({
         // open a new window with pdf for print in Firefox (in other system: http://printjs.crabbly.com)
         if ($.browser.mozilla) {
             window.open(href, '_blank');
-            return ;
+            return;
         }
         if (!this.printContent) {
-            this.printContent = $('<iframe id="print_iframe_content" src="'+ href +'" style="display:none"></iframe>');
+            this.printContent = $('<iframe id="print_iframe_content" src="' + href + '" style="display:none"></iframe>');
             this.$el.append(this.printContent);
             this.printContent.on('load', function () {
                 $(this).get(0).contentWindow.print();

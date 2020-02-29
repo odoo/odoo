@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <!--Private profile-->
+    <template id="private_profile" inherit_id="website_profile.private_profile">
+        <xpath expr="//div[@id='private_profile_return_link_container']" position="inside">
+            <t t-if="request.params.get('forum_id')">
+                <a t-attf-href="/forum/#{request.params.get('forum_id')}">Return to the forum.</a>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="user_profile_sub_nav" inherit_id="website_profile.user_profile_sub_nav">
+        <xpath expr="//nav" position="before">
+            <div t-if="request.params.get('forum_origin')" class="o_wprofile_all_users_nav_btn_container col pr-0 flex-grow-0">
+                <a t-att-href="request.website._get_http_domain() + request.params.get('forum_origin')"
+                    class="o_wprofile_all_users_nav_btn btn text-nowrap">
+                    <i class="fa fa-chevron-left small"/> Back
+                </a>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="user_profile_content" inherit_id="website_profile.user_profile_content">
+        <xpath expr="//table[@id='o_wprofile_sidebar_table']//tr[last()]" position="after">
+            <t t-if="forum and (up_votes or down_votes)">
+                <tr id="profile_abstract_info_company">
+                    <th><small class="font-weight-bold">Votes</small></th>
+                    <td>
+                        <span>
+                            <i class="fa fa-thumbs-up text-success" role="img" aria-label="Positive votes" title="Positive votes"/>
+                            <span class="font-weight-bold" t-esc="up_votes"/>
+                            <i class="fa fa-thumbs-down text-danger ml-3" role="img" aria-label="Negative votes" title="Negative votes"/>
+                            <span class="font-weight-bold" t-esc="down_votes"/>
+                        </span>
+                    </td>
+                </tr>
+            </t>
+        </xpath>
+        <xpath expr="//ul[@id='profile_extra_info_tablist']" position="inside">
+            <t t-if="forum">
+                <li class="nav-item">
+                    <a role="tab" aria-controls="questions" href="#questions" class="nav-link o_wprofile_navlink" data-toggle="tab"><t t-esc="count_questions"/> Questions</a>
+                </li>
+                <li class="nav-item">
+                    <a role="tab" aria-controls="answers" href="#answers" class="nav-link o_wprofile_navlink" data-toggle="tab"><t t-esc="count_answers"/> Answers</a>
+                </li>
+                <li t-if="uid == user.id" class="nav-item">
+                    <a role="tab" aria-controls="activity" href="#activity" class="nav-link o_wprofile_navlink" data-toggle="tab">Activity</a>
+                </li>
+                <li t-if="uid == user.id" class="nav-item">
+                    <a role="tab" aria-controls="votes" href="#votes" class="nav-link o_wprofile_navlink" data-toggle="tab">Votes</a>
+                </li>
+            </t>
+        </xpath>
+        <xpath expr="//div[@id='profile_extra_info_tabcontent']" position="inside">
+            <t t-if="forum">
+                <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="questions">
+                    <div class="mb32">
+                        <h5 class="border-bottom pb-1">Questions</h5>
+                        <t t-if="questions">
+                            <div class="mb4" t-foreach="questions" t-as="question">
+                                <t t-call="website_forum.display_post"/>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <span class="font-weight-bold">No question posted yet.</span>
+                        </t>
+                    </div>
+                    <t t-if="favourite">
+                        <div class="mb4">
+                            <h5 class="border-bottom pb-1">Favourite Questions</h5>
+                            <div t-foreach="favourite" t-as="question">
+                                <t t-call="website_forum.display_post">
+                                    <t t-set="hide_fav_icon" t-value="True"/>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-if="followed">
+                        <div class="mb4">
+                            <h5 class="border-bottom pb-1">Followed Questions</h5>
+                            <div t-foreach="followed" t-as="question" class="mb16">
+                                <t t-call="website_forum.display_post"/>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+                <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="answers">
+                    <div class="mb32">
+                        <h5 class="border-bottom pb-1">Answers</h5>
+                        <t t-if="answers">
+                            <div t-foreach="answers" t-as="answer">
+                                <t t-call="website_forum.display_post_answer"/>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <span class="font-weight-bold">No answer posted yet.</span>
+                        </t>
+                    </div>
+                </div>
+                <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="votes" t-if="uid == user.id">
+                    <div class="mb32">
+                        <h5 class="border-bottom pb-1">Votes</h5>
+                        <t t-call="website_forum.user_votes"/>
+                    </div>
+                </div>
+                <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="activity" t-if="uid == user.id">
+                    <div class="mb32">
+                        <h5 class="border-bottom pb-1">Activities</h5>
+                        <t t-call="website_forum.display_activities"/>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="display_activities" name="Forum Profile Activities">
+        <t t-if="activities">
+            <div t-foreach="activities" t-as="activity" class="card mb-2">
+                <div class="card-body">
+                    <span t-esc="activity.subtype_id.name" class="badge badge-info mr-2 mt-1"/>
+                    <span t-field="activity.date" t-options='{"format": "short"}' class="mr-2"/>
+                    <t t-set="post" t-value="posts[activity.res_id]"/>
+                    <span t-if="post[1]">
+                        <a t-attf-href="/forum/#{ slug(post[0].forum_id) }/question/#{ slug(post[0]) }#answer-#{ str(post[1].id) }">
+                            <span t-esc="post[0].name"/>
+                        </a>
+                    </span>
+                    <span t-if="not post[1]">
+                        <a t-attf-href="/forum/#{ slug(post[0].forum_id) }/question/#{ slug(post[0]) }">
+                            <span t-esc="post[0].name"/>
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </t>
+        <t t-else="">
+            <p class="text-muted">No activities yet!</p>
+        </t>
+    </template>
+
+    <template id="user_votes" name="Forum User Votes">
+        <div t-foreach="vote_post" t-as="vote">
+            <t t-esc="vote.post_id.create_date"/>
+            <span t-if="vote.vote == '1'" class="fa fa-thumbs-up text-success" style="margin-left:30px" role="img" aria-label="Positive vote" title="Positive vote"/>
+            <span t-if="vote.vote == '-1'" class="fa fa-thumbs-down text-warning" style="margin-left:30px" role="img" aria-label="Negative vote" title="Negative vote"/>
+            <t t-if="vote.post_id.parent_id">
+                <a t-attf-href="/forum/#{ slug(vote.post_id.forum_id) }/question/#{ vote.post_id.parent_id.id }/#answer-#{ vote.post_id.id }" t-esc="vote.post_id.parent_id.name" style="margin-left:10px"/>
+            </t>
+            <t t-if="not vote.post_id.parent_id">
+                <a t-attf-href="/forum/#{ slug(vote.post_id.forum_id) }/question/#{ vote.post_id.id }" style=" color:black;margin-left:10px" t-esc="vote.post_id.name"/>
+            </t>
+        </div>
+        <div class="mb16" t-if="not vote_post">
+            <p class="text-muted">No vote given by you yet!</p>
+        </div>
+    </template>
+</data></odoo>

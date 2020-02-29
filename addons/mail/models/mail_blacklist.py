@@ -50,7 +50,6 @@ class MailBlackList(models.Model):
         results = super(MailBlackList, self).create(to_create)
         return self.env['mail.blacklist'].browse(bl_entries.values()) | results
 
-    @api.multi
     def write(self, values):
         if 'email' in values:
             values['email'] = tools.email_normalize(values['email'])
@@ -94,23 +93,28 @@ class MailBlackList(models.Model):
 
 
 class MailBlackListMixin(models.AbstractModel):
-    """ Mixin that is inherited by all model with opt out.
-        This mixin is inheriting of another mixin, mail.address.mixin which defines the _primary_email variable
-        and the email_normalized field that are mandatory to use the blacklist mixin.
-        """
-    _name = 'mail.blacklist.mixin'
+    """ Mixin that is inherited by all model with opt out. This mixin inherits from
+    mail.address.mixin which defines the _primary_email variable and the email_normalized
+    field that are mandatory to use the blacklist mixin. Mail Thread capabilities
+    are required for this mixin. """
+    _name = 'mail.thread.blacklist'
     _description = 'Mail Blacklist mixin'
-    _inherit = ['mail.address.mixin']
+    _inherit = ['mail.thread', 'mail.address.mixin']
 
     # Note : is_blacklisted sould only be used for display. As the compute is not depending on the blacklist,
     # once read, it won't be re-computed again if the blacklist is modified in the same request.
-    is_blacklisted = fields.Boolean(string='Blacklist', compute="_compute_is_blacklisted", compute_sudo=True,
-        store=False, search="_search_is_blacklisted", groups="base.group_user",
+    is_blacklisted = fields.Boolean(
+        string='Blacklist', compute="_compute_is_blacklisted", compute_sudo=True, store=False,
+        search="_search_is_blacklisted", groups="base.group_user",
         help="If the email address is on the blacklist, the contact won't receive mass mailing anymore, from any list")
+    # messaging
+    message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact", default=0)
 
     @api.model
     def _search_is_blacklisted(self, operator, value):
         # Assumes operator is '=' or '!=' and value is True or False
+        self.flush(['email_normalized'])
+        self.env['mail.blacklist'].flush(['email', 'active'])
         self._assert_primary_email()
         if operator != '=':
             if operator == '!=' and isinstance(value, bool):
@@ -147,3 +151,16 @@ class MailBlackListMixin(models.AbstractModel):
             ('email', 'in', self.mapped('email_normalized'))]).mapped('email'))
         for record in self:
             record.is_blacklisted = record.email_normalized in blacklist
+
+    def _message_receive_bounce(self, email, partner):
+        """ Override of mail.thread generic method. Purpose is to increment the
+        bounce counter of the record. """
+        super(MailBlackListMixin, self)._message_receive_bounce(email, partner)
+        for record in self:
+            record.message_bounce = record.message_bounce + 1
+
+    def _message_reset_bounce(self, email):
+        """ Override of mail.thread generic method. Purpose is to reset the
+        bounce counter of the record. """
+        super(MailBlackListMixin, self)._message_reset_bounce(email)
+        self.write({'message_bounce': 0})

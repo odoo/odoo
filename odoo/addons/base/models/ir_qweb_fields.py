@@ -6,10 +6,12 @@ from io import BytesIO
 from odoo import api, fields, models, _
 from PIL import Image
 import babel
+import babel.dates
 from lxml import etree
 import math
 
-from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date, pycompat
+from odoo.tools import html_escape as escape, posix_to_ldml, float_utils, format_date, format_duration, pycompat
+from odoo.tools.misc import get_lang
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -130,13 +132,11 @@ class FieldConverter(models.AbstractModel):
         """ user_lang()
 
         Fetches the res.lang record corresponding to the language code stored
-        in the user's context. Fallbacks to en_US if no lang is present in the
-        context *or the language code is not valid*.
+        in the user's context.
 
         :returns: Model[res.lang]
         """
-        lang_code = self._context.get('lang') or 'en_US'
-        return self.env['res.lang']._lang_get(lang_code)
+        return get_lang(self.env)
 
 
 class IntegerConverter(models.AbstractModel):
@@ -165,7 +165,7 @@ class FloatConverter(models.AbstractModel):
     @api.model
     def value_to_html(self, value, options):
         if 'decimal_precision' in options:
-            precision = self.env['decimal.precision'].search([('name', '=', options['decimal_precision'])]).digits
+            precision = self.env['decimal.precision'].precision_get(options['decimal_precision'])
         else:
             precision = options['precision']
 
@@ -189,7 +189,7 @@ class FloatConverter(models.AbstractModel):
     @api.model
     def record_to_html(self, record, field_name, options):
         if 'precision' not in options and 'decimal_precision' not in options:
-            _, precision = record._fields[field_name].digits or (None, None)
+            _, precision = record._fields[field_name].get_digits(record.env) or (None, None)
             options = dict(options, precision=precision)
         return super(FloatConverter, self).record_to_html(record, field_name, options)
 
@@ -224,6 +224,7 @@ class DateTimeConverter(models.AbstractModel):
             format=dict(type='string', string=_('Pattern to format')),
             time_only=dict(type='boolean', string=_('Display only the time')),
             hide_seconds=dict(type='boolean', string=_('Hide seconds')),
+            date_only=dict(type='boolean', string=_('Display only the date')),
         )
         return options
 
@@ -231,28 +232,37 @@ class DateTimeConverter(models.AbstractModel):
     def value_to_html(self, value, options):
         if not value:
             return ''
+        options = options or {}
+
         lang = self.user_lang()
         locale = babel.Locale.parse(lang.code)
-
+        format_func = babel.dates.format_datetime
         if isinstance(value, str):
             value = fields.Datetime.from_string(value)
 
         value = fields.Datetime.context_timestamp(self, value)
 
-        if options and 'format' in options:
+        if 'format' in options:
             pattern = options['format']
         else:
-            if options and options.get('time_only'):
+            if options.get('time_only'):
                 strftime_pattern = (u"%s" % (lang.time_format))
+            elif options.get('date_only'):
+                strftime_pattern = (u"%s" % (lang.date_format))
             else:
                 strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
 
             pattern = posix_to_ldml(strftime_pattern, locale=locale)
 
-        if options and options.get('hide_seconds'):
+        if options.get('hide_seconds'):
             pattern = pattern.replace(":ss", "").replace(":s", "")
 
-        return pycompat.to_text(babel.dates.format_datetime(value, format=pattern, locale=locale))
+        if options.get('time_only'):
+            format_func = babel.dates.format_time
+        if options.get('date_only'):
+            format_func = babel.dates.format_date
+
+        return pycompat.to_text(format_func(value, format=pattern, locale=locale))
 
 
 class TextConverter(models.AbstractModel):
@@ -383,7 +393,7 @@ class MonetaryConverter(models.AbstractModel):
               It's set under the ``_values`` key.
     """
     _name = 'ir.qweb.field.monetary'
-    _description = 'Qweb Field Monerary'
+    _description = 'Qweb Field Monetary'
     _inherit = 'ir.qweb.field'
 
     @api.model
@@ -417,7 +427,7 @@ class MonetaryConverter(models.AbstractModel):
             if company_id:
                 company = self.env['res.company'].browse(company_id)
             else:
-                company = self.env.user.company_id
+                company = self.env.company
             value = options['from_currency']._convert(value, display_currency, company, date)
 
         lang = self.user_lang()
@@ -477,9 +487,7 @@ class FloatTimeConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        sign = math.copysign(1.0, value)
-        hours, minutes = divmod(abs(value) * 60, 60)
-        return '%02d:%02d' % (sign * hours, minutes)
+        return format_duration(value)
 
 
 class DurationConverter(models.AbstractModel):
@@ -507,9 +515,9 @@ class DurationConverter(models.AbstractModel):
         options = super(DurationConverter, self).get_available_options()
         unit = [[u[0], _(u[0])] for u in TIMEDELTA_UNITS]
         options.update(
-            digital=dict(type="boolean", string=_('Digital formating')),
+            digital=dict(type="boolean", string=_('Digital formatting')),
             unit=dict(type="selection", params=unit, string=_('Date unit'), description=_('Date unit used for comparison and formatting'), default_value='second', required=True),
-            round=dict(type="selection", params=unit, string=_('Rounding unit'), description=_("Date unit used for the rounding. The value must be smaller than 'hour' if you use the digital formating."), default_value='second'),
+            round=dict(type="selection", params=unit, string=_('Rounding unit'), description=_("Date unit used for the rounding. The value must be smaller than 'hour' if you use the digital formatting."), default_value='second'),
         )
         return options
 
@@ -600,7 +608,7 @@ class BarcodeConverter(models.AbstractModel):
     def get_available_options(self):
         options = super(BarcodeConverter, self).get_available_options()
         options.update(
-            type=dict(type='string', string=_('Barcode type'), description=_('Barcode type, eg: UPCA, EAN13, Code128'), default_value='Code128'),
+            symbology=dict(type='string', string=_('Barcode symbology'), description=_('Barcode type, eg: UPCA, EAN13, Code128'), default_value='Code128'),
             width=dict(type='integer', string=_('Width'), default_value=600),
             height=dict(type='integer', string=_('Height'), default_value=100),
             humanreadable=dict(type='integer', string=_('Human Readable'), default_value=0),
@@ -609,9 +617,9 @@ class BarcodeConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options=None):
-        barcode_type = options.get('type', 'Code128')
+        barcode_symbology = options.get('symbology', 'Code128')
         barcode = self.env['ir.actions.report'].barcode(
-            barcode_type,
+            barcode_symbology,
             value,
             **{key: value for key, value in options.items() if key in ['width', 'height', 'humanreadable']})
         return u'<img src="data:png;base64,%s">' % base64.b64encode(barcode).decode('ascii')
@@ -625,19 +633,32 @@ class Contact(models.AbstractModel):
     @api.model
     def get_available_options(self):
         options = super(Contact, self).get_available_options()
+        contact_fields = [
+            {'field_name': 'name', 'label': _('Name'), 'default': True},
+            {'field_name': 'address', 'label': _('Address'), 'default': True},
+            {'field_name': 'phone', 'label': _('Phone'), 'default': True},
+            {'field_name': 'mobile', 'label': _('Mobile'), 'default': True},
+            {'field_name': 'email', 'label': _('Email'), 'default': True},
+            {'field_name': 'vat', 'label': _('VAT')},
+        ]
+        separator_params = dict(
+            type='selection',
+            selection=[[" ", _("Space")], [",", _("Comma")], ["-", _("Dash")], ["|", _("Vertical bar")], ["/", _("Slash")]],
+            placeholder=_('Linebreak'),
+        )
         options.update(
-            fields=dict(type='array', params=dict(type='selection', params=["name", "address", "city", "country_id", "phone", "mobile", "email", "fax", "karma", "website"]), string=_('Displayed fields'), description=_('List of contact fields to display in the widget'), default_value=["name", "address", "phone", "mobile", "email"]),
-            separator=dict(type='string', string=_('Address separator'), description=_('Separator use to split the address from the display_name.'), default_value="\\n"),
+            fields=dict(type='array', params=dict(type='selection', params=contact_fields), string=_('Displayed fields'), description=_('List of contact fields to display in the widget'), default_value=[param.get('field_name') for param in contact_fields if param.get('default')]),
+            separator=dict(type='selection', params=separator_params, string=_('Address separator'), description=_('Separator use to split the address from the display_name.'), default_value=False),
             no_marker=dict(type='boolean', string=_('Hide badges'), description=_("Don't display the font awesome marker")),
             no_tag_br=dict(type='boolean', string=_('Use comma'), description=_("Use comma instead of the <br> tag to display the address")),
-            phone_icons=dict(type='boolean', string=_('Displayed phone icons'), description=_("Display the phone icons even if no_marker is True")),
-            country_image=dict(type='boolean', string=_('Displayed contry image'), description=_("Display the country image if the field is present on the record")),
+            phone_icons=dict(type='boolean', string=_('Display phone icons'), description=_("Display the phone icons even if no_marker is True")),
+            country_image=dict(type='boolean', string=_('Display country image'), description=_("Display the country image if the field is present on the record")),
         )
         return options
 
     @api.model
     def value_to_html(self, value, options):
-        if not value.exists():
+        if not value:
             return False
 
         opf = options and options.get('fields') or ["name", "address", "phone", "mobile", "email"]
@@ -654,6 +675,8 @@ class Contact(models.AbstractModel):
             'country_id': value.country_id.display_name,
             'website': value.website,
             'email': value.email,
+            'vat': value.vat,
+            'vat_label': value.country_id.vat_label or _('VAT'),
             'fields': opf,
             'object': value,
             'options': options

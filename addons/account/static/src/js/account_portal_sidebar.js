@@ -1,40 +1,35 @@
-odoo.define('account.AccountPortalSidebar.instance', function (require) {
-"use strict";
-
-require('web.dom_ready');
-var AccountPortalSidebar = require('account.AccountPortalSidebar');
-
-if (!$('.o_portal_invoice_sidebar').length) {
-    return $.Deferred().reject("DOM doesn't contain '.o_portal_invoice_sidebar'");
-}
-
-var account_portal_sidebar = new AccountPortalSidebar();
-return account_portal_sidebar.attachTo($('.o_portal_invoice_sidebar')).then(function () {
-    return account_portal_sidebar;
-});
-});
-
-//==============================================================================
-
 odoo.define('account.AccountPortalSidebar', function (require) {
-"use strict";
+'use strict';
 
+var publicWidget = require('web.public.widget');
 var PortalSidebar = require('portal.PortalSidebar');
+var utils = require('web.utils');
 
-var AccountPortalSidebar = PortalSidebar.extend({
+publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
+    selector: '.o_portal_invoice_sidebar',
     events: {
         'click .o_portal_invoice_print': '_onPrintInvoice',
     },
+
     /**
      * @override
      */
     start: function () {
-        var self = this;
-        this._super.apply(this, arguments);
+        var def = this._super.apply(this, arguments);
+
         var $invoiceHtml = this.$el.find('iframe#invoice_html');
-        var updateIframeSize = self._updateIframeSize.bind(self, $invoiceHtml);
-        $invoiceHtml.on('load', updateIframeSize);
+        var updateIframeSize = this._updateIframeSize.bind(this, $invoiceHtml);
+
         $(window).on('resize', updateIframeSize);
+
+        var iframeDoc = $invoiceHtml[0].contentDocument || $invoiceHtml[0].contentWindow.document;
+        if (iframeDoc.readyState === 'complete') {
+            updateIframeSize();
+        } else {
+            $invoiceHtml.on('load', updateIframeSize);
+        }
+
+        return def;
     },
 
     //--------------------------------------------------------------------------
@@ -53,6 +48,16 @@ var AccountPortalSidebar = PortalSidebar.extend({
         // Set it to 0 first to handle the case where scrollHeight is too big for its content.
         $el.height(0);
         $el.height($wrapwrap[0].scrollHeight);
+
+        // scroll to the right place after iframe resize
+        if (!utils.isValidAnchor(window.location.hash)) {
+            return;
+        }
+        var $target = $(window.location.hash);
+        if (!$target.length) {
+            return;
+        }
+        $('html, body').scrollTop($target.offset().top);
     },
     /**
      * @private
@@ -64,7 +69,4 @@ var AccountPortalSidebar = PortalSidebar.extend({
         this._printIframeContent(href);
     },
 });
-
-
-return AccountPortalSidebar;
 });

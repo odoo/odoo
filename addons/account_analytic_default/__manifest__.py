@@ -4,7 +4,7 @@
 {
     'name': 'Account Analytic Defaults',
     'version': '1.0',
-    'category': 'Accounting',
+    'category': 'Accounting/Accounting',
     'description': """
 Set default values for your analytic accounts.
 ==============================================
@@ -17,12 +17,11 @@ Allows to automatically select analytic accounts based on criterions:
     * Company
     * Date
     """,
-    'depends': ['sale_stock'],
+    'depends': ['account'],
     'data': [
         'security/ir.model.access.csv',
         'security/account_analytic_default_security.xml',
         'views/account_analytic_default_view.xml',
-        'views/res_config_settings_views.xml',
     ],
     'installable': True,
 }

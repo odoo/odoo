@@ -28,7 +28,7 @@
     <record id="portal_share_action" model="ir.actions.act_window">
         <field name="name">Share Document</field>
         <field name="res_model">portal.share</field>
-        <field name="src_model">portal.share</field>
+        <field name="binding_model_id" ref="model_portal_share"/>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>

@@ -18,7 +18,7 @@ class WebsiteBackend(http.Controller):
                 'system': has_group_system,
                 'website_designer': has_group_designer
             },
-            'currency': request.env.user.company_id.currency_id.id,
+            'currency': request.env.company.currency_id.id,
             'dashboards': {
                 'visits': {},
             }
@@ -26,8 +26,10 @@ class WebsiteBackend(http.Controller):
 
         current_website = website_id and Website.browse(website_id) or Website.get_current_website()
         multi_website = request.env.user.has_group('website.group_multi_website')
-        dashboard_data['websites'] = (multi_website and request.env['website'].search([]) or current_website).read(['id', 'name'])
-        for website in dashboard_data['websites']:
+        websites = multi_website and request.env['website'].search([]) or current_website
+        dashboard_data['websites'] = websites.read(['id', 'name'])
+        for rec, website in zip(websites, dashboard_data['websites']):
+            website['domain'] = rec._get_http_domain()
             if website['id'] == current_website.id:
                 website['selected'] = True
 

@@ -1,0 +1,168 @@
+
+@each $url in $o-theme-font-urls {
+    @if $url {
+        @import url("https://fonts.googleapis.com/css?family=#{unquote($url)}&display=swap");
+    }
+}
+
+// Override css variables to influence the default style of the editor without
+// duplicating the css.
+:root {
+    --o-we-toolbar-height: #{$o-navbar-height};
+    --o-we-bg-color: #{$o-we-color-dark};
+    --o-we-bg-color-dark: #{$o-we-color-darker};
+    --o-we-color: #{$o-we-color-text-normal};
+    --o-we-color-accent: #{$o-we-color-text-light};
+
+    --o-we-dropdown-bg-color: #{$o-we-color-darker};
+    --o-we-dropdown-color: #{$o-we-color-text-normal};
+
+    --o-we-snippets-bg-color: #{$o-we-color-normal};
+    --o-we-snippets-color: #{$o-we-color-text-light};
+}
+
+// EDITOR TOP BAR AND POPOVER
+#web_editor-top-edit {
+    form.navbar-form {
+        @include o-position-absolute(0, 0, 0, auto);
+        z-index: $zindex-popover + 5;
+        height: $o-navbar-height;
+        margin: 0;
+        padding: 0;
+        transition: right 0.4s $o-we-md-ease 0s;
+        border-left: 1px solid $o-we-color-divider;
+
+        .btn-group {
+            height: 100%;
+        }
+
+        .btn {
+            height: 100%;
+            margin: 0;
+            padding: 10px;
+            line-height: 1.2;
+            font-size: 13px;
+            font-family: $o-we-font-family;
+
+            transition: all 0.3s ease 0s;
+            border: none;
+            border-radius: 0;
+
+            .fa {
+                margin-right: $grid-gutter-width/4;
+
+                &.fa-times {
+                    color: $o-we-color-danger;
+                }
+            }
+
+            &.btn-primary {
+                @include button-variant($o-brand-odoo, $o-brand-odoo);
+            }
+
+            &.btn-secondary {
+                @include button-variant($o-we-color-dark, $o-we-color-dark);
+
+                &:hover {
+                    background: rgba(black, 0.5);
+                }
+            }
+
+            &:focus,
+            &:active,
+            &:focus:active {
+                outline: none;
+            }
+        }
+
+        .dropdown-menu {
+            left: auto;
+            right: 0;
+        }
+    }
+}
+
+.note-statusbar {
+    display: none;
+}
+
+// TRANSLATIONS
+.oe_translate_examples li {
+    margin: 10px;
+    padding: 4px;
+}
+
+html[lang] > body.editor_enable [data-oe-translation-state] {
+    background: rgba($o-we-content-to-translate-color, 0.5) !important;
+
+    &[data-oe-translation-state="translated"] {
+        background: rgba($o-we-translated-content-color, 0.5) !important;
+    }
+
+    &.o_dirty {
+        background: rgba($o-we-translated-content-color, 0.25) !important;
+    }
+}
+
+// SNIPPET PANEL
+$i: 1;
+@each $font in $o-theme-fonts {
+    we-toggler.o_we_option_font_#{$i}, we-button.o_we_option_font_#{$i} > div {
+        font-family: if($font, $font, $font-family-base);
+
+        &::before {
+            content: nth($o-theme-font-names, $i);
+        }
+    }
+    $i: $i + 1;
+}
+.o_we_add_google_font_btn {
+    border-top: 1px solid currentColor !important;
+}
+
+// SNIPPET OPTIONS
+.colorpicker {
+    .o_colorpicker_sections {
+        .note-color-palette > div {
+            color: $o-we-color-text-light;
+        }
+    }
+
+    .o_colorpicker_section {
+        &:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        > button {
+
+            &:hover,
+            &.selected {
+                box-shadow: 0px 0px 2px 2px $o-we-color-light;
+            }
+
+            &[data-event="foreColor"] {
+                background-color: $o-we-color-normal;
+
+                &:before {
+                    background-color: rgba(white, 0.3);
+                }
+            }
+        }
+    }
+
+    .note-palette-title {
+        color: $o-we-color-text-light;
+    }
+
+    .palette-reset {
+        .note-color-reset {
+            color: desaturate(rgba($o-we-color-danger, 0.6), 40%);
+
+            &:hover {
+                color: $o-we-color-danger;
+            }
+        }
+    }
+}

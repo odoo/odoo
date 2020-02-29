@@ -26,17 +26,16 @@ class TestTraceability(TestMrpCommon):
         stock_id = self.env.ref('stock.stock_location_stock').id
         inventory_adjustment = self.env['stock.inventory'].create({
             'name': 'Initial Inventory',
-            'location_id': stock_id,
-            'filter': 'partial',
+            'location_ids': [(4, stock_id)],
         })
         inventory_adjustment.action_start()
         inventory_adjustment.write({
             'line_ids': [
                 (0,0, {'product_id': consumed_no_track.id, 'product_qty': 3, 'location_id': stock_id}),
-                (0,0, {'product_id': consumed_lot.id, 'product_qty': 3, 'prod_lot_id': self.env['stock.production.lot'].create({'name': 'L1', 'product_id': consumed_lot.id}).id, 'location_id': stock_id}),
-                (0,0, {'product_id': consumed_serial.id, 'product_qty': 1, 'prod_lot_id': self.env['stock.production.lot'].create({'name': 'S1', 'product_id': consumed_serial.id}).id, 'location_id': stock_id}),
-                (0,0, {'product_id': consumed_serial.id, 'product_qty': 1, 'prod_lot_id': self.env['stock.production.lot'].create({'name': 'S2', 'product_id': consumed_serial.id}).id, 'location_id': stock_id}),
-                (0,0, {'product_id': consumed_serial.id, 'product_qty': 1, 'prod_lot_id': self.env['stock.production.lot'].create({'name': 'S3', 'product_id': consumed_serial.id}).id, 'location_id': stock_id}),
+                (0,0, {'product_id': consumed_lot.id, 'product_qty': 3, 'prod_lot_id': self.env['stock.production.lot'].create({'name': 'L1', 'product_id': consumed_lot.id, 'company_id': self.env.company.id}).id, 'location_id': stock_id}),
+                (0,0, {'product_id': consumed_serial.id, 'product_qty': 1, 'prod_lot_id': self.env['stock.production.lot'].create({'name': 'S1', 'product_id': consumed_serial.id, 'company_id': self.env.company.id}).id, 'location_id': stock_id}),
+                (0,0, {'product_id': consumed_serial.id, 'product_qty': 1, 'prod_lot_id': self.env['stock.production.lot'].create({'name': 'S2', 'product_id': consumed_serial.id, 'company_id': self.env.company.id}).id, 'location_id': stock_id}),
+                (0,0, {'product_id': consumed_serial.id, 'product_qty': 1, 'prod_lot_id': self.env['stock.production.lot'].create({'name': 'S3', 'product_id': consumed_serial.id, 'company_id': self.env.company.id}).id, 'location_id': stock_id}),
             ]
         })
         inventory_adjustment.action_validate()
@@ -70,10 +69,10 @@ class TestTraceability(TestMrpCommon):
             }))
 
             if finished_product.tracking != 'serial':
-                produce_form.product_qty = 1
+                produce_form.qty_producing = 1
 
             if finished_product.tracking != 'none':
-                produce_form.lot_id = self.env['stock.production.lot'].create({'name': 'Serial or Lot finished', 'product_id': finished_product.id})
+                produce_form.finished_lot_id = self.env['stock.production.lot'].create({'name': 'Serial or Lot finished', 'product_id': finished_product.id, 'company_id': self.env.company.id})
             produce_wizard = produce_form.save()
 
             produce_wizard.do_produce()
@@ -105,7 +104,7 @@ class TestTraceability(TestMrpCommon):
             for line in lines:
                 tracking = line['columns'][1].split(' ')[1]
                 self.assertEqual(
-                    line['columns'][-1], "1.000 Unit(s)", 'Part with tracking type "%s", should have quantity = 1' % (tracking)
+                    line['columns'][-1], "1.000 Units", 'Part with tracking type "%s", should have quantity = 1' % (tracking)
                 )
                 unfoldable = False if tracking == 'none' else True
                 self.assertEqual(
@@ -114,3 +113,151 @@ class TestTraceability(TestMrpCommon):
                     'Parts with tracking type "%s", should have be unfoldable : %s' % (tracking, unfoldable)
                 )
 
+    def test_tracking_on_byproducts(self):
+        product_final = self.env['product.product'].create({
+            'name': 'Finished Product',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        product_1 = self.env['product.product'].create({
+            'name': 'Raw 1',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        product_2 = self.env['product.product'].create({
+            'name': 'Raw 2',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        byproduct_1 = self.env['product.product'].create({
+            'name': 'Byproduct 1',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        byproduct_2 = self.env['product.product'].create({
+            'name': 'Byproduct 2',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        bom_1 = self.env['mrp.bom'].create({
+            'product_id': product_final.id,
+            'product_tmpl_id': product_final.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_1.id, 'product_qty': 1}),
+                (0, 0, {'product_id': product_2.id, 'product_qty': 1})
+            ],
+            'byproduct_ids': [
+                (0, 0, {'product_id': byproduct_1.id, 'product_qty': 1, 'product_uom_id': byproduct_1.uom_id.id}),
+                (0, 0, {'product_id': byproduct_2.id, 'product_qty': 1, 'product_uom_id': byproduct_2.uom_id.id})
+            ]})
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_final
+        mo_form.bom_id = bom_1
+        mo_form.product_qty = 2
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        produce_form.finished_lot_id = self.env['stock.production.lot'].create({
+            'product_id': product_final.id,
+            'name': 'Final_lot_1',
+            'company_id': self.env.company.id,
+        })
+        with produce_form.raw_workorder_line_ids.edit(0) as line:
+            line.lot_id = self.env['stock.production.lot'].create({
+                'product_id': product_1.id,
+                'name': 'Raw_1_lot_1',
+                'company_id': self.env.company.id,
+            })
+        with produce_form.raw_workorder_line_ids.edit(1) as line:
+            line.lot_id = self.env['stock.production.lot'].create({
+                'product_id': product_2.id,
+                'name': 'Raw_2_lot_1',
+                'company_id': self.env.company.id,
+            })
+        with produce_form.finished_workorder_line_ids.edit(0) as line:
+            line.lot_id = self.env['stock.production.lot'].create({
+                'product_id': byproduct_1.id,
+                'name': 'Byproduct_1_lot_1',
+                'company_id': self.env.company.id,
+            })
+        with produce_form.finished_workorder_line_ids.edit(1) as line:
+            line.lot_id = self.env['stock.production.lot'].create({
+                'product_id': byproduct_2.id,
+                'name': 'Byproduct_2_lot_1',
+                'company_id': self.env.company.id,
+            })
+        produce_wizard = produce_form.save()
+        produce_wizard.continue_production()
+
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        produce_form.finished_lot_id = self.env['stock.production.lot'].create({
+            'product_id': product_final.id,
+            'name': 'Final_lot_2',
+            'company_id': self.env.company.id,
+        })
+        with produce_form.raw_workorder_line_ids.edit(0) as line:
+            line.lot_id = self.env['stock.production.lot'].create({
+                'product_id': product_1.id,
+                'name': 'Raw_1_lot_2',
+                'company_id': self.env.company.id,
+            })
+        with produce_form.raw_workorder_line_ids.edit(1) as line:
+            line.lot_id = self.env['stock.production.lot'].create({
+                'product_id': product_2.id,
+                'name': 'Raw_2_lot_2',
+                'company_id': self.env.company.id,
+            })
+        with produce_form.finished_workorder_line_ids.edit(0) as line:
+            line.lot_id = self.env['stock.production.lot'].create({
+                'product_id': byproduct_1.id,
+                'name': 'Byproduct_1_lot_2',
+                'company_id': self.env.company.id,
+            })
+        with produce_form.finished_workorder_line_ids.edit(1) as line:
+            line.lot_id = self.env['stock.production.lot'].create({
+                'product_id': byproduct_2.id,
+                'name': 'Byproduct_2_lot_2',
+                'company_id': self.env.company.id,
+            })
+        produce_wizard = produce_form.save()
+        produce_wizard.do_produce()
+        mo.button_mark_done()
+
+        self.assertEqual(len(mo.move_raw_ids.mapped('move_line_ids')), 4)
+        self.assertEqual(len(mo.move_finished_ids.mapped('move_line_ids')), 6)
+
+        raw_move_lines = mo.move_raw_ids.mapped('move_line_ids')
+        raw_line_raw_1_lot_1 = raw_move_lines.filtered(lambda ml: ml.lot_id.name == 'Raw_1_lot_1')
+        self.assertEqual(set(raw_line_raw_1_lot_1.lot_produced_ids.mapped('name')), set(['Final_lot_1', 'Byproduct_1_lot_1', 'Byproduct_2_lot_1']))
+        raw_line_raw_1_lot_2 = raw_move_lines.filtered(lambda ml: ml.lot_id.name == 'Raw_1_lot_2')
+        self.assertEqual(set(raw_line_raw_1_lot_2.lot_produced_ids.mapped('name')), set(['Final_lot_2', 'Byproduct_1_lot_2', 'Byproduct_2_lot_2']))
+        raw_line_raw_2_lot_1 = raw_move_lines.filtered(lambda ml: ml.lot_id.name == 'Raw_2_lot_1')
+        self.assertEqual(set(raw_line_raw_2_lot_1.lot_produced_ids.mapped('name')), set(['Final_lot_1', 'Byproduct_1_lot_1', 'Byproduct_2_lot_1']))
+        raw_line_raw_2_lot_2 = raw_move_lines.filtered(lambda ml: ml.lot_id.name == 'Raw_2_lot_2')
+        self.assertEqual(set(raw_line_raw_2_lot_2.lot_produced_ids.mapped('name')), set(['Final_lot_2', 'Byproduct_1_lot_2', 'Byproduct_2_lot_2']))
+
+        finished_move_lines = mo.move_finished_ids.mapped('move_line_ids')
+        finished_move_line_lot_1 = finished_move_lines.filtered(lambda ml: ml.lot_id.name == 'Final_lot_1')
+        self.assertEqual(finished_move_line_lot_1.consume_line_ids, raw_line_raw_1_lot_1 | raw_line_raw_2_lot_1)
+        finished_move_line_lot_2 = finished_move_lines.filtered(lambda ml: ml.lot_id.name == 'Final_lot_2')
+        self.assertEqual(finished_move_line_lot_2.consume_line_ids, raw_line_raw_1_lot_2 | raw_line_raw_2_lot_2)
+
+        byproduct_move_line_1_lot_1 = finished_move_lines.filtered(lambda ml: ml.lot_id.name == 'Byproduct_1_lot_1')
+        self.assertEqual(byproduct_move_line_1_lot_1.consume_line_ids, raw_line_raw_1_lot_1 | raw_line_raw_2_lot_1)
+        byproduct_move_line_1_lot_2 = finished_move_lines.filtered(lambda ml: ml.lot_id.name == 'Byproduct_1_lot_2')
+        self.assertEqual(byproduct_move_line_1_lot_2.consume_line_ids, raw_line_raw_1_lot_2 | raw_line_raw_2_lot_2)
+
+        byproduct_move_line_2_lot_1 = finished_move_lines.filtered(lambda ml: ml.lot_id.name == 'Byproduct_2_lot_1')
+        self.assertEqual(byproduct_move_line_2_lot_1.consume_line_ids, raw_line_raw_1_lot_1 | raw_line_raw_2_lot_1)
+        byproduct_move_line_2_lot_2 = finished_move_lines.filtered(lambda ml: ml.lot_id.name == 'Byproduct_2_lot_2')
+        self.assertEqual(byproduct_move_line_2_lot_2.consume_line_ids, raw_line_raw_1_lot_2 | raw_line_raw_2_lot_2)

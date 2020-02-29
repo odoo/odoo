@@ -2,7 +2,7 @@ Odoo Mass Mailing
 -----------------
 
 Easily send mass mailing to your leads, opportunities or customers
-with Odoo <a href="https://www.odoo.com/page/mailing#">Mass Mailing</a>. Track
+with Odoo <a href="https://www.odoo.com/page/mailing#">Email Marketing</a>. Track
 marketing campaigns performance to improve conversion rates. Design
 professional emails and reuse templates in a few clicks.
 

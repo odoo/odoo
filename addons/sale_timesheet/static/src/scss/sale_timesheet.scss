@@ -1,5 +1,12 @@
+$canceled-color: gray;
+
 
 .o_timesheet_plan_sale_timesheet {
+
+    .o_title {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
 
     [type='action'] {
         color: $o-brand-primary;
@@ -10,6 +17,19 @@
         text-align: right;
         float: none;
         width: auto;
+    }
+
+    .o_profitability_wrapper {
+        display: flex;
+        flex: 1;
+        flex-wrap: wrap;
+
+        .o_profitability_section {
+            display: flex;
+            flex: 1;
+            justify-content: flex-start;
+        }
+
     }
 
     .o_timesheet_plan_sale_timesheet_dashboard {
@@ -32,6 +52,10 @@
             text-align: right;
         }
 
+        .section {
+
+        }
+
     }
 
     .o_timesheet_plan_sale_timesheet_people_time {
@@ -52,7 +76,12 @@
             cursor: pointer;
         }
         .o_progress_non_billable {
-            background-color: gray;
+            background-color: purple;
+            color: white;
+            cursor: pointer;
+        }
+        .o_progress_canceled {
+            background-color: $canceled-color;
             color: white;
             cursor: pointer;
         }
@@ -61,6 +90,7 @@
             margin-bottom: 10px;
             > .badge {
                 border: none;
+                font-size: unset;
                     a {
                     color: white;
                 }
@@ -78,6 +108,9 @@
     }
 
     .o_project_plan_project_timesheet_forecast {
+
+        margin-top: 50px;
+
         th{
             text-align: center;
             vertical-align: top;
@@ -110,6 +143,12 @@
 
         .o_timesheet_plan_redirect {
             cursor: pointer;
+        }
+
+        .o_canceled_tag {
+            background-color: $canceled-color;
+            color: white;
+            border: 0px;
         }
     }
 

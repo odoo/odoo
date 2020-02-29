@@ -43,12 +43,6 @@ and ``__init__.py`` contains::
     test modules which are not imported from ``tests/__init__.py`` will not be
     run
 
-.. versionchanged:: 8.0
-
-    previously, the test runner would only run modules added to two lists
-    ``fast_suite`` and ``checks`` in ``tests/__init__.py``. In 8.0 it will
-    run all imported modules
-
 The test runner will simply run any test case, as described in the official
 `unittest documentation`_, but Odoo provides a number of utilities and helpers
 related to testing Odoo content (modules, mainly):
@@ -62,17 +56,22 @@ related to testing Odoo content (modules, mainly):
 .. autoclass:: odoo.tests.common.SavepointCase
 
 .. autoclass:: odoo.tests.common.HttpCase
-    :members: browse_ref, ref, url_open, phantom_js
+    :members: browse_ref, ref, url_open, browser_js
 
 .. autofunction:: odoo.tests.common.tagged
 
 By default, tests are run once right after the corresponding module has been
 installed. Test cases can also be configured to run after all modules have
-been installed, and not run right after the module installation:
+been installed, and not run right after the module installation::
 
-.. autofunction:: odoo.tests.common.at_install
+  # coding: utf-8
+  from odoo.tests import HttpCase, tagged
 
-.. autofunction:: odoo.tests.common.post_install
+  # This test should only be executed after all modules have been installed.
+  @tagged('-at_install', 'post_install')
+  class WebsiteVisitorTests(HttpCase):
+    def test_create_visitor_on_tracked_page(self):
+        Page = self.env['website.page']
 
 The most common situation is to use
 :class:`~odoo.tests.common.TransactionCase` and test a property of a model
@@ -108,10 +107,7 @@ Tests are automatically run when installing or updating modules if
 :option:`--test-enable <odoo-bin --test-enable>` was enabled when starting the
 Odoo server.
 
-As of Odoo 8, running tests outside of the install/update cycle is not
-supported.
-
-.. _unittest documentation: https://docs.python.org/2/library/unittest.html
+.. _unittest documentation: https://docs.python.org/3/library/unittest.html
 
 Test selection
 --------------
@@ -330,7 +326,7 @@ infrastructure:
 
 - we want the runbot to also run these tests, so there is a test (in `test_js.py`_)
   which simply spawns a browser and points it to the *web/tests* url.  Note that
-  the phantom_js method does not spawn phantom_js, but Chrome headless instead.
+  the browser_js method spawns a Chrome headless instance.
 
 
 Modularity and testing
@@ -510,11 +506,25 @@ Testing Python code and JS code separately is very useful, but it does not prove
 that the web client and the server work together.  In order to do that, we can
 write another kind of test: tours.  A tour is a mini scenario of some interesting
 business flow.  It explains a sequence of steps that should be followed.  The
-test runner will then create a phantom_js browser, point it to the proper url
+test runner will then create a Chrome headless browser, point it to the proper url
 and simulate the click and inputs, according to the scenario.
 
+Screenshots and screencasts during browser_js tests
+---------------------------------------------------
 
-.. _qunit: http://qunitjs.com/
+When running tests that use HttpCase.browser_js from the command line, the Chrome
+browser is used in headless mode. By default, if a test fails, a PNG screenshot is
+taken at the moment of the failure and written in
+
+.. code-block:: console
+
+  '/tmp/odoo_tests/{db_name}/screenshots/'
+
+Two new command line arguments were added since Odoo 13.0 to control this behavior:
+:option:`--screenshots <odoo-bin --screenshots>` and :option:`--screencasts <odoo-bin --screencasts>`
+
+
+.. _qunit: https://qunitjs.com/
 .. _qunit_config.js: https://github.com/odoo/odoo/blob/51ee0c3cb59810449a60dae0b086b49b1ed6f946/addons/web/static/tests/helpers/qunit_config.js#L49
 .. _web.js_tests_assets: https://github.com/odoo/odoo/blob/51ee0c3cb59810449a60dae0b086b49b1ed6f946/addons/web/views/webclient_templates.xml#L427
 .. _web.qunit_suite: https://github.com/odoo/odoo/blob/51ee0c3cb59810449a60dae0b086b49b1ed6f946/addons/web/views/webclient_templates.xml#L509

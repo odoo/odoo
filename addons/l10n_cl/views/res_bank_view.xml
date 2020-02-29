@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_res_bank_form">
+            <field name="name">res.bank.form</field>
+            <field name="model">res.bank</field>
+            <field name="inherit_id" ref="base.view_res_bank_form" />
+            <field name="arch" type="xml">
+                <field name="name" position="before">
+                    <field name="l10n_cl_sbif_code" />
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_res_bank_tree">
+            <field name="name">bank.bank.tree</field>
+            <field name="model">res.bank</field>
+            <field name="inherit_id" ref="base.view_res_bank_tree" />
+            <field name="arch" type="xml">
+                <field name="name" position="before">
+                    <field name="l10n_cl_sbif_code" />
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

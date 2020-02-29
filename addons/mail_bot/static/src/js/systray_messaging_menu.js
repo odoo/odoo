@@ -33,7 +33,7 @@ return MessagingMenu.include({
      *
      * @override
      * @private
-     * @returns {$.Promise<Object[]>} resolved with list of previews that are
+     * @returns {Promise<Object[]>} resolved with list of previews that are
      *   compatible with the 'mail.Preview' template.
      */
     _getPreviews: function () {

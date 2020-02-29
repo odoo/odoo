@@ -7,7 +7,7 @@
          <field name="arch" type="xml">
              <pivot string="Sales Analysis" disable_linking="True">
                  <field name="team_id" type="col"/>
-                 <field name="confirmation_date" interval="month" type="row"/>
+                 <field name="date" interval="month" type="row"/>
                  <field name="price_subtotal" type="measure"/>
              </pivot>
          </field>
@@ -18,7 +18,7 @@
          <field name="model">sale.report</field>
          <field name="arch" type="xml">
              <graph string="Sales Analysis" type="line">
-                 <field name="confirmation_date" type="row" interval="day"/>
+                 <field name="date" type="row" interval="day"/>
                  <field name="price_subtotal" type="measure"/>
              </graph>
          </field>
@@ -40,6 +40,7 @@
                 <field name="categ_id"/>
                 <field name="partner_id"/>
                 <field name="country_id"/>
+                <field name="industry_id"/>
                 <group expand="0" string="Extended Filters">
                     <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -49,13 +50,13 @@
                     <filter string="Sales Team" name="sales_channel" context="{'group_by':'team_id'}"/>
                     <filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/>
                     <filter string="Customer Country" name="country_id" context="{'group_by':'country_id'}"/>
+                    <filter string="Customer Industry" name="industry_id" context="{'group_by':'industry_id'}"/>
                     <filter string="Product" name="Product" context="{'group_by':'product_id'}"/>
                     <filter string="Product Category" name="Category" context="{'group_by':'categ_id'}"/>
                     <filter name="status" string="Status" context="{'group_by':'state'}"/>
                     <filter string="Company" name="company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     <separator/>
                     <filter string="Order Date" name="date" context="{'group_by':'date'}"/>
-                    <filter string="Confirmation Date" name="confirm_month" context="{'group_by':'confirmation_date:month'}"/>
                 </group>
             </search>
         </field>
@@ -64,7 +65,6 @@
     <record id="action_order_report_all" model="ir.actions.act_window">
         <field name="name">Sales Analysis</field>
         <field name="res_model">sale.report</field>
-        <field name="view_type">form</field>
         <field name="view_mode">graph,pivot</field>
         <field name="view_id"></field>  <!-- force empty -->
         <field name="search_view_id" ref="view_order_product_search"/>

@@ -22,7 +22,6 @@ class TestProjectBilling(TestCommonSaleTimesheetNoChart):
         cls.partner_2 = cls.env['res.partner'].create({
             'name': 'Customer from the South',
             'email': 'customer.usd@south.com',
-            'customer': True,
             'property_account_payable_id': cls.account_payable.id,
             'property_account_receivable_id': cls.account_receivable.id,
         })
@@ -338,7 +337,7 @@ class TestProjectBilling(TestCommonSaleTimesheetNoChart):
             'employee_id': self.employee_tde.id,
         })
 
-        self.assertEquals(timesheet4.so_line, self.so1_line_deliver_no_task, "The timesheet should be linked to SOL on the project, as no entry for TDE in project map and no SOL on task")
+        self.assertEqual(timesheet4.so_line, self.so1_line_deliver_no_task, "The timesheet should be linked to SOL on the project, as no entry for TDE in project map and no SOL on task")
 
     def test_billing_task_rate(self):
         """ Check task and subtask creation, and timesheeting in a project billed at 'task rate'. Then move the task into a 'employee rate' project then, 'non billable'. """

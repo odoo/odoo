@@ -108,26 +108,27 @@ var AttachDocument = Widget.extend({
      * @private
      */
     _onFileLoaded: function () {
-        var self = this,
-            def = $.Deferred();
-
-        if (self.node.attrs.action) {
-            // the first argument isn't a file but the jQuery.Event
-            var files = Array.prototype.slice.call(arguments, 1);
-            self._rpc({
-                model: self.res_model,
-                method: self.node.attrs.action,
-                args: [self.res_id],
-                kwargs: {
-                    'attachment_ids': _.map(files, function (file) {return file.id;}),
-                }
-            }).then( function () {
-                def.resolve();
-            });
-        } else {
-            def.resolve();
-        }
-        return $.when(def).then(function () {
+        var self = this;
+        // the first argument isn't a file but the jQuery.Event
+        var files = Array.prototype.slice.call(arguments, 1);
+        return new Promise(function (resolve) {
+            if (self.node.attrs.action) {
+                self._rpc({
+                    model: self.res_model,
+                    method: self.node.attrs.action,
+                    args: [self.res_id],
+                    kwargs: {
+                        attachment_ids: _.map(files, function (file) {
+                            return file.id;
+                        }),
+                    }
+                }).then(function () {
+                    resolve();
+                });
+            } else {
+                resolve();
+            }
+        }).then(function () {
             self.trigger_up('reload');
             framework.unblockUI();
         });

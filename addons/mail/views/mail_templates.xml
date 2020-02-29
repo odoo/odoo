@@ -14,6 +14,7 @@
                 <!-- Services -->
                 <script type="text/javascript" src="/mail/static/src/js/services/mail_manager.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/services/mail_document_thread_manager.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/services/mail_status_manager.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/services/mail_notification_manager.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/services/mail_window_manager.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/services/mail_service.js"></script>
@@ -45,7 +46,6 @@
                     <script type="text/javascript" src="/mail/static/src/js/thread_windows/abstract_thread_window.js"></script>
                     <script type="text/javascript" src="/mail/static/src/js/thread_windows/thread_window.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/discuss.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/discuss_mobile.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
                     <!-- composers -->
                     <script type="text/javascript" src="/mail/static/src/js/composers/basic_composer.js"></script>
@@ -64,9 +64,11 @@
                 <!-- systray -->
                 <script type="text/javascript" src="/mail/static/src/js/systray/systray_activity_menu.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/systray/systray_messaging_menu.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/tour.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/tours/mail.js"></script>
                 <!-- tools -->
                 <script type="text/javascript" src="/mail/static/src/js/tools/debug_manager.js"></script>
+                <!-- filter menu -->
+                <script type="text/javascript" src="/mail/static/src/js/filter_menu.js"></script>
                 <!-- utils -->
                 <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/activity.js"></script>
@@ -75,18 +77,23 @@
                 <script type="text/javascript" src="/mail/static/src/js/views/activity/activity_model.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/views/activity/activity_controller.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/views/activity/activity_renderer.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/views/activity/activity_record.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/views/activity/activity_cell.js"></script>
                 <!-- Attachment box -->
                 <script type="text/javascript" src="/mail/static/src/js/attachment_box.js"></script>
-                <!-- Others -->
+                <!-- Emojis -->
                 <script type="text/javascript" src="/mail/static/src/js/emojis.js"></script>
-
-                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/announcement.scss"/>
+                <script type="text/javascript" src="/mail/static/src/js/emojis_mixin.js"/>
+                <script type="text/javascript" src="/mail/static/src/js/text_emojis_fields.js"/>
+                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/emojis.scss"/>
+                <!-- Others -->
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/discuss.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/abstract_thread_window.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/thread_window.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/composer.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/chatter.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/followers.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/out_of_office.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/thread.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/systray.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/mail_activity.scss"/>
@@ -129,19 +136,15 @@
                     <script type="text/javascript" src="/mail/static/tests/models/cc_throttle_function_tests.js"></script>
                     <script type="text/javascript" src="/mail/static/tests/models/timer_tests.js"></script>
                     <script type="text/javascript" src="/mail/static/tests/models/timers_tests.js"></script>
-                <!-- activity view --> 
+                <!-- activity view -->
                 <script type="text/javascript" src="/mail/static/tests/activity_tests.js"></script>
-            </xpath>
-        </template>
-
-        <template id="qunit_mobile_suite" name="mail_mobile_tests" inherit_id="web.qunit_mobile_suite">
-            <xpath expr="//t[@t-set='head']" position="inside">
-                <script type="text/javascript" src="/mail/static/tests/discuss_mobile_tests.js"></script>
+                <!-- services -->
+                <script type="text/javascript" src="/mail/static/tests/mail_status_manager_tests.js"></script>
             </xpath>
         </template>
 
         <template id="message_origin_link">
-            <p>This <t t-esc="self._description.lower()"/> has been <span t-if="edit">modified</span><span t-if="not edit">created</span> from:
+            <p>This <t t-esc="self.env['ir.model']._get(self._name).name.lower()"/> has been <span t-if="edit">modified</span><span t-if="not edit">created</span> from:
                 <t t-foreach="origin" t-as="o">
                     <a href="#" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id"> <t t-esc="o.display_name"/></a><span t-if="origin.ids[-1:] != o.ids">, </span>
                 </t>

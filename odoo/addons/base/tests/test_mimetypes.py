@@ -1,7 +1,7 @@
 import base64
 import unittest
 
-from odoo.tests.common import tagged
+from odoo.tests.common import BaseCase
 from odoo.tools.mimetypes import guess_mimetype
 
 PNG = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC'
@@ -16,15 +16,10 @@ AAAAAAAAAAAAA/9oACAEBAAEFAn//xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAEDAQE/AX//xAAUEQE
 AA/9oACAECAQE/AX//xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEBAAY/An//xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEBA
 AE/IX//2gAMAwEAAgADAAAAEB//xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAEDAQE/EH//xAAUEQEAAAAAAAAAAAAAAAAAAAAA
 /9oACAECAQE/EH//xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEBAAE/EH//2Q=="""
-SVG = b"""PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiL
-S8vVzNDLy9EVEQgU1ZHIDIwMDAxMTAyLy9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAwL0NSLVNWRy0yMDAwMTEwMi9E
-VEQvc3ZnLTIwMDAxMTAyLmR0ZCI+Cgo8c3ZnIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPgogIDxnIHRyYW5zZm9ybT0idHJ
-hbnNsYXRlKDUwLDUwKSI+CiAgICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTUwIiBoZWlnaHQ9IjUwIiBzdHlsZT0iZmlsbD
-pyZWQ7IiAvPgogIDwvZz4KCjwvc3ZnPgo="""
+SVG = b"""PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMjAwMDExMDIvL0VOIlxuICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAwL0NSLVNWRy0yMDAwMTEwMi9EVEQvc3ZnLTIwMDAxMTAyLmR0ZCI+PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg1MCw1MCkiPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxNTAiIGhlaWdodD0iNTAiIHN0eWxlPSJmaWxsOnJlZDsiIC8+PC9nPjwvc3ZnPg=="""
 
 
-@tagged('standard', 'at_install')
-class test_guess_mimetype(unittest.TestCase):
+class test_guess_mimetype(BaseCase):
 
     def test_default_mimetype_empty(self):
         mimetype = guess_mimetype(b'')
@@ -50,7 +45,7 @@ class test_guess_mimetype(unittest.TestCase):
         content = base64.b64decode(BMP)
         mimetype = guess_mimetype(content, default='test')
         # mimetype should match image/bmp, image/x-ms-bmp, ...
-        self.assertRegexpMatches(mimetype, r'image/.*\bbmp')
+        self.assertRegex(mimetype, r'image/.*\bbmp')
 
     def test_mimetype_jpg(self):
         content = base64.b64decode(JPG)

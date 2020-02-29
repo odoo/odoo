@@ -1,9 +1,12 @@
 odoo.define('web.KanbanColumnProgressBar', function (require) {
 'use strict';
 
-var Widget = require('web.Widget');
+const core = require('web.core');
 var session = require('web.session');
 var utils = require('web.utils');
+var Widget = require('web.Widget');
+
+const _t = core._t;
 
 var KanbanColumnProgressBar = Widget.extend({
     template: 'KanbanView.ColumnProgressBar',
@@ -28,9 +31,10 @@ var KanbanColumnProgressBar = Widget.extend({
 
         // <progressbar/> attributes
         this.fieldName = columnState.progressBarValues.field;
-        this.colors = columnState.progressBarValues.colors;
+        this.colors = _.extend({}, columnState.progressBarValues.colors, {
+            __false: 'muted', // color to use for false value
+        });
         this.sumField = columnState.progressBarValues.sum_field;
-        this.progressBarHelp = columnState.progressBarValues.help;
 
         // Previous progressBar state
         var state = options.progressBarStates[this.columnID];
@@ -56,7 +60,7 @@ var KanbanColumnProgressBar = Widget.extend({
 
         this.$bars = {};
         _.each(this.colors, function (val, key) {
-            self.$bars[val] = self.$('.bg-' + val + '-full');
+            self.$bars[key] = self.$(`.progress-bar[data-filter=${key}]`);
         });
         this.$counter = this.$('.o_kanban_counter_side');
         this.$number = this.$counter.find('b');
@@ -76,23 +80,31 @@ var KanbanColumnProgressBar = Widget.extend({
             // This should be executed when the progressbar is fully rendered
             // and is in the DOM, this happens to be always the case with
             // current use of progressbars
-
-            var subgroupCounts = {};
-            _.each(self.colors, function (val, key) {
-                var subgroupCount = self.columnState.progressBarValues.counts[key] || 0;
-                if (self.activeFilter === key && subgroupCount === 0) {
-                    self.activeFilter = false;
-                }
-                subgroupCounts[key] = subgroupCount;
-            });
-
-            self.groupCount = self.columnState.count;
-            self.subgroupCounts = subgroupCounts;
-            self.prevTotalCounterValue = self.totalCounterValue;
-            self.totalCounterValue = self.sumField ? (self.columnState.aggregateValues[self.sumField] || 0) : self.columnState.count;
+            self.computeCounters();
             self._notifyState();
             self._render();
         });
+    },
+    /**
+     * Computes the count of each sub group and the total count
+     */
+    computeCounters() {
+        const subgroupCounts = {};
+        let allSubgroupCount = 0;
+        for (const key of Object.keys(this.colors)) {
+            const subgroupCount = this.columnState.progressBarValues.counts[key] || 0;
+            if (this.activeFilter === key && subgroupCount === 0) {
+                this.activeFilter = false;
+            }
+            subgroupCounts[key] = subgroupCount;
+            allSubgroupCount += subgroupCount;
+        };
+        subgroupCounts.__false = this.columnState.count - allSubgroupCount;
+
+        this.groupCount = this.columnState.count;
+        this.subgroupCounts = subgroupCounts;
+        this.prevTotalCounterValue = this.totalCounterValue;
+        this.totalCounterValue = this.sumField ? (this.columnState.aggregateValues[this.sumField] || 0) : this.columnState.count;
     },
 
     //--------------------------------------------------------------------------
@@ -122,7 +134,7 @@ var KanbanColumnProgressBar = Widget.extend({
         });
         this.trigger_up('tweak_column_records', {
             callback: function ($el, recordData) {
-                var categoryValue = recordData[self.fieldName];
+                var categoryValue = recordData[self.fieldName] ? recordData[self.fieldName] : '__false';
                 _.each(self.colors, function (val, key) {
                     $el.removeClass('oe_kanban_card_' + val);
                 });
@@ -131,19 +143,13 @@ var KanbanColumnProgressBar = Widget.extend({
                 }
             },
         });
-        if (this.progressBarHelp && _.every(this.subgroupCounts, function (val) { return val === 0; })) {
-            this.$el.tooltip({
-                delay: 0,
-                trigger: 'hover',
-                title: this.progressBarHelp,
-            });
-        }
 
         // Display and animate the progress bars
         var barNumber = 0;
         var barMinWidth = 6; // In %
+        const selection = self.columnState.fields[self.fieldName].selection;
         _.each(self.colors, function (val, key) {
-            var $bar = self.$bars[val];
+            var $bar = self.$bars[key];
             var count = self.subgroupCounts && self.subgroupCounts[key] || 0;
 
             if (!$bar) {
@@ -151,14 +157,21 @@ var KanbanColumnProgressBar = Widget.extend({
             }
 
             // Adapt tooltip
-            $bar.attr('data-original-title', count + ' ' + key);
+            let value;
+            if (selection) { // progressbar on a field of type selection
+                const option = selection.find(option => option[0] === key);
+                value = option && option[1] || _t('Other');
+            } else {
+                value = key;
+            }
+            $bar.attr('data-original-title', count + ' ' + value);
             $bar.tooltip({
                 delay: 0,
                 trigger: 'hover',
             });
 
             // Adapt active state
-            $bar.toggleClass('active progress-bar-striped', key === self.activeFilter);
+            $bar.toggleClass('progress-bar-animated progress-bar-striped', key === self.activeFilter);
 
             // Adapt width
             $bar.removeClass('o_bar_has_records transition-off');
@@ -178,6 +191,7 @@ var KanbanColumnProgressBar = Widget.extend({
                 $bar.css('width', '');
             }
         });
+        this.$('.progress-bar').css('min-width', '');
         this.$('.progress-bar.o_bar_has_records').css('min-width', barMinWidth + '%');
 
         // Display and animate the counter number
@@ -189,7 +203,8 @@ var KanbanColumnProgressBar = Widget.extend({
                 end = 0;
                 _.each(self.columnState.data, function (record) {
                     var recordData = record.data;
-                    if (self.activeFilter === recordData[self.fieldName]) {
+                    if (self.activeFilter === recordData[self.fieldName] ||
+                        (self.activeFilter === '__false' && !recordData[self.fieldName])) {
                         end += parseFloat(recordData[self.sumField]);
                     }
                 });

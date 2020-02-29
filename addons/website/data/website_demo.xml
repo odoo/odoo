@@ -1,17 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
-        <record id="website2" model="website">
-            <field name="name">My Website 2</field>
-            <field name="domain"></field>
-        </record>
-
-        <!-- BS Debug Page -->
-        <!-- Showcase all (most?) BS components and utilities -->
-        <record id="bs_debug_page" model="website.page">
+    <data>
+        <record id="bs_debug_view" model="ir.ui.view">
             <field name="name">BS Debug</field>
-            <field name="url">/website/demo/bootstrap</field>
-            <field name="website_published">False</field>
             <field name="type">qweb</field>
             <field name="key">website.bs_debug_page_view</field>
             <field name="arch" type="xml">
@@ -268,12 +259,8 @@
             </field>
         </record>
 
-        <!-- Snippet Debug Page -->
-        <!-- Showcase all snippets -->
-        <record id="snippets_debug_page" model="website.page">
+        <record id="snippets_debug_view" model="ir.ui.view">
             <field name="name">Snippet Debug</field>
-            <field name="url">/website/demo/snippets</field>
-            <field name="website_published">False</field>
             <field name="type">qweb</field>
             <field name="key">website.snippets_debug_page_view</field>
             <field name="arch" type="xml">
@@ -303,6 +290,29 @@
                     </t>
                 </t>
             </field>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="website2" model="website">
+            <field name="name">My Website 2</field>
+            <field name="domain"></field>
+        </record>
+
+        <!-- BS Debug Page -->
+        <!-- Showcase all (most?) BS components and utilities -->
+        <record id="bs_debug_page" model="website.page">
+            <field name="url">/website/demo/bootstrap</field>
+            <field name="is_published">False</field>
+            <field name="view_id" ref="bs_debug_view"/>
+        </record>
+
+        <!-- Snippet Debug Page -->
+        <!-- Showcase all snippets -->
+        <record id="snippets_debug_page" model="website.page">
+            <field name="url">/website/demo/snippets</field>
+            <field name="is_published">False</field>
+            <field name="view_id" ref="snippets_debug_view"/>
         </record>
     </data>
 </odoo>

@@ -1,0 +1,23 @@
+#oe_snippets > .o_we_customize_panel we-customizeblock-option {
+    we-list {
+        .oe_we_table_wraper {
+            max-height: 200px;
+            overflow-y: auto;
+            table {
+                table-layout: fixed;
+                width: 100%;
+                input {
+                    background-color: var(--o-we-bg-color-dark);
+                    color: var(--o-we-color);
+                    border: none;
+                    width: 100%;
+                }
+                td {
+                    &:first-child, &:last-child {
+                        width: 28px;
+                    }
+                }
+            }
+        }
+    }
+}

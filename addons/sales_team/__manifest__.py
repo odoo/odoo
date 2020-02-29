@@ -3,7 +3,7 @@
 {
     'name': 'Sales Teams',
     'version': '1.0',
-    'category': 'Sales',
+    'category': 'Sales/Sales',
     'summary': 'Sales Teams',
     'description': """
 Using this application you can manage Sales Teams  with CRM and/or Sales

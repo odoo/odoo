@@ -10,7 +10,6 @@ from odoo.addons.account.wizard.pos_box import CashBox
 class PosBox(CashBox):
     _register = False
 
-    @api.multi
     def run(self):
         active_model = self.env.context.get('active_model', False)
         active_ids = self.env.context.get('active_ids', [])
@@ -22,18 +21,6 @@ class PosBox(CashBox):
             return self._run(bank_statements)
         else:
             return super(PosBox, self).run()
-
-
-class PosBoxIn(PosBox):
-    _inherit = 'cash.box.in'
-
-    def _calculate_values_for_statement_line(self, record):
-        values = super(PosBoxIn, self)._calculate_values_for_statement_line(record=record)
-        active_model = self.env.context.get('active_model', False)
-        active_ids = self.env.context.get('active_ids', [])
-        if active_model == 'pos.session' and active_ids:
-            values['ref'] = self.env[active_model].browse(active_ids)[0].name
-        return values
 
 
 class PosBoxOut(PosBox):

@@ -3,12 +3,19 @@ odoo.define('website_event.website_event', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
 var _t = core._t;
 
 // Catch registration form event, because of JS for attendee details
 var EventRegistrationForm = Widget.extend({
+    events: {
+        'click .o_wevent_registration_btn': '_onRegistrationBtnClick',
+    },
+
+    /**
+     * @override
+     */
     start: function () {
         var self = this;
         var res = this._super.apply(this.arguments).then(function () {
@@ -21,6 +28,15 @@ var EventRegistrationForm = Widget.extend({
         });
         return res;
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
     on_click: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
@@ -36,7 +52,7 @@ var EventRegistrationForm = Widget.extend({
             $('<div class="alert alert-info"/>')
                 .text(_t('Please select at least one ticket.'))
                 .insertAfter('#registration_form table');
-            return $.Deferred();
+            return new Promise(function () {});
         } else {
             $button.attr('disabled', true);
             return ajax.jsonRpc($form.attr('action'), 'call', post).then(function (modal) {
@@ -54,9 +70,18 @@ var EventRegistrationForm = Widget.extend({
             });
         }
     },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onRegistrationBtnClick: function (ev) {
+        var $btn = $(ev.currentTarget);
+        $btn.toggleClass('btn-primary text-left pl-0');
+        $btn.siblings().toggleClass('d-none');
+    },
 });
 
-sAnimations.registry.EventRegistrationFormInstance = sAnimations.Class.extend({
+publicWidget.registry.EventRegistrationFormInstance = publicWidget.Widget.extend({
     selector: '#registration_form',
 
     /**
@@ -65,7 +90,7 @@ sAnimations.registry.EventRegistrationFormInstance = sAnimations.Class.extend({
     start: function () {
         var def = this._super.apply(this, arguments);
         var instance = new EventRegistrationForm(this);
-        return $.when(def, instance.appendTo(this.$el));
+        return Promise.all([def, instance.attachTo(this.$el)]);
     },
 });
 

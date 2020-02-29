@@ -5,7 +5,7 @@
 {
     'name': 'Members',
     'version': '1.0',
-    'category': 'Sales',
+    'category': 'Sales/Sales',
     'description': """
 This module allows you to manage all operations for managing memberships.
 =========================================================================
@@ -20,7 +20,7 @@ It supports different kind of members:
 It is integrated with sales and accounting to allow you to automatically
 invoice and send propositions for membership renewal.
     """,
-    'depends': ['base', 'product', 'account'],
+    'depends': ['account'],
     'data': [
         'security/ir.model.access.csv',
         'wizard/membership_invoice_views.xml',
@@ -30,7 +30,4 @@ invoice and send propositions for membership renewal.
         'report/report_membership_views.xml',
     ],
     'website': 'https://www.odoo.com/page/community-builder',
-    'test': [
-        '../account/test/account_minimal_test.xml',
-    ],
 }

@@ -6,11 +6,11 @@ odoo.define('website.content.snippets.animation', function (require) {
  */
 
 var Class = require('web.Class');
+var config = require('web.config');
 var core = require('web.core');
-var dom = require('web.dom');
 var mixins = require('web.mixins');
+var publicWidget = require('web.public.widget');
 var utils = require('web.utils');
-var Widget = require('web.Widget');
 
 var qweb = core.qweb;
 
@@ -20,17 +20,67 @@ window.requestAnimationFrame = window.requestAnimationFrame
     || window.webkitRequestAnimationFrame
     || window.mozRequestAnimationFrame
     || window.msRequestAnimationFrame
-    || window.oRequestAnimationFrame
-    || function (callback) { setTimeout(callback, 10); };
+    || window.oRequestAnimationFrame;
 window.cancelAnimationFrame = window.cancelAnimationFrame
     || window.webkitCancelAnimationFrame
     || window.mozCancelAnimationFrame
     || window.msCancelAnimationFrame
-    || window.oCancelAnimationFrame
-    || function (id) { clearTimeout(id); };
+    || window.oCancelAnimationFrame;
 if (!window.performance || !window.performance.now) {
-    window.performance = {now: function () { return Date.now(); }};
+    window.performance = {
+        now: function () {
+            return Date.now();
+        }
+    };
 }
+
+/**
+ * Add the notion of edit mode to public widgets.
+ */
+publicWidget.Widget.include({
+    /**
+     * Indicates if the widget should not be instantiated in edit. The default
+     * is true, indeed most (all?) defined widgets only want to initialize
+     * events and states which should not be active in edit mode (this is
+     * especially true for non-website widgets).
+     *
+     * @type {boolean}
+     */
+    disabledInEditableMode: true,
+    /**
+     * Acts as @see Widget.events except that the events are only binded if the
+     * Widget instance is instanciated in edit mode. The property is not
+     * considered if @see disabledInEditableMode is false.
+     */
+    edit_events: null,
+    /**
+     * Acts as @see Widget.events except that the events are only binded if the
+     * Widget instance is instanciated in readonly mode. The property only
+     * makes sense if @see disabledInEditableMode is false, you should simply
+     * use @see Widget.events otherwise.
+     */
+    read_events: null,
+
+    /**
+     * Initializes the events that will need to be binded according to the
+     * given mode.
+     *
+     * @constructor
+     * @param {Object} parent
+     * @param {Object} [options]
+     * @param {boolean} [options.editableMode=false]
+     *        true if the page is in edition mode
+     */
+    init: function (parent, options) {
+        this._super.apply(this, arguments);
+
+        this.editableMode = this.options.editableMode || false;
+        var extraEvents = this.editableMode ? this.edit_events : this.read_events;
+        if (extraEvents) {
+            this.events = _.extend({}, this.events || {}, extraEvents);
+        }
+    },
+});
 
 /**
  * In charge of handling one animation loop using the requestAnimationFrame
@@ -74,10 +124,24 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
         this._updateCallback = updateCallback;
         this.startEvents = startEvents || 'scroll';
         this.$startTarget = $($startTarget || window);
-        this._getStateCallback = options.getStateCallback
-            || ((this.startEvents === 'scroll' && this.$startTarget[0] === window) ? function () { return window.pageYOffset; } : false)
-            || ((this.startEvents === 'resize' && this.$startTarget[0] === window) ? function () { return {width: window.innerWidth, height: window.innerHeight}; } : false)
-            || function () { return undefined; };
+        if (options.getStateCallback) {
+            this._getStateCallback = options.getStateCallback;
+        } else if (this.startEvents === 'scroll' && this.$startTarget[0] === window) {
+            this._getStateCallback = function () {
+                return window.pageYOffset;
+            };
+        } else if (this.startEvents === 'resize' && this.$startTarget[0] === window) {
+            this._getStateCallback = function () {
+                return {
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                };
+            };
+        } else {
+            this._getStateCallback = function () {
+                return undefined;
+            };
+        }
         this.endEvents = options.endEvents || false;
         this.$endTarget = options.$endTarget ? $(options.$endTarget) : this.$startTarget;
 
@@ -88,7 +152,7 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
         this._uid = '_animationEffect' + _.uniqueId();
         this.startEvents = _processEvents(this.startEvents, this._uid);
         if (this.endEvents) {
-            this.endEvents =  _processEvents(this.endEvents, this._uid);
+            this.endEvents = _processEvents(this.endEvents, this._uid);
         }
 
         function _processEvents(events, namespace) {
@@ -181,7 +245,9 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
      */
     play: function (e) {
         this._newEvent = e;
-        if (!this._paused) return;
+        if (!this._paused) {
+            return;
+        }
         this._paused = false;
         this._rafID = window.requestAnimationFrame(this._update.bind(this));
         this._lastUpdateTimestamp = undefined;
@@ -190,7 +256,9 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
      * Forces the requestAnimationFrame loop to stop.
      */
     pause: function () {
-        if (this._paused) return;
+        if (this._paused) {
+            return;
+        }
         this._paused = true;
         window.cancelAnimationFrame(this._rafID);
         this._lastUpdateTimestamp = undefined;
@@ -210,7 +278,9 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
      * @param {DOMHighResTimeStamp} timestamp
      */
     _update: function (timestamp) {
-        if (this._paused) return;
+        if (this._paused) {
+            return;
+        }
         this._rafID = window.requestAnimationFrame(this._update.bind(this));
 
         // Check the elapsed time since the last update callback call.
@@ -219,7 +289,9 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
         var elapsedTime = 0;
         if (this._lastUpdateTimestamp) {
             elapsedTime = timestamp - this._lastUpdateTimestamp;
-            if (elapsedTime < this._minFrameTime) return;
+            if (elapsedTime < this._minFrameTime) {
+                return;
+            }
         }
 
         // Check the new animation state thanks to the get state callback and
@@ -242,53 +314,9 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
 });
 
 /**
- * Provides a way for executing code once a website DOM element is loaded in the
- * dom and handle the case where the website edit mode is triggered.
- *
  * Also register AnimationEffect automatically (@see effects, _prepareEffects).
  */
-var Animation = Widget.extend({
-    /**
-     * The selector attribute, if defined, allows to automatically create an
-     * instance of this animation on page load for each DOM element which
-     * matches this selector. The `Animation.$target` element will then be that
-     * particular DOM element. This should be the main way of instantiating
-     * `Animation` elements.
-     */
-    selector: false,
-    /**
-     * Extension of @see Widget.events
-     *
-     * A description of the event handlers to bind/delegate once the widget
-     * has been rendered::
-     *
-     *   'click .hello .world': 'async _onHelloWorldClick',
-     *     _^_      _^_           _^_        _^_
-     *      |        |             |          |
-     *      |  (Optional) jQuery   |  Handler method name
-     *      |  delegate selector   |
-     *      |                      |_ (Optional) space separated options
-     *      |                          * async: use the automatic system
-     *      |_ Event name with           making handlers promise-ready (see
-     *         potential jQuery          makeButtonHandler, makeAsyncHandler)
-     *         namespaces
-     *
-     * Note: the values may be replaced by a function declaration. This is
-     * however a deprecated behavior.
-     *
-     * @type {Object}
-     */
-    events: {},
-    /**
-     * Acts as @see Widget.events except that the events are only binded if the
-     * Animation instance is instanciated in edit mode.
-     */
-    edit_events: {},
-    /**
-     * Acts as @see Widget.events except that the events are only binded if the
-     * Animation instance is instanciated in readonly mode.
-     */
-    read_events: {},
+var Animation = publicWidget.Widget.extend({
     /**
      * The max FPS at which all the automatic animation effects will be
      * running by default.
@@ -329,23 +357,6 @@ var Animation = Widget.extend({
     effects: [],
 
     /**
-     * Initializes the events that will need to be binded according to the
-     * given mode.
-     *
-     * @constructor
-     * @param {Object} parent
-     * @param {boolean} editableMode - true if the page is in edition mode
-     */
-    init: function (parent, editableMode) {
-        this._super.apply(this, arguments);
-        this.editableMode = editableMode;
-        if (editableMode) {
-            this.events = _.extend({}, this.events || {}, this.edit_events || {});
-        } else {
-            this.events = _.extend({}, this.events || {}, this.read_events || {});
-        }
-    },
-    /**
      * Initializes the animation. The method should not be called directly as
      * called automatically on animation instantiation and on restart.
      *
@@ -360,89 +371,11 @@ var Animation = Widget.extend({
         });
         return this._super.apply(this, arguments);
     },
-    /**
-     * Destroys the animation and basically restores the target to the state it
-     * was before the start method was called (unlike standard widget, the
-     * associated $el DOM is not removed).
-     *
-     * Also stops animation effects and destroys them if any.
-     */
-    destroy: function () {
-        var $oldel = this.$el;
-        // The difference with the default behavior is that we unset the
-        // associated element first so that:
-        // 1) its events are unbinded
-        // 2) it is not removed from the DOM
-        this.setElement(null);
-        this._super.apply(this, arguments);
-        // Reassign the variables afterwards to allow extensions to use them
-        // after calling the _super method
-        this.$el = $oldel;
-        this.el = $oldel[0];
-        this.$target = this.$el;
-        this.target = this.el;
-    },
-    /**
-     * @override
-     */
-    setElement: function () {
-        this._super.apply(this, arguments);
-        this.$target = this.$el;
-        this.target = this.el;
-    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @see this.events
-     * @override
-     */
-    _delegateEvents: function () {
-        var self = this;
-        var originalEvents = this.events;
-
-        var events = {};
-        _.each(this.events, function (method, event) {
-            // If the method is a function, use the default Widget system
-            if (typeof method !== 'string') {
-                events[event] = method;
-                return;
-            }
-            // If the method is only a function name without options, use the
-            // default Widget system
-            var methodOptions = method.split(' ');
-            if (methodOptions.length <= 1) {
-                events[event] = method;
-                return;
-            }
-            // If the method has no meaningful options, use the default Widget
-            // system
-            var isAsync = _.contains(methodOptions, 'async');
-            if (!isAsync) {
-                events[event] = method;
-                return;
-            }
-
-            method = self.proxy(methodOptions[methodOptions.length - 1]);
-            if (_.str.startsWith(event, 'click')) {
-                // Protect click handler to be called multiple times by
-                // mistake by the user and add a visual disabling effect
-                // for buttons.
-                method = dom.makeButtonHandler(method);
-            } else {
-                // Protect all handlers to be recalled while the previous
-                // async handler call is not finished.
-                method = dom.makeAsyncHandler(method);
-            }
-            events[event] = method;
-        });
-
-        this.events = events;
-        this._super.apply(this, arguments);
-        this.events = originalEvents;
-    },
     /**
      * Registers `AnimationEffect` instances.
      *
@@ -491,26 +424,23 @@ var Animation = Widget.extend({
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-/**
- * The registry object contains the list of available animations.
- */
-var registry = {};
+var registry = publicWidget.registry;
 
-registry.slider = Animation.extend({
+registry.slider = publicWidget.Widget.extend({
     selector: '.carousel',
+    disabledInEditableMode: false,
     edit_events: {
-        'slid.bs.carousel': '_onEditionSlide',
+        'content_changed': '_onContentChanged',
     },
 
     /**
      * @override
      */
     start: function () {
-        if (!this.editableMode) {
-            this.$('img').on('load.slider', this._onImageLoaded.bind(this));
-            this._computeHeights();
-        }
-        this.$target.carousel();
+        this.$('img').on('load.slider', () => this._computeHeights());
+        this._computeHeights();
+        // Initialize carousel and pause if in edit mode.
+        this.$target.carousel(this.editableMode ? 'pause' : undefined);
         return this._super.apply(this, arguments);
     },
     /**
@@ -536,6 +466,7 @@ registry.slider = Animation.extend({
     _computeHeights: function () {
         var maxHeight = 0;
         var $items = this.$('.carousel-item');
+        $items.css('min-height', '');
         _.each($items, function (el) {
             var $item = $(el);
             var isActive = $item.hasClass('active');
@@ -546,9 +477,7 @@ registry.slider = Animation.extend({
             }
             $item.toggleClass('active', isActive);
         });
-        _.each($items, function (el) {
-            $(el).css('min-height', maxHeight);
-        });
+        $items.css('min-height', maxHeight);
     },
 
     //--------------------------------------------------------------------------
@@ -558,19 +487,14 @@ registry.slider = Animation.extend({
     /**
      * @private
      */
-    _onEditionSlide: function () {
-        this._computeHeights();
-    },
-    /**
-     * @private
-     */
-    _onImageLoaded: function () {
+    _onContentChanged: function (ev) {
         this._computeHeights();
     },
 });
 
 registry.parallax = Animation.extend({
     selector: '.parallax',
+    disabledInEditableMode: false,
     effects: [{
         startEvents: 'scroll',
         update: '_onWindowScroll',
@@ -608,7 +532,7 @@ registry.parallax = Animation.extend({
             this.$bg = this.$('> .s_parallax_bg');
             if (!this.$bg.length) {
                 this.$bg = $('<span/>', {
-                    class: 's_parallax_bg' + (this.$target.hasClass('oe_custom_bg') ? ' oe_custom_bg' : ''),
+                    class: 's_parallax_bg',
                 }).prependTo(this.$target);
             }
         }
@@ -623,19 +547,21 @@ registry.parallax = Animation.extend({
 
         // Reset offset if parallax effect will not be performed and leave
         this.$target.toggleClass('s_parallax_is_fixed', this.speed === 1);
-        if (this.speed === 0 || this.speed === 1) {
+        var noParallaxSpeed = (this.speed === 0 || this.speed === 1);
+        this.$target.toggleClass('s_parallax_no_overflow_hidden', noParallaxSpeed);
+        if (noParallaxSpeed) {
             this.$bg.css({
                 transform: '',
                 top: '',
-                bottom: ''
+                bottom: '',
             });
             return;
         }
 
         // Initialize parallax data according to snippet and viewport dimensions
         this.viewport = document.body.clientHeight - $('#wrapwrap').position().top;
-        this.visible_area = [this.$target.offset().top];
-        this.visible_area.push(this.visible_area[0] + this.$target.innerHeight() + this.viewport);
+        this.visibleArea = [this.$target.offset().top];
+        this.visibleArea.push(this.visibleArea[0] + this.$target.innerHeight() + this.viewport);
         this.ratio = this.speed * (this.viewport / 10);
 
         // Provide a "safe-area" to limit parallax
@@ -663,53 +589,21 @@ registry.parallax = Animation.extend({
 
         // Perform translation if the element is visible only
         var vpEndOffset = scrollOffset + this.viewport;
-        if (vpEndOffset >= this.visible_area[0]
-         && vpEndOffset <= this.visible_area[1]) {
+        if (vpEndOffset >= this.visibleArea[0]
+         && vpEndOffset <= this.visibleArea[1]) {
             this.$bg.css('transform', 'translateY(' + _getNormalizedPosition.call(this, vpEndOffset) + 'px)');
         }
 
         function _getNormalizedPosition(pos) {
             // Normalize scroll in a 1 to 0 range
-            var r = (pos - this.visible_area[1]) / (this.visible_area[0] - this.visible_area[1]);
+            var r = (pos - this.visibleArea[1]) / (this.visibleArea[0] - this.visibleArea[1]);
             // Normalize accordingly to current options
             return Math.round(this.ratio * (2 * r - 1));
         }
     },
 });
 
-registry.share = Animation.extend({
-    selector: '.s_share, .oe_share', // oe_share for compatibility
-
-    /**
-     * @override
-     */
-    start: function () {
-        var url_regex = /(\?(?:|.*&)(?:u|url|body)=)(.*?)(&|#|$)/;
-        var title_regex = /(\?(?:|.*&)(?:title|text|subject)=)(.*?)(&|#|$)/;
-        var url = encodeURIComponent(window.location.href);
-        var title = encodeURIComponent($('title').text());
-        this.$('a').each(function () {
-            var $a = $(this);
-            $a.attr('href', function (i, href) {
-                return href.replace(url_regex, function (match, a, b, c) {
-                    return a + url + c;
-                }).replace(title_regex, function (match, a, b, c) {
-                    return a + title + c;
-                });
-            });
-            if ($a.attr('target') && $a.attr('target').match(/_blank/i) && !$a.closest('.o_editable').length) {
-                $a.on('click', function () {
-                    window.open(this.href,'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
-                    return false;
-                });
-            }
-        });
-
-        return this._super.apply(this, arguments);
-    },
-});
-
-registry.mediaVideo = Animation.extend({
+registry.mediaVideo = publicWidget.Widget.extend({
     selector: '.media_iframe_video',
 
     /**
@@ -750,7 +644,141 @@ registry.mediaVideo = Animation.extend({
     },
 });
 
-registry.ul = Animation.extend({
+registry.backgroundVideo = publicWidget.Widget.extend({
+    selector: '.o_background_video',
+    xmlDependencies: ['/website/static/src/xml/website.background.video.xml'],
+    disabledInEditableMode: false,
+
+    /**
+     * @override
+     */
+    start: function () {
+        var proms = [this._super(...arguments)];
+
+        this.videoSrc = this.el.dataset.bgVideoSrc;
+        this.iframeID = _.uniqueId('o_bg_video_iframe_');
+
+        this.isYoutubeVideo = this.videoSrc.indexOf('youtube') >= 0;
+        this.isMobileEnv = config.device.size_class <= config.device.SIZES.LG && config.device.touch;
+        if (this.isYoutubeVideo && this.isMobileEnv) {
+            this.videoSrc = this.videoSrc + "&enablejsapi=1";
+
+            if (!window.YT) {
+                var oldOnYoutubeIframeAPIReady = window.onYouTubeIframeAPIReady;
+                proms.push(new Promise(resolve => {
+                    window.onYouTubeIframeAPIReady = () => {
+                        if (oldOnYoutubeIframeAPIReady) {
+                            oldOnYoutubeIframeAPIReady();
+                        }
+                        return resolve();
+                    };
+                }));
+                $('<script/>', {
+                    src: 'https://www.youtube.com/iframe_api',
+                }).appendTo('head');
+            }
+        }
+
+        var throttledUpdate = _.throttle(() => this._adjustIframe(), 50);
+
+        var $dropdownMenu = this.$el.closest('.dropdown-menu');
+        if ($dropdownMenu.length) {
+            this.$dropdownParent = $dropdownMenu.parent();
+            this.$dropdownParent.on('shown.bs.dropdown.backgroundVideo', throttledUpdate);
+        }
+
+        $(window).on('resize.' + this.iframeID, throttledUpdate);
+
+        return Promise.all(proms).then(() => this._appendBgVideo());
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+
+        if (this.$dropdownParent) {
+            this.$dropdownParent.off('.backgroundVideo');
+        }
+
+        $(window).off('resize.' + this.iframeID);
+
+        if (this.$bgVideoContainer) {
+            this.$bgVideoContainer.remove();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adjusts iframe sizes and position so that it fills the container and so
+     * that it is centered in it.
+     *
+     * @private
+     */
+    _adjustIframe: function () {
+        if (!this.$iframe) {
+            return;
+        }
+
+        this.$iframe.removeClass('show');
+
+        // Adjust the iframe
+        var wrapperWidth = this.$target.innerWidth();
+        var wrapperHeight = this.$target.innerHeight();
+        var relativeRatio = (wrapperWidth / wrapperHeight) / (16 / 9);
+        var style = {};
+        if (relativeRatio >= 1.0) {
+            style['width'] = '100%';
+            style['height'] = (relativeRatio * 100) + '%';
+            style['left'] = '0';
+            style['top'] = (-(relativeRatio - 1.0) / 2 * 100) + '%';
+        } else {
+            style['width'] = ((1 / relativeRatio) * 100) + '%';
+            style['height'] = '100%';
+            style['left'] = (-((1 / relativeRatio) - 1.0) / 2 * 100) + '%';
+            style['top'] = '0';
+        }
+        this.$iframe.css(style);
+
+        void this.$iframe[0].offsetWidth; // Force style addition
+        this.$iframe.addClass('show');
+    },
+    /**
+     * Append background video related elements to the target.
+     *
+     * @private
+     */
+    _appendBgVideo: function () {
+        var $oldContainer = this.$bgVideoContainer || this.$('> .o_bg_video_container');
+        this.$bgVideoContainer = $(qweb.render('website.background.video', {
+            videoSrc: this.videoSrc,
+            iframeID: this.iframeID,
+        }));
+        this.$iframe = this.$bgVideoContainer.find('.o_bg_video_iframe');
+        this.$iframe.one('load', () => {
+            this.$bgVideoContainer.find('.o_bg_video_loading').remove();
+        });
+        this.$bgVideoContainer.prependTo(this.$target);
+        $oldContainer.remove();
+
+        this._adjustIframe();
+
+        // YouTube does not allow to auto-play video in mobile devices, so we
+        // have to play the video manually.
+        if (this.isMobileEnv && this.isYoutubeVideo) {
+            new window.YT.Player(this.iframeID, {
+                events: {
+                    onReady: ev => ev.target.playVideo(),
+                }
+            });
+        }
+    },
+});
+
+registry.ul = publicWidget.Widget.extend({
     selector: 'ul.o_ul_folded, ol.o_ul_folded',
     events: {
         'click .o_ul_toggle_next': '_onToggleNextClick',
@@ -785,162 +813,10 @@ registry.ul = Animation.extend({
     },
 });
 
-registry.gallery = Animation.extend({
-    selector: '.o_gallery:not(.o_slideshow)',
-    xmlDependencies: ['/website/static/src/xml/website.gallery.xml'],
-    read_events: {
-        'click img': '_onClickImg',
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Called when an image is clicked. Opens a dialog to browse all the images
-     * with a bigger size.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _onClickImg: function (ev) {
-        var self = this;
-        var $cur = $(ev.currentTarget);
-
-        var urls = [];
-        var idx = undefined;
-        var milliseconds = undefined;
-        var params = undefined;
-        var $images = $cur.closest('.o_gallery').find('img');
-        var size = 0.8;
-        var dimensions = {
-            min_width  : Math.round( window.innerWidth  *  size*0.9),
-            min_height : Math.round( window.innerHeight *  size),
-            max_width  : Math.round( window.innerWidth  *  size*0.9),
-            max_height : Math.round( window.innerHeight *  size),
-            width : Math.round( window.innerWidth *  size*0.9),
-            height : Math.round( window.innerHeight *  size)
-        };
-
-        $images.each(function () {
-            urls.push($(this).attr('src'));
-        });
-        var $img = ($cur.is('img') === true) ? $cur : $cur.closest('img');
-        idx = urls.indexOf($img.attr('src'));
-
-        milliseconds = $cur.closest('.o_gallery').data('interval') || false;
-        params = {
-            srcs : urls,
-            index: idx,
-            dim  : dimensions,
-            interval : milliseconds,
-            id: _.uniqueId('slideshow_')
-        };
-        var $modal = $(qweb.render('website.gallery.slideshow.lightbox', params));
-        $modal.modal({
-            keyboard: true,
-            backdrop: true,
-        });
-        $modal.on('hidden.bs.modal', function () {
-            $(this).hide();
-            $(this).siblings().filter('.modal-backdrop').remove(); // bootstrap leaves a modal-backdrop
-            $(this).remove();
-        });
-        $modal.find('.modal-content, .modal-body.o_slideshow').css('height', '100%');
-        $modal.appendTo(document.body);
-
-        $modal.one('shown.bs.modal', function () {
-            self.trigger_up('animation_start_demand', {
-                editableMode: false,
-                $target: $modal.find('.modal-body.o_slideshow'),
-            });
-        });
-    },
-});
-
-registry.gallerySlider = Animation.extend({
-    selector: '.o_slideshow',
-    xmlDependencies: ['/website/static/src/xml/website.gallery.xml'],
-
-    /**
-     * @override
-     */
-    start: function () {
-        var self = this;
-        this.$carousel = this.$target.is('.carousel') ? this.$target : this.$target.find('.carousel');
-        this.$indicator = this.$carousel.find('.carousel-indicators');
-        this.$prev = this.$indicator.find('li.o_indicators_left').css('visibility', ''); // force visibility as some databases have it hidden
-        this.$next = this.$indicator.find('li.o_indicators_right').css('visibility', '');
-        var $lis = this.$indicator.find('li[data-slide-to]');
-        var nbPerPage = Math.floor(this.$indicator.width() / $lis.first().outerWidth(true)) - 3; // - navigator - 1 to leave some space
-        var realNbPerPage = nbPerPage || 1;
-        var nbPages = Math.ceil($lis.length / realNbPerPage);
-
-        var index;
-        var page;
-        update();
-
-        function hide() {
-            $lis.each(function (i) {
-                $(this).toggleClass('d-none', !(i >= page*nbPerPage && i < (page+1)*nbPerPage));
-            });
-            if (self.editableMode) { // do not remove DOM in edit mode
-                return;
-            }
-            if (page <= 0) {
-                self.$prev.detach();
-            } else {
-                self.$prev.prependTo(self.$indicator);
-            }
-            if (page >= nbPages - 1) {
-                self.$next.detach();
-            } else {
-                self.$next.appendTo(self.$indicator);
-            }
-        }
-
-        function update() {
-            index = $lis.index($lis.filter('.active')) || 0;
-            page = Math.floor(index / realNbPerPage);
-            hide();
-        }
-
-        this.$carousel.on('slide.bs.carousel.gallery_slider', function () {
-            setTimeout(function () {
-                var $item = self.$carousel.find('.carousel-inner .carousel-item-prev, .carousel-inner .carousel-item-next');
-                var index = $item.index();
-                $lis.removeClass('active')
-                    .filter('[data-slide-to="'+index+'"]')
-                    .addClass('active');
-            }, 0);
-        });
-        this.$indicator.on('click.gallery_slider', '> li:not([data-slide-to])', function () {
-            page += ($(this).hasClass('o_indicators_left') ? -1 : 1);
-            page = Math.max(0, Math.min(nbPages - 1, page)); // should not be necessary
-            self.$carousel.carousel(page * realNbPerPage);
-            hide();
-        });
-        this.$carousel.on('slid.bs.carousel.gallery_slider', update);
-
-        return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    destroy: function () {
-        this._super.apply(this, arguments);
-
-        this.$prev.prependTo(this.$indicator);
-        this.$next.appendTo(this.$indicator);
-        this.$carousel.off('.gallery_slider');
-        this.$indicator.off('.gallery_slider');
-    },
-});
-
-registry.socialShare = Animation.extend({
+registry.socialShare = publicWidget.Widget.extend({
     selector: '.oe_social_share',
     xmlDependencies: ['/website/static/src/xml/website.share.xml'],
-    read_events: {
+    events: {
         'mouseenter': '_onMouseEnter',
     },
 
@@ -955,22 +831,21 @@ registry.socialShare = Animation.extend({
         this.$('.oe_social_facebook').click($.proxy(this._renderSocial, this, 'facebook'));
         this.$('.oe_social_twitter').click($.proxy(this._renderSocial, this, 'twitter'));
         this.$('.oe_social_linkedin').click($.proxy(this._renderSocial, this, 'linkedin'));
-        this.$('.oe_social_google-plus').click($.proxy(this._renderSocial, this, 'google-plus'));
     },
     /**
      * @private
      */
     _render: function () {
-        this.$target.popover({
+        this.$el.popover({
             content: qweb.render('website.social_hover', {medias: this.socialList}),
             placement: 'bottom',
-            container: this.$target,
+            container: this.$el,
             html: true,
             trigger: 'manual',
             animation: false,
         }).popover("show");
 
-        this.$target.off('mouseleave.socialShare').on('mouseleave.socialShare', function () {
+        this.$el.off('mouseleave.socialShare').on('mouseleave.socialShare', function () {
             var self = this;
             setTimeout(function () {
                 if (!$(".popover:hover").length) {
@@ -986,19 +861,18 @@ registry.socialShare = Animation.extend({
         var url = this.$el.data('urlshare') || document.URL.split(/[?#]/)[0];
         url = encodeURIComponent(url);
         var title = document.title.split(" | ")[0];  // get the page title without the company name
-        var hashtags = ' #'+ document.title.split(" | ")[1].replace(' ','') + ' ' + this.hashtags;  // company name without spaces (for hashtag)
-        var social_network = {
+        var hashtags = ' #' + document.title.split(" | ")[1].replace(' ', '') + ' ' + this.hashtags;  // company name without spaces (for hashtag)
+        var socialNetworks = {
             'facebook': 'https://www.facebook.com/sharer/sharer.php?u=' + url,
             'twitter': 'https://twitter.com/intent/tweet?original_referer=' + url + '&text=' + encodeURIComponent(title + hashtags + ' - ') + url,
             'linkedin': 'https://www.linkedin.com/shareArticle?mini=true&url=' + url + '&title=' + encodeURIComponent(title),
-            'google-plus': 'https://plus.google.com/share?url=' + url,
         };
-        if (!_.contains(_.keys(social_network), social)) {
+        if (!_.contains(_.keys(socialNetworks), social)) {
             return;
         }
         var wHeight = 500;
         var wWidth = 500;
-        window.open(social_network[social], '', 'menubar=no, toolbar=no, resizable=yes, scrollbar=yes, height=' + wHeight + ',width=' + wWidth);
+        window.open(socialNetworks[social], '', 'menubar=no, toolbar=no, resizable=yes, scrollbar=yes, height=' + wHeight + ',width=' + wWidth);
     },
 
     //--------------------------------------------------------------------------
@@ -1012,78 +886,44 @@ registry.socialShare = Animation.extend({
      * @private
      */
     _onMouseEnter: function () {
-        var social = this.$target.data('social');
-        this.socialList = social ? social.split(',') : ['facebook', 'twitter', 'linkedin', 'google-plus'];
-        this.hashtags = this.$target.data('hashtags') || '';
+        var social = this.$el.data('social');
+        this.socialList = social ? social.split(',') : ['facebook', 'twitter', 'linkedin'];
+        this.hashtags = this.$el.data('hashtags') || '';
 
         this._render();
         this._bindSocialEvent();
     },
 });
 
-registry.facebookPage = Animation.extend({
-    selector: '.o_facebook_page',
-
-    /**
-     * @override
-     */
-    start: function () {
-        var def = this._super.apply(this, arguments);
-
-        var params = _.pick(this.$el.data(), 'href', 'height', 'tabs', 'small_header', 'hide_cover', 'show_facepile');
-        if (!params.href) {
-            return def;
-        }
-        params.width = utils.confine(this.$el.width(), 180, 500);
-
-        var src = $.param.querystring('https://www.facebook.com/plugins/page.php', params);
-        this.$iframe = $('<iframe/>', {
-            src: src,
-            width: params.width,
-            height: params.height,
-            css: {
-                border: 'none',
-                overflow: 'hidden',
-            },
-            scrolling: 'no',
-            frameborder: '0',
-            allowTransparency: 'true',
-        });
-        this.$el.append(this.$iframe);
-
-        return def;
-    },
-    /**
-     * @override
-     */
-    destroy: function () {
-        this._super.apply(this, arguments);
-
-        if (this.$iframe) {
-            this.$iframe.remove();
-        }
-    },
-});
-
-/**
- * This is a fix for apple device (<= IPhone 4, IPad 2)
- * Standard bootstrap requires data-toggle='collapse' element to be <a/> tags.
- * Unfortunatly one snippet uses a <div/> tag instead. The fix forces an empty
- * click handler on these div, which allows standard bootstrap to work.
- *
- * This should be removed in a future odoo snippets refactoring.
- */
-registry._fixAppleCollapse = Animation.extend({
-    selector: '.s_faq_collapse [data-toggle="collapse"]',
-    events: {
-        'click': function () {},
-    },
-});
-
-registry.anchorSlide = Animation.extend({
+registry.anchorSlide = publicWidget.Widget.extend({
     selector: 'a[href^="/"][href*="#"], a[href^="#"]',
-    read_events: {
+    events: {
         'click': '_onAnimateClick',
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {jQuery} $el the element to scroll to.
+     * @param {string} [scrollValue='true'] scroll value
+     */
+    _scrollTo: function ($el, scrollValue = 'true') {
+        const headerHeight = this._computeHeaderHeight();
+        $('html, body').animate({
+            scrollTop: $el.offset().top - headerHeight,
+        }, scrollValue === 'true' ? 500 : 0);
+    },
+    /**
+     * @private
+     */
+    _computeHeaderHeight: function () {
+        let headerHeight = 0;
+        const $navbarFixed = $('.o_top_fixed_element');
+        _.each($navbarFixed, el => headerHeight += $(el).outerHeight());
+        return headerHeight;
     },
 
     //--------------------------------------------------------------------------
@@ -1094,19 +934,43 @@ registry.anchorSlide = Animation.extend({
      * @private
      */
     _onAnimateClick: function (ev) {
-        var hash = ev.currentTarget.hash;
+        if (this.$target[0].pathname !== window.location.pathname) {
+            return;
+        }
+        var hash = this.$target[0].hash;
+        if (!utils.isValidAnchor(hash)) {
+            return;
+        }
         var $anchor = $(hash);
-        if ($anchor.length && $anchor.attr('data-anchor') && this.$target[0].pathname === window.location.pathname) {
-            ev.preventDefault();
-            $('html, body').animate({
-                scrollTop: $anchor.offset().top,
-            }, 500);
+        const scrollValue = $anchor.attr('data-anchor');
+        if (!$anchor.length || !scrollValue) {
+            return;
+        }
+        ev.preventDefault();
+        this._scrollTo($anchor, scrollValue);
+    },
+});
+
+registry.ScrollButton = registry.anchorSlide.extend({
+    selector: '.o_scroll_button',
+
+    /**
+     * @override
+     */
+    _onAnimateClick: function (ev) {
+        ev.preventDefault();
+        const $nextSection = this.$el.closest('section').next('section');
+        if ($nextSection.length) {
+            this._scrollTo($nextSection);
         }
     },
 });
 
 return {
-    Class: Animation,
+    Widget: publicWidget.Widget,
+    Animation: Animation,
     registry: registry,
+
+    Class: Animation, // Deprecated
 };
 });

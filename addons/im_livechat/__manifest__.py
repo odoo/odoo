@@ -4,7 +4,7 @@
     'version': '1.0',
     'sequence': 170,
     'summary': 'Chat with your website visitors',
-    'category': 'Website',
+    'category': 'Website/Live Chat',
     'complexity': 'easy',
     'website': 'https://www.odoo.com/page/live-chat',
     'description':
@@ -20,7 +20,9 @@ Help your customers with this chat, and analyse their feedback.
         """,
     'data': [
         "data/mail_shortcode_data.xml",
+        "data/mail_data.xml",
         "data/im_livechat_channel_data.xml",
+        'data/digest_data.xml',
         "security/im_livechat_channel_security.xml",
         "security/ir.model.access.csv",
         "views/rating_views.xml",
@@ -28,6 +30,7 @@ Help your customers with this chat, and analyse their feedback.
         "views/im_livechat_channel_views.xml",
         "views/im_livechat_channel_templates.xml",
         "views/res_users_views.xml",
+        "views/digest_views.xml",
         "report/im_livechat_report_channel_views.xml",
         "report/im_livechat_report_operator_views.xml"
     ],
@@ -35,7 +38,7 @@ Help your customers with this chat, and analyse their feedback.
         "data/im_livechat_channel_demo.xml",
         'data/mail_shortcode_demo.xml',
     ],
-    'depends': ["mail", "rating"],
+    'depends': ["mail", "rating", "digest"],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'auto_install': False,

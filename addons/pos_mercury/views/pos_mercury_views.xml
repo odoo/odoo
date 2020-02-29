@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <record id="view_pos_mercury_configuration_form" model="ir.ui.view" >
-            <field name="name">Mercury Configurations</field>
+            <field name="name">Vantiv Configurations</field>
             <field name="model">pos_mercury.configuration</field>
             <field name="arch" type="xml">
                 <form string="Card Reader">
@@ -13,8 +13,8 @@
                         </div>
                         <div>
                             <p>
-                                <i>Mercury Configurations</i> define what Mercury account will be used when
-                                processing credit card transactions in the Point Of Sale. Setting up a Mercury
+                                <i>Vantiv Configurations</i> define what Vantiv account will be used when
+                                processing credit card transactions in the Point Of Sale. Setting up a Vantiv
                                 configuration will enable you to allow payments with various credit cards
                                 (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this
                                 configuration you should associate it with a Point Of Sale payment method.
@@ -22,7 +22,7 @@
                                 We currently support the MagTek Dynamag card reader device. It can be connected
                                 directly to the Point Of Sale device or it can be connected to the IoTBox.
                             </p><p>
-                                Using the Mercury integration in the Point Of Sale is easy: just press the
+                                Using the Vantiv integration in the Point Of Sale is easy: just press the
                                 associated payment method. After that the amount can be adjusted (eg. for cashback)
                                 just like on any other payment line. Whenever the payment line is set up, a card
                                 can be swiped through the card reader device.
@@ -31,7 +31,7 @@
                                 (without having pressed anything else) will charge the full amount of the order to
                                 the card.
                             </p><p>
-                                If you don't already have a Mercury account, contact Mercury at +1 (800) 846-4472
+                                If you don't already have a Vantiv account, contact Vantiv at +1 (800) 846-4472
                                 to create one.
                             </p>
                         </div>
@@ -45,7 +45,7 @@
         </record>
 
         <record id="view_pos_mercury_configuration_tree" model="ir.ui.view">
-            <field name="name">Mercury Configurations</field>
+            <field name="name">Vantiv Configurations</field>
             <field name="model">pos_mercury.configuration</field>
             <field name="arch" type="xml">
                 <tree string="Card Reader">
@@ -56,10 +56,9 @@
         </record>
 
         <record id="action_configuration_form" model="ir.actions.act_window">
-            <field name="name">Mercury Configurations</field>
+            <field name="name">Vantiv Configurations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos_mercury.configuration</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -68,25 +67,13 @@
             </field>
         </record>
 
-        <record id="view_account_journal_pos_user_form" model="ir.ui.view">
-            <field name="name">POS Journal</field>
-            <field name="model">account.journal</field>
-            <field name="inherit_id" ref="point_of_sale.view_account_journal_pos_user_form"></field>
+        <record id="pos_payment_method_view_form" model="ir.ui.view">
+            <field name="name">Payment Method</field>
+            <field name="model">pos.payment.method</field>
+            <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"></field>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='amount_authorized']" position="after">
-                    <group  attrs="{'invisible': [('type', '!=', 'bank')]}">
-                        <field name="pos_mercury_config_id"/>
-                    </group>
-                </xpath>
-            </field>
-        </record>
-        <record id="view_account_bank_journal_form_inherited_pos_mercury" model="ir.ui.view">
-            <field name="name">account.bank.journal.form.inherited.pos.mercury</field>
-            <field name="model">account.journal</field>
-            <field name="inherit_id" ref="point_of_sale.view_account_bank_journal_form_inherited_pos"></field>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='journal_user']" position="after">
-                    <field name="pos_mercury_config_id" attrs="{'invisible': [('journal_user', '=', False)]}"/>
+                <xpath expr="//field[@name='use_payment_terminal']" position="after">
+                    <field name="pos_mercury_config_id" attrs="{'invisible': [('use_payment_terminal', '!=', 'mercury')], 'required': [('use_payment_terminal', '=', 'mercury')]}"/>
                 </xpath>
             </field>
         </record>

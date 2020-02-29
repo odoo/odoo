@@ -15,7 +15,9 @@
                 <filter string="Livechat Channel" name="groupby_livechat_channel" context="{'group_by': 'parent_res_name'}"/>
             </xpath>
             <xpath expr="/search" position="inside">
-                <filter string="Creation Date" name="creation_date_filter" date="create_date" default_period="this_week"/>
+                <filter string="This Week" name="creation_date_filter" domain="[
+                ('create_date', '>=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1,days=1,weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
+                ('create_date', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(days=1,weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
             </xpath>
         </field>
     </record>

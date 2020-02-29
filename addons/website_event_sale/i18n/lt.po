@@ -1,40 +1,67 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_event_sale
+# 	* website_event_sale
 # 
 # Translators:
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Rytis Štreimikis <r.streimikis@hotmail.lt>, 2017
+# Martin Trigaux, 2019
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2019
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Rytis Štreimikis <r.streimikis@hotmail.lt>, 2017\n"
+"POT-Creation-Date: 2019-09-30 09:42+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>Free</span>"
-msgstr "<span>Nemokama</span>"
+msgid "<i class=\"fa fa-ban mr-2\"/>Sold Out"
+msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>Unlimited</span>"
-msgstr "<span>Neribota</span>"
+msgid "<i class=\"fa fa-check mr-2\"/>Registered"
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity cannot be applied to this "
+"event tickets product."
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity will not be applied to the "
+"event tickets products."
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
+msgid "Event Tickets"
+msgstr "Renginio bilietai"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>left</span>"
-msgstr "<span>kairė</span>"
+msgid "Free"
+msgstr "Laisvas"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
+msgid "N/A"
+msgstr "nėra"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.index
@@ -42,17 +69,22 @@ msgid "Only"
 msgstr "Tik"
 
 #. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_pricelist_item
+msgid "Pricelist Rule"
+msgstr ""
+
+#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
 msgid "Product"
 msgstr "Produktas"
 
 #. module: website_event_sale
-#: model:ir.model,name:website_event_sale.model_sale_order
-msgid "Quotation"
-msgstr "Įkainojimas"
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "Register"
+msgstr "Registruotis"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:56
+#: code:addons/website_event_sale/controllers/main.py:0
 #, python-format
 msgid "Registration"
 msgstr "Registracija"
@@ -60,7 +92,22 @@ msgstr "Registracija"
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.index
 msgid "Remaining"
-msgstr "Likutis"
+msgstr "Liko"
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Pardavimo užsakymas"
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Pardavimo užsakymo eilutė"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "Sales end on"
+msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.index
@@ -68,28 +115,46 @@ msgid "Sold Out"
 msgstr "Išparduota"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:71
+#: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
-msgstr "Atleiskite, %(ticket)s bilietai į %(event)s renginį jau išparduoti."
+msgstr "Atsiprašome, %(ticket)s bilietai į %(event)s renginį jau išparduoti."
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:77
+#: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid ""
 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
 " ticket for the %(event)s event."
 msgstr ""
-"Atleiskite, tik %(remaining_seats)d vietos yra likusios %(ticket)s bilietams"
-" į %(event)s renginį."
+"Atsiprašome, tik %(remaining_seats)d vietos yra likusios %(ticket)s "
+"bilietams į %(event)s renginį."
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:39
+#: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "The ticket doesn't match with this product."
 msgstr "Bilietas nesutampa su produktu."
 
 #. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
+msgid "Ticket"
+msgstr "Bilietas"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid ""
+"Tickets\n"
+"                    <span class=\"close\">×</span>"
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+#, python-format
+msgid "Warning"
+msgstr "Įspėjimas"
+
+#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website
 msgid "Website"
-msgstr "Tinklalapis"
+msgstr "Svetainė"

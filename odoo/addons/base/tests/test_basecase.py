@@ -67,6 +67,6 @@ class TestTransactionCase(common.TransactionCase):
         xid = 'base.test_partner_yellow'
         partner = self.env.ref(xid)
         pid = self.ref(xid)
-        self.assertEquals(pid, partner.id, "ref() should resolve xid to database ID")
+        self.assertEqual(pid, partner.id, "ref() should resolve xid to database ID")
         partner2 = self.browse_ref(xid)
         self.assertEqual(partner, partner2, "browse_ref() should resolve xid to browse records")

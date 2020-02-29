@@ -1,0 +1,40 @@
+<odoo>
+    <!-- bind to all views -->
+    <act_window
+        id="act1"
+        name="Action 1"
+        res_model="tab.a"
+        binding_model="tab.a"
+        binding_views=""/>
+    <!-- bind to form views -->
+    <act_window
+        id="act2"
+        name="Action 2"
+        res_model="tab.a"
+        binding_model="tab.a"
+        binding_views="form"/>
+    <!-- bind to default views (list, form) -->
+    <act_window
+        id="act3"
+        name="Action 3"
+        res_model="tab.a"
+        binding_model="tab.a"/>
+
+    <record id="r1" model="ir.actions.act_window">
+        <field name="name">Record 1</field>
+        <field name="res_model">tab.b</field>
+        <field name="binding_model_id" ref="model_tab_b"/>
+        <field name="binding_view_types"/>
+    </record>
+    <record id="r2" model="ir.actions.act_window">
+        <field name="name">Record 2</field>
+        <field name="res_model">tab.b</field>
+        <field name="binding_model_id" ref="model_tab_b"/>
+        <field name="binding_view_types">form</field>
+    </record>
+    <record id="r3" model="ir.actions.act_window">
+        <field name="name">Record 3</field>
+        <field name="res_model">tab.b</field>
+        <field name="binding_model_id" ref="model_tab_b"/>
+    </record>
+</odoo>

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
 
@@ -33,9 +34,9 @@ class EventSaleTest(common.TransactionCase):
 
         # I create a sales order
         self.sale_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'My Attendee'}).id,
             'note': 'Invoice after delivery',
-            'payment_term_id': self.env.ref('account.account_payment_term').id
+            'payment_term_id': self.env.ref('account.account_payment_term_end_following_month').id
         })
 
         # In the sales order I add some sales order lines. i choose event product

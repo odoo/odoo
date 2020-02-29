@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_gengo
+# 	* base_gengo
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
-# Edoardo Scaglia <edoardo.87@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Paolo Valier, 2018
-# David Minneci <david@numeko.it>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
-# Petra <bop@odoo.com>, 2018
+# Martin Trigaux, 2019
+# Paolo Valier, 2019
+# David Minneci <david@numeko.it>, 2019
+# Léonie Bouchat <lbo@odoo.com>, 2019
+# mymage <stefano.consolaro@mymage.it>, 2019
+# Petra <bop@odoo.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-10-02 10:05+0000\n"
-"Last-Translator: Petra <bop@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,31 +50,36 @@ msgstr ""
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Add Gengo login Private Key..."
-msgstr "Aggiungi chiave privata login Gengo"
+msgstr "Aggiungere chiave privata login Gengo..."
 
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Add Gengo login Public Key..."
-msgstr "Aggiungi chiave pubblica login Gengo"
+msgstr "Aggiungere chiave pubblica login Gengo..."
 
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Add your comments here for translator...."
-msgstr "Aggiungi i commenti qui per i traduttori..."
+msgstr "Aggiungere qui i commenti per i traduttori..."
 
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Auto Approve Translation"
-msgstr "Approvazione automatica Traduzione"
+msgstr "Approvazione automatica traduzione"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_res_company__gengo_auto_approve
 #: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__gengo_auto_approve
 msgid "Auto Approve Translation ?"
-msgstr "Auto approvazione traduzione?"
+msgstr "Approvazione automatica traduzione?"
 
 #. module: base_gengo
-#: selection:base.gengo.translations,sync_type:0
+#: model:ir.model,name:base_gengo.model_base_gengo_translations
+msgid "Base Gengo Translations"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields.selection,name:base_gengo.selection__base_gengo_translations__sync_type__both
 msgid "Both"
 msgstr "Entrambe"
 
@@ -96,7 +101,7 @@ msgstr ""
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Click here to Configure Gengo Parameters"
-msgstr "Clicca qui per Configurare i Parametri di Gengo"
+msgstr "Cliccare qui per configurare i parametri di Gengo"
 
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
@@ -122,7 +127,7 @@ msgstr "Aziende"
 #. module: base_gengo
 #: model:ir.model,name:base_gengo.model_res_config_settings
 msgid "Config Settings"
-msgstr "Impostazioni di configurazione"
+msgstr "Impostazioni configurazione"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__create_uid
@@ -142,12 +147,12 @@ msgstr "Nome visualizzato"
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
 msgid "Gengo Comments & Activity..."
-msgstr "Commenti e attività Gengo"
+msgstr "Commenti e attività Gengo..."
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_ir_translation__order_id
 msgid "Gengo Order ID"
-msgstr "ID Ordine Gengo"
+msgstr "ID ordine Gengo"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_res_company__gengo_private_key
@@ -164,7 +169,7 @@ msgstr "Chiave pubblica Gengo"
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Gengo Request Form"
-msgstr "Form richiesta Gengo"
+msgstr "Modulo richiesta Gengo"
 
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
@@ -177,45 +182,44 @@ msgid "Gengo Translation Service Level"
 msgstr "Livello servizio traduzione Gengo"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:84
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:0
 #, python-format
 msgid ""
 "Gengo `Public Key` or `Private Key` are missing. Enter your Gengo "
 "authentication parameters under `Settings > Companies > Gengo Parameters`."
 msgstr ""
-"Manca la chiave pubblica e quella privata di Genco. Prego inserire i "
-"parametri di autenticazione sotto \"Impostazioni > Aziende > Paramtetri "
-"Gengo\"."
+"Manca la chiave pubblica o quella privata di Gengo. Inserire i parametri di "
+"autenticazione in Impostazioni > Aziende > Parametri Gengo."
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:95
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:0
 #, python-format
 msgid ""
 "Gengo connection failed with this message:\n"
 "``%s``"
 msgstr ""
 "Connessione Gengo fallita con questo messaggio:\n"
-" ''%s''"
+"``%s``"
 
 #. module: base_gengo
 #: model:ir.actions.act_window,name:base_gengo.action_wizard_base_gengo_translations
 #: model:ir.ui.menu,name:base_gengo.menu_action_wizard_base_gengo_translations
 msgid "Gengo: Manual Request of Translation"
-msgstr "Gengo: Richiesta manuale di traduzione"
+msgstr "Gengo: richiesta manuale di traduzione"
 
 #. module: base_gengo
 #: model:ir.actions.server,name:base_gengo.gengo_sync_send_request_scheduler_ir_actions_server
 #: model:ir.cron,cron_name:base_gengo.gengo_sync_send_request_scheduler
 #: model:ir.cron,name:base_gengo.gengo_sync_send_request_scheduler
 msgid "Gengo: Sync translation (Request)"
-msgstr "Gengo: Sincronizzazione di traduzione (Richiesta)"
+msgstr "Gengo: sincronizzazione di traduzione (Richiesta)"
 
 #. module: base_gengo
 #: model:ir.actions.server,name:base_gengo.gengo_sync_receive_request_scheduler_ir_actions_server
 #: model:ir.cron,cron_name:base_gengo.gengo_sync_receive_request_scheduler
 #: model:ir.cron,name:base_gengo.gengo_sync_receive_request_scheduler
 msgid "Gengo: Sync translation (Response)"
-msgstr "Gengo: Sincronizzazione di traduzione (Risposta)"
+msgstr "Gengo: sincronizzazione di traduzione (Risposta)"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__id
@@ -226,7 +230,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:base_gengo.field_res_company__gengo_auto_approve
 #: model:ir.model.fields,help:base_gengo.field_res_config_settings__gengo_auto_approve
 msgid "Jobs are Automatically Approved by Gengo."
-msgstr "I lavori saranno automaticamente approvati da Gengo"
+msgstr "I lavori sono approvati automaticamente da Gengo."
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__lang_id
@@ -236,17 +240,17 @@ msgstr "Lingua"
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations____last_update
 msgid "Last Modified on"
-msgstr "Data di ultima modifica"
+msgstr "Ultima modifica il"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__write_uid
 msgid "Last Updated by"
-msgstr "Ultima modifica di"
+msgstr "Ultimo aggiornamento di"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__write_date
 msgid "Last Updated on"
-msgstr "Ultima modifica il"
+msgstr "Ultimo aggiornamento il"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__sync_limit
@@ -259,7 +263,7 @@ msgid "Private Key"
 msgstr "Chiave privata"
 
 #. module: base_gengo
-#: selection:ir.translation,gengo_translation:0
+#: model:ir.model.fields.selection,name:base_gengo.selection__ir_translation__gengo_translation__pro
 msgid "Pro"
 msgstr "Pro"
 
@@ -269,16 +273,16 @@ msgid "Public Key"
 msgstr "Chiave pubblica"
 
 #. module: base_gengo
-#: selection:base.gengo.translations,sync_type:0
+#: model:ir.model.fields.selection,name:base_gengo.selection__base_gengo_translations__sync_type__receive
 msgid "Receive Translation"
-msgstr "Ricevi Traduzione"
+msgstr "Ricevere traduzione"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_res_company__gengo_sandbox
 #: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__gengo_sandbox
 #: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Sandbox Mode"
-msgstr "Modo Sandbox"
+msgstr "Modo sandbox"
 
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
@@ -286,14 +290,14 @@ msgid "Send"
 msgstr "Invia"
 
 #. module: base_gengo
-#: selection:base.gengo.translations,sync_type:0
+#: model:ir.model.fields.selection,name:base_gengo.selection__base_gengo_translations__sync_type__send
 msgid "Send New Terms"
 msgstr "Invia nuovi termini"
 
 #. module: base_gengo
-#: selection:ir.translation,gengo_translation:0
+#: model:ir.model.fields.selection,name:base_gengo.selection__ir_translation__gengo_translation__standard
 msgid "Standard"
-msgstr "Standard"
+msgstr "Normale"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__sync_type
@@ -301,14 +305,14 @@ msgid "Sync Type"
 msgstr "Tipo sincronizzazione"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:114
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:0
 #, python-format
 msgid ""
 "The number of terms to sync should be between 1 to 200 to work with Gengo "
 "translation services."
 msgstr ""
 "Il numero di termini da sincronizzare deve essere compreso tra 1 e 200 per "
-"poter funzionare con i servizi di traduzione Gengo"
+"poter funzionare con i servizi di traduzione Gengo."
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__authorized_credentials
@@ -326,15 +330,15 @@ msgstr ""
 "inviate a Gengo"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:109
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:0
 #, python-format
 msgid "This language is not supported by the Gengo translation services."
-msgstr "Questa lingua non è supportata dai servizi di traduzione Gengo"
+msgstr "Questa lingua non è supportata dai servizi di traduzione Gengo."
 
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.view_translation_search
 msgid "To Approve In Gengo"
-msgstr "Da approvare dentro Gengo"
+msgstr "Da approvare in Gengo"
 
 #. module: base_gengo
 #: model:ir.model,name:base_gengo.model_ir_translation
@@ -342,12 +346,12 @@ msgid "Translation"
 msgstr "Traduzione"
 
 #. module: base_gengo
-#: selection:ir.translation,gengo_translation:0
+#: model:ir.model.fields.selection,name:base_gengo.selection__ir_translation__gengo_translation__machine
 msgid "Translation By Machine"
 msgstr "Traduzione automatica"
 
 #. module: base_gengo
-#: selection:ir.translation,gengo_translation:0
+#: model:ir.model.fields.selection,name:base_gengo.selection__ir_translation__gengo_translation__ultra
 msgid "Ultra"
 msgstr "Ultra"
 
@@ -359,8 +363,3 @@ msgid ""
 msgstr ""
 "Potrete selezionare qui il livello di servizio che volete per una traduzione"
 " automatica utilizzando Gengo."
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_base_gengo_translations
-msgid "base.gengo.translations"
-msgstr "base.gengo.translations"

@@ -10,7 +10,6 @@ var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
-var session = require('web.session');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -56,7 +55,10 @@ var PartnerInviteDialog = Dialog.extend({
             allowClear: true,
             multiple: true,
             formatResult: function (item) {
-                var status = QWeb.render('mail.UserStatus', { status: item.im_status });
+                var status = QWeb.render('mail.UserStatus', {
+                    status: self.call('mail_service', 'getImStatus', { partnerID: item.id }),
+                    partnerID: item.id,
+                });
                 return $('<span>').text(item.text).prepend(status);
             },
             query: function (query) {
@@ -79,7 +81,7 @@ var PartnerInviteDialog = Dialog.extend({
 
     /**
      * @private
-     * @returns {$.Promise}
+     * @returns {Promise}
      */
     _addChannel: function () {
         var self = this;
@@ -124,7 +126,7 @@ var RenameConversationDialog = Dialog.extend({
         this._callback = callback;
 
         this._super(parent, {
-            title: 'Rename conversation',
+            title: _t('Rename conversation'),
             size: 'medium',
             buttons: [{
                 text: _t("Rename"),
@@ -165,9 +167,9 @@ var RenameConversationDialog = Dialog.extend({
             kwargs: {
                 name: name,
             }
-        }).then(function (updatedName) {
+        }).then(function () {
             var channel = self.call('mail_service', 'getThread', self._channelID);
-            channel.setName(updatedName);
+            channel.setName(name);
             self._callback();
         });
     },
@@ -238,12 +240,12 @@ var ModeratorRejectMessageDialog = Dialog.extend({
 
 var Discuss = AbstractAction.extend({
     contentTemplate: 'mail.discuss',
-    custom_events: {
+    custom_events: _.extend({}, AbstractAction.prototype.custom_events, {
         discard_extended_composer: '_onDiscardExtendedComposer',
         message_moderation: '_onMessageModeration',
         search: '_onSearch',
         update_moderation_buttons: '_onUpdateModerationButtons',
-    },
+    }),
     events: {
         'click .o_mail_sidebar_title .o_add': '_onAddThread',
         'blur .o_mail_add_thread input': '_onAddThreadBlur',
@@ -278,6 +280,8 @@ var Discuss = AbstractAction.extend({
             this.options.channelQuickSearchThreshold = 20;
         }
 
+        this._isMessagingReady = this.call('mail_service', 'isReady');
+        this._isStarted = false;
         this._threadsScrolltop = {};
         this._composerStates = {};
         this._defaultThreadID = this.options.active_id ||
@@ -289,68 +293,20 @@ var Discuss = AbstractAction.extend({
             this._updateThreads.bind(this), 100, { leading: false });
 
         this.controlPanelParams.modelName = 'mail.message';
-    },
-    /**
-     * @override
-     */
-    willStart: function () {
-        return $.when(this._super(), this.call('mail_service', 'isReady'));
+        this.call('mail_service', 'getMailBus').on('messaging_ready', this, this._onMessagingReady);
     },
     /**
      * @override
      */
     start: function () {
         var self = this;
-
-        this._basicComposer = new BasicComposer(this, {
-            mentionPartnersRestricted: true,
-            showTyping: true,
+        this._isStarted = true;
+        return this._super.apply(this, arguments).then(function () {
+            if (!self._isMessagingReady) {
+                return;
+            }
+            return self._initRender();
         });
-        this._extendedComposer = new ExtendedComposer(this, {
-            mentionPartnersRestricted: true,
-            showTyping: true,
-        });
-        this._basicComposer
-            .on('post_message', this, this._onPostMessage)
-            .on('input_focused', this, this._onComposerFocused);
-        this._extendedComposer
-            .on('post_message', this, this._onPostMessage)
-            .on('input_focused', this, this._onComposerFocused);
-        this._renderButtons();
-
-        var defs = [];
-        defs.push(
-            this._renderThread()
-        );
-        defs.push(
-            this._basicComposer.appendTo(this.$('.o_mail_discuss_content')));
-        defs.push(
-            this._extendedComposer.appendTo(this.$('.o_mail_discuss_content')));
-        defs.push(this._super.apply(this, arguments));
-
-        return $.when.apply($, defs)
-            .then(function () {
-                return self._setThread(self._defaultThreadID);
-            })
-            .then(function () {
-                self._initThreads();
-                self._startListening();
-                self._threadWidget.$el.on('scroll', null, _.debounce(function () {
-                    if (
-                        self._threadWidget.getScrolltop() < 20 &&
-                        !self._threadWidget.$('.o_mail_no_content').length &&
-                        !self._thread.isAllHistoryLoaded(self.domain)
-                    ) {
-                        self._loadMoreMessages();
-                    }
-                    if (
-                        self._threadWidget.isAtBottom() &&
-                        self._thread.getType() !== 'mailbox'
-                    ) {
-                        self._thread.markAsRead();
-                    }
-                }, 100));
-            });
     },
     /**
      * @override
@@ -379,8 +335,8 @@ var Discuss = AbstractAction.extend({
         this.call('mail_service', 'getMailBus').trigger('discuss_open', true);
         if (this._thread) {
             this._threadWidget.scrollToPosition(this._threadsScrolltop[this._thread.getID()]);
+            this._loadEnoughMessages();
         }
-        this._loadEnoughMessages();
     },
     /**
      * @override
@@ -471,7 +427,7 @@ var Discuss = AbstractAction.extend({
     },
     /**
      * @private
-     * @returns {$.Promise}
+     * @returns {Promise}
      */
     _fetchAndRenderThread: function () {
         var self = this;
@@ -545,6 +501,61 @@ var Discuss = AbstractAction.extend({
         }
      },
     /**
+     * @private
+     */
+    _initRender: function () {
+        var self = this;
+        this.$('.o_mail_discuss_loading').remove();
+        this._basicComposer = new BasicComposer(this, {
+            mentionPartnersRestricted: true,
+            showTyping: true,
+        });
+        this._extendedComposer = new ExtendedComposer(this, {
+            mentionPartnersRestricted: true,
+            showTyping: true,
+        });
+        this._basicComposer
+            .on('post_message', this, this._onPostMessage)
+            .on('input_focused', this, this._onComposerFocused);
+        this._extendedComposer
+            .on('post_message', this, this._onPostMessage)
+            .on('input_focused', this, this._onComposerFocused);
+        this._renderButtons();
+
+        var defs = [];
+        defs.push(
+            this._renderThread()
+        );
+        defs.push(
+            this._basicComposer.appendTo(this.$('.o_mail_discuss_content')));
+        defs.push(
+            this._extendedComposer.appendTo(this.$('.o_mail_discuss_content')));
+
+        return Promise.all(defs)
+            .then(function () {
+                return self._setThread(self._defaultThreadID);
+            })
+            .then(function () {
+                self._initThreads();
+                self._startListening();
+                self._threadWidget.$el.on('scroll', null, _.debounce(function () {
+                    if (
+                        self._threadWidget.getScrolltop() < 20 &&
+                        !self._threadWidget.$('.o_mail_no_content').length &&
+                        !self._thread.isAllHistoryLoaded(self.domain)
+                    ) {
+                        self._loadMoreMessages();
+                    }
+                    if (
+                        self._threadWidget.isAtBottom() &&
+                        self._thread.getType() !== 'mailbox'
+                    ) {
+                        self._thread.markAsRead();
+                    }
+                }, 100));
+            });
+    },
+    /**
      * Renders the mainside bar with current threads
      *
      * @private
@@ -564,7 +575,7 @@ var Discuss = AbstractAction.extend({
      * loaded when scrolling to the top, so they can't be loaded if there is no
      * scrollbar)
      *
-     * @returns {Deferred} resolved when there are enough messages to fill the
+     * @returns {Promise} resolved when there are enough messages to fill the
      *   screen, or when there is no more message to fetch
      */
     _loadEnoughMessages: function () {
@@ -580,7 +591,7 @@ var Discuss = AbstractAction.extend({
      * Load more messages for the current thread
      *
      * @private
-     * @returns {$.Promise}
+     * @returns {Promise}
      */
     _loadMoreMessages: function () {
         var self = this;
@@ -641,9 +652,10 @@ var Discuss = AbstractAction.extend({
         var self = this;
         if (type === 'multi_user_channel') {
             $input.autocomplete({
+                autoFocus: true,
                 source: function (request, response) {
                     self._lastSearchVal = _.escape(request.term);
-                    self._searchChannel(self._lastSearchVal).done(function (result){
+                    self._searchChannel(self._lastSearchVal).then(function (result){
                         result.push({
                             label:  _.str.sprintf(
                                         '<strong>' + _t("Create %s (Public)") + '</strong>',
@@ -682,9 +694,10 @@ var Discuss = AbstractAction.extend({
             });
         } else if (type === 'dm_chat') {
             $input.autocomplete({
+                autoFocus: true,
                 source: function (request, response) {
                     self._lastSearchVal = _.escape(request.term);
-                    self.call('mail_service', 'searchPartner', self._lastSearchVal, 10).done(response);
+                    self.call('mail_service', 'searchPartner', self._lastSearchVal, 10).then(response);
                 },
                 select: function (ev, ui) {
                     var partnerID = ui.item.id;
@@ -726,7 +739,7 @@ var Discuss = AbstractAction.extend({
      * @private
      */
     _renderButtons: function () {
-        this.$buttons = $(QWeb.render('mail.discuss.ControlButtons', { debug: session.debug }));
+        this.$buttons = $(QWeb.render('mail.discuss.ControlButtons', { debug: config.isDebug() }));
         this.$buttons.find('button').css({display:'inline-block'});
         this.$buttons
             .on('click', '.o_mail_discuss_button_invite', this._onInviteButtonClicked.bind(this))
@@ -814,7 +827,7 @@ var Discuss = AbstractAction.extend({
      * Renders, binds events and appends a thread widget.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _renderThread: function () {
         this._threadWidget = new ThreadWidget(this, {
@@ -872,7 +885,7 @@ var Discuss = AbstractAction.extend({
     /**
      * @private
      * @param {string} searchVal
-     * @returns {$.Promise<Array>}
+     * @returns {Promise<Array>}
      */
     _searchChannel: function (searchVal){
         return this._rpc({
@@ -910,7 +923,7 @@ var Discuss = AbstractAction.extend({
         this._extendedComposer.do_show();
 
         this._threadWidget.scrollToMessage({
-            msgID: messageID,
+            messageID: messageID,
             duration: 200,
             onlyIfNecessary: true
         });
@@ -922,11 +935,12 @@ var Discuss = AbstractAction.extend({
      *
      * @private
      * @param {integer} threadID a thread with such ID
-     * @returns {$.Promise}
+     * @returns {Promise}
      */
     _setThread: function (threadID) {
         var self = this;
 
+        this.$('.o_out_of_office').remove();
         // Store scroll position and composer state of the previous thread
         this._storeThreadState();
 
@@ -965,6 +979,13 @@ var Discuss = AbstractAction.extend({
             // message
             self._unselectMessage();
 
+            if (self._thread.hasOutOfOffice()) {
+                const $outOfOffice = $(QWeb.render('mail.thread.OutOfOffice', {
+                    thread: self._thread
+                }));
+                $outOfOffice.prependTo(self.$('.o_mail_discuss_content'));
+            }
+
             self.action_manager.do_push_state({
                 action: self.action.id,
                 active_id: self._thread.getID(),
@@ -992,10 +1013,10 @@ var Discuss = AbstractAction.extend({
             .on('new_channel', this, this._onNewChannel)
             .on('is_thread_bottom_visible', this, this._onIsThreadBottomVisible)
             .on('unsubscribe_from_channel', this, this._onChannelLeft)
+            .on('updated_im_status', this, this._onUpdatedImStatus)
             .on('update_needaction', this, this._onUpdateNeedaction)
             .on('update_starred', this, this._onUpdateStarred)
             .on('update_thread_unread_counter', this, this._onUpdateThreadUnreadCounter)
-            .on('update_dm_presence', this, this._onUpdateDmPresence)
             .on('activity_updated', this, this._onActivityUpdated)
             .on('update_moderation_counter', this, this._onUpdateModerationCounter)
             .on('update_typing_partners', this, this._onTypingPartnersUpdated)
@@ -1398,6 +1419,19 @@ var Discuss = AbstractAction.extend({
     },
     /**
      * @private
+     */
+    _onMessagingReady: function () {
+        if (this._isMessagingReady) {
+            return;
+        }
+        this._isMessagingReady = true;
+        if (!this._isStarted) {
+            return;
+        }
+        this._initRender();
+    },
+    /**
+     * @private
      * @param {MouseEvent} ev
      */
     _onModerateAllClicked: function (ev) {
@@ -1461,7 +1495,7 @@ var Discuss = AbstractAction.extend({
         var self = this;
         var options = {};
         if (this._selectedMessage) {
-            messageData.subtype = this._selectedMessage.isNote() ? 'mail.mt_note': 'mail.mt_comment';
+            messageData.subtype_xmlid = this._selectedMessage.isNote() ? 'mail.mt_note': 'mail.mt_comment';
             messageData.subtype_id = false;
             messageData.message_type = 'comment';
 
@@ -1478,9 +1512,6 @@ var Discuss = AbstractAction.extend({
                 } else {
                     self._threadWidget.scrollToBottom();
                 }
-            })
-            .fail(function () {
-                // todo: display notifications
             });
     },
     /**
@@ -1572,7 +1603,7 @@ var Discuss = AbstractAction.extend({
     /**
      * @private
      */
-    _onUpdateDmPresence: function () {
+    _onUpdatedImStatus: function () {
         this._throttledUpdateThreads();
     },
     /**

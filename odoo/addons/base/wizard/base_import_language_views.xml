@@ -12,7 +12,7 @@
                         <field name="code" string="Code" placeholder="e.g. en_US"/>
                         <field name="data" filename="filename"/>
                         <field name="filename" invisible="1"/>
-                        <field name="overwrite"/>
+                        <field name="overwrite" groups="base.group_no_one"/>
                     </group>
                     <footer>
                         <button name="import_lang" string="_Import" type="object" class="btn-primary"/>
@@ -26,7 +26,6 @@
             <field name="name">Import Translation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">base.language.import</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>

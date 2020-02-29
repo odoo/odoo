@@ -8,7 +8,7 @@
             <t t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)">
                 <t t-set="information_block">
                     <div groups="sale.group_delivery_invoice_address">
-                        <strong>Shipping address:</strong>
+                        <strong>Shipping Address:</strong>
                         <div t-field="o.partner_shipping_id"
                             t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                     </div>

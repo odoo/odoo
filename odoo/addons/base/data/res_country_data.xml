@@ -70,6 +70,8 @@
             <field file="base/static/img/country_flags/ar.png" name="image" type="base64" />
             <field name="currency_id" ref="ARS" />
             <field eval="54" name="phone_code" />
+            <field name="vat_label">CUIT</field>
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format"/>
         </record>
         <record id="as" model="res.country">
             <field name="name">American Samoa</field>
@@ -348,6 +350,7 @@
         <record id="co" model="res.country">
             <field name="name">Colombia</field>
             <field name="code">co</field>
+            <field name="vat_label">NIT</field>
             <field file="base/static/img/country_flags/co.png" name="image" type="base64" />
             <field name="currency_id" ref="COP" />
             <field eval="57" name="phone_code" />
@@ -700,6 +703,7 @@
             <field name="code">hr</field>
             <field file="base/static/img/country_flags/hr.png" name="image" type="base64" />
             <field name="currency_id" ref="HRK" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s \n%(country_name)s'" name="address_format" />
             <field eval="385" name="phone_code" />
             <field name="vat_label">VAT</field>
         </record>
@@ -1029,7 +1033,7 @@
             <field eval="692" name="phone_code" />
         </record>
         <record id="mk" model="res.country">
-            <field name="name">Macedonia, the former Yugoslav Republic of</field>
+            <field name="name">North Macedonia</field>
             <field name="code">mk</field>
             <field file="base/static/img/country_flags/mk.png" name="image" type="base64" />
             <field name="currency_id" ref="MKD" />
@@ -1081,7 +1085,7 @@
             <field name="name">Mauritania</field>
             <field name="code">mr</field>
             <field file="base/static/img/country_flags/mr.png" name="image" type="base64" />
-            <field name="currency_id" ref="MRO" />
+            <field name="currency_id" ref="MRU" />
             <field eval="222" name="phone_code" />
         </record>
         <record id="ms" model="res.country">
@@ -1104,6 +1108,7 @@
             <field name="code">mu</field>
             <field file="base/static/img/country_flags/mu.png" name="image" type="base64" />
             <field name="currency_id" ref="MUR" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field eval="230" name="phone_code" />
         </record>
         <record id="mv" model="res.country">
@@ -1484,7 +1489,7 @@
             <field name="name">Suriname</field>
             <field name="code">sr</field>
             <field file="base/static/img/country_flags/sr.png" name="image" type="base64" />
-            <field name="currency_id" ref="SRG" />
+            <field name="currency_id" ref="SRD" />
             <field eval="597" name="phone_code" />
         </record>
         <record id="ss" model="res.country">
@@ -1582,7 +1587,7 @@
             <field name="name">Turkmenistan</field>
             <field name="code">tm</field>
             <field file="base/static/img/country_flags/tm.png" name="image" type="base64" />
-            <field name="currency_id" ref="TMM" />
+            <field name="currency_id" ref="TMT" />
             <field eval="993" name="phone_code" />
         </record>
         <record id="tn" model="res.country">
@@ -1779,14 +1784,14 @@
             <field name="name">Zambia</field>
             <field name="code">zm</field>
             <field file="base/static/img/country_flags/zm.png" name="image" type="base64" />
-            <field name="currency_id" ref="ZMK" />
+            <field name="currency_id" ref="ZMW" />
             <field eval="260" name="phone_code" />
         </record>
         <record id="zw" model="res.country">
             <field name="name">Zimbabwe</field>
             <field name="code">zw</field>
             <field file="base/static/img/country_flags/zw.png" name="image" type="base64" />
-            <field name="currency_id" ref="ZWD" />
+            <field name="currency_id" ref="ZWL" />
             <field eval="263" name="phone_code" />
         </record>
         <record id="xk" model="res.country">
@@ -1814,6 +1819,21 @@
                 ref('ar'),ref('bo'),ref('br'),ref('cl'),ref('co'),
                 ref('ec'),ref('fk'),ref('gs'),ref('gf'),ref('gy'),
                 ref('py'),ref('pe'),ref('sr'),ref('uy'),ref('ve')])]"/>
+        </record>
+
+        <record id="sepa_zone" model="res.country.group">
+            <field name="name">SEPA Countries</field>
+            <field name="country_ids" eval="[(6,0,[
+                ref('ad'),ref('at'),ref('ax'),ref('be'),ref('bg'),
+                ref('bl'),ref('ch'),ref('cy'),ref('cz'),ref('de'),
+                ref('dk'),ref('ee'),ref('es'),ref('fi'),ref('fr'),
+                ref('uk'),ref('gf'),ref('gg'),ref('gi'),ref('gp'),
+                ref('gr'),ref('hr'),ref('hu'),ref('ie'),ref('im'),
+                ref('is'),ref('it'),ref('je'),ref('li'),ref('lt'),
+                ref('lu'),ref('lv'),ref('mc'),ref('mf'),ref('mq'),
+                ref('mt'),ref('nl'),ref('no'),ref('pl'),ref('pm'),
+                ref('pt'),ref('re'),ref('ro'),ref('se'),ref('si'),
+                ref('sk'),ref('sm'),ref('va'),ref('yt')])]"/>
         </record>
     </data>
 </odoo>

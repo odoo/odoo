@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="group_delivery_invoice_address" model="res.groups">
-        <field name="name">Addresses in Sales Orders</field>
+     <record id="group_auto_done_setting" model="res.groups">
+        <field name="name">Lock Confirmed Sales</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
-    <record id="group_discount_per_so_line" model="res.groups">
-        <field name="name">Discount on lines</field>
+    <record id="group_delivery_invoice_address" model="res.groups">
+        <field name="name">Addresses in Sales Orders</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
@@ -19,12 +19,6 @@
     <record id="group_proforma_sales" model="res.groups">
         <field name="name">Pro-forma Invoices</field>
         <field name="category_id" ref="base.module_category_hidden"/>
-    </record>
-
-    <record id="group_sale_order_dates" model="res.groups">
-        <field name="name">Manage delivery dates from sales orders.</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
-        <field name="comment">This option introduces extra fields in the sales order to easily schedule product deliveries on your own: expected date, commitment date, effective date.</field>
     </record>
 
     <record model="res.users" id="base.user_root">
@@ -42,21 +36,36 @@
         <field name="name">Sales Order multi-company</field>
         <field name="model_id" ref="model_sale_order"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record model="ir.rule" id="sale_order_line_comp_rule">
         <field name="name">Sales Order Line multi-company</field>
         <field name="model_id" ref="model_sale_order_line"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
     </record>
 
     <record model="ir.rule" id="sale_order_report_comp_rule">
         <field name="name">Sales Order Analysis multi-company</field>
         <field name="model_id" ref="model_sale_report"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <!-- Payments -->
+    <record id="payment_transaction_salesman_rule" model="ir.rule">
+        <field name="name">Access every payment transaction</field>
+        <field name="model_id" ref="payment.model_payment_transaction"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="payment_token_salesman_rule" model="ir.rule">
+        <field name="name">Access every payment token</field>
+        <field name="model_id" ref="payment.model_payment_token"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
 
     <!-- Portal Access Rules -->
@@ -110,7 +119,7 @@
     <record id="sale_order_line_personal_rule" model="ir.rule">
         <field name="name">Personal Order Lines</field>
         <field ref="model_sale_order_line" name="model_id"/>
-        <field name="domain_force">['|',('order_id.user_id','=',user.id),('order_id.user_id','=',False)]</field>
+        <field name="domain_force">['|',('salesman_id','=',user.id),('salesman_id','=',False)]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
 
@@ -124,7 +133,7 @@
     <record id="account_invoice_report_rule_see_personal" model="ir.rule">
         <field name="name">Personal Invoices Analysis</field>
         <field name="model_id" ref="model_account_invoice_report"/>
-        <field name="domain_force">['|', ('user_id', '=', user.id), ('user_id', '=', False)]</field>
+        <field name="domain_force">['|', ('invoice_user_id', '=', user.id), ('invoice_user_id', '=', False)]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
 
@@ -133,6 +142,72 @@
         <field name="model_id" ref="model_account_invoice_report"/>
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+    </record>
+
+    <!-- Payment transactions and tokens access rules -->
+
+    <record id="payment_transaction_salesman_rule" model="ir.rule">
+        <field name="name">Access every payment transaction</field>
+        <field name="model_id" ref="payment.model_payment_transaction"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="payment_token_salesman_rule" model="ir.rule">
+        <field name="name">Access every payment token</field>
+        <field name="model_id" ref="payment.model_payment_token"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <!-- Multi - Salesmen invoice and account move assignation rules -->
+    <record id="account_invoice_rule_see_personal" model="ir.rule">
+        <field name="name">Personal Invoices</field>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="domain_force">[('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), '|', ('invoice_user_id', '=', user.id), ('invoice_user_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="account_invoice_rule_see_all" model="ir.rule">
+        <field name="name">All Invoices</field>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="domain_force">[('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+    </record>
+
+    <record id="account_invoice_line_rule_see_personal" model="ir.rule">
+        <field name="name">Personal Invoice Lines</field>
+        <field name="model_id" ref="model_account_move_line"/>
+        <field name="domain_force">[('move_id.move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), '|', ('move_id.invoice_user_id', '=', user.id), ('move_id.invoice_user_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="account_invoice_line_rule_see_all" model="ir.rule">
+        <field name="name">All Invoice Lines</field>
+        <field name="model_id" ref="model_account_move_line"/>
+        <field name="domain_force">[('move_id.move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+    </record>
+    
+    <!-- Wizard access rules -->
+    <record id="sale_payment_acquirer_onboarding_wizard_rule" model="ir.rule">
+        <field name="name">Payment Acquier Onboarding Wizard Rule</field>
+        <field name="model_id" ref="model_sale_payment_acquirer_onboarding_wizard"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+    </record>
+
+    <record id="sale_advance_payment_inv_rule" model="ir.rule">
+        <field name="name">Sales Advance Payment Invoice Rule</field>
+        <field name="model_id" ref="model_sale_advance_payment_inv"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+    </record>
+
+    <record id="sale_order_cancel_rule" model="ir.rule">
+        <field name="name">Sales Order Cancel Rule</field>
+        <field name="model_id" ref="model_sale_order_cancel"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
     </record>
 </data>
 </odoo>

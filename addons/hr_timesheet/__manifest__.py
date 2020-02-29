@@ -5,7 +5,7 @@
 {
     'name': 'Task Logs',
     'version': '1.0',
-    'category': 'Human Resources',
+    'category': 'Operations/Timesheets',
     'sequence': 23,
     'summary': 'Track employee time on tasks',
     'description': """
@@ -20,7 +20,7 @@ It is completely integrated with the cost accounting module. It allows you to se
 up a management by affair.
     """,
     'website': 'https://www.odoo.com/page/timesheet-mobile-app',
-    'depends': ['hr', 'analytic', 'project', 'uom'],
+    'depends': ['hr', 'analytic', 'project', 'uom', 'timer'],
     'data': [
         'security/hr_timesheet_security.xml',
         'security/ir.model.access.csv',
@@ -29,10 +29,12 @@ up a management by affair.
         'views/res_config_settings_views.xml',
         'views/project_views.xml',
         'views/project_portal_templates.xml',
+        'views/hr_timesheet_portal_templates.xml',
         'report/hr_timesheet_report_view.xml',
         'report/report_timesheet_templates.xml',
         'views/hr_views.xml',
         'data/hr_timesheet_data.xml',
+        'wizard/project_task_create_timesheet_views.xml',
     ],
     'demo': [
         'data/hr_timesheet_demo.xml',

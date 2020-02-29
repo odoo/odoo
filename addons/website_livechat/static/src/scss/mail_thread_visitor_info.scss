@@ -1,0 +1,34 @@
+.o_web_client {
+    &:not(.o_no_thread_window) {
+        .o_w_visitor_info {
+            display:none !important;
+        }
+    }
+    &.o_no_thread_window {
+        .o_mail_thread {
+            position: sticky;
+        }
+        .o_w_visitor_info {
+            height: 87px;
+            border-bottom: 1px solid #ced4da;
+            position: fixed;
+            background: white;
+            width: 100%;
+            z-index: 1;
+            .o_w_visitor_status {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                &.o_w_visitor_disconnected {
+                    color: red;
+                }
+                &.o_w_visitor_connected {
+                    color: #00A09D;
+                }
+            }
+        }
+        .o_w_visitor_info + .o_sub_w_visitor_info {
+            padding-top: 80px;
+        }
+    }
+}

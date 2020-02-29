@@ -20,6 +20,9 @@ var ThreadField = AbstractField.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
+        this._isMessagingReady = this.call('mail_service', 'isReady');
+        this._isStarted = false;
+        this.call('mail_service', 'getMailBus').on('messaging_ready', this, this._onMessagingReady);
         // Used to automatically mark document thread as read at the moment we
         // access the document and render the thread.
         this._markAsReadOnNextRender = false;
@@ -28,21 +31,17 @@ var ThreadField = AbstractField.extend({
     /**
      * @override
      */
-    willStart: function () {
-        return this.alive(this.call('mail_service', 'isReady'));
-    },
-    /**
-     * @override
-     */
     start: function () {
         var self = this;
 
+        this._isStarted = true;
         this.dp = new concurrency.DropPrevious();
 
         this._threadWidget = new ThreadWidget(this, {
             displayOrder: ThreadWidget.ORDER.DESC,
             displayDocumentLinks: false,
             displayMarkAsRead: false,
+            hasMessageAttachmentDeletable: true,
             squashCloseMessages: false,
         });
 
@@ -57,7 +56,7 @@ var ThreadField = AbstractField.extend({
         var def1 = this._threadWidget.appendTo(this.$el);
         var def2 = this._super.apply(this, arguments);
 
-        return this.alive($.when(def1, def2)).then(function () {
+        return this.alive(Promise.all([def1, def2])).then(function () {
             // unwrap the thread to remove an unnecessary level on div
             self.setElement(self._threadWidget.$el);
             var mailBus = self.call('mail_service', 'getMailBus');
@@ -86,7 +85,7 @@ var ThreadField = AbstractField.extend({
     /**
      * @param  {Object} message
      * @param  {integer[]} message.partner_ids
-     * @return {$.Promise}
+     * @return {Promise}
      */
     postMessage: function (message) {
         var self = this;
@@ -95,9 +94,9 @@ var ThreadField = AbstractField.extend({
                 if (message.partner_ids.length) {
                     self.trigger_up('reload_mail_fields', { followers: true });
                 }
-            })
-            .fail(function () {
+            }).guardedCatch(function () {
                 self.do_notify(_t("Sending Error"), _t("Your message has not been sent."));
+                return Promise.reject();
             });
     },
 
@@ -109,15 +108,18 @@ var ThreadField = AbstractField.extend({
      * @private
      * @param {Object} [options]
      * @param {boolean} [options.forceFetch]
-     * @return {$.Deferred}
+     * @return {Promise}
      */
     _fetchAndRenderThread: function (options) {
         var self = this;
-        if (!this._documentThread) {
+        if (!this._isMessagingReady) {
+            self._threadWidget.renderLoading();
+            return Promise.resolve();
+        } else if (!this._documentThread) {
             var thread = new CreateModeDocumentThread();
             options = { isCreateMode: true };
             self._threadWidget.render(thread, options);
-            return $.when();
+            return Promise.resolve();
         } else {
             var fetchDef = this.dp.add(this._documentThread.fetchMessages(options));
             return fetchDef.then(function () {
@@ -134,7 +136,7 @@ var ThreadField = AbstractField.extend({
     /**
      * @override
      * @private
-     * @returns {$.Deferred}
+     * @returns {Promise}
      */
     _render: function () {
         return this._fetchAndRenderThread();
@@ -159,6 +161,9 @@ var ThreadField = AbstractField.extend({
      * If it is a new document in create mode, unset the document thread.
      */
     _setDocumentThread: function () {
+        if (!this._isMessagingReady) {
+            return;
+        }
         var params = {
             messageIDs: this.value.res_ids,
             name: this.recordData.display_name,
@@ -184,6 +189,20 @@ var ThreadField = AbstractField.extend({
      */
     _onLoadMoreMessages: function () {
         this._fetchAndRenderThread({ forceFetch: true });
+    },
+    /**
+     * @private
+     */
+    _onMessagingReady: function () {
+        if (this._isMessagingReady) {
+            return;
+        }
+        this._isMessagingReady = true;
+        if (!this._isStarted) {
+            return;
+        }
+        this._setDocumentThread();
+        this._render();
     },
     /**
      * @private

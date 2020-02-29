@@ -7,6 +7,7 @@
                 <pivot string="Point of Sale Analysis" disable_linking="True">
                     <field name="product_categ_id" type="row"/>
                     <field name="date" interval="month" type="col"/>
+                    <field name="order_id" type="measure"/>
                     <field name="product_qty" type="measure"/>
                     <field name="price_total" type="measure"/>
                 </pivot>
@@ -59,7 +60,6 @@
         <record id="action_report_pos_order_all" model="ir.actions.act_window">
             <field name="name">Orders Analysis</field>
             <field name="res_model">report.pos.order</field>
-            <field name="view_type">form</field>
             <field name="view_mode">graph,pivot</field>
             <field name="search_view_id" ref="view_report_pos_order_search"/>
             <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>

@@ -7,17 +7,12 @@
     'summary': 'Website Module for Mail',
     'version': '0.1',
     'description': """
-Module holding mail improvements for website.
-It is responsible of comments moderation for published documents (forum, slides, blog, ...)
+Module holding mail improvements for website. It holds the follow widget.
 """,
     'depends': ['website', 'mail'],
     'data': [
+        'views/assets.xml',
         'views/website_mail_templates.xml',
-        'data/mail_channel_data.xml',
-        'security/website_mail_security.xml',
-    ],
-    'qweb': [
-        'static/src/xml/website_mail.xml'
     ],
     'installable': True,
     'auto_install': True,

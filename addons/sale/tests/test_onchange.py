@@ -26,7 +26,7 @@ class TestOnchangeProductId(TransactionCase):
 
     def test_onchange_product_id(self):
 
-        uom_id = self.product_uom_model.search([('name', '=', 'Unit(s)')])[0]
+        uom_id = self.product_uom_model.search([('name', '=', 'Units')])[0]
         pricelist = self.pricelist_model.search([('name', '=', 'Public Pricelist')])[0]
 
         partner_id = self.res_partner_model.create(dict(name="George"))
@@ -42,7 +42,7 @@ class TestOnchangeProductId(TransactionCase):
                                                               list_price=121,
                                                               taxes_id=[(6, 0, [tax_include_id.id])]))
 
-        product_id = self.product_model.create(dict(product_tmpl_id=product_tmpl_id.id))
+        product_id = product_tmpl_id.product_variant_id
 
         fp_id = self.fiscal_position_model.create(dict(name="fiscal position", sequence=1))
 
@@ -63,12 +63,14 @@ class TestOnchangeProductId(TransactionCase):
         sale_order = order_form.save()
 
         # Check the unit price of SO line
-        self.assertEquals(100, sale_order.order_line[0].price_unit, "The included tax must be subtracted to the price")
+        self.assertEqual(100, sale_order.order_line[0].price_unit, "The included tax must be subtracted to the price")
 
     def test_pricelist_application(self):
         """ Test different prices are correctly applied based on dates """
-        support_product = self.env.ref('product.product_product_2')
-        support_product.list_price = 100
+        support_product = self.env['product.product'].create({
+            'name': 'Virtual Home Staging',
+            'list_price': 100,
+        })
         partner = self.res_partner_model.create(dict(name="George"))
 
         christmas_pricelist = self.env['product.pricelist'].create({
@@ -102,7 +104,7 @@ class TestOnchangeProductId(TransactionCase):
         so = order_form.save()
         # Check the unit price and subtotal of SO line
         self.assertEqual(so.order_line[0].price_unit, 80, "First date pricelist rule not applied")
-        self.assertEquals(so.order_line[0].price_subtotal, so.order_line[0].price_unit * so.order_line[0].product_uom_qty, 'Total of SO line should be a multiplication of unit price and ordered quantity')
+        self.assertEqual(so.order_line[0].price_subtotal, so.order_line[0].price_unit * so.order_line[0].product_uom_qty, 'Total of SO line should be a multiplication of unit price and ordered quantity')
 
         # Change order date of the SO and check the unit price and subtotal of SO line
         with Form(so) as order:
@@ -111,15 +113,17 @@ class TestOnchangeProductId(TransactionCase):
                 line.product_id = support_product
 
         self.assertEqual(so.order_line[0].price_unit, 50, "Second date pricelist rule not applied")
-        self.assertEquals(so.order_line[0].price_subtotal, so.order_line[0].price_unit * so.order_line[0].product_uom_qty, 'Total of SO line should be a multiplication of unit price and ordered quantity')
+        self.assertEqual(so.order_line[0].price_subtotal, so.order_line[0].price_unit * so.order_line[0].product_uom_qty, 'Total of SO line should be a multiplication of unit price and ordered quantity')
 
     def test_pricelist_uom_discount(self):
         """ Test prices and discounts are correctly applied based on date and uom"""
-        computer_case = self.env.ref('product.product_product_16')
-        computer_case.list_price = 100
+        computer_case = self.env['product.product'].create({
+            'name': 'Drawer Black',
+            'list_price': 100,
+        })
         partner = self.res_partner_model.create(dict(name="George"))
         categ_unit_id = self.ref('uom.product_uom_categ_unit')
-        goup_discount_id = self.ref('sale.group_discount_per_so_line')
+        goup_discount_id = self.ref('product.group_discount_per_so_line')
         self.env.user.write({'groups_id': [(4, goup_discount_id, 0)]})
         new_uom = self.env['uom.uom'].create({
             'name': '10 units',
@@ -167,10 +171,12 @@ class TestOnchangeProductId(TransactionCase):
 
     def test_pricelist_based_on_other(self):
         """ Test price and discount are correctly applied with a pricelist based on an other one"""
-        computer_case = self.env.ref('product.product_product_16')
-        computer_case.list_price = 100
+        computer_case = self.env['product.product'].create({
+            'name': 'Drawer Black',
+            'list_price': 100,
+        })
         partner = self.res_partner_model.create(dict(name="George"))
-        goup_discount_id = self.ref('sale.group_discount_per_so_line')
+        goup_discount_id = self.ref('product.group_discount_per_so_line')
         self.env.user.write({'groups_id': [(4, goup_discount_id, 0)]})
 
         first_pricelist = self.env['product.pricelist'].create({
@@ -217,7 +223,10 @@ class TestOnchangeProductId(TransactionCase):
 
     def test_pricelist_with_other_currency(self):
         """ Test prices are correctly applied with a pricelist with an other currency"""
-        computer_case = self.env.ref('product.product_product_16')
+        computer_case = self.env['product.product'].create({
+            'name': 'Drawer Black',
+            'list_price': 100,
+        })
         computer_case.list_price = 100
         partner = self.res_partner_model.create(dict(name="George"))
         categ_unit_id = self.ref('uom.product_uom_categ_unit')
@@ -226,9 +235,9 @@ class TestOnchangeProductId(TransactionCase):
         self.env['res.currency.rate'].create({'name': '2018-07-11',
             'rate': 2.0,
             'currency_id': other_currency.id,
-            'company_id': self.env.user.company_id.id})
+            'company_id': self.env.company.id})
         self.env['res.currency.rate'].search(
-            [('currency_id', '=', self.env.user.company_id.currency_id.id)]
+            [('currency_id', '=', self.env.company.currency_id.id)]
         ).unlink()
         new_uom = self.env['uom.uom'].create({
             'name': '10 units',

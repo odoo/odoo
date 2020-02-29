@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="assets_frontend" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" href="/website_mail_channel/static/src/css/website_mail_channel.css"/>
+    </xpath>
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_mail_channel/static/src/js/website_mail_channel.js"/>
+    </xpath>
+</template>
+
+<template id="assets_wysiwyg" inherit_id="website.assets_wysiwyg" name="Website Mail Channel Editor Assets">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_mail_channel/static/src/snippets/s_channel/options.js"/>
+    </xpath>
+</template>
+
+</odoo>

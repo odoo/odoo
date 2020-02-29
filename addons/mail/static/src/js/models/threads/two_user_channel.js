@@ -15,7 +15,7 @@ var TwoUserChannel = Channel.extend({
      * Unpin from two-user thread
      *
      * @override
-     * @returns {$.Promise} resolve when unsubscribed
+     * @returns {Promise} resolve when unsubscribed
      */
     unsubscribe: function () {
         return this._rpc({

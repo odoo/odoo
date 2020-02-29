@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <record id="sms_template_demo_0" model="sms.template">
+        <field name="name">Customer: automated SMS</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="body">Dear ${object.display_name} this is an automated SMS.</field>
+    </record>
+</data></odoo>

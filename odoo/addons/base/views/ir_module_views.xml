@@ -67,20 +67,22 @@
                             By <field name="author" class="oe_inline" placeholder="Author Name"/>
                         </h3>
                         <div>
-                            <button name="button_immediate_install" string="Install" attrs="{'invisible': ['|', ('to_buy','=',True), ('state','!=', 'uninstalled')]}" type="object" class="btn btn-primary"/>
-                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" class="btn btn-primary" states="uninstalled,uninstallable" attrs="{'invisible': [('to_buy','=',False)]}" role="button">Upgrade</a>
-                            <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="btn btn-primary"/>
-                            <button name="button_uninstall_wizard" states="installed" string="Uninstall" type="object"  class="btn btn-secondary"/>
-                            <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" type="object" class="btn btn-secondary"/>
-                            <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object" class="btn btn-secondary"/>
-                            <button name="button_install_cancel" states="to install" string="Cancel Install" type="object" class="btn btn-secondary"/>
+                            <button name="button_immediate_install" string="Install" attrs="{'invisible': ['|', ('to_buy','=',True), ('state','!=', 'uninstalled')]}" type="object" class="btn btn-primary mr-1"/>
+                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module#hosting=on_premise" class="btn btn-primary mr-1" states="uninstalled,uninstallable" attrs="{'invisible': [('to_buy','=',False)]}" role="button">Upgrade</a>
+                            <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="btn btn-primary mr-1"/>
+                            <button name="button_uninstall_wizard" states="installed" string="Uninstall" type="object"  class="btn btn-secondary mr-1"/>
+                            <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" type="object" class="btn btn-secondary mr-1"/>
+                            <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object" class="btn btn-secondary mr-1"/>
+                            <button name="button_install_cancel" states="to install" string="Cancel Install" type="object" class="btn btn-secondary mr-1"/>
                         </div>
+                        <h6 class="text-muted mt-2" attrs="{'invisible': [('has_iap', '=', False)]}">Contains In-App Purchases</h6>
                     </div>
                     <div class="oe_clear"/>
                     <notebook groups="base.group_no_one">
-                        <page string="Information">
+                        <page string="Information" name="information">
                             <group>
                                 <group>
+                                    <field name="has_iap" invisible="1"/>
                                     <field name="website" widget="url" attrs="{'invisible':[('website','=',False)]}"/>
                                     <field name="category_id" widget="selection"/>
                                     <field name="summary"/>
@@ -93,7 +95,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Technical Data">
+                        <page string="Technical Data" name="technical_data">
                             <group col="4">
                                 <field name="demo"/>
                                 <field name="application"/>
@@ -119,7 +121,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Installed Features" attrs="{'invisible':[('state','!=','installed')]}">
+                        <page string="Installed Features" name="installed_features" attrs="{'invisible':[('state','!=','installed')]}">
                             <group string="Created Menus"/>
                             <p class="oe_grey" attrs="{'invisible': [('menus_by_module','not in',[None,False])]}"> -This module does not create menu.</p>
                             <field name="menus_by_module"/>
@@ -165,7 +167,7 @@
                       <div class="oe_module_vignette">
                         <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
                         <div class="o_dropdown_kanban dropdown" tabindex="-1">
-                            <a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" role="button" aria-label="Dropdown menu" title="Dropdown menu">
+                            <a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" role="button" aria-label="Dropdown menu" title="Dropdown menu">
                                 <span class="fa fa-ellipsis-v"/>
                             </a>
                             <div class="dropdown-menu" role="menu" aria-labelledby="dLabel">
@@ -179,16 +181,16 @@
                         <div class="oe_module_desc" t-att-title="record.shortdesc.value">
                           <h4 class="o_kanban_record_title">
                             <field name="shortdesc"/>&amp;nbsp;
-                            <code groups="base.group_no_one"><field name="name"/></code>
                           </h4>
                           <p class="oe_module_name">
-                             <field name="summary"/>
+                            <field groups="!base.group_no_one" name="summary"/>
+                            <code groups="base.group_no_one"><field name="name"/></code>
                           </p>
                           <div class="oe_module_action">
                             <a t-att-href="record.website.raw_value" target="_blank" attrs="{'invisible':[('website', '=', '')]}" class="btn btn-sm btn-secondary float-right" role="button">Learn More</a>
                             <a type="edit" class="btn btn-secondary btn-sm float-right" role="button" attrs="{'invisible': [('website', '&lt;&gt;', '')]}">Module Info</a>
                             <button type="object" class="btn btn-primary btn-sm" name="button_immediate_install" states="uninstalled" t-if="! record.to_buy.raw_value">Install</button>
-                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" class="btn btn-info btn-sm" states="uninstalled,uninstallable" t-if="record.to_buy.raw_value" role="button">Upgrade</a>
+                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module#hosting=on_premise" class="btn btn-info btn-sm" states="uninstalled,uninstallable" t-if="record.to_buy.raw_value" role="button">Upgrade</a>
                             <div t-if="installed" class="text-muted float-left">Installed</div>
                             <button states="to remove" type="object" class="btn btn-sm btn-primary" name="button_uninstall_cancel">Cancel Uninstall</button>
                             <button states="to install" type="object" class="btn btn-sm btn-primary" name="button_install_cancel">Cancel Install</button>
@@ -203,19 +205,38 @@
         <record id="open_module_tree" model="ir.actions.act_window">
             <field name="name">Apps</field>
             <field name="res_model">ir.module.module</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{'search_default_app':1}</field>
             <field name="search_view_id" ref="view_module_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
-                No website module found!
+                No module found!
               </p><p>
                 You should try other search criteria.
               </p>
             </field>
         </record>
-        <menuitem id="menu_module_tree" parent="menu_management" name="Apps" sequence="5" action="open_module_tree" />
+
+        <!--top menu -->
+        <menuitem id="menu_apps" name="Apps" parent="menu_management" sequence="5"/>
+
+        <!--submenu -->
+        <menuitem id="menu_module_tree" parent="menu_apps" name="Main Apps" sequence="5" action="open_module_tree" />
+
+        <menuitem id="theme_store" parent="menu_apps" name="Theme Store" sequence="15"/>
+
+        <!--link to stores-->
+        <record model='ir.actions.act_url' id='action_third_party'>
+            <field name='name'>Third-Party Apps</field>
+            <field name='url'>https://www.odoo.com/apps/modules</field>
+        </record>
+        <menuitem id="menu_third_party" parent="menu_apps" name="Third-Party Apps" sequence="20" action="action_third_party"/>
+
+        <record model='ir.actions.act_url' id='action_theme_store'>
+            <field name='name'>Theme Store</field>
+            <field name='url'>https://www.odoo.com/apps/themes</field>
+        </record>
+        <menuitem id="menu_theme_store" parent="menu_apps" name="Theme Store" sequence="10" action="action_theme_store"/>
 
 
         <!-- Apps modules -->

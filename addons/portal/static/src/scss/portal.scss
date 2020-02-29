@@ -4,7 +4,7 @@
 ///
 
 // ======  Variables =========
-$-navbar-height: $nav-link-height !default;
+$o-theme-navbar-logo-height: $nav-link-height !default;
 
 // Portal toolbar (filters, search bar)
 $o-portal-mobile-toolbar: true; // Enable/Disable custom design
@@ -24,33 +24,32 @@ $o-portal-bg-color: desaturate($gray-200, 100%);
 $o-portal-use-default-colors: $body-bg == $o-portal-default-body-bg;
 
 // Frontend general
-#wrapwrap {
-    position: relative;
-    display: flex;
-    flex-flow: column nowrap;
-    width: 100%;
-    min-height: 100%;
-
-    > * {
-        flex: 0 0 auto;
-    }
-    > main {
-        flex: 1 0 auto;
-    }
+body {
+    // Set frontend direction that will be flipped with
+    // rtlcss for right-to-left text direction.
+    direction: ltr;
 }
 
 header {
     .navbar-brand {
         flex: 0 0 auto;
+        max-width: 75%;
 
         &.logo {
             padding-top: 0;
             padding-bottom: 0;
 
             img {
+                // object-fit does not work on IE but is only used as a fallback
+                object-fit: contain;
+                display: block;
                 width: auto;
-                height: $-navbar-height;
-                max-width: none;
+                height: $o-theme-navbar-logo-height;
+
+                @include media-breakpoint-down(sm) {
+                    height: auto;
+                    max-height: min($o-theme-navbar-logo-height, 5rem);
+                }
             }
         }
     }
@@ -64,7 +63,6 @@ header {
     ul.nav > li {
         &.divider {
             display: none;
-            height: $-navbar-height;
             border-right: 1px solid $nav-divider-color;
         }
 
@@ -159,6 +157,19 @@ li > p {
 .container-fluid .container-fluid {
     @extend %o-double-container-no-padding;
 }
+#wrap {
+    > .container, > .container-fluid {
+        // BS3 used to do this on all containers so that margins and floats are
+        // cleared inside containers. As lots of current odoo layouts may rely
+        // on this for some alignments, this is restored (at least for a while)
+        // here only for main containers of the frontend.
+        &::before, &::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    }
+}
 [class^="col-lg-"] {
     min-height: 24px;
 }
@@ -244,14 +255,14 @@ img.o_we_custom_image {
     background-color: #169C78;
     color: white;
     .text-muted {
-        color: #ddd;
+        color: #ddd !important;
     }
 }
 .oe_blue_light {
     background-color: #41b6ab;
     color: white;
     .text-muted {
-        color: #ddd;
+        color: #ddd !important;
     }
 }
 .oe_blue {
@@ -262,21 +273,21 @@ img.o_we_custom_image {
     background-color: #f05442;
     color: white;
     .text-muted {
-        color: #ddd;
+        color: #ddd !important;
     }
 }
 .oe_purple {
     background-color: #b163a3;
     color: white;
     .text-muted {
-        color: #ddd;
+        color: #ddd !important;
     }
 }
 .oe_red {
     background-color: #9C1b31;
     color: white;
     .text-muted {
-        color: #ddd;
+        color: #ddd !important;
     }
 }
 .oe_none {
@@ -364,7 +375,7 @@ img.o_we_custom_image {
                 @include o-position-absolute(0, $left: 0);
                 line-height: $line-height-base;
 
-                + span {
+                + span, + div {
                     display: block;
                     // FontAwesome '.fa-fw' fixed-with + margin
                     padding-left: 1.28571429em + 0.5em;
@@ -398,40 +409,6 @@ img.o_we_custom_image {
     width: 50px;
 }
 
-.o_portal_chatter {
-    padding: 10px;
-
-    .o_portal_chatter_avatar{
-        width: 45px;
-        height: 45px;
-        margin-right: 1rem;
-    }
-
-    .o_portal_chatter_header {
-        margin-bottom: 15px;
-    }
-
-    .o_portal_chatter_composer {
-        margin-bottom: 15px;
-    }
-
-    .o_portal_chatter_messages {
-        margin-bottom: 15px;
-
-        .o_portal_chatter_message_title {
-            p {
-                font-size:85%;
-                color:$o-main-color-muted;
-                margin: 0px;
-            }
-        }
-    }
-
-    .o_portal_chatter_pager {
-        text-align: center;
-    }
-}
-
 form label {
     font-weight: $font-weight-bold;
     &.label-optional {
@@ -442,6 +419,7 @@ form label {
 .o_portal_contact_img {
     width: 2.3em;
     height: 2.3em;
+    object-fit: cover;
 }
 
 .o_portal_sidebar {
@@ -464,11 +442,6 @@ form label {
         }
     }
 
-    .o_portal_page_size {
-        width: 100%;
-        max-width: 210mm; // A4 page's width
-    }
-
     .o_portal_html_view {
         overflow: hidden;
         background: white;
@@ -480,6 +453,84 @@ form label {
 
         iframe {
             position: relative;
+        }
+    }
+}
+
+// ------------------------------------------------------------
+// Frontend Discuss widget
+// ------------------------------------------------------------
+
+// Readonly display
+.o_portal_chatter {
+    padding: 10px;
+
+    .o_portal_chatter_avatar {
+        width: 45px;
+        height: 45px;
+        margin-right: 1rem;
+    }
+
+    .o_portal_chatter_header {
+        margin-bottom: 15px;
+    }
+
+    .o_portal_chatter_composer {
+        margin-bottom: 15px;
+    }
+
+    .o_portal_chatter_messages {
+        margin-bottom: 15px;
+
+        .o_portal_chatter_message {
+            div.media-body > p:not(.o_portal_chatter_puslished_date):last-of-type {
+                margin-bottom: 5px;
+            }
+        }
+
+        .o_portal_chatter_message_title {
+            p {
+                font-size:85%;
+                color:$o-main-color-muted;
+                margin: 0px;
+            }
+        }
+    }
+
+    .o_portal_chatter_pager {
+        text-align: center;
+    }
+
+
+}
+
+// Readonly / Composer mix display
+.o_portal_chatter,
+.o_portal_chatter_composer {
+    .o_portal_chatter_attachment {
+        .o_portal_chatter_attachment_name {
+            word-wrap: break-word;
+        }
+
+        .o_portal_chatter_attachment_delete {
+            @include o-position-absolute($top: 0, $right: 0);
+            opacity: 0;
+        }
+
+        &:hover .o_portal_chatter_attachment_delete {
+            opacity: 1;
+        }
+    }
+
+    .o_portal_message_internal_off {
+        .btn-danger {
+            display: none;
+        }
+    }
+
+    .o_portal_message_internal_on {
+        .btn-success {
+            display: none;
         }
     }
 }

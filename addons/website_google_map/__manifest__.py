@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Google Maps',
-    'category': 'Website',
+    'category': 'Website/Website',
     'summary': 'Show your company address on Google Maps',
     'version': '1.0',
     'description': """

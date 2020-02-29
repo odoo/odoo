@@ -7,7 +7,7 @@
         padding: 0;
         width: 100%;
         background-color: white;
-        z-index: 1000;
+        z-index: $zindex-modal;
         overflow: auto;
         .o_mobile_search_header {
             height: 46px;
@@ -83,13 +83,8 @@
             }
         }
         .o_mobile_search_show_result {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
             padding: 15px;
             font-size: 17px;
-            z-index: 1000;
         }
     }
 }

@@ -15,6 +15,7 @@ class PurchaseOrder(models.Model):
         if not self.requisition_id:
             return
 
+        self = self.with_company(self.company_id)
         requisition = self.requisition_id
         if self.partner_id:
             partner = self.partner_id
@@ -23,8 +24,7 @@ class PurchaseOrder(models.Model):
         payment_term = partner.property_supplier_payment_term_id
 
         FiscalPosition = self.env['account.fiscal.position']
-        fpos = FiscalPosition.get_fiscal_position(partner.id)
-        fpos = FiscalPosition.browse(fpos)
+        fpos = FiscalPosition.with_company(self.company_id).get_fiscal_position(partner.id)
 
         self.partner_id = partner.id
         self.fiscal_position_id = fpos.id
@@ -38,7 +38,7 @@ class PurchaseOrder(models.Model):
             else:
                 self.origin = requisition.name
         self.notes = requisition.description
-        self.date_order = requisition.date_end or fields.Datetime.now()
+        self.date_order = fields.Datetime.now()
 
         if requisition.type_id.line_copy != 'copy':
             return
@@ -47,19 +47,16 @@ class PurchaseOrder(models.Model):
         order_lines = []
         for line in requisition.line_ids:
             # Compute name
-            product_lang = line.product_id.with_context({
-                'lang': partner.lang,
-                'partner_id': partner.id,
-            })
+            product_lang = line.product_id.with_context(
+                lang=partner.lang,
+                partner_id=partner.id
+            )
             name = product_lang.display_name
             if product_lang.description_purchase:
                 name += '\n' + product_lang.description_purchase
 
             # Compute taxes
-            if fpos:
-                taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == requisition.company_id)).ids
-            else:
-                taxes_ids = line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == requisition.company_id).ids
+            taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == requisition.company_id)).ids
 
             # Compute quantity and price_unit
             if line.product_uom_id != line.product_id.uom_po_id:
@@ -79,7 +76,6 @@ class PurchaseOrder(models.Model):
             order_lines.append((0, 0, order_line_values))
         self.order_line = order_lines
 
-    @api.multi
     def button_confirm(self):
         res = super(PurchaseOrder, self).button_confirm()
         for po in self:
@@ -100,7 +96,6 @@ class PurchaseOrder(models.Model):
                     subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'))
         return purchase
 
-    @api.multi
     def write(self, vals):
         result = super(PurchaseOrder, self).write(vals)
         if vals.get('requisition_id'):
@@ -117,12 +112,11 @@ class PurchaseOrderLine(models.Model):
     def _onchange_quantity(self):
         res = super(PurchaseOrderLine, self)._onchange_quantity()
         if self.order_id.requisition_id:
-            for line in self.order_id.requisition_id.line_ids:
-                if line.product_id == self.product_id:
-                    if line.product_uom_id != self.product_uom:
-                        self.price_unit = line.product_uom_id._compute_price(
-                            line.price_unit, self.product_uom)
-                    else:
-                        self.price_unit = line.price_unit
-                    break
+            for line in self.order_id.requisition_id.line_ids.filtered(lambda l: l.product_id == self.product_id):
+                if line.product_uom_id != self.product_uom:
+                    self.price_unit = line.product_uom_id._compute_price(
+                        line.price_unit, self.product_uom)
+                else:
+                    self.price_unit = line.price_unit
+                break
         return res

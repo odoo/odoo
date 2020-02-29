@@ -3,7 +3,7 @@
 
 {
     'name': 'Quotation Builder',
-    'category': 'Sales',
+    'category': 'Sales/Sales',
     'summary': 'Build great quotation templates',
     'website': 'https://www.odoo.com/page/quote-builder',
     'version': '1.0',

@@ -37,7 +37,7 @@ var ReportAction = AbstractAction.extend({
     start: function () {
         var self = this;
         this.iframe = this.$('iframe')[0];
-        return $.when(this._super.apply(this, arguments), session.is_bound).then(function () {
+        return Promise.all([this._super.apply(this, arguments), session.is_bound]).then(function () {
             var web_base_url = session['web.base.url'];
             var trusted_host = utils.get_host_from_url(web_base_url);
             var trusted_protocol = utils.get_protocol_from_url(web_base_url);
@@ -105,7 +105,7 @@ var ReportAction = AbstractAction.extend({
 
     /**
      * Helper allowing to send a message to the `this.el` iframe's window and
-     * seting the `targetOrigin` as `this.trusted_origin` (which is the 
+     * seting the `targetOrigin` as `this.trusted_origin` (which is the
      * `web.base.url` ir.config_parameter key) - in other word, only when using
      * this method we only send the message to a trusted domain.
      */

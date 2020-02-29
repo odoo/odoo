@@ -21,18 +21,9 @@
         <record id="action_membership_invoice_view" model="ir.actions.act_window">
             <field name="name">Join Membership</field>
             <field name="res_model">membership.invoice</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_membership_invoice_view"/>
             <field name="target">new</field>
         </record>
-
-        <act_window name="Invoice Membership"
-            res_model="membership.invoice"
-            src_model="res.partner"
-            multi="True"
-            key2="client_action_multi"
-            view_mode="form"
-            id="action_membership_invoice_view"/>
 
 </odoo>

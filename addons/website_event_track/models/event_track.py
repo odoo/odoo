@@ -4,6 +4,7 @@
 from odoo import api, fields, models
 from odoo.tools.translate import _, html_translate
 from odoo.addons.http_routing.models.ir_http import slug
+from datetime import timedelta
 
 
 class TrackTag(models.Model):
@@ -11,9 +12,9 @@ class TrackTag(models.Model):
     _description = 'Event Track Tag'
     _order = 'name'
 
-    name = fields.Char('Tag')
+    name = fields.Char('Tag Name', required=True)
     track_ids = fields.Many2many('event.track', string='Tracks')
-    color = fields.Integer(string='Color Index')
+    color = fields.Integer(string='Color Index', help="Note that colorless tags won't be available on the website.")
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists !"),
@@ -24,25 +25,7 @@ class TrackLocation(models.Model):
     _name = "event.track.location"
     _description = 'Event Track Location'
 
-    name = fields.Char('Room')
-
-
-class TrackStage(models.Model):
-    _name = 'event.track.stage'
-    _description = 'Event Track Stage'
-    _order = 'sequence, id'
-
-    name = fields.Char(string='Stage Name', required=True, translate=True)
-    sequence = fields.Integer(string='Sequence', default=1)
-    mail_template_id = fields.Many2one(
-        'mail.template', string='Email Template',
-        domain=[('model', '=', 'event.track')],
-        help="If set an email will be sent to the customer when the track reaches this step.")
-    fold = fields.Boolean(
-        string='Folded in Kanban',
-        help='This stage is folded in the kanban view when there are no records in that stage to display.')
-    is_done = fields.Boolean(string='Accepted Stage')
-    is_cancel = fields.Boolean(string='Canceled Stage')
+    name = fields.Char('Location', required=True)
 
 
 class Track(models.Model):
@@ -58,11 +41,12 @@ class Track(models.Model):
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.user)
+    company_id = fields.Many2one('res.company', related='event_id.company_id')
     partner_id = fields.Many2one('res.partner', 'Speaker')
-    partner_name = fields.Char('Speaker Name')
-    partner_email = fields.Char('Speaker Email')
-    partner_phone = fields.Char('Speaker Phone')
-    partner_biography = fields.Html('Speaker Biography')
+    partner_name = fields.Char('Name', tracking=10)
+    partner_email = fields.Char('Email', tracking=20)
+    partner_phone = fields.Char('Phone', tracking=30)
+    partner_biography = fields.Html('Biography')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
     stage_id = fields.Many2one(
         'event.track.stage', string='Stage', ondelete='restrict',
@@ -78,24 +62,24 @@ class Track(models.Model):
              " * Grey is the default situation\n"
              " * Red indicates something is preventing the progress of this track\n"
              " * Green indicates the track is ready to be pulled to the next stage")
-    description = fields.Html('Track Description', translate=html_translate, sanitize_attributes=False)
+    description = fields.Html(translate=html_translate, sanitize_attributes=False)
     date = fields.Datetime('Track Date')
-    duration = fields.Float('Duration', default=1.5)
-    location_id = fields.Many2one('event.track.location', 'Room')
+    date_end = fields.Datetime('Track End Date', compute='_compute_end_date', store=True)
+    duration = fields.Float('Duration', default=1.5, help="Track duration in hours.")
+    location_id = fields.Many2one('event.track.location', 'Location')
     event_id = fields.Many2one('event.event', 'Event', required=True)
-    color = fields.Integer('Color Index')
+    color = fields.Integer('Color', related="stage_id.color")
     priority = fields.Selection([
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
         'Priority', required=True, default='1')
-    image = fields.Binary('Image', related='partner_id.image_medium', store=True, readonly=False)
+    image = fields.Image("Image", max_width=128, max_height=128)
 
-    @api.multi
     @api.depends('name')
     def _compute_website_url(self):
         super(Track, self)._compute_website_url()
         for track in self:
-            if not isinstance(track.id, models.NewId):
+            if track.id:
                 track.website_url = '/event/%s/track/%s' % (slug(track.event_id), slug(track))
 
     @api.onchange('partner_id')
@@ -104,7 +88,15 @@ class Track(models.Model):
             self.partner_name = self.partner_id.name
             self.partner_email = self.partner_id.email
             self.partner_phone = self.partner_id.phone
-            self.partner_biography = self.partner_id.website_description
+
+    @api.depends('date', 'duration')
+    def _compute_end_date(self):
+        for track in self:
+            if track.date:
+                delta = timedelta(minutes=60 * track.duration)
+                track.date_end = track.date + delta
+            else:
+                track.date_end = False
 
     @api.model
     def create(self, vals):
@@ -119,7 +111,6 @@ class Track(models.Model):
 
         return track
 
-    @api.multi
     def write(self, vals):
         if 'stage_id' in vals and 'kanban_state' not in vals:
             vals['kanban_state'] = 'normal'
@@ -133,21 +124,18 @@ class Track(models.Model):
         """ Always display all stages """
         return stages.search([], order=order)
 
-    @api.multi
-    def _track_template(self, tracking):
-        res = super(Track, self)._track_template(tracking)
+    def _track_template(self, changes):
+        res = super(Track, self)._track_template(changes)
         track = self[0]
-        changes, tracking_value_ids = tracking[track.id]
         if 'stage_id' in changes and track.stage_id.mail_template_id:
             res['stage_id'] = (track.stage_id.mail_template_id, {
                 'composition_mode': 'comment',
                 'auto_delete_message': True,
                 'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
-                'notif_layout': 'mail.mail_notification_light'
+                'email_layout_xmlid': 'mail.mail_notification_light'
             })
         return res
 
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'kanban_state' in init_values and self.kanban_state == 'blocked':
@@ -156,15 +144,14 @@ class Track(models.Model):
             return self.env.ref('website_event_track.mt_track_ready')
         return super(Track, self)._track_subtype(init_values)
 
-    @api.multi
-    def message_get_suggested_recipients(self):
-        recipients = super(Track, self).message_get_suggested_recipients()
+    def _message_get_suggested_recipients(self):
+        recipients = super(Track, self)._message_get_suggested_recipients()
         for track in self:
-            if track.partner_email != track.partner_id.email:
+            if track.partner_email and track.partner_email != track.partner_id.email:
                 track._message_add_suggested_recipient(recipients, email=track.partner_email, reason=_('Speaker Email'))
         return recipients
 
-    def _message_post_after_hook(self, message, *args, **kwargs):
+    def _message_post_after_hook(self, message, msg_vals):
         if self.partner_email and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -176,38 +163,14 @@ class Track(models.Model):
                     ('partner_email', '=', new_partner.email),
                     ('stage_id.is_cancel', '=', False),
                 ]).write({'partner_id': new_partner.id})
-        return super(Track, self)._message_post_after_hook(message, *args, **kwargs)
+        return super(Track, self)._message_post_after_hook(message, msg_vals)
 
-    @api.multi
     def open_track_speakers_list(self):
         return {
             'name': _('Speakers'),
             'domain': [('id', 'in', self.mapped('partner_id').ids)],
-            'view_type': 'form',
             'view_mode': 'kanban,form',
             'res_model': 'res.partner',
             'view_id': False,
             'type': 'ir.actions.act_window',
         }
-
-
-class SponsorType(models.Model):
-    _name = "event.sponsor.type"
-    _description = 'Event Sponsor Type'
-    _order = "sequence"
-
-    name = fields.Char('Sponsor Type', required=True, translate=True)
-    sequence = fields.Integer('Sequence')
-
-
-class Sponsor(models.Model):
-    _name = "event.sponsor"
-    _description = 'Event Sponsor'
-    _order = "sequence"
-
-    event_id = fields.Many2one('event.event', 'Event', required=True)
-    sponsor_type_id = fields.Many2one('event.sponsor.type', 'Sponsoring Type', required=True)
-    partner_id = fields.Many2one('res.partner', 'Sponsor/Customer', required=True)
-    url = fields.Char('Sponsor Website')
-    sequence = fields.Integer('Sequence', store=True, related='sponsor_type_id.sequence', readonly=False)
-    image_medium = fields.Binary(string='Logo', related='partner_id.image_medium', store=True, readonly=False)

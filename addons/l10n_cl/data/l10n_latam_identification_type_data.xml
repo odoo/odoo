@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="False">
+        <record model='l10n_latam.identification.type' id='it_RUT'>
+            <field name='name'>RUT</field>
+            <field name='description'>RUT</field>
+            <field name='sequence'>11</field>
+            <field name='is_vat' eval='True'/>
+            <field name='country_id' ref="base.cl"/>
+        </record>
+        <record model='l10n_latam.identification.type' id='it_RUN'>
+            <field name='name'>RUN</field>
+            <field name='description'>Cédula</field>
+            <field name='sequence'>12</field>
+            <field name='country_id' ref="base.cl"/>
+        </record>
+        <record model='l10n_latam.identification.type' id='it_DNI'>
+            <field name='name'>DNI</field>
+            <field name='description'>DNI Extranjero</field>
+            <field name='sequence'>13</field>
+            <field name='country_id' ref="base.cl"/>
+        </record>
+    </data>
+</odoo>

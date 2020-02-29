@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- get vat from journal_id for all layout -->
+    <template id="l10n_in_external_layout" inherit_id="web.external_layout">
+        <xpath expr="//t[@t-if='company.external_report_layout_id']" position="before">
+            <t t-if="o and 'journal_id' in o and company.country_id.code == 'IN'">
+                <t t-set="vat" t-value="o.journal_id.l10n_in_gstin_partner_id.vat"/>
+            </t>
+            <t t-elif="o and 'l10n_in_journal_id' in o and company.country_id.code == 'IN'">
+                <t t-set="vat" t-value="o.l10n_in_journal_id.l10n_in_gstin_partner_id.vat"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="l10n_in_external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//li[@t-if='company.vat']" position="replace">
+            <li t-if="vat or company.vat" class="list-inline-item d-inline"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-esc="vat or company.vat"/></li>
+        </xpath>
+    </template>
+
+    <template id="l10n_in_external_layout_clean" inherit_id="web.external_layout_clean">
+        <xpath expr="//li[@t-if='company.vat']" position="replace">
+            <li t-if="vat or company.vat"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-esc="vat or company.vat"/></li>
+        </xpath>
+    </template>
+
+    <template id="l10n_in_external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <xpath expr="//li[@t-if='company.vat']" position="replace">
+            <li t-if="vat or company.vat" class="list-inline-item"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-esc="vat or company.vat"/></li>
+        </xpath>
+    </template>
+
+    <template id="l10n_in_external_layout_background" inherit_id="web.external_layout_background">
+        <xpath expr="//li[@t-if='company.vat']" position="replace">
+            <li t-if="vat or company.vat" class="list-inline-item"><i class="fa fa-building-o" role="img" aria-label="Fiscal number"/><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-esc="vat or company.vat"/></li>
+        </xpath>
+    </template>
+</odoo>

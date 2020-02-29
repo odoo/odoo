@@ -101,7 +101,7 @@ QUnit.module('MessagingMenu', {
     }
 });
 
-QUnit.test('messaging menu widget: menu with no records', function (assert) {
+QUnit.test('messaging menu widget: menu with no records', async function (assert) {
     assert.expect(1);
 
     var messagingMenu = new MessagingMenu();
@@ -109,27 +109,74 @@ QUnit.test('messaging menu widget: menu with no records', function (assert) {
             services: this.services,
             mockRPC: function (route, args) {
                 if (args.method === 'message_fetch') {
-                    return $.when([]);
+                    return Promise.resolve([]);
                 }
                 return this._super.apply(this, arguments);
             }
         });
-    messagingMenu.appendTo($('#qunit-fixture'));
-    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    await messagingMenu.appendTo($('#qunit-fixture'));
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
     assert.hasClass(messagingMenu.$('.o_no_activity'),'o_no_activity', "should not have instance of widget");
     messagingMenu.destroy();
 });
 
-QUnit.test('messaging menu widget: messaging menu with 1 record', function (assert) {
+QUnit.test('messaging menu widget: messaging not ready', async function (assert) {
+    assert.expect(8);
+
+    const messagingReadyProm = testUtils.makeTestPromise();
+
+    const messagingMenu = new MessagingMenu();
+    testUtils.mock.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        async mockRPC(route, args) {
+            if (route === '/mail/init_messaging') {
+                const _super = this._super.bind(this, ...arguments); // limitation of class.js
+                assert.step('/mail/init_messaging:pending');
+                await messagingReadyProm;
+                assert.step('/mail/init_messaging:resolved');
+                return _super();
+            }
+            if (args.method === 'message_fetch') {
+                return [];
+            }
+            return this._super(...arguments);
+        },
+    });
+    await messagingMenu.appendTo($('#qunit-fixture'));
+    assert.verifySteps(['/mail/init_messaging:pending']);
+    assert.ok(
+        messagingMenu.el,
+        "messaging menu should be rendered");
+    assert.strictEqual(
+        document.querySelector('.o_mail_systray_item'),
+        messagingMenu.el,
+        "should display messaging menu even when messaging is not ready");
+    assert.hasClass(
+        messagingMenu.$('.o_mail_messaging_menu_icon'),
+        'fa-spinner',
+        "Messaging menu icon should be a spinner when messaging menu is not ready");
+
+    messagingReadyProm.resolve();
+    await testUtils.nextTick();
+    assert.verifySteps(['/mail/init_messaging:resolved']);
+    assert.doesNotHaveClass(
+        messagingMenu.$('.o_mail_messaging_menu_icon'),
+        'fa-spinner',
+        "Messaging menu icon should no longer be a spinner when messaging menu is ready");
+
+    messagingMenu.destroy();
+});
+
+QUnit.test('messaging menu widget: messaging menu with 1 record', async function (assert) {
     assert.expect(3);
     var messagingMenu = new MessagingMenu();
     testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
     });
-    messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo($('#qunit-fixture'));
 
-    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
     assert.containsOnce(messagingMenu, '.o_mail_preview',
         "should display a preview");
@@ -146,7 +193,7 @@ QUnit.test('messaging menu widget: messaging menu with 1 record', function (asse
     messagingMenu.destroy();
 });
 
-QUnit.test('messaging menu widget: open inbox for needaction not linked to any document', function (assert) {
+QUnit.test('messaging menu widget: open inbox for needaction not linked to any document', async function (assert) {
     assert.expect(4);
 
     var messagingMenu = new MessagingMenu();
@@ -157,7 +204,7 @@ QUnit.test('messaging menu widget: open inbox for needaction not linked to any d
             partner_id: 1,
         },
     });
-    messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo($('#qunit-fixture'));
 
     // Simulate received needaction message without associated document,
     // so that we have a message in inbox without a model and a resID
@@ -174,7 +221,7 @@ QUnit.test('messaging menu widget: open inbox for needaction not linked to any d
     messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
 
     // Open messaging menu
-    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
     var $firstChannelPreview =
         messagingMenu.$('.o_mail_preview').first();
@@ -190,7 +237,7 @@ QUnit.test('messaging menu widget: open inbox for needaction not linked to any d
             assert.step('do_action:' + ev.data.action + ':' + ev.data.options.active_id);
         }
     }, true);
-    testUtils.dom.click($firstChannelPreview);
+    await testUtils.dom.click($firstChannelPreview);
     assert.verifySteps(
         ['do_action:mail.action_discuss:mailbox_inbox'],
         "should open Discuss with Inbox");
@@ -198,7 +245,7 @@ QUnit.test('messaging menu widget: open inbox for needaction not linked to any d
     messagingMenu.destroy();
 });
 
-QUnit.test("messaging menu widget: mark as read on thread preview", function ( assert ) {
+QUnit.test("messaging menu widget: mark as read on thread preview", async function ( assert ) {
     assert.expect(8);
 
     testUtils.mock.patch(DocumentThread, {
@@ -230,8 +277,8 @@ QUnit.test("messaging menu widget: mark as read on thread preview", function ( a
         data: this.data,
     });
 
-    messagingMenu.appendTo($('#qunit-fixture'));
-    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    await messagingMenu.appendTo($('#qunit-fixture'));
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
     assert.hasClass(messagingMenu.$el,'o_mail_systray_item',
         'should be the instance of widget');
     assert.hasClass(messagingMenu.$el,'show',
@@ -247,7 +294,7 @@ QUnit.test("messaging menu widget: mark as read on thread preview", function ( a
     assert.containsOnce(messagingMenu, '.o_mail_preview_mark_as_read',
         "should have mark as read icon next to preview");
 
-    testUtils.dom.click(messagingMenu.$(".o_mail_preview_mark_as_read"));
+    await testUtils.dom.click(messagingMenu.$(".o_mail_preview_mark_as_read"));
 
     assert.verifySteps(['markedAsRead'],
         "the document thread should be marked as read");
@@ -256,7 +303,7 @@ QUnit.test("messaging menu widget: mark as read on thread preview", function ( a
     messagingMenu.destroy();
 });
 
-QUnit.test('needaction messages in channels should appear, in addition to channel preview', function (assert) {
+QUnit.test('needaction messages in channels should appear, in addition to channel preview', async function (assert) {
     // Let's suppose a channel whose before-last message (msg1) is a needaction,
     // but not the last message (msg2). In that case, the systray messaging
     // menu should display the needaction message msg1 in the preview, and the
@@ -295,9 +342,9 @@ QUnit.test('needaction messages in channels should appear, in addition to channe
             partner_id: partnerID,
         },
     });
-    messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo($('#qunit-fixture'));
 
-    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
     assert.containsN(messagingMenu, '.o_mail_preview', 2,
         "should display two previews");
@@ -314,7 +361,7 @@ QUnit.test('needaction messages in channels should appear, in addition to channe
     messagingMenu.destroy();
 });
 
-QUnit.test('preview of message on a document + mark as read', function (assert) {
+QUnit.test('preview of message on a document + mark as read', async function (assert) {
     assert.expect(7);
 
     this.data.initMessaging = {
@@ -351,11 +398,11 @@ QUnit.test('preview of message on a document + mark as read', function (assert) 
             partner_id: partnerID,
         },
     });
-    messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo($('#qunit-fixture'));
     assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '1',
         "should display a counter of 1 on the messaging menu icon");
 
-    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
     assert.containsOnce(messagingMenu, '.o_mail_preview',
         "should display one preview");
@@ -367,7 +414,7 @@ QUnit.test('preview of message on a document + mark as read', function (assert) 
     assert.strictEqual(messagingMenu.$('.o_preview_unread .o_last_message_preview').text().replace(/\s/g, ''),
         "Demo:*MessageOnDocument*", "should correctly display the preview");
 
-    testUtils.dom.click(messagingMenu.$('.o_mail_preview_mark_as_read'));
+    await testUtils.dom.click(messagingMenu.$('.o_mail_preview_mark_as_read'));
     assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '0',
         "should display a counter of 0 on the messaging menu icon");
     assert.containsNone(messagingMenu, '.o_mail_preview',
@@ -376,7 +423,7 @@ QUnit.test('preview of message on a document + mark as read', function (assert) 
     messagingMenu.destroy();
 });
 
-QUnit.test('update messaging preview on receiving a new message in channel preview', function (assert) {
+QUnit.test('update messaging preview on receiving a new message in channel preview', async function (assert) {
     assert.expect(8);
 
     var messagingMenu = new MessagingMenu();
@@ -384,9 +431,9 @@ QUnit.test('update messaging preview on receiving a new message in channel previ
         services: this.services,
         data: this.data,
     });
-    messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo($('#qunit-fixture'));
 
-    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
     assert.containsOnce(messagingMenu, '.o_mail_preview',
         "should display a single channel preview");
@@ -410,7 +457,7 @@ QUnit.test('update messaging preview on receiving a new message in channel previ
     };
     var notification = [[false, 'mail.channel', 1], data];
     messagingMenu.call('bus_service', 'trigger', 'notification', [notification]);
-
+    await testUtils.nextTick();
     assert.containsOnce(messagingMenu, '.o_mail_preview',
         "should still display a single channel preview");
     assert.strictEqual(messagingMenu.$('.o_preview_name').text().trim(), "general",
@@ -427,7 +474,89 @@ QUnit.test('update messaging preview on receiving a new message in channel previ
     messagingMenu.destroy();
 });
 
-QUnit.test('preview of inbox message not linked to document + mark as read', function (assert) {
+QUnit.test('new message of type "notification" are not considered as unread messages', async function (assert) {
+    assert.expect(8);
+
+    const messagingMenu = new MessagingMenu();
+    testUtils.mock.addMockEnvironment(messagingMenu, {
+        data: this.data,
+        services: this.services,
+    });
+    await messagingMenu.appendTo($('#qunit-fixture'));
+    // open messaging menu
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(
+        messagingMenu,
+        '.o_mail_preview',
+        "should display a single channel preview");
+    assert.strictEqual(
+        messagingMenu
+            .$('.o_preview_name')
+            .text()
+            .trim(),
+        "general",
+        "should display channel preview of 'general' channel");
+    assert.strictEqual(
+        messagingMenu
+            .$('.o_preview_counter')
+            .text()
+            .trim(),
+        "",
+        "should have unread counter of 0 for 'general' channel (no unread messages)");
+    assert.strictEqual(
+        messagingMenu
+            .$('.o_last_message_preview')
+            .text()
+            .replace(/\s/g, ""),
+        "Me:test",
+        "should display author name and inline body of currently last message in the channel");
+    // close messaging menu
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+
+    // simulate receiving a new message on the channel 'general' (id 1)
+    // of type 'notification'
+    const data = {
+        id: 100,
+        author_id: [42, "Someone"],
+        body: "<p>Left #general</p>",
+        channel_ids: [1],
+        message_type: 'notification',
+    };
+    const notification = [[false, 'mail.channel', 1], data];
+    messagingMenu.call('bus_service', 'trigger', 'notification', [notification]);
+    await testUtils.nextTick();
+    // open messaging menu
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(
+        messagingMenu,
+        '.o_mail_preview',
+        "should still display a single channel preview");
+    assert.strictEqual(
+        messagingMenu
+            .$('.o_preview_name')
+            .text()
+            .trim(),
+        "general",
+        "should still display channel preview of 'general' channel");
+    assert.strictEqual(
+        messagingMenu
+            .$('.o_preview_counter')
+            .text()
+            .trim(),
+        "",
+        "should still have unread counter of 0 for 'general' channel (no unread messages)");
+    assert.strictEqual(
+        messagingMenu
+            .$('.o_last_message_preview')
+            .text()
+            .replace(/\s/g, ""),
+        "Someone:Left#general",
+        "should display author name and inline body of notification message (last message of channel)");
+
+    messagingMenu.destroy();
+});
+
+QUnit.test('preview of inbox message not linked to document + mark as read', async function (assert) {
     assert.expect(17);
 
     this.data.initMessaging = {
@@ -459,19 +588,16 @@ QUnit.test('preview of inbox message not linked to document + mark as read', fun
         },
         mockRPC: function (route, args) {
             if (args.method === 'set_message_done') {
-                assert.step({
-                    method: 'set_message_done',
-                    messageIDs: args.args[0],
-                });
+                assert.step('method: set_message_done, messageIDs: ' + JSON.stringify(args.args[0]));
             }
             return this._super.apply(this, arguments);
         },
     });
-    messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo($('#qunit-fixture'));
     assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '2',
         "should display a counter of 2 on the messaging menu icon");
 
-    messagingMenu.$('.dropdown-toggle').click();
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
     assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 2,
         "should display two previews");
@@ -494,11 +620,9 @@ QUnit.test('preview of inbox message not linked to document + mark as read', fun
     assert.strictEqual($preview2.find('.o_last_message_preview').text().replace(/\s/g, ''),
         "Demo:*Message2*", "should correctly display the 2nd preview");
 
-    $preview1.find('.o_mail_preview_mark_as_read').click();
-    assert.verifySteps([{
-            method: 'set_message_done',
-            messageIDs: [689],
-        }], "should mark 1st preview as read");
+    await testUtils.dom.click($preview1.find('.o_mail_preview_mark_as_read'));
+    assert.verifySteps(['method: set_message_done, messageIDs: [689]'],
+        "should mark 1st preview as read");
     assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '1',
         "should display a counter of 1 on the messaging menu icon after marking one preview as read");
     assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 1,
@@ -507,14 +631,9 @@ QUnit.test('preview of inbox message not linked to document + mark as read', fun
         "Demo:*Message2*", "preview 2 should be the remaining one");
 
     $preview2 = messagingMenu.$('.o_mail_preview');
-    $preview2.find('.o_mail_preview_mark_as_read').click();
-    assert.verifySteps([{
-        method: 'set_message_done',
-        messageIDs: [689],
-    }, {
-        method: 'set_message_done',
-        messageIDs: [690],
-    }], "should mark 2nd preview as read");
+    await testUtils.dom.click($preview2.find('.o_mail_preview_mark_as_read'));
+    assert.verifySteps(['method: set_message_done, messageIDs: [690]'],
+        "should mark 2nd preview as read");
     assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '0',
         "should display a counter of 0 on the messaging menu icon after marking both previews as read");
     assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 0,
@@ -523,7 +642,7 @@ QUnit.test('preview of inbox message not linked to document + mark as read', fun
     messagingMenu.destroy();
 });
 
-QUnit.test('grouped preview for needaction messages linked to same document', function (assert) {
+QUnit.test('grouped preview for needaction messages linked to same document', async function (assert) {
     assert.expect(5);
 
     // simulate two (read) needaction (mention) messages in channel 'general'
@@ -561,9 +680,9 @@ QUnit.test('grouped preview for needaction messages linked to same document', fu
             partner_id: 44,
         },
     });
-    messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo($('#qunit-fixture'));
 
-    messagingMenu.$('.dropdown-toggle').click();
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
     var $previews = messagingMenu.$('.o_mail_preview');
 
     assert.strictEqual($previews.length, 2,
@@ -586,10 +705,18 @@ QUnit.test('grouped preview for needaction messages linked to same document', fu
     messagingMenu.destroy();
 });
 
-QUnit.test("messaging menu widget: channel seen notification", function ( assert ) {
+QUnit.test("messaging menu widget: channel seen notification", async function (assert) {
     assert.expect(4);
 
-    this.data.initMessaging.channel_slots.channel_channel[0].message_unread_counter = 1;
+    this.data.initMessaging.channel_slots = {
+        channel_direct_message: [{
+            id: 1,
+            channel_type: "chat",
+            direct_partner: [{ id: 2, name: 'Someone', im_status: '' }],
+            name: 'DM',
+            message_unread_counter: 1,
+        }],
+    };
 
     var messagingMenu = new MessagingMenu();
     testUtils.mock.addMockEnvironment(messagingMenu, {
@@ -598,14 +725,14 @@ QUnit.test("messaging menu widget: channel seen notification", function ( assert
         session: { partner_id: 3 },
     });
 
-    messagingMenu.appendTo($('#qunit-fixture'));
-    messagingMenu.$('.dropdown-toggle').click();
+    await messagingMenu.appendTo($('#qunit-fixture'));
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
     assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '1',
         "should have correct messaging menu counter (1 unread message in channel)");
     assert.strictEqual(messagingMenu.$('.o_preview_counter').text().replace(/\s/g, ''),
         '(1)',
-        "should display 1 unread message on general channel preview");
+        "should display 1 unread message on DM channel preview");
 
     // Simulate received channel seen notification
     var message = {
@@ -617,16 +744,61 @@ QUnit.test("messaging menu widget: channel seen notification", function ( assert
         [['myDB', 'mail.channel', 1], message]
     ];
     messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
-
+    await testUtils.nextTick();
     assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '0',
         "should no longer have a messaging menu counter (no unread message in channel)");
     assert.strictEqual(messagingMenu.$('.o_preview_counter').text().replace(/\s/g, ''), '',
-        "should no longer display unread message on general channel preview");
+        "should no longer display unread message on DM channel preview");
 
     messagingMenu.destroy();
 });
 
-QUnit.test("messaging menu widget: preview with no message should be undated", function ( assert ) {
+QUnit.test("messaging menu widget: no traceback when receiving channel_fetched notification with blank thread window", async function (assert) {
+    assert.expect(3);
+
+    this.data.initMessaging.channel_slots = {
+        channel_direct_message: [{
+            id: 1,
+            channel_type: "chat",
+            direct_partner: [{ id: 2, name: 'Someone', im_status: '' }],
+            name: 'DM',
+            message_unread_counter: 1,
+        }],
+    };
+
+    var messagingMenu = new MessagingMenu();
+    testUtils.mock.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+        session: { partner_id: 3 },
+    });
+
+    await messagingMenu.appendTo($('#qunit-fixture'));
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(messagingMenu, '.o_new_message',
+        "should have button to open blank thread window");
+
+    await testUtils.dom.click(messagingMenu.$('.o_new_message'));
+    var $threadWindow = $('.o_thread_window');
+    assert.strictEqual($threadWindow.length, 1, "should have an open thread window");
+    assert.ok($threadWindow.hasClass('o_thread_less'), "should be a blank thread window");
+
+    // Simulate received channel fetched notification
+    var message = {
+        info: 'channel_fetched',
+        last_message_id: 1,
+        partner_id: 2,
+    };
+    var notifications = [
+        [['myDB', 'mail.channel', 1], message]
+    ];
+    messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
+    await testUtils.nextTick();
+
+    messagingMenu.destroy();
+});
+
+QUnit.test("messaging menu widget: preview with no message should be undated", async function ( assert ) {
     assert.expect(2);
 
     // remove any message on the channel
@@ -639,9 +811,8 @@ QUnit.test("messaging menu widget: preview with no message should be undated", f
         data: this.data,
     });
 
-    messagingMenu.appendTo($('#qunit-fixture'));
-
-    messagingMenu.$('.dropdown-toggle').click();
+    await messagingMenu.appendTo($('#qunit-fixture'));
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
     assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 1,
         "should have two previews in messaging menu");
@@ -652,7 +823,7 @@ QUnit.test("messaging menu widget: preview with no message should be undated", f
     messagingMenu.destroy();
 });
 
-QUnit.test("messaging menu widget: sort dated previews before undated previews", function ( assert ) {
+QUnit.test("messaging menu widget: sort dated previews before undated previews", async function ( assert ) {
     assert.expect(5);
 
     var dm = {
@@ -670,8 +841,8 @@ QUnit.test("messaging menu widget: sort dated previews before undated previews",
         data: this.data,
     });
 
-    messagingMenu.appendTo($('#qunit-fixture'));
-    messagingMenu.$('.dropdown-toggle').click();
+    await messagingMenu.appendTo($('#qunit-fixture'));
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
     assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 2,
         "should have two previews in messaging menu");
@@ -691,7 +862,7 @@ QUnit.test("messaging menu widget: sort dated previews before undated previews",
     messagingMenu.destroy();
 });
 
-QUnit.test('global counter with channel previews', function (assert) {
+QUnit.test('global counter with channel previews', async function (assert) {
     assert.expect(5);
 
     var channels = [{
@@ -760,11 +931,10 @@ QUnit.test('global counter with channel previews', function (assert) {
             partner_id: 3,
         },
     });
-    messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo($('#qunit-fixture'));
     assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '2',
         "should display a counter of 2 on the messaging menu icon");
-
-    messagingMenu.$('.dropdown-toggle').click();
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
     assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 3,
         "should display 3 previews");
@@ -778,6 +948,197 @@ QUnit.test('global counter with channel previews', function (assert) {
         "preview of channel 2 should have unread counter of 1");
     assert.strictEqual($previewChannel3.data('unread-counter'), 0,
         "preview of channel 3 should have unread counter of 0");
+
+    messagingMenu.destroy();
+});
+
+QUnit.test('messaging menu widget: do not open chat window twice on preview clicked', async function (assert) {
+    // This test assumes that a condition for opening chat window is to
+    // successfully fetch messages beforehand.
+    assert.expect(4);
+
+    var self = this;
+    // Used to pause `message_fetch` after opening the messaging menu.
+    // This is necessary `message_fetch` on mailbox_inbox is required to
+    // display the previews.
+    var lockMessageFetch = false;
+    var messageFetchDef = testUtils.makeTestPromise();
+
+    var messagingMenu = new MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+        session: { partner_id: 1 },
+        mockRPC: function (route, args) {
+            if (args.method === 'message_fetch' && lockMessageFetch) {
+                var _super = this._super.bind(this);
+                return messageFetchDef.then(function () {
+                    assert.step('message_fetch');
+                    return _super(route, args);
+                });
+            }
+            if (args.method === 'channel_minimize') {
+                assert.step('channel_minimize');
+                // called to detach thread in chat window
+                // simulate longpolling response with new chat window state
+                var channelInfo = _.extend({}, self.data['mail.channel'].records[0], {
+                    is_minimized: true,
+                    state: 'open',
+                });
+                var notifications = [ [['myDB', 'res.partner'], channelInfo] ];
+                messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+    await messagingMenu.appendTo($('#qunit-fixture'));
+
+    // Opening chat window from messaging menu (pending from `messageFetchDef`)
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    lockMessageFetch = true;
+    await testUtils.dom.click(messagingMenu.$('.o_mail_preview'));
+    messageFetchDef.resolve();
+
+    await testUtils.nextTick();
+    assert.strictEqual($('.o_thread_window').length, 1,
+        "should only display a single chat window");
+    assert.verifySteps([
+        'message_fetch',
+        'channel_minimize',
+    ], "should have fetched messages only once");
+
+    messagingMenu.destroy();
+});
+
+QUnit.test('messaging menu widget: expand on thread preview', async function (assert) {
+    assert.expect(4);
+
+    this.data['mail.message'].records.push({
+        author_id: [1, "Demo"],
+        body: "<p>Office Design Project</p>",
+        res_id: 123,
+        model: 'some.res.model',
+        needaction: true,
+        needaction_partner_ids: [44],
+    });
+
+    var messagingMenu = new MessagingMenu();
+    testUtils.mock.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+        session: { partner_id: 44 },
+        intercepts: {
+            do_action: function (ev) {
+                const { res_model, res_id } = ev.data.action;
+                if (res_model === 'some.res.model' && res_id === 123) {
+                    assert.step('open_document');
+                }
+            },
+        },
+    });
+    await messagingMenu.appendTo($('#qunit-fixture'));
+
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    var $preview = messagingMenu.$('.o_mail_preview');
+    assert.containsOnce(messagingMenu, '.o_thread_window_expand', "should display one preview");
+    assert.strictEqual($preview.data('document-model'), "some.res.model", "preview should be from some.res.model");
+
+    await testUtils.dom.click($preview.find('.o_thread_window_expand'));
+    assert.verifySteps(['open_document']);
+
+    messagingMenu.destroy();
+});
+
+QUnit.test('messaging menu widget: click twice preview on slow message_fetch should open chat window once', async function (assert) {
+    // This test assumes that a condition for opening chat window is to
+    // successfully fetch messages beforehand.
+    assert.expect(1);
+
+    const self = this;
+    // Used to pause `message_fetch` after opening the messaging menu.
+    // This is necessary `message_fetch` on mailbox_inbox is required to
+    // display the previews.
+    let lockMessageFetch = false;
+    const messageFetchProm = testUtils.makeTestPromise();
+
+    const messagingMenu = new MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+        session: { partner_id: 1 },
+        async mockRPC(route, args) {
+            if (args.method === 'message_fetch' && lockMessageFetch) {
+                const _super = this._super.bind(this);
+                await messageFetchProm;
+                return _super(route, args);
+            }
+            if (args.method === 'channel_minimize') {
+                // called to detach thread in chat window
+                // simulate longpolling response with new chat window state
+                const channelInfo = {
+                    ...self.data['mail.channel'].records[0],
+                    is_minimized: true,
+                    state: 'open',
+                };
+                const notifications = [ [['myDB', 'res.partner'], channelInfo] ];
+                messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
+            }
+            return this._super(...arguments);
+        },
+    });
+    await messagingMenu.appendTo($('#qunit-fixture'));
+
+    // Opening chat window 1st time from messaging menu (pending from `messageFetchDef`)
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    lockMessageFetch = true;
+    await testUtils.dom.click(messagingMenu.$('.o_mail_preview'));
+    // Click again on preview to open chat window
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    await testUtils.dom.click(messagingMenu.$('.o_mail_preview'));
+    messageFetchProm.resolve();
+    await testUtils.nextTick();
+
+    assert.containsOnce(
+        $,
+        '.o_thread_window',
+        "should only display a single chat window");
+
+    messagingMenu.destroy();
+});
+
+QUnit.test('no code injection in message body preview', async function (assert) {
+    assert.expect(4);
+
+    this.data['mail.message'].records[0].body =
+        `<p><script>throw new Error('CodeInjectionError');</script></p>`;
+
+    const messagingMenu = new MessagingMenu();
+    testUtils.mock.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+    });
+    await messagingMenu.appendTo($('#qunit-fixture'));
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(
+        messagingMenu,
+        '.o_mail_preview',
+        "should display a preview"
+    );
+    assert.strictEqual(
+        messagingMenu.$('.o_preview_name').text().trim(),
+        "general",
+        "should display correct name of channel in preview"
+    );
+    assert.strictEqual(
+        messagingMenu.$('.o_last_message_preview').text().replace(/\s/g, ""),
+        "Me:thrownewError('CodeInjectionError');",
+        "should display correct uninjected last message inline content"
+    );
+    assert.containsNone(
+        messagingMenu.$('.o_last_message_preview'),
+        'script',
+        "last message inline content should not have any code injection"
+    );
 
     messagingMenu.destroy();
 });

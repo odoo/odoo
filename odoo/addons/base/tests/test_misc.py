@@ -4,14 +4,12 @@
 import datetime
 from dateutil.relativedelta import relativedelta
 import pytz
-import unittest
 
-from odoo.tools import misc, date_utils
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tools import misc, date_utils, merge_sequences
+from odoo.tests.common import TransactionCase, BaseCase
 
 
-@tagged('standard', 'at_install')
-class TestCountingStream(unittest.TestCase):
+class TestCountingStream(BaseCase):
     def test_empty_stream(self):
         s = misc.CountingStream(iter([]))
         self.assertEqual(s.index, -1)
@@ -42,8 +40,35 @@ class TestCountingStream(unittest.TestCase):
         self.assertEqual(s.index, 0)
 
 
-@tagged('standard', 'at_install')
-class TestDateRangeFunction(unittest.TestCase):
+class TestMergeSequences(BaseCase):
+    def test_merge_sequences(self):
+        # base case
+        seq = merge_sequences(['A', 'B', 'C'])
+        self.assertEqual(seq, ['A', 'B', 'C'])
+
+        # 'Z' can be anywhere
+        seq = merge_sequences(['A', 'B', 'C'], ['Z'])
+        self.assertEqual(seq, ['A', 'B', 'C', 'Z'])
+
+        # 'Y' must precede 'C';
+        seq = merge_sequences(['A', 'B', 'C'], ['Y', 'C'])
+        self.assertEqual(seq, ['A', 'B', 'Y', 'C'])
+
+        # 'X' must follow 'A' and precede 'C'
+        seq = merge_sequences(['A', 'B', 'C'], ['A', 'X', 'C'])
+        self.assertEqual(seq, ['A', 'B', 'X', 'C'])
+
+        # all cases combined
+        seq = merge_sequences(
+            ['A', 'B', 'C'],
+            ['Z'],                  # 'Z' can be anywhere
+            ['Y', 'C'],             # 'Y' must precede 'C';
+            ['A', 'X', 'Y'],        # 'X' must follow 'A' and precede 'Y'
+        )
+        self.assertEqual(seq, ['A', 'B', 'X', 'Y', 'C', 'Z'])
+
+
+class TestDateRangeFunction(BaseCase):
     """ Test on date_range generator. """
 
     def test_date_range_with_naive_datetimes(self):
@@ -165,9 +190,12 @@ class TestDateRangeFunction(unittest.TestCase):
 
 class TestFormatLangDate(TransactionCase):
     def test_00_accepted_types(self):
-        date_datetime = datetime.datetime.strptime('2017-01-31 12:00:00', "%Y-%m-%d %H:%M:%S")
+        self.env.user.tz = 'Europe/Brussels'
+        datetime_str = '2017-01-31 12:00:00'
+        date_datetime = datetime.datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
         date_date = date_datetime.date()
         date_str = '2017-01-31'
+        time_part = datetime.time(16, 30, 22)
 
         self.assertEqual(misc.format_date(self.env, date_datetime), '01/31/2017')
         self.assertEqual(misc.format_date(self.env, date_date), '01/31/2017')
@@ -176,13 +204,26 @@ class TestFormatLangDate(TransactionCase):
         self.assertEqual(misc.format_date(self.env, False), '')
         self.assertEqual(misc.format_date(self.env, None), '')
 
+        self.assertEqual(misc.format_datetime(self.env, date_datetime), 'Jan 31, 2017, 1:00:00 PM')
+        self.assertEqual(misc.format_datetime(self.env, datetime_str), 'Jan 31, 2017, 1:00:00 PM')
+        self.assertEqual(misc.format_datetime(self.env, ''), '')
+        self.assertEqual(misc.format_datetime(self.env, False), '')
+        self.assertEqual(misc.format_datetime(self.env, None), '')
+
+        self.assertEqual(misc.format_time(self.env, time_part), '4:30:22 PM')
+        self.assertEqual(misc.format_time(self.env, ''), '')
+        self.assertEqual(misc.format_time(self.env, False), '')
+        self.assertEqual(misc.format_time(self.env, None), '')
+
     def test_01_code_and_format(self):
         date_str = '2017-01-31'
         lang = self.env['res.lang']
 
         # Activate French and Simplified Chinese (test with non-ASCII characters)
-        lang.search([('active', '=', False), ('code', 'in', ['fr_FR', 'zh_CN'])]).write({'active': True})
+        lang._activate_lang('fr_FR')
+        lang._activate_lang('zh_CN')
 
+        # -- test `date`
         # Change a single parameter
         self.assertEqual(misc.format_date(lang.with_context(lang='fr_FR').env, date_str), '31/01/2017')
         self.assertEqual(misc.format_date(lang.env, date_str, lang_code='fr_FR'), '31/01/2017')
@@ -195,3 +236,69 @@ class TestFormatLangDate(TransactionCase):
 
         # Change 3 parameters
         self.assertEqual(misc.format_date(lang.with_context(lang='zh_CN').env, date_str, lang_code='en_US', date_format='MMM d, y'), 'Jan 31, 2017')
+
+        # -- test `datetime`
+        datetime_str = '2017-01-31 10:33:00'
+
+        # Change languages and timezones
+        self.assertEqual(misc.format_datetime(lang.with_context(lang='fr_FR').env, datetime_str, tz='Europe/Brussels'), '31 janv. 2017 à 11:33:00')
+        self.assertEqual(misc.format_datetime(lang.with_context(lang='zh_CN').env, datetime_str, tz='America/New_York'), '2017\u5E741\u670831\u65E5 \u4E0A\u53485:33:00')  # '2017年1月31日 上午5:33:00'
+
+        # Change language, timezone and format
+        self.assertEqual(misc.format_datetime(lang.with_context(lang='fr_FR').env, datetime_str, tz='America/New_York', dt_format='short'), '31/01/2017 05:33')
+        self.assertEqual(misc.format_datetime(lang.with_context(lang='en_US').env, datetime_str, tz='Europe/Brussels', dt_format='MMM d, y'), 'Jan 31, 2017')
+
+        # Check given `lang_code` overwites context lang
+        self.assertEqual(misc.format_datetime(lang.env, datetime_str, tz='Europe/Brussels', dt_format='long', lang_code='fr_FR'), '31 janvier 2017 à 11:33:00 +0100')
+        self.assertEqual(misc.format_datetime(lang.with_context(lang='zh_CN').env, datetime_str, tz='Europe/Brussels', dt_format='long', lang_code='en_US'), 'January 31, 2017 at 11:33:00 AM +0100')
+
+        # -- test `time`
+        time_part = datetime.time(16, 30, 22)
+        time_part_tz = datetime.time(16, 30, 22, tzinfo=pytz.timezone('US/Eastern'))  # 4:30 PM timezoned
+
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part), '16:30:22')
+        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part), '\u4e0b\u53484:30:22')
+
+        # Check format in different languages
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='short'), '16:30')
+        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='short'), '\u4e0b\u53484:30')
+
+        # Check timezoned time part
+        self.assertIn(misc.format_time(lang.with_context(lang='fr_FR').env, time_part_tz, time_format='long'), ['16:30:22 -0504', '16:30:22 HNE'])
+        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part_tz, time_format='full'), '\u5317\u7f8e\u4e1c\u90e8\u6807\u51c6\u65f6\u95f4\u0020\u4e0b\u53484:30:22')
+
+        # Check given `lang_code` overwites context lang
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='short', lang_code='zh_CN'), '\u4e0b\u53484:30')
+        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='medium', lang_code='fr_FR'), '16:30:22')
+
+
+class TestGroupCalls(BaseCase):
+    def test_callbacks(self):
+        log = []
+
+        def foo():
+            log.append("foo")
+
+        def bar(items):
+            log.extend(items)
+            callbacks.add(baz)
+
+        def baz():
+            log.append("baz")
+
+        callbacks = misc.GroupCalls()
+        callbacks.add(foo)
+        callbacks.add(bar, list)[0].append(1)
+        callbacks.add(bar, list)[0].append(2)
+        self.assertEqual(log, [])
+
+        callbacks()
+        self.assertEqual(log, ["foo", 1, 2, "baz"])
+
+        callbacks()
+        self.assertEqual(log, ["foo", 1, 2, "baz"])
+
+        callbacks.add(bar, list)[0].append(3)
+        callbacks.clear()
+        callbacks()
+        self.assertEqual(log, ["foo", 1, 2, "baz"])

@@ -13,13 +13,33 @@
                     <field name="name"/>
                 </h1>
                 <group name="delivery">
+                  <group>
                     <field name="package_carrier_type"/>
-                    <field name="height"/>
-                    <field name="width"/>
-                    <field name="length"/>
-                    <field name="max_weight"/>
+                    <label for="height"/>
+                    <div class="o_row" name="height">
+                      <field name="height"/>
+                      <span><field name="length_uom_name"/></span>
+                    </div>
+                    <label for="width"/>
+                    <div class="o_row" name="width">
+                      <field name="width"/>
+                      <span><field name="length_uom_name"/></span>
+                    </div>
+                    <label for="packaging_length"/>
+                    <div class="o_row" name="packaging_length">
+                      <field name="packaging_length"/>
+                      <span><field name="length_uom_name"/></span>
+                    </div>
+                  </group>
+                  <group>
+                    <label for="max_weight"/>
+                    <div class="o_row" name="max_weight">
+                      <field name="max_weight"/>
+                      <span><field name="weight_uom_name"/></span>
+                    </div>
                     <field name="barcode"/>
                     <field name="shipper_package_code"/>
+                  </group>
                 </group>
             </sheet>
         </form>
@@ -37,7 +57,7 @@
             <field name="name"/>
             <field name="height"/>
             <field name="width"/>
-            <field name="length"/>
+            <field name="packaging_length"/>
             <field name="max_weight"/>
             <field name="shipper_package_code"/>
             <field name="barcode" invisible="1"/>

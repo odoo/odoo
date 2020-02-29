@@ -7,12 +7,12 @@
 odoo.define('website_links.website_links_menu', function (require) {
 'use strict';
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
+var websiteNavbarData = require('website.navbar');
 
-sAnimations.registry.websiteLinksMenu = sAnimations.Class.extend({
-	selector: '#o_website_links_share_page',
+var WebsiteLinksMenu = publicWidget.Widget.extend({
 
-	/**
+    /**
      * @override
      */
     start: function () {
@@ -20,4 +20,7 @@ sAnimations.registry.websiteLinksMenu = sAnimations.Class.extend({
         return this._super.apply(this, arguments);
     },
 });
+
+websiteNavbarData.websiteNavbarRegistry.add(WebsiteLinksMenu, '#o_website_links_share_page');
+
 });

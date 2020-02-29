@@ -8,9 +8,8 @@
                 <p class="text-muted" style="margin-top: -5px;">clicks</p>
             </div>
             <div class="col-md-7 col-7">
-
                 <h4 class="truncate_text">
-                    <img t-att-src="widget.link_obj.icon_src" alt="Icon"/>
+                    <img t-attf-src="http://www.google.com/s2/favicons?domain={{ widget.link_obj.url }}" loading="lazy" alt="Icon" onerror="this.src='/website_links/static/img/default_favicon.png'"/>
                     <a class="no-link-style" t-att-href="widget.link_obj.url"><t t-esc="widget.link_obj.title"/></a>
                 </h4>
                 <p class="text-muted mb0" style="margin-top: -5px;">

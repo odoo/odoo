@@ -146,12 +146,14 @@ var Tip = Widget.extend({
     },
     _reposition: function () {
         if (this.tip_opened) return;
+        if (!this.$el) return;
         this.$el.removeClass("o_animated");
 
         // Reverse left/right position if direction is right to left
         var appendAt = this.info.position;
-        if (_t.database.parameters.direction === 'rtl') {
-            appendAt = appendAt === 'right' ? 'left': 'right';
+        var rtlMap = {left: 'right', right: 'left'};
+        if (rtlMap[appendAt] && _t.database.parameters.direction === 'rtl') {
+            appendAt = rtlMap[appendAt];
         }
         this.$el.position({
             my: this._get_spaced_inverted_position(appendAt),
@@ -177,7 +179,16 @@ var Tip = Widget.extend({
     },
     _bind_anchor_events: function () {
         this.consume_event = Tip.getConsumeEventType(this.$anchor);
-        this.$anchor.on(this.consume_event + ".anchor", (function (e) {
+        this.$consumeEventAnchor = this.$anchor;
+        // jQuery-ui draggable triggers 'drag' events on the .ui-draggable element,
+        // but the tip is attached to the .ui-draggable-handle element which may
+        // be one of its children (or the element itself)
+        if (this.consume_event === "drag") {
+            this.$consumeEventAnchor = this.$anchor.closest('.ui-draggable');
+        } else if (this.consume_event.includes('apply.daterangepicker')) {
+            this.$consumeEventAnchor = this.$anchor.parent().children('.o_field_date_range');
+        }
+        this.$consumeEventAnchor.on(this.consume_event + ".anchor", (function (e) {
             if (e.type !== "mousedown" || e.which === 1) { // only left click
                 this.trigger("tip_consumed");
                 this._unbind_anchor_events();
@@ -188,6 +199,7 @@ var Tip = Widget.extend({
     },
     _unbind_anchor_events: function () {
         this.$anchor.off(".anchor");
+        this.$consumeEventAnchor.off(".anchor");
     },
     _get_spaced_inverted_position: function (position) {
         if (position === "right") return "left+" + this.info.space;
@@ -297,13 +309,21 @@ var Tip = Widget.extend({
 });
 
 Tip.getConsumeEventType = function ($element) {
-    if ($element.is("textarea") || $element.filter("input").is(function () {
+    if ($element.hasClass('o_field_many2one') || $element.hasClass('o_field_many2manytags')) {
+        return 'autocompleteselect';
+    } else if ($element.is("textarea") || $element.filter("input").is(function () {
         var type = $(this).attr("type");
         return !type || !!type.match(/^(email|number|password|search|tel|text|url)$/);
     })) {
+        // FieldDateRange triggers a special event when using the widget
+        if ($element.hasClass("o_field_date_range")) {
+            return "apply.daterangepicker input";
+        }
         return "input";
+    } else if ($element.hasClass('ui-draggable-handle')) {
+        return "drag";
     }
-    return "mousedown";
+    return "click";
 };
 
 return Tip;

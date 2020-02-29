@@ -8,27 +8,19 @@
         <menuitem name="Forum" id="menu_website_forum_global"
             parent="website.menu_website_global_configuration" sequence="170" groups="website.group_website_designer"/>
 
-        <record id="badge_form_view_forum" model="ir.ui.view">
-            <field name="name">forum.badge_form_view</field>
-            <field name="model">gamification.badge</field>
-            <field name="inherit_id" ref="gamification.badge_form_view"/>
-            <field name="arch" type="xml">
-                <field name="challenge_ids" position="after">
-                    <group>
-                        <field name="level" />
-                    </group>
-                </field>
-            </field>
-        </record>
-
         <!-- FORUM VIEWS -->
         <record id="view_forum_forum_list" model="ir.ui.view">
             <field name="name">forum.forum.list</field>
             <field name="model">forum.forum</field>
             <field name="arch" type="xml">
                 <tree string="Forums">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="website_id" groups="website.group_multi_website"/>
+                    <field name="total_posts"/>
+                    <field name="total_views"/>
+                    <field name="total_answers"/>
+                    <field name="total_favorites"/>
                     <field name="active" invisible="1"/>
                 </tree>
             </field>
@@ -40,31 +32,33 @@
             <field name="arch" type="xml">
                 <form string="Forum">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" confirm="(Un)archiving a forum automatically (un)archives its posts. Do you want to proceed?" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
+                        <field name="active" invisible="1"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="image_1920" widget="image" options="{'preview_image': 'image_128'}" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
                         </div>
-                        <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name"/>
-                        </h1>
-                        <field name="description"/>
                         <group>
+                            <field name="mode" widget="radio" required="True"/>
                             <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                         </group>
                         <notebook>
-                            <page string="Options">
-                              <group string="Orders">
-                                <field name="default_order"/>
-                                <label for="relevancy_post_vote" string="Relevance Computation" groups="base.group_no_one"/>
-                                <div groups="base.group_no_one">
-                                    (votes - 1) ** <field name="relevancy_post_vote" class="oe_inline"/> / (days + 2) ** <field name="relevancy_time_decay" class="oe_inline"/>
-                                </div>
-                              </group>
-                            </page>
-                            <page string='Karma Gains'>
+                            <page name="options" string="Options">
                                 <group>
+                                    <group string="Order" name="group_order">
+                                        <field name="default_order"/>
+                                        <label for="relevancy_post_vote" string="Relevance Computation" groups="base.group_no_one" attrs="{'invisible':[('default_order','!=','relevancy desc')]}"/>
+                                        <div groups="base.group_no_one" class="o_row" attrs="{'invisible':[('default_order','!=','relevancy desc')]}">
+                                            (votes - 1) ** <field name="relevancy_post_vote"/> / (days + 2) ** <field name="relevancy_time_decay"/>
+                                        </div>
+                                    </group>
+                                </group>
+                            </page>
+                            <page name="karma_gains" string="Karma Gains">
+                                <group name="karma_gain_details">
                                     <field name="karma_gen_question_new"/>
                                     <field name="karma_gen_question_upvote"/>
                                     <field name="karma_gen_question_downvote"/>
@@ -75,9 +69,9 @@
                                     <field name="karma_gen_answer_flagged"/>
                                 </group>
                             </page>
-                            <page string='Karma Related Rights'>
+                            <page name="karma_rights" string="Karma Related Rights">
                                 <group>
-                                    <group>
+                                    <group name="karma_rights_left">
                                         <field name="karma_ask"/>
                                         <field name="karma_answer"/>
                                         <field name="karma_upvote"/>
@@ -92,7 +86,7 @@
                                         <field name="karma_answer_accept_own"/>
                                         <field name="karma_answer_accept_all"/>
                                     </group>
-                                    <group>
+                                    <group name="karma_rights_right">
                                         <field name="karma_editor"/>
                                         <field name="karma_comment_own"/>
                                         <field name="karma_comment_all"/>
@@ -109,6 +103,9 @@
                                 </group>
                             </page>
                         </notebook>
+                        <group>
+                            <field name="description"/>
+                        </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
@@ -123,6 +120,7 @@
             <field name="model">forum.forum</field>
             <field name="arch" type="xml">
                 <search string="Forum">
+                    <field name="name"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>
             </field>
@@ -131,7 +129,6 @@
         <record id="action_forum_forum" model="ir.actions.act_window">
             <field name="name">Forums</field>
             <field name="res_model">forum.forum</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
@@ -146,6 +143,9 @@
                     <field name="name"/>
                     <field name="active" invisible="1"/>
                     <field name="forum_id"/>
+                    <field name="views"/>
+                    <field name="child_count"/>
+                    <field name="favourite_count"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                 </tree>
             </field>
@@ -157,32 +157,32 @@
             <field name="arch" type="xml">
                 <form string="Forum Post">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" confirm="(Un)archiving a post automatically (un)archives its answers. Do you want to proceed?" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <label for="name" class="oe_edit_only"/>
                         <h1>
                             <field name="name" placeholder="Name"/>
                         </h1>
                         <group>
-                            <group>
+                            <group name="forum_details">
+                                <field name="active" invisible="1"/>
                                 <field name="forum_id"/>
                                 <field name="website_id" groups="website.group_multi_website"/>
                                 <field name="parent_id"/>
-                            </group><group>
-                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            </group>
+                            <group name="post_details">
+                                <field name="tag_ids" widget="many2many_tags"/>
                                 <field name="state"/>
                                 <field name="closed_reason_id"/>
                                 <field name="closed_uid"/>
                                 <field name="closed_date"/>
-                            </group><group>
+                            </group>
+                            <group name="creation_details">
                                 <field name="create_uid"/>
                                 <field name="create_date"/>
                                 <field name="write_uid"/>
                                 <field name="write_date"/>
-                            </group><group>
+                            </group>
+                            <group name="post_statistics">
                                 <field name="is_correct"/>
                                 <field name="views"/>
                                 <field name="vote_count"/>
@@ -191,7 +191,7 @@
                                 <field name="relevancy"/>
                             </group>
                         </group>
-                        <group string="Answers" attrs="{'invisible':[('parent_id','!=',False)]}">
+                        <group name="answers" string="Answers" attrs="{'invisible':[('parent_id','!=',False)]}">
                             <field name="child_ids" nolabel="1">
                                 <tree>
                                     <field name="create_uid" string="Answered by"/>
@@ -248,7 +248,6 @@
         <record id="action_forum_post" model="ir.actions.act_window">
             <field name="name">Forum Posts</field>
             <field name="res_model">forum.post</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="view_id" ref="view_forum_post_list"/>
             <field name="search_view_id" ref="view_forum_post_search"/>
@@ -267,7 +266,7 @@
             <field name="name">forum.tag.list</field>
             <field name="model">forum.tag</field>
             <field name="arch" type="xml">
-                <tree string="Tag">
+                <tree string="Tags">
                     <field name="name"/>
                     <field name="forum_id"/>
                 </tree>
@@ -294,9 +293,8 @@
         </record>
 
         <record id="forum_tag_action" model="ir.actions.act_window">
-            <field name="name">Tag</field>
+            <field name="name">Tags</field>
             <field name="res_model">forum.tag</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -305,7 +303,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_forum_tag_global" parent="menu_website_forum_global" name="Tag" action="forum_tag_action" sequence="30"/>
-
+        <menuitem id="menu_forum_tag_global" parent="menu_website_forum_global" name="Tags" action="forum_tag_action" sequence="30"/>
+        <menuitem id="menu_forum_rank_global" parent="menu_website_forum_global" name="Ranks" action="gamification.gamification_karma_ranks_action" sequence="5"/>
     </data>
 </odoo>

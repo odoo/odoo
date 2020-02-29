@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import UserError
-from odoo.tests import common
 
 
-class TestGamificationCommon(common.TransactionCase):
+class TestGamificationCommon(TransactionCaseWithUserDemo):
 
     def setUp(self):
         super(TestGamificationCommon, self).setUp()
         employees_group = self.env.ref('base.group_user')
         self.user_ids = employees_group.users
 
+        # Push demo user into the challenge before creating a new one
+        self.env.ref('gamification.challenge_base_discover')._update_all()
         self.robot = self.env['res.users'].with_context(no_reset_password=True).create({
             'name': 'R2D2',
             'login': 'r2d2@openerp.com',
@@ -25,7 +27,6 @@ class test_challenge(TestGamificationCommon):
 
     def test_00_join_challenge(self):
         challenge = self.env.ref('gamification.challenge_base_discover')
-
         self.assertGreaterEqual(len(challenge.user_ids), len(self.user_ids), "Not enough users in base challenge")
         challenge._update_all()
         self.assertGreaterEqual(len(challenge.user_ids), len(self.user_ids)+1, "These are not droids you are looking for")
@@ -40,7 +41,7 @@ class test_challenge(TestGamificationCommon):
         goal_ids = Goals.search([('challenge_id', '=', challenge.id), ('state', '!=', 'draft')])
         self.assertEqual(len(goal_ids), len(challenge.line_ids) * len(challenge.user_ids.ids), "Incorrect number of goals generated, should be 1 goal per user, per challenge line")
 
-        demo = self.env.ref('base.user_demo')
+        demo = self.user_demo
         # demo user will set a timezone
         demo.tz = "Europe/Brussels"
         goal_ids = Goals.search([('user_id', '=', demo.id), ('definition_id', '=', self.env.ref('gamification.definition_base_timezone').id)])

@@ -13,7 +13,6 @@ RATING_LIMIT_MIN = 1
 
 
 class Rating(models.Model):
-
     _name = "rating.rating"
     _description = "Rating"
     _order = 'write_date desc'
@@ -22,11 +21,11 @@ class Rating(models.Model):
         ('rating_range', 'check(rating >= 0 and rating <= 10)', 'Rating should be between 0 to 10'),
     ]
 
-    @api.one
     @api.depends('res_model', 'res_id')
     def _compute_res_name(self):
-        name = self.env[self.res_model].sudo().browse(self.res_id).name_get()
-        self.res_name = name and name[0][1] or ('%s/%s') % (self.res_model, self.res_id)
+        for rating in self:
+            name = self.env[rating.res_model].sudo().browse(rating.res_id).name_get()
+            rating.res_name = name and name[0][1] or ('%s/%s') % (rating.res_model, rating.res_id)
 
     @api.model
     def _default_access_token(self):
@@ -50,7 +49,11 @@ class Rating(models.Model):
         ('highly_dissatisfied', 'Highly dissatisfied'),
         ('no_rating', 'No Rating yet')], string='Rating', store=True, compute='_compute_rating_text', readonly=True)
     feedback = fields.Text('Comment', help="Reason of the rating")
-    message_id = fields.Many2one('mail.message', string="Linked message", help="Associated message when posting a review. Mainly used in website addons.", index=True)
+    message_id = fields.Many2one(
+        'mail.message', string="Linked message",
+        index=True, ondelete='cascade',
+        help="Associated message when posting a review. Mainly used in website addons.")
+    is_internal = fields.Boolean('Employee Only', readonly=False, related='message_id.is_internal', store=True)
     access_token = fields.Char('Security Token', default=_default_access_token, help="Access token to set the rating of the value")
     consumed = fields.Boolean(string="Filled Rating", help="Enabled if the rating has been filled.")
 
@@ -63,12 +66,20 @@ class Rating(models.Model):
                 name = name and name[0][1] or ('%s/%s') % (rating.parent_res_model, rating.parent_res_id)
             rating.parent_res_name = name
 
-    @api.multi
     @api.depends('rating')
     def _compute_rating_image(self):
+        # Due to some new widgets, we may have ratings different from 0/1/5/10 (e.g. slide.channel review)
+        # Let us have some custom rounding while finding a better solution for images.
         for rating in self:
+            rating_for_img = 0
+            if rating.rating >= 8:
+                rating_for_img = 10
+            elif rating.rating > 3:
+                rating_for_img = 5
+            elif rating.rating >= 1:
+                rating_for_img = 1
             try:
-                image_path = get_resource_path('rating', 'static/src/img', 'rating_%s.png' % (int(rating.rating),))
+                image_path = get_resource_path('rating', 'static/src/img', 'rating_%s.png' % rating_for_img)
                 rating.rating_image = base64.b64encode(open(image_path, 'rb').read())
             except (IOError, OSError):
                 rating.rating_image = False
@@ -91,11 +102,15 @@ class Rating(models.Model):
             values.update(self._find_parent_data(values))
         return super(Rating, self).create(values)
 
-    @api.multi
     def write(self, values):
         if values.get('res_model_id') and values.get('res_id'):
             values.update(self._find_parent_data(values))
         return super(Rating, self).write(values)
+
+    def unlink(self):
+        # OPW-2181568: Delete the chatter message too
+        self.env['mail.message'].search([('rating_ids', 'in', self.ids)]).unlink()
+        return super(Rating, self).unlink()
 
     def _find_parent_data(self, values):
         """ Determine the parent res_model/res_id, based on the values to create or write """
@@ -113,7 +128,6 @@ class Rating(models.Model):
                 data['parent_res_id'] = parent_res_model.id
         return data
 
-    @api.multi
     def reset(self):
         for record in self:
             record.write({

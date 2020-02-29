@@ -7,7 +7,10 @@
         <field name="arch" type="xml">
             <div id="invoicing_settings" position="inside">
                 <field name="show_module_l10n_in" invisible="1"/>
-                <div class="col-xs-12 col-md-6 o_setting_box" title="Manage Reseller(E-Commerce)" attrs="{'invisible': [('show_module_l10n_in', '=', False)]}">
+                <div class="col-xs-12 col-md-6 o_setting_box"
+                    name="ecommerce_reseller_setting"
+                    title="Manage Reseller(E-Commerce)"
+                    attrs="{'invisible': [('show_module_l10n_in', '=', False)]}">
                     <div class="o_setting_left_pane">
                         <field name="group_l10n_in_reseller"/>
                     </div>

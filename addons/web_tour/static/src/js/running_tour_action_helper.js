@@ -28,6 +28,9 @@ var RunningTourActionHelper = core.Class.extend({
     text: function (text, element) {
         this._text(this._get_action_values(element), text);
     },
+    text_blur: function (text, element) {
+        this._text_blur(this._get_action_values(element), text);
+    },
     drag_and_drop: function (to, element) {
         this._drag_and_drop(this._get_action_values(element), to);
     },
@@ -81,24 +84,35 @@ var RunningTourActionHelper = core.Class.extend({
 
         text = text || "Test";
         if (values.consume_event === "input") {
-            values.$element.trigger("keydown").val(text).trigger("keyup").trigger("input");
+            values.$element
+                .trigger({ type: 'keydown', key: text[text.length - 1] })
+                .val(text)
+                .trigger({ type: 'keyup', key: text[text.length - 1] });
+            values.$element[0].dispatchEvent(new InputEvent('input', {
+                bubbles: true,
+            }));
         } else if (values.$element.is("select")) {
             var $options = values.$element.children("option");
             $options.prop("selected", false).removeProp("selected");
             var $selectedOption = $options.filter(function () { return $(this).val() === text; });
             if ($selectedOption.length === 0) {
-                $selectedOption = $options.filter(function () { return $(this).text() === text; });
+                $selectedOption = $options.filter(function () { return $(this).text().trim() === text; });
             }
             $selectedOption.prop("selected", true);
             this._click(values);
         } else {
             values.$element.focusIn();
             values.$element.trigger($.Event( "keydown", {key: '_', keyCode: 95}));
-            values.$element.text(text);
+            values.$element.text(text).trigger("input");
             values.$element.focusInEnd();
             values.$element.trigger($.Event( "keyup", {key: '_', keyCode: 95}));
         }
         values.$element.trigger("change");
+    },
+    _text_blur: function (values, text) {
+        this._text(values, text);
+        values.$element.trigger('focusout');
+        values.$element.trigger('blur');
     },
     _drag_and_drop: function (values, to) {
         var $to;
@@ -128,17 +142,31 @@ var RunningTourActionHelper = core.Class.extend({
      },
     _keydown: function (values, keyCodes) {
         while (keyCodes.length) {
-            var keyCode = +keyCodes.shift();
-            values.$element.trigger({type: "keydown", keyCode: keyCode});
-            if ((keyCode > 47 && keyCode < 58) // number keys
-                || keyCode === 32 // spacebar
-                || (keyCode > 64 && keyCode < 91) // letter keys
-                || (keyCode > 95 && keyCode < 112) // numpad keys
-                || (keyCode > 185 && keyCode < 193) // ;=,-./` (in order)
-                || (keyCode > 218 && keyCode < 223)) {   // [\]' (in order))
-                document.execCommand("insertText", 0, String.fromCharCode(keyCode));
+            const eventOptions = {};
+            const keyCode = keyCodes.shift();
+            let insertedText = null;
+            if (isNaN(keyCode)) {
+                eventOptions.key = keyCode;
+            } else {
+                const code = parseInt(keyCode, 10);
+                eventOptions.keyCode = code;
+                eventOptions.which = code;
+                if (
+                    code === 32 || // spacebar
+                    (code > 47 && code < 58) || // number keys
+                    (code > 64 && code < 91) || // letter keys
+                    (code > 95 && code < 112) || // numpad keys
+                    (code > 185 && code < 193) || // ;=,-./` (in order)
+                    (code > 218 && code < 223) // [\]' (in order))
+                ) {
+                    insertedText = String.fromCharCode(code);
+                }
             }
-            values.$element.trigger({type: "keyup", keyCode: keyCode});
+            values.$element.trigger(Object.assign({ type: "keydown" }, eventOptions));
+            if (insertedText) {
+                document.execCommand("insertText", 0, insertedText);
+            }
+            values.$element.trigger(Object.assign({ type: "keyup" }, eventOptions));
         }
     },
 });

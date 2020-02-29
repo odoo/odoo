@@ -6,20 +6,20 @@ from odoo import fields, models
 
 class SupplierInfo(models.Model):
     _inherit = 'product.supplierinfo'
-    _order = 'sequence, purchase_requisition_id desc, min_qty desc, price'
 
-    purchase_requisition_id = fields.Many2one('purchase.requisition', related='purchase_requisition_line_id.requisition_id', string='Blanket order', readonly=False)
+    purchase_requisition_id = fields.Many2one('purchase.requisition', related='purchase_requisition_line_id.requisition_id', string='Agreement', readonly=False)
     purchase_requisition_line_id = fields.Many2one('purchase.requisition.line')
 
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    def _prepare_sellers(self, params):
+    def _prepare_sellers(self, params=False):
+        sellers = super(ProductProduct, self)._prepare_sellers(params=params)
         if params and params.get('order_id'):
-            return self.seller_ids.filtered(lambda s: not s.purchase_requisition_id or s.purchase_requisition_id == params['order_id'].requisition_id)
+            return sellers.filtered(lambda s: not s.purchase_requisition_id or s.purchase_requisition_id == params['order_id'].requisition_id)
         else:
-            return self.seller_ids
+            return sellers
 
 
 class ProductTemplate(models.Model):

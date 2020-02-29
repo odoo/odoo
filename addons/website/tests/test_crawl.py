@@ -10,18 +10,36 @@ from werkzeug import urls
 import odoo
 import re
 
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 _logger = logging.getLogger(__name__)
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
-class Crawler(odoo.tests.HttpCase):
+@odoo.tests.common.tagged('post_install', '-at_install', 'crawl')
+class Crawler(HttpCaseWithUserDemo):
     """ Test suite crawling an Odoo CMS instance and checking that all
     internal links lead to a 200 response.
 
     If a username and a password are provided, authenticates the user before
     starting the crawl
     """
+
+    def setUp(self):
+        super(Crawler, self).setUp()
+
+        if hasattr(self.env['res.partner'], 'grade_id'):
+            # Create at least one published parter, so that /partners doesn't
+            # return a 404
+            grade = self.env['res.partner.grade'].create({
+                'name': 'A test grade',
+                'website_published': True,
+            })
+            self.env['res.partner'].create({
+                'name': 'A Company for /partners',
+                'is_company': True,
+                'grade_id': grade.id,
+                'website_published': True,
+            })
 
     def crawl(self, url, seen=None, msg=''):
         if seen is None:

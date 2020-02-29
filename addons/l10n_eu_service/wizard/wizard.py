@@ -18,7 +18,7 @@ class l10n_eu_service(models.TransientModel):
         return eu_group
 
     def _get_default_company_id(self):
-        return self.env.user.company_id.id
+        return self.env.company.id
 
     def _default_fiscal_position_id(self):
         user = self.env.user
@@ -31,7 +31,7 @@ class l10n_eu_service(models.TransientModel):
         user = self.env.user
         return self.env['account.tax'].search(
             [('company_id', '=', user.company_id.id), ('type_tax_use', '=', 'sale'),
-             ('amount_type', '=', 'percent'), ('account_id', '!=', False)], limit=1, order='amount desc')
+             ('amount_type', '=', 'percent')], limit=1, order='amount desc')
 
     def _default_done_country_ids(self):
         user = self.env.user
@@ -70,7 +70,15 @@ class l10n_eu_service(models.TransientModel):
         'res.country', 'l10n_eu_service_country_rel_todo', default=_default_todo_country_ids,
         string='EU Customers From', required=True)
 
-    @api.multi
+    def _get_repartition_line_copy_values(self, original_rep_lines):
+        return [(0, 0, {
+            'factor_percent': line.factor_percent,
+            'repartition_type': line.repartition_type,
+            'account_id': line.repartition_type == 'tax' and (self.account_collected_id.id or line.account_id.id) or None,
+            'company_id': line.company_id.id,
+            'sequence': line.sequence,
+        }) for line in original_rep_lines]
+
     def generate_eu_service(self):
         tax_rate = self.env["l10n_eu_service.service_tax_rate"]
         account_tax = self.env['account.tax']
@@ -82,8 +90,8 @@ class l10n_eu_service(models.TransientModel):
             data_tax = {
                 'name': tax_name,
                 'amount': tax_rate.search([('country_id', '=', country.id)]).rate,
-                'account_id': self.account_collected_id.id or self.tax_id.account_id.id,
-                'refund_account_id': self.account_collected_id.id or self.tax_id.refund_account_id.id,
+                'invoice_repartition_line_ids': self._get_repartition_line_copy_values(self.tax_id.invoice_repartition_line_ids),
+                'refund_repartition_line_ids': self._get_repartition_line_copy_values(self.tax_id.refund_repartition_line_ids),
                 'type_tax_use': 'sale',
                 'description': "EU-VAT-%s-S" % country.code,
                 'sequence': 1000,

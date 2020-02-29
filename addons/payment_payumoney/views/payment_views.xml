@@ -5,10 +5,10 @@
         <field name="model">payment.acquirer</field>
         <field name="inherit_id" ref="payment.acquirer_form"/>
         <field name="arch" type="xml">
-            <xpath expr='//group[@name="acquirer"]' position='after'>
+            <xpath expr='//group[@name="acquirer"]' position='inside'>
                 <group attrs="{'invisible': [('provider', '!=', 'payumoney')]}">
-                    <field name="payumoney_merchant_key"/>
-                    <field name="payumoney_merchant_salt" password="True"/>
+                    <field name="payumoney_merchant_key" attrs="{'required':[ ('provider', '=', 'payumoney'), ('state', '!=', 'disabled')]}"/>
+                    <field name="payumoney_merchant_salt" attrs="{'required':[ ('provider', '=', 'payumoney'), ('state', '!=', 'disabled')]}" password="True"/>
                 </group>
             </xpath>
         </field>

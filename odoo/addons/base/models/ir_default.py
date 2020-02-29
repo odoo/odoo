@@ -27,13 +27,11 @@ class IrDefault(models.Model):
         self.clear_caches()
         return super(IrDefault, self).create(vals_list)
 
-    @api.multi
     def write(self, vals):
         if self:
             self.clear_caches()
         return super(IrDefault, self).write(vals)
 
-    @api.multi
     def unlink(self):
         if self:
             self.clear_caches()
@@ -57,7 +55,7 @@ class IrDefault(models.Model):
         if user_id is True:
             user_id = self.env.uid
         if company_id is True:
-            company_id = self.env.user.company_id.id
+            company_id = self.env.company.id
 
         # check consistency of model_name, field_name, and value
         try:
@@ -107,7 +105,7 @@ class IrDefault(models.Model):
         if user_id is True:
             user_id = self.env.uid
         if company_id is True:
-            company_id = self.env.user.company_id.id
+            company_id = self.env.company.id
 
         field = self.env['ir.model.fields']._get(model_name, field_name)
         default = self.search([
@@ -119,7 +117,7 @@ class IrDefault(models.Model):
         return json.loads(default.json_value) if default else None
 
     @api.model
-    @tools.ormcache('self.env.uid', 'model_name', 'condition')
+    @tools.ormcache('self.env.uid', 'self.env.company.id', 'model_name', 'condition')
     # Note about ormcache invalidation: it is not needed when deleting a field,
     # a user, or a company, as the corresponding defaults will no longer be
     # requested. It must only be done when a user's company is modified.
@@ -128,16 +126,17 @@ class IrDefault(models.Model):
             current user), as a dict mapping field names to values.
         """
         cr = self.env.cr
-        query = """ SELECT f.name, d.json_value FROM ir_default d
+        query = """ SELECT f.name, d.json_value
+                    FROM ir_default d
                     JOIN ir_model_fields f ON d.field_id=f.id
-                    JOIN res_users u ON u.id=%s
                     WHERE f.model=%s
-                        AND (d.user_id IS NULL OR d.user_id=u.id)
-                        AND (d.company_id IS NULL OR d.company_id=u.company_id)
+                        AND (d.user_id IS NULL OR d.user_id=%s)
+                        AND (d.company_id IS NULL OR d.company_id=%s)
                         AND {}
                     ORDER BY d.user_id, d.company_id, d.id
                 """
-        params = [self.env.uid, model_name]
+        # self.env.company is empty when there is no user (controllers with auth=None)
+        params = [model_name, self.env.uid, self.env.company.id or None]
         if condition:
             query = query.format("d.condition=%s")
             params.append(condition)

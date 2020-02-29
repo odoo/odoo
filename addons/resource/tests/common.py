@@ -20,6 +20,24 @@ class TestResourceCommon(TransactionCase):
                 for index, att in enumerate(attendances)
             ],
         })
+    def _define_calendar_2_weeks(self, name, attendances, tz):
+        return self.env['resource.calendar'].create({
+            'name': name,
+            'tz': tz,
+            'two_weeks_calendar': True,
+            'attendance_ids': [
+                (0, 0, {
+                    'name': '%s_%d' % (name, index),
+                    'hour_from': att[0],
+                    'hour_to': att[1],
+                    'dayofweek': str(att[2]),
+                    'week_type': att[3],
+                    'display_type': att[4],
+                    'sequence': att[5],
+                })
+                for index, att in enumerate(attendances)
+            ],
+        })
 
     def setUp(self):
         super(TestResourceCommon, self).setUp()
@@ -30,6 +48,11 @@ class TestResourceCommon(TransactionCase):
         self.calendar_patel = self._define_calendar('38 Hours', sum([((9, 12, i), (13, 17, i)) for i in range(5)], ()), 'Etc/GMT-6')
         # UTC-8 winter, UTC-7 summer
         self.calendar_john = self._define_calendar('8+12 Hours', [(8, 16, 1), (8, 13, 4), (16, 23, 4)], 'America/Los_Angeles')
+        # UTC+1 winter, UTC+2 summer
+        self.calendar_jules = self._define_calendar_2_weeks('Week 1: 30 Hours - Week 2: 16 Hours', [
+            (0, 0, 0, '0', 'line_section', 0), (8, 16, 0, '0', False, 1), (9, 17, 1, '0', False, 2),
+            (0, 0, 0, '1', 'line_section', 10), (8, 16, 0, '1', False, 11), (7, 15, 2, '1', False, 12),
+            (8, 16, 3, '1', False, 13), (10, 16, 4, '1', False, 14)], 'Europe/Brussels')
 
         # Employee is linked to a resource.resource via resource.mixin
         self.jean = self.env['resource.test'].create({
@@ -43,4 +66,8 @@ class TestResourceCommon(TransactionCase):
         self.john = self.env['resource.test'].create({
             'name': 'John',
             'resource_calendar_id': self.calendar_john.id,
+        })
+        self.jules = self.env['resource.test'].create({
+            'name': 'Jules',
+            'resource_calendar_id': self.calendar_jules.id,
         })

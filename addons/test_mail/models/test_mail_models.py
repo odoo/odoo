@@ -15,6 +15,19 @@ class MailTestSimple(models.Model):
     email_from = fields.Char()
 
 
+class MailTestGateway(models.Model):
+    """ A very simple model only inheriting from mail.thread to test pure mass
+    mailing features and base performances. """
+    _description = 'Simple Chatter Model for Mail Gateway'
+    _name = 'mail.test.gateway'
+    _inherit = ['mail.thread.blacklist']
+    _primary_email = 'email_from'
+
+    name = fields.Char()
+    email_from = fields.Char()
+    custom_field = fields.Char()
+
+
 class MailTestStandard(models.Model):
     """ This model can be used in tests when automatic subscription and simple
     tracking is necessary. Most features are present in a simple way. """
@@ -26,6 +39,7 @@ class MailTestStandard(models.Model):
     email_from = fields.Char()
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True)
     umbrella_id = fields.Many2one('mail.test', tracking=True)
+    company_id = fields.Many2one('res.company')
 
 
 class MailTestActivity(models.Model):
@@ -65,15 +79,19 @@ class MailTestFull(models.Model):
     user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
     umbrella_id = fields.Many2one('mail.test', tracking=True)
 
-    def _track_template(self, tracking):
-        res = super(MailTestFull, self)._track_template(tracking)
+    def _track_template(self, changes):
+        res = super(MailTestFull, self)._track_template(changes)
         record = self[0]
-        changes, tracking_value_ids = tracking[record.id]
         if 'customer_id' in changes and record.mail_template:
             res['customer_id'] = (record.mail_template, {'composition_mode': 'mass_mail'})
         elif 'datetime' in changes:
             res['datetime'] = ('test_mail.mail_test_full_tracking_view', {'composition_mode': 'mass_mail'})
         return res
+
+    def _creation_subtype(self):
+        if self.umbrella_id:
+            return self.env.ref('test_mail.st_mail_test_full_umbrella_upd')
+        return super(MailTestFull, self)._creation_subtype()
 
     def _track_subtype(self, init_values):
         self.ensure_one()
@@ -123,3 +141,43 @@ class MailModel(models.Model):
     def _value_pc(self):
         for record in self:
             record.value_pc = float(record.value) / 100
+
+
+class MailCC(models.Model):
+    _name = 'mail.test.cc'
+    _description = "Test Email CC Thread"
+    _inherit = ['mail.thread.cc']
+
+    name = fields.Char()
+
+
+class MailMultiCompany(models.Model):
+    """ This model can be used in multi company tests"""
+    _name = 'mail.test.multi.company'
+    _description = "Test Multi Company Mail"
+    _inherit = 'mail.thread'
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company')
+
+
+class MailTrackingModel(models.Model):
+    _description = 'Test Tracking Model'
+    _name = 'mail.test.tracking'
+    _inherit = ['mail.thread']
+
+    name = fields.Char(required=True, tracking=True)
+    field_0 = fields.Char(tracking=True)
+    field_1 = fields.Char(tracking=True)
+    field_2 = fields.Char(tracking=True)
+
+
+class MailCompute(models.Model):
+    _name = 'mail.test.compute'
+    _description = "Test model with several tracked computed fields"
+    _inherit = ['mail.thread']
+
+    partner_id = fields.Many2one('res.partner', tracking=True)
+    partner_name = fields.Char(related='partner_id.name', store=True, tracking=True)
+    partner_email = fields.Char(related='partner_id.email', store=True, tracking=True)
+    partner_phone = fields.Char(related='partner_id.phone', tracking=True)

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="slide_content_detailed" inherit_id="website_slides.slide_content_detailed">
+            <xpath expr="//div[hasclass('o_wslides_lesson_content_type')]" position="inside">
+                <div t-if="slide.slide_type == 'certification' and not channel_progress[slide.id].get('completed')" class="col mt32 mb8 d-flex justify-content-center">
+                    <a role="button"
+                        class="btn btn-primary btn-lg"
+                        t-att-href="'/slides_survey/slide/get_certification_url?slide_id=%s' %(slide.id)">
+                        <i class="fa fa-fw fa-graduation-cap" role="img"/>
+                        <t t-if="slide.channel_id.is_member">Begin Certification</t>
+                        <t t-else="">Test Certification</t>
+                    </a>
+                </div>
+                <div t-if="slide.slide_type == 'certification' and channel_progress[slide.id].get('completed')" class="col mt32 mb8 d-flex justify-content-center">
+                    <a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/%s/get_certification' % slide.survey_id.id">
+                        <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/> Download certification
+                    </a>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

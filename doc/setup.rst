@@ -12,3 +12,4 @@ Setting Up
     setup/update
     setup/cdn
     setup/enterprise
+    setup/email_gateway

@@ -203,7 +203,10 @@ var diacriticsMap = {
 '\u0225': 'z','\u0240': 'z','\u2C6C': 'z','\uA763': 'z',
 };
 
+const patchMap = new WeakMap();
+
 var utils = {
+
     /**
      * Throws an error if the given condition is not true
      *
@@ -279,6 +282,28 @@ var utils = {
         return "";
     },
     /**
+     * Gets dataURL (base64 data) from the given file or blob.
+     * Technically wraps FileReader.readAsDataURL in Promise.
+     *
+     * @param {Blob|File} file
+     * @returns {Promise} resolved with the dataURL, or rejected if the file is
+     *  empty or if an error occurs.
+     */
+    getDataURLFromFile: function (file) {
+        if (!file) {
+            return Promise.reject();
+        }
+        return new Promise(function (resolve, reject) {
+            var reader = new FileReader();
+            reader.addEventListener('load', function () {
+                resolve(reader.result);
+            });
+            reader.addEventListener('abort', reject);
+            reader.addEventListener('error', reject);
+            reader.readAsDataURL(file);
+        });
+    },
+    /**
      * Returns a human readable number (e.g. 34000 -> 34k).
      *
      * @param {number} number
@@ -303,7 +328,19 @@ var utils = {
         var d2 = Math.pow(10, decimals);
         var val = _t('kMGTPE');
         var symbol = '';
-        for (var i = val.length - 1 ; i > 0 ; i--) {
+        var numberMagnitude = number.toExponential().split('e')[1];
+        // the case numberMagnitude >= 21 corresponds to a number
+        // better expressed in the scientific format.
+        if (numberMagnitude >= 21) {
+            // we do not use number.toExponential(decimals) because we want to
+            // avoid the possible useless O decimals: 1e.+24 preferred to 1.0e+24
+            number = Math.round(number * Math.pow(10, decimals - numberMagnitude)) / d2;
+            // formatterCallback seems useless here.
+            return number + 'e' + numberMagnitude;
+        }
+        var sign = Math.sign(number);
+        number = Math.abs(number);
+        for (var i = val.length; i > 0 ; i--) {
             var s = Math.pow(10, i * 3);
             if (s <= number / Math.pow(10, minDigits - 1)) {
                 number = Math.round(number * d2 / s) / d2;
@@ -311,6 +348,7 @@ var utils = {
                 break;
             }
         }
+        number = sign * number;
         return formatterCallback('' + number) + symbol;
     },
     /**
@@ -319,7 +357,7 @@ var utils = {
      * @param {Number} size number of bytes
      */
     human_size: function (size) {
-        var units = _t("Bytes,Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb").split(',');
+        var units = _t("Bytes|Kb|Mb|Gb|Tb|Pb|Eb|Zb|Yb").split('|');
         var i = 0;
         while (size >= 1024) {
             size /= 1024;
@@ -408,6 +446,18 @@ var utils = {
         return (/^\d+(\.\d*)? [^0-9]+$/).test(v);
     },
     /**
+     * Returns whether the given anchor is valid.
+     *
+     * This test is useful to prevent a crash that would happen if using an invalid
+     * anchor as a selector.
+     *
+     * @param {string} anchor
+     * @returns {boolean}
+     */
+    isValidAnchor: function (anchor) {
+        return /^#[\w-]+$/.test(anchor);
+    },
+    /**
      * @param {any} node
      * @param {any} human_readable
      * @param {any} indent
@@ -467,6 +517,54 @@ var utils = {
         return new Array(size - str.length + 1).join('0') + str;
     },
     /**
+     * Patch a class and return a function that remove the patch
+     * when called.
+     *
+     * @param {Class} C Class to patch
+     * @param {string} patchName
+     * @param {Object} patch
+     * @returns {Function}
+     */
+    patch: function (C, patchName, patch) {
+        let metadata = patchMap.get(C.prototype);
+        if (!metadata) {
+            metadata = {
+                origMethods: {},
+                patches: {},
+                current: []
+            };
+            patchMap.set(C.prototype, metadata);
+        }
+        const proto = C.prototype;
+        if (metadata.patches[patchName]) {
+            throw new Error(`Patch [${patchName}] already exists`);
+        }
+        metadata.patches[patchName] = patch;
+        applyPatch(proto, patch);
+        metadata.current.push(patchName);
+
+        function applyPatch(proto, patch) {
+            Object.keys(patch).forEach(function (methodName) {
+                const method = patch[methodName];
+                if (typeof method === "function") {
+                    const original = proto[methodName];
+                    if (!(methodName in metadata.origMethods)) {
+                        metadata.origMethods[methodName] = original;
+                    }
+                    proto[methodName] = function (...args) {
+                        const previousSuper = this._super;
+                        this._super = original;
+                        const res = method.call(this, ...args);
+                        this._super = previousSuper;
+                        return res;
+                    };
+                }
+            });
+        }
+
+        return utils.unpatch.bind(null, C, patchName);
+    },
+    /**
      * performs a half up rounding with a fixed amount of decimals, correcting for float loss of precision
      * See the corresponding float_round() in server/tools/float_utils.py for more info
      * @param {Number} value the value to be rounded
@@ -490,7 +588,7 @@ var utils = {
         }
         var normalized_value = value / precision;
         var epsilon_magnitude = Math.log(Math.abs(normalized_value))/Math.log(2);
-        var epsilon = Math.pow(2, epsilon_magnitude - 53);
+        var epsilon = Math.pow(2, epsilon_magnitude - 52);
         normalized_value += normalized_value >= 0 ? epsilon : -epsilon;
 
         /**
@@ -611,11 +709,38 @@ var utils = {
      * @param {boolean} casesensetive
      * @returns {string} ASCII string
      */
-    unaccent: function (str, casesensetive=false) {
+    unaccent: function (str, casesensetive) {
         str = str.replace(/[^\u0000-\u007E]/g, function (accented) {
             return diacriticsMap[accented] || accented;
         });
         return casesensetive ? str : str.toLowerCase();
+    },
+    /**
+     * We define here an unpatch function.  This is mostly useful if we want to
+     * remove a patch.  For example, for testing purposes
+     *
+     * @param {Class} C
+     * @param {string} patchName
+     */
+    unpatch: function (C, patchName) {
+        const proto = C.prototype;
+        let metadata = patchMap.get(proto);
+        if (!metadata) {
+            return;
+        }
+        patchMap.delete(proto);
+
+        // reset to original
+        for (let k in metadata.origMethods) {
+            proto[k] = metadata.origMethods[k];
+        }
+
+        // apply other patches
+        for (let name of metadata.current) {
+            if (name !== patchName) {
+                utils.patch(C, name, metadata.patches[name]);
+            }
+        }
     },
     /**
      * @param {any} node
@@ -727,7 +852,20 @@ var utils = {
         }
         return curr;
     },
-
+    /**
+     * Returns the domain targeting assets files.
+     *
+     * @returns {Array} Domain of assets files
+     */
+    assetsDomain: function () {
+        return [
+            '&',
+            ['res_model', '=', 'ir.ui.view'],
+            '|',
+            ['name', '=like', '%.assets\_%.css'],
+            ['name', '=like', '%.assets\_%.js'],
+        ];
+    },
 };
 
 return utils;

@@ -1,34 +1,159 @@
+odoo.define('web.ErrorDialogRegistry', function (require) {
+"use strict";
+
+var Registry = require('web.Registry');
+
+return new Registry();
+});
+
 odoo.define('web.CrashManager', function (require) {
 "use strict";
 
+const AbstractService = require('web.AbstractService');
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var ErrorDialogRegistry = require('web.ErrorDialogRegistry');
+var Widget = require('web.Widget');
 
-var QWeb = core.qweb;
 var _t = core._t;
 var _lt = core._lt;
 
-var map_title ={
-    user_error: _lt('Warning'),
-    warning: _lt('Warning'),
-    access_error: _lt('Access Error'),
-    missing_error: _lt('Missing Record'),
-    validation_error: _lt('Validation Error'),
-    except_orm: _lt('Global Business Error'),
-    access_denied: _lt('Access Denied'),
-};
+// Register this eventlistener before qunit does.
+// Some errors needs to be negated by the crash_manager.
+window.addEventListener('unhandledrejection', ev =>
+    core.bus.trigger('crash_manager_unhandledrejection', ev)
+);
 
-var CrashManager = core.Class.extend({
-    init: function() {
-        this.active = true;
+let active = true;
+
+/**
+ * An extension of Dialog Widget to render the warnings and errors on the website.
+ * Extend it with your template of choice like ErrorDialog/WarningDialog
+ */
+var CrashManagerDialog = Dialog.extend({
+    xmlDependencies: (Dialog.prototype.xmlDependencies || []).concat(
+        ['/web/static/src/xml/crash_manager.xml']
+    ),
+
+    /**
+     * @param {Object} error
+     * @param {string} error.message    the message in Warning/Error Dialog
+     * @param {string} error.traceback  the traceback in ErrorDialog
+     *
+     * @constructor
+     */
+    init: function (parent, options, error) {
+        this._super.apply(this, [parent, options]);
+        this.message = error.message;
+        this.traceback = error.traceback;
+    },
+});
+
+var ErrorDialog = CrashManagerDialog.extend({
+    template: 'CrashManager.error',
+});
+
+var WarningDialog = CrashManagerDialog.extend({
+    template: 'CrashManager.warning',
+
+    /**
+     * Sets size to medium by default.
+     *
+     * @override
+     */
+    init: function (parent, options, error) {
+        this._super(parent, _.extend({
+            size: 'medium',
+       }, options), error);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Focuses the ok button.
+     *
+     * @override
+     */
+    open: function () {
+        this._super({shouldFocusButtons: true});
+    },
+});
+
+var CrashManager = AbstractService.extend({
+    init: function () {
+        var self = this;
+        active = true;
         this.isConnected = true;
+
+        this._super.apply(this, arguments);
+
+        // crash manager integration
+        core.bus.on('rpc_error', this, this.rpc_error);
+        window.onerror = function (message, file, line, col, error) {
+            // Scripts injected in DOM (eg: google API's js files) won't return a clean error on window.onerror.
+            // The browser will just give you a 'Script error.' as message and nothing else for security issue.
+            // To enable onerror to work properly with CORS file, you should:
+            //   1. add crossorigin="anonymous" to your <script> tag loading the file
+            //   2. enabling 'Access-Control-Allow-Origin' on the server serving the file.
+            // Since in some case it wont be possible to to this, this handle should have the possibility to be
+            // handled by the script manipulating the injected file. For this, you will use window.onOriginError
+            // If it is not handled, we should display something clearer than the common crash_manager error dialog
+            // since it won't show anything except "Script error."
+            // This link will probably explain it better: https://blog.sentry.io/2016/05/17/what-is-script-error.html
+            if (!file && !line && !col) {
+                // Chrome and Opera set "Script error." on the `message` and hide the `error`
+                // Firefox handles the "Script error." directly. It sets the error thrown by the CORS file into `error`
+                if (window.onOriginError) {
+                    window.onOriginError();
+                    delete window.onOriginError;
+                } else {
+                    self.show_error({
+                        type: _t("Odoo Client Error"),
+                        message: _t("Unknown CORS error"),
+                        data: {debug: _t("An unknown CORS error occured. The error probably originates from a JavaScript file served from a different origin. (Opening your browser console might give you a hint on the error.)")},
+                    });
+                }
+            } else {
+                // ignore Chrome video internal error: https://crbug.com/809574
+                if (!error && message === 'ResizeObserver loop limit exceeded') {
+                    return;
+                }
+                var traceback = error ? error.stack : '';
+                self.show_error({
+                    type: _t("Odoo Client Error"),
+                    message: message,
+                    data: {debug: file + ':' + line + "\n" + _t('Traceback:') + "\n" + traceback},
+                });
+            }
+        };
+
+        // listen to unhandled rejected promises, and throw an error when the
+        // promise has been rejected due to a crash
+        core.bus.on('crash_manager_unhandledrejection', this, function (ev) {
+            if (ev.reason && ev.reason instanceof Error) {
+                var traceback = ev.reason.stack;
+                self.show_error({
+                    type: _t("Odoo Client Error"),
+                    message: '',
+                    data: {debug: _t('Traceback:') + "\n" + traceback},
+                });
+            } else {
+                // the rejection is not due to an Error, so prevent the browser
+                // from displaying an 'unhandledrejection' error in the console
+                ev.stopPropagation();
+                ev.stopImmediatePropagation();
+                ev.preventDefault();
+            }
+        });
     },
     enable: function () {
-        this.active = true;
+        active = true;
     },
     disable: function () {
-        this.active = false;
+        active = false;
     },
     handleLostConnection: function () {
         var self = this;
@@ -45,7 +170,7 @@ var CrashManager = core.Class.extend({
             ajax.jsonRpc('/web/webclient/version_info', 'call', {}, {shadow:true}).then(function () {
                 core.bus.trigger('connection_restored');
                 self.isConnected = true;
-            }).fail(function () {
+            }).guardedCatch(function () {
                 // exponential backoff, with some jitter
                 delay = (delay * 1.5) + 500*Math.random();
                 setTimeout(checkConnection, delay);
@@ -53,7 +178,21 @@ var CrashManager = core.Class.extend({
         }, delay);
     },
     rpc_error: function(error) {
-        if (!this.active) {
+        // Some qunit tests produces errors before the DOM is set.
+        // This produces an error loop as the modal/toast has no DOM to attach to.
+        if (!document.body) {
+            return;
+        }
+        var map_title = {
+            access_denied: _lt("Access Denied"),
+            access_error: _lt("Access Error"),
+            except_orm: _lt("Global Business Error"),
+            missing_error: _lt("Missing Record"),
+            user_error: _lt("User Error"),
+            validation_error: _lt("Validation Error"),
+            warning: _lt("Warning"),
+        };
+        if (!active) {
             return;
         }
         if (this.connection_lost) {
@@ -69,14 +208,14 @@ var CrashManager = core.Class.extend({
             return;
         }
         if (_.has(map_title, error.data.exception_type)) {
-            if(error.data.exception_type === 'except_orm'){
-                if(error.data.arguments[1]) {
+            if (error.data.exception_type === 'except_orm') {
+                if (error.data.arguments[1]) {
                     error = _.extend({}, error,
                                 {
                                     data: _.extend({}, error.data,
                                         {
                                             message: error.data.arguments[1],
-                                            title: error.data.arguments[0] !== 'Warning' ? (" - " + error.data.arguments[0]) : '',
+                                            title: error.data.arguments[0] !== 'Warning' ? error.data.arguments[0] : '',
                                         })
                                 });
                 }
@@ -97,37 +236,33 @@ var CrashManager = core.Class.extend({
                                 data: _.extend({}, error.data,
                                     {
                                         message: error.data.arguments[0],
-                                        title: map_title[error.data.exception_type] !== 'Warning' ? (" - " + map_title[error.data.exception_type]) : '',
+                                        title: map_title[error.data.exception_type] !== 'Warning' ? map_title[error.data.exception_type] : '',
                                     })
                             });
             }
-
             this.show_warning(error);
-        //InternalError
-
         } else {
             this.show_error(error);
         }
     },
-    show_warning: function(error) {
-        if (!this.active) {
+    show_warning: function (error, options) {
+        if (!active) {
             return;
         }
-        return new Dialog(this, {
-            size: 'medium',
-            title: _.str.capitalize(error.type || error.message) || _t("Odoo Warning"),
-            subtitle: error.data.title,
-            $content: $(QWeb.render('CrashManager.warning', {error: error}))
-        }).open({shouldFocusButtons:true});
+        var message = error.data ? error.data.message : error.message;
+        var title = _.str.capitalize(error.type) || _t("Something went wrong !");
+        return this._displayWarning(message, title, options);
     },
-    show_error: function(error) {
-        if (!this.active) {
+    show_error: function (error) {
+        if (!active) {
             return;
         }
-        var dialog = new Dialog(this, {
-            title: _.str.capitalize(error.type || error.message) || _t("Odoo Error"),
-            $content: $(QWeb.render('CrashManager.error', {error: error}))
-        });
+        error.traceback = error.data.debug;
+        var dialogClass = error.data.context && ErrorDialogRegistry.get(error.data.context.exception_class) || ErrorDialog;
+        var dialog = new dialogClass(this, {
+            title: _.str.capitalize(error.type) || _t("Odoo Error"),
+        }, error);
+
 
         // When the dialog opens, initialize the copy feature and destroy it when the dialog is closed
         var $clipboardBtn;
@@ -172,6 +307,24 @@ var CrashManager = core.Class.extend({
             data: {debug: ""}
         });
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {string} message
+     * @param {string} title
+     * @param {Object} options
+     */
+    _displayWarning: function (message, title, options) {
+        return new WarningDialog(this, Object.assign({}, options, {
+            title,
+        }), {
+            message,
+        }).open();
+    },
 });
 
 /**
@@ -196,7 +349,7 @@ var ExceptionHandler = {
  * Handle redirection warnings, which behave more or less like a regular
  * warning, with an additional redirection button.
  */
-var RedirectWarningHandler = Dialog.extend(ExceptionHandler, {
+var RedirectWarningHandler = Widget.extend(ExceptionHandler, {
     init: function(parent, error) {
         this._super(parent);
         this.error = error;
@@ -204,19 +357,22 @@ var RedirectWarningHandler = Dialog.extend(ExceptionHandler, {
     display: function() {
         var self = this;
         var error = this.error;
-        error.data.message = error.data.arguments[0];
 
-        new Dialog(this, {
-            size: 'medium',
+        new WarningDialog(this, {
             title: _.str.capitalize(error.type) || _t("Odoo Warning"),
             buttons: [
                 {text: error.data.arguments[2], classes : "btn-primary", click: function() {
-                    window.location.href = '#action='+error.data.arguments[1];
+                    $.bbq.pushState({
+                        'action': error.data.arguments[1],
+                        'cids': $.bbq.getState().cids,
+                    }, 2);
                     self.destroy();
+                    location.reload();
                 }},
                 {text: _t("Cancel"), click: function() { self.destroy(); }, close: true}
-            ],
-            $content: QWeb.render('CrashManager.warning', {error: error}),
+            ]
+        }, {
+            message: error.data.arguments[0],
         }).open();
     }
 });
@@ -226,9 +382,9 @@ core.crash_registry.add('odoo.exceptions.RedirectWarning', RedirectWarningHandle
 function session_expired(cm) {
     return {
         display: function () {
-            cm.show_warning({type: _t("Odoo Session Expired"), data: {message: _t("Your Odoo session expired. Please refresh the current web page.")}});
+            cm.show_warning({type: _t("Odoo Session Expired"), message: _t("Your Odoo session expired. Please refresh the current web page.")});
         }
-    }
+    };
 }
 core.crash_registry.add('odoo.http.SessionExpiredException', session_expired);
 core.crash_registry.add('werkzeug.exceptions.Forbidden', session_expired);
@@ -238,18 +394,15 @@ core.crash_registry.add('504', function (cm) {
         display: function () {
             cm.show_warning({
                 type: _t("Request timeout"),
-                data: {message: _t("The operation was interrupted. This usually means that the current operation is taking too much time.")}});
+                message: _t("The operation was interrupted. This usually means that the current operation is taking too much time.")});
         }
-    }
+    };
 });
 
-return CrashManager;
-});
-
-odoo.define('web.crash_manager', function (require) {
-"use strict";
-
-var CrashManager = require('web.CrashManager');
-return new CrashManager();
-
+return {
+    CrashManager: CrashManager,
+    ErrorDialog: ErrorDialog,
+    WarningDialog: WarningDialog,
+    disable: () => active = false,
+};
 });

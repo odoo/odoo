@@ -6,8 +6,8 @@ from odoo import api, fields, models, tools
 class MaintenanceEquipment(models.Model):
     _inherit = 'maintenance.equipment'
 
-    employee_id = fields.Many2one('hr.employee', string='Assigned to Employee', tracking=True)
-    department_id = fields.Many2one('hr.department', string='Assigned to Department', tracking=True)
+    employee_id = fields.Many2one('hr.employee', string='Assigned Employee', tracking=True)
+    department_id = fields.Many2one('hr.department', string='Assigned Department', tracking=True)
     equipment_assign_to = fields.Selection(
         [('department', 'Department'), ('employee', 'Employee'), ('other', 'Other')],
         string='Used By',
@@ -15,14 +15,14 @@ class MaintenanceEquipment(models.Model):
         default='employee')
     owner_user_id = fields.Many2one(compute='_compute_owner', store=True)
 
-    @api.one
     @api.depends('employee_id', 'department_id', 'equipment_assign_to')
     def _compute_owner(self):
-        self.owner_user_id = self.env.user.id
-        if self.equipment_assign_to == 'employee':
-            self.owner_user_id = self.employee_id.user_id.id
-        elif self.equipment_assign_to == 'department':
-            self.owner_user_id = self.department_id.manager_id.user_id.id
+        for equipment in self:
+            equipment.owner_user_id = self.env.user.id
+            if equipment.equipment_assign_to == 'employee':
+                equipment.owner_user_id = equipment.employee_id.user_id.id
+            elif equipment.equipment_assign_to == 'department':
+                equipment.owner_user_id = equipment.department_id.manager_id.user_id.id
 
     @api.onchange('equipment_assign_to')
     def _onchange_equipment_assign_to(self):
@@ -45,7 +45,6 @@ class MaintenanceEquipment(models.Model):
             equipment.message_subscribe(partner_ids=partner_ids)
         return equipment
 
-    @api.multi
     def write(self, vals):
         partner_ids = []
         # subscribe employee or department manager when equipment assign to employee or department.
@@ -61,7 +60,6 @@ class MaintenanceEquipment(models.Model):
             self.message_subscribe(partner_ids=partner_ids)
         return super(MaintenanceEquipment, self).write(vals)
 
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if ('employee_id' in init_values and self.employee_id) or ('department_id' in init_values and self.department_id):
@@ -77,30 +75,16 @@ class MaintenanceRequest(models.Model):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
     employee_id = fields.Many2one('hr.employee', string='Employee', default=_default_employee_get)
-    department_id = fields.Many2one('hr.department', string='Department')
     owner_user_id = fields.Many2one(compute='_compute_owner', store=True)
+    equipment_id = fields.Many2one(domain="['|', ('employee_id', '=', employee_id), ('employee_id', '=', False)]")
 
-    @api.depends('employee_id', 'department_id')
+    @api.depends('employee_id')
     def _compute_owner(self):
         for r in self:
             if r.equipment_id.equipment_assign_to == 'employee':
                 r.owner_user_id = r.employee_id.user_id.id
-            elif r.equipment_id.equipment_assign_to == 'department':
-                r.owner_user_id = r.department_id.manager_id.user_id.id
-
-    @api.onchange('employee_id', 'department_id')
-    def onchange_department_or_employee_id(self):
-        domain = []
-        if self.department_id:
-            domain = [('department_id', '=', self.department_id.id)]
-        if self.employee_id and self.department_id:
-            domain = ['|'] + domain
-        if self.employee_id:
-            domain = domain + ['|', ('employee_id', '=', self.employee_id.id), ('employee_id', '=', None)]
-        equipment = self.env['maintenance.equipment'].search(domain, limit=2)
-        if len(equipment) == 1:
-            self.equipment_id = equipment
-        return {'domain': {'equipment_id': domain}}
+            else:
+                r.owner_user_id = False
 
     @api.model
     def create(self, vals):
@@ -109,7 +93,6 @@ class MaintenanceRequest(models.Model):
             result.message_subscribe(partner_ids=[result.employee_id.user_id.partner_id.id])
         return result
 
-    @api.multi
     def write(self, vals):
         if vals.get('employee_id'):
             employee = self.env['hr.employee'].browse(vals['employee_id'])

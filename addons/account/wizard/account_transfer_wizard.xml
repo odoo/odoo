@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="account_move_transfer_accounts_wizard" model="ir.ui.view">
+            <field name="name">account.transfer.wizard.form</field>
+            <field name="model">account.transfer.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+
+                    <field name="display_currency_helper" invisible="1"/>
+                    <div attrs="{'invisible': [('display_currency_helper', '=', False)]}"  class="alert alert-info text-center" role="status">
+                        The selected destination account is set to use a specific currency. Every entry transferred to it will be converted into this currency, causing
+                        the loss of any pre-existing foreign currency amount.
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="destination_account_id" required="1" domain="[('company_id', '=', company_id)]"/>
+                            <field name="date" required="1"/>
+                        </group>
+                        <group>
+                            <field name="journal_id" required="1" domain="[('type', '=', 'general'), ('company_id', '=', company_id)]"/>
+                        </group>
+                    </group>
+
+                    <p><strong>The following journal entry will be generated</strong></p>
+
+                    <field name="aml_preview_data" widget="aml_preview"/>
+
+                    <footer>
+                        <button string="Transfer Entries" name="button_transfer" type="object" class="oe_highlight"/>
+                        <button string="Cancel" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

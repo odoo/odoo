@@ -4,3 +4,4 @@
 from . import common
 from . import test_expenses
 from . import test_expenses_mail_subjects
+from . import test_multicompany

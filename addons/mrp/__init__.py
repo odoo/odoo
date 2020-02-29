@@ -14,5 +14,4 @@ def _create_warehouse_data(cr, registry):
     """
     env = api.Environment(cr, SUPERUSER_ID, {})
     warehouse_ids = env['stock.warehouse'].search([('manufacture_pull_id', '=', False)])
-    for warehouse_id in warehouse_ids:
-        warehouse_id.write({'manufacture_to_resupply': True})
+    warehouse_ids.write({'manufacture_to_resupply': True})

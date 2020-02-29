@@ -14,16 +14,19 @@
     <br/>
     You will find more details here:
     <div style="margin: 16px 0px 16px 0px;">
-        <a href="/event/${object.event_id.id}/"
+        <a href="/event/${object.event_id.id}/track/${object.id}"
                 style="padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
-            View Event
+            View Talk
         </a>
     </div>
     <br/><br/>
     Thank you,
-</div>
-            </field>
-            <field name="user_signature" eval="True"/>
+    % if user.signature
+        <br />
+        ${user.signature | safe}
+    % endif
+</div></field>
+            <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
@@ -43,15 +46,18 @@
         <record id="event_track_stage0" model="event.track.stage">
             <field name="name">Proposal</field>
             <field name="sequence">1</field>
+            <field name="color">1</field>
         </record>
         <record id="event_track_stage1" model="event.track.stage">
             <field name="name">Confirmed</field>
             <field name="sequence">2</field>
             <field name="mail_template_id" ref="mail_template_data_track_confirmation"/>
+            <field name="color">2</field>
         </record>
         <record id="event_track_stage2" model="event.track.stage">
             <field name="name">Announced</field>
             <field name="sequence">3</field>
+            <field name="color">3</field>
         </record>
         <record id="event_track_stage3" model="event.track.stage">
             <field name="name">Published</field>

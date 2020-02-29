@@ -9,6 +9,8 @@ var Widget = require('web.Widget');
 var SearchBar = Widget.extend({
     template: 'SearchView.SearchBar',
     events: _.extend({}, Widget.prototype.events, {
+        'compositionend .o_searchview_input': '_onCompositionendInput',
+        'compositionstart .o_searchview_input': '_onCompositionstartInput',
         'keydown': '_onKeydown',
     }),
     /**
@@ -28,12 +30,11 @@ var SearchBar = Widget.extend({
 
         this.facets = params.facets;
         this.fields = params.fields;
-        this.filters = params.filters;
         this.filterFields = params.filterFields;
-        this.groupBys = params.groupBys;
 
         this.autoCompleteSources = [];
         this.searchFacets = [];
+        this._isInputComposing = false;
     },
     /**
      * @override
@@ -46,7 +47,7 @@ var SearchBar = Widget.extend({
             defs.push(self._renderFacet(facet));
         });
         defs.push(this._setupAutoCompletion());
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 
     //--------------------------------------------------------------------------
@@ -116,18 +117,21 @@ var SearchBar = Widget.extend({
      * @param {Function} callback
      */
     _getAutoCompleteSources: function (req, callback) {
-        var defs = _.invoke(this.autoCompleteSources, 'getAutocompletionValues', req.term);
-        $.when.apply($, defs).then(function () {
-            callback(_(arguments).chain()
+        var defs = this.autoCompleteSources.map(function (source) {
+            return source.getAutocompletionValues(req.term);
+        });
+        Promise.all(defs).then(function (result) {
+            var resultCleaned = _(result).chain()
                 .compact()
                 .flatten(true)
-                .value());
-            });
+                .value();
+            callback(resultCleaned);
+        });
     },
     /**
      * @private
      * @param {Object} facet
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _renderFacet: function (facet) {
         var searchFacet = new SearchFacet(this, facet);
@@ -136,12 +140,13 @@ var SearchBar = Widget.extend({
     },
     /**
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _setupAutoCompletion: function () {
         var self = this;
         this._setupAutoCompletionWidgets();
         this.autoComplete = new AutoComplete(this, {
+            $input: this.$('input'),
             source: this._getAutoCompleteSources.bind(this),
             select: this._onAutoCompleteSelected.bind(this),
             get_search_string: function () {
@@ -163,12 +168,6 @@ var SearchBar = Widget.extend({
                 self.autoCompleteSources.push(new (Obj) (self, filter, field, self.context));
             }
         });
-        _.each(this.filters, function (filter) {
-            self.autoCompleteSources.push(new (registry.get('filter'))(self, filter));
-        });
-        _.each(this.groupBys, function (filter) {
-            self.autoCompleteSources.push(new (registry.get('groupby'))(self, filter));
-        });
     },
 
     //--------------------------------------------------------------------------
@@ -183,10 +182,16 @@ var SearchBar = Widget.extend({
      */
     _onAutoCompleteSelected: function (e, ui) {
         e.preventDefault();
-        var filter = ui.item.facet.filter;
+        var facet = ui.item.facet;
+        if (!facet) {
+            // this happens when selecting "(no result)" item
+            this.trigger_up('reset');
+            return;
+        }
+        var filter = facet.filter;
         if (filter.type === 'field') {
             var values = filter.autoCompleteValues;
-            values.push(ui.item.facet.values[0]);
+            values.push(facet.values[0]);
             this.trigger_up('autocompletion_filter', {
                 filterId: filter.id,
                 autoCompleteValues: values,
@@ -198,10 +203,27 @@ var SearchBar = Widget.extend({
         }
     },
     /**
+     * @rivate
+     * @param {CompositionEvent} ev
+     */
+    _onCompositionendInput: function () {
+        this._isInputComposing = false;
+    },
+    /**
+     * @rivate
+     * @param {CompositionEvent} ev
+     */
+    _onCompositionstartInput: function () {
+        this._isInputComposing = true;
+    },
+    /**
      * @private
      * @param {KeyEvent} e
      */
     _onKeydown: function (e) {
+        if (this._isInputComposing) {
+            return;
+        }
         switch(e.which) {
             case $.ui.keyCode.LEFT:
                 this._focusPreceding();
@@ -211,9 +233,22 @@ var SearchBar = Widget.extend({
                 this._focusFollowing();
                 e.preventDefault();
                 break;
+            case $.ui.keyCode.DOWN:
+                // if the searchbar dropdown is closed, try to focus the renderer
+                const $dropdown = this.$('.o_searchview_autocomplete:visible');
+                if (!$dropdown.length) {
+                    this.trigger_up('navigation_move', { direction: 'down' });
+                    e.preventDefault();
+                }
+                break;
             case $.ui.keyCode.BACKSPACE:
                 if (this.$input.val() === '') {
                     this.trigger_up('facet_removed');
+                }
+                break;
+            case $.ui.keyCode.ENTER:
+                if (this.$input.val() === '') {
+                    this.trigger_up('reload');
                 }
                 break;
         }

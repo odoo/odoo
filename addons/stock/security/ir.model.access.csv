@@ -56,23 +56,36 @@ access_stock_rule_internal,stock.rule.flow internal,model_stock_rule,base.group_
 access_stock_move_line_manager,stock.move.line manager,model_stock_move_line,stock.group_stock_manager,1,1,1,1
 access_stock_move_line_user,stock.move.line user,model_stock_move_line,stock.group_stock_user,1,1,1,1
 access_stock_move_line_all,stock.move.line all users,model_stock_move_line,base.group_user,1,1,1,1
-access_product_putaway_all,product.putaway all users,model_product_putaway,base.group_user,1,0,0,0
-access_product_putaway_manager,product.putaway all managers,model_product_putaway,stock.group_stock_manager,1,1,1,1
+access_stock_putaway_all,stock.putaway.rule all users,model_stock_putaway_rule,base.group_user,1,0,0,0
+access_stock_putaway_manager,stock.putaway.rule all managers,model_stock_putaway_rule,stock.group_stock_manager,1,1,1,1
 access_stock_removal_all,product.removal all users,model_product_removal,base.group_user,1,0,0,0
-access_stock_fixed_putaway_strat,stock_fixed_putaway_strat managers,model_stock_fixed_putaway_strat,stock.group_stock_manager,1,1,1,1
-access_stock_fixed_putaway_user,stock_fixed_putaway_strat user,model_stock_fixed_putaway_strat,stock.group_stock_user,1,0,0,0
 access_stock_move_line_portal,stock.move.line portal,stock.model_stock_move_line,base.group_portal,0,0,0,0
-access_product_price_history_stock_user,prices.history stock user,product.model_product_price_history,stock.group_stock_user,1,0,0,0
-access_product_price_history_stock_manager,prices.history stock manager,product.model_product_price_history,stock.group_stock_manager,1,1,1,1
 access_barcode_nomenclature_stock_user,barcode.nomenclature.stock.user,barcodes.model_barcode_nomenclature,stock.group_stock_user,1,0,0,0
 access_barcode_nomenclature_stock_manager,barcode.nomenclature.stock.manager,barcodes.model_barcode_nomenclature,stock.group_stock_manager,1,1,1,1
 access_barcode_rule_stock_user,barcode.rule.stock.user,barcodes.model_barcode_rule,stock.group_stock_user,1,0,0,0
 access_barcode_rule_stock_manager,barcode.rule.stock.manager,barcodes.model_barcode_rule,stock.group_stock_manager,1,1,1,1
-access_stock_forecast_user,report.stock.forecast.user,model_report_stock_forecast,stock.group_stock_user,1,0,0,0
-access_stock_forecast_manager,report.stock.forecast.manager,model_report_stock_forecast,stock.group_stock_manager,1,1,1,1
 access_stock_scrap_user,stock.scrap.user,model_stock_scrap,stock.group_stock_user,1,1,1,0
+access_stock_scrap_manager,stock.scrap.manager,model_stock_scrap,stock.group_stock_manager,1,1,1,1
 access_product_attribute_manager,product.attribute manager,product.model_product_attribute,stock.group_stock_manager,1,1,1,1
 access_product_attribute_value_manager,product.attribute manager value,product.model_product_attribute_value,stock.group_stock_manager,1,1,1,1
 access_product_product_attribute_manager,product.product.attribute manager value,product.model_product_template_attribute_value,stock.group_stock_manager,1,1,1,1
 access_product_template_attribute_exclusion_manager,product.attribute manager filter line,product.model_product_template_attribute_exclusion,stock.group_stock_manager,1,1,1,1
 access_product_template_attribute_line_manager,product.attribute manager line,product.model_product_template_attribute_line,stock.group_stock_manager,1,1,1,1
+access_report_stock_quantity,access_report_stock_quantity,model_report_stock_quantity,base.group_user,1,0,0,0
+access_stock_traceability_report,access.stock.traceability.report,model_stock_traceability_report,stock.group_stock_user,1,1,1,0
+access_stock_assign_serial,access.stock.assign.serial,model_stock_assign_serial,stock.group_stock_user,1,1,1,0
+access_stock_return_picking_line,access.stock.return.picking.line,model_stock_return_picking_line,stock.group_stock_user,1,1,1,0
+access_stock_return_picking,access.stock.return.picking,model_stock_return_picking,stock.group_stock_user,1,1,1,0
+access_stock_change_product_qty,access.stock.change.product.qty,model_stock_change_product_qty,stock.group_stock_user,1,1,1,0
+access_stock_scheduler_compute,access.stock.scheduler.compute,model_stock_scheduler_compute,stock.group_stock_user,1,1,1,0
+access_stock_immediate_transfer_line,access.stock.immediate.transfer.line,model_stock_immediate_transfer_line,stock.group_stock_user,1,1,1,0
+access_stock_immediate_transfer,access.stock.immediate.transfer,model_stock_immediate_transfer,stock.group_stock_user,1,1,1,0
+access_stock_backorder_confirmation_line,access.stock.backorder.confirmation.line,model_stock_backorder_confirmation_line,stock.group_stock_user,1,1,1,0
+access_stock_backorder_confirmation,access.stock.backorder.confirmation,model_stock_backorder_confirmation,stock.group_stock_user,1,1,1,0
+access_stock_quantity_history,access.stock.quantity.history,model_stock_quantity_history,stock.group_stock_user,1,1,1,0
+access_stock_rules_report,access.stock.rules.report,model_stock_rules_report,stock.group_stock_user,1,1,1,0
+access_stock_warn_insufficient_qty_scrap,access.stock.warn.insufficient.qty.scrap,model_stock_warn_insufficient_qty_scrap,stock.group_stock_user,1,1,1,0
+access_product_replenish,access.product.replenish,model_product_replenish,stock.group_stock_user,1,1,1,0
+access_stock_track_confirmation,access.stock.track.confirmation,model_stock_track_confirmation,stock.group_stock_user,1,1,1,0
+access_stock_track_line,access.stock.track.line,model_stock_track_line,stock.group_stock_user,1,1,1,0
+access_stock_package_destination,access.stock.package.destination,model_stock_package_destination,stock.group_stock_user,1,1,1,0

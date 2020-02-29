@@ -5,19 +5,21 @@
             <field name="name">res.lang.tree</field>
             <field name="model">res.lang</field>
             <field name="arch" type="xml">
-                <tree string="Languages">
+                <tree string="Languages" limit="200">
                     <field name="name"/>
-                    <field name="code"/>
-                    <field name="iso_code"/>
-                    <field name="direction"/>
-                    <field name="translatable"/>
+                    <field name="code" groups="base.group_no_one"/>
+                    <field name="iso_code" groups="base.group_no_one"/>
+                    <field name="url_code" groups="base.group_no_one" invisible="1"/>
+                    <field name="direction" groups="base.group_no_one"/>
                     <field name="active"/>
                     <button name="%(base.action_view_base_language_install)d"
-                    string="Update Terms" type="action" icon="fa-refresh" help="Update Language Terms"
-                    attrs="{'invisible': [('active', '=', False)]}"/>
+                        string="Activate Language and Update Translations"
+                        type="action"
+                        icon="fa-refresh"/>
                 </tree>
             </field>
         </record>
+
         <record id="res_lang_form" model="ir.ui.view">
             <field name="name">res.lang.form</field>
             <field name="model">res.lang</field>
@@ -25,9 +27,11 @@
                 <form string="Languages">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
-                                <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
-                            </button>
+                            <button string="Activate and Translate"
+                                name="%(base.action_view_base_language_install)d"
+                                type="action"
+                                class="oe_stat_button"
+                                icon="fa-refresh" />
                         </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -37,7 +41,8 @@
                             <group>
                                 <field name="code"/>
                                 <field name="iso_code"/>
-                                <field name="translatable"/>
+                                <field name="url_code" invisible="1" required="0"/>
+                                <field name="active"/>
                             </group>
                             <group>
                                 <field name="direction"/>
@@ -81,17 +86,18 @@
                 </form>
             </field>
         </record>
+
         <record id="res_lang_search" model="ir.ui.view">
             <field name="name">res.lang.search</field>
             <field name="model">res.lang</field>
             <field name="arch" type="xml">
                 <search string="Languages">
                     <field name="name"
-                        filter_domain="['|', '|', ('name','ilike',self), ('code','ilike',self), ('iso_code','ilike',self)]"
+                        filter_domain="['|', '|', ('name', 'ilike', self), ('code', 'ilike', self), ('iso_code', 'ilike', self)]"
                         string="Language"/>
-                    <filter string="Translatable" name="translatable" domain="[('translatable','=',True)]"/>
-                    <filter string="Active" name="active" domain="[('active','=',True)]"/>
                     <field name="direction"/>
+                    <separator/>
+                    <filter string="Active" name="active" domain="[('active', '=', True)]"/>
                 </search>
             </field>
         </record>
@@ -99,10 +105,10 @@
         <record id="res_lang_act_window" model="ir.actions.act_window">
             <field name="name">Languages</field>
             <field name="res_model">res.lang</field>
-            <field name="view_type">form</field>
             <field name="context">{'active_test': False}</field>
             <field name="search_view_id" ref="res_lang_search"/>
         </record>
+
         <menuitem action="res_lang_act_window" id="menu_res_lang_act_window" parent="menu_translation" sequence="1"/>
     </data>
 </odoo>

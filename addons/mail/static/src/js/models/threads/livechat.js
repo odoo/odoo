@@ -34,7 +34,7 @@ var Livechat = TwoUserChannel.extend({
      * display of a user that is typing.
      *
      * @override
-     * @returns {$.Promise<Array<Object[]>>} resolved with list of list of
+     * @returns {Promise<Object[]>} resolved with list of list of
      *   livechat members.
      */
     getMentionPartnerSuggestions: function () {

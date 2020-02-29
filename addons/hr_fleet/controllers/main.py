@@ -4,15 +4,15 @@
 import base64
 import io
 
-from odoo import _
-from odoo.http import request, route, Controller
-
 from PyPDF2 import  PdfFileReader, PdfFileWriter
 from reportlab.pdfgen import canvas
 
+from odoo import _
+from odoo.http import request, route, Controller
+
+
 
 class HrFleet(Controller):
-    
     @route(["/fleet/print_claim_report/<int:employee_id>"], type='http', auth='user')
     def get_claim_report_user(self, employee_id, **post):
         if not request.env.user.has_group('fleet.fleet_group_manager'):

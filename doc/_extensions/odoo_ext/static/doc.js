@@ -1,6 +1,6 @@
 (function ($) {
 
-    $(document).ready(function () {
+    $(function () {
 
         // --  Initialize fallbacks for requestAnimationFrame
         window.requestAnimationFrame = window.requestAnimationFrame

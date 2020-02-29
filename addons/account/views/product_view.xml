@@ -11,27 +11,25 @@
                     <attribute name="invisible">0</attribute>
                 </xpath>
                 <page name="inventory" position="after">
-                    <page string="Accounting" name="invoicing" groups="account.group_account_user">
+                    <page string="Accounting" name="invoicing" groups="account.group_account_readonly">
                         <group name="properties">
                             <group string="Receivables">
                                 <field name="property_account_income_id"
-                                    domain="[('internal_type','=','other'),('deprecated','=',False)]"
-                                    groups="account.group_account_user"/>
+                                    groups="account.group_account_readonly"/>
                             </group>
                             <group string="Payables" name="payables">
                                 <field name="property_account_expense_id"
-                                    domain="[('internal_type','=','other'),('deprecated','=',False)]"
-                                    groups="account.group_account_user"/>
+                                    groups="account.group_account_readonly"/>
                             </group>
                         </group>
                         <group name="accounting"/>
                     </page>
                 </page>
-                <field name="list_price" position="after">
-                    <field name="taxes_id" widget="many2many_tags"/>
-                </field>
+                <xpath expr="//div[@name='pricing']" position="after">
+                    <field name="taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'sale'}"/>
+                </xpath>
                 <group name="bill" position="inside">
-                    <field name="supplier_taxes_id" widget="many2many_tags"/>
+                    <field name="supplier_taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'purchase'}"/>
                 </group>
             </field>
         </record>
@@ -43,9 +41,9 @@
             <field name="arch" type="xml">
                 <group name="first" position="after">
                     <group name="account_property" >
-                        <group string="Account Properties" groups="account.group_account_user">
-                            <field name="property_account_income_categ_id" domain="[('internal_type','=','other'),('deprecated', '=', False)]"/>
-                            <field name="property_account_expense_categ_id" domain="[('internal_type','=','other'),('deprecated', '=', False)]"/>
+                        <group string="Account Properties" groups="account.group_account_readonly">
+                            <field name="property_account_income_categ_id"/>
+                            <field name="property_account_expense_categ_id"/>
                         </group>
                     </group>
                 </group>

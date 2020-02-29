@@ -158,8 +158,8 @@ class CustomerPortal(CustomerPortal):
         # Log only once a day
         if order_sudo and request.session.get('view_quote_%s' % order_sudo.id) != now and request.env.user.share and access_token:
             request.session['view_quote_%s' % order_sudo.id] = now
-            body = _('Quotation viewed by customer')
-            _message_post_helper(res_model='sale.order', res_id=order_sudo.id, message=body, token=order_sudo.access_token, message_type='notification', subtype="mail.mt_note", partner_ids=order_sudo.user_id.sudo().partner_id.ids)
+            body = _('Quotation viewed by customer %s') % order_sudo.partner_id.name
+            _message_post_helper('sale.order', order_sudo.id, body, token=order_sudo.access_token, message_type='notification', subtype_xmlid="mail.mt_note")
 
         values = {
             'sale_order': order_sudo,
@@ -169,22 +169,22 @@ class CustomerPortal(CustomerPortal):
             'bootstrap_formatting': True,
             'partner_id': order_sudo.partner_id.id,
             'report_type': 'html',
+            'action': order_sudo._get_portal_return_action(),
         }
         if order_sudo.company_id:
             values['res_company'] = order_sudo.company_id
 
         if order_sudo.has_to_be_paid():
             domain = expression.AND([
-                ['&', ('website_published', '=', True), ('company_id', '=', order_sudo.company_id.id)],
-                ['|', ('specific_countries', '=', False), ('country_ids', 'in', [order_sudo.partner_id.country_id.id])]
+                ['&', ('state', 'in', ['enabled', 'test']), ('company_id', '=', order_sudo.company_id.id)],
+                ['|', ('country_ids', '=', False), ('country_ids', 'in', [order_sudo.partner_id.country_id.id])]
             ])
             acquirers = request.env['payment.acquirer'].sudo().search(domain)
 
             values['acquirers'] = acquirers.filtered(lambda acq: (acq.payment_flow == 'form' and acq.view_template_id) or
                                                      (acq.payment_flow == 's2s' and acq.registration_view_template_id))
-            values['pms'] = request.env['payment.token'].search(
-                [('partner_id', '=', order_sudo.partner_id.id),
-                ('acquirer_id', 'in', acquirers.filtered(lambda acq: acq.payment_flow == 's2s').ids)])
+            values['pms'] = request.env['payment.token'].search([('partner_id', '=', order_sudo.partner_id.id)])
+            values['acq_extra_fees'] = acquirers.get_acquirer_extra_fees(order_sudo.amount_total, order_sudo.currency_id, order_sudo.partner_id.country_id.id)
 
         if order_sudo.state in ('draft', 'sent', 'cancel'):
             history = request.session.get('my_quotations_history', [])
@@ -219,19 +219,21 @@ class CustomerPortal(CustomerPortal):
 
         if not order_sudo.has_to_be_paid():
             order_sudo.action_confirm()
+            order_sudo._send_order_confirmation_mail()
 
         pdf = request.env.ref('sale.action_report_saleorder').sudo().render_qweb_pdf([order_sudo.id])[0]
 
         _message_post_helper(
-            res_model='sale.order',
-            res_id=order_sudo.id,
-            message=_('Order signed by %s') % (name,),
+            'sale.order', order_sudo.id, _('Order signed by %s') % (name,),
             attachments=[('%s.pdf' % order_sudo.name, pdf)],
             **({'token': access_token} if access_token else {}))
 
+        query_string = '&message=sign_ok'
+        if order_sudo.has_to_be_paid(True):
+            query_string += '#allow_payment=yes'
         return {
             'force_refresh': True,
-            'redirect_url': order_sudo.get_portal_url(query_string='&message=sign_ok'),
+            'redirect_url': order_sudo.get_portal_url(query_string=query_string),
         }
 
     @http.route(['/my/orders/<int:order_id>/decline'], type='http', auth="public", methods=['POST'], website=True)
@@ -246,7 +248,7 @@ class CustomerPortal(CustomerPortal):
         query_string = False
         if order_sudo.has_to_be_signed() and message:
             order_sudo.action_cancel()
-            _message_post_helper(message=message, res_id=order_id, res_model='sale.order', **{'token': access_token} if access_token else {})
+            _message_post_helper('sale.order', order_id, message, **{'token': access_token} if access_token else {})
         else:
             query_string = "&message=cant_reject"
 

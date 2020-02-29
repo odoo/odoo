@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_product_catalog" name="Product Catalog">
+    <section class="s_product_catalog oe_img_bg oe_custom_bg pt48 pb48"
+             style="background-image: url('/web/image/website.s_product_catalog_default_image');">
+        <div class="container">
+            <h2>Menu</h2>
+            <h5 class="text-secondary">Add a menu description</h5>
+            <div class="row">
+                <div class="col-lg-6 pt24">
+                    <h3 class="text-primary">Starter</h3>
+                    <div class="row">
+                        <t t-call="website.s_product_catalog_dish">
+                            <t t-set="name">Cheese Onion Rings</t>
+                            <t t-set="price">$9.00</t>
+                        </t>
+                        <t t-call="website.s_product_catalog_dish">
+                            <t t-set="name">Chefs Fresh Soup of the Day</t>
+                            <t t-set="price">$7.50</t>
+                        </t>
+                        <t t-call="website.s_product_catalog_dish">
+                            <t t-set="name">Beef Carpaccio</t>
+                            <t t-set="price">$10.50</t>
+                        </t>
+                    </div>
+                </div>
+                <div class="col-lg-6 pt24">
+                    <h3 class="text-primary">Main Course</h3>
+                    <div class="row">
+                        <t t-call="website.s_product_catalog_dish">
+                            <t t-set="name">Filet Mignon 8oz</t>
+                            <t t-set="price">$15.50</t>
+                        </t>
+                        <t t-call="website.s_product_catalog_dish">
+                            <t t-set="name">Farm Friendly Chicken Supreme</t>
+                            <t t-set="price">$15.50</t>
+                        </t>
+                        <t t-call="website.s_product_catalog_dish">
+                            <t t-set="name">Tuna and Salmon Burger</t>
+                            <t t-set="price">$12.00</t>
+                        </t>
+                    </div>
+                </div>
+                <div class="col-lg-6 pt24">
+                    <h3 class="text-primary">Dessert</h3>
+                    <div class="row">
+                        <t t-call="website.s_product_catalog_dish">
+                            <t t-set="name">Chocolate Cake</t>
+                            <t t-set="price">$7.50</t>
+                        </t>
+                        <t t-call="website.s_product_catalog_dish">
+                            <t t-set="name">Sticky Toffee Pudding</t>
+                            <t t-set="price">$7.50</t>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_product_catalog_dish">
+    <div class="s_product_catalog_dish col-lg-12 pt16" data-name="Product">
+        <div class="s_product_catalog_dish_title d-flex align-items-baseline border-bottom mb8">
+            <h4 t-esc="name"/>
+            <span class="ml-auto pl-3 h5" t-esc="price"/>
+        </div>
+        <p class="s_product_catalog_dish_description">Add a description here</p>
+    </div>
+</template>
+
+<template id="s_product_catalog_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-js="ProductCatalog" data-selector=".s_product_catalog">
+            <we-colorpicker string="Separator" data-select-style=""
+                            data-apply-to=".s_product_catalog_dish_title"
+                            data-css-property="border-bottom-color"
+                            data-color-prefix="border-"/>
+            <we-checkbox string="Descriptions" data-toggle-description="true"
+                         data-no-preview="true"/>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

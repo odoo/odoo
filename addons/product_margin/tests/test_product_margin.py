@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import tools
-from odoo.tests import common, Form
+from odoo.addons.account.tests.common import AccountTestCommon
+from odoo.tests import Form
 from odoo.modules.module import get_resource_path
 
 
-class TestProductMargin(common.TransactionCase):
+class TestProductMargin(AccountTestCommon):
 
     def create_account_invoice(self, invoice_type, partner, product, quantity=0.0, price_unit=0.0):
         """ Create an invoice as in a view by triggering its onchange methods"""
 
-        invoice_form = Form(self.env['account.invoice'].with_context(type=invoice_type))
+        invoice_form = Form(self.env['account.move'].with_context(default_move_type=invoice_type))
         invoice_form.partner_id = partner
         with invoice_form.invoice_line_ids.new() as line:
             line.product_id = product
@@ -18,20 +20,18 @@ class TestProductMargin(common.TransactionCase):
             line.price_unit = price_unit
 
         invoice = invoice_form.save()
-        invoice.action_invoice_open()
-        return invoice
+        invoice.post()
 
     def test_product_margin(self):
         ''' In order to test the product_margin module '''
 
-        # load account_minimal_test.xml file for chart of account in configuration
-        tools.convert_file(self.cr, 'product_margin',
-                           get_resource_path('account', 'test', 'account_minimal_test.xml'),
-                           {}, 'init', False, 'test', self.registry._assertion_report)
-
-        supplier = self.env['res.partner'].create({'name': 'Supplier', 'supplier': True})
-        customer = self.env['res.partner'].create({'name': 'Customer', 'customer': True})
-        ipad = self.env.ref("product.product_product_4")
+        supplier = self.env['res.partner'].create({'name': 'Supplier'})
+        customer = self.env['res.partner'].create({'name': 'Customer'})
+        ipad = self.env['product.product'].create({
+            'name': 'Ipad',
+            'standard_price': 500.0,
+            'list_price': 750.0,
+        })
 
         # Create supplier invoice and customer invoice to test product margin.
         # Define supplier invoices

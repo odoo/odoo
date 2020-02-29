@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_gengo
+# 	* base_gengo
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2018
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
-# Martin Trigaux, 2018
-# Levent Karakaş <levent@mektup.at>, 2018
-# Murat Kaplan <muratk@projetgrup.com>, 2018
-# gokhun lekesiz <gokhun.lekesiz@rammar.com.tr>, 2018
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
-# Buket Şeker <buket_skr@hotmail.com>, 2018
+# Ediz Duman <neps1192@gmail.com>, 2019
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2019
+# Martin Trigaux, 2019
+# Levent Karakaş <levent@mektup.at>, 2019
+# Murat Kaplan <muratk@projetgrup.com>, 2019
+# gokhun lekesiz <gokhun.lekesiz@rammar.com.tr>, 2019
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
+# Buket Şeker <buket_skr@hotmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-10-02 10:05+0000\n"
-"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +33,8 @@ msgid ""
 "<span class=\"o_form_label\">Gengo Public or Private keys are wrong or "
 "missing.</span>"
 msgstr ""
+"<span class=\"o_form_label\">Gengo Public veya Private keyleri yanlış yada "
+"eksik.</span>"
 
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
@@ -41,6 +44,9 @@ msgid ""
 "in this system. You are supposed to do that directly by using your Gengo "
 "Account</span>"
 msgstr ""
+"<span class=\"o_form_label\">Not: Çeviri durumu 'İşleniyor' durumundaysa, "
+"çevirinin sisteme yüklenebilmesi için onaylanması gerekiyor anlamındadır. "
+"Doğrudan Gengo Hesabınızı kullanarak bunu yapmanız gerekiyor.</span>"
 
 #. module: base_gengo
 #: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
@@ -69,7 +75,12 @@ msgid "Auto Approve Translation ?"
 msgstr "Çeviri Otomatik Onaylansın mı?"
 
 #. module: base_gengo
-#: selection:base.gengo.translations,sync_type:0
+#: model:ir.model,name:base_gengo.model_base_gengo_translations
+msgid "Base Gengo Translations"
+msgstr "Temel Gengo Çevirisi"
+
+#. module: base_gengo
+#: model:ir.model.fields.selection,name:base_gengo.selection__base_gengo_translations__sync_type__both
 msgid "Both"
 msgstr "İkisi de"
 
@@ -172,7 +183,7 @@ msgid "Gengo Translation Service Level"
 msgstr "Genge Çeviri Hizmet Düzeyi"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:84
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:0
 #, python-format
 msgid ""
 "Gengo `Public Key` or `Private Key` are missing. Enter your Gengo "
@@ -183,7 +194,7 @@ msgstr ""
 "parametrelerinizi girin."
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:95
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:0
 #, python-format
 msgid ""
 "Gengo connection failed with this message:\n"
@@ -254,7 +265,7 @@ msgid "Private Key"
 msgstr "Özel Anahtar"
 
 #. module: base_gengo
-#: selection:ir.translation,gengo_translation:0
+#: model:ir.model.fields.selection,name:base_gengo.selection__ir_translation__gengo_translation__pro
 msgid "Pro"
 msgstr "Pro"
 
@@ -264,7 +275,7 @@ msgid "Public Key"
 msgstr "Genel Anahtar"
 
 #. module: base_gengo
-#: selection:base.gengo.translations,sync_type:0
+#: model:ir.model.fields.selection,name:base_gengo.selection__base_gengo_translations__sync_type__receive
 msgid "Receive Translation"
 msgstr "Çeviri Al"
 
@@ -281,12 +292,12 @@ msgid "Send"
 msgstr "Gönder"
 
 #. module: base_gengo
-#: selection:base.gengo.translations,sync_type:0
+#: model:ir.model.fields.selection,name:base_gengo.selection__base_gengo_translations__sync_type__send
 msgid "Send New Terms"
 msgstr "Yeni Şartları Gönder"
 
 #. module: base_gengo
-#: selection:ir.translation,gengo_translation:0
+#: model:ir.model.fields.selection,name:base_gengo.selection__ir_translation__gengo_translation__standard
 msgid "Standard"
 msgstr "Standart"
 
@@ -296,7 +307,7 @@ msgid "Sync Type"
 msgstr "Eşleme Türü"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:114
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:0
 #, python-format
 msgid ""
 "The number of terms to sync should be between 1 to 200 to work with Gengo "
@@ -321,7 +332,7 @@ msgstr ""
 " konulacaktır"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:109
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:0
 #, python-format
 msgid "This language is not supported by the Gengo translation services."
 msgstr "Bu dil Gengo tercüme servisi tarafından desteklenmiyor."
@@ -337,12 +348,12 @@ msgid "Translation"
 msgstr "Çeviri"
 
 #. module: base_gengo
-#: selection:ir.translation,gengo_translation:0
+#: model:ir.model.fields.selection,name:base_gengo.selection__ir_translation__gengo_translation__machine
 msgid "Translation By Machine"
 msgstr "Makine Tarafından Çeviri"
 
 #. module: base_gengo
-#: selection:ir.translation,gengo_translation:0
+#: model:ir.model.fields.selection,name:base_gengo.selection__ir_translation__gengo_translation__ultra
 msgid "Ultra"
 msgstr "Ultra"
 
@@ -354,8 +365,3 @@ msgid ""
 msgstr ""
 "Genge otomatik çeviri servisi için istediğiniz hizmet düzeyini buradan "
 "seçebilirsiniz"
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_base_gengo_translations
-msgid "base.gengo.translations"
-msgstr "base.gengo.translations"

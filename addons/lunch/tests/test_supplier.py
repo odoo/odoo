@@ -42,6 +42,7 @@ class TestSupplier(TestsCommon):
         '''
             This test checks that _search_available_today returns a valid domain
         '''
+        self.env.user.tz = 'Europe/Brussels'
         Supplier = self.env['lunch.supplier']
 
         tests = [(self.monday_1am, 1.0, 'monday'), (self.monday_10am, 10.0, 'monday'),

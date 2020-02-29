@@ -25,6 +25,8 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'security/ir.model.access.csv',
         'data/account_data.xml',
         'data/l10n_in_chart_data.xml',
+        'data/account.account.template.csv',
+        'data/l10n_in_chart_post_data.xml',
         'data/account_tax_template_data.xml',
         'data/account_fiscal_position_data.xml',
         'data/l10n_in.port.code.csv',
@@ -41,10 +43,12 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'views/res_partner_views.xml',
         'views/account_tax_views.xml',
         'views/uom_uom_views.xml',
+        'views/report_template.xml',
         'data/account_chart_template_data.xml'
     ],
     'demo': [
         'data/res_partner_demo.xml',
+        'data/product_demo.xml',
         'data/account_payment_demo.xml',
         'data/account_invoice_demo.xml'
     ]

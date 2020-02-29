@@ -7,7 +7,7 @@
     'name': 'Worldline SIPS',
     'version': '1.0',
     'author': 'Eezee-It',
-    'category': 'Accounting',
+    'category': 'Accounting/Payment',
     'description': """
 Worldline SIPS Payment Acquirer for online payments
 

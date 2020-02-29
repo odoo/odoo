@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <field name="categ_id" position="after">
-                <field name="l10n_in_hsn_code" attrs="{'required': ['|', ('l10n_in_hsn_description','=', ''), ('l10n_in_hsn_description','=', False)]}"/>
+                <field name="l10n_in_hsn_code"/>
                 <field name="l10n_in_hsn_description"/>
             </field>
         </field>

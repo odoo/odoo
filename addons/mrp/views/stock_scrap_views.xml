@@ -6,8 +6,8 @@
         <field name="inherit_id" ref="stock.stock_scrap_form_view2"/>
         <field name="arch" type="xml">
             <field name="owner_id" position="after">
-                <field name="workorder_id" attrs="{'invisible': [('workorder_id', '=', False)]}"/>
-                <field name="production_id" attrs="{'invisible': [('production_id', '=', False)]}"/>
+                <field name="workorder_id" invisible="1"/>
+                <field name="production_id" invisible="1"/>
             </field>
         </field>
     </record>
@@ -17,8 +17,8 @@
         <field name="inherit_id" ref="stock.stock_scrap_form_view"/>
         <field name="arch" type="xml">
             <field name="owner_id" position="after">
-                <field name="workorder_id" attrs="{'invisible': [('workorder_id', '=', False)]}"/>
-                <field name="production_id" attrs="{'invisible': [('production_id', '=', False)]}"/>
+                <field name="workorder_id" domain="[('production_id', '=', product_id)]" attrs="{'invisible': [('workorder_id', '=', False)]}"/>
+                <field name="production_id" domain="[('company_id', '=', company_id)]" attrs="{'invisible': [('production_id', '=', False)]}"/>
             </field>
         </field>
     </record>

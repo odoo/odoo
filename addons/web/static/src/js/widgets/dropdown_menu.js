@@ -6,6 +6,8 @@ var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 
+var _t = core._t;
+
 var DropdownMenu = Widget.extend({
     template: 'web.DropdownMenu',
 
@@ -37,7 +39,18 @@ var DropdownMenu = Widget.extend({
         this.items = items;
         this.openItems = {};
     },
+    /**
+     * @override
+     */
+    start: function () {
+        this.$menu = this.$('.o_dropdown_menu');
+        this.$dropdownReference = this.$('.o_dropdown_toggler_btn');
 
+         if (_t.database.parameters.direction === 'rtl') {
+            this.$menu.addClass('dropdown-menu-right');
+        }
+        return this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Public

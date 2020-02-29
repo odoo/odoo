@@ -9,7 +9,7 @@ class TestIrDefault(TransactionCase):
 
     def test_defaults(self):
         """ check the mechanism of user-defined defaults """
-        companyA = self.env.user.company_id
+        companyA = self.env.company
         companyB = companyA.create({'name': 'CompanyB'})
         user1 = self.env.user
         user2 = user1.create({'name': 'u2', 'login': 'u2'})
@@ -19,8 +19,8 @@ class TestIrDefault(TransactionCase):
 
         # create some default value for some model
         IrDefault1 = self.env['ir.default']
-        IrDefault2 = IrDefault1.sudo(user2)
-        IrDefault3 = IrDefault1.sudo(user3)
+        IrDefault2 = IrDefault1.with_user(user2)
+        IrDefault3 = IrDefault1.with_user(user3)
 
         # set a default value for all users
         IrDefault1.search([('field_id.model', '=', 'res.partner')]).unlink()
@@ -106,3 +106,40 @@ class TestIrDefault(TransactionCase):
         # delete the record, and check the presence of the default value
         title.unlink()
         self.assertEqual(IrDefault.get_model_defaults('res.partner'), {})
+
+    def test_multi_company_defaults(self):
+        """Check defaults in multi-company environment."""
+        company_a = self.env["res.company"].create({"name": "C_A"})
+        company_b = self.env["res.company"].create({"name": "C_B"})
+        company_a_b = (company_a + company_b)
+        company_b_a = (company_b + company_a)
+        multi_company_user = self.env['res.users'].create({
+            'name': 'u2', 'login': 'u2',
+            'company_id': company_a.id,
+            'company_ids': company_a_b.ids,
+        })
+        IrDefault = self.env["ir.default"].with_user(multi_company_user)
+        IrDefault.with_context(allowed_company_ids=company_a.ids).set(
+            'res.partner', 'ref', 'CADefault', user_id=True, company_id=True)
+        IrDefault.with_context(allowed_company_ids=company_b.ids).set(
+            'res.partner', 'ref', 'CBDefault', user_id=True, company_id=True)
+        self.assertEqual(
+            IrDefault.get_model_defaults('res.partner')['ref'],
+            'CADefault',
+        )
+        self.assertEqual(
+            IrDefault.with_context(allowed_company_ids=company_a.ids).get_model_defaults('res.partner')['ref'],
+            'CADefault',
+        )
+        self.assertEqual(
+            IrDefault.with_context(allowed_company_ids=company_b.ids).get_model_defaults('res.partner')['ref'],
+            'CBDefault',
+        )
+        self.assertEqual(
+            IrDefault.with_context(allowed_company_ids=company_a_b.ids).get_model_defaults('res.partner')['ref'],
+            'CADefault',
+        )
+        self.assertEqual(
+            IrDefault.with_context(allowed_company_ids=company_b_a.ids).get_model_defaults('res.partner')['ref'],
+            'CBDefault',
+        )

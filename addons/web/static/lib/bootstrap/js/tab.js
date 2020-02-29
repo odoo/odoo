@@ -1,13 +1,13 @@
 /*!
-  * Bootstrap tab.js v4.2.1 (https://getbootstrap.com/)
-  * Copyright 2011-2018 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+  * Bootstrap tab.js v4.3.1 (https://getbootstrap.com/)
+  * Copyright 2011-2019 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
   */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('jquery'), require('./util.js')) :
   typeof define === 'function' && define.amd ? define(['jquery', './util.js'], factory) :
-  (global.Tab = factory(global.jQuery,global.Util));
-}(this, (function ($,Util) { 'use strict';
+  (global = global || self, global.Tab = factory(global.jQuery, global.Util));
+}(this, function ($, Util) { 'use strict';
 
   $ = $ && $.hasOwnProperty('default') ? $['default'] : $;
   Util = Util && Util.hasOwnProperty('default') ? Util['default'] : Util;
@@ -35,7 +35,7 @@
    */
 
   var NAME = 'tab';
-  var VERSION = '4.2.1';
+  var VERSION = '4.3.1';
   var DATA_KEY = 'bs.tab';
   var EVENT_KEY = "." + DATA_KEY;
   var DATA_API_KEY = '.data-api';
@@ -143,8 +143,8 @@
     _proto.dispose = function dispose() {
       $.removeData(this._element, DATA_KEY);
       this._element = null;
-    }; // Private
-
+    } // Private
+    ;
 
     _proto._activate = function _activate(element, container, callback) {
       var _this2 = this;
@@ -186,7 +186,10 @@
       }
 
       Util.reflow(element);
-      $(element).addClass(ClassName.SHOW);
+
+      if (element.classList.contains(ClassName.FADE)) {
+        element.classList.add(ClassName.SHOW);
+      }
 
       if (element.parentNode && $(element.parentNode).hasClass(ClassName.DROPDOWN_MENU)) {
         var dropdownElement = $(element).closest(Selector.DROPDOWN)[0];
@@ -202,8 +205,8 @@
       if (callback) {
         callback();
       }
-    }; // Static
-
+    } // Static
+    ;
 
     Tab._jQueryInterface = function _jQueryInterface(config) {
       return this.each(function () {
@@ -262,4 +265,4 @@
 
   return Tab;
 
-})));
+}));

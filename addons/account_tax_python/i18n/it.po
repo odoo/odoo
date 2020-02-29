@@ -1,27 +1,52 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * account_tax_python
+# 	* account_tax_python
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
-# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
-# Paolo Valier, 2018
-# David Minneci <david@numeko.it>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Paolo Valier, 2019
+# David Minneci <david@numeko.it>, 2019
+# Léonie Bouchat <lbo@odoo.com>, 2019
+# Luigia Cimmino Caserta <lcc@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:15+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:08+0000\n"
+"Last-Translator: Luigia Cimmino Caserta <lcc@odoo.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
+msgid ""
+"\n"
+"    - Group of Taxes: The tax is a set of sub taxes.\n"
+"    - Fixed: The tax amount stays the same whatever the price.\n"
+"    - Percentage of Price: The tax amount is a % of the price:\n"
+"        e.g 100 * 10% = 110 (not price included)\n"
+"        e.g 110 / (1 + 10%) = 100 (price included)\n"
+"    - Percentage of Price Tax Included: The tax amount is a division of the price:\n"
+"        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+"        e.g 200 * (1 - 10%) = 180 (price included)\n"
+"        "
+msgstr ""
+"\n"
+"    - Gruppo di tasse: La tassa è un insieme di sotto-tasse.\n"
+"    - Fisso: l'ammontare delle tasse resta lo stesso, a prescindere dal prezzo.\n"
+"    - Percentuale del Prezzo: l'ammontare delle tasse è una percentuale del prezzo:\n"
+"        es. 100 * 10% = 110 (prezzo non incluso)\n"
+"        es. 110 / (1 + 10%) = 100 (prezzo incluso)\n"
+"    - Percentuale del Prezzo Tasse Incluse: l'ammontare delle tasse è una frazione del prezzo\n"
+"        es. 180 / (1 - 10%) = 200 (prezzo non incluso)\n"
+"        es. 200 * (1 - 10%) = 180 (prezzo incluso)\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
@@ -41,9 +66,9 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Calcola l'importo dell'imposta impostando la variabile \"result\".\n"
+"Calcola l'importo dell'imposta impostando la variabile \"risultato\".\n"
 "\n"
-":param base_amount: effettivo, importo effettivo a cui si applica l'imposta\n"
+":param base_amount: effettivo, importo attuale a cui si applica l'imposta\n"
 ":param price_unit: effettivo\n"
 ":param quantity: effettivo\n"
 ":param company: registrazione di res.company\n"
@@ -61,7 +86,7 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Calcola l'importo dell'imposta impostando la variabile \"result\".\n"
+"Calcola l'importo dell'imposta impostando la variabile \"risultato\".\n"
 "\n"
 ":param base_amount: effettivo, importo attuale a cui si applica l'imposta\n"
 ":param price_unit: effettivo\n"
@@ -80,7 +105,7 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Calcola l'importo dell'imposta impostando la variabile \"risultato\".\n"
+"Determina se l'imposta sarà applicata impostando la variabile \"risultato\" su Vero o Falso.\n"
 "\n"
 ":param price_unit: effettivo\n"
 ":param quantity: effettivo\n"
@@ -106,34 +131,10 @@ msgstr ""
 ":param partner: registrazione di res.partner o None"
 
 #. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
-msgid "Fixed"
-msgstr "Fisso"
-
-#. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
-msgid "Group of Taxes"
-msgstr "Gruppo di imposte"
-
-#. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
-msgid "Percentage of Price"
-msgstr "Percentuale del prezzo"
-
-#. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
-msgid "Percentage of Price Tax Included"
-msgstr "Percentuale del prezzo tasse incluse"
-
-#. module: account_tax_python
-#: selection:account.tax,amount_type:0
-#: selection:account.tax.template,amount_type:0
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
 msgid "Python Code"
 msgstr "Codice Python"
 

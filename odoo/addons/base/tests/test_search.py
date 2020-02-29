@@ -74,7 +74,7 @@ class test_search(TransactionCase):
         c = Users.create({'name': '__test_B', 'login': '__z_test_B', 'country_id': country_us.id, 'state_id': states_us[0].id})
 
         # Search as search user
-        Users = Users.sudo(u)
+        Users = Users.with_user(u)
 
         # Do: search on res.users, order on a field on res.partner to try inherits'd fields, then res.users
         expected_ids = [u.id, a.id, c.id, b.id]
@@ -141,10 +141,50 @@ class test_search(TransactionCase):
                                      self.ref('base.group_partner_manager')])])
 
         u1 = Users.create(dict(name='Q', login='m', **kw)).id
-        u2 = Users.sudo(user=u1).create(dict(name='B', login='f', **kw)).id
+        u2 = Users.with_user(u1).create(dict(name='B', login='f', **kw)).id
         u3 = Users.create(dict(name='C', login='c', **kw)).id
-        u4 = Users.sudo(user=u2).create(dict(name='D', login='z', **kw)).id
+        u4 = Users.with_user(u2).create(dict(name='D', login='z', **kw)).id
 
         expected_ids = [u2, u4, u3, u1]
         found_ids = Users.search([('id', 'in', expected_ids)]).ids
         self.assertEqual(found_ids, expected_ids)
+
+    def test_20_x_active(self):
+        """Check the behaviour of the x_active field."""
+        # test that a custom field x_active filters like active
+        # we take the model res.country as a test model as it is included in base and does
+        # not have an active field
+        model_country = self.env['res.country']
+        self.assertNotIn('active', model_country._fields)  # just in case someone adds the active field in the model
+        self.env['ir.model.fields'].create({
+            'name': 'x_active',
+            'model_id': self.env.ref('base.model_res_country').id,
+            'ttype': 'boolean',
+        })
+        self.assertEqual('x_active', model_country._active_name)
+        country_ussr = model_country.create({'name': 'USSR', 'x_active': False})
+        ussr_search = model_country.search([('name', '=', 'USSR')])
+        self.assertFalse(ussr_search)
+        ussr_search = model_country.with_context(active_test=False).search([('name', '=', 'USSR')])
+        self.assertIn(country_ussr, ussr_search, "Search with active_test on a custom x_active field failed")
+        ussr_search = model_country.search([('name', '=', 'USSR'), ('x_active', '=', False)])
+        self.assertIn(country_ussr, ussr_search, "Search with active_test on a custom x_active field failed")
+        # test that a custom field x_active on a model with the standard active
+        # field does not interfere with the standard behaviour
+        # use res.bank since it has an active field and is simple to use
+        model_bank = self.env['res.bank']
+        self.env['ir.model.fields'].create({
+            'name': 'x_active',
+            'model_id': self.env.ref('base.model_res_bank').id,
+            'ttype': 'boolean',
+        })
+        self.assertEqual('active', model_bank._active_name)
+        bank_credit_communal = model_bank.create({'name': 'Crédit Communal', 'x_active': False, 'active': True})
+        cc_search = model_bank.search([('name', '=', 'Crédit Communal')])
+        self.assertIn(bank_credit_communal, cc_search, "Search for active record with x_active set to False has failed")
+        bank_credit_communal.write({
+            'active': False,
+            'x_active': True,
+        })
+        cc_search = model_bank.search([('name', '=', 'Crédit Communal')])
+        self.assertNotIn(bank_credit_communal, cc_search, "Search for inactive record with x_active set to True has failed")

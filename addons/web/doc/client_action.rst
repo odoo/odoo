@@ -83,18 +83,19 @@ method.
 
     As required by :js:class:`~openerp.web.Widget`'s contract, if
     :js:func:`~openerp.web.Widget.start()` executes any asynchronous
-    code it should return a ``$.Deferred`` so callers know when it's
+    code it should return a ``Promise`` so callers know when it's
     ready for interaction.
 
 .. code-block:: javascript
 
     start: function () {
-        return $.when(
+        return Promise.all([
             this._super(),
             // Simply read the res.widget object this action should display
             new instance.web.Model('res.widget').call(
                 'read', [[this.widget_id], ['title']])
-                    .then(this.proxy('on_widget_loaded'));
+                    .then(this.proxy('on_widget_loaded')
+        ]);
     }
 
 The client action can then behave exactly as it wishes to within its

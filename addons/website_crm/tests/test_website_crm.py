@@ -8,7 +8,7 @@ import odoo.tests
 class TestWebsiteCrm(odoo.tests.HttpCase):
 
     def test_tour(self):
-        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('website_crm_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.website_crm_tour.ready")
+        self.start_tour("/", 'website_crm_tour')
 
         # check result
         record = self.env['crm.lead'].search([('description', '=', '### TOUR DATA ###')])

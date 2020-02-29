@@ -1,24 +1,30 @@
 odoo.define('website.navbar', function (require) {
 'use strict';
 
-var rootWidget = require('web_editor.root_widget');
+var core = require('web.core');
+var dom = require('web.dom');
+var publicWidget = require('web.public.widget');
 var concurrency = require('web.concurrency');
 var Widget = require('web.Widget');
-var websiteRootData = require('website.WebsiteRoot');
+var websiteRootData = require('website.root');
 
-var websiteNavbarRegistry = new rootWidget.RootWidgetRegistry();
+var qweb = core.qweb;
 
-var WebsiteNavbar = rootWidget.RootWidget.extend({
-    events: _.extend({}, rootWidget.RootWidget.prototype.events || {}, {
+var websiteNavbarRegistry = new publicWidget.RootWidgetRegistry();
+
+var WebsiteNavbar = publicWidget.RootWidget.extend({
+    xmlDependencies: ['/website/static/src/xml/website.xml'],
+    events: _.extend({}, publicWidget.RootWidget.prototype.events || {}, {
         'click [data-action]': '_onActionMenuClick',
         'mouseover > ul > li.dropdown:not(.show)': '_onMenuHovered',
         'click .o_mobile_menu_toggle': '_onMobileMenuToggleClick',
+        'mouseover #oe_applications:not(:has(.dropdown-item))': '_onOeApplicationsHovered',
     }),
-    custom_events: _.extend({}, rootWidget.RootWidget.prototype.custom_events || {}, {
-        action_demand: '_onActionDemand',
-        edit_mode: '_onEditMode',
-        readonly_mode: '_onReadonlyMode',
-        ready_to_save: '_onSave',
+    custom_events: _.extend({}, publicWidget.RootWidget.prototype.custom_events || {}, {
+        'action_demand': '_onActionDemand',
+        'edit_mode': '_onEditMode',
+        'readonly_mode': '_onReadonlyMode',
+        'ready_to_save': '_onSave',
     }),
 
     /**
@@ -26,15 +32,30 @@ var WebsiteNavbar = rootWidget.RootWidget.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        this._widgetDefs = [$.Deferred()];
+        var self = this;
+        var initPromise = new Promise(function (resolve) {
+            self.resolveInit = resolve;
+        });
+        this._widgetDefs = [initPromise];
     },
     /**
      * @override
      */
     start: function () {
         var self = this;
+        dom.initAutoMoreMenu(this.$('ul.o_menu_sections'), {
+            maxWidth: function () {
+                // The navbar contains different elements in community and
+                // enterprise, so we check for both of them here only
+                return self.$el.width()
+                    - (self.$('.o_menu_systray').outerWidth(true) || 0)
+                    - (self.$('ul#oe_applications').outerWidth(true) || 0)
+                    - (self.$('.o_menu_toggle').outerWidth(true) || 0)
+                    - (self.$('.o_menu_brand').outerWidth(true) || 0);
+            },
+        });
         return this._super.apply(this, arguments).then(function () {
-            self._widgetDefs[0].resolve();
+            self.resolveInit();
         });
     },
 
@@ -67,7 +88,7 @@ var WebsiteNavbar = rootWidget.RootWidget.extend({
      * @private
      * @param {string} actionName
      * @param {Array} params
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _handleAction: function (actionName, params, _i) {
         var self = this;
@@ -88,26 +109,50 @@ var WebsiteNavbar = rootWidget.RootWidget.extend({
                 // instantiated yet (rare) -> retry some times to eventually abort
                 if (_i > 50) {
                     console.warn(_.str.sprintf("Action '%s' was not able to be handled.", actionName));
-                    return $.Deferred().reject();
+                    return Promise.reject();
                 }
                 return concurrency.delay(100).then(function () {
                     return self._handleAction(actionName, params, (_i || 0) + 1);
                 });
             }
-            return $.when.apply($, defs);
+            return Promise.all(defs).then(function (values) {
+                if (values.length === 1) {
+                    return values[0];
+                }
+                return values;
+            });
         });
     },
     /**
      * @private
      */
     _whenReadyForActions: function () {
-        return $.when.apply($, this._widgetDefs);
+        return Promise.all(this._widgetDefs);
     },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Called when the backend applications menu is hovered -> fetch the
+     * available menus and insert it in DOM.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onOeApplicationsHovered: function (ev) {
+        var self = this;
+        this._rpc({
+            model: 'ir.ui.menu',
+            method: 'load_menus_root',
+            args: [],
+        }).then(function (result) {
+            self.$('#oe_applications .dropdown-menu').html(
+                $(qweb.render('website.oe_applications_menu', {menu_data: result}))
+            );
+        });
+    },
     /**
      * Called when an action menu is clicked -> searches for the automatic
      * widget {@see RootWidget} which can handle that action.
@@ -118,9 +163,10 @@ var WebsiteNavbar = rootWidget.RootWidget.extend({
     _onActionMenuClick: function (ev) {
         var $button = $(ev.currentTarget);
         $button.prop('disabled', true);
-        this._handleAction($button.data('action')).always(function () {
+        var always = function () {
             $button.prop('disabled', false);
-        });
+        };
+        this._handleAction($button.data('action')).then(always).guardedCatch(always);
     },
     /**
      * Called when an action is asked to be executed from a child widget ->
@@ -130,10 +176,10 @@ var WebsiteNavbar = rootWidget.RootWidget.extend({
     _onActionDemand: function (ev) {
         var def = this._handleAction(ev.data.actionName, ev.data.params);
         if (ev.data.onSuccess) {
-            def.done(ev.data.onSuccess);
+            def.then(ev.data.onSuccess);
         }
         if (ev.data.onFailure) {
-            def.fail(ev.data.onFailure);
+            def.guardedCatch(ev.data.onFailure);
         }
     },
     /**
@@ -210,12 +256,12 @@ var WebsiteNavbarActionWidget = Widget.extend({
      *
      * @param {string} actionName
      * @param {Array} params
-     * @returns {Deferred|null} action's deferred or null if no action was found
+     * @returns {Promise|null} action's promise or null if no action was found
      */
     handleAction: function (actionName, params) {
         var action = this[this.actions[actionName]];
         if (action) {
-            return $.when(action.apply(this, params || []));
+            return Promise.resolve(action.apply(this, params || []));
         }
         return null;
     },

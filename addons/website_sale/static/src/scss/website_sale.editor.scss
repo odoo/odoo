@@ -1,0 +1,31 @@
+.o_wsale_soptions_menu_sizes {
+    table {
+        margin: auto;
+
+        td {
+            margin: 0;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            border: 1px #dddddd solid;
+            cursor: pointer;
+
+            &.selected {
+                background-color: #B1D4F1;
+            }
+        }
+
+        &.oe_hover td {
+            &.selected {
+                background-color: transparent;
+            }
+            &.select {
+                background-color: #B1D4F1;
+            }
+        }
+    }
+}
+
+.oe_drop_zone + .s_wsale_products_recently_viewed {
+    display: block !important;
+}

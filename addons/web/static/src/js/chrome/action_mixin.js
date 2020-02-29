@@ -35,6 +35,15 @@ var ActionMixin = {
     contentTemplate: null,
 
     /**
+     * Events built by and managed by Odoo Framework
+     *
+     * It is expected that any Widget Class implementing this mixin
+     * will also implement the ParentedMixin which actually manages those
+     */
+    custom_events: {
+        get_controller_query_params: '_onGetControllerQueryParams',
+    },
+    /**
      * If an action wants to use a control panel, it will be created and
      * registered in this _controlPanel key (the widget).  The way this control
      * panel is created is up to the implementation (so, view controllers or
@@ -75,7 +84,7 @@ var ActionMixin = {
      * Called by the action manager when action is restored (typically, when the
      * user clicks on the action in the breadcrumb)
      *
-     * @returns {Deferred|undefined}
+     * @returns {Promise|undefined}
      */
     willRestore: function () {},
 
@@ -89,14 +98,14 @@ var ActionMixin = {
      * example, if the user has edited a form, maybe we should ask him if we
      * can discard all his changes when we switch to another action.  In that
      * case, the action manager will call this method.  If the returned
-     * deferred is succesfully resolved, then we can destroy the current action,
+     * promise is successfully resolved, then we can destroy the current action,
      * otherwise, we need to stop.
      *
-     * @returns {Deferred} resolved if the action can be removed, rejected
+     * @returns {Promise} resolved if the action can be removed, rejected
      *   otherwise
      */
     canBeRemoved: function () {
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * This function is called when the current state of the action
@@ -131,6 +140,19 @@ var ActionMixin = {
      */
     getTitle: function () {
         return this._title;
+    },
+    /**
+     * Returns a serializable state that will be pushed in the URL by
+     * the action manager, allowing the action to be restarted correctly
+     * upon refresh. This function should be overriden to add extra information.
+     * Note that some keys are reserved by the framework and will thus be
+     * ignored ('action', 'active_id', 'active_ids' and 'title', for all
+     * actions, and 'model' and 'view_type' for act_window actions).
+     *
+     * @returns {Object}
+     */
+    getState: function () {
+        return {};
     },
     /**
      * Gives the focus to the action
@@ -177,6 +199,21 @@ var ActionMixin = {
     _setTitle: function (title) {
         this._title = title;
         this.updateControlPanel({title: this._title}, {clear: false});
+    },
+    /**
+     * FIXME: this logic should be rethought
+     *
+     * Handles a context request: provides to the caller the state of the
+     * current controller.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {function} ev.data.callback used to send the requested state
+     */
+    _onGetControllerQueryParams: function (ev) {
+        ev.stopPropagation();
+        var state = this.getOwnedQueryParams();
+        ev.data.callback(state || {});
     },
 };
 

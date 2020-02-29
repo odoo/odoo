@@ -37,7 +37,6 @@ class ReportMembership(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     quantity = fields.Integer(readonly=True)
 
-    @api.model_cr
     def init(self):
         '''Create the view'''
         tools.drop_view_if_exists(self._cr, self._table)
@@ -73,14 +72,14 @@ class ReportMembership(models.Model):
             CASE WHEN ml.state = 'waiting'  THEN ml.id END AS num_waiting,
             CASE WHEN ml.state = 'invoiced' THEN ml.id END AS num_invoiced,
             CASE WHEN ml.state = 'paid'     THEN ml.id END AS num_paid,
-            CASE WHEN ml.state IN ('waiting', 'invoiced') THEN SUM(il.price_subtotal) ELSE 0 END AS tot_pending,
-            CASE WHEN ml.state = 'paid' OR p.membership_state = 'old' THEN SUM(il.price_subtotal) ELSE 0 END AS tot_earned,
+            CASE WHEN ml.state IN ('waiting', 'invoiced') THEN SUM(aml.price_subtotal) ELSE 0 END AS tot_pending,
+            CASE WHEN ml.state = 'paid' OR p.membership_state = 'old' THEN SUM(aml.price_subtotal) ELSE 0 END AS tot_earned,
             ml.membership_id AS membership_id,
             p.company_id AS company_id
             FROM res_partner p
             LEFT JOIN membership_membership_line ml ON (ml.partner = p.id)
-            LEFT JOIN account_invoice_line il ON (ml.account_invoice_line = il.id)
-            LEFT JOIN account_invoice ai ON (il.invoice_id = ai.id)
+            LEFT JOIN account_move_line aml ON (ml.account_invoice_line = aml.id)
+            LEFT JOIN account_move am ON (aml.move_id = am.id)
             WHERE p.membership_state != 'none' and p.active = 'true'
             GROUP BY
               p.id,

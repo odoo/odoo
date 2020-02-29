@@ -1,432 +1,511 @@
 #!/usr/bin/python3
 import logging
 import time
-from threading import Thread
-import usb
-import gatt
+from threading import Thread, Event, Lock
+from usb import core
+from gatt import DeviceManager as Gatt_DeviceManager
 import subprocess
-import netifaces as ni
 import json
-import re
-from odoo import http
+from re import sub, finditer
 import urllib3
-from odoo.http import request as httprequest
-import datetime
+import os
+import socket
+import sys
+from importlib import util
+import v4l2
+from fcntl import ioctl
+from cups import Connection as cups_connection
+from glob import glob
+from base64 import b64decode
+from pathlib import Path
+import socket
+import ctypes
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(name)s: %(message)s')
-_logger = logging.getLogger('dispatcher')
+from odoo import http, _
+from odoo.modules.module import get_resource_path
+from odoo.addons.hw_drivers.tools import helpers
 
-owner_dict = {}
-last_ping = {}
+_logger = logging.getLogger(__name__)
+
+
+#----------------------------------------------------------
+# Controllers
+#----------------------------------------------------------
 
 class StatusController(http.Controller):
+    @http.route('/hw_drivers/action', type='json', auth='none', cors='*', csrf=False, save_session=False)
+    def action(self, session_id, device_id, data):
+        """
+        This route is called when we want to make a action with device (take picture, printing,...)
+        We specify in data from which session_id that action is called
+        And call the action of specific device
+        """
+        iot_device = iot_devices.get(device_id)
+        if iot_device:
+            iot_device.data['owner'] = session_id
+            data = json.loads(data)
+            iot_device.action(data)
+            return True
+        return False
 
-    @http.route('/hw_drivers/owner/check', type='json', auth='none', cors='*', csrf=False)
-    def check_cantakeowner(self): #, devices, tab
-        data = httprequest.jsonrequest
-        for device in data['devices']:
-            if owner_dict.get(device) and owner_dict[device] != data['tab']:
-                before_date = datetime.datetime.now() - datetime.timedelta(seconds=10)
-                if last_ping.get(owner_dict[device]) and last_ping.get(owner_dict[device]) > before_date:
-                    return 'no'
-                else:
-                    old_tab = owner_dict[device]
-                    for dev2 in owner_dict:
-                        if owner_dict[dev2] == old_tab:
-                            owner_dict[dev2] = ''
-        return 'yes'
+    @http.route('/hw_drivers/check_certificate', type='http', auth='none', cors='*', csrf=False, save_session=False)
+    def check_certificate(self):
+        """
+        This route is called when we want to check if certificate is up-to-date
+        Used in cron.daily
+        """
+        helpers.check_certificate()
 
-    @http.route('/hw_drivers/owner/take', type='json', auth='none', cors='*', csrf=False)
-    def take_ownership(self): #, devices, tab
-        data = httprequest.jsonrequest
-        for device in data['devices']:
-            owner_dict[device] = data['tab']
-            last_ping[data['tab']] = datetime.datetime.now()
-        return data['tab']
+    @http.route('/hw_drivers/event', type='json', auth='none', cors='*', csrf=False, save_session=False)
+    def event(self, listener):
+        """
+        listener is a dict in witch there are a sessions_id and a dict of device_id to listen
+        """
+        req = event_manager.add_request(listener)
+        if req['event'].wait(50):
+            req['event'].clear()
+            req['result']['session_id'] = req['session_id']
+            return req['result']
 
-    @http.route('/hw_drivers/owner/ping', type='json', auth='none', cors='*', csrf=False)
-    def ping_trigger(self): #, tab
-        data = httprequest.jsonrequest
-        ping_dict = {}
-        last_ping[data['tab']] = datetime.datetime.now()
-        for dev in data['devices']:
-            if owner_dict.get(dev) and owner_dict[dev] == data['tab']:
-                for driver_path in drivers:
-                    if driver_path.find(dev) == 0 and drivers[driver_path].ping_value:
-                        ping_dict[dev] = drivers[driver_path].ping_value
-                        drivers[driver_path].ping_value = ''  # or set it to nothing
-            else:
-                ping_dict[dev] = 'STOP'
-        return ping_dict
+    @http.route('/hw_drivers/box/connect', type='http', auth='none', cors='*', csrf=False, save_session=False)
+    def connect_box(self, token):
+        """
+        This route is called when we want that a IoT Box will be connected to a Odoo DB
+        token is a base 64 encoded string and have 2 argument separate by |
+        1 - url of odoo DB
+        2 - token. This token will be compared to the token of Odoo. He have 1 hour lifetime
+        """
+        server = helpers.get_odoo_server_url()
+        image = get_resource_path('hw_drivers', 'static/img', 'False.jpg')
+        if not server:
+            credential = b64decode(token).decode('utf-8').split('|')
+            url = credential[0]
+            token = credential[1]
+            if len(credential) > 2:
+                # IoT Box send token with db_uuid and enterprise_code only since V13
+                db_uuid = credential[2]
+                enterprise_code = credential[3]
+                helpers.add_credential(db_uuid, enterprise_code)
+            try:
+                subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/connect_to_server.sh'), url, '', token, 'noreboot'])
+                helpers.check_certificate()
+                m.send_alldevices()
+                m.load_drivers()
+                image = get_resource_path('hw_drivers', 'static/img', 'True.jpg')
+            except subprocess.CalledProcessError as e:
+                _logger.error('A error encountered : %s ' % e.output)
+        if os.path.isfile(image):
+            with open(image, 'rb') as f:
+                return f.read()
 
-    @http.route('/hw_drivers/box/connect', type='json', auth='none', cors='*', csrf=False)
-    def connect_box(self):
-        data = httprequest.jsonrequest
-        server = ""  # read from file
-        try:
-            f = open('/home/pi/odoo-remote-server.conf', 'r')
-            for line in f:
-                server += line
-            f.close()
-            server = server.split('\n')[0]
-        except:
-            server = ''
-        if server:
-            return 'This IoTBox has already been connected'
+#----------------------------------------------------------
+# Log Exceptions
+#----------------------------------------------------------
+
+class ExceptionLogger:
+    """
+    Redirect Exceptions to the logger to keep track of them in the log file.
+    """
+
+    def __init__(self):
+        self.logger = logging.getLogger()
+
+    def write(self, message):
+        if message != '\n':
+            self.logger.err(message)
+
+    def flush(self):
+        pass
+
+sys.stderr = ExceptionLogger()
+
+#----------------------------------------------------------
+# Drivers
+#----------------------------------------------------------
+
+drivers = []
+bt_devices = {}
+socket_devices = {}
+iot_devices = {}
+
+class DriverMetaClass(type):
+    def __new__(cls, clsname, bases, attrs):
+        newclass = super(DriverMetaClass, cls).__new__(cls, clsname, bases, attrs)
+        # Some drivers must be tried only when all the others have been ruled out. These are kept at the bottom of the list.
+        if newclass.is_tested_last:
+            drivers.append(newclass)
         else:
-            iotname = ''
-            token = data['token'].split('|')[1]
-            url = data['token'].split('|')[0]
-            reboot = 'noreboot'
-            subprocess.call(['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/connect_to_server.sh', url, iotname, token, reboot])
-            send_iot_box_device(False)
-            return 'IoTBox connected'
+            drivers.insert(0, newclass)
+        return newclass
 
-    @http.route('/hw_drivers/drivers/status', type='http', auth='none', cors='*')
-    def status(self):
-        result = "<html><head></head><body>List of drivers and values: <br/> <ul>"
-        for path in drivers:
-            result += "<li>" + path + ":" + str(drivers[path].value) + "</li>"
-        result += "</ul>"
-        result +=" </body></html>"
-        return result
+class Driver(Thread, metaclass=DriverMetaClass):
+    """
+    Hook to register the driver into the drivers list
+    """
+    connection_type = ""
+    is_tested_last = False
 
-    @http.route('/hw_drivers/driverdetails/<string:identifier>', type='http', auth='none', cors='*')
-    def statusdetail(self, identifier):
-        for device in drivers:
-            if device.find(identifier) != -1:
-                return str(drivers[device].value)
+    def __init__(self, device):
+        super(Driver, self).__init__()
+        self.dev = device
+        self.data = {'value': ''}
+        self.gatt_device = False
+        self._device_manufacturer = ''
+
+    @property
+    def device_name(self):
+        return self._device_name
+
+    @property
+    def device_identifier(self):
+        return self.dev.identifier
+
+    @property
+    def device_manufacturer(self):
+        return self._device_manufacturer
+
+    @property
+    def device_connection(self):
+        """
+        On specific driver override this method to give connection type of device
+        return string
+        possible value : direct - network - bluetooth - serial - hdmi
+        """
+        return self._device_connection
+
+    @property
+    def device_type(self):
+        """
+        On specific driver override this method to give type of device
+        return string
+        possible value : printer - camera - keyboard - scanner - display - device
+        """
+        return self._device_type
+
+    @classmethod
+    def supported(cls, device):
+        """
+        On specific driver override this method to check if device is supported or not
+        return True or False
+        """
+        pass
+
+    def get_message(self):
         return ''
 
-    @http.route('/hw_drivers/driveraction/<string:identifier>', type='json', auth='none', cors='*', csrf=False)
-    def driveraction(self, identifier):
-        data = httprequest.jsonrequest
-        result = 'device not found'
-        if data.get('action') == 'print':
-            with open('/tmp/toprinter', 'w') as file:
-                file.write(data['data'])
-            subprocess.call("cat /tmp/toprinter | base64 -d | lp -d " + identifier, shell=True)
-            result = 'ok'
-        if data.get('action') == 'camera':
-            cameras = subprocess.check_output("v4l2-ctl --list-devices", shell=True).decode('utf-8').split('\n\n')
-            adrress = '/dev/video0'
-            for camera in cameras:
-                if camera:
-                    camera = camera.split('\n\t')
-                    serial = re.sub('[^a-zA-Z0-9 ]+', '', camera[0].split(': ')[0]).replace(' ','_')
-                    if serial == data.get('identifier'):
-                        adrress = camera[1]
-            picture = subprocess.check_output("v4l2-ctl --list-formats-ext|grep 'Size'|awk '{print $3}'|sort -rn|awk NR==1", shell=True).decode('utf-8')
-            subprocess.call("fswebcam -d " + adrress + " /tmp/testimage -r " + picture, shell=True)
-            image_bytes = subprocess.check_output('cat /tmp/testimage | base64',shell=True)
-            result = {'image': image_bytes}
-        return result
-
-    @http.route('/hw_drivers/send_iot_box', type='http', auth='none', cors='*')
-    def send_iot_box(self):
-        send_iot_box_device(False)
-        return 'ok'
-
-#----------------------------------------------------------
-# Driver common interface
-#----------------------------------------------------------
-class Driver(Thread):
-    ping_value = ""
-
-    def supported(self):
-        pass
-
-    def value(self):
-        pass
-
-    def get_name(self):
-        pass
-
-    def get_connection(self):
-        pass
-
-    def action(self, action):
-        pass
-
-#----------------------------------------------------------
-# Usb drivers
-#----------------------------------------------------------
-usbdrivers = []
-drivers = {}
-
-class UsbMetaClass(type):
-    def __new__(cls, clsname, bases, attrs):
-        newclass = super(UsbMetaClass, cls).__new__(cls, clsname, bases, attrs)
-        usbdrivers.append(newclass)
-        return newclass
-
-class USBDriver(Driver,metaclass=UsbMetaClass):
-    def __init__(self, dev):
-        super(USBDriver, self).__init__()
-        self.dev = dev
-        self.value = ""
-
-    def get_name(self):
-        lsusb = str(subprocess.check_output('lsusb')).split("\\n")
-        for usbpath in lsusb:  # Should filter on usb devices or inverse loops?
-            device = self.dev
-            if "%04x:%04x" % (device.idVendor, device.idProduct) in usbpath:
-                return usbpath.split("%04x:%04x" % (device.idVendor, device.idProduct))[1]
-        return str(device.idVendor) + ":" + str(device.idProduct)
-
-    def get_connection(self):
-        return 'direct'
-
-    def value(self):
-        return self.value
-
-
-#----------------------------------------------------------
-# Bluetooth
-#----------------------------------------------------------
-class GattBtManager(gatt.DeviceManager):
-
-    def device_discovered(self, device):
-        # TODO: need some kind of updated_devices mechanism or not?
-        path = "bt_%s" % (device.mac_address,)
-        if path not in drivers:
-            for driverclass in btdrivers:
-                d = driverclass(device = device, manager=self)
-                if d.supported():
-                    drivers[path] = d
-                    d.connect()
-                    send_iot_box_device(False)
-
-
-class BtManager(Thread):
-    gatt_manager = False
-
-    def run(self):
-        dm = GattBtManager(adapter_name='hci0')
-        self.gatt_manager = dm
-        dm.start_discovery()
-        dm.run()
-
-#----------------------------------------------------------
-# Bluetooth drivers
-#----------------------------------------------------------
-btdrivers = []
-
-class BtMetaClass(type):
-    def __new__(cls, clsname, bases, attrs):
-        newclass = super(BtMetaClass, cls).__new__(cls, clsname, bases, attrs)
-        btdrivers.append(newclass)
-        return newclass
-
-
-class BtDriver(Driver, metaclass=BtMetaClass):
-
-
-    def __init__(self, device, manager):
-        super(BtDriver, self).__init__()
-        self.dev = device
-        self.manager = manager
-        self.value = ''
-        self.gatt_device = False
+    def action(self, data):
+        """
+        On specific driver override this method to make a action with device (take picture, printing,...)
+        """
+        raise NotImplementedError()
 
     def disconnect(self):
-        path = "bt_%s" % (self.dev.mac_address,)
-        del drivers[path]
-
-    def get_name(self):
-        return self.dev.alias()
-
-    def value(self):
-        return self.value
-
-    def action(self, action):
-        pass
-
-    def get_connection(self):
-        return 'bluetooth'
-
-    def connect(self):
-        pass
+        del iot_devices[self.device_identifier]
 
 
+#----------------------------------------------------------
+# Device manager
+#----------------------------------------------------------
+
+class EventManager(object):
+    def __init__(self):
+        self.sessions = {}
+
+    def _delete_expired_sessions(self, max_time=70):
+        '''
+        Clears sessions that are no longer called.
+
+        :param max_time: time a session can stay unused before being deleted
+        '''
+        now = time.time()
+        expired_sessions = [session for session in self.sessions if now - self.sessions[session]['time_request'] > max_time]
+        for session in expired_sessions:
+            del self.sessions[session]
+
+    def add_request(self, listener):
+        self.session = {
+            'session_id': listener['session_id'],
+            'devices': listener['devices'],
+            'event': Event(),
+            'result': {},
+            'time_request': time.time(),
+        }
+        self._delete_expired_sessions()
+        self.sessions[listener['session_id']] = self.session
+        return self.sessions[listener['session_id']]
+
+    def device_changed(self, device):
+        for session in self.sessions:
+            if device.device_identifier in self.sessions[session]['devices']:
+                self.sessions[session]['result'] = device.data
+                self.sessions[session]['result']['device_id'] = device.device_identifier
+                self.sessions[session]['event'].set()
 
 
+class IoTDevice(object):
+
+    def __init__(self, dev, connection_type):
+        self.dev = dev
+        self.connection_type = connection_type
+
+event_manager = EventManager()
 
 
-class USBDeviceManager(Thread):
-    devices = {}
+#----------------------------------------------------------
+# Manager
+#----------------------------------------------------------
+
+class Manager(Thread):
+
+    def load_drivers(self):
+        """
+        This method loads local files: 'odoo/addons/hw_drivers/drivers'
+        And execute these python drivers
+        """
+        helpers.download_drivers()
+        path = get_resource_path('hw_drivers', 'drivers')
+        driversList = os.listdir(path)
+        self.devices = {}
+        for driver in driversList:
+            path_file = os.path.join(path, driver)
+            spec = util.spec_from_file_location(driver, path_file)
+            if spec:
+                module = util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+        http.addons_manifest = {}
+        http.root = http.Root()
+
+    def send_alldevices(self):
+        """
+        This method send IoT Box and devices informations to Odoo database
+        """
+        server = helpers.get_odoo_server_url()
+        if server:
+            subject = helpers.read_file_first_line('odoo-subject.conf')
+            if subject:
+                domain = helpers.get_ip().replace('.', '-') + subject.strip('*')
+            else:
+                domain = helpers.get_ip()
+            iot_box = {
+                'name': socket.gethostname(),
+                'identifier': helpers.get_mac_address(),
+                'ip': domain,
+                'token': helpers.get_token(),
+                'version': helpers.get_version()
+                }
+            devices_list = {}
+            for device in iot_devices:
+                identifier = iot_devices[device].device_identifier
+                devices_list[identifier] = {
+                    'name': iot_devices[device].device_name,
+                    'type': iot_devices[device].device_type,
+                    'manufacturer': iot_devices[device].device_manufacturer,
+                    'connection': iot_devices[device].device_connection,
+                }
+            data = {
+                'params': {
+                    'iot_box' : iot_box,
+                    'devices' : devices_list,
+                }
+            }
+            # disable certifiacte verification
+            urllib3.disable_warnings()
+            http = urllib3.PoolManager(cert_reqs='CERT_NONE')
+            try:
+                http.request(
+                    'POST',
+                    server + "/iot/setup",
+                    body = json.dumps(data).encode('utf8'),
+                    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+                )
+            except Exception as e:
+                _logger.error('Could not reach configured server')
+                _logger.error('A error encountered : %s ' % e)
+        else:
+            _logger.warning('Odoo server not set')
+
+    def get_connected_displays(self):
+        display_devices = {}
+
+        displays = subprocess.check_output(['tvservice', '-l']).decode()
+        x_screen = 0
+        for match in finditer('Display Number (\d), type HDMI (\d)', displays):
+            display_id, hdmi_id = match.groups()
+            display_name = subprocess.check_output(['tvservice', '-nv', display_id]).decode().rstrip().split('=')[1]
+            display_identifier = sub('[^a-zA-Z0-9 ]+', '', display_name).replace(' ', '_') + "_" + str(hdmi_id)
+            iot_device = IoTDevice({
+                'identifier': display_identifier,
+                'name': display_name,
+                'x_screen': str(x_screen),
+            }, 'display')
+            display_devices[display_identifier] = iot_device
+            x_screen += 1
+
+        if not len(display_devices):
+            # No display connected, create "fake" device to be accessed from another computer
+            display_devices['distant_display'] = IoTDevice({
+                'identifier': "distant_display",
+                'name': "Distant Display",
+            }, 'display')
+
+        return display_devices
+
+    def serial_loop(self):
+        serial_devices = {}
+        for identifier in glob('/dev/serial/by-path/*'):
+            iot_device = IoTDevice({'identifier': identifier, }, 'serial')
+            serial_devices[identifier] = iot_device
+        return serial_devices
+
+    def usb_loop(self):
+        """
+        Loops over the connected usb devices, assign them an identifier, instantiate
+        an `IoTDevice` for them.
+
+        USB devices are identified by a combination of their `idVendor` and
+        `idProduct`. We can't be sure this combination in unique per equipment.
+        To still allow connecting multiple similar equipments, we complete the
+        identifier by a counter. The drawbacks are we can't be sure the equipments
+        will get the same identifiers after a reboot or a disconnect/reconnect.
+
+        :return: a dict of the `IoTDevices` instances indexed by their identifier.
+        """
+        usb_devices = {}
+        devs = core.find(find_all=True)
+        cpt = 2
+        for dev in devs:
+            dev.identifier =  "usb_%04x:%04x" % (dev.idVendor, dev.idProduct)
+            if dev.identifier in usb_devices:
+                dev.identifier += '_%s' % cpt
+                cpt += 1
+            iot_device = IoTDevice(dev, 'usb')
+            usb_devices[dev.identifier] = iot_device
+        return usb_devices
+
+    def video_loop(self):
+        camera_devices = {}
+        videos = glob('/dev/video*')
+        for video in videos:
+            with open(video, 'w') as path:
+                dev = v4l2.v4l2_capability()
+                ioctl(path, v4l2.VIDIOC_QUERYCAP, dev)
+                dev.interface = video
+                dev.identifier = dev.bus_info.decode('utf-8')
+                iot_device = IoTDevice(dev, 'video')
+                camera_devices[dev.identifier] = iot_device
+        return camera_devices
+
+    def printer_loop(self):
+        printer_devices = {}
+        with cups_lock:
+            devices = conn.getDevices()
+        for path in devices:
+            if 'uuid=' in path:
+                serial = sub('[^a-zA-Z0-9 ]+', '', path.split('uuid=')[1])
+            elif 'serial=' in path:
+                serial = sub('[^a-zA-Z0-9 ]+', '', path.split('serial=')[1])
+            else:
+                serial = sub('[^a-zA-Z0-9 ]+', '', path)
+            devices[path]['identifier'] = serial
+            devices[path]['url'] = path
+            iot_device = IoTDevice(devices[path], 'printer')
+            printer_devices[serial] = iot_device
+        return printer_devices
+
     def run(self):
-        first_time = True
-        send_iot_box_device(False)
+        """
+        Thread that will check connected/disconnected device, load drivers if needed and contact the odoo server with the updates
+        """
+        helpers.check_git_branch()
+        helpers.check_certificate()
+        updated_devices = {}
+        self.send_alldevices()
+        self.load_drivers()
+        # The list of devices doesn't change after the Raspberry has booted
+        display_devices = self.get_connected_displays()
+        cpt = 0
         while 1:
-            sendJSON = False
-            devs = usb.core.find(find_all=True)
-            updated_devices = {}
-            for dev in devs:
-                path =  "usb_%04x:%04x_%03d_%03d_" % (dev.idVendor, dev.idProduct, dev.bus, dev.address)
-                updated_devices[path] = self.devices.get(path, dev)
+            updated_devices = self.usb_loop()
+            updated_devices.update(self.video_loop())
+            updated_devices.update(display_devices)
+            updated_devices.update(bt_devices)
+            updated_devices.update(socket_devices)
+            updated_devices.update(self.serial_loop())
+            if cpt % 40 == 0:
+                printer_devices = self.printer_loop()
+                cpt = 0
+            updated_devices.update(printer_devices)
+            cpt += 1
             added = updated_devices.keys() - self.devices.keys()
             removed = self.devices.keys() - updated_devices.keys()
             self.devices = updated_devices
-            if (removed):
-                for path in list(drivers):
-                    if (path in removed):
-                        del drivers[path]
-                        sendJSON = True
-            for path in added:
-                dev = updated_devices[path]
-                for driverclass in usbdrivers:
-                    d = driverclass(updated_devices[path])
-                    if d.supported():
-                        _logger.info('For device %s will be driven', path)
-                        drivers[path] = d
-                        # launch thread
+            send_devices = False
+            for path in [device_rm for device_rm in removed if device_rm in iot_devices]:
+                iot_devices[path].disconnect()
+                _logger.info('Device %s is now disconnected', path)
+                send_devices = True
+            for path in [device_add for device_add in added if device_add not in iot_devices]:
+                for driverclass in [d for d in drivers if d.connection_type == self.devices[path].connection_type]:
+                    if driverclass.supported(device = updated_devices[path].dev):
+                        _logger.info('Device %s is now connected', path)
+                        d = driverclass(device = updated_devices[path].dev)
                         d.daemon = True
                         d.start()
-                        sendJSON = True
-            if sendJSON or first_time:
-                send_iot_box_device(send_printer = first_time)
-                first_time = False
+                        iot_devices[path] = d
+                        send_devices = True
+                        break
+            if send_devices:
+                self.send_alldevices()
             time.sleep(3)
-            
 
+class GattBtManager(Gatt_DeviceManager):
 
+    def device_discovered(self, device):
+        path = "bt_%s" % (device.mac_address,)
+        if path not in bt_devices:
+            device.manager = self
+            device.identifier = path
+            iot_device = IoTDevice(device, 'bluetooth')
+            bt_devices[path] = iot_device
 
+class BtManager(Thread):
 
-def send_iot_box_device(send_printer):
-    maciotbox = subprocess.check_output("/sbin/ifconfig eth0 |grep -Eo ..\(\:..\){5}", shell=True).decode('utf-8').split('\n')[0]
-    server = "" # read from file
-    try:
-        f = open('/home/pi/odoo-remote-server.conf', 'r')
-        for line in f:
-            server += line
-        f.close()
-    except: #In case the file does not exist
-        server=''
-    server = server.split('\n')[0]
-    if server:
-        url = server + "/iot/setup"
-        interfaces = ni.interfaces()
-        for iface_id in interfaces:
-            iface_obj = ni.ifaddresses(iface_id)
-            ifconfigs = iface_obj.get(ni.AF_INET, [])
-            for conf in ifconfigs:
-                if conf.get('addr') and conf.get('addr') != '127.0.0.1':
-                    ips = conf.get('addr')
-                    break
+    def run(self):
+        dm = GattBtManager(adapter_name='hci0')
+        for device in [device_con for device_con in dm.devices() if device_con.is_connected()]:
+            device.disconnect()
+        dm.start_discovery()
+        dm.run()
 
-        # Build device JSON
-        devicesList = {}
-        for path in drivers:
-            device_name = drivers[path].get_name()
-            device_connection = drivers[path].get_connection()
-            identifier = path.split('_')[0] + '_' + path.split('_')[1]
-            devicesList[identifier] = {'name': device_name,
-                                 'type': 'device',
-                                 'connection': device_connection}
+class SocketManager(Thread):
 
-        # Build camera JSON
-        try:
-            cameras = subprocess.check_output("v4l2-ctl --list-devices", shell=True).decode('utf-8').split('\n\n')
-            for camera in cameras:
-                if camera:
-                    camera = camera.split('\n\t')
-                    serial = re.sub('[^a-zA-Z0-9 ]+', '', camera[0].split(': ')[0]).replace(' ','_')
-                    devicesList[serial] = {
-                                            'name': camera[0].split(': ')[0],
-                                            'connection': 'direct',
-                                            'type': 'camera'
-                                        }
-        except:
-            pass
-
-        # Build printer JSON
-        printerList = {}
-        if send_printer:
-            printers = subprocess.check_output("sudo lpinfo -lv", shell=True).decode('utf-8').split('Device')
-            printers_installed = ''
+    def run(self):
+        while True:
             try:
-                printers_installed = subprocess.check_output("sudo lpstat -a", shell=True).decode('utf-8')
-            except:
-                pass
-            for printer in printers:
-                printerTab = printer.split('\n')
-                if printer and printerTab[4].split('=')[1] != ' ' or 'lpd://' in printerTab[0]:
-                    device_connection = printerTab[1].split('= ')[1]
-                    model = ''
-                    for device_id in printerTab[4].split('= ')[1].split(';'):
-                        if any(x in device_id for x in ['MDL','MODEL']):
-                            model = device_id.split(':')[1]
-                    serial = re.sub('[^a-zA-Z0-9 ]+', '', model).replace(' ','_')
-                    identifier = ''
-                    if device_connection == 'direct':
-                        identifier = serial + '_' + maciotbox  #name + macIOTBOX
-                    elif device_connection == 'network' and 'socket' in printerTab[0]:
-                        socketIP = printerTab[0].split('://')[1]
-                        macprinter = subprocess.check_output("arp -a " + socketIP + " |awk NR==1'{print $4}'", shell=True).decode('utf-8').split('\n')[0]
-                        identifier = macprinter  # macPRINTER
-                    elif device_connection == 'network' and 'lpd' in printerTab[0]:
-                        identifier = re.sub('[^a-zA-Z0-9 ]+', '', printerTab[0].split('://')[1])
-                        model = printerTab[2].split('= ')[1]
-                    elif device_connection == 'network' and 'dnssd' in printerTab[0]:
-                        hostname_printer = subprocess.check_output("ippfind -n \"" + model + "\" | awk \'{split($0,a,\"/\"); print a[3]}\' | awk \'{split($0,b,\":\"); print b[1]}\'", shell=True).decode('utf-8').split('\n')[0]
-                        if hostname_printer:
-                            macprinter = subprocess.check_output("arp -a " + hostname_printer + " |awk NR==1'{print $4}'", shell=True).decode('utf-8').split('\n')[0]
-                            identifier = macprinter  # macprinter
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                sock.bind(('', 9000))
+                sock.listen(1)
+                dev, addr = sock.accept()
+                if addr and addr[0] not in socket_devices:
+                    iot_device = IoTDevice(type('', (), {'dev': dev}), 'socket')
+                    socket_devices[addr[0]] = iot_device
+            except OSError as e:
+                _logger.error(_('Error in SocketManager: %s') % (e.strerror))
 
-                    identifier = identifier.replace(':','_')
-                    if identifier and identifier not in printerList:
-                        printerList[identifier] = {
-                                            'name': model,
-                                            'connection': device_connection,
-                                            'type': 'printer'
-                        }
+conn = cups_connection()
+PPDs = conn.getPPDs()
+printers = conn.getPrinters()
+cups_lock = Lock()  # We can only make one call to Cups at a time
 
-                        if identifier not in printers_installed:
-                            # install these printers
-                            try:
-                                ppd = subprocess.check_output("sudo lpinfo -m |grep '" + model + "'", shell=True).decode('utf-8').split('\n')
-                                if len(ppd) > 2:
-                                    subprocess.call("sudo lpadmin -p '" + identifier + "' -E -v '" + printerTab[0].split('= ')[1] + "'", shell=True)
-                                else:
-                                    subprocess.call("sudo lpadmin -p '" + identifier + "' -E -v '" + printerTab[0].split('= ')[1] + "' -m '" + ppd[0].split(' ')[0] + "'", shell=True)
-                            except:
-                                subprocess.call("sudo lpadmin -p '" + identifier + "' -E -v '" + printerTab[0].split('= ')[1] + "'", shell=True)
-            subprocess.call('> /tmp/printers', shell=True)
-            for printer in printerList:
-                subprocess.call('echo "' + printerList[printer]['name'] + '" >> /tmp/printers', shell=True)
+m = Manager()
+m.daemon = True
+m.start()
 
-        if devicesList:
-            subprocess.call('> /tmp/devices', shell=True)
-            for device in devicesList:
-                subprocess.call('echo "' + str(device) + '|' + devicesList[device]['name'] + '" >> /tmp/devices', shell=True)
+bm = BtManager()
+bm.daemon = True
+bm.start()
 
-        #build JSON with all devices
-        hostname = subprocess.check_output('hostname').decode('utf-8').split('\n')[0]
-        token = "" # read from file
-        try:
-            f = open('/home/pi/token', 'r')
-            for line in f:
-                token += line
-            f.close()
-        except: #In case the file does not exist
-            token=''
-        token = token.split('\n')[0]
-        data = {'name': hostname,'identifier': maciotbox, 'ip': ips, 'token': token}
-        devicesList.update(printerList)
-        data['devices'] = devicesList
-        data_json = json.dumps(data).encode('utf8')
-        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        urllib3.disable_warnings()
-        http = urllib3.PoolManager(cert_reqs='CERT_NONE')
-        req = False
-        try:
-            req = http.request('POST',
-                                url,
-                                body=data_json,
-                                headers=headers)
-        except Exception as e:
-            _logger.warning('Could not reach configured server')
-            _logger.error('A error encountered : %s ' % e)
-
-
+sm = SocketManager()
+sm.daemon = True
+sm.start()

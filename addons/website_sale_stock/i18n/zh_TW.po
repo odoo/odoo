@@ -1,18 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_stock
+# 	* website_sale_stock
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
-# sejun huang <sejun.huang@gmail.com>, 2018
+# Martin Trigaux, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: sejun huang <sejun.huang@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +52,7 @@ msgstr "購物車數量"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "配置設置"
+msgstr "配置設定"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__custom_message
@@ -62,24 +62,14 @@ msgstr "自定義消息"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default Mode"
-msgstr ""
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default threshold"
-msgstr "預設閾值"
-
-#. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:16
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "In stock"
 msgstr "有現貨"
@@ -104,51 +94,62 @@ msgid ""
 msgstr "管理您的產品的庫存, 在網站顯示他們的可用性狀態。"
 
 #. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Mode"
+msgstr "模式"
+
+#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product"
-msgstr "產品"
+msgstr "商品"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_template
 msgid "Product Template"
-msgstr "產品模板"
+msgstr "产品模板"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
-msgid "Sale Order"
+msgid "Sales Order"
 msgstr "銷售訂單"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "銷售訂單行"
+msgstr "銷售訂單明細"
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__never
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__never
 msgid "Sell regardless of inventory"
 msgstr "不考慮庫存的銷售"
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__threshold
 msgid "Show inventory below a threshold and prevent sales if not enough stock"
 msgstr "顯示的庫存低於閾值，如果沒有足夠的庫存，則阻止銷售"
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__always
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__always
 msgid "Show inventory on website and prevent sales if not enough stock"
 msgstr "在網站上顯示庫存並且如果沒有足夠的庫存，則阻止銷售"
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__threshold
+msgid ""
+"Show inventory when below the threshold and prevent sales if not enough "
+"stock"
+msgstr ""
+
+#. module: website_sale_stock
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__custom
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__custom
 msgid "Show product-specific notifications"
 msgstr "顯示具體產品的通知"
 
 #. module: website_sale_stock
-#: code:addons/website_sale_stock/models/sale_order.py:30
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry"
@@ -157,10 +158,15 @@ msgstr "一些產品已經下架，您的購物車已更新。給您帶來不便
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:22
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Temporarily out of stock"
 msgstr "暫時缺貨"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Threshold"
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -168,9 +174,16 @@ msgid "Transfer"
 msgstr "調撥"
 
 #. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__website_warehouse_id
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__warehouse_id
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Warehouse"
+msgstr "倉庫"
+
+#. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:13
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:22
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__warning_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__warning_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
@@ -192,35 +205,35 @@ msgstr ""
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:19
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added"
 msgstr "您已經添加"
 
 #. module: website_sale_stock
-#: code:addons/website_sale_stock/models/sale_order.py:27
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "You ask for %s products but only %s is available"
 msgstr "您想要 %s 的產品但只有 %s 可用"
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:20
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "all"
 msgstr "所有"
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:9
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:14
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "available"
 msgstr "可用"
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:20
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "in your cart."
 msgstr "在您的購物車中。"

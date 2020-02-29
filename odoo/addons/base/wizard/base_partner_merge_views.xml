@@ -3,7 +3,6 @@
         <record id="action_partner_deduplicate" model="ir.actions.act_window">
             <field name="name">Deduplicate Contacts</field>
             <field name="res_model">base.partner.merge.automatic.wizard</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
             <field name="context">{'active_test': False}</field>
@@ -16,7 +15,7 @@
                 <form string='Automatic Merge Wizard'>
                     <sheet>
                         <group attrs="{'invisible': [('state', '!=', 'finished')]}" col="1">
-                            <h2>There is no more contacts to merge for this request...</h2>
+                            <h2>There are no more contacts to merge for this request</h2>
                             <button name="%(action_partner_deduplicate)d" string="Deduplicate the other Contacts" class="oe_highlight" type="action"/>
                         </group>
                         <p class="oe_grey" attrs="{'invisible': [('state', '!=', ('option'))]}">
@@ -102,10 +101,9 @@
         <act_window
             id="action_partner_merge"
             res_model="base.partner.merge.automatic.wizard"
-            src_model="res.partner"
+            binding_model="res.partner"
+            binding_views="list"
             target="new"
-            multi="True"
-            key2="client_action_multi"
             view_mode="form"
-            name="Merge Contacts"/>
+            name="Merge"/>
 </odoo>

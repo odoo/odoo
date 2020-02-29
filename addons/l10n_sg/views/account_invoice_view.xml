@@ -3,8 +3,8 @@
     <data>
         <record id="view_invoice_form_l10n_sg" model="ir.ui.view">
             <field name="name">l10n_sg.invoice.form</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='fiscal_position_id']" position="after">
                     <field name="l10n_sg_permit_number"/>

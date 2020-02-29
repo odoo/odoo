@@ -12,7 +12,6 @@ class ResConfigSettings(models.TransientModel):
         for config in self:
             config.partner_autocomplete_insufficient_credit = self.env['iap.account'].get_credits('partner_autocomplete') <= 0
 
-    @api.multi
     def redirect_to_buy_autocomplete_credit(self):
         Account = self.env['iap.account']
         return {

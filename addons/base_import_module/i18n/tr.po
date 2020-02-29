@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_import_module
+# 	* base_import_module
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Murat Kaplan <muratk@projetgrup.com>, 2018
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
-# Emre Akayoğlu <emre.akayoglu@mechsoft.com.tr>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
-# Levent Karakaş <levent@mektup.at>, 2018
+# Martin Trigaux, 2019
+# Levent Karakaş <levent@mektup.at>, 2019
+# Murat Kaplan <muratk@projetgrup.com>, 2019
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2019
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2019
+# Emre Akayoğlu <emre.akayoglu@mechsoft.com.tr>, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
+# Buket Şeker <buket_skr@hotmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Levent Karakaş <levent@mektup.at>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,10 +37,10 @@ msgid "Close"
 msgstr "Kapat"
 
 #. module: base_import_module
-#: code:addons/base_import_module/controllers/main.py:31
+#: code:addons/base_import_module/controllers/main.py:0
 #, python-format
 msgid "Could not select database '%s'"
-msgstr ""
+msgstr "Veritabanı Seçilemedi"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_uid
@@ -57,7 +58,7 @@ msgid "Display Name"
 msgstr "Görünüm Adı"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:123
+#: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
 msgstr "Dosya '%s' izin verilen ençok dosya boyutunu aşıyor"
@@ -134,22 +135,29 @@ msgid "Module .ZIP file"
 msgstr "Modül .ZIP dosyası"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:113
+#: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "No file sent."
 msgstr "Hiçbir dosya gönderilemedi. "
 
 #. module: base_import_module
-#: code:addons/base_import_module/controllers/main.py:25
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Note: you can only import data modules (.xml files and static assets)"
+msgstr ""
+"Not: sadece veri modüllerini içe aktarabilirsiniz (.xml dosyaları ve statik "
+"varlıklar)"
+
+#. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:0
 #, python-format
 msgid "Only administrators can upload a module"
 msgstr "Sadece sistem yöneticileri modül yüklemesi yapabilir"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:115
+#: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Only zip files are supported."
-msgstr ""
+msgstr "Sadece zip dosyaları desteklenir."
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -167,22 +175,25 @@ msgid "Status"
 msgstr "Durumu"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:50
+#: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Studio customizations require Studio"
 msgstr "Studio kişiselleştirmeleri Studio gerektirmektedir."
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:57
+#: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Studio customizations require the Odoo Studio app."
-msgstr ""
+msgstr "Studio kişiselleştirmeleri Odoo Studio uygulaması gerektirmektedir."
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:52
+#: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
-msgid "Unmet module dependencies: %s"
-msgstr "Karşılanmamış modül bağımlılıkları: %s"
+msgid ""
+"Unmet module dependencies: \n"
+"\n"
+" - %s"
+msgstr ""
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_ui_view
@@ -190,11 +201,11 @@ msgid "View"
 msgstr "Görüntüle"
 
 #. module: base_import_module
-#: selection:base.import.module,state:0
+#: model:ir.model.fields.selection,name:base_import_module.selection__base_import_module__state__done
 msgid "done"
 msgstr "ok"
 
 #. module: base_import_module
-#: selection:base.import.module,state:0
+#: model:ir.model.fields.selection,name:base_import_module.selection__base_import_module__state__init
 msgid "init"
 msgstr "başlatma"

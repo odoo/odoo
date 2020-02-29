@@ -7,7 +7,7 @@ import uuid
 import werkzeug.urls
 import requests
 
-from odoo import api, fields, models, exceptions
+from odoo import api, fields, models, exceptions, _
 from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
@@ -46,7 +46,6 @@ def jsonrpc(url, method='call', params=None, timeout=15):
         'id': uuid.uuid4().hex,
     }
 
-
     _logger.info('iap jsonrpc %s', url)
     try:
         req = requests.post(url, json=payload, timeout=timeout)
@@ -68,7 +67,9 @@ def jsonrpc(url, method='call', params=None, timeout=15):
             raise e
         return response.get('result')
     except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError) as e:
-        raise exceptions.AccessError('The url that this service requested returned an error. Please contact the author the app. The url it tried to contact was ' + url)
+        raise exceptions.AccessError(
+            _('The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was %s') % url
+        )
 
 #----------------------------------------------------------
 # Helpers for proxy
@@ -158,18 +159,29 @@ class IapAccount(models.Model):
 
     service_name = fields.Char()
     account_token = fields.Char(default=lambda s: uuid.uuid4().hex)
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.user.company_id)
+    company_ids = fields.Many2many('res.company')
 
     @api.model
     def get(self, service_name, force_create=True):
-        account = self.search([('service_name', '=', service_name), ('company_id', 'in', [self.env.user.company_id.id, False])])
-        if not account and force_create:
-            account = self.create({'service_name': service_name})
-            # Since the account did not exist yet, we will encounter a NoCreditError,
-            # which is going to rollback the database and undo the account creation,
-            # preventing the process to continue any further.
-            self.env.cr.commit()
-        return account
+        accounts = self.search([
+            ('service_name', '=', service_name), 
+            '|',
+                ('company_ids', 'in', self.env.companies.ids),
+                ('company_ids','=',False)],
+            order='id desc')
+        if not accounts:
+            if force_create:
+                account = self.create({'service_name': service_name})
+                # Since the account did not exist yet, we will encounter a NoCreditError,
+                # which is going to rollback the database and undo the account creation,
+                # preventing the process to continue any further.
+                self.env.cr.commit()
+                return account
+            return accounts
+        accounts_with_company = accounts.filtered(lambda acc: acc.company_ids)
+        if accounts_with_company:
+            return accounts_with_company[0]
+        return accounts[0]
 
     @api.model
     def get_credits_url(self, service_name, base_url='', credit=0, trial=False):
@@ -196,6 +208,18 @@ class IapAccount(models.Model):
         d = {'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid')}
 
         return '%s?%s' % (endpoint + route, werkzeug.urls.url_encode(d))
+
+    @api.model
+    def get_config_account_url(self):
+        account = self.env['iap.account'].get('partner_autocomplete')
+        action = self.env.ref('iap.iap_account_action')
+        menu = self.env.ref('iap.iap_account_menu')
+        no_one = self.user_has_groups('base.group_no_one')
+        if account:
+            url = "/web#id=%s&action=%s&model=iap.account&view_type=form&menu_id=%s" % (account.id, action.id, menu.id)
+        else:
+            url = "/web#action=%s&model=iap.account&view_type=form&menu_id=%s" % (action.id, menu.id)
+        return no_one and url
 
     @api.model
     def get_credits(self, service_name):

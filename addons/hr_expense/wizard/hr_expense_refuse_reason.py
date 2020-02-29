@@ -35,7 +35,6 @@ class HrExpenseRefuseWizard(models.TransientModel):
             })
         return res
 
-    @api.multi
     def expense_refuse_reason(self):
         self.ensure_one()
         if self.hr_expense_ids:

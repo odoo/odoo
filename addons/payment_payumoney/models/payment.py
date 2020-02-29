@@ -26,7 +26,7 @@ class PaymentAcquirerPayumoney(models.Model):
         if environment == 'prod':
             return {'payumoney_form_url': 'https://secure.payu.in/_payment'}
         else:
-            return {'payumoney_form_url': 'https://test.payu.in/_payment'}
+            return {'payumoney_form_url': 'https://sandboxsecure.payu.in/_payment'}
 
     def _payumoney_generate_sign(self, inout, values):
         """ Generate the shasign for incoming or outgoing communications.
@@ -52,10 +52,9 @@ class PaymentAcquirerPayumoney(models.Model):
         shasign = hashlib.sha512(sign.encode('utf-8')).hexdigest()
         return shasign
 
-    @api.multi
     def payumoney_form_generate_values(self, values):
         self.ensure_one()
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.get_base_url()
         payumoney_values = dict(values,
                                 key=self.payumoney_merchant_key,
                                 txnid=values['reference'],
@@ -74,10 +73,10 @@ class PaymentAcquirerPayumoney(models.Model):
         payumoney_values['hash'] = self._payumoney_generate_sign('in', payumoney_values)
         return payumoney_values
 
-    @api.multi
     def payumoney_get_form_action_url(self):
         self.ensure_one()
-        return self._get_payumoney_urls(self.environment)['payumoney_form_url']
+        environment = 'prod' if self.state == 'enabled' else 'test'
+        return self._get_payumoney_urls(environment)['payumoney_form_url']
 
 
 class PaymentTransactionPayumoney(models.Model):
@@ -108,7 +107,6 @@ class PaymentTransactionPayumoney(models.Model):
             raise ValidationError(_('PayUmoney: invalid shasign, received %s, computed %s, for data %s') % (shasign, shasign_check, data))
         return transaction
 
-    @api.multi
     def _payumoney_form_get_invalid_parameters(self, data):
         invalid_parameters = []
 
@@ -122,7 +120,6 @@ class PaymentTransactionPayumoney(models.Model):
 
         return invalid_parameters
 
-    @api.multi
     def _payumoney_form_validate(self, data):
         status = data.get('status')
         result = self.write({

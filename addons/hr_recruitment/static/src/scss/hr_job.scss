@@ -1,18 +1,44 @@
-.o_kanban_view.o_kanban_ungrouped {
-    display: flex;
-    .o_kanban_record {
-        width: 350px;
-    }
-}
-
 .o_kanban_view.o_kanban_dashboard {
+    &.o_hr_recruitment_kanban {
+        &.o_kanban_ungrouped .o_kanban_record {
+            width: 350px;
+            &:not(.o_kanban_ghost) {
+                height: 180px;
+            }
+        }
+
+        .ribbon {
+            &::before, &::after {
+                display: none;
+            }
+
+            span {
+                background-color: $o-brand-odoo;
+                padding: 5px;
+                font-size: small;
+                z-index: unset;
+            }
+        }
+        .ribbon-top-right {
+            margin-top: -$o-kanban-dashboard-vpadding;
+
+            span {
+                left: 0px;
+                right: 30px;
+            }
+        }
+    }
+
+    .o_kanban_record_subtitle {
+        height: 1em;
+    }
+
     .o_recruitment_kanban_boxes {
         display: flex;
         flex-flow: row nowrap;
 
         .o_recruitment_kanban_box {
             position: relative;
-            text-align: center;
             padding: 0 0 0 0;
             flex: 1 1 auto;
             display: flex;
@@ -23,9 +49,10 @@
                 justify-content: flex-start;
                 padding-left: 16px;
             }
-            &:last-child {
+            div:last-child {
                 justify-content: flex-end;
                 padding-right: 16px;
+                text-align: right;
             }
 
             .o_value {
@@ -59,5 +86,12 @@
     .o_kanban_state_with_padding {
         padding-left:7%;
         padding-bottom:5%;
+        width: 12px;
+    }
+}
+
+.o_recruitment_list {
+    .o_list_button {
+        text-align: right;
     }
 }

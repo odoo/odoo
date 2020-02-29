@@ -24,7 +24,7 @@
             <EncryptedFormat>MagneSafe</EncryptedFormat>
           </Account>
           <Amount>
-            <Purchase><t t-esc='"%.2f" % purchase'/></Purchase> <!-- format required by Mercury -->
+            <Purchase><t t-esc='"%.2f" % purchase'/></Purchase> <!-- format required by Vantiv -->
           </Amount>
         </Transaction>
       </TStream>
@@ -38,7 +38,7 @@
           <RecordNo><t t-esc='record_no'/></RecordNo>
           <Memo><t t-esc='memo'/></Memo>
           <Amount>
-            <Purchase><t t-esc='"%.2f" % authorize'/></Purchase> <!-- format required by Mercury -->
+            <Purchase><t t-esc='"%.2f" % authorize'/></Purchase> <!-- format required by Vantiv -->
           </Amount>
           <TranInfo>
             <AuthCode><t t-esc='auth_code'/></AuthCode>

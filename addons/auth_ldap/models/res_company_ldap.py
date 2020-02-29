@@ -167,7 +167,7 @@ class CompanyLDAP(models.Model):
         """
 
         return {
-            'name': ldap_entry[1]['cn'][0],
+            'name': tools.ustr(ldap_entry[1]['cn'][0]),
             'login': login,
             'company_id': conf['company'][0]
         }

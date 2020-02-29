@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import json
 import locale
 import logging
@@ -8,7 +9,6 @@ import re
 from operator import itemgetter
 
 from odoo import api, fields, models, tools, _
-from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -28,7 +28,7 @@ class Lang(models.Model):
     name = fields.Char(required=True)
     code = fields.Char(string='Locale Code', required=True, help='This field is used to set/get locales for user')
     iso_code = fields.Char(string='ISO code', help='This ISO code is the name of po files to use for translations')
-    translatable = fields.Boolean()
+    url_code = fields.Char('URL Code', required=True, help='The Lang Code displayed in the URL')
     active = fields.Boolean()
     direction = fields.Selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], required=True, default='ltr')
     date_format = fields.Char(string='Date Format', required=True, default=DEFAULT_DATE_FORMAT)
@@ -51,6 +51,7 @@ class Lang(models.Model):
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'The name of the language must be unique !'),
         ('code_uniq', 'unique(code)', 'The code of the language must be unique !'),
+        ('url_code_uniq', 'unique(url_code)', 'The URL code of the language must be unique !'),
     ]
 
     @api.constrains('active')
@@ -82,21 +83,29 @@ class Lang(models.Model):
             except Exception:
                 raise ValidationError(warning)
 
-    @api.model_cr
     def _register_hook(self):
         # check that there is at least one active language
         if not self.search_count([]):
             _logger.error("No language is active.")
 
-    @api.model
+    # TODO remove me after v14
     def load_lang(self, lang, lang_name=None):
-        """ Create the given language if necessary, and make it active. """
-        # if the language exists, simply make it active
-        language = self.with_context(active_test=False).search([('code', '=', lang)], limit=1)
-        if language:
-            language.write({'active': True})
-            return language.id
+        _logger.warning("Call to deprecated method load_lang, use _create_lang or _activate_lang instead")
+        language = self._activate_lang(lang) or self._create_lang(lang, lang_name)
+        return language.id
 
+    def _activate_lang(self, code):
+        """ Activate languages
+        :param code: code of the language to activate
+        :return: the language matching 'code' activated
+        """
+        lang = self.with_context(active_test=False).search([('code', '=', code)])
+        if lang and not lang.active:
+            lang.active = True
+        return lang
+
+    def _create_lang(self, lang, lang_name=None):
+        """ Create the given language and make it active. """
         # create the language with locale information
         fail = True
         iso_lang = tools.get_iso_codes(lang)
@@ -142,7 +151,6 @@ class Lang(models.Model):
             'iso_code': iso_lang,
             'name': lang_name,
             'active': True,
-            'translatable': True,
             'date_format' : fix_datetime_format(locale.nl_langinfo(locale.D_FMT)),
             'time_format' : fix_datetime_format(locale.nl_langinfo(locale.T_FMT)),
             'decimal_point' : fix_xa0(str(conv['decimal_point'])),
@@ -150,7 +158,7 @@ class Lang(models.Model):
             'grouping' : str(conv.get('grouping', [])),
         }
         try:
-            return self.create(lang_info).id
+            return self.create(lang_info)
         finally:
             tools.resetlocale()
 
@@ -158,37 +166,36 @@ class Lang(models.Model):
     def install_lang(self):
         """
 
-        This method is called from odoo/addons/base/base_data.xml to load
+        This method is called from odoo/addons/base/data/res_lang_data.xml to load
         some language and set it as the default for every partners. The
-        language is set via tools.config by the RPC 'create' method on the
+        language is set via tools.config by the '_initialize_db' method on the
         'db' object. This is a fragile solution and something else should be
         found.
 
         """
         # config['load_language'] is a comma-separated list or None
         lang_code = (tools.config.get('load_language') or 'en_US').split(',')[0]
-        lang = self.search([('code', '=', lang_code)])
-        if not lang:
-            self.load_lang(lang_code)
+        lang = self._activate_lang(lang_code) or self._create_lang(lang_code)
         IrDefault = self.env['ir.default']
         default_value = IrDefault.get('res.partner', 'lang')
         if default_value is None:
             IrDefault.set('res.partner', 'lang', lang_code)
             # set language of main company, created directly by db bootstrap SQL
-            partner = self.env.user.company_id.partner_id
+            partner = self.env.company.partner_id
             if not partner.lang:
                 partner.write({'lang': lang_code})
         return True
 
     @tools.ormcache('code')
     def _lang_get_id(self, code):
-        return (self.search([('code', '=', code)]) or
-                self.search([('code', '=', 'en_US')]) or
-                self.search([], limit=1)).id
+        return self.with_context(active_test=True).search([('code', '=', code)]).id
 
-    @api.model
-    @api.returns('self', lambda value: value.id)
+    @tools.ormcache('url_code')
+    def _lang_get_code(self, url_code):
+        return self.with_context(active_test=True).search([('url_code', '=', url_code)]).code or url_code
+
     def _lang_get(self, code):
+        """ Return the language using this code if it is active """
         return self.browse(self._lang_get_id(code))
 
     @tools.ormcache('self.code', 'monetary')
@@ -204,7 +211,7 @@ class Lang(models.Model):
     def get_available(self):
         """ Return the available languages as a list of (code, name) sorted by name. """
         langs = self.with_context(active_test=False).search([])
-        return sorted([(lang.code, lang.name) for lang in langs], key=itemgetter(1))
+        return sorted([(lang.code, lang.url_code, lang.name) for lang in langs], key=itemgetter(2))
 
     @api.model
     @tools.ormcache()
@@ -213,12 +220,22 @@ class Lang(models.Model):
         langs = self.with_context(active_test=True).search([])
         return sorted([(lang.code, lang.name) for lang in langs], key=itemgetter(1))
 
+    def toggle_active(self):
+        super().toggle_active()
+        # Automatically load translation
+        active_lang = [lang.code for lang in self.filtered(lambda l: l.active)]
+        if active_lang:
+            mods = self.env['ir.module.module'].search([('state', '=', 'installed')])
+            mods._update_translations(active_lang)
+
     @api.model_create_multi
     def create(self, vals_list):
         self.clear_caches()
+        for vals in vals_list:
+            if not vals.get('url_code'):
+                vals['url_code'] = vals.get('iso_code') or vals['code']
         return super(Lang, self).create(vals_list)
 
-    @api.multi
     def write(self, vals):
         lang_codes = self.mapped('code')
         if 'code' in vals and any(code != vals['code'] for code in lang_codes):
@@ -230,10 +247,10 @@ class Lang(models.Model):
             self.env['ir.default'].discard_values('res.partner', 'lang', lang_codes)
 
         res = super(Lang, self).write(vals)
+        self.flush()
         self.clear_caches()
         return res
 
-    @api.multi
     def unlink(self):
         for language in self:
             if language.code == 'en_US':
@@ -247,7 +264,6 @@ class Lang(models.Model):
         self.clear_caches()
         return super(Lang, self).unlink()
 
-    @api.multi
     def format(self, percent, value, grouping=False, monetary=False):
         """ Format() will return the language-specific output for float values"""
         self.ensure_one()
@@ -259,7 +275,7 @@ class Lang(models.Model):
         # floats and decimal ints need special action!
         if grouping:
             lang_grouping, thousands_sep, decimal_point = self._data_get(monetary)
-            eval_lang_grouping = safe_eval(lang_grouping)
+            eval_lang_grouping = ast.literal_eval(lang_grouping)
 
             if percent[-1] in 'eEfFgG':
                 parts = formatted.split('.')

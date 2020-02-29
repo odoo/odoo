@@ -77,12 +77,17 @@ var AbstractThreadWindow = Widget.extend({
         var self = this;
         this.$input = this.$('.o_composer_text_field');
         this.$header = this.$('.o_thread_window_header');
+        var options = {
+           displayMarkAsRead: false,
+           displayStars: this.options.displayStars,
+        };
+        if (this._thread && this._thread._type === 'document_thread') {
+           options.displayDocumentLinks = false;
+        }
+        this._threadWidget = new ThreadWidget(this, options);
 
-        this._threadWidget = new ThreadWidget(this, {
-            displayMarkAsRead: false,
-            displayStars: this.options.displayStars,
-        });
-
+        // animate the (un)folding of thread windows
+        this.$el.css({transition: 'height ' + this.FOLD_ANIMATION_DURATION + 'ms linear'});
         if (this.isFolded()) {
             this.$el.css('height', this.HEIGHT_FOLDED);
         } else if (this.options.autofocus) {
@@ -95,7 +100,7 @@ var AbstractThreadWindow = Widget.extend({
         var def = this._threadWidget.replace(this.$('.o_thread_window_content')).then(function () {
             self._threadWidget.$el.on('scroll', self, self._debouncedOnScroll);
         });
-        return $.when(this._super(), def);
+        return Promise.all([this._super(), def]);
     },
     /**
      * @override
@@ -142,7 +147,7 @@ var AbstractThreadWindow = Widget.extend({
      * @returns {mail.model.Thread|undefined}
      */
     getThread: function () {
-        if (!this.hasThread) {
+        if (!this.hasThread()) {
             return undefined;
         }
         return this._thread;
@@ -297,24 +302,14 @@ var AbstractThreadWindow = Widget.extend({
                 this._focusInput();
             }
         }
-        this._animateFold();
+        var height = this.isFolded() ? this.HEIGHT_FOLDED : this.HEIGHT_OPEN;
+        this.$el.css({height: height});
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Called when there is a change of the fold state of the thread window.
-     * This method animates the change of fold state of this thread window.
-     *
-     * @private
-     */
-    _animateFold: function () {
-        this.$el.animate({
-            height: this.isFolded() ? this.HEIGHT_FOLDED : this.HEIGHT_OPEN
-        }, this.FOLD_ANIMATION_DURATION);
-    },
     /**
      * Set the focus on the composer of the thread window. This operation is
      * ignored in mobile context.

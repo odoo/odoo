@@ -2,6 +2,10 @@
 <odoo>
   <data noupdate="1">
 
+    <record id="base.user_demo" model="res.users">
+        <field name="groups_id" eval="[(4, ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+    </record>
+
     <!--Manage the job_id to get in hr.applicant-->
     <record id="hr.job_developer" model="hr.job">
         <field name="state">recruit</field>
@@ -40,6 +44,7 @@
         <field name="name">Sales Manager</field>
         <field name="job_id" ref="hr.job_marketing"/>
         <field name="department_id" ref="hr.dep_sales"/>
+        <field name="medium_id" ref="utm.utm_medium_direct"/>
         <field name="type_id" ref="degree_graduate"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
         <field name="user_id" ref="base.user_demo"/>
@@ -64,6 +69,7 @@
         <field name="name">Developer PHP</field>
         <field name="job_id" ref="hr.job_developer"/>
         <field name="department_id" ref="hr.dep_rd"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
         <field name="type_id" ref="degree_graduate"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field name="user_id" ref="base.user_admin"/>
@@ -88,6 +94,7 @@
         <field name="name">Developer Python</field>
         <field name="job_id" ref="hr.job_developer"/>
         <field name="department_id" ref="hr.dep_rd"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
         <field name="type_id" ref="degree_graduate"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field name="user_id" ref="base.user_admin"/>
@@ -156,6 +163,7 @@
     </record>
     <record id="hr_case_yrsexperienceinphp0" model="hr.applicant">
         <field name="name">Marketing Job</field>
+        <field eval="(datetime.now()+relativedelta(months=-2)).strftime('%Y-%m-03 01:00:00')" name="create_date"/>
         <field name="job_id" ref="hr.job_marketing"/>
         <field name="department_id" ref="hr.dep_sales"/>
         <field name="type_id" ref="degree_graduate"/>
@@ -166,6 +174,7 @@
     </record>
     <record id="hr_case_marketingjob0" model="hr.applicant">
         <field name="name">More than 5 yrs Experience in PHP</field>
+        <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-08 01:00:00')" name="create_date"/>
         <field name="job_id" ref="hr.job_developer"/>
         <field name="department_id" ref="hr.dep_rd"/>
         <field name="type_id" ref="degree_licenced"/>
@@ -234,21 +243,18 @@
 
     <record id="hr_case_salesman0_cv" model="ir.attachment">
         <field name="name">Jones_CV.pdf</field>
-        <field name="datas_fname">Jones_CV.pdf</field>
         <field name="datas" type="base64" file="hr_recruitment/data/hr_recruitment_demo_jones_cv.pdf"></field>
         <field name="res_model">hr.applicant</field>
         <field name="res_id" ref="hr_recruitment.hr_case_salesman0"/>
     </record>
     <record id="hr_case_fresher0_cv" model="ir.attachment">
         <field name="name">Jose_CV.txt</field>
-        <field name="datas_fname">Jose_CV.txt</field>
         <field name="datas" type="base64" file="hr_recruitment/data/hr_recruitment_demo_jose_cv.txt"></field>
         <field name="res_model">hr.applicant</field>
         <field name="res_id" ref="hr_recruitment.hr_case_fresher0"/>
     </record>
     <record id="hr_case_programmer_cv" model="ir.attachment">
         <field name="name">Williams_CV.doc</field>
-        <field name="datas_fname">Williams_CV.doc</field>
         <field name="datas" type="base64" file="hr_recruitment/data/hr_recruitment_demo_williams_cv.doc"></field>
         <field name="res_model">hr.applicant</field>
         <field name="res_id" ref="hr_recruitment.hr_case_programmer"/>

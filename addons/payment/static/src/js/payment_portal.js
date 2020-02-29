@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
 
     $('input#cc_number').payment('formatCardNumber');
     $('input#cc_cvc').payment('formatCardCVC');

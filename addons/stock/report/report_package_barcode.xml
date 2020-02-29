@@ -9,51 +9,49 @@
                     <div class="oe_structure"/>
                     <table class="table table-condensed" style="border-bottom: 0px solid white !important;">
                         <tr>
-                          <th>
-                            <h1 t-field="o.name" class="mt0 float-left"/>
-                          </th>
-                            <th style="text-align: center">
+                            <th>
+                              <h1 t-field="o.name" class="mt0 float-left"/>
+                            </th>
+                            <th name="td_pk_barcode" style="text-align: center">
                                 <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" alt="Barcode"
                                   style="width:300px;height:50px"/>
                                   <p t-field="o.name"/>
                             </th>
                         </tr>
-                  </table>
-                    <div class="row o_packaging_type" t-if="o.packaging_id">
-                        <div class="col-12" style="font-weight:bold;">Package Type: <span t-field="o.packaging_id.name"/></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <h2>Package Content</h2>
+                    </table>
+                    <div class="row mt32 mb32">
+                        <div t-if="o.packaging_id" class="o_packaging_type col-auto">
+                            <strong>Package Type:</strong>
+                            <p t-field="o.packaging_id.name"/>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-8">
-                            <table class="table table-sm" style="border-bottom: 0px solid white !important;">
-                                <thead>
-                                    <tr>
-                                        <th>Product</th>
-                                        <th class="text-right">Quantity</th>
-                                        <th class="text-right">Lot/Serial Number</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr t-foreach="o.quant_ids" t-as="l">
-                                        <td>
-                                           <span  t-field="l.product_id.name"/>
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-field="l.quantity"/>
-                                            <span groups="uom.group_uom" t-field="l.product_id.uom_id.name"/>
-                                        </td>
-                                        <td>
-                                            <t t-if="l.lot_id"><span t-field="l.lot_id.name"/></t>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <table class="table table-sm" style="border-bottom: 0px solid white !important;">
+                        <t t-set="has_serial_number" t-value="o.quant_ids.mapped('lot_id')" />
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th name="th_quantity" class="text-right">Quantity</th>
+                                <th name="th_uom" groups="uom.group_uom"/>
+                                <th name="th_serial" class="text-right" t-if="has_serial_number">Lot/Serial Number</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.quant_ids" t-as="l">
+                                <td>
+                                   <span  t-field="l.product_id.name"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="l.quantity"/>
+                                </td>
+                                <td groups="uom.group_uom">
+                                    <span t-field="l.product_id.uom_id.name"/>
+                                </td>
+                                <td class="text-right" t-if="has_serial_number">
+                                    <t t-if="l.lot_id"><span t-field="l.lot_id.name"/></t>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </t>
         </t>
@@ -66,9 +64,6 @@
             <t>
                 <div class="page">
                     <div class="oe_structure"/>
-                    <div class="row o_package_name text-center">
-                      <div class="col-xs-12" style="font-size:24px; font-weight:bold;">Package Reference: <span t-field="o.name"/></div>
-                    </div>
                     <div class="row">
                         <div class="col-12 text-center">
                             <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:600px;height:100px" alt="Barcode"/>
@@ -76,7 +71,7 @@
                         </div>
                     </div>
                     <div class="row o_packaging_type" t-if="o.packaging_id">
-                        <div class="col-12" style="font-size:24px; font-weight:bold;">Package Type: <span t-field="o.packaging_id.name"/></div>
+                        <div class="col-12 text-center" style="font-size:24px; font-weight:bold;"><span>Package Type: </span><span t-field="o.packaging_id.name"/></div>
                     </div>
                 </div>
             </t>

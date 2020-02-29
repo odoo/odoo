@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from datetime import timedelta
 
 
 class HrEmployee(models.Model):
@@ -9,15 +10,13 @@ class HrEmployee(models.Model):
     newly_hired_employee = fields.Boolean('Newly hired employee', compute='_compute_newly_hired_employee',
                                           search='_search_newly_hired_employee')
 
-    @api.multi
     def _compute_newly_hired_employee(self):
-        read_group_result = self.env['hr.applicant'].read_group(
-            [('emp_id', 'in', self.ids), ('job_id.state', '=', 'recruit')],
-            ['emp_id'], ['emp_id'])
-        result = dict((data['emp_id'], data['emp_id_count'] > 0) for data in read_group_result)
-        for record in self:
-            record.newly_hired_employee = result.get(record.id, False)
+        now = fields.Datetime.now()
+        for employee in self:
+            employee.newly_hired_employee = bool(employee.create_date > (now - timedelta(days=90)))
 
     def _search_newly_hired_employee(self, operator, value):
-        applicants = self.env['hr.applicant'].search([('job_id.state', '=', 'recruit')])
-        return [('id', 'in', applicants.ids)]
+        employees = self.env['hr.employee'].search([
+            ('create_date', '>', fields.Datetime.now() - timedelta(days=90))
+        ])
+        return [('id', 'in', employees.ids)]

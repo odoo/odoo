@@ -2,27 +2,20 @@
 <odoo noupdate="1">
     <record model="crm.stage" id="stage_lead1">
         <field name="name">New</field>
-        <field name="probability">10</field>
-        <field name="on_change">1</field>
         <field name="sequence">1</field>
     </record>
     <record model="crm.stage" id="stage_lead2">
         <field name="name">Qualified</field>
-        <field name="probability">30</field>
-        <field name="on_change">1</field>
         <field name="sequence">2</field>
     </record>
     <record model="crm.stage" id="stage_lead3">
         <field name="name">Proposition</field>
-        <field name="probability">70</field>
-        <field name="on_change">1</field>
         <field name="sequence">3</field>
     </record>
     <record model="crm.stage" id="stage_lead4">
         <field name="name">Won</field>
         <field name="fold" eval="False"/>
-        <field name="probability">100</field>
-        <field name="on_change">1</field>
+        <field name="is_won">True</field>
         <field name="sequence">70</field>
     </record>
 </odoo>

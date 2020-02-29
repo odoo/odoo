@@ -1,12 +1,23 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    @api.multi
+    attendee_count = fields.Integer('Attendee Count', compute='_compute_attendee_count')
+
+    def write(self, vals):
+        """ Synchronize partner from SO to registrations. This is done notably
+        in website_sale controller shop/address that updates customer, but not
+        only. """
+        result = super(SaleOrder, self).write(vals)
+        if vals.get('partner_id'):
+            registrations_toupdate = self.env['event.registration'].search([('sale_order_id', 'in', self.ids)])
+            registrations_toupdate.write({'partner_id': vals['partner_id']})
+        return result
+
     def _action_confirm(self):
         res = super(SaleOrder, self)._action_confirm()
         for so in self:
@@ -14,7 +25,6 @@ class SaleOrder(models.Model):
             so.order_line._update_registrations(confirm=so.amount_total == 0, cancel_to_draft=False)
         return res
 
-    @api.multi
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for so in self:
@@ -24,40 +34,60 @@ class SaleOrder(models.Model):
                     .for_xml_id('event_sale', 'action_sale_order_event_registration')
         return res
 
+    def action_view_attendee_list(self):
+        action = self.env.ref('event.event_registration_action_tree').read()[0]
+        action['domain'] = [('sale_order_id', 'in', self.ids)]
+        return action
+
+    def _compute_attendee_count(self):
+        sale_orders_data = self.env['event.registration'].read_group(
+            [('sale_order_id', 'in', self.ids)],
+            ['sale_order_id'], ['sale_order_id']
+        )
+        attendee_count_data = {
+            sale_order_data['sale_order_id'][0]:
+            sale_order_data['sale_order_id_count']
+            for sale_order_data in sale_orders_data
+        }
+        for sale_order in self:
+            sale_order.attendee_count = attendee_count_data.get(sale_order.id, 0)
+
 
 class SaleOrderLine(models.Model):
 
     _inherit = 'sale.order.line'
 
-    event_id = fields.Many2one('event.event', string='Event',
-       help="Choose an event and it will automatically create a registration for this event.")
-    event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket', help="Choose "
-        "an event ticket and it will automatically create a registration for this event ticket.")
+    event_id = fields.Many2one(
+        'event.event', string='Event',
+        help="Choose an event and it will automatically create a registration for this event.")
+    event_ticket_id = fields.Many2one(
+        'event.event.ticket', string='Event Ticket',
+        help="Choose an event ticket and it will automatically create a registration for this event ticket.")
     event_ok = fields.Boolean(related='product_id.event_ok', readonly=True)
 
-    @api.multi
-    def _update_registrations(self, confirm=True, cancel_to_draft=False, registration_data=None):
+    def _update_registrations(self, confirm=True, cancel_to_draft=False, registration_data=None, mark_as_paid=False):
         """ Create or update registrations linked to a sales order line. A sale
         order line has a product_uom_qty attribute that will be the number of
         registrations linked to this line. This method update existing registrations
         and create new one for missing one. """
         Registration = self.env['event.registration'].sudo()
-        registrations = Registration.search([('sale_order_line_id', 'in', self.ids), ('state', '!=', 'cancel')])
+        registrations = Registration.search([('sale_order_line_id', 'in', self.ids)])
         for so_line in self.filtered('event_id'):
             existing_registrations = registrations.filtered(lambda self: self.sale_order_line_id.id == so_line.id)
             if confirm:
-                existing_registrations.filtered(lambda self: self.state != 'open').confirm_registration()
+                existing_registrations.filtered(lambda self: self.state not in ['open', 'cancel']).action_confirm()
+            if mark_as_paid:
+                existing_registrations.filtered(lambda self: not self.is_paid)._action_set_paid()
             if cancel_to_draft:
-                existing_registrations.filtered(lambda self: self.state == 'cancel').do_draft()
+                existing_registrations.filtered(lambda self: self.state == 'cancel').action_set_draft()
 
             for count in range(int(so_line.product_uom_qty) - len(existing_registrations)):
-                registration = {}
+                registration_vals = {}
                 if registration_data:
-                    registration = registration_data.pop()
+                    registration_vals = registration_data.pop()
                 # TDE CHECK: auto confirmation
-                registration['sale_order_line_id'] = so_line
-                Registration.with_context(registration_force_draft=True).create(
-                    Registration._prepare_attendee_values(registration))
+                registration_vals['sale_order_line_id'] = so_line.id
+                Registration.create(registration_vals)
         return True
 
     @api.onchange('product_id')
@@ -73,13 +103,13 @@ class SaleOrderLine(models.Model):
         if self.event_ticket_id and (not self.event_id or self.event_id != self.event_ticket_id.event_id):
             self.event_ticket_id = None
 
+    @api.onchange('product_uom', 'product_uom_qty')
+    def product_uom_change(self):
+        if not self.event_ticket_id:
+            super(SaleOrderLine, self).product_uom_change()
+
     @api.onchange('event_ticket_id')
     def _onchange_event_ticket_id(self):
-        company = self.event_id.company_id or self.env.user.company_id
-        currency = company.currency_id
-        self.price_unit = currency._convert(
-            self.event_ticket_id.price, self.order_id.currency_id, self.order_id.company_id, self.order_id.date_order or fields.Date.today())
-
         # we call this to force update the default name
         self.product_id_change()
 
@@ -94,6 +124,17 @@ class SaleOrderLine(models.Model):
                 lang=self.order_id.partner_id.lang,
             )
 
-            return ticket.get_ticket_multiline_description_sale() + self._get_sale_order_line_multiline_description_variants()
+            return ticket._get_ticket_multiline_description() + self._get_sale_order_line_multiline_description_variants()
         else:
             return super(SaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)
+
+    def _get_display_price(self, product):
+        if self.event_ticket_id and self.event_id:
+            company = self.event_id.company_id or self.env.company.id
+            currency = company.currency_id
+            return currency._convert(
+                self.event_ticket_id.price, self.order_id.currency_id,
+                self.order_id.company_id or self.env.company.id,
+                self.order_id.date_order or fields.Date.today())
+        else:
+            return super()._get_display_price(product)

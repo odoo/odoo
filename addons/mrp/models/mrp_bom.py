@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_round
 
@@ -16,6 +15,7 @@ class MrpBom(models.Model):
     _inherit = ['mail.thread']
     _rec_name = 'product_tmpl_id'
     _order = "sequence"
+    _check_company_auto = True
 
     def _get_default_product_uom_id(self):
         return self.env['uom.uom'].search([], limit=1, order='id').id
@@ -30,22 +30,26 @@ class MrpBom(models.Model):
         default='normal', required=True)
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product',
-        domain="[('type', 'in', ['product', 'consu'])]", required=True)
+        check_company=True,
+        domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", required=True)
     product_id = fields.Many2one(
         'product.product', 'Product Variant',
-        domain="['&', ('product_tmpl_id', '=', product_tmpl_id), ('type', 'in', ['product', 'consu'])]",
+        check_company=True,
+        domain="['&', ('product_tmpl_id', '=', product_tmpl_id), ('type', 'in', ['product', 'consu']),  '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="If a product variant is defined the BOM is available only for this product.")
     bom_line_ids = fields.One2many('mrp.bom.line', 'bom_id', 'BoM Lines', copy=True)
+    byproduct_ids = fields.One2many('mrp.bom.byproduct', 'bom_id', 'By-products', copy=True)
     product_qty = fields.Float(
         'Quantity', default=1.0,
-        digits=dp.get_precision('Unit of Measure'), required=True)
+        digits='Unit of Measure', required=True)
     product_uom_id = fields.Many2one(
-        'uom.uom', 'Product Unit of Measure',
-        default=_get_default_product_uom_id, oldname='product_uom', required=True,
-        help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control")
+        'uom.uom', 'Unit of Measure',
+        default=_get_default_product_uom_id, required=True,
+        help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control", domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_tmpl_id.uom_id.category_id')
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of bills of material.")
     routing_id = fields.Many2one(
-        'mrp.routing', 'Routing',
+        'mrp.routing', 'Routing', check_company=True,
         help="The operations for producing this BoM.  When a routing is specified, the production orders will "
              " be executed through work orders, otherwise everything is processed in the production order itself. ")
     ready_to_produce = fields.Selection([
@@ -53,30 +57,44 @@ class MrpBom(models.Model):
         ('asap', 'When components for 1st operation are available')], string='Manufacturing Readiness',
         default='asap', help="Defines when a Manufacturing Order is considered as ready to be started", required=True)
     picking_type_id = fields.Many2one(
-        'stock.picking.type', 'Operation Type', domain=[('code', '=', 'mrp_operation')],
+        'stock.picking.type', 'Operation Type', domain="[('code', '=', 'mrp_operation'), ('company_id', '=', company_id)]",
+        check_company=True,
         help=u"When a procurement has a ‘produce’ route with a operation type set, it will try to create "
              "a Manufacturing Order for that product using a BoM of the same operation type. That allows "
              "to define stock rules which trigger different manufacturing orders with different BoMs.")
     company_id = fields.Many2one(
-        'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('mrp.bom'),
-        required=True)
+        'res.company', 'Company', index=True,
+        default=lambda self: self.env.company)
+    consumption = fields.Selection([
+        ('strict', 'Strict'),
+        ('flexible', 'Flexible')],
+        help="Defines if you can consume more or less components than the quantity defined on the BoM.",
+        default='strict',
+        string='Consumption',
+        required=True
+    )
 
     @api.onchange('product_id')
     def onchange_product_id(self):
         if self.product_id:
             for line in self.bom_line_ids:
-                line.attribute_value_ids = False
+                line.bom_product_template_attribute_value_ids = False
 
     @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids')
-    def _check_product_recursion(self):
+    def _check_bom_lines(self):
         for bom in self:
-            if bom.product_id:
-                if bom.bom_line_ids.filtered(lambda x: x.product_id == bom.product_id):
-                    raise ValidationError(_('BoM line product %s should not be same as BoM product.') % bom.display_name)
-            else:
-                if bom.bom_line_ids.filtered(lambda x: x.product_id.product_tmpl_id == bom.product_tmpl_id):
-                    raise ValidationError(_('BoM line product %s should not be same as BoM product.') % bom.display_name)
+            for bom_line in bom.bom_line_ids:
+                if bom.product_id and bom_line.product_id == bom.product_id:
+                    raise ValidationError(_("BoM line product %s should not be the same as BoM product.") % bom.display_name)
+                if bom.product_id and bom_line.bom_product_template_attribute_value_ids:
+                    raise ValidationError(_("BoM cannot concern product %s and have a line with attributes (%s) at the same time.")
+                        % (bom.product_id.display_name, ", ".join([ptav.display_name for ptav in bom_line.bom_product_template_attribute_value_ids])))
+                for ptav in bom_line.bom_product_template_attribute_value_ids:
+                    if ptav.product_tmpl_id != bom.product_tmpl_id:
+                        raise ValidationError(
+                            _("The attribute value %s set on product %s does not match the BoM product %s.") %
+                            (ptav.display_name, ptav.product_tmpl_id.display_name, bom_line.parent_product_tmpl_id.display_name)
+                        )
 
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
@@ -94,25 +112,31 @@ class MrpBom(models.Model):
             self.product_uom_id = self.product_tmpl_id.uom_id.id
             if self.product_id.product_tmpl_id != self.product_tmpl_id:
                 self.product_id = False
+            for line in self.bom_line_ids:
+                line.bom_product_template_attribute_value_ids = False
 
     @api.onchange('routing_id')
     def onchange_routing_id(self):
         for line in self.bom_line_ids:
             line.operation_id = False
 
-    @api.multi
+    @api.model
+    def name_create(self, name):
+        # prevent to use string as product_tmpl_id
+        if isinstance(name, str):
+            raise UserError(_("You cannot create a new Bill of Material from here."))
+        return super(MrpBom, self).name_create(name)
+
     def name_get(self):
         return [(bom.id, '%s%s' % (bom.code and '%s: ' % bom.code or '', bom.product_tmpl_id.display_name)) for bom in self]
 
-    @api.multi
     def unlink(self):
         if self.env['mrp.production'].search([('bom_id', 'in', self.ids), ('state', 'not in', ['done', 'cancel'])], limit=1):
             raise UserError(_('You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first.'))
         return super(MrpBom, self).unlink()
 
     @api.model
-    def _bom_find(self, product_tmpl=None, product=None, picking_type=None, company_id=False, bom_type=False):
-        """ Finds BoM for particular product, picking and company """
+    def _bom_find_domain(self, product_tmpl=None, product=None, picking_type=None, company_id=False, bom_type=False):
         if product:
             if not product_tmpl:
                 product_tmpl = product.product_tmpl_id
@@ -121,14 +145,24 @@ class MrpBom(models.Model):
             domain = [('product_tmpl_id', '=', product_tmpl.id)]
         else:
             # neither product nor template, makes no sense to search
-            return False
+            raise UserError(_('You should provide either a product or a product template to search a BoM'))
         if picking_type:
             domain += ['|', ('picking_type_id', '=', picking_type.id), ('picking_type_id', '=', False)]
         if company_id or self.env.context.get('company_id'):
-            domain = domain + [('company_id', '=', company_id or self.env.context.get('company_id'))]
+            domain = domain + ['|', ('company_id', '=', False), ('company_id', '=', company_id or self.env.context.get('company_id'))]
         if bom_type:
             domain += [('type', '=', bom_type)]
         # order to prioritize bom with product_id over the one without
+        return domain
+
+    @api.model
+    def _bom_find(self, product_tmpl=None, product=None, picking_type=None, company_id=False, bom_type=False):
+        """ Finds BoM for particular product, picking and company """
+        if product and product.type == 'service' or product_tmpl and product_tmpl.type == 'service':
+            return False
+        domain = self._bom_find_domain(product_tmpl=product_tmpl, product=product, picking_type=picking_type, company_id=company_id, bom_type=bom_type)
+        if domain is False:
+            return domain
         return self.search(domain, order='sequence, product_id', limit=1)
 
     def explode(self, product, quantity, picking_type=False):
@@ -202,21 +236,24 @@ class MrpBomLine(models.Model):
     _order = "sequence, id"
     _rec_name = "product_id"
     _description = 'Bill of Material Line'
+    _check_company_auto = True
 
     def _get_default_product_uom_id(self):
         return self.env['uom.uom'].search([], limit=1, order='id').id
 
-    product_id = fields.Many2one(
-        'product.product', 'Component', required=True)
+    product_id = fields.Many2one( 'product.product', 'Component', required=True, check_company=True)
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id', readonly=False)
+    company_id = fields.Many2one(
+        related='bom_id.company_id', store=True, index=True, readonly=True)
     product_qty = fields.Float(
         'Quantity', default=1.0,
-        digits=dp.get_precision('Product Unit of Measure'), required=True)
+        digits='Product Unit of Measure', required=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
         default=_get_default_product_uom_id,
-        oldname='product_uom', required=True,
-        help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control")
+        required=True,
+        help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control", domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     sequence = fields.Integer(
         'Sequence', default=1,
         help="Gives the sequence order when displaying.")
@@ -230,11 +267,14 @@ class MrpBomLine(models.Model):
         'mrp.bom', 'Parent BoM',
         index=True, ondelete='cascade', required=True)
     parent_product_tmpl_id = fields.Many2one('product.template', 'Parent Product Template', related='bom_id.product_tmpl_id')
-    attribute_value_ids = fields.Many2many(
-        'product.attribute.value', string='Apply on Variants',
-        help="BOM Product Variants needed form apply this line.")
+    possible_bom_product_template_attribute_value_ids = fields.Many2many('product.template.attribute.value', compute='_compute_possible_bom_product_template_attribute_value_ids')
+    bom_product_template_attribute_value_ids = fields.Many2many(
+        'product.template.attribute.value', string="Apply on Variants", ondelete='restrict',
+        domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
+        help="BOM Product Variants needed to apply this line.")
     operation_id = fields.Many2one(
-        'mrp.routing.workcenter', 'Consumed in Operation',
+        'mrp.routing.workcenter', 'Consumed in Operation', check_company=True,
+        domain="[('routing_id', '=', routing_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]",
         help="The operation where the components are consumed, or the finished products created.")
     child_bom_id = fields.Many2one(
         'mrp.bom', 'Sub BoM', compute='_compute_child_bom_id')
@@ -249,31 +289,40 @@ class MrpBomLine(models.Model):
             'You should install the mrp_byproduct module if you want to manage extra products on BoMs !'),
     ]
 
-    @api.one
+    @api.depends(
+        'parent_product_tmpl_id.attribute_line_ids.value_ids',
+        'parent_product_tmpl_id.attribute_line_ids.attribute_id.create_variant',
+        'parent_product_tmpl_id.attribute_line_ids.product_template_value_ids.ptav_active',
+    )
+    def _compute_possible_bom_product_template_attribute_value_ids(self):
+        for line in self:
+            line.possible_bom_product_template_attribute_value_ids = line.parent_product_tmpl_id.valid_product_template_attribute_line_ids._without_no_variant_attributes().product_template_value_ids._only_active()
+
     @api.depends('product_id', 'bom_id')
     def _compute_child_bom_id(self):
-        if not self.product_id:
-            self.child_bom_id = False
-        else:
-            self.child_bom_id = self.env['mrp.bom']._bom_find(
-                product_tmpl=self.product_id.product_tmpl_id,
-                product=self.product_id,
-                picking_type=self.bom_id.picking_type_id)
+        for line in self:
+            if not line.product_id:
+                line.child_bom_id = False
+            else:
+                line.child_bom_id = self.env['mrp.bom']._bom_find(
+                    product_tmpl=line.product_id.product_tmpl_id,
+                    product=line.product_id,
+                    picking_type=line.bom_id.picking_type_id)
 
-    @api.one
     @api.depends('product_id')
     def _compute_attachments_count(self):
-        nbr_attach = self.env['mrp.document'].search_count([
-            '|',
-            '&', ('res_model', '=', 'product.product'), ('res_id', '=', self.product_id.id),
-            '&', ('res_model', '=', 'product.template'), ('res_id', '=', self.product_id.product_tmpl_id.id)])
-        self.attachments_count = nbr_attach
+        for line in self:
+            nbr_attach = self.env['mrp.document'].search_count([
+                '|',
+                '&', ('res_model', '=', 'product.product'), ('res_id', '=', line.product_id.id),
+                '&', ('res_model', '=', 'product.template'), ('res_id', '=', line.product_id.product_tmpl_id.id)])
+            line.attachments_count = nbr_attach
 
-    @api.one
     @api.depends('child_bom_id')
     def _compute_child_line_ids(self):
         """ If the BOM line refers to a BOM, return the ids of the child BOM lines """
-        self.child_line_ids = self.child_bom_id.bom_line_ids.ids
+        for line in self:
+            line.child_line_ids = line.child_bom_id.bom_line_ids.ids
 
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
@@ -290,13 +339,6 @@ class MrpBomLine(models.Model):
         if self.product_id:
             self.product_uom_id = self.product_id.uom_id.id
 
-    @api.onchange('parent_product_tmpl_id')
-    def onchange_parent_product(self):
-        return {'domain': {'attribute_value_ids': [
-            ('id', 'in', self.parent_product_tmpl_id._get_valid_product_attribute_values().ids),
-            ('attribute_id.create_variant', '!=', 'no_variant')
-        ]}}
-
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
@@ -305,17 +347,20 @@ class MrpBomLine(models.Model):
         return super(MrpBomLine, self).create(vals_list)
 
     def _skip_bom_line(self, product):
-        """ Control if a BoM line should be produce, can be inherited for add
+        """ Control if a BoM line should be produced, can be inherited to add
         custom control. It currently checks that all variant values are in the
-        product. """
-        if self.attribute_value_ids:
-            for att, att_values in groupby(self.attribute_value_ids, lambda l: l.attribute_id):
-                values = self.env['product.attribute.value'].concat(*list(att_values))
-                if not (product.attribute_value_ids & values):
+        product.
+
+        If multiple values are encoded for the same attribute line, only one of
+        them has to be found on the variant.
+        """
+        self.ensure_one()
+        if self.bom_product_template_attribute_value_ids:
+            for ptal, iter_ptav in groupby(self.bom_product_template_attribute_value_ids.sorted('attribute_line_id'), lambda ptav: ptav.attribute_line_id):
+                if not any([ptav in product.product_template_attribute_value_ids for ptav in iter_ptav]):
                     return True
         return False
 
-    @api.multi
     def action_see_attachments(self):
         domain = [
             '|',
@@ -330,12 +375,48 @@ class MrpBomLine(models.Model):
             'view_id': attachment_view.id,
             'views': [(attachment_view.id, 'kanban'), (False, 'form')],
             'view_mode': 'kanban,tree,form',
-            'view_type': 'form',
             'help': _('''<p class="o_view_nocontent_smiling_face">
                         Upload files to your product
                     </p><p>
                         Use this feature to store any files, like drawings or specifications.
                     </p>'''),
             'limit': 80,
-            'context': "{'default_res_model': '%s','default_res_id': %d}" % ('product.product', self.product_id.id)
+            'context': "{'default_res_model': '%s','default_res_id': %d, 'default_company_id': %s}" % ('product.product', self.product_id.id, self.company_id.id)
         }
+
+
+class MrpByProduct(models.Model):
+    _name = 'mrp.bom.byproduct'
+    _description = 'Byproduct'
+    _rec_name = "product_id"
+    _check_company_auto = True
+
+    product_id = fields.Many2one('product.product', 'By-product', required=True, check_company=True)
+    company_id = fields.Many2one(related='bom_id.company_id', store=True, index=True, readonly=True)
+    product_qty = fields.Float(
+        'Quantity',
+        default=1.0, digits='Product Unit of Measure', required=True)
+    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
+    bom_id = fields.Many2one('mrp.bom', 'BoM', ondelete='cascade')
+    routing_id = fields.Many2one(
+        'mrp.routing', 'Routing', store=True, related='bom_id.routing_id')
+    operation_id = fields.Many2one(
+        'mrp.routing.workcenter', 'Produced in Operation', check_company=True,
+        domain="[('routing_id', '=', routing_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]")
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        """ Changes UoM if product_id changes. """
+        if self.product_id:
+            self.product_uom_id = self.product_id.uom_id.id
+
+    @api.onchange('product_uom_id')
+    def onchange_uom(self):
+        res = {}
+        if self.product_uom_id and self.product_id and self.product_uom_id.category_id != self.product_id.uom_id.category_id:
+            res['warning'] = {
+                'title': _('Warning'),
+                'message': _('The unit of measure you choose is in a different category than the product unit of measure.')
+            }
+            self.product_uom_id = self.product_id.uom_id.id
+        return res

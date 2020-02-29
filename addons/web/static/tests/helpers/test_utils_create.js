@@ -13,7 +13,8 @@ odoo.define('web.test_utils_create', function (require) {
 var ActionManager = require('web.ActionManager');
 var config = require('web.config');
 var ControlPanelView = require('web.ControlPanelView');
-var DebugManager = require('web.DebugManager');
+var concurrency = require('web.concurrency');
+var DebugManager = require('web.DebugManager.Backend');
 var dom = require('web.dom');
 var testUtilsMock = require('web.test_utils_mock');
 var Widget = require('web.Widget');
@@ -26,17 +27,12 @@ var Widget = require('web.Widget');
  * @param {Object} [params.actions] the actions given to the mock server
  * @param {Object} [params.archs] this archs given to the mock server
  * @param {Object} [params.data] the business data given to the mock server
- * @param {boolean} [params.debug]
  * @param {function} [params.mockRPC]
  * @returns {ActionManager}
  */
-function createActionManager (params) {
+async function createActionManager(params) {
     params = params || {};
-    var $target = $('#qunit-fixture');
-    if (params.debug) {
-        $target = $('body');
-        $target.addClass('debug');
-    }
+    const target = prepareTarget(params.debug);
 
     var widget = new Widget();
     // when 'document' addon is installed, the sidebar does a 'search_read' on
@@ -47,7 +43,7 @@ function createActionManager (params) {
     _.extend(params, {
         mockRPC: function (route, args) {
             if (args.model === 'ir.attachment') {
-                return $.when([]);
+                return Promise.resolve([]);
             }
             if (mockRPC) {
                 return mockRPC.apply(this, arguments);
@@ -56,7 +52,7 @@ function createActionManager (params) {
         },
     });
     testUtilsMock.addMockEnvironment(widget, _.defaults(params, { debounce: false }));
-    widget.prependTo($target);
+    await widget.prependTo(target);
     widget.$el.addClass('o_web_client');
     if (config.device.isMobile) {
         widget.$el.addClass('o_touch_device');
@@ -71,13 +67,13 @@ function createActionManager (params) {
         widget.destroy();
     };
     var fragment = document.createDocumentFragment();
-    actionManager.appendTo(fragment).then(function () {
+    return actionManager.appendTo(fragment).then(function () {
         dom.append(widget.$el, fragment, {
             callbacks: [{ widget: actionManager }],
             in_DOM: true,
         });
+        return actionManager;
     });
-    return actionManager;
 }
 
 /**
@@ -89,16 +85,10 @@ function createActionManager (params) {
  * through a mock method using the data object as source, and already loaded/
  * started.
  *
- * Most views can be tested synchronously (@see createView), but some view have
- * external dependencies (like lazy loaded libraries). In that case, it is
- * necessary to use this method.
- *
  * @param {Object} params
  * @param {string} params.arch the xml (arch) of the view to be instantiated
  * @param {any[]} [params.domain] the initial domain for the view
  * @param {Object} [params.context] the initial context for the view
- * @param {Object} [params.debug=false] if true, the widget will be appended in
- *   the DOM. Also, RPCs and uncaught OdooEvent will be logged
  * @param {string[]} [params.groupBy] the initial groupBy for the view
  * @param {integer} [params.fieldDebounce=0] the debounce value to use for the
  *   duration of the test.
@@ -109,17 +99,15 @@ function createActionManager (params) {
  *   Note that this is particularly useful if you want to intercept events going
  *   up in the init process of the view, because there are no other way to do it
  *   after this method returns
- * @returns {Deferred<AbstractView>} resolves with the instance of the view
+ *  @param {Boolean} [params.doNotDisableAHref=false] will not preventDefault on the A elements of the view if true.
+ *    Default is false.
+ * @returns {Promise<AbstractController>} resolves with the instance of the view
  */
-function createAsyncView(params) {
-    var $target = $('#qunit-fixture');
+async function createView(params) {
+    const target = prepareTarget(params.debug);
     var widget = new Widget();
-    if (params.debug) {
-        $target = $('body');
-        $target.addClass('debug');
-    }
     // reproduce the DOM environment of views
-    var $webClient = $('<div>').addClass('o_web_client').prependTo($target);
+    var $webClient = $('<div>').addClass('o_web_client').prependTo(target);
     var $actionManager = $('<div>').addClass('o_action_manager').appendTo($webClient);
 
 
@@ -143,9 +131,10 @@ function createAsyncView(params) {
         _updateMVCParams: function () {
             this._super.apply(this, arguments);
             this.loadParams.groupedBy = params.groupBy || viewOptions.groupBy || [];
+            testUtilsMock.unpatch(View);
         },
     });
-    if (params.hasSelectors) {
+    if ('hasSelectors' in params) {
         viewOptions.hasSelectors = params.hasSelectors;
     }
 
@@ -157,6 +146,11 @@ function createAsyncView(params) {
             modelName: params.model || 'foo',
         });
     } else {
+        viewOptions.controlPanelFieldsView = testUtilsMock.fieldsViewGet(mockServer, {
+            arch: params.archs && params.archs[params.model + ',false,search'] || '<search/>',
+            fields: viewInfo.fields,
+            model: params.model,
+        });
         view = new params.View(viewInfo, viewOptions);
     }
 
@@ -175,26 +169,60 @@ function createAsyncView(params) {
             // when it will be called the second time (by its parent)
             delete view.destroy;
             widget.destroy();
-
-            testUtilsMock.unpatch(View);
+            $webClient.remove();
         };
 
         // render the view in a fragment as they must be able to render correctly
         // without being in the DOM
         var fragment = document.createDocumentFragment();
-        return view.appendTo(fragment).then(function () {
+        return view.appendTo(fragment).then( () => {
             dom.prepend($actionManager, fragment, {
                 callbacks: [{ widget: view }],
                 in_DOM: true,
             });
-            view.$el.on('click', 'a', function (ev) {
-                ev.preventDefault();
-            });
 
+            if (!params.doNotDisableAHref) {
+                [...view.el.getElementsByTagName('A')].forEach((elem) => {
+                    elem.addEventListener('click', (ev) => {
+                        ev.preventDefault();
+                    });
+                });
+            }
             return view;
         });
     });
 }
+
+/**
+ * Similar as createView, but specific for calendar views. Some calendar
+ * tests need to trigger positional clicks on the DOM produced by fullcalendar.
+ * Those tests must use this helper with option positionalClicks set to true.
+ * This will move the rendered calendar to the body (required to do positional
+ * clicks), and wait for a setTimeout(0) before returning, because fullcalendar
+ * makes the calendar scroll to 6:00 in a setTimeout(0), which might have an
+ * impact according to where we want to trigger positional clicks.
+ *
+ * @param {Object} params see @createView
+ * @param {Object} [options]
+ * @param {boolean} [options.positionalClicks=false]
+ * @returns {Promise<CalendarController>}
+ */
+async function createCalendarView(params, options) {
+    var calendar = await createView(params);
+    if (!options || !options.positionalClicks) {
+        return calendar;
+    }
+    var $view = $('#qunit-fixture').contents();
+    $view.prependTo('body');
+    var destroy = calendar.destroy;
+    calendar.destroy = function () {
+        $view.remove();
+        destroy();
+    };
+    await concurrency.delay(0);
+    return calendar;
+}
+
 /**
  * create a controlPanel from various parameters.
  *
@@ -203,8 +231,6 @@ function createAsyncView(params) {
  * @param {Object} [params={}]
  * @param {Object} [params.action={}]
  * @param {Object} [params.context={}]
- * @param {Object} [params.debug=false] if true, the widget will be appended in
- *   the DOM. Also, RPCs and uncaught OdooEvent will be logged
  * @param {string} [params.domain=[]]
  * @param {integer} [params.fieldDebounce=0] the debounce value to use for the
  *   duration of the test.
@@ -227,17 +253,13 @@ function createAsyncView(params) {
  * @param {boolean} [params.withSearchBar=true] if set to false, no default
  *   search bar will be rendered
  *
- * @returns {Deferred<ControlPanel>} resolves with an instance of the ControlPanelController
+ * @returns {Promise<ControlPanel>} resolves with an instance of the ControlPanelController
  */
 function createControlPanel(params) {
     params = params || {};
-    var $target = $('#qunit-fixture');
-    if (params.debug) {
-        $target = $('body');
-        $target.addClass('debug');
-    }
+    const target = prepareTarget(params.debug);
     // reproduce the DOM environment of a view control panel
-    var $webClient = $('<div>').addClass('o_web_client').prependTo($target);
+    var $webClient = $('<div>').addClass('o_web_client').prependTo(target);
     var $actionManager = $('<div>').addClass('o_action_manager').appendTo($webClient);
     var $action = $('<div>').addClass('o_action').appendTo($actionManager);
 
@@ -255,6 +277,7 @@ function createControlPanel(params) {
     }
 
     var viewOptions = _.defaults({}, params.viewOptions, {
+        context: params.context,
         modelName: params.model,
         searchMenuTypes: params.searchMenuTypes,
         viewInfo: params.viewInfo,
@@ -270,6 +293,7 @@ function createControlPanel(params) {
             // children when it will be called the second time (by its parent)
             delete controlPanel.destroy;
             widget.destroy();
+            $webClient.remove();
         };
 
         // render the controlPanel in a fragment as it must be able to render
@@ -290,16 +314,16 @@ function createControlPanel(params) {
  *
  * @param {Object} [params={}]
  */
-function createDebugManager (params) {
+var createDebugManager = function (params) {
     params = params || {};
     var mockRPC = params.mockRPC;
     _.extend(params, {
         mockRPC: function (route, args) {
             if (args.method === 'check_access_rights') {
-                return $.when(true);
+                return Promise.resolve(true);
             }
             if (args.method === 'xmlid_to_res_id') {
-                return $.when(true);
+                return Promise.resolve(true);
             }
             if (mockRPC) {
                 return mockRPC.apply(this, arguments);
@@ -309,7 +333,7 @@ function createDebugManager (params) {
         session: {
             user_has_group: function (group) {
                 if (group === 'base.group_no_one') {
-                    return $.when(true);
+                    return Promise.resolve(true);
                 }
                 return this._super.apply(this, arguments);
             },
@@ -318,7 +342,7 @@ function createDebugManager (params) {
     var debugManager = new DebugManager();
     testUtilsMock.addMockEnvironment(debugManager, params);
     return debugManager;
-}
+};
 
 /**
  * create a model from given parameters.
@@ -361,36 +385,27 @@ function createParent(params) {
 }
 
 /**
- * create a view synchronously.  This method uses the createAsyncView method.
- * Most views are synchronous, so the deferred can be resolved immediately and
- * this method will work.
+ * Get the target (fixture or body) of the document and adds event listeners
+ * to intercept custom or DOM events.
  *
- * Be careful, if for some reason a view is async, this method will crash.
- * @see createAsyncView
- *
- * @param {Object} params will be given to createAsyncView
- * @returns {AbstractView}
+ * @param {boolean} [debug=false] if true, the widget will be appended in
+ *      the DOM. Also, RPCs and uncaught OdooEvent will be logged
+ * @returns {HTMLElement}
  */
-function createView(params) {
-    var view;
-    createAsyncView(params).then(function (result) {
-        view = result;
-    });
-    if (!view) {
-        throw "The view that you are trying to create is async. Please use createAsyncView instead";
-    }
-    return view;
+function prepareTarget(debug=false) {
+    document.body.classList.toggle('debug', debug);
+    return debug ? document.body : document.querySelector("#qunit-fixture");
 }
-
 
 return {
     createActionManager: createActionManager,
-    createAsyncView: createAsyncView,
+    createCalendarView: createCalendarView,
     createControlPanel: createControlPanel,
     createDebugManager: createDebugManager,
     createModel: createModel,
     createParent: createParent,
     createView: createView,
+    prepareTarget: prepareTarget,
 };
 
 });

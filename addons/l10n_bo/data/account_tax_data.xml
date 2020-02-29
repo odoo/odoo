@@ -1,148 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-     <!-- Account Tags -->
-
-    <record id="tag_bo_01" model="account.account.tag">
-        <field name="name">Impuesto a las Utilidades de la Empresa IUE (25%)</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_02" model="account.account.tag">
-        <field name="name">Impuesto a las Transacciones IT (3%)</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_03" model="account.account.tag">
-        <field name="name">Impuesto a las Transacciones IT (3%)</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_04" model="account.account.tag">
-        <field name="name">Impuesto al Valor Agregado (IVA) Total a Pagar</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_05" model="account.account.tag">
-        <field name="name">Impuesto Cobrado</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_06" model="account.account.tag">
-        <field name="name">Impuesto Cobrado Fuera de Ámbito</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_07" model="account.account.tag">
-        <field name="name">Impuesto Cobrado de Exonerados al IVA</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_08" model="account.account.tag">
-        <field name="name">Impuesto Cobrado IVA</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_09" model="account.account.tag">
-        <field name="name">Impuesto Pagado</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_10" model="account.account.tag">
-        <field name="name">Impuesto Pagado Fuera de Ámbito</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_11" model="account.account.tag">
-        <field name="name">Impuesto Pagado de Exonerados al IVA</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_12" model="account.account.tag">
-        <field name="name">Impuesto Pagado IVA</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_13" model="account.account.tag">
-        <field name="name">Base Imponible</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_14" model="account.account.tag">
-        <field name="name">Base Imponible - Compras</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_15" model="account.account.tag">
-        <field name="name">Compras Gravadas Fuera de Ámbito</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_16" model="account.account.tag">
-        <field name="name">Compras NO Gravadas (Exoneradas)</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_17" model="account.account.tag">
-        <field name="name">Compras Gravadas con IVA</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_18" model="account.account.tag">
-        <field name="name">Base Imponible - Ventas</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_19" model="account.account.tag">
-        <field name="name">Ventas Gravadas Fuera de Ámbito</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_20" model="account.account.tag">
-        <field name="name">Ventas NO Gravadas (Exoneradas)</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="tag_bo_21" model="account.account.tag">
-        <field name="name">Impuesto al Valor Agregado con IVA</field>
-        <field name="applicability">taxes</field>
-    </record>
-
     <record id="ITAX_21" model="account.tax.template">
-      <field name="chart_template_id" ref="bo_chart_template"/>
-      <field name="name">IVA 13% Venta</field>
-      <field name="amount">13</field>
-      <field name="amount_type">percent</field>
-      <field name="type_tax_use">sale</field>
-      <field name="include_base_amount">1</field>
-      <field name="refund_account_id" ref="231"/>
-      <field name="account_id" ref="231"/>
-      <field name="tag_ids" eval="[(6,0,[ref('tag_bo_08'),ref('tag_bo_21') ])]"/>
-      <field name="tax_group_id" ref="tax_group_iva_13"/>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">IVA 13% Venta</field>
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="include_base_amount">1</field>
+        <field name="tax_group_id" ref="tax_group_iva_13"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_imponible_venras_iva')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('231'),
+                'plus_report_line_ids': [ref('tax_report_impuesto_ttl_cob_iva')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_base_imponible_venras_iva')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('231'),
+                'minus_report_line_ids': [ref('tax_report_impuesto_ttl_cob_iva')],
+            }),
+        ]"/>
     </record>
 
     <record id="OTAX_21" model="account.tax.template">
-      <field name="chart_template_id" ref="bo_chart_template"/>
-      <field name="name">IVA 13% Compra</field>
-      <field name="amount">13</field>
-      <field name="amount_type">percent</field>
-      <field name="type_tax_use">purchase</field>
-      <field name="include_base_amount">1</field>
-      <field name="refund_account_id" ref="231"/>
-      <field name="account_id" ref="231"/>
-      <field name="tag_ids" eval="[(6,0,[ref('tag_bo_12'), ref('tag_bo_17')])]"/>
-      <field name="tax_group_id" ref="tax_group_iva_13"/>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">IVA 13% Compra</field>
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="include_base_amount">1</field>
+        <field name="tax_group_id" ref="tax_group_iva_13"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_imponible_compras_iva')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('231'),
+                'plus_report_line_ids': [ref('tax_report_impuesto_ttl_pag_iva')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_base_imponible_compras_iva')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('231'),
+                'minus_report_line_ids': [ref('tax_report_impuesto_ttl_pag_iva')],
+            }),
+        ]"/>
     </record>
 
     <record id="ITAX_03" model="account.tax.template">
-      <field name="chart_template_id" ref="bo_chart_template"/>
-      <field name="name">IT 3%</field>
-      <field name="amount">3</field>
-      <field name="amount_type">percent</field>
-      <field name="price_include" eval="True"/>
-      <field name="type_tax_use">sale</field>
-      <field name="refund_account_id" ref="232"/>
-      <field name="account_id" ref="232"/>
-      <field name="tag_ids" eval="[(6,0,[ref('tag_bo_03'), ref('tag_bo_21')])]"/>
-      <field name="tax_group_id" ref="tax_group_it_3"/>
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">IT 3%</field>
+        <field name="amount">3</field>
+        <field name="amount_type">percent</field>
+        <field name="price_include" eval="True"/>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_it_3"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_imponible_venras_iva')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('232'),
+                'plus_report_line_ids': [ref('tax_report_impuesto_trans_3')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_base_imponible_venras_iva')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('232'),
+                'minus_report_line_ids': [ref('tax_report_impuesto_trans_3')],
+            }),
+        ]"/>
     </record>
 </odoo>

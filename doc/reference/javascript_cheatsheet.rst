@@ -1,5 +1,7 @@
 :banner: banners/javascript.jpg
 
+.. _reference/jscs:
+
 =====================
 Javascript Cheatsheet
 =====================
@@ -277,3 +279,267 @@ using the view in the kanban arch (a specific example is the helpdesk dashboard)
     from the server point of view, this is still a view of the same base type,
     subjected to the same rules (rng validation, for example).  So, your views still
     need to have a valid arch field.
+
+Promises and asynchronous code
+===============================
+
+For a very good and complete introduction to promises, please read this excellent article https://github.com/getify/You-Dont-Know-JS/blob/1st-ed/async%20%26%20performance/ch3.md
+
+Creating new Promises
+-----------------------
+- turn a constant into a promise
+    There are 2 static functions on Promise that create a resolved or rejected promise based on a constant:
+
+    .. code-block:: javascript
+
+        var p = Promise.resolve({blabla: '1'}); // creates a resolved promise
+        p.then(function (result) {
+            console.log(result); // --> {blabla: '1'};
+        });
+
+
+        var p2 = Promise.reject({error: 'error message'}); // creates a rejected promise
+        p2.catch(function (reason) {
+            console.log(reason); // --> {error: 'error message');
+        });
+
+
+    .. note:: Note that even if the promises are created already resolved or rejected, the `then` or `catch` handlers will still be called asynchronously.
+
+
+- based on an already asynchronous code
+    Suppose that in a function you must do a rpc, and when it is completed set the result on this.
+    The `this._rpc` is a function that returns a `Promise`.
+
+    .. code-block:: javascript
+
+        function callRpc() {
+            var self = this;
+            return this._rpc(...).then(function (result) {
+                self.myValueFromRpc = result;
+            });
+        }
+
+- for callback based function
+    Suppose that you were using a function `this.close` that takes as parameter a callback that is called when the closing is finished.
+    Now suppose that you are doing that in a method that must send a promise that is resolved when the closing is finished.
+
+    .. code-block:: javascript
+        :linenos:
+
+        function waitForClose() {
+            var self = this;
+            return new Promise (function(resolve, reject) {
+                self.close(resolve);
+            });
+        }
+
+    * line 2: we save the `this` into a variable so that in an inner function, we can access the scope of our component
+    * line 3: we create and return a new promise. The constructor of a promise takes a function as parameter. This function itself has 2 parameters that we called here `resolve` and `reject`
+        - `resolve` is a function that, when called, puts the promise in the resolved state.
+        - `reject` is a function that, when called, puts the promise in the rejected state. We do not use reject here and it can be omitted.
+    * line 4: we are calling the function close on our object. It takes a function as parameter (the callback) and it happens that resolve is already a function, so we can pass it directly. To be clearer, we could have written:
+
+    .. code-block:: javascript
+
+        return new Promise (function (resolve) {
+            self.close(function () {
+                resolve();
+            });
+        });
+
+
+
+- creating a promise generator (calling one promise after the other *in sequence* and waiting for the last one)
+    Suppose that you need to loop over an array, do an operation *in sequence* and resolve a promise when the last operation is done.
+
+    .. code-block:: javascript
+
+        function doStuffOnArray(arr) {
+            var done = Promise.resolve();
+            arr.forEach(function (item) {
+                done = done.then(function () {
+                    return item.doSomethingAsynchronous();
+                });
+            });
+            return done;
+        }
+
+    This way, the promise you return is effectively the last promise.
+- creating a promise, then resolving it outside the scope of its definition (anti-pattern)
+    .. note:: we do not recommend using this, but sometimes it is useful. Think carefully for alternatives first...
+
+    .. code-block:: javascript
+
+        ...
+        var resolver, rejecter;
+        var prom = new Promise(function (resolve, reject){
+            resolver = resolve;
+            rejecter = reject;
+        });
+        ...
+
+        resolver("done"); // will resolve the promise prom with the result "done"
+        rejecter("error"); // will reject the promise prom with the reason "error"
+
+Waiting for Promises
+--------------------
+- waiting for a number of Promises
+        if you have multiple promises that all need to be waited, you can convert them into a single promise that will be resolved when all the promises are resolved using Promise.all(arrayOfPromises).
+
+        .. code-block:: javascript
+
+                var prom1 = doSomethingThatReturnsAPromise();
+                var prom2 = Promise.resolve(true);
+                var constant = true;
+
+                var all = Promise.all([prom1, prom2, constant]); // all is a promise
+                // results is an array, the individual results correspond to the index of their
+                // promise as called in Promise.all()
+                all.then(function (results) {
+                    var prom1Result = results[0];
+                    var prom2Result = results[1];
+                    var constantResult = results[2];
+                });
+                return all;
+
+
+- waiting for a part of a promise chain, but not another part
+        If you have an asynchronous process that you want to wait to do something, but you also want to return to the caller before that something is done.
+
+        .. code-block:: javascript
+
+            function returnAsSoonAsAsyncProcessIsDone() {
+                var prom = AsyncProcess();
+                prom.then(function (resultOfAsyncProcess) {
+                        return doSomething();
+                });
+                /* returns prom which will only wait for AsyncProcess(),
+                   and when it will be resolved, the result will be the one of AsyncProcess */
+                return prom;
+            }
+
+Error handling
+--------------
+
+- in general in promises
+        The general idea is that a promise should not be rejected for control flow, but should only be rejected for errors.
+        When that is the case, you would have multiple resolutions of your promise with, for instance status codes that you would have to check in the `then` handlers and a single `catch` handler at the end of the promise chain.
+
+        .. code-block:: javascript
+
+            function a() {
+                x.y();  // <-- this is an error: x is undefined
+                return Promise.resolve(1);
+            }
+            function b() {
+               return Promise.reject(2);
+            }
+
+            a().catch(console.log);           // will log the error in a
+            a().then(b).catch(console.log);   // will log the error in a, the then is not executed
+            b().catch(console.log);           // will log the rejected reason of b (2)
+            Promise.resolve(1)
+                   .then(b)                   // the then is executed, it executes b
+                   .then(...)                 // this then is not executed
+                   .catch(console.log);       // will log the rejected reason of b (2)
+
+
+
+- in Odoo specifically
+        In Odoo, it happens that we use promise rejection for control flow, like in mutexes and other concurrency primitives defined in module `web.concurrency`
+        We also want to execute the catch for *business* reasons, but not when there is a coding error in the definition of the promise or of the handlers.
+        For this, we have introduced the concept of `guardedCatch`. It is called like `catch` but not when the rejected reason is an error
+
+        .. code-block:: javascript
+
+                function blabla() {
+                    if (someCondition) {
+                        return Promise.reject("someCondition is truthy");
+                    }
+                    return Promise.resolve();
+                }
+
+                // ...
+
+                var promise = blabla();
+                promise.then(function (result) { console.log("everything went fine"); })
+                // this will be called if blabla returns a rejected promise, but not if it has an error
+                promise.guardedCatch(function (reason) { console.log(reason); });
+
+                // ...
+
+                var anotherPromise =
+                        blabla().then(function () { console.log("everything went fine"); })
+                                // this will be called if blabla returns a rejected promise,
+                                // but not if it has an error
+                                .guardedCatch(console.log);
+
+
+        .. code-block:: javascript
+
+                var promiseWithError = Promise.resolve().then(function () {
+                    x.y();  // <-- this is an error: x is undefined
+                });
+                promiseWithError.guardedCatch(function (reason) {console.log(reason);}); // will not be called
+                promiseWithError.catch(function (reason) {console.log(reason);}); // will be called
+
+
+
+Testing asynchronous code
+--------------------------
+
+- using promises in tests
+        In the tests code, we support the latest version of Javascript, including primitives like `async` and `await`. This makes using and waiting for promises very easy.
+        Most helper methods also return a promise (either by being marked `async` or by returning a promise directly.
+
+        .. code-block:: javascript
+
+                var testUtils = require('web.test_utils');
+                QUnit.test("My test", async function (assert) {
+                    // making the function async has 2 advantages:
+                    // 1) it always returns a promise so you don't need to define `var done = assert.async()`
+                    // 2) it allows you to use the `await`
+                    assert.expect(1);
+
+                    var form = await testUtils.createView({ ... });
+                    await testUtils.form.clickEdit(form);
+                    await testUtils.form.click('jquery selector');
+                    assert.containsOnce('jquery selector');
+                    form.destroy();
+                });
+
+                QUnit.test("My test - no async - no done", function (assert) {
+                    // this function is not async, but it returns a promise.
+                    // QUnit will wait for for this promise to be resolved.
+                    assert.expect(1);
+
+                    return testUtils.createView({ ... }).then(function (form) {
+                        return testUtils.form.clickEdit(form).then(function () {
+                            return testUtils.form.click('jquery selector').then(function () {
+                                assert.containsOnce('jquery selector');
+                                form.destroy();
+                            });
+                        });
+                    });
+                });
+
+
+                QUnit.test("My test - no async", function (assert) {
+                    // this function is not async and does not return a promise.
+                    // we have to use the done function to signal QUnit that the test is async and will be finished inside an async callback
+                    assert.expect(1);
+                    var done = assert.async();
+
+                    testUtils.createView({ ... }).then(function (form) {
+                        testUtils.form.clickEdit(form).then(function () {
+                            testUtils.form.click('jquery selector').then(function () {
+                            assert.containsOnce('jquery selector');
+                            form.destroy();
+                            done();
+                            });
+                        });
+                    });
+                });
+
+        as you can see, the nicer form is to use `async/await` as it is clearer and shorter to write.

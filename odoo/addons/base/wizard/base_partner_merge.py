@@ -6,13 +6,14 @@ import functools
 import itertools
 import logging
 import psycopg2
+import datetime
 
 from odoo import api, fields, models
 from odoo import SUPERUSER_ID, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import mute_logger
 
-_logger = logging.getLogger('base.partner.merge')
+_logger = logging.getLogger('odoo.addons.base.partner.merge')
 
 class MergePartnerLine(models.TransientModel):
 
@@ -41,7 +42,7 @@ class MergePartnerAutomatic(models.TransientModel):
         active_ids = self.env.context.get('active_ids')
         if self.env.context.get('active_model') == 'res.partner' and active_ids:
             res['state'] = 'selection'
-            res['partner_ids'] = active_ids
+            res['partner_ids'] = [(6, 0, active_ids)]
             res['dst_partner_id'] = self._get_ordered_partner(active_ids)[-1].id
         return res
 
@@ -107,6 +108,8 @@ class MergePartnerAutomatic(models.TransientModel):
         Partner = self.env['res.partner']
         relations = self._get_fk_on('res_partner')
 
+        self.flush()
+
         for table, column in relations:
             if 'base_partner_merge_' in table:  # ignore two tables
                 continue
@@ -168,6 +171,8 @@ class MergePartnerAutomatic(models.TransientModel):
                     query = 'DELETE FROM "%(table)s" WHERE "%(column)s" IN %%s' % query_dic
                     self._cr.execute(query, (tuple(src_partners.ids),))
 
+        self.invalidate_cache()
+
     @api.model
     def _update_reference_fields(self, src_partners, dst_partner):
         """ Update all reference fields from the src_partner to dst_partner.
@@ -182,12 +187,13 @@ class MergePartnerAutomatic(models.TransientModel):
                 return
             records = Model.sudo().search([(field_model, '=', 'res.partner'), (field_id, '=', src.id)])
             try:
-                with mute_logger('odoo.sql_db'), self._cr.savepoint():
-                    return records.sudo().write({field_id: dst_partner.id})
+                with mute_logger('odoo.sql_db'), self._cr.savepoint(), self.env.clear_upon_failure():
+                    records.sudo().write({field_id: dst_partner.id})
+                    records.flush()
             except psycopg2.Error:
                 # updating fails, most likely due to a violated unique constraint
                 # keeping record with nonexistent partner_id is useless, better delete it
-                return records.sudo().unlink()
+                records.sudo().unlink()
 
         update_records = functools.partial(update_records)
 
@@ -217,6 +223,13 @@ class MergePartnerAutomatic(models.TransientModel):
                 }
                 records_ref.sudo().write(values)
 
+        self.flush()
+
+    def _get_summable_fields(self):
+        """ Returns the list of fields that should be summed when merging partners
+        """
+        return []
+
     @api.model
     def _update_values(self, src_partners, dst_partner):
         """ Update values of dst_partner with the ones from the src_partners.
@@ -226,6 +239,7 @@ class MergePartnerAutomatic(models.TransientModel):
         _logger.debug('_update_values for dst_partner: %s for src_partners: %r', dst_partner.id, src_partners.ids)
 
         model_fields = dst_partner.fields_get().keys()
+        summable_fields = self._get_summable_fields()
 
         def write_serializer(item):
             if isinstance(item, models.BaseModel):
@@ -239,7 +253,10 @@ class MergePartnerAutomatic(models.TransientModel):
             if field.type not in ('many2many', 'one2many') and field.compute is None:
                 for item in itertools.chain(src_partners, [dst_partner]):
                     if item[column]:
-                        values[column] = write_serializer(item[column])
+                        if column in summable_fields and values.get(column):
+                            values[column] += write_serializer(item[column])
+                        else:
+                            values[column] = write_serializer(item[column])
         # remove fields that can not be updated (id and parent_id)
         values.pop('id', None)
         parent_id = values.pop('parent_id', None)
@@ -258,7 +275,7 @@ class MergePartnerAutomatic(models.TransientModel):
             :param extra_checks: pass False to bypass extra sanity check (e.g. email address)
         """
         # super-admin can be used to bypass extra checks
-        if self.env.user._is_admin():
+        if self.env.is_admin():
             extra_checks = False
 
         Partner = self.env['res.partner']
@@ -292,24 +309,21 @@ class MergePartnerAutomatic(models.TransientModel):
         if extra_checks and 'account.move.line' in self.env and self.env['account.move.line'].sudo().search([('partner_id', 'in', [partner.id for partner in src_partners])]):
             raise UserError(_("Only the destination contact may be linked to existing Journal Items. Please ask the Administrator if you need to merge several contacts linked to existing Journal Items."))
 
-        # Make the company of all related users consistent
-        for user in partner_ids.mapped('user_ids'):
-            user.sudo().write({'company_ids': [(6, 0, [dst_partner.company_id.id])],
-                        'company_id': dst_partner.company_id.id})
+        # Make the company of all related users consistent with destination partner company
+        if dst_partner.company_id:
+            for user in partner_ids.mapped('user_ids'):
+                user.sudo().write({'company_ids': [(6, 0, [dst_partner.company_id.id])],
+                            'company_id': dst_partner.company_id.id})
 
         # call sub methods to do the merge
         self._update_foreign_keys(src_partners, dst_partner)
         self._update_reference_fields(src_partners, dst_partner)
         self._update_values(src_partners, dst_partner)
 
-        self._log_merge_operation(src_partners, dst_partner)
+        _logger.info('(uid = %s) merged the partners %r with %s', self._uid, src_partners.ids, dst_partner.id)
 
         # delete source partner, since they are merged
         src_partners.unlink()
-
-    @api.multi
-    def _log_merge_operation(self, src_partners, dst_partner):
-        _logger.info('(uid = %s) merged the partners %r with %s', self._uid, src_partners.ids, dst_partner.id)
 
     # ----------------------------------------
     # Helpers
@@ -394,11 +408,10 @@ class MergePartnerAutomatic(models.TransientModel):
             :param partner_ids : list of partner ids to sort
         """
         return self.env['res.partner'].browse(partner_ids).sorted(
-            key=lambda p: (p.active, (p.create_date or '')),
+            key=lambda p: (p.active, (p.create_date or datetime.datetime(1970, 1, 1))),
             reverse=True,
         )
 
-    @api.multi
     def _compute_models(self):
         """ Compute the different models needed by the system if you want to exclude some partners. """
         model_mapping = {}
@@ -412,14 +425,12 @@ class MergePartnerAutomatic(models.TransientModel):
     # Actions
     # ----------------------------------------
 
-    @api.multi
     def action_skip(self):
         """ Skip this wizard line. Don't compute any thing, and simply redirect to the new step."""
         if self.current_line_id:
             self.current_line_id.unlink()
         return self._action_next_screen()
 
-    @api.multi
     def _action_next_screen(self):
         """ return the action of the next screen ; this means the wizard is set to treat the
             next wizard line. Each line is a subset of partner that can be merged together.
@@ -454,7 +465,6 @@ class MergePartnerAutomatic(models.TransientModel):
             'target': 'new',
         }
 
-    @api.multi
     def _process_query(self, query):
         """ Execute the select request and write the result in this wizard
             :param query : the SQL query used to fill the wizard line
@@ -490,7 +500,6 @@ class MergePartnerAutomatic(models.TransientModel):
 
         _logger.info("counter: %s", counter)
 
-    @api.multi
     def action_start_manual_process(self):
         """ Start the process 'Merge with Manual Check'. Fill the wizard according to the group_by and exclude
             options, and redirect to the first step (treatment of first wizard line). After, for each subset of
@@ -504,7 +513,6 @@ class MergePartnerAutomatic(models.TransientModel):
         self._process_query(query)
         return self._action_next_screen()
 
-    @api.multi
     def action_start_automatic_process(self):
         """ Start the process 'Merge Automatically'. This will fill the wizard with the same mechanism as 'Merge
             with Manual Check', but instead of refreshing wizard with the current line, it will automatically process
@@ -529,7 +537,6 @@ class MergePartnerAutomatic(models.TransientModel):
             'target': 'new',
         }
 
-    @api.multi
     def parent_migration_process_cb(self):
         self.ensure_one()
 
@@ -586,7 +593,6 @@ class MergePartnerAutomatic(models.TransientModel):
             'target': 'new',
         }
 
-    @api.multi
     def action_update_all_process(self):
         self.ensure_one()
         self.parent_migration_process_cb()
@@ -609,7 +615,6 @@ class MergePartnerAutomatic(models.TransientModel):
 
         return self._action_next_screen()
 
-    @api.multi
     def action_merge(self):
         """ Merge Contact button. Merge the selected partners, and redirect to
             the end screen (since there is no other wizard line to process.

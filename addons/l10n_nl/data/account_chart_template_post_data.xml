@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10nnl_chart_template" model="account.chart.template">
+        <field name="code_digits">6</field>
+        <field name="property_account_receivable_id" ref="recv"/>
+        <field name="property_account_payable_id" ref="pay"/>
+        <field name="property_account_expense_categ_id" ref="7001"/>
+        <field name="property_account_income_categ_id" ref="8001"/>
+        <field name="property_stock_account_input_categ_id" ref="0120"/>
+        <field name="property_stock_account_output_categ_id" ref="0129"/>
+        <field name="property_stock_valuation_account_id" ref="4830"/>
+        <field name="expense_currency_exchange_account_id" ref="4920"/>
+        <field name="income_currency_exchange_account_id" ref="8920"/>
+        <field name="default_pos_receivable_account_id" ref="recv_pos" />
+    </record>
+</odoo>

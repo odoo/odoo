@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-        <template id="assets_nvd3">
-            <link href="/web/static/lib/nvd3/nv.d3.css" rel="stylesheet" type="text/css"></link>
-            <script src="/web/static/lib/nvd3/d3.v3.js"></script>
-            <script src="/web/static/lib/nvd3/nv.d3.js"></script>
-        </template>
-
         <template id="graphs" name="Link Statistics">
             <t t-call="website.layout">
-                <t t-set="head">
-                    <t t-call-assets="website_links.assets_nvd3"/>
-                </t>
-
                 <div class="o_website_links_chart">
                     <div class="container">
                         <div class="row mt8">
@@ -115,7 +104,7 @@
                         </h1>
 
                         <div class="row">
-                            <div class="col-md-12 mb8">
+                            <div class="col-md-12 mb128">
                                 <div class="tab-content">
 
                                     <!-- All Time Charts -->
@@ -123,11 +112,11 @@
                                         <div class="row">
                                             <div class="col-md-7 website_links_click_chart" id="all_time_clicks_chart">
                                                 <h3 class="title"></h3>
-                                                <svg style="height:20em;"></svg>
+                                                <canvas style="height:20em;"></canvas>
                                             </div>
                                             <div class="col-md-5 website_links_click_chart" id="all_time_countries_charts">
                                                 <h3 class="title"></h3>
-                                                <svg style="height:20em;"></svg>
+                                                <canvas style="height:20em;"></canvas>
                                             </div>
                                         </div>
                                     </div>
@@ -137,11 +126,11 @@
                                         <div class="row">
                                             <div class="col-md-7 website_links_click_chart" id="last_month_clicks_chart">
                                                 <h3 class="title"></h3>
-                                                <svg style="height:20em;"></svg>
+                                                <canvas style="height:20em;"></canvas>
                                             </div>
                                             <div class="col-md-5 website_links_click_chart" id="last_month_countries_charts">
                                                 <h3 class="title"></h3>
-                                                <svg style="height:20em;"></svg>
+                                                <canvas style="height:20em;"></canvas>
                                             </div>
                                         </div>
                                     </div>
@@ -151,11 +140,11 @@
                                         <div class="row">
                                             <div class="col-md-7 website_links_click_chart" id="last_week_clicks_chart">
                                                 <h3 class="title"></h3>
-                                                <svg style="height:20em;"></svg>
+                                                <canvas style="height:20em;"></canvas>
                                             </div>
                                             <div class="col-md-5 website_links_click_chart" id="last_week_countries_charts">
                                                 <h3 class="title"></h3>
-                                                <svg style="height:20em;"></svg>
+                                                <canvas style="height:20em;"></canvas>
                                             </div>
                                         </div>
                                     </div>

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="mrp.button">
-        <button type="button" class="btn btn-primary o_mrp_bom_print">print</button>
-        <button type="button" class="btn btn-primary ml8 o_mrp_bom_print_unfolded">print unfolded</button>
+        <div class="o_list_buttons o_mrp_bom_report_buttons">
+            <button type="button" class="btn btn-primary o_mrp_bom_print">Print</button>
+            <button type="button" class="btn btn-primary o_mrp_bom_print_unfolded">Print Unfolded</button>
+        </div>
     </t>
 
     <form class="form-inline" t-name="mrp.report_bom_search">
@@ -30,8 +32,15 @@
             <select class="o_input o_mrp_bom_report_type">
                 <option t-att-data-type="'all'">BoM Structure &amp; Cost</option>
                 <option t-att-data-type="'bom_structure'">BoM Structure</option>
-                <option t-att-data-type="'bom_cost'">BoM Cost</option>
             </select>
         </div>
     </form>
+
+    <div t-name="mrp.workorderPopover">
+        <t t-foreach="infos" t-as="info">
+            <i t-attf-class="fa fa-arrow-right mr-2 #{ info.color }"></i><t t-esc="info.msg"/><br/>
+        </t>
+        <button t-if="replan" class="btn btn-primary action_replan_button">Replan</button>
+    </div>
+
 </templates>

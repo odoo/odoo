@@ -2,6 +2,7 @@ odoo.define('board.BoardView', function (require) {
 "use strict";
 
 var Context = require('web.Context');
+var config = require('web.config');
 var core = require('web.core');
 var dataManager = require('web.data_manager');
 var Dialog = require('web.Dialog');
@@ -54,7 +55,7 @@ var BoardController = FormController.extend({
     /**
      * Actually save a dashboard
      *
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _saveDashboard: function () {
         var board = this.renderer.getBoard();
@@ -119,7 +120,6 @@ var BoardController = FormController.extend({
 
 var BoardRenderer = FormRenderer.extend({
     custom_events: _.extend({}, FormRenderer.prototype.custom_events, {
-        do_action: '_onDoAction',
         update_filters: '_onUpdateFilters',
         switch_view: '_onSwitchView',
     }),
@@ -233,7 +233,7 @@ var BoardRenderer = FormRenderer.extend({
      * @param {Object} params.context
      * @param {any[]} params.domain
      * @param {string} params.viewType
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _createController: function (params) {
         var self = this;
@@ -244,7 +244,7 @@ var BoardRenderer = FormRenderer.extend({
             .then(function (action) {
                 if (!action) {
                     // the action does not exist anymore
-                    return $.when();
+                    return Promise.resolve();
                 }
                 var evalContext = new Context(params.context).eval();
                 if (evalContext.group_by && evalContext.group_by.length === 0) {
@@ -272,7 +272,8 @@ var BoardRenderer = FormRenderer.extend({
                         searchQuery: {
                             context: context,
                             domain: domain,
-                            groupBy: context.group_by || [],
+                            groupBy: typeof context.group_by === 'string' && context.group_by ? [context.group_by] : context.group_by || [],
+                            orderedBy: context.orderedBy || [],
                         },
                         withControlPanel: false,
                     });
@@ -333,7 +334,7 @@ var BoardRenderer = FormRenderer.extend({
             });
         });
 
-        var $html = $('<div>').append($(QWeb.render('DashBoard', {node: node})));
+        var $html = $('<div>').append($(QWeb.render('DashBoard', {node: node, isMobile: config.device.isMobile})));
 
         // render each view
         _.each(this.actionsDescr, function (action) {

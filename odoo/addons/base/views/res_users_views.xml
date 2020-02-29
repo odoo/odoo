@@ -29,11 +29,9 @@
         </record>
         <act_window id="change_password_wizard_action"
             name="Change Password"
-            src_model="res.users"
+            binding_model="res.users"
             res_model="change.password.wizard"
-            view_type="form" view_mode="form"
-            key2="client_action_multi" target="new"
-            groups="base.group_erp_manager"/>
+            view_mode="form" target="new"/>
 
         <!-- res.groups -->
         <record id="view_groups_search" model="ir.ui.view">
@@ -60,20 +58,20 @@
                         <field name="share"/>
                     </group>
                     <notebook>
-                        <page string="Users">
+                        <page string="Users" name="users">
                             <field name="users" context="{'search_default_no_share':1}"/>
                         </page>
-                        <page string="Inherited">
+                        <page string="Inherited" name="inherit_groups">
                             <label for="implied_ids" string="Users added to this group are automatically added in the following groups."/>
                             <field name="implied_ids"/>
                         </page>
-                        <page string="Menus">
+                        <page string="Menus" name="menus">
                             <field name="menu_access"/>
                         </page>
-                        <page string="Views">
+                        <page string="Views" name="views">
                             <field name="view_access"/>
                         </page>
-                        <page string="Access Rights">
+                        <page string="Access Rights" name="access_rights">
                             <field name="model_access">
                                 <tree string="Access Rights" editable="top">
                                     <field name="name"/>
@@ -85,7 +83,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Record Rules">
+                        <page string="Record Rules" name="record_rules">
                             <field name="rule_groups">
                                 <tree string="Record Rules" editable="top">
                                     <field name="name"/>
@@ -97,7 +95,7 @@
                                     <field name="perm_unlink"/>
                                 </tree>
                             </field>
-                        </page><page string="Notes">
+                        </page><page string="Notes" name="notes">
                             <field name="comment"/>
                         </page>
                     </notebook>
@@ -109,7 +107,6 @@
             <field name="name">Groups</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.groups</field>
-            <field name="view_type">form</field>
             <field name="context">{'search_default_no_share': 1}</field>
             <field name="help">A group is a set of functional areas that will be assigned to the user in order to give them access and rights to specific applications and tasks in the system. You can create custom groups or edit the ones existing by default in order to customize the view of the menu that users will be able to see. Whether they can have a read, write, create and delete access right can be managed from here.</field>
         </record>
@@ -127,7 +124,7 @@
                         <div class="alert alert-info text-center mb-3" attrs="{'invisible': [('id', '>', 0)]}" role="alert">
                             You are inviting a new user.
                         </div>
-                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
+                        <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image": "image_128"}'/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" required="1"/></h1>
@@ -140,14 +137,14 @@
                             <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
                             <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
                         </div>
-                        <group>
+                        <group name="phone_numbers">
                             <label for="groups_id" string="Access Rights"
                                     attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one"/>
                             <div attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one">
                                 <field name="groups_id" readonly="1" widget="many2many_tags" options="{'color_field': 'color'}" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
                             </div>
-                            <field name="phone" widget="phone"/>
-                            <field name="mobile" widget="phone"/>
+                            <field name="phone" widget="phone" options="{'enable_sms': false}"/>
+                            <field name="mobile" widget="phone" options="{'enable_sms': false}"/>
                         </group>
                     </sheet>
                 </form>
@@ -172,11 +169,17 @@
                             <button name="action_show_rules" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-list-ul">
                                 <field string="Record Rules" name="rules_count" widget="statinfo"/>
                             </button>
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
-                                <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
-                            </button>
                         </div>
-                        <div class="alert alert-info text-center o_form_header" attrs="{'invisible': [('active', '=', True)]}" role="alert">
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active_partner" required="0" readonly="1" invisible="1"/>
+                        <div class="alert alert-info text-center o_form_header"
+                            attrs="{'invisible': [
+                                '|', '|',
+                                '&amp;', ('active', '=', True), ('active_partner', '=', True),
+                                '&amp;', ('active', '=', False), ('active_partner', '=', False),
+                                '&amp;', ('active', '=', True), ('active_partner', '=', False),
+                            ]}"
+                            role="alert">
                           <a class="close" data-dismiss="alert" href="#">x</a>
                           <div>
                             <strong>The contact linked to this user is still active</strong>
@@ -185,7 +188,7 @@
                             <field name="partner_id" required="0" readonly="1"/>
                           </div>
                         </div>
-                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
+                        <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" required="1"/></h1>
@@ -201,15 +204,25 @@
                             <page name="access_rights" string="Access Rights">
                                 <group string="Multi Companies" attrs="{'invisible': [('companies_count', '&lt;=', 1)]}">
                                     <field string="Allowed Companies" name="company_ids" widget="many2many_tags" options="{'no_create': True}"/>
-                                    <field string="Current Company" name="company_id" context="{'user_preference': 0}"/>
+                                    <field string="Default Company" name="company_id" context="{'user_preference': 0}"/>
                                     <field string="Companies count" name="companies_count" invisible="1"/>
                                 </group>
                                 <field name="groups_id"/>
                             </page>
-                            <page string="Preferences">
+                            <page string="Preferences" name="references">
                                 <group>
                                     <group string="Localization" name="preferences">
-                                        <field name="lang"/>
+                                        <field name="active" invisible="1"/>
+                                        <label for="lang" />
+                                        <div class="o_row">
+                                            <field name="lang"/>
+                                            <button
+                                                type="action"
+                                                name="%(base.res_lang_act_window)d"
+                                                class="btn-sm btn-link mb4 fa fa-globe"
+                                                aria-label="More languages"
+                                                title="More languages"/>
+                                        </div>
                                         <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" />
                                         <field name="tz_offset" invisible="1"/>
                                     </group>
@@ -217,7 +230,7 @@
                                         <field name="action_id"/>
                                     </group>
                                 </group>
-                                <group string="Messaging and Social" name="messaging">
+                                <group name="messaging">
                                     <field name="signature"/>
                                 </group>
                             </page>
@@ -236,6 +249,7 @@
                     <field name="login"/>
                     <field name="lang"/>
                     <field name="login_date"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -254,7 +268,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="o_kanban_image">
-                                    <img alt="Avatar" t-att-src="kanban_image('res.users', 'image_medium', record.id.raw_value)"/>
+                                    <img alt="Avatar" t-att-src="kanban_image('res.users', 'image_128', record.id.raw_value)"/>
                                 </div>
                                 <div class="oe_kanban_details">
                                     <ul>
@@ -282,6 +296,7 @@
                     <field name="company_ids" string="Company" groups="base.group_multi_company"/>
                     <field name="share"/>
                     <filter name="no_share" string="Internal Users" domain="[('share','=',False)]"/>
+                    <separator/>
                     <filter name="Inactive" string="Inactive Users" domain="[('active','=',False)]"/>
                 </search>
             </field>
@@ -301,7 +316,6 @@
             <field name="name">Users</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.users</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="view_users_tree"/>
             <field name="search_view_id" ref="view_users_search"/>
@@ -328,30 +342,43 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users">
-                    <field name="image" readonly="0" widget='image' class="oe_right oe_avatar" options='{"preview_image": "image_small"}'/>
+                    <field name="image_1920" readonly="0" widget='image' class="oe_right oe_avatar" options='{"preview_image": "image_128"}'/>
                     <h1>
                         <field name="name" readonly="1" class="oe_inline"/>
                     </h1>
-                    <button name="preference_change_password" type="object" string="Change password" class="oe_link"/>
-                    <group name="preferences" col="4">
-                        <field name="lang" readonly="0"/>
-                        <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
-                        <field name="tz_offset" invisible="1"/>
+                    <group name="preferences">
+                        <group>
+                            <field name="email" widget="email" readonly="0"/>
+                        </group>
+                        <group>
+                            <label for="lang"/>
+                            <div class="o_row">
+                                <field name="lang" readonly="0"/>
+                                <button
+                                    type="action"
+                                    name="%(base.res_lang_act_window)d"
+                                    class="btn-sm btn-link mb4 fa fa-globe"
+                                    aria-label="More languages"
+                                    groups="base.group_system"
+                                    title="More languages"
+                                />
+                            </div>
+                            <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
+                            <field name="tz_offset" invisible="1"/>
+                        </group>
+                    </group>
+                    <group name="signature">
+                        <field name="signature" readonly="0"/>
+                    </group>
+                    <group name="status" string="Status" invisible="1">
                         <field name="company_id" options="{'no_create': True}" readonly="0"
                             groups="base.group_multi_company"/>
                     </group>
-                    <group string="Email Preferences">
-                        <group name="preference_email">
-                            <field name="email" widget="email" readonly="0"/>
-                        </group>
-                        <group name="preference_contact"></group>
-                    </group>
-                    <group>
-                        <field name="signature" readonly="0"/>
-                    </group>
+                    <group name="preference_contact"></group>
                     <footer>
                         <button name="preference_save" type="object" string="Save" class="btn-primary"/>
                         <button name="preference_cancel" string="Cancel" special="cancel" class="btn-secondary"/>
+                        <button name="preference_change_password" type="object" string="Change password" class="btn-secondary"/>
                     </footer>
                 </form>
             </field>
@@ -361,7 +388,6 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.users</field>
             <field name="target">new</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
         </record>
         <record id="action_res_users_my_view2" model="ir.actions.act_window.view">

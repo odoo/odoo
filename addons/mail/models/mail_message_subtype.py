@@ -46,17 +46,15 @@ class MailMessageSubtype(models.Model):
         self.clear_caches()
         return super(MailMessageSubtype, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         self.clear_caches()
         return super(MailMessageSubtype, self).write(vals)
 
-    @api.multi
     def unlink(self):
         self.clear_caches()
         return super(MailMessageSubtype, self).unlink()
 
-    @tools.ormcache('self.env.uid', 'model_name')
+    @tools.ormcache('model_name')
     def _get_auto_subscription_subtypes(self, model_name):
         """ Return data related to auto subscription based on subtype matching.
         Example with tasks and project :
@@ -97,7 +95,7 @@ class MailMessageSubtype(models.Model):
         subtype_ids, internal_ids, external_ids = self._default_subtypes(model_name)
         return self.browse(subtype_ids), self.browse(internal_ids), self.browse(external_ids)
 
-    @tools.ormcache('self.env.uid', 'model_name')
+    @tools.ormcache('self.env.uid', 'self.env.su', 'model_name')
     def _default_subtypes(self, model_name):
         domain = [('default', '=', True),
                   '|', ('res_model', '=', model_name), ('res_model', '=', False)]

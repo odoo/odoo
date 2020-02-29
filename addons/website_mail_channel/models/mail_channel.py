@@ -5,29 +5,21 @@ import hmac
 
 from werkzeug import urls
 
-from odoo import api, models
-from odoo.tools.safe_eval import safe_eval
+from odoo import models
 from odoo.addons.http_routing.models.ir_http import slug
 
 
 class MailGroup(models.Model):
     _inherit = 'mail.channel'
 
-    @api.multi
-    def _notify_specific_email_values(self, message):
-        res = super(MailGroup, self)._notify_specific_email_values(message)
-        try:
-            headers = safe_eval(res.get('headers', dict()))
-        except Exception:
-            headers = {}
+    def _notify_email_header_dict(self):
+        headers = super(MailGroup, self)._notify_email_header_dict()
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        headers['List-Archive'] = '<%s/groups/%s>' % (base_url, slug(self)),
-        headers['List-Subscribe'] = '<%s/groups>' % (base_url),
-        headers['List-Unsubscribe'] = '<%s/groups?unsubscribe>' % (base_url,),
-        res['headers'] = repr(headers)
-        return res
+        headers['List-Archive'] = '<%s/groups/%s>' % (base_url, slug(self))
+        headers['List-Subscribe'] = '<%s/groups>' % (base_url)
+        headers['List-Unsubscribe'] = '<%s/groups?unsubscribe>' % (base_url,)
+        return headers
 
-    @api.multi
     def _send_confirmation_email(self, partner_ids, unsubscribe=False):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         route = "/groups/%(action)s/%(channel)s/%(partner)s/%(token)s"
@@ -55,7 +47,6 @@ class MailGroup(models.Model):
 
         return True
 
-    @api.multi
     def _generate_action_token(self, partner_id, action='unsubscribe'):
         self.ensure_one()
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')

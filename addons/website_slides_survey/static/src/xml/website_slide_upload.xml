@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+    <t t-name="website.slide.upload.modal.certification">
+        <div>
+            <form class="clearfix">
+                <div class="form-group row">
+                    <label for="certification_id" class="col-form-label col-md-3">Certification</label>
+                    <div class="controls col-md-9">
+                        <input class="form-control" id="certification_id" required="required"/>
+                    </div>
+                </div>
+                <t t-call="website.slide.upload.modal.common"/>
+                <div class="form-group row">
+                    <div class="col-md-4">
+                        <div class="img-thumbnail">
+                            <div class="o_slide_preview">
+                                <img src="/website_slides/static/src/img/document.png" id="slide-image" title="Content Preview" alt="Content Preview" class="img-fluid"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <h5 class="list-group-item-heading">
+                                    <label for="upload" class="col-form-label">Cover Image File</label>
+                                </h5>
+                                <input id="upload" name="file" class="form-control" accept="image/*" type="file" required="required" data-prevent-onchange="1"/>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <canvas id="data_canvas" class="d-none"></canvas>
+            </form>
+        </div>
+    </t>
+</template>

@@ -2,9 +2,10 @@
 <odoo>
     <data>
         <record id="crm.model_crm_lead" model="ir.model">
+            <field name="website_form_key">create_lead</field>
             <field name="website_form_default_field_id" ref="crm.field_crm_lead__description" />
             <field name="website_form_access">True</field>
-            <field name="website_form_label">Create a lead</field>
+            <field name="website_form_label">Create an Opportunity</field>
         </record>
         <function model="ir.model.fields" name="formbuilder_whitelist">
             <value>crm.lead</value>
@@ -15,6 +16,8 @@
                 'name',
                 'partner_name',
                 'phone',
+                'team_id',
+                'user_id',
             ]"/>
         </function>
     </data>

@@ -36,8 +36,8 @@
                     <t t-foreach="partners" t-as="partner">
                         <div class="media mt-3">
                             <a t-attf-href="/customers/#{slug(partner)}"
-                               t-field="partner.image_medium"
-                               t-options='{"widget": "image", "class": "mr-3"}'
+                               t-field="partner.image_128"
+                               t-options='{"widget": "image", "class": "mr-3 o_image_128_max"}'
                             ></a>
                             <div class="media-body" style="min-height: 64px;">
                                 <a t-attf-href="/customers/#{slug(partner)}">
@@ -197,7 +197,7 @@
             </a>
         </h4>
         <div><a t-attf-href="/partners/#{slug(partner.assigned_partner_id)}"
-                t-field="partner.assigned_partner_id.image_medium"
+                t-field="partner.assigned_partner_id.image_128"
                 t-options='{"widget": "image", "class": "d-block mx-auto"}'
              />
         </div>
@@ -218,7 +218,7 @@
             <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media mt-3">
               <t t-if="reference.website_published">
                 <a t-attf-href="/customers/#{slug(reference)}">
-                    <span t-field="reference.image_medium" t-options='{"widget": "image", "class": "d-block mr-3"}'/>
+                    <span t-field="reference.image_128" t-options='{"widget": "image", "class": "d-block mr-3 o_image_128_max"}'/>
                 </a>
                 <div class="media-body" style="min-height: 64px;">
                     <a t-attf-href="/customers/#{slug(reference)}">
@@ -232,6 +232,15 @@
               </t>
             </div>
         </t>
+</template>
+
+<template id="references_block_href" inherit_id="website_crm_partner_assign.references_block" name="Partner References Block">
+    <xpath expr="//div/span" position="replace">
+        <a t-attf-href="/customers/#{slug(reference)}">$0</a>
+    </xpath>
+    <xpath expr="//div[hasclass('media-body')]/span" position="replace">
+        <a t-attf-href="/customers/#{slug(reference)}">$0</a>
+    </xpath>
 </template>
 
 </odoo>

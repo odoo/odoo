@@ -5,7 +5,10 @@
     'category': 'Tests',
     'description': """A module to test translation import.""",
     'depends': ['base'],
-    'data': ['view.xml'],
+    'data': [
+        'security/ir.model.access.csv',
+        'view.xml'
+    ],
     'installable': True,
     'auto_install': False,
 }

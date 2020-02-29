@@ -6,8 +6,8 @@
             <field name="arch" type="xml">
             <form string="Pay Order">
                 <group>
-                    <field name="session_id" invisible="True"/>
-                    <field name="journal_id" domain="[('journal_user', '=', True)]"/>
+                    <field name="config_id" invisible="1" />
+                    <field name="payment_method_id" domain="[('config_ids', 'in', config_id)]"/>
                     <field name="amount" />
                     <field name="payment_name"/>
                 </group>
@@ -22,7 +22,6 @@
             <field name="name">Payment</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.make.payment</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>

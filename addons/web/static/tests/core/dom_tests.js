@@ -30,7 +30,11 @@ function prepareAutoresizeTextArea(options) {
 QUnit.module('core', {}, function () {
 QUnit.module('dom', {}, function () {
 
-    QUnit.module('autoresize');
+    QUnit.module('autoresize', {
+        afterEach: function () {
+            $('#qunit-fixture').find('textarea').remove();
+        },
+    });
 
     QUnit.test('autoresize (border-box): no padding + no border', function (assert) {
         assert.expect(3);

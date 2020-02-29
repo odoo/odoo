@@ -171,11 +171,15 @@ var ThreadTypingMixin = {
         if (this._isTypingMyselfInfo(params)) {
             return;
         }
+        var partnerID = params.partnerID;
         this._othersTypingTimers.registerTimer({
-            timeoutCallbackArguments: [params.partnerID],
-            timerID: params.partnerID,
+            timeoutCallbackArguments: [partnerID],
+            timerID: partnerID,
         });
-        this._typingPartnerIDs.push(params.partnerID);
+        if (_.contains(this._typingPartnerIDs, partnerID)) {
+            return;
+        }
+        this._typingPartnerIDs.push(partnerID);
         this._warnUpdatedTypingPartners();
     },
     /**
@@ -209,6 +213,9 @@ var ThreadTypingMixin = {
     unregisterTyping: function (params) {
         var partnerID = params.partnerID;
         this._othersTypingTimers.unregisterTimer({ timerID: partnerID });
+        if (!_.contains(this._typingPartnerIDs, partnerID)) {
+            return;
+        }
         this._typingPartnerIDs = _.reject(this._typingPartnerIDs, function (id) {
             return id === partnerID;
         });
@@ -239,11 +246,11 @@ var ThreadTypingMixin = {
      * @private
      * @param {Object} params
      * @param {boolean} params.typing whether we are typing something or not
-     * @returns {$.Promise} resolved if the server is notified, rejected
+     * @returns {Promise} resolved if the server is notified, rejected
      *   otherwise
      */
     _notifyMyselfTyping: function (params) {
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * Warn views that the list of users that are currently typing on this

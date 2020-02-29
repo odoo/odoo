@@ -8,8 +8,6 @@
             <field name="arch" type="xml">
                 <search string="Search history">
                     <field name="name"/>
-                    <filter string="With Messages" name="session_not_empty" domain="[('channel_message_ids', '!=', False)]"/>
-                    <filter string="Empty Sessions" name="session_empty" domain="[('channel_message_ids', '=', False)]"/>
                     <group expand="0" string="Group By...">
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'livechat_channel_id'}"/>
                         <separator orientation="vertical"/>
@@ -39,7 +37,7 @@
                 <form string="Session Form" create="false" edit="false">
                     <sheet>
                         <div style="width:50%" class="float-right">
-                            <field name="rating_last_image" widget="image" class="float-right" options='{"preview_image": "image_thumb"}' readonly="1" nolabel="1"/>
+                            <field name="rating_last_image" widget="image" class="float-right" readonly="1" nolabel="1"/>
                             <field name="rating_last_feedback" nolabel="1"/>
                         </div>
                         <div style="width:50%" class="float-left">
@@ -53,7 +51,7 @@
                             <div class="o_history_kanban_container">
                                 <div class="o_history_kanban_sub_container">
                                     <field name="message_ids" mode="kanban">
-                                        <kanban>
+                                        <kanban default_order="create_date DESC">
                                             <field name="author_id"/>
                                             <field name="body"/>
                                             <field name="create_date" groups="base.group_no_one"/>
@@ -65,9 +63,9 @@
                                                         <div class="o_kanban_image">
                                                             <div>
                                                                  <t t-if="record.author_avatar.raw_value">
-                                                                    <img t-att-src="kanban_image('mail.message', 'author_avatar', record.id.raw_value)" alt="Avatar" class="rounded-circle" width="56px" heigth="56px"/>
+                                                                    <img t-att-src="kanban_image('mail.message', 'author_avatar', record.id.raw_value)" alt="Avatar" class="o_image_64_cover rounded-circle"/>
                                                                  </t>
-                                                                 <t t-else=""><img alt="Anonymous" src="/mail/static/src/img/smiley/avatar.jpg" class="rounded-circle"/></t>
+                                                                 <t t-else=""><img alt="Anonymous" src="/mail/static/src/img/smiley/avatar.jpg" class="o_image_64_cover rounded-circle"/></t>
                                                             </div>
                                                         </div>
                                                         <div class="oe_module_desc">
@@ -100,7 +98,6 @@
         <record id="mail_channel_action" model="ir.actions.act_window">
             <field name="name">History</field>
             <field name="res_model">mail.channel</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="im_livechat.mail_channel_view_search"/>
             <field name="domain">[('livechat_channel_id', '!=', None)]</field>
@@ -132,11 +129,10 @@
             <field name="name">Sessions</field>
             <field name="res_model">mail.channel</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('livechat_channel_id', 'in', [active_id])]</field>
+            <field name="domain">[('livechat_channel_id', 'in', [active_id]), ('channel_message_ids', '!=', False)]</field>
             <field name="context">{
                 'search_default_livechat_channel_id': [active_id],
                 'default_livechat_channel_id': active_id,
-                'search_default_session_not_empty': 1,
             }</field>
             <field name="search_view_id" ref="mail_channel_view_search"/>
         </record>

@@ -4,7 +4,7 @@
 {
     'name': 'Check Printing Base',
     'version': '1.0',
-    'category': 'Accounting',
+    'category': 'Accounting/Accounting',
     'summary': 'Check printing commons',
     'description': """
 This module offers the basic functionalities to make payments by printing checks.
@@ -13,6 +13,7 @@ The check settings are located in the accounting journals configuration page.
     """,
     'depends': ['account'],
     'data': [
+        'security/ir.model.access.csv',
         'data/account_check_printing_data.xml',
         'views/account_journal_views.xml',
         'views/account_payment_views.xml',

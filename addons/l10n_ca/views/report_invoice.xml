@@ -1,0 +1,9 @@
+<odoo>
+    <template id="l10n_ca_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <div t-if="o.partner_id.vat" position="after">
+            <t t-if="o.company_id.country_id.code == 'CA' and o.partner_id.l10n_ca_pst" class="mt16">
+                <div>PST: <span t-field="o.partner_id.l10n_ca_pst"/></div>
+            </t>
+        </div>
+    </template>
+</odoo>

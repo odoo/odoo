@@ -7,7 +7,7 @@ from odoo import tools
 from odoo.modules.module import get_module_resource
 
 
-class TestPurchase(TestStockCommon):
+class PurchaseTestCommon(TestStockCommon):
 
     def _create_make_procurement(self, product, product_qty, date_planned=False):
         ProcurementGroup = self.env['procurement.group']
@@ -17,16 +17,14 @@ class TestPurchase(TestStockCommon):
             'date_planned': date_planned or fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10)),  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
             'group_id': self.env['procurement.group'],
         }
-        return ProcurementGroup.run(product, product_qty, self.uom_unit, self.warehouse_1.lot_stock_id, product.name, '/', order_values)
-
-    def _load(self, module, *args):
-        tools.convert_file(self.cr, 'purchase',
-                           get_module_resource(module, *args),
-                           {}, 'init', False, 'test', self.registry._assertion_report)
+        return ProcurementGroup.run([self.env['procurement.group'].Procurement(
+            product, product_qty, self.uom_unit, self.warehouse_1.lot_stock_id,
+            product.name, '/', self.env.company, order_values)
+        ])
 
     @classmethod
     def setUpClass(cls):
-        super(TestPurchase, cls).setUpClass()
+        super(PurchaseTestCommon, cls).setUpClass()
 
         cls.route_buy = cls.warehouse_1.buy_pull_id.route_id.id
         cls.route_mto = cls.warehouse_1.mto_pull_id.route_id.id

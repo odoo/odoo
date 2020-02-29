@@ -12,12 +12,16 @@
             </div>
             <div t-if="widget.imageList.length > 0" class="o_attachments_previews">
                 <t t-foreach="widget.imageList" t-as="attachment">
-                    <t t-call="mail.AttachmentPreview"/>
+                    <t t-call="mail.AttachmentPreview">
+                        <t t-set="isDeletable" t-value="true"/>
+                    </t>
                 </t>
             </div>
             <div t-if="widget.otherList.length > 0" class="o_attachments_list">
                 <t t-foreach="widget.otherList" t-as="attachment">
-                    <t t-call="mail.Attachment"/>
+                    <t t-call="mail.Attachment">
+                        <t t-set="isDeletable" t-value="true"/>
+                    </t>
                 </t>
             </div>
             <div class="o_chatter_attachment_form">
@@ -32,6 +36,38 @@
             </div>
         </div>
     </div>
+
+    <!--
+        Chatter Suggested Partners
+    -->
+    <t t-name="mail.chatter.ComposerSuggestedPartners">
+        <!-- List of followers -->
+        <div class="o_composer_suggested_partners">
+            <t t-foreach='widget.suggestedPartners' t-as='recipient'>
+                <div t-attf-title="Add as recipient and follower (reason: {{recipient.reason}})" t-att-class="recipient_index > 2 ? 'o_suggested_toggle o_hidden' : ''">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox"
+                                class="custom-control-input"
+                                t-attf-id="o_composer_suggested_partners_p{{recipient_index}}"
+                                t-att-checked="recipient.checked ? 'checked' : undefined"
+                                t-att-data-fullname="recipient.full_name"/>
+                        <label t-attf-for="o_composer_suggested_partners_p{{recipient_index}}" class="custom-control-label">
+                            <t t-esc="recipient.name"/>
+                            <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
+                        </label>
+                    </div>
+                </div>
+            </t>
+            <t t-if='widget.suggestedPartners.length > 3'>
+                <a href="#" class='o_suggested_show_more_less o_suggested_toggle'>
+                    Show <t t-esc="widget.suggestedPartners.length - 3"/> more
+                </a>
+                <a href="#" class='o_suggested_show_more_less o_suggested_toggle o_hidden'>
+                    Show <t t-esc="widget.suggestedPartners.length - 3"/> less
+                </a>
+            </t>
+        </div>
+    </t>
 
     <!--
         Chatter composer
@@ -57,24 +93,7 @@
                         </t>
                     </b>
                 </small>
-                <!-- List of followers -->
-                <div class="o_composer_suggested_partners">
-                    <t t-foreach='widget.suggestedPartners' t-as='recipient'>
-                        <div t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox"
-                                       class="custom-control-input"
-                                       t-attf-id="o_composer_suggested_partners_p#{recipient_index}"
-                                       t-att-checked="recipient.checked ? 'checked' : undefined"
-                                       t-att-data-fullname="recipient.full_name"/>
-                                <label t-attf-for="o_composer_suggested_partners_p#{recipient_index}" class="custom-control-label">
-                                    <t t-esc="recipient.name"/>
-                                    <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
-                                </label>
-                            </div>
-                        </div>
-                    </t>
-                </div>
+                <t t-call="mail.chatter.ComposerSuggestedPartners"/>
             </t>
         </t>
 
@@ -102,18 +121,14 @@
         <button t-if="scheduleActivityButton" class="btn btn-link o_chatter_button_schedule_activity" title="Log or schedule an activity" disabled="disabled">
             <i class="fa fa-clock-o" role="img" aria-label="Dates" title="Dates"/> <t t-if="isMobile">Activity</t><t t-else="">Schedule activity</t>
         </button>
-
-    </t>
-
-    <t t-name="mail.chatter.Attachment.Button">
-        <button class="btn btn-link o_chatter_button_attachment" title="View all the attachments of the current record">
-            <span>
-                <i class="fa fa-paperclip"/>
-                <span class="o_chatter_attachment_button_count">
-                    <t t-esc="count"/>
+        <t t-if="!disableAttachmentBox">
+            <button class="btn btn-link o_chatter_button_attachment" title="View all the attachments of the current record">
+                <span>
+                    <i class="fa fa-paperclip"/>
+                    <span class="o_chatter_attachment_button_count" t-esc="count"/>
                 </span>
-            </span>
-        </button>
+            </button>
+        </t>
     </t>
 
     <!--

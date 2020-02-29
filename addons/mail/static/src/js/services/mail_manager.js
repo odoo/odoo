@@ -46,13 +46,20 @@ var PREVIEW_MSG_MAX_SIZE = 350;  // optimal for native english speakers
 
 var MailManager =  AbstractService.extend({
     dependencies: ['ajax', 'bus_service', 'local_storage'],
-    _ODOOBOT_ID: "ODOOBOT", // default authorID for transient messages
+    _isReady: false,
+    _ODOOBOT_ID: ["ODOOBOT", "ODOOBOT"], // authorID for transient messages
 
     /**
      * @override
      */
     start: function () {
         this._super.apply(this, arguments);
+
+        this._throttleNotifyChannelFetched = _.throttle(this._notifyChannelFetched.bind(this), 3000);
+        // List of channel that have requested the service to notify when
+        // it has been fetched, so that throttled RPCs batch the ids.
+        this._toNotifyChannelFetchedIDs = [];
+
         this._initializeInternalState();
         this._listenOnBuses();
         this._fetchMailStateFromServer();
@@ -74,24 +81,24 @@ var MailManager =  AbstractService.extend({
      *   the unread_counter of channel.
      * @param {boolean} [options.silent] whether it should inform in the mailBus
      *   of the newly created message.
-     * @returns {mail.model.Message} message object
+     * @returns {Promise<mail.model.Message>}
      */
     addMessage: function (data, options) {
         options = options || {};
         var message = this.getMessage(data.id);
+        var prom;
         if (!message) {
-            message = this._addNewMessage(data, options);
+            prom = this._addNewMessage(data, options);
         } else {
             if (data.moderation_status === 'accepted') {
                 message.setModerationStatus('accepted', {
                     additionalThreadIDs: data.channel_ids
                 });
             }
-            if (options.domain && options.domain !== []) {
-                this._addMessageToThreads(message, options);
-            }
+            this._addMessageToThreads(message, options);
+            prom = Promise.resolve(message);
         }
-        return message;
+        return prom;
     },
     /**
      * Creates a channel, can be either a true channel or a DM chat based on
@@ -99,7 +106,7 @@ var MailManager =  AbstractService.extend({
      *
      * @param {integer|string} name id of partner (in case of dm) or name
      * @param {string} type ['dm_chat', 'public', 'private']
-     * @returns {$.Promise<integer>} resolved with ID of the newly created
+     * @returns {Promise<integer>} resolved with ID of the newly created
      *   channel
      */
     createChannel: function (name, type) {
@@ -144,7 +151,7 @@ var MailManager =  AbstractService.extend({
      * Returns the content that will be shown in the mail navbar dropdown
      *
      * @param {mail.model.Channel[]} channels
-     * @returns {$.Promise<Object[]>} resolved with list of channel previews
+     * @returns {Promise<Object[]>} resolved with list of channel previews
      */
     getChannelPreviews: function (channels) {
         var self = this;
@@ -221,23 +228,22 @@ var MailManager =  AbstractService.extend({
      *
      * @param {string} [filter=undefined] specify 'chat' or 'channels' to only
      *   get previews for that type of threads
-     * @returns {$.Promise<Object[]>} resolved with list of objects that have a
+     * @returns {Promise<Object[]>} resolved with list of objects that have a
      *   valid format for rendering a messaging menu preview items.
      */
     getSystrayPreviews: function (filter) {
         var self = this;
-        var defs = [];
 
         var channelDef = this._getSystrayChannelPreviews(filter);
         var inboxDef = this._getSystrayInboxPreviews(filter);
         var failureDef = this._getSystrayMailFailurePreviews(filter);
-        defs = defs.concat([channelDef, inboxDef, failureDef]);
-        return $.when.apply($, defs)
-            .then(function (previewsChannel, previewsInbox, previewsFailure) {
+
+        return Promise.all([channelDef, inboxDef, failureDef])
+            .then(function (result) { //previewsChannel, previewsInbox, previewsFailure
                 // order: failures > inbox > channel, each group must be sorted
-                previewsChannel = self._sortPreviews(previewsChannel);
-                previewsInbox = self._sortPreviews(previewsInbox);
-                previewsFailure = self._sortPreviews(previewsFailure);
+                var previewsChannel = self._sortPreviews(result[0]);
+                var previewsInbox = self._sortPreviews(result[1]);
+                var previewsFailure = self._sortPreviews(result[2]);
                 return _.union(previewsFailure, previewsInbox, previewsChannel);
             });
     },
@@ -252,7 +258,7 @@ var MailManager =  AbstractService.extend({
     /**
      * Get the OdooBot ID, which is the default authorID for transient messages
      *
-     * @returns {string}
+     * @returns {Array<string>}
      */
     getOdoobotID: function () {
         return this._ODOOBOT_ID;
@@ -289,7 +295,7 @@ var MailManager =  AbstractService.extend({
      * This is the case when it has fetched the initial state from the server,
      * by means of the route 'mail/init_messaging'
      *
-     * @returns {$.Promise}
+     * @returns {boolean}
      */
     isReady: function () {
         return this._isReady;
@@ -300,24 +306,24 @@ var MailManager =  AbstractService.extend({
      *
      * @param {integer} channelID
      * @param {Object} [options] options to be passed on channel add
-     * @returns {$.Promise<integer>} resolved with channelID joined
+     * @returns {Promise<integer>} resolved with channelID joined
      */
     joinChannel: function (channelID, options) {
-        var def;
+        var prom;
         var channel = this.getChannel(channelID);
         if (channel) {
             // channel already joined
-            def = $.when(channelID);
+            prom = Promise.resolve(channelID);
         } else {
-            def = this._joinAndAddChannel(channelID, options);
+            prom = this._joinAndAddChannel(channelID, options);
         }
-        return def;
+        return prom;
     },
     /**
      * Mark messages as read
      *
      * @param  {Array} messageIDs list of messages IDs
-     * @returns {$.Promise} resolved when messages have been marked as read on
+     * @returns {Promise} resolved when messages have been marked as read on
      *   the server.
      */
     markMessagesAsRead: function (messageIDs) {
@@ -335,8 +341,16 @@ var MailManager =  AbstractService.extend({
                 args: [ids],
             });
         } else {
-            return $.when();
+            return Promise.resolve();
         }
+    },
+    /**
+     * @param {Object} data
+     * @param {integer} data.channelID
+     */
+    notifyChannelFetched: function (data) {
+        this._toNotifyChannelFetchedIDs = _.uniq(this._toNotifyChannelFetchedIDs.concat(data.channelID));
+        this._throttleNotifyChannelFetched();
     },
     /**
      * @param {integer|string} threadID
@@ -382,19 +396,19 @@ var MailManager =  AbstractService.extend({
      *
      * @param {string} searchVal
      * @param {integer} limit max number of found partners in the response
-     * @returns {$.Promise<Object[]>} list of found partners (matching
+     * @returns {Promise<Object[]>} list of found partners (matching
      *   'searchVal')
      */
     searchPartner: function (searchVal, limit) {
-        var def = $.Deferred();
+        var self = this;
         var partners = this._searchPartnerPrefetch(searchVal, limit);
-
-        if (!partners.length) {
-            def = this._searchPartnerFetch(searchVal, limit);
-        } else {
-            def = $.when(partners);
-        }
-        return def.then(function (partners) {
+        return new Promise(function (resolve, reject) {
+            if (!partners.length) {
+                resolve(self._searchPartnerFetch(searchVal, limit));
+            } else {
+                resolve(partners);
+            }
+        }).then(function (partners) {
             var suggestions = _.map(partners, function (partner) {
                 return {
                     id: partner.id,
@@ -408,13 +422,12 @@ var MailManager =  AbstractService.extend({
     /**
      * Unstars all messages from all channels
      *
-     * @returns {$.Promise}
+     * @returns {Promise}
      */
     unstarAll: function () {
         return this._rpc({
             model: 'mail.message',
             method: 'unstar_all',
-            args: [[]]
         });
     },
 
@@ -434,32 +447,32 @@ var MailManager =  AbstractService.extend({
      * @param {string} [data.state] e.g. 'open', 'folded'
      * @param {Object|integer} [options=undefined]
      * @param {boolean} [options.silent=false]
-     * @returns {integer} the ID of the newly or already existing channel
+     * @returns {Promise<integer>} resolves with the ID of the newly or already
+     *   existing channel
      */
     _addChannel: function (data, options) {
         options = typeof options === 'object' ? options : {};
         var channel = this.getChannel(data.id);
+        var proms = [];
         if (!channel) {
             channel = this._makeChannel(data, options);
             if (channel.getType() === 'dm_chat') {
                 this._pinnedDmPartners.push(channel.getDirectPartnerID());
-                this.call('bus_service', 'updateOption',
-                    'bus_presence_partner_ids',
-                    this._pinnedDmPartners
-                );
             }
             this._threads.push(channel);
             if (data.last_message) {
                 // channel_info in mobile, necessary for showing channel
                 // preview in mobile
-                this.addMessage(data.last_message);
+                proms.push(this.addMessage(data.last_message));
             }
             this._sortThreads();
             if (!options.silent) {
-                this._mailBus.trigger('new_channel', channel);
+                this._mailBus.trigger('new_channel', channel, proms);
             }
         }
-        return channel.getID();
+        return Promise.all(proms).then(function () {
+            return channel.getID();
+        });
     },
     /**
      * Add a new mailbox
@@ -506,21 +519,23 @@ var MailManager =  AbstractService.extend({
      * @private
      * @param {Object} data
      * @param {Object} options
-     * @returns {mail.model.Message}
+     * @return {Promise<mail.model.Message>}
      */
     _addNewMessage: function (data, options) {
+        var self = this;
         var message = this._makeMessage(data);
         // Keep the array ordered by ID when inserting the new message
         var index = _.sortedIndex(this._messages, message, function (msg) {
             return msg.getID();
         });
         this._messages.splice(index, 0, message);
-        this._addNewMessagePostprocessThread(message, options);
-        this._addMessageToThreads(message, options);
-        if (!options.silent) {
-            this._mailBus.trigger('new_message', message);
-        }
-        return message;
+        return this._addNewMessagePostprocessThread(message, options).then(function () {
+            self._addMessageToThreads(message, options);
+            if (!options.silent) {
+                self._mailBus.trigger('new_message', message);
+            }
+            return message;
+        });
     },
     /**
      * For newly added message, postprocess threads linked to this message
@@ -531,9 +546,11 @@ var MailManager =  AbstractService.extend({
      * @param {Array} [options.domain]
      * @param {boolean} [options.incrementUnread]
      * @param {boolean} [options.showNotification]
+     * @returns {Promise}
      */
     _addNewMessagePostprocessThread: function (message, options) {
         var self = this;
+        var proms = [];
         _.each(message.getThreadIDs(), function (threadID) {
             var thread = self.getThread(threadID);
             if (thread) {
@@ -543,6 +560,7 @@ var MailManager =  AbstractService.extend({
                     !message.isSystemNotification()
                 ) {
                     if (thread.isTwoUserThread() && options.showNotification) {
+                        var prom = Promise.resolve();
                         if (
                             !self._isDiscussOpen() &&
                             !config.device.isMobile &&
@@ -550,17 +568,21 @@ var MailManager =  AbstractService.extend({
                         ) {
                             // automatically open thread window
                             // while keeping it unread
-                            thread.detach({ passively: true });
+                            prom = thread.detach({ passively: true });
                         }
-                        var query = { isVisible: false };
-                        self._mailBus.trigger('is_thread_bottom_visible', thread, query);
-                        if (!self.call('bus_service', 'isOdooFocused') || !query.isVisible) {
-                            self._notifyIncomingMessage(message);
-                        }
+                        proms.push(prom);
+                        prom.then(function () {
+                            var query = { isVisible: false };
+                            self._mailBus.trigger('is_thread_bottom_visible', thread, query);
+                            if (!self.call('bus_service', 'isOdooFocused') || !query.isVisible) {
+                                self._notifyIncomingMessage(message);
+                            }
+                        });
                     }
                 }
             }
         });
+        return Promise.all(proms);
     },
     /**
      * Create a Channel (other than a DM)
@@ -568,7 +590,7 @@ var MailManager =  AbstractService.extend({
      * @private
      * @param {string} name
      * @param {string} type
-     * @returns {$.Promise<integer>} ID of the created channel
+     * @returns {Promise<integer>} ID of the created channel
      */
     _createChannel: function (name, type) {
         var context = _.extend({ isMobile: config.device.isMobile }, session.user_context);
@@ -585,7 +607,7 @@ var MailManager =  AbstractService.extend({
      *
      * @private
      * @param {string} name
-     * @returns {$.Promise<integer>} ID of the created channel
+     * @returns {Promise<integer>} ID of the created channel
      */
     _createDMChat: function (name) {
         var context = _.extend({ isMobile: config.device.isMobile }, session.user_context);
@@ -600,7 +622,7 @@ var MailManager =  AbstractService.extend({
     /**
      * @private
      * @param {integer[]} channelIDs
-     * @returns {$.Promise<Object[]>} resolved with list of channel preview
+     * @returns {Promise<Object[]>} resolved with list of channel preview
      */
     _fetchChannelPreviews: function (channelIDs) {
         return this._rpc({
@@ -614,7 +636,7 @@ var MailManager =  AbstractService.extend({
      */
     _fetchMailStateFromServer: function () {
         var self = this;
-        this._isReady = session.is_bound.then(function () {
+        session.is_bound.then(function () {
             var context = _.extend(
                 { isMobile: config.device.isMobile },
                 session.user_context
@@ -626,6 +648,8 @@ var MailManager =  AbstractService.extend({
         }).then(function (result) {
             self._updateInternalStateFromServer(result);
             self.call('bus_service', 'startPolling');
+            self._isReady = true;
+            self._mailBus.trigger('messaging_ready');
         });
     },
     /**
@@ -642,7 +666,7 @@ var MailManager =  AbstractService.extend({
      *
      * @private
      * @param {mail.model.Channel[]} channels
-     * @returns {$.Deferred<Object[]>} resolved with list of channel previews
+     * @returns {Promise<Object[]>} resolved with list of channel previews
      */
     _getChannelPreviews: function (channels) {
         var self = this;
@@ -657,19 +681,22 @@ var MailManager =  AbstractService.extend({
             });
             fetchDef = this._fetchChannelPreviews(ids);
         } else {
-            fetchDef = $.when();
+            fetchDef = Promise.resolve();
         }
         return fetchDef.then(function (fetchedPreviews) {
             // add fetched messages
+            var proms = [];
             _.each(fetchedPreviews, function (fetchedPreview) {
                 if (fetchedPreview.last_message) {
-                    self.addMessage(fetchedPreview.last_message);
+                    proms.push(self.addMessage(fetchedPreview.last_message));
                 }
                 // mark the channel as previewed, so that we do not need to
                 // fetch preview again
                 var channel = self.getChannel(fetchedPreview.id);
                 channel.markAsPreviewed();
             });
+            return Promise.all(proms);
+        }).then(function () {
             return _.map(channels, function (channel) {
                 return channel.getPreview();
             });
@@ -684,7 +711,7 @@ var MailManager =  AbstractService.extend({
      * the documentID is omitted for a model preview, whereas it is set for a
      * preview of a failure related to a document.
      *
-     * @returns {$.Promise<Object[]>} resolved with previews of mail failures
+     * @returns {Promise<Object[]>} resolved with previews of mail failures
      */
     _getMailFailurePreviews: function () {
         // items = list of objects:
@@ -744,7 +771,7 @@ var MailManager =  AbstractService.extend({
      * @private
      * @param {string|undefined} [filter] the filter to apply on channel
      *   previews in systray messaging menu
-     * @returns {$.Promise<Object[]>} resolved with object valid for template
+     * @returns {Promise<Object[]>} resolved with object valid for template
      *   mail.Preview on channel previews, based on selected filter
      */
     _getSystrayChannelPreviews: function (filter) {
@@ -786,7 +813,7 @@ var MailManager =  AbstractService.extend({
      *
      * @private
      * @param {string|undefined} [filter]
-     * @returns {$.Deferred<Object[]>} resolved with valid objects for template
+     * @returns {Promise<Object[]>} resolved with valid objects for template
      *   mail.Preview on inbox message previews
      */
     _getSystrayInboxPreviews: function (filter) {
@@ -796,7 +823,7 @@ var MailManager =  AbstractService.extend({
             var inbox = this.getMailbox('inbox');
             return inbox.getMessagePreviews();
         } else {
-            return $.when([]);
+            return Promise.resolve([]);
         }
     },
     /**
@@ -810,7 +837,7 @@ var MailManager =  AbstractService.extend({
         if (filter === 'mailbox_inbox' || !filter) {
             return this._getMailFailurePreviews();
         } else {
-            return $.when([]);
+            return Promise.resolve([]);
         }
     },
     /**
@@ -837,6 +864,19 @@ var MailManager =  AbstractService.extend({
         this._pinnedDmPartners = [];
         // all threads, including channels, DM, mailboxes, document threads, ...
         this._threads = [];
+
+        this._addMailbox({
+            id: 'inbox',
+            name: _t("Inbox"),
+        });
+        this._addMailbox({
+            id: 'starred',
+            name: _t("Starred"),
+        });
+        this._addMailbox({
+            id: 'history',
+            name: _t("History"),
+        });
     },
     /**
      * State whether discuss app is open or not
@@ -853,7 +893,7 @@ var MailManager =  AbstractService.extend({
      * @private
      * @param {integer|string} channelID
      * @param {Object} options options passed on channel add
-     * @returns {$.Promise<integer>} channelID of joined and added channel
+     * @returns {Promise<integer>} channelID of joined and added channel
      */
     _joinAndAddChannel: function (channelID, options) {
         var self = this;
@@ -921,6 +961,23 @@ var MailManager =  AbstractService.extend({
      */
     _makeMessage: function (data) {
         return new Message(this, data);
+    },
+    /**
+     * @private
+     * @returns {$.Promise}
+     */
+    _notifyChannelFetched: function () {
+        var channelIDs = this._toNotifyChannelFetchedIDs;
+        this._toNotifyChannelFetchedIDs = [];
+        if (_.isEmpty(channelIDs)) {
+            // no channel to notify fetched
+            return Promise.resolve();
+        }
+        return this._rpc({
+            model: 'mail.channel',
+            method: 'channel_fetched',
+            args: [channelIDs],
+        }, { shadow: true });
     },
     /**
      * shows a popup to notify a new received message.
@@ -993,7 +1050,6 @@ var MailManager =  AbstractService.extend({
     _redirectToDocument: function (resModel, resID, viewID) {
         this.do_action({
             type: 'ir.actions.act_window',
-            view_type: 'form',
             view_mode: 'form',
             res_model: resModel,
             views: [[viewID || false, 'form']],
@@ -1041,10 +1097,6 @@ var MailManager =  AbstractService.extend({
             var index = this._pinnedDmPartners.indexOf(channel.getDirectPartnerID());
             if (index > -1) {
                 this._pinnedDmPartners.splice(index, 1);
-                this.call('bus_service', 'updateOption',
-                    'bus_presence_partner_ids',
-                    this._pinnedDmPartners
-                );
             }
         }
         this._threads = _.without(this._threads, channel);
@@ -1075,7 +1127,7 @@ var MailManager =  AbstractService.extend({
      * @private
      * @param {string} searchVal
      * @param {integer} limit
-     * @returns {$.Promise<Object[]>} fetched partners matching 'searchVal'
+     * @returns {Promise<Object[]>} fetched partners matching 'searchVal'
      */
     _searchPartnerFetch: function (searchVal, limit) {
         return this._rpc({
@@ -1171,12 +1223,19 @@ var MailManager =  AbstractService.extend({
      *   (e.g. list of public channel data are stored in 'channel_channel')
      * @param {Object[]} [data.channel_slots[i] list of data of channel of type
      *   `i`
+     * @returns {Promise}
      */
     _updateChannelsFromServer: function (data) {
         var self = this;
+        var proms = [];
+        const options = {};
+
         _.each(data.channel_slots, function (channels) {
-            _.each(channels, self._addChannel.bind(self));
+            _.each(channels, function (channel) {
+                proms.push(self._addChannel(channel, options));
+            });
         });
+        return Promise.all(proms);
     },
     /**
      * Update commands from mail data fetched from the server
@@ -1198,11 +1257,12 @@ var MailManager =  AbstractService.extend({
      * @param {Array<Object[]>} result.mention_partner_suggestions list of
      *   suggestions.
      * @param {integer} result.menu_id the menu ID of discuss app
+     * @returns {Promise}
      */
     _updateInternalStateFromServer: function (result) {
         // commands are needed for channel instantiation
         this._updateCommandsFromServer(result);
-        this._updateChannelsFromServer(result);
+        var prom = this._updateChannelsFromServer(result);
         this._updateModerationSettingsFromServer(result);
         this._updateMailboxesFromServer(result);
         this._updateMailFailuresFromServer(result);
@@ -1210,10 +1270,12 @@ var MailManager =  AbstractService.extend({
 
         this._mentionPartnerSuggestions = result.mention_partner_suggestions;
         this._discussMenuID = result.menu_id;
+
+        return prom;
     },
     /**
      * Update the mailboxes with mail data fetched from server, namely 'Inbox',
-     * 'Starred', and 'Moderation Queue' if the user is a moderator of a channel
+     * 'Starred', 'History', and 'Moderation Queue' if the user is a moderator of a channel
      *
      * @private
      * @param {Object} data
@@ -1227,16 +1289,8 @@ var MailManager =  AbstractService.extend({
      *   set to 'Starred'
      */
     _updateMailboxesFromServer: function (data) {
-        this._addMailbox({
-            id: 'inbox',
-            name: _t("Inbox"),
-            mailboxCounter: data.needaction_inbox_counter || 0,
-        });
-        this._addMailbox({
-            id: 'starred',
-            name: _t("Starred"),
-            mailboxCounter: data.starred_counter || 0,
-        });
+        this.getMailbox('inbox').setMailboxCounter(data.needaction_inbox_counter || 0);
+        this.getMailbox('starred').setMailboxCounter(data.starred_counter || 0);
 
         if (data.is_moderator) {
             this._addMailbox({

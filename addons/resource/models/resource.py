@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 import math
 from datetime import datetime, time, timedelta
-from dateutil.rrule import rrule, DAILY
+from dateutil.relativedelta import relativedelta
+from dateutil.rrule import rrule, DAILY, WEEKLY
 from functools import partial
 from itertools import chain
 from pytz import timezone, utc
@@ -11,12 +13,18 @@ from pytz import timezone, utc
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
+from odoo.osv import expression
 from odoo.tools.float_utils import float_round
+
+from odoo.tools import date_utils, float_utils
+from .resource_mixin import timezone_datetime
 
 # Default hour per day value. The one should
 # only be used when the one from the calendar
 # is not available.
 HOURS_PER_DAY = 8
+# This will generate 16th of days
+ROUNDING_FACTOR = 16
 
 
 def make_aware(dt):
@@ -150,29 +158,28 @@ class ResourceCalendar(models.Model):
         res = super(ResourceCalendar, self).default_get(fields)
         if not res.get('name') and res.get('company_id'):
             res['name'] = _('Working Hours of %s') % self.env['res.company'].browse(res['company_id']).name
+        if 'attendance_ids' in fields and not res.get('attendance_ids'):
+            res['attendance_ids'] = [
+                (0, 0, {'name': _('Monday Morning'), 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': _('Monday Afternoon'), 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': _('Tuesday Morning'), 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': _('Tuesday Afternoon'), 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': _('Wednesday Morning'), 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': _('Wednesday Afternoon'), 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': _('Thursday Morning'), 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': _('Thursday Afternoon'), 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': _('Friday Morning'), 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': _('Friday Afternoon'), 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+            ]
         return res
-
-    def _get_default_attendance_ids(self):
-        return [
-            (0, 0, {'name': _('Monday Morning'), 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Monday Afternoon'), 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            (0, 0, {'name': _('Tuesday Morning'), 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Tuesday Afternoon'), 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            (0, 0, {'name': _('Wednesday Morning'), 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Wednesday Afternoon'), 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            (0, 0, {'name': _('Thursday Morning'), 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Thursday Afternoon'), 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-            (0, 0, {'name': _('Friday Morning'), 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Friday Afternoon'), 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
-        ]
 
     name = fields.Char(required=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get())
+        default=lambda self: self.env.company)
     attendance_ids = fields.One2many(
         'resource.calendar.attendance', 'calendar_id', 'Working Time',
-        copy=True, default=_get_default_attendance_ids)
+        copy=True)
     leave_ids = fields.One2many(
         'resource.calendar.leaves', 'calendar_id', 'Time Off')
     global_leave_ids = fields.One2many(
@@ -185,38 +192,147 @@ class ResourceCalendar(models.Model):
         _tz_get, string='Timezone', required=True,
         default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC',
         help="This field is used in order to define in which timezone the resources will work.")
+    two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
+    two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
 
+    @api.depends('two_weeks_calendar')
+    def _compute_two_weeks_explanation(self):
+        today = fields.Date.today()
+        week_type = _("odd") if int(math.floor((today.toordinal() - 1) / 7) % 2) else _("even")
+        first_day = date_utils.start_of(today, 'week')
+        last_day = date_utils.end_of(today, 'week')
+        self.two_weeks_explanation = "This week (from %s to %s) is an %s week." % (first_day, last_day, week_type)
 
     def _get_global_attendances(self):
-        return self.attendance_ids.filtered(lambda attendance: not attendance.date_from and not attendance.date_to and not attendance.resource_id)
+        return self.attendance_ids.filtered(lambda attendance:
+            not attendance.date_from and not attendance.date_to
+            and not attendance.resource_id and not attendance.display_type)
 
-    @api.onchange('attendance_ids')
-    def _onchange_hours_per_day(self):
-        attendances = self._get_global_attendances()
+    def _compute_hours_per_day(self, attendances):
+        if not attendances:
+            return 0
+
         hour_count = 0.0
         for attendance in attendances:
             hour_count += attendance.hour_to - attendance.hour_from
-        self.hours_per_day = float_round(hour_count / float(len(set(attendances.mapped('dayofweek')))), precision_digits=2)
+
+        if self.two_weeks_calendar:
+            number_of_days = len(set(attendances.filtered(lambda cal: cal.week_type == '1').mapped('dayofweek')))
+            number_of_days += len(set(attendances.filtered(lambda cal: cal.week_type == '0').mapped('dayofweek')))
+        else:
+            number_of_days = len(set(attendances.mapped('dayofweek')))
+
+        return float_round(hour_count / float(number_of_days), precision_digits=2)
+
+    @api.onchange('attendance_ids', 'two_weeks_calendar')
+    def _onchange_hours_per_day(self):
+        attendances = self._get_global_attendances()
+        self.hours_per_day = self._compute_hours_per_day(attendances)
+
+    def switch_calendar_type(self):
+        if not self.two_weeks_calendar:
+            self.attendance_ids.unlink()
+            self.attendance_ids = [
+                (0, 0, {
+                    'name': 'Even week',
+                    'dayofweek': '0',
+                    'sequence': '0',
+                    'hour_from': 0,
+                    'day_period': 'morning',
+                    'week_type': '0',
+                    'hour_to': 0,
+                    'display_type':
+                    'line_section'}),
+                (0, 0, {
+                    'name': 'Odd week',
+                    'dayofweek': '0',
+                    'sequence': '25',
+                    'hour_from': 0,
+                    'day_period':
+                    'morning',
+                    'week_type': '1',
+                    'hour_to': 0,
+                    'display_type': 'line_section'}),
+            ]
+
+            self.two_weeks_calendar = True
+            default_attendance = self.default_get('attendance_ids')['attendance_ids']
+            for idx, att in enumerate(default_attendance):
+                att[2]["week_type"] = '0'
+                att[2]["sequence"] = idx + 1
+            self.attendance_ids = default_attendance
+            for idx, att in enumerate(default_attendance):
+                att[2]["week_type"] = '1'
+                att[2]["sequence"] = idx + 26
+            self.attendance_ids = default_attendance
+        else:
+            self.two_weeks_calendar = False
+            self.attendance_ids.unlink()
+            self.attendance_ids = self.default_get('attendance_ids')['attendance_ids']
+        self._onchange_hours_per_day()
+
+    @api.onchange('attendance_ids')
+    def _onchange_attendance_ids(self):
+        if not self.two_weeks_calendar:
+            return
+
+        even_week_seq = self.attendance_ids.filtered(lambda att: att.display_type == 'line_section' and att.week_type == '0')
+        odd_week_seq = self.attendance_ids.filtered(lambda att: att.display_type == 'line_section' and att.week_type == '1')
+        if len(even_week_seq) != 1 or len(odd_week_seq) != 1:
+            raise ValidationError(_("You can't delete section between weeks."))
+
+        even_week_seq = even_week_seq.sequence
+        odd_week_seq = odd_week_seq.sequence
+
+        for line in self.attendance_ids.filtered(lambda att: att.display_type is False):
+            if even_week_seq > odd_week_seq:
+                line.week_type = '1' if even_week_seq > line.sequence else '0'
+            else:
+                line.week_type = '0' if odd_week_seq > line.sequence else '1'
+
+    def _check_overlap(self, attendance_ids):
+        """ attendance_ids correspond to attendance of a week,
+            will check for each day of week that there are no superimpose. """
+        result = []
+        for attendance in attendance_ids.filtered(lambda att: not att.date_from and not att.date_to):
+            # 0.000001 is added to each start hour to avoid to detect two contiguous intervals as superimposing.
+            # Indeed Intervals function will join 2 intervals with the start and stop hour corresponding.
+            result.append((int(attendance.dayofweek) * 24 + attendance.hour_from + 0.000001, int(attendance.dayofweek) * 24 + attendance.hour_to, attendance))
+
+        if len(Intervals(result)) != len(result):
+            raise ValidationError(_("Attendances can't overlap."))
+
+    @api.constrains('attendance_ids')
+    def _check_attendance(self):
+        # Avoid superimpose in attendance
+        for calendar in self:
+            attendance_ids = calendar.attendance_ids.filtered(lambda attendance: not attendance.resource_id and attendance.display_type is False)
+            if calendar.two_weeks_calendar:
+                calendar._check_overlap(attendance_ids.filtered(lambda attendance: attendance.week_type == '0'))
+                calendar._check_overlap(attendance_ids.filtered(lambda attendance: attendance.week_type == '1'))
+            else:
+                calendar._check_overlap(attendance_ids)
 
     # --------------------------------------------------
     # Computation API
     # --------------------------------------------------
-    def _attendance_intervals(self, start_dt, end_dt, resource=None, domain=None):
+    def _attendance_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
         """ Return the attendance intervals in the given datetime range.
-            The returned intervals are expressed in the resource's timezone.
+            The returned intervals are expressed in specified tz or in the resource's timezone.
         """
         assert start_dt.tzinfo and end_dt.tzinfo
         combine = datetime.combine
 
         resource_ids = [resource.id, False] if resource else [False]
         domain = domain if domain is not None else []
-        domain = domain + [
+        domain = expression.AND([domain, [
             ('calendar_id', '=', self.id),
             ('resource_id', 'in', resource_ids),
-        ]
+            ('display_type', '=', False),
+        ]])
 
-        # express all dates and times in the resource's timezone
-        tz = timezone((resource or self).tz)
+        # express all dates and times in specified tz or in the resource's timezone
+        tz = tz if tz else timezone((resource or self).tz)
         start_dt = start_dt.astimezone(tz)
         end_dt = end_dt.astimezone(tz)
 
@@ -229,9 +345,20 @@ class ResourceCalendar(models.Model):
             until = end_dt.date()
             if attendance.date_to:
                 until = min(until, attendance.date_to)
+            if attendance.week_type:
+                start_week_type = int(math.floor((start.toordinal()-1)/7) % 2)
+                if start_week_type != int(attendance.week_type):
+                    # start must be the week of the attendance
+                    # if it's not the case, we must remove one week
+                    start = start + relativedelta(weeks=-1)
             weekday = int(attendance.dayofweek)
 
-            for day in rrule(DAILY, start, until=until, byweekday=weekday):
+            if self.two_weeks_calendar and attendance.week_type:
+                days = rrule(WEEKLY, start, interval=2, until=until, byweekday=weekday)
+            else:
+                days = rrule(DAILY, start, until=until, byweekday=weekday)
+
+            for day in days:
                 # attendance hours are interpreted in the resource's timezone
                 dt0 = tz.localize(combine(day, float_to_time(attendance.hour_from)))
                 dt1 = tz.localize(combine(day, float_to_time(attendance.hour_to)))
@@ -239,9 +366,9 @@ class ResourceCalendar(models.Model):
 
         return Intervals(result)
 
-    def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None):
+    def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
         """ Return the leave intervals in the given datetime range.
-            The returned intervals are expressed in the calendar's timezone.
+            The returned intervals are expressed in specified tz or in the calendar's timezone.
         """
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
@@ -258,7 +385,7 @@ class ResourceCalendar(models.Model):
         ]
 
         # retrieve leave intervals in (start_dt, end_dt)
-        tz = timezone((resource or self).tz)
+        tz = tz if tz else timezone((resource or self).tz)
         start_dt = start_dt.astimezone(tz)
         end_dt = end_dt.astimezone(tz)
         result = []
@@ -269,16 +396,54 @@ class ResourceCalendar(models.Model):
 
         return Intervals(result)
 
-    def _work_intervals(self, start_dt, end_dt, resource=None, domain=None):
+    def _work_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
         """ Return the effective work intervals between the given datetimes. """
-        return (self._attendance_intervals(start_dt, end_dt, resource) -
-                self._leave_intervals(start_dt, end_dt, resource, domain))
+        return (self._attendance_intervals(start_dt, end_dt, resource, tz=tz) -
+                self._leave_intervals(start_dt, end_dt, resource, domain, tz=tz))
+
+    # --------------------------------------------------
+    # Private Methods / Helpers
+    # --------------------------------------------------
+
+    def _get_days_data(self, intervals, day_total):
+        """
+        helper function to compute duration of `intervals`
+        expressed in days and hours.
+        `day_total` is a dict {date: n_hours} with the number of hours for each day.
+        """
+        day_hours = defaultdict(float)
+        for start, stop, meta in intervals:
+            day_hours[start.date()] += (stop - start).total_seconds() / 3600
+
+        # compute number of days as quarters
+        days = sum(
+            float_utils.round(ROUNDING_FACTOR * day_hours[day] / day_total[day]) / ROUNDING_FACTOR
+            for day in day_hours
+        )
+        return {
+            'days': days,
+            'hours': sum(day_hours.values()),
+        }
+
+    def _get_day_total(self, from_datetime, to_datetime, resource=None):
+        """
+        @return dict with hours of attendance in each day between `from_datetime` and `to_datetime`
+        """
+        self.ensure_one()
+        # total hours per day:  retrieve attendances with one extra day margin,
+        # in order to compute the total hours on the first and last days
+        from_full = from_datetime - timedelta(days=1)
+        to_full = to_datetime + timedelta(days=1)
+        intervals = self._attendance_intervals(from_full, to_full, resource=resource)
+        day_total = defaultdict(float)
+        for start, stop, meta in intervals:
+            day_total[start.date()] += (stop - start).total_seconds() / 3600
+        return day_total
 
     # --------------------------------------------------
     # External API
     # --------------------------------------------------
 
-    @api.multi
     def get_work_hours_count(self, start_dt, end_dt, compute_leaves=True, domain=None):
         """
             `compute_leaves` controls whether or not this method is taking into
@@ -305,7 +470,32 @@ class ResourceCalendar(models.Model):
             for start, stop, meta in intervals
         )
 
-    @api.multi
+    def get_work_duration_data(self, from_datetime, to_datetime, compute_leaves=True, domain=None):
+        """
+            Get the working duration (in days and hours) for a given period, only
+            based on the current calendar. This method does not use resource to
+            compute it.
+
+            `domain` is used in order to recognise the leaves to take,
+            None means default value ('time_type', '=', 'leave')
+
+            Returns a dict {'days': n, 'hours': h} containing the
+            quantity of working time expressed as days and as hours.
+        """
+        # naive datetimes are made explicit in UTC
+        from_datetime, dummy = make_aware(from_datetime)
+        to_datetime, dummy = make_aware(to_datetime)
+
+        day_total = self._get_day_total(from_datetime, to_datetime)
+
+        # actual hours per day
+        if compute_leaves:
+            intervals = self._work_intervals(from_datetime, to_datetime, domain=domain)
+        else:
+            intervals = self._attendance_intervals(from_datetime, to_datetime)
+
+        return self._get_days_data(intervals, day_total)
+
     def plan_hours(self, hours, day_dt, compute_leaves=False, domain=None, resource=None):
         """
         `compute_leaves` controls whether or not this method is taking into
@@ -346,7 +536,6 @@ class ResourceCalendar(models.Model):
                     hours -= interval_hours
             return False
 
-    @api.multi
     def plan_days(self, days, day_dt, compute_leaves=False, domain=None):
         """
         `compute_leaves` controls whether or not this method is taking into
@@ -395,7 +584,7 @@ class ResourceCalendar(models.Model):
 class ResourceCalendarAttendance(models.Model):
     _name = "resource.calendar.attendance"
     _description = "Work Detail"
-    _order = 'dayofweek, hour_from'
+    _order = 'week_type, dayofweek, hour_from'
 
     name = fields.Char(required=True)
     dayofweek = fields.Selection([
@@ -416,6 +605,15 @@ class ResourceCalendarAttendance(models.Model):
     calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, ondelete='cascade')
     day_period = fields.Selection([('morning', 'Morning'), ('afternoon', 'Afternoon')], required=True, default='morning')
     resource_id = fields.Many2one('resource.resource', 'Resource')
+    week_type = fields.Selection([
+        ('1', 'Odd week'),
+        ('0', 'Even week')
+        ], 'Week Even/Odd', default=False)
+    two_weeks_calendar = fields.Boolean("Calendar in 2 weeks mode", related='calendar_id.two_weeks_calendar')
+    display_type = fields.Selection([
+        ('line_section', "Section")], default=False, help="Technical field for UX purpose.")
+    sequence = fields.Integer(default=10,
+        help="Gives the sequence of this line when displaying the resource calendar.")
 
     @api.onchange('hour_from', 'hour_to')
     def _onchange_hours(self):
@@ -445,7 +643,7 @@ class ResourceResource(models.Model):
     active = fields.Boolean(
         'Active', default=True, tracking=True,
         help="If the active field is set to False, it will allow you to hide the resource record without removing it.")
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env['res.company']._company_default_get())
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     resource_type = fields.Selection([
         ('user', 'Human'),
         ('material', 'Material')], string='Resource Type',
@@ -456,7 +654,7 @@ class ResourceResource(models.Model):
         help="This field is used to calculate the the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes.")
     calendar_id = fields.Many2one(
         "resource.calendar", string='Working Time',
-        default=lambda self: self.env['res.company']._company_default_get().resource_calendar_id,
+        default=lambda self: self.env.company.resource_calendar_id,
         required=True,
         help="Define the schedule of resource")
     tz = fields.Selection(
@@ -468,7 +666,6 @@ class ResourceResource(models.Model):
         ('check_time_efficiency', 'CHECK(time_efficiency>0)', 'Time efficiency must be strictly positive'),
     ]
 
-    @api.multi
     @api.constrains('time_efficiency')
     def _check_time_efficiency(self):
         for record in self:
@@ -487,7 +684,6 @@ class ResourceResource(models.Model):
                 values['tz'] = tz
         return super(ResourceResource, self).create(values)
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
@@ -507,10 +703,55 @@ class ResourceResource(models.Model):
         if self.user_id:
             self.tz = self.user_id.tz
 
+    def _get_work_interval(self, start, end):
+        """ Return interval's start datetime for interval closest to start. And interval's end datetime for interval closest to end.
+            If none is found return None
+            Note: this method is used in enterprise (forecast and planning)
+
+            :start: datetime
+            :end: datetime
+            :return: (datetime|None, datetime|None)
+        """
+        start_datetime = timezone_datetime(start)
+        end_datetime = timezone_datetime(end)
+        resource_mapping = {}
+        for resource in self:
+            work_intervals = sorted(
+                resource.calendar_id._work_intervals(start_datetime, end_datetime, resource),
+                key=lambda x: x[0]
+            )
+            if work_intervals:
+                resource_mapping[resource.id] = (work_intervals[0][0].astimezone(utc), work_intervals[-1][1].astimezone(utc))
+            else:
+                resource_mapping[resource.id] = (None, None)
+        return resource_mapping
+
+    def _get_unavailable_intervals(self, start, end):
+        """ Compute the intervals during which employee is unavailable with hour granularity between start and end
+            Note: this method is used in enterprise (forecast and planning)
+
+        """
+        start_datetime = timezone_datetime(start)
+        end_datetime = timezone_datetime(end)
+        resource_mapping = {}
+        for resource in self:
+            calendar = resource.calendar_id
+            resource_work_intervals = calendar._work_intervals(start_datetime, end_datetime, resource)
+            resource_work_intervals = [(start, stop) for start, stop, meta in resource_work_intervals]
+            # start + flatten(intervals) + end
+            resource_work_intervals = [start_datetime] + list(chain.from_iterable(resource_work_intervals)) + [end_datetime]
+            # put it back to UTC
+            resource_work_intervals = list(map(lambda dt: dt.astimezone(utc), resource_work_intervals))
+            # pick groups of two
+            resource_work_intervals = list(zip(resource_work_intervals[0::2], resource_work_intervals[1::2]))
+            resource_mapping[resource.id] = resource_work_intervals
+        return resource_mapping
+
 
 class ResourceCalendarLeaves(models.Model):
     _name = "resource.calendar.leaves"
     _description = "Resource Time Off Detail"
+    _order = "date_from"
 
     name = fields.Char('Reason')
     company_id = fields.Many2one(

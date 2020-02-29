@@ -9,11 +9,11 @@ class StockScrap(models.Model):
 
     production_id = fields.Many2one(
         'mrp.production', 'Manufacturing Order',
-        states={'done': [('readonly', True)]})
+        states={'done': [('readonly', True)]}, check_company=True)
     workorder_id = fields.Many2one(
         'mrp.workorder', 'Work Order',
         states={'done': [('readonly', True)]},
-        help='Not to restrict or prefer quants, but informative.')
+        help='Not to restrict or prefer quants, but informative.', check_company=True)
 
     @api.onchange('workorder_id')
     def _onchange_workorder_id(self):
@@ -34,6 +34,3 @@ class StockScrap(models.Model):
             else:
                 vals.update({'raw_material_production_id': self.production_id.id})
         return vals
-
-    def _get_origin_moves(self):
-        return super(StockScrap, self)._get_origin_moves() or self.production_id and self.production_id.move_raw_ids.filtered(lambda x: x.product_id == self.product_id)

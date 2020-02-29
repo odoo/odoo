@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="OrderReceipt">
+        <t t-jquery=".pos-receipt-order-data" t-operation="append">
+            <t t-if="receipt.l10n_fr_hash !== false">
+                <div style="word-wrap:break-word;"><t t-esc="receipt.l10n_fr_hash"/></div>
+            </t>
+        </t>
+    </t>
+
+</templates>

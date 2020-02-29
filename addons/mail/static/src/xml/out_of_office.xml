@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!--
+        @param {mail.model.AbstractThread} thread
+    -->
+    <div class="o_out_of_office" t-name="mail.thread.OutOfOffice">
+        <div class="o_out_of_office_info" t-if="thread.getOutOfOfficeInfo()" t-esc="thread.getOutOfOfficeInfo()"/>
+    </div>
+</templates>

@@ -1,17 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-try:
-    from configparser import ConfigParser
-except ImportError:
-    # python2 import
-    from ConfigParser import ConfigParser
+from configparser import ConfigParser
 from os.path import join as opj
 import os
-import werkzeug
+import werkzeug.urls
 
+import odoo
 from odoo import models, fields
-from odoo.modules.module import ad_paths
 
 
 class IrTranslation(models.Model):
@@ -27,7 +23,7 @@ class IrTranslation(models.Model):
 
         tx_config_file = ConfigParser()
         tx_sections = []
-        for addon_path in ad_paths:
+        for addon_path in odoo.addons.__path__:
             tx_path = opj(addon_path, '.tx', 'config')
             if os.path.isfile(tx_path):
                 tx_config_file.read(tx_path)
@@ -63,7 +59,7 @@ class IrTranslation(models.Model):
                         project_modules[module] = tx_project
 
             for translation in self:
-                if not translation.module or not translation.source or translation.lang == 'en_US':
+                if not translation.module or not translation.src or translation.lang == 'en_US':
                     # custom or source term
                     translation.transifex_url = False
                     continue
@@ -84,8 +80,7 @@ class IrTranslation(models.Model):
                     'project': project,
                     'lang': lang_code,
                     'module': translation.module,
-                    'src': werkzeug.url_quote_plus(
-                            "text:'" +
-                            translation.source[:50].replace("'", "\\'") +
-                            "'"),
+                    'src': "text:'" + werkzeug.urls.url_quote_plus(
+                               translation.src[:50].replace("\n", "").replace("'", "")
+                           ) + "'",
                 }

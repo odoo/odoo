@@ -9,6 +9,7 @@ import mimetypes
 import os
 import re
 import sys
+import traceback
 
 import werkzeug
 import werkzeug.exceptions
@@ -19,10 +20,13 @@ import werkzeug.utils
 import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError
-from odoo.http import request, STATIC_CACHE, content_disposition
-from odoo.tools import pycompat, consteq
+from odoo.http import request, content_disposition
+from odoo.tools import consteq, pycompat
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.modules.module import get_resource_path, get_module_path
+
+from odoo.http import ALLOWED_DEBUG_MODES
+from odoo.tools.misc import str2bool
 
 _logger = logging.getLogger(__name__)
 
@@ -83,8 +87,8 @@ class IrHttp(models.AbstractModel):
         return {'model': ModelConverter, 'models': ModelsConverter, 'int': SignedIntConverter}
 
     @classmethod
-    def _find_handler(cls, return_rule=False):
-        return cls.routing_map().bind_to_environ(request.httprequest.environ).match(return_rule=return_rule)
+    def _match(cls, path_info, key=None):
+        return cls.routing_map().bind_to_environ(request.httprequest.environ).match(path_info=path_info, return_rule=True)
 
     @classmethod
     def _auth_method_user(cls):
@@ -126,6 +130,21 @@ class IrHttp(models.AbstractModel):
         return auth_method
 
     @classmethod
+    def _handle_debug(cls):
+        # Store URL debug mode (might be empty) into session
+        if 'debug' in request.httprequest.args:
+            debug_mode = []
+            for debug in request.httprequest.args['debug'].split(','):
+                if debug not in ALLOWED_DEBUG_MODES:
+                    debug = '1' if str2bool(debug, debug) else ''
+                debug_mode.append(debug)
+            debug_mode = ','.join(debug_mode)
+
+            # Write on session only when needed
+            if debug_mode != request.session.debug:
+                request.session.debug = debug_mode
+
+    @classmethod
     def _serve_attachment(cls):
         env = api.Environment(request.cr, SUPERUSER_ID, request.context)
         attach = env['ir.attachment'].get_serve_attachment(request.httprequest.path, extra_fields=['name', 'checksum'])
@@ -133,7 +152,7 @@ class IrHttp(models.AbstractModel):
             wdate = attach[0]['__last_update']
             datas = attach[0]['datas'] or b''
             name = attach[0]['name']
-            checksum = attach[0]['checksum'] or hashlib.sha1(datas).hexdigest()
+            checksum = attach[0]['checksum'] or hashlib.sha512(datas).hexdigest()[:64]  # sha512/256
 
             if (not datas and name != request.httprequest.path and
                     name.startswith(('http://', 'https://', '/'))):
@@ -162,6 +181,9 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _handle_exception(cls, exception):
+        # in case of Exception, e.g. 404, we don't step into _dispatch
+        cls._handle_debug()
+
         # If handle_exception returns something different than None, it will be used as a response
 
         # This is done first as the attachment path may
@@ -182,9 +204,11 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _dispatch(cls):
+        cls._handle_debug()
+
         # locate the controller method
         try:
-            rule, arguments = cls._find_handler(return_rule=True)
+            rule, arguments = cls._match(request.httprequest.path)
             func = rule.endpoint
         except werkzeug.exceptions.NotFound as e:
             return cls._handle_exception(e)
@@ -216,29 +240,44 @@ class IrHttp(models.AbstractModel):
         for key, val in list(arguments.items()):
             # Replace uid placeholder by the current request.uid
             if isinstance(val, models.BaseModel) and isinstance(val._uid, RequestUID):
-                arguments[key] = val.sudo(request.uid)
+                arguments[key] = val.with_user(request.uid)
                 if not val.exists():
                     return cls._handle_exception(werkzeug.exceptions.NotFound())
 
     @classmethod
-    def routing_map(cls):
+    def _generate_routing_rules(cls, modules, converters):
+        return http._generate_routing_rules(modules, False, converters)
+
+    @classmethod
+    def routing_map(cls, key=None):
+
         if not hasattr(cls, '_routing_map'):
-            _logger.info("Generating routing map")
-            installed = request.registry._init_modules - {'web'}
+            cls._routing_map = {}
+            cls._rewrite_len = {}
+
+        if key not in cls._routing_map:
+            _logger.info("Generating routing map for key %s" % str(key))
+            installed = request.registry._init_modules | set(odoo.conf.server_wide_modules)
             if tools.config['test_enable'] and odoo.modules.module.current_test:
                 installed.add(odoo.modules.module.current_test)
-            mods = [''] + odoo.conf.server_wide_modules + sorted(installed)
+            mods = sorted(installed)
             # Note : when routing map is generated, we put it on the class `cls`
             # to make it available for all instance. Since `env` create an new instance
             # of the model, each instance will regenared its own routing map and thus
             # regenerate its EndPoint. The routing map should be static.
-            cls._routing_map = http.routing_map(mods, False, converters=cls._get_converters())
-        return cls._routing_map
+            routing_map = werkzeug.routing.Map(strict_slashes=False, converters=cls._get_converters())
+            for url, endpoint, routing in cls._generate_routing_rules(mods, converters=cls._get_converters()):
+                xtra_keys = 'defaults subdomain build_only strict_slashes redirect_to alias host'.split()
+                kw = {k: routing[k] for k in xtra_keys if k in routing}
+                routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods'], **kw))
+            cls._routing_map[key] = routing_map
+        return cls._routing_map[key]
 
     @classmethod
     def _clear_routing_map(cls):
         if hasattr(cls, '_routing_map'):
-            del cls._routing_map
+            cls._routing_map = {}
+            _logger.debug("Clear routing map")
 
     #------------------------------------------------------
     # Binary server
@@ -260,15 +299,27 @@ class IrHttp(models.AbstractModel):
         if not record or not record.exists() or field not in record:
             return None, 404
 
-        # access token grant access
-        if model == 'ir.attachment' and access_token:
-            record = record.sudo()
-            if not consteq(record.access_token or '', access_token):
+        if model == 'ir.attachment':
+            record_sudo = record.sudo()
+            if access_token and not consteq(record_sudo.access_token or '', access_token):
                 return None, 403
+            elif (access_token and consteq(record_sudo.access_token or '', access_token)):
+                record = record_sudo
+            elif record_sudo.public:
+                record = record_sudo
+            elif self.env.user.has_group('base.group_portal'):
+                # Check the read access on the record linked to the attachment
+                # eg: Allow to download an attachment on a task from /my/task/task_id
+                record.check('read')
+                record = record_sudo
 
         # check read access
         try:
-            last_update = record['__last_update']
+            # We have prefetched some fields of record, among which the field
+            # 'write_date' used by '__last_update' below. In order to check
+            # access on record, we have to invalidate its cache first.
+            record._cache.clear()
+            record['__last_update']
         except AccessError:
             return None, 403
 
@@ -277,7 +328,8 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _binary_ir_attachment_redirect_content(cls, record, default_mimetype='application/octet-stream'):
         # mainly used for theme images attachemnts
-        status = content = filename = mimetype = filehash = None
+        status = content = filename = filehash = None
+        mimetype = getattr(record, 'mimetype', False)
         if record.type == 'url' and record.url:
             # if url in in the form /somehint server locally
             url_match = re.match("^/(\w+)/(.+)$", record.url)
@@ -296,17 +348,16 @@ class IrHttp(models.AbstractModel):
                         filename = os.path.basename(module_resource_path)
                         mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
                         filehash = '"%s"' % hashlib.md5(pycompat.to_text(content).encode('utf-8')).hexdigest()
-            else:
+
+            if not content:
                 status = 301
                 content = record.url
-
-
 
         return status, content, filename, mimetype, filehash
 
     def _binary_record_content(
             self, record, field='datas', filename=None,
-            filename_field='datas_fname', default_mimetype='application/octet-stream'):
+            filename_field='name', default_mimetype='application/octet-stream'):
 
         model = record._name
         mimetype = 'mimetype' in record and record.mimetype or False
@@ -315,7 +366,7 @@ class IrHttp(models.AbstractModel):
 
         field_def = record._fields[field]
         if field_def.type == 'binary' and field_def.attachment:
-            field_attachment = self.env['ir.attachment'].search_read(domain=[('res_model', '=', model), ('res_id', '=', record.id), ('res_field', '=', field)], fields=['datas', 'mimetype', 'checksum'], limit=1)
+            field_attachment = self.env['ir.attachment'].sudo().search_read(domain=[('res_model', '=', model), ('res_id', '=', record.id), ('res_field', '=', field)], fields=['datas', 'mimetype', 'checksum'], limit=1)
             if field_attachment:
                 mimetype = field_attachment[0]['mimetype']
                 content = field_attachment[0]['datas']
@@ -325,14 +376,27 @@ class IrHttp(models.AbstractModel):
             content = record[field] or ''
 
         # filename
+        default_filename = False
         if not filename:
             if filename_field in record:
                 filename = record[filename_field]
-            else:
+            if not filename:
+                default_filename = True
                 filename = "%s-%s-%s" % (record._name, record.id, field)
 
         if not mimetype:
-            mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
+            try:
+                decoded_content = base64.b64decode(content)
+            except base64.binascii.Error:  # if we could not decode it, no need to pass it down: it would crash elsewhere...
+                return (404, [], None)
+            mimetype = guess_mimetype(decoded_content, default=default_mimetype)
+
+        # extension
+        _, existing_extension = os.path.splitext(filename)
+        if not existing_extension or default_filename:
+            extension = mimetypes.guess_extension(mimetype)
+            if extension:
+                filename = "%s%s" % (filename, extension)
 
         if not filehash:
             filehash = '"%s"' % hashlib.md5(pycompat.to_text(content).encode('utf-8')).hexdigest()
@@ -344,10 +408,12 @@ class IrHttp(models.AbstractModel):
         headers = [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
         # cache
         etag = bool(request) and request.httprequest.headers.get('If-None-Match')
-        status = status or (304 if filehash and etag == filehash else 200)
+        status = status or 200
         if filehash:
             headers.append(('ETag', filehash))
-        headers.append(('Cache-Control', 'max-age=%s' % (STATIC_CACHE if unique else 0)))
+            if etag == filehash and status == 200:
+                status = 304
+        headers.append(('Cache-Control', 'max-age=%s' % (http.STATIC_CACHE_LONG if unique else 0)))
         # content-disposition default name
         if download:
             headers.append(('Content-Disposition', content_disposition(filename)))
@@ -355,7 +421,7 @@ class IrHttp(models.AbstractModel):
         return (status, headers, content)
 
     def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas',
-                       unique=False, filename=None, filename_field='datas_fname', download=False,
+                       unique=False, filename=None, filename_field='name', download=False,
                        mimetype=None, default_mimetype='application/octet-stream',
                        access_token=None):
         """ Get file, attachment or downloadable content
@@ -389,11 +455,11 @@ class IrHttp(models.AbstractModel):
             status, content, filename, mimetype, filehash = self._binary_ir_attachment_redirect_content(record, default_mimetype=default_mimetype)
         if not content:
             status, content, filename, mimetype, filehash = self._binary_record_content(
-                record, field=field, filename=None, filename_field=filename_field,
+                record, field=field, filename=filename, filename_field=filename_field,
                 default_mimetype='application/octet-stream')
 
         status, headers, content = self._binary_set_headers(
-            status, content, filename, mimetype, unique, filehash=False, download=download)
+            status, content, filename, mimetype, unique, filehash=filehash, download=download)
 
         return status, headers, content
 

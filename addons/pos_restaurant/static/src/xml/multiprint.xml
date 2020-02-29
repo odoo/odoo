@@ -10,48 +10,44 @@
 
     <t t-name="NameWrapped">
         <t t-foreach="change.name_wrapped.slice(1)" t-as="wrapped_line">
-            <line>
-                <left></left>
-                <right><t t-esc="wrapped_line"/></right>
-            </line>
+            <div>
+                <span class="pos-receipt-right-align" t-esc="wrapped_line"/>
+            </div>
         </t>
     </t>
 
     <t t-name="OrderChangeReceipt">
-        <receipt 
-            align='center' 
-            width='40' 
-            size='double-height' 
-            line-ratio='0.4' 
-            value-decimals='3' 
-            value-thousands-separator=''
-            value-autoint='on' 
-        >
-            <div size='normal' ><t t-esc="changes.name" /></div>
+        <div class="pos-receipt">
+            <div class="pos-receipt-order-data"><t t-esc="changes.name" /></div>
             <t t-if="changes.floor || changes.table">
                 <br />
-                <div><span><t t-esc="changes.floor" /></span> / <span bold='on' size='double'><t t-esc="changes.table"/></span></div>
+                <div class="pos-receipt-title">
+                    <t t-esc="changes.floor" /> / <t t-esc="changes.table"/>
+                </div>
             </t>
             <br />
             <br />
             <t t-if="changes.cancelled.length > 0">
-                <div color='red'>
-                    <div bold='on' size='double'>CANCELLED <span bold='off' size='double-height'><t t-esc='changes.time.hours' />:<t t-esc='changes.time.minutes' /></span> </div>
+                <div class="pos-order-receipt-cancel">
+                    <div class="pos-receipt-title">
+                        CANCELLED
+                        <t t-esc='changes.time.hours'/>:<t t-esc='changes.time.minutes'/>
+                    </div>
                     <br />
                     <br />
                     <t t-foreach="changes.cancelled" t-as="change">
-                        <line>
-                            <left><value><t t-esc="change.qty" /></value></left>
-                            <right><t t-esc="change.name_wrapped[0]" /></right>
-                        </line>
+                        <div>
+                            <t t-esc="change.qty"/>
+                            <span t-esc="change.name_wrapped[0]" class="pos-receipt-right-align"/>
+                        </div>
                         <t t-call="NameWrapped"/>
                         <t t-if="change.note">
-                            <line>
-                                <left>NOTE</left>
-                                <right>...</right>
-                            </line>
-                            <div><span font='b' bold='off' line-ratio='0.4' indent='1' width='30'>--- <t t-esc="change.note" /></span></div>
-                            <line></line>
+                            <div>
+                                NOTE
+                                <span class="pos-receipt-right-align">...</span>
+                            </div>
+                            <div><span class="pos-receipt-left-padding">--- <t t-esc="change.note" /></span></div>
+                            <br/>
                         </t>
                     </t>
                     <br />
@@ -59,28 +55,31 @@
                 </div>
             </t>
             <t t-if="changes.new.length > 0">
-                <div bold='on' size='double'>NEW <span bold='off' size='double-height'><t t-esc='changes.time.hours' />:<t t-esc='changes.time.minutes' /></span> </div>
+                <div class="pos-receipt-title">
+                    NEW
+                    <t t-esc='changes.time.hours'/>:<t t-esc='changes.time.minutes'/>
+                </div>
                 <br />
                 <br />
                 <t t-foreach="changes.new" t-as="change">
-                    <line>
-                        <left><value><t t-esc="change.qty" /></value></left>
-                        <right><t t-esc="change.name_wrapped[0]" /></right>
-                    </line>
+                    <div>
+                        <t t-esc="change.qty"/>
+                        <span t-esc="change.name_wrapped[0]" class="pos-receipt-right-align"/>
+                    </div>
                     <t t-call="NameWrapped"/>
                     <t t-if="change.note">
-                        <line>
-                            <left>NOTE</left>
-                            <right>...</right>
-                        </line>
-                        <div><span font='b' bold='off' line-ratio='0.4' indent='1' width='30'>--- <t t-esc="change.note" /></span></div>
-                        <line></line>
+                        <div>
+                            NOTE
+                            <span class="pos-receipt-right-align">...</span>
+                        </div>
+                        <div><span class="pos-receipt-left-padding">--- <t t-esc="change.note" /></span></div>
+                        <br/>
                     </t>
                 </t>
                 <br />
                 <br />
             </t>
-        </receipt>
+        </div>
     </t>
 
 </templates>

@@ -95,9 +95,7 @@
     width: $custom-control-indicator-size;
     height: $custom-control-indicator-size;
     content: "";
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: $custom-control-indicator-bg-size;
+    background: no-repeat 50% / #{$custom-control-indicator-bg-size};
   }
 }
 
@@ -144,6 +142,7 @@
 
 .custom-radio {
   .custom-control-label::before {
+    // stylelint-disable-next-line property-blacklist
     border-radius: $custom-radio-indicator-border-radius;
   }
 
@@ -173,6 +172,7 @@
       left: -($custom-switch-width + $custom-control-gutter);
       width: $custom-switch-width;
       pointer-events: all;
+      // stylelint-disable-next-line property-blacklist
       border-radius: $custom-switch-indicator-border-radius;
     }
 
@@ -182,6 +182,7 @@
       width: $custom-switch-indicator-size;
       height: $custom-switch-indicator-size;
       background-color: $custom-control-indicator-border-color;
+      // stylelint-disable-next-line property-blacklist
       border-radius: $custom-switch-indicator-border-radius;
       @include transition(transform .15s ease-in-out, $custom-forms-transition);
     }
@@ -213,6 +214,8 @@
   width: 100%;
   height: $custom-select-height;
   padding: $custom-select-padding-y ($custom-select-padding-x + $custom-select-indicator-padding) $custom-select-padding-y $custom-select-padding-x;
+  font-family: $custom-select-font-family;
+  @include font-size($custom-select-font-size);
   font-weight: $custom-select-font-weight;
   line-height: $custom-select-line-height;
   color: $custom-select-color;
@@ -220,11 +223,7 @@
   background: $custom-select-background;
   background-color: $custom-select-bg;
   border: $custom-select-border-width solid $custom-select-border-color;
-  @if $enable-rounded {
-    border-radius: $custom-select-border-radius;
-  } @else {
-    border-radius: 0;
-  }
+  @include border-radius($custom-select-border-radius, 0);
   @include box-shadow($custom-select-box-shadow);
   appearance: none;
 
@@ -262,7 +261,7 @@
 
   // Hides the default caret in IE11
   &::-ms-expand {
-    opacity: 0;
+    display: none;
   }
 }
 
@@ -271,7 +270,7 @@
   padding-top: $custom-select-padding-y-sm;
   padding-bottom: $custom-select-padding-y-sm;
   padding-left: $custom-select-padding-x-sm;
-  font-size: $custom-select-font-size-sm;
+  @include font-size($custom-select-font-size-sm);
 }
 
 .custom-select-lg {
@@ -279,7 +278,7 @@
   padding-top: $custom-select-padding-y-lg;
   padding-bottom: $custom-select-padding-y-lg;
   padding-left: $custom-select-padding-x-lg;
-  font-size: $custom-select-font-size-lg;
+  @include font-size($custom-select-font-size-lg);
 }
 
 
@@ -331,6 +330,7 @@
   z-index: 1;
   height: $custom-file-height;
   padding: $custom-file-padding-y $custom-file-padding-x;
+  font-family: $custom-file-font-family;
   font-weight: $custom-file-font-weight;
   line-height: $custom-file-line-height;
   color: $custom-file-color;

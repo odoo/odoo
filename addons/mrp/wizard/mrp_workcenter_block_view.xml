@@ -10,6 +10,7 @@
                     <field name="loss_id" class="oe_inline" domain="[('manual','=',True)]"/>
                     <field name="description" placeholder="Add a description..."/>
                     <field name="workcenter_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
                 </group>
                 <footer>
                     <button name="button_block" string="Block" type="object" class="btn-danger text-uppercase"/>
@@ -23,7 +24,6 @@
         <field name="name">Block Workcenter</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.workcenter.productivity</field>
-        <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="context">{'default_workcenter_id': active_id}</field>
         <field name="view_id" eval="mrp_workcenter_block_wizard_form"/>
@@ -34,7 +34,6 @@
         <field name="name">Block Workcenter</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.workcenter.productivity</field>
-        <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="view_id" eval="mrp_workcenter_block_wizard_form"/>
         <field name="target">new</field>

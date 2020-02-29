@@ -39,13 +39,15 @@ class IrConfigParameter(models.Model):
         ('key_uniq', 'unique (key)', 'Key must be unique.')
     ]
 
-    @api.model_cr
     @mute_logger('odoo.addons.base.models.ir_config_parameter')
     def init(self, force=False):
         """
         Initializes the parameters listed in _default_parameters.
         It overrides existing parameters if force is ``True``.
         """
+        # avoid prefetching during module installation, as the res_users table
+        # may not have all prescribed columns
+        self = self.with_context(prefetch_fields=False)
         for key, func in _default_parameters.items():
             # force=True skips search and always performs the 'if' body (because ids=False)
             params = self.sudo().search([('key', '=', key)])
@@ -64,7 +66,7 @@ class IrConfigParameter(models.Model):
         return self._get_param(key) or default
 
     @api.model
-    @ormcache('self._uid', 'key')
+    @ormcache('self.env.uid', 'self.env.su', 'key')
     def _get_param(self, key):
         params = self.search_read([('key', '=', key)], fields=['value'], limit=1)
         return params[0]['value'] if params else None
@@ -98,12 +100,10 @@ class IrConfigParameter(models.Model):
         self.clear_caches()
         return super(IrConfigParameter, self).create(vals_list)
 
-    @api.multi
     def write(self, vals):
         self.clear_caches()
         return super(IrConfigParameter, self).write(vals)
 
-    @api.multi
     def unlink(self):
         self.clear_caches()
         return super(IrConfigParameter, self).unlink()

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="payment.payment_acquirer_payulatam" model="payment.acquirer">
+            <field name="provider">payulatam</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="view_template_id" ref="payulatam_form"/>
+        </record>
+    </data>
+</odoo>

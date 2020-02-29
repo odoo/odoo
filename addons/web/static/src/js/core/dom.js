@@ -1,11 +1,10 @@
 odoo.define('web.dom_ready', function (require) {
 'use strict';
 
-var def = $.Deferred();
-$(def.resolve.bind(def));
-return def;
+    return new Promise(function (resolve, reject) {
+        $(resolve);
+    });
 });
-
 //==============================================================================
 
 odoo.define('web.dom', function (require) {
@@ -33,7 +32,7 @@ var _t = core._t;
  * that on_attach_callback() will be called on each w with arguments args
  */
 function _notify(content, callbacks) {
-    _.each(callbacks, function (c) {
+    callbacks.forEach(function (c) {
         if (c.widget && c.widget.on_attach_callback) {
             c.widget.on_attach_callback(c.callback_args);
         }
@@ -103,7 +102,7 @@ var dom = {
         }
 
         options = options || {};
-        minHeight = (options && options.min_height) || 50;
+        minHeight = 'min_height' in options ? options.min_height : 50;
 
         $fixedTextarea = $('<textarea disabled>', {
             class: $textarea[0].className,
@@ -117,6 +116,7 @@ var dom = {
             borderTopWidth: 0,
             borderBottomWidth: 0,
             padding: 0,
+            overflow: 'hidden',
             top: -10000,
         }).css(direction, -10000);
         $fixedTextarea.data("auto_resize", true);
@@ -154,10 +154,27 @@ var dom = {
      *
      * @param {jQuery} $from - the jQuery element(s) from which to search
      * @param {string} selector - the CSS selector to match
+     * @param {boolean} [addBack=false] - whether or not the $from element
+     *                                  should be considered in the results
      * @returns {jQuery}
      */
-    cssFind: function ($from, selector) {
-        return $from.find('*').filter(selector);
+    cssFind: function ($from, selector, addBack) {
+        var $results;
+
+        // No way to correctly parse a complex jQuery selector but having no
+        // spaces should be a good-enough condition to use a simple find
+        var multiParts = selector.indexOf(' ') >= 0;
+        if (multiParts) {
+            $results = $from.find('*').filter(selector);
+        } else {
+            $results = $from.find(selector);
+        }
+
+        if (addBack && $from.is(selector)) {
+            $results = $results.add($from);
+        }
+
+        return $results;
     },
     /**
      * Detaches widgets from the DOM and performs their on_detach_callback()
@@ -170,14 +187,14 @@ var dom = {
      * @return {jQuery} the detached elements
      */
     detach: function (to_detach, options) {
-        _.each(to_detach, function (d) {
+        to_detach.forEach( function (d) {
             if (d.widget.on_detach_callback) {
                 d.widget.on_detach_callback(d.callback_args);
             }
         });
         var $to_detach = options && options.$to_detach;
         if (!$to_detach) {
-            $to_detach = $(_.map(to_detach, function (d) {
+            $to_detach = $(to_detach.map(function (d) {
                 return d.widget.el;
             }));
         }
@@ -229,10 +246,16 @@ var dom = {
      * @param {function|boolean} stopPropagation
      */
     makeAsyncHandler: function (fct, preventDefault, stopPropagation) {
-        // Create a deferred indicating if a previous call to this handler is
-        // still pending.
-        var def = $.when();
-
+        var pending = false;
+        function _isLocked() {
+            return pending;
+        }
+        function _lock() {
+            pending = true;
+        }
+        function _unlock() {
+            pending = false;
+        }
         return function (ev) {
             if (preventDefault === true || preventDefault && preventDefault()) {
                 ev.preventDefault();
@@ -241,13 +264,15 @@ var dom = {
                 ev.stopPropagation();
             }
 
-            if (def.state() === 'pending') {
+            if (_isLocked()) {
                 // If a previous call to this handler is still pending, ignore
                 // the new call.
                 return;
             }
+
+            _lock();
             var result = fct.apply(this, arguments);
-            def = $.when(result);
+            Promise.resolve(result).then(_unlock).guardedCatch(_unlock);
             return result;
         };
     },
@@ -284,11 +309,13 @@ var dom = {
             // a 'real' debounce creation useless. Also, during the debouncing
             // part, the button is disabled without any visual effect.
             $button.addClass('o_debounce_disabled');
-            $.when(dom.DEBOUNCE && concurrency.delay(dom.DEBOUNCE)).then(function () {
+            Promise.resolve(dom.DEBOUNCE && concurrency.delay(dom.DEBOUNCE)).then(function () {
                 $button.addClass('disabled').prop('disabled', true);
                 $button.removeClass('o_debounce_disabled');
 
-                return $.when(result).always(function () {
+                return Promise.resolve(result).then(function () {
+                    $button.removeClass('disabled').prop('disabled', false);
+                }).guardedCatch(function () {
                     $button.removeClass('disabled').prop('disabled', false);
                 });
             });
@@ -514,7 +541,7 @@ var dom = {
             menuItemsWidth += computeFloatOuterWidthWithMargins($extraItemsToggle[0]);
             do {
                 menuItemsWidth -= computeFloatOuterWidthWithMargins($items.eq(--nbItems)[0]);
-            } while (!(maxWidth - menuItemsWidth >= -0.001));
+            } while (!(maxWidth - menuItemsWidth >= -0.001) && (nbItems > 0));
 
             var $extraItems = $items.slice(nbItems).detach();
             $extraItems.removeClass('nav-item');

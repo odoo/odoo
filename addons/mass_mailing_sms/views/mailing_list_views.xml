@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mailing_list_action_sms" model="ir.actions.act_window">
+        <field name="name">Contact Lists</field>
+        <field name="res_model">mailing.list</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'mailing_sms': True}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new contacts list
+          </p><p>
+            You don't need to import your contacts lists, you can easily
+            send SMS to any contact saved in other Odoo apps.
+          </p>
+        </field>
+    </record>
+
+    <!-- SMS Marketing / Contacts Lists / Contacts Lists -->
+    <record id="mass_mailing_sms.mailing_list_menu_sms" model="ir.ui.menu">
+        <field name="action" ref="mailing_list_action_sms"/>
+    </record>
+</odoo>

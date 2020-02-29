@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-extend="XmlReceipt">
+    <t t-extend="OrderReceipt">
         <t t-jquery='.cashier' t-operation='append'>
             <t t-if='receipt.table'>
                 at table <t t-esc='receipt.table' />
             </t>
-            <t t-if='receipt.customer_count'>
+            <t t-if='receipt.table &amp;&amp; receipt.customer_count'>
                 <div>Guests: <t t-esc='receipt.customer_count' /></div>
             </t>
         </t>
@@ -20,6 +20,19 @@
             <t t-if='receipt.customer_count'>
                 <div>Guests: <t t-esc='receipt.customer_count' /></div>
             </t>
+        </t>
+    </t>
+
+    <t t-extend="OrderSelectorWidget">
+        <t t-jquery=".order-sequence" t-operation="replace">
+            <span class="order-sequence">
+                <t t-if="order.server_id &amp;&amp; widget.pos.pos_session.login_number != order.uid.split('-')[1]">
+                    <t t-esc="order.uid.substring(order.uid.indexOf('-') +1)"/>
+                </t>
+                <t t-else="">
+                    <t t-esc="order.sequence_number"/>
+                </t>
+            </span>
         </t>
     </t>
 
@@ -62,16 +75,16 @@
                 </span>
                 <span class="table-seats"><t t-esc="widget.table.seats" /></span>
                 <t t-if="widget.table.shape === 'round'">
-                    <span class='table-handle top'></span>
-                    <span class='table-handle bottom'></span>
-                    <span class='table-handle left'></span>
-                    <span class='table-handle right'></span>
+                    <span class='table-handle top ui-resizable-n'></span>
+                    <span class='table-handle bottom ui-resizable-s'></span>
+                    <span class='table-handle left ui-resizable-w'></span>
+                    <span class='table-handle right ui-resizable-e'></span>
                 </t>
                 <t t-if="widget.table.shape === 'square'">
-                    <span class='table-handle top right'></span>
-                    <span class='table-handle top left'></span>
-                    <span class='table-handle bottom right'></span>
-                    <span class='table-handle bottom left'></span>
+                    <span class='table-handle top right ui-resizable-ne'></span>
+                    <span class='table-handle top left ui-resizable-nw'></span>
+                    <span class='table-handle bottom right ui-resizable-se'></span>
+                    <span class='table-handle bottom left ui-resizable-sw'></span>
                 </t>
             </div>
         </t>

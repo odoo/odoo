@@ -9,40 +9,41 @@ QUnit.module('chrome', {}, function () {
 
     QUnit.module('Pager');
 
-    QUnit.test('basic stuff', function (assert) {
+    QUnit.test('basic stuff', async function (assert) {
         assert.expect(2);
 
         var pager = new Pager(null, 10, 1, 4);
         pager.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
 
         assert.strictEqual(pager.state.current_min, 1,
             "current_min should be set to 1");
 
         // click on next
-        testUtils.dom.click(pager.$('.o_pager_next'));
+        await testUtils.dom.click(pager.$('.o_pager_next'));
         assert.strictEqual(pager.state.current_min, 5,
             "current_min should now be 5");
 
         pager.destroy();
     });
 
-    QUnit.test('edit the pager', function (assert) {
+    QUnit.test('edit the pager', async function (assert) {
         assert.expect(5);
 
         var pager = new Pager(null, 10, 1, 4);
         pager.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
 
         // enter edition
-        testUtils.dom.click(pager.$('.o_pager_value'));
+        await testUtils.dom.click(pager.$('.o_pager_value'));
         assert.containsOnce(pager, 'input',
             "the pager should contain an input");
         assert.strictEqual(pager.$('input').val(), '1-4',
             "the input should have correct value");
 
         // change the limit
-        pager.$('input')
-            .val('1-6')
-            .trigger($.Event('keydown', {which: $.ui.keyCode.ENTER})); // trigger the change
+        await testUtils.fields.editInput(pager.$('input'), '1-6');
+        await testUtils.fields.triggerKeydown(pager.$('input'), 'enter');
         assert.strictEqual(pager.state.limit, 6,
             "the limit should have been updated");
         assert.strictEqual(pager.state.current_min, 1,
@@ -53,42 +54,39 @@ QUnit.module('chrome', {}, function () {
         pager.destroy();
     });
 
-    QUnit.test('disabling the pager', function (assert) {
-        var done = assert.async();
+    QUnit.test('disabling the pager', async function (assert) {
         assert.expect(4);
 
         var pager = new Pager(null, 10, 1, 4);
         pager.appendTo($('#qunit-fixture'));
-
-        pager.disable();
+        await testUtils.nextTick();
+        await pager.disable();
 
         // try to go to the next or previous pages
-        testUtils.dom.click(pager.$('.o_pager_next'));
+        await testUtils.dom.click(pager.$('.o_pager_next'));
         assert.strictEqual(pager.state.current_min, 1,
             "current_min should still be 1");
-        testUtils.dom.click(pager.$('.o_pager_previous'));
+        await testUtils.dom.click(pager.$('.o_pager_previous'));
         assert.strictEqual(pager.state.current_min, 1,
             "current_min should still be 1");
 
         // try to change the limit
-        testUtils.dom.click(pager.$('.o_pager_value'));
+        await testUtils.dom.click(pager.$('.o_pager_value'));
         assert.containsNone(pager, 'input',
             "the pager should not contain an input");
 
         // a common use is to disable the pager before reloading the data, and
         // re-enable it once they have been loaded
-        // the following imulates this situation
+        // the following emulates this situation
         pager.on('pager_changed', null, function () {
             pager.disable();
             concurrency.delay(0).then(function () {
                 assert.ok(pager.disabled, "pager should still be disabled");
                 pager.destroy();
-                done();
             });
         });
         pager.enable();
-        testUtils.dom.click(pager.$('.o_pager_next'));
-
+        await testUtils.dom.click(pager.$('.o_pager_next'));
     });
 });
 

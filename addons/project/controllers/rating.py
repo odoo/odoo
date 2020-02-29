@@ -9,7 +9,7 @@ from odoo.http import request
 
 class RatingProject(http.Controller):
 
-    @http.route(['/project/rating/'], type='http', auth="public", website=True)
+    @http.route(['/project/rating'], type='http', auth="public", website=True, sitemap=True)
     def index(self, **kw):
         projects = request.env['project.project'].sudo().search([('rating_status', '!=', 'no'), ('portal_show_rating', '=', True)])
         values = {'projects': projects}
@@ -23,10 +23,10 @@ class RatingProject(http.Controller):
                 rating,
                 COUNT(rating) as rating_count,
                 CASE
-                    WHEN now()::date - create_date::date BETWEEN 0 AND 6 Then 'days_06'
-                    WHEN now()::date - create_date::date BETWEEN 0 AND 15 Then 'days_15'
-                    WHEN now()::date - create_date::date BETWEEN 0 AND 30  Then 'days_30'
-                    WHEN now()::date - create_date::date BETWEEN 0 AND 90  Then 'days_90'
+                    WHEN now()::date - write_date::date BETWEEN 0 AND 6 Then 'days_06'
+                    WHEN now()::date - write_date::date BETWEEN 0 AND 15 Then 'days_15'
+                    WHEN now()::date - write_date::date BETWEEN 0 AND 30  Then 'days_30'
+                    WHEN now()::date - write_date::date BETWEEN 0 AND 90  Then 'days_90'
                 END AS period
             FROM
                 rating_rating
@@ -35,7 +35,7 @@ class RatingProject(http.Controller):
                     AND parent_res_id = %s
                     AND res_model = 'project.task'
                     AND rated_partner_id IS NOT NULL
-                    AND create_date >= current_date - interval '90' day
+                    AND write_date >= current_date - interval '90' day
                     AND rating IN (1,5,10)
             GROUP BY
                 rated_partner_id, rating, period
@@ -82,11 +82,15 @@ class RatingProject(http.Controller):
         project = request.env['project.project'].sudo().browse(project_id)
         # to avoid giving any access rights on projects to the public user, let's use sudo
         # and check if the user should be able to view the project (project managers only if it's unpublished or has no rating)
-        if not ((project.rating_status != 'no') and project.portal_show_rating) and not user.sudo(user).has_group('project.group_project_manager'):
+        if not ((project.rating_status != 'no') and project.portal_show_rating) and not user.with_user(user).has_group('project.group_project_manager'):
             raise NotFound()
 
         return request.render('project.rating_project_rating_page', {
             'project': project,
-            'ratings': request.env['rating.rating'].sudo().search([('consumed', '=', True), ('parent_res_model', '=', 'project.project'), ('parent_res_id', '=', project_id)], order='write_date DESC', limit=50),
+            'ratings': request.env['rating.rating'].sudo().search([
+                ('consumed', '=', True),
+                ('parent_res_model', '=', 'project.project'),
+                ('parent_res_id', '=', project_id)
+            ], order='write_date DESC', limit=50),
             'statistics': self._calculate_period_partner_stats(project_id),
         })

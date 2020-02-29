@@ -15,7 +15,15 @@ weWidgets.LinkDialog.include({
     custom_events: _.extend({}, weWidgets.LinkDialog.prototype.custom_events || {}, {
         website_url_chosen: '_onAutocompleteClose',
     }),
+    LINK_DEBOUNCE: 1000,
 
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this._adaptPageAnchor = _.debounce(this._adaptPageAnchor, this.LINK_DEBOUNCE);
+    },
     /**
      * Allows the URL input to propose existing website pages.
      *
@@ -49,10 +57,13 @@ weWidgets.LinkDialog.include({
             _.each(anchors, function (anchor) {
                 $selectMenu.append($('<option>', {text: anchor}));
             });
-        }).always(function () {
+            always();
+        }).guardedCatch(always);
+
+        function always() {
             $anchorsLoading.addClass('d-none');
             $selectMenu.prop("selectedIndex", -1);
-        });
+        }
     },
 
     //--------------------------------------------------------------------------

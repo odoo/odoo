@@ -19,10 +19,10 @@ QUnit.module('Base Import Mobile Tests', {
     }
 });
 
-QUnit.test('import button should be hidden in list on mobile screens', function (assert) {
+QUnit.test('import button should be hidden in list on mobile screens', async function (assert) {
     assert.expect(1);
 
-    var list = createView({
+    var list = await createView({
         View: ListView,
         model: 'foo',
         data: this.data,
@@ -34,10 +34,10 @@ QUnit.test('import button should be hidden in list on mobile screens', function 
     list.destroy();
 });
 
-QUnit.test('import button should be hidden in kanban on mobile screens', function (assert) {
+QUnit.test('import button should be hidden in kanban on mobile screens', async function (assert) {
     assert.expect(1);
 
-    var kanban = createView({
+    var kanban = await createView({
         View: KanbanView,
         model: 'foo',
         data: this.data,

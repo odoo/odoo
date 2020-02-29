@@ -14,6 +14,22 @@ FormController.include({
     }),
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async saveRecord() {
+        const changedFields = await this._super(...arguments);
+        const chatter = this.renderer.chatter;
+        if (chatter) {
+            await chatter.updateSuggestedPartners();
+        }
+        return changedFields;
+    },
+
+    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 

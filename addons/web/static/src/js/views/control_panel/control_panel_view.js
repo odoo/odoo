@@ -8,11 +8,12 @@ var controlPanelViewParameters = require('web.controlPanelViewParameters');
 var mvc = require('web.mvc');
 var pyUtils = require('web.py_utils');
 var viewUtils = require('web.viewUtils');
+var Domain = require('web.Domain');
 
 var DEFAULT_INTERVAL = controlPanelViewParameters.DEFAULT_INTERVAL;
 var DEFAULT_PERIOD = controlPanelViewParameters.DEFAULT_PERIOD;
 var INTERVAL_OPTIONS = controlPanelViewParameters.INTERVAL_OPTIONS;
-var PERIOD_OPTIONS = controlPanelViewParameters.PERIOD_OPTIONS;
+const OPTION_GENERATORS = controlPanelViewParameters.OPTION_GENERATORS;
 
 var Factory = mvc.Factory;
 
@@ -35,6 +36,8 @@ var ControlPanelView = Factory.extend({
      * @param {Object} [params.state] used to determine the control panel model
      *   essential content at load. For instance, state can be the state of an
      *   other control panel model that we want to use.
+     * @param {string} [params.title] the name of the action, to display in the
+     *   breadcrumb
      * @param {string} [params.template] the QWeb template to render
      * @param {Object} [params.viewInfo={arch: '<search/>', fields: {}}] a
      *   search fieldsview
@@ -43,6 +46,10 @@ var ControlPanelView = Factory.extend({
      *   breadcrumbs won't be rendered
      * @param {boolean} [params.withSearchBar=true] if set to false, no default
      *   search bar will be rendered
+     * @param {Object[]} [params.dynamicFilters=[]] filters to add to the
+     *   search (in addition to those described in the arch), each filter being
+     *   an object with keys 'description' (what is displayed in the searchbar)
+     *   and 'domain'
      */
     init: function (params) {
         var self = this;
@@ -65,6 +72,30 @@ var ControlPanelView = Factory.extend({
         this.arch = viewUtils.parseArch(viewInfo.arch);
         this.fields = viewInfo.fields;
 
+        this.referenceMoment = moment();
+
+        const setDescriptions = (options) => {
+            return options.map(o => {
+                const oClone = JSON.parse(JSON.stringify(o));
+                const description = o.description ?
+                                    o.description.toString () :
+                                    this.referenceMoment.clone().add(o.addParam).format(o.format);
+                return _.extend(oClone, {description:  description});
+            });
+        };
+        const process = (options) => {
+            return options.map(o => {
+                const date = this.referenceMoment.clone().set(o.setParam).add(o.addParam);
+                delete o.addParam;
+                o.setParam[o.granularity] = date[o.granularity]();
+                o.defaultYear = date.year();
+                return o;
+            });
+        }
+
+        this.optionGenerators = process(setDescriptions(OPTION_GENERATORS));
+        this.intervalOptions = setDescriptions(INTERVAL_OPTIONS);
+
         this.controllerParams.modelName = params.modelName;
 
         this.modelParams.context = context;
@@ -78,6 +109,7 @@ var ControlPanelView = Factory.extend({
         this.rendererParams.context = context;
         this.rendererParams.searchMenuTypes = params.searchMenuTypes || [];
         this.rendererParams.template = params.template;
+        this.rendererParams.title = params.title;
         this.rendererParams.withBreadcrumbs = params.withBreadcrumbs !== false;
         this.rendererParams.withSearchBar = 'withSearchBar' in params ? params.withSearchBar : true;
 
@@ -95,12 +127,18 @@ var ControlPanelView = Factory.extend({
             }
         }
 
-        PERIOD_OPTIONS = PERIOD_OPTIONS.map(function (option) {
-            return _.extend(option, {description: option.description.toString()});
-        });
-        INTERVAL_OPTIONS = INTERVAL_OPTIONS.map(function (option) {
-            return _.extend(option, {description: option.description.toString()});
-        });
+        // add a filter group with the dynamic filters, if any
+        if (params.dynamicFilters && params.dynamicFilters.length) {
+            var dynamicFiltersGroup = params.dynamicFilters.map(function (filter) {
+                return {
+                    description: filter.description,
+                    domain: JSON.stringify(filter.domain),
+                    isDefault: true,
+                    type: 'filter',
+                };
+            });
+            this.loadParams.groups.unshift(dynamicFiltersGroup);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -139,31 +177,43 @@ var ControlPanelView = Factory.extend({
                                 attrs.name ||
                                 attrs.domain ||
                                 'Ω';
+        if (attrs.invisible) {
+            filter.invisible = true;
+        }
         if (filter.type === 'filter') {
+            if (filter.isDefault) {
+                filter.defaultRank = -5;
+            }
             filter.domain = attrs.domain;
             filter.context = pyUtils.eval('context', attrs.context);
             if (attrs.date) {
                 filter.fieldName = attrs.date;
                 filter.fieldType = this.fields[attrs.date].type;
-                // we should be able to declare list of options per date filter
-                // (request of POs) (same remark for groupbys)
                 filter.hasOptions = true;
-                filter.options = PERIOD_OPTIONS;
+                filter.options = this.optionGenerators;
                 filter.defaultOptionId = attrs.default_period ||
                                             DEFAULT_PERIOD;
-                filter.currentOptionId = false;
+                filter.currentOptionIds = new Set();
+                filter.basicDomains = this._getDateFilterBasicDomains(filter);
             }
         } else if (filter.type === 'groupBy') {
+            if (filter.isDefault) {
+                const val = this.searchDefaults[attrs.name];
+                filter.defaultRank = typeof val === 'number' ? val : 100;
+            }
             filter.fieldName = attrs.fieldName;
             filter.fieldType = this.fields[attrs.fieldName].type;
             if (_.contains(['date', 'datetime'], filter.fieldType)) {
                 filter.hasOptions = true;
-                filter.options = INTERVAL_OPTIONS;
+                filter.options = this.intervalOptions;
                 filter.defaultOptionId = attrs.defaultInterval ||
                                             DEFAULT_INTERVAL;
-                filter.currentOptionId = false;
+                filter.currentOptionIds = new Set();
             }
         } else if (filter.type === 'field') {
+            if (filter.isDefault) {
+                filter.defaultRank = -10;
+            }
             var field = this.fields[attrs.name];
             filter.attrs = attrs;
             filter.autoCompleteValues = [];
@@ -177,6 +227,54 @@ var ControlPanelView = Factory.extend({
         }
     },
     /**
+     * Constructs an object containing various domains based on this.referenceMoment and
+     * the field associated with the provided date filter.
+     *
+     * @private
+     * @param {Object} filter
+     * @returns {Object}
+     */
+    _getDateFilterBasicDomains: function (filter) {
+        const _constructBasicDomain = (y, o) => {
+            const setParam = Object.assign({}, y.setParam, o ? o.setParam : {});
+            const granularity = o ? o.granularity : y.granularity;
+            const date = this.referenceMoment.clone().set(setParam);
+            let leftBound = date.clone().startOf(granularity).locale('en');
+            let rightBound = date.clone().endOf(granularity).locale('en');
+
+            if (filter.fieldType === 'date') {
+                leftBound = leftBound.format("YYYY-MM-DD");
+                rightBound = rightBound.format("YYYY-MM-DD");
+            } else {
+                leftBound = leftBound.utc().format("YYYY-MM-DD HH:mm:ss");
+                rightBound = rightBound.utc().format("YYYY-MM-DD HH:mm:ss");
+            }
+            const domain = Domain.prototype.arrayToString([
+                '&',
+                [filter.fieldName, ">=", leftBound],
+                [filter.fieldName, "<=", rightBound]
+            ]);
+
+            let description;
+            if (o) {
+                description = o.description + " " + y.description;
+            } else {
+                description = y.description;
+            }
+
+            return { domain, description };
+        };
+
+        const domains = {};
+        this.optionGenerators.filter(y => y.groupId === 2).forEach(y => {
+            domains[y.optionId] = _constructBasicDomain(y);
+            this.optionGenerators.filter(y => y.groupId === 1).forEach(o => {
+                domains[y.optionId + "__" + o.optionId] = _constructBasicDomain(y, o);
+            });
+        });
+        return domains;
+    },
+    /**
      * Parse the arch of a 'search' view.
      *
      * @private
@@ -184,7 +282,15 @@ var ControlPanelView = Factory.extend({
      */
     _parseSearchArch: function (arch) {
         var self = this;
-        var preFilters = _.flatten(arch.children.map(function (child) {
+        // a searchview arch may contain a 'searchpanel' node, but this isn't
+        // the concern of the ControlPanelView (the SearchPanel will handle it).
+        // Ideally, this code should whitelist the tags to take into account
+        // instead of blacklisting the others, but with the current (messy)
+        // structure of a searchview arch, it's way simpler to do it that way.
+        var children = arch.children.filter(function (child) {
+            return child.tag !== 'searchpanel';
+        });
+        var preFilters = _.flatten(children.map(function (child) {
             return child.tag !== 'group' ?
                     self._evalArchChild(child) :
                     child.children.map(self._evalArchChild);
@@ -197,11 +303,7 @@ var ControlPanelView = Factory.extend({
         var groupOfGroupBys = [];
         var groupNumber = 1;
 
-
         _.each(preFilters, function (preFilter) {
-            if (preFilter.attrs && preFilter.attrs.invisible) {
-                return;
-            }
             if (preFilter.tag !== currentTag || _.contains(['separator', 'field'], preFilter.tag)) {
                 if (currentGroup.length) {
                     if (currentTag === 'groupBy') {

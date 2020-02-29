@@ -32,6 +32,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @param {string} [data.moderation_status='accepted']
      * @param {string} [data.module_icon]
      * @param {Array} [data.needaction_partner_ids = []]
+     * @param {Array} [data.history_partner_ids = []]
      * @param {string} [data.record_name]
      * @param {integer} [data.res_id]
      * @param {Array} [data.starred_partner_ids = []]
@@ -66,6 +67,16 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         this._customerEmailData.push(data);
     },
     /**
+     * @override
+     * @return {string|undefined}
+     */
+    getAuthorImStatus: function () {
+        if (!this.hasAuthor()) {
+            return undefined;
+        }
+        return this.call('mail_service', 'getImStatus', { partnerID: this.getAuthorID() });
+    },
+    /**
      * Get the name of the author of this message
      * If there are no author, return "".
      *
@@ -84,7 +95,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         if (this._isOdoobotAuthor()) {
             return '/mail/static/src/img/odoobot.png';
         } else if (this.hasAuthor()) {
-            return '/web/image/res.partner/' + this.getAuthorID() + '/image_small';
+            return '/web/image/res.partner/' + this.getAuthorID() + '/image_128';
         } else if (this.getType() === 'email') {
             return '/mail/static/src/img/email_icon.png';
         }
@@ -241,7 +252,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         }
         return {
             author: this.getDisplayedAuthor(),
-            body: mailUtils.parseAndTransform(this.getBody(), mailUtils.inline),
+            body: mailUtils.htmlToTextContentInline(this.getBody()),
             date: this.getDate(),
             documentModel: this.getDocumentModel(),
             documentID: this.getDocumentID(),
@@ -250,6 +261,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
             messageID: this.getID(),
             status: this.status,
             title: title,
+            isLinkedToDocumentThread: this.isLinkedToDocumentThread(),
         };
     },
     /**
@@ -357,7 +369,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @return {boolean}
      */
     isLinkedToDocumentThread: function () {
-        return !!(this._documentModel !== 'mail.channel' && this._documentID);
+        return !!(this._documentModel !== 'mail.channel' && this._documentID && this._type !== 'user_notification');
     },
     /**
      * State whether the current user is the author of this message
@@ -501,7 +513,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @see {mail.Manager.Notification} for the receipt of 'toggle_star'
      *   notification after this rpc.
      *
-     * @return {$.Promise}
+     * @return {Promise}
      */
     toggleStarStatus: function () {
         return this._rpc({
@@ -568,7 +580,8 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @return {boolean}
      */
     _isOdoobotAuthor: function () {
-        return this._serverAuthorID === this.call('mail_service', 'getOdoobotID');
+        return this._serverAuthorID &&
+            this._serverAuthorID[0] === this.call('mail_service', 'getOdoobotID')[0];
     },
     /**
      * State whether the message is transient or not
@@ -591,7 +604,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         _.each(emojis, function (emoji) {
             var unicode = emoji.unicode;
             var regexp = new RegExp("(?:^|\\s|<[a-z]*>)(" + unicode + ")(?=\\s|$|</[a-z]*>)", 'g');
-            var originalBody = self.body;
+            var originalBody = self._body;
             self._body = self._body.replace(regexp,
                 ' <span class="o_mail_emoji">' + unicode + '</span> ');
             // Idiot-proof limit. If the user had the amazing idea of
@@ -635,6 +648,9 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         }
         if (_.contains(this._starredPartnerIDs, session.partner_id)) {
             this.setStarred(true);
+        }
+        if (_.contains(this._historyPartnerIDs, session.partner_id)) {
+            this._setHistory(true);
         }
         if (
             this.originatesFromChannel() &&
@@ -727,6 +743,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @param {string} [data.moderation_status='accepted']
      * @param {string} [data.module_icon]
      * @param {Array} [data.needaction_partner_ids = []]
+     * @param {Array} [data.history_partner_ids = []]
      * @param {string} [data.record_name]
      * @param {integer} [data.res_id]
      * @param {Array} [data.starred_partner_ids = []]
@@ -742,15 +759,32 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         this._documentID = data.res_id;
         this._emailFrom = data.email_from;
         this._info = data.info;
+        this._isNote = data.is_note;
         this._moduleIcon = data.module_icon;
         this._needactionPartnerIDs = data.needaction_partner_ids || [];
         this._starredPartnerIDs = data.starred_partner_ids || [];
+        this._historyPartnerIDs = data.history_partner_ids || [];
         this._subject = data.subject;
         this._subtypeDescription = data.subtype_description;
         this._threadIDs = data.channel_ids || [];
         this._trackingValueIDs = data.tracking_value_ids;
 
         this._moderationStatus = data.moderation_status || 'accepted';
+    },
+    /*
+     * Set whether the message is history or not.
+     * If it is history, the message is moved to the "History" mailbox.
+     * Note that this function only applies it locally, the server is not aware
+     *
+     * @private
+     * @param {boolean} history if set, the message is history
+     */
+    _setHistory: function (history) {
+        if (history) {
+            this._addThread('mailbox_history');
+        } else {
+            this.removeThread('mailbox_history');
+        }
     },
     /**
      * Set whether the message is moderated by current user or not.
@@ -789,6 +823,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
     _warnMessageModerated: function () {
         var mailBus = this.call('mail_service', 'getMailBus');
         if (this.needsModerationByUser()) {
+            this._setModeratedByUser(false);
             var moderationBox = this.call('mail_service', 'getMailbox', 'moderation');
             moderationBox.decrementMailboxCounter();
             moderationBox.removeMessage(this.getID());

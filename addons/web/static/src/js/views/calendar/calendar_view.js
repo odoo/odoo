@@ -6,6 +6,7 @@ var CalendarModel = require('web.CalendarModel');
 var CalendarController = require('web.CalendarController');
 var CalendarRenderer = require('web.CalendarRenderer');
 var core = require('web.core');
+var pyUtils = require('web.py_utils');
 var utils = require('web.utils');
 
 var _lt = core._lt;
@@ -23,11 +24,11 @@ var CalendarView = AbstractView.extend({
     icon: 'fa-calendar',
     jsLibs: ['/web/static/lib/fullcalendar/js/fullcalendar.js'],
     cssLibs: ['/web/static/lib/fullcalendar/css/fullcalendar.css'],
-    config: {
+    config: _.extend({}, AbstractView.prototype.config, {
         Model: CalendarModel,
         Controller: CalendarController,
         Renderer: CalendarRenderer,
-    },
+    }),
     viewType: 'calendar',
     searchMenuTypes: ['filter', 'favorite'],
 
@@ -65,8 +66,11 @@ var CalendarView = AbstractView.extend({
             if (child.tag !== 'field') return;
             var fieldName = child.attrs.name;
             fieldNames.push(fieldName);
-            if (!child.attrs.invisible) {
-                displayFields[fieldName] = child.attrs;
+            if (!child.attrs.invisible || child.attrs.filters) {
+                child.attrs.options = child.attrs.options ? pyUtils.py_eval(child.attrs.options) : {};
+                if (!child.attrs.invisible) {
+                    displayFields[fieldName] = {attrs: child.attrs};
+                }
 
                 if (params.sidebar === false) return; // if we have not sidebar, (eg: Dashboard), we don't use the filter "coworkers"
 
@@ -90,27 +94,29 @@ var CalendarView = AbstractView.extend({
 
                     modelFilters.push(fields[fieldName].relation);
                 }
+                if (child.attrs.filters) {
+                    filters[fieldName] = filters[fieldName] || {
+                        'title': fields[fieldName].string,
+                        'fieldName': fieldName,
+                        'filters': [],
+                    };
+                    if (child.attrs.color) {
+                        filters[fieldName].field_color = child.attrs.color;
+                        filters[fieldName].color_model = fields[fieldName].relation;
+                    }
+                    if (!child.attrs.avatar_field && fields[fieldName].relation) {
+                        if (fields[fieldName].relation.includes(['res.users', 'res.partner', 'hr.employee'])) {
+                            filters[fieldName].avatar_field = 'image_128';
+                        }
+                        filters[fieldName].avatar_model = fields[fieldName].relation;
+                    }
+                }
             }
         });
 
         if (attrs.color) {
             var fieldName = attrs.color;
             fieldNames.push(fieldName);
-            filters[fieldName] = {
-                'title': fields[fieldName].string,
-                'fieldName': fieldName,
-                'filters': [],
-            };
-            if (fields[fieldName].relation) {
-                if (['res.users', 'res.partner'].indexOf(fields[fieldName].relation) !== -1) {
-                    filters[fieldName].avatar_field = 'image_small';
-                }
-                filters[fieldName].avatar_model = fields[fieldName].relation;
-            }
-        }
-
-        if (_.isEmpty(displayFields)) {
-            displayFields = fields.display_name ? {'display_name': {}} : [];
         }
 
         //if quick_add = False, we don't allow quick_add
@@ -132,22 +138,24 @@ var CalendarView = AbstractView.extend({
             }
         }
 
-        this.controllerParams.readonlyFormViewId = !attrs.readonly_form_view_id || !utils.toBoolElse(attrs.readonly_form_view_id, true) ? false : attrs.readonly_form_view_id;
         this.controllerParams.eventOpenPopup = utils.toBoolElse(attrs.event_open_popup || '', false);
+        this.controllerParams.showUnusualDays = utils.toBoolElse(attrs.show_unusual_days || '', false);
         this.controllerParams.mapping = mapping;
         this.controllerParams.context = params.context || {};
         this.controllerParams.displayName = params.action && params.action.name;
 
         this.rendererParams.displayFields = displayFields;
-        this.rendererParams.eventTemplate = _.findWhere(arch.children, {'tag': 'templates'});
         this.rendererParams.model = viewInfo.model;
+        this.rendererParams.hideDate = utils.toBoolElse(attrs.hide_date || '', false);
+        this.rendererParams.hideTime = utils.toBoolElse(attrs.hide_time || '', false);
+        this.rendererParams.canDelete = this.controllerParams.activeActions.delete;
 
         this.loadParams.fieldNames = _.uniq(fieldNames);
         this.loadParams.mapping = mapping;
         this.loadParams.fields = fields;
         this.loadParams.fieldsInfo = viewInfo.fieldsInfo;
         this.loadParams.editable = !fields[mapping.date_start].readonly;
-        this.loadParams.creatable = true;
+        this.loadParams.creatable = this.controllerParams.activeActions.create;
         this.loadParams.eventLimit = eventLimit;
         this.loadParams.fieldColor = attrs.color;
 

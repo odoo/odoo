@@ -9,23 +9,18 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='section_leaves']" position="before">
                 <h2>Billing</h2>
-                <div name="timesheet_billing" class="row mt16 o_settings_container" title="Sell services (e.g. project, maintenance), record time spent using Timesheets app and invoice them based on a fixed price (ordered quantity) or on the time spent (delivered quantity)">
-                    <div class="col-12 col-lg-6 o_setting_box">
+                <div name="timesheet_billing" class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box" id="time_billing_setting">
                         <div class="o_setting_right_pane">
                             <span class="o_form_label">Time Billing</span>
+                            <a href="https://www.odoo.com/documentation/user/13.0/project/advanced/so_to_task.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
                             <div class="text-muted">
                                 Sell services and invoice time spent
                             </div>
                             <div class="content-group" name="msg_module_sale_timesheet">
-                                <div class="mt16">
+                                <div class="mt8">
                                     <div>
-                                        <button name="%(sale_timesheet.product_template_action_time_based)d" string="Setup your time-based services" type="action" class="btn-link" icon="fa-arrow-right"/>
-                                    </div>
-                                    <div>
-                                        <button name="%(sale_timesheet.product_template_action_fixed)d" string="Setup your fixed price services" type="action" class="btn-link" icon="fa-arrow-right"/>
-                                    </div>
-                                    <div>
-                                        <button name="%(sale_timesheet.product_template_action_milestone)d" string="Setup your milestone services" type="action" class="btn-link" icon="fa-arrow-right"/>
+                                        <button name="%(sale_timesheet.product_template_action_default_services)d" string="Configure your services" type="action" class="btn-link" icon="fa-arrow-right"/>
                                     </div>
                                 </div>
                             </div>

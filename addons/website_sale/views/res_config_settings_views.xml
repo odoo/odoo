@@ -16,12 +16,23 @@
                         <div class="o_setting_right_pane">
                             <label for="group_product_variant"/>
                             <div class="text-muted">
-                                Set product attributes (e.g. color, size) to sell variants
+                                Sell variants of a product using attributes (size, color, etc.)
                             </div>
                             <div class="content-group" attrs="{'invisible': [('group_product_variant', '=', False)]}">
-                                <div class="mt16">
+                                <div class="mt8">
                                     <button type="action" name="%(product.attribute_action)d" string="Attributes" class="btn-link" icon="fa-arrow-right"/>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="prompt_optional_products">
+                        <div class="o_setting_left_pane">
+                            <field name="module_sale_product_configurator" string="Optional Products"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="module_sale_product_configurator" string="Optional Products"/>
+                            <div class="text-muted">
+                                Display a prompt with optional products when adding to cart
                             </div>
                         </div>
                     </div>
@@ -91,20 +102,19 @@
                     </div>
                     <div class="col-12 col-lg-6 o_setting_box" id="pricelists_setting"  title="With the first mode you can set several prices in the product config form (from Sales tab). With the second one, you set prices and computation rules from Pricelists.">
                         <div class="o_setting_left_pane">
-                            <field name="multi_sales_price"/>
+                            <field name="group_product_pricelist"/>
                         </div>
                         <div class="o_setting_right_pane">
-                            <label for="multi_sales_price"/>
+                            <label for="group_product_pricelist"/>
                             <div class="text-muted">
                                 Apply specific prices per country, discounts, etc.
                             </div>
-                            <div class="content-group mt16" attrs="{'invisible': [('multi_sales_price', '=', False)]}">
+                            <div class="content-group mt16" attrs="{'invisible': [('group_product_pricelist', '=', False)]}">
                                 <field name="group_sale_pricelist" invisible="1"/>
-                                <field name="group_pricelist_item" invisible="1"/>
                                 <field name="group_product_pricelist" invisible="1"/>
-                                <field name="multi_sales_price_method" class="o_light_label" widget="radio"/>
+                                <field name="product_pricelist_setting" class="o_light_label" widget="radio"/>
                             </div>
-                            <div attrs="{'invisible': [('multi_sales_price', '=', False)]}">
+                            <div class="mt8" attrs="{'invisible': [('group_product_pricelist', '=', False)]}">
                                 <button type="action" name="%(product.product_pricelist_action2)d" string="Pricelists" class="btn-link" icon="fa-arrow-right"/>
                             </div>
                         </div>
@@ -130,15 +140,17 @@
                                 Sell in several currencies
                             </div>
                             <div class="content-group" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
-                                <div class="mt16">
+                                <div class="mt8">
                                     <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="btn-link" icon="fa-arrow-right"/>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-6 o_setting_box" title="Boost your sales with two kinds of discount programs: promotions and coupon codes. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products.">
+                    <div class="col-12 col-lg-6 o_setting_box"
+                        id="promotion_coupon_programs"
+                        title="Boost your sales with two kinds of discount programs: promotions and coupon codes. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products.">
                         <div class="o_setting_left_pane">
-                            <field name="module_sale_coupon" widget="upgrade_boolean"/>
+                            <field name="module_sale_coupon" />
                         </div>
                         <div class="o_setting_right_pane">
                             <label for="module_sale_coupon"/>
@@ -258,7 +270,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('default_invoice_policy', '=', 'delivery')]}">
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            id="automatic_invoice_generation"
+                            attrs="{'invisible': [('default_invoice_policy', '=', 'delivery')]}">
                             <div class="o_setting_left_pane">
                                 <field name="automatic_invoice" nolabel="1"/>
                             </div>
@@ -288,12 +302,24 @@
                             <div class="content-group">
                                 <div class="row mt16">
                                     <label class="o_light_label col-lg-3" string="Sales Team" for="salesteam_id"/>
-                                    <field name="salesteam_id" />
+                                    <field name="salesteam_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" />
                                 </div>
                                 <div class="row">
                                     <label class="o_light_label col-lg-3" for="salesperson_id"/>
                                     <field name="salesperson_id"/>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="confirmation_email_setting">
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Confirmation Email</span>
+                            <div class="text-muted">
+                                Email sent to the customer after the checkout
+                            </div>
+                            <div class="row mt16">
+                                <label for="confirmation_template_id" string="Email Template" class="col-lg-4 o_light_label"/>
+                                <field name="confirmation_template_id" class="oe_inline"/>
                             </div>
                         </div>
                     </div>
@@ -315,7 +341,7 @@
                                 <div class="row mt16">
                                     <div class="col-12">
                                       <label for="cart_abandoned_delay" string="Cart is abandoned after" class="o_light_label"/>
-                                      <field class="col-2" name="cart_abandoned_delay"/> hour(s).
+                                      <field class="col-2" name="cart_abandoned_delay"/> hours.
                                     </div>
                                 </div>
                             </div>

@@ -1,9 +1,11 @@
-odoo.define('website_sale.validate', function(require) {
+odoo.define('website_sale.validate', function (require) {
 'use strict';
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
+var core = require('web.core');
+var _t = core._t;
 
-sAnimations.registry.websiteSaleValidate = sAnimations.Class.extend({
+publicWidget.registry.websiteSaleValidate = publicWidget.Widget.extend({
     selector: 'div.oe_website_sale_tx_status[data-order-id]',
 
     /**
@@ -11,13 +13,8 @@ sAnimations.registry.websiteSaleValidate = sAnimations.Class.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        if (this.editableMode) {
-            return def;
-        }
-
         this._poll_nbr = 0;
         this._paymentTransationPollStatus();
-
         return def;
     },
 
@@ -41,9 +38,9 @@ sAnimations.registry.websiteSaleValidate = sAnimations.Class.extend({
                     }, Math.ceil(self._poll_nbr / 3) * 1000);
                 } else {
                     var $message = $(result.message);
-                    $message.find('span:first').prepend(
-                        $("<i title='We are waiting the confirmation of the bank or payment provider' class='fa fa-warning' style='margin-right:10px;'>")
-                    );
+                    var $warning =  $("<i class='fa fa-warning' style='margin-right:10px;'>");
+                    $warning.attr("title", _t("We are waiting the confirmation of the bank or payment provider"));
+                    $message.find('span:first').prepend($warning);
                     result.message = $message.html();
                 }
             }

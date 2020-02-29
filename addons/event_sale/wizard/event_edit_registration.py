@@ -26,15 +26,16 @@ class RegistrationEditor(models.TransientModel):
         for so_line in [l for l in sale_order.order_line if l.event_ticket_id]:
             existing_registrations = [r for r in registrations if r.event_ticket_id == so_line.event_ticket_id]
             for reg in existing_registrations:
-                attendee_list.append({
+                attendee_list.append([0, 0, {
                     'event_id': reg.event_id.id,
                     'event_ticket_id': reg.event_ticket_id.id,
                     'registration_id': reg.id,
                     'name': reg.name,
                     'email': reg.email,
                     'phone': reg.phone,
+                    'mobile': reg.mobile,
                     'sale_order_line_id': so_line.id,
-                })
+                }])
             for count in range(int(so_line.product_uom_qty) - len(existing_registrations)):
                 attendee_list.append([0, 0, {
                     'event_id': so_line.event_id.id,
@@ -45,7 +46,6 @@ class RegistrationEditor(models.TransientModel):
         res = self._convert_to_write(res)
         return res
 
-    @api.multi
     def action_make_registration(self):
         self.ensure_one()
         for registration_line in self.event_registration_ids:
@@ -72,9 +72,9 @@ class RegistrationEditorLine(models.TransientModel):
     event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket')
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
+    mobile = fields.Char(string='Mobile')
     name = fields.Char(string='Name', index=True)
 
-    @api.multi
     def get_registration_data(self):
         self.ensure_one()
         return {
@@ -83,6 +83,7 @@ class RegistrationEditorLine(models.TransientModel):
             'partner_id': self.editor_id.sale_order_id.partner_id.id,
             'name': self.name or self.editor_id.sale_order_id.partner_id.name,
             'phone': self.phone or self.editor_id.sale_order_id.partner_id.phone,
+            'mobile': self.mobile or self.editor_id.sale_order_id.partner_id.mobile,
             'email': self.email or self.editor_id.sale_order_id.partner_id.email,
             'origin': self.editor_id.sale_order_id.name,
             'sale_order_id': self.editor_id.sale_order_id.id,

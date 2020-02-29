@@ -15,7 +15,22 @@
 
         <record id="fleet_vehicle_state_new_request" model="fleet.vehicle.state">
             <field name="name">New Request</field>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="fleet_vehicle_state_to_order" model="fleet.vehicle.state">
+            <field name="name">To Order</field>
             <field name="sequence">5</field>
+        </record>
+
+        <record id="fleet_vehicle_state_registered" model="fleet.vehicle.state">
+            <field name="name">Registered</field>
+            <field name="sequence">7</field>
+        </record>
+
+        <record id="fleet_vehicle_state_downgraded" model="fleet.vehicle.state">
+            <field name="name">Downgraded</field>
+            <field name="sequence">8</field>
         </record>
     </data>
 </odoo>

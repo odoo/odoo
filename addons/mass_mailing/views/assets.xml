@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="mass_mailing assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/mass_mailing.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/mass_mailing_mobile.scss"/>
+            <link rel="stylesheet" href="/mass_mailing/static/src/css/email_template.css"/>
+
+            <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing.js"></script>
+            <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_widget.js"></script>
+        </xpath>
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_list_kanban_record.js"></script>
+            <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_list_kanban_renderer.js"></script>
+            <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_list_kanban_view.js"></script>
+            <script type="text/javascript" src="/mass_mailing/static/src/js/unsubscribe.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_mail_themes">
+        <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/themes/theme_basic.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/themes/theme_default.scss"/>
+        <t t-call="mass_mailing.mass_mailing_mail_style"/>
+    </template>
+
+    <template id="assets_mail_themes_edition"> <!-- maybe to remove and convert into a field dumy with attr invisible if the template is not selected -->
+        <t t-call="web._assets_helpers"/>
+        <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/mass_mailing.ui.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/webclient.scss"/>
+    </template>
+
+    <template id="iframe_css_assets_edit">
+        <t t-call-assets="mass_mailing.assets_mail_themes" t-js="false"/>
+        <t t-call-assets="mass_mailing.assets_mail_themes_edition" t-js="false"/>
+    </template>
+
+    <template id="iframe_css_assets_readonly">
+        <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/css/basic_theme_readonly.css"/>
+    </template>
+
+    <template id="qunit_suite" inherit_id="web.qunit_suite">
+        <xpath expr="." position="inside">
+            <script type="text/javascript">
+                odoo.define('mass_mailing.FieldHtml.test', function (require) {
+                    'use strict';
+                    var MassMailingFieldHtml = require('mass_mailing.FieldHtml');
+                    MassMailingFieldHtml.include({jsLibs: []});
+                });
+            </script>
+            <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_snippets.js"/>
+            <script type="text/javascript" src="/mass_mailing/static/tests/mass_mailing_html_tests.js"/>
+        </xpath>
+    </template>
+
+    <template id="mass_mailing_mail_style">
+        <style>
+            @media screen and (max-width: 768px) {
+                .o_mail_col_mv {
+                    display: block !important;
+                    width: auto !important;
+                }
+                .o_mail_table_styles {
+                    width: 100% !important;
+                }
+                .o_mail_col_container {
+                    margin: 0px 0px 10px 0px !important;
+                }
+            }
+        </style>
+    </template>
+</odoo>

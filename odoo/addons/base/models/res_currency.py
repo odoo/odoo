@@ -28,7 +28,7 @@ class Currency(models.Model):
     # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
     name = fields.Char(string='Currency', size=3, required=True, help="Currency Code (ISO 4217)")
     symbol = fields.Char(help="Currency sign, to be used when printing amounts.", required=True)
-    rate = fields.Float(compute='_compute_current_rate', string='Current Rate', digits=(12, 6),
+    rate = fields.Float(compute='_compute_current_rate', string='Current Rate', digits=0,
                         help='The rate of the currency to the currency of rate 1.')
     rate_ids = fields.One2many('res.currency.rate', 'currency_id', string='Rates')
     rounding = fields.Float(string='Rounding Factor', digits=(12, 6), default=0.01)
@@ -46,6 +46,7 @@ class Currency(models.Model):
     ]
 
     def _get_rates(self, company, date):
+        self.env['res.currency.rate'].flush(['rate', 'currency_id', 'company_id', 'name'])
         query = """SELECT c.id,
                           COALESCE((SELECT r.rate FROM res_currency_rate r
                                   WHERE r.currency_id = c.id AND r.name <= %s
@@ -58,17 +59,15 @@ class Currency(models.Model):
         currency_rates = dict(self._cr.fetchall())
         return currency_rates
 
-    @api.multi
     @api.depends('rate_ids.rate')
     def _compute_current_rate(self):
         date = self._context.get('date') or fields.Date.today()
-        company = self.env['res.company'].browse(self._context.get('company_id')) or self.env['res.users']._get_company()
+        company = self.env['res.company'].browse(self._context.get('company_id')) or self.env.company
         # the subquery selects the last rate before 'date' for the given currency/company
         currency_rates = self._get_rates(company, date)
         for currency in self:
             currency.rate = currency_rates.get(currency.id) or 1.0
 
-    @api.multi
     @api.depends('rounding')
     def _compute_decimal_places(self):
         for currency in self:
@@ -77,7 +76,6 @@ class Currency(models.Model):
             else:
                 currency.decimal_places = 0
 
-    @api.multi
     @api.depends('rate_ids.name')
     def _compute_date(self):
         for currency in self:
@@ -92,11 +90,9 @@ class Currency(models.Model):
                 results = super(Currency, self)._name_search(name_match.group(1), args, operator=operator, limit=limit, name_get_uid=name_get_uid)
         return results
 
-    @api.multi
     def name_get(self):
         return [(currency.id, tools.ustr(currency.name)) for currency in self]
 
-    @api.multi
     def amount_to_text(self, amount):
         self.ensure_one()
         def _num2words(number, lang):
@@ -114,8 +110,7 @@ class Currency(models.Model):
         integer_value = int(parts[0])
         fractional_value = int(parts[2] or 0)
 
-        lang_code = self.env.context.get('lang') or self.env.user.lang
-        lang = self.env['res.lang'].search([('code', '=', lang_code)])
+        lang = tools.get_lang(self.env)
         amount_words = tools.ustr('{amt_value} {amt_word}').format(
                         amt_value=_num2words(integer_value, lang=lang.iso_code),
                         amt_word=self.currency_unit_label,
@@ -127,21 +122,15 @@ class Currency(models.Model):
                         )
         return amount_words
 
-    @api.multi
     def round(self, amount):
         """Return ``amount`` rounded  according to ``self``'s rounding rules.
 
            :param float amount: the amount to round
            :return: rounded float
         """
-        # TODO: Need to check why it calls round() from sale.py, _amount_all() with *No* ID after below commits,
-        # https://github.com/odoo/odoo/commit/36ee1ad813204dcb91e9f5f20d746dff6f080ac2
-        # https://github.com/odoo/odoo/commit/0b6058c585d7d9a57bd7581b8211f20fca3ec3f7
-        # Removing self.ensure_one() will make few test cases to break of modules event_sale, sale_mrp and stock_dropshipping.
-        #self.ensure_one()
+        self.ensure_one()
         return tools.float_round(amount, precision_rounding=self.rounding)
 
-    @api.multi
     def compare_amounts(self, amount1, amount2):
         """Compare ``amount1`` and ``amount2`` after rounding them according to the
            given currency's precision..
@@ -162,9 +151,9 @@ class Currency(models.Model):
 
            With the new API, call it like: ``currency.compare_amounts(amount1, amount2)``.
         """
+        self.ensure_one()
         return tools.float_compare(amount1, amount2, precision_rounding=self.rounding)
 
-    @api.multi
     def is_zero(self, amount):
         """Returns true if ``amount`` is small enough to be treated as
            zero according to current currency's rounding rules.
@@ -177,6 +166,7 @@ class Currency(models.Model):
 
            With the new API, call it like: ``currency.is_zero(amount)``.
         """
+        self.ensure_one()
         return tools.float_is_zero(amount, precision_rounding=self.rounding)
 
     @api.model
@@ -211,14 +201,13 @@ class Currency(models.Model):
     def _compute(self, from_currency, to_currency, from_amount, round=True):
         _logger.warning('The `_compute` method is deprecated. Use `_convert` instead')
         date = self._context.get('date') or fields.Date.today()
-        company = self.env['res.company'].browse(self._context.get('company_id')) or self.env['res.users']._get_company()
+        company = self.env['res.company'].browse(self._context.get('company_id')) or self.env.company
         return from_currency._convert(from_amount, to_currency, company, date)
 
-    @api.multi
     def compute(self, from_amount, to_currency, round=True):
         _logger.warning('The `compute` method is deprecated. Use `_convert` instead')
         date = self._context.get('date') or fields.Date.today()
-        company = self.env['res.company'].browse(self._context.get('company_id')) or self.env['res.users']._get_company()
+        company = self.env['res.company'].browse(self._context.get('company_id')) or self.env.company
         return self._convert(from_amount, to_currency, company, date)
 
     def _select_companies_rates(self):
@@ -246,10 +235,10 @@ class CurrencyRate(models.Model):
 
     name = fields.Date(string='Date', required=True, index=True,
                            default=lambda self: fields.Date.today())
-    rate = fields.Float(digits=(12, 6), default=1.0, help='The rate of the currency to the currency of rate 1')
+    rate = fields.Float(digits=0, default=1.0, help='The rate of the currency to the currency of rate 1')
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     company_id = fields.Many2one('res.company', string='Company',
-                                 default=lambda self: self.env.user.company_id)
+                                 default=lambda self: self.env.company)
 
     _sql_constraints = [
         ('unique_name_per_day', 'unique (name,currency_id,company_id)', 'Only one currency rate per day allowed!'),

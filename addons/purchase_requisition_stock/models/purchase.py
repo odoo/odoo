@@ -10,4 +10,5 @@ class PurchaseOrder(models.Model):
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
         super(PurchaseOrder, self)._onchange_requisition_id()
-        self.picking_type_id = self.requisition_id.picking_type_id.id
+        if self.requisition_id:
+            self.picking_type_id = self.requisition_id.picking_type_id.id

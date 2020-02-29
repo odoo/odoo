@@ -2,12 +2,12 @@
 <odoo>
 <!-- Snippets & Themes Menu -->
 <template id="email_designer_snippets" inherit_id="web_editor.snippets" primary="True">
-    <xpath expr="//h2[@id='snippets_menu']" position="replace">
-        <t t-set="company_id" t-value="res_company"/>
-        <h2 id="snippets_menu">Select a template</h2>
+    <xpath expr="//div[@id='snippets_menu']" position="inside">
+        <button type="button" disabled="disabled">Select a template</button>
     </xpath>
-    <xpath expr="//div[@id='o_scroll']" position="replace">
-        <div id="o_scroll">
+    <xpath expr="//t[@id='default_snippets']" position="replace">
+        <t id="default_snippets">
+            <t t-set="company_id" t-value="res_company"/>
             <div id="email_designer_themes">
                 <div data-name="basic"
                      data-nowrap="1"
@@ -25,7 +25,7 @@
                 <div class="o_panel_header">
                     <i class="fa fa-angle-double-up"/> Headers
                 </div>
-                <div class="o_panel_body">
+                <div class="o_panel_body" id="email_designer_header_elements">
                     <t t-snippet="mass_mailing.s_mail_block_header_social" t-thumbnail="/mass_mailing/static/src/img/blocks/block_header_social.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_header_text_social" t-thumbnail="/mass_mailing/static/src/img/blocks/block_header_text_social.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_header_logo" t-thumbnail="/mass_mailing/static/src/img/blocks/block_header_logo.png"/>
@@ -36,7 +36,7 @@
                 <div class="o_panel_header">
                     <i class="fa fa-clone"/> Body
                 </div>
-                <div class="o_panel_body">
+                <div class="o_panel_body" id="email_designer_body_elements">
                     <t t-snippet="mass_mailing.s_mail_block_title_text" t-thumbnail="/mass_mailing/static/src/img/blocks/block_title_text.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_title_sub" t-thumbnail="/mass_mailing/static/src/img/blocks/block_title_sub.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_paragraph" t-thumbnail="/mass_mailing/static/src/img/blocks/block_paragraph.png"/>
@@ -54,7 +54,7 @@
                 <div class="o_panel_header">
                     <i class="fa fa-plus"/> Marketing Content
                 </div>
-                <div class="o_panel_body">
+                <div class="o_panel_body" id="email_designer_marketing_elements">
                     <t t-snippet="mass_mailing.s_mail_block_discount2" t-thumbnail="/mass_mailing/static/src/img/blocks/block_discount2.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_discount1" t-thumbnail="/mass_mailing/static/src/img/blocks/block_discount1.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_event" t-thumbnail="/mass_mailing/static/src/img/blocks/block_event.png"/>
@@ -65,14 +65,13 @@
                 <div class="o_panel_header">
                     <i class="fa fa-angle-double-down"/> Footers
                 </div>
-                <div class="o_panel_body">
+                <div class="o_panel_body" id="email_designer_footer_elements">
                     <t t-snippet="mass_mailing.s_mail_block_footer_social" t-thumbnail="/mass_mailing/static/src/img/blocks/block_footer_social.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_footer_social_left" t-thumbnail="/mass_mailing/static/src/img/blocks/block_footer_social_left.png"/>
                 </div>
             </div>
-        </div>
+        </t>
     </xpath>
-
     <xpath expr="//div[@id='snippet_options']" position="inside">
         <t t-call="mass_mailing.snippet_options"/>
     </xpath>
@@ -767,6 +766,62 @@
                 </tbody>
             </table>
         </div>
+    </div>
+</template>
+
+<!-- Snippet themes Options -->
+<template id="snippet_options">
+    <t t-call="web_editor.snippet_options"/>
+    <t t-raw="0"/>
+
+    <div data-js="mass_mailing_sizing_x"
+        data-selector="img, .mv, .col_mv, td, th"
+        data-exclude=".o_mail_no_resize, .o_mail_no_options"/>
+
+    <div data-js="mass_mailing_table_item"
+        data-selector="td, th"
+        data-exclude=".o_mail_no_options"/>
+
+    <div data-js="table_row"
+        data-selector="tr:has(> .row), tr:has(> .col_mv)"
+        data-exclude=".o_mail_no_options"
+        data-drop-near="tr:has(> .row), tr:has(> .col_mv)"/>
+
+    <div data-js="table_column"
+        data-selector=".col>td, .col>th"
+        data-exclude=".o_mail_no_options"
+        data-drop-near=".col>td, .col>th"/>
+
+    <div data-js="table_column_mv"
+        data-selector=".col_mv, td, th"
+        data-exclude=".o_mail_no_options"
+        data-drop-near=".col_mv, td, th"/>
+
+    <t t-set="mailing_content_selector" t-translation="off">.note-editable > div:not(.o_layout), .note-editable .oe_structure > div, .oe_snippet_body</t>
+    <div data-js="content"
+        t-att-data-selector="mailing_content_selector"
+        data-exclude=".o_mail_no_options"
+        data-drop-near="[data-oe-field='body_html']:not(:has(.o_layout)) > *, .oe_structure > *"
+        data-drop-in="[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure"/>
+
+    <div data-js="SnippetSave"
+        t-att-data-selector="mailing_content_selector">
+        <we-button class="fa fa-fw fa-save"
+                   title="Save the block to use it elsewhere"
+                   data-save-snippet=""
+                   data-no-preview="true"/>
+    </div>
+
+    <div data-js="sizing_y"
+        data-selector=".note-editable > div:not(.o_layout), .note-editable .oe_structure > div, td, th"
+        data-exclude=".o_mail_no_resize, .o_mail_no_options"/>
+
+    <div data-selector=".note-editable > div:not(.o_layout), .note-editable .oe_structure > div, td, th"
+         data-exclude=".o_mail_no_colorpicker, .o_mail_no_options">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
     </div>
 </template>
 </odoo>

@@ -70,7 +70,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * redirects the user to this new page.
      *
      * @private
-     * @returns {Deferred} Unresolved if there is a redirection
+     * @returns {Promise} Unresolved if there is a redirection
      */
     _createNewPage: function () {
         return wUtils.prompt({
@@ -87,14 +87,16 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 $add.find('input').prop('checked', true);
                 $group.after($add);
             }
-        }).then(function (val, field, $dialog) {
+        }).then(function (result) {
+            var val = result.val;
+            var $dialog = result.dialog;
             if (!val) {
                 return;
             }
             var url = '/website/add/' + encodeURIComponent(val);
             if ($dialog.find('input[type="checkbox"]').is(':checked')) url +='?add_menu=1';
             document.location = url;
-            return $.Deferred();
+            return new Promise(function () {});
         });
     },
     /**
@@ -138,7 +140,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      *
      * @private
      * @param {number} moduleId: the module to install
-     * @return {Deferred}
+     * @return {Promise}
      */
     _install: function (moduleId) {
         this.pendingInstall = true;
@@ -147,7 +149,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             model: 'ir.module.module',
             method: 'button_immediate_install',
             args: [[moduleId]],
-        }).fail(function () {
+        }).guardedCatch(function () {
             $('body').css('pointer-events', '');
         });
     },
@@ -155,20 +157,21 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * Show the menu
      *
      * @private
-     * @returns Deferred
+     * @returns {Promise}
      */
     _showMenu: function () {
-        var def = $.Deferred();
-        this.trigger_up('action_demand', {
-            actionName: 'close_all_widgets',
-            onSuccess: def.resolve.bind(def),
-        });
-        return def.then((function () {
-            this.firstTab = true;
-            this.$newContentMenuChoices.removeClass('o_hidden');
+        var self = this;
+        return new Promise(function (resolve, reject) {
+            self.trigger_up('action_demand', {
+                actionName: 'close_all_widgets',
+                onSuccess: resolve,
+            });
+        }).then(function () {
+            self.firstTab = true;
+            self.$newContentMenuChoices.removeClass('o_hidden');
             $('body').addClass('o_new_content_open');
-            this.$('> a').focus();
-        }).bind(this));
+            self.$('> a').focus();
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -264,7 +267,10 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                         }).last();
                     if ($finalPosition) {
                         $el.fadeTo(400, 0, function () {
-                            $el.insertAfter($finalPosition);
+                            // if once installed, button disapeear, don't need to move it.
+                            if (!$el.hasClass('o_new_content_element_once')) {
+                                $el.insertAfter($finalPosition);
+                            }
                             // change style to use spinner
                             $i.removeClass()
                                 .addClass('fa fa-spin fa-spinner fa-pulse');
@@ -275,14 +281,16 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                     }
 
                     self._install(moduleId).then(function () {
-                        window.location.href = window.location.origin + window.location.pathname + '?' + enableFlag;
+                        var origin = window.location.origin;
+                        var redirectURL = $el.find('a').data('url') || (window.location.pathname + '?' + enableFlag);
+                        window.location.href = origin + redirectURL;
                     }, function () {
                         $i.removeClass()
                             .addClass('fa fa-exclamation-triangle');
                         $p.text(_.str.sprintf(self.newContentText.failed, name));
                     });
                 }
-            },{
+            }, {
                 text: _t("Cancel"),
                 close: true,
             }];
@@ -291,7 +299,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         new Dialog(this, {
             title: title,
             size: 'medium',
-            $content: $('<p/>', {text: content}),
+            $content: $('<div/>', {text: content}),
             buttons: buttons
         }).open();
     },

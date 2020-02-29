@@ -45,10 +45,10 @@ return Dialog.extend({
             // this restores default modal height (bootstrap) and allows field selector to overflow
             self.$el.css('overflow', 'visible').closest('.modal-dialog').css('height', 'auto');
         });
-        return $.when(
+        return Promise.all([
             this._super.apply(this, arguments),
             this.domainSelector.appendTo(this.$el)
-        );
+        ]);
     },
 });
 });

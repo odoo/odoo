@@ -4,36 +4,22 @@
 import logging
 import math
 import re
-import uuid
 
 from datetime import datetime
-from werkzeug.exceptions import Forbidden
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import misc
+from odoo.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
-
-
-class KarmaError(Forbidden):
-    """ Karma-related error, used for forum and posts. """
-    pass
 
 
 class Forum(models.Model):
     _name = 'forum.forum'
     _description = 'Forum'
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.multi.mixin']
-
-    @api.model_cr
-    def init(self):
-        """ Add forum uuid for user email validation.
-
-        TDE TODO: move me somewhere else, auto_init ? """
-        forum_uuids = self.env['ir.config_parameter'].search([('key', '=', 'website_forum.uuid')])
-        if not forum_uuids:
-            forum_uuids.set_param('website_forum.uuid', str(uuid.uuid4()))
+    _inherit = ['mail.thread', 'image.mixin', 'website.seo.metadata', 'website.multi.mixin']
+    _order = "sequence"
 
     @api.model
     def _get_default_faq(self):
@@ -42,18 +28,19 @@ class Forum(models.Model):
 
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)
+    sequence = fields.Integer('Sequence', default=1)
+    mode = fields.Selection([
+        ('questions', 'Questions'),
+        ('discussions', 'Discussions')],
+        string='Forum Mode', required=True, default='questions',
+        help='Questions mode: only one answer allowed\n Discussions mode: multiple answers allowed')
     active = fields.Boolean(default=True)
-    faq = fields.Html('Guidelines', default=_get_default_faq, translate=True, sanitize=False)
-    description = fields.Text(
-        'Description',
-        translate=True,
-        default=lambda s: _('This community is for professionals and enthusiasts of our products and services. '
-                            'Share and discuss the best content and new marketing ideas, '
-                            'build your professional profile and become a better marketer together.'))
+    faq = fields.Html('Guidelines', default=_get_default_faq, translate=html_translate, sanitize=False)
+    description = fields.Text('Description', translate=True)
     welcome_message = fields.Html(
         'Welcome Message',
         translate=True,
-        default="""<section class="bg-info shadow">
+        default="""<section>
                         <div class="container py-5">
                             <div class="row">
                                 <div class="col-lg-12">
@@ -64,7 +51,7 @@ class Forum(models.Model):
                                     </p>
                                 </div>
                                 <div class="col text-center mt-3">
-                                    <a href="#" class="js_close_intro btn btn-outline-light">Hide Intro</a>
+                                    <a href="#" class="js_close_intro btn btn-outline-light mr-2">Hide Intro</a>
                                     <a class="btn btn-light forum_register_url" href="/web/login">Register</a>
                                 </div>
                             </div>
@@ -76,7 +63,7 @@ class Forum(models.Model):
         ('vote_count desc', 'Most Voted'),
         ('relevancy desc', 'Relevance'),
         ('child_count desc', 'Answered')],
-        string='Default Order', required=True, default='write_date desc')
+        string='Default', required=True, default='write_date desc')
     relevancy_post_vote = fields.Float('First Relevance Parameter', default=0.8, help="This formula is used in order to sort by relevance. The variable 'votes' represents number of votes for a post, and 'days' is number of days since the post creation")
     relevancy_time_decay = fields.Float('Second Relevance Parameter', default=1.8)
     allow_bump = fields.Boolean('Allow Bump', default=True,
@@ -87,6 +74,12 @@ class Forum(models.Model):
                                  help='After posting the user will be proposed to share its question '
                                       'or answer on social networks, enabling social network propagation '
                                       'of the forum content.')
+    # posts statistics
+    post_ids = fields.One2many('forum.post', 'forum_id', string='Posts')
+    total_posts = fields.Integer('Post Count', compute='_compute_forum_statistics')
+    total_views = fields.Integer('Views Count', compute='_compute_forum_statistics')
+    total_answers = fields.Integer('Answers Count', compute='_compute_forum_statistics')
+    total_favorites = fields.Integer('Favorites Count', compute='_compute_forum_statistics')
     count_posts_waiting_validation = fields.Integer(string="Number of posts waiting for validation", compute='_compute_count_posts_waiting_validation')
     count_flagged_posts = fields.Integer(string='Number of flagged posts', compute='_compute_count_flagged_posts')
     # karma generation
@@ -103,7 +96,7 @@ class Forum(models.Model):
     karma_answer = fields.Integer(string='Answer questions', default=3)
     karma_edit_own = fields.Integer(string='Edit own posts', default=1)
     karma_edit_all = fields.Integer(string='Edit all posts', default=300)
-    karma_edit_retag = fields.Integer(string='Change question tags', default=75, oldname="karma_retag")
+    karma_edit_retag = fields.Integer(string='Change question tags', default=75)
     karma_close_own = fields.Integer(string='Close own posts', default=100)
     karma_close_all = fields.Integer(string='Close all posts', default=500)
     karma_unlink_own = fields.Integer(string='Delete own posts', default=500)
@@ -122,26 +115,43 @@ class Forum(models.Model):
     karma_flag = fields.Integer(string='Flag a post as offensive', default=500)
     karma_dofollow = fields.Integer(string='Nofollow links', help='If the author has not enough karma, a nofollow attribute is added to links', default=500)
     karma_editor = fields.Integer(string='Editor Features: image and links',
-                                  default=30, oldname='karma_editor_link_files')
+                                  default=30)
     karma_user_bio = fields.Integer(string='Display detailed user biography', default=750)
     karma_post = fields.Integer(string='Ask questions without validation', default=100)
     karma_moderate = fields.Integer(string='Moderate posts', default=1000)
 
-    @api.one
-    def _compute_count_posts_waiting_validation(self):
-        domain = [('forum_id', '=', self.id), ('state', '=', 'pending')]
-        self.count_posts_waiting_validation = self.env['forum.post'].search_count(domain)
+    @api.depends('post_ids.state', 'post_ids.views', 'post_ids.child_count', 'post_ids.favourite_count')
+    def _compute_forum_statistics(self):
+        result = dict((cid, dict(total_posts=0, total_views=0, total_answers=0, total_favorites=0)) for cid in self.ids)
+        read_group_res = self.env['forum.post'].read_group(
+            [('forum_id', 'in', self.ids), ('state', 'in', ('active', 'close'))],
+            ['forum_id', 'views', 'child_count', 'favourite_count'],
+            groupby=['forum_id'],
+            lazy=False)
+        for res_group in read_group_res:
+            cid = res_group['forum_id'][0]
+            result[cid]['total_posts'] += res_group.get('__count', 0)
+            result[cid]['total_views'] += res_group.get('views', 0)
+            result[cid]['total_answers'] += res_group.get('child_count', 0)
+            result[cid]['total_favorites'] += res_group.get('favourite_count', 0)
 
-    @api.one
+        for record in self:
+            record.update(result[record.id])
+
+    def _compute_count_posts_waiting_validation(self):
+        for forum in self:
+            domain = [('forum_id', '=', forum.id), ('state', '=', 'pending')]
+            forum.count_posts_waiting_validation = self.env['forum.post'].search_count(domain)
+
     def _compute_count_flagged_posts(self):
-        domain = [('forum_id', '=', self.id), ('state', '=', 'flagged')]
-        self.count_flagged_posts = self.env['forum.post'].search_count(domain)
+        for forum in self:
+            domain = [('forum_id', '=', forum.id), ('state', '=', 'flagged')]
+            forum.count_flagged_posts = self.env['forum.post'].search_count(domain)
 
     @api.model
     def create(self, values):
         return super(Forum, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
 
-    @api.multi
     def write(self, vals):
         res = super(Forum, self).write(vals)
         if 'active' in vals:
@@ -157,7 +167,7 @@ class Forum(models.Model):
         user = self.env.user
         for tag in (tag for tag in tags.split(',') if tag):
             if tag.startswith('_'):  # it's a new tag
-                # check that not arleady created meanwhile or maybe excluded by the limit on the search
+                # check that not already created meanwhile or maybe excluded by the limit on the search
                 tag_ids = Tag.search([('name', '=', tag[1:])])
                 if tag_ids:
                     existing_keep.append(int(tag_ids[0]))
@@ -234,28 +244,28 @@ class Post(models.Model):
     closed_date = fields.Datetime('Closed on', readonly=True)
 
     # karma calculation and access
-    karma_accept = fields.Integer('Convert comment to answer', compute='_get_post_karma_rights')
-    karma_edit = fields.Integer('Karma to edit', compute='_get_post_karma_rights')
-    karma_close = fields.Integer('Karma to close', compute='_get_post_karma_rights')
-    karma_unlink = fields.Integer('Karma to unlink', compute='_get_post_karma_rights')
-    karma_comment = fields.Integer('Karma to comment', compute='_get_post_karma_rights')
-    karma_comment_convert = fields.Integer('Karma to convert comment to answer', compute='_get_post_karma_rights')
-    karma_flag = fields.Integer('Flag a post as offensive', compute='_get_post_karma_rights')
-    can_ask = fields.Boolean('Can Ask', compute='_get_post_karma_rights')
-    can_answer = fields.Boolean('Can Answer', compute='_get_post_karma_rights')
-    can_accept = fields.Boolean('Can Accept', compute='_get_post_karma_rights')
-    can_edit = fields.Boolean('Can Edit', compute='_get_post_karma_rights')
-    can_close = fields.Boolean('Can Close', compute='_get_post_karma_rights')
-    can_unlink = fields.Boolean('Can Unlink', compute='_get_post_karma_rights')
-    can_upvote = fields.Boolean('Can Upvote', compute='_get_post_karma_rights')
-    can_downvote = fields.Boolean('Can Downvote', compute='_get_post_karma_rights')
-    can_comment = fields.Boolean('Can Comment', compute='_get_post_karma_rights')
-    can_comment_convert = fields.Boolean('Can Convert to Comment', compute='_get_post_karma_rights')
-    can_view = fields.Boolean('Can View', compute='_get_post_karma_rights', search='_search_can_view')
-    can_display_biography = fields.Boolean("Is the author's biography visible from his post", compute='_get_post_karma_rights')
-    can_post = fields.Boolean('Can Automatically be Validated', compute='_get_post_karma_rights')
-    can_flag = fields.Boolean('Can Flag', compute='_get_post_karma_rights')
-    can_moderate = fields.Boolean('Can Moderate', compute='_get_post_karma_rights')
+    karma_accept = fields.Integer('Convert comment to answer', compute='_get_post_karma_rights', compute_sudo=False)
+    karma_edit = fields.Integer('Karma to edit', compute='_get_post_karma_rights', compute_sudo=False)
+    karma_close = fields.Integer('Karma to close', compute='_get_post_karma_rights', compute_sudo=False)
+    karma_unlink = fields.Integer('Karma to unlink', compute='_get_post_karma_rights', compute_sudo=False)
+    karma_comment = fields.Integer('Karma to comment', compute='_get_post_karma_rights', compute_sudo=False)
+    karma_comment_convert = fields.Integer('Karma to convert comment to answer', compute='_get_post_karma_rights', compute_sudo=False)
+    karma_flag = fields.Integer('Flag a post as offensive', compute='_get_post_karma_rights', compute_sudo=False)
+    can_ask = fields.Boolean('Can Ask', compute='_get_post_karma_rights', compute_sudo=False)
+    can_answer = fields.Boolean('Can Answer', compute='_get_post_karma_rights', compute_sudo=False)
+    can_accept = fields.Boolean('Can Accept', compute='_get_post_karma_rights', compute_sudo=False)
+    can_edit = fields.Boolean('Can Edit', compute='_get_post_karma_rights', compute_sudo=False)
+    can_close = fields.Boolean('Can Close', compute='_get_post_karma_rights', compute_sudo=False)
+    can_unlink = fields.Boolean('Can Unlink', compute='_get_post_karma_rights', compute_sudo=False)
+    can_upvote = fields.Boolean('Can Upvote', compute='_get_post_karma_rights', compute_sudo=False)
+    can_downvote = fields.Boolean('Can Downvote', compute='_get_post_karma_rights', compute_sudo=False)
+    can_comment = fields.Boolean('Can Comment', compute='_get_post_karma_rights', compute_sudo=False)
+    can_comment_convert = fields.Boolean('Can Convert to Comment', compute='_get_post_karma_rights', compute_sudo=False)
+    can_view = fields.Boolean('Can View', compute='_get_post_karma_rights', search='_search_can_view', compute_sudo=False)
+    can_display_biography = fields.Boolean("Is the author's biography visible from his post", compute='_get_post_karma_rights', compute_sudo=False)
+    can_post = fields.Boolean('Can Automatically be Validated', compute='_get_post_karma_rights', compute_sudo=False)
+    can_flag = fields.Boolean('Can Flag', compute='_get_post_karma_rights', compute_sudo=False)
+    can_moderate = fields.Boolean('Can Moderate', compute='_get_post_karma_rights', compute_sudo=False)
 
     def _search_can_view(self, operator, value):
         if operator not in ('=', '!=', '<>'):
@@ -265,10 +275,11 @@ class Post(models.Model):
             operator = operator == "=" and '!=' or '='
             value = True
 
-        if self._uid == SUPERUSER_ID:
+        user = self.env.user
+        # Won't impact sitemap, search() in converter is forced as public user
+        if self.env.is_admin():
             return [(1, '=', 1)]
 
-        user = self.env['res.users'].browse(self._uid)
         req = """
             SELECT p.id
             FROM forum_post p
@@ -288,28 +299,26 @@ class Post(models.Model):
         # don't use param named because orm will add other param (test_active, ...)
         return [('id', op, (req, (user.id, user.karma, user.id, user.karma, user.id)))]
 
-    @api.one
     @api.depends('content')
     def _get_plain_content(self):
-        self.plain_content = tools.html2plaintext(self.content)[0:500] if self.content else False
+        for post in self:
+            post.plain_content = tools.html2plaintext(post.content)[0:500] if post.content else False
 
-    @api.one
     @api.depends('vote_count', 'forum_id.relevancy_post_vote', 'forum_id.relevancy_time_decay')
     def _compute_relevancy(self):
-        if self.create_date:
-            days = (datetime.today() - self.create_date).days
-            self.relevancy = math.copysign(1, self.vote_count) * (abs(self.vote_count - 1) ** self.forum_id.relevancy_post_vote / (days + 2) ** self.forum_id.relevancy_time_decay)
-        else:
-            self.relevancy = 0
+        for post in self:
+            if post.create_date:
+                days = (datetime.today() - post.create_date).days
+                post.relevancy = math.copysign(1, post.vote_count) * (abs(post.vote_count - 1) ** post.forum_id.relevancy_post_vote / (days + 2) ** post.forum_id.relevancy_time_decay)
+            else:
+                post.relevancy = 0
 
-    @api.multi
     def _get_user_vote(self):
         votes = self.env['forum.post.vote'].search_read([('post_id', 'in', self._ids), ('user_id', '=', self._uid)], ['vote', 'post_id'])
         mapped_vote = dict([(v['post_id'][0], v['vote']) for v in votes])
         for vote in self:
             vote.user_vote = mapped_vote.get(vote.id, 0)
 
-    @api.multi
     @api.depends('vote_ids.vote')
     def _get_vote_count(self):
         read_group_res = self.env['forum.post.vote'].read_group([('post_id', 'in', self._ids)], ['post_id', 'vote'], ['post_id', 'vote'], lazy=False)
@@ -319,21 +328,20 @@ class Post(models.Model):
         for post in self:
             post.vote_count = result[post.id]
 
-    @api.one
     def _get_user_favourite(self):
-        self.user_favourite = self._uid in self.favourite_ids.ids
+        for post in self:
+            post.user_favourite = post._uid in post.favourite_ids.ids
 
-    @api.one
     @api.depends('favourite_ids')
     def _get_favorite_count(self):
-        self.favourite_count = len(self.favourite_ids)
+        for post in self:
+            post.favourite_count = len(post.favourite_ids)
 
-    @api.one
     @api.depends('create_uid', 'parent_id')
     def _is_self_reply(self):
-        self.self_reply = self.parent_id.create_uid.id == self._uid
+        for post in self:
+            post.self_reply = post.parent_id.create_uid.id == post._uid
 
-    @api.one
     @api.depends('child_ids.create_uid', 'website_message_ids')
     def _get_child_count(self):
         def process(node):
@@ -341,21 +349,23 @@ class Post(models.Model):
             for child in node.child_ids:
                 total += process(child)
             return total
-        self.child_count = process(self)
 
-    @api.one
+        for post in self:
+            post.child_count = process(post)
+
     def _get_uid_has_answered(self):
-        self.uid_has_answered = any(answer.create_uid.id == self._uid for answer in self.child_ids)
+        for post in self:
+            post.uid_has_answered = any(answer.create_uid.id == post._uid for answer in post.child_ids)
 
-    @api.one
     @api.depends('child_ids.is_correct')
     def _get_has_validated_answer(self):
-        self.has_validated_answer = any(answer.is_correct for answer in self.child_ids)
+        for post in self:
+            post.has_validated_answer = any(answer.is_correct for answer in post.child_ids)
 
-    @api.multi
+    @api.depends_context('uid')
     def _get_post_karma_rights(self):
         user = self.env.user
-        is_admin = user.id == SUPERUSER_ID
+        is_admin = self.env.is_admin()
         # sudoed recordset instead of individual posts so values can be
         # prefetched in bulk
         for post, post_sudo in zip(self, self.sudo()):
@@ -395,15 +405,16 @@ class Post(models.Model):
             filter_regexp = r'(<img.*?>)|(<a[^>]*?href[^>]*?>)|(<[a-z|A-Z]+[^>]*style\s*=\s*[\'"][^\'"]*\s*background[^:]*:[^url;]*url)'
             content_match = re.search(filter_regexp, content, re.I)
             if content_match:
-                raise KarmaError('User karma not sufficient to post an image or link.')
+                raise AccessError(_('%d karma required to post an image or link.') % forum.karma_editor)
         return content
 
     def _default_website_meta(self):
         res = super(Post, self)._default_website_meta()
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.plain_content
-        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/forum/user/%s/avatar" % (self.create_uid.id)
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = self.env['website'].image_url(self.create_uid, 'image_1024')
         res['default_twitter']['twitter:card'] = 'summary'
+        res['default_meta_description'] = self.plain_content
         return res
 
     @api.constrains('parent_id')
@@ -422,9 +433,9 @@ class Post(models.Model):
             raise UserError(_('Posting answer on a [Deleted] or [Closed] question is not possible.'))
         # karma-based access
         if not post.parent_id and not post.can_ask:
-            raise KarmaError('You don\'t have enough karma to create a new question.')
+            raise AccessError(_('%d karma required to create a new question.') % post.forum_id.karma_ask)
         elif post.parent_id and not post.can_answer:
-            raise KarmaError('You don\'t have enough karma to answer a question.')
+            raise AccessError(_('%d karma required to answer a question.') % post.forum_id.karma_answer)
         if not post.parent_id and not post.can_post:
             post.sudo().state = 'pending'
 
@@ -435,45 +446,50 @@ class Post(models.Model):
         return post
 
     @api.model
-    def check_mail_message_access(self, res_ids, operation, model_name=None):
+    def get_mail_message_access(self, res_ids, operation, model_name=None):
+        # XDO FIXME: to be correctly fixed with new get_mail_message_access and filter access rule
         if operation in ('write', 'unlink') and (not model_name or model_name == 'forum.post'):
             # Make sure only author or moderator can edit/delete messages
-            if any(not post.can_edit for post in self.browse(res_ids)):
-                raise KarmaError('Not enough karma to edit a post.')
-        return super(Post, self).check_mail_message_access(res_ids, operation, model_name=model_name)
+            for post in self.browse(res_ids):
+                if not post.can_edit:
+                    raise AccessError(_('%d karma required to edit a post.') % post.karma_edit)
+        return super(Post, self).get_mail_message_access(res_ids, operation, model_name=model_name)
 
-    @api.multi
     def write(self, vals):
         trusted_keys = ['active', 'is_correct', 'tag_ids']  # fields where security is checked manually
         if 'content' in vals:
             vals['content'] = self._update_content(vals['content'], self.forum_id.id)
-        if 'state' in vals:
-            if vals['state'] in ['active', 'close']:
-                if any(not post.can_close for post in self):
-                    raise KarmaError('Not enough karma to close or reopen a post.')
-                trusted_keys += ['state', 'closed_uid', 'closed_date', 'closed_reason_id']
-            elif vals['state'] == 'flagged':
-                if any(not post.can_flag for post in self):
-                    raise KarmaError('Not enough karma to flag a post.')
-                trusted_keys += ['state', 'flag_user_id']
-        if 'active' in vals:
-            if any(not post.can_unlink for post in self):
-                raise KarmaError('Not enough karma to delete or reactivate a post')
-        if 'is_correct' in vals:
-            if any(not post.can_accept for post in self):
-                raise KarmaError('Not enough karma to accept or refuse an answer')
-            # update karma except for self-acceptance
-            mult = 1 if vals['is_correct'] else -1
-            for post in self:
+
+        tag_ids = False
+        if 'tag_ids' in vals:
+            tag_ids = set(tag.get('id') for tag in self.resolve_2many_commands('tag_ids', vals['tag_ids']))
+
+        for post in self:
+            if 'state' in vals:
+                if vals['state'] in ['active', 'close']:
+                    if not post.can_close:
+                        raise AccessError(_('%d karma required to close or reopen a post.') % post.karma_close)
+                    trusted_keys += ['state', 'closed_uid', 'closed_date', 'closed_reason_id']
+                elif vals['state'] == 'flagged':
+                    if not post.can_flag:
+                        raise AccessError(_('%d karma required to flag a post.') % post.forum_id.karma_flag)
+                    trusted_keys += ['state', 'flag_user_id']
+            if 'active' in vals:
+                if not post.can_unlink:
+                    raise AccessError(_('%d karma required to delete or reactivate a post.') % post.karma_unlink)
+            if 'is_correct' in vals:
+                if not post.can_accept:
+                    raise AccessError(_('%d karma required to accept or refuse an answer.') % post.karma_accept)
+                # update karma except for self-acceptance
+                mult = 1 if vals['is_correct'] else -1
                 if vals['is_correct'] != post.is_correct and post.create_uid.id != self._uid:
                     post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_accepted * mult)
                     self.env.user.sudo().add_karma(post.forum_id.karma_gen_answer_accept * mult)
-        if 'tag_ids' in vals:
-            tag_ids = set(tag.get('id') for tag in self.resolve_2many_commands('tag_ids', vals['tag_ids']))
-            if any(set(post.tag_ids.ids) != tag_ids for post in self) and any(self.env.user.karma < post.forum_id.karma_edit_retag for post in self):
-                raise KarmaError(_('Not enough karma to retag.'))
-        if any(key not in trusted_keys for key in vals) and any(not post.can_edit for post in self):
-            raise KarmaError('Not enough karma to edit a post.')
+            if tag_ids:
+                if set(post.tag_ids.ids) != tag_ids and self.env.user.karma < post.forum_id.karma_edit_retag:
+                    raise AccessError(_('%d karma required to retag.') % post.forum_id.karma_edit_retag)
+            if any(key not in trusted_keys for key in vals) and not post.can_edit:
+                raise AccessError(_('%d karma required to edit a post.') % post.karma_edit)
 
         res = super(Post, self).write(vals)
 
@@ -481,37 +497,33 @@ class Post(models.Model):
         if 'content' in vals or 'name' in vals:
             for post in self:
                 if post.parent_id:
-                    body, subtype = _('Answer Edited'), 'website_forum.mt_answer_edit'
+                    body, subtype_xmlid = _('Answer Edited'), 'website_forum.mt_answer_edit'
                     obj_id = post.parent_id
                 else:
-                    body, subtype = _('Question Edited'), 'website_forum.mt_question_edit'
+                    body, subtype_xmlid = _('Question Edited'), 'website_forum.mt_question_edit'
                     obj_id = post
-                obj_id.message_post(body=body, subtype=subtype)
+                obj_id.message_post(body=body, subtype_xmlid=subtype_xmlid)
         if 'active' in vals:
             answers = self.env['forum.post'].with_context(active_test=False).search([('parent_id', 'in', self.ids)])
             if answers:
                 answers.write({'active': vals['active']})
         return res
 
-    @api.multi
     def post_notification(self):
         for post in self:
             tag_partners = post.tag_ids.mapped('message_partner_ids')
-            tag_channels = post.tag_ids.mapped('message_channel_ids')
 
             if post.state == 'active' and post.parent_id:
                 post.parent_id.message_post_with_view(
                     'website_forum.forum_post_template_new_answer',
                     subject=_('Re: %s') % post.parent_id.name,
                     partner_ids=[(4, p.id) for p in tag_partners],
-                    channel_ids=[(4, c.id) for c in tag_channels],
                     subtype_id=self.env['ir.model.data'].xmlid_to_res_id('website_forum.mt_answer_new'))
             elif post.state == 'active' and not post.parent_id:
                 post.message_post_with_view(
                     'website_forum.forum_post_template_new_question',
                     subject=post.name,
                     partner_ids=[(4, p.id) for p in tag_partners],
-                    channel_ids=[(4, c.id) for c in tag_channels],
                     subtype_id=self.env['ir.model.data'].xmlid_to_res_id('website_forum.mt_question_new'))
             elif post.state == 'pending' and not post.parent_id:
                 # TDE FIXME: in master, you should probably use a subtype;
@@ -526,7 +538,6 @@ class Post(models.Model):
                     subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'))
         return True
 
-    @api.multi
     def reopen(self):
         if any(post.parent_id or post.state != 'close' for post in self):
             return False
@@ -548,7 +559,6 @@ class Post(models.Model):
 
         self.sudo().write({'state': 'active'})
 
-    @api.multi
     def close(self, reason_id):
         if any(post.parent_id for post in self):
             return False
@@ -575,66 +585,67 @@ class Post(models.Model):
         })
         return True
 
-    @api.one
     def validate(self):
-        if not self.can_moderate:
-            raise KarmaError('Not enough karma to validate a post')
-
-        # if state == pending, no karma previously added for the new question
-        if self.state == 'pending':
-            self.create_uid.sudo().add_karma(self.forum_id.karma_gen_question_new)
-
-        self.write({
-            'state': 'active',
-            'active': True,
-            'moderator_id': self.env.user.id,
-        })
-        self.post_notification()
-        return True
-
-    @api.one
-    def refuse(self):
-        if not self.can_moderate:
-            raise KarmaError('Not enough karma to refuse a post')
-
-        self.moderator_id = self.env.user
-        return True
-
-    @api.one
-    def flag(self):
-        if not self.can_flag:
-            raise KarmaError('Not enough karma to flag a post')
-
-        if(self.state == 'flagged'):
-            return {'error': 'post_already_flagged'}
-        elif(self.state == 'active'):
-            self.write({
-                'state': 'flagged',
-                'flag_user_id': self.env.user.id,
+        for post in self:
+            if not post.can_moderate:
+                raise AccessError(_('%d karma required to validate a post.') % post.forum_id.karma_moderate)
+            # if state == pending, no karma previously added for the new question
+            if post.state == 'pending':
+                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_question_new)
+            post.write({
+                'state': 'active',
+                'active': True,
+                'moderator_id': self.env.user.id,
             })
-            return self.can_moderate and {'success': 'post_flagged_moderator'} or {'success': 'post_flagged_non_moderator'}
-        else:
-            return {'error': 'post_non_flaggable'}
-
-    @api.one
-    def mark_as_offensive(self, reason_id):
-        if not self.can_moderate:
-            raise KarmaError('Not enough karma to mark a post as offensive')
-
-        # remove some karma
-        _logger.info('Downvoting user <%s> for posting spam/offensive contents', self.create_uid)
-        self.create_uid.sudo().add_karma(self.forum_id.karma_gen_answer_flagged)
-
-        self.write({
-            'state': 'offensive',
-            'moderator_id': self.env.user.id,
-            'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
-            'closed_reason_id': reason_id,
-            'active': False,
-        })
+            post.post_notification()
         return True
 
-    @api.multi
+    def refuse(self):
+        for post in self:
+            if not post.can_moderate:
+                raise AccessError(_('%d karma required to refuse a post.') % post.forum_id.karma_moderate)
+            post.moderator_id = self.env.user
+        return True
+
+    def flag(self):
+        res = []
+        for post in self:
+            if not post.can_flag:
+                raise AccessError(_('%d karma required to flag a post.') % post.forum_id.karma_flag)
+            if post.state == 'flagged':
+               res.append({'error': 'post_already_flagged'})
+            elif post.state == 'active':
+                # TODO: potential performance bottleneck, can be batched
+                post.write({
+                    'state': 'flagged',
+                    'flag_user_id': self.env.user.id,
+                })
+                res.append(
+                    post.can_moderate and
+                    {'success': 'post_flagged_moderator'} or
+                    {'success': 'post_flagged_non_moderator'}
+                )
+            else:
+                res.append({'error': 'post_non_flaggable'})
+        return res
+
+    def mark_as_offensive(self, reason_id):
+        for post in self:
+            if not post.can_moderate:
+                raise AccessError(_('%d karma required to mark a post as offensive.') % post.forum_id.karma_moderate)
+            # remove some karma
+            _logger.info('Downvoting user <%s> for posting spam/offensive contents', post.create_uid)
+            post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_flagged)
+            # TODO: potential bottleneck, could be done in batch
+            post.write({
+                'state': 'offensive',
+                'moderator_id': self.env.user.id,
+                'closed_date': fields.Datetime.now(),
+                'closed_reason_id': reason_id,
+                'active': False,
+            })
+        return True
+
     def mark_as_offensive_batch(self, key, values):
         spams = self.browse()
         if key == 'create_uid':
@@ -648,10 +659,10 @@ class Post(models.Model):
         _logger.info('User %s marked as spams (in batch): %s' % (self.env.uid, spams))
         return spams.mark_as_offensive(reason_id)
 
-    @api.multi
     def unlink(self):
-        if any(not post.can_unlink for post in self):
-            raise KarmaError('Not enough karma to unlink a post')
+        for post in self:
+            if not post.can_unlink:
+                raise AccessError(_('%d karma required to unlink a post.') % post.karma_unlink)
         # if unlinking an answer with accepted answer: remove provided karma
         for post in self:
             if post.is_correct:
@@ -659,7 +670,6 @@ class Post(models.Model):
                 self.env.user.sudo().add_karma(post.forum_id.karma_gen_answer_accepted * -1)
         return super(Post, self).unlink()
 
-    @api.multi
     def bump(self):
         """ Bump a question: trigger a write_date by writing on a dummy bump_date
         field. One cannot bump a question more than once every 10 days. """
@@ -669,7 +679,6 @@ class Post(models.Model):
             return self.sudo().write({'bump_date': fields.Datetime.now()})
         return False
 
-    @api.multi
     def vote(self, upvote=True):
         Vote = self.env['forum.post.vote']
         vote_ids = Vote.search([('post_id', 'in', self._ids), ('user_id', '=', self._uid)])
@@ -688,7 +697,6 @@ class Post(models.Model):
                 Vote.create({'post_id': post_id, 'vote': new_vote})
         return {'vote_count': self.vote_count, 'user_vote': new_vote}
 
-    @api.multi
     def convert_answer_to_comment(self):
         """ Tools to convert an answer (forum.post) to a comment (mail.message).
         The original post is unlinked and a new comment is posted on the question
@@ -699,18 +707,21 @@ class Post(models.Model):
 
         # karma-based action check: use the post field that computed own/all value
         if not self.can_comment_convert:
-            raise KarmaError('Not enough karma to convert an answer to a comment')
+            raise AccessError(_('%d karma required to convert an answer to a comment.') % self.karma_comment_convert)
 
         # post the message
         question = self.parent_id
+        self_sudo = self.sudo()
         values = {
-            'author_id': self.sudo().create_uid.partner_id.id,  # use sudo here because of access to res.users model
+            'author_id': self_sudo.create_uid.partner_id.id,  # use sudo here because of access to res.users model
+            'email_from': self_sudo.create_uid.email_formatted,  # use sudo here because of access to res.users model
             'body': tools.html_sanitize(self.content, sanitize_attributes=True, strip_style=True, strip_classes=True),
             'message_type': 'comment',
-            'subtype': 'mail.mt_comment',
+            'subtype_xmlid': 'mail.mt_comment',
             'date': self.create_date,
         }
-        new_message = question.with_context(mail_create_nosubscribe=True).message_post(**values)
+        # done with the author user to have create_uid correctly set
+        new_message = question.with_user(self_sudo.create_uid.id).with_context(mail_create_nosubscribe=True).message_post(**values)
 
         # unlink the original answer, using SUPERUSER_ID to avoid karma issues
         self.sudo().unlink()
@@ -729,10 +740,16 @@ class Post(models.Model):
             return False
 
         # karma-based action check: must check the message's author to know if own / all
-        karma_convert = comment.author_id.id == self.env.user.partner_id.id and post.forum_id.karma_comment_convert_own or post.forum_id.karma_comment_convert_all
+        is_author = comment.author_id.id == self.env.user.partner_id.id
+        karma_own = post.forum_id.karma_comment_convert_own
+        karma_all = post.forum_id.karma_comment_convert_all
+        karma_convert = is_author and karma_own or karma_all
         can_convert = self.env.user.karma >= karma_convert
         if not can_convert:
-            raise KarmaError('Not enough karma to convert a comment to an answer')
+            if is_author and karma_own < karma_all:
+                raise AccessError(_('%d karma required to convert your comment to an answer.') % karma_own)
+            else:
+                raise AccessError(_('%d karma required to convert a comment to an answer.') % karma_all)
 
         # check the message's author has not already an answer
         question = post.parent_id if post.parent_id else post
@@ -745,34 +762,39 @@ class Post(models.Model):
             'forum_id': question.forum_id.id,
             'content': comment.body,
             'parent_id': question.id,
+            'name': _('Re: %s') % (question.name or ''),
         }
         # done with the author user to have create_uid correctly set
-        new_post = self.sudo(post_create_uid.id).create(post_values)
+        new_post = self.with_user(post_create_uid).create(post_values)
 
         # delete comment
         comment.unlink()
 
         return new_post
 
-    @api.one
     def unlink_comment(self, message_id):
-        user = self.env.user
-        comment = self.env['mail.message'].sudo().browse(message_id)
-        if not comment.model == 'forum.post' or not comment.res_id == self.id:
-            return False
-        # karma-based action check: must check the message's author to know if own or all
-        karma_unlink = comment.author_id.id == user.partner_id.id and self.forum_id.karma_comment_unlink_own or self.forum_id.karma_comment_unlink_all
-        can_unlink = user.karma >= karma_unlink
-        if not can_unlink:
-            raise KarmaError('Not enough karma to unlink a comment')
-        return comment.unlink()
+        result = []
+        for post in self:
+            user = self.env.user
+            comment = self.env['mail.message'].sudo().browse(message_id)
+            if not comment.model == 'forum.post' or not comment.res_id == post.id:
+                result.append(False)
+                continue
+            # karma-based action check: must check the message's author to know if own or all
+            karma_unlink = (
+                comment.author_id.id == user.partner_id.id and
+                post.forum_id.karma_comment_unlink_own or post.forum_id.karma_comment_unlink_all
+            )
+            can_unlink = user.karma >= karma_unlink
+            if not can_unlink:
+                raise AccessError(_('%d karma required to unlink a comment.') % karma_unlink)
+            result.append(comment.unlink())
+        return result
 
-    @api.multi
     def set_viewed(self):
         self._cr.execute("""UPDATE forum_post SET views = views+1 WHERE id IN %s""", (self._ids,))
         return True
 
-    @api.multi
     def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to the post on the website directly """
         self.ensure_one()
@@ -784,10 +806,9 @@ class Post(models.Model):
             'res_id': self.id,
         }
 
-    @api.multi
-    def _notify_get_groups(self, message, groups):
+    def _notify_get_groups(self):
         """ Add access button to everyone if the document is active. """
-        groups = super(Post, self)._notify_get_groups(message, groups)
+        groups = super(Post, self)._notify_get_groups()
 
         if self.state == 'active':
             for group_name, group_method, group_data in groups:
@@ -795,10 +816,8 @@ class Post(models.Model):
 
         return groups
 
-    @api.multi
     @api.returns('mail.message', lambda value: value.id)
-    def message_post(self, message_type='notification', **kwargs):
-        question_followers = self.env['res.partner']
+    def message_post(self, *, message_type='notification', **kwargs):
         if self.ids and message_type == 'comment':  # user comments have a restriction on karma
             # add followers of comments on the parent post
             if self.parent_id:
@@ -809,25 +828,23 @@ class Post(models.Model):
                     ('res_id', '=', self.parent_id.id),
                     ('partner_id', '!=', False),
                 ]).filtered(lambda fol: comment_subtype in fol.subtype_ids).mapped('partner_id')
-                partner_ids += [(4, partner.id) for partner in question_followers]
+                partner_ids += question_followers.ids
                 kwargs['partner_ids'] = partner_ids
 
             self.ensure_one()
             if not self.can_comment:
-                raise KarmaError('Not enough karma to comment')
+                raise AccessError(_('%d karma required to comment.') % self.karma_comment)
             if not kwargs.get('record_name') and self.parent_id:
                 kwargs['record_name'] = self.parent_id.name
         return super(Post, self).message_post(message_type=message_type, **kwargs)
 
-    @api.multi
-    def _notify_customize_recipients(self, message, msg_vals, recipients_vals):
+    def _notify_record_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):
         """ Override to avoid keeping all notified recipients of a comment.
         We avoid tracking needaction on post comments. Only emails should be
         sufficient. """
-        msg_type = msg_vals.get('message_type') or message.message_type
-        if msg_type == 'comment':
-            return {'needaction_partner_ids': [], 'partner_ids': []}
-        return {}
+        if msg_vals.get('message_type', message.message_type) == 'comment':
+            return
+        return super(Post, self)._notify_record_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
 
 
 class PostReason(models.Model):
@@ -842,6 +859,7 @@ class PostReason(models.Model):
 class Vote(models.Model):
     _name = 'forum.post.vote'
     _description = 'Post Vote'
+    _order = 'create_date desc, id desc'
 
     post_id = fields.Many2one('forum.post', string='Post', ondelete='cascade', required=True)
     user_id = fields.Many2one('res.users', string='User', required=True, default=lambda self: self._uid)
@@ -849,6 +867,10 @@ class Vote(models.Model):
     create_date = fields.Datetime('Create Date', index=True, readonly=True)
     forum_id = fields.Many2one('forum.forum', string='Forum', related="post_id.forum_id", store=True, readonly=False)
     recipient_id = fields.Many2one('res.users', string='To', related="post_id.create_uid", store=True, readonly=False)
+
+    _sql_constraints = [
+        ('vote_uniq', 'unique (post_id, user_id)', "Vote already exists !"),
+    ]
 
     def _get_karma_value(self, old_vote, new_vote, up_karma, down_karma):
         _karma_upd = {
@@ -860,45 +882,64 @@ class Vote(models.Model):
 
     @api.model
     def create(self, vals):
+        # can't modify owner of a vote
+        if not self.env.is_admin():
+            vals.pop('user_id', None)
+
         vote = super(Vote, self).create(vals)
 
-        # own post check
-        if vote.user_id.id == vote.post_id.create_uid.id:
-            raise UserError(_('It is not allowed to vote for its own post.'))
-        # karma check
-        if vote.vote == '1' and not vote.post_id.can_upvote:
-            raise KarmaError('You don\'t have enough karma toupvote.')
-        elif vote.vote == '-1' and not vote.post_id.can_downvote:
-            raise KarmaError('You don\'t have enough karma to downvote.')
+        vote._check_general_rights()
+        vote._check_karma_rights(vote.vote == '1')
 
-        if vote.post_id.parent_id:
-            karma_value = self._get_karma_value('0', vote.vote, vote.forum_id.karma_gen_answer_upvote, vote.forum_id.karma_gen_answer_downvote)
-        else:
-            karma_value = self._get_karma_value('0', vote.vote, vote.forum_id.karma_gen_question_upvote, vote.forum_id.karma_gen_question_downvote)
-        vote.recipient_id.sudo().add_karma(karma_value)
+        # karma update
+        vote._vote_update_karma('0', vote.vote)
         return vote
 
-    @api.multi
     def write(self, values):
-        if 'vote' in values:
-            for vote in self:
-                # own post check
-                if vote.user_id.id == vote.post_id.create_uid.id:
-                    raise UserError(_('It is not allowed to vote for its own post.'))
-                # karma check
-                if (values['vote'] == '1' or vote.vote == '-1' and values['vote'] == '0') and not vote.post_id.can_upvote:
-                    raise KarmaError('You don\'t have enough karma to upvote.')
-                elif (values['vote'] == '-1' or vote.vote == '1' and values['vote'] == '0') and not vote.post_id.can_downvote:
-                    raise KarmaError('You don\'t have enough karma to downvote.')
+        # can't modify owner of a vote
+        if not self.env.is_admin():
+            values.pop('user_id', None)
+
+        for vote in self:
+            self._check_general_rights(values)
+            if 'vote' in values:
+                if (values['vote'] == '1' or vote.vote == '-1' and values['vote'] == '0'):
+                    upvote = True
+                elif (values['vote'] == '-1' or vote.vote == '1' and values['vote'] == '0'):
+                    upvote = False
+                self._check_karma_rights(upvote)
 
                 # karma update
-                if vote.post_id.parent_id:
-                    karma_value = self._get_karma_value(vote.vote, values['vote'], vote.forum_id.karma_gen_answer_upvote, vote.forum_id.karma_gen_answer_downvote)
-                else:
-                    karma_value = self._get_karma_value(vote.vote, values['vote'], vote.forum_id.karma_gen_question_upvote, vote.forum_id.karma_gen_question_downvote)
-                vote.recipient_id.sudo().add_karma(karma_value)
+                self._vote_update_karma(vote.vote, values['vote'])
+
         res = super(Vote, self).write(values)
         return res
+
+    def _check_general_rights(self, vals={}):
+        post = self.post_id
+        if vals.get('post_id'):
+            post = self.env['forum.post'].browse(vals.get('post_id'))
+        if not self.env.is_admin():
+            # own post check
+            if self._uid == post.create_uid.id:
+                raise UserError(_('It is not allowed to vote for its own post.'))
+            # own vote check
+            if self._uid != self.user_id.id:
+                raise UserError(_('It is not allowed to modify someone else\'s vote.'))
+
+    def _check_karma_rights(self, upvote=None):
+        # karma check
+        if upvote and not self.post_id.can_upvote:
+            raise AccessError(_('%d karma required to upvote.') % self.post_id.forum_id.karma_upvote)
+        elif not upvote and not self.post_id.can_downvote:
+            raise AccessError(_('%d karma required to downvote.') % self.post_id.forum_id.karma_downvote)
+
+    def _vote_update_karma(self, old_vote, new_vote):
+        if self.post_id.parent_id:
+            karma_value = self._get_karma_value(old_vote, new_vote, self.forum_id.karma_gen_answer_upvote, self.forum_id.karma_gen_answer_downvote)
+        else:
+            karma_value = self._get_karma_value(old_vote, new_vote, self.forum_id.karma_gen_question_upvote, self.forum_id.karma_gen_question_downvote)
+        self.recipient_id.sudo().add_karma(karma_value)
 
 
 class Tags(models.Model):
@@ -917,7 +958,6 @@ class Tags(models.Model):
         ('name_uniq', 'unique (name, forum_id)', "Tag name already exists !"),
     ]
 
-    @api.multi
     @api.depends("post_ids.tag_ids", "post_ids.state")
     def _get_posts_count(self):
         for tag in self:
@@ -927,5 +967,5 @@ class Tags(models.Model):
     def create(self, vals):
         forum = self.env['forum.forum'].browse(vals.get('forum_id'))
         if self.env.user.karma < forum.karma_tag_create:
-            raise KarmaError(_('You don\'t have enough karma to create a new Tag.'))
+            raise AccessError(_('%d karma required to create a new Tag.') % forum.karma_tag_create)
         return super(Tags, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals)

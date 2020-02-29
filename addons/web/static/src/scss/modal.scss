@@ -23,6 +23,21 @@
                     float: right;
                 }
             }
+
+            .o_view_nocontent {
+                position: unset;
+            }
+
+            .o_modal_changes td {
+                &:first-child {
+                    padding-right: 10px;
+                    vertical-align: top;
+                    white-space: nowrap;
+                }
+                &:not(:first-child) {
+                    width: 100%;
+                }
+            }
         }
 
         .modal-footer {
@@ -39,10 +54,9 @@
             footer {
                 > :not(:first-child) { margin-left: .25rem; }
                 > :not(:last-child) { margin-right: .25rem; }
-            }
-
-            button {
-                margin-bottom: .5rem;
+                button {
+                    margin-bottom: .5rem;
+                }
             }
         }
     }
@@ -89,6 +103,30 @@
                 }
             }
         }
+    }
+}
+
+.modal.o_inactive_modal {
+    z-index: $zindex-modal-backdrop - 1;
+}
+
+.o_dialog {
+
+    > .modal {
+        display: block;
+        pointer-events: none;
+    }
+
+    .modal-content {
+        pointer-events: auto;
+    }
+}
+
+body.modal-open {
+    // Allow vertical scrolling in modals on iOS
+    -webkit-overflow-scrolling: touch;
+    .modal {
+        @include o-scrollbar-overlay;
     }
 }
 

@@ -4,56 +4,43 @@
 """
 Some functions related to the os and os.path module
 """
-
 from contextlib import contextmanager
+import logging
 import os
 from os.path import join as opj
-import shutil
 import tempfile
 import zipfile
 
-if os.name == 'nt':
-    import ctypes
-    import win32service as ws
-    import win32serviceutil as wsu
+_logger = logging.getLogger(__name__)
 
 
 def listdir(dir, recursive=False):
-    """Allow to recursively get the file listing"""
+    """Allow to recursively get the file listing following symlinks, returns
+    paths relative to the provided `dir` except completely broken if the symlink
+    it follows leaves `dir`...
+    """
+    if not recursive:
+        _logger.getChild('listdir').warning("Deprecated: just call os.listdir...")
     dir = os.path.normpath(dir)
     if not recursive:
         return os.listdir(dir)
 
     res = []
-    for root, dirs, files in walksymlinks(dir):
-        root = root[len(dir)+1:]
-        res.extend([opj(root, f) for f in files])
+    for root, _, files in os.walk(dir, followlinks=True):
+        r = os.path.relpath(root, dir)
+        # FIXME: what should happen if root is outside dir?
+        yield from (opj(r, f) for f in files)
     return res
 
 def walksymlinks(top, topdown=True, onerror=None):
-    """
-    same as os.walk but follow symlinks
-    attention: all symlinks are walked before all normal directories
-    """
-    for dirpath, dirnames, filenames in os.walk(top, topdown, onerror):
-        if topdown:
-            yield dirpath, dirnames, filenames
-
-        symlinks = (dirname for dirname in dirnames if os.path.islink(os.path.join(dirpath, dirname)))
-        for s in symlinks:
-            for x in walksymlinks(os.path.join(dirpath, s), topdown, onerror):
-                yield x
-
-        if not topdown:
-            yield dirpath, dirnames, filenames
+    _logger.getChild('walksymlinks').warning("Deprecated: use os.walk(followlinks=True) instead")
+    return os.walk(top, topdown=topdown, onerror=onerror, followlinks=True)
 
 @contextmanager
 def tempdir():
-    tmpdir = tempfile.mkdtemp()
-    try:
-        yield tmpdir
-    finally:
-        shutil.rmtree(tmpdir)
+    _logger.getChild('tempdir').warning("Deprecated: use tempfile.TemporaryDirectory")
+    with tempfile.TemporaryDirectory() as d:
+        yield d
 
 def zip_dir(path, stream, include_dir=True, fnct_sort=None):      # TODO add ignore list
     """
@@ -82,6 +69,10 @@ if os.name != 'nt':
     getppid = os.getppid
     is_running_as_nt_service = lambda: False
 else:
+    import ctypes
+    import win32service as ws
+    import win32serviceutil as wsu
+
     # based on http://mail.python.org/pipermail/python-win32/2007-June/006174.html
     _TH32CS_SNAPPROCESS = 0x00000002
     class _PROCESSENTRY32(ctypes.Structure):

@@ -82,11 +82,14 @@ class Serialized(fields.Field):
     column_type = ('text', 'text')
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        return json.dumps(value)
+        return self.convert_to_cache(value, record, validate=validate)
 
     def convert_to_cache(self, value, record, validate=True):
-        # cache format: dict
-        value = value or {}
-        return value if isinstance(value, dict) else json.loads(value)
+        # cache format: json.dumps(value) or None
+        return json.dumps(value) if isinstance(value, dict) else (value or None)
+
+    def convert_to_record(self, value, record):
+        return json.loads(value or "{}")
+
 
 fields.Serialized = Serialized

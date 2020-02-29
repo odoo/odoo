@@ -22,7 +22,7 @@
             <field name="partner_weight">10</field>
         </record>
         <record model="res.partner" id="base.res_partner_2">
-            <field name="assigned_partner_id" eval="ref('base.res_partner_3')"/>
+            <field name="assigned_partner_id" ref="base.res_partner_3"/>
         </record>
        <record id="base.res_partner_4" model="res.partner">
             <field name="grade_id" ref="res_partner_grade_bronze"/>
@@ -69,39 +69,39 @@
         </record>
 
         <record model="res.partner" id="base.res_partner_10">
-            <field name="assigned_partner_id" eval="ref('base.res_partner_4')"/>
+            <field name="assigned_partner_id" ref="base.res_partner_4"/>
         </record>
         <record model="res.partner" id="base.res_partner_12">
-            <field name="assigned_partner_id" eval="ref('base.res_partner_10')"/>
+            <field name="assigned_partner_id" ref="base.res_partner_10"/>
         </record>
         <record model="res.partner" id="base.res_partner_4">
-            <field name="assigned_partner_id" eval="ref('base.res_partner_4')"/>
+            <field name="assigned_partner_id" ref="base.res_partner_4"/>
         </record>
         <record model="res.partner" id="base.res_partner_10">
-            <field name="assigned_partner_id" eval="ref('base.res_partner_12')"/>
+            <field name="assigned_partner_id" ref="base.res_partner_12"/>
         </record>
         <record model="res.partner" id="base.res_partner_3">
-            <field name="assigned_partner_id" eval="ref('base.res_partner_3')"/>
+            <field name="assigned_partner_id" ref="base.res_partner_3"/>
         </record>
         <record model="res.partner" id="base.res_partner_2">
-            <field name="assigned_partner_id" eval="ref('base.res_partner_1')"/>
+            <field name="assigned_partner_id" ref="base.res_partner_1"/>
         </record>
         <record model="res.partner" id="base.res_partner_4">
-            <field name="assigned_partner_id" eval="ref('base.res_partner_18')"/>
+            <field name="assigned_partner_id" ref="base.res_partner_18"/>
         </record>
         <record model="res.partner" id="base.res_partner_4">
-            <field name="assigned_partner_id" eval="ref('base.res_partner_3')"/>
+            <field name="assigned_partner_id" ref="base.res_partner_3"/>
         </record>
         <record model="res.partner" id="base.res_partner_1">
-            <field name="assigned_partner_id" eval="ref('base.res_partner_12')"/>
+            <field name="assigned_partner_id" ref="base.res_partner_12"/>
         </record>
         <record model="res.partner" id="base.res_partner_1">
-            <field name="assigned_partner_id" eval="ref('base.res_partner_2')"/>
+            <field name="assigned_partner_id" ref="base.res_partner_2"/>
         </record>
         <record model="res.partner" id="base.res_partner_1">
-            <field name="assigned_partner_id" eval="ref('base.res_partner_2')"/>
+            <field name="assigned_partner_id" ref="base.res_partner_2"/>
         </record>
         <record model="res.partner" id="base.res_partner_12">
-            <field name="assigned_partner_id" eval="ref('base.res_partner_12')"/>
+            <field name="assigned_partner_id" ref="base.res_partner_12"/>
         </record>
 </odoo>

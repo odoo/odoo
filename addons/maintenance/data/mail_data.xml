@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<data>
+<data noupdate="1">
     <!-- Maintenance-specific activities, for automatic generation mainly -->
     <record id="mail_act_maintenance_request" model="mail.activity.type">
         <field name="name">Maintenance Request</field>
@@ -42,14 +42,14 @@
         <field name="name">Maintenance Request Created</field>
         <field name="res_model">maintenance.equipment.category</field>
         <field name="default" eval="True"/>
-        <field name="parent_id" eval="ref('mt_req_created')"/>
+        <field name="parent_id" ref="mt_req_created"/>
         <field name="relation_field">category_id</field>
     </record>
     <record id="mt_cat_mat_assign" model="mail.message.subtype">
         <field name="name">Equipment Assigned</field>
         <field name="res_model">maintenance.equipment.category</field>
         <field name="default" eval="True"/>
-        <field name="parent_id" eval="ref('mt_mat_assign')"/>
+        <field name="parent_id" ref="mt_mat_assign"/>
         <field name="relation_field">category_id</field>
     </record>
     <record id="equipment_team_maintenance" model="maintenance.team">

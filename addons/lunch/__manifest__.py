@@ -4,8 +4,8 @@
     'name': 'Lunch',
     'sequence': 120,
     'version': '1.0',
-    'depends': ['decimal_precision', 'mail'],
-    'category': 'Human Resources',
+    'depends': ['mail'],
+    'category': 'Human Resources/Lunch',
     'summary': 'Handle lunch orders of your employees',
     'description': """
 The base module to manage lunch.
@@ -26,7 +26,6 @@ If you want to save your employees' time and avoid them to always have coins in 
         'security/ir.model.access.csv',
         'report/lunch_cashmove_report_views.xml',
         'views/lunch_templates.xml',
-        'wizard/lunch_line_wizard_views.xml',
         'views/lunch_alert_views.xml',
         'views/lunch_cashmove_views.xml',
         'views/lunch_location_views.xml',

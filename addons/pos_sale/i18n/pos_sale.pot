@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* pos_sale
+# 	* pos_sale
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.1\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-24 10:57+0000\n"
-"PO-Revision-Date: 2018-12-24 10:57+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2019-08-26 08:15+0000\n"
+"PO-Revision-Date: 2019-08-26 08:15+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,27 +21,17 @@ msgid "<span class=\"o_form_label\">Sales Team</span>"
 msgstr ""
 
 #. module: pos_sale
-#: selection:sale.report,state:0
-msgid "Cancelled"
-msgstr ""
-
-#. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
 msgid "Currency Rate"
 msgstr ""
 
 #. module: pos_sale
-#: selection:sale.report,state:0
-msgid "Draft Quotation"
-msgstr ""
-
-#. module: pos_sale
-#: selection:sale.report,state:0
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
 msgid "Invoiced"
 msgstr ""
 
 #. module: pos_sale
-#: selection:sale.report,state:0
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_draft
 msgid "New"
 msgstr ""
 
@@ -56,7 +46,7 @@ msgid "Open Sessions"
 msgstr ""
 
 #. module: pos_sale
-#: selection:sale.report,state:0
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
 msgid "Paid"
 msgstr ""
 
@@ -81,13 +71,8 @@ msgid "Point of Sales"
 msgstr ""
 
 #. module: pos_sale
-#: selection:sale.report,state:0
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_done
 msgid "Posted"
-msgstr ""
-
-#. module: pos_sale
-#: selection:sale.report,state:0
-msgid "Quotation Sent"
 msgstr ""
 
 #. module: pos_sale
@@ -96,27 +81,14 @@ msgid "Sales Analysis Report"
 msgstr ""
 
 #. module: pos_sale
-#: model:ir.model,name:pos_sale.model_crm_team
-msgid "Sales Channels"
-msgstr ""
-
-#. module: pos_sale
-#: selection:sale.report,state:0
-msgid "Sales Done"
-msgstr ""
-
-#. module: pos_sale
-#: selection:sale.report,state:0
-msgid "Sales Order"
-msgstr ""
-
-#. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
 msgid "Sales Reporting"
 msgstr ""
 
 #. module: pos_sale
+#: model:ir.model,name:pos_sale.model_crm_team
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__crm_team_id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__crm_team_id
 #: model:ir.model.fields,field_description:pos_sale.field_pos_session__crm_team_id
 msgid "Sales Team"
 msgstr ""
@@ -148,7 +120,9 @@ msgstr ""
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
-msgid "The rate of the currency to the currency of rate applicable at the date of the order"
+msgid ""
+"The rate of the currency to the currency of rate applicable at the date of "
+"the order"
 msgstr ""
 
 #. module: pos_sale
@@ -156,4 +130,3 @@ msgstr ""
 #: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Team."
 msgstr ""
-

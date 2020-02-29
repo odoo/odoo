@@ -16,4 +16,12 @@
         </t>
     </t>
 
+    <t t-extend="OrderReceipt">
+        <t t-jquery='.pos-receipt-order-data' t-operation='append'>
+            <t t-if='receipt.reprint === true'>
+                <div>DUPLICATA</div>
+            </t>
+        </t>
+    </t>
+
 </templates>

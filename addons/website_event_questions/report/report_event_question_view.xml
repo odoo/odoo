@@ -40,6 +40,9 @@
                         <filter string="Event" name="group_by_event" context="{'group_by': 'event_id'}" />
                         <filter string="Question" name="group_by_question" context="{'group_by': 'question_id'}"/>
                         <filter string="Answer" name="group_by_answer" context="{'group_by': 'answer_id'}" />
+                        <filter name="exclude_cancelled"
+                                string="Exclude cancelled registrations"
+                                domain="[('attendee_id.state', '!=', 'cancel')]" />
                     </group>
                 </search>
             </field>
@@ -49,7 +52,6 @@
        <record model="ir.actions.act_window" id="action_event_question_report">
            <field name="name">Questions Analysis</field>
            <field name="res_model">event.question.report</field>
-           <field name="view_type">form</field>
            <field name="view_mode">graph,pivot</field>
        </record>
 

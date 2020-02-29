@@ -16,6 +16,8 @@ var ControlPanelController = mvc.Controller.extend({
         new_groupBy: '_onNewGroupBy',
         activate_time_range: '_onActivateTimeRange',
         autocompletion_filter: '_onAutoCompletionFilter',
+        reload: '_onReload',
+        reset: '_onReset',
     },
 
     /**
@@ -34,6 +36,12 @@ var ControlPanelController = mvc.Controller.extend({
     on_attach_callback: function () {
         this.renderer.on_attach_callback();
     },
+    /**
+     * Called when the control panel is remove form the DOM.
+     */
+    on_detach_callback: function () {
+        this.renderer.on_detach_callback();
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -47,6 +55,14 @@ var ControlPanelController = mvc.Controller.extend({
         return this.model.exportState();
     },
     /**
+     * Called by the abstract controller to give focus to the searchbar
+     */
+    focusSearchBar: function () {
+        if (this.renderer.searchBar) {
+            this.renderer.searchBar.focus();
+        }
+    },
+    /**
      * Compute the search related values that will be used to fetch data.
      *
      * @returns {Object} object with keys 'context', 'domain', 'groupBy'
@@ -56,14 +72,14 @@ var ControlPanelController = mvc.Controller.extend({
     },
     /**
      * @param {Object} state a ControlPanelModel state
-     * @returns {Deferred<Object>} the result of `getSearchState`
+     * @returns {Promise<Object>} the result of `getSearchState`
      */
     importState: function (state) {
         var defs = [];
         this.model.importState(state);
         defs.push(this.getSearchQuery());
         defs.push(this.renderer.updateState(this.model.get()));
-        return $.when(defs).then(function (defsResults) {
+        return Promise.all(defs).then(function (defsResults) {
             return defsResults[0];
         });
     },
@@ -120,7 +136,7 @@ var ControlPanelController = mvc.Controller.extend({
     },
     /**
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _reportNewQueryAndRender: function () {
         this.trigger_up('search', this.model.getQuery());
@@ -228,6 +244,23 @@ var ControlPanelController = mvc.Controller.extend({
         ev.stopPropagation();
         this.model.createNewGroupBy(ev.data);
         this._reportNewQueryAndRender();
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onReload: function (ev) {
+        ev.stopPropagation();
+        this.trigger_up('search', this.model.getQuery());
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onReset: function (ev) {
+        ev.stopPropagation();
+        var state = this.model.get();
+        this.renderer.updateState(state);
     },
 });
 

@@ -1,7 +1,8 @@
 # coding: utf-8
-from odoo.tests import common, HttpCase
+from odoo.tests import common, HttpCase, tagged
 
 
+@tagged('-at_install', 'post_install')
 class TestPage(common.TransactionCase):
     def setUp(self):
         super(TestPage, self).setUp()
@@ -59,7 +60,7 @@ class TestPage(common.TransactionCase):
         total_pages = Page.search_count([])
         total_menus = Menu.search_count([])
         # Copying a specific page should create a new page with an unique URL (suffixed by -X)
-        Page.clone_page(self.page_specific.id, True)
+        Page.clone_page(self.page_specific.id, clone_menu=True)
         cloned_page = Page.search([('url', '=', '/page_specific-1')])
         cloned_menu = Menu.search([('url', '=', '/page_specific-1')])
         self.assertEqual(len(cloned_page), 1, "A page with an URL /page_specific-1 should've been created")
@@ -68,19 +69,27 @@ class TestPage(common.TransactionCase):
         self.assertEqual(len(cloned_menu), 1, "A specific page (with a menu) being cloned should have it's menu also cloned")
         self.assertEqual(cloned_menu.page_id, cloned_page, "The new cloned menu and the new cloned page should be linked (m2o)")
         self.assertEqual(Menu.search_count([]), total_menus + 1, "Should have cloned the page menu")
+        Page.clone_page(self.page_specific.id, page_name="about-us", clone_menu=True)
+        cloned_page_about_us = Page.search([('url', '=', '/about-us')])
+        cloned_menu_about_us = Menu.search([('url', '=', '/about-us')])
+        self.assertEqual(len(cloned_page_about_us), 1, "A page with an URL /about-us should've been created")
+        self.assertEqual(len(cloned_menu_about_us), 1, "A specific page (with a menu) being cloned should have it's menu also cloned")
+        self.assertEqual(cloned_menu_about_us.page_id, cloned_page_about_us, "The new cloned menu and the new cloned page should be linked (m2o)")
+        # It should also copy its menu with new url/name/page_id (if the page has a menu)
+        self.assertEqual(Menu.search_count([]), total_menus + 2, "Should have cloned the page menu")
 
         total_pages = Page.search_count([])
         total_menus = Menu.search_count([])
 
         # Copying a generic page should create a specific page with same URL
-        Page.clone_page(self.page_1.id, True)
+        Page.clone_page(self.page_1.id, clone_menu=True)
         cloned_generic_page = Page.search([('url', '=', '/page_1'), ('id', '!=', self.page_1.id), ('website_id', '!=', False)])
         self.assertEqual(len(cloned_generic_page), 1, "A generic page being cloned should create a specific one for the current website")
         self.assertEqual(cloned_generic_page.url, self.page_1.url, "The URL of the cloned specific page should be the same as the generic page it has been cloned from")
         self.assertEqual(Page.search_count([]), total_pages + 1, "Should have cloned the generic page as a specific page for this website")
         self.assertEqual(Menu.search_count([]), total_menus, "It should not create a new menu as the generic page's menu belong to another website")
         # Except if the URL already exists for this website (its the case now that we already cloned it once)
-        Page.clone_page(self.page_1.id, True)
+        Page.clone_page(self.page_1.id, clone_menu=True)
         cloned_generic_page_2 = Page.search([('url', '=', '/page_1-1'), ('id', '!=', self.page_1.id)])
         self.assertEqual(len(cloned_generic_page_2), 1, "A generic page being cloned should create a specific page with a new URL if there is already a specific page with that URL")
 
@@ -164,21 +173,31 @@ class TestPage(common.TransactionCase):
     def test_cou_page_frontend(self):
         Page = self.env['website.page']
         View = self.env['ir.ui.view']
+        Website = self.env['website']
+
+        website2 = self.env['website'].create({
+            'name': 'My Second Website',
+            'domain': '',
+        })
 
         # currently the view unlink of website.page can't handle views with inherited views
         self.extension_view.unlink()
 
-        self.page_1.with_context(website_id=1).unlink()
+        website_id = 1
+        self.page_1.with_context(website_id=website_id).unlink()
 
         self.assertEqual(bool(self.base_view.exists()), False)
         self.assertEqual(bool(self.page_1.exists()), False)
         # Not COU but deleting a page will delete its menu (cascade)
         self.assertEqual(bool(self.page_1_menu.exists()), False)
 
-        self.assertEqual(Page.search([('url', '=', '/page_1')]).website_id.id, 2)
-        self.assertEqual(View.search([('name', 'in', ('Base', 'Extension'))]).mapped('website_id').id, 2)
+        pages = Page.search([('url', '=', '/page_1')])
+        self.assertEqual(len(pages), Website.search_count([]) - 1, "A specific page for every website should have been created, except for the one from where we deleted the generic one.")
+        self.assertTrue(website_id not in pages.mapped('website_id').ids, "The website from which we deleted the generic page should not have a specific one.")
+        self.assertTrue(website_id not in View.search([('name', 'in', ('Base', 'Extension'))]).mapped('website_id').ids, "Same for views")
 
 
+@tagged('-at_install', 'post_install')
 class Crawler(HttpCase):
     def test_unpublished_page(self):
         Page = self.env['website.page']
@@ -196,11 +215,11 @@ class Crawler(HttpCase):
         generic_page = Page.create({
             'view_id': base_view.id,
             'url': '/page_1',
-            'website_published': True,
+            'is_published': True,
         })
 
         specific_page = generic_page.copy({'website_id': self.env['website'].get_current_website().id})
-        specific_page.write({'website_published': False, 'arch': generic_page.arch.replace('I am a generic page', 'I am a specific page')})
+        specific_page.write({'is_published': False, 'arch': generic_page.arch.replace('I am a generic page', 'I am a specific page')})
 
         r = self.url_open(specific_page.url)
         self.assertEqual(r.status_code, 404, "Restricted users should see a 404 and not the generic one as we unpublished the specific one")

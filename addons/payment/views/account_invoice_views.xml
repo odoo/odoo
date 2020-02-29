@@ -2,25 +2,25 @@
 <odoo>
     <data>
         <record id="account_invoice_view_form_inherit_payment" model="ir.ui.view">
-            <field name="name">account.invoice.view.form.inherit.payment</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="name">account.move.view.form.inherit.payment</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
                 <!--
                 The user must capture/void the authorized transactions before registering a new payment.
                 -->
                 <xpath expr="//button[@id='account_invoice_payment_btn']" position="attributes">
-                    <attribute name="attrs">{'invisible': ['|', ('state', '!=', 'open'), ('authorized_transaction_ids', '!=', [])]}</attribute>
+                    <attribute name="attrs">{'invisible': ['|', '|', '|', ('state', '!=', 'posted'), ('payment_state', 'not in', ('partial', 'not_paid')), ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')), ('authorized_transaction_ids', '!=', [])]}</attribute>
                 </xpath>
                 <xpath expr="//button[@id='account_invoice_payment_btn']" position="after">
                     <field name="authorized_transaction_ids" invisible="1"/>
                     <button name="payment_action_capture" type="object"
                             string="Capture Transaction" class="oe_highlight"
-                            attrs="{'invisible': ['|', ('state', '!=', 'open'), ('authorized_transaction_ids', '=', [])]}"/>
+                            attrs="{'invisible': ['|', '|', ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('state', '!=', 'posted'), ('authorized_transaction_ids', '=', [])]}"/>
                     <button name="payment_action_void" type="object"
                             string="Void Transaction"
                             confirm="Are you sure you want to void the authorized transaction? This action can't be undone."
-                            attrs="{'invisible': ['|', ('state', '!=', 'open'), ('authorized_transaction_ids', '=', [])]}"/>
+                            attrs="{'invisible': ['|', '|', ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('state', '!=', 'posted'), ('authorized_transaction_ids', '=', [])]}"/>
                 </xpath>
             </field>
         </record>

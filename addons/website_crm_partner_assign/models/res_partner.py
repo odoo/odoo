@@ -10,18 +10,19 @@ class ResPartnerGrade(models.Model):
     _inherit = ['website.published.mixin']
     _description = 'Partner Grade'
 
-    website_published = fields.Boolean(default=True)
     sequence = fields.Integer('Sequence')
     active = fields.Boolean('Active', default=lambda *args: 1)
     name = fields.Char('Level Name', translate=True)
     partner_weight = fields.Integer('Level Weight', default=1,
         help="Gives the probability to assign a lead to this partner. (0 means no assignation.)")
 
-    @api.multi
     def _compute_website_url(self):
         super(ResPartnerGrade, self)._compute_website_url()
         for grade in self:
             grade.website_url = "/partners/grade/%s" % (slug(grade))
+
+    def _default_is_published(self):
+        return True
 
 
 class ResPartnerActivation(models.Model):
@@ -38,7 +39,7 @@ class ResPartner(models.Model):
 
     partner_weight = fields.Integer('Level Weight', default=0, tracking=True,
         help="This should be a numerical value greater than 0 which will decide the contention for this partner to take this lead/opportunity.")
-    grade_id = fields.Many2one('res.partner.grade', 'Level', tracking=True)
+    grade_id = fields.Many2one('res.partner.grade', 'Partner Level', tracking=True)
     grade_sequence = fields.Integer(related='grade_id.sequence', readonly=True, store=True)
     activation = fields.Many2one('res.partner.activation', 'Activation', index=True, tracking=True)
     date_partnership = fields.Date('Partnership Date')
@@ -54,10 +55,10 @@ class ResPartner(models.Model):
     )
     implemented_count = fields.Integer(compute='_compute_implemented_partner_count', store=True)
 
-    @api.one
     @api.depends('implemented_partner_ids', 'implemented_partner_ids.website_published', 'implemented_partner_ids.active')
     def _compute_implemented_partner_count(self):
-        self.implemented_count = len(self.implemented_partner_ids.filtered('website_published'))
+        for partner in self:
+            partner.implemented_count = len(partner.implemented_partner_ids.filtered('website_published'))
 
     @api.onchange('grade_id')
     def _onchange_grade_id(self):

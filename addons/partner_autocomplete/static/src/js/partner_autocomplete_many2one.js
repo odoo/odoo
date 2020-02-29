@@ -35,7 +35,7 @@ var PartnerField = FieldMany2One.extend(AutocompleteMixin, {
      * Action : create popup form with pre-filled values from Autocomplete
      *
      * @param {Object} company
-     * @returns {Deferred}
+     * @returns {Promise}
      * @private
      */
     _createPartner: function (company) {
@@ -78,7 +78,7 @@ var PartnerField = FieldMany2One.extend(AutocompleteMixin, {
      */
     _modifyAutompleteRendering: function (){
         var api = this.$input.data('ui-autocomplete');
-        // FIXME: bugfix to prevent traceback in mobile apps due to override 
+        // FIXME: bugfix to prevent traceback in mobile apps due to override
         // of Many2one widget with native implementation.
         if (!api) {
             return;
@@ -114,40 +114,38 @@ var PartnerField = FieldMany2One.extend(AutocompleteMixin, {
      *
      * @override
      * @param search_val {string}
-     * @returns {Deferred}
+     * @returns {Promise}
      * @private
      */
     _searchSuggestions: function (search_val) {
-        var def = $.Deferred();
+        var self = this;
+        return new Promise(function (resolve, reject) {
+            if (self._isOnline()) {
 
-        if (this._isOnline()) {
-            var self = this;
+                self._autocomplete(search_val).then(function (suggestions) {
+                    var choices = [];
+                    if (suggestions && suggestions.length) {
+                        _.each(suggestions, function (suggestion) {
+                            var label = '<i class="fa fa-magic text-muted"/> ';
+                            label += _.str.sprintf('%s, <span class="text-muted">%s</span>', suggestion.label, suggestion.description);
 
-            self._autocomplete(search_val).then(function (suggestions) {
-                var choices = [];
-                if (suggestions && suggestions.length) {
-                    _.each(suggestions, function (suggestion) {
-                        var label = '<i class="fa fa-magic text-muted"/> ';
-                        label += _.str.sprintf('%s, <span class="text-muted">%s</span>', suggestion.label, suggestion.description);
-
-                        choices.push({
-                            label: label,
-                            action: function () {
-                                self._createPartner(suggestion);
-                            },
-                            logo: suggestion.logo,
-                            classname: 'o_partner_autocomplete_dropdown_item',
+                            choices.push({
+                                label: label,
+                                action: function () {
+                                    self._createPartner(suggestion);
+                                },
+                                logo: suggestion.logo,
+                                classname: 'o_partner_autocomplete_dropdown_item',
+                            });
                         });
-                    });
-                }
+                    }
 
-                def.resolve(choices);
-            });
-        } else {
-            def.resolve([]);
-        }
-
-        return def;
+                    resolve(choices);
+                });
+            } else {
+               resolve([]);
+            }
+        });
     },
 });
 

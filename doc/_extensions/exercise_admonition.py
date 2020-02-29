@@ -20,5 +20,5 @@ class exercise(nodes.Admonition, nodes.Element): pass
 class Exercise(admonitions.BaseAdmonition):
     node_class = exercise
 
-from sphinx.locale import admonitionlabels, l_
-admonitionlabels['exercise'] = l_('Exercise')
+from sphinx.locale import admonitionlabels
+admonitionlabels['exercise'] = 'Exercise'

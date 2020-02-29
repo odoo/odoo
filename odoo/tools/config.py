@@ -9,9 +9,12 @@ except ImportError:
 import errno
 import logging
 import optparse
+import glob
 import os
 import sys
+import tempfile
 import odoo
+from os.path import expandvars, expanduser, abspath, realpath
 from .. import release, conf, loglevels
 from . import appdirs
 
@@ -117,6 +120,9 @@ class configmanager(object):
         group.add_option("--addons-path", dest="addons_path",
                          help="specify additional addons paths (separated by commas).",
                          action="callback", callback=self._check_addons_path, nargs=1, type="string")
+        group.add_option("--upgrade-path", dest="upgrade_path",
+                         help="specify an additional upgrade path.",
+                         action="callback", callback=self._check_upgrade_path, nargs=1, type="string")
         group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules.", my_default='base,web')
 
         group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
@@ -160,8 +166,22 @@ class configmanager(object):
                          dest='test_enable',
                          help="Enable unit tests.")
         group.add_option("--test-tags", dest="test_tags",
-                         help="Comma separated list of tags to filter which tests to excute. Enable unit tests if set.")
+                         help="""Comma separated list of spec to filter which tests to execute. Enable unit tests if set.
+                         A filter spec has the format: [-][tag][/module][:class][.method]
+                         The '-' specifies if we want to include or exclude tests matching this spec.
+                         The tag will match tags added on a class with a @tagged decorator. By default tag value is 'standard' when not
+                         given on include mode. '*' will match all tags. Tag will also match module name (deprecated, use /module)
+                         The module, class, and method will respectively match the module name, test class name and test method name.
+                         examples: :TestClass.test_func,/test_module,external
+                         """)
 
+        group.add_option("--screencasts", dest="screencasts", action="store", my_default=None,
+                         metavar='DIR',
+                         help="Screencasts will go in DIR/{db_name}/screencasts. '1' can be used to force the same dir as for screenshots.")
+        temp_tests_dir = os.path.join(tempfile.gettempdir(), 'odoo_tests')
+        group.add_option("--screenshots", dest="screenshots", action="store", my_default=temp_tests_dir,
+                         metavar='DIR',
+                         help="Screenshots will go in DIR/{db_name}/screenshots. Defaults to %s." % temp_tests_dir)
         parser.add_option_group(group)
 
         # Logging Group
@@ -219,7 +239,7 @@ class configmanager(object):
                          choices=['disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'],
                          help="specify the database ssl connection mode (see PostgreSQL documentation)")
         group.add_option("--db_maxconn", dest="db_maxconn", type='int', my_default=64,
-                         help="specify the the maximum number of physical connections to PostgreSQL")
+                         help="specify the maximum number of physical connections to PostgreSQL")
         group.add_option("--db-template", dest="db_template", my_default="template0",
                          help="specify a custom database template to create a new database")
         parser.add_option_group(group)
@@ -285,11 +305,11 @@ class configmanager(object):
                              help="Specify the number of workers, 0 disable prefork mode.",
                              type="int")
             group.add_option("--limit-memory-soft", dest="limit_memory_soft", my_default=2048 * 1024 * 1024,
-                             help="Maximum allowed virtual memory per worker, when reached the worker be "
+                             help="Maximum allowed virtual memory per worker (in bytes), when reached the worker be "
                              "reset after the current request (default 2048MiB).",
                              type="int")
             group.add_option("--limit-memory-hard", dest="limit_memory_hard", my_default=2560 * 1024 * 1024,
-                             help="Maximum allowed virtual memory per worker, when reached, any memory "
+                             help="Maximum allowed virtual memory per worker (in bytes), when reached, any memory "
                              "allocation will fail (default 2560MiB).",
                              type="int")
             group.add_option("--limit-time-cpu", dest="limit_time_cpu", my_default=60,
@@ -378,7 +398,7 @@ class configmanager(object):
 
             die(os.path.isfile(rcfilepath) and os.path.isfile(old_rcfilepath),
                 "Found '.odoorc' and '.openerp_serverrc' in your path. Please keep only one of "\
-                "them, preferrably '.odoorc'.")
+                "them, preferably '.odoorc'.")
 
             if not os.path.isfile(rcfilepath) and os.path.isfile(old_rcfilepath):
                 rcfilepath = old_rcfilepath
@@ -405,8 +425,8 @@ class configmanager(object):
                 'db_name', 'db_user', 'db_password', 'db_host', 'db_sslmode',
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
-                'db_maxconn', 'import_partial', 'addons_path',
-                'syslog', 'without_demo',
+                'db_maxconn', 'import_partial', 'addons_path', 'upgrade_path',
+                'syslog', 'without_demo', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',
                 'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface'
         ]
@@ -455,7 +475,7 @@ class configmanager(object):
             elif isinstance(self.options[arg], str) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
-        self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(os.path.join(os.path.dirname(__file__), '..'))))
+        self.options['root_path'] = self._normalize(os.path.join(os.path.dirname(__file__), '..'))
         if not self.options['addons_path'] or self.options['addons_path']=='None':
             default_addons = []
             base_addons = os.path.join(self.options['root_path'], 'addons')
@@ -467,10 +487,15 @@ class configmanager(object):
             self.options['addons_path'] = ','.join(default_addons)
         else:
             self.options['addons_path'] = ",".join(
-                    os.path.abspath(os.path.expanduser(os.path.expandvars(x.strip())))
-                      for x in self.options['addons_path'].split(','))
+                self._normalize(x)
+                for x in self.options['addons_path'].split(','))
 
-        self.options['data_dir'] = os.path.abspath(os.path.expanduser(os.path.expandvars(self.options['data_dir'].strip())))
+        self.options["upgrade_path"] = (
+            ",".join(self._normalize(x)
+                for x in self.options['upgrade_path'].split(','))
+            if self.options['upgrade_path']
+            else ""
+        )
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options['demo'] = (dict(self.options['init'])
@@ -493,6 +518,10 @@ class configmanager(object):
 
         if opt.save:
             self.save()
+
+        # normalize path options
+        for key in ['data_dir', 'logfile', 'pidfile', 'test_file', 'screencasts', 'screenshots', 'pg_path', 'translate_out', 'translate_in', 'geoip_database']:
+            self.options[key] = self._normalize(self.options[key])
 
         conf.addons_paths = self.options['addons_path'].split(',')
 
@@ -519,10 +548,29 @@ class configmanager(object):
             if not os.path.isdir(res):
                 raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, path))
             if not self._is_addons_path(res):
-                raise optparse.OptionValueError("option %s: The addons-path %r does not seem to a be a valid Addons Directory!" % (opt, path))
+                raise optparse.OptionValueError("option %s: the path %r is not a valid addons directory" % (opt, path))
             ad_paths.append(res)
 
         setattr(parser.values, option.dest, ",".join(ad_paths))
+
+    def _check_upgrade_path(self, option, opt, value, parser):
+        upgrade_path = []
+        for path in value.split(','):
+            path = path.strip()
+            res = self._normalize(path)
+            if not os.path.isdir(res):
+                raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, path))
+            if not self._is_upgrades_path(res):
+                raise optparse.OptionValueError("option %s: the path %r is not a valid upgrade directory" % (opt, path))
+            if res not in upgrade_path:
+                upgrade_path.append(res)
+        setattr(parser.values, option.dest, ",".join(upgrade_path))
+
+    def _is_upgrades_path(self, res):
+        return any(
+            glob.glob(os.path.join(res, f"*/*/{prefix}-*.py"))
+            for prefix in ["pre", "post", "end"]
+        )
 
     def _test_enable_callback(self, option, opt, value, parser):
         if not parser.values.test_tags:
@@ -646,7 +694,8 @@ class configmanager(object):
         return os.path.join(self['data_dir'], 'filestore', dbname)
 
     def set_admin_password(self, new_password):
-        self.options['admin_passwd'] = crypt_context.encrypt(new_password)
+        hash_password = crypt_context.hash if hasattr(crypt_context, 'hash') else crypt_context.encrypt
+        self.options['admin_passwd'] = hash_password(new_password)
 
     def verify_admin_password(self, password):
         """Verifies the super-admin password, possibly updating the stored hash if needed"""
@@ -659,5 +708,11 @@ class configmanager(object):
             if updated_hash:
                 self.options['admin_passwd'] = updated_hash
             return True
+
+    def _normalize(self, path):
+        if not path:
+            return ''
+        return realpath(abspath(expanduser(expandvars(path.strip()))))
+
 
 config = configmanager()

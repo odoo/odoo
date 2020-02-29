@@ -3,7 +3,7 @@
 
 {
     'name': 'Resellers',
-    'category': 'Website',
+    'category': 'Website/Website',
     'summary': 'Publish your resellers/partners and forward leads to them',
     'version': '1.0',
     'description': """

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="AccountMoveLinePreview">
+        <div class="table-responsive">
+            <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped"
+                   style="table-layout: fixed">
+                <thead>
+                    <tr>
+                        <th>Account</th>
+                        <th>Label</th>
+                        <th>Partner</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <t t-foreach="lines_to_preview" t-as="line">
+                        <tr class="o_data_row">
+                            <td><t t-esc="line['preview-account']"/></td>
+                            <td><t t-esc="line['name']"/></td>
+                            <td><t t-esc="line['preview-partner']"/></td>
+                            <td align="center"><t t-esc="line['debit']"/></td>
+                            <td align="center"><t t-esc="line['credit']"/></td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </t>
+</templates>

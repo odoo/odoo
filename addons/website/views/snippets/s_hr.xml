@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_hr" name="Separator">
+    <div class="s_hr text-left pt32 pb32">
+        <hr class="border-600 w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid;"/>
+    </div>
+</template>
+
+<template id="s_hr_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-selector=".s_hr" data-target="hr">
+            <we-row string="Thickness">
+                <we-colorpicker
+                    data-select-style="true"
+                    data-css-property="border-color"
+                    data-color-prefix="border-"
+                    data-excluded="transparent_grayscale"/>
+                <we-input data-unit="px" data-select-style="1px"
+                          data-css-property="border-top-width"/>
+            </we-row>
+            <we-select string="Style" data-css-property="border-top-style">
+                <we-button data-select-style="solid">Solid</we-button>
+                <we-button data-select-style="dashed">Dashed</we-button>
+                <we-button data-select-style="dotted">Dotted</we-button>
+                <we-button data-select-style="double">Double</we-button>
+            </we-select>
+            <we-select string="Width">
+                <we-button data-select-class="w-25">25%</we-button>
+                <we-button data-select-class="w-50">50%</we-button>
+                <we-button data-select-class="w-75">75%</we-button>
+                <we-button data-select-class="w-100">100%</we-button>
+            </we-select>
+            <we-select string="Alignment">
+                <we-button data-select-class="mr-auto">Left</we-button>
+                <we-button data-select-class="mx-auto">Center</we-button>
+                <we-button data-select-class="ml-auto">Right</we-button>
+            </we-select>
+        </div>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_hr_css_000" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_hr/000.scss"/>
+    </xpath>
+</template>
+
+</odoo>

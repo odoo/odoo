@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_partner_latam_form" model="ir.ui.view">
+        <field name="name">view_partner_latam_form</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="model">res.partner</field>
+        <field name="priority">100</field>
+        <field type="xml" name="arch">
+            <field name="vat" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="vat" position="after">
+                <label for="l10n_latam_identification_type_id" string="Identification Number"/>
+                <div>
+                    <field name="l10n_latam_identification_type_id" options="{'no_open': True, 'no_create': True}" placeholder="Type" attrs="{'readonly': [('parent_id','!=',False)]}" class="oe_inline" domain="country_id and ['|', ('country_id', '=', False), ('country_id', '=', country_id)] or []" required="True"/>
+                    <span class="oe_read_only"> - </span>
+                    <field name="vat" placeholder="Number" class="oe_inline" attrs="{'readonly': [('parent_id','!=',False)]}"/>
+                </div>
+            </field>
+        </field>
+    </record>
+
+</odoo>

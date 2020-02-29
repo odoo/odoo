@@ -1,12 +1,9 @@
-.o_website_sale_image_list .o_kanban_view.o_kanban_ungrouped.o_attachments_previews {
+.o_website_sale_image_list .o_kanban_view.o_kanban_ungrouped {
     width: auto;
 
-    .o_kanban_record.o_attachment.o_website_sale_image_card {
-        border: none;
-        background: none;
-        margin: 0 0 $grid-gutter-width*0.2;
-        padding: $o-mail-attachment-margin;
+    .o_kanban_record{
         flex: 0 1 50%;
+        position: relative;
 
         @include media-breakpoint-up(md) {
             flex: 0 0 percentage(1/3);
@@ -19,44 +16,25 @@
         @include media-breakpoint-up(xl) {
             flex: 0 0 percentage(1/6);
         }
-
-        .o_image_box {
-            padding-top: 50%;
-
-            @include media-breakpoint-up(md) {
-                padding-top: 75%;
-            }
-        }
-
-        .o_image_overlay {
-            bottom: 16%;
-            background: rgba(gray('900'), 0.2);
-        }
-
-        .o_website_sale_image_card_title {
-            @include o-text-overflow(block);
-            padding:6px;
+        // make the image square and in the center
+        .o_squared_image {
             position: relative;
-            background: gray('200');
-            color:$headings-color;
-        }
-
-        .o_website_sale_image_card_remove, .o_website_sale_image_card_size {
-            @include o-position-absolute(0, 0);
-            border-radius: 0 2px;
-        }
-
-        .o_website_sale_image_card_size {
-            left: 0;
-            right: auto;
-            border-radius: 0 0 2px;
-            font-weight: normal;
-            font-size: $font-size-sm - 1;
-
-            &.label-normal {
-                background-color: gray('200');
-                color: $body-color;
+            overflow: hidden;
+            padding-bottom: 100%;
+            > img {
+                position: absolute;
+                margin: auto;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
             }
+        }
+
+        .o_product_image_size {
+            position: absolute;
+            top: 0;
+            left: 0;
         }
     }
 }
@@ -71,9 +49,7 @@
 
             > img {
                 border: 1px solid gray('400');
-                min-height: 200px;
-                max-height: 350px; // Fallback for browsers that dosn't support responsive units
-                max-height: 50vh;
+                height: 200px;
                 width: auto;
             }
 
@@ -81,6 +57,16 @@
                 @include o-hover-opacity(0.7, 1);
                 padding: 2%;
             }
+        }
+    }
+    .o_video_container {
+        height: 200px;
+        position: relative;
+        @include o-we-preview-box($text-muted);
+        .o_invalid_warning {
+            width: 90%;
+            @include o-position-absolute($top: 50%, $left: 50%);
+            transform: translate(-50%, -50%);
         }
     }
 }

@@ -4,19 +4,58 @@
 
 $-seen: ();
 $-font-numbers: (
-    $o-theme-font-number,
-    $o-theme-headings-font-number,
-    $o-theme-buttons-font-number,
-    $o-theme-navbar-font-number
+    o-website-value('font-number'),
+    o-website-value('headings-font-number'),
+    o-website-value('navbar-font-number'),
+    o-website-value('buttons-font-number'),
 );
 @each $-number in $-font-numbers {
     @if index($-seen, $-number) == null {
         $-seen: append($-seen, $-number);
         $-theme-font: nth($o-theme-font-urls, $-number);
         @if $-theme-font {
-            @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
+            @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}&display=swap");
         }
     }
+}
+
+:root {
+    // The theme customize modal JS will need to know the value of some scss
+    // variables used to render the user website, and those may have been
+    // customized by themes, the user or anything else (so there is no file to
+    // parse to get them). Those will be printed here as CSS variables.
+
+    // 1) Handle default values
+    --header-font-size: #{$font-size-base};
+
+    // 2) The values in the $theme-colors map are already printed by Bootstrap.
+
+    // 3) The values in the $colors map are also printed by Bootstrap.
+
+    // 4) The Odoo values map, $o-website-values, must be printed.
+    @each $key, $value in $o-website-values {
+        --#{$key}: #{$value};
+    }
+
+    // 5) Use final value used by the theme
+    $-h1-color: if($headings-color == inherit or not $headings-color, $body-color, $headings-color);
+    $-h2-color: if(color('h2'), color('h2'), $-h1-color);
+    $-h3-color: if(color('h3'), color('h3'), $-h2-color);
+    $-h4-color: if(color('h4'), color('h4'), $-h3-color);
+    $-h5-color: if(color('h5'), color('h5'), $-h4-color);
+    $-h6-color: if(color('h6'), color('h6'), $-h5-color);
+
+    --body: #{$body-bg};
+    --text: #{$body-color};
+    --h1: #{$-h1-color};
+    --h2: #{$-h2-color};
+    --h3: #{$-h3-color};
+    --h4: #{$-h4-color};
+    --h5: #{$-h5-color};
+    --h6: #{$-h6-color};
+
+    --logo-height: #{$o-theme-navbar-logo-height};
+    --number-of-fonts: #{length($o-theme-fonts)};
 }
 
 #wrapwrap {
@@ -37,8 +76,8 @@ $-font-numbers: (
 }
 
 .navbar {
-    @if ($o-theme-navbar-font-number != $o-theme-font-number) {
-        font-family: nth($o-theme-fonts, $o-theme-navbar-font-number);
+    @if ($o-theme-navbar-font != $o-theme-font) {
+        font-family: $o-theme-navbar-font;
     }
 
     .nav-item {
@@ -60,6 +99,31 @@ $-font-numbers: (
         background-color: color('menu') !important;
         @if (color-yiq(color('menu')) != $yiq-text-dark) {
             @extend .navbar-dark;
+        }
+    }
+}
+
+$-header-nav-link-height: $nav-link-height;
+@if o-website-value('header-font-size') {
+    $-header-nav-link-height: o-website-value('header-font-size') * $line-height-base + $nav-link-padding-y * 2;
+    header {
+        font-size: o-website-value('header-font-size');
+
+        .dropdown-menu {
+            font-size: inherit;
+        }
+    }
+}
+@if $o-theme-navbar-logo-height {
+    // With default values, this makes it slightly bigger than standard
+    // navbar-brand, which is what we want
+    header .navbar-brand {
+        font-size: $o-theme-navbar-logo-height / $line-height-base;
+
+        $-logo-padding-y: max(0, $-header-nav-link-height - $o-theme-navbar-logo-height) / 2;
+        &, &.logo {
+            padding-top: $-logo-padding-y;
+            padding-bottom: $-logo-padding-y;
         }
     }
 }
@@ -91,8 +155,8 @@ h6 {
     color: color('h6');
 }
 .btn {
-    @if ($o-theme-buttons-font-number != $o-theme-font-number) {
-        font-family: nth($o-theme-fonts, $o-theme-buttons-font-number);
+    @if ($o-theme-buttons-font != $o-theme-font) {
+        font-family: $o-theme-buttons-font;
     }
 }
 
@@ -135,6 +199,19 @@ font[class*='bg-'] {
         border-top-left-radius: $size;
         border-bottom-right-radius: $size;
     }
+    &.rounded-empty-circle {
+        @extend .rounded-circle;
+        border-width: ceil(1.4 * $border-width);
+        border-style: solid;
+        background: transparent;
+    }
+}
+// Smaller container
+.o_container_small {
+    @extend .container;
+    @include media-breakpoint-up(lg) {
+        max-width: map-get($container-max-widths, md);
+    }
 }
 
 // Buttons
@@ -157,12 +234,6 @@ font[class*='bg-'] {
     }
 }
 
-.s_btn {
-    .btn + .btn {
-        margin-left: .75rem;
-    }
-}
-
 // Blockquotes
 .blockquote {
     font-size: 1rem;
@@ -175,6 +246,14 @@ font[class*='bg-'] {
 .oe_img_bg {
     background-size: cover;
     background-repeat: no-repeat;
+
+    &.o_bg_img_opt_repeat {
+        background-size: auto;
+        background-repeat: repeat;
+    }
+
+    // Compatibility <= 13.0, TODO remove?
+    // -----------------------------------
     &.o_bg_img_opt_contain {
         background-size: contain;
         background-position: center center;
@@ -182,15 +261,32 @@ font[class*='bg-'] {
     &.o_bg_img_opt_custom {
         background-size: auto;
     }
-    &.o_bg_img_opt_repeat {
-        background-repeat: repeat;
-    }
     &.o_bg_img_opt_repeat_x {
         background-repeat: repeat-x;
     }
     &.o_bg_img_opt_repeat_y {
         background-repeat: repeat-y;
     }
+}
+
+// Background videos
+.o_background_video {
+    position: relative;
+
+    > * {
+        position: relative;
+    }
+}
+.o_bg_video_container {
+    @include o-position-absolute(0, 0 ,0 ,0);
+    overflow: hidden;
+}
+.o_bg_video_iframe {
+    position: relative;
+    pointer-events: none !important;
+}
+.o_bg_video_loading {
+    @include o-position-absolute(0, 0 ,0 ,0);
 }
 
 // Probably outdated
@@ -271,167 +367,35 @@ table.table_desc tr td {
     border-radius: 0;
 }
 
+.o_full_screen_height {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    min-height: 100vh !important;
+}
+.o_half_screen_height {
+    @extend .o_full_screen_height;
+    min-height: 55vh !important;
+}
+
+// TODO remove cover_full and cover_mid classes (kept for compatibility for now)
+.cover_full {
+    @extend .o_full_screen_height;
+}
+.cover_mid {
+    @extend .o_half_screen_height;
+}
+
+// Allows custom border radius without contents overflowing.
+.card {
+    overflow: hidden;
+}
+
 //
 // Snippets
 //
 
-// Title
-.s_title {
-    .s_title_boxed {
-        display: inline-block;
-        padding: $grid-gutter-width;
-        border: 1px solid;
-    }
-    .s_title_lines {
-        overflow: hidden;
-        &:before,
-        &:after {
-            content: "";
-            display: inline-block;
-            vertical-align: middle;
-            width: 100%;
-            border-top: 1px solid;
-            border-top-color: inherit;
-        }
-        &:before { margin: 0 $grid-gutter-width/2 0 -100%; }
-        &:after  { margin: 0 -100% 0 $grid-gutter-width/2; }
-    }
-    .s_title_underlined {
-        @extend %o-page-header;
-    }
-    .s_title_small_caps {
-        font-variant: small-caps;
-    }
-    .s_title_transparent {
-        opacity: .5;
-    }
-    .s_title_thin {
-        font-weight: 300;
-    }
-}
-
-
-// Features Grid
-.s_features_grid {
-    &_content {
-        overflow: hidden;
-        p {
-            margin-bottom: 0;
-        }
-    }
-    &_icon {
-        float: left;
-        margin-right: $grid-gutter-width/2;
-    }
-}
-
-
-// Alert
-.s_alert {
-    margin: $grid-gutter-width/2 0;
-    border: 1px solid;
-    border-radius: 0.25rem;
-    p, ul, ol {
-        &:last-child {
-            margin-bottom: 0;
-        }
-    }
-    &_sm {
-        padding: $grid-gutter-width/3;
-        font-size: $font-size-sm;
-    }
-    &_md {
-        padding: $grid-gutter-width/2;
-        font-size: $font-size-base;
-    }
-    &_lg {
-        padding: $grid-gutter-width;
-        font-size: $font-size-lg;
-    }
-    &_icon {
-        float: left;
-        margin-right: 10px;
-    }
-    &_content {
-        overflow: hidden;
-    }
-}
-
-// Three columns
-
-.s_three_columns {
-    .align-items-stretch .card {
-        height: 100%;
-    }
-}
-
-
-// Comparisons
-.s_comparisons {
-    .card-body {
-        .card-title {
-            margin: 0;
-        }
-        .s_comparisons_currency,
-        .s_comparisons_price,
-        .s_comparisons_decimal {
-            display: inline-block;
-            vertical-align: middle;
-        }
-        .s_comparisons_currency,
-        .s_comparisons_decimal {
-            font-size: 80%;
-        }
-        .s_comparisons_price {
-            font-size: 200%;
-        }
-    }
-}
-
-
-// FAQ
-.s_faq_collapse {
-    .accordion .card {
-        .card-header {
-            cursor: pointer;
-            display: inline-block;
-            width: 100%;
-            padding: .5em 0;
-            border-radius: 0;
-            outline: none;
-            &:before {
-                content:'\f056';
-                font-family: 'FontAwesome';
-                display: inline-block;
-                margin: 0 .5em 0 .75em;
-                color: $gray-600;
-            }
-            &.collapsed:before {
-                content:'\f055';
-                font-family: 'FontAwesome';
-            }
-            &:hover,
-            &:focus {
-                text-decoration: none;
-            }
-        }
-        .card-body {
-            padding: 1em 2.25em;
-        }
-    }
-    .card-body p:last-child,
-    .card-body ul:last-child {
-        margin-bottom: 0;
-    }
-}
-
-
-// References
-.s_references .img-thumbnail {
-    border: none;
-}
-
-// Carousel
+// Carousel -> TODO: should be versioned in 000.scss file but how ?
 .s_carousel,
 .s_quotes_carousel {
 
@@ -471,8 +435,8 @@ table.table_desc tr td {
     // Default
     &.s_carousel_default {
         // Controls - chevron
-        .carousel-control-prev-icon:before { content: "\f053"; margin-left: 1.5rem; }
-        .carousel-control-next-icon:before { content: "\f054"; margin-right: 1.5rem; }
+        .carousel-control-prev-icon:before { content: "\f053" #{"/*rtl:'\f054'*/"}; margin-left: 1.5rem; }
+        .carousel-control-next-icon:before { content: "\f054" #{"/*rtl:'\f053'*/"}; margin-right: 1.5rem; }
         .carousel-control-prev-icon:before,
         .carousel-control-next-icon:before {
             background-color: rgba(0,0,0,0);
@@ -634,199 +598,16 @@ table.table_desc tr td {
     }
 }
 
-
-// Quotes Slider
-.s_quotes_carousel {
-    blockquote {
-        padding: $grid-gutter-width;
-        margin-bottom: 0;
-        .s_quotes_carousel_icon {
-            position: absolute;
-            top: 0;
-            left: -3rem;
-        }
-        img {
-            max-width: 40px;
-            margin-right: 5px;
-            border-radius: 50%;
-        }
-        footer {
-            background-color: transparent;
-            &:before {
-                content:"";
-            }
-        }
-    }
-}
-
-// Company Team
-.s_company_team {
-    @include media-breakpoint-down(md) {
-        img {
-            max-width: 50%;
-        }
-    }
-}
-
-
-// Gallery
-.o_gallery {
-    &.o_grid, &.o_masonry {
-        .img {
-            width: 100%;
-        }
-    }
-    &.o_grid {
-        &.o_spc-none div.row {
-            margin: 0;
-            > div {
-                padding: 0;
-            }
-        }
-        &.o_spc-small div.row {
-            margin: 5px 0;
-            > div {
-                padding: 0 5px;
-            }
-        }
-        &.o_spc-medium div.row {
-            margin: 10px 0;
-            > div {
-                padding: 0 10px;
-            }
-        }
-        &.o_spc-big div.row {
-            margin: 15px 0;
-            > div {
-                padding: 0 15px;
-            }
-        }
-        &.size-auto .row {
-            height: auto;
-        }
-        &.size-small .row {
-            height: 100px;
-        }
-        &.size-medium .row {
-            height: 250px;
-        }
-        &.size-big .row {
-            height: 400px;
-        }
-        &.size-small, &.size-medium, &.size-big {
-            img {
-                height: 100%;
-            }
-        }
-    }
-    &.o_masonry {
-        &.o_spc-none div.col {
-            padding: 0;
-            > img {
-                margin: 0 !important;
-            }
-        }
-        &.o_spc-small div.col {
-            padding: 0 5px;
-            > img {
-                margin: 5px 0 !important;
-            }
-        }
-        &.o_spc-medium div.col {
-            padding: 0 10px;
-            > img {
-                margin: 10px 0 !important;
-            }
-        }
-        &.o_spc-big div.col {
-            padding: 0 15px;
-            > img {
-                margin: 15px 0 !important;
-            }
-        }
-    }
-    &.o_nomode {
-        &.o_spc-none .img {
-            padding: 0;
-        }
-        &.o_spc-small .img {
-            padding: 5px;
-        }
-        &.o_spc-medium .img {
-            padding: 10px;
-        }
-        &.o_spc-big .img {
-            padding: 15px;
-        }
-    }
-    &.o_slideshow {
-        .carousel ul.carousel-indicators li {
-            border: 1px solid #aaa;
-        }
-        > .container {
-            height: 100%;
-        }
-    }
-    .carousel-inner .item img {
-        max-width: none;
-    }
-}
-.o_gallery,
-.modal-body {
-    &.o_slideshow {
-        .carousel {
-            height: 100%;
-            .carousel-inner {
-                height: 100%;
-            }
-            .carousel-item {
-                height: 100%;
-                padding-bottom: 64px;
-            }
-            img {
-                max-height: 100%;
-                max-width: 100%;
-                margin: auto;
-            }
-            ul.carousel-indicators {
-                height: auto;
-                padding: 0;
-                border-width: 0;
-                position: absolute;
-                bottom: 0;
-                width: 100%;
-                margin-left: 0;
-                left: 0%;
-                > * {
-                    list-style-image: none;
-                    display: inline-block;
-                    width: 40px;
-                    height: 40px;
-                    margin: 2.5px 2.5px 2.5px 2.5px;
-                    padding: 0;
-                    border: 1px solid #aaa;
-                    text-indent: initial;
-                    background-size: cover;
-                    background-color: #fff;
-                    border-radius: 0;
-                    vertical-align: bottom;
-                    flex: 0 0 40px;
-                    &:not(.active) {
-                        opacity: 0.8;
-                        filter: grayscale(1);
-                    }
-                }
-            }
-        }
-    }
-}
-
-
 // Parallax
 .parallax {
     position: relative;
-    overflow: hidden;
-    z-index: 0;
+
+    // TODO this introduces a limitation: no dropdown will be able to
+    // overflow. Maybe there is a better way to find.
+    &:not(.s_parallax_no_overflow_hidden) {
+        overflow: hidden;
+    }
+
     > * {
         position: relative;
     }
@@ -845,133 +626,15 @@ table.table_desc tr td {
             background-color: inherit;
         }
     }
-    &.s_parallax_is_fixed > .s_parallax_bg {
-        background-attachment: fixed;
-    }
-}
-
-
-// HR
-.s_hr {
-    line-height: 0;
-    hr {
-        padding: 0;
-        border: 0;
-        border-top-color: inherit;
-        margin: 0;
-    }
-    // Style
-    .s_hr_dashed { border-top-style: dashed; }
-    .s_hr_double { border-top-style: double; }
-    .s_hr_dotted { border-top-style: dotted; }
-    .s_hr_solid  { border-top-style: solid;  }
-    // Thickness
-    $count: 5;
-    $base-width: 1px;
-    @while $count > 0 {
-        .s_hr_#{$base-width * $count} {
-            border-top-width: $base-width * $count;
-        }
-        $count: $count - 1;
-    }
-}
-
-
-// Card
-.s_card {
-    margin: $grid-gutter-width/2 0;
-    .card-body {
-        // color: initial;
-        p, ul, ol {
-            &:last-child {
-                margin-bottom: 0;
-            }
+    @include media-breakpoint-up(xl) {
+        // Fixed backgrounds are disabled when using a mobile/tablet device,
+        // which is not a big deal but, on some of them (iOS...), defining the
+        // background as fixed breaks the background-size/position props.
+        // So we enable this only for >= XL devices.
+        &.s_parallax_is_fixed > .s_parallax_bg {
+            background-attachment: fixed;
         }
     }
-}
-
-
-// Share
-.s_share {
-    > * {
-        display: inline-block;
-        vertical-align: middle;
-    }
-    .s_share_title {
-        margin: 0 .4rem 0 0;
-    }
-    > a + a {
-        margin-left: .4rem;
-    }
-    .s_share_facebook {
-        &, &:hover, &:focus { color: #3b5998; }
-    }
-    .s_share_twitter {
-        &, &:hover, &:focus { color: #1da1f2; }
-    }
-    .s_share_linkedin {
-        &, &:hover, &:focus { color: #0077b5; }
-    }
-    .s_share_google {
-        &, &:hover, &:focus { color: #db4437; }
-    }
-}
-
-
-// Rating
-.s_rating {
-    $star: "\f005";
-    $star-o: "\f006";
-    $circle: "\f111";
-    $circle-o: "\f10c";
-    $heart: "\f004";
-    $heart-o: "\f08a";
-    @mixin s_rating_generate_icons($off, $on) {
-        .fa:before {
-            content: $off;
-        }
-        @for $counter from 5 to 0 {
-            &.s_rating_#{$counter} {
-                .fa:nth-of-type(-n+#{$counter}):before {
-                    content: $on;
-                }
-            }
-        }
-    }
-    > .s_rating_stars   { @include s_rating_generate_icons($star-o, $star);     }
-    > .s_rating_squares { @include s_rating_generate_icons($circle-o, $circle); }
-    > .s_rating_hearts  { @include s_rating_generate_icons($heart-o, $heart);   }
-    > .s_rating_bar {
-        .fa {
-            display: none;
-        }
-        .s_rating_bar {
-            display: flex;
-            height: $progress-height;
-            background-color: $gray-300;
-            &:before {
-                content: "";
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                @include transition($progress-bar-transition);
-                @include gradient-striped();
-                background-size: $progress-height $progress-height;
-                background-color: theme-color('primary');
-                animation: progress-bar-stripes $progress-bar-animation-timing;
-            }
-        }
-        @for $counter from 5 to 0 {
-            &.s_rating_#{$counter} {
-                .s_rating_bar:before {
-                    width: percentage($counter/5);
-                }
-            }
-        }
-    }
-    > .s_rating_1x { .fa { font-size: 1em; }; }
-    > .s_rating_2x { .fa { font-size: 2em; }; }
-    > .s_rating_3x { .fa { font-size: 3em; }; }
 }
 
 //
@@ -985,10 +648,16 @@ table.table_desc tr td {
     position: fixed;
     z-index: $zindex-modal - 20;
     background: $light;
-    margin-top: -200px;
+    margin-top: -999px;
     transition: margin-top 500ms ease 0s;
+    @include media-breakpoint-down(sm) {
+        .navbar-collapse {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+    }
     &.affixed {
-        margin-top: 0px;
+        margin-top: 0px !important; // the default margin-top is adapted in JS
     }
 }
 #oe_main_menu_navbar + #wrapwrap .o_header_affix {
@@ -1017,6 +686,36 @@ table.table_desc tr td {
             box-shadow: none;
         }
     }
+}
+
+// Mega menu
+.o_mega_menu {
+    width: 100%;
+    padding: 0;
+    margin-top: 0;
+    border-radius: 0;
+    background-clip: unset; // Remove the 1px gap introduced by BS4
+
+    .container, .container-fluid {
+        // Need to reforce those because they are removed since its a container
+        // inside another container (the one in the navbar)
+        padding-left: $grid-gutter-width / 2;
+        padding-right: $grid-gutter-width / 2;
+    }
+}
+.o_mega_menu_container_size {
+    @include media-breakpoint-up(md) {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    $-mm-max-widths: ();
+    @each $k, $v in $container-max-widths {
+        $-mm-max-widths: map-merge($-mm-max-widths, (
+            #{$k}: $v - $grid-gutter-width,
+        ));
+    }
+    @include make-container-max-widths($-mm-max-widths);
 }
 
 // Copyright
@@ -1090,4 +789,44 @@ table.table_desc tr td {
 // TODO: Will be handled properly in master/saas-12.2, temp fix for website_event.registration_attendee_details
 .modal-footer > .float-left {
     margin-right: auto;
+}
+
+// CoverProperties
+.o_record_cover_container {
+    position: relative;
+
+    .o_record_cover_component {
+        @include o-position-absolute(0, 0, 0, 0);
+
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+}
+
+// Scroll down button
+.o_scroll_button {
+    display: flex;
+    width: 50px;
+    height: 50px;
+    animation: o-anim-heartbeat 2.6s ease-in-out 1s infinite;
+
+    &:focus {
+        outline: none;
+    }
+    &:hover {
+        text-decoration: none;
+        animation-iteration-count: 1;
+    }
+}
+
+// Attention keeper for the "scroll down" top-banner button
+@keyframes o-anim-heartbeat {
+    0%, 14%, 35% {
+        transform: scale(1);
+    }
+    7%, 21% {
+        transform: scale(1.3);
+        background-color: rgba(theme-color('primary'), 0.8);
+    }
 }

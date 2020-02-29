@@ -6,12 +6,12 @@
         <field name="inherit_id" ref="mail.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <div id="mail_alias_domain" position="after">
-                <div>
+                <div class="mt8">
                     <button type="action"
                     name="%(action_email_server_tree)d"
                     string="Incoming Email Servers" icon="fa-arrow-right" class="btn-link"/>
                 </div>
-                <div>
+                <div class="mt8">
                     <button type="action"
                     name="%(base.action_ir_mail_server_list)d"
                     string="Outgoing Email Servers" icon="fa-arrow-right" class="btn-link"/>

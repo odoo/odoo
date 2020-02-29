@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_forum.add_new_forum">
+        <form id="editor_new_forum">
+            <div class="form-group row">
+                <label for="page-name" class="col-md-4 col-form-label">Forum Name:</label>
+                <div class="col-md-8">
+                    <input type="text" name="forum_name" class="form-control" required="required"/>
+                    <div class="custom-control custom-checkbox mt-2">
+                        <input type="checkbox" class="custom-control-input" id="add_to_menu" required="required"/>
+                        <label class="custom-control-label" for="add_to_menu">Add to menu</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row mt-2">
+                <label class="col-md-4 col-form-label">Forum Mode:</label>
+                <div class="col-md-8">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="questions" name="mode" class="custom-control-input" value="questions" checked="checked"/>
+                        <label class="custom-control-label" for="questions">Questions and Answers</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="discussions" name="mode" class="custom-control-input" value="discussions"/>
+                        <label class="custom-control-label" for="discussions">Discussions</label>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </t>
+</templates>

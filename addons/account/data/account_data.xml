@@ -2,6 +2,11 @@
 <odoo>
     <data noupdate="1">
 
+        <record forcecreate="True" id="decimal_payment" model="decimal.precision">
+            <field name="name">Payment Terms</field>
+            <field name="digits">6</field>
+        </record>
+
         <!-- Open Settings from Purchase Journal to configure mail servers -->
         <record id="action_open_settings" model="ir.actions.act_window">
             <field name="name">Settings</field>
@@ -11,7 +16,7 @@
             <field name="context" eval="{'module': 'general_settings'}"/>
         </record>
 
-        <!-- TAGS FOR CASH FLOW STATEMENT -->
+        <!-- TAGS FOR CASH FLOW STATEMENT DIRECT METHOD -->
 
         <record id="account_tag_operating" model="account.account.tag">
             <field name="name">Operating Activities</field>
@@ -40,14 +45,15 @@
             <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 15, 'option': 'day_after_invoice_date'})]"/>
         </record>
 
-        <record forcecreate="True" id="decimal_payment" model="decimal.precision">
-            <field name="name">Payment Terms</field>
-            <field name="digits">6</field>
+        <record id="account_payment_term_21days" model="account.payment.term">
+            <field name="name">21 Days</field>
+            <field name="note">Payment terms: 21 Days</field>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 21, 'option': 'day_after_invoice_date'})]"/>
         </record>
 
-        <record id="account_payment_term_net" model="account.payment.term">
-            <field name="name">30 Net Days</field>
-            <field name="note">Payment terms: 30 Net Days</field>
+        <record id="account_payment_term_30days" model="account.payment.term">
+            <field name="name">30 Days</field>
+            <field name="note">Payment terms: 30 Days</field>
             <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 30, 'option': 'day_after_invoice_date'})]"/>
         </record>
 
@@ -61,6 +67,19 @@
             <field name="name">2 Months</field>
             <field name="note">Payment terms: 2 Months</field>
             <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 60, 'option': 'day_after_invoice_date'})]"/>
+        </record>
+
+        <record id="account_payment_term_end_following_month" model="account.payment.term">
+            <field name="name">End of Following Month</field>
+            <field name="note">Payment terms: End of Following Month</field>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 31, 'option': 'day_following_month'})]"/>
+        </record>
+
+        <record id="account_payment_term_advance_60days" model="account.payment.term">
+            <field name="name">30% Now, Balance 60 Days</field>
+            <field name="note">Payment terms: 30% Now, Balance 60 Days</field>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'percent', 'value_amount': 30.0, 'sequence': 400, 'days': 0, 'option': 'day_after_invoice_date'}),
+                    (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 60, 'option': 'day_after_invoice_date'})]"/>
         </record>
 
         <!--
@@ -78,19 +97,19 @@
         <!-- Account-related subtypes for messaging / Chatter -->
         <record id="mt_invoice_validated" model="mail.message.subtype">
             <field name="name">Validated</field>
-            <field name="res_model">account.invoice</field>
+            <field name="res_model">account.move</field>
             <field name="default" eval="False"/>
             <field name="description">Invoice validated</field>
         </record>
         <record id="mt_invoice_paid" model="mail.message.subtype">
             <field name="name">Paid</field>
-            <field name="res_model">account.invoice</field>
+            <field name="res_model">account.move</field>
             <field name="default" eval="False"/>
             <field name="description">Invoice paid</field>
         </record>
         <record id="mt_invoice_created" model="mail.message.subtype">
             <field name="name">Invoice Created</field>
-            <field name="res_model">account.invoice</field>
+            <field name="res_model">account.move</field>
             <field name="default" eval="False"/>
             <field name="hidden" eval="True"/>
             <field name="description">Invoice Created</field>
@@ -175,27 +194,14 @@
         </record>
 
         <!-- Share Button in action menu -->
-        <record id="model_account_invoice_action_share" model="ir.actions.server">
+        <record id="model_account_move_action_share" model="ir.actions.server">
             <field name="name">Share</field>
-            <field name="model_id" ref="account.model_account_invoice"/>
-            <field name="binding_model_id" ref="account.model_account_invoice"/>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">form</field>
             <field name="state">code</field>
             <field name="code">action = records.action_share()</field>
         </record>
 
-        <!-- Account Reconciliation Models
-        Create a default rule for the reconciliation widget matching invoices automatically.
-        -->
-        <record id="reconciliation_model_default_rule" model="account.reconcile.model">
-            <field name="name">Invoices Matching Rule</field>
-            <field name="sequence">1</field>
-            <field name="rule_type">invoice_matching</field>
-            <field name="auto_reconcile" eval="False"/>
-            <field name="match_nature">both</field>
-            <field name="match_same_currency" eval="True"/>
-            <field name="match_total_amount" eval="True"/>
-            <field name="match_total_amount_param" eval="100"/>
-            <field name="match_partner" eval="True"/>
-        </record>
     </data>
 </odoo>

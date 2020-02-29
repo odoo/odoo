@@ -25,15 +25,13 @@ class Bank(models.Model):
     street2 = fields.Char()
     zip = fields.Char()
     city = fields.Char()
-    state = fields.Many2one('res.country.state', 'Fed. State', domain="[('country_id', '=', country)]")
+    state = fields.Many2one('res.country.state', 'Fed. State', domain="[('country_id', '=?', country)]")
     country = fields.Many2one('res.country')
     email = fields.Char()
     phone = fields.Char()
     active = fields.Boolean(default=True)
     bic = fields.Char('Bank Identifier Code', index=True, help="Sometimes called BIC or Swift.")
 
-    @api.multi
-    @api.depends('name', 'bic')
     def name_get(self):
         result = []
         for bank in self:
@@ -50,14 +48,24 @@ class Bank(models.Model):
             if operator in expression.NEGATIVE_TERM_OPERATORS:
                 domain = ['&'] + domain
         bank_ids = self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
-        return self.browse(bank_ids).name_get()
+        return models.lazy_name_get(self.browse(bank_ids).with_user(name_get_uid))
+        
+    @api.onchange('country')
+    def _onchange_country_id(self):
+        if self.country and self.country != self.state.country_id:
+            self.state = False
+            
+    @api.onchange('state')
+    def _onchange_state(self):
+        if self.state.country_id:
+            self.country = self.state.country_id
 
 
 class ResPartnerBank(models.Model):
     _name = 'res.partner.bank'
     _rec_name = 'acc_number'
     _description = 'Bank Accounts'
-    _order = 'sequence'
+    _order = 'sequence, id'
 
     @api.model
     def get_supported_account_types(self):
@@ -75,9 +83,9 @@ class ResPartnerBank(models.Model):
     bank_id = fields.Many2one('res.bank', string='Bank')
     bank_name = fields.Char(related='bank_id.name', readonly=False)
     bank_bic = fields.Char(related='bank_id.bic', readonly=False)
-    sequence = fields.Integer()
+    sequence = fields.Integer(default=10)
     currency_id = fields.Many2one('res.currency', string='Currency')
-    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.user.company_id, ondelete='cascade')
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company, ondelete='cascade')
     qr_code_valid = fields.Boolean(string="Has all required arguments", compute="_validate_qr_code_arguments")
 
     _sql_constraints = [
@@ -104,6 +112,7 @@ class ResPartnerBank(models.Model):
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         pos = 0
         while pos < len(args):
+            # DLE P14
             if args[pos][0] == 'acc_number':
                 op = args[pos][1]
                 value = args[pos][2]
@@ -122,18 +131,17 @@ class ResPartnerBank(models.Model):
         communication = ""
         if comment:
             communication = (comment[:137] + '...') if len(comment) > 140 else comment
-        qr_code_string = 'BCD\n001\n1\nSCT\n%s\n%s\n%s\nEUR%s\n\n\n%s' % (self.bank_bic, self.company_id.name, self.acc_number, amount, communication)
-        qr_code_url = '/report/barcode/?type=%s&value=%s&width=%s&height=%s&humanreadable=1' % ('QR', werkzeug.url_quote_plus(qr_code_string), 128, 128)
+        qr_code_string = 'BCD\n001\n1\nSCT\n%s\n%s\n%s\nEUR%s\n\n\n%s' % (self.bank_bic or "", self.company_id.name, self.acc_number, amount, communication)
+        qr_code_url = '/report/barcode/?' + werkzeug.urls.url_encode({'type': 'QR', 'value': qr_code_string, 'width': 128, 'height': 128, 'humanreadable': 1})
         return qr_code_url
 
-    @api.multi
     def _validate_qr_code_arguments(self):
+        sepa_zones_codes = [c.code for c in self.env.ref('base.sepa_zone').country_ids]
+        # Some country instances share the same IBAN country code (e.g. Åland Islands and Finland IBANs are "FI", but Åland Islands code is "AX").
+        # Therefore sepa_zones_codes is too permissive, "AX" is not a valid IBAN country code.
+        not_iban_codes = ("AX", "NC", "YT", "TF", "BL", "RE", "MF", "GP", "PM", "PF", "GF", "MQ", "JE", "GG", "IM")
+        sepa_zones_codes = [code for code in sepa_zones_codes if code not in not_iban_codes]
         for bank in self:
-            if bank.currency_id.name == False:
-                currency = bank.company_id.currency_id
-            else:
-                currency = bank.currency_id
-            bank.qr_code_valid = (bank.bank_bic
-                                            and bank.company_id.name
-                                            and bank.acc_number
-                                            and (currency.name == 'EUR'))
+            bank.qr_code_valid = (bank.company_id.name and
+                                  bank.acc_number and
+                                  bank.sanitized_acc_number[:2] in sepa_zones_codes)

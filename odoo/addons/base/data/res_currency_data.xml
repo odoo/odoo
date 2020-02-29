@@ -165,6 +165,7 @@
             <field name="name">ARS</field>
             <field name="symbol">$</field>
             <field name="rounding">0.01</field>
+            <field name="position">before</field>
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Peso</field>
             <field name="currency_subunit_label">Centavos</field>
@@ -221,6 +222,7 @@
             <field name="symbol">¥</field>
             <field name="rounding">1.00</field>
             <field name="active" eval="False"/>
+            <field name="position">before</field>
             <field name="currency_unit_label">Yen</field>
             <field name="currency_subunit_label">Cen</field>
         </record>
@@ -488,7 +490,7 @@
         <record id="BHD" model="res.currency">
             <field name="name">BHD</field>
             <field name="symbol">BD</field>
-            <field name="rounding">0.01</field>
+            <field name="rounding">0.001</field>
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Dinar</field>
             <field name="currency_subunit_label">Fils</field>
@@ -813,7 +815,7 @@
         <record id="IQD" model="res.currency">
             <field name="name">IQD</field>
             <field name="symbol"> ع.د</field>
-            <field name="rounding">0.01</field>
+            <field name="rounding">0.001</field>
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Dinar</field>
             <field name="currency_subunit_label">Fils</field>
@@ -840,7 +842,7 @@
         <record id="JOD" model="res.currency">
             <field name="name">JOD</field>
             <field name="symbol"> د.ا </field>
-            <field name="rounding">0.01</field>
+            <field name="rounding">0.001</field>
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Dinar</field>
             <field name="currency_subunit_label">Fils</field>
@@ -867,7 +869,7 @@
         <record id="KWD" model="res.currency">
             <field name="name">KWD</field>
             <field name="symbol"> د.ك </field>
-            <field name="rounding">0.01</field>
+            <field name="rounding">0.001</field>
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Dinar</field>
             <field name="currency_subunit_label">Fils</field>
@@ -921,10 +923,10 @@
         <record id="LYD" model="res.currency">
             <field name="name">LYD</field>
             <field name="symbol"> ل.د </field>
-            <field name="rounding">0.01</field>
+            <field name="rounding">0.001</field>
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Dinar</field>
-            <field name="currency_subunit_label">Centimes</field>
+            <field name="currency_subunit_label">Dirham</field>
         </record>
 
         <record id="MOP" model="res.currency">
@@ -974,6 +976,15 @@
 
         <record id="MRO" model="res.currency">
             <field name="name">MRO</field>
+            <field name="symbol">UM</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+            <field name="currency_unit_label">Ouguiya</field>
+            <field name="currency_subunit_label">Khoums</field>
+        </record>
+
+        <record id="MRU" model="res.currency">
+            <field name="name">MRU</field>
             <field name="symbol">UM</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
@@ -1125,8 +1136,8 @@
             <field name="currency_subunit_label">Chon</field>
         </record>
 
-        <record id="ZWD" model="res.currency">
-            <field name="name">ZWD</field>
+        <record id="ZWL" model="res.currency">
+            <field name="name">ZWL</field>
             <field name="symbol">Z$</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
@@ -1134,8 +1145,8 @@
             <field name="currency_subunit_label">Cents</field>
         </record>
 
-        <record id="ZMK" model="res.currency">
-            <field name="name">ZMK</field>
+        <record id="ZMW" model="res.currency">
+            <field name="name">ZMW</field>
             <field name="symbol">ZK</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
@@ -1195,9 +1206,9 @@
             <field name="currency_subunit_label">Kopiyka</field>
         </record>
 
-        <record id="TMM" model="res.currency">
-            <field name="name">TMM</field>
-            <field name="symbol">m</field>
+        <record id="TMT" model="res.currency">
+            <field name="name">TMT</field>
+            <field name="symbol">T</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Manat</field>
@@ -1207,7 +1218,7 @@
         <record id="TND" model="res.currency">
             <field name="name">TND</field>
             <field name="symbol">DT</field>
-            <field name="rounding">0.01</field>
+            <field name="rounding">0.001</field>
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Dinar</field>
             <field name="currency_subunit_label">Millimes</field>
@@ -1242,7 +1253,7 @@
 
         <record id="TZS" model="res.currency">
             <field name="name">TZS</field>
-            <field name="symbol">x/y</field>
+            <field name="symbol">TSh</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Shilling</field>
@@ -1285,23 +1296,13 @@
             <field name="currency_subunit_label">Cents</field>
         </record>
 
-        <record id="SRG" model="res.currency">
-            <field name="name">SRG</field>
+        <record id="SRD" model="res.currency">
+            <field name="name">SRD</field>
             <field name="symbol">$</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Dollars</field>
             <field name="currency_subunit_label">Cents</field>
-        </record>
-
-        <!-- no longer in use since 2007 -->
-        <record id="SDD" model="res.currency">
-            <field name="name">SDD</field>
-            <field name="symbol">£Sd</field>
-            <field name="rounding">0.01</field>
-            <field name="active" eval="False"/>
-            <field name="currency_unit_label">Dinar</field>
-            <field name="currency_subunit_label">Fils</field>
         </record>
 
         <record id="SDG" model="res.currency">
@@ -1504,7 +1505,7 @@
         <record id="OMR" model="res.currency">
             <field name="name">OMR</field>
             <field name="symbol">ر.ع.</field>
-            <field name="rounding">0.01</field>
+            <field name="rounding">0.001</field>
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Rial</field>
             <field name="currency_subunit_label">Baisa</field>

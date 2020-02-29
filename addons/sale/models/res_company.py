@@ -7,8 +7,7 @@ from odoo import api, fields, models, _
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    sale_note = fields.Text(string='Default Terms and Conditions', translate=True)
-    portal_confirmation_sign = fields.Boolean(string='Online Signature')
+    portal_confirmation_sign = fields.Boolean(string='Online Signature', default=True)
     portal_confirmation_pay = fields.Boolean(string='Online Payment')
     quotation_validity_days = fields.Integer(default=30, string="Default Quotation Validity (Days)")
 
@@ -22,18 +21,18 @@ class ResCompany(models.Model):
         ('paypal', 'PayPal'),
         ('stripe', 'Stripe'),
         ('other', 'Pay with another payment acquirer'),
-        ('manual', 'Wire Transfer'),
+        ('manual', 'Manual Payment'),
     ], string="Sale onboarding selected payment method")
 
     @api.model
     def action_close_sale_quotation_onboarding(self):
         """ Mark the onboarding panel as closed. """
-        self.env.user.company_id.sale_quotation_onboarding_state = 'closed'
+        self.env.company.sale_quotation_onboarding_state = 'closed'
 
     @api.model
     def action_open_sale_onboarding_payment_acquirer(self):
         """ Called by onboarding panel above the quotation list."""
-        self.env.user.company_id.get_chart_of_accounts_or_fail()
+        self.env.company.get_chart_of_accounts_or_fail()
         action = self.env.ref('sale.action_open_sale_onboarding_payment_acquirer_wizard').read()[0]
         return action
 
@@ -41,7 +40,7 @@ class ResCompany(models.Model):
         """ Get a sample quotation or create one if it does not exist. """
         # use current user as partner
         partner = self.env.user.partner_id
-        company_id = self.env.user.company_id.id
+        company_id = self.env.company.id
         # is there already one?
         sample_sales_order = self.env['sale.order'].search(
             [('company_id', '=', company_id), ('partner_id', '=', partner.id),
@@ -62,6 +61,7 @@ class ResCompany(models.Model):
                 'product_uom_qty': 10,
                 'price_unit': 123,
                 'order_id': sample_sales_order.id,
+                'company_id': sample_sales_order.company_id.id,
             })
         return sample_sales_order
 
@@ -86,12 +86,6 @@ class ResCompany(models.Model):
         }
         return action
 
-    @api.multi
-    def action_save_onboarding_quotation_layout(self):
-        """ Set the onboarding step as done """
-        if bool(self.logo) and self.logo != self._get_logo():
-            self.set_onboarding_step_done('account_onboarding_invoice_layout_state')
-
     def get_and_update_sale_quotation_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations
             are displayed only one time. """
@@ -102,12 +96,5 @@ class ResCompany(models.Model):
             'sale_onboarding_sample_quotation_state',
         ]
         return self.get_and_update_onbarding_state('sale_quotation_onboarding_state', steps)
-
-    @api.model
-    def action_open_sale_onboarding_quotation_layout(self):
-        """ Onboarding step for the quotation layout. """
-        action = self.env.ref('sale.action_open_sale_onboarding_quotation_layout').read()[0]
-        action['res_id'] = self.env.user.company_id.id
-        return action
 
     _sql_constraints = [('check_quotation_validity_days', 'CHECK(quotation_validity_days > 0)', 'Quotation Validity is required and must be greater than 0.')]

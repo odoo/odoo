@@ -16,8 +16,9 @@ FormView.include({
     init: function () {
         this._super.apply(this, arguments);
 
-        if ('message_ids' in this.fieldsInfo[this.viewType]) {
-            this.fieldsInfo[this.viewType].message_attachment_count = {};
+        var fieldsInfo = this.fieldsInfo[this.viewType];
+        if (!_.isEmpty(this.mailFields) && !('message_attachment_count' in fieldsInfo)) {
+            fieldsInfo.message_attachment_count = {};
         }
     },
 });

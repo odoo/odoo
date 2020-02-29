@@ -36,16 +36,42 @@ $o-social-colors: (
     'twitter': #55ACEE,
     'linkedin': #0077B5,
     'google-plus': #DD4B39,
+    'youtube': #ff0000,
+    'github': #1a1e22,
+    'instagram': #cf2872,
+    'whatsapp': #25d366,
+    'pinterest': #C8232C,
 );
 
 $o-theme-figcaption-opacity: 0.6;
+
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+$o-website-values-palettes: (
+    (
+        'logo-height': null, // Default to navbar height (see portal)
+        'header-font-size': null, // Default to BS (normal font-size)
+        'font-number': 1,
+        'headings-font-number': 1,
+        'navbar-font-number': 1,
+        'buttons-font-number': 1,
+        'google-fonts': null,
+    ),
+) !default;
+$o-website-values-palette-number: 1 !default;
+
+// By default, all user website values are null. Each null value is
+// automatically replaced with corresponsing value of chosen values palette.
+$o-user-website-values: () !default;
 
 //------------------------------------------------------------------------------
 // Fonts
 //------------------------------------------------------------------------------
 
 $o-theme-fonts: (
-    (-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"), // This is BS default
+    ('Roboto', sans-serif),
     ('Open Sans', sans-serif),
     ('Source Sans Pro', sans-serif),
     ('Raleway', sans-serif),
@@ -53,7 +79,7 @@ $o-theme-fonts: (
     ('Arvo', Times, serif),
 ) !default;
 $o-theme-font-urls: (
-    null,
+    'Roboto:400,400i,700,700i',
     'Open+Sans:400,400i,700,700i',
     'Source+Sans+Pro:400,400i,700,700i',
     'Raleway:400,400i,700,700i',
@@ -61,14 +87,10 @@ $o-theme-font-urls: (
     'Arvo:400,400i,700,700i',
 ) !default;
 $o-theme-font-names: (
-    'Bootstrap',
+    'Roboto',
     'Open Sans',
     'Source Sans Pro',
     'Raleway',
     'Noto Serif',
     'Arvo',
 ) !default;
-$o-theme-font-number: 1 !default;
-$o-theme-headings-font-number: 1 !default;
-$o-theme-buttons-font-number: 1 !default;
-$o-theme-navbar-font-number: 1 !default;

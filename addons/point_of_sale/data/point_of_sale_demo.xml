@@ -49,12 +49,12 @@
           <field name="weight">0.01</field>
           <field name="to_weight">True</field>
           <field name="barcode">2100002000003</field>
-          <field name="taxes_id">False</field>
+          <field name="taxes_id" eval='[(5,)]'/>
           <field name="categ_id" ref="product.product_category_5"/>
           <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-          <field name="uom_id" ref="uom.product_uom_kgm" />
-          <field name="uom_po_id" ref="uom.product_uom_kgm" />
-          <field name="image" type="base64" file="point_of_sale/static/img/wall_shelf_unit.png"/>
+          <field name="uom_id" ref="uom.product_uom_unit" />
+          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="image_1920" type="base64" file="point_of_sale/static/img/wall_shelf_unit.png"/>
         </record>
         <record id="small_shelf" model="product.product">
           <field name="available_in_pos">True</field>
@@ -63,13 +63,13 @@
           <field name="default_code">FURN_0008</field>
           <field name="type">product</field>
           <field name="weight">0.01</field>
-          <field name="taxes_id">False</field>
+          <field name="taxes_id" eval='[(5,)]'/>
           <field name="categ_id" ref="product.product_category_5"/>
           <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
           <field name="to_weight">True</field>
-          <field name="uom_id" ref="uom.product_uom_kgm" />
-          <field name="uom_po_id" ref="uom.product_uom_kgm" />
-          <field name="image" type="base64" file="point_of_sale/static/img/small_shelf.png"/>
+          <field name="uom_id" ref="uom.product_uom_unit" />
+          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="image_1920" type="base64" file="point_of_sale/static/img/small_shelf.png"/>
         </record>
 
         <record id="letter_tray" model="product.product">
@@ -82,9 +82,9 @@
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
           <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-          <field name="uom_id" ref="uom.product_uom_kgm" />
-          <field name="uom_po_id" ref="uom.product_uom_kgm" />
-          <field name="image" type="base64" file="point_of_sale/static/img/letter_tray.png"/>
+          <field name="uom_id" ref="uom.product_uom_unit" />
+          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="image_1920" type="base64" file="point_of_sale/static/img/letter_tray.png"/>
         </record>
         <record id="desk_organizer" model="product.product">
           <field name="available_in_pos">True</field>
@@ -97,9 +97,9 @@
           <field name="weight">0.01</field>
           <field name="categ_id" ref="product.product_category_5"/>
           <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-          <field name="uom_id" ref="uom.product_uom_kgm" />
-          <field name="uom_po_id" ref="uom.product_uom_kgm" />
-          <field name="image" type="base64" file="point_of_sale/static/img/desk_organizer.png"/>
+          <field name="uom_id" ref="uom.product_uom_unit" />
+          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="image_1920" type="base64" file="point_of_sale/static/img/desk_organizer.png"/>
           <field name="taxes_id" eval='[(5,)]'/>  <!-- no taxes -->
         </record>
 
@@ -114,9 +114,9 @@
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
           <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-          <field name="uom_id" ref="uom.product_uom_kgm" />
-          <field name="uom_po_id" ref="uom.product_uom_kgm" />
-          <field name="image" type="base64" file="point_of_sale/static/img/magnetic_board.png"/>
+          <field name="uom_id" ref="uom.product_uom_unit" />
+          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="image_1920" type="base64" file="point_of_sale/static/img/magnetic_board.png"/>
         </record>
         <record id="monitor_stand" model="product.product">
           <field name="available_in_pos">True</field>
@@ -128,9 +128,9 @@
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
           <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-          <field name="uom_id" ref="uom.product_uom_kgm" />
-          <field name="uom_po_id" ref="uom.product_uom_kgm" />
-          <field name="image" type="base64" file="point_of_sale/static/img/monitor_stand.png"/>
+          <field name="uom_id" ref="uom.product_uom_unit" />
+          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="image_1920" type="base64" file="point_of_sale/static/img/monitor_stand.png"/>
         </record>
         <record id="desk_pad" model="product.product">
           <field name="available_in_pos">True</field>
@@ -142,9 +142,9 @@
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
           <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-          <field name="uom_id" ref="uom.product_uom_kgm" />
-          <field name="uom_po_id" ref="uom.product_uom_kgm" />
-          <field name="image" type="base64" file="point_of_sale/static/img/desk_pad.png"/>
+          <field name="uom_id" ref="uom.product_uom_unit" />
+          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="image_1920" type="base64" file="point_of_sale/static/img/desk_pad.png"/>
         </record>
 
         <record id="whiteboard" model="product.product">
@@ -155,9 +155,9 @@
           <field name="type">product</field>
           <field name="weight">0.01</field>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="uom_id" ref="uom.product_uom_kgm" />
-          <field name="uom_po_id" ref="uom.product_uom_kgm" />
-          <field name="image" type="base64" file="point_of_sale/static/img/whiteboard.png"/>
+          <field name="uom_id" ref="uom.product_uom_unit" />
+          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="image_1920" type="base64" file="point_of_sale/static/img/whiteboard.png"/>
         </record>
 
         <record id="led_lamp" model="product.product">
@@ -170,9 +170,9 @@
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
           <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-          <field name="uom_id" ref="uom.product_uom_kgm" />
-          <field name="uom_po_id" ref="uom.product_uom_kgm" />
-          <field name="image" type="base64" file="point_of_sale/static/img/led_lamp.png"/>
+          <field name="uom_id" ref="uom.product_uom_unit" />
+          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="image_1920" type="base64" file="point_of_sale/static/img/led_lamp.png"/>
         </record>
 
         <record id="newspaper_rack" model="product.product">
@@ -186,9 +186,9 @@
           <field name="barcode">2100001000004</field>
           <field name="categ_id" ref="product.product_category_5"/>
           <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-          <field name="uom_id" ref="uom.product_uom_kgm" />
-          <field name="uom_po_id" ref="uom.product_uom_kgm" />
-          <field name="image" type="base64" file="point_of_sale/static/img/newspaper_stand.png"/>
+          <field name="uom_id" ref="uom.product_uom_unit" />
+          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="image_1920" type="base64" file="point_of_sale/static/img/newspaper_stand.png"/>
         </record>
 
         <record id="whiteboard_pen" model="product.product">
@@ -200,9 +200,9 @@
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_consumable"/>
           <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-          <field name="uom_id" ref="uom.product_uom_kgm" />
-          <field name="uom_po_id" ref="uom.product_uom_kgm" />
-          <field name="image" type="base64" file="point_of_sale/static/img/whiteboard_pen.png"/>
+          <field name="uom_id" ref="uom.product_uom_unit" />
+          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="image_1920" type="base64" file="point_of_sale/static/img/whiteboard_pen.png"/>
         </record>
 
         <record id="product.product_product_1" model="product.product">

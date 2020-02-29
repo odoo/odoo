@@ -1,0 +1,45 @@
+.s_timeline {
+    .s_timeline_line {
+        position: relative;
+        &:before {
+            content: '';
+            position: absolute;
+            width: 1px;
+            top: 10px;
+            bottom: 10px;
+            left: 50%;
+            background-color: gray('800');
+            z-index: 1;
+        }
+    }
+    .s_timeline_row {
+        align-items: center;
+        .s_timeline_content {
+            align-items: center;
+            justify-content: flex-end;
+            width: 100%;
+            ~ .s_timeline_content {
+                justify-content: flex-start;
+            }
+        }
+        &.flex-row-reverse {
+            .s_timeline_content {
+                flex-direction: row-reverse;
+            }
+        }
+    }
+    .s_timeline_date {
+        z-index: 2;
+        span:not(.fa) {
+            display: inline-block;
+            padding: 5px;
+        }
+        .fa {
+            margin: 0 $grid-gutter-width/2;
+        }
+    }
+    .s_timeline_icon {
+        flex: 0 0 auto;
+        margin: $grid-gutter-width/2;
+    }
+}

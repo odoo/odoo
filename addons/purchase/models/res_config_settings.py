@@ -7,9 +7,9 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    lock_confirmed_po = fields.Boolean("Lock Confirmed Orders", default=lambda self: self.env.user.company_id.po_lock == 'lock')
+    lock_confirmed_po = fields.Boolean("Lock Confirmed Orders", default=lambda self: self.env.company.po_lock == 'lock')
     po_lock = fields.Selection(related='company_id.po_lock', string="Purchase Order Modification *", readonly=False)
-    po_order_approval = fields.Boolean("Purchase Order Approval", default=lambda self: self.env.user.company_id.po_double_validation == 'two_step')
+    po_order_approval = fields.Boolean("Purchase Order Approval", default=lambda self: self.env.company.po_double_validation == 'two_step')
     po_double_validation = fields.Selection(related='company_id.po_double_validation', string="Levels of Approvals *", readonly=False)
     po_double_validation_amount = fields.Monetary(related='company_id.po_double_validation_amount', string="Minimum Amount", currency_field='company_currency_id', readonly=False)
     company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string="Company Currency", readonly=True,
@@ -21,14 +21,12 @@ class ResConfigSettings(models.TransientModel):
         help="This default value is applied to any new product created. "
         "This can be changed in the product detail form.", default="receive")
     group_warning_purchase = fields.Boolean("Purchase Warnings", implied_group='purchase.group_warning_purchase')
-    group_manage_vendor_price = fields.Boolean("Vendor Pricelists",
-        implied_group="purchase.group_manage_vendor_price")
     module_account_3way_match = fields.Boolean("3-way matching: purchases, receptions and bills")
     module_purchase_requisition = fields.Boolean("Purchase Agreements")
+    module_purchase_product_matrix = fields.Boolean("Purchase Grid Entry")
     po_lead = fields.Float(related='company_id.po_lead', readonly=False)
     use_po_lead = fields.Boolean(
         string="Security Lead Time for Purchase",
-        oldname='default_new_po_lead',
         config_parameter='purchase.use_po_lead',
         help="Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products,they will be scheduled that many days earlier to cope with unexpected vendor delays.")
 

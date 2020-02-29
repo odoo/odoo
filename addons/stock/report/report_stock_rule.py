@@ -34,14 +34,13 @@ class ReportStockRule(models.AbstractModel):
         for location in locations:
             # TODO: group the RR by location_id to avoid a filtered at each loop
             rr = reordering_rules.filtered(lambda r: r.location_id.id == location.id)
-            if location.putaway_strategy_id or rr:
+            putaways = product.putaway_rule_ids.filtered(lambda p: p.location_in_id.id == location.id)
+            if putaways or rr:
                 header_lines[location.id] = {'putaway': [], 'orderpoint': []}
-                if location.putaway_strategy_id:
-                    putaway = location.putaway_strategy_id._get_putaway_rule(product)
+                for putaway in putaways:
                     header_lines[location.id]['putaway'].append(putaway)
-                if rr:
-                    for r in rr:
-                        header_lines[location.id]['orderpoint'].append(r)
+                for r in rr:
+                    header_lines[location.id]['orderpoint'].append(r)
         route_lines = []
         colors = self._get_route_colors()
         for color_index, route in enumerate(routes):

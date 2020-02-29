@@ -10,10 +10,16 @@
             </xpath>
         </template>
 
+        <template id="assets_tests" name="Website Links Assets Tests" inherit_id="web.assets_tests">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_links/static/tests/tours/website_links.js"></script>
+            </xpath>
+        </template>
+
         <template id="share_page_menu" inherit_id="website.user_navbar">
             <xpath expr="//a[@data-action='promote-current-page']" position="after">
                 <a href="/r" id="o_website_links_share_page" class="dropdown-item">
-                    <span title="Track this page to count clicks">Track this Page</span>
+                    <span title="Track this page to count clicks">Link Tracker</span>
                 </a>
             </xpath>
 
@@ -86,7 +92,7 @@
                     </div>
 
                     <h2 class="o_page_header">Your tracked links
-                        <small class="float-right d-none d-md-block mt16" id="filters">
+                        <small class="float-right d-none d-md-block" id="filters">
                             <ul class="nav nav-tabs nav-tabs-inline graph-tabs" role="tablist">
                                 <li class="nav-item"><a aria-controls="filter-newest-links" href="#" class="nav-link active" id="filter-newest-links" role="tab" data-toggle="tab">Newest</a></li>
                                 <li class="nav-item"><a aria-controls="filter-most-clicked-links" href="#" class="nav-link" id="filter-most-clicked-links" role="tab" data-toggle="tab">Most Clicked</a></li>

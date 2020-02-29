@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common, Form
+from odoo.tests.common import Form, TransactionCase
+from odoo.tests import Form
 
 
-class TestSaleMrpFlow(common.TransactionCase):
+class TestSaleMrpFlow(TransactionCase):
 
     def setUp(self):
         super(TestSaleMrpFlow, self).setUp()
@@ -177,7 +178,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         """
         moves_to_process = moves.filtered(lambda m: m.product_id in quantities_to_process.keys())
         for move in moves_to_process:
-            self.assertEquals(move.product_uom_qty, quantities_to_process[move.product_id])
+            self.assertEqual(move.product_uom_qty, quantities_to_process[move.product_id])
 
     def _create_move_quantities(self, qty_to_process, components, warehouse):
         """ Helper to creates moves in order to update the quantities of components
@@ -223,7 +224,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         #              |- component_e x1
 
         # Creation of a sale order for x7 kit_parent
-        partner = self.env.ref('base.res_partner_1')
+        partner = self.env['res.partner'].create({'name': 'My Test Partner'})
         f = Form(self.env['purchase.order'])
         f.partner_id = partner
         with f.order_line.new() as line:
@@ -237,7 +238,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         # Check picking creation, its move lines should concern
         # only components. Also checks that the quantities are corresponding
         # to the PO
-        self.assertEquals(len(po.picking_ids), 1)
+        self.assertEqual(len(po.picking_ids), 1)
         order_line = po.order_line[0]
         picking_original = po.picking_ids[0]
         move_lines = picking_original.move_lines
@@ -255,7 +256,7 @@ class TestSaleMrpFlow(common.TransactionCase):
             self.component_g: 28.0
         }
 
-        self.assertEquals(len(move_lines), 7)
+        self.assertEqual(len(move_lines), 7)
         self.assertTrue(not any(kit in products for kit in kits))
         self.assertTrue(all(component in products for component in components))
         self._assert_quantities(move_lines, expected_quantities)
@@ -265,17 +266,18 @@ class TestSaleMrpFlow(common.TransactionCase):
         move_lines.write({'quantity_done': qty_to_process})
 
         # Create a backorder for the missing componenents
-        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, po.picking_ids[0].id)]})
-        backorder_wizard.process()
+        pick = po.picking_ids[0]
+        res = pick.button_validate()
+        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
 
         # Check that a backorded is created
-        self.assertEquals(len(po.picking_ids), 2)
+        self.assertEqual(len(po.picking_ids), 2)
         backorder_1 = po.picking_ids - picking_original
-        self.assertEquals(backorder_1.backorder_id.id, picking_original.id)
+        self.assertEqual(backorder_1.backorder_id.id, picking_original.id)
 
         # Even if some components are received completely,
         # no KitParent should be received
-        self.assertEquals(order_line.qty_received, 0)
+        self.assertEqual(order_line.qty_received, 0)
 
         # Process just enough components to make 1 kit_parent
         qty_to_process = {
@@ -285,16 +287,16 @@ class TestSaleMrpFlow(common.TransactionCase):
         self._process_quantities(backorder_1.move_lines, qty_to_process)
 
         # Create a backorder for the missing componenents
-        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, backorder_1.id)]})
-        backorder_wizard.process()
+        res = backorder_1.button_validate()
+        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
 
         # Only 1 kit_parent should be received at this point
-        self.assertEquals(order_line.qty_received, 1)
+        self.assertEqual(order_line.qty_received, 1)
 
         # Check that the second backorder is created
-        self.assertEquals(len(po.picking_ids), 3)
+        self.assertEqual(len(po.picking_ids), 3)
         backorder_2 = po.picking_ids - picking_original - backorder_1
-        self.assertEquals(backorder_2.backorder_id.id, backorder_1.id)
+        self.assertEqual(backorder_2.backorder_id.id, backorder_1.id)
 
         # Set the components quantities that backorder_2 should have
         expected_quantities = {
@@ -309,7 +311,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         # Check that the computed quantities are matching the theorical ones.
         # Since component_e was totally processed, this componenent shouldn't be
         # present in backorder_2
-        self.assertEquals(len(backorder_2.move_lines), 6)
+        self.assertEqual(len(backorder_2.move_lines), 6)
         move_comp_e = backorder_2.move_lines.filtered(lambda m: m.product_id.id == self.component_e.id)
         self.assertFalse(move_comp_e)
         self._assert_quantities(backorder_2.move_lines, expected_quantities)
@@ -324,16 +326,16 @@ class TestSaleMrpFlow(common.TransactionCase):
         self._process_quantities(backorder_2.move_lines, qty_to_process)
 
         # Create a backorder for the missing componenents
-        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, backorder_2.id)]})
-        backorder_wizard.process()
+        res = backorder_2.button_validate()
+        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
 
         # Check that x3 kit_parents are indeed received
-        self.assertEquals(order_line.qty_received, 3)
+        self.assertEqual(order_line.qty_received, 3)
 
         # Check that the third backorder is created
-        self.assertEquals(len(po.picking_ids), 4)
+        self.assertEqual(len(po.picking_ids), 4)
         backorder_3 = po.picking_ids - (picking_original + backorder_1 + backorder_2)
-        self.assertEquals(backorder_3.backorder_id.id, backorder_2.id)
+        self.assertEqual(backorder_3.backorder_id.id, backorder_2.id)
 
         # Check the components quantities that backorder_3 should have
         expected_quantities = {
@@ -352,17 +354,13 @@ class TestSaleMrpFlow(common.TransactionCase):
         # Validating the last backorder now it's complete.
         # All kits should be received
         backorder_3.button_validate()
-        self.assertEquals(order_line.qty_received, 7.0)
+        self.assertEqual(order_line.qty_received, 7.0)
 
         # Return all components processed by backorder_3
-        default_data = self.env['stock.return.picking'].with_context(
-            active_ids=backorder_3.ids,
-            active_id=backorder_3.ids[0]
-        ).default_get(['move_dest_exists', 'original_location_id', 'product_return_moves', 'parent_location_id', 'location_id'])
-        return_wiz = self.env['stock.return.picking'].with_context(
-            active_ids=backorder_3.ids,
-            active_id=backorder_3.ids[0]
-        ).create(default_data)
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=backorder_3.ids, active_id=backorder_3.ids[0],
+            active_model='stock.picking'))
+        return_wiz = stock_return_picking_form.save()
         for return_move in return_wiz.product_return_moves:
             return_move.write({
                 'quantity': expected_quantities[return_move.product_id],
@@ -373,20 +371,16 @@ class TestSaleMrpFlow(common.TransactionCase):
 
         # Process all components and validate the picking
         wiz_act = return_pick.button_validate()
-        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
         wiz.process()
 
         # Now quantity received should be 3 again
-        self.assertEquals(order_line.qty_received, 3)
+        self.assertEqual(order_line.qty_received, 3)
 
-        default_data = self.env['stock.return.picking'].with_context(
-            active_ids=return_pick.ids,
-            active_id=return_pick.ids[0]
-        ).default_get(['move_dest_exists', 'original_location_id', 'product_return_moves', 'parent_location_id', 'location_id'])
-        return_wiz = self.env['stock.return.picking'].with_context(
-            active_ids=return_pick.ids,
-            active_id=return_pick.ids[0]
-        ).create(default_data)
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=return_pick.ids, active_id=return_pick.ids[0],
+            active_model='stock.picking'))
+        return_wiz = stock_return_picking_form.save()
         for move in return_wiz.product_return_moves:
             move.quantity = expected_quantities[move.product_id]
         res = return_wiz.create_returns()
@@ -399,18 +393,19 @@ class TestSaleMrpFlow(common.TransactionCase):
                 'to_refund': True
             })
 
-        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, return_of_return_pick.id)]})
-        backorder_wizard.process()
+        wiz_act = return_of_return_pick.button_validate()
+        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
+        wiz.process()
 
         # As one of each component is missing, only 6 kit_parents should be received
-        self.assertEquals(order_line.qty_received, 6)
+        self.assertEqual(order_line.qty_received, 6)
 
         # Check that the 4th backorder is created.
-        self.assertEquals(len(po.picking_ids), 7)
+        self.assertEqual(len(po.picking_ids), 7)
         backorder_4 = po.picking_ids - (
                     picking_original + backorder_1 + backorder_2 + backorder_3 + return_of_return_pick + return_pick)
-        self.assertEquals(backorder_4.backorder_id.id, return_of_return_pick.id)
+        self.assertEqual(backorder_4.backorder_id.id, return_of_return_pick.id)
 
         # Check the components quantities that backorder_4 should have
         for move in backorder_4.move_lines:
-            self.assertEquals(move.product_qty, 1)
+            self.assertEqual(move.product_qty, 1)

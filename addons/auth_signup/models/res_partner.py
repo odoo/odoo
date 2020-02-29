@@ -27,18 +27,16 @@ class ResPartner(models.Model):
     signup_token = fields.Char(copy=False, groups="base.group_erp_manager")
     signup_type = fields.Char(string='Signup Token Type', copy=False, groups="base.group_erp_manager")
     signup_expiration = fields.Datetime(copy=False, groups="base.group_erp_manager")
-    signup_valid = fields.Boolean(compute='_compute_signup_valid', compute_sudo=True, string='Signup Token is Valid')
+    signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid')
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
 
-    @api.multi
     @api.depends('signup_token', 'signup_expiration')
     def _compute_signup_valid(self):
         dt = now()
-        for partner in self:
-            partner.signup_valid = bool(partner.signup_token) and \
-            (not partner.signup_expiration or dt <= partner.signup_expiration)
+        for partner, partner_sudo in zip(self, self.sudo()):
+            partner.signup_valid = bool(partner_sudo.signup_token) and \
+            (not partner_sudo.signup_expiration or dt <= partner_sudo.signup_expiration)
 
-    @api.multi
     def _compute_signup_url(self):
         """ proxy for function field towards actual implementation """
         result = self.sudo()._get_signup_url_for_action()
@@ -47,14 +45,13 @@ class ResPartner(models.Model):
                 self.env['res.users'].check_access_rights('write')
             partner.signup_url = result.get(partner.id, False)
 
-    @api.multi
     def _get_signup_url_for_action(self, url=None, action=None, view_type=None, menu_id=None, res_id=None, model=None):
         """ generate a signup url for the given partner ids and action, possibly overriding
             the url state components (menu_id, id, view_type) """
 
         res = dict.fromkeys(self.ids, False)
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for partner in self:
+            base_url = partner.get_base_url()
             # when required, make sure the partner has a valid signup token
             if self.env.context.get('signup_valid') and not partner.user_ids:
                 partner.sudo().signup_prepare()
@@ -94,10 +91,13 @@ class ResPartner(models.Model):
                 if fragment:
                     query['redirect'] = base + werkzeug.urls.url_encode(fragment)
 
-            res[partner.id] = werkzeug.urls.url_join(base_url, "/web/%s?%s" % (route, werkzeug.urls.url_encode(query)))
+            url = "/web/%s?%s" % (route, werkzeug.urls.url_encode(query))
+            if not self.env.context.get('relative_url'):
+                url = werkzeug.urls.url_join(base_url, url)
+            res[partner.id] = url
+
         return res
 
-    @api.multi
     def action_signup_prepare(self):
         return self.signup_prepare()
 
@@ -109,7 +109,7 @@ class ResPartner(models.Model):
 
         allow_signup = self.env['res.users']._get_signup_invitation_scope() == 'b2c'
         for partner in self:
-            if allow_signup and not partner.user_ids:
+            if allow_signup and not partner.sudo().user_ids:
                 partner = partner.sudo()
                 partner.signup_prepare()
                 res[partner.id]['auth_signup_token'] = partner.signup_token
@@ -117,11 +117,9 @@ class ResPartner(models.Model):
                 res[partner.id]['auth_login'] = partner.user_ids[0].login
         return res
 
-    @api.multi
     def signup_cancel(self):
         return self.write({'signup_token': False, 'signup_type': False, 'signup_expiration': False})
 
-    @api.multi
     def signup_prepare(self, signup_type="signup", expiration=False):
         """ generate a new token for the partners with the given validity, if necessary
             :param expiration: the expiration datetime of the token (string, optional)

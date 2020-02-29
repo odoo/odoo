@@ -69,25 +69,26 @@
         </record>
         <record model="account.account.type" id="data_unaffected_earnings">
           <field name="name">Current Year Earnings</field>
+          <field name="internal_group">equity</field>
           <field name="include_initial_balance" eval="True"/>
+        </record>
+        <record model="account.account.type" id="data_account_type_revenue">
+            <field name="name">Income</field>
+            <field name="type">other</field>
+            <field name="internal_group">income</field>
         </record>
         <record model="account.account.type" id="data_account_type_other_income">
           <field name="name">Other Income</field>
           <field name="type">other</field>
           <field name="internal_group">income</field>
         </record>
-        <record model="account.account.type" id="data_account_type_revenue">
-          <field name="name">Income</field>
-          <field name="type">other</field>
-          <field name="internal_group">income</field>
+        <record model="account.account.type" id="data_account_type_expenses">
+            <field name="name">Expenses</field>
+            <field name="type">other</field>
+            <field name="internal_group">expense</field>
         </record>
         <record model="account.account.type" id="data_account_type_depreciation">
           <field name="name">Depreciation</field>
-          <field name="type">other</field>
-          <field name="internal_group">expense</field>
-        </record>
-        <record model="account.account.type" id="data_account_type_expenses">
-          <field name="name">Expenses</field>
           <field name="type">other</field>
           <field name="internal_group">expense</field>
         </record>
@@ -96,6 +97,10 @@
           <field name="type">other</field>
           <field name="internal_group">expense</field>
         </record>
+        <record model="account.account.type" id="data_account_off_sheet">
+            <field name="name">Off-Balance Sheet</field>
+            <field name="type">other</field>
+            <field name="internal_group">off_balance</field>
+        </record>
     </data>
 </odoo>
-

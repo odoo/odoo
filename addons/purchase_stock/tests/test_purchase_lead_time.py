@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
+from datetime import datetime, timedelta
+from unittest.mock import patch
 
 from odoo import fields
-from .common import TestPurchase
+from .common import PurchaseTestCommon
+from odoo.tests.common import Form
 
 
-class TestPurchaseLeadTime(TestPurchase):
+class TestPurchaseLeadTime(PurchaseTestCommon):
 
     def test_00_product_company_level_delays(self):
         """ To check dates, set product's Delivery Lead Time
@@ -33,7 +35,7 @@ class TestPurchaseLeadTime(TestPurchase):
 
         # Check scheduled date of purchase order
         schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay)
-        self.assertEqual(purchase.date_planned, schedule_date, 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time.')
+        self.assertEqual(purchase.order_line.date_planned, schedule_date, 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time.')
 
         # check the picking created or not
         self.assertTrue(purchase.picking_ids, "Picking should be created.")
@@ -78,7 +80,7 @@ class TestPurchaseLeadTime(TestPurchase):
 
         # Check scheduled date of purchase order
         po_schedule_date = min(schedule_date_1, schedule_date_2)
-        self.assertEqual(purchase2.date_planned, po_schedule_date, 'Schedule date of purchase order should be minimum of schedule dates of purchase order lines.')
+        self.assertEqual(purchase2.order_line[1].date_planned, po_schedule_date, 'Schedule date of purchase order should be minimum of schedule dates of purchase order lines.')
 
         # Check the picking created or not
         self.assertTrue(purchase2.picking_ids, "Picking should be created.")
@@ -101,13 +103,16 @@ class TestPurchaseLeadTime(TestPurchase):
 
         date_planned = fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10))
         # Create procurement order of product_1
-        self.env['procurement.group'].run(self.product_1, 5.000, self.uom_unit, self.warehouse_1.lot_stock_id, 'Test scheduler for RFQ', '/', {
-            'warehouse_id': self.warehouse_1,
-            'date_planned': date_planned,  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
-            'rule_id': self.warehouse_1.buy_pull_id,
-            'group_id': False,
-            'route_ids': [],
-        })
+        self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
+            self.product_1, 5.000, self.uom_unit, self.warehouse_1.lot_stock_id, 'Test scheduler for RFQ', '/', self.env.company,
+            {
+                'warehouse_id': self.warehouse_1,
+                'date_planned': date_planned,  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
+                'rule_id': self.warehouse_1.buy_pull_id,
+                'group_id': False,
+                'route_ids': [],
+            }
+        )])
 
         # Confirm purchase order
 
@@ -133,3 +138,159 @@ class TestPurchaseLeadTime(TestPurchase):
         incoming_shipment2 = self.env['stock.picking'].search([('picking_type_id', '=', self.warehouse_1.int_type_id.id), ('location_id', '=', self.warehouse_1.wh_qc_stock_loc_id.id), ('location_dest_id', '=', self.warehouse_1.lot_stock_id.id)])
         incoming_shipment2_date = schedule_date - timedelta(days=incoming_shipment2.move_lines[0].rule_id.delay)
         self.assertEqual(incoming_shipment2.scheduled_date, incoming_shipment2_date, 'Schedule date of Internal Type shipment for quality control stock location should be equal to: schedule date of Internal type shipment for input stock location + push rule delay..')
+
+    def test_merge_po_line(self):
+        """Chage that merging po line for same procurement is done depending on
+        propagate_date and propagate_date_minimum_delta"""
+
+        # create a product with manufacture route
+        product_1 = self.env['product.product'].create({
+            'name': 'AAA',
+            'route_ids': [(4, self.route_buy)],
+            'seller_ids': [(0, 0, {'name': self.partner_1.id, 'delay': 5})]
+        })
+
+        # create a move for product_1 from stock to output and reserve to trigger the
+        # rule
+        move_1 = self.env['stock.move'].create({
+            'name': 'move_1',
+            'product_id': product_1.id,
+            'product_uom': self.ref('uom.product_uom_unit'),
+            'propagate_date': True,
+            'propagate_date_minimum_delta': 1,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_output'),
+            'product_uom_qty': 10,
+            'procure_method': 'make_to_order'
+        })
+
+        move_1._action_confirm()
+        po_line = self.env['purchase.order.line'].search([
+            ('product_id', '=', product_1.id),
+        ])
+        self.assertEqual(len(po_line), 1, 'the purchase order line is not created')
+        self.assertEqual(po_line.product_qty, 10, 'the purchase order line has a wrong quantity')
+
+        move_2 = self.env['stock.move'].create({
+            'name': 'move_2',
+            'product_id': product_1.id,
+            'product_uom': self.ref('uom.product_uom_unit'),
+            'propagate_date': True,
+            'propagate_date_minimum_delta': 1,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_output'),
+            'product_uom_qty': 5,
+            'procure_method': 'make_to_order'
+        })
+
+        move_2._action_confirm()
+        po_line = self.env['purchase.order.line'].search([
+            ('product_id', '=', product_1.id),
+        ])
+        self.assertEqual(len(po_line), 1, 'the purchase order lines should be merged')
+        self.assertEqual(po_line.product_qty, 15, 'the purchase order line has a wrong quantity')
+
+    def test_merge_po_line_2(self):
+        """Chage that merging po line for same procurement is done depending on
+        propagate_date and propagate_date_minimum_delta"""
+
+        # create a product with manufacture route
+        product_1 = self.env['product.product'].create({
+            'name': 'AAA',
+            'route_ids': [(4, self.route_buy)],
+            'seller_ids': [(0, 0, {'name': self.partner_1.id, 'delay': 5})]
+        })
+
+        # create a move for product_1 from stock to output and reserve to trigger the
+        # rule
+        move_1 = self.env['stock.move'].create({
+            'name': 'move_1',
+            'product_id': product_1.id,
+            'product_uom': self.ref('uom.product_uom_unit'),
+            'propagate_date': True,
+            'propagate_date_minimum_delta': 1,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_output'),
+            'product_uom_qty': 10,
+            'procure_method': 'make_to_order'
+        })
+
+        move_1._action_confirm()
+        po_line = self.env['purchase.order.line'].search([
+            ('product_id', '=', product_1.id),
+        ])
+        self.assertEqual(len(po_line), 1, 'the purchase order line is not created')
+        self.assertEqual(po_line.product_qty, 10, 'the purchase order line has a wrong quantity')
+        po_line.propagate_date = not po_line.propagate_date
+        move_2 = self.env['stock.move'].create({
+            'name': 'move_2',
+            'product_id': product_1.id,
+            'product_uom': self.ref('uom.product_uom_unit'),
+            'propagate_date': True,
+            'propagate_date_minimum_delta': 1,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_output'),
+            'product_uom_qty': 5,
+            'procure_method': 'make_to_order'
+        })
+
+        move_2._action_confirm()
+        po_line = self.env['purchase.order.line'].search([
+            ('product_id', '=', product_1.id),
+        ])
+        self.assertEqual(len(po_line), 2, 'the purchase order lines are merged')
+        self.assertEqual(po_line[0].product_qty, 10, 'the purchase order line has a wrong quantity')
+        self.assertEqual(po_line[1].product_qty, 5, 'the purchase order line has a wrong quantity')
+
+    def test_reordering_days_to_purchase(self):
+        self.patcher = patch('odoo.addons.stock.models.stock_orderpoint.fields.Date', wraps=fields.Date)
+        self.mock_date = self.patcher.start()
+
+        vendor = self.env['res.partner'].create({
+            'name': 'Colruyt'
+        })
+
+        self.env.company.days_to_purchase = 2.0
+
+        product = self.env['product.product'].create({
+            'name': 'Chicory',
+            'type': 'product',
+            'seller_ids': [(0, 0, {'name': vendor.id, 'delay': 1.0})]
+        })
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = product
+        orderpoint_form.product_min_qty = 0.0
+        orderpoint = orderpoint_form.save()
+
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        delivery_moves = self.env['stock.move']
+        for i in range(0, 6):
+            delivery_moves |= self.env['stock.move'].create({
+                'name': 'Delivery',
+                'date_expected': datetime.today() + timedelta(days=i),
+                'product_id': product.id,
+                'product_uom': product.uom_id.id,
+                'product_uom_qty': 5.0,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': self.ref('stock.stock_location_customers'),
+            })
+        delivery_moves._action_confirm()
+        self.env['procurement.group'].run_scheduler()
+        po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertEqual(fields.Date.to_date(po_line.order_id.date_order), fields.Date.today() + timedelta(days=2))
+        self.assertEqual(len(po_line), 1)
+        self.assertEqual(po_line.product_uom_qty, 20.0)
+        self.assertEqual(len(po_line.order_id), 1)
+        orderpoint_form = Form(orderpoint)
+        orderpoint_form.save()
+
+        self.mock_date.today.return_value = fields.Date.today() + timedelta(days=1)
+        self.env.cache.invalidate()
+        self.env['procurement.group'].run_scheduler()
+        po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertEqual(len(po_line), 2)
+        self.assertEqual(len(po_line.order_id), 2)
+        new_order = po_line.order_id.sorted('date_order')[-1]
+        self.assertEqual(fields.Date.to_date(new_order.date_order), fields.Date.today() + timedelta(days=2))
+        self.assertEqual(new_order.order_line.product_uom_qty, 5.0)
+        self.patcher.stop()
