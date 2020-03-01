@@ -2,6 +2,7 @@ odoo.define('web.search_view_tests', function (require) {
 "use strict";
 
 var FormView = require('web.FormView');
+var GraphView = require('web.GraphView');
 var testUtils = require('web.test_utils');
 
 var createActionManager = testUtils.createActionManager;
@@ -590,7 +591,71 @@ QUnit.module('Search View', {
         // data should be grouped by the field 'Birthday' using the interval 'year'
         assert.strictEqual($('div.o_facet_values span').text().trim(),'Birthday: Year');
         assert.strictEqual($('.o_content tr.o_group_header').length, 4);
+
         actionManager.destroy();
+    });
+
+    QUnit.test('group by a date field using interval works', async function (assert) {
+        assert.expect(8);
+
+        var pivot = await createView({
+            View: GraphView,
+            model: "partner",
+            groupBy:['bar'],
+            data: this.data,
+            arch: '<graph/>',
+            archs: {
+                'partner,false,search': `<search>
+                <filter string="Bar" name="superName" context="{'group_by': 'bar'}"/>
+                    <filter string="Date" name="coolName" context="{'group_by': 'date_field'}"/>
+                    <filter string="Foo" name="superName" context="{'group_by': 'foo'}"/>
+                </search>`
+            },
+        });
+
+        function getFacetTexts() {
+            return [...pivot.el.querySelectorAll('div.o_facet_values span')].map(
+                e => e.innerText
+            ).join(' ');
+        };
+
+        // open menu 'Group By'
+        await testUtils.dom.click(pivot.el.querySelector('.o_search_options .fa-bars'));
+        // select 'Bar'
+        await testUtils.dom.click(pivot.el.querySelectorAll('.o_group_by_menu .o_menu_item')[0]);
+        assert.strictEqual(getFacetTexts(), 'Bar');
+
+        // Open the groupby 'Date'
+        await testUtils.dom.click(pivot.el.querySelectorAll('.o_group_by_menu .o_menu_item')[1]);
+        // select option 'week'
+        await testUtils.dom.click(pivot.el.querySelector('.o_group_by_menu .o_menu_item .o_item_option[data-option_id="week"]'));
+        assert.strictEqual(getFacetTexts(), 'Bar > Date: Week');
+
+        // select option 'day'
+        await testUtils.dom.click(pivot.el.querySelector('.o_group_by_menu .o_menu_item .o_item_option[data-option_id="day"]'));
+        assert.strictEqual(getFacetTexts(), 'Bar > Date: Week > Date: Day');
+
+        // select option 'year'
+        await testUtils.dom.click(pivot.el.querySelector('.o_group_by_menu .o_menu_item .o_item_option[data-option_id="year"]'));
+        assert.strictEqual(getFacetTexts(), 'Bar > Date: Year > Date: Week > Date: Day');
+
+        // select 'Foo'
+        await testUtils.dom.click(pivot.el.querySelectorAll('.o_group_by_menu .o_menu_item')[2]);
+        assert.strictEqual(getFacetTexts(), 'Bar > Date: Year > Date: Week > Date: Day > Foo');
+
+        // select option 'quarter'
+        await testUtils.dom.click(pivot.el.querySelector('.o_group_by_menu .o_menu_item .o_item_option[data-option_id="quarter"]'));
+        assert.strictEqual(getFacetTexts(), 'Bar > Date: Year > Date: Quarter > Date: Week > Date: Day > Foo');
+
+        // unselect 'Bar'
+        await testUtils.dom.click(pivot.el.querySelectorAll('.o_group_by_menu .o_menu_item')[0]);
+        assert.strictEqual(getFacetTexts(), 'Date: Year > Date: Quarter > Date: Week > Date: Day > Foo');
+
+        // unselect option 'week'
+        await testUtils.dom.click(pivot.el.querySelector('.o_group_by_menu .o_menu_item .o_item_option[data-option_id="week"]'));
+        assert.strictEqual(getFacetTexts(), 'Date: Year > Date: Quarter > Date: Day > Foo');
+
+        pivot.destroy();
     });
 
     QUnit.test('a separator in groupbys does not cause problems', async function (assert) {

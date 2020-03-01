@@ -298,14 +298,6 @@ def model(method):
             def method(self, args):
                 ...
 
-        may be called in both record and traditional styles, like::
-
-            # recs = model.browse(cr, uid, ids, context)
-            recs.method(args)
-
-            model.method(cr, uid, args, context=context)
-
-        Notice that no ``ids`` are passed to the method in the traditional style.
     """
     if method.__name__ == 'create':
         return model_create_single(method)

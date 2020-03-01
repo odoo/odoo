@@ -282,6 +282,12 @@ msgid ""
 "                            </span>\n"
 "                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
+"                                <strong>דיוור המוני בדוא\"ל</strong> על\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">הרשומות שנבחרו</span>\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">מסנן החיפוש הנוכחי</span>.\n"
+"                            </span>\n"
+"                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">עוקבים אחר המסמך ו</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -858,7 +864,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__partners
 msgid "Authenticated Partners"
-msgstr ""
+msgstr "לקוחות/ספקים מאומתים"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__author_id
@@ -1530,7 +1536,7 @@ msgstr "יקר"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_decoration
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__decoration_type
 msgid "Decoration Type"
-msgstr ""
+msgstr "סוג סימון"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__default
@@ -1540,12 +1546,12 @@ msgstr "ברירת מחדל"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_description
 msgid "Default Description"
-msgstr ""
+msgstr "תיאור ברירת מחדל"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_next_type_id
 msgid "Default Next Activity"
-msgstr ""
+msgstr "ברירת המחדל של הפעילות הבאה"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
@@ -1555,7 +1561,7 @@ msgstr "סיכום ברירת מחדל"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_user_id
 msgid "Default User"
-msgstr ""
+msgstr "משתמש ברירת מחדל"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__null_value
@@ -2047,7 +2053,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_activity__mail_template_ids
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__mail_template_ids
 msgid "Email templates"
-msgstr ""
+msgstr "תבניות דוא\"ל"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_mail
@@ -2318,7 +2324,7 @@ msgstr "עוקבים אחר"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__followers
 msgid "Followers only"
-msgstr ""
+msgstr "עוקבים בלבד"
 
 #. module: mail
 #. openerp-web
@@ -3786,7 +3792,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "No activities planned."
-msgstr ""
+msgstr "לא מתוכננות פעילויות."
 
 #. module: mail
 #. openerp-web
@@ -4620,7 +4626,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__next_type_ids
 msgid "Recommended Next Activities"
-msgstr ""
+msgstr "פעילויות נוספות מומלצות"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_force_thread_id
@@ -4947,7 +4953,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/views/activity/activity_controller.js:0
 #, python-format
 msgid "Search: %s"
-msgstr ""
+msgstr "חיפוש: %s"
 
 #. module: mail
 #. openerp-web
@@ -5584,7 +5590,7 @@ msgstr "מספר מעקב"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__force_next
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__force_next
 msgid "Trigger Next Activity"
-msgstr ""
+msgstr "הפעל את הפעילות הבאה"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__message_type
@@ -6248,12 +6254,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__previous_activity
 msgid "after previous activity deadline"
-msgstr ""
+msgstr "לאחר תאריך יעד הפעילות הקודמת"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__current_date
 msgid "after validation date"
-msgstr ""
+msgstr "לאחר תאריך האימות"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

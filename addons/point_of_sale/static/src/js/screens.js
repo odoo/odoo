@@ -717,7 +717,7 @@ var ProductCategoriesWidget = PosBaseWidget.extend({
 
                 search_timeout = setTimeout(function(){
                     self.perform_search(self.category, searchbox.value, event.which === 13);
-                },70);
+                },200);
             }
         };
     },

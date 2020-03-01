@@ -253,11 +253,11 @@ class Users(models.Model):
     email = fields.Char(related='partner_id.email', inherited=True, readonly=False)
 
     accesses_count = fields.Integer('# Access Rights', help='Number of access rights that apply to the current user',
-                                    compute='_compute_accesses_count')
+                                    compute='_compute_accesses_count', compute_sudo=True)
     rules_count = fields.Integer('# Record Rules', help='Number of record rules that apply to the current user',
-                                 compute='_compute_accesses_count')
+                                 compute='_compute_accesses_count', compute_sudo=True)
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
-                                  compute='_compute_accesses_count')
+                                  compute='_compute_accesses_count', compute_sudo=True)
 
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
@@ -473,7 +473,10 @@ class Users(models.Model):
     def create(self, vals_list):
         users = super(Users, self).create(vals_list)
         for user in users:
-            user.partner_id.write({'company_id': user.company_id.id, 'active': user.active})
+            # if partner is global we keep it that way
+            if user.partner_id.company_id:
+                user.partner_id.company_id = user.company_id
+            user.partner_id.active = user.active
         return users
 
     def write(self, values):

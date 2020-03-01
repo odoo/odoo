@@ -29,11 +29,11 @@ MOUNT_POINT="${__dir}/root_mount"
 OVERWRITE_FILES_BEFORE_INIT_DIR="${__dir}/overwrite_before_init"
 OVERWRITE_FILES_AFTER_INIT_DIR="${__dir}/overwrite_after_init"
 VERSION=13.0
-VERSION_IOTBOX=20.01
+VERSION_IOTBOX=20.02
 REPO=https://github.com/odoo/odoo.git
 
 if ! file_exists *raspbian*.img ; then
-    wget 'http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-09-30/2019-09-26-raspbian-buster-lite.zip' -O raspbian.img.zip
+    wget 'http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2020-02-07/2020-02-05-raspbian-buster-lite.zip' -O raspbian.img.zip
     unzip raspbian.img.zip
 fi
 

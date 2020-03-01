@@ -17,6 +17,7 @@ class TestMonetaryAccess(odoo.tests.HttpCase):
 
         # this would raise without the fix introduced in this commit
         new_user = user_demo.copy({'monetary': 1/3})
+        new_user.partner_id.company_id = new_user.company_id
 
         # The following is here to document how the ORM behaves, not really part of the test;
         # in particular these specific points highlight the discrepancy between what is sent

@@ -70,6 +70,7 @@
 # 佳 胡 <hujia@tang96.com>, 2019
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
+# as co02 <asco02@163.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -77,7 +78,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-01 12:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2020\n"
+"Last-Translator: as co02 <asco02@163.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,6 +123,16 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"   \n"
+"奥地利的会计报告。\n"
+"================================\n"
+"\n"
+"    * 定义以下报告：\n"
+"        * 盈亏（§231UGB Gesamtkostenverfahren）\n"
+"        * 资产负债表 (§ 224 UGB)\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -166,7 +177,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"允许收银员重复打印小票\n"
+"允许收银员重新打印小票\n"
 "\n"
 
 #. module: base
@@ -381,7 +392,7 @@ msgstr ""
 "\n"
 "\n"
 "\n"
-"该模块已经安装到您的系统中了。"
+"插件已安装。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_sale
@@ -2147,7 +2158,8 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"提出问题, 获得答案, 不为杂乱无章的信息而分心"
+"提出问题，获得答案，不要分心\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_test
@@ -8149,7 +8161,7 @@ msgstr "<code>dateutil</code> (Python模块)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>env</code>: Odoo Environment on which the action is triggered"
-msgstr "<code>env</code>：触发操作的 Odoo 环境"
+msgstr "<code>env</code>：触发操作的系统环境变量"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -9130,7 +9142,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.action_view_tree
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_search
 msgid "Action"
-msgstr "动作"
+msgstr "操作"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__help
@@ -9142,7 +9154,7 @@ msgstr "动作"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__help
 #: model:ir.model.fields,field_description:base.field_ir_cron__help
 msgid "Action Description"
-msgstr "动作说明"
+msgstr "操作说明"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__name
@@ -9156,13 +9168,13 @@ msgstr "动作名称"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__target
 msgid "Action Target"
-msgstr "动作目标"
+msgstr "操作目标"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__state
 #: model:ir.model.fields,field_description:base.field_ir_cron__state
 msgid "Action To Do"
-msgstr "后置操作"
+msgstr "待办操作"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__type
@@ -9175,33 +9187,33 @@ msgstr "后置操作"
 #: model:ir.model.fields,field_description:base.field_ir_cron__type
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Action Type"
-msgstr "动作类型"
+msgstr "操作类型"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_url
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__url
 msgid "Action URL"
-msgstr "动作网址"
+msgstr "操作网址"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__usage
 msgid "Action Usage"
-msgstr "动作用途"
+msgstr "操作用途"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window
 msgid "Action Window"
-msgstr "动作窗口"
+msgstr "操作窗口"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_close
 msgid "Action Window Close"
-msgstr "动作窗口关闭"
+msgstr "操作窗口关闭"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr "动作窗口视图"
+msgstr "操作窗口视图"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_actions
@@ -9210,7 +9222,7 @@ msgstr "动作窗口视图"
 #: model:ir.ui.menu,name:base.next_id_6
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Actions"
-msgstr "动作"
+msgstr "操作"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
@@ -10202,7 +10214,7 @@ msgstr "自动完成地址信息"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
 msgid "Automated Action Rules"
-msgstr "自动动作规则"
+msgstr "自动操作规则"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation_hr_contract
@@ -11159,7 +11171,7 @@ msgstr "校验和/SHA1"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__child_ids
 #: model:ir.model.fields,field_description:base.field_ir_cron__child_ids
 msgid "Child Actions"
-msgstr "下级动作"
+msgstr "子操作"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__child_ids
@@ -11286,12 +11298,12 @@ msgstr "客户"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_client
 msgid "Client Action"
-msgstr "客户端动作"
+msgstr "客户端操作"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__tag
 msgid "Client action tag"
-msgstr "客户端动作标签"
+msgstr "客户端操作标签"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -13836,7 +13848,7 @@ msgstr "可执行Python代码"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__multi
 msgid "Execute several actions"
-msgstr "执行几个动作"
+msgstr "执行多个操作"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
@@ -15830,7 +15842,7 @@ msgstr "如果设为真，该动作将不会显示于表单右侧的工具栏中
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_default__company_id
 msgid "If set, action binding only applies for this company"
-msgstr "如果设置， 动作绑定只用于这个公司"
+msgstr "如果设置， 操作只能用于这个公司"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_default__user_id
@@ -17649,7 +17661,7 @@ msgstr "主序列"
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window__target__main
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_client__target__main
 msgid "Main action of Current Window"
-msgstr "当前窗口的主要动作"
+msgstr "当前窗口的主要操作"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__maintainer
@@ -20977,7 +20989,7 @@ msgstr "只有管理员能改变设置"
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "Only administrators can execute this action."
-msgstr "只有系统管理员可以执行此动作"
+msgstr "只有系统管理员可以执行此操作"
 
 #. module: base
 #: code:addons/fields.py:0
@@ -23018,7 +23030,7 @@ msgstr "相关的业务伙伴"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_server_object_lines__server_id
 msgid "Related Server Action"
-msgstr "相关的服务器动作"
+msgstr "相关的服务器操作"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__related_field_id
@@ -23153,7 +23165,7 @@ msgstr "报表"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report
 msgid "Report Action"
-msgstr "报告动作"
+msgstr "报告操作"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_file
@@ -23389,7 +23401,7 @@ msgstr "手动运行"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Run this action manually."
-msgstr "手工运行此操作"
+msgstr "手动运行此操作"
 
 #. module: base
 #: model:res.country,name:base.ru
@@ -23725,7 +23737,7 @@ msgstr "安排的动作"
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_tree
 msgid "Scheduled Actions"
-msgstr "安排的动作"
+msgstr "安排的操作"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
@@ -23746,7 +23758,7 @@ msgstr "搜索"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_search
 msgid "Search Actions"
-msgstr "搜索动作"
+msgstr "搜索操作"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_bank_view_search
@@ -24079,7 +24091,7 @@ msgstr "服务器"
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Server Action"
-msgstr "服务器动作"
+msgstr "服务器操作"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_server_object_lines
@@ -24092,7 +24104,7 @@ msgstr "服务器动作值映射"
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_tree
 msgid "Server Actions"
-msgstr "服务器动作"
+msgstr "服务器操作"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__ir_actions_server_id
@@ -25381,7 +25393,7 @@ msgstr "扩展当前模型清单。"
 msgid ""
 "The menu action this filter applies to. When left empty the filter applies "
 "to all menus for this model."
-msgstr "此筛选将被应用在此菜单。如果留空，筛选对此模型的所有菜单适用。"
+msgstr "此筛选将被应用在此菜单。如果留空，筛选对此模块的所有菜单适用。"
 
 #. module: base
 #: code:addons/base/models/res_company.py:0
@@ -27473,7 +27485,7 @@ msgstr "宽度"
 #: model:ir.actions.act_window,name:base.ir_action_window
 #: model:ir.ui.menu,name:base.menu_ir_action_window
 msgid "Window Actions"
-msgstr "窗口动作"
+msgstr "窗口操作"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__wizard_id

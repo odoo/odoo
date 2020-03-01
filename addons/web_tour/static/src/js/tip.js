@@ -151,8 +151,9 @@ var Tip = Widget.extend({
 
         // Reverse left/right position if direction is right to left
         var appendAt = this.info.position;
-        if (_t.database.parameters.direction === 'rtl') {
-            appendAt = appendAt === 'right' ? 'left': 'right';
+        var rtlMap = {left: 'right', right: 'left'};
+        if (rtlMap[appendAt] && _t.database.parameters.direction === 'rtl') {
+            appendAt = rtlMap[appendAt];
         }
         this.$el.position({
             my: this._get_spaced_inverted_position(appendAt),
@@ -184,6 +185,8 @@ var Tip = Widget.extend({
         // be one of its children (or the element itself)
         if (this.consume_event === "drag") {
             this.$consumeEventAnchor = this.$anchor.closest('.ui-draggable');
+        } else if (this.consume_event.includes('apply.daterangepicker')) {
+            this.$consumeEventAnchor = this.$anchor.parent().children('.o_field_date_range');
         }
         this.$consumeEventAnchor.on(this.consume_event + ".anchor", (function (e) {
             if (e.type !== "mousedown" || e.which === 1) { // only left click
