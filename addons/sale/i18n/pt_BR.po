@@ -22,6 +22,7 @@
 # Mateus Lopes <mateus1@gmail.com>, 2018
 # Martin Trigaux, 2019
 # Ramiro Pereira de Magalhães <ramiro.p.magalhaes@gmail.com>, 2019
+# Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -29,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:23+0000\n"
-"Last-Translator: Ramiro Pereira de Magalhães <ramiro.p.magalhaes@gmail.com>, 2019\n"
+"Last-Translator: Marcel Savegnago <marcel.savegnago@gmail.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -258,6 +259,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=“fa fa-lg fa-building-o” title=“Os valores definidos aqui são "
+"específicos da empresa.” groups=“base.group_multi_company”/>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_orders
@@ -340,7 +343,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<span>Pro-Forma Invoice # </span>"
-msgstr ""
+msgstr "<span>Fatura Pró-Forma #</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -517,12 +520,12 @@ msgstr "Permitir desconto manual em linhas de vendas."
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr ""
+msgstr "Permite-lhe enviar Fatura Pro-Forma aos seus clientes"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings_group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr ""
+msgstr "Permite-lhe enviar uma fatura pró-forma."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -598,6 +601,10 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
+"Aumente as suas vendas com dois tipos de programas de descontos: promoções e"
+" códigos de cupão. Pode definir condições específicas (produtos, clientes, "
+"quantidade mínima de compra, período). As recompensas podem ser descontos (%"
+" ou um montante fixo) ou artigos gratuitos."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
@@ -1332,7 +1339,7 @@ msgstr ""
 #: code:addons/sale/models/sale.py:551
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
-msgstr ""
+msgstr "Não é permitido confirmar um pedido nas seguintes situações: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
@@ -1714,7 +1721,7 @@ msgstr "Outras Informações"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr ""
+msgstr "Fatura PRÓ-FORMA"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_partner_id
@@ -1828,7 +1835,7 @@ msgstr "Imprimir"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr ""
+msgstr "Fatura pró-forma"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
@@ -2271,7 +2278,7 @@ msgstr "Vender produtos por múltiplos de unidade # por pacote"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr ""
+msgstr "Enviar Fatura PRO-FORMA"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2291,6 +2298,10 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Sales tab)."
 msgstr ""
+"Enviar um e-mail é útil se você precisar compartilhar informações ou "
+"conteúdos específicos sobre um produto (instruções, regras, links, mídia, "
+"etc.). Crie e defina o modelo de e-mail do formulário de detalhes do produto"
+" (na guia Vendas)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
@@ -2306,7 +2317,7 @@ msgstr "Serviços"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_use_invoices
 msgid "Set Invoicing Target"
-msgstr ""
+msgstr "Definir Meta de Faturamento"
 
 #. module: sale
 #. openerp-web
@@ -2328,7 +2339,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set specific billing and shipping addresses"
-msgstr ""
+msgstr "Definir endereços específicos de faturamento e entrega"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2354,7 +2365,7 @@ msgstr "Entrega"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery
 msgid "Shipping Costs"
-msgstr ""
+msgstr "Custos de remessa"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2375,17 +2386,17 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show margins on orders"
-msgstr ""
+msgstr "Mostrar margens em pedidos"
 
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
 msgid "Show public price & discount to the customer"
-msgstr ""
+msgstr "Mostrar preço público e desconto para o cliente"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show standard terms &amp; conditions on orders"
-msgstr ""
+msgstr "Mostre termos e condições padrão em pedidos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_group_show_price_subtotal
@@ -2406,7 +2417,7 @@ msgstr "Assinatura"
 #: code:addons/sale/controllers/portal.py:211
 #, python-format
 msgid "Signature is missing."
-msgstr ""
+msgstr "Falta a assinatura."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2421,7 +2432,7 @@ msgstr "Documento de Origem"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_product_email_template
 msgid "Specific Email"
-msgstr ""
+msgstr "E-mail Específico"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:88
@@ -2449,6 +2460,8 @@ msgid ""
 "Target of invoice revenue for the current month. This is the amount the "
 "sales channel estimates to be able to invoice this month."
 msgstr ""
+"Meta de receita faturada para o mês corrente. Esse é o valor que o canal de "
+"vendas estima para poder faturar este mês."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_sale_show_tax
@@ -2511,6 +2524,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"O pedido de venda %s vinculado à conta analítica %s está cancelado. Você não"
+" pode registrar uma despesa em um Pedido de Vendas cancelado."
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:133
@@ -2520,6 +2535,9 @@ msgid ""
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
 msgstr ""
+"O Pedido de Venda %s está vinculado à Conta Analítica %s está bloqueado "
+"atualmente. Você não pode registrar uma despesa em um pedido de venda "
+"bloqueado. Por favor, crie um novo PV vinculado a esta Conta Analítica."
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:129
@@ -2528,6 +2546,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
 msgstr ""
+"O Pedido de Venda %s está vinculado à Conta Analítica %s deve ser validado "
+"antes de registrar despesas."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
@@ -2683,7 +2703,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,service_type:0
 msgid "Timesheets on project (one fare per SO/Project)"
-msgstr ""
+msgstr "Planilhas de tempo no projeto (uma tarifa por OS/Projeto)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
