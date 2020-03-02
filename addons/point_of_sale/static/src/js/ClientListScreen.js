@@ -15,7 +15,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             this.state = {
                 query: null,
                 selectedClient: this.currentOrderClient,
-                isShowDetails: Boolean(this.currentOrderClient),
+                detailIsShown: Boolean(this.currentOrderClient),
                 isEditMode: false,
                 editModeProps: {
                     partner: {
@@ -111,10 +111,10 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         clickClient(event) {
             let partner = event.detail.client;
             if (this.state.selectedClient === partner) {
-                this.state.isShowDetails = !this.state.isShowDetails;
+                this.state.detailIsShown = !this.state.detailIsShown;
             } else {
                 this.state.selectedClient = partner;
-                this.state.isShowDetails = true;
+                this.state.detailIsShown = true;
             }
             this.deactivateEditMode();
         }
@@ -129,7 +129,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         activateEditMode(event) {
             const { isNewClient } = event.detail;
             this.state.isEditMode = true;
-            this.state.isShowDetails = true;
+            this.state.detailIsShown = true;
             if (!isNewClient) {
                 this.state.editModeProps = {
                     partner: this.state.selectedClient,
@@ -177,7 +177,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         _resetState() {
             this.state.query = null;
             this.state.selectedClient = this.currentOrderClient;
-            this.state.isShowDetails = true;
+            this.state.detailIsShown = true;
             this.state.isEditMode = false;
             this.state.editModeProps = {};
             this.render();

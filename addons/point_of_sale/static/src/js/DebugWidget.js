@@ -46,7 +46,7 @@ odoo.define('point_of_sale.DebugWidget', function(require) {
             }
         }
         toggleWidget() {
-            this.state.isShow = !this.state.isShow;
+            this.state.isShown = !this.state.isShown;
         }
         setWeight() {
             var weightInKg = parse.float(this.state.weightInput);

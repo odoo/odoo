@@ -183,7 +183,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                     () => {
                         this.trigger('show-screen', {
                             name: 'ReceiptScreen',
-                            props: { isShowPrintInvoice: true },
+                            props: { printInvoiceIsShown: true },
                         });
                         console.log('TODO jcb: Error handler later');
                     }
@@ -199,7 +199,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                         .catch(error => {
                             this.trigger('show-screen', {
                                 name: 'ReceiptScreen',
-                                props: { isShowPrintInvoice: true },
+                                props: { printInvoiceIsShown: true },
                             });
                             if (error) {
                                 this.showPopup('ErrorPopup', {

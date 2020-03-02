@@ -15,7 +15,7 @@
                         <CashierName />
                         <SaleDetailsButton t-if="env.pos.proxy.printer" />
                         <ProxyStatus t-if="env.pos.config.use_proxy" />
-                        <ClientScreenButton t-if="isShowClientScreenButton" />
+                        <ClientScreenButton t-if="clientScreenButtonIsShown" />
                         <SyncNotification />
                         <HeaderButton />
                     </div>
@@ -25,15 +25,15 @@
                         <div class="subwindow">
                             <div class="subwindow-container">
                                 <div class="subwindow-container-fix screens">
-                                    <t isShow="mainScreen.isShow" t-component="mainScreen.component"
+                                    <t isShown="mainScreen.isShown" t-component="mainScreen.component"
                                        t-props="mainScreenProps" t-key="mainScreen.name" />
-                                    <t t-if="tempScreen.isShow" t-component="tempScreen.component"
+                                    <t t-if="tempScreen.isShown" t-component="tempScreen.component"
                                        t-props="tempScreenProps" t-key="tempScreen.name" />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <DebugWidget t-if="env.isDebug() and state.isShowDebugWidget"
+                    <DebugWidget t-if="env.isDebug() and state.debugWidgetIsShown"
                                  t-transition="fade" />
                 </div>
             </t>
@@ -46,14 +46,14 @@
                     <div t-if="state.uiState === 'LOADING'" class="progressbar">
                         <div class="progress" t-ref="progressbar"></div>
                     </div>
-                    <div t-if="loading.isShowSkipButton" class="button skip" t-on-click="trigger('loading-skip-callback')">
+                    <div t-if="loading.skipButtonIsShown" class="button skip" t-on-click="trigger('loading-skip-callback')">
                         Skip
                     </div>
                 </div>
             </div>
 
             <!-- Allow popups to be visible at any state of the ui. -->
-            <div t-if="popup.isShow" class="popups">
+            <div t-if="popup.isShown" class="popups">
                 <t t-component="popup.component" t-props="popupProps"
                    t-key="popup.name" />
             </div>

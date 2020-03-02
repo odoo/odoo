@@ -11,7 +11,7 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
     class ReceiptScreen extends PosComponent {
         /**
          * Optional props:
-         *     isShowPrintInvoice: Boolean
+         *     printInvoiceIsShown: Boolean
          */
         constructor() {
             super(...arguments);

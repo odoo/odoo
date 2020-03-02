@@ -11,10 +11,10 @@ odoo.define('point_of_sale.test_popups', async function(require) {
     QUnit.module('Test Pos Popups', {
         before() {
             class Root extends PosComponent {
-                popup = useState({ isShow: false, name: null, component: null, props: {} });
+                popup = useState({ isShown: false, name: null, component: null, props: {} });
                 static template = xml`
                     <div t-on-show-popup="__showPopup">
-                        <t t-if="popup.isShow" t-component="popup.component" t-props="popup.props" t-key="popup.name" />
+                        <t t-if="popup.isShown" t-component="popup.component" t-props="popup.props" t-key="popup.name" />
                     </div>
                 `;
             }

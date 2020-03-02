@@ -28,13 +28,13 @@ odoo.define('point_of_sale.chrome', function(require) {
 
             this.state = useState({
                 uiState: 'LOADING', // 'LOADING' | 'READY' | 'CLOSING'
-                isShowDebugWidget: true,
+                debugWidgetIsShown: true,
                 hasBigScrollBars: false,
             });
 
             this.loading = useState({
                 message: 'Loading',
-                isShowSkipButton: false,
+                skipButtonIsShown: false,
             });
 
             this.mainScreen = useState({
@@ -43,10 +43,10 @@ odoo.define('point_of_sale.chrome', function(require) {
             });
             this.mainScreenProps = {};
 
-            this.popup = useState({ isShow: false, name: null, component: null });
+            this.popup = useState({ isShown: false, name: null, component: null });
             this.popupProps = {}; // We want to avoid making the props to become Proxy!
 
-            this.tempScreen = useState({ isShow: false, name: null, component: null });
+            this.tempScreen = useState({ isShown: false, name: null, component: null });
             this.tempScreenProps = {};
 
             this.progressbar = useRef('progressbar');
@@ -78,7 +78,7 @@ odoo.define('point_of_sale.chrome', function(require) {
 
         // GETTERS //
 
-        get isShowClientScreenButton() {
+        get clientScreenButtonIsShown() {
             return (
                 this.env.pos.config.use_proxy && this.env.pos.config.iface_customer_facing_display
             );
@@ -138,7 +138,7 @@ odoo.define('point_of_sale.chrome', function(require) {
                 await this.showPopup('ErrorTracebackPopup', {
                     title,
                     body,
-                    isShowExitButton: true,
+                    exitButtonIsShown: true,
                 });
             }
         }
@@ -147,7 +147,7 @@ odoo.define('point_of_sale.chrome', function(require) {
 
         __showPopup(event) {
             const { name, props, resolve, numberBuffer } = event.detail;
-            this.popup.isShow = true;
+            this.popup.isShown = true;
             this.popup.name = name;
             this.popup.component = this.constructor.components[name];
             this.popupProps = { ...props, resolve, numberBuffer };
@@ -156,35 +156,35 @@ odoo.define('point_of_sale.chrome', function(require) {
             }
         }
         __closePopup() {
-            this.popup.isShow = false;
+            this.popup.isShown = false;
             if (this.popupProps.numberBuffer) {
                 this.popupProps.numberBuffer.resume();
             }
         }
         __showTempScreen(event) {
             const { name, props, resolve, numberBuffer } = event.detail;
-            this.tempScreen.isShow = true;
+            this.tempScreen.isShown = true;
             this.tempScreen.name = name;
             this.tempScreen.component = this.constructor.components[name];
             this.tempScreenProps = { ...props, resolve, numberBuffer };
             // hide main screen
-            this.mainScreen.isShow = false;
+            this.mainScreen.isShown = false;
             // pause numberBuffer
             if (numberBuffer) {
                 numberBuffer.pause();
             }
         }
         __closeTempScreen() {
-            this.tempScreen.isShow = false;
+            this.tempScreen.isShown = false;
             // show main screen
-            this.mainScreen.isShow = true;
+            this.mainScreen.isShown = true;
             // resume numberBuffer
             if (this.tempScreenProps.numberBuffer) {
                 this.tempScreenProps.numberBuffer.resume();
             }
         }
         showScreen({ detail: { name, props } }) {
-            this.mainScreen.isShow = true;
+            this.mainScreen.isShown = true;
             this.mainScreen.name = name;
             this.mainScreen.component = this.constructor.components[name];
             this.mainScreenProps = props || {};
@@ -197,7 +197,7 @@ odoo.define('point_of_sale.chrome', function(require) {
             }
 
             this.state.uiState = 'CLOSING';
-            this.loading.isShowSkipButton = false;
+            this.loading.skipButtonIsShown = false;
             this.setLoadingMessage(this.env._t('Closing ...'));
 
             if (this.env.pos.db.get_orders().length) {
@@ -236,7 +236,7 @@ odoo.define('point_of_sale.chrome', function(require) {
             }
         }
         _toggleDebugWidget() {
-            this.state.isShowDebugWidget = !this.state.isShowDebugWidget;
+            this.state.debugWidgetIsShown = !this.state.debugWidgetIsShown;
         }
         onPosError(event) {
             console.log(event.detail.error);
@@ -263,7 +263,7 @@ odoo.define('point_of_sale.chrome', function(require) {
          */
         showLoadingSkip(callback) {
             if (callback) {
-                this.loading.isShowSkipButton = true;
+                this.loading.skipButtonIsShown = true;
                 this._loadingSkipCallback = callback;
             }
         }

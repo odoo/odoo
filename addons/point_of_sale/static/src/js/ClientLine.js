@@ -8,7 +8,7 @@ odoo.define('point_of_sale.ClientLine', function(require) {
             if (this.props.partner !== this.props.selectedClient) {
                 return '';
             } else {
-                return this.props.isShowDetails ? 'highlight' : 'lowlight';
+                return this.props.detailIsShown ? 'highlight' : 'lowlight';
             }
         }
     }

@@ -29,7 +29,7 @@
                     <div class="window">
                         <section class="subwindow collapsed">
                             <div class="subwindow-container collapsed">
-                                <div t-if="state.isShowDetails"
+                                <div t-if="state.detailIsShown"
                                      class="client-details-contents subwindow-container-fix"
                                      t-ref="client-details-ref">
                                     <t t-if="state.isEditMode">
@@ -60,7 +60,7 @@
                                                t-key="partner.id">
                                                 <ClientLine partner="partner"
                                                             selectedClient="state.selectedClient"
-                                                            isShowDetails="state.isShowDetails"
+                                                            detailIsShown="state.detailIsShown"
                                                             t-on-click-client="clickClient" />
                                             </t>
                                         </tbody>
