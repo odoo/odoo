@@ -162,7 +162,6 @@ class SaleOrder(models.Model):
     require_payment = fields.Boolean('Online Payment', default=_get_default_require_payment, readonly=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help='Request an online payment to the customer in order to confirm orders automatically.')
-    remaining_validity_days = fields.Integer(compute='_compute_remaining_validity_days', string="Remaining Days Before Expiration")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
 
     user_id = fields.Many2one(
@@ -301,13 +300,6 @@ class SaleOrder(models.Model):
                 order.expected_date = fields.Datetime.to_string(min(dates_list))
             else:
                 order.expected_date = False
-
-    def _compute_remaining_validity_days(self):
-        for record in self:
-            if record.validity_date:
-                record.remaining_validity_days = (record.validity_date - fields.Date.today()).days + 1
-            else:
-                record.remaining_validity_days = 0
 
     @api.depends('transaction_ids')
     def _compute_authorized_transaction_ids(self):
