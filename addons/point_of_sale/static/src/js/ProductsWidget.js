@@ -5,12 +5,21 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
     const { PosComponent } = require('point_of_sale.PosComponent');
     const { ProductsWidgetControlPanel } = require('point_of_sale.ProductsWidgetControlPanel');
     const { ProductsList } = require('point_of_sale.ProductsList');
+    const { useListener } = require('web.custom_hooks');
 
     class ProductsWidget extends PosComponent {
+        /**
+         * @param {Object} props
+         * @param {number?} props.startCategoryId
+         */
         constructor() {
             super(...arguments);
-            this.clickProductHandler = this.props.clickProductHandler;
-            const startCategoryId = this.env.pos.config.iface_start_categ_id
+            useListener('switch-category', this._switchCategory);
+            useListener('update-search', this._updateSearch);
+            useListener('clear-search', this._clearSearch);
+            const startCategoryId = this.props.startCategoryId
+                ? this.props.startCategoryId
+                : this.env.pos.config.iface_start_categ_id
                 ? this.env.pos.config.iface_start_categ_id[0]
                 : 0;
             this.state = useState({ searchWord: '', selectedCategoryId: startCategoryId });
@@ -36,18 +45,20 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
         get breadcrumbs() {
             if (this.state.selectedCategoryId === this.env.pos.db.root_category_id) return [];
             return [
-                ...this.env.pos.db.get_category_ancestors_ids(this.state.selectedCategoryId).slice(1),
+                ...this.env.pos.db
+                    .get_category_ancestors_ids(this.state.selectedCategoryId)
+                    .slice(1),
                 this.state.selectedCategoryId,
             ].map(id => this.env.pos.db.get_category_by_id(id));
         }
-        switchCategory(event) {
+        _switchCategory(event) {
             // event detail is the id of the selected category
             this.state.selectedCategoryId = event.detail;
         }
-        updateSearch(event) {
+        _updateSearch(event) {
             this.state.searchWord = event.detail;
         }
-        clearSearch() {
+        _clearSearch() {
             this.state.searchWord = '';
         }
     }

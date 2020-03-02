@@ -7,18 +7,14 @@
                 <tr class="header-row">
                     <td class="header-cell">
                         <ProductsWidgetControlPanel breadcrumbs="breadcrumbs"
-                                               subcategories="subcategories"
-                                               t-on-switch-category="switchCategory"
-                                               t-on-update-search="updateSearch"
-                                               t-on-clear-search="clearSearch" />
+                                                    subcategories="subcategories" />
                     </td>
                 </tr>
 
                 <tr class="content-row">
                     <td class="content-cell">
                         <div class="content-container">
-                            <ProductsList products="productsToDisplay"
-                                          searchWord="searchWord" />
+                            <ProductsList products="productsToDisplay" searchWord="searchWord" />
                         </div>
                     </td>
                 </tr>
