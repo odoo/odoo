@@ -426,6 +426,45 @@ table.table_desc tr td {
 // Snippets
 //
 
+// To Check data-vcss
+.s_title {
+    .s_title_boxed {
+        > * {
+            display: inline-block;
+            padding: $grid-gutter-width;
+            border: 1px solid;
+        }
+    }
+    .s_title_lines {
+        overflow: hidden;
+        &:before,
+        &:after {
+            content: "";
+            display: inline-block;
+            vertical-align: middle;
+            width: 100%;
+            border-top: 1px solid;
+            border-top-color: inherit;
+        }
+        &:before { margin: 0 $grid-gutter-width/2 0 -100%; }
+        &:after  { margin: 0 -100% 0 $grid-gutter-width/2; }
+    }
+    .s_title_underlined {
+        @extend %o-page-header;
+    }
+    .s_title_small_caps {
+        font-variant: small-caps;
+    }
+    .s_title_transparent {
+        opacity: .5;
+    }
+    .s_title_thin {
+        font-weight: 300;
+    }
+}
+
+
+
 // Carousel -> TODO: should be versioned in 000.scss file but how ?
 .s_carousel,
 .s_quotes_carousel {
