@@ -6,6 +6,7 @@
             <div class="pos-receipt-print"></div>
             <t t-if="state.uiState === 'READY'">
                 <div class="pos-topheader">
+                    <div t-if="tempScreen.isShown" class="block-top-header" />
                     <div class="pos-branding">
                         <img class="pos-logo" t-on-click="trigger('toggle-debug-widget')"
                              src="/point_of_sale/static/src/img/logo.png" alt="Logo" />

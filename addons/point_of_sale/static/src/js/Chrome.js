@@ -109,7 +109,8 @@ odoo.define('point_of_sale.chrome', function(require) {
                 await this.env.pos.ready;
                 this._buildChrome();
                 this.state.uiState = 'READY';
-                this.trigger('show-screen', { name: 'ProductScreen' });
+                this.env.pos.on('change:selectedOrder', () => this._showSavedScreen(), this);
+                this._showSavedScreen();
                 this.env.pos.push_order(); // push order in the background, no need to await
             } catch (error) {
                 let title = 'Unknown Error',
@@ -144,6 +145,14 @@ odoo.define('point_of_sale.chrome', function(require) {
         }
 
         // EVENT HANDLERS //
+
+        _showSavedScreen() {
+            const order = this.env.pos.get_order();
+            const { name } = order.get_screen_data('screen') || {
+                name: 'ProductScreen',
+            };
+            this.trigger('show-screen', { name });
+        }
 
         __showPopup(event) {
             const { name, props, resolve, numberBuffer } = event.detail;
@@ -184,10 +193,15 @@ odoo.define('point_of_sale.chrome', function(require) {
             }
         }
         showScreen({ detail: { name, props } }) {
+            // 1. Set the information of the screen to display.
             this.mainScreen.isShown = true;
             this.mainScreen.name = name;
             this.mainScreen.component = this.constructor.components[name];
             this.mainScreenProps = props || {};
+            // 2. Save the screen to the order.
+            //  - This screen is shown when the order is selected.
+            const order = this.env.pos.get_order();
+            order.set_screen_data('screen', { name });
         }
         async _closePos() {
             // If pos is not properly loaded, we just go back to /web without
