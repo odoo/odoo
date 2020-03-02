@@ -574,6 +574,28 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(self.comp1.virtual_available, 0.0)
         self.assertEqual(self.comp1.virtual_available, 0.0)
 
+    def test_flow_10(self):
+        """Receipts from a children contact of a subcontractor are properly
+        handled.
+        """
+        # Create a children contact
+        subcontractor_contact = self.env['res.partner'].create({
+            'name': 'Test children subcontractor contact',
+            'parent_id': self.subcontractor_partner1.id,
+        })
+        # Create a receipt picking from the subcontractor
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = subcontractor_contact
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished
+            move.product_uom_qty = 1
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+        # Check that a manufacturing order is created
+        mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
+        self.assertEqual(len(mo), 1)
+
 
 class TestSubcontractingTracking(TransactionCase):
     def setUp(self):
