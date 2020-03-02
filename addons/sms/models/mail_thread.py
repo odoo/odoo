@@ -61,7 +61,7 @@ class MailThread(models.AbstractModel):
         send an SMS on a record. """
         return ['mobile']
 
-    def _sms_get_recipients_info(self, force_field=False):
+    def _sms_get_recipients_info(self, force_field=False, partner_fallback=True):
         """" Get SMS recipient information on current record set. This method
         checks for numbers and sanitation in order to centralize computation.
 
@@ -72,17 +72,27 @@ class MailThread(models.AbstractModel):
           * contact -> find numbers from all possible phone fields on record, find
             customer, force its number to found field number or fallback on customer fields;
 
+        :param force_field: either give a specific field to find phone number, either
+            generic heuristic is used to find one based on ``_sms_get_number_fields``;
+        :param partner_fallback: if no value found in the record, check its customer
+            values based on ``_sms_get_default_partners``;
+
         :return dict: record.id: {
-            'partner': a res.partner recordset that is the customer (void or singleton);
-            'sanitized': sanitized number to use (coming from record's field or partner's mobile
-              or phone). Set to False is number impossible to parse and format;
+            'partner': a res.partner recordset that is the customer (void or singleton)
+                linked to the recipient. See ``_sms_get_default_partners``;
+            'sanitized': sanitized number to use (coming from record's field or partner's
+                phone fields). Set to False is number impossible to parse and format;
             'number': original number before sanitation;
+            'partner_store': whether the number comes from the customer phone fields. If
+                False it means number comes from the record itself, even if linked to a
+                customer;
+            'field_store': field in which the number has been found (generally mobile or
+                phone, see ``_sms_get_number_fields``);
         } for each record in self
         """
         result = dict.fromkeys(self.ids, False)
-        number_fields = self._sms_get_number_fields()
+        tocheck_fields = [force_field] if force_field else self._sms_get_number_fields()
         for record in self:
-            tocheck_fields = [force_field] if force_field else number_fields
             all_numbers = [record[fname] for fname in tocheck_fields if fname in record]
             all_partners = record._sms_get_default_partners()
 
@@ -95,25 +105,41 @@ class MailThread(models.AbstractModel):
             if valid_number:
                 result[record.id] = {
                     'partner': all_partners[0] if all_partners else self.env['res.partner'],
-                    'sanitized': valid_number, 'number': valid_number,
+                    'sanitized': valid_number,
+                    'number': record[fname],
+                    'partner_store': False,
+                    'field_store': fname,
                 }
-            elif all_partners:
-                partner_number, partner = False, self.env['res.partner']
+            elif all_partners and partner_fallback:
+                partner = self.env['res.partner']
                 for partner in all_partners:
-                    partner_number = partner.mobile or partner.phone
-                    if partner_number:
-                        partner_number = phone_validation.phone_sanitize_numbers_w_record([partner_number], record)[partner_number]['sanitized']
-                    if partner_number:
-                        break
+                    for fname in self.env['res.partner']._sms_get_number_fields():
+                        valid_number = phone_validation.phone_sanitize_numbers_w_record([partner[fname]], record)[partner[fname]]['sanitized']
+                        if valid_number:
+                            break
 
-                if partner_number:
-                    result[record.id] = {'partner': partner, 'sanitized': partner_number, 'number': partner_number}
-                else:
-                    result[record.id] = {'partner': partner, 'sanitized': False, 'number': partner.mobile or partner.phone}
+                if not valid_number:
+                    fname = 'mobile' if partner.mobile else ('phone' if partner.phone else 'mobile')
+
+                result[record.id] = {
+                    'partner': partner,
+                    'sanitized': valid_number if valid_number else False,
+                    'number': partner[fname],
+                    'partner_store': True,
+                    'field_store': fname,
+                }
             elif all_numbers:
                 result[record.id] = {'partner': self.env['res.partner'], 'sanitized': False, 'number': all_numbers[0]}
             else:
-                result[record.id] = {'partner': self.env['res.partner'], 'sanitized': False, 'number': False}
+                idx, value = next(((idx, val) for idx, val in enumerate(all_numbers)), (0, False))
+                fname = tocheck_fields[idx] if tocheck_fields else False
+                result[record.id] = {
+                    'partner': self.env['res.partner'],
+                    'sanitized': False,
+                    'number': value,
+                    'partner_store': False,
+                    'field_store': fname
+                }
         return result
 
     def _message_sms_schedule_mass(self, body='', template=False, active_domain=None, **composer_values):
