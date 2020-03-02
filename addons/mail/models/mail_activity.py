@@ -384,8 +384,14 @@ class MailActivity(models.Model):
     def action_notify(self):
         if not self:
             return
+        original_context = self.env.context
         body_template = self.env.ref('mail.message_activity_assigned')
         for activity in self:
+            if activity.user_id.lang:
+                # Send the notification in the assigned user's language
+                self = self.with_context(lang=activity.user_id.lang)
+                body_template = body_template.with_context(lang=activity.user_id.lang)
+                activity = activity.with_context(lang=activity.user_id.lang)
             model_description = self.env['ir.model']._get(activity.res_model).display_name
             body = body_template.render(
                 dict(
@@ -406,6 +412,8 @@ class MailActivity(models.Model):
                     model_description=model_description,
                     email_layout_xmlid='mail.mail_notification_light',
                 )
+            body_template = body_template.with_context(original_context)
+            self = self.with_context(original_context)
 
     def action_done(self):
         """ Wrapper without feedback because web button add context as
