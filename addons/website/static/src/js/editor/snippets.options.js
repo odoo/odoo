@@ -1922,6 +1922,16 @@ options.registry.ScrollButton = options.Class.extend({
     _computeVisibility: function () {
         return this.$target.is('.o_full_screen_height, .o_half_screen_height');
     },
+    /**
+     * @override
+     */
+    _onColorResetButtonClick: function () {
+        this._super.apply(this, arguments);
+        this.trigger_up('action_demand', {
+            actionName: 'toggle_page_option',
+            params: [{name: 'header_color', value: ''}],
+        });
+    },
 });
 
 return {
