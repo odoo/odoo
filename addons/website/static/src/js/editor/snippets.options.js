@@ -1588,10 +1588,9 @@ options.registry.topMenuColor = options.Class.extend({
      * @override
      */
     start: function () {
-        var self = this;
         var def = this._super.apply(this, arguments);
-        this.$target.on('snippet-option-change', function () {
-            self.onFocus();
+        this.$target.on('snippet-option-change', () => {
+            this.updateUI();
         });
         return def;
     },
