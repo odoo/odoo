@@ -732,13 +732,6 @@ class StockMove(models.Model):
 class StockReturnPicking(models.TransientModel):
     _inherit = "stock.return.picking"
 
-    @api.model
-    def default_get(self, default_fields):
-        res = super(StockReturnPicking, self).default_get(default_fields)
-        for i, k, vals in res.get('product_return_moves', []):
-            vals.update({'to_refund': True})
-        return res
-
     @api.multi
     def _create_returns(self):
         new_picking_id, pick_type_id = super(StockReturnPicking, self)._create_returns()
@@ -754,6 +747,13 @@ class StockReturnPickingLine(models.TransientModel):
     _inherit = "stock.return.picking.line"
 
     to_refund = fields.Boolean(string="Update quantities on SO/PO", help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
+
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if 'to_refund' in fields_list:
+            res = dict(res, to_refund=True)
+        return res
 
 
 class ProcurementGroup(models.Model):
