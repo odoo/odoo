@@ -35,7 +35,7 @@ class SaleCoupon(models.Model):
         ('cancel', 'Cancelled')
     ], required=True, default='new')
     partner_id = fields.Many2one('res.partner', "For Customer")
-    program_id = fields.Many2one('sale.coupon.program', "Program")
+    program_id = fields.Many2one('sale.coupon.program', "Program", required=True, ondelete="cascade")
     order_id = fields.Many2one('sale.order', 'Order Reference', readonly=True,
         help="The sales order from which coupon is generated")
     sales_order_id = fields.Many2one('sale.order', 'Used in', readonly=True,
