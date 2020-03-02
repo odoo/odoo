@@ -10,6 +10,7 @@ from odoo import api, fields, models
 from odoo import tools
 from odoo.addons import website
 from odoo.addons.http_routing.models.ir_http import url_for
+from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.http import request
 
@@ -27,8 +28,20 @@ class View(models.Model):
     first_page_id = fields.Many2one('website.page', string='Website Page', help='First page linked to this view', compute='_compute_first_page_id')
     track = fields.Boolean(string='Track', default=False, help="Allow to specify for one page of the website to be trackable or not")
     visibility = fields.Selection([('', 'All'), ('connected', 'Signed In'), ('restricted_group', 'Restricted Group'), ('password', 'With Password')], default='')
-    visibility_group = fields.Many2one('res.groups')
-    visibility_password = fields.Char(groups='website.group_website_publisher')
+    visibility_group = fields.Many2one('res.groups', copy=False)
+    visibility_password = fields.Char(groups='base.group_system', copy=False)
+    visibility_password_display = fields.Char(compute='_get_pwd', inverse='_set_pwd', groups='website.group_website_designer')
+
+    @api.depends('visibility_password')
+    def _get_pwd(self):
+        for r in self:
+            r.visibility_password_display = r.sudo().visibility_password and '********' or ''
+
+    def _set_pwd(self):
+        crypt_context = self.env.user._crypt_context()
+        for r in self:
+            r.sudo().visibility_password = crypt_context.encrypt(r.visibility_password_display)
+            r.visibility = r.visibility  # double check access
 
     def _compute_first_page_id(self):
         for view in self:
@@ -324,8 +337,8 @@ class View(models.Model):
 
     @api.model
     def read_template(self, xml_id):
-        view_sudo = self._view_obj(self.get_view_id(xml_id)).sudo()
-        if view_sudo.visibility and view_sudo.handle_visibility(do_raise=False):
+        view = self._view_obj(self.get_view_id(xml_id))
+        if view.visibility and view._handle_visibility(do_raise=False):
             self = self.sudo()
         return super(View, self).read_template(xml_id)
 
@@ -338,14 +351,19 @@ class View(models.Model):
         domain = [('key', '=', self.key), ('model_data_id', '!=', None)]
         return self.with_context(active_test=False).search(domain, limit=1)  # Useless limit has multiple xmlid should not be possible
 
-    def handle_visibility(self, do_raise=True):
+    def _handle_visibility(self, do_raise=True):
         """ Check the visibility set on the main view and raise 403 if you should not have access.
             Order is: Public, Connected, Has group, Password
 
             It only check the visibility on the main content, others views called stay available in rpc.
         """
         error = False
-        self = self.sudo()
+
+        try:
+            self.visibility  # avoid useless sudo() in case page is public
+        except AccessError:
+            self = self.sudo()
+
         if self.visibility and not request.env.user.has_group('website.group_website_designer'):
             if (self.visibility == 'connected' and request.website.is_public_user()):
                 error = werkzeug.exceptions.Forbidden()
@@ -356,7 +374,9 @@ class View(models.Model):
                     error = werkzeug.exceptions.Forbidden()
             elif self.visibility == 'password' and \
                     (request.website.is_public_user() or self.id not in request.session.get('views_unlock', [])):
-                if self.sudo().visibility_password == request.params.get('visibility_password'):
+                pwd = request.params.get('visibility_password')
+                if pwd and self.env.user._crypt_context().verify(
+                        pwd, self.sudo().visibility_password):
                     request.session.setdefault('views_unlock', list()).append(self.id)
                 else:
                     error = werkzeug.exceptions.Forbidden('website_visibility_password_required')
@@ -369,7 +389,7 @@ class View(models.Model):
 
     def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
         """ Render the template. If website is enabled on request, then extend rendering context with website values. """
-        self.handle_visibility(do_raise=True)
+        self._handle_visibility(do_raise=True)
         new_context = dict(self._context)
         if request and getattr(request, 'is_frontend', False):
 

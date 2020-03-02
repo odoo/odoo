@@ -152,7 +152,10 @@
                             <div class="ml-1 input-group-prepend show_visibility_password" >
                                 <div class="input-group-text"><i class="fa fa-key"></i></div>
                             </div>
-                            <input type="text" t-att-value='widget.page.visibility_password ? widget.page.visibility_password : ""' class="form-control show_visibility_password" id="visibility_password"/>
+                            <input type="password" id="visibility_password"
+                                   t-att-value='widget.page.visibility_password'
+                                   t-att-required="widget.page.visibility == 'password' ? 'required' : None"
+                                   class="form-control show_visibility_password"/>
                             <div class="ml-1 input-group-prepend show_visibility_group">
                                 <div class="input-group-text"><i class="fa fa-group"></i></div>
                             </div>
