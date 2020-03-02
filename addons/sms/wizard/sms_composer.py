@@ -16,9 +16,6 @@ class SendSMS(models.TransientModel):
     @api.model
     def default_get(self, fields):
         result = super(SendSMS, self).default_get(fields)
-        if fields == 'partner_ids':
-            # shortcut because default_get in cache, avoid issues
-            return result
 
         result['res_model'] = result.get('res_model') or self.env.context.get('active_model')
         result['composition_mode'] = result.get('composition_mode')
@@ -67,71 +64,78 @@ class SendSMS(models.TransientModel):
     active_domain_count = fields.Integer(
         'Active records count', compute='_compute_recipients_count', compute_sudo=False,
         help='UX field computing the number of recipients in mass mode based on given active domain')
+    comment_single_recipient = fields.Boolean(
+        'Single Mode', compute='_compute_comment_single_recipient', compute_sudo=False,
+        help='UX field allowing to know we are sending an SMS to a single specific recipient')
     # options for comment and mass mode
     mass_keep_log = fields.Boolean('Keep a note on document', default=True)
     mass_force_send = fields.Boolean('Send directly', default=False)
     mass_use_blacklist = fields.Boolean('Use blacklist', default=True)
     # recipients
-    recipient_description = fields.Text('Recipients (Partners)', compute='_compute_recipients', compute_sudo=False)
-    recipient_count = fields.Integer('# Valid recipients', compute='_compute_recipients', compute_sudo=False)
+    recipient_single_description = fields.Text('Recipients (Partners)', compute='_compute_recipients', compute_sudo=False)
+    recipient_valid_count = fields.Integer('# Valid recipients', compute='_compute_recipients', compute_sudo=False)
     recipient_invalid_count = fields.Integer('# Invalid recipients', compute='_compute_recipients', compute_sudo=False)
     number_field_name = fields.Char(string='Field holding number')
-    partner_ids = fields.Many2many('res.partner')
     numbers = fields.Char('Recipients (Numbers)')
     sanitized_numbers = fields.Char('Sanitized Number', compute='_compute_sanitized_numbers', compute_sudo=False)
     # content
     template_id = fields.Many2one('sms.template', string='Use Template', domain="[('model', '=', res_model)]")
     body = fields.Text('Message', required=True)
 
-    @api.depends('res_model', 'res_ids', 'active_domain')
+    @api.depends('res_model', 'res_id', 'res_ids', 'active_domain')
     def _compute_recipients_count(self):
-        self.res_ids_count = len(literal_eval(self.res_ids)) if self.res_ids else 0
-        if self.res_model:
-            self.active_domain_count = self.env[self.res_model].search_count(literal_eval(self.active_domain or '[]'))
-        else:
-            self.active_domain_count = 0
-
-    @api.depends('partner_ids', 'res_model', 'res_id', 'res_ids', 'use_active_domain', 'composition_mode', 'number_field_name', 'sanitized_numbers')
-    def _compute_recipients(self):
-        self.recipient_description = False
-        self.recipient_count = 0
-        self.recipient_invalid_count = 0
-
-        if self.partner_ids:
-            if len(self.partner_ids) == 1:
-                self.recipient_description = '%s (%s)' % (self.partner_ids[0].display_name, self.partner_ids[0].mobile or self.partner_ids[0].phone or _('Missing number'))
-            self.recipient_count = len(self.partner_ids)
-
-        elif self.composition_mode in ('comment', 'mass') and self.res_model:
-            records = self._get_records()
-
-            if records and issubclass(type(records), self.pool['mail.thread']):
-                res = records._sms_get_recipients_info(force_field=self.number_field_name)
-                valid_ids = [rid for rid, rvalues in res.items() if rvalues['sanitized']]
-                invalid_ids = [rid for rid, rvalues in res.items() if not rvalues['sanitized']]
-                self.recipient_count = len(valid_ids)
-                self.recipient_invalid_count = len(invalid_ids)
-                if len(records) == 1:
-                    self.recipient_description = '%s (%s)' % (
-                        res[records.id]['partner'].name or records.display_name,
-                        res[records.id]['sanitized'] or _("Invalid number")
-                    )
+        for composer in self:
+            composer.res_ids_count = len(literal_eval(composer.res_ids)) if composer.res_ids else 0
+            if composer.res_model:
+                composer.active_domain_count = self.env[composer.res_model].search_count(literal_eval(composer.active_domain or '[]'))
             else:
-                self.recipient_invalid_count = 0 if (self.sanitized_numbers or (self.composition_mode == 'mass' and self.use_active_domain)) else 1
+                composer.active_domain_count = 0
+
+    @api.depends('res_id', 'composition_mode')
+    def _compute_comment_single_recipient(self):
+        for composer in self:
+            composer.comment_single_recipient = bool(composer.res_id and composer.composition_mode == 'comment')
+
+    @api.depends('res_model', 'res_id', 'res_ids', 'use_active_domain', 'composition_mode', 'number_field_name', 'sanitized_numbers')
+    def _compute_recipients(self):
+        for composer in self:
+            composer.recipient_single_description = False
+            composer.recipient_valid_count = 0
+            composer.recipient_invalid_count = 0
+
+            if composer.composition_mode in ('comment', 'mass') and composer.res_model:
+                records = composer._get_records()
+
+                if records and issubclass(type(records), self.pool['mail.thread']):
+                    res = records._sms_get_recipients_info(force_field=composer.number_field_name)
+                    valid_ids = [rid for rid, rvalues in res.items() if rvalues['sanitized']]
+                    invalid_ids = [rid for rid, rvalues in res.items() if not rvalues['sanitized']]
+                    composer.recipient_valid_count = len(valid_ids)
+                    composer.recipient_invalid_count = len(invalid_ids)
+                    if len(records) == 1:
+                        composer.recipient_single_description = '%s (%s)' % (
+                            res[records.id]['partner'].name or records.display_name,
+                            res[records.id]['sanitized'] or _("Invalid number")
+                        )
+                else:
+                    composer.recipient_invalid_count = 0 if (
+                        composer.sanitized_numbers or (composer.composition_mode == 'mass' and composer.use_active_domain)
+                    ) else 1
 
     @api.depends('numbers', 'res_model', 'res_id')
     def _compute_sanitized_numbers(self):
-        if self.numbers:
-            record = self._get_records() if self.res_model and self.res_id else self.env.user
-            numbers = [number.strip() for number in self.numbers.split(',')]
-            sanitize_res = phone_validation.phone_sanitize_numbers_w_record(numbers, record)
-            sanitized_numbers = [info['sanitized'] for info in sanitize_res.values() if info['sanitized']]
-            invalid_numbers = [number for number, info in sanitize_res.items() if info['code']]
-            if invalid_numbers:
-                raise UserError(_('Following numbers are not correctly encoded: %s') % repr(invalid_numbers))
-            self.sanitized_numbers = ','.join(sanitized_numbers)
-        else:
-            self.sanitized_numbers = False
+        for composer in self:
+            if composer.numbers:
+                record = composer._get_records() if composer.res_model and composer.res_id else self.env.user
+                numbers = [number.strip() for number in composer.numbers.split(',')]
+                sanitize_res = phone_validation.phone_sanitize_numbers_w_record(numbers, record)
+                sanitized_numbers = [info['sanitized'] for info in sanitize_res.values() if info['sanitized']]
+                invalid_numbers = [number for number, info in sanitize_res.items() if info['code']]
+                if invalid_numbers:
+                    raise UserError(_('Following numbers are not correctly encoded: %s') % repr(invalid_numbers))
+                composer.sanitized_numbers = ','.join(sanitized_numbers)
+            else:
+                composer.sanitized_numbers = False
 
     @api.onchange('composition_mode', 'res_model', 'res_id', 'template_id')
     def _onchange_template_id(self):
@@ -182,7 +186,6 @@ class SendSMS(models.TransientModel):
         for record in records:
             messages |= record._message_sms(
                 self.body, subtype_id=subtype_id,
-                partner_ids=self.partner_ids.ids or False,
                 number_field=self.number_field_name,
                 sms_numbers=self.sanitized_numbers.split(',') if self.sanitized_numbers else None)
         return messages
