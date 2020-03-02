@@ -8,7 +8,7 @@ class AccrualAccountingWizard(models.TransientModel):
     _description = 'Create accrual entry.'
 
     date = fields.Date(required=True)
-    company_id = fields.Many2one('res.company', required=True)
+    company_id = fields.Many2one('res.company', required=True, readonly=True)
     account_type = fields.Selection([('income', 'Revenue'), ('expense', 'Expense')])
     active_move_line_ids = fields.Many2many('account.move.line')
     journal_id = fields.Many2one('account.journal', required=True, readonly=False,

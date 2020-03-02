@@ -55,11 +55,11 @@ class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
     _description = 'Analytic Line'
 
-    product_id = fields.Many2one('product.product', string='Product', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    product_id = fields.Many2one('product.product', string='Product', check_company=True)
     general_account_id = fields.Many2one('account.account', string='Financial Account', ondelete='restrict', readonly=True,
-                                         related='move_id.account_id', store=True, domain=[('deprecated', '=', False)],
+                                         related='move_id.account_id', store=True, domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
                                          compute_sudo=True)
-    move_id = fields.Many2one('account.move.line', string='Journal Item', ondelete='cascade', index=True)
+    move_id = fields.Many2one('account.move.line', string='Journal Item', ondelete='cascade', index=True, check_company=True)
     code = fields.Char(size=8)
     ref = fields.Char(string='Ref.')
 

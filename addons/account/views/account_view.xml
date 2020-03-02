@@ -14,6 +14,7 @@
                        <div class="oe_title">
                            <h1 class= "oe_read_only">
                              <field name="code" placeholder="code"/> - <field name="name" placeholder="name"/>
+                             <field name="company_id" invisible="1"/>
                            </h1>
                            <div class="oe_inline oe_edit_only">
                              <label for="code"/>
@@ -290,8 +291,8 @@
                                         <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
                                     </group>
                                     <group>
-                                        <field name="default_debit_account_id" options="{'no_create': True}" domain="[('deprecated', '=', False)]" groups="account.group_account_readonly"/>
-                                        <field name="default_credit_account_id" options="{'no_create': True}" domain="[('deprecated', '=', False)]" groups="account.group_account_readonly"/>
+                                        <field name="default_debit_account_id" options="{'no_create': True}" groups="account.group_account_readonly"/>
+                                        <field name="default_credit_account_id" options="{'no_create': True}" groups="account.group_account_readonly"/>
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     </group>
                                 </group>
@@ -644,6 +645,7 @@ action = model.setting_init_bank_account_action()
                                     <field name="amount_currency" optional="hidden"/>
                                     <field name="currency_id" optional="hidden"/>
                                     <field name="state" invisible="1"/>
+                                    <field name="company_id" invisible="1"/>
                                     <button name="button_cancel_reconciliation" attrs="{'invisible': ['|',('journal_entry_ids', '=', []), ('state', '=', 'confirm')]}" string="Revert reconciliation" type="object" icon="fa-undo"/>
                                 </tree>
                             </field>
@@ -732,6 +734,7 @@ action = model.setting_init_bank_account_action()
                     <field name="sequence"/>
                     <field name="note"/>
                     <field name="transaction_type"/>
+                    <field name="company_id" invisible="1"/>
                 </group>
             </form>
             </field>
@@ -886,14 +889,14 @@ action = model.setting_init_bank_account_action()
                                <field name="show_decimal_separator" invisible="1"/>
                                <field name="decimal_separator" attrs="{'invisible': [('show_decimal_separator', '=', False)]}" groups="base.group_no_one"/>
                            </group>
-                            <field name="line_ids" default="{'default_model_id': self}" nolabel="1">
+                            <field name="line_ids" default="{'default_model_id': self, 'default_company_id': self.company_id}" nolabel="1">
                                 <tree editable="bottom">
                                     <field name="account_id"/>
                                     <field name="amount_type"/>
-                                    <field name="journal_id" domain="[('type', '=', 'general'), ('company_id', '=', company_id)]" attrs="{'column_invisible': [('parent.rule_type', '!=', 'writeoff_button')]}"/>
+                                    <field name="journal_id" attrs="{'column_invisible': [('parent.rule_type', '!=', 'writeoff_button')]}"/>
                                     <field name="amount_string"/>
                                     <field name="tax_ids" widget="many2many_tags"/>
-                                    <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_tags"/>
+                                    <field name="analytic_account_id" groups="analytic.group_analytic_tags"/>
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                     <field name="show_force_tax_included" invisible="1"/>
                                     <field name="force_tax_included" attrs="{'invisible': [('show_force_tax_included', '=', False)]}" widget="boolean_toggle"/>
@@ -1073,7 +1076,7 @@ action = model.setting_init_bank_account_action()
                     <field name="sequence" widget="handle"/>
                     <field name="factor_percent" attrs="{'invisible': [('repartition_type', '=', 'base')]}"/>
                     <field name="repartition_type"/>
-                    <field name="account_id" attrs="{'invisible': [('repartition_type', '=', 'base')]}" options="{'no_create': True}" domain="[('internal_type', 'not in', ('receivable', 'payable'))]"/>
+                    <field name="account_id" attrs="{'invisible': [('repartition_type', '=', 'base')]}" options="{'no_create': True}"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'no_create': True}" domain="[('applicability', '=', 'taxes'), ('country_id', '=', country_id)]"/>
                     <field name="country_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>

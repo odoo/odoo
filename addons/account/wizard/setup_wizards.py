@@ -67,10 +67,14 @@ class SetupBarBankConfigWizard(models.TransientModel):
     _inherits = {'res.partner.bank': 'res_partner_bank_id'}
     _name = 'account.setup.bank.manual.config'
     _description = 'Bank setup manual config'
+    _check_company_auto = True
 
     res_partner_bank_id = fields.Many2one(comodel_name='res.partner.bank', ondelete='cascade', required=True)
     new_journal_name = fields.Char(default=lambda self: self.linked_journal_id.name, inverse='set_linked_journal_id', required=True, help='Will be used to name the Journal related to this bank account')
-    linked_journal_id = fields.Many2one(string="Journal", comodel_name='account.journal', inverse='set_linked_journal_id', compute="_compute_linked_journal_id")
+    linked_journal_id = fields.Many2one(string="Journal",
+        comodel_name='account.journal', inverse='set_linked_journal_id',
+        compute="_compute_linked_journal_id", check_company=True,
+        domain="[('type','=','bank'), ('bank_account_id', '=', False), ('company_id', '=', company_id)]")
     new_journal_code = fields.Char(string="Code", required=True, default=lambda self: self._onchange_new_journal_code())
     num_journals_without_account = fields.Integer(default=lambda self: self._number_unlinked_journal())
     # field computing the type of the res.patrner.bank. It's behaves the same as a related res_part_bank_id.acc_type
