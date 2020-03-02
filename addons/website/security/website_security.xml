@@ -75,7 +75,7 @@
     <record id="view_rule_visibility_public" model="ir.rule">
         <field name="name">Website View Visibility Public</field>
         <field name="model_id" ref="base.model_ir_ui_view"/>
-        <field name="domain_force">[('type', '=', 'qweb'), ('visibility', 'in', ('public', False))]</field>
+        <field name="domain_force">['|', ('type', '!=', 'qweb'), ('visibility', 'in', ('public', False))]</field>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
@@ -85,7 +85,7 @@
     <record id="view_rule_visibility_connected" model="ir.rule">
         <field name="name">Website View Visibility Connected</field>
         <field name="model_id" ref="base.model_ir_ui_view"/>
-        <field name="domain_force">[('type', '=', 'qweb'), ('visibility', 'in', ('public', 'connected', False))]</field>
+        <field name="domain_force">['|', ('type', '!=', 'qweb'), ('visibility', 'in', ('public', 'connected', False))]</field>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>

@@ -22,6 +22,8 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         'keyup input#page_name': '_onNameChanged',
         'keyup input#page_url': '_onUrlChanged',
         'change input#create_redirect': '_onCreateRedirectChanged',
+        'click input#visibility_password': '_onPasswordClicked',
+        'change input#visibility_password': '_onPasswordChanged',
         'change select#visibility': '_onVisibilityChanged',
     }),
 
@@ -234,10 +236,19 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             redirect_type: this.$('#redirect_type').val(),
             website_indexed: this.$('#is_indexed').prop('checked'),
             visibility: this.$('#visibility').val(),
-            visibility_password: this.$('#visibility').val() === 'password' ? this.$('#visibility_password').val() : false,
             visibility_group: this.$('#visibility').val() === 'restricted_group' ? this.$('#visibility_group').data('group-id') : false,
             date_publish: datePublish,
         };
+        if (this.$('#visibility').val() === 'password') {
+            var field_pwd = $('#visibility_password');
+            if (!field_pwd.get(0).reportValidity()) {
+                return;
+            }
+            if (field_pwd.data('dirty')) {
+                params['visibility_pwd'] = field_pwd.val();
+            }
+        }
+
         this._rpc({
             model: 'website.page',
             method: 'save_page_info',
@@ -408,6 +419,19 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
     _onVisibilityChanged: function (ev) {
         this.$('.show_visibility_password').toggleClass('d-none', ev.target.value !== 'password');
         this.$('.show_visibility_group').toggleClass('d-none', ev.target.value !== 'restricted_group');
+        this.$('#visibility_password').attr('required', ev.target.value === 'password');
+    },
+    /**
+     * @private
+     */
+    _onPasswordClicked: function (ev) {
+        ev.target.value = '';
+        this._onPasswordChanged();
+    },    /**
+     * @private
+     */
+    _onPasswordChanged: function () {
+        this.$('#visibility_password').data('dirty', 1);
     },
 });
 
