@@ -29,8 +29,10 @@ class TestORM(TransactionCase):
             'groups_id': [(6, 0, [self.ref('base.group_user')])],
         })
         ps = (p1 + p2).with_user(user)
-        self.assertEqual([{'id': p2.id, 'name': 'Y'}], ps.read(['name']), "read() should skip deleted records")
-        self.assertEqual([], ps[0].read(['name']), "read() should skip deleted records")
+        with self.assertRaises(MissingError):
+            self.assertEqual([{'id': p2.id, 'name': 'Y'}], ps.read(['name']), "read() should raise on deleted records")
+        with self.assertRaises(MissingError):
+            self.assertEqual([], ps[0].read(['name']), "read() should raise on deleted records")
 
         # Deleting an already deleted record should be simply ignored
         self.assertTrue(p1.unlink(), "Re-deleting should be a no-op")
@@ -71,7 +73,7 @@ class TestORM(TransactionCase):
         # Prepare mixed case 
         p2.unlink()
         # read mixed records: some deleted and some filtered
-        with self.assertRaises(AccessError):
+        with self.assertRaises(MissingError):
             (p1 + p2).with_user(user).read(['name'])
         # delete mixed records: some deleted and some filtered
         with self.assertRaises(AccessError):

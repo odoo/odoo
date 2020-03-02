@@ -729,6 +729,7 @@ actual arch.
             fields = list({'arch', 'model'}.union(fields))
 
         # read the view arch
+        root.flush()  # for test_view_normalization_00
         [view_data] = root.read(fields=fields)
         view_arch = etree.fromstring(view_data['arch'].encode('utf-8'))
         if not root.inherit_id:

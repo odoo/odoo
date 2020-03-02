@@ -430,6 +430,10 @@ class TestTranslationWrite(TransactionCase):
         })
 
         self.category.with_context(lang='en_US').write({'name': 'English Name'})
+        # when there is only one language, we would except the cache to be the
+        # same whether the lang context is set or not, but it is not the case
+        translation.flush()
+        translation.invalidate_cache()
         translation_value = translation.read(['value'])
         self.assertEqual(translation_value[0]['value'], "English Name", "Existing translation was not updated")
 

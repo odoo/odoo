@@ -2913,24 +2913,16 @@ Fields:
                  with one dictionary per record
         :raise AccessError: if user has no read rights on some of the given
                 records
+        :raise MissingError: if some of the given records are deleted
+        :raise ValueError: if some of the given fields are invalid
         """
+        self.check_access_rule('read')
         fields = self.check_field_access_rights('read', fields)
 
-        # fetch stored fields from the database to the cache
-        stored_fields = set()
         for name in fields:
             field = self._fields.get(name)
             if not field:
                 raise ValueError("Invalid field %r on model %r" % (name, self._name))
-            if field.store:
-                stored_fields.add(name)
-            elif field.compute:
-                # optimization: prefetch direct field dependencies
-                for dotname in field.depends:
-                    f = self._fields[dotname.split('.')[0]]
-                    if f.prefetch and (not f.groups or self.user_has_groups(f.groups)):
-                        stored_fields.add(f.name)
-        self._read(stored_fields)
 
         # retrieve results from records; this takes values from the cache and
         # computes remaining fields
