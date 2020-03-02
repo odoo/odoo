@@ -315,3 +315,51 @@ class TestTimesheet(TestCommonTimesheet):
         timesheet_1.with_user(self.user_employee).action_timer_stop()
 
         self.assertGreater(timesheet_1.unit_amount, 1, 'unit_amount should be greated than his last value')
+
+    def test_allow_timesheets_and_timer(self):
+        """
+        Check that a modification of the 'allow_timesheets' field updates correctly the
+        'allow_timesheet_timer' field.
+        """
+        Project = self.env['project.project']
+
+        # case 1: create a project with allow_timesheets set to FALSE
+        project_1 = Project.create({
+            'name': 'Project 1',
+            'allow_timesheets': False,
+            'partner_id': self.partner.id
+        })
+
+        self.assertFalse(
+            project_1.allow_timesheet_timer,
+            "On project creation with 'allow_timesheets' set to FALSE, 'allow_timesheet_timer' shall be set to FALSE")
+
+        # case 2: create a project with allow_timesheets set to TRUE
+        project_2 = Project.create({
+            'name': 'Project 2',
+            'allow_timesheets': True,
+            'partner_id': self.partner.id,
+            'analytic_account_id': self.analytic_account.id
+        })
+
+        self.assertTrue(
+            project_2.allow_timesheet_timer,
+            "On project creation with 'allow_timesheets' set to TRUE, 'allow_timesheet_timer' shall be set to TRUE")
+
+        # case 3: change 'allow_timesheets' from FALSE to TRUE
+        project_1.write({
+            'allow_timesheets': True
+        })
+
+        self.assertTrue(
+            project_1.allow_timesheet_timer,
+            "On 'allow_timesheets' change to TRUE, 'allow_timesheet_timer' shall be set to TRUE")
+
+        # case 4: change 'allow_timesheets' from TRUE to FALSE
+        project_2.write({
+            'allow_timesheets': False
+        })
+
+        self.assertFalse(
+            project_2.allow_timesheet_timer,
+            "On 'allow_timesheets' change to FALSE, 'allow_timesheet_timer' shall be set to FALSE")
