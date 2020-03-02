@@ -1,47 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
 
-        <!-- open opportunities related to given partner -->
-        <record id="relate_partner_opportunities" model="ir.actions.act_window">
-            <field name="name">Opportunities</field>
-            <field name="res_model">crm.lead</field>
-            <field name="view_mode">kanban,tree,form,graph,calendar</field>
-            <field name="domain">[('type','=','opportunity')]</field>
-            <field name="context">{
-                'search_default_partner_id': active_id,
-                'default_type': 'opportunity'
-            }</field>
-            <field name="view_id" eval="False"/>
-            <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create an new opportunity related to this customer
-              </p><p>
-                Use opportunities to keep track of your sales pipeline, follow
-                up potential sales and better forecast your future revenues.
-              </p><p>
-                You will be able to plan meetings and log activities from
-                opportunities, convert them into quotations, attach related
-                documents, track all discussions, and much more.
-              </p>
-            </field>
-        </record>
-
-        <record id="relate_partner_opportunities_kanban" model="ir.actions.act_window.view">
-            <field name="sequence" eval="0"/>
-            <field name="view_mode">kanban</field>
-            <field name="view_id" ref="crm_case_kanban_view_leads"/>
-            <field name="act_window_id" ref="relate_partner_opportunities"/>
-        </record>
-
-        <record id="relate_partner_opportunities_tree" model="ir.actions.act_window.view">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="crm_case_tree_view_oppor"/>
-            <field name="act_window_id" ref="relate_partner_opportunities"/>
-        </record>
-
-        <!-- Partner kanban view inherte -->
+        <!-- Partner kanban view inherit -->
         <record id="crm_lead_partner_kanban_view" model="ir.ui.view">
             <field name="name">res.partner.kanban.inherit</field>
             <field name="model">res.partner</field>
