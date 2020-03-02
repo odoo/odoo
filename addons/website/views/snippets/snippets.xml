@@ -132,12 +132,18 @@
     <we-row string="Border">
         <we-colorpicker data-dependencies="border_width_opt"
                         data-select-style="true" data-css-property="border-color" data-color-prefix="border-"/>
+        <we-select data-css-property="border-style" data-dependencies="border_width_opt">
+            <we-button data-select-style="solid">Solid</we-button>
+            <we-button data-select-style="dashed">Dashed</we-button>
+            <we-button data-select-style="dotted">Dotted</we-button>
+            <we-button data-select-style="double">Double</we-button>
+        </we-select>
         <we-input data-name="border_width_opt"
                   data-select-style="0" data-css-property="border-width"
                   data-unit="px" data-extra-class="border"/>
     </we-row>
     <we-input string="Rounded"
-              data-dependencies="border_width_opt"
+              data-dependencies="border_width_opt,bg_color_opt"
               data-select-style="0" data-css-property="border-radius"
               data-unit="px" data-extra-class="rounded"/>
 </template>

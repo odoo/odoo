@@ -1027,6 +1027,12 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     isContainer: function () {
         return false;
     },
+    /**
+     * @override
+     */
+    isActive: function () {
+        return !weUtils.areCssValuesEqual(this._value, 'rgba(0, 0, 0, 0)');
+    },
 
     //--------------------------------------------------------------------------
     // Private
