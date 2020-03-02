@@ -3908,14 +3908,15 @@
          */
         async render(force = false) {
             const __owl__ = this.__owl__;
-            if (!__owl__.isMounted && !__owl__.currentFiber) {
+            const currentFiber = __owl__.currentFiber;
+            if (!__owl__.isMounted && !currentFiber) {
                 // if we get here, this means that the component was either never mounted,
                 // or was unmounted and some state change  triggered a render. Either way,
                 // we do not want to actually render anything in this case.
                 return;
             }
-            if (__owl__.currentFiber && !__owl__.currentFiber.isRendered) {
-                return scheduler.addFiber(__owl__.currentFiber.root);
+            if (currentFiber && !currentFiber.isRendered && !currentFiber.isCompleted) {
+                return scheduler.addFiber(currentFiber.root);
             }
             // if we aren't mounted at this point, it implies that there is a
             // currentFiber that is already rendered (isRendered is true), so we are
@@ -5135,8 +5136,8 @@
     exports.utils = utils;
 
     exports.__info__.version = '1.0.5';
-    exports.__info__.date = '2020-02-21T08:48:04.397Z';
-    exports.__info__.hash = 'fd6327b';
+    exports.__info__.date = '2020-03-02T13:53:47.501Z';
+    exports.__info__.hash = 'f5d019b';
     exports.__info__.url = 'https://github.com/odoo/owl';
 
 }(this.owl = this.owl || {}));
