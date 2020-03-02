@@ -408,6 +408,7 @@ class HrExpense(models.Model):
             'quantity': 1,
             'unit_amount': price,
             'company_id': employee.company_id.id,
+            'currency_id': employee.company_id.currency_id.id,
         })
         if account:
             custom_values['account_id'] = account.id
