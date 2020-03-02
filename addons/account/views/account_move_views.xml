@@ -567,6 +567,7 @@
                         <field name="move_type" invisible="1"/>
                         <field name="payment_state" invisible="1" force_save="1"/>
                         <field name="invoice_filter_type_domain" invisible="1"/>
+                        <field name="suitable_journal_ids" invisible="1"/>
                         <field name="company_currency_id" invisible="1"/>
                         <field name="commercial_partner_id" invisible="1"/>
                         <field name="bank_partner_id" invisible="1"/>
@@ -645,7 +646,6 @@
                                        invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'"
                                        groups="account.group_account_readonly"
                                        options="{'no_create': True}"
-                                       domain="[('type', '=?', invoice_filter_type_domain)]"
                                        attrs="{'readonly': [('posted_before', '=', True)]}"/>
 
                                 <field name="company_id" groups="base.group_multi_company"/>

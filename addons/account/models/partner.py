@@ -22,7 +22,10 @@ class AccountFiscalPosition(models.Model):
     name = fields.Char(string='Fiscal Position', required=True)
     active = fields.Boolean(default=True,
         help="By unchecking the active field, you may hide a fiscal position without deleting it.")
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, required=True)
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        string='Company', required=True, readonly=True,
+        default=lambda self: self.env.company)
     account_ids = fields.One2many('account.fiscal.position.account', 'position_id', string='Account Mapping', copy=True)
     tax_ids = fields.One2many('account.fiscal.position.tax', 'position_id', string='Tax Mapping', copy=True)
     note = fields.Text('Notes', translate=True, help="Legal mentions that have to be printed on the invoices.")
@@ -191,11 +194,13 @@ class AccountFiscalPositionTax(models.Model):
     _name = 'account.fiscal.position.tax'
     _description = 'Tax Mapping of Fiscal Position'
     _rec_name = 'position_id'
+    _check_company_auto = True
 
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
         required=True, ondelete='cascade')
-    tax_src_id = fields.Many2one('account.tax', string='Tax on Product', required=True)
-    tax_dest_id = fields.Many2one('account.tax', string='Tax to Apply')
+    company_id = fields.Many2one('res.company', string='Company', related='position_id.company_id', store=True)
+    tax_src_id = fields.Many2one('account.tax', string='Tax on Product', required=True, check_company=True)
+    tax_dest_id = fields.Many2one('account.tax', string='Tax to Apply', check_company=True)
 
     _sql_constraints = [
         ('tax_src_dest_uniq',
@@ -208,13 +213,17 @@ class AccountFiscalPositionAccount(models.Model):
     _name = 'account.fiscal.position.account'
     _description = 'Accounts Mapping of Fiscal Position'
     _rec_name = 'position_id'
+    _check_company_auto = True
 
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
         required=True, ondelete='cascade')
+    company_id = fields.Many2one('res.company', string='Company', related='position_id.company_id', store=True)
     account_src_id = fields.Many2one('account.account', string='Account on Product',
-        domain=[('deprecated', '=', False)], required=True)
+        check_company=True, required=True,
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]")
     account_dest_id = fields.Many2one('account.account', string='Account to Use Instead',
-        domain=[('deprecated', '=', False)], required=True)
+        check_company=True, required=True,
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]")
 
     _sql_constraints = [
         ('account_src_dest_uniq',
@@ -393,23 +402,25 @@ class ResPartner(models.Model):
     journal_item_count = fields.Integer(compute='_compute_journal_item_count', string="Journal Items", type="integer")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable",
-        domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False)]",
+        domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False), ('company_id', '=', current_company_id)]",
         help="This account will be used instead of the default one as the payable account for the current partner",
         required=True)
     property_account_receivable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Receivable",
-        domain="[('internal_type', '=', 'receivable'), ('deprecated', '=', False)]",
+        domain="[('internal_type', '=', 'receivable'), ('deprecated', '=', False), ('company_id', '=', current_company_id)]",
         help="This account will be used instead of the default one as the receivable account for the current partner",
         required=True)
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
         string="Fiscal Position",
-        domain="[('company_id', 'in', [company_id or current_company_id, False])]",
+        domain="[('company_id', '=', current_company_id)]",
         help="The fiscal position determines the taxes/accounts used for this contact.")
     property_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Customer Payment Terms',
+        domain="[('company_id', 'in', [current_company_id, False])]",
         help="This payment term will be used instead of the default one for sales orders and customer invoices")
     property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Vendor Payment Terms',
+        domain="[('company_id', 'in', [current_company_id, False])]",
         help="This payment term will be used instead of the default one for purchase orders and vendor bills")
     ref_company_ids = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner')
