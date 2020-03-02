@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Reverse Journal Entry">
                     <field name="residual" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
                     <field name="move_ids" invisible="1"/>
                     <field name="move_type" invisible="1"/>
                     <span class="text-muted" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'in_invoice', 'some_invoice'))]}">Invoices/>Bills won't be reversed but credit notes will be created instead: the tax tags will be adapted accordingly.</span>

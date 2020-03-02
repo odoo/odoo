@@ -10,6 +10,7 @@ class AccountMoveReversal(models.TransientModel):
     """
     _name = 'account.move.reversal'
     _description = 'Account Move Reversal'
+    _check_company_auto = True
 
     move_ids = fields.Many2many('account.move', 'account_move_reversal_move', 'reversal_id', 'move_id', domain=[('state', '=', 'posted')])
     new_move_ids = fields.Many2many('account.move', 'account_move_reversal_new_move', 'reversal_id', 'new_move_id')
@@ -21,7 +22,8 @@ class AccountMoveReversal(models.TransientModel):
             ('modify', 'Full refund and new draft invoice')
         ], string='Credit Method', required=True,
         help='Choose how you want to credit this invoice. You cannot "modify" nor "cancel" if the invoice is already reconciled.')
-    journal_id = fields.Many2one('account.journal', string='Use Specific Journal', help='If empty, uses the journal of the journal entry to be reversed.')
+    journal_id = fields.Many2one('account.journal', string='Use Specific Journal', help='If empty, uses the journal of the journal entry to be reversed.', check_company=True)
+    company_id = fields.Many2one('res.company', required=True, readonly=True)
 
     # computed fields
     residual = fields.Monetary(compute="_compute_from_moves")
@@ -32,8 +34,10 @@ class AccountMoveReversal(models.TransientModel):
     def default_get(self, fields):
         res = super(AccountMoveReversal, self).default_get(fields)
         move_ids = self.env['account.move'].browse(self.env.context['active_ids']) if self.env.context.get('active_model') == 'account.move' else self.env['account.move']
+
         if any(move.state != "posted" for move in move_ids):
             raise UserError(_('You can only reverse posted moves.'))
+        res['company_id'] = move_ids.company_id.id or self.env.company.id
         res['move_ids'] = [(6, 0, move_ids.ids)]
         res['refund_method'] = (len(move_ids) > 1 or move_ids.move_type == 'entry') and 'cancel' or 'refund'
         return res

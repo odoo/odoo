@@ -11,15 +11,20 @@ class AccountReconcileModelLine(models.Model):
     _name = 'account.reconcile.model.line'
     _description = 'Rules for the reconciliation model'
     _order = 'sequence, id'
+    _check_company_auto = True
 
     model_id = fields.Many2one('account.reconcile.model', readonly=True)
     match_total_amount = fields.Boolean(related='model_id.match_total_amount')
     match_total_amount_param = fields.Float(related='model_id.match_total_amount_param')
     rule_type = fields.Selection(related='model_id.rule_type')
-    company_id = fields.Many2one(related='model_id.company_id')
+    company_id = fields.Many2one(related='model_id.company_id', store=True, default=lambda self: self.env.company)
     sequence = fields.Integer(required=True, default=10)
-    account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False)], required=True)
-    journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
+    account_id = fields.Many2one('account.account', string='Account', ondelete='cascade',
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
+        required=True, check_company=True)
+    journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade',
+        domain="[('type', '=', 'general'), ('company_id', '=', company_id)]",
+        help="This field is ignored in a bank statement reconciliation.", check_company=True)
     label = fields.Char(string='Journal Item Label')
     amount_type = fields.Selection([
         ('fixed', 'Fixed'),
@@ -33,9 +38,9 @@ class AccountReconcileModelLine(models.Model):
     * Percentage: Percentage of the balance, between 0 and 100.
     * Fixed: The fixed value of the writeoff. The amount will count as a debit if it is negative, as a credit if it is positive.
     * From Label: There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\nR:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\nYou could enter\nBRT: ([\d,]+)""")
-    tax_ids = fields.Many2many('account.tax', string='Taxes', ondelete='restrict')
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null')
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags',
+    tax_ids = fields.Many2many('account.tax', string='Taxes', ondelete='restrict', check_company=True)
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', check_company=True)
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', check_company=True,
                                         relation='account_reconcile_model_analytic_tag_rel')
 
     @api.onchange('tax_ids')
@@ -84,11 +89,15 @@ class AccountReconcileModel(models.Model):
     _name = 'account.reconcile.model'
     _description = 'Preset to create journal entries during a invoices and payments matching'
     _order = 'sequence, id'
+    _check_company_auto = True
 
     # Base fields.
     name = fields.Char(string='Name', required=True)
     sequence = fields.Integer(required=True, default=10)
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        string='Company', required=True, readonly=True,
+        default=lambda self: self.env.company)
 
     rule_type = fields.Selection(selection=[
         ('writeoff_button', 'Manually create a write-off on clicked button.'),
@@ -101,7 +110,8 @@ class AccountReconcileModel(models.Model):
 
     # ===== Conditions =====
     match_journal_ids = fields.Many2many('account.journal', string='Journals',
-        domain="[('type', 'in', ('bank', 'cash'))]",
+        domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', company_id)]",
+        check_company=True,
         help='The reconciliation model will only be available from the selected journals.')
     match_nature = fields.Selection(selection=[
         ('amount_received', 'Amount Received'),

@@ -340,6 +340,7 @@ class AccountAccount(models.Model):
     _name = "account.account"
     _description = "Account"
     _order = "code, company_id"
+    _check_company_auto = True
 
     @api.constrains('internal_type', 'reconcile')
     def _check_reconcile(self):
@@ -372,9 +373,11 @@ class AccountAccount(models.Model):
     reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
         help="Check this box if this account allows invoices & payments matching of journal items.")
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
-        'account_id', 'tax_id', string='Default Taxes', context={'append_type_to_tax_name': True})
+        'account_id', 'tax_id', string='Default Taxes',
+        check_company=True,
+        context={'append_type_to_tax_name': True})
     note = fields.Text('Internal Notes')
-    company_id = fields.Many2one('res.company', string='Company', required=True,
+    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
         default=lambda self: self.env.company)
     tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
     group_id = fields.Many2one('account.group', compute='_compute_account_group', store=True)
@@ -731,7 +734,7 @@ class AccountGroup(models.Model):
     name = fields.Char(required=True)
     code_prefix_start = fields.Char()
     code_prefix_end = fields.Char()
-    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', required=True, readonly=True, default=lambda self: self.env.company)
 
     _sql_constraints = [
         (
@@ -901,10 +904,12 @@ class AccountRoot(models.Model):
 class AccountJournalGroup(models.Model):
     _name = 'account.journal.group'
     _description = "Account Journal Group"
+    _check_company_auto = True
 
     name = fields.Char("Journal Group", required=True, translate=True)
     company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
-    excluded_journal_ids = fields.Many2many('account.journal', string="Excluded Journals", domain="[('company_id', '=', company_id)]")
+    excluded_journal_ids = fields.Many2many('account.journal', string="Excluded Journals", domain="[('company_id', '=', company_id)]",
+        check_company=True)
     sequence = fields.Integer(default=10)
 
 
@@ -913,6 +918,7 @@ class AccountJournal(models.Model):
     _description = "Journal"
     _order = 'sequence, type, code'
     _inherit = ['mail.thread', 'mail.activity.mixin']
+    _check_company_auto = True
 
     def _default_inbound_payment_methods(self):
         return self.env.ref('account.account_payment_method_manual_in')
@@ -942,11 +948,15 @@ class AccountJournal(models.Model):
         "Select 'General' for miscellaneous operations journals.")
     type_control_ids = fields.Many2many('account.account.type', 'journal_account_type_control_rel', 'journal_id', 'type_id', string='Account Types Allowed')
     account_control_ids = fields.Many2many('account.account', 'journal_account_control_rel', 'journal_id', 'account_id', string='Accounts Allowed',
+        check_company=True,
         domain="[('deprecated', '=', False), ('company_id', '=', company_id)]")
     default_credit_account_id = fields.Many2one('account.account', string='Default Credit Account',
-        domain=[('deprecated', '=', False)], help="It acts as a default account for credit amount",
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
+        help="It acts as a default account for credit amount",
+        check_company=True,
         ondelete='restrict')
     default_debit_account_id = fields.Many2one('account.account', string='Default Debit Account',
+        check_company=True,
         domain="[('deprecated', '=', False), ('company_id', '=', company_id)]", help="It acts as a default account for debit amount", ondelete='restrict')
     restrict_mode_hash_table = fields.Boolean(string="Lock Posted Entries with Hash",
         help="If ticked, the accounting entry or invoice receives a hash as soon as it is posted and cannot be modified anymore.")
@@ -957,7 +967,7 @@ class AccountJournal(models.Model):
 
     #groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
     currency_id = fields.Many2one('res.currency', help='The currency used to enter statement', string="Currency")
-    company_id = fields.Many2one('res.company', string='Company', required=True, index=True, default=lambda self: self.env.company,
+    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, index=True, default=lambda self: self.env.company,
         help="Company related to this journal")
 
     refund_sequence = fields.Boolean(string='Dedicated Credit Note Sequence', help="Check this box if you don't want to share the same sequence for invoices and credit notes made from this journal", default=False)
@@ -979,12 +989,24 @@ class AccountJournal(models.Model):
              "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings.")
     at_least_one_inbound = fields.Boolean(compute='_methods_compute', store=True)
     at_least_one_outbound = fields.Boolean(compute='_methods_compute', store=True)
-    profit_account_id = fields.Many2one('account.account', domain="[('company_id', '=', company_id)]", string='Profit Account', help="Used to register a profit when the ending balance of a cash register differs from what the system computes")
-    loss_account_id = fields.Many2one('account.account', domain="[('company_id', '=', company_id)]", string='Loss Account', help="Used to register a loss when the ending balance of a cash register differs from what the system computes")
+    profit_account_id = fields.Many2one('account.account',
+        string='Profit Account',
+        domain="[('company_id', '=', company_id)]",
+        check_company=True,
+        help="Used to register a profit when the ending balance of a cash register differs from what the system computes")
+    loss_account_id = fields.Many2one('account.account',
+        string='Loss Account',
+        domain="[('company_id', '=', company_id)]",
+        check_company=True,
+        help="Used to register a loss when the ending balance of a cash register differs from what the system computes")
 
     # Bank journals fields
     company_partner_id = fields.Many2one('res.partner', related='company_id.partner_id', string='Account Holder', readonly=True, store=False)
-    bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict', copy=False, domain="[('partner_id','=', company_partner_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    bank_account_id = fields.Many2one('res.partner.bank',
+        string="Bank Account",
+        ondelete='restrict', copy=False,
+        check_company=True,
+        domain="[('partner_id','=', company_partner_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     bank_statements_source = fields.Selection(selection=_get_bank_statements_available_sources, string='Bank Feeds', default='undefined', help="Defines how the bank statements will be registered")
     bank_acc_number = fields.Char(related='bank_account_id.acc_number', readonly=False)
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id', readonly=False)
@@ -1000,9 +1022,15 @@ class AccountJournal(models.Model):
     alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
     alias_name = fields.Char('Alias Name', related='alias_id.alias_name', help="It creates draft invoices and bills by sending an email.", readonly=False)
 
-    journal_group_ids = fields.Many2many('account.journal.group', domain="[('company_id', '=', company_id)]", string="Journal Groups")
+    journal_group_ids = fields.Many2many('account.journal.group',
+        domain="[('company_id', '=', company_id)]",
+        check_company=True,
+        string="Journal Groups")
 
-    secure_sequence_id = fields.Many2one('ir.sequence', help='Sequence to use to ensure the securisation of data', readonly=True, copy=False)
+    secure_sequence_id = fields.Many2one('ir.sequence',
+        help='Sequence to use to ensure the securisation of data',
+        check_company=True,
+        readonly=True, copy=False)
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
@@ -1056,7 +1084,7 @@ class AccountJournal(models.Model):
     def _check_bank_account(self):
         for journal in self:
             if journal.type == 'bank' and journal.bank_account_id:
-                if journal.bank_account_id.company_id != journal.company_id:
+                if journal.bank_account_id.company_id and journal.bank_account_id.company_id != journal.company_id:
                     raise ValidationError(_('The bank account of a bank journal must belong to the same company (%s).') % journal.company_id.name)
                 # A bank account can belong to a customer/supplier, in which case their partner_id is the customer/supplier.
                 # Or they are part of a bank journal and their partner_id must be the company's partner_id.
@@ -1407,6 +1435,7 @@ class AccountTax(models.Model):
     _name = 'account.tax'
     _description = 'Tax'
     _order = 'sequence,id'
+    _check_company_auto = True
 
     @api.model
     def _default_tax_group(self):
@@ -1428,8 +1457,11 @@ class AccountTax(models.Model):
         e.g 200 * (1 - 10%) = 180 (price included)
         """)
     active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
-    children_tax_ids = fields.Many2many('account.tax', 'account_tax_filiation_rel', 'parent_tax', 'child_tax', string='Children Taxes')
+    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.company)
+    children_tax_ids = fields.Many2many('account.tax',
+        'account_tax_filiation_rel', 'parent_tax', 'child_tax',
+        check_company=True,
+        string='Children Taxes')
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
     amount = fields.Float(required=True, digits=(16, 4))
@@ -1448,10 +1480,15 @@ class AccountTax(models.Model):
         ], string='Tax Due', default='on_invoice',
         help="Based on Invoice: the tax is due as soon as the invoice is validated.\n"
         "Based on Payment: the tax is due as soon as the payment of the invoice is received.")
-    cash_basis_transition_account_id = fields.Many2one(string="Cash Basis Transition Account", domain=[('deprecated', '=', False)], comodel_name='account.account', help="Account used to transition the tax amount for cash basis taxes. It will contain the tax amount as long as the original invoice has not been reconciled ; at reconciliation, this amount cancelled on this account and put on the regular tax account.")
+    cash_basis_transition_account_id = fields.Many2one(string="Cash Basis Transition Account",
+        check_company=True,
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
+        comodel_name='account.account',
+        help="Account used to transition the tax amount for cash basis taxes. It will contain the tax amount as long as the original invoice has not been reconciled ; at reconciliation, this amount cancelled on this account and put on the regular tax account.")
     cash_basis_base_account_id = fields.Many2one(
         'account.account',
-        domain=[('deprecated', '=', False)],
+        check_company=True,
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
         string='Base Tax Received Account',
         help='Account that will be set on lines created in cash basis journal entry and used to keep track of the tax base amount.')
     invoice_repartition_line_ids = fields.One2many(string="Repartition for Invoices", comodel_name="account.tax.repartition.line", inverse_name="invoice_tax_id", copy=True, help="Repartition when the tax is used on an invoice")
@@ -1473,15 +1510,15 @@ class AccountTax(models.Model):
         if 'refund_repartition_line_ids' in vals:
             # We write on the related country_id field so that the field is recomputed. Without that, it will stay empty until we save the record.
             rslt['refund_repartition_line_ids'] = [
-                (0, 0, { 'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': company.country_id.id}),
-                (0, 0, { 'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': company.country_id.id}),
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': company.country_id.id}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': company.country_id.id}),
             ]
 
         if 'invoice_repartition_line_ids' in vals:
             # We write on the related country_id field so that the field is recomputed. Without that, it will stay empty until we save the record.
             rslt['invoice_repartition_line_ids'] = [
-                (0, 0, { 'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': company.country_id.id}),
-                (0, 0, { 'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': company.country_id.id}),
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': company.country_id.id}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': company.country_id.id}),
             ]
 
         return rslt
@@ -1946,17 +1983,26 @@ class AccountTaxRepartitionLine(models.Model):
     _name = "account.tax.repartition.line"
     _description = "Tax Repartition Line"
     _order = 'sequence, repartition_type, id'
+    _check_company_auto = True
 
     factor_percent = fields.Float(string="%", required=True, help="Factor to apply on the account move lines generated from this repartition line, in percents")
     factor = fields.Float(string="Factor Ratio", compute="_compute_factor", help="Factor to apply on the account move lines generated from this repartition line")
     repartition_type = fields.Selection(string="Based On", selection=[('base', 'Base'), ('tax', 'of tax')], required=True, default='tax', help="Base on which the factor will be applied.")
-    account_id = fields.Many2one(string="Account", comodel_name='account.account', help="Account on which to post the tax amount")
+    account_id = fields.Many2one(string="Account",
+        comodel_name='account.account',
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('internal_type', 'not in', ('receivable', 'payable'))]",
+        check_company=True,
+        help="Account on which to post the tax amount")
     tag_ids = fields.Many2many(string="Tax Grids", comodel_name='account.account.tag', domain=[('applicability', '=', 'taxes')], copy=True)
-    invoice_tax_id = fields.Many2one(comodel_name='account.tax', help="The tax set to apply this repartition on invoices. Mutually exclusive with refund_tax_id")
-    refund_tax_id = fields.Many2one(comodel_name='account.tax', help="The tax set to apply this repartition on refund invoices. Mutually exclusive with invoice_tax_id")
+    invoice_tax_id = fields.Many2one(comodel_name='account.tax',
+        check_company=True,
+        help="The tax set to apply this repartition on invoices. Mutually exclusive with refund_tax_id")
+    refund_tax_id = fields.Many2one(comodel_name='account.tax',
+        check_company=True,
+        help="The tax set to apply this repartition on refund invoices. Mutually exclusive with invoice_tax_id")
     tax_id = fields.Many2one(comodel_name='account.tax', compute='_compute_tax_id')
-    country_id = fields.Many2one(string="Country", comodel_name='res.country', related='company_id.country_id',  help="Technical field used to restrict tags domain in form view.")
-    company_id = fields.Many2one(string="Company", comodel_name='res.company', required=True, default=lambda x: x.env.company, help="The company this repartition line belongs to.")
+    country_id = fields.Many2one(string="Country", comodel_name='res.country', related='company_id.country_id', help="Technical field used to restrict tags domain in form view.")
+    company_id = fields.Many2one(string="Company", comodel_name='res.company', compute="_compute_company", store=True, help="The company this repartition line belongs to.")
     sequence = fields.Integer(string="Sequence", default=1, help="The order in which display and match repartition lines. For refunds to work properly, invoice repartition lines should be arranged in the same order as the credit note repartition lines they correspond to.")
 
     @api.constrains('invoice_tax_id', 'refund_tax_id')
@@ -1969,6 +2015,11 @@ class AccountTaxRepartitionLine(models.Model):
     def _compute_factor(self):
         for record in self:
             record.factor = record.factor_percent / 100.0
+
+    @api.depends('invoice_tax_id.company_id', 'refund_tax_id.company_id')
+    def _compute_company(self):
+        for record in self:
+            record.company_id = record.invoice_tax_id and record.invoice_tax_id.company_id.id or record.refund_tax_id.company_id.id
 
     @api.depends('invoice_tax_id', 'refund_tax_id')
     def _compute_tax_id(self):

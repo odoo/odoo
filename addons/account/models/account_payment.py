@@ -29,6 +29,7 @@ class account_payment(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Payments"
     _order = "payment_date desc, name desc"
+    _check_company_auto = True
 
     name = fields.Char(readonly=True, copy=False)  # The name is attributed upon post()
     payment_reference = fields.Char(copy=False, readonly=True, help="Reference of the document used to issue this payment. Eg. check number, file name, etc.")
@@ -73,9 +74,10 @@ class account_payment(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     payment_date = fields.Date(string='Date', default=fields.Date.context_today, required=True, readonly=True, states={'draft': [('readonly', False)]}, copy=False, tracking=True)
     communication = fields.Char(string='Memo', readonly=True, states={'draft': [('readonly', False)]})
-    journal_id = fields.Many2one('account.journal', string='Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True, domain="[('id', 'in', _suitable_journal_ids)]")
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True,
+        check_company=True, domain="[('id', 'in', _suitable_journal_ids)]")
     _suitable_journal_ids = fields.Many2many('account.journal', compute='_compute_suitable_journal_ids')
-    company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
+    company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True, store=True, default=lambda self: self.env.company)
 
     hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
                                          help="Technical field used to hide the payment method if the "
@@ -88,7 +90,7 @@ class account_payment(models.Model):
         string='Journal Item Label',
         help='Change label of the counterpart that will hold the payment difference',
         default='Write-Off')
-    partner_bank_account_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account", readonly=True, states={'draft': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id), ('partner_id', 'in', possible_bank_partner_ids)]")
+    partner_bank_account_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account", readonly=True, states={'draft': [('readonly', False)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id), ('partner_id', 'in', possible_bank_partner_ids)]", check_company=True)
     possible_bank_partner_ids = fields.Many2many('res.partner', compute='_compute_possible_bank_partners')
     show_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be displayed or not in the payments form views')
     require_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be required or not in the payments form views')

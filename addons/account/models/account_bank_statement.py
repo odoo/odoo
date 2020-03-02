@@ -228,6 +228,7 @@ class AccountBankStatement(models.Model):
     _description = "Bank Statement"
     _order = "date desc, name desc, id desc"
     _inherit = ['mail.thread', 'sequence.mixin']
+    _check_company_auto = True
 
     name = fields.Char(string='Reference', states={'open': [('readonly', False)]}, copy=False, readonly=True)
     reference = fields.Char(string='External Reference', states={'open': [('readonly', False)]}, copy=False, readonly=True, help="Used to hold the reference of the external mean that created this statement (name of imported file, reference of online synchronization...)")
@@ -239,7 +240,7 @@ class AccountBankStatement(models.Model):
         "This is useful if the accounting period in which the entries should normally be booked is already closed.")
     state = fields.Selection([('open', 'New'), ('confirm', 'Validated')], string='Status', required=True, readonly=True, copy=False, default='open')
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', string="Currency")
-    journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm': [('readonly', True)]}, default=_default_journal)
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm': [('readonly', True)]}, default=_default_journal, check_company=True)
     journal_type = fields.Selection(related='journal_id.type', help="Technical field used for usability purposes")
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env.company)
@@ -469,10 +470,11 @@ class AccountBankStatementLine(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner')
     account_number = fields.Char(string='Bank Account Number', help="Technical field used to store the bank account number before its creation, upon the line's processing")
     bank_account_id = fields.Many2one('res.partner.bank', string='Bank Account', help="Bank account that was used in this transaction.")
-    account_id = fields.Many2one('account.account', string='Counterpart Account', domain=[('deprecated', '=', False)],
+    account_id = fields.Many2one('account.account', string='Counterpart Account', domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
+        check_company=True,
         help="This technical field can be used at the statement line creation/import time in order to avoid the reconciliation"
              " process on it later on. The statement line will simply create a counterpart on this account")
-    statement_id = fields.Many2one('account.bank.statement', string='Statement', index=True, required=True, ondelete='cascade')
+    statement_id = fields.Many2one('account.bank.statement', string='Statement', index=True, required=True, ondelete='cascade', check_company=True)
     journal_id = fields.Many2one('account.journal', related='statement_id.journal_id', string='Journal', store=True, readonly=True)
     partner_name = fields.Char(help="This field is used to record the third party name when importing bank statement in electronic format,"
              " when the partner doesn't exist yet in the database (or cannot be found).")
