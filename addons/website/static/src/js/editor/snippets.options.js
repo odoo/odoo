@@ -47,7 +47,7 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
      * @param {OdooEvent} ev
      */
     _onWebsiteURLChosen: function (ev) {
-        $(this.inputEl).trigger('input');
+        this._value = this.inputEl.value;
         this._onUserValueChange(ev);
     },
     /**
