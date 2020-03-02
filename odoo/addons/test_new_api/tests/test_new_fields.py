@@ -1037,6 +1037,18 @@ class TestX2many(common.TransactionCase):
         result = recs.search([('id', 'in', recs.ids), ('lines', '!=', False)])
         self.assertEqual(result, recs - recZ)
 
+    def test_custom_m2m(self):
+        model_id = self.env['ir.model']._get_id('res.partner')
+        field = self.env['ir.model.fields'].create({
+            'name': 'x_foo',
+            'field_description': 'Foo',
+            'model_id': model_id,
+            'ttype': 'many2many',
+            'relation': 'res.country',
+            'store': False,
+        })
+        self.assertTrue(field.unlink())
+
 
 class TestHtmlField(common.TransactionCase):
 
