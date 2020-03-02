@@ -116,7 +116,7 @@ odoo.define('point_of_sale.chrome', function(require) {
                 this.state.uiState = 'READY';
                 this.env.pos.on('change:selectedOrder', () => this._showSavedScreen(), this);
                 this._showSavedScreen();
-                this.env.pos.push_order(); // push order in the background, no need to await
+                this.env.pos.push_orders(); // push order in the background, no need to await
             } catch (error) {
                 let title = 'Unknown Error',
                     body;
@@ -229,7 +229,7 @@ odoo.define('point_of_sale.chrome', function(require) {
             if (this.env.pos.db.get_orders().length) {
                 // If there are orders in the db left unsynced, we try to sync them.
                 try {
-                    await this.env.pos.push_order();
+                    await this.env.pos.push_orders();
                 } catch (error) {
                     console.warn(error);
                 }

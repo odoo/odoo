@@ -877,7 +877,7 @@ exports.PosModel = Backbone.Model.extend({
 
     // saves the order locally and try to send it to the backend.
     // it returns a promise that succeeds after having tried to send the order and all the other pending orders.
-    push_order: function (order, opts) {
+    push_orders: function (order, opts) {
         opts = opts || {};
         var self = this;
 
@@ -888,6 +888,22 @@ exports.PosModel = Backbone.Model.extend({
         return new Promise(function (resolve, reject) {
             self.flush_mutex.exec(function () {
                 var flushed = self._flush_orders(self.db.get_orders(), opts);
+
+                flushed.then(resolve, reject);
+
+                return flushed;
+            });
+        });
+    },
+
+    push_single_order: function (order, opts) {
+        opts = opts || {};
+        const self = this;
+        const order_id = self.db.add_order(order.export_as_JSON());
+
+        return new Promise(function (resolve, reject) {
+            self.flush_mutex.exec(function () {
+                var flushed = self._flush_orders([self.db.get_order(order_id)], opts);
 
                 flushed.then(resolve, reject);
 
@@ -1155,7 +1171,7 @@ exports.PosModel = Backbone.Model.extend({
                 this.db.add_order(json.paid_orders[i].data);
             }
             report.paid = json.paid_orders.length;
-            this.push_order();
+            this.push_orders();
         }
 
         if (json.unpaid_orders) {

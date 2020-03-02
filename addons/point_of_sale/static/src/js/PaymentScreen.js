@@ -1,7 +1,7 @@
 odoo.define('point_of_sale.PaymentScreen', function(require) {
     'use strict';
 
-    const { _t, qweb } = require('web.core');
+    const { qweb } = require('web.core');
     const { parse } = require('web.field_utils');
     const { is_email } = require('web.utils');
     const { PosComponent } = require('point_of_sale.PosComponent');
@@ -69,12 +69,12 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
         async selectClient() {
             await this.showTempScreen('ClientListScreen');
         }
-        addNewPaymentLine({ detail: paymentMethod}) {
+        addNewPaymentLine({ detail: paymentMethod }) {
             // original function: click_paymentmethods
             if (this.currentOrder.electronic_payment_in_progress()) {
                 this.showPopup('ErrorPopup', {
-                    title: _t('Error'),
-                    body: _t('There is already an electronic payment in progress.'),
+                    title: this.env._t('Error'),
+                    body: this.env._t('There is already an electronic payment in progress.'),
                 });
                 return false;
             } else {
@@ -164,10 +164,10 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 for (let line of this.paymentLines) {
                     if (!line.is_done()) this.currentOrder.remove_paymentline(line);
                 }
-                this._finalizeValidation();
+                await this._finalizeValidation();
             }
         }
-        _finalizeValidation() {
+        async _finalizeValidation() {
             if (this.currentOrder.is_paid_with_cash() && this.env.pos.config.iface_cashdrawer) {
                 this.env.pos.proxy.printer.open_cashbox();
             }
@@ -175,77 +175,122 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             this.currentOrder.initialize_validation_date();
             this.currentOrder.finalized = true;
 
-            if (this.currentOrder.is_to_invoice()) {
-                var invoiced = this.env.pos.push_and_invoice_order(this.currentOrder);
-                this.invoicing = true;
+            let syncedOrderBackendIds = [];
+            let errorCode;
 
-                invoiced.catch(
-                    () => {
-                        this.trigger('show-screen', {
-                            name: 'ReceiptScreen',
-                            props: { printInvoiceIsShown: true },
+            try {
+                if (this.currentOrder.is_to_invoice()) {
+                    syncedOrderBackendIds = await this.env.pos.push_and_invoice_order(
+                        this.currentOrder
+                    );
+                } else {
+                    syncedOrderBackendIds = await this.env.pos.push_single_order(this.currentOrder);
+                }
+            } catch (error) {
+                if (error instanceof Error) {
+                    throw error;
+                } else {
+                    errorCode = error.code;
+                    await this._handlePushOrderError(error);
+                }
+            }
+            if (syncedOrderBackendIds.length && this.currentOrder.wait_for_push_order()) {
+                try {
+                    await this._postPushOrderResolve(this.currentOrder, syncedOrderBackendIds);
+                } catch (error) {
+                    if (error instanceof Error) {
+                        throw error;
+                    } else {
+                        await this.showPopup('ErrorPopup', {
+                            title: 'Error: no internet connection. Press okay to proceed.',
+                            body: error,
                         });
-                        console.log('TODO jcb: Error handler later');
                     }
-                    // this._handleFailedPushOrder.bind(this, this.currentOrder, false)
-                );
+                }
+            }
 
-                invoiced.then(server_ids => {
-                    this.invoicing = false;
-                    this._postPushOrderResolve(this.currentOrder, server_ids)
-                        .then(() => {
-                            this.trigger('show-screen', { name: 'ReceiptScreen' });
-                        })
-                        .catch(error => {
-                            this.trigger('show-screen', {
-                                name: 'ReceiptScreen',
-                                props: { printInvoiceIsShown: true },
-                            });
-                            if (error) {
-                                this.showPopup('ErrorPopup', {
-                                    title: 'Error: no internet connection',
-                                    body: error,
-                                });
-                            }
-                        });
+            const shouldShowPrintInvoice = errorCode
+                ? this.currentOrder.is_to_invoice() && errorCode < 0
+                : false;
+            this.trigger('show-screen', {
+                name: 'ReceiptScreen',
+                printInvoiceIsShow: shouldShowPrintInvoice,
+            });
+
+            // If we succeeded in syncing the current order, and
+            // there are still other orders that are left unsynced,
+            // we ask the user if he is willing to wait and sync them.
+            if (syncedOrderBackendIds.length && this.env.pos.db.get_orders().length) {
+                const { confirmed } = await this.showPopup('ConfirmPopup', {
+                    title: this.env._t('There are unsynced orders'),
+                    body: this.env._t('Do you want to sync these orders?'),
+                });
+                if (confirmed) {
+                    // NOTE: Not yet sure if this should be awaited or not.
+                    // If awaited, some operations like changing screen
+                    // might not work.
+                    this.env.pos.push_orders();
+                }
+            }
+        }
+        async _handlePushOrderError(error) {
+            // This error handler receives `error` equivalent to `error.message` of the rpc error.
+            if (error.message === 'Backend Invoice') {
+                await this.showPopup('ConfirmPopup', {
+                    title: this.env._t('Please print the invoice from the backend'),
+                    body:
+                        this.env._t(
+                            'The order has been synchronized earlier. Please make the invoice from the backend for the order: '
+                        ) + error.data.order.name,
+                });
+            } else if (error.code < 0) {
+                // XmlHttpRequest Errors
+                // TODO jcb: This should be SyncErrorPopup which allows the user to opt on
+                // not seeing the error message again.
+                await this.showPopup('ErrorPopup', {
+                    title: this.env._t('The order could not be sent'),
+                    body: this.env._t('Check your internet connection and try again.'),
+                });
+            } else if (error.code === 200) {
+                // OpenERP Server Errors
+                await this.showPopup('ErrorTracebackPopup', {
+                    title: error.data.message || this.env._t('Server Error'),
+                    body:
+                        error.data.debug ||
+                        this.env._t('The server encountered an error while receiving your order.'),
                 });
             } else {
-                var ordered = this.env.pos.push_order(this.currentOrder);
-                if (this.currentOrder.wait_for_push_order()) {
-                    var server_ids = [];
-                    ordered
-                        .then(ids => {
-                            server_ids = ids;
-                        })
-                        .finally(() => {
-                            this._postPushOrderResolve(this.currentOrder, server_ids)
-                                .then(() => {
-                                    this.trigger('show-screen', { name: 'ReceiptScreen' });
-                                })
-                                .catch(error => {
-                                    this.trigger('show-screen', { name: 'ReceiptScreen' });
-                                    if (error) {
-                                        this.showPopup('ErrorPopup', {
-                                            title: 'Error: no internet connection',
-                                            body: error,
-                                        });
-                                    }
-                                });
-                        });
-                } else {
-                    this.trigger('show-screen', { name: 'ReceiptScreen' });
-                }
+                // ???
+                await this.showPopup('ErrorPopup', {
+                    title: this.env._t('Unknown Error'),
+                    body: this.env._t(
+                        'The order could not be sent to the server due to an unknown error'
+                    ),
+                });
             }
         }
         async _isOrderValid(isForceValidate) {
             if (this.currentOrder.get_orderlines().length === 0) {
                 this.showPopup('ErrorPopup', {
-                    title: _t('Empty Order'),
-                    body: _t(
+                    title: this.env._t('Empty Order'),
+                    body: this.env._t(
                         'There must be at least one product in your order before it can be validated'
                     ),
                 });
                 return false;
+            }
+
+            if (this.currentOrder.is_to_invoice() && !this.currentOrder.get_client()) {
+                const { confirmed } = await this.showPopup('ConfirmPopup', {
+                    title: this.env._t('Please select the Customer'),
+                    body: this.env._t(
+                        'You need to select the customer before you can invoice an order.'
+                    ),
+                });
+                if (confirmed) {
+                    await this.showTempScreen('ClientListScreen');
+                }
+                return !!this.currentOrder.get_client();
             }
 
             if (!this.currentOrder.is_paid() || this.invoicing) {
@@ -255,8 +300,8 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             if (this.currentOrder.has_not_valid_rounding()) {
                 var line = this.currentOrder.has_not_valid_rounding();
                 this.showPopup('ErrorPopup', {
-                    title: _t('Incorrect rounding'),
-                    body: _t(
+                    title: this.env._t('Incorrect rounding'),
+                    body: this.env._t(
                         'You have to round your payments lines.' + line.amount + ' is not rounded.'
                     ),
                 });
@@ -275,8 +320,8 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 }
                 if (!cash) {
                     this.showPopup('ErrorPopup', {
-                        title: _t('Cannot return change without a cash payment method'),
-                        body: _t(
+                        title: this.env._t('Cannot return change without a cash payment method'),
+                        body: this.env._t(
                             'There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale configuration'
                         ),
                     });
@@ -295,8 +340,8 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                     : 'This customer does not have a valid email address, define one or do not send an email.';
 
                 this.showPopup('ConfirmPopup', {
-                    title: _t(title),
-                    body: _t(body),
+                    title: this.env._t(title),
+                    body: this.env._t(body),
                 }).then(({ confirmed }) => {
                     if (confirmed) this.trigger('show-screen', { name: 'ClientListScreen' });
                 });
@@ -311,17 +356,17 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 this.currentOrder.get_total_with_tax() * 1000 < this.currentOrder.get_total_paid()
             ) {
                 this.showPopup('ConfirmPopup', {
-                    title: _t('Please Confirm Large Amount'),
+                    title: this.env._t('Please Confirm Large Amount'),
                     body:
-                        _t('Are you sure that the customer wants to  pay') +
+                        this.env._t('Are you sure that the customer wants to  pay') +
                         ' ' +
                         this.env.pos.format_currency(this.currentOrder.get_total_paid()) +
                         ' ' +
-                        _t('for an order of') +
+                        this.env._t('for an order of') +
                         ' ' +
                         this.env.pos.format_currency(this.currentOrder.get_total_with_tax()) +
                         ' ' +
-                        _t('? Clicking "Confirm" will validate the payment.'),
+                        this.env._t('? Clicking "Confirm" will validate the payment.'),
                 }).then(({ confirmed }) => {
                     if (confirmed) this.validateOrder(true);
                 });
@@ -345,37 +390,41 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
         }
         async _sendReceiptToCustomer(order_server_ids) {
             // TODO jcb: which QWeb will render?
-            var order = this.env.pos.get_order();
-            var data = {
-                widget: this,
-                pos: order.pos,
-                order: order,
-                receipt: order.export_for_printing(),
-                orderlines: order.get_orderlines(),
-                paymentlines: order.get_paymentlines(),
-            };
-
-            var receipt = qweb.render('OrderReceipt', data);
-            var printer = new Printer();
-
-            return new Promise(function(resolve, reject) {
-                printer.htmlToImg(receipt).then(function(ticket) {
-                    rpc.query({
-                        model: 'pos.order',
-                        method: 'action_receipt_to_customer',
-                        args: [order_server_ids, order.get_name(), order.get_client(), ticket],
-                    })
-                        .then(function() {
-                            resolve();
-                        })
-                        .catch(function() {
-                            order.set_to_email(false);
-                            reject(
-                                'There is no internet connection, impossible to send the email.'
-                            );
-                        });
-                });
+            await this.showPopup('ConfirmPopup', {
+                title: 'not yet implemented',
+                body: '_sendReceiptToCustomer is  is not yet implemented',
             });
+            // var order = this.env.pos.get_order();
+            // var data = {
+            //     widget: this,
+            //     pos: order.pos,
+            //     order: order,
+            //     receipt: order.export_for_printing(),
+            //     orderlines: order.get_orderlines(),
+            //     paymentlines: order.get_paymentlines(),
+            // };
+
+            // var receipt = qweb.render('OrderReceipt', data);
+            // var printer = new Printer();
+
+            // return new Promise(function(resolve, reject) {
+            //     printer.htmlToImg(receipt).then(function(ticket) {
+            //         rpc.query({
+            //             model: 'pos.order',
+            //             method: 'action_receipt_to_customer',
+            //             args: [order_server_ids, order.get_name(), order.get_client(), ticket],
+            //         })
+            //             .then(function() {
+            //                 resolve();
+            //             })
+            //             .catch(function() {
+            //                 order.set_to_email(false);
+            //                 reject(
+            //                     'There is no internet connection, impossible to send the email.'
+            //                 );
+            //             });
+            //     });
+            // });
         }
     }
     PaymentScreen.components = {

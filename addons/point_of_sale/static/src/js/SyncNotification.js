@@ -26,7 +26,7 @@ odoo.define('point_of_sale.SyncNotification', function(require) {
             this.env.pos.on('change:synch', null, this);
         }
         onClick() {
-            this.env.pos.push_order(null, { show_error: true });
+            this.env.pos.push_orders(null, { show_error: true });
         }
     }
 
