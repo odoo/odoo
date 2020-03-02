@@ -464,10 +464,15 @@ class HrExpense(models.Model):
             'tax_ids': [(4, tax.id, False) for tax in product.supplier_taxes_id],
             'quantity': 1,
             'company_id': employee.company_id.id,
+<<<<<<< HEAD
             'currency_id': currency_id.id
         }
 
         account = product.product_tmpl_id._get_product_accounts()['expense']
+=======
+            'currency_id': employee.company_id.currency_id.id,
+        })
+>>>>>>> 7110b662479... temp
         if account:
             vals['account_id'] = account.id
 
