@@ -17,12 +17,7 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
             useListener('switch-category', this._switchCategory);
             useListener('update-search', this._updateSearch);
             useListener('clear-search', this._clearSearch);
-            const startCategoryId = this.props.startCategoryId
-                ? this.props.startCategoryId
-                : this.env.pos.config.iface_start_categ_id
-                ? this.env.pos.config.iface_start_categ_id[0]
-                : 0;
-            this.state = useState({ searchWord: '', selectedCategoryId: startCategoryId });
+            this.state = useState({ searchWord: '' });
         }
         get searchWord() {
             return this.state.searchWord.trim();
@@ -30,30 +25,31 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
         get productsToDisplay() {
             if (this.searchWord !== '') {
                 return this.env.pos.db.search_product_in_category(
-                    this.state.selectedCategoryId,
+                    this.props.selectedCategoryId.value,
                     this.searchWord
                 );
             } else {
-                return this.env.pos.db.get_product_by_category(this.state.selectedCategoryId);
+                return this.env.pos.db.get_product_by_category(this.props.selectedCategoryId.value);
             }
         }
         get subcategories() {
             return this.env.pos.db
-                .get_category_childs_ids(this.state.selectedCategoryId)
+                .get_category_childs_ids(this.props.selectedCategoryId.value)
                 .map(id => this.env.pos.db.get_category_by_id(id));
         }
         get breadcrumbs() {
-            if (this.state.selectedCategoryId === this.env.pos.db.root_category_id) return [];
+            if (this.props.selectedCategoryId.value === this.env.pos.db.root_category_id) return [];
             return [
                 ...this.env.pos.db
-                    .get_category_ancestors_ids(this.state.selectedCategoryId)
+                    .get_category_ancestors_ids(this.props.selectedCategoryId.value)
                     .slice(1),
-                this.state.selectedCategoryId,
+                this.props.selectedCategoryId.value,
             ].map(id => this.env.pos.db.get_category_by_id(id));
         }
         _switchCategory(event) {
             // event detail is the id of the selected category
-            this.state.selectedCategoryId = event.detail;
+            this.props.selectedCategoryId.value = event.detail;
+            this.trigger('set-selected-category-id', event.detail);
         }
         _updateSearch(event) {
             this.state.searchWord = event.detail;

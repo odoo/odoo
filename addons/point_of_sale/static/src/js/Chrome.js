@@ -25,11 +25,13 @@ odoo.define('point_of_sale.chrome', function(require) {
             useListener('close-temp-screen', this.__closeTempScreen);
             useListener('close-pos', this._closePos);
             useListener('loading-skip-callback', () => this._loadingSkipCallback());
+            useListener('set-selected-category-id', this._setSelectedCategoryId);
 
             this.state = useState({
                 uiState: 'LOADING', // 'LOADING' | 'READY' | 'CLOSING'
                 debugWidgetIsShown: true,
                 hasBigScrollBars: false,
+                selectedCategoryId: { value: 0 },
             });
 
             this.loading = useState({
@@ -108,6 +110,9 @@ odoo.define('point_of_sale.chrome', function(require) {
                 this.env.pos = new PosModel(posModelDefaultAttributes);
                 await this.env.pos.ready;
                 this._buildChrome();
+                this.state.selectedCategoryId.value = this.env.pos.config.iface_start_categ_id
+                    ? this.env.pos.config.iface_start_categ_id[0]
+                    : 0;
                 this.state.uiState = 'READY';
                 this.env.pos.on('change:selectedOrder', () => this._showSavedScreen(), this);
                 this._showSavedScreen();
@@ -154,6 +159,10 @@ odoo.define('point_of_sale.chrome', function(require) {
             this.trigger('show-screen', { name });
         }
 
+        _setSelectedCategoryId(event) {
+            this.state.selectedCategoryId.value = event.detail;
+        }
+
         __showPopup(event) {
             const { name, props, resolve, numberBuffer } = event.detail;
             this.popup.isShown = true;
@@ -197,7 +206,10 @@ odoo.define('point_of_sale.chrome', function(require) {
             this.mainScreen.isShown = true;
             this.mainScreen.name = name;
             this.mainScreen.component = this.constructor.components[name];
-            this.mainScreenProps = props || {};
+            this.mainScreenProps = {
+                selectedCategoryId: this.state.selectedCategoryId,
+                ...(props || {}),
+            };
             // 2. Save the screen to the order.
             //  - This screen is shown when the order is selected.
             const order = this.env.pos.get_order();
