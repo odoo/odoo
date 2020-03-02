@@ -53,6 +53,7 @@
                             <t t-esc="line.product_name_wrapped[0]" />
                             <span t-esc="env.pos.format_currency_no_symbol(line.price_display)" class="price_display pos-receipt-right-align"/>
                         </div>
+                        <!-- TODO jcb: consider the problem solved by this commit: d4aa36251258ed9abfb1ebaa63b58ba04ffe4e83 -->
                         <WrappedProductNameLines line="line" />
                     </t>
                     <t t-else="">
