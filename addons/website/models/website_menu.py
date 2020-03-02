@@ -113,7 +113,7 @@ class Menu(models.Model):
             visible = True
             if menu.page_id and not menu.user_has_groups('base.group_user') and \
                 (not menu.page_id.sudo().is_visible or
-                 (not menu.page_id.view_id.handle_visibility(do_raise=False) and
+                 (not menu.page_id.view_id._handle_visibility(do_raise=False) and
                  menu.page_id.view_id.visibility != "password")):
                 visible = False
             menu.is_visible = visible
