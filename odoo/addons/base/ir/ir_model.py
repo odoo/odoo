@@ -534,12 +534,16 @@ class IrModelFields(models.Model):
             if field.name in models.MAGIC_COLUMNS:
                 continue
             model = self.env[field.model]
-            if tools.column_exists(self._cr, model._table, field.name) and \
-                    tools.table_kind(self._cr, model._table) == 'r':
-                self._cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE' % (model._table, field.name))
-            if field.state == 'manual' and field.ttype == 'many2many':
-                rel_name = field.relation_table or model._fields[field.name].relation
-                tables_to_drop.add(rel_name)
+            if field.store:
+                # TODO: Refactor this brol in master
+                if tools.column_exists(self._cr, model._table, field.name) and \
+                        tools.table_kind(self._cr, model._table) == 'r':
+                    self._cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE' % (
+                        model._table, field.name,
+                    ))
+                if field.state == 'manual' and field.ttype == 'many2many':
+                    rel_name = field.relation_table or model._fields[field.name].relation
+                    tables_to_drop.add(rel_name)
             if field.state == 'manual':
                 model._pop_field(field.name)
 
