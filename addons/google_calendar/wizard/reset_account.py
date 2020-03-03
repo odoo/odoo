@@ -3,8 +3,8 @@
 
 from odoo import fields, models
 
-from addons.google_calendar.models.google_sync import google_calendar_token
-from addons.google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons.google_calendar.models.google_sync import google_calendar_token
+from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
 
 
 class ResetGoogleAccount(models.TransientModel):
