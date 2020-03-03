@@ -1057,12 +1057,12 @@ class SaleOrderLine(models.Model):
             self.env.cr.execute('''
                 SELECT
                     rel.order_line_id as id,
-                    SUM(CASE WHEN am.type = 'out_invoice' THEN
-                        CEIL(aml.quantity / aml_uom.factor * sol_uom.factor / sol_uom.rounding) * sol_uom.rounding
+                    SUM(CASE WHEN am.type = 'out_invoice'
+                        THEN CEIL(aml.quantity / aml_uom.factor * sol_uom.factor / sol_uom.rounding) * sol_uom.rounding
                         ELSE 0 END) as out_invoice,
-                    SUM(CASE WHEN am.type = 'out_refund' AND
-                        (sol.untaxed_amount_to_invoice = 0 OR sol.is_downpayment IS FALSE OR sol.is_downpayment IS NULL) THEN
-                        CEIL(aml.quantity / aml_uom.factor * sol_uom.factor / sol_uom.rounding) * sol_uom.rounding
+                    SUM(CASE WHEN am.type = 'out_refund'
+                        AND (sol.untaxed_amount_to_invoice = 0 OR sol.is_downpayment IS NOT TRUE)
+                        THEN CEIL(aml.quantity / aml_uom.factor * sol_uom.factor / sol_uom.rounding) * sol_uom.rounding
                         ELSE 0 END) as out_refund
                 FROM sale_order_line_invoice_rel rel
                 JOIN sale_order_line sol on sol.id = rel.order_line_id
