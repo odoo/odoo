@@ -1042,7 +1042,11 @@ class SaleOrderLine(models.Model):
             else:
                 line.qty_to_invoice = 0
 
+<<<<<<< HEAD
     @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity', 'untaxed_amount_to_invoice')
+=======
+    @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity')
+>>>>>>> 1de47906733... temp
     def _get_invoice_qty(self):
         """
         Compute the quantity invoiced. If case of a refund, the quantity invoiced is decreased. Note
@@ -1056,9 +1060,14 @@ class SaleOrderLine(models.Model):
                 if invoice_line.move_id.state != 'cancel':
                     if invoice_line.move_id.type == 'out_invoice':
                         qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
+<<<<<<< HEAD
                     elif invoice_line.move_id.type == 'out_refund' :
                         if not line.is_downpayment or line.untaxed_amount_to_invoice == 0 :
                             qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
+=======
+                    elif invoice_line.move_id.type == 'out_refund':
+                        qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
+>>>>>>> 1de47906733... temp
             line.qty_invoiced = qty_invoiced
 
     @api.depends('price_unit', 'discount')
