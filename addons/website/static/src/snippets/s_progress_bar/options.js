@@ -2,20 +2,12 @@ odoo.define('website.s_progress_bar_options', function (require) {
 'use strict';
 
 const core = require('web.core');
+const utils = require('web.utils');
 const options = require('web_editor.snippets.options');
 
 const _t = core._t;
 
 options.registry.progress = options.Class.extend({
-    /**
-     * @override
-     */
-    start: function () {
-        if (this.$overlay) {
-            this._bindMoveProgress();
-        }
-        this._super();
-    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -47,6 +39,22 @@ options.registry.progress = options.Class.extend({
             $text.insertBefore(this.$target.find('.progress'));
         }
     },
+    /**
+     * Sets the progress bar value.
+     *
+     * @see this.selectClass for parameters
+     */
+    progressBarValue: function (previewMode, widgetValue, params) {
+        let value = parseInt(widgetValue);
+        value = utils.confine(value, 0, 100);
+        const $progressBar = this.$target.find('.progress-bar');
+        const $progressBarText = this.$target.find('.s_progress_bar_text');
+        // Target precisely the XX% not only XX to not replace wrong element
+        // eg 'Since 1978 we have completed 45%' <- don't replace 1978
+        $progressBarText.text($progressBarText.text().replace(/[0-9]+%/, value + '%'));
+        $progressBar.attr("aria-valuenow", value);
+        $progressBar.css("width", value + "%");
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -62,52 +70,11 @@ options.registry.progress = options.Class.extend({
                                         .parent('.progress-bar').length;
                 return isInline ? 'inline' : 'below';
             }
+            case 'progressBarValue': {
+                return this.$target.find('.progress-bar').attr('aria-valuenow') + '%';
+            }
         }
         return this._super(...arguments);
-    },
-    /**
-     * Binds the editor padding feature to the progress bar width.
-     */
-    _bindMoveProgress: function () {
-        var self = this;
-        var $e = this.$overlay.find(".o_handle.e").removeClass("readonly");
-        const $progressBar = this.$target.find('.progress-bar');
-        const $parent = $progressBar.parent();
-        var pos = $parent.offset();
-        var width = $parent.width();
-        var time;
-        function move(event) {
-            clearTimeout(time);
-            time = setTimeout(function () {
-                var value = (event.clientX - pos.left) / width * 100 | 0;
-                if (value > 100) {
-                    value = 100;
-                }
-                if (value < 0) {
-                    value = 0;
-                }
-                const $progressBarText = self.$target.find('.s_progress_bar_text');
-                // Target precisely the XX% not only XX to not replace wrong element
-                // eg 'Since 1978 we have completed 45%' <- don't replace 1978
-                $progressBarText.text($progressBarText.text().replace(/[0-9]+%/, value + '%'));
-                $progressBar.attr("data-value", value);
-                $progressBar.attr("aria-valuenow", value);
-                if (value < 3) {
-                    value = 3;
-                }
-                $progressBar.css("width", value + "%");
-            }, 5);
-        }
-        $e.on("mousedown", function () {
-            self.$overlay.addClass('d-none');
-            $(document)
-                .on("mousemove", move)
-                .one("mouseup", function () {
-                    self.$overlay.removeClass('d-none');
-                    $(document).off("mousemove", move);
-                    self.trigger_up('cover_update');
-                });
-        });
     },
 });
 });
