@@ -19,6 +19,40 @@ class StockMove(models.Model):
     created_purchase_line_id = fields.Many2one('purchase.order.line',
         'Created Purchase Order Line', ondelete='set null', readonly=True, copy=False)
 
+    def _get_in_svl_vals(self, forced_quantity):
+        svl_vals_list = []
+        # Before define the incoming SVL values, checks if some quantities has
+        # already been invoiced and still waiting to be receipt.
+        # In such case, gets back the price from these waiting invoice lines.
+        for move in self:
+            po_line = move.purchase_line_id
+            # Take invoice lines about the current product and who have waiting quantities.
+            invoice_lines = po_line.invoice_lines.filtered(lambda l: l.product_id == move.product_id and l.qty_waiting_for_receipt > 0)
+            if invoice_lines:
+                quantity_received = 0
+                qty_waiting = sum(invoice_lines.mapped('qty_waiting_for_receipt'))
+                # Gets values for each of those invoice lines.
+                for line in invoice_lines:
+                    qty_to_process = min(move.quantity_done, line.qty_waiting_for_receipt)
+                    quantity_received += qty_to_process
+                    line.qty_waiting_for_receipt -= qty_to_process
+                    qty_waiting -= qty_to_process
+                    svl_vals = super(StockMove, move)._get_in_svl_vals(qty_to_process)
+                    svl_vals[0]['unit_cost'] = line.price_unit
+                    svl_vals[0]['value'] = (qty_to_process * line.price_unit)
+                    svl_vals[0]['description'] = move.picking_id.name
+                    svl_vals_list += svl_vals
+                # If it remains quantities to process after processed the waiting
+                # ones, gets SVL values for the remaining quantity.
+                if quantity_received < move.quantity_done:
+                    qty_to_process = move.quantity_done - quantity_received
+                    svl_vals = super(StockMove, move)._get_in_svl_vals(qty_to_process)
+                    svl_vals[0]['description'] = move.picking_id.name
+                    svl_vals_list += svl_vals
+        if svl_vals_list:
+            return svl_vals_list
+        return super()._get_in_svl_vals(forced_quantity)
+
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
         distinct_fields = super(StockMove, self)._prepare_merge_moves_distinct_fields()

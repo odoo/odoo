@@ -1319,3 +1319,800 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.assertEqual(len(input_aml), 2, "Only two lines should have been generated in stock input account: one when receiving the product, one when making the invoice.")
         self.assertAlmostEqual(sum(input_aml.mapped('debit')), 90, "Total debit value on stock input account should be equal to the original PO price of the product.")
         self.assertAlmostEqual(sum(input_aml.mapped('credit')), 90, "Total credit value on stock input account should be equal to the original PO price of the product.")
+
+    def test_anglosaxon_valuation_price_unit_diff_receipt_before_bill_01(self):
+        """ Increases the product price after receipt in the bill and checks valuation layers.
+        PO:  price unit:  10
+        Inv: price unit:  12
+        """
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+        self.product1.product_tmpl_id.invoice_policy = 'delivery'
+
+        # Creates a PO.
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 1
+            po_line.price_unit = 10.0
+        order = po_form.save()
+        order.button_confirm()
+
+        # Receives the goods.
+        receipt = order.picking_ids[0]
+        receipt.move_lines.quantity_done = 1
+        receipt.button_validate()
+
+        # Creates an invoice and increases the price.
+        invoice_form = Form(self.env['account.move'].with_context(
+            default_purchase_id=order.id,
+            default_move_type='in_invoice'
+        ))
+        invoice_form.purchase_id = order
+        with invoice_form.invoice_line_ids.edit(0) as line_form:
+            line_form.price_unit = 12.0
+        invoice = invoice_form.save()
+        invoice.post()
+
+        # Checks a stock valuation layer for the price difference was created.
+        price_diff_svl = self.env['stock.valuation.layer'].search([('account_move_id', '=', invoice.id)])
+        self.assertEqual(
+            price_diff_svl.value, 2.0,
+            "The stock valuation layer must have a value of 2."
+        )
+        self.assertEqual(
+            price_diff_svl.stock_valuation_layer_id.value, 10.0,
+            "The stock valuation layer must be linked to the last stock valuation layer."
+        )
+
+        # Check if something was posted in the price difference account
+        price_diff_aml = self.env['account.move.line'].search([('account_id', '=', self.price_diff_account.id)])
+        self.assertEqual(len(price_diff_aml), 0, "No line should have been generated in the price difference account.")
+
+        # Check what was posted in stock input account
+        input_aml = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)])
+        self.assertEqual(
+            len(input_aml), 3,
+            "Three lines should have been generated in stock input account:"
+            "\n\t- one when receiving the product"
+            "\n\t- one when making the invoice"
+            "\n\t- one for the difference price"
+        )
+        self.assertAlmostEqual(sum(input_aml.mapped('debit')), 12, msg="Total debit value on stock input account should be equal to the original PO price of the product.")
+        self.assertAlmostEqual(sum(input_aml.mapped('credit')), 12, msg="Total credit value on stock input account should be equal to the original PO price of the product.")
+
+    def test_anglosaxon_valuation_price_unit_diff_receipt_before_bill_02(self):
+        """ Receives a product, increases the price into the bill, then receive
+        the same product a second time with another price.
+        PO: 5 units at 5.0$
+        Inv: price unit: 10.0$
+
+        Increase PO line quantity at 7
+        Inv: price unit: 25.0$
+        Checks the Stock Valuation Layers are correctly created.
+        """
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+        self.product1.product_tmpl_id.invoice_policy = 'delivery'
+
+        # Creates a PO with the first PO line (5 units at 5.0$).
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 5
+            po_line.price_unit = 5.0
+        order = po_form.save()
+        order.button_confirm()
+
+        # Receives the goods.
+        receipt = order.picking_ids[0]
+        receipt.move_lines.quantity_done = 5
+        receipt.button_validate()
+
+        # Creates an invoice and increases the price.
+        invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
+        invoice_form.purchase_id = order
+        with invoice_form.invoice_line_ids.edit(0) as line_form:
+            line_form.price_unit = 10.0
+        invoice = invoice_form.save()
+        invoice.post()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 2)
+        svl_1 = svl[0]  # SVL for the product1.
+        svl_2 = svl[1]  # SVL for the price difference correction.
+        self.assertEqual(svl_1.quantity, 5.0)
+        self.assertEqual(svl_1.unit_cost, 5.0)
+        self.assertEqual(svl_1.value, 25.0)
+        self.assertEqual(svl_2.quantity, 0.0)
+        self.assertEqual(svl_2.unit_cost, 0.0)
+        self.assertEqual(svl_2.value, 25.0)
+        self.assertEqual(sum(svl.mapped('value')), 50.0)
+
+        # Adds a second PO line.
+        po_form = Form(order)
+        with po_form.order_line.edit(0) as po_line:
+            # po_line.product_id = self.product1
+            po_line.product_qty = 7
+        order = po_form.save()
+        order.button_confirm()
+
+        # Receives the goods (second line).
+        receipt = order.picking_ids.filtered(lambda p: p.state == 'assigned')[0]
+        receipt.move_lines.quantity_done = 2
+        receipt.button_validate()
+
+        # Creates a second invoice and increases the price.
+        invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
+        invoice_form.purchase_id = order
+        with invoice_form.invoice_line_ids.edit(0) as line_form:
+            line_form.price_unit = 25.0
+        invoice = invoice_form.save()
+        invoice.post()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 4)
+        svl_3 = svl[2]  # SVL for the product1.
+        svl_4 = svl[3]  # SVL for the price difference correction.
+        self.assertEqual(svl_3.quantity, 2.0)
+        self.assertEqual(svl_3.unit_cost, 5.0)
+        self.assertEqual(svl_3.value, 10.0)
+        self.assertEqual(svl_4.quantity, 0.0)
+        self.assertEqual(svl_4.unit_cost, 0.0)
+        self.assertEqual(svl_4.value, 40.0)
+        self.assertEqual(sum(svl.mapped('value')), 100.0)
+
+        # Checks nothing was posted in the price difference account.
+        price_diff_aml = self.env['account.move.line'].search([('account_id', '=', self.price_diff_account.id)])
+        self.assertEqual(len(price_diff_aml), 0, "No line should have been generated in the price difference account.")
+
+    def test_anglosaxon_valuation_price_unit_diff_receipt_before_bill_03(self):
+        """ Receives a product, increases the price into the bill, then receive
+        the same product a second time with another price.
+        PO: 4 units at 5.0$, receipt.
+        Inv: 5 units at 10.0$
+
+        PO: increase line qty. to 5, receipt.
+        Checks the Stock Valuation Layers are correctly created.
+        """
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+        self.product1.product_tmpl_id.invoice_policy = 'delivery'
+
+        # Creates a PO with the first PO line (5 units at 5.0$).
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 4
+            po_line.price_unit = 5.0
+        order = po_form.save()
+        order.button_confirm()
+
+        # Receives the goods.
+        receipt = order.picking_ids[0]
+        receipt.move_lines.quantity_done = 4
+        receipt.button_validate()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 1)
+        svl_1 = svl[0]  # SVL for the product1.
+        self.assertEqual(svl_1.quantity, 4.0)
+        self.assertEqual(svl_1.unit_cost, 5.0)
+        self.assertEqual(svl_1.value, 20.0)
+
+        # Creates an invoice and increases the price.
+        invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
+        invoice_form.purchase_id = order
+        with invoice_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = 5.0
+            line_form.price_unit = 10.0
+        invoice = invoice_form.save()
+        invoice.post()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 2)
+        svl_2 = svl[1]  # SVL for the price difference correction.
+        self.assertEqual(svl_2.quantity, 0.0)
+        self.assertEqual(svl_2.unit_cost, 0.0)
+        self.assertEqual(svl_2.value, 20.0)
+        self.assertEqual(sum(svl.mapped('value')), 40.0)
+
+        # Edits the PO line.
+        po_form = Form(order)
+        with po_form.order_line.edit(0) as po_line:
+            po_line.product_qty = 5
+        order = po_form.save()
+        order.button_confirm()
+
+        # Receives the goods (second line).
+        receipt = order.picking_ids.filtered(lambda p: p.state == 'assigned')[0]
+        receipt.move_lines.quantity_done = 1
+        receipt.button_validate()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 3)
+        svl_3 = svl[2]  # SVL for the product1.
+        self.assertEqual(svl_3.quantity, 1.0)
+        self.assertEqual(svl_3.unit_cost, 10.0)
+        self.assertEqual(svl_3.value, 10.0)
+        self.assertEqual(sum(svl.mapped('value')), 50.0)
+
+        # Checks nothing was posted in the price difference account.
+        price_diff_aml = self.env['account.move.line'].search([('account_id', '=', self.price_diff_account.id)])
+        self.assertEqual(len(price_diff_aml), 0, "No line should have been generated in the price difference account.")
+
+    def test_anglosaxon_valuation_price_unit_diff_receipt_before_bill_04(self):
+        """ Receives a product, increases the price into the bill, then receive
+        the same product a second time with another price.
+        PO: 4 units at 5.0$, receipt.
+        Inv: 5 units at 10.0$
+
+        PO: increase line qty. to 6, receipt.
+        Inv: 1 unit at 10.0$
+        Checks the Stock Valuation Layers are correctly created.
+        """
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+        self.product1.product_tmpl_id.invoice_policy = 'delivery'
+
+        # Creates a PO with the first PO line (5 units at 5.0$).
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 4
+            po_line.price_unit = 5.0
+        order = po_form.save()
+        order.button_confirm()
+
+        # Receives the goods.
+        receipt = order.picking_ids[0]
+        receipt.move_lines.quantity_done = 4
+        receipt.button_validate()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 1)
+        svl_1 = svl[0]  # SVL for the product1.
+        self.assertEqual(svl_1.quantity, 4.0)
+        self.assertEqual(svl_1.unit_cost, 5.0)
+        self.assertEqual(svl_1.value, 20.0)
+
+        # Creates an invoice and increases the price.
+        invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
+        invoice_form.purchase_id = order
+        with invoice_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = 5.0
+            line_form.price_unit = 10.0
+        invoice = invoice_form.save()
+        invoice.post()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 2)
+        svl_2 = svl[1]  # SVL for the price difference correction.
+        self.assertEqual(svl_2.quantity, 0.0)
+        self.assertEqual(svl_2.unit_cost, 0.0)
+        self.assertEqual(svl_2.value, 20.0)
+        self.assertEqual(sum(svl.mapped('value')), 40.0)
+
+        # Edits the PO line.
+        po_form = Form(order)
+        with po_form.order_line.edit(0) as po_line:
+            po_line.product_qty = 6
+        order = po_form.save()
+        order.button_confirm()
+
+        # Receives the goods (second line).
+        receipt = order.picking_ids.filtered(lambda p: p.state == 'assigned')[0]
+        receipt.move_lines.quantity_done = 2
+        receipt.button_validate()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 4)
+        svl_3 = svl[2]  # SVL with no value (already proceed in the bill)
+        svl_4 = svl[3]  # SVL with value for the extra unit.
+        self.assertEqual(svl_3.quantity, 1.0)
+        self.assertEqual(svl_3.unit_cost, 10.0)
+        self.assertEqual(svl_3.value, 10.0)
+        self.assertEqual(svl_4.quantity, 1.0)
+        self.assertEqual(svl_4.unit_cost, 5.0)
+        self.assertEqual(svl_4.value, 5.0)
+        self.assertEqual(sum(svl.mapped('value')), 55.0)
+
+        # Creates a second invoice and increases the price.
+        invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
+        invoice_form.purchase_id = order
+        with invoice_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = 1
+            line_form.price_unit = 10.0
+        invoice = invoice_form.save()
+        invoice.post()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 5)
+        svl_5 = svl[4]  # SVL for the price difference correction.
+        self.assertEqual(svl_5.quantity, 0.0)
+        self.assertEqual(svl_5.unit_cost, 0.0)
+        self.assertEqual(svl_5.value, 5.0)
+        self.assertEqual(sum(svl.mapped('value')), 60.0)
+
+        # Checks nothing was posted in the price difference account.
+        price_diff_aml = self.env['account.move.line'].search([('account_id', '=', self.price_diff_account.id)])
+        self.assertEqual(len(price_diff_aml), 0, "No line should have been generated in the price difference account.")
+
+    def test_anglosaxon_valuation_price_unit_diff_bill_before_receipt_01(self):
+        """ Creates an invoice, then receives the product.
+        PO: 5 units at 5.0$
+        Inv: price unit: 10.0$
+
+        PO: adds 2 units at 20.0$
+        Inv: price unit: 25.0$
+        Checks the Stock Valuation Layers are correctly created.
+        """
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+        self.product1.product_tmpl_id.invoice_policy = 'delivery'
+
+        # Creates a PO with the first PO line (5 units at 5.0$).
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 5
+            po_line.price_unit = 5.0
+        order = po_form.save()
+        order.button_confirm()
+
+        # Creates an invoice and increases the price.
+        invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
+        invoice_form.purchase_id = order
+        with invoice_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = 5
+            line_form.price_unit = 10.0
+        invoice = invoice_form.save()
+        invoice.post()
+
+        # Receives the goods.
+        receipt = order.picking_ids[0]
+        receipt.move_lines.quantity_done = 5
+        receipt.button_validate()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 1)
+        self.assertEqual(svl.quantity, 5.0)
+        self.assertEqual(svl.unit_cost, 10.0)
+        self.assertEqual(svl.value, 50.0)
+
+        # Adds a second PO line.
+        po_form = Form(order)
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 2
+            po_line.price_unit = 20.0
+        order = po_form.save()
+        order.button_confirm()
+
+        # Creates a second invoice and increases the price.
+        invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
+        invoice_form.purchase_id = order
+        with invoice_form.invoice_line_ids.edit(1) as line_form:
+            line_form.quantity = 2
+            line_form.price_unit = 25.0
+        invoice = invoice_form.save()
+        invoice.post()
+
+        # Receives the goods (second line).
+        receipt = order.picking_ids.filtered(lambda p: p.state == 'assigned')[0]
+        receipt.move_lines.quantity_done = 2
+        receipt.button_validate()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 2)
+        svl_2 = svl[1]
+        self.assertEqual(svl_2.quantity, 2.0)
+        self.assertEqual(svl_2.unit_cost, 25.0)
+        self.assertEqual(svl_2.value, 50.0)
+        self.assertEqual(sum(svl.mapped('value')), 100.0)
+
+        # Checks nothing was posted in the price difference account.
+        price_diff_aml = self.env['account.move.line'].search([('account_id', '=', self.price_diff_account.id)])
+        self.assertEqual(len(price_diff_aml), 0, "No line should have been generated in the price difference account.")
+
+    def test_anglosaxon_valuation_price_unit_diff_bill_before_receipt_02(self):
+        """ Creates an invoice, then receives the product.
+        PO: 5 units at 5.0$
+        Inv: price unit: 5 at 10.0$
+        Receipt only 4, no backorder.
+
+        PO: increase quantity at 7 units
+        Inv: price unit: 2 at 25.0$
+        Receipt 3 unit.
+        Checks the Stock Valuation Layers are correctly created.
+        """
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+        self.product1.product_tmpl_id.invoice_policy = 'delivery'
+
+        # Creates a PO with the first PO line (5 units at 5.0$).
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 5
+            po_line.price_unit = 5.0
+        order = po_form.save()
+        order.button_confirm()
+
+        # Creates an invoice and increases the price.
+        invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
+        invoice_form.purchase_id = order
+        with invoice_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = 5
+            line_form.price_unit = 10.0
+        invoice = invoice_form.save()
+        invoice.post()
+
+        # Receives the goods.
+        receipt = order.picking_ids[0]
+        receipt.move_lines.quantity_done = 4
+        # Handles the backorder wizard as the receipt isn't complete.
+        wizard = receipt.button_validate()
+        wizard_form = Form(self.env['stock.backorder.confirmation'].with_context(wizard['context']))
+        wizard = wizard_form.save()
+        wizard.process_cancel_backorder()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 1)
+        self.assertEqual(svl.quantity, 4.0)
+        self.assertEqual(svl.unit_cost, 10.0)
+        self.assertEqual(svl.value, 40.0)
+
+        # Edits the PO line and increases the quantity.
+        po_form = Form(order)
+        with po_form.order_line.edit(0) as po_line:
+            po_line.product_qty = 7
+        order = po_form.save()
+
+        # Creates a second invoice and increases the price.
+        invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
+        with invoice_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = 2
+            line_form.price_unit = 25.0
+        invoice = invoice_form.save()
+        invoice.post()
+
+        # Receives the goods (for the added quantity).
+        receipt = order.picking_ids.filtered(lambda p: p.state == 'assigned')[0]
+        receipt.move_lines.quantity_done = 3
+        receipt.button_validate()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 3)
+        latest_svl = svl[1:].sorted(lambda layer: layer.quantity)
+        svl_2 = latest_svl[0]
+        svl_3 = latest_svl[1]
+        # The second receipt must had created two SVL because the 3 received
+        # quantities refer to two invoices with different prices.
+        self.assertEqual(svl_2.quantity, 1.0)
+        self.assertEqual(svl_2.unit_cost, 10.0)
+        self.assertEqual(svl_2.value, 10.0)
+        self.assertEqual(svl_3.quantity, 2.0)
+        self.assertEqual(svl_3.unit_cost, 25.0)
+        self.assertEqual(svl_3.value, 50.0)
+        self.assertEqual(sum(svl.mapped('value')), 100.0)
+
+        # Checks nothing was posted in the price difference account.
+        price_diff_aml = self.env['account.move.line'].search([('account_id', '=', self.price_diff_account.id)])
+        self.assertEqual(len(price_diff_aml), 0, "No line should have been generated in the price difference account.")
+
+    def test_anglosaxon_valuation_price_unit_diff_mixed_order_01(self):
+        """ For one purchase order, creates an invoice then receives product.
+        Then, updates the po line quantity, receives the product and creates a another invoices.
+        PO: 5 units at 5.0$
+        Inv: price unit: 5 at 10.0$
+        Receipt 5 units.
+
+        PO: increase quantity at 10 units
+        Receipt 5 units.
+        Inv: price unit: 5 at 25.0$
+        Checks the Stock Valuation Layers are correctly created.
+        """
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+        self.product1.product_tmpl_id.invoice_policy = 'delivery'
+
+        # Creates a PO with the first PO line (5 units at 5.0$).
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 5
+            po_line.price_unit = 5.0
+        order = po_form.save()
+        order.button_confirm()
+
+        # Creates an invoice and increases the price.
+        invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
+        invoice_form.purchase_id = order
+        with invoice_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = 5
+            line_form.price_unit = 10.0
+        invoice = invoice_form.save()
+        invoice.post()
+
+        # Receives the goods.
+        receipt = order.picking_ids[0]
+        receipt.move_lines.quantity_done = 5
+        receipt.button_validate()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 1)
+        self.assertEqual(svl.quantity, 5.0)
+        self.assertEqual(svl.unit_cost, 10.0, "Must take the unit cost from the invoice")
+        self.assertEqual(svl.value, 50.0)
+
+        # Edits the PO line and increases the quantity.
+        po_form = Form(order)
+        with po_form.order_line.edit(0) as po_line:
+            po_line.product_qty = 10
+        order = po_form.save()
+
+        # Receives the goods (for the added quantity).
+        receipt = order.picking_ids.filtered(lambda p: p.state == 'assigned')[0]
+        receipt.move_lines.quantity_done = 5
+        receipt.button_validate()
+
+        # Creates a second invoice and increases the price.
+        invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
+        with invoice_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = 5
+            line_form.price_unit = 25.0
+        invoice = invoice_form.save()
+        invoice.post()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 3)
+        svl_2 = svl[1]  # SVL created by the receipt
+        svl_3 = svl[2]  # SVL for the price difference between the receipt and the invoice.
+        self.assertEqual(svl_2.quantity, 5.0)
+        self.assertEqual(svl_2.unit_cost, 5.0)
+        self.assertEqual(svl_2.value, 25.0)
+        self.assertEqual(svl_3.quantity, 0.0)
+        self.assertEqual(svl_3.unit_cost, 0.0)
+        self.assertEqual(svl_3.value, 100.0)
+        self.assertEqual(sum(svl.mapped('value')), 175.0)
+
+    def test_anglosaxon_valuation_price_unit_diff_mixed_order_02(self):
+        """ For one purchase order, receives product then creates an invoice.
+        Then, updates the po line quantity, creates an another invoice and receives the product.
+        PO: 5 units at 5.0$
+        Receipt 5 units.
+        Inv: price unit: 5 at 10.0$
+
+        PO: increase quantity at 10 units
+        Inv: price unit: 5 at 25.0$
+        Receipt 5 units.
+        Checks the Stock Valuation Layers are correctly created.
+        """
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+        self.product1.product_tmpl_id.invoice_policy = 'delivery'
+
+        # Creates a PO with the first PO line (5 units at 5.0$).
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 5
+            po_line.price_unit = 5.0
+        order = po_form.save()
+        order.button_confirm()
+
+        # Receives the goods.
+        receipt = order.picking_ids[0]
+        receipt.move_lines.quantity_done = 5
+        receipt.button_validate()
+
+        # Creates an invoice and increases the price.
+        invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
+        invoice_form.purchase_id = order
+        with invoice_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = 5
+            line_form.price_unit = 10.0
+        invoice = invoice_form.save()
+        invoice.post()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 2)
+        svl_1 = svl[0]  # SVL created by the receipt
+        svl_2 = svl[1]  # SVL for the price difference between the receipt and the invoice.
+        self.assertEqual(svl_1.quantity, 5.0)
+        self.assertEqual(svl_1.unit_cost, 5.0)
+        self.assertEqual(svl_1.value, 25.0)
+        self.assertEqual(svl_2.quantity, 0)
+        self.assertEqual(svl_2.unit_cost, 0)
+        self.assertEqual(svl_2.value, 25.0)
+        self.assertEqual(sum(svl.mapped('value')), 50.0)
+
+        # Edits the PO line and increases the quantity.
+        po_form = Form(order)
+        with po_form.order_line.edit(0) as po_line:
+            po_line.product_qty = 10
+        order = po_form.save()
+
+        # Creates a second invoice and increases the price.
+        invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
+        with invoice_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = 5
+            line_form.price_unit = 25.0
+        invoice = invoice_form.save()
+        invoice.post()
+
+        # Receives the goods (for the added quantity).
+        receipt = order.picking_ids.filtered(lambda p: p.state == 'assigned')[0]
+        receipt.move_lines.quantity_done = 5
+        receipt.button_validate()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 3)
+        svl_3 = svl[2]
+        self.assertEqual(svl_3.quantity, 5.0, "Must take the unit cost from the invoice")
+        self.assertEqual(svl_3.unit_cost, 25.0)
+        self.assertEqual(svl_3.value, 125.0)
+        self.assertEqual(sum(svl.mapped('value')), 175.0)
+
+    def test_anglosaxon_valuation_price_unit_diff_multiple_products_01(self):
+        """ For one purchase order, receives product then creates an invoice.
+        Then, updates the po line quantity, creates an another invoice and receives the product.
+        PO: 5 units at 5.0$
+        Receipt 5 units.
+        Inv: price unit: 5 at 10.0$
+
+        PO: increase quantity at 10 units
+        Inv: price unit: 5 at 25.0$
+        Receipt 5 units.
+        Checks the Stock Valuation Layers are correctly created.
+        """
+        self.env.company.anglo_saxon_accounting = True
+        product_fifo = self.product1
+        product_fifo.categ_id.property_cost_method = 'fifo'
+        product_fifo.categ_id.property_valuation = 'real_time'
+        product_fifo.product_tmpl_id.invoice_policy = 'delivery'
+        product_avco = self.env['product.product'].create({
+            'name': 'AVCO Product',
+            'standard_price': 100.0,
+            'list_price': 120.0,
+            'type': 'product',
+        })
+        product_avco.categ_id.property_cost_method = 'average'
+        product_avco.categ_id.property_valuation = 'real_time'
+        product_avco.product_tmpl_id.invoice_policy = 'delivery'
+
+        # Creates a PO 5 product_fifo at 5.0$ and 5 product_avco at 7.0$.
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product_fifo
+            po_line.product_qty = 5
+            po_line.price_unit = 5.0
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product_avco
+            po_line.product_qty = 5
+            po_line.price_unit = 7.0
+        order = po_form.save()
+        order.button_confirm()
+
+        # Receives 4 product_fifo.
+        receipt = order.picking_ids[0]
+        receipt.move_lines[0].quantity_done = 4
+        # Handles the backorder wizard as the receipt isn't complete.
+        wizard = receipt.button_validate()
+        wizard_form = Form(self.env['stock.backorder.confirmation'].with_context(wizard['context']))
+        wizard = wizard_form.save()
+        wizard.process_cancel_backorder()
+
+        # Creates an invoice for 6 product_fifo at 10 and 5 product_avco at 14.
+        invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
+        invoice_form.purchase_id = order
+        with invoice_form.invoice_line_ids.edit(0) as line_fifo_product:
+            line_fifo_product.quantity = 6
+            line_fifo_product.price_unit = 10.0
+        with invoice_form.invoice_line_ids.edit(1) as line_avco_product:
+            line_avco_product.quantity = 5
+            line_avco_product.price_unit = 14.0
+        invoice = invoice_form.save()
+        invoice.post()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', 'in', [product_fifo.id, product_avco.id])]).filtered(lambda layer: layer.value)
+        self.assertEqual(len(svl), 2)
+        svl_1 = svl[0]  # SVL created by the receipt
+        svl_2 = svl[1]  # SVL for the price difference between the receipt and the invoice.
+        self.assertEqual(svl_1.product_id.id, product_fifo.id)
+        self.assertEqual(svl_1.quantity, 4.0)
+        self.assertEqual(svl_1.unit_cost, 5.0)
+        self.assertEqual(svl_1.value, 20.0)
+        self.assertEqual(svl_2.product_id.id, product_fifo.id)
+        self.assertEqual(svl_2.quantity, 0)
+        self.assertEqual(svl_2.unit_cost, 0)
+        self.assertEqual(svl_2.value, 20.0)
+        self.assertEqual(sum(svl.mapped('value')), 40.0)
+
+        # Edits the PO line and increases product_fifo's quantity to 6 and product_avco's quantity to 10.
+        po_form = Form(order)
+        with po_form.order_line.edit(0) as po_line_product_fifo:
+            po_line_product_fifo.product_qty = 6
+        with po_form.order_line.edit(1) as po_line_product_avco:
+            po_line_product_avco.product_qty = 10
+        order = po_form.save()
+
+        # Create a second receipt for 2 product_fifo and 10 product_avco.
+        receipt = order.picking_ids[0]
+        receipt.move_lines[0].quantity_done = 2
+        receipt.move_lines[1].quantity_done = 10
+        receipt.button_validate()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', 'in', [product_fifo.id, product_avco.id])]).filtered(lambda layer: layer.value)
+        self.assertEqual(len(svl), 5)
+        svl_3 = svl[2]  # SVL for 2 product_fifo, unit cost from the invoice.
+        svl_4 = svl[3]  # SVL for 5 product_avco, unit cost from the invoice.
+        svl_5 = svl[4]  # SVL for 5 product_avco, unit cost from the PO line.
+        self.assertEqual(svl_3.product_id.id, product_fifo.id)
+        self.assertEqual(svl_3.quantity, 2)
+        self.assertEqual(svl_3.unit_cost, 10.0)
+        self.assertEqual(svl_3.value, 20.0)
+        self.assertEqual(svl_4.product_id.id, product_avco.id)
+        self.assertEqual(svl_4.quantity, 5)
+        self.assertEqual(svl_4.unit_cost, 14.0)
+        self.assertEqual(svl_4.value, 70.0)
+        self.assertEqual(svl_5.product_id.id, product_avco.id)
+        self.assertEqual(svl_5.quantity, 5)
+        self.assertEqual(svl_5.unit_cost, 7.0)
+        self.assertEqual(svl_5.value, 35.0)
+        self.assertEqual(sum(svl.mapped('value')), 165.0)
+
+        # Creates a second invoice and increases the price.
+        invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
+        with invoice_form.invoice_line_ids.edit(1) as line_form:
+            line_form.quantity = 5
+            line_form.price_unit = 12.0
+        invoice = invoice_form.save()
+        invoice.post()
+
+        # Checks stock valuation layers.
+        svl = self.env['stock.valuation.layer'].search([('product_id', 'in', [product_fifo.id, product_avco.id])]).filtered(lambda layer: layer.value)
+        self.assertEqual(len(svl), 6)
+        svl_6 = svl[5]
+        self.assertEqual(svl_6.product_id.id, product_avco.id)
+        self.assertEqual(svl_6.quantity, 0)
+        self.assertEqual(svl_6.unit_cost, 0)
+        self.assertEqual(svl_6.value, 25.0)
+        self.assertEqual(sum(svl.mapped('value')), 190.0)
