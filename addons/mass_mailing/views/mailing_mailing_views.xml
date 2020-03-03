@@ -344,27 +344,37 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div name="div_responsible_avatar">
-                                    <span attrs="{'invisible': [('sent_date', '=', False)]}" t-attf-title="Sent on #{record.sent_date.value}" class="d-inline-flex">
-                                        <span class="fa fa-calendar-check-o mr-2 small my-auto" aria-label="Sent date"/>
-                                        <span class="align-self-baseline"><field name="sent_date" widget="date"/></span>
-                                    </span>
-                                    <span attrs="{'invisible': [('schedule_date', '=', False)]}" t-attf-title="Scheduled on #{record.schedule_date.value}" class="d-inline-flex">
-                                        <span class="fa fa-hourglass-half mr-2 small my-auto" aria-label="Scheduled date"/>
-                                        <span class="align-self-baseline"><field name="schedule_date" widget="date"/></span>
-                                    </span>
-                                    <span attrs="{'invisible': ['|', '|', ('sent_date', '!=', False), ('schedule_date', '!=', False), ('state', '=', 'in_queue')]}" class="oe_clear">
-                                        <b><field name='total'/></b>
-                                        <field name='mailing_model_id' attrs="{'invisible': [('mailing_model_name','=','mailing.list')]}"/>
-                                        <span attrs="{'invisible': [('mailing_model_name','!=','mailing.list')]}">Mailing Contact</span>
-                                    </span>
-                                    <span attrs="{'invisible': ['|', '|', ('schedule_date', '!=', False), ('state', '!=', 'in_queue'), ('next_departure', '=', False)]}"
-                                        t-attf-title="Scheduled on #{record.next_departure.value}" class="d-inline-flex">
-                                        <span class="fa fa-hourglass-o mr-2 small my-auto" aria-label="Scheduled date"/>
-                                        <span class="align-self-baseline">Next Batch</span>
-                                    </span>
-                                    <t t-set="unassigned"><t t-esc="_t('Unassigned')"/></t>
-                                    <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value || unassigned" t-att-alt="record.user_id.value" class="o_image_24_cover oe_kanban_avatar float-right"/>
+                                <div name="div_responsible_avatar" class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <span attrs="{'invisible': [('sent_date', '=', False)]}"
+                                            t-attf-title="Sent on #{record.sent_date.value}" class="d-inline-flex">
+                                            <span class="fa fa-calendar-check-o mr-2 small my-auto" aria-label="Sent date"/>
+                                            <span class="align-self-baseline"><field name="sent_date" widget="date"/></span>
+                                        </span>
+                                        <span attrs="{'invisible': [('schedule_date', '=', False)]}"
+                                            t-attf-title="Scheduled on #{record.schedule_date.value}" class="d-inline-flex">
+                                            <span class="fa fa-hourglass-half mr-2 small my-auto" aria-label="Scheduled date"/>
+                                            <span class="align-self-baseline"><field name="schedule_date" widget="date"/></span>
+                                        </span>
+                                        <span attrs="{'invisible': ['|', '|', ('sent_date', '!=', False), ('schedule_date', '!=', False), ('state', '=', 'in_queue')]}"
+                                            class="oe_clear">
+                                            <b><field name='total'/></b>
+                                            <field name='mailing_model_id' attrs="{'invisible': [('mailing_model_name','=','mailing.list')]}"/>
+                                            <span attrs="{'invisible': [('mailing_model_name','!=','mailing.list')]}">Mailing Contact</span>
+                                        </span>
+                                        <span attrs="{'invisible': ['|', '|', ('schedule_date', '!=', False), ('state', '!=', 'in_queue'), ('next_departure', '=', False)]}"
+                                            t-attf-title="Scheduled on #{record.next_departure.value}" class="d-inline-flex">
+                                            <span class="fa fa-hourglass-o mr-2 small my-auto" aria-label="Scheduled date"/>
+                                            <span class="align-self-baseline">Next Batch</span>
+                                        </span>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <t t-set="unassigned"><t t-esc="_t('Unassigned')"/></t>
+                                        <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)"
+                                            t-att-title="record.user_id.value || unassigned"
+                                            t-att-alt="record.user_id.value"
+                                            class="o_image_24_cover oe_kanban_avatar"/>
+                                    </div>
                                 </div>
                             </div>
                         </t>
