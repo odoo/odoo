@@ -3175,6 +3175,19 @@ exports.Order = Backbone.Model.extend({
     wait_for_push_order: function () {
         return this.is_to_email();
     },
+
+    /**
+     * @returns {Object} object to use as props for instantiating OrderReceipt.
+     */
+    getOrderReceiptEnv: function() {
+        // Formerly get_receipt_render_env defined in ScreenWidget.
+        return {
+            order: this,
+            receipt: this.export_for_printing(),
+            orderlines: this.get_orderlines(),
+            paymentlines: this.get_paymentlines(),
+        };
+    },
 });
 
 var OrderCollection = Backbone.Collection.extend({

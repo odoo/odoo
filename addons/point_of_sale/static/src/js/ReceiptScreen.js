@@ -15,7 +15,6 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
          */
         constructor() {
             super(...arguments);
-            this.receiptRenderEnv = this._receiptRenderEnv();
             this.orderReceipt = useRef('order-receipt');
         }
         mounted() {
@@ -37,9 +36,9 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
             this.env.pos.off('change:selectedOrder', null, this);
         }
         get change() {
-            return this.env.pos.format_currency(this.currenOrder.get_change());
+            return this.env.pos.format_currency(this.currentOrder.get_change());
         }
-        get currenOrder() {
+        get currentOrder() {
             return this.env.pos.get_order();
         }
         /**
@@ -52,7 +51,7 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
          * event (an error event) that will be properly handled in Chrome Component.
          */
         async handleAutoPrint() {
-            if (this._shouldAutoPrint() && !this.currenOrder.is_to_email()) {
+            if (this._shouldAutoPrint() && !this.currentOrder.is_to_email()) {
                 await this.onPrintReceipt();
                 if (this._shouldCloseImmediately()) {
                     this.onOrderDone();
@@ -60,7 +59,7 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
             }
         }
         onOrderDone() {
-            this.currenOrder.finalize();
+            this.currentOrder.finalize();
             this.trigger('show-screen', { name: 'ProductScreen' });
         }
         async onPrintReceipt() {
@@ -70,7 +69,7 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
                 } else {
                     this._printWeb();
                 }
-                this.currenOrder._printed = true;
+                this.currentOrder._printed = true;
             } catch (error) {
                 this.trigger('pos-error', { error });
             }
@@ -80,22 +79,12 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
             // We want the print invoice button to appear when there is a
             // syncing error when the receipt screen is shown.
         }
-        _receiptRenderEnv() {
-            // old name: get_receipt_render_env
-            return {
-                pos: this.env.pos,
-                order: this.currenOrder,
-                receipt: this.currenOrder.export_for_printing(),
-                orderlines: this.currenOrder.get_orderlines(),
-                paymentlines: this.currenOrder.get_paymentlines(),
-            };
-        }
         _shouldAutoPrint() {
-            return this.env.pos.config.iface_print_auto && !this.currenOrder._printed;
+            return this.env.pos.config.iface_print_auto && !this.currentOrder._printed;
         }
         _shouldCloseImmediately() {
-            var invoiced_finalized = this.currenOrder.is_to_invoice()
-                ? this.currenOrder.finalized
+            var invoiced_finalized = this.currentOrder.is_to_invoice()
+                ? this.currentOrder.finalized
                 : true;
             return (
                 this.env.pos.proxy.printer &&

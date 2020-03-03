@@ -9,11 +9,11 @@ odoo.define('point_of_sale.OrderReceipt', function(require) {
     class OrderReceipt extends PosComponent {
         constructor() {
             super(...arguments);
-            this.receiptEnv = this.props.receiptEnv;
-            this.order = this.receiptEnv.order;
-            this.receipt = this.receiptEnv.receipt;
-            this.orderlines = this.receiptEnv.orderlines;
-            this.paymentlines = this.receiptEnv.paymentlines;
+            this.order = this.props.order;
+            const _receiptEnv = this.order.getOrderReceiptEnv();
+            this.receipt = _receiptEnv.receipt;
+            this.orderlines = _receiptEnv.orderlines;
+            this.paymentlines = _receiptEnv.paymentlines;
             this.isTaxIncluded =
                 Math.abs(this.receipt.subtotal - this.receipt.total_with_tax) <= 0.000001;
         }

@@ -1,7 +1,6 @@
 odoo.define('point_of_sale.PaymentScreen', function(require) {
     'use strict';
 
-    const { qweb } = require('web.core');
     const { parse } = require('web.field_utils');
     const { is_email } = require('web.utils');
     const { PosComponent } = require('point_of_sale.PosComponent');
@@ -11,6 +10,8 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
     const { PaymentScreenPaymentLines } = require('point_of_sale.PaymentScreenPaymentLines');
     const { useNumberBuffer } = require('point_of_sale.custom_hooks');
     const { useListener } = require('web.custom_hooks');
+    const { OrderReceipt } = require('point_of_sale.OrderReceipt');
+    const { Printer } = require('point_of_sale.Printer');
 
     class PaymentScreen extends PosComponent {
         constructor() {
@@ -159,6 +160,8 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             this.render();
         }
         async validateOrder(isForceValidate) {
+            // TODO jcb: isForceValidate here is wrong.
+            // It always receive an Event as value.
             if (await this._isOrderValid(isForceValidate)) {
                 // remove pending payments before finalizing the validation
                 for (let line of this.paymentLines) {
@@ -375,12 +378,6 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
 
             return true;
         }
-        _getAmountString() {
-            if (!this.selectedPaymentLine) return '';
-            const amount = this.selectedPaymentLine.get_amount();
-            const formattedAmount = this.env.pos.formatFixed(amount);
-            return formattedAmount === '0' ? '' : formattedAmount;
-        }
         _postPushOrderResolve(order, order_server_ids) {
             if (order.is_to_email()) {
                 return this._sendReceiptToCustomer(order_server_ids);
@@ -389,42 +386,31 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             }
         }
         async _sendReceiptToCustomer(order_server_ids) {
-            // TODO jcb: which QWeb will render?
-            await this.showPopup('ConfirmPopup', {
-                title: 'not yet implemented',
-                body: '_sendReceiptToCustomer is  is not yet implemented',
-            });
-            // var order = this.env.pos.get_order();
-            // var data = {
-            //     widget: this,
-            //     pos: order.pos,
-            //     order: order,
-            //     receipt: order.export_for_printing(),
-            //     orderlines: order.get_orderlines(),
-            //     paymentlines: order.get_paymentlines(),
-            // };
-
-            // var receipt = qweb.render('OrderReceipt', data);
-            // var printer = new Printer();
-
-            // return new Promise(function(resolve, reject) {
-            //     printer.htmlToImg(receipt).then(function(ticket) {
-            //         rpc.query({
-            //             model: 'pos.order',
-            //             method: 'action_receipt_to_customer',
-            //             args: [order_server_ids, order.get_name(), order.get_client(), ticket],
-            //         })
-            //             .then(function() {
-            //                 resolve();
-            //             })
-            //             .catch(function() {
-            //                 order.set_to_email(false);
-            //                 reject(
-            //                     'There is no internet connection, impossible to send the email.'
-            //                 );
-            //             });
-            //     });
-            // });
+            const order = this.currentOrder;
+            const fixture = document.createElement('div');
+            const orderReceipt = new OrderReceipt(this, { order });
+            // Important to mount the component to a HTMLElement.
+            // If not properly mounted, HTMLElement (el) corresponding
+            // the component is not created.
+            await orderReceipt.mount(fixture);
+            const receiptString = orderReceipt.el.outerHTML;
+            fixture.remove();
+            const printer = new Printer();
+            const ticketImage = await printer.htmlToImg(receiptString);
+            try {
+                await this.rpc({
+                    model: 'pos.order',
+                    method: 'action_receipt_to_customer',
+                    args: [order_server_ids, order.get_name(), order.get_client(), ticketImage],
+                });
+            } catch (error) {
+                order.set_to_email(false);
+                if (error instanceof Error) {
+                    throw error;
+                } else {
+                    throw 'There is no internet connection, impossible to send the email.';
+                }
+            }
         }
     }
     PaymentScreen.components = {
