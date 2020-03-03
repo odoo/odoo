@@ -45,7 +45,7 @@ class TestSelfAccessProfile(TestHrCommon):
 
         form = Form(james, view=view)
         for field in employee_related_fields:
-            with self.assertRaises(AssertionError, msg="Field '%s' should be readonly in the employee profile when self edition is not allowed." % field):
+            with self.assertRaises(AssertionError, msg="Field '%s' should be readonly in the employee profile when self editing is not allowed." % field):
                 form.__setattr__(field, 'some value')
 
 

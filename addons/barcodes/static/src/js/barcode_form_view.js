@@ -61,7 +61,7 @@ FormController.include({
     _barcodeAddX2MQuantity: function (barcode, activeBarcode) {
         if (this.mode === 'readonly') {
             this.do_warn(_t('Error: Document not editable'),
-                _t('To modify this document, please first start edition.'));
+                _t('To modify this document, please enable edit mode.'));
             return Promise.reject();
         }
 

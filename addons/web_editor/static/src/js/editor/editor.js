@@ -143,7 +143,7 @@ var EditorMenuBar = Widget.extend({
             if (!rte.history.getEditableHasUndo().length) {
                 resolve();
             } else {
-                var confirm = Dialog.confirm(this, _t("If you discard the current edition, all unsaved changes will be lost. You can cancel to return to the edition mode."), {
+                var confirm = Dialog.confirm(this, _t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."), {
                     confirm_callback: resolve,
                 });
                 confirm.on('closed', self, reject);

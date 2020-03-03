@@ -346,7 +346,7 @@ Asset bundles
 The ``t-field`` directive can only be used when performing field access
 (``a.b``) on a "smart" record (result of the ``browse`` method). It is able
 to automatically format based on field type, and is integrated in the
-website's rich text edition.
+website's rich text editing.
 
 ``t-options`` can be used to customize fields, the most common option
 is ``widget``, other options are field- or widget-dependent.

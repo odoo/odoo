@@ -2062,7 +2062,7 @@ Relational fields
 
     - can_create: allow the creation of related records (take precedence over no_create
       option)
-    - can_write: allow the edition of related records (default: true)
+    - can_write: allow the editing of related records (default: true)
 
     Options:
 
@@ -2103,7 +2103,7 @@ Relational fields
 
 - kanban.many2one (KanbanFieldMany2One)
     Default widget for many2one fields (in kanban view). We need to disable all
-    edition in kanban views.
+    editing in kanban views.
 
     - Supported field types: *many2one*
 

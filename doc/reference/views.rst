@@ -87,7 +87,7 @@ an impact on all view types.
 
 * ``edit`` (``form`` & ``list`` & ``gantt``)
 
-  Disable/enable record edition on the view.
+  Disable/enable record editing on the view.
 
 * ``delete`` (``form`` & ``list``)
 
@@ -777,7 +777,7 @@ system. Available semantic components are:
     dialog, ``cancel`` to close the dialog without saving.
 
 ``field``
-  renders (and allow edition of, possibly) a single field of the current
+  renders (and allow editing of, possibly) a single field of the current
   record. Using several times a field in a form view is supported and the fields
   can receive different values for modifiers 'invisible' and 'readonly'. However,
   the behavior is not guaranteed when several fields exist with different values
@@ -828,7 +828,7 @@ system. Available semantic components are:
   ``context``
     for relational fields only, context to pass when fetching possible values
   ``readonly``
-    display the field in both readonly and edition mode, but never make it
+    display the field in both readonly and edit mode, but never make it
     editable
   ``required``
     generates an error and prevents saving the record if the field doesn't
@@ -1331,7 +1331,7 @@ root can have the following attributes:
     .. note:: if the ``edit`` attribute is set to ``false``, the ``editable`` option will be ignored.
 
 ``multi_edit``
-    editable or not editable list can activate the multi-edition feature by defining
+    editable or not editable list can activate the multi-editing feature by defining
     the `multi_edit=1`
 
 ``default_order``

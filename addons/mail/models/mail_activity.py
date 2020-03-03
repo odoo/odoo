@@ -79,7 +79,7 @@ class MailActivityType(models.Model):
 
     #Fields for display purpose only
     initial_res_model_id = fields.Many2one('ir.model', 'Initial model', compute="_compute_initial_res_model_id", store=False,
-            help='Technical field to keep trace of the model at the beginning of the edition for UX related behaviour')
+            help='Technical field to keep track of the model at the start of editing to support UX related behaviour')
     res_model_change = fields.Boolean(string="Model has change", help="Technical field for UX related behaviour", default=False, store=False)
 
     @api.onchange('res_model_id')

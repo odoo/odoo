@@ -195,7 +195,7 @@ class StockQuant(models.Model):
                 return
             allowed_fields = self._get_inventory_fields_write()
             if any([field for field in vals.keys() if field not in allowed_fields]):
-                raise UserError(_("Quant's edition is restricted, you can't do this operation."))
+                raise UserError(_("Quant's editing is restricted, you can't do this operation."))
             self = self.sudo()
             return super(StockQuant, self).write(vals)
         return super(StockQuant, self).write(vals)
