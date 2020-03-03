@@ -42,19 +42,6 @@
                         </t>
                     </div>
                 </div>
-                <div class="col-lg-6 pt24">
-                    <h3>Dessert</h3>
-                    <div class="row">
-                        <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Chocolate Cake</t>
-                            <t t-set="price">$7.50</t>
-                        </t>
-                        <t t-call="website.s_product_catalog_dish">
-                            <t t-set="name">Sticky Toffee Pudding</t>
-                            <t t-set="price">$7.50</t>
-                        </t>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -63,7 +50,7 @@
 <template id="s_product_catalog_dish">
     <div class="s_product_catalog_dish col-lg-12 pt16" data-name="Product">
         <div class="s_product_catalog_dish_title d-flex align-items-baseline border-bottom mb8">
-            <h4 t-esc="name"/>
+            <h5 t-esc="name"/>
             <span class="ml-auto pl-3 h5" t-esc="price"/>
         </div>
         <p class="s_product_catalog_dish_description">Add a description here</p>
