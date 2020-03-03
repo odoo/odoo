@@ -523,6 +523,8 @@ class IrActionsReport(models.Model):
 
         # Browse the user instead of using the sudo self.env.user
         user = self.env['res.users'].browse(self.env.uid)
+        # Get the company keeping original su state
+        company = self.env.company.with_env(self.env)
         website = None
         if request and hasattr(request, 'website'):
             if request.website is not None:
@@ -534,7 +536,7 @@ class IrActionsReport(models.Model):
             time=time,
             context_timestamp=lambda t: fields.Datetime.context_timestamp(self.with_context(tz=user.tz), t),
             user=user,
-            res_company=user.company_id,
+            res_company=company,
             website=website,
             web_base_url=self.env['ir.config_parameter'].sudo().get_param('web.base.url', default=''),
         )
