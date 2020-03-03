@@ -27,8 +27,11 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line')
     def _compute_delivery_state(self):
-        for order in self:
-            order.delivery_set = any(line.is_delivery for line in order.order_line)
+        delivery_line = self.order_line.filtered('is_delivery')
+        if delivery_line:
+            self.delivery_set = True
+        else:
+            self.delivery_set = False
 
     @api.onchange('order_line', 'partner_id')
     def onchange_order_line(self):
