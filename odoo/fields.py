@@ -2961,7 +2961,7 @@ class One2many(_RelationalMulti):
 
         # group lines by inverse field (without prefetching other fields)
         group = defaultdict(list)
-        for line in lines.with_context(prefetch_fields=False):
+        for line in lines:
             # line[inverse] may be a record or an integer
             group[get_id(line[inverse])].append(line.id)
 

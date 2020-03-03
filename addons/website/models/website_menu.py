@@ -44,7 +44,7 @@ class Menu(models.Model):
     group_ids = fields.Many2many('res.groups', string='Visible Groups',
                                  help="User need to be at least in one of these groups to see the menu")
     is_mega_menu = fields.Boolean(compute=_compute_field_is_mega_menu, inverse=_set_field_is_mega_menu)
-    mega_menu_content = fields.Html(translate=html_translate, sanitize=False)
+    mega_menu_content = fields.Html(translate=html_translate, sanitize=False, prefetch=True)
     mega_menu_classes = fields.Char()
 
     def name_get(self):
