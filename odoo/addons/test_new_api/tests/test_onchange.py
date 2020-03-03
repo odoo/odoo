@@ -8,11 +8,15 @@ except ImportError:
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.tests import common
+from odoo.tests.common import tagged
+
 
 def strip_prefix(prefix, names):
     size = len(prefix)
     return [name[size:] for name in names if name.startswith(prefix)]
 
+
+@tagged('orm_onchange')
 class TestOnChange(SavepointCaseWithUserDemo):
 
     def setUp(self):
@@ -527,6 +531,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
         self.assertFalse(called[0], "discussion.messages has been read")
 
 
+@tagged('orm_onchange')
 class TestComputeOnchange(common.TransactionCase):
 
     def test_create(self):
@@ -551,6 +556,24 @@ class TestComputeOnchange(common.TransactionCase):
         record = model.create({'active': False, 'foo': "foo", 'bar': "bar", 'baz': "baz"})
         self.assertEqual(record.bar, "foo")
         self.assertEqual(record.baz, "baz")
+
+    def test_copy(self):
+        Model = self.env['test_new_api.compute.onchange']
+
+        # compute 'bar', 'baz' and 'line'
+        record = Model.create({'active': True, 'foo': "foo1"})
+        self.assertEqual(record.bar, "foo1")
+        self.assertEqual(record.baz, "foo1")
+
+        # manually update 'baz' to test copy attribute
+        record.write({'baz': "baz1"})
+        self.assertEqual(record.bar, "foo1")
+        self.assertEqual(record.baz, "baz1")
+
+        copied = record.copy()
+        self.assertEqual(copied.foo, "foo1")   # copied
+        self.assertEqual(copied.bar, "foo1")   # computed
+        self.assertEqual(copied.baz, "baz1")   # copied (computed would be foo1)
 
     def test_write(self):
         model = self.env['test_new_api.compute.onchange']
