@@ -66,6 +66,12 @@ class AccountAccountTag(models.Model):
         escaped_tag_name = tag_name.replace('\\', '\\\\').replace('%', '\%').replace('_', '\_')
         return self.env['account.account.tag'].search([('name', '=like', '_' + escaped_tag_name), ('country_id', '=', country_id), ('applicability', '=', 'taxes')])
 
+    @api.constrains('country_id', 'applicability')
+    def _validate_tag_country(self):
+        for record in self:
+            if record.applicability == 'taxes' and not record.country_id:
+                raise ValidationError(_("A tag defined to be used on taxes must always have a country set."))
+
 
 class AccountTaxReport(models.Model):
     _name = "account.tax.report"
