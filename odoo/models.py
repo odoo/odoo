@@ -158,30 +158,17 @@ class MetaModel(api.Meta):
             return
 
         if not hasattr(self, '_module'):
-            self._module = self._get_addon_name(self.__module__)
+            assert self.__module__.startswith('odoo.addons.'), \
+                "Invalid import of %s.%s, it should start with 'odoo.addons'." % (self.__module__, name)
+            self._module = self.__module__.split('.')[2]
 
         # Remember which models to instanciate for this module.
         if self._module:
             self.module_to_models[self._module].append(self)
 
-        # check for new-api conversion error: leave comma after field definition
         for key, val in attrs.items():
-            if type(val) is tuple and len(val) == 1 and isinstance(val[0], Field):
-                _logger.error("Trailing comma after field definition: %s.%s", self, key)
             if isinstance(val, Field):
                 val.args['_module'] = self._module
-
-    def _get_addon_name(self, full_name):
-        # The (OpenERP) module name can be in the ``odoo.addons`` namespace
-        # or not. For instance, module ``sale`` can be imported as
-        # ``odoo.addons.sale`` (the right way) or ``sale`` (for backward
-        # compatibility).
-        module_parts = full_name.split('.')
-        if len(module_parts) > 2 and module_parts[:2] == ['odoo', 'addons']:
-            addon_name = full_name.split('.')[2]
-        else:
-            addon_name = full_name.split('.')[0]
-        return addon_name
 
 
 class NewId(object):

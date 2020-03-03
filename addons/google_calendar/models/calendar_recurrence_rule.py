@@ -5,7 +5,7 @@ import re
 
 from odoo import api, fields, models
 
-from addons.google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
 
 
 class RecurrenceRule(models.Model):

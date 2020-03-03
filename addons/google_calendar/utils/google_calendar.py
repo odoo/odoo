@@ -8,8 +8,8 @@ import logging
 
 from odoo import api, _
 from odoo.tools import exception_to_unicode
-from addons.google_calendar.utils.google_event import GoogleEvent
-from addons.google_account.models.google_service import TIMEOUT
+from odoo.addons.google_calendar.utils.google_event import GoogleEvent
+from odoo.addons.google_account.models.google_service import TIMEOUT
 
 
 _logger = logging.getLogger(__name__)
