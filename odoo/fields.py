@@ -356,11 +356,16 @@ class Field(MetaField('DummyField', (object,), {})):
         # initialize ``self`` with ``attrs``
         if attrs.get('compute'):
             # by default, computed fields are not stored, computed in superuser
-            # mode if stored, not copied and readonly
+            # mode if stored, not copied and readonly.
+            # an editable computed field (store=True, readonly=False) takes its
+            # copy attribute from its class as it can be updated by users
             attrs['store'] = store = attrs.get('store', False)
             attrs['compute_sudo'] = attrs.get('compute_sudo', store)
-            attrs['copy'] = attrs.get('copy', False)
+            # readonly=not inverse unless explicitly given
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
+            # copy=False unless explicitly given or stored and editable
+            if not store or attrs['readonly']:
+                attrs['copy'] = attrs.get('copy', False)
         if attrs.get('related'):
             # by default, related fields are not stored, computed in superuser
             # mode, not copied and readonly
