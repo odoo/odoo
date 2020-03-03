@@ -274,6 +274,12 @@
     </xpath>
 </template>
 
+<template id="header_hoverable_dropdown" inherit_id="website.layout" name="Header Hoverable Dropdown" active="False">
+    <xpath expr="//header" position="attributes">
+        <attribute name="t-attf-class" add="o_hoverable_dropdown" separator=" "/>
+    </xpath>
+</template>
+
 <!-- Features template -->
 <template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout" priority="20">
     <xpath expr="t" position="replace">

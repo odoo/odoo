@@ -460,4 +460,77 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
         $menu.addClass('dropdown-menu-' + alignment);
     },
 });
+
+publicWidget.registry.hoverableDropdown = animations.Animation.extend({
+    selector: 'header.o_hoverable_dropdown',
+    disabledInEditableMode: false,
+    effects: [{
+        startEvents: 'resize',
+        update: '_dropdownHover',
+    }],
+    events: {
+        'mouseenter .dropdown:not(.position-static)': '_onMouseEnter',
+        'mouseleave .dropdown:not(.position-static)': '_onMouseLeave',
+    },
+
+    /**
+     * @override
+     */
+    start: function () {
+        this.$dropdownMenus = this.$el.find('.dropdown-menu');
+        this.$dropdownToggles = this.$el.find('.dropdown-toggle');
+        this._dropdownHover();
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _dropdownHover: function () {
+        if (config.device.size_class > config.device.SIZES.SM) {
+            this.$dropdownMenus.css('margin-top', '0');
+            this.$dropdownMenus.css('top', 'unset');
+        } else {
+            this.$dropdownMenus.css('margin-top', '');
+            this.$dropdownMenus.css('top', '');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onMouseEnter: function (ev) {
+        if (config.device.size_class <= config.device.SIZES.SM) {
+            return;
+        }
+
+        const $dropdown = $(ev.currentTarget);
+        $dropdown.addClass('show');
+        $dropdown.find(this.$dropdownToggles).attr('aria-expanded', 'true');
+        $dropdown.find(this.$dropdownMenus).addClass('show');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onMouseLeave: function (ev) {
+        if (config.device.size_class <= config.device.SIZES.SM) {
+            return;
+        }
+
+        const $dropdown = $(ev.currentTarget);
+        $dropdown.removeClass('show');
+        $dropdown.find(this.$dropdownToggles).attr('aria-expanded', 'false');
+        $dropdown.find(this.$dropdownMenus).removeClass('show');
+    },
+});
 });
