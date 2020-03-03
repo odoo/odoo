@@ -590,12 +590,12 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
 
         # copy the project
         project_copy = project.copy()
-        self.assertFalse(project_copy.sale_line_id, "Duplicatinga project should erase its Sale line")
-        self.assertFalse(project_copy.sale_order_id, "Duplicatinga project should erase its Sale order")
-        self.assertEqual(project_copy.billable_type, 'no', "Duplicatinga project should reset its billable type to none billable")
+        self.assertFalse(project_copy.sale_line_id, "Duplicating project should erase its Sale line")
+        self.assertFalse(project_copy.sale_order_id, "Duplicating project should erase its Sale order")
+        self.assertEqual(project_copy.billable_type, 'no', "Duplicating project should reset its billable type to none billable")
         self.assertEqual(len(project.tasks), len(project_copy.tasks), "Copied project must have the same number of tasks")
         self.assertFalse(project_copy.tasks.mapped('sale_line_id'), "The tasks of the duplicated project should not have a Sale Line set.")
 
         # copy the task
         task_copy = task.copy()
-        self.assertFalse(task_copy.sale_line_id, "Duplicatinga task should not keep its Sale line")
+        self.assertEqual(task_copy.sale_line_id, task.sale_line_id, "Duplicating task should keep its Sale line")

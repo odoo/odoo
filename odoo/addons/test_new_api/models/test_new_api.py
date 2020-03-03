@@ -505,6 +505,14 @@ class ComputeOnchange(models.Model):
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', store=True)
     baz = fields.Char(compute='_compute_baz', store=True, readonly=False)
+    line_ids = fields.One2many(
+        'test_new_api.compute.onchange.line', 'record_id',
+        compute='_compute_line_ids', store=True, readonly=False
+    )
+    tag_ids = fields.Many2many(
+        'test_new_api.multi.tag',
+        compute='_compute_tag_ids', store=True, readonly=False,
+    )
 
     @api.depends('foo')
     def _compute_bar(self):
@@ -516,6 +524,36 @@ class ComputeOnchange(models.Model):
         for record in self:
             if record.active:
                 record.baz = record.foo
+
+    @api.depends('foo')
+    def _compute_line_ids(self):
+        for record in self:
+            if not record.foo:
+                continue
+            if any(line.foo == record.foo for line in record.line_ids):
+                continue
+            # add a line with the same value as 'foo'
+            record.line_ids = [(0, 0, {'foo': record.foo})]
+
+    @api.depends('foo')
+    def _compute_tag_ids(self):
+        Tag = self.env['test_new_api.multi.tag']
+        for record in self:
+            if record.foo:
+                record.tag_ids = Tag.search([('name', '=', record.foo)])
+
+    def copy(self, default=None):
+        default = dict(default or {}, foo="%s (copy)" % (self.foo or ""))
+        return super().copy(default)
+
+
+class ComputeOnchangeLine(models.Model):
+    _name = 'test_new_api.compute.onchange.line'
+    _description = "Line-like model for test_new_api.compute.onchange"
+
+    foo = fields.Char()
+    record_id = fields.Many2one('test_new_api.compute.onchange',
+                                required=True, ondelete='cascade')
 
 
 class ModelBinary(models.Model):
