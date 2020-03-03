@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-extend="website_event.customize_options">
+        <t t-jquery="a[name='display-website-menu']" t-operation="after">
+            <a href="#" name="display-showcase-talks" class="dropdown-item" role="menuitem">
+                <label class="o_switch" for="display-showcase-talks">
+                    <input id="display-showcase-talks" type="checkbox"/>
+                    <span/>
+                    Showcase Talks
+                </label>
+            </a>
+            <a href="#" name="allow-talk-proposal" class="dropdown-item" role="menuitem">
+                <label class="o_switch" for="allow-talk-proposal">
+                    <input id="allow-talk-proposal" type="checkbox"/>
+                    <span/>
+                    Allow Talks Proposals
+                </label>
+            </a>
+        </t>
+    </t>
+
+</templates>
