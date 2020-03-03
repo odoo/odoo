@@ -249,7 +249,6 @@ class SaleOrderLine(models.Model):
         # create the project or duplicate one
         values = {
             'name': '%s - %s' % (self.order_id.client_order_ref, self.order_id.name) if self.order_id.client_order_ref else self.order_id.name,
-            'allow_timesheets': True,
             'analytic_account_id': account.id,
             'partner_id': self.order_id.partner_id.id,
             'sale_line_id': self.id,

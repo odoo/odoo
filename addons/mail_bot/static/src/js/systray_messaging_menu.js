@@ -57,9 +57,13 @@ return MessagingMenu.include({
      */
     _handleResponseNotificationPermission: function (value) {
         this.call('mailbot_service', 'removeRequest');
-        if (value !== 'granted') {
+        localStorage.removeItem('odoobot_notification_last_request_time');
+        if (value === 'denied') {
             this.call('bus_service', 'sendNotification', _t('Permission denied'),
                 _t('Odoo will not have the permission to send native notifications on this device.'));
+        }
+        else if (value === 'default') {
+            localStorage.setItem('odoobot_notification_last_request_time', new Date().getTime());
         }
         this._updateCounter();
     },

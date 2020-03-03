@@ -146,7 +146,11 @@ widgetsMedia.ImageWidget.include({
      * @private
      */
     _loadMoreImages: function (forceSearch) {
-        this._super(this._unsplash.isActive || forceSearch);
+        if (!this._unsplash.isActive) {
+            return this._super(forceSearch);
+        }
+        this.numberOfAttachmentsToDisplay += 10;
+        this.search(this.$('.o_we_search').val() || '');
     },
     /**
      * @override

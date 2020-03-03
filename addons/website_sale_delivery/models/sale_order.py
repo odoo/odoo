@@ -20,14 +20,13 @@ class SaleOrder(models.Model):
         for order in self:
             order.website_order_line = order.website_order_line.filtered(lambda l: not l.is_delivery)
 
-    @api.depends('order_line.price_subtotal', 'order_line.price_total')
+    @api.depends('order_line.price_unit', 'order_line.tax_id', 'order_line.discount', 'order_line.product_uom_qty')
     def _compute_amount_delivery(self):
-        if self.user_has_groups('account.group_show_line_subtotals_tax_excluded'):
-            price_fname = 'price_subtotal'
-        else:
-            price_fname = 'price_total'
         for order in self:
-            order.amount_delivery = sum(order.order_line.filtered('is_delivery').mapped(price_fname))
+            if self.env.user.has_group('account.group_show_line_subtotals_tax_excluded'):
+                order.amount_delivery = sum(order.order_line.filtered('is_delivery').mapped('price_subtotal'))
+            else:
+                order.amount_delivery = sum(order.order_line.filtered('is_delivery').mapped('price_total'))
 
     def _check_carrier_quotation(self, force_carrier_id=None):
         self.ensure_one()
