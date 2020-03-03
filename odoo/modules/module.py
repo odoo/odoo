@@ -445,7 +445,11 @@ def get_test_modules(module):
     # Try to import the module
     results = _get_tests_modules('odoo.addons', module)
 
-    with mute_logger(__name__):
+    try:
+        importlib.import_module('odoo.upgrade.%s' % module)
+    except ImportError:
+        pass
+    else:
         results += _get_tests_modules('odoo.upgrade', module)
 
     return results
