@@ -365,10 +365,12 @@ class Field(MetaField('DummyField', (object,), {})):
         # initialize ``self`` with ``attrs``
         if attrs.get('compute'):
             # by default, computed fields are not stored, computed in superuser
-            # mode if stored, not copied and readonly
+            # mode if stored, not copied (unless stored and explicitly not
+            # readonly), and readonly (unless inversible)
             attrs['store'] = store = attrs.get('store', False)
             attrs['compute_sudo'] = attrs.get('compute_sudo', store)
-            attrs['copy'] = attrs.get('copy', False)
+            if not (attrs['store'] and not attrs.get('readonly', True)):
+                attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
         if attrs.get('related'):
             # by default, related fields are not stored, computed in superuser

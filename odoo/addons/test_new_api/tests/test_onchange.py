@@ -552,6 +552,41 @@ class TestComputeOnchange(common.TransactionCase):
         self.assertEqual(record.bar, "foo")
         self.assertEqual(record.baz, "baz")
 
+    def test_copy(self):
+        Model = self.env['test_new_api.compute.onchange']
+
+        # create tags
+        tag_foo, tag_bar = self.env['test_new_api.multi.tag'].create([
+            {'name': 'foo1'},
+            {'name': 'bar1'},
+        ])
+
+        # compute 'bar', 'baz', 'line_ids' and 'tag_ids'
+        record = Model.create({'active': True, 'foo': "foo1"})
+        self.assertEqual(record.bar, "foo1")
+        self.assertEqual(record.baz, "foo1")
+        self.assertEqual(record.line_ids.mapped('foo'), ['foo1'])
+        self.assertEqual(record.tag_ids, tag_foo)
+
+        # manually update 'baz' and 'lines' to test copy attribute
+        record.write({
+            'baz': "baz1",
+            'line_ids': [(0, 0, {'foo': 'bar'})],
+            'tag_ids': [(4, tag_bar.id)],
+        })
+        self.assertEqual(record.bar, "foo1")
+        self.assertEqual(record.baz, "baz1")
+        self.assertEqual(record.line_ids.mapped('foo'), ['foo1', 'bar'])
+        self.assertEqual(record.tag_ids, tag_foo + tag_bar)
+
+        # copy the record, and check results
+        copied = record.copy()
+        self.assertEqual(copied.foo, "foo1 (copy)")   # copied and modified
+        self.assertEqual(copied.bar, "foo1 (copy)")   # computed
+        self.assertEqual(copied.baz, "baz1")          # copied
+        self.assertEqual(record.line_ids.mapped('foo'), ['foo1', 'bar'])  # copied
+        self.assertEqual(record.tag_ids, tag_foo + tag_bar)  # copied
+
     def test_write(self):
         model = self.env['test_new_api.compute.onchange']
         record = model.create({'active': True, 'foo': "foo"})

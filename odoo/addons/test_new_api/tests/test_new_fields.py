@@ -110,16 +110,37 @@ class TestFields(TransactionCaseWithUserDemo):
 
     def test_10_computed(self):
         """ check definition of computed fields """
-        # by default function fields are not stored and readonly
+        # by default function fields are not stored, readonly, not copied
         field = self.env['test_new_api.message']._fields['size']
         self.assertFalse(field.store)
         self.assertFalse(field.compute_sudo)
         self.assertTrue(field.readonly)
+        self.assertFalse(field.copy)
 
         field = self.env['test_new_api.message']._fields['name']
         self.assertTrue(field.store)
         self.assertTrue(field.compute_sudo)
         self.assertTrue(field.readonly)
+        self.assertFalse(field.copy)
+
+        # stored editable computed fields are copied according to their type
+        field = self.env['test_new_api.compute.onchange']._fields['baz']
+        self.assertTrue(field.store)
+        self.assertTrue(field.compute_sudo)
+        self.assertFalse(field.readonly)
+        self.assertTrue(field.copy)
+
+        field = self.env['test_new_api.compute.onchange']._fields['line_ids']
+        self.assertTrue(field.store)
+        self.assertTrue(field.compute_sudo)
+        self.assertFalse(field.readonly)
+        self.assertFalse(field.copy)  # like a regular one2many field
+
+        field = self.env['test_new_api.compute.onchange']._fields['tag_ids']
+        self.assertTrue(field.store)
+        self.assertTrue(field.compute_sudo)
+        self.assertFalse(field.readonly)
+        self.assertTrue(field.copy)  # like a regular many2many field
 
     def test_10_computed_custom(self):
         """ check definition of custom computed fields """
