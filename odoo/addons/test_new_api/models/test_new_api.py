@@ -505,6 +505,10 @@ class ComputeOnchange(models.Model):
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', store=True)
     baz = fields.Char(compute='_compute_baz', store=True, readonly=False)
+    lines = fields.One2many(
+        'test_new_api.compute.onchange.line', 'onchange_id',
+        compute='_compute_lines', store=True, readonly=False
+    )
 
     @api.depends('foo')
     def _compute_bar(self):
@@ -516,6 +520,24 @@ class ComputeOnchange(models.Model):
         for record in self:
             if record.active:
                 record.baz = record.foo
+
+    @api.depends('foo')
+    def _compute_lines(self):
+        for record in self:
+            if not record.foo:
+                record.lines = False
+                continue
+            lines = self.env['test_new_api.compute.onchange.line'].search([
+                ('foo', '=', record.foo)])
+            record.lines = lines
+
+
+class ComputeOnchangeLine(models.Model):
+    _name = 'test_new_api.compute.onchange.line'
+    _description = "Line-like model for test_new_api.compute.onchange"
+
+    foo = fields.Char()
+    onchange_id = fields.Many2one('test_new_api.compute.onchange', required=False)
 
 
 class ModelBinary(models.Model):
