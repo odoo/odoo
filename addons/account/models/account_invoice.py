@@ -76,12 +76,6 @@ class AccountInvoice(models.Model):
             invoice.amount_untaxed_invoice_signed = invoice.amount_untaxed * sign
             invoice.amount_tax_signed = invoice.amount_tax * sign
 
-    @api.onchange('amount_total')
-    def _onchange_amount_total(self):
-        for inv in self:
-            if float_compare(inv.amount_total, 0.0, precision_rounding=inv.currency_id.rounding) == -1:
-                raise Warning(_('You cannot validate an invoice with a negative total amount. You should create a credit note instead.'))
-
     @api.model
     def _default_journal(self):
         if self._context.get('default_journal_id', False):
