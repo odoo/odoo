@@ -61,7 +61,7 @@ class TestEventSale(TestEventSaleCommon):
         })
         ticket1_line = customer_so.order_line.filtered(lambda line: line.event_ticket_id == ticket1)
         ticket2_line = customer_so.order_line.filtered(lambda line: line.event_ticket_id == ticket2)
-        self.assertEqual(customer_so.amount_untaxed, TICKET1_COUNT * 10 + TICKET2_COUNT * 50)
+        self.assertEqual(customer_so.amount_untaxed, TICKET1_COUNT * ticket1_line.price_unit + TICKET2_COUNT * ticket2_line.price_unit)
 
         # one existing registration for first ticket
         ticket1_reg1 = self.env['event.registration'].create({
@@ -143,7 +143,7 @@ class TestEventSale(TestEventSaleCommon):
         ticket2_line.write({'product_uom_qty': 3})
         editor_action = customer_so.action_confirm()
         self.assertEqual(customer_so.state, 'sale')
-        self.assertEqual(customer_so.amount_untaxed, TICKET1_COUNT * 10 + (TICKET2_COUNT + 2) * 50)
+        self.assertEqual(customer_so.amount_untaxed, TICKET1_COUNT * ticket1_line.price_unit + (TICKET2_COUNT + 2) * ticket2_line.price_unit)
 
         # check confirm of SO correctly created new registrations with information coming from SO
         self.assertEqual(len(self.event_0.registration_ids), 6)  # 3 for each ticket now
