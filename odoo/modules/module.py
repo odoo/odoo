@@ -24,7 +24,6 @@ import odoo.tools as tools
 import odoo.release as release
 from odoo import SUPERUSER_ID, api
 from odoo.tools import pycompat
-from odoo.tools.misc import mute_logger
 
 MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
 README = ['README.rst', 'README.md', 'README.txt']
@@ -432,7 +431,11 @@ def get_test_modules(module):
     # Try to import the module
     results = _get_tests_modules('odoo.addons', module)
 
-    with mute_logger(__name__):
+    try:
+        importlib.import_module('odoo.addons.base.maintenance.migrations.%s' % module)
+    except ImportError:
+        pass
+    else:
         results += _get_tests_modules('odoo.addons.base.maintenance.migrations', module)
 
     return results
