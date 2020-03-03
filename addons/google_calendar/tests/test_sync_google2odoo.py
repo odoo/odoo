@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from addons.google_calendar.utils.google_calendar import GoogleEvent
+from odoo.addons.google_calendar.utils.google_calendar import GoogleEvent
 import pytz
 from datetime import datetime, date
 from odoo.tests.common import SavepointCase, new_test_user
