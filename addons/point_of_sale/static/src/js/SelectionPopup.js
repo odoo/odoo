@@ -3,6 +3,7 @@ odoo.define('point_of_sale.SelectionPopup', function(require) {
 
     const { useState } = owl.hooks;
     const { Chrome } = require('point_of_sale.chrome');
+    const { addComponents } = require('point_of_sale.PosComponent');
     const { AbstractAwaitablePopup } = require('point_of_sale.AbstractAwaitablePopup');
 
     // formerly SelectionPopupWidget
@@ -55,7 +56,7 @@ odoo.define('point_of_sale.SelectionPopup', function(require) {
         list: [],
     };
 
-    Chrome.addComponents([SelectionPopup]);
+    addComponents(Chrome, [SelectionPopup]);
 
     return { SelectionPopup };
 });

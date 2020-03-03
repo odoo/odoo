@@ -4,7 +4,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
     const { debounce } = owl.utils;
     const { useRef } = owl.hooks;
     const { Chrome } = require('point_of_sale.chrome');
-    const { PosComponent } = require('point_of_sale.PosComponent');
+    const { PosComponent, addComponents } = require('point_of_sale.PosComponent');
     const { ClientLine } = require('point_of_sale.ClientLine');
     const { ClientDetails } = require('point_of_sale.ClientDetails');
     const { ClientDetailsEdit } = require('point_of_sale.ClientDetailsEdit');
@@ -183,9 +183,9 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             this.render();
         }
     }
-    ClientListScreen.components = { ClientLine, ClientDetails, ClientDetailsEdit };
 
-    Chrome.addComponents([ClientListScreen]);
+    addComponents(ClientListScreen, [ClientLine, ClientDetails, ClientDetailsEdit]);
+    addComponents(Chrome, [ClientListScreen]);
 
     return { ClientListScreen };
 });

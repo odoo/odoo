@@ -3,7 +3,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
 
     const { parse } = require('web.field_utils');
     const { is_email } = require('web.utils');
-    const { PosComponent } = require('point_of_sale.PosComponent');
+    const { PosComponent, addComponents } = require('point_of_sale.PosComponent');
     const { Chrome } = require('point_of_sale.chrome');
     const { PaymentMethodButton } = require('point_of_sale.PaymentMethodButton');
     const { PaymentScreenNumpad } = require('point_of_sale.PaymentScreenNumpad');
@@ -378,13 +378,13 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             }
         }
     }
-    PaymentScreen.components = {
+
+    addComponents(PaymentScreen, [
         PaymentScreenNumpad,
         PaymentMethodButton,
         PaymentScreenPaymentLines,
-    };
-
-    Chrome.addComponents([PaymentScreen]);
+    ]);
+    addComponents(Chrome, [PaymentScreen]);
 
     return { PaymentScreen };
 });

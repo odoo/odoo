@@ -2,8 +2,9 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
     'use strict';
 
     const core = require('web.core');
+    const { Chrome } = require('point_of_sale.chrome');
     const { useRef, useState } = owl.hooks;
-    const { PosComponent } = require('point_of_sale.PosComponent');
+    const { PosComponent, addComponents } = require('point_of_sale.PosComponent');
     const { OrderReceipt } = require('point_of_sale.OrderReceipt');
     const { useErrorHandlers } = require('point_of_sale.custom_hooks');
 
@@ -137,8 +138,7 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
     ReceiptScreen.components = { OrderReceipt };
 
     // register screen component
-    const { Chrome } = require('point_of_sale.chrome');
-    Chrome.addComponents([ReceiptScreen]);
+    addComponents(Chrome, [ReceiptScreen]);
 
     return { ReceiptScreen };
 });

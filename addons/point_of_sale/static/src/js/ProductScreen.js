@@ -1,7 +1,7 @@
 odoo.define('point_of_sale.ProductScreen', function(require) {
     'use strict';
 
-    const { PosComponent } = require('point_of_sale.PosComponent');
+    const { PosComponent, addComponents } = require('point_of_sale.PosComponent');
     const { Chrome } = require('point_of_sale.chrome');
     const { ProductsWidget } = require('point_of_sale.ProductsWidget');
     const { OrderWidget } = require('point_of_sale.OrderWidget');
@@ -243,10 +243,10 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         }
 
         // We then add to the components object.
-        this.addComponents([controlButton.component]);
+        addComponents(this, [controlButton.component]);
     };
 
-    Chrome.addComponents([ProductScreen]);
+    addComponents(Chrome, [ProductScreen]);
 
     return { ProductScreen };
 });

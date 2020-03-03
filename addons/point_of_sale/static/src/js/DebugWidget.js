@@ -6,7 +6,7 @@ odoo.define('point_of_sale.DebugWidget', function(require) {
     const { getFileAsText } = require('point_of_sale.utils');
     const { parse } = require('web.field_utils');
     const { Chrome } = require('point_of_sale.chrome');
-    const { PosComponent } = require('point_of_sale.PosComponent');
+    const { PosComponent, addComponents } = require('point_of_sale.PosComponent');
     const { Draggable } = require('point_of_sale.Draggable');
     const { DraggableHandle } = require('point_of_sale.DraggableHandle');
 
@@ -142,9 +142,8 @@ odoo.define('point_of_sale.DebugWidget', function(require) {
         }
     }
 
-    DebugWidget.addComponents([Draggable, DraggableHandle]);
-
-    Chrome.addComponents([DebugWidget]);
+    addComponents(DebugWidget, [Draggable, DraggableHandle]);
+    addComponents(Chrome, [DebugWidget]);
 
     return { DebugWidget };
 });

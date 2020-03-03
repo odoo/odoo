@@ -3,6 +3,7 @@ odoo.define('point_of_sale.EditListPopup', function(require) {
 
     const { useState } = owl.hooks;
     const { Chrome } = require('point_of_sale.chrome');
+    const { addComponents } = require('point_of_sale.PosComponent');
     const { AbstractAwaitablePopup } = require('point_of_sale.AbstractAwaitablePopup');
     const { EditListInput } = require('point_of_sale.EditListInput');
 
@@ -98,7 +99,7 @@ odoo.define('point_of_sale.EditListPopup', function(require) {
         isSingleItem: false,
     };
 
-    Chrome.addComponents([EditListPopup]);
+    addComponents(Chrome, [EditListPopup]);
 
     return { EditListPopup };
 });

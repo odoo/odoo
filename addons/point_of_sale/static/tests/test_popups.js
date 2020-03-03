@@ -4,7 +4,7 @@ odoo.define('point_of_sale.test_popups', async function(require) {
     const makeTestEnvironment = require('web.test_env');
     const testUtils = require('web.test_utils');
     const { ConfirmPopup } = require('point_of_sale.ConfirmPopup');
-    const { PosComponent } = require('point_of_sale.PosComponent');
+    const { PosComponent, addComponents } = require('point_of_sale.PosComponent');
     const { useState } = owl;
     const { xml } = owl.tags;
 
@@ -25,7 +25,7 @@ odoo.define('point_of_sale.test_popups', async function(require) {
 
     QUnit.test('ConfirmPopup', async function(assert) {
         assert.expect(6);
-        this.Root.addComponents([ConfirmPopup]);
+        addComponents(this.Root, [ConfirmPopup]);
 
         const root = new this.Root();
         await root.mount(testUtils.prepareTarget());

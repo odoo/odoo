@@ -3,7 +3,7 @@ odoo.define('point_of_sale.ProxyStatus', function(require) {
 
     const { useState } = owl;
     const { Chrome } = require('point_of_sale.chrome');
-    const { PosComponent } = require('point_of_sale.PosComponent');
+    const { PosComponent, addComponents } = require('point_of_sale.PosComponent');
 
     // Previously ProxyStatusWidget
     class ProxyStatus extends PosComponent {
@@ -81,7 +81,7 @@ odoo.define('point_of_sale.ProxyStatus', function(require) {
         }
     }
 
-    Chrome.addComponents([ProxyStatus]);
+    addComponents(Chrome, [ProxyStatus]);
 
     return { ProxyStatus };
 });

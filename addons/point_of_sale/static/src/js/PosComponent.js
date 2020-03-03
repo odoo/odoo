@@ -1,7 +1,9 @@
 odoo.define('point_of_sale.PosComponent', function(require) {
     'use strict';
 
-    class PosComponent extends owl.Component {
+    const { Component } = owl;
+
+    class PosComponent extends Component {
         /**
          * This function is available to all Components that inherits this class.
          * The goal of this function is to show an awaitable dialog (popup) that
@@ -65,17 +67,27 @@ odoo.define('point_of_sale.PosComponent', function(require) {
             return this.__owl__.observer.weakMap.get(state).value;
         }
     }
-    PosComponent.addComponents = function(components) {
+
+    /**
+     * Extends the static `components` of parentComponent with the given components array.
+     *
+     * @param {Component} parentComponent
+     * @param {Array<Component>} components
+     */
+    function addComponents(parentComponent, components) {
+        if (!(parentComponent && parentComponent.prototype instanceof Component)) {
+            return;
+        }
         for (let component of components) {
-            if (this.components[component.name]) {
+            if (component.name in parentComponent.components) {
                 console.warn(
-                    `${component.name} already exists in ${this.name}'s components so it was skipped.`
+                    `${component.name} already exists in ${parentComponent.name}'s components so it was skipped.`
                 );
             } else {
-                this.components[component.name] = component;
+                parentComponent.components[component.name] = component;
             }
         }
     };
 
-    return { PosComponent };
+    return { PosComponent, addComponents };
 });
