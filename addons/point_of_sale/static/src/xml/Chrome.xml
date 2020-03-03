@@ -44,7 +44,7 @@
                     <h1 class="message">
                         <t t-esc="loading.message" />
                     </h1>
-                    <div t-if="state.uiState === 'LOADING'" class="progressbar">
+                    <div class="progressbar">
                         <div class="progress" t-ref="progressbar"></div>
                     </div>
                     <div t-if="loading.skipButtonIsShown" class="button skip" t-on-click="trigger('loading-skip-callback')">

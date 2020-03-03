@@ -270,7 +270,7 @@ odoo.define('point_of_sale.chrome', function(require) {
             this.state.debugWidgetIsShown = !this.state.debugWidgetIsShown;
         }
         onPosError(event) {
-            console.log(event.detail.error);
+            console.warn(event.detail.error);
         }
 
         // TO PASS AS PARAMETERS //
