@@ -24,6 +24,9 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
     def setUp(self):
         super().setUp()
         self.project_pigs.privacy_visibility = 'followers'
+        # setup is done as admin, so clear cache before checking user access
+        self.project_pigs.flush()
+        self.project_pigs.invalidate_cache()
 
     @users('Internal user', 'Portal user')
     def test_project_no_write(self):
@@ -47,13 +50,13 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
 
     @users('Internal user', 'Portal user')
     def test_project_no_read(self):
-        self.project_pigs.invalidate_cache()
         with self.assertRaises(AccessError, msg="%s should not be able to read the project" % self.env.user.name):
             self.project_pigs.with_user(self.env.user).name
 
     @users('Portal user')
     def test_project_allowed_portal_no_read(self):
         self.project_pigs.allowed_user_ids = self.env.user
+        self.project_pigs.flush()
         self.project_pigs.invalidate_cache()
         with self.assertRaises(AccessError, msg="%s should not be able to read the project" % self.env.user.name):
             self.project_pigs.with_user(self.env.user).name
@@ -61,6 +64,7 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
     @users('Internal user')
     def test_project_allowed_internal_read(self):
         self.project_pigs.allowed_user_ids = self.env.user
+        self.project_pigs.flush()
         self.project_pigs.invalidate_cache()
         self.project_pigs.with_user(self.env.user).name
 
@@ -72,14 +76,16 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
     @users('Portal user')
     def test_task_allowed_portal_no_read(self):
         self.project_pigs.allowed_user_ids = self.env.user
-        self.task.invalidate_cache()
+        self.project_pigs.flush()
+        self.project_pigs.invalidate_cache()
         with self.assertRaises(AccessError, msg="%s should not be able to read the task" % self.env.user.name):
             self.task.with_user(self.env.user).name
 
     @users('Internal user')
     def test_task_allowed_internal_read(self):
         self.project_pigs.allowed_user_ids = self.env.user
-        self.task.invalidate_cache()
+        self.project_pigs.flush()
+        self.project_pigs.invalidate_cache()
         self.task.with_user(self.env.user).name
 
     @users('Internal user', 'Portal user')
@@ -115,17 +121,20 @@ class TestCRUDVisibilityPortal(TestAccessRights):
     def setUp(self):
         super().setUp()
         self.project_pigs.privacy_visibility = 'portal'
+        # setup is done as admin, so clear cache before checking user access
+        self.project_pigs.flush()
+        self.project_pigs.invalidate_cache()
 
     @users('Portal user')
     def test_task_portal_no_read(self):
-        self.task.invalidate_cache()
         with self.assertRaises(AccessError, msg="%s should not be able to read the task" % self.env.user.name):
             self.task.with_user(self.env.user).name
 
     @users('Portal user')
     def test_task_allowed_portal_read(self):
         self.project_pigs.allowed_user_ids = self.env.user
-        self.task.invalidate_cache()
+        self.project_pigs.flush()
+        self.project_pigs.invalidate_cache()
         self.task.with_user(self.env.user).name
 
     @users('Internal user')
@@ -138,6 +147,9 @@ class TestCRUDVisibilityEmployees(TestAccessRights):
     def setUp(self):
         super().setUp()
         self.project_pigs.privacy_visibility = 'employees'
+        # setup is done as admin, so clear cache before checking user access
+        self.project_pigs.flush()
+        self.project_pigs.invalidate_cache()
 
     @users('Portal user')
     def test_task_portal_no_read(self):
@@ -145,13 +157,13 @@ class TestCRUDVisibilityEmployees(TestAccessRights):
             self.task.with_user(self.env.user).name
 
         self.project_pigs.allowed_user_ids = self.env.user
-        self.task.invalidate_cache()
+        self.project_pigs.flush()
+        self.project_pigs.invalidate_cache()
         with self.assertRaises(AccessError, msg="%s should not be able to read the task" % self.env.user.name):
             self.task.with_user(self.env.user).name
 
     @users('Internal user')
     def test_task_allowed_portal_read(self):
-        self.task.invalidate_cache()
         self.task.with_user(self.env.user).name
 
 
@@ -160,6 +172,9 @@ class TestAllowedUsers(TestAccessRights):
     def setUp(self):
         super().setUp()
         self.project_pigs.privacy_visibility = 'followers'
+        # setup is done as admin, so clear cache before checking user access
+        self.project_pigs.flush()
+        self.project_pigs.invalidate_cache()
 
     def test_project_permission_added(self):
         self.project_pigs.allowed_user_ids = self.user
@@ -214,7 +229,7 @@ class TestAllowedUsers(TestAccessRights):
         self.user.groups_id |= self.env.ref('project.group_project_user')
         self.assertNotIn(self.user, self.project_pigs.allowed_user_ids)
         self.task.allowed_user_ids = self.user
-        self.project_pigs.invalidate_cache()
+        self.task.flush()
         self.task.invalidate_cache()
         self.task.with_user(self.user).name = "I can edit a task!"
 
