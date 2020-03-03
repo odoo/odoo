@@ -562,6 +562,7 @@ class SaleOrder(models.Model):
             'invoice_payment_ref': self.reference,
             'transaction_ids': [(6, 0, self.transaction_ids.ids)],
             'invoice_line_ids': [],
+            'company_id': self.company_id.id,
         }
         return invoice_vals
 
@@ -644,7 +645,7 @@ class SaleOrder(models.Model):
         # 2) Manage 'grouped' parameter: group by (partner_id, currency_id).
         if not grouped:
             new_invoice_vals_list = []
-            for grouping_keys, invoices in groupby(invoice_vals_list, key=lambda x: (x.get('partner_id'), x.get('currency_id'))):
+            for grouping_keys, invoices in groupby(invoice_vals_list, key=lambda x: (x.get('company_id'), x.get('partner_id'), x.get('currency_id'))):
                 origins = set()
                 payment_refs = set()
                 refs = set()
