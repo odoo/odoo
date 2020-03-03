@@ -272,6 +272,8 @@ class Field(MetaField('DummyField', (object,), {})):
         args = {key: val for key, val in kwargs.items() if val is not Default}
         self.args = args or EMPTY_DICT
         self._setup_done = None
+        self.name = type(self).__name__
+        self.model_name = '_unknown'
 
     def new(self, **kwargs):
         """ Return a field of the same type as ``self``, with its own parameters. """
