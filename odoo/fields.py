@@ -258,9 +258,13 @@ class Field(MetaField('DummyField', (object,), {})):
         return type(self)(**kwargs)
 
     def __str__(self):
+        if self.name is None:
+            return "<%s.%s>" % (__name__, type(self).__name__)
         return "%s.%s" % (self.model_name, self.name)
 
     def __repr__(self):
+        if self.name is None:
+            return "<%s.%s>" % (__name__, type(self).__name__)
         return "%s.%s" % (self.model_name, self.name)
 
     ############################################################################
