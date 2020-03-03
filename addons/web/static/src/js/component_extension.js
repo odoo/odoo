@@ -46,25 +46,19 @@
      * frontend.
      */
     const originalWillStart = owl.Component.prototype.willStart;
-    owl.Component.prototype.willStart = async function () {
-        const unknownTemplate = !(this.constructor.template in this.env.qweb.templates);
-        if (unknownTemplate && this.constructor.xmlDependencies) {
-            const proms = this.constructor.xmlDependencies.map(xml => {
-                return owl.utils.loadFile(xml).then(doc => {
-                    if (!doc) {
-                        return;
-                    }
+    owl.Component.prototype.willStart = async function() {
+        if (this.constructor.xmlDependencies) {
+            await this.env.session.loadOwlXML(this.constructor.xmlDependencies).then(results => {
+                for (const doc of results) {
                     const frag = document.createElement('t');
                     frag.innerHTML = doc;
-                    const owlTemplates = [];
-                    for (let child of frag.querySelectorAll("templates > [owl]")) {
+                    for (let child of frag.querySelectorAll("templates > [t-name][owl]")) {
                         child.removeAttribute('owl');
-                        owlTemplates.push(child.outerHTML);
+                        const name = child.getAttribute("t-name");
+                        this.env.qweb.addTemplate(name, child.outerHTML, true);
                     }
-                    this.env.qweb.addTemplates(`<templates> ${owlTemplates.join('\n')} </templates>`);
-                });
+                }
             });
-            await Promise.all(proms);
         }
         return originalWillStart.apply(this, ...arguments);
     };

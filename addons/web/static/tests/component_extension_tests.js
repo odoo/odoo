@@ -3,6 +3,7 @@ odoo.define('web.component_extension_tests', function (require) {
 
     const makeTestEnvironment = require("web.test_env");
     const testUtils = require("web.test_utils");
+    const session = require('web.session');
 
     const { Component, tags } = owl;
     const { xml } = tags;
@@ -46,19 +47,51 @@ odoo.define('web.component_extension_tests', function (require) {
         });
 
         QUnit.test("Component lazy load template", async function (assert) {
-            assert.expect(1);
+            assert.expect(7);
             const fixture = document.body.querySelector('#qunit-fixture');
-
+            const env = {
+                session: {
+                    loadOwlXML: session.loadOwlXML,
+                    loadFile: function (url) {
+                        assert.step(url);
+                        let template;
+                        if (url === 'dependency1') {
+                            template = `<templates>
+                                <div t-name="Parent.test1" owl="1">
+                                    <t t-call="Parent.test2"/>
+                                </div>
+                            </templates>`;
+                        } else if (url === 'dependency2') {
+                            template = `<templates>
+                                <div t-name="Parent.test2" owl="1">
+                                    lazy loaded 2
+                                </div>
+                            </templates>`;
+                        } else if (url === 'dependency3') {
+                            template = `<templates>
+                                <div t-name="Parent.test3" owl="1">
+                                    Parent3
+                                </div>
+                            </templates>`;
+                        }
+                        return Promise.resolve(template);
+                    }
+                }
+            }
             class Parent extends Component {}
-            Parent.env = makeTestEnvironment({}, () => Promise.reject());
+            Parent.env = makeTestEnvironment(env, () => Promise.reject());
             Parent.template = 'Parent.test1';
             Parent.xmlDependencies = [
-                '/web/static/tests/component_extension_tests_1.xml',
-                '/web/static/tests/component_extension_tests_2.xml',
+                'dependency1',
+                'dependency2',
             ];
 
             const parent = new Parent();
             await parent.mount(fixture);
+            assert.verifySteps([
+                'dependency1',
+                'dependency2',
+            ])
 
             assert.strictEqual(
                 fixture.innerHTML,
@@ -66,6 +99,22 @@ odoo.define('web.component_extension_tests', function (require) {
             );
 
             parent.destroy();
+
+            class Parent2 extends Parent {}
+            Parent2.xmlDependencies = ['dependency3'].concat(Parent.xmlDependencies);
+
+            const parent2 = new Parent2();
+            await parent2.mount(fixture);
+            assert.verifySteps([
+                'dependency3',
+            ])
+
+            assert.strictEqual(
+                fixture.innerHTML,
+                `<div><div> lazy loaded 2 </div></div>`
+            );
+
+            parent2.destroy();
         });
 
         QUnit.module("Custom Hooks");
