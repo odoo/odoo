@@ -92,6 +92,7 @@
             <field name="model">product.pricelist.item</field>
             <field name="arch" type="xml">
                 <form string="Pricelist Items">
+<<<<<<< HEAD
                     <sheet>
                       <h1><field name="name"/></h1>
                       <group>
@@ -159,6 +160,60 @@
                           </div>
                           <label string=" + " for="price_surcharge"/>
                           <field name="price_surcharge" nolabel="1"/>
+=======
+                    <h1><field name="name"/></h1>
+                    <group>
+                        <group>
+                            <field name="applied_on" widget="radio"/>
+                            <field name="categ_id" attrs="{'invisible':[('applied_on', '!=', '2_product_category')], 'required':[('applied_on', '=', '2_product_category')]}"/>
+                            <field name="product_tmpl_id" attrs="{'invisible':[('applied_on', '!=', '1_product')],'required':[('applied_on', '=', '1_product')]}" string="Product"/>
+                            <field name="product_id" attrs="{'invisible':[('applied_on', '!=', '0_product_variant')],'required':[('applied_on', '=', '0_product_variant')]}" string="Product Variant"/>
+                        </group>
+                        <group>
+                            <field name="min_quantity"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                    </group>
+                    <separator string="Price Computation"/>
+                    <group>
+                        <group>
+                            <label for="compute_price" string="Compute Price"/>
+                            <div>
+                                <field name="compute_price" widget="radio"/>
+                                <field name="currency_id" invisible="1"/>
+                                <div attrs="{'invisible':[('compute_price', '!=', 'fixed')]}">
+                                    <field name="fixed_price" nolabel= "1" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/></div>
+                                <div attrs="{'invisible':[('compute_price', '!=', 'percentage')]}">
+                                    <field name="percent_price" nolabel="1" class="oe_inline"/>%%
+                                </div>
+                            </div>
+                        </group>
+                    </group>
+                    <div class="oe_grey" groups="uom.group_uom">
+                        <p>The computed price is expressed in the default Unit of Measure of the product.</p>
+                    </div>
+                    <group col="6" attrs="{'invisible':[('compute_price', '!=', 'formula')]}">
+                        <field name="base" colspan="6"/>
+
+                        <label for="" string="New Price ="/>
+                        <div>
+                            <span attrs="{'invisible':[('base', '!=', 'list_price')]}">Public Price  -  </span>
+                            <span attrs="{'invisible':[('base', '!=', 'standard_price')]}">Cost  -  </span>
+                            <span attrs="{'invisible':[('base', '!=', 'pricelist')]}">Other Pricelist  -  </span>
+                        </div>
+                        <label for="price_discount"/>
+                        <div class="o_row">
+                            <field name="price_discount"/>
+                            <span>%%</span>
+                        </div>
+                        <label string=" + " for="price_surcharge"/>
+                        <field name="price_surcharge" nolabel="1"/>
+
+                        <field name="price_round" string="Rounding Method"/>
+                        <field name="price_min_margin" string="Min. Margin"/>
+                        <field name="price_max_margin" string="Max. Margin"/>
+>>>>>>> 03f11078160... temp
 
                           <field name="price_round" string="Rounding Method"/>
                           <field name="price_min_margin" string="Min. Margin"/>
