@@ -616,16 +616,18 @@ class MassMailing(models.Model):
         """Returns a set of emails already targeted by current mailing/campaign (no duplicates)"""
         self.ensure_one()
         target = self.env[self.mailing_model_real]
+        query = None
         if set(['email', 'email_from']) & set(target._fields):
             mail_field = 'email' if 'email' in target._fields else 'email_from'
-            # avoid loading a large number of records in memory
-            # + use a basic heuristic for extracting emails
-            query = """
-                SELECT lower(substring(%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
-                  FROM mail_mail_statistics s
-                  JOIN %(target)s t ON (s.res_id = t.id)
-                 WHERE substring(%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
-            """
+            if target._fields[mail_field].store:
+                # avoid loading a large number of records in memory
+                # + use a basic heuristic for extracting emails
+                query = """
+                    SELECT lower(substring(%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
+                    FROM mail_mail_statistics s
+                    JOIN %(target)s t ON (s.res_id = t.id)
+                    WHERE substring(%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
+                """
         elif 'partner_id' in target._fields:
             mail_field = 'email'
             query = """
@@ -635,7 +637,8 @@ class MassMailing(models.Model):
                   JOIN res_partner p ON (t.partner_id = p.id)
                  WHERE substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
             """
-        else:
+
+        if not query:
             raise UserError(_("Unsupported mass mailing model %s") % self.mailing_model_id.name)
 
         if self.mass_mailing_campaign_id.unique_ab_testing:
