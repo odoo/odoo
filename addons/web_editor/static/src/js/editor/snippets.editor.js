@@ -774,6 +774,7 @@ var SnippetEditor = Widget.extend({
      * @param {Event} ev
      */
     _onUserValueWidgetRequest: function (ev) {
+        ev.stopPropagation();
         for (const key of Object.keys(this.styles)) {
             const widget = this.styles[key].findWidget(ev.data.name);
             if (widget) {
