@@ -575,11 +575,10 @@ class RepairLine(models.Model):
 
     name = fields.Text('Description', required=True)
     repair_id = fields.Many2one(
-        'repair.order', 'Repair Order Reference',
+        'repair.order', 'Repair Order Reference', required=True,
         index=True, ondelete='cascade', check_company=True)
     company_id = fields.Many2one(
-        'res.company', 'Company',
-        readonly=True, required=True, index=True)
+        related='repair_id.company_id', store=True, index=True)
     type = fields.Selection([
         ('add', 'Add'),
         ('remove', 'Remove')], 'Type', required=True)
@@ -633,7 +632,7 @@ class RepairLine(models.Model):
             taxes = line.tax_id.compute_all(line.price_unit, line.repair_id.pricelist_id.currency_id, line.product_uom_qty, line.product_id, line.repair_id.partner_id)
             line.price_subtotal = taxes['total_excluded']
 
-    @api.onchange('type', 'repair_id')
+    @api.onchange('type')
     def onchange_operation_type(self):
         """ On change of operation type it sets source location, destination location
         and to invoice field.
@@ -711,8 +710,7 @@ class RepairFee(models.Model):
         'repair.order', 'Repair Order Reference',
         index=True, ondelete='cascade', required=True)
     company_id = fields.Many2one(
-        'res.company', 'Company',
-        readonly=True, required=True, index=True)
+        related="repair_id.company_id", index=True, store=True)
     name = fields.Text('Description', index=True, required=True)
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,
