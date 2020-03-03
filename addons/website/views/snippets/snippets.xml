@@ -274,17 +274,6 @@
         <we-button class="fa fa-fw fa-angle-right" data-move-snippet="next" data-no-preview="true"/>
     </div>
 
-    <!--  V-ALIGN -->
-    <div id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
-        <we-select string="Alignment">
-            <we-button data-select-class="align-items-start">Top</we-button>
-            <we-button data-select-class="align-items-center">Middle</we-button>
-            <we-button data-select-class="align-items-end">Bottom</we-button>
-            <we-divider/>
-            <we-button data-select-class="align-items-stretch">Equal height</we-button>
-        </we-select>
-    </div>
-
     <!-- Background Image -->
     <div data-js="background" string="Background"
         data-selector="section, .parallax, .carousel-item"
@@ -494,6 +483,7 @@
             <we-button data-select-class="o_full_screen_height">Full screen</we-button>
         </we-select>
     </div>
+
     <!-- Scroll to next section button (only for full height) -->
     <div data-js="ScrollButton" data-selector="section">
         <we-row string="Scroll down button" class="o_scroll_button_opt">
@@ -512,6 +502,17 @@
                 data-no-preview="true"
                 data-name="scroll_button_opt"/>
         </we-row>
+    </div>
+
+    <!--  Vertical Alignment -->
+    <div id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
+        <we-select string="Vert. Alignment" title="Vertical Alignment">
+            <we-button data-select-class="align-items-start">Top</we-button>
+            <we-button data-select-class="align-items-center">Middle</we-button>
+            <we-button data-select-class="align-items-end">Bottom</we-button>
+            <we-divider/>
+            <we-button data-select-class="align-items-stretch">Equal height</we-button>
+        </we-select>
     </div>
 
     <!-- Cookies Bar -->
