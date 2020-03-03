@@ -8992,6 +8992,107 @@ QUnit.module('fields', {}, function () {
 
             form.destroy();
         });
+
+        QUnit.skip('one2many with many2many_tags in list and list in form with a limit', async function (assert) {
+            // This test is skipped for now, as it doesn't work, and it can't be fixed in the current
+            // architecture (without large changes). However, this is unlikely to happen as the default
+            // limit is 80, and it would be useless to display so many records with a many2many_tags
+            // widget. So it would be nice if we could make it work in the future, but it's no big
+            // deal for now.
+            assert.expect(6);
+
+            this.data.partner.records[0].p = [1];
+            this.data.partner.records[0].turtles = [1, 2, 3];
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="bar"/>
+                        <field name="p">
+                            <tree>
+                                <field name="turtles" widget="many2many_tags"/>
+                            </tree>
+                            <form>
+                                <field name="turtles">
+                                    <tree limit="2"><field name="display_name"/></tree>
+                                </field>
+                            </form>
+                        </field>
+                    </form>`,
+                res_id: 1,
+            });
+
+            assert.containsOnce(form, '.o_field_widget[name=p] .o_data_row');
+            assert.containsN(form, '.o_data_row .o_field_many2manytags .badge', 3);
+
+            await testUtils.dom.click(form.$('.o_data_row'));
+
+            assert.containsOnce(document.body, '.modal .o_form_view');
+            assert.containsN(document.body, '.modal .o_field_widget[name=turtles] .o_data_row', 2);
+            assert.isVisible($('.modal .o_field_x2many_list .o_pager'));
+            assert.strictEqual($(".modal .o_field_x2many_list .o_pager").text().trim(), '1-2 / 3');
+
+            form.destroy();
+        });
+
+        QUnit.test('one2many with many2many_tags in list and list in form, and onchange', async function (assert) {
+            assert.expect(8);
+
+            this.data.partner.onchanges = {
+                bar: function (obj) {
+                    obj.p = [
+                        [5],
+                        [0, 0, {
+                            turtles: [
+                                [5],
+                                [0, 0, {
+                                    display_name: 'new turtle',
+                                }]
+                            ],
+                        }]
+                    ];
+                },
+            };
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="bar"/>
+                        <field name="p">
+                            <tree>
+                                <field name="turtles" widget="many2many_tags"/>
+                            </tree>
+                            <form>
+                                <field name="turtles">
+                                    <tree editable="bottom"><field name="display_name"/></tree>
+                                </field>
+                            </form>
+                        </field>
+                    </form>`,
+            });
+
+            assert.containsOnce(form, '.o_field_widget[name=p] .o_data_row');
+            assert.containsOnce(form, '.o_data_row .o_field_many2manytags .badge');
+
+            await testUtils.dom.click(form.$('.o_data_row'));
+
+            assert.containsOnce(document.body, '.modal .o_form_view');
+            assert.containsOnce(document.body, '.modal .o_field_widget[name=turtles] .o_data_row');
+            assert.strictEqual($('.modal .o_field_widget[name=turtles] .o_data_row').text(), 'new turtle');
+
+            await testUtils.dom.click($('.modal .o_field_x2many_list_row_add a'));
+            assert.containsN(document.body, '.modal .o_field_widget[name=turtles] .o_data_row', 2);
+            assert.strictEqual($('.modal .o_field_widget[name=turtles] .o_data_row:first').text(), 'new turtle');
+            assert.hasClass($('.modal .o_field_widget[name=turtles] .o_data_row:nth(1)'), 'o_selected_row');
+
+            form.destroy();
+        });
     });
 });
 });
