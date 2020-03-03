@@ -9161,6 +9161,53 @@ QUnit.module('fields', {}, function () {
 
             form.destroy();
         });
+
+        QUnit.test('one2many value returned by onchange with unknown fields', async function (assert) {
+            assert.expect(3);
+
+            this.data.partner.onchanges = {
+                bar: function (obj) {
+                    obj.p = [
+                        [5],
+                        [0, 0, {
+                            bar: true,
+                            display_name: "coucou",
+                            trululu: [2, 'second record'],
+                            turtles: [[5], [0, 0, {turtle_int: 4}]],
+                        }]
+                    ];
+                },
+            };
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="bar"/>
+                        <field name="p" widget="many2many_tags"/>
+                    </form>`,
+                mockRPC(route, args) {
+                    if (args.method === 'create') {
+                        assert.deepEqual(args.args[0].p[0][2], {
+                            bar: true,
+                            display_name: "coucou",
+                            trululu: 2,
+                            turtles: [[5], [0, 0, {turtle_int: 4}]],
+                        });
+                    }
+                    return this._super(...arguments);
+                },
+            });
+
+            assert.containsOnce(form, '.o_field_many2manytags .badge');
+            assert.strictEqual(form.$('.o_field_many2manytags .o_badge_text').text(), 'coucou');
+
+            await testUtils.form.clickSave(form);
+
+            form.destroy();
+        });
     });
 });
 });
