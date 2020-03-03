@@ -1864,12 +1864,12 @@ simply use the ``widget`` attribute in the view's XML description:
 
 .. note::
 
-    * the same widget is used in both "view" (read-only) and "edition" modes
+    * the same widget is used in both "view" (read-only) and "edit" modes
       of a form view, it's not possible to use a widget in one and an other
       widget in the other
     * and a given field (name) can not be used multiple times in the same form
     * a widget may ignore the current mode of the form view and remain the
-      same in both view and edition
+      same in both view and edit modes
 
 .. todo:: most of this should probably move to an advanced form view guide
 
