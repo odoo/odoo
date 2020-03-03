@@ -7,13 +7,13 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
     const { BarcodeEvents } = require('barcodes.BarcodeEvents');
     const { parse } = require('web.field_utils');
 
-    // NOTE: We might need to make a class that wraps these hooks
+    // NOTE jcb: We might need to make a class that wraps these hooks
     // to introduce odoo-type extensibility.
 
     /**
      * This hook introduces a `numberBuffer` field in the current component.
-     * The following functions (state) can be accessed to the `numberBuffer`
-     * field:
+     * This `numberBuffer` field exposes the following access functions to
+     * the buffer:
      *      - get(): returns the recent value of the buffer.
      *      - set(valStr): sets `valStr` as value of the buffer.
      *      - reset(): set the buffer to empty string.
@@ -21,7 +21,12 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
      *      - resume(): resume on recording number buffer
      *      - state: contains the string buffer
      *
-     * When this hook is activate in a component, a keyup listener is started
+     * NOTE: `state` is also exposed as it can be used as params in the current
+     * components template. And since it is from useState, it is reactive.
+     *
+     * Background:
+     *
+     * When this hook is activated in a component, a keyup listener is started
      * in window. If the input is not from barcode or the input is not happening
      * inside an editable (`input` or `textarea`) elements, then, any valid
      * number input will be intercepted and registered to the buffer inside this
@@ -48,9 +53,6 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
      *          `onNonKeyboardInput`. The event should carry a payload { key } that will
      *          be checked and used as input to the buffer.
      * @param {Integer} obj.maxTimeBetweenKeys Barcode's max time between keys in ms.
-     *
-     * @return {Object} object with the following methods
-
      */
     function useNumberBuffer({
         decimalPoint = null,
@@ -267,12 +269,11 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
                 });
             } else if (error.code < 0) {
                 // XmlHttpRequest Errors
-                // TODO jcb: This should be SyncErrorPopup which allows the user to opt on
-                // not seeing the error message again.
-                await this.showPopup('ErrorPopup', {
-                    title: this.env._t('The order could not be sent'),
-                    body: this.env._t('Check your internet connection and try again.'),
-                });
+                const title = this.env._t('Unable to sync order');
+                const body = this.env._t(
+                    'Check the internet connection then try to sync again by clicking on the red wifi button (upper right of the screen).'
+                );
+                await this.showPopup('OfflineErrorPopup', { title, body });
             } else if (error.code === 200) {
                 // OpenERP Server Errors
                 await this.showPopup('ErrorTracebackPopup', {
@@ -290,7 +291,7 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
                     ),
                 });
             }
-        }
+        };
     }
 
     return { useNumberBuffer, useErrorHandlers };

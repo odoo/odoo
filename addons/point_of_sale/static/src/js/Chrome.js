@@ -165,9 +165,14 @@ odoo.define('point_of_sale.chrome', function(require) {
 
         __showPopup(event) {
             const { name, props, resolve, numberBuffer } = event.detail;
+            const popupConstructor = this.constructor.components[name];
+            if (popupConstructor.dontShow) {
+                resolve();
+                return;
+            }
             this.popup.isShown = true;
             this.popup.name = name;
-            this.popup.component = this.constructor.components[name];
+            this.popup.component = popupConstructor;
             this.popupProps = { ...props, resolve, numberBuffer };
             if (numberBuffer) {
                 numberBuffer.pause();

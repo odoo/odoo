@@ -97,6 +97,7 @@
         'static/src/xml/EditListInput.xml',
         'static/src/xml/EditListPopup.xml',
         'static/src/xml/NumberPopup.xml',
+        'static/src/xml/OfflineErrorPopup.xml',
         'static/src/xml/OrderImportPopup.xml',
         'static/src/xml/SetPricelistButton.xml',
         'static/src/xml/SetFiscalPositionButton.xml',
