@@ -7,6 +7,15 @@
         <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
     </record>
 
+    <!-- <record id="act_jobs_form_single" model="ir.actions.act_window">
+            <field name="name">Job</field>
+            <field name="res_model">hr.job</field>
+            <field name="view_mode">form</field>
+            <field name="domain">[('job_id', '=', active_id)]</field>
+            <field name="context">{
+                    'default_job_id': active_id,
+                }</field>
+        </record> -->
     <record id="view_hr_job_kanban" model="ir.ui.view">
         <field name="name">hr.job.kanban</field>
         <field name="model">hr.job</field>
@@ -24,6 +33,7 @@
                 <field name="manager_id"/>
                 <field name="state"/>
                 <field name="user_id"/>
+                <field name="hr_responsible_id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
@@ -32,12 +42,12 @@
                                     <div class="o_primary col-12">
                                         <span><t t-esc="record.name.value"/></span>
                                     </div>
-                                    <div class="o_kanban_record_subtitle col-12 text-muted">
+                                    <div class="o_kanban_record_subtitle text-muted">
                                         <field name="user_id" />
                                     </div>
                                     <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
-                                    <div t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'" class="o_secondary o_job_alias">
-                                        <small> <i class="fa fa-envelope-o" role="img" aria-label="Alias" title="Alias"></i> <field name="alias_id"/> </small>
+                                    <div class="o_secondary o_job_alias">
+                                        <i class="fa fa-envelope-o" role="img" aria-label="Alias" title="Alias"></i> <field name="alias_id"/>
                                     </div>
                                 </div>
                                 <div class="o_kanban_manage_button_section">
@@ -54,7 +64,7 @@
                                         </div>
                                         <div class="col-6">
                                             <field name="new_application_count"/> New Applications <br/>
-                                            <field name="no_of_recruitment"/> To Recruit
+                                            <a type="object" name="action_view_job"><field name="no_of_recruitment"/> To Recruit</a>
                                         </div>
                                     </div>
                                 </t>
@@ -69,7 +79,7 @@
                                     <div class="o_recruitment_kanban_box o_kanban_primary_bottom bottom_block" style="padding-left:8px;">
                                         <div class="col-6"></div>
                                         <div class="col-6">
-                                            <a type="action" name="%(action_hr_job_sources)d">Share Trackers</a>
+                                            <a type="action" name="%(action_hr_job_sources)d">Link Trackers</a>
                                         </div>
                                     </div>
                                 </div>

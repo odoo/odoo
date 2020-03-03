@@ -78,6 +78,18 @@ class Job(models.Model):
         for job in self:
             job.application_count = result.get(job.id, 0)
 
+    def action_view_job(self):
+        print(self)
+        return {
+            'name': _('Job Position'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'hr.job',
+            'res_id': self.id,
+        }
+        # action = self.with_context(active_id=self.id).env.ref('hr_recruitment.act_jobs_form_single').read()[0]
+        # return action
+
     def _get_first_stage(self):
         self.ensure_one()
         return self.env['hr.recruitment.stage'].search([
