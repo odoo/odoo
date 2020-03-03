@@ -132,6 +132,7 @@ class HolidaysAllocation(models.Model):
         ('days', 'Days')
         ], string="Unit of time added at each interval", default='hours', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     interval_unit = fields.Selection([
+        ('days', 'Days'),
         ('weeks', 'Weeks'),
         ('months', 'Months'),
         ('years', 'Years')
@@ -169,6 +170,8 @@ class HolidaysAllocation(models.Model):
 
             delta = relativedelta(days=0)
 
+            if holiday.interval_unit == 'days':
+                delta = relativedelta(days=holiday.interval_number)
             if holiday.interval_unit == 'weeks':
                 delta = relativedelta(weeks=holiday.interval_number)
             if holiday.interval_unit == 'months':
