@@ -3369,6 +3369,21 @@ var BasicModel = AbstractModel.extend({
                                 }
                             } else {
                                 // the subrecord is new, so create it
+
+                                // we may have received values from an onchange for fields that are
+                                // not in the view, and that we don't even know, as we don't have the
+                                // fields_get of models of related fields. We save those values
+                                // anyway, but for many2ones, we have to extract the id from the pair
+                                // [id, display_name]
+                                const rawChangesEntries = Object.entries(relRecord._rawChanges);
+                                for (const [fieldName, value] of rawChangesEntries) {
+                                    const isMany2OneValue = Array.isArray(value) &&
+                                                            value.length === 2 &&
+                                                            Number.isInteger(value[0]) &&
+                                                            typeof value[1] === 'string';
+                                    changes[fieldName] = isMany2OneValue ? value[0] : value;
+                                }
+
                                 commands[fieldName].push(x2ManyCommands.create(relRecord.ref, changes));
                             }
                         }
