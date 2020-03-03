@@ -91,10 +91,10 @@ class WebsiteSlides(WebsiteProfile):
             uncategorized_domain = expression.AND([base_domain, [('channel_id', '=', slide.channel_id.id), ('category_id', '=', False)]])
             uncategorized_slides = request.env['slide.slide'].search(uncategorized_domain)
 
-        channel_slides_ids = slide.channel_id.slide_ids.ids
+        channel_slides_ids = slide.channel_id.slide_content_ids.ids
         slide_index = channel_slides_ids.index(slide.id)
-        previous_slide = slide.channel_id.slide_ids[slide_index-1] if slide_index > 0 else None
-        next_slide = slide.channel_id.slide_ids[slide_index+1] if slide_index < len(channel_slides_ids) - 1 else None
+        previous_slide = slide.channel_id.slide_content_ids[slide_index-1] if slide_index > 0 else None
+        next_slide = slide.channel_id.slide_content_ids[slide_index+1] if slide_index < len(channel_slides_ids) - 1 else None
 
         values = {
             # slide
