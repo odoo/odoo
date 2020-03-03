@@ -1997,7 +1997,7 @@ var BasicModel = AbstractModel.extend({
             case 'UPDATE':
                 list._changes.push({operation: 'UPDATE', id: command.id});
                 if (command.data) {
-                    defs.push(this._applyChange(command.id, command.data));
+                    defs.push(this._applyChange(command.id, command.data, { viewType: view.type }));
                 }
                 break;
             case 'FORGET':
