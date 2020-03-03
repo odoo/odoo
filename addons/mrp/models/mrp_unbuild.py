@@ -127,8 +127,8 @@ class MrpUnbuild(models.Model):
         produce_moves = self._generate_produce_moves()
         produce_moves._action_confirm()
 
-        finished_move = consume_moves.filtered(lambda m: m.product_id == self.product_id)
-        consume_moves -= finished_move
+        finished_moves = consume_moves.filtered(lambda m: m.product_id == self.product_id)
+        consume_moves -= finished_moves
 
         if any(produce_move.has_tracking != 'none' and not self.mo_id for produce_move in produce_moves):
             raise UserError(_('Some of your components are tracked, you have to specify a manufacturing order in order to retrieve the correct components.'))
@@ -136,18 +136,19 @@ class MrpUnbuild(models.Model):
         if any(consume_move.has_tracking != 'none' and not self.mo_id for consume_move in consume_moves):
             raise UserError(_('Some of your byproducts are tracked, you have to specify a manufacturing order in order to retrieve the correct byproducts.'))
 
-        if finished_move.has_tracking != 'none':
-            self.env['stock.move.line'].create({
-                'move_id': finished_move.id,
-                'lot_id': self.lot_id.id,
-                'qty_done': finished_move.product_uom_qty,
-                'product_id': finished_move.product_id.id,
-                'product_uom_id': finished_move.product_uom.id,
-                'location_id': finished_move.location_id.id,
-                'location_dest_id': finished_move.location_dest_id.id,
-            })
-        else:
-            finished_move.quantity_done = finished_move.product_uom_qty
+        for finished_move in finished_moves:
+            if finished_move.has_tracking != 'none':
+                self.env['stock.move.line'].create({
+                    'move_id': finished_move.id,
+                    'lot_id': self.lot_id.id,
+                    'qty_done': finished_move.product_uom_qty,
+                    'product_id': finished_move.product_id.id,
+                    'product_uom_id': finished_move.product_uom.id,
+                    'location_id': finished_move.location_id.id,
+                    'location_dest_id': finished_move.location_dest_id.id,
+                })
+            else:
+                finished_move.quantity_done = finished_move.product_uom_qty
 
         # TODO: Will fail if user do more than one unbuild with lot on the same MO. Need to check what other unbuild has aready took
         for move in produce_moves | consume_moves:
@@ -175,7 +176,7 @@ class MrpUnbuild(models.Model):
             else:
                 move.quantity_done = move.product_uom_qty
 
-        finished_move._action_done()
+        finished_moves._action_done()
         consume_moves._action_done()
         produce_moves._action_done()
         produced_move_line_ids = produce_moves.mapped('move_line_ids').filtered(lambda ml: ml.qty_done > 0)
