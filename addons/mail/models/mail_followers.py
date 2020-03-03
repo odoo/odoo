@@ -48,6 +48,10 @@ class Followers(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        if any("channel_id" in vals for vals in vals_list):
+            ctx = dict(self.env.context)
+            ctx.pop('default_partner_id', None)
+            self = self.with_context(ctx)
         res = super(Followers, self).create(vals_list)
         res._invalidate_documents()
         return res
