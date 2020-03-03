@@ -8,7 +8,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
     const { PaymentMethodButton } = require('point_of_sale.PaymentMethodButton');
     const { PaymentScreenNumpad } = require('point_of_sale.PaymentScreenNumpad');
     const { PaymentScreenPaymentLines } = require('point_of_sale.PaymentScreenPaymentLines');
-    const { useNumberBuffer } = require('point_of_sale.custom_hooks');
+    const { useNumberBuffer, useErrorHandlers } = require('point_of_sale.custom_hooks');
     const { useListener } = require('web.custom_hooks');
     const { OrderReceipt } = require('point_of_sale.OrderReceipt');
     const { Printer } = require('point_of_sale.Printer');
@@ -20,6 +20,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             useListener('select-payment-line', this.selectPaymentLine);
             useListener('new-payment-line', this.addNewPaymentLine);
             useListener('update-selected-paymentline', this._updateSelectedPaymentline);
+            useErrorHandlers();
             useNumberBuffer({
                 // The numberBuffer listens to this event to update its state.
                 // Basically means 'update the buffer when this event is triggered'
@@ -217,7 +218,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 : false;
             this.trigger('show-screen', {
                 name: 'ReceiptScreen',
-                printInvoiceIsShow: shouldShowPrintInvoice,
+                props: { printInvoiceIsShown: shouldShowPrintInvoice },
             });
 
             // If we succeeded in syncing the current order, and
@@ -234,42 +235,6 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                     // might not work.
                     this.env.pos.push_orders();
                 }
-            }
-        }
-        async _handlePushOrderError(error) {
-            // This error handler receives `error` equivalent to `error.message` of the rpc error.
-            if (error.message === 'Backend Invoice') {
-                await this.showPopup('ConfirmPopup', {
-                    title: this.env._t('Please print the invoice from the backend'),
-                    body:
-                        this.env._t(
-                            'The order has been synchronized earlier. Please make the invoice from the backend for the order: '
-                        ) + error.data.order.name,
-                });
-            } else if (error.code < 0) {
-                // XmlHttpRequest Errors
-                // TODO jcb: This should be SyncErrorPopup which allows the user to opt on
-                // not seeing the error message again.
-                await this.showPopup('ErrorPopup', {
-                    title: this.env._t('The order could not be sent'),
-                    body: this.env._t('Check your internet connection and try again.'),
-                });
-            } else if (error.code === 200) {
-                // OpenERP Server Errors
-                await this.showPopup('ErrorTracebackPopup', {
-                    title: error.data.message || this.env._t('Server Error'),
-                    body:
-                        error.data.debug ||
-                        this.env._t('The server encountered an error while receiving your order.'),
-                });
-            } else {
-                // ???
-                await this.showPopup('ErrorPopup', {
-                    title: this.env._t('Unknown Error'),
-                    body: this.env._t(
-                        'The order could not be sent to the server due to an unknown error'
-                    ),
-                });
             }
         }
         async _isOrderValid(isForceValidate) {

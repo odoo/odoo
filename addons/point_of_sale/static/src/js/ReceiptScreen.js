@@ -2,9 +2,10 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
     'use strict';
 
     const core = require('web.core');
-    const { useRef } = owl.hooks;
+    const { useRef, useState } = owl.hooks;
     const { PosComponent } = require('point_of_sale.PosComponent');
     const { OrderReceipt } = require('point_of_sale.OrderReceipt');
+    const { useErrorHandlers } = require('point_of_sale.custom_hooks');
 
     const _t = core._t;
 
@@ -15,6 +16,8 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
          */
         constructor() {
             super(...arguments);
+            useErrorHandlers();
+            this.state = useState({ printInvoiceIsShown: this.props.printInvoiceIsShown });
             this.orderReceipt = useRef('order-receipt');
         }
         mounted() {
@@ -75,9 +78,19 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
             }
         }
         async onPrintInvoice() {
-            // TODO jcb
-            // We want the print invoice button to appear when there is a
-            // syncing error when the receipt screen is shown.
+            // The button element of this event handler appears when the order
+            // failed to sync and is to be invoiced. What we do here is to try
+            // to sync again to eventually print the invoice.
+            try {
+                await this.env.pos.push_and_invoice_order(this.currentOrder);
+                this.state.printInvoiceIsShown = false;
+            } catch (error) {
+                if (error instanceof Error) {
+                    throw error;
+                } else {
+                    await this._handlePushOrderError(error);
+                }
+            }
         }
         _shouldAutoPrint() {
             return this.env.pos.config.iface_print_auto && !this.currentOrder._printed;

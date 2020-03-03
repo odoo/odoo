@@ -15,7 +15,7 @@
                     </span>
                 </div>
                 <div class="centered-content touch-scrollable">
-                    <div t-if="props.printInvoiceIsShown" class="button print_invoice"
+                    <div t-if="state.printInvoiceIsShown" class="button print_invoice"
                          t-on-click="onPrintInvoice">
                         <i class="fa fa-print"></i> Print Invoice
                     </div>
