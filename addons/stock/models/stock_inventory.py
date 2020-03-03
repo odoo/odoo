@@ -328,7 +328,7 @@ class InventoryLine(models.Model):
                 return "[('type', '=', 'product'), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('id', 'in', %s)]" % inventory.product_ids.ids
         return "[('type', '=', 'product'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]"
 
-    is_editable = fields.Boolean(help="Technical field to restrict the edition.")
+    is_editable = fields.Boolean(help="Technical field to restrict editing.")
     inventory_id = fields.Many2one(
         'stock.inventory', 'Inventory', check_company=True,
         index=True, ondelete='cascade')
