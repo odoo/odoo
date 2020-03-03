@@ -507,13 +507,6 @@
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field eval="True" name="reconcile"/>
         </record>
-        <record id="a446" model="account.account.template">
-            <field name="name">Acomptes reçus</field>
-            <field name="code">446</field>
-            <field name="user_type_id" ref="account.data_account_type_payable"/>
-            <field name="chart_template_id" ref="l10nbe_chart_template"/>
-            <field eval="True" name="reconcile"/>
-        </record>
         <record id="a448" model="account.account.template">
             <field name="name">Compensations fournisseurs</field>
             <field name="code">448</field>
@@ -693,6 +686,20 @@
             <field name="code">4597</field>
             <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+        </record>
+        <record id="a460" model="account.account.template">
+            <field name="name">Acomptes à recevoir</field>
+            <field name="code">460</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field eval="True" name="reconcile"/>
+        </record>
+        <record id="a461" model="account.account.template">
+            <field name="name">Acomptes reçus</field>
+            <field name="code">461</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field eval="True" name="reconcile"/>
         </record>
         <record id="a490" model="account.account.template">
             <field name="name">Charges à reporter</field>
