@@ -55,7 +55,7 @@ class Event(models.Model):
         for event in self:
             event.sponsor_count = result.get(event.id, 0)
 
-    @api.depends('event_type_id', 'website_menu')
+    @api.depends('event_type_id', 'website_menu', 'website_track_proposal')
     def _compute_website_track(self):
         """ Explicitly checks that event_type has changed before copying its value
         on the event itself. Changing website_menu trigger should not mess with the
@@ -63,8 +63,10 @@ class Event(models.Model):
         for event in self:
             if event.event_type_id and event.event_type_id != event._origin.event_type_id:
                 event.website_track = event.event_type_id.website_track
-            elif not event.website_menu or not event.website_track:
+            elif not event.website_menu:
                 event.website_track = False
+            elif event.website_track_proposal and not event.website_track:
+                event.website_track = True
 
     @api.depends('event_type_id', 'website_track')
     def _compute_website_track_proposal(self):
@@ -74,57 +76,46 @@ class Event(models.Model):
             elif not event.website_track:
                 event.website_track_proposal = False
 
-    @api.onchange('website_track_proposal')
-    def _onchange_website_track_proposal(self):
-        """ Keep an explicit onchange for tick / untick of website_track_proposal.
-        Indeed otherwise you have a loop of dependencies between website_track and
-        website_track_proposal
-
-          * untick website_track: website_track_proposal = False (done in _compute_website_track_proposal)
-          * tick website_track: no effect
-          * untick website_track_proposal: no effect
-          * tick website_track_proposa: website_track = True
-
-        It would be complicated to write in computed fields, as they depend on
-        each other, on cache and current values, ...
-
-        It is therefore simpler to keep an onchange: when ticking website_track_proposal
-        set website_track as True in interface.
-        """
-        for event in self:
-            if event.website_track_proposal and not event.website_track:
-                event.website_track = True
-
     @api.depends('track_ids.tag_ids', 'track_ids.tag_ids.color')
     def _compute_tracks_tag_ids(self):
         for event in self:
             event.tracks_tag_ids = event.track_ids.mapped('tag_ids').filtered(lambda tag: tag.color != 0).ids
 
-    def _update_website_menus(self, vals):
-        super(Event, self)._update_website_menus(vals)
+    def _update_website_menus(self):
+        super(Event, self)._update_website_menus()
         for event in self:
-            if 'website_track' in vals:
-                if vals['website_track'] and not event.track_menu_ids:
-                    for sequence, (name, url, xml_id, menu_type) in enumerate(event._get_track_menu_entries()):
-                        menu = super(Event, event)._create_menu(sequence, name, url, xml_id)
-                        event.env['website.event.menu'].create({
-                            'menu_id': menu.id,
-                            'event_id': event.id,
-                            'menu_type': menu_type,
-                        })
-                elif event.track_menu_ids and not vals['website_track']:
-                    event.track_menu_ids.mapped('menu_id').unlink()
-            if 'website_track_proposal' in vals:
-                if vals['website_track_proposal'] and not event.track_proposal_menu_ids:
-                    for sequence, (name, url, xml_id, menu_type) in enumerate(event._get_track_proposal_menu_entries()):
-                        menu = super(Event, event)._create_menu(sequence, name, url, xml_id)
-                        event.env['website.event.menu'].create({
-                            'menu_id': menu.id,
-                            'event_id': event.id,
-                            'menu_type': menu_type,
-                        })
-                elif event.track_proposal_menu_ids and not vals['website_track_proposal']:
-                    event.track_proposal_menu_ids.mapped('menu_id').unlink()
+            if event.website_track and not event.track_menu_ids:
+                for sequence, (name, url, xml_id, menu_type) in enumerate(event._get_track_menu_entries()):
+                    menu = super(Event, event)._create_menu(sequence, name, url, xml_id)
+                    event.env['website.event.menu'].create({
+                        'menu_id': menu.id,
+                        'event_id': event.id,
+                        'menu_type': menu_type,
+                    })
+            elif not event.website_track:
+                event.track_menu_ids.mapped('menu_id').unlink()
+            if event.website_track_proposal and not event.track_proposal_menu_ids:
+                for sequence, (name, url, xml_id, menu_type) in enumerate(event._get_track_proposal_menu_entries()):
+                    menu = super(Event, event)._create_menu(sequence, name, url, xml_id)
+                    event.env['website.event.menu'].create({
+                        'menu_id': menu.id,
+                        'event_id': event.id,
+                        'menu_type': menu_type,
+                    })
+            elif not event.website_track_proposal:
+                event.track_proposal_menu_ids.mapped('menu_id').unlink()
+
+    def write(self, values):
+        track_activated = self.filtered(lambda event: event.website_track)
+        track_deactivated = self.filtered(lambda event: not event.website_track)
+        track_proposal_activated = self.filtered(lambda event: event.website_track_proposal)
+        track_proposal_deactivated = self.filtered(lambda event: not event.website_track_proposal)
+        super(Event, self).write(values)
+        to_deactivate = track_activated.filtered(lambda event: not event.website_track)
+        to_activate = track_deactivated.filtered(lambda event: event.website_track)
+        track_proposal_to_deactivate = track_proposal_activated.filtered(lambda event: not event.website_track_proposal)
+        track_proposal_to_activate = track_proposal_deactivated.filtered(lambda event: event.website_track_proposal)
+        (to_activate | to_deactivate | track_proposal_to_activate | track_proposal_to_deactivate)._update_website_menus()
 
     def _get_track_menu_entries(self):
         self.ensure_one()
@@ -137,3 +128,12 @@ class Event(models.Model):
         self.ensure_one()
         res = [(_('Talk Proposals'), '/event/%s/track_proposal' % slug(self), False, 'track_proposal')]
         return res
+
+    def toggle_website_menu(self, val):
+        self.website_menu = val
+
+    def toggle_website_track(self, val):
+        self.website_track = val
+
+    def toggle_website_track_proposal(self, val):
+        self.website_track_proposal = val
