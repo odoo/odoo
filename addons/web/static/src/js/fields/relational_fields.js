@@ -1110,7 +1110,7 @@ var FieldX2Many = AbstractField.extend({
             // case, we can re-render the whole subview.
             if (command && command.operation === 'UPDATE' && command.data) {
                 var state = record.data[this.name];
-                var fieldNames = state.getFieldNames();
+                var fieldNames = state.getFieldNames({ viewType: 'list' });
                 this._reset(record, ev);
                 return this.renderer.confirmUpdate(state, command.id, fieldNames, ev.initialEvent);
             }
