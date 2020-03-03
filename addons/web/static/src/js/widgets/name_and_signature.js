@@ -142,7 +142,7 @@ var NameAndSignature = Widget.extend({
                 // May happen since this is debounced
                 return;
             }
-            self.resetSignature();
+            self.resizeSignature();
         }, 250));
 
         return this._super.apply(this, arguments);
@@ -204,6 +204,27 @@ var NameAndSignature = Widget.extend({
         var signature = this.$signatureField.jSignature('getData');
         return signature && this.emptySignature ? this.emptySignature === signature : true;
     },
+    resizeSignature: function() {
+        if (!this.$signatureField) {
+            return;
+        }
+        // recompute size based on the current width
+        this.$signatureField.css({width: 'unset'});
+        const width = this.$signatureField.width();
+        const height = parseInt(width / this.displaySignatureRatio);
+
+        // necessary because the lib is adding invisible div with margin
+        // signature field too tall without this code
+        this.$signatureField.css({
+            width: width,
+            height: height,
+        });
+        this.$signatureField.find('canvas').css({
+            width: width,
+            height: height,
+        });
+        return {width, height};
+    },
     /**
      * (Re)initializes the signature area:
      *  - set the correct width and height of the drawing based on the width
@@ -219,17 +240,8 @@ var NameAndSignature = Widget.extend({
             // no action if called before start
             return Promise.reject();
         }
-        // recompute size based on the current width
-        this.$signatureField.css({width: 'unset'});
-        var width = this.$signatureField.width();
-        var height = parseInt(width / this.displaySignatureRatio);
 
-        // necessary because the lib is adding invisible div with margin
-        // signature field too tall without this code
-        this.$signatureField.css({
-            width: width,
-            height: height,
-        });
+        const {width, height} = this.resizeSignature();
 
         this.$signatureField
             .empty()
