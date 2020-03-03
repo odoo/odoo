@@ -10,6 +10,7 @@ class StockValuationLayer(models.Model):
     _name = 'stock.valuation.layer'
     _description = 'Stock Valuation Layer'
     _order = 'create_date, id'
+    _check_company_auto = False
 
     _rec_name = 'product_id'
 

@@ -41,6 +41,7 @@ class PurchaseRequisition(models.Model):
     _description = "Purchase Requisition"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = "id desc"
+    _check_company_auto = True
 
     def _get_type_id(self):
         return self.env['purchase.requisition.type'].search([], limit=1)

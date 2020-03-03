@@ -11,6 +11,7 @@ class MrpUnbuild(models.Model):
     _description = "Unbuild Order"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'id desc'
+    _check_company_auto = False
 
     name = fields.Char('Reference', copy=False, readonly=True, default=lambda x: _('New'))
     product_id = fields.Many2one(

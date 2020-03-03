@@ -12,6 +12,7 @@ class Inventory(models.Model):
     _name = "stock.inventory"
     _description = "Inventory"
     _order = "date desc, id desc"
+    _check_company_auto = False
 
     name = fields.Char(
         'Inventory Reference', default="Inventory",
@@ -257,6 +258,7 @@ class InventoryLine(models.Model):
     _name = "stock.inventory.line"
     _description = "Inventory Line"
     _order = "product_id, inventory_id, location_id, prod_lot_id"
+    _check_company_auto = False
 
     @api.model
     def _domain_location_id(self):

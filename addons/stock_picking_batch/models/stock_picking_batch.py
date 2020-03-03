@@ -10,6 +10,7 @@ class StockPickingBatch(models.Model):
     _name = "stock.picking.batch"
     _description = "Batch Transfer"
     _order = "name desc"
+    _check_company_auto = False
 
     name = fields.Char(
         string='Batch Transfer', default='New',

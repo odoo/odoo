@@ -13,6 +13,7 @@ class StockMoveLine(models.Model):
     _description = "Product Moves (Stock Move Line)"
     _rec_name = "product_id"
     _order = "result_package_id desc, id"
+    _check_company_auto = False
 
     picking_id = fields.Many2one(
         'stock.picking', 'Stock Picking', auto_join=True,

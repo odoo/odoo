@@ -239,6 +239,7 @@ class Picking(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Transfer"
     _order = "priority desc, date asc, id desc"
+    _check_company_auto = False
 
     name = fields.Char(
         'Reference', default='/',

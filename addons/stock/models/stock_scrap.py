@@ -11,6 +11,7 @@ class StockScrap(models.Model):
     _inherit = ['mail.thread']
     _order = 'id desc'
     _description = 'Scrap'
+    _check_company_auto = False
 
     def _get_default_scrap_location_id(self):
         company_id = self.env.context.get('default_company_id') or self.env.company.id

@@ -705,6 +705,7 @@ class SupplierInfo(models.Model):
     _name = "product.supplierinfo"
     _description = "Supplier Pricelist"
     _order = 'sequence, min_qty desc, price'
+    _check_company_auto = True
 
     name = fields.Many2one(
         'res.partner', 'Vendor',

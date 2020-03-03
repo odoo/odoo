@@ -330,7 +330,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     _needaction = False         # whether the model supports "need actions" (Old API)
     _translate = True           # False disables translations export for this model (Old API)
-    _check_company_auto = False
+    _check_company_auto = None
     """On write and create, call ``_check_company`` to ensure companies
     consistency on the relational fields having ``check_company=True``
     as attribute.
@@ -2739,6 +2739,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # register constraints and onchange methods
         cls._init_constraints_onchanges()
+
+        if cls._check_company_auto is not None and 'company_id' not in cls._fields and self._name != 'res.company':
+            _logger.warning("%s._check_company_auto attribute will be ignored because it doesn't have a company_id field", self._name)
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):

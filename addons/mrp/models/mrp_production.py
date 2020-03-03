@@ -17,6 +17,7 @@ class MrpProduction(models.Model):
     _date_name = 'date_planned_start'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_planned_start asc,id'
+    _check_company_auto = False
 
     @api.model
     def _get_default_picking_type(self):

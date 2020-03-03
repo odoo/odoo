@@ -8,6 +8,7 @@ from odoo.tools.float_utils import float_compare
 class ChooseDeliveryPackage(models.TransientModel):
     _name = 'choose.delivery.package'
     _description = 'Delivery Package Selection Wizard'
+    _check_company_auto = True
 
     def _default_shipping_weight(self):
         picking = self.env['stock.picking'].browse(self.env.context.get('default_picking_id'))

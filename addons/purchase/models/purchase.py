@@ -17,6 +17,7 @@ class PurchaseOrder(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _description = "Purchase Order"
     _order = 'date_order desc, id desc'
+    _check_company_auto = True
 
     @api.depends('order_line.price_total')
     def _amount_all(self):

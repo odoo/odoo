@@ -17,6 +17,7 @@ class StockQuant(models.Model):
     _name = 'stock.quant'
     _description = 'Quants'
     _rec_name = 'product_id'
+    _check_company_auto = False
 
     def _domain_location_id(self):
         if not self._is_inventory_mode():
@@ -647,6 +648,7 @@ class QuantPackage(models.Model):
     _name = "stock.quant.package"
     _description = "Packages"
     _order = 'name'
+    _check_company_auto = True
 
     name = fields.Char(
         'Package Reference', copy=False, index=True,

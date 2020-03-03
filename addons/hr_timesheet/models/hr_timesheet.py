@@ -10,6 +10,7 @@ from odoo.exceptions import UserError
 
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
+    _check_company_auto = True
 
     @api.model
     def default_get(self, field_list):

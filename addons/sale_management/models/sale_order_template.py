@@ -58,6 +58,7 @@ class SaleOrderTemplateLine(models.Model):
     _name = "sale.order.template.line"
     _description = "Quotation Template Line"
     _order = 'sale_order_template_id, sequence, id'
+    _check_company_auto = True
 
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of sale quote lines.",
         default=10)
