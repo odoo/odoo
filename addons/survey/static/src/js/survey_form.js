@@ -234,18 +234,18 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
      * If the trigger is 'next_question', we handle some extra computation to find
      * a suitable "fadeInOutDelay" based on the delay between the time of the question
      * change by the host and the time of reception of the event.
-     * This will allow us to account for a little bit of server lag (up to 2 seconds)
+     * This will allow us to account for a little bit of server lag (up to 1 second)
      * while giving everyone a fair experience on the quiz.
      *
      * e.g 1:
      * - The host switches the question
-     * - We receive the event 500 ms later due to server lag
-     * - -> The fadeInOutDelay will be 750 ms (500ms delay + 750ms * 2 fade in fade out)
+     * - We receive the event 200 ms later due to server lag
+     * - -> The fadeInOutDelay will be 400 ms (200ms delay + 400ms * 2 fade in fade out)
      *
      * e.g 2:
      * - The host switches the question
-     * - We receive the event 1500 ms later due to bigger server lag
-     * - -> The fadeInOutDelay will be 250ms (1500ms delay + 250ms * 2 fade in fade out)
+     * - We receive the event 600 ms later due to bigger server lag
+     * - -> The fadeInOutDelay will be 200ms (600ms delay + 200ms * 2 fade in fade out)
      *
      * @private
      * @param {Array[]} notifications structured as specified by the bus feature
@@ -275,10 +275,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 var serverDelayMS = moment.utc().valueOf() - moment.unix(nextPageEvent.question_start).utc().valueOf();
                 if (serverDelayMS < 0) {
                     serverDelayMS = 0;
-                } else if (serverDelayMS > 2000) {
-                    serverDelayMS = 2000;
+                } else if (serverDelayMS > 1000) {
+                    serverDelayMS = 1000;
                 }
-                this.fadeInOutDelay = (2000 - serverDelayMS) / 2;
+                this.fadeInOutDelay = (1000 - serverDelayMS) / 2;
             } else {
                 this.fadeInOutDelay = 400;
             }
