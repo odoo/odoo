@@ -199,17 +199,15 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 }
             }
             if (syncedOrderBackendIds.length && this.currentOrder.wait_for_push_order()) {
-                try {
-                    await this._postPushOrderResolve(this.currentOrder, syncedOrderBackendIds);
-                } catch (error) {
-                    if (error instanceof Error) {
-                        throw error;
-                    } else {
-                        await this.showPopup('ErrorPopup', {
-                            title: 'Error: no internet connection. Press okay to proceed.',
-                            body: error,
-                        });
-                    }
+                const result = await this._postPushOrderResolve(
+                    this.currentOrder,
+                    syncedOrderBackendIds
+                );
+                if (!result) {
+                    await this.showPopup('ErrorPopup', {
+                        title: 'Error: no internet connection.',
+                        body: error,
+                    });
                 }
             }
 
@@ -226,8 +224,10 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             // we ask the user if he is willing to wait and sync them.
             if (syncedOrderBackendIds.length && this.env.pos.db.get_orders().length) {
                 const { confirmed } = await this.showPopup('ConfirmPopup', {
-                    title: this.env._t('There are unsynced orders'),
-                    body: this.env._t('Do you want to sync these orders?'),
+                    title: this.env._t('Remaining unsynced orders'),
+                    body: this.env._t(
+                        'There are unsynced orders. Do you want to sync these orders?'
+                    ),
                 });
                 if (confirmed) {
                     // NOTE: Not yet sure if this should be awaited or not.
@@ -343,11 +343,11 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
 
             return true;
         }
-        _postPushOrderResolve(order, order_server_ids) {
+        async _postPushOrderResolve(order, order_server_ids) {
             if (order.is_to_email()) {
-                return this._sendReceiptToCustomer(order_server_ids);
+                return await this._sendReceiptToCustomer(order_server_ids);
             } else {
-                return Promise.resolve();
+                return true;
             }
         }
         async _sendReceiptToCustomer(order_server_ids) {
@@ -362,20 +362,19 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             fixture.remove();
             const printer = new Printer();
             const ticketImage = await printer.htmlToImg(receiptString);
+            const orderName = order.get_name();
+            const orderClient = order.get_client();
             try {
                 await this.rpc({
                     model: 'pos.order',
                     method: 'action_receipt_to_customer',
-                    args: [order_server_ids, order.get_name(), order.get_client(), ticketImage],
+                    args: [order_server_ids, orderName, orderClient, ticketImage],
                 });
             } catch (error) {
                 order.set_to_email(false);
-                if (error instanceof Error) {
-                    throw error;
-                } else {
-                    throw 'There is no internet connection, impossible to send the email.';
-                }
+                return false;
             }
+            return true;
         }
     }
 
