@@ -21,6 +21,8 @@ var SwitchCompanyMenu = Widget.extend({
         'click .dropdown-item[data-menu] div.log_into': '_onSwitchCompanyClick',
         'click .dropdown-item[data-menu] div.toggle_company': '_onToggleCompanyClick',
     },
+    // force this item to be the first one to the left of the UserMenu in the systray
+    sequence: 1,
     /**
      * @override
      */
