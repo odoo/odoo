@@ -131,7 +131,29 @@
             <i class="fa fa-fw fa-film"/>
         </we-button>
     </xpath>
+    <xpath expr="//we-button[@data-toggle-bg-filter]" position="attributes">
+        <attribute name="data-dependencies" add="bg_video_toggler_opt" separator=","/>
+    </xpath>
     <xpath expr="//div[@data-js='BackgroundOptimize']" position="after">
+        <!-- Parallax -->
+        <div data-js="Parallax"
+             t-att-data-selector="selector"
+             t-att-data-exclude="exclude"
+             t-att-data-target="target">
+            <!-- &emsp; -->
+            <we-select string=" ⌙ Parallax"
+                       data-attribute-name="scrollBackgroundRatio"
+                       data-attribute-default-value="0"
+                       data-no-preview="true"
+                       data-dependencies="bg_image_opt">
+                <we-button data-name="parallax_none_opt" data-select-data-attribute="0">None</we-button>
+                <we-button data-select-data-attribute="1">Fixed</we-button>
+                <we-button data-select-data-attribute="0.6">Very Slow</we-button>
+                <we-button data-select-data-attribute="1.2">Slow</we-button>
+                <we-button data-select-data-attribute="1.6">Fast</we-button>
+                <we-button data-select-data-attribute="2">Very Fast</we-button>
+            </we-select>
+        </div>
         <div data-js="BackgroundVideo"
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
@@ -333,11 +355,11 @@
     <t t-set="only_bg_color_selector" t-value="'section .row > div, .s_text_highlight'"/>
     <t t-set="only_bg_color_exclude" t-value="'.s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .o_mega_menu .row > div, .s_image_gallery .row > div'"/>
 
-    <t t-set="base_only_bg_image_selector" t-value="'.parallax, .s_tabs .oe_structure > *, footer .oe_structure > *'"/>
+    <t t-set="base_only_bg_image_selector" t-value="'.s_tabs .oe_structure > *, footer .oe_structure > *'"/>
     <t t-set="only_bg_image_selector" t-value="base_only_bg_image_selector"/>
     <t t-set="only_bg_image_exclude" t-value="''"/>
 
-    <t t-set="both_bg_color_image_selector" t-value="'section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div'"/>
+    <t t-set="both_bg_color_image_selector" t-value="'section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .parallax'"/>
     <t t-set="both_bg_color_image_exclude" t-value="base_only_bg_image_selector + ', .s_carousel_wrapper, .s_color_blocks_2, .s_image_gallery .carousel-item, .s_google_map'"/>
 
     <t t-call="web_editor.snippet_options_background_options">
@@ -362,26 +384,6 @@
         <t t-set="with_colors" t-value="False"/>
         <t t-set="with_images" t-value="True"/>
     </t>
-
-    <!-- Parallax -->
-    <div data-js="parallax" data-selector=".parallax">
-        <we-select string="⌙ Scroll Speed" data-attribute-name="scrollBackgroundRatio" data-attribute-default-value="0">
-            <we-button data-select-data-attribute="0">No-scroll</we-button>
-            <we-divider/>
-            <we-button data-select-data-attribute="1">Fixed</we-button>
-            <we-divider/>
-            <we-button data-select-data-attribute="0.6">Very Slow</we-button>
-            <we-button data-select-data-attribute="1.2">Slow</we-button>
-            <we-button data-select-data-attribute="1.6">Fast</we-button>
-            <we-button data-select-data-attribute="2">Very Fast</we-button>
-        </we-select>
-
-        <we-colorpicker string="⌙ Filter"
-            data-select-style="true"
-            data-css-property="background-color"
-            data-color-prefix="bg-"
-            data-excluded="common, theme, custom"/>
-    </div>
 
     <!-- Border | Columns -->
     <div data-js="Box"

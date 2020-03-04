@@ -67,10 +67,24 @@
         <we-row t-if="with_colors or with_images" string="Background" class="o_we_full_row">
             <t t-if="with_colors" t-call="web_editor.snippet_options_background_color_widget"/>
             <t t-if="with_images">
-                <we-button title="Image" class="ml-auto" data-toggle-bg-image="true" t-att-data-dependencies="images_dependencies" data-no-preview="true">
+                <we-button title="Image" class="ml-auto"
+                           data-name="bg_image_toggle_opt"
+                           t-att-data-dependencies="images_dependencies"
+                           data-toggle-bg-image="true"
+                           data-no-preview="true">
                     <i class="fa fa-fw fa-camera"/>
                 </we-button>
-                <we-button title="Shape" data-toggle-bg-shape="true" t-att-data-dependencies="images_dependencies" data-no-preview="true">
+                <we-button title="Filter"
+                           data-name="bg_filter_toggle_opt"
+                           data-dependencies="bg_image_toggle_opt"
+                           data-toggle-bg-filter="true"
+                           data-no-preview="true">
+                    <i class="fa fa-fw fa-paint-brush"/>
+                </we-button>
+                <we-button title="Shape"
+                           t-att-data-dependencies="images_dependencies"
+                           data-toggle-bg-shape="true"
+                           data-no-preview="true">
                     <i class="fa fa-fw fa-square"/>
                 </we-button>
             </t>
@@ -115,6 +129,17 @@
             <t t-call="web_editor.snippet_options_image_optimization_widgets">
                 <t t-set="indent" t-value="True"/>
             </t>
+        </div>
+
+        <!-- Color Filter -->
+        <div t-att-data-selector="selector"
+             t-att-data-exclude="exclude"
+             t-att-data-target="target">
+            <we-colorpicker string="⌙ Filter"
+                            data-select-style="true"
+                            data-css-property="background-color"
+                            data-color-prefix="bg-"
+                            data-apply-to=".o_we_bg_filter"/>
         </div>
 
         <div data-js="BackgroundShape" string="Shape"

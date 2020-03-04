@@ -3265,6 +3265,20 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
 });
 
 registry.BackgroundToggler = SnippetOptionWidget.extend({
+    /**
+     * @override
+     */
+    start() {
+        this.$target.on('content_changed.BackgroundToggler', this._onExternalUpdate.bind(this));
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this.$target.off('.BackgroundToggler');
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -3298,6 +3312,25 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
         // TODO: use setWidgetValue instead of calling shapeOption method directly when possible
         return shapeOption._toggleShape();
     },
+    /**
+     * Toggles background filter on or off.
+     *
+     * @see this.selectClass for parameters
+     */
+    toggleBgFilter(previewMode, widgetValue, params) {
+        if (widgetValue) {
+            const bgFilterEl = document.createElement('div');
+            bgFilterEl.classList.add('o_we_bg_filter', 'bg-black-50');
+            const lastBackgroundEl = this._getLastPreFilterLayerElement();
+            if (lastBackgroundEl) {
+                $(lastBackgroundEl).after(bgFilterEl);
+            } else {
+                this.$target.prepend(bgFilterEl);
+            }
+        } else {
+            this.$target.find('.o_we_bg_filter').remove();
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -3313,6 +3346,9 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
                 const bgImageOpt = bgImageWidget.getParent();
                 return !!bgImageOpt._computeWidgetState('background', bgImageWidget.getMethodsParams('background'));
             }
+            case 'toggleBgFilter': {
+                return this._hasBgFilter();
+            }
             case 'toggleBgShape': {
                 const [shapeWidget] = this._requestUserValueWidgets('bg_shape_opt');
                 const shapeOption = shapeWidget.getParent();
@@ -3320,6 +3356,38 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
             }
         }
         return this._super(...arguments);
+    },
+    /**
+     * @private
+     */
+    _getLastPreFilterLayerElement() {
+        return null;
+    },
+    /**
+     * @private
+     * @returns {Boolean}
+     */
+    _hasBgFilter() {
+        return !!this.$target.find('> .o_we_bg_filter').length;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onExternalUpdate() {
+        if (this._hasBgFilter()
+                && !this._getLastPreFilterLayerElement()
+                && !getBgImageURL(this.$target)) {
+            // No 'pre-filter' background layout anymore and no more background
+            // image: remove the background filter option.
+            // TODO there probably is a better system to implement to do that
+            const widget = this._requestUserValueWidgets('bg_filter_toggle_opt')[0];
+            widget.$el.click();
+        }
     },
 });
 
@@ -3353,13 +3421,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
             this.__customImageSrc = widgetValue;
         }
 
-        if (widgetValue) {
-            this.$target.css('background-image', `url('${widgetValue}')`);
-            this.$target.addClass('oe_img_bg');
-        } else {
-            this.$target.css('background-image', '');
-            this.$target.removeClass('oe_img_bg');
-        }
+        this._setBackground(widgetValue);
 
         if (previewMode !== 'reset') {
             removeOnImageChangeAttrs.forEach(attr => delete this.$target[0].dataset[attr]);
@@ -3375,7 +3437,15 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
      * @override
      */
     setTarget: function () {
+        // When we change the target of this option we need to transfer the
+        // background-image from the old target to the new one.
+        const oldBgURL = getBgImageURL(this.$target);
+        this._setBackground('');
         this._super(...arguments);
+        if (oldBgURL) {
+            this._setBackground(oldBgURL);
+        }
+
         // TODO should be automatic for all options as equal to the start method
         this.__customImageSrc = getBgImageURL(this.$target[0]);
     },
@@ -3392,6 +3462,19 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
             return getBgImageURL(this.$target[0]);
         }
         return this._super(...arguments);
+    },
+    /**
+     * @private
+     * @param {string} backgroundURL
+     */
+    _setBackground(backgroundURL) {
+        if (backgroundURL) {
+            this.$target.css('background-image', `url('${backgroundURL}')`);
+            this.$target.addClass('oe_img_bg');
+        } else {
+            this.$target.css('background-image', '');
+            this.$target.removeClass('oe_img_bg');
+        }
     },
 });
 
@@ -3574,10 +3657,11 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         }
         if (!shapeContainer) {
             shapeContainer = document.createElement('div');
-            target.prepend(shapeContainer);
-            if (shapeContainer.nextElementSibling.matches('.s_parallax_bg')) {
-                // Move parallax before shape so it shows on top.
-                target.prepend(shapeContainer.nextElementSibling);
+            const preShapeLayerElement = this._getLastPreShapeLayerElement();
+            if (preShapeLayerElement) {
+                $(preShapeLayerElement).after(shapeContainer);
+            } else {
+                target.prepend(shapeContainer);
             }
             target.style.position = 'relative';
         }
@@ -3608,6 +3692,16 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         } else {
             this.$target[0].dataset.oeShapeData = JSON.stringify(shapeData);
         }
+    },
+    /**
+     * @private
+     */
+    _getLastPreShapeLayerElement() {
+        const $filterEl = this.$target.find('> .o_we_bg_filter');
+        if ($filterEl.length) {
+            return $filterEl[0];
+        }
+        return null;
     },
     /**
      * Returns the src of the shape corresponding to the current parameters.

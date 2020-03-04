@@ -256,16 +256,8 @@ font[class*='bg-'] {
 }
 
 // Background videos
-.o_background_video {
-    position: relative;
-
-    > * {
-        position: relative;
-    }
-}
 .o_bg_video_container {
-    @include o-position-absolute(0, 0 ,0 ,0);
-    overflow: hidden;
+    @extend %o-we-background-layer;
 }
 .o_bg_video_iframe {
     position: relative;
@@ -588,31 +580,14 @@ table.table_desc tr td {
 
 // Parallax
 .parallax {
-    position: relative;
-
     // TODO this introduces a limitation: no dropdown will be able to
     // overflow. Maybe there is a better way to find.
     &:not(.s_parallax_no_overflow_hidden) {
         overflow: hidden;
     }
 
-    > * {
-        position: relative;
-    }
     > .s_parallax_bg {
-        @include o-position-absolute(0, 0, 0, 0);
-        display: block;
-        background-color: inherit;
-        background-size: cover;
-        background-attachment: scroll;
-        pointer-events: none;
-
-        &::after {
-            content: "";
-            @include o-position-absolute(0, 0, 0, 0);
-            display: block;
-            background-color: inherit;
-        }
+        @extend %o-we-background-layer;
     }
     @include media-breakpoint-up(xl) {
         // Fixed backgrounds are disabled when using a mobile/tablet device,

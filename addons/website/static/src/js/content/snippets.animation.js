@@ -494,7 +494,7 @@ registry.slider = publicWidget.Widget.extend({
     },
 });
 
-registry.parallax = Animation.extend({
+registry.Parallax = Animation.extend({
     selector: '.parallax',
     disabledInEditableMode: false,
     effects: [{
@@ -530,27 +530,13 @@ registry.parallax = Animation.extend({
      */
     _rebuild: function () {
         // Add/find bg DOM element to hold the parallax bg (support old v10.0 parallax)
-        if (!this.$bg || !this.$bg.length) {
-            this.$bg = this.$('> .s_parallax_bg');
-            if (!this.$bg.length) {
-                this.$bg = $('<span/>', {
-                    class: 's_parallax_bg',
-                }).prependTo(this.$target);
-            }
-        }
-        var urlTarget = this.$target.css('background-image');
-        if (urlTarget !== 'none') {
-            this.$bg.css('background-image', urlTarget);
-        }
-        this.$target.css('background-image', 'none');
+        this.$bg = this.$('> .s_parallax_bg');
 
         // Get parallax speed
         this.speed = parseFloat(this.$target.attr('data-scroll-background-ratio') || 0);
 
         // Reset offset if parallax effect will not be performed and leave
-        this.$target.toggleClass('s_parallax_is_fixed', this.speed === 1);
         var noParallaxSpeed = (this.speed === 0 || this.speed === 1);
-        this.$target.toggleClass('s_parallax_no_overflow_hidden', noParallaxSpeed);
         if (noParallaxSpeed) {
             this.$bg.css({
                 transform: '',

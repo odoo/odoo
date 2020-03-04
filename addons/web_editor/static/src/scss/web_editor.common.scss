@@ -708,3 +708,33 @@ blockquote {
     @include bg-variant(".bg-#{$-color-name}", $-color);
     @include text-emphasis-variant(".text-#{$-color-name}", $-color);
 }
+
+// Base snippet rules
+%o-we-background-layer-parent {
+    &, & > * {
+        // Allow background layers to be placed accordingly and snippet content
+        // to be displayed on top. Note: we cannot just position the layers
+        // with z-index: -1, otherwise it would go under the snippet own
+        // background. Adding a z-index: 0 on the snippet to create its own
+        // stacking context won't solve that either as, in that case, any BS
+        // component inside would be using that stacking context (e.g. a
+        // dropdown inside snippet 1 of the page would go under snippet 2
+        // when opened since the dropdown z-index would be confined into
+        // snippet 1's stacking context.
+        position: relative;
+    }
+}
+%o-we-background-layer {
+    @include o-position-absolute(0, 0, 0, 0);
+    display: block;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    pointer-events: none;
+}
+
+section {
+    @extend %o-we-background-layer-parent;
+}
+.o_we_bg_filter {
+    @extend %o-we-background-layer;
+}
