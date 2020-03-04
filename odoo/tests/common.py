@@ -964,7 +964,7 @@ class ChromeBrowser():
         full_path = os.path.join(self.screenshots_dir, fname)
         with open(full_path, 'wb') as f:
             f.write(decoded)
-        self._logger.log(25, 'Screenshot in: %s', full_path)
+        self._logger.runbot('Screenshot in: %s', full_path)
 
     def _save_screencast(self, prefix='failed'):
         # could be encododed with something like that
@@ -993,11 +993,11 @@ class ChromeBrowser():
         if ffmpeg_path:
             framerate = int(len(self.screencast_frames) / (self.screencast_frames[-1].get('timestamp') - self.screencast_frames[0].get('timestamp')))
             r = subprocess.run([ffmpeg_path, '-framerate', str(framerate), '-i', '%s/frame_%%05d.png' % self.screencasts_dir, outfile])
-            self._logger.log(25, 'Screencast in: %s', outfile)
+            self._logger.runbot('Screencast in: %s', outfile)
         else:
             outfile = outfile.strip('.mp4')
             shutil.move(self.screencasts_frames_dir, outfile)
-            self._logger.log(25, 'Screencast frames in: %s', outfile)
+            self._logger.runbot('Screencast frames in: %s', outfile)
 
     def start_screencast(self):
         if self.screencasts_dir:
