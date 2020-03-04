@@ -70,6 +70,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
                         ref: content.ref,
                         account_payment_id: content.account_payment_id,
                         invoice_id: content.invoice_id,
+                        invoice_view_id: content.invoice_view_id,
                     }));
                     $content.filter('.js_unreconcile_payment').on('click', self._onRemoveMoveReconcile.bind(self));
                     $content.filter('.js_open_payment').on('click', self._onOpenPayment.bind(self));
@@ -96,13 +97,18 @@ var ShowPaymentLineWidget = AbstractField.extend({
      */
     _onOpenPayment: function (event) {
         var invoiceId = parseInt($(event.target).attr('invoice-id'));
+        var invoiceViewId = parseInt($(event.target).attr('invoice-view-id'));
         var paymentId = parseInt($(event.target).attr('payment-id'));
         var moveId = parseInt($(event.target).attr('move-id'));
         var res_model;
         var id;
+        var views = [[false, 'form']];
         if (invoiceId !== undefined && !isNaN(invoiceId)){
             res_model = "account.invoice";
             id = invoiceId;
+            if (invoiceViewId !== undefined && !isNaN(invoiceViewId)){
+                views = [[invoiceViewId, 'form']];
+            }
         } else if (paymentId !== undefined && !isNaN(paymentId)){
             res_model = "account.payment";
             id = paymentId;
@@ -116,7 +122,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
                 type: 'ir.actions.act_window',
                 res_model: res_model,
                 res_id: id,
-                views: [[false, 'form']],
+                views: views,
                 target: 'current'
             });
         }
