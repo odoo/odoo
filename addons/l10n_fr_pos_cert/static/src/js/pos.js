@@ -68,6 +68,7 @@ models.Orderline = models.Orderline.extend({
                     if (qty_decrease) {
                         var order = this.pos.get_order();
                         var selected_orderline = order.get_selected_orderline();
+                        qty_decrease = qty_decrease.replace(_t.database.parameters.decimal_point, '.');
                         qty_decrease = parseFloat(qty_decrease);
                         var decimals = this.pos.dp['Product Unit of Measure'];
                         qty_decrease = round_di(qty_decrease, decimals);
