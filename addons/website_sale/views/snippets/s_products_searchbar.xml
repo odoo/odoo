@@ -7,17 +7,13 @@
     </t>
 </template>
 <template id="s_products_searchbar" name="Products Search">
-    <section class="s_wsale_products_searchbar bg-200 pt24 pb24">
+    <section class="s_wsale_products_searchbar bg-200 pt48 pb48" data-vxml="001">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 offset-lg-2">
-                    <div class="card">
-                        <div class="card-body">
-                            <h2>Search for a product</h2>
-                            <p>We have amazing products in our shop, check them now !</p>
-                            <t t-call="website_sale.s_products_searchbar_input"/>
-                        </div>
-                    </div>
+                    <h2>Search for a product</h2>
+                    <p>We have amazing products in our shop, check them now !</p>
+                    <t t-call="website_sale.s_products_searchbar_input"/>
                 </div>
             </div>
         </div>
