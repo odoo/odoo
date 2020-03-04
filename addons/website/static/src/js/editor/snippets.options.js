@@ -626,6 +626,20 @@ options.Class.include({
     },
 });
 
+function _getLastPreFilterLayerElement($el) {
+    // Make sure parallax and video element are considered to be below the
+    // color filters / shape
+    const $bgVideo = $el.find('> .o_bg_video_container');
+    if ($bgVideo.length) {
+        return $bgVideo[0];
+    }
+    const $parallaxEl = $el.find('> .s_parallax_bg');
+    if ($parallaxEl.length) {
+        return $parallaxEl[0];
+    }
+    return null;
+}
+
 options.registry.BackgroundToggler.include({
     /**
      * Toggles background video on or off.
@@ -658,14 +672,32 @@ options.registry.BackgroundToggler.include({
         return this._super(...arguments);
     },
     /**
+     * TODO an overall better management of background layers is needed
+     *
      * @override
      */
-    _computeWidgetVisibility(widgetName, params) {
-        if (widgetName === 'bg_video_toggler_opt') {
-            return !this.$target.is('.parallax, .s_parallax_bg');
+    _getLastPreFilterLayerElement() {
+        const el = _getLastPreFilterLayerElement(this.$target);
+        if (el) {
+            return el;
         }
         return this._super(...arguments);
     },
+});
+
+options.registry.BackgroundShape.include({
+    /**
+     * TODO need a better management of background layers
+     *
+     * @override
+     */
+    _getLastPreShapeLayerElement() {
+        const el = this._super(...arguments);
+        if (el) {
+            return el;
+        }
+        return _getLastPreFilterLayerElement(this.$target);
+    }
 });
 
 options.registry.BackgroundVideo = options.Class.extend({
@@ -1555,16 +1587,22 @@ options.registry.layout_column = options.Class.extend({
     },
 });
 
-options.registry.parallax = options.Class.extend({
+options.registry.Parallax = options.Class.extend({
     /**
      * @override
      */
-    onFocus: function () {
-        this.trigger_up('option_update', {
-            optionNames: ['BackgroundImage', 'BackgroundPosition'],
-            name: 'target',
-            data: this.$target.find('> .s_parallax_bg'),
-        });
+    async start() {
+        this.parallaxEl = this.$target.find('> .s_parallax_bg')[0] || null;
+        this._updateBackgroundOptions();
+
+        this.$target.on('content_changed.ParallaxOption', this._onExternalUpdate.bind(this));
+
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    onFocus() {
         // Refresh the parallax animation on focus; at least useful because
         // there may have been changes in the page that influenced the parallax
         // rendering (new snippets, ...).
@@ -1574,8 +1612,101 @@ options.registry.parallax = options.Class.extend({
     /**
      * @override
      */
-    onMove: function () {
+    onMove() {
         this._refreshPublicWidgets();
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this.$target.off('.ParallaxOption');
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Build/remove parallax.
+     *
+     * @see this.selectClass for parameters
+     */
+    async selectDataAttribute(previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        if (params.attributeName !== 'scrollBackgroundRatio') {
+            return;
+        }
+
+        const isParallax = (widgetValue !== '0');
+        this.$target.toggleClass('parallax', isParallax);
+        this.$target.toggleClass('s_parallax_is_fixed', widgetValue === '1');
+        this.$target.toggleClass('s_parallax_no_overflow_hidden', (widgetValue === '0' || widgetValue === '1'));
+        if (isParallax) {
+            if (!this.parallaxEl) {
+                this.parallaxEl = document.createElement('span');
+                this.parallaxEl.classList.add('s_parallax_bg');
+                this.$target.prepend(this.parallaxEl);
+            }
+        } else {
+            if (this.parallaxEl) {
+                this.parallaxEl.remove();
+                this.parallaxEl = null;
+            }
+        }
+
+        this._updateBackgroundOptions();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeVisibility() {
+        return !this.$target.hasClass('o_background_video');
+    },
+    /**
+     * Updates external background-related option to work with the parallax
+     * element instead of the original target when necessary.
+     *
+     * @private
+     */
+    _updateBackgroundOptions() {
+        this.trigger_up('option_update', {
+            optionNames: ['BackgroundImage', 'BackgroundPosition', 'BackgroundOptimize'],
+            name: 'target',
+            data: this.parallaxEl ? $(this.parallaxEl) : this.$target,
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called on any snippet update to check if the parallax should still be
+     * enabled or not.
+     *
+     * TODO there is probably a better system to implement to solve this issue.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onExternalUpdate(ev) {
+        if (!this.parallaxEl) {
+            return;
+        }
+        const bgImage = this.parallaxEl.style.backgroundImage;
+        if (!bgImage || bgImage === 'none' || this.$target.hasClass('o_background_video')) {
+            // The parallax option was enabled but the background image was
+            // removed: disable the parallax option.
+            const widget = this._requestUserValueWidgets('parallax_none_opt')[0];
+            widget.$el.click();
+            widget.getParent().close(); // FIXME remove this ugly hack asap
+        }
     },
 });
 

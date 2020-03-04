@@ -33,16 +33,8 @@
 }
 
 // Background shapes
-[data-oe-shape-data] > * {
-    position: relative;
-}
-
 .o_we_shape {
-    @include o-position-absolute(0,0,0,0);
-    // position: absolute needs to be !important otherwise
-    // some classes (video background) override it with position: relative
-    position: absolute !important;
-    background-repeat: no-repeat;
+    @extend %o-we-background-layer;
 
     @each $module, $shapes in $o-bg-shapes {
         @each $shape, $style in $shapes {
@@ -68,7 +60,6 @@
         }
     }
 }
-
 .o_we_flip_x {
     transform: scaleX(-1);
 }
