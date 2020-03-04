@@ -107,6 +107,19 @@ var DebugManager = Widget.extend({
         qs.debug = '';
         window.location.search = '?' + $.param(qs);
     },
+    /**
+     * @private
+     * @param {string} model
+     * @param {string} operation
+     * @returns {Promise<boolean>}
+     */
+    _checkAccessRight(model, operation) {
+        return this._rpc({
+            model: model,
+            method: 'check_access_rights',
+            kwargs: {operation, raise_exception: false},
+        })
+    },
 });
 
 return DebugManager;

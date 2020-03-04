@@ -110,6 +110,28 @@ DebugManager.include({
  * (window action)
  */
 DebugManager.include({
+    async start() {
+        const [_, canSeeRecordRules, canSeeModelAccess] = await Promise.all([
+            this._super(...arguments),
+            this._checkAccessRight('ir.rule', 'read'),
+            this._checkAccessRight('ir.model.access', 'read'),
+        ])
+        this.canSeeRecordRules = canSeeRecordRules;
+        this.canSeeModelAccess = canSeeModelAccess;
+    },
+    /**
+     * Return the ir.model id from the model name
+     * @param {string} modelName
+     */
+    async getModelId(modelName) {
+        const [modelId] = await this._rpc({
+            model: 'ir.model',
+            method: 'search',
+            args: [[['model', '=', modelName]]],
+            kwargs: { limit: 1},
+        });
+        return modelId
+    },
     /**
      * Updates current action (action descriptor) on tag = action,
      */
@@ -136,24 +158,17 @@ DebugManager.include({
             flags: {action_buttons: true, headless: true}
         });
     },
-    get_view_fields: function () {
-        var model = this._action.res_model,
-            self = this;
-        this._rpc({
-            model: 'ir.model',
-            method: 'search',
-            args: [[['model', '=', model]]]
-        }).then(function (ids) {
-            self.do_action({
-                res_model: 'ir.model.fields',
-                name: _t('View Fields'),
-                views: [[false, 'list'], [false, 'form']],
-                domain: [['model_id', '=', model]],
-                type: 'ir.actions.act_window',
-                context: {
-                    'default_model_id': ids[0]
-                }
-            });
+    async get_view_fields () {
+        const modelId = await this.getModelId(this._action.res_model);
+        this.do_action({
+            res_model: 'ir.model.fields',
+            name: _t('View Fields'),
+            views: [[false, 'list'], [false, 'form']],
+            domain: [['model_id', '=', modelId]],
+            type: 'ir.actions.act_window',
+            context: {
+                'default_model_id': modelId
+            }
         });
     },
     manage_filters: function () {
@@ -175,7 +190,33 @@ DebugManager.include({
                 args: [this._action.res_model],
             })
             .then(this.do_action);
-    }
+    },
+    async actionRecordRules() {
+        const modelId = await this.getModelId(this._action.res_model);
+        this.do_action({
+            res_model: 'ir.rule',
+            name: _t('Model Record Rules'),
+            views: [[false, 'list'], [false, 'form']],
+            domain: [['model_id', '=', modelId]],
+            type: 'ir.actions.act_window',
+            context: {
+                'default_model_id': modelId,
+            },
+        });
+    },
+    async actionModelAccess() {
+        const modelId = await this.getModelId(this._action.res_model);
+        this.do_action({
+            res_model: 'ir.model.access',
+            name: _t('Model Access'),
+            views: [[false, 'list'], [false, 'form']],
+            domain: [['model_id', '=', modelId]],
+            type: 'ir.actions.act_window',
+            context: {
+                'default_model_id': modelId,
+            },
+        });
+    },
 });
 
 /**
@@ -188,11 +229,7 @@ DebugManager.include({
         this._can_edit_views = false;
         return Promise.all([
             this._super(),
-            this._rpc({
-                    model: 'ir.ui.view',
-                    method: 'check_access_rights',
-                    kwargs: {operation: 'write', raise_exception: false},
-                })
+            this._checkAccessRight('ir.ui.view', 'write')
                 .then(function (ar) {
                     this._can_edit_views = ar;
                 }.bind(this))
