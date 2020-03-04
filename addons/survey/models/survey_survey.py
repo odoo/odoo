@@ -632,18 +632,6 @@ class Survey(models.Model):
             self.sudo().flush(['session_state'])
 
     def _get_session_next_question(self):
-        """ Triggers the next question of the session.
-
-        We artificially add 2 seconds to the 'current_question_start_time' to account for server delay.
-        As the timing can influence the attendees score, we try to be fair with everyone by giving them
-        an extra few seconds before we start counting down.
-
-        Frontend should take the delay into account by displaying the appropriate animations.
-
-        Writing the next question on the survey is sudo'ed to avoid potential access right issues.
-        e.g: a survey user can create a live session from any survey but he can only write
-        on its own survey. """
-
         self.ensure_one()
 
         if not self.question_ids or not self.env.user.has_group('survey.group_survey_user'):
