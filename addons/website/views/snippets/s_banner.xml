@@ -2,19 +2,41 @@
 <odoo>
 
 <template id="s_banner" name="Banner">
-    <section class="s_banner parallax s_parallax_is_fixed pt96 pb96" data-scroll-background-ratio="1">
+    <section class="s_banner parallax s_parallax_is_fixed o_half_screen_height" data-scroll-background-ratio="1">
         <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
         <div class="container">
-            <div class="row s_nb_column_fixed">
-                <div class="col-lg-7 bg-white jumbotron rounded pt32 pb32" data-name="Box">
+            <div class="row no-gutters s_nb_column_fixed">
+                <div class="s_banner_box col-lg-7 bg-white p-5 lead" data-name="Box">
                     <h1><font style="font-size: 62px;">Sell Online. Easily.</font></h1>
-                    <p class="lead">This is a simple hero unit, a simple jumbotron-style component <br/>for calling extra attention to featured content or information.</p>
-                    <p class="lead"><br/></p>
+                    <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+                    <p><br/></p>
                     <a href="#" class="btn btn-alpha">Do something</a>
                 </div>
             </div>
         </div>
     </section>
+</template>
+
+<template id="s_banner_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div id="so_padding" data-selector=".s_banner_box">
+            <we-select string="Spacing">
+                <we-button data-select-class="p-0">None</we-button>
+                <we-button data-select-class="p-1">Tiny</we-button>
+                <we-button data-select-class="p-2">Small</we-button>
+                <we-button data-select-class="p-3">Medium</we-button>
+                <we-button data-select-class="p-4">Large</we-button>
+                <we-button data-select-class="p-5">Huge</we-button>
+            </we-select>
+        </div>
+        <div id="so_banner_text_style" data-selector=".s_banner_box">
+            <we-select string="Paragraph">
+                <we-button data-select-class="small">Small</we-button>
+                <we-button data-select-class="">Medium</we-button>
+                <we-button data-select-class="lead">Large</we-button>
+            </we-select>
+        </div>
+    </xpath>
 </template>
 
 </odoo>
