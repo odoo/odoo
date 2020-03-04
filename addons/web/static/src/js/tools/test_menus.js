@@ -9,6 +9,7 @@
     var testedApps;
     var testedMenus;
     var blackListedMenus = ['base.menu_theme_store', 'base.menu_third_party'];
+    var appsMenusOnly = false;
 
     function createWebClientHooks() {
         var AbstractController = odoo.__DEBUG__.services['web.AbstractController'];
@@ -45,7 +46,8 @@
         }
     }
 
-    function clickEverywhere(menu_id){
+    function clickEverywhere(menu_id, light){
+        appsMenusOnly = light;
         setTimeout(_clickEverywhere, 1000, menu_id);
     }
 
@@ -104,6 +106,7 @@
         if (testedApps.indexOf(element.dataset.menuXmlid) >= 0) return Promise.resolve(); // Another infinite loop protection
         testedApps.push(element.dataset.menuXmlid);
         return testMenuItem(element).then(function () {
+            if (appsMenusOnly === true) return Promise.resolve();
             var $subMenuItems;
             $subMenuItems = $('.o_menu_entry_lvl_1, .o_menu_entry_lvl_2, .o_menu_entry_lvl_3, .o_menu_entry_lvl_4');
             var testMenuPromise = Promise.resolve();
@@ -172,6 +175,7 @@
      * the click on each of them
      */
     function testViews() {
+            if (appsMenusOnly === true) return Promise.resolve();
             var $switches = $("nav.o_cp_switch_buttons > button:not(.active):visible");
             var testSwitchPromise = Promise.resolve();
             // chainDeferred($switches, testSwitchPromise, testViewSwitch # FIXME
@@ -210,6 +214,7 @@
      * Click on each filter in the control pannel
      */
     function testFilters() {
+        if (appsMenusOnly === true) return Promise.resolve();
         var filterProm = Promise.resolve();
         // var $filters = $('div.o_control_panel div.btn-group.o_dropdown > ul.o_filters_menu > li:not(.o_add_custom_filter)');
         var $filters = $('.o_filters_menu > .o_menu_item:not(.d-none)');
