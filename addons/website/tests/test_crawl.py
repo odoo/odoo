@@ -85,7 +85,7 @@ class Crawler(HttpCaseWithUserDemo):
         count = len(seen)
         duration = time.time() - t0
         sql = self.registry.test_cr.sql_log_count - t0_sql
-        _logger.log(25, "public crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request, ", count, duration, sql, duration / count, float(sql) / count)
+        _logger.runbot("public crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request, ", count, duration, sql, duration / count, float(sql) / count)
 
     def test_20_crawl_demo(self):
         t0 = time.time()
@@ -95,7 +95,7 @@ class Crawler(HttpCaseWithUserDemo):
         count = len(seen)
         duration = time.time() - t0
         sql = self.registry.test_cr.sql_log_count - t0_sql
-        _logger.log(25, "demo crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)
+        _logger.runbot("demo crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)
 
     def test_30_crawl_admin(self):
         t0 = time.time()
@@ -105,4 +105,4 @@ class Crawler(HttpCaseWithUserDemo):
         count = len(seen)
         duration = time.time() - t0
         sql = self.registry.test_cr.sql_log_count - t0_sql
-        _logger.log(25, "admin crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)
+        _logger.runbot("admin crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)

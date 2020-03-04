@@ -125,8 +125,13 @@ def init_logger():
         return record
     logging.setLogRecordFactory(record_factory)
 
-    logging.addLevelName(25, "INFO")
+    logging.RUNBOT = 25
+    logging.addLevelName(logging.RUNBOT, "INFO") # displayed as info in log
     logging.captureWarnings(True)
+
+    def runbot(self, message, *args, **kws):
+        self.log(logging.RUNBOT, message, *args, **kws)
+    logging.Logger.runbot = runbot
 
     # enable deprecation warnings (disabled by default)
     warnings.filterwarnings('once', category=DeprecationWarning)
@@ -228,6 +233,7 @@ PSEUDOCONFIG_MAPPER = {
     'debug': ['odoo:DEBUG', 'odoo.sql_db:INFO'],
     'debug_sql': ['odoo.sql_db:DEBUG'],
     'info': [],
+    'runbot': ['odoo:RUNBOT', 'werkzeug:WARNING'],
     'warn': ['odoo:WARNING', 'werkzeug:WARNING'],
     'error': ['odoo:ERROR', 'werkzeug:ERROR'],
     'critical': ['odoo:CRITICAL', 'werkzeug:CRITICAL'],

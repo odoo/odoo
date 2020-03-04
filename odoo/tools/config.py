@@ -198,7 +198,7 @@ class configmanager(object):
         # For backward-compatibility, map the old log levels to something
         # quite close.
         levels = [
-            'info', 'debug_rpc', 'warn', 'test', 'critical',
+            'info', 'debug_rpc', 'warn', 'test', 'critical', 'runbot',
             'debug_sql', 'error', 'debug', 'debug_rpc_answer', 'notset'
         ]
         group.add_option('--log-level', dest='log_level', type='choice',

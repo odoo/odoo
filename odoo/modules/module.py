@@ -495,18 +495,13 @@ class OdooTestResult(unittest.result.TestResult):
 
 
 class OdooTestRunner(object):
-    """A test runner class that displays results in in logger.
-    Simplified verison of TextTestRunner(
+    """A test runner class that displays results in in logger using OdooTestResult.
+    Simplified verison of TextTestRunner
     """
 
     def run(self, test):
         result = OdooTestResult()
-
-        start_time = time.perf_counter()
         test(result)
-        time_taken = time.perf_counter() - start_time
-        run = result.testsRun
-        _logger.info("Ran %d test%s in %.3fs", run, run != 1 and "s" or "", time_taken)
         return result
 
 current_test = None
@@ -535,8 +530,10 @@ def run_unit_tests(module_name, position='at_install'):
             t0_sql = odoo.sql_db.sql_counter
             _logger.info('%s running tests.', m.__name__)
             result = OdooTestRunner().run(suite)
+            log_level = logging.INFO
             if time.time() - t0 > 5:
-                _logger.log(25, "%s tested in %.2fs, %s queries", m.__name__, time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
+                log_level = logging.RUNBOT
+            _logger.log(log_level, "%s ran %s tests in %.2fs, %s queries", m.__name__, result.testsRun, time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
             if not result.wasSuccessful():
                 r = False
                 _logger.error("Module %s: %d failures, %d errors", module_name, len(result.failures), len(result.errors))

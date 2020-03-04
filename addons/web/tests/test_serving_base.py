@@ -982,7 +982,7 @@ class TestStaticInheritancePerformance(TestStaticInheritanceCommon):
         contents = HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
         after = datetime.now()
         delta2500 = after - before
-        _logger.log(25, 'Static Templates Inheritance: 2500 templates treated in %s seconds' % delta2500.total_seconds())
+        _logger.runbot('Static Templates Inheritance: 2500 templates treated in %s seconds' % delta2500.total_seconds())
 
         whole_tree = etree.fromstring(contents)
         self.assertEqual(len(whole_tree), nMod * nFilePerMod * nTemplatePerFile)
@@ -997,6 +997,6 @@ class TestStaticInheritancePerformance(TestStaticInheritanceCommon):
         delta25000 = after - before
 
         time_ratio = delta25000.total_seconds() / delta2500.total_seconds()
-        _logger.log(25, 'Static Templates Inheritance: 25000 templates treated in %s seconds' % delta25000.total_seconds())
-        _logger.log(25, 'Static Templates Inheritance: Computed linearity ratio: %s' % time_ratio)
+        _logger.runbot('Static Templates Inheritance: 25000 templates treated in %s seconds' % delta25000.total_seconds())
+        _logger.runbot('Static Templates Inheritance: Computed linearity ratio: %s' % time_ratio)
         self.assertLessEqual(time_ratio, 10)
