@@ -380,8 +380,9 @@ var KanbanRecord = Widget.extend({
      *
      * @private
      * @param {string} fieldName field used to set cover image
+     * @param {boolean} autoOpen automatically open the file choser if there are no attachments
      */
-    _setCoverImage: function (fieldName) {
+    _setCoverImage: function (fieldName, autoOpen) {
         var self = this;
         this._rpc({
             model: 'ir.attachment',
@@ -395,6 +396,7 @@ var KanbanRecord = Widget.extend({
         }).then(function (attachmentIds) {
             self.imageUploadID = _.uniqueId('o_cover_image_upload');
             self.accepted_file_extensions = 'image/*';  // prevent uploading of other file types
+            self.attachment_count = attachmentIds.length;
             var coverId = self.record[fieldName] && self.record[fieldName].raw_value;
             var $content = $(QWeb.render('KanbanView.SetCoverModal', {
                 coverId: coverId,
@@ -442,6 +444,10 @@ var KanbanRecord = Widget.extend({
             });
             dialog.opened().then(function () {
                 var $selectBtn = dialog.$footer.find('.btn-primary');
+                if (autoOpen && !self.attachment_count) {
+                    $selectBtn.click();
+                }
+
                 $content.on('click', '.o_kanban_cover_image', function (ev) {
                     $imgs.not(ev.currentTarget).removeClass('o_selected');
                     $selectBtn.prop('disabled', !$(ev.currentTarget).toggleClass('o_selected').hasClass('o_selected'));
@@ -687,10 +693,11 @@ var KanbanRecord = Widget.extend({
                 break;
             case 'set_cover':
                 var fieldName = $action.data('field');
+                var autoOpen = $action.data('auto-open');
                 if (this.fields[fieldName].type === 'many2one' &&
                     this.fields[fieldName].relation === 'ir.attachment' &&
                     this.fieldsInfo[fieldName].widget === 'attachment_image') {
-                    this._setCoverImage(fieldName);
+                    this._setCoverImage(fieldName, autoOpen);
                 } else {
                     var warning = _.str.sprintf(_t('Could not set the cover image: incorrect field ("%s") is provided in the view.'), fieldName);
                     this.do_warn(warning);

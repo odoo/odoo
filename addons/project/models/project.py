@@ -5,7 +5,7 @@ import ast
 from datetime import timedelta
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import UserError, AccessError, ValidationError
+from odoo.exceptions import UserError, AccessError, ValidationError, RedirectWarning
 from odoo.tools.misc import format_date
 
 
@@ -132,6 +132,10 @@ class Project(models.Model):
                     Create a new project</p>''')
             })
             action_data = action.read()[0]
+
+            action_config = self.env.ref('project.open_view_project_all_config', False)
+            if action_config:
+                action_config.sudo().write({'help': action.help})
         # Reload the dashboard
         return action_data
 
@@ -352,6 +356,22 @@ class Project(models.Model):
 
         return res
 
+    def action_unlink(self):
+        wizard = self.env['project.delete.wizard'].create({
+            'project_ids': self.ids
+        })
+
+        return {
+            'name': _('Confirmation'),
+            'view_mode': 'form',
+            'res_model': 'project.delete.wizard',
+            'views': [(self.env.ref('project.project_delete_wizard_form').id, 'form')],
+            'type': 'ir.actions.act_window',
+            'res_id': wizard.id,
+            'target': 'new',
+            'context': self.env.context,
+        }
+
     def unlink(self):
         # Check project is empty
         for project in self.with_context(active_test=False):
@@ -507,9 +527,9 @@ class Task(models.Model):
         domain="[('project_ids', '=', project_id)]", copy=False)
     tag_ids = fields.Many2many('project.tags', string='Tags')
     kanban_state = fields.Selection([
-        ('normal', 'Grey'),
-        ('done', 'Green'),
-        ('blocked', 'Red')], string='Kanban State',
+        ('normal', 'In Progress'),
+        ('done', 'Ready'),
+        ('blocked', 'Blocked')], string='Kanban State',
         copy=False, default='normal', required=True)
     kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', tracking=True)
     create_date = fields.Datetime("Created On", readonly=True, index=True)
@@ -943,6 +963,11 @@ class Task(models.Model):
         return headers
 
     def _message_post_after_hook(self, message, msg_vals):
+        if message.attachment_ids and not self.displayed_image_id:
+            image_attachments = message.attachment_ids.filtered(lambda a: a.mimetype == 'image')
+            if image_attachments:
+                self.displayed_image_id = image_attachments[0]
+
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
