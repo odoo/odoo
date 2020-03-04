@@ -183,10 +183,15 @@ class ProductTemplate(models.Model):
         for template in self:
             template.currency_id = template.company_id.sudo().currency_id.id or main_company.currency_id.id
 
-    @api.depends_context('company')
+    @api.depends_context('force_company')
     def _compute_cost_currency_id(self):
+        # Cost_currency_id is the displayed currency for standard_price
+        # which is company_dependent and thus depends on force_company
+        # context key (or self.env.company)
+        company_id = self._context.get('force_company') or self.env.company.id
+        company = self.env['res.company'].browse(company_id)
         for template in self:
-            template.cost_currency_id = self.env.company.currency_id.id
+            template.cost_currency_id = company.currency_id.id
 
     def _compute_template_price(self):
         prices = self._compute_template_price_no_inverse()
@@ -229,8 +234,11 @@ class ProductTemplate(models.Model):
         else:
             self.write({'list_price': self.price})
 
+    @api.depends_context('force_company')
     @api.depends('product_variant_ids', 'product_variant_ids.standard_price')
     def _compute_standard_price(self):
+        # Depends on force_company context because standard_price is company_dependent
+        # on the product_product
         unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
         for template in unique_variants:
             template.standard_price = template.product_variant_ids.standard_price
