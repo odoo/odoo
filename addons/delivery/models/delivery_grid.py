@@ -67,6 +67,8 @@ class ProviderGrid(models.Model):
 
     def _get_price_available(self, order):
         self.ensure_one()
+        self = self.sudo()
+        order = order.sudo()
         total = weight = volume = quantity = 0
         total_delivery = 0.0
         for line in order.order_line:
