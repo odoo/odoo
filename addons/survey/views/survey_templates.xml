@@ -302,7 +302,7 @@
              t-att-id="question.id" t-att-data-required="question.constr_mandatory"
              t-att-data-constr-error-msg="question.constr_error_msg"
              t-att-data-validation-error-msg="question.validation_error_msg">
-            <h4>
+            <h4 t-if="not hide_question_title">
                 <span t-field='question.title' />
                 <span t-if="question.constr_mandatory" class="text-danger">*</span>
             </h4>
