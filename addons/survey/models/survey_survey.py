@@ -549,7 +549,7 @@ class Survey(models.Model):
             if page_or_question_id == 0:
                 return pages_or_questions[0]
 
-        current_page_index = pages_or_questions.ids.index(next(p.id for p in pages_or_questions if p.id == page_or_question_id))
+        current_page_index = pages_or_questions.ids.index(page_or_question_id)
 
         # Get previous and we are on first page  OR Get Next and we are on last page
         if (go_back and current_page_index == 0) or (not go_back and current_page_index == len(pages_or_questions) - 1):
@@ -581,6 +581,27 @@ class Survey(models.Model):
             return pages_or_questions[current_page_index + (1 if not go_back else -1)]
 
         return Question
+
+    def _is_last_page_or_question(self, user_input, page_or_question):
+        """ This method checks if the given question or page is the last one.
+        This includes conditional questions configuration. If the given question is normally not the last one but
+        every following questions are inactive due to conditional questions configurations (and user choices),
+        the given question will be the last one.
+        For section, we check in each following section if there is an active question.
+        If yes, the given page is not the last one.
+        """
+        pages_or_questions = self._get_pages_or_questions(user_input)
+        current_page_index = pages_or_questions.ids.index(page_or_question.id)
+        next_page_or_question_candidates = pages_or_questions[current_page_index + 1:]
+        if next_page_or_question_candidates:
+            inactive_questions = user_input._get_inactive_conditional_questions()
+            if self.questions_layout == 'page_per_question':
+                return not any(next_question not in inactive_questions for next_question in next_page_or_question_candidates)
+            elif self.questions_layout == 'page_per_section':
+                for section in next_page_or_question_candidates:
+                    return not any(next_question not in inactive_questions for next_question in section.question_ids)
+
+        return True
 
     def _get_survey_questions(self, answer=None, page_id=None, question_id=None):
         """ Returns a tuple containing: the survey question and the passed question_id / page_id

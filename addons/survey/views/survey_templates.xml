@@ -88,6 +88,7 @@
                 class="d-flex flex-grow-1"
                 t-att-data-answer-token="answer.access_token"
                 t-att-data-survey-token="survey.access_token"
+                t-att-data-users-can-go-back="survey.users_can_go_back"
                 t-att-data-session-in-progress="answer.is_session_answer"
                 t-att-data-is-start-screen="answer.state == 'new'"
                 t-att-data-readonly="survey_form_readonly"
@@ -186,7 +187,9 @@
             <div class="row">
                 <div class="offset-3 col-6 text-center mt16">
                     <button type="submit" t-att-value="'next' if not survey_last else 'finish'" class="btn btn-primary">
-                        Continue</button><span class="font-weight-bold text-muted ml-2 d-none d-md-inline"> or press Enter</span>
+                        <t t-if="not survey_last">Continue</t>
+                        <t t-else="">Submit</t>
+                    </button><span class="font-weight-bold text-muted ml-2 d-none d-md-inline"> or press Enter</span>
                 </div>
             </div>
         </t>
@@ -221,12 +224,8 @@
                 <div class="row">
                     <div class="offset-3 col-6 text-center mt16">
                         <button type="submit" t-att-value="'next' if not survey_last else 'finish'" class="btn btn-primary">
-                            <t t-if="answer.is_session_answer">
-                                Submit
-                            </t>
-                            <t t-else="">
-                                Continue
-                            </t>
+                            <t t-if="answer.is_session_answer or survey_last">Submit</t>
+                            <t t-else="">Continue</t>
                         </button>
                         <span class="font-weight-bold text-muted ml-2 d-none d-md-inline">or press Enter</span>
                     </div>
@@ -532,7 +531,7 @@
                 <t t-set="item_idx" t-value="0"/>
                 <!-- For matrix, we have an extra check because we have rows * columns total options -->
                 <t t-set="useKeySelection" t-value="useKeySelection and (len(question.suggested_answer_ids) * len(question.matrix_row_ids)) &lt; len(letters)" />
-                <tr class="bg-white text-white" t-foreach="question.matrix_row_ids" t-as="row_label">
+                <tr class="bg-white text-white" t-foreach="question.matrix_row_ids" t-as="row_label" t-att-id="row_label.id">
                     <th class="border-0 font-weight-normal text-left"><span t-field="row_label.value" /></th>
                     <t t-foreach="question.suggested_answer_ids" t-as="col_label">
                         <t t-set="answer" t-value="answer_lines.filtered(lambda line: line.suggested_answer_id == col_label and line.matrix_row_id == row_label)"/>
