@@ -115,6 +115,16 @@ class BaseFollowersTest(common.BaseFunctionalTest):
                 'channel_id': self.channel_listen.id,
             })
 
+    def test_followers_default_partner_context(self):
+        """Test that a follower partner_id is not taken from context
+           when channel id is also defined.
+        """
+        test_record = self.test_record.sudo(self.user_employee)
+        test_record.with_context(default_partner_id=1).message_subscribe(
+            partner_ids=[self.user_employee.partner_id.id, self.user_admin.partner_id.id],
+            channel_ids=[self.channel_listen.id]
+        )
+
 
 class AdvancedFollowersTest(common.BaseFunctionalTest):
     @classmethod
