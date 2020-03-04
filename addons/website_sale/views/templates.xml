@@ -996,7 +996,7 @@
             <table t-if="suggested_products" id="suggested_products" class="js_cart_lines table table-striped table-sm">
                 <tbody>
                     <tr t-foreach="suggested_products" t-as="product">
-                        <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
+                        <t t-set="combination_info" t-value="product._get_combination_info_variant(pricelist=website_sale_order.pricelist_id)"/>
                         <td class='td-img text-center'>
                             <a t-att-href="product.website_url">
                                 <span t-field="product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}" />
