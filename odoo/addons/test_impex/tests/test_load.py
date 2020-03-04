@@ -905,10 +905,19 @@ class test_o2m(ImporterCase):
     def test_subfields_fail_by_implicit_id(self):
         result = self.import_(['value/parent_id'], [['noxidforthat']])
         self.assertEqual(result['messages'], [message(
-            u"No matching record found for name 'noxidforthat' in field 'Value/Parent'",
+            u"No matching record found for name 'noxidforthat' in field 'Value/Parent'", index=0,
             moreinfo=moreaction(res_model='export.one2many')
             )])
         self.assertIs(result['ids'], False)
+
+    def test_subfields_fail_with_multi_rows(self):
+        result = self.import_(['value/parent_id'], [['noxidforthat'], ['noxidforthat1'], ['noxidforthat2']])
+        self.assertEqual(result['messages'], [message(
+            u"No matching record found for name 'noxidforthat' in field 'Value/Parent'", from_=0, to_=2, index=0,
+            moreinfo=moreaction(res_model='export.one2many',),
+            )])
+        self.assertIs(result['ids'], False)
+        self.assertEqual(result['messages'][0]['index'], 0)
 
     def test_link_inline(self):
         """ m2m-style specification for o2ms
@@ -1104,7 +1113,7 @@ class test_realworld(SavepointCaseWithUserDemo):
             [['5'],],
         )
         self.assertEqual(result['messages'], [message(
-            u"No matching record found for name '5' in field 'Child/Child1/Parent'", field='child',
+            u"No matching record found for name '5' in field 'Child/Child1/Parent'", field='child', index=0,
             moreinfo=moreaction(res_model='export.one2many.multiple'))])
         self.assertIs(result['ids'], False)
 
