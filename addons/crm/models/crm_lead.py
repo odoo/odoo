@@ -12,6 +12,7 @@ from odoo.tools import email_re, email_split
 from odoo.exceptions import UserError, AccessError
 from odoo.addons.phone_validation.tools import phone_validation
 from collections import OrderedDict
+import re
 
 from . import crm_stage
 
@@ -153,6 +154,8 @@ class Lead(models.Model):
     lost_reason = fields.Many2one(
         'crm.lost.reason', string='Lost Reason',
         index=True, ondelete='restrict', tracking=True)
+    possible_duplicate_ids = fields.One2many('crm.lead', string='Possible Duplicates', compute='_compute_possible_duplicate_ids')
+    possible_duplicate_count = fields.Integer('Possible Duplicates Count', compute='_compute_possible_duplicate_ids')
 
     _sql_constraints = [
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
@@ -235,6 +238,25 @@ class Lead(models.Model):
         mapped_data = {m['opportunity_id'][0]: m['opportunity_id_count'] for m in meeting_data}
         for lead in self:
             lead.meeting_count = mapped_data.get(lead.id, 0)
+
+    def _compute_possible_duplicate_ids(self):
+        leads = self.env['crm.lead'].with_context(active_test=False).search([])
+        mapped_data = dict()
+        for lead in leads:
+            if lead.email_from:
+                domain = self._get_email_domain(lead.email_from)
+                if mapped_data.get(domain):
+                    mapped_data[domain].append(lead.id)
+                else:
+                    mapped_data[domain] = [lead.id]
+        for lead in self:
+            if lead.email_from:
+                lead.possible_duplicate_ids = mapped_data.get(self._get_email_domain(lead.email_from))
+                lead.possible_duplicate_count = len(lead.with_context(active_test=False).possible_duplicate_ids) - 1
+
+    def _get_email_domain(self, email):
+        regex = re.compile(r"""([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.([a-zA-Z]{2,63})""", re.VERBOSE)
+        return regex.match(email).group(2)
 
     def _search_phone_mobile_search(self, operator, value):
         if len(value) <= 2:
@@ -638,6 +660,13 @@ class Lead(models.Model):
             'default_team_id': self.team_id.id,
             'default_name': self.name,
         }
+        return action
+
+    def action_view_possible_duplicates(self):
+        action = self.env.ref('crm.crm_lead_opportunities').read()[0]
+        action['display_name'] = _('Possible Duplicates')
+        action['domain'] = [('id', 'in', self.with_context(active_test=False).possible_duplicate_ids.ids)]
+        action['context'] = {'active_test': False}
         return action
 
     # ------------------------------------------------------------
