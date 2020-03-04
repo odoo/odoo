@@ -107,6 +107,45 @@ odoo.define('web.component_extension_tests', function (require) {
             parent2.destroy();
         });
 
+        QUnit.test("Component lazy load libs", async function (assert) {
+            assert.expect(4);
+            const fixture = document.body.querySelector('#qunit-fixture');
+            const ajaxService = new AjaxService();
+            ajaxService.loadLibs = function () {
+                assert.deepEqual(
+                    ...arguments,
+                    {
+                        assetLibs: ["asset"],
+                        cssLibs: ["css"],
+                        jsLibs: ["js"]
+                    }
+                )
+                assert.step('loadlibs');
+                return Promise.resolve();
+            }
+            const env = {
+                services: {
+                    ajax: ajaxService,
+                }
+            }
+            class Parent extends Component {}
+            Parent.jsLibs = ['js'];
+            Parent.cssLibs = ['css'];
+            Parent.assetLibs = ['asset'];
+            Parent.template = xml`<div>Parent</div>`;
+            Parent.env = makeTestEnvironment(env, () => Promise.reject());
+
+            const parent = new Parent();
+            await parent.mount(fixture);
+            assert.verifySteps(['loadlibs']);
+            assert.strictEqual(
+                fixture.innerHTML,
+                `<div>Parent</div>`
+            );
+
+            parent.destroy();
+        });
+
         QUnit.module("Custom Hooks");
 
         QUnit.test("useListener handler type", async function (assert) {

@@ -65,9 +65,15 @@
             });
             proms.push(templateProm);
         }
-        if (this.jsLibs || this.cssLibs || this.assetLibs) {
-            proms.push(this._loadLibs(this));
+        if (constructor.jsLibs || constructor.cssLibs || constructor.assetLibs) {
+            const libs = {
+                jsLibs: constructor.jsLibs,
+                cssLibs: constructor.cssLibs,
+                assetLibs: constructor.assetLibs,
+            }
+            proms.push(this.env.services.ajax.loadLibs(libs));
         }
+        await Promise.all(proms);
         return originalWillStart.apply(this, ...arguments);
     };
 })();
