@@ -47,8 +47,12 @@
      */
     const originalWillStart = owl.Component.prototype.willStart;
     owl.Component.prototype.willStart = async function() {
-        if (this.constructor.xmlDependencies) {
-            await this.env.session.loadOwlXML(this.constructor.xmlDependencies).then(results => {
+        const constructor = this.constructor;
+        const proms = [];
+        const unknownTemplate = !(constructor.template in this.env.qweb.templates);
+        if (unknownTemplate && this.constructor.xmlDependencies) {
+            const templateProm = this.env.services.ajax.loadOwlXML(constructor.xmlDependencies);
+            templateProm.then(results => {
                 for (const doc of results) {
                     const frag = document.createElement('t');
                     frag.innerHTML = doc;
@@ -59,6 +63,10 @@
                     }
                 }
             });
+            proms.push(templateProm);
+        }
+        if (this.jsLibs || this.cssLibs || this.assetLibs) {
+            proms.push(this._loadLibs(this));
         }
         return originalWillStart.apply(this, ...arguments);
     };

@@ -7,6 +7,23 @@ var core = require('web.core');
 var session = require('web.session');
 
 var AjaxService = AbstractService.extend({
+    loadFile: ajax.loadFile,
+    loadOwlXML: function(urls) {
+        this.globalProms = this.globalProms || {};
+        if (!urls) {
+            return Promise.all(Object.values(this.globalProms));
+        }
+        const currentProms = [];
+        for (const url of urls) {
+            let urlProm = this.globalProms[url];
+            if (!urlProm) {
+                urlProm = this.loadFile(url);
+                this.globalProms[url] = urlProm;
+            }
+            currentProms.push(urlProm);
+        }
+        return Promise.all(currentProms);
+    },
     /**
      * @param {Object} libs - @see ajax.loadLibs
      * @param {Object} [context] - @see ajax.loadLibs

@@ -250,23 +250,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         });
         return lock;
     },
-    loadFile: ajax.loadFile,
-    loadOwlXML: function(urls) {
-        this.globalProms = this.globalProms || {};
-        if (!urls) {
-            return Promise.all(Object.values(this.globalProms));
-        }
-        const currentProms = {};
-        for (const url of urls) {
-            let urlProm = this.globalProms[url];
-            if (!urlProm) {
-                urlProm = this.loadFile(url);
-                this.globalProms[url] = urlProm;
-            }
-            currentProms[url] = urlProm;
-        }
-        return Promise.all(Object.values(currentProms));
-    },
     get_currency: function (currency_id) {
         return this.currencies[currency_id];
     },
