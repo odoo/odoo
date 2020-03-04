@@ -314,7 +314,7 @@
                                     accept it on the behalf of </span><b t-field="quotation.partner_id.commercial_partner_id"/><span>, for an amount of </span>
                                     <b data-id="total_amount" t-field="quotation.amount_total"
                                         t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
-                                    <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
+                                    <span>with payment terms: </span><b t-field="quotation.payment_term_id.note"/>.
                                 </p>
                                 <t t-call="portal.portal_signature">
                                     <t t-set="object" t-value="quotation"/>
@@ -337,7 +337,7 @@
                                 accept it on the behalf of </span><b t-field="quotation.partner_id.commercial_partner_id"/><span>, for an amount of </span>
                                 <b data-id="total_amount" t-field="quotation.amount_total"
                                   t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
-                                <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
+                                <span>with payment terms: </span><b t-field="quotation.payment_term_id.note"/>.
                             </p>
                         </div>
                         <div class="modal-footer">
@@ -519,7 +519,7 @@
                   <div t-if="quotation.payment_term_id">
                       <label class="col-sm-5 col-xs-5 text-right">Payment Terms:</label>
                       <div class="col-sm-7 col-xs-7">
-                          <span t-field="quotation.payment_term_id"/>
+                          <span t-field="quotation.payment_term_id.note"/>
                       </div>
                   </div>
               </div>
