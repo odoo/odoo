@@ -71,6 +71,11 @@ var ShowPaymentLineWidget = AbstractField.extend({
                         move_id: content.move_id,
                         ref: content.ref,
                         account_payment_id: content.account_payment_id,
+<<<<<<< HEAD
+=======
+                        invoice_id: content.invoice_id,
+                        invoice_view_id: content.invoice_view_id,
+>>>>>>> 35d3618611f... temp
                     }));
                     $content.filter('.js_unreconcile_payment').on('click', self._onRemoveMoveReconcile.bind(self));
                     $content.filter('.js_open_payment').on('click', self._onOpenPayment.bind(self));
@@ -97,11 +102,27 @@ var ShowPaymentLineWidget = AbstractField.extend({
      * @param {MouseEvent} event
      */
     _onOpenPayment: function (event) {
+<<<<<<< HEAD
+=======
+        var invoiceId = parseInt($(event.target).attr('invoice-id'));
+        var invoiceViewId = parseInt($(event.target).attr('invoice-view-id'));
+>>>>>>> 35d3618611f... temp
         var paymentId = parseInt($(event.target).attr('payment-id'));
         var moveId = parseInt($(event.target).attr('move-id'));
         var res_model;
         var id;
+<<<<<<< HEAD
         if (paymentId !== undefined && !isNaN(paymentId)){
+=======
+        var views = [[false, 'form']];
+        if (invoiceId !== undefined && !isNaN(invoiceId)){
+            res_model = "account.invoice";
+            id = invoiceId;
+            if (invoiceViewId !== undefined && !isNaN(invoiceViewId)){
+                views = [[invoiceViewId, 'form']];
+            }
+        } else if (paymentId !== undefined && !isNaN(paymentId)){
+>>>>>>> 35d3618611f... temp
             res_model = "account.payment";
             id = paymentId;
         } else if (moveId !== undefined && !isNaN(moveId)){
@@ -114,7 +135,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
                 type: 'ir.actions.act_window',
                 res_model: res_model,
                 res_id: id,
-                views: [[false, 'form']],
+                views: views,
                 target: 'current'
             });
         }
