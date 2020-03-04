@@ -64,8 +64,12 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         }
         // Getters
 
+        get currentOrder() {
+            return this.env.pos.get_order();
+        }
+
         get currentOrderClient() {
-            return this.env.pos.get_order().get_client();
+            return this.currentOrder.get_client();
         }
         get clients() {
             if (this.state.query && this.state.query.trim() !== '') {
@@ -119,11 +123,9 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             this.deactivateEditMode();
         }
         clickNext() {
-            if (this.nextButton.command === 'set') {
-                this.env.pos.get_order().set_client(this.state.selectedClient);
-            } else if (this.nextButton.command === 'deselect') {
-                this.env.pos.get_order().set_client(null);
-            }
+            const newClient = this.nextButton.command === 'set' ? this.state.selectedClient : null;
+            this._updateOrderPricelist(newClient);
+            this.currentOrder.set_client(newClient);
             this.back();
         }
         activateEditMode(event) {
@@ -163,7 +165,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                     this.currentOrderClient &&
                     this.state.selectedClient.id === this.currentOrderClient.id
                 ) {
-                    this.env.pos.get_order().set_client(this.state.selectedClient);
+                    this.currentOrder.set_client(this.state.selectedClient);
                 }
                 this.deactivateEditMode();
             } catch (err) {
@@ -173,6 +175,28 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         }
         cancelEdit() {
             this.deactivateEditMode();
+        }
+        _updateOrderPricelist(newClient) {
+            let newClientPricelist, newClientFiscalPosition;
+            const defaultFiscalPosition = this.env.pos.fiscal_positions.find(
+                position => position.id === this.env.pos.config.default_fiscal_position_id[0]
+            );
+            if (newClient) {
+                newClientFiscalPosition = newClient.property_account_position_id
+                    ? this.env.pos.fiscal_positions.find(
+                          position => position.id === newClient.property_account_position_id[0]
+                      )
+                    : defaultFiscalPosition;
+                newClientPricelist =
+                    this.env.pos.pricelists.find(
+                        pricelist => pricelist.id === newClient.property_product_pricelist[0]
+                    ) || this.env.pos.default_pricelist;
+            } else {
+                newClientFiscalPosition = defaultFiscalPosition;
+                newClientPricelist = this.env.pos.default_pricelist;
+            }
+            this.currentOrder.fiscal_position = newClientFiscalPosition;
+            this.currentOrder.set_pricelist(newClientPricelist);
         }
         _resetState() {
             this.state.query = null;

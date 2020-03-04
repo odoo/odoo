@@ -37,6 +37,7 @@ odoo.define('point_of_sale.SelectionPopup', function(require) {
                     item.isSelected = false;
                 }
             }
+            this.confirm();
         }
         /**
          * We send as payload of the response the selected item.

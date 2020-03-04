@@ -27,19 +27,29 @@ odoo.define('point_of_sale.SetFiscalPositionButton', function(require) {
                 : this.env._t('Tax');
         }
         async onClick() {
-            const selectionList = this.env.pos.fiscal_positions.map(fiscalPosition => {
-                return {
-                    id: fiscalPosition.id,
-                    label: fiscalPosition.name,
-                    isSelected: fiscalPosition.id === this.currentOrder.fiscal_position.id,
-                    item: fiscalPosition,
-                };
-            });
+            const currentFiscalPosition = this.currentOrder.fiscal_position;
+            const fiscalPosList = [
+                {
+                    id: -1,
+                    label: this.env._t('None'),
+                    isSelected: !currentFiscalPosition,
+                },
+            ];
+            for (let fiscalPos of this.env.pos.fiscal_positions) {
+                fiscalPosList.push({
+                    id: fiscalPos.id,
+                    label: fiscalPos.name,
+                    isSelected: currentFiscalPosition
+                        ? fiscalPos.id === currentFiscalPosition.id
+                        : false,
+                    item: fiscalPos,
+                });
+            }
             const { confirmed, payload: selectedFiscalPosition } = await this.showPopup(
                 'SelectionPopup',
                 {
                     title: this.env._t('Select Fiscal Position'),
-                    list: selectionList,
+                    list: fiscalPosList,
                 }
             );
             if (confirmed) {

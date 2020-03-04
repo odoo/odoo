@@ -258,7 +258,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 if (confirmed) {
                     await this.showTempScreen('ClientListScreen');
                 }
-                return !!this.currentOrder.get_client();
+                return false;
             }
 
             if (!this.currentOrder.is_paid() || this.invoicing) {
@@ -307,13 +307,13 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                     ? 'You need to select the customer before you can send the receipt via email.'
                     : 'This customer does not have a valid email address, define one or do not send an email.';
 
-                this.showPopup('ConfirmPopup', {
+                const { confirmed } = await this.showPopup('ConfirmPopup', {
                     title: this.env._t(title),
                     body: this.env._t(body),
-                }).then(({ confirmed }) => {
-                    if (confirmed) this.trigger('show-screen', { name: 'ClientListScreen' });
                 });
-
+                if (confirmed) {
+                    await this.showTempScreen('ClientListScreen');
+                }
                 return false;
             }
 
