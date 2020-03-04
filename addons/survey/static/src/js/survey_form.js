@@ -111,6 +111,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 } else {
                     $choiceInput.prop("checked", !$choiceInput.prop("checked")).trigger('change');
                 }
+
                 // Avoid selection key to be typed into the textbox if 'other' is selected by key
                 event.preventDefault();
             }
@@ -146,9 +147,20 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
         var $matrixBtn = $target.closest('.o_survey_matrix_btn');
         if ($target.attr('type') === 'radio') {
+            var isQuestionComplete = false;
             if ($matrixBtn.length > 0) {
                 $matrixBtn.closest('tr').find('td').removeClass('o_survey_selected');
                 $matrixBtn.addClass('o_survey_selected');
+                if (this.options.questionsLayout === 'page_per_question') {
+                    var subQuestionsIds = $matrixBtn.closest('table').data('subQuestions');
+                    var completedQuestions = [];
+                    subQuestionsIds.forEach(function (id) {
+                        if (self.$('tr#' + id).find('input:checked').length !== 0) {
+                            completedQuestions.push(id);
+                        }
+                    });
+                    isQuestionComplete = completedQuestions.length === subQuestionsIds.length;
+                }
             } else {
                 var previouslySelectedAnswer = $choiceItemGroup.find('label.o_survey_selected');
                 previouslySelectedAnswer.removeClass('o_survey_selected');
@@ -156,6 +168,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 var newlySelectedAnswer = $target.closest('label');
                 if (newlySelectedAnswer.find('input').val() !== previouslySelectedAnswer.find('input').val()) {
                     newlySelectedAnswer.addClass('o_survey_selected');
+                    isQuestionComplete = this.options.questionsLayout === 'page_per_question';
                 }
 
                 // Conditional display
@@ -186,6 +199,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                         this.selectedAnswers.push(parseInt($target.val()));
                     }
                 }
+            }
+            // Submit Form
+            var isLastQuestion = this.$('button[value="finish"]').length !== 0;
+            if (!isLastQuestion && this.options.usersCanGoBack && isQuestionComplete) {
+                this._submitForm({});
             }
         } else {  // $target.attr('type') === 'checkbox'
             if ($matrixBtn.length > 0) {

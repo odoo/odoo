@@ -286,9 +286,9 @@ class Survey(http.Controller):
                     answer_sudo.last_displayed_page_id.id if answer_sudo.last_displayed_page_id else 0)
 
                 if next_page_or_question:
-                    pages_or_questions = survey_sudo._get_pages_or_questions(answer_sudo)
-                    if pages_or_questions.ids.index(next_page_or_question.id) == len(pages_or_questions) - 1:
-                        data.update({'survey_last': True})
+                    data.update({
+                        'survey_last': survey_sudo._is_last_page_or_question(answer_sudo, next_page_or_question)
+                    })
 
             if answer_sudo.is_session_answer and next_page_or_question.is_time_limited:
                 data.update({
