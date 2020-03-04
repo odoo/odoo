@@ -56,26 +56,31 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
          */
         async handleAutoPrint() {
             if (this._shouldAutoPrint() && !this.currentOrder.is_to_email()) {
-                await this.onPrintReceipt();
-                if (this._shouldCloseImmediately()) {
-                    this.onOrderDone();
+                await this.printReceipt();
+                if (this.currentOrder._printed && this._shouldCloseImmediately()) {
+                    this.orderDone();
                 }
             }
         }
-        onOrderDone() {
+        orderDone() {
             this.currentOrder.finalize();
             this.trigger('show-screen', { name: 'ProductScreen' });
         }
-        async onPrintReceipt() {
-            try {
-                if (this.env.pos.proxy.printer) {
-                    await this._printHtml();
+        async printReceipt() {
+            if (this.env.pos.proxy.printer) {
+                const printResult = await this.env.pos.proxy.printer.print_receipt(
+                    this.orderReceipt.el.outerHTML
+                );
+                if (printResult.successful) {
+                    this.currentOrder._printed = true;
                 } else {
-                    this._printWeb();
+                    await this.showPopup('ErrorPopup', {
+                        title: printResult.message.title,
+                        body: printResult.message.body,
+                    });
                 }
-                this.currentOrder._printed = true;
-            } catch (error) {
-                this.trigger('pos-error', { error });
+            } else {
+                await this._printWeb();
             }
         }
         async onPrintInvoice() {
@@ -106,33 +111,27 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
                 invoiced_finalized
             );
         }
-        _printWeb() {
+        async _printWeb() {
             if ($.browser.safari) {
                 document.execCommand('print', false, null);
             } else {
                 try {
                     window.print();
+                    this.currentOrder._printed = true;
                 } catch (err) {
                     if (navigator.userAgent.toLowerCase().indexOf('android') > -1) {
-                        throw {
-                            name: 'PrintingError',
-                            message: {
-                                title: _t('Printing is not supported on some android browsers'),
-                                body: _t(
-                                    'Printing is not supported on some android browsers due to no default printing protocol ' +
-                                        'is available. It is possible to print your tickets by making use of an IoT Box.'
-                                ),
-                            },
-                        };
+                        await this.showPopup('ErrorPopup', {
+                            title: _t('Printing is not supported on some android browsers'),
+                            body: _t(
+                                'Printing is not supported on some android browsers due to no default printing protocol ' +
+                                    'is available. It is possible to print your tickets by making use of an IoT Box.'
+                            ),
+                        });
                     } else {
                         throw err;
                     }
                 }
             }
-        }
-        async _printHtml() {
-            // Important to await because we want to catch the error
-            await this.env.pos.proxy.printer.print_receipt(this.orderReceipt.el.outerHTML);
         }
     }
     ReceiptScreen.components = { OrderReceipt };

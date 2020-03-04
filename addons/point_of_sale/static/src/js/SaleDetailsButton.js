@@ -6,17 +6,23 @@ odoo.define('point_of_sale.SaleDetailsButton', function(require) {
 
     class SaleDetailsButton extends PosComponent {
         async onClick() {
-            const result = await this.rpc({
+            const saleDetails = await this.rpc({
                 model: 'report.point_of_sale.report_saledetails',
                 method: 'get_sale_details',
                 args: [false, false, false, [this.env.pos.pos_session.id]],
             });
             const report = this.env.qweb.renderToString('SaleDetailsReport', {
-                ...result,
+                ...saleDetails,
                 date: new Date().toLocaleString(),
                 pos: this.env.pos,
             });
-            this.env.pos.proxy.printer.print_receipt(report);
+            const printResult = await this.env.pos.proxy.printer.print_receipt(report);
+            if (!printResult.successful) {
+                await this.showPopup('ErrorPopup', {
+                    title: printResult.message.title,
+                    body: printResult.message.body,
+                });
+            }
         }
     }
 

@@ -10,7 +10,7 @@
                             <t t-esc="change" /></span>
                     </h1>
                     <span class="button next" t-att-class="{ highlight: !locked }"
-                          t-on-click="onOrderDone">
+                          t-on-click="orderDone">
                         Next Order <i class="fa fa-angle-double-right"></i>
                     </span>
                 </div>
@@ -19,7 +19,7 @@
                          t-on-click="onPrintInvoice">
                         <i class="fa fa-print"></i> Print Invoice
                     </div>
-                    <div class="button print" t-on-click="onPrintReceipt">
+                    <div class="button print" t-on-click="printReceipt">
                         <i class="fa fa-print"></i> Print Receipt
                     </div>
                     <div class="pos-receipt-container">
