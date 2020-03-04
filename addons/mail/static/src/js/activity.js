@@ -421,14 +421,14 @@ var BasicActivity = AbstractField.extend({
             ev.stopPropagation();
             self._markActivityDone({
                 activityID: activityID,
-                feedback: _.escape($form.find('#activity_feedback').val()),
+                feedback: $form.find('#activity_feedback').val(),
             });
         });
         $form.on('click', '.o_activity_popover_done_next', function (ev) {
             ev.stopPropagation();
             self._markActivityDoneAndScheduleNext({
                 activityID: activityID,
-                feedback: _.escape($form.find('#activity_feedback').val()),
+                feedback: $form.find('#activity_feedback').val(),
             });
         });
         $form.on('click', '.o_activity_popover_discard', function (ev) {
