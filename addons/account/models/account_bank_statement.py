@@ -951,7 +951,8 @@ class AccountBankStatementLine(models.Model):
             aml_dict['currency_id'] = statement_currency.id
 
     def _check_invoice_state(self, invoice):
-        invoice._compute_amount()
+        if invoice.is_invoice(include_receipts=True):
+            invoice._compute_amount()
 
     def button_confirm_bank(self):
         self.statement_id.button_confirm_bank()
