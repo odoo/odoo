@@ -69,7 +69,19 @@ class UserInputSession(http.Controller):
         """ This route is called when the host goes to the next question of the session.
 
         It's not a regular 'request.render' route because we handle the transition between
-        questions using a AJAX call to be able to display a bioutiful fade in/out effect. """
+        questions using a AJAX call to be able to display a bioutiful fade in/out effect.
+
+        It triggers the next question of the session.
+
+        We artificially add 1 second to the 'current_question_start_time' to account for server delay.
+        As the timing can influence the attendees score, we try to be fair with everyone by giving them
+        an extra second before we start counting down.
+
+        Frontend should take the delay into account by displaying the appropriate animations.
+
+        Writing the next question on the survey is sudo'ed to avoid potential access right issues.
+        e.g: a survey user can create a live session from any survey but he can only write
+        on its own survey. """
 
         survey = self._fetch_from_token(survey_token)
 
@@ -87,7 +99,7 @@ class UserInputSession(http.Controller):
             now = datetime.datetime.now()
             survey.sudo().write({
                 'session_question_id': next_question.id,
-                'session_question_start_time': fields.Datetime.now() + relativedelta(seconds=2)
+                'session_question_start_time': fields.Datetime.now() + relativedelta(seconds=1)
             })
             request.env['bus.bus'].sendone(survey.access_token, {
                 'question_start': now.timestamp(),

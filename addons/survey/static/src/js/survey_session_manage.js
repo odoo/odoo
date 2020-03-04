@@ -304,7 +304,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
 
         var resolveFadeOut;
         var fadeOutPromise = new Promise(function (resolve, reject) { resolveFadeOut = resolve; });
-        this.$el.fadeOut(1000, function () {
+        this.$el.fadeOut(500, function () {
             resolveFadeOut();
         });
 
@@ -323,7 +323,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
                 var $renderedTemplate = $(results[1]);
                 self.$el.replaceWith($renderedTemplate);
                 self.attachTo($renderedTemplate);
-                self.$el.fadeIn(1000, function () {
+                self.$el.fadeIn(500, function () {
                     self._startTimer();
                 });
             } else {
