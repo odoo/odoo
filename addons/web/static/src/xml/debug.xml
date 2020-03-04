@@ -38,6 +38,9 @@
             <a role="menuitem" href="#" data-action="get_view_fields" class="dropdown-item">View Fields</a>
             <a role="menuitem" href="#" data-action="manage_filters" class="dropdown-item">Manage Filters</a>
             <a role="menuitem" href="#" data-action="translate" class="dropdown-item">Technical Translation</a>
+            <div t-if="manager.canSeeModelAccess || manager.canSeeRecordRules" class="dropdown-divider" role="separator"/>
+            <a t-if="manager.canSeeModelAccess" role="menuitem" href="#" data-action="actionModelAccess" class="dropdown-item">View Access Rights</a>
+            <a t-if="manager.canSeeRecordRules" role="menuitem" href="#" data-action="actionRecordRules" class="dropdown-item">View Record Rules</a>
         </t>
     </t>
 </t>
