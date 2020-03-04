@@ -482,7 +482,7 @@ class Task(models.Model):
         copy=False,
         readonly=True)
     project_id = fields.Many2one('project.project', string='Project',
-        compute='_compute_project_id', store=True, readonly=False,
+        compute='_compute_project_id', store=True, readonly=False, copy=True,
         index=True, tracking=True, check_company=True, change_default=True)
     planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.',tracking=True)
     subtask_planned_hours = fields.Float("Subtasks", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
@@ -492,7 +492,7 @@ class Task(models.Model):
         index=True, tracking=True)
     partner_id = fields.Many2one('res.partner',
         string='Customer',
-        compute='_compute_partner_id', store=True, readonly=False,
+        compute='_compute_partner_id', store=True, readonly=False, copy=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     partner_is_company = fields.Boolean(related='partner_id.is_company', readonly=True)
     commercial_partner_id = fields.Many2one(related='partner_id.commercial_partner_id')
