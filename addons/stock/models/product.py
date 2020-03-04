@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
@@ -172,11 +174,23 @@ class Product(models.Model):
         moves_out_res = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_out_todo, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
         quants_res = dict((item['product_id'][0], (item['quantity'], item['reserved_quantity'])) for item in Quant.read_group(domain_quant, ['product_id', 'quantity', 'reserved_quantity'], ['product_id'], orderby='id'))
         if dates_in_the_past:
-            # Calculate the moves that were done before now to calculate back in time (as most questions will be recent ones)
+            # Calculate the move lines that were done before now to calculate back in time (as most questions will be recent ones)
             domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
             domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
-            moves_in_res_past = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_in_done, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
-            moves_out_res_past = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_out_done, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
+            moves_in_res_past = defaultdict(lambda: 0)
+            for in_move_line in self.env['stock.move.line'].search_read(domain_move_in_done, ['product_id', 'qty_done', 'product_uom_id']):
+                product_id = in_move_line['product_id'][0]
+                uom_id = in_move_line['product_uom_id'][0]
+                qty_done = in_move_line['qty_done']
+                product_uom_id = self.env['product.product'].browse(product_id).uom_id
+                moves_in_res_past[product_id] += self.env['uom.uom'].browse(uom_id)._compute_quantity(qty_done, product_uom_id)
+            moves_out_res_past = defaultdict(lambda: 0)
+            for out_move_line in self.env['stock.move.line'].search_read(domain_move_out_done, ['product_id', 'qty_done', 'product_uom_id']):
+                product_id = out_move_line['product_id'][0]
+                uom_id = out_move_line['product_uom_id'][0]
+                qty_done = out_move_line['qty_done']
+                product_uom_id = self.env['product.product'].browse(product_id).uom_id
+                moves_out_res_past[product_id] += self.env['uom.uom'].browse(uom_id)._compute_quantity(qty_done, product_uom_id)
 
         res = dict()
         for product in self.with_context(prefetch_fields=False):
