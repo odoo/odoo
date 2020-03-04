@@ -28,3 +28,15 @@ class TestMenusDemo(odoo.tests.HttpCase):
                     _logger.log(25, 'Testing %s', app['name'])
                     self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere'](%d);" % app['id'], "odoo.isReady === true", login="demo", timeout=300)
                     self.terminate_browser()
+
+@odoo.tests.tagged('post_install', '-at_install')
+class TestMenusAdminLight(odoo.tests.HttpCase):
+
+    def test_01_click_apps_menus_as_admin(self):
+        self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere'](undefined, true);", "odoo.isReady === true", login="admin", timeout=120)
+
+@odoo.tests.tagged('post_install', '-at_install',)
+class TestMenusDemoLight(odoo.tests.HttpCase):
+
+    def test_01_click_apps_menus_as_demo(self):
+            self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere'](undefined, true);", "odoo.isReady === true", login="demo", timeout=120)
