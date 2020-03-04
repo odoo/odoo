@@ -36,7 +36,7 @@ class ProductTemplate(models.Model):
             policy = None
             if product.invoice_policy == 'delivery':
                 policy = 'delivered_manual' if product.service_type == 'manual' else 'delivered_timesheet'
-            elif product.invoice_policy == 'order' and product.service_type == 'timesheet':
+            elif product.invoice_policy == 'order' and (product.service_type == 'timesheet' or product.type == 'service'):
                 policy = 'ordered_timesheet'
             product.service_policy = policy
 
@@ -83,6 +83,8 @@ class ProductTemplate(models.Model):
         if self.type == 'service' and not self.invoice_policy:
             self.invoice_policy = 'order'
             self.service_type = 'timesheet'
+        elif self.type == 'service' and self.invoice_policy == 'order':
+            self.service_policy = 'ordered_timesheet'
         elif self.type == 'consu' and not self.invoice_policy and self.service_policy == 'ordered_timesheet':
             self.invoice_policy = 'order'
 
