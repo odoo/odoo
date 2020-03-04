@@ -979,7 +979,7 @@
             <table t-if="suggested_products" id="suggested_products" class="js_cart_lines table table-striped table-sm">
                 <tbody>
                     <tr t-foreach="suggested_products" t-as="product">
-                        <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
+                        <t t-set="combination_info" t-value="product._get_combination_info_variant(pricelist=website_sale_order.pricelist_id)"/>
                         <td class='td-img'>
                             <a t-attf-href="/shop/product/#{ slug(product.product_tmpl_id) }">
                                 <span t-field="product.image_small" t-options="{'widget': 'image', 'class': 'rounded'}" />
