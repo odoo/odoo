@@ -533,7 +533,7 @@ class AccountMove(models.Model):
         self.line_ids -= to_remove
 
         # ==== Mount base lines ====
-        for line in self.line_ids.filtered(lambda line: not line.exclude_from_invoice_tab):
+        for line in self.line_ids.filtered(lambda line: not line.tax_repartition_line_id):
             # Don't call compute_all if there is no tax.
             if not line.tax_ids:
                 line.tax_tag_ids = [(5, 0, 0)]
@@ -2882,7 +2882,7 @@ class AccountMoveLine(models.Model):
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
 
-    @api.onchange('amount_currency', 'currency_id', 'debit', 'credit', 'tax_ids', 'account_id', 'analytic_account_id', 'analytic_tag_ids')
+    @api.onchange('amount_currency', 'currency_id', 'debit', 'credit', 'tax_ids', 'account_id')
     def _onchange_mark_recompute_taxes(self):
         ''' Recompute the dynamic onchange based on taxes.
         If the edited line is a tax line, don't recompute anything as the user must be able to
@@ -2890,6 +2890,14 @@ class AccountMoveLine(models.Model):
         '''
         for line in self:
             if not line.tax_repartition_line_id:
+                line.recompute_tax_line = True
+
+    @api.onchange('analytic_account_id', 'analytic_tag_ids')
+    def _onchange_mark_recompute_taxes_analytic(self):
+        ''' Trigger tax recomputation only when some taxes with analytics
+        '''
+        for line in self:
+            if not line.tax_repartition_line_id and any(tax.analytic for tax in line.tax_ids):
                 line.recompute_tax_line = True
 
     @api.onchange('product_id')
