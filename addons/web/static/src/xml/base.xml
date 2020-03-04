@@ -1499,7 +1499,7 @@
 
 <t t-name="UserMenu">
     <li class="o_user_menu">
-        <a role="button" class="dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#">
+        <a role="button" class="dropdown-toggle o-no-caret" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#">
             <img class="rounded-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'" alt="Avatar"/>
             <span class="oe_topbar_name"/>
         </a>
@@ -1520,7 +1520,7 @@
 
 <t t-name="SwitchCompanyMenu">
     <li class="o_switch_company_menu">
-        <a role="button" class="dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+        <a role="button" class="dropdown-toggle o-no-caret" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#" aria-label="Dropdown menu" title="Dropdown menu">
             <span t-attf-class="#{widget.isMobile ? 'fa fa-building-o' : 'oe_topbar_name'}">
                 <t t-if="!widget.isMobile"><t t-raw="widget.current_company_name"/></t>
             </span>
