@@ -119,7 +119,7 @@ var ActivityMenu = Widget.extend({
             this.do_action({
                 type: 'ir.actions.act_window',
                 name: targetAction.data('model_name'),
-                views: [[false, 'activity'], [false, 'kanban'], [false, 'list']],
+                views: [[false, 'activity'], [false, 'kanban'], [false, 'list'], [false, 'form']],
                 view_mode: 'activity',
                 res_model: targetAction.data('res_model'),
                 domain: domain,
