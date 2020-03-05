@@ -8,7 +8,7 @@ var _t = core._t;
 
 tour.register('crm_tour', {
     url: "/web",
-}, [tour.STEPS.SHOW_APPS_MENU_ITEM, {
+}, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
     content: _t("Ready to boost your sales? Your <b>Pipeline</b> can be found here, under the <b>CRM</b> app."),
     position: 'right',
@@ -71,7 +71,7 @@ tour.register('crm_tour', {
     extra_trigger: '.o_lead_opportunity_form',
     content: _t("Use the breadcrumbs to <b>go back to your sales pipeline</b>."),
     position: "bottom"
-}, tour.STEPS.TOGGLE_HOME_MENU, tour.STEPS.SHOW_APPS_MENU_ITEM, {
+}, tour.stepUtils.toggleHomeMenu(), tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="base.menu_administration"]',
     content: _t("Configuration options are available in the Settings app."),
     position: "bottom",
@@ -85,7 +85,7 @@ tour.register('crm_tour', {
     trigger: "div#invite_users .o_user_emails",
     content: _t("<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"),
     position: "right"
-}, tour.STEPS.TOGGLE_HOME_MENU, tour.STEPS.SHOW_APPS_MENU_ITEM, {
+}, tour.stepUtils.toggleHomeMenu(), tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
     content: _t("Good job! You completed the tour of the CRM app."),
     position: 'right',

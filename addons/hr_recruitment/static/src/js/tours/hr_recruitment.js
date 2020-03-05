@@ -6,7 +6,7 @@ var tour = require('web_tour.tour');
 
 var _t = core._t;
 
-tour.register('hr_recruitment_tour', [tour.STEPS.SHOW_APPS_MENU_ITEM, {
+tour.register('hr_recruitment_tour', [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="hr_recruitment.menu_hr_recruitment_root"]',
     content: _t('Want to <b>start recruiting</b> like a pro? <i>Start here.</i>'),
     position: 'right',

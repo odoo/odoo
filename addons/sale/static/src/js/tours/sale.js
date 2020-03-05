@@ -8,7 +8,7 @@ var _t = core._t;
 
 tour.register('sale_tour', {
     url: "/web",
-}, [tour.STEPS.SHOW_APPS_MENU_ITEM, {
+}, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     content: _t('Open Sales app to send your first quotation in a few clicks.'),
     position: 'right',
