@@ -21,6 +21,13 @@ class Blog(models.Model):
     subtitle = fields.Char('Blog Subtitle', translate=True)
     active = fields.Boolean('Active', default=True)
     content = fields.Html('Content', translate=html_translate, sanitize=False)
+    blog_post_ids = fields.One2many('blog.post', 'blog_id', 'Blog Posts')
+    blog_post_count = fields.Integer("Posts", compute='_compute_blog_post_count')
+
+    @api.depends('blog_post_ids')
+    def _compute_blog_post_count(self):
+        for record in self:
+            record.blog_post_count = len(record.blog_post_ids)
 
     def write(self, vals):
         res = super(Blog, self).write(vals)
@@ -203,6 +210,13 @@ class BlogPost(models.Model):
             result &= super(BlogPost, self).write(copy_vals)
         self._check_for_publication(vals)
         return result
+
+    @api.returns('self', lambda value: value.id)
+    def copy_data(self, default=None):
+        self.ensure_one()
+        name = _("%s (copy)") % self.name
+        default = dict(default or {}, name=name)
+        return super(BlogPost, self).copy_data(default)
 
     def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to the post on website
