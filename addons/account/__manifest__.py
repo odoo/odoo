@@ -22,7 +22,6 @@ You could use this simplified accounting in case you work with an (external) acc
         'data/data_account_type.xml',
         'data/account_data.xml',
         'data/digest_data.xml',
-        'views/account_menuitem.xml',
         'views/account_payment_view.xml',
         'wizard/account_accrual_accounting_view.xml',
         'wizard/account_unreconcile_view.xml',
@@ -66,6 +65,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'report/account_hash_integrity_templates.xml',
         'wizard/account_transfer_wizard.xml',
         'views/res_currency.xml',
+        'views/account_menuitem.xml',
     ],
     'demo': [
         'demo/account_demo.xml',
