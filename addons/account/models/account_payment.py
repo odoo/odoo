@@ -134,6 +134,21 @@ class account_register_payments(models.TransientModel):
         self.amount = abs(self._compute_payment_amount(invoices))
         return res
 
+    @api.onchange('currency_id')
+    def _onchange_currency_id(self):
+        res = super(account_register_payments, self)._onchange_currency_id()
+        active_ids = self._context.get('active_ids')
+        invoices = self.env['account.invoice'].browse(active_ids)
+        payment_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id or invoices and invoices[0].currency_id
+        if len(invoices) >= 2 and any([x.currency_id.id != payment_currency.id if x.currency_id.id else False for x in invoices]):
+            return {
+                'warning': {
+                    'title': _('Warning'),
+                    'message': _('When creating a payment for multiple invoices, the payment should have the same currency as the invoices.'),
+                },
+            }
+        return res
+
     @api.model
     def default_get(self, fields):
         rec = super(account_register_payments, self).default_get(fields)
