@@ -1,41 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
     <data noupdate="1">
-
-        <!--  crm categories -->
-        <record id="categ_oppor1" model="crm.lead.tag">
-            <field name="name">Product</field>
-            <field name="color" eval="1"/>
-        </record>
-        <record id="categ_oppor2" model="crm.lead.tag">
-            <field name="name">Software</field>
-            <field name="color" eval="2"/>
-        </record>
-        <record id="categ_oppor3" model="crm.lead.tag">
-            <field name="name">Services</field>
-            <field name="color" eval="3"/>
-        </record>
-        <record id="categ_oppor4" model="crm.lead.tag">
-            <field name="name">Information</field>
-            <field name="color" eval="4"/>
-        </record>
-        <record id="categ_oppor5" model="crm.lead.tag">
-            <field name="name">Design</field>
-            <field name="color" eval="5"/>
-        </record>
-        <record id="categ_oppor6" model="crm.lead.tag">
-            <field name="name">Training</field>
-            <field name="color" eval="6"/>
-        </record>
-        <record id="categ_oppor7" model="crm.lead.tag">
-            <field name="name">Consulting</field>
-            <field name="color" eval="7"/>
-        </record>
-        <record id="categ_oppor8" model="crm.lead.tag">
-            <field name="name">Other</field>
-            <field name="color" eval="8"/>
-        </record>
-
         <!--  Demo Leads -->
         <record id="crm_case_1" model="crm.lead">
             <field name="create_date" eval="DateTime.now() - relativedelta(days=8)"/>
@@ -50,7 +15,7 @@
             <field name="zip">93190</field>
             <field name="street">Rue Léon Dierx 73</field>
             <field name="phone">+33 1 25 54 45 69</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor6])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor6')])]"/>
             <field name="priority">1</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
@@ -86,7 +51,7 @@
             <field name="zip">33000</field>
             <field name="street">Rue Ignasse Blanchoux 214/32</field>
             <field name="phone">+33 1 25 54 45 69</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor2])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor2')])]"/>
             <field name="priority">1</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
@@ -119,7 +84,7 @@
             <field name="zip">10001</field>
             <field name="street">Lafayette Ave 450/12</field>
             <field name="phone">+1 555 754 3010</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor4, categ_oppor5])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor4'), ref('sales_team.categ_oppor5')])]"/>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_admin"/>
@@ -141,7 +106,7 @@
             <field name="city">Manchester</field>
             <field name="zip">03101</field>
             <field name="street">United Street 68</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor5])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor5')])]"/>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_admin"/>
@@ -165,7 +130,7 @@
             <field name="zip">1909</field>
             <field name="street">West Allegheny Ave 800</field>
             <field name="phone">+1 813 494 5005</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_admin"/>
@@ -204,7 +169,7 @@ Contact: +1 813 494 5005</p>]]></field>
             <field name="country_id" ref="base.it"/>
             <field name="city">Roma</field>
             <field name="zip">00118</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor3, categ_oppor4])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor3'), ref('sales_team.categ_oppor4')])]"/>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_admin"/>
@@ -226,7 +191,7 @@ Contact: +1 813 494 5005</p>]]></field>
             <field name="zip">29000</field>
             <field name="street">R. Sen. Pompeu</field>
             <field name="phone">+11 55 21 5555 5555</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor4])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor4')])]"/>
             <field name="priority">0</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
@@ -247,7 +212,7 @@ Contact: +1 813 494 5005</p>]]></field>
             <field name="country_id" ref="base.uk"/>
             <field name="city">London</field>
             <field name="zip">E1AB</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor4, categ_oppor8])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor4'), ref('sales_team.categ_oppor8')])]"/>
             <field name="priority">1</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
@@ -282,7 +247,7 @@ ESM Expert<br />]]></field>
             <field name="country_id" ref="base.uk"/>
             <field name="city">Oxford</field>
             <field name="zip">OX1 1RQ</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor4, categ_oppor7])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor4'), ref('sales_team.categ_oppor7')])]"/>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_demo"/>
@@ -303,7 +268,7 @@ ESM Expert<br />]]></field>
             <field name="country_id" ref="base.es"/>
             <field name="city">Madrid</field>
             <field name="zip">28001</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
@@ -338,7 +303,7 @@ Andrew</p>]]></field>
             <field name="country_id" ref="base.be"/>
             <field name="city">Wavre</field>
             <field name="zip">1300</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor7])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor7')])]"/>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_admin"/>
@@ -358,7 +323,7 @@ Andrew</p>]]></field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="country_id" ref="base.cn"/>
             <field name="city">Shenzhen</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
@@ -386,7 +351,7 @@ Andrew</p>]]></field>
             <field name="country_id" ref="base.au"/>
             <field name="city">Melbourne</field>
             <field name="street">Kensington Road 189</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
             <field name="priority">1</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
@@ -412,7 +377,7 @@ Andrew</p>]]></field>
             <field name="zip">1300</field>
             <field name="street">Rue de Namur 69</field>
             <field name="phone">+32 10 588 558</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor2])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor2')])]"/>
             <field name="priority">2</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
@@ -435,7 +400,7 @@ Andrew</p>]]></field>
             <field name="city">Wavre</field>
             <field name="street">Rue de Namur 69</field>
             <field name="phone">+32 10 588 558</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
             <field name="priority">1</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=1)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
@@ -528,7 +493,7 @@ Andrew</p>]]></field>
             <field name="city">Liverpool</field>
             <field name="zip">L25 4RL</field>
             <field name="street">Union Road</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor5])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor5')])]"/>
             <field name="priority">2</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=1)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
@@ -553,7 +518,7 @@ Andrew</p>]]></field>
             <field name="city">Brussels</field>
             <field name="zip">1100</field>
             <field name="street">Rue des Palais 51, bte 33</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor3,categ_oppor4])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor3'),ref('sales_team.categ_oppor4')])]"/>
             <field name="priority">1</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=3)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
@@ -586,7 +551,7 @@ Andrew</p>]]></field>
             <field name="street">3661 Station Street</field>
             <field name="country_id" ref="base.uk"/>
             <field name="partner_id" ref="base.res_partner_4"/>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor4,categ_oppor6])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor4'),ref('sales_team.categ_oppor6')])]"/>
             <field name="priority">1</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=3)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
@@ -636,7 +601,7 @@ Andrew</p>]]></field>
             <field name="street">3rd Floor, Room 3-C,</field>
             <field name="street2">Carretera Panamericana, Km 1, Urb. Delgado Chalbaud</field>
             <field name="phone">+58 212 681 0538</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
             <field name="priority">1</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=1)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
@@ -661,7 +626,7 @@ Andrew</p>]]></field>
             <field name="zip">60610</field>
             <field name="city">Chicago</field>
             <field name="phone">+1 312 349 2324</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor4,categ_oppor8])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor4'),ref('sales_team.categ_oppor8')])]"/>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
@@ -681,7 +646,7 @@ Andrew</p>]]></field>
             <field name="city">Birmingham</field>
             <field name="zip">B46 3AG</field>
             <field name="street">Cannon Hill Park</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor7])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor7')])]"/>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
@@ -700,7 +665,7 @@ Andrew</p>]]></field>
             <field name="contact_name">Benjamin Flores</field>
             <field name="partner_name">Nebula Business</field>
             <field name="partner_id" ref="base.res_partner_12"/>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor3])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor3')])]"/>
             <field name="priority">1</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_admin"/>
@@ -718,7 +683,7 @@ Andrew</p>]]></field>
             <field name="probability">80.0</field>
             <field name="partner_id" ref="base.res_partner_18"/>
             <field name="priority">0</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor3])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor3')])]"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
@@ -737,7 +702,7 @@ Andrew</p>]]></field>
             <field name="country_id" ref="base.pe"/>
             <field name="city">Lima</field>
             <field name="priority">0</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor7])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor7')])]"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
@@ -761,7 +726,7 @@ Andrew</p>]]></field>
             <field name="street">Palermo, Capital Federal</field>
             <field name="street2">C1414CMS Capital Federal</field>
             <field name="priority">2</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor4])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor4')])]"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
@@ -784,7 +749,7 @@ Andrew</p>]]></field>
             <field name="city">Wavre</field>
             <field name="zip">1300</field>
             <field name="priority">2</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor2])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor2')])]"/>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=6)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
@@ -808,7 +773,7 @@ Andrew</p>]]></field>
             <field name="zip">1300</field>
             <field name="street">Rue de Namur 69</field>
             <field name="priority">2</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor2])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor2')])]"/>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=6)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_demo"/>
@@ -832,7 +797,7 @@ Andrew</p>]]></field>
             <field name="zip">1300</field>
             <field name="street">Rue de Namur 69</field>
             <field name="priority">0</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor1, categ_oppor5])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1'), ref('sales_team.categ_oppor5')])]"/>
             <field name="date_deadline" eval="DateTime.today() + relativedelta(days=12)"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_demo"/>
@@ -852,7 +817,7 @@ Andrew</p>]]></field>
             <field name="zip">93190</field>
             <field name="street">Rue Léon Dierx 73</field>
             <field name="phone">+33 1 25 54 45 69</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor6])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor6')])]"/>
             <field name="priority">1</field>
             <field name="date_open" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="stage_id" ref="stage_lead2"/>
@@ -874,7 +839,7 @@ Andrew</p>]]></field>
             <field name="zip">1080</field>
             <field name="street">Rue du Commerce 93</field>
             <field name="phone">+32 22 33 54 07</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor6])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor6')])]"/>
             <field name="priority">1</field>
             <field name="date_open" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="stage_id" ref="stage_lead1"/>
@@ -894,7 +859,7 @@ Andrew</p>]]></field>
             <field name="country_id" ref="base.au"/>
             <field name="city">Chevy Chase</field>
             <field name="street">1920 Del Dew Drive</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
             <field name="priority">1</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
@@ -916,7 +881,7 @@ Andrew</p>]]></field>
             <field name="country_id" ref="base.au"/>
             <field name="city">Chevy Chase</field>
             <field name="street">1920 Del Dew Drive</field>
-            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
             <field name="priority">1</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
@@ -937,7 +902,7 @@ Andrew</p>]]></field>
 <field name="email_from">max123@itconsult.com</field>
 <field name="country_id" ref="base.it"/>
 <field name="city">Milan</field>
-<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
 <field name="priority">1</field>
 <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
 <field name="stage_id" ref="crm.stage_lead2"/>
@@ -957,7 +922,7 @@ Andrew</p>]]></field>
 <field name="country_id" ref="base.gr"/>
 <field name="city">London</field>
 <field name="street">1 Russel square</field>
-<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
 <field name="priority">1</field>
 <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
 <field name="stage_id" ref="crm.stage_lead3"/>
@@ -977,7 +942,7 @@ Andrew</p>]]></field>
 <field name="email_from">roxshott9@trellian.com</field>
 <field name="country_id" ref="base.br"/>
 <field name="city">Canguaretama</field>
-<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
 <field name="priority">1</field>
 <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
 <field name="stage_id" ref="crm.stage_lead2"/>
@@ -996,7 +961,7 @@ Andrew</p>]]></field>
 <field name="email_from">mlimprecht8@fastcompany.com</field>
 <field name="country_id" ref="base.pt"/>
 <field name="city">Valejas</field>
-<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
 <field name="priority">1</field>
 <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
 <field name="stage_id" ref="crm.stage_lead2"/>
@@ -1016,7 +981,7 @@ Andrew</p>]]></field>
 <field name="email_from">akalinovich7@tinypic.com</field>
 <field name="country_id" ref="base.id"/>
 <field name="city">Boafeo</field>
-<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
 <field name="priority">1</field>
 <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
 <field name="stage_id" ref="crm.stage_lead2"/>
@@ -1036,7 +1001,7 @@ Andrew</p>]]></field>
 <field name="email_from">jjobbins6@simplemachines.org</field>
 <field name="country_id" ref="base.ru"/>
 <field name="city">Gvardeysk</field>
-<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
 <field name="priority">1</field>
 <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
 <field name="stage_id" ref="crm.stage_lead2"/>
@@ -1056,7 +1021,7 @@ Andrew</p>]]></field>
 <field name="email_from">eespinazo5@reuters.com</field>
 <field name="country_id" ref="base.nl"/>
 <field name="city">Amsterdam</field>
-<field name="tag_ids" eval="[(6, 0, [categ_oppor3])]"/>
+<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor3')])]"/>
 <field name="priority">1</field>
 <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
 <field name="stage_id" ref="crm.stage_lead1"/>
@@ -1076,7 +1041,7 @@ Andrew</p>]]></field>
 <field name="email_from">credford4@salon.com</field>
 <field name="country_id" ref="base.ru"/>
 <field name="city">Odoyev</field>
-<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
 <field name="priority">1</field>
 <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
 <field name="team_id" ref="sales_team.crm_team_1"/>
@@ -1098,7 +1063,7 @@ Andrew</p>]]></field>
 <field name="email_from">ikirvell3@gnu.org</field>
 <field name="country_id" ref="base.id"/>
 <field name="city">Dahu Satu</field>
-<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
 <field name="priority">1</field>
 <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
 <field name="stage_id" ref="crm.stage_lead3"/>
@@ -1118,7 +1083,7 @@ Andrew</p>]]></field>
 <field name="email_from">ngrabert2@dailymail.co.uk</field>
 <field name="country_id" ref="base.jp"/>
 <field name="city">Tokyo</field>
-<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
 <field name="priority">1</field>
 <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
 <field name="stage_id" ref="crm.stage_lead2"/>
@@ -1138,7 +1103,7 @@ Andrew</p>]]></field>
 <field name="email_from">fseiller1@theglobeandmail.com</field>
 <field name="country_id" ref="base.id"/>
 <field name="city">Wurigelebur</field>
-<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
 <field name="priority">1</field>
 <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
 <field name="stage_id" ref="crm.stage_lead3"/>
@@ -1159,7 +1124,7 @@ Andrew</p>]]></field>
 <field name="email_from">tbrockhouse0@google.pl</field>
 <field name="country_id" ref="base.be"/>
 <field name="city">Brussels</field>
-<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
 <field name="priority">1</field>
 <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
 <field name="stage_id" ref="crm.stage_lead3"/>

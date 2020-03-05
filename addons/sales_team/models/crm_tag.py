@@ -6,8 +6,8 @@ from odoo import fields, models
 
 class Tag(models.Model):
 
-    _name = "crm.lead.tag"
-    _description = "Lead Tag"
+    _name = "crm.tag"
+    _description = "CRM Tag"
 
     name = fields.Char('Tag Name', required=True, translate=True)
     color = fields.Integer('Color Index')
