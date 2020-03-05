@@ -217,8 +217,11 @@ class ProductTemplate(models.Model):
         else:
             self.write({'list_price': self.price})
 
+    @api.depends_context('company')
     @api.depends('product_variant_ids', 'product_variant_ids.standard_price')
     def _compute_standard_price(self):
+        # Depends on force_company context because standard_price is company_dependent
+        # on the product_product
         unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
         for template in unique_variants:
             template.standard_price = template.product_variant_ids.standard_price
