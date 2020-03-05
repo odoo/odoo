@@ -18,6 +18,8 @@ var _t = core._t;
  * @param {string} [title]
  * @param {Object} [options]
  * @param {string[]} [options.classes]
+ * @param {string} [options.tooltip]
+ * @param {string} [options.placeholder]
  * @param {Object} [options.dataAttributes]
  * @returns {HTMLElement} - the original 'el' argument
  */
@@ -34,6 +36,9 @@ function _addTitleAndAllowedAttributes(el, title, options) {
     }
     if (options && options.tooltip) {
         tooltipEl.title = options.tooltip;
+    }
+    if (options && options.placeholder) {
+        el.setAttribute('placeholder', options.placeholder);
     }
     if (options && options.dataAttributes) {
         for (const key in options.dataAttributes) {
@@ -750,7 +755,7 @@ const InputUserValueWidget = UserValueWidget.extend({
 
         this.inputEl = document.createElement('input');
         this.inputEl.setAttribute('type', 'text');
-        this.inputEl.setAttribute('placeholder', this.el.dataset.placeholder || '');
+        this.inputEl.setAttribute('placeholder', this.el.getAttribute('placeholder') || '');
         this.inputEl.classList.toggle('text-left', !unit);
         this.inputEl.classList.toggle('text-right', !!unit);
         this.containerEl.appendChild(this.inputEl);
@@ -1898,6 +1903,7 @@ const SnippetOptionWidget = Widget.extend({
                 classes: el.classList,
                 dataAttributes: el.dataset,
                 tooltip: el.title,
+                placeholder: el.getAttribute('placeholder'),
                 childNodes: [...el.childNodes],
             },
         };
