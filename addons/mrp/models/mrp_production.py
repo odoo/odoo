@@ -453,8 +453,7 @@ class MrpProduction(models.Model):
             if quantity > 0:
                 production = move[0].raw_material_production_id
                 production_qty = production.product_qty - production.qty_produced
-                move[0]._decrease_reserved_quanity(quantity)
-                move[0].with_context(do_not_unreserve=True).write({'product_uom_qty': quantity})
+                move[0].write({'product_uom_qty': quantity})
                 move[0]._recompute_state()
                 move[0]._action_assign()
                 move[0].unit_factor = production_qty and (quantity - move[0].quantity_done) / production_qty or 1.0
