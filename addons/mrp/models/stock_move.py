@@ -189,7 +189,7 @@ class StockMove(models.Model):
         move_line_to_unlink = self.env['stock.move.line']
         for move in self:
             reserved_quantity = quantity
-            for move_line in self.move_line_ids:
+            for move_line in move.move_line_ids:
                 if move_line.product_uom_qty > reserved_quantity:
                     move_line.product_uom_qty = reserved_quantity
                 else:
@@ -199,6 +199,11 @@ class StockMove(models.Model):
                     move_line_to_unlink |= move_line
         move_line_to_unlink.unlink()
         return True
+
+    def _do_unreserve(self):
+        production_moves = self.filtered(lambda m: m.raw_material_production_id or m.production_id)
+        production_moves._decrease_reserved_quanity(0.0)
+        return super(StockMove, self - production_moves)._do_unreserve()
 
     def _prepare_phantom_move_values(self, bom_line, quantity):
         return {
