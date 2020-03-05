@@ -685,7 +685,6 @@ class MrpProduction(models.Model):
         move = self.move_raw_ids.filtered(lambda x: x.bom_line_id.id == bom_line.id and x.state not in ('done', 'cancel'))
         if move:
             old_qty = move[0].product_uom_qty
-            remaining_qty = move[0].raw_material_production_id.product_qty - move[0].raw_material_production_id.qty_produced
             if quantity > 0:
                 move[0].write({'product_uom_qty': quantity})
                 move[0]._action_assign()
