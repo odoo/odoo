@@ -410,6 +410,7 @@
                     <field name="invoice_date" optional="show" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Invoice Date"/>
                     <field name="invoice_origin" optional="hide" string="Source Document"/>
                     <field name="invoice_payment_ref" optional="hide" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund','out_receipt')"/>
+                    <field name="ref" optional="hide"/>
                     <field name="invoice_user_id" optional="hide" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Sales Person"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                     <field name="invoice_date_due" optional="show"/>
