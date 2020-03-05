@@ -230,6 +230,24 @@ class TestChannelFeatures(TestMailCommon):
         self.assertEqual(test_channel_group.channel_partner_ids, self.env['res.partner'])
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
 
+    def test_multi_company_chat(self):
+        company_A = self.env['res.company'].create({'name': 'Company A'})
+        company_B = self.env['res.company'].create({'name': 'Company B'})
+        test_user_1 = self.env['res.users'].create({
+            'login': 'user1',
+            'name': 'My First New User',
+            'company_ids': [(6, 0, company_A.ids)],
+            'company_id': company_A.id
+        })
+        test_user_2 = self.env['res.users'].create({
+            'login': 'user2',
+            'name': 'My Second New User',
+            'company_ids': [(6, 0, company_B.ids)],
+            'company_id': company_B.id
+        })
+        initial_channel_info = self.env['mail.channel'].with_user(test_user_1).with_context(allowed_company_ids=company_A.ids).channel_get(test_user_2.partner_id.ids)
+        self.assertTrue(initial_channel_info, 'should be able to chat with multi company user')
+
 
 @tagged('moderation')
 class TestChannelModeration(TestMailCommon):
