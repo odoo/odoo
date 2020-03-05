@@ -33,7 +33,7 @@ class Event(models.Model):
     # website
     website_published = fields.Boolean(tracking=True)
     website_menu = fields.Boolean(
-        string='Dedicated Menu', copy=False,
+        string='Dedicated Menu',
         compute='_compute_from_event_type', readonly=False, store=True,
         help="Creates menus Introduction, Location and Register on the page "
              "of the event on the website.")
