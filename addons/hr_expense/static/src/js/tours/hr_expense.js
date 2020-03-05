@@ -8,7 +8,7 @@ var _t = core._t;
 
 tour.register('hr_expense_tour' , {
     url: "/web"
-}, [tour.STEPS.SHOW_APPS_MENU_ITEM, {
+}, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',
     content: _t("Want to manage your expenses? It starts here."),
     position: 'right',
