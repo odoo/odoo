@@ -110,6 +110,17 @@ class TestUi(odoo.tests.HttpCase):
     def test_03_backend_dashboard(self):
         self.start_tour("/", 'backend_dashboard', login='admin')
 
+    def test_04_website_navbar_menu(self):
+        website = self.env['website'].search([], limit=1)
+        self.env['website.menu'].create({
+            'name': 'Test Tour Menu',
+            'url': '/test-tour-menu',
+            'parent_id': website.menu_id.id,
+            'sequence': 0,
+            'website_id': website.id,
+        })
+        self.start_tour("/", 'website_navbar_menu')
+
     def test_05_specific_website_editor(self):
         website_default = self.env['website'].search([], limit=1)
         new_website = self.env['website'].create({'name': 'New Website'})
