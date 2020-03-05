@@ -12,7 +12,7 @@
                     </span>
                     <h1>Payment</h1>
                     <span class="button next" t-att-class="{ highlight: currentOrder.is_paid() }"
-                          t-on-click="validateOrder">
+                          t-on-click="validateOrder(false)">
                         Validate
                         <i class="fa fa-angle-double-right"></i>
                     </span>

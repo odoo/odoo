@@ -161,8 +161,6 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             this.render();
         }
         async validateOrder(isForceValidate) {
-            // TODO jcb: isForceValidate here is wrong.
-            // It always receive an Event as value.
             if (await this._isOrderValid(isForceValidate)) {
                 // remove pending payments before finalizing the validation
                 for (let line of this.paymentLines) {
