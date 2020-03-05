@@ -16,8 +16,7 @@ class Website(models.Model):
 
     pricelist_id = fields.Many2one('product.pricelist', compute='_compute_pricelist_id', string='Default Pricelist')
     currency_id = fields.Many2one('res.currency',
-        related='pricelist_id.currency_id', depends=(), related_sudo=False,
-        string='Default Currency', readonly=False)
+        string='Default Currency', compute="_compute_currency_id")
     salesperson_id = fields.Many2one('res.users', string='Salesperson')
 
     def _get_default_website_team(self):
@@ -52,7 +51,7 @@ class Website(models.Model):
         Pricelist = self.env['product.pricelist']
         for website in self:
             website.pricelist_ids = Pricelist.search(
-                Pricelist._get_website_pricelists_domain(website.id)
+                Pricelist._get_website_pricelists_domain(website)
             )
 
     @api.depends_context('website_id')
@@ -61,6 +60,12 @@ class Website(models.Model):
             if website._context.get('website_id') != website.id:
                 website = website.with_context(website_id=website.id)
             website.pricelist_id = website.get_current_pricelist()
+
+    @api.depends('company_id', 'currency_id')
+    def _compute_currency_id(self):
+        for website in self:
+            company = website.company_id or self.env.company
+            website.currency_id = website.pricelist_id.currency_id or company.currency_id
 
     # This method is cached, must not return records! See also #8795
     @tools.ormcache('self.env.uid', 'country_code', 'show_visible', 'website_pl', 'current_pl', 'all_pl', 'partner_pl', 'order_pl')
@@ -93,24 +98,24 @@ class Website(models.Model):
         #          is cached and the result of this method will be impacted by that field value.
         #          Pass it through `partner_pl` parameter instead to invalidate the cache.
 
-        # If there is a GeoIP country, find a pricelist for it
+        # If there is a GeoIP country, try to find a pricelist for it
         self.ensure_one()
         pricelists = self.env['product.pricelist']
         if country_code:
             for cgroup in self.env['res.country.group'].search([('country_ids.code', '=', country_code)]):
                 pricelists |= cgroup.pricelist_ids.filtered(
-                    lambda pl: pl._is_available_on_website(self.id) and _check_show_visible(pl)
+                    lambda pl: pl._is_available_on_website(self) and _check_show_visible(pl)
                 )
 
         # no GeoIP or no pricelist for this country
-        if not country_code or not pricelists:
+        if all_pl and (not country_code or not pricelists):
             pricelists |= all_pl.filtered(lambda pl: _check_show_visible(pl))
 
         # if logged in, add partner pl (which is `property_product_pricelist`, might not be website compliant)
-        is_public = self.user_id.id == self.env.user.id
-        if not is_public:
+        # VFE why filtering on website compliance if we accept it may not be website compliant ?
+        if not (self.user_id.id == self.env.user.id) and partner_pl:
             # keep partner_pl only if website compliant
-            partner_pl = pricelists.browse(partner_pl).filtered(lambda pl: pl._is_available_on_website(self.id) and _check_show_visible(pl))
+            partner_pl = pricelists.browse(partner_pl).filtered(lambda pl: pl._is_available_on_website(self) and _check_show_visible(pl))
             if country_code:
                 # keep partner_pl only if GeoIP compliant in case of GeoIP enabled
                 partner_pl = partner_pl.filtered(
@@ -134,17 +139,22 @@ class Website(models.Model):
             else:
                 # In the weird case we are coming from the backend (https://github.com/odoo/odoo/issues/20245)
                 website = len(self) == 1 and self or self.search([], limit=1)
+
         isocountry = req and req.session.geoip and req.session.geoip.get('country_code') or False
         partner = self.env.user.partner_id
-        last_order_pl = partner.last_website_so_id.pricelist_id
-        partner_pl = partner.with_user(self.env.user).property_product_pricelist
-        pricelists = website._get_pl_partner_order(isocountry, show_visible,
-                                                   website.user_id.sudo().partner_id.property_product_pricelist.id,
-                                                   req and req.session.get('website_sale_current_pl') or None,
-                                                   website.pricelist_ids,
-                                                   partner_pl=partner_pl and partner_pl.id or None,
-                                                   order_pl=last_order_pl and last_order_pl.id or None)
-        return self.env['product.pricelist'].browse(pricelists)
+        last_order_pl = partner.last_website_so_id.pricelist_id.filtered('active')
+        partner_pl = partner.property_product_pricelist
+        website_user_default_pl = website.user_id.sudo().partner_id.property_product_pricelist
+        pricelist_ids = website._get_pl_partner_order(
+            isocountry, show_visible,
+            website_pl=website_user_default_pl.id,
+            current_pl=req and req.session.get('website_sale_current_pl') or None,
+            all_pl=website.pricelist_ids,
+            partner_pl=partner_pl.id,
+            order_pl=last_order_pl.id)
+        return self.env['product.pricelist'].browse(pricelist_ids)
+        # VFE dunno why, but in tests TestWebsitePriceListAvailableGeoIP.test_get_pricelist_available and 2 others,
+        # the archived main pricelist is still given by _get_pricelist_available
 
     def get_pricelist_available(self, show_visible=False):
         return self._get_pricelist_available(request, show_visible)
@@ -159,13 +169,14 @@ class Website(models.Model):
 
     def get_current_pricelist(self):
         """
-        :returns: The current pricelist record
+        :returns: The current pricelist record, may be empty if no pricelist existing and active.
         """
+        self.ensure_one()
         # The list of available pricelists for this user.
         # If the user is signed in, and has a pricelist set different than the public user pricelist
         # then this pricelist will always be considered as available
         available_pricelists = self.get_pricelist_available()
-        pl = None
+        pl = self.env['product.pricelist']
         partner = self.env.user.partner_id
         if request and request.session.get('website_sale_current_pl'):
             # `website_sale_current_pl` is set only if the user specifically chose it:
@@ -173,26 +184,17 @@ class Website(models.Model):
             #  - Either, he entered a coupon code
             pl = self.env['product.pricelist'].browse(request.session['website_sale_current_pl'])
             if pl not in available_pricelists:
-                pl = None
+                pl = self.env['product.pricelist']
                 request.session.pop('website_sale_current_pl')
-        if not pl:
+        if not pl or not pl.active:
             # If the user has a saved cart, it take the pricelist of this last unconfirmed cart
             pl = partner.last_website_so_id.pricelist_id
-            if not pl:
+            if not pl or not pl.active:
                 # The pricelist of the user set on its partner form.
                 # If the user is not signed in, it's the public user pricelist
                 pl = partner.property_product_pricelist
-            if available_pricelists and pl not in available_pricelists:
-                # If there is at least one pricelist in the available pricelists
-                # and the chosen pricelist is not within them
-                # it then choose the first available pricelist.
-                # This can only happen when the pricelist is the public user pricelist and this pricelist is not in the available pricelist for this localization
-                # If the user is signed in, and has a special pricelist (different than the public user pricelist),
-                # then this special pricelist is amongs these available pricelists, and therefore it won't fall in this case.
-                pl = available_pricelists[0]
+            pl = pl if pl in available_pricelists else available_pricelists[:1]
 
-        if not pl:
-            _logger.error('Fail to find pricelist for partner "%s" (id %s)', partner.name, partner.id)
         return pl
 
     def sale_product_domain(self):
@@ -233,10 +235,10 @@ class Website(models.Model):
         return values
 
     def sale_get_order(self, force_create=False, code=None, update_pricelist=False, force_pricelist=False):
-        """ Return the current sales order after mofications specified by params.
+        """ Return the current sales order after modifications specified by params.
         :param bool force_create: Create sales order if not already existing
         :param str code: Code to force a pricelist (promo code)
-                         If empty, it's a special case to reset the pricelist with the first available else the default.
+            If empty, it's a special case to reset the pricelist with the first available else the default.
         :param bool update_pricelist: Force to recompute all the lines from sales order to adapt the price with the current pricelist.
         :param int force_pricelist: pricelist_id - if set,  we change the pricelist with this one
         :returns: browse record for the current sales order
@@ -259,12 +261,12 @@ class Website(models.Model):
                 request.session['sale_order_id'] = None
             return self.env['sale.order']
 
-        if self.env['product.pricelist'].browse(force_pricelist).exists():
+        if force_pricelist and self.env['product.pricelist'].browse(force_pricelist).exists():
             pricelist_id = force_pricelist
             request.session['website_sale_current_pl'] = pricelist_id
             update_pricelist = True
         else:
-            pricelist_id = request.session.get('website_sale_current_pl') or self.get_current_pricelist().id
+            pricelist_id = self.get_current_pricelist().id
 
         if not self._context.get('pricelist'):
             self = self.with_context(pricelist=pricelist_id)

@@ -1199,7 +1199,7 @@ class WebsiteSale(http.Controller):
         if display_price:
             FieldMonetary = request.env['ir.qweb.field.monetary']
             monetary_options = {
-                'display_currency': request.website.get_current_pricelist().currency_id,
+                'display_currency': request.website.currency_id,
             }
             for res_product, product in zip(res['products'], products):
                 combination_info = product._get_combination_info(only_template=True)
@@ -1233,7 +1233,7 @@ class WebsiteSale(http.Controller):
 
                 FieldMonetary = request.env['ir.qweb.field.monetary']
                 monetary_options = {
-                    'display_currency': request.website.get_current_pricelist().currency_id,
+                    'display_currency': request.website.currency_id,
                 }
                 rating = request.website.viewref('website_sale.product_comment').active
                 res = {'products': []}

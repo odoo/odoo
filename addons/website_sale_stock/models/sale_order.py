@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api, fields
-from odoo.tools.translate import _
+from odoo import fields, models, _
 
 
 class SaleOrder(models.Model):
@@ -10,32 +9,26 @@ class SaleOrder(models.Model):
 
     warning_stock = fields.Char('Warning')
 
-    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
-        values = super(SaleOrder, self)._cart_update(product_id, line_id, add_qty, set_qty, **kwargs)
-        line_id = values.get('line_id')
+    def _check_quantity(self, product, old_qty, new_qty, line=None):
+        new_qty, warning = super(SaleOrder, self)._check_quantity(product, old_qty, new_qty, line)
+        if new_qty < old_qty or not (product.type == 'product' and product.inventory_availability in ['always', 'threshold']):
+            return new_qty, warning
 
-        for line in self.order_line:
-            if line.product_id.type == 'product' and line.product_id.inventory_availability in ['always', 'threshold']:
-                cart_qty = sum(self.order_line.filtered(lambda p: p.product_id.id == line.product_id.id).mapped('product_uom_qty'))
-                if cart_qty > line.product_id.with_context(warehouse=self.warehouse_id.id).virtual_available and (line_id == line.id):
-                    qty = line.product_id.with_context(warehouse=self.warehouse_id.id).virtual_available - cart_qty
-                    new_val = super(SaleOrder, self)._cart_update(line.product_id.id, line.id, qty, 0, **kwargs)
-                    values.update(new_val)
+        requested_qty = new_qty - old_qty
+        lines_with_product = self.order_line.filtered(lambda l: l.product_id == product)
+        cart_qty = sum(lines_with_product.mapped('product_uom_qty'))
+        qty_available = product.with_context(warehouse=self.warehouse_id.id).virtual_available - cart_qty
+        if requested_qty > qty_available:
+            new_qty = old_qty + qty_available
+            warning = _('You ask for %i products but only %i is available') % (cart_qty, qty_available)
+            if line:
+                line.warning_stock = warning
+        return new_qty, warning
 
-                    # Make sure line still exists, it may have been deleted in super()_cartupdate because qty can be <= 0
-                    if line.exists() and new_val['quantity']:
-                        line.warning_stock = _('You ask for %s products but only %s is available') % (cart_qty, new_val['quantity'])
-                        values['warning'] = line.warning_stock
-                    else:
-                        self.warning_stock = _("Some products became unavailable and your cart has been updated. We're sorry for the inconvenience.")
-                        values['warning'] = self.warning_stock
+    def _prepare_line_values(self, product, qty, **kwargs):
+        values = super(SaleOrder, self)._prepare_line_values(product, qty, **kwargs)
+        values['customer_lead'] = product.sale_delay
         return values
-
-    def _website_product_id_change(self, order_id, product_id, qty=0):
-        res = super(SaleOrder, self)._website_product_id_change(order_id, product_id, qty=qty)
-        product = self.env['product.product'].browse(product_id)
-        res['customer_lead'] = product.sale_delay
-        return res
 
     def _get_stock_warning(self, clear=True):
         self.ensure_one()

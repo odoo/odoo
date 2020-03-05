@@ -18,19 +18,13 @@ class ProductStyle(models.Model):
 
 
 class ProductPricelist(models.Model):
-    _inherit = "product.pricelist"
+    _inherit = ["product.pricelist", 'website.published.multi.mixin']
+    _name = "product.pricelist"
 
-    def _default_website(self):
-        """ Find the first company's website, if there is one. """
-        company_id = self.env.company.id
+    def _default_is_published(self):
+        return True
 
-        if self._context.get('default_company_id'):
-            company_id = self._context.get('default_company_id')
-
-        domain = [('company_id', '=', company_id)]
-        return self.env['website'].search(domain, limit=1)
-
-    website_id = fields.Many2one('website', string="Website", ondelete='restrict', default=_default_website, domain="[('company_id', '=?', company_id)]")
+    website_id = fields.Many2one(domain="[('company_id', '=?', company_id)]")
     code = fields.Char(string='E-commerce Promotional Code', groups="base.group_user")
     selectable = fields.Boolean(help="Allow the end user to choose this price list")
 
@@ -41,27 +35,15 @@ class ProductPricelist(models.Model):
         website = self.env['website']
         website._get_pl_partner_order.clear_cache(website)
 
-    @api.model
-    def create(self, data):
-        if data.get('company_id') and not data.get('website_id'):
-            # l10n modules install will change the company currency, creating a
-            # pricelist for that currency. Do not use user's company in that
-            # case as module install are done with OdooBot (company 1)
-            self = self.with_context(default_company_id=data['company_id'])
-        res = super(ProductPricelist, self).create(data)
-        self.clear_cache()
-        return res
-
     def write(self, data):
+        # VFE TODO when archiving a pricelist, invalidate_cache of res_partner.property_product_pricelist ?
+        # And/or reset the property if it is the default one ?
         res = super(ProductPricelist, self).write(data)
-        if data.keys() & {'code', 'active', 'website_id', 'selectable'}:
-            self._check_website_pricelist()
         self.clear_cache()
         return res
 
     def unlink(self):
         res = super(ProductPricelist, self).unlink()
-        self._check_website_pricelist()
         self.clear_cache()
         return res
 
@@ -69,22 +51,17 @@ class ProductPricelist(models.Model):
         domain = super(ProductPricelist, self)._get_partner_pricelist_multi_search_domain_hook()
         website = ir_http.get_request_website()
         if website:
-            domain += self._get_website_pricelists_domain(website.id)
+            domain += self._get_website_pricelists_domain(website)
         return domain
 
     def _get_partner_pricelist_multi_filter_hook(self):
         res = super(ProductPricelist, self)._get_partner_pricelist_multi_filter_hook()
         website = ir_http.get_request_website()
         if website:
-            res = res.filtered(lambda pl: pl._is_available_on_website(website.id))
+            res = res.filtered(lambda pl: pl._is_available_on_website(website))
         return res
 
-    def _check_website_pricelist(self):
-        for website in self.env['website'].search([]):
-            if not website.pricelist_ids:
-                raise UserError(_("With this action, '%s' website would not have any pricelist available.") % (website.name))
-
-    def _is_available_on_website(self, website_id):
+    def _is_available_on_website(self, website):
         """ To be able to be used on a website, a pricelist should either:
         - Have its `website_id` set to current website (specific pricelist).
         - Have no `website_id` set and should be `selectable` (generic pricelist)
@@ -96,14 +73,19 @@ class ProductPricelist(models.Model):
         Change in this method should be reflected in `_get_website_pricelists_domain`.
         """
         self.ensure_one()
-        return self.website_id.id == website_id or (not self.website_id and (self.selectable or self.sudo().code))
+        return self.website_published and (not self.company_id or self.company_id == website.company_id) and (
+            self.website_id.id == website.id or (
+                not self.website_id and (
+                    self.selectable or self.sudo().code)))
 
-    def _get_website_pricelists_domain(self, website_id):
+    def _get_website_pricelists_domain(self, website):
         ''' Check above `_is_available_on_website` for explanation.
         Change in this method should be reflected in `_is_available_on_website`.
         '''
         return [
-            '|', ('website_id', '=', website_id),
+            '&', ('website_published', '=', True),
+            '&', ('company_id', 'in', [website.company_id.id, False]),
+            '|', ('website_id', '=', website.id),
             '&', ('website_id', '=', False),
             '|', ('selectable', '=', True), ('code', '!=', False),
         ]
@@ -118,16 +100,6 @@ class ProductPricelist(models.Model):
         if not company_id and website:
             company_id = website.company_id.id
         return super(ProductPricelist, self)._get_partner_pricelist_multi(partner_ids, company_id)
-
-    @api.constrains('company_id', 'website_id')
-    def _check_websites_in_company(self):
-        '''Prevent misconfiguration multi-website/multi-companies.
-           If the record has a company, the website should be from that company.
-        '''
-        for record in self.filtered(lambda pl: pl.website_id and pl.company_id):
-            if record.website_id.company_id != record.company_id:
-                raise ValidationError(_("Only the company's websites are allowed. \
-                    Leave the Company field empty or select a website from that company."))
 
 
 class ProductPublicCategory(models.Model):
@@ -255,7 +227,7 @@ class ProductTemplate(models.Model):
 
         return self._get_possible_variants(parent_combination).sorted(_sort_key_variant)
 
-    def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):
+    def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=None, parent_combination=False, only_template=False, currency=None):
         """Override for website, where we want to:
             - take the website pricelist if no pricelist is set
             - apply the b2b/b2c setting to the result
@@ -265,15 +237,17 @@ class ProductTemplate(models.Model):
         """
         self.ensure_one()
 
-        current_website = False
+        current_website = self.env['website']
 
         if self.env.context.get('website_id'):
             current_website = self.env['website'].get_current_website()
-            if not pricelist:
-                pricelist = current_website.get_current_pricelist()
+            self = self.with_company(current_website.company_id)
+            pricelist = pricelist or current_website.get_current_pricelist()
 
         combination_info = super(ProductTemplate, self)._get_combination_info(
-            combination=combination, product_id=product_id, add_qty=add_qty, pricelist=pricelist,
+            combination=combination, product_id=product_id,
+            add_qty=add_qty, pricelist=pricelist,
+            currency=currency or current_website.currency_id,
             parent_combination=parent_combination, only_template=only_template)
 
         if self.env.context.get('website_id'):
@@ -285,19 +259,16 @@ class ProductTemplate(models.Model):
             fpos = self.env['account.fiscal.position'].get_fiscal_position(partner.id)
             taxes = fpos.map_tax(product.sudo().taxes_id.filtered(lambda x: x.company_id == company_id), product, partner)
 
-            # The list_price is always the price of one.
-            quantity_1 = 1
-            price = taxes.compute_all(combination_info['price'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
-            if pricelist.discount_policy == 'without_discount':
-                list_price = taxes.compute_all(combination_info['list_price'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
+            if combination_info['has_discounted_price']:
+                price = taxes.compute_all(combination_info['price'], pricelist.currency_id, 1, product, partner)[tax_display]
+                list_price = taxes.compute_all(combination_info['list_price'], pricelist.currency_id, 1, product, partner)[tax_display]
             else:
-                list_price = price
-            has_discounted_price = pricelist.currency_id.compare_amounts(list_price, price) == 1
+                list_price = taxes.compute_all(combination_info['price'], pricelist.currency_id, 1, product, partner)[tax_display]
+                price = list_price
 
             combination_info.update(
                 price=price,
                 list_price=list_price,
-                has_discounted_price=has_discounted_price,
             )
 
         return combination_info
@@ -313,13 +284,6 @@ class ProductTemplate(models.Model):
         :rtype: recordset of `product.product`
         """
         return self._create_product_variant(self._get_first_possible_combination(), log_warning)
-
-    def _get_current_company_fallback(self, **kwargs):
-        """Override: if a website is set on the product or given, fallback to
-        the company of the website. Otherwise use the one from parent method."""
-        res = super(ProductTemplate, self)._get_current_company_fallback(**kwargs)
-        website = self.website_id or kwargs.get('website')
-        return website and website.company_id or res
 
     def _default_website_sequence(self):
         ''' We want new product to be the last (highest seq).

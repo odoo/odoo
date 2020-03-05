@@ -216,6 +216,7 @@
         </record>
 
         <record model="product.pricelist" id="product.list0">
+            <field name="website_published" eval="True"/>
             <field name="selectable" eval="True" />
             <field name="sequence">3</field>
             <field name="currency_id" ref="base.USD"/>
@@ -229,8 +230,10 @@
 
         <record id="list_christmas" model="product.pricelist">
             <field name="name">Christmas</field>
+            <field name="website_published" eval="True"/>
             <field name="selectable" eval="False" />
             <field name="website_id" ref="website.default_website" />
+            <field name="company_id" ref="base.main_company"/>
             <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
             <field name="sequence">20</field>
         </record>
@@ -245,6 +248,8 @@
             <field name="name">Benelux</field>
             <field name="selectable" eval="False" />
             <field name="website_id" ref="website.default_website" />
+            <field name="company_id" ref="base.main_company"/>
+            <field name="website_published" eval="True"/>
             <field name="country_group_ids" eval="[(6,0,[ref('benelux')])]" />
             <field name="sequence">2</field>
         </record>
@@ -256,11 +261,12 @@
             <field name="currency_id" ref="base.EUR"/>
         </record>
 
-
         <record id="list_europe" model="product.pricelist">
             <field name="name">EUR</field>
+            <field name="website_published" eval="True"/>
             <field name="selectable" eval="True" />
             <field name="website_id" ref="website.default_website" />
+            <field name="company_id" ref="base.main_company"/>
             <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
             <field name="sequence">3</field>
             <field name="currency_id" ref="base.EUR"/>

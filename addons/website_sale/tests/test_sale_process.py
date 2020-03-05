@@ -221,6 +221,7 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
             'name': 'EUR_test',
             'website_id': self.website.id,
             'code': 'EUR_test',
+            'company_id': self.website.company_id.id,
         })
 
         with MockRequest(self.env, website=self.website, sale_order_id=so.id):
