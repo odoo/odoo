@@ -1,11 +1,12 @@
 {% extends "basic/layout.html" %}
 
-{% set script_files = script_files + [
-'_static/jquery.min.js',
-'_static/bootstrap.js',
-'_static/doc.js',
-'_static/jquery.noconflict.js',
-] %}
+{%- block scripts %}
+ {{ super() }}
+<script type="text/javascript" src="{{ pathto('_static/jquery.min.js', 1) }}"></script>
+<script type="text/javascript" src="{{ pathto('_static/bootstrap.js', 1) }}"></script>
+<script type="text/javascript" src="{{ pathto('_static/doc.js', 1) }}"></script>
+<script type="text/javascript" src="{{ pathto('_static/jquery.noconflict.js', 1) }}"></script>
+{%- endblock %}
 
 {% set classes = [] %}
 {% if pagename == master_doc %}
