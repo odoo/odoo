@@ -141,6 +141,9 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
             if (state.buffer === '-' || /^(0)\1+$/.test(state.buffer)) {
                 state.buffer = '';
             }
+            // once an input is accepted and updated the buffer,
+            // the buffer should not be in reset state anymore.
+            isReset = false;
         }
 
         // Takes `key` from details of the event
@@ -178,17 +181,13 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
         // keys from the buffered events.
         function bufferEvents(handler) {
             return event => {
-                if (['INPUT', 'TEXTAREA'].includes(event.target.tagName)) return;
-                // Ignore input if modifier key is pressed.
+                const key = event.key || event.detail.key;
                 if (
-                    event instanceof KeyboardEvent &&
-                    (event.getModifierState('Fn') ||
-                        event.getModifierState('Hyper') ||
-                        event.getModifierState('OS') ||
-                        event.getModifierState('Super') ||
-                        event.getModifierState('Win') ||
-                        event.getModifierState('Control') ||
-                        event.getModifierState('Alt'))
+                    // Do not buffer the input event if
+                    // * target is input element
+                    ['INPUT', 'TEXTAREA'].includes(event.target.tagName) ||
+                    // * or if event key is not a valid number input
+                    !['Delete', 'Backspace'].concat('0123456789+-.,'.split('')).includes(key)
                 ) {
                     return;
                 }
