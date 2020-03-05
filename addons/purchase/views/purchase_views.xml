@@ -383,6 +383,9 @@
                     <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]"/>
                     <separator/>
                     <filter name="order_date" string="Order Date" date="date_order"/>
+                    <filter name="draft_rfqs" string="Draft RFQs" domain="[('state', '=', 'draft')]"/>
+                    <filter name="waiting_rfqs" string="Waiting RFQs" domain="[('state', '=', 'sent'), ('date_order', '&gt;=', datetime.datetime.now())]"/>
+                    <filter name="late_rfqs" string="Late RFQs" domain="[('state', '=', 'sent'), ('date_order', '&lt;', datetime.datetime.now())]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -445,7 +448,7 @@
             <field name="name">purchase.order.kanban</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" js_class="purchase_kanban_dashboard">
                     <field name="name"/>
                     <field name="partner_id" readonly="1"/>
                     <field name="amount_total"/>
@@ -484,7 +487,7 @@
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
                 <tree string="Purchase Order" multi_edit="1" decoration-bf="message_unread==True"
-                      decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" class="o_purchase_order">
+                      decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" class="o_purchase_order" js_class="purchase_list_dashboard">
                     <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1"/>
@@ -676,4 +679,36 @@
                 action = records.action_create_invoice()
         </field>
     </record>
+    
+    <!-- Dashboard action buttons -->
+    <!-- Dashboard action buttons: End in List view -->
+    <record id="purchase_action_dashboard_list" model="ir.actions.act_window">
+        <field name="name">Requests for Quotation</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">form,tree,kanban,pivot,graph,calendar,activity</field>
+        <field name="view_id" ref="purchase.purchase_order_tree"/>
+        <field name="search_view_id" ref="view_purchase_order_filter"/>
+        <field name="target">main</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No RFQs to display
+            </p>
+        </field>
+    </record>
+
+    <!-- Dashboard action buttons: End in Kanban view-->
+    <record id="purchase_action_dashboard_kanban" model="ir.actions.act_window">
+        <field name="name">Requests for Quotation</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">form,tree,kanban,pivot,graph,calendar,activity</field>
+        <field name="view_id" ref="purchase.view_purchase_order_kanban"/>
+        <field name="search_view_id" ref="view_purchase_order_filter"/>
+        <field name="target">main</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No RFQs to display
+            </p>
+        </field>
+    </record>
+
 </odoo>

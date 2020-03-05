@@ -13,6 +13,7 @@
     'data': [
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
+        'views/assets.xml',
         'views/account_move_views.xml',
         'data/purchase_data.xml',
         'report/purchase_reports.xml',
@@ -27,6 +28,9 @@
         'views/portal_templates.xml',
         'report/purchase_order_templates.xml',
         'report/purchase_quotation_templates.xml',
+    ],
+    'qweb': [
+        "static/src/xml/purchase_dashboard.xml",
     ],
     'demo': [
         'data/purchase_demo.xml',
