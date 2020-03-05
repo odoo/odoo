@@ -715,7 +715,6 @@ class AccountAccount(models.Model):
             'view_mode': 'form',
             'res_model': 'account.account',
             'res_id': self.id,
-            'target': 'new',
         }
 
     def action_duplicate_accounts(self):
@@ -1429,6 +1428,13 @@ class AccountTaxGroup(models.Model):
     property_tax_payable_account_id = fields.Many2one('account.account', company_dependent=True, string='Tax current account (payable)')
     property_tax_receivable_account_id = fields.Many2one('account.account', company_dependent=True, string='Tax current account (receivable)')
     property_advance_tax_payment_account_id = fields.Many2one('account.account', company_dependent=True, string='Advance Tax payment account')
+
+    def _any_is_configured(self, company_id):
+        domain = expression.OR([[('property_tax_payable_account_id', '!=', False)],
+                                [('property_tax_receivable_account_id', '!=', False)],
+                                [('property_advance_tax_payment_account_id', '!=', False)]])
+        group_with_config = self.with_company(company_id).search_count(domain)
+        return group_with_config > 0
 
 
 class AccountTax(models.Model):
