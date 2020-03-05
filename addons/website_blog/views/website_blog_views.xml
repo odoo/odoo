@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <tree string="Blogs">
                     <field name="name"/>
+                    <field name="blog_post_count"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <field name="active" invisible="1"/>
                 </tree>
@@ -43,6 +44,7 @@
                 <tree string="Blog Posts">
                     <field name="name"/>
                     <field name="active" invisible="1"/>
+                    <field name="author_id"/>
                     <field name="blog_id"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <field name="visits"/>
