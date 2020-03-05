@@ -8,6 +8,7 @@ import datetime
 import functools
 import glob
 import hashlib
+import html
 import io
 import itertools
 import jinja2
@@ -1495,11 +1496,11 @@ class Binary(http.Controller):
         args = []
         for ufile in files:
 
-            filename = ufile.filename
+            filename = html.escape(ufile.filename, quote=True)
             if request.httprequest.user_agent.browser == 'safari':
                 # Safari sends NFD UTF-8 (where é is composed by 'e' and [accent])
                 # we need to send it the same stuff, otherwise it'll fail
-                filename = unicodedata.normalize('NFD', ufile.filename)
+                filename = unicodedata.normalize('NFD', filename)
 
             try:
                 attachment = Model.create({
