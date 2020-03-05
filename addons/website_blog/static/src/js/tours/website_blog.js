@@ -8,7 +8,11 @@ odoo.define("website_blog.tour", function (require) {
 
     tour.register("blog", {
         url: "/",
-    }, [tour.STEPS.WEBSITE_NEW_PAGE, {
+    }, [{
+        trigger: '#new-content-menu > a',
+        auto: true,
+        position: 'bottom',
+    }, {
         trigger: "a[data-action=new_blog_post]",
         content: _t("Select this menu item to create a new blog post."),
         position: "bottom",

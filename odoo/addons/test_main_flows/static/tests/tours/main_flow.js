@@ -7,7 +7,7 @@ const tour = require('web_tour.tour');
 tour.register('main_flow_tour', {
     test: true,
     url: "/web",
-}, [tour.STEPS.SHOW_APPS_MENU_ITEM, {
+}, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     content: _t('Organize your sales activities with the <b>Sales app</b>.'),
     position: 'right',
@@ -276,7 +276,7 @@ tour.register('main_flow_tour', {
     trigger: '.o_menu_toggle',
     content: _t('Go back to the home menu'),
     position: 'bottom',
-}, tour.STEPS.SHOW_APPS_MENU_ITEM, {
+}, tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
     content: _t('Organize your sales activities with the <b>CRM app</b>.'),
     position: 'right',
@@ -424,7 +424,7 @@ tour.register('main_flow_tour', {
     trigger: '.o_menu_toggle',
     content: _t('Go back to the home menu'),
     position: 'bottom',
-}, tour.STEPS.SHOW_APPS_MENU_ITEM, {
+}, tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="stock.menu_stock_root"]',
     content: _t('Go to Inventory'),
     position: 'right',
@@ -488,7 +488,7 @@ tour.register('main_flow_tour', {
     trigger: '.o_menu_toggle',
     content: _t('Go back to the home menu'),
     position: 'bottom',
-}, tour.STEPS.SHOW_APPS_MENU_ITEM, {
+}, tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="purchase.menu_purchase_root"]',
     content: _t('Go to Purchase'),
     position: 'right',
@@ -544,7 +544,7 @@ tour.register('main_flow_tour', {
     trigger: '.o_menu_toggle',
     content: _t('Go back to the home menu'),
     position: 'bottom',
-}, tour.STEPS.SHOW_APPS_MENU_ITEM, {
+}, tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="mrp.menu_mrp_root"]',
     content: _t('Go to Manufacturing'),
     position: 'right',
@@ -587,7 +587,7 @@ tour.register('main_flow_tour', {
     trigger: '.o_menu_toggle',
     content: _t('Go back to the home menu'),
     position: 'bottom',
-}, tour.STEPS.SHOW_APPS_MENU_ITEM, {
+}, tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     content: _t('Organize your sales activities with the <b>Sales app</b>.'),
     position: 'bottom',

@@ -6,6 +6,7 @@ var config = require('web.config');
 var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
 var utils = require('web_tour.utils');
+var TourStepUtils = require('web_tour.TourStepUtils');
 var RainbowMan = require('web.RainbowMan');
 var RunningTourActionHelper = require('web_tour.RunningTourActionHelper');
 var ServicesMixin = require('web.ServicesMixin');
@@ -427,30 +428,6 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             }
         }
     },
-
-    /**
-     * Tour predefined steps
-     */
-    STEPS: {
-        SHOW_APPS_MENU_ITEM: {
-            edition: 'community',
-            trigger: '.o_menu_apps a',
-            auto: true,
-            position: "bottom",
-        },
-
-        TOGGLE_HOME_MENU: {
-            edition: "enterprise",
-            trigger: ".o_main_navbar .o_menu_toggle",
-            content: _t('Click on the <i>Home icon</i> to navigate across apps.'),
-            position: "bottom",
-        },
-
-        WEBSITE_NEW_PAGE: {
-            trigger: "#new-content-menu > a",
-            auto: true,
-            position: "bottom",
-        },
-    },
+    stepUtils: new TourStepUtils(this)
 });
 });
