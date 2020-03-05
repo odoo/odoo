@@ -9,6 +9,11 @@ publicWidget.registry.SignUpForm = publicWidget.Widget.extend({
         'submit': '_onSubmit',
     },
 
+    start() {
+        this._super(...arguments);
+        this.$('#login').change(this._onChangeLogin);
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -21,5 +26,12 @@ publicWidget.registry.SignUpForm = publicWidget.Widget.extend({
         $btn.attr('disabled', 'disabled');
         $btn.prepend('<i class="fa fa-refresh fa-spin"/> ');
     },
+
+    /**
+     * @private
+     */
+    _onChangeLogin: function() {
+        $(this).val($(this).val().toLocaleLowerCase());
+    }
 });
 });

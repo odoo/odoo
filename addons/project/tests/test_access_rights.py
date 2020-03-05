@@ -12,8 +12,8 @@ class TestAccessRights(TestProjectCommon):
     def setUp(self):
         super().setUp()
         self.task = self.create_task('Make the world a better place')
-        self.user = mail_new_test_user(self.env, 'Internal user', groups='base.group_user')
-        self.portal = mail_new_test_user(self.env, 'Portal user', groups='base.group_portal')
+        self.user = mail_new_test_user(self.env, 'internal user', groups='base.group_user')
+        self.portal = mail_new_test_user(self.env, 'portal user', groups='base.group_portal')
 
     def create_task(self, name, *, with_user=None, **kwargs):
         values = dict(name=name, project_id=self.project_pigs.id, **kwargs)
@@ -26,7 +26,7 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
         super().setUp()
         self.project_pigs.privacy_visibility = 'followers'
 
-    @users('Internal user', 'Portal user')
+    @users('internal user', 'portal user')
     def test_project_no_write(self):
         with self.assertRaises(AccessError, msg="%s should not be able to write on the project" % self.env.user.name):
             self.project_pigs.with_user(self.env.user).name = "Take over the world"
@@ -35,7 +35,7 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
         with self.assertRaises(AccessError, msg="%s should not be able to write on the project" % self.env.user.name):
             self.project_pigs.with_user(self.env.user).name = "Take over the world"
 
-    @users('Internal user', 'Portal user')
+    @users('internal user', 'portal user')
     def test_project_no_unlink(self):
         self.project_pigs.task_ids.unlink()
         with self.assertRaises(AccessError, msg="%s should not be able to unlink the project" % self.env.user.name):
@@ -46,45 +46,45 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
         with self.assertRaises(AccessError, msg="%s should not be able to unlink the project" % self.env.user.name):
             self.project_pigs.with_user(self.env.user).unlink()
 
-    @users('Internal user', 'Portal user')
+    @users('internal user', 'portal user')
     def test_project_no_read(self):
         self.project_pigs.invalidate_cache()
         with self.assertRaises(AccessError, msg="%s should not be able to read the project" % self.env.user.name):
             self.project_pigs.with_user(self.env.user).name
 
-    @users('Portal user')
+    @users('portal user')
     def test_project_allowed_portal_no_read(self):
         self.project_pigs.allowed_user_ids = self.env.user
         self.project_pigs.invalidate_cache()
         with self.assertRaises(AccessError, msg="%s should not be able to read the project" % self.env.user.name):
             self.project_pigs.with_user(self.env.user).name
 
-    @users('Internal user')
+    @users('internal user')
     def test_project_allowed_internal_read(self):
         self.project_pigs.allowed_user_ids = self.env.user
         self.project_pigs.invalidate_cache()
         self.project_pigs.with_user(self.env.user).name
 
-    @users('Internal user', 'Portal user')
+    @users('internal user', 'portal user')
     def test_task_no_read(self):
         self.task.invalidate_cache()
         with self.assertRaises(AccessError, msg="%s should not be able to read the task" % self.env.user.name):
             self.task.with_user(self.env.user).name
 
-    @users('Portal user')
+    @users('portal user')
     def test_task_allowed_portal_no_read(self):
         self.project_pigs.allowed_user_ids = self.env.user
         self.task.invalidate_cache()
         with self.assertRaises(AccessError, msg="%s should not be able to read the task" % self.env.user.name):
             self.task.with_user(self.env.user).name
 
-    @users('Internal user')
+    @users('internal user')
     def test_task_allowed_internal_read(self):
         self.project_pigs.allowed_user_ids = self.env.user
         self.task.invalidate_cache()
         self.task.with_user(self.env.user).name
 
-    @users('Internal user', 'Portal user')
+    @users('internal user', 'portal user')
     def test_task_no_write(self):
         with self.assertRaises(AccessError, msg="%s should not be able to write on the task" % self.env.user.name):
             self.task.with_user(self.env.user).name = "Paint the world in black & white"
@@ -93,7 +93,7 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
         with self.assertRaises(AccessError, msg="%s should not be able to write on the task" % self.env.user.name):
             self.task.with_user(self.env.user).name = "Paint the world in black & white"
 
-    @users('Internal user', 'Portal user')
+    @users('internal user', 'portal user')
     def test_task_no_create(self):
         with self.assertRaises(AccessError, msg="%s should not be able to create a task" % self.env.user.name):
             self.create_task("Archive the world, it's not needed anymore")
@@ -102,7 +102,7 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
         with self.assertRaises(AccessError, msg="%s should not be able to create a task" % self.env.user.name):
             self.create_task("Archive the world, it's not needed anymore")
 
-    @users('Internal user', 'Portal user')
+    @users('internal user', 'portal user')
     def test_task_no_unlink(self):
         with self.assertRaises(AccessError, msg="%s should not be able to unlink the task" % self.env.user.name):
             self.task.with_user(self.env.user).unlink()
@@ -118,19 +118,19 @@ class TestCRUDVisibilityPortal(TestAccessRights):
         super().setUp()
         self.project_pigs.privacy_visibility = 'portal'
 
-    @users('Portal user')
+    @users('portal user')
     def test_task_portal_no_read(self):
         self.task.invalidate_cache()
         with self.assertRaises(AccessError, msg="%s should not be able to read the task" % self.env.user.name):
             self.task.with_user(self.env.user).name
 
-    @users('Portal user')
+    @users('portal user')
     def test_task_allowed_portal_read(self):
         self.project_pigs.allowed_user_ids = self.env.user
         self.task.invalidate_cache()
         self.task.with_user(self.env.user).name
 
-    @users('Internal user')
+    @users('internal user')
     def test_task_internal_read(self):
         self.task.with_user(self.env.user).name
 
@@ -141,7 +141,7 @@ class TestCRUDVisibilityEmployees(TestAccessRights):
         super().setUp()
         self.project_pigs.privacy_visibility = 'employees'
 
-    @users('Portal user')
+    @users('portal user')
     def test_task_portal_no_read(self):
         self.task.invalidate_cache()
         with self.assertRaises(AccessError, msg="%s should not be able to read the task" % self.env.user.name):
@@ -152,7 +152,7 @@ class TestCRUDVisibilityEmployees(TestAccessRights):
         with self.assertRaises(AccessError, msg="%s should not be able to read the task" % self.env.user.name):
             self.task.with_user(self.env.user).name
 
-    @users('Internal user')
+    @users('internal user')
     def test_task_allowed_portal_read(self):
         self.task.invalidate_cache()
         self.task.with_user(self.env.user).name
@@ -209,9 +209,9 @@ class TestAllowedUsers(TestAccessRights):
     def test_visibility_changed(self):
         self.project_pigs.privacy_visibility = 'portal'
         self.task.allowed_user_ids |= self.portal
-        self.assertNotIn(self.user, self.task.allowed_user_ids, "Internal user should have been removed from allowed users")
+        self.assertNotIn(self.user, self.task.allowed_user_ids, "internal user should have been removed from allowed users")
         self.project_pigs.privacy_visibility = 'employees'
-        self.assertNotIn(self.portal, self.task.allowed_user_ids, "Portal user should have been removed from allowed users")
+        self.assertNotIn(self.portal, self.task.allowed_user_ids, "portal user should have been removed from allowed users")
 
     def test_write_task(self):
         self.user.groups_id |= self.env.ref('project.group_project_user')
