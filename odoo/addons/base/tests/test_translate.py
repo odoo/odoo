@@ -353,8 +353,8 @@ class TestTranslation(TransactionCase):
         translations = self.env['ir.translation'].search([('name', '=', 'res.partner.category,name'), ('res_id', '=', cheese.id)], order='lang')
         self.assertEqual(len(translations), 2)
         self.assertRecordValues(translations,
-            [{'lang': 'en_US', 'src': 'Cheese', 'value': 'Cheese'},
-             {'lang': 'fr_FR', 'src': 'Cheese', 'value': 'Cheese'}])
+            [{'lang': 'en_US', 'src': 'Cheese', 'value': ''},
+             {'lang': 'fr_FR', 'src': 'Cheese', 'value': ''}])
 
         # Translate in both language
         translations[0].value = 'The Cheese'
@@ -555,6 +555,28 @@ class TestTranslationWrite(TransactionCase):
             ('res_id', '=', belgium.id),
         ])
         self.assertEqual(len(translations), 0, "Translations were not removed")
+
+        # simulate remove the English translation in the interface
+        belgium.with_context(lang='fr_FR').write({'vat_label': 'TVA'})
+        belgium.with_context(lang='en_US').write({'vat_label': 'VAT'})
+        self.env['ir.translation'].translate_fields('res.country', belgium.id, 'vat_label')
+        en_translation = self.env['ir.translation'].search([
+            ('name', '=', 'res.country,vat_label'),
+            ('res_id', '=', belgium.id),
+            ('lang', '=', 'en_US'),
+        ])
+        en_translation.write({'value': ''})
+
+        # should recover the initial value from db
+        self.assertEqual(
+            "TVA", belgium.with_context(lang='fr_FR').vat_label,
+            "French translation was not kept"
+        )
+        self.assertEqual(
+            "VAT", belgium.with_context(lang='en_US').vat_label,
+            "Did not fallback to source when reset"
+        )
+
 
     def test_field_selection(self):
         """ Test translations of field selections. """
