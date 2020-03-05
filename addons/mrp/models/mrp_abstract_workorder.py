@@ -174,7 +174,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
         serial number.
         """
         lines = []
-        is_tracked = move.product_id.tracking != 'none'
+        is_tracked = move.product_id.tracking == 'serial'
         if move in self.move_raw_ids._origin:
             # Get the inverse_name (many2one on line) of raw_workorder_line_ids
             initial_line_values = {self.raw_workorder_line_ids._get_raw_workorder_inverse_name(): self.id}
