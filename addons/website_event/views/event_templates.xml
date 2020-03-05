@@ -486,6 +486,11 @@
                                 <a t-att-href="event.google_map_link()" target="_blank">Get the direction</a>
                             </div>
                         </t>
+                        <t t-else="">
+                            <div class="o_wevent_sidebar_block">
+                                <h6 class="o_wevent_sidebar_title">Online Event</h6>
+                            </div>
+                        </t>
                         <!-- Organizer -->
                         <div t-if="event.organizer_id" class="o_wevent_sidebar_block">
                             <h6 class="o_wevent_sidebar_title">Organizer</h6>
