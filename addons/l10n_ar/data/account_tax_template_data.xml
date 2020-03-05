@@ -286,10 +286,12 @@
 
     <!-- Only for Responsable Inscription account.chart.template -->
 
+    <!-- Remove this record in V14 -->
     <record id="ri_tax_vat_no_corresponde_ventas" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="description">IVA No Corresponde</field>
         <field name="name">IVA No Corresponde</field>
+        <field name="active" eval="False"/>
         <field name="sequence">2</field>
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
