@@ -487,6 +487,9 @@ class Users(models.Model):
             if user.partner_id.company_id:
                 user.partner_id.company_id = user.company_id
             user.partner_id.active = user.active
+
+            # force login to be lowercased
+            user.login = user.login.lower()
         return users
 
     def write(self, values):
@@ -619,13 +622,7 @@ class Users(models.Model):
         try:
             with cls.pool.cursor() as cr:
                 self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
-                with self._assert_can_auth():
-                    user = self.search(self._get_login_domain(login))
-                    if not user:
-                        raise AccessDenied()
-                    user = user.with_user(user)
-                    user._check_credentials(password)
-                    user._update_last_login()
+                user = self._perform_login(login, password)
         except AccessDenied:
             _logger.info("Login failed for db:%s login:%s from %s", db, login, ip)
             raise
@@ -633,6 +630,18 @@ class Users(models.Model):
         _logger.info("Login successful for db:%s login:%s from %s", db, login, ip)
 
         return user.id
+
+    def _perform_login(self, login, password):
+        with self._assert_can_auth():
+            user = self.search(self._get_login_domain(login))
+            if not user:
+                user = self.search(self._get_login_domain(login.lower()))
+                if not user:
+                    raise AccessDenied()
+            user = user.with_user(user)
+            user._check_credentials(password)
+            user._update_last_login()
+            return user
 
     @classmethod
     def authenticate(cls, db, login, password, user_agent_env):

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.exceptions import AccessDenied
 from odoo.tests.common import TransactionCase
 
 
@@ -114,3 +115,103 @@ class TestUsers(TransactionCase):
             "On user company change, if its partner_id has already a company_id,"
             "the company_id of the partner_id shall be updated"
         )
+
+    def test_login(self):
+        User = self.env['res.users']
+        Company = self.env['res.company']
+
+        company_1 = Company.create({'name': 'company_1'})
+
+        test_user = User.create({
+            'name': 'John Smith',
+            'login': 'JSmith',
+            'company_ids': [company_1.id],
+            'company_id': company_1.id,
+            'password': 'very strong password',
+        })
+
+        uid = User._perform_login('jsmith', 'very strong password')
+        self.assertEqual(test_user, uid)
+
+        with self.assertRaises(AccessDenied):
+            User._perform_login('jsmith', 'wrong password')
+
+    def test_old_uppercase_login(self):
+        """ Verify historically case sensitive login are still usable """
+
+        User = self.env['res.users']
+        Company = self.env['res.company']
+
+        company_1 = Company.create({'name': 'company_1'})
+
+        test_user = User.create({
+            'name': 'John Smith',
+            'login': 'JSmith',  # is lowercased by create
+            'company_ids': [company_1.id],
+            'company_id': company_1.id,
+            'password': 'very strong password',
+        })
+        test_user.login = 'JSmith'
+
+        uid = User._perform_login('JSmith', 'very strong password')
+        self.assertEqual(test_user, uid)
+
+        with self.assertRaises(AccessDenied):
+            User._perform_login('jsmith', 'very strong password')
+
+    def test_new_lowercase_login(self):
+        """ Verify new account login are lowercase """
+
+        User = self.env['res.users']
+        Company = self.env['res.company']
+
+        company_1 = Company.create({'name': 'company_1'})
+
+        test_user = User.create({
+            'name': 'John Smith',
+            'login': 'JSmith',
+            'company_ids': [company_1.id],
+            'company_id': company_1.id,
+            'password': 'very strong password',
+        })
+        self.assertEqual(test_user.login, 'jsmith')
+
+        uid = User._perform_login('jsmith', 'very strong password')
+        self.assertEqual(test_user, uid)
+
+        uid = User._perform_login('JSmith', 'very strong password')
+        self.assertEqual(test_user, uid)
+
+    def test_new_and_old_login(self):
+        """
+        Verify a new account login doesn't prevent an old account from
+        connecting
+        """
+
+        User = self.env['res.users']
+        Company = self.env['res.company']
+
+        company_1 = Company.create({'name': 'company_1'})
+
+        test_old_user = User.create({
+            'name': 'John Smith',
+            'login': 'JSmith',
+            'company_ids': [company_1.id],
+            'company_id': company_1.id,
+            'password': 'very strong password old',
+        })
+        test_old_user.login = 'JSmith'
+
+        test_new_user = User.create({
+            'name': 'john smith',
+            'login': 'jsmith',
+            'company_ids': [company_1.id],
+            'company_id': company_1.id,
+            'password': 'very strong password new',
+        })
+
+        uid = User._perform_login('jsmith', 'very strong password new')
+        self.assertEqual(test_new_user, uid)
+
+        uid = User._perform_login('JSmith', 'very strong password old')
+        self.assertEqual(test_old_user, uid)
