@@ -338,10 +338,13 @@ list of filtered posts (by date or tag).
                                 <t t-set="hide_date" t-value="True"/>
                             </t>
                         </span>
-                        <span t-if="len(blog_post.message_ids) > 0" class="text-nowrap pl-2">|
-                            <i class="fa fa-comment text-muted mr-1"/><t t-esc="len(blog_post.message_ids)"/>
-                            <t t-if="len(blog_post.message_ids)>1">Comments</t>
-                            <t t-else="">Comment</t>
+                        <span t-if="len(blog_post.message_ids) > 0" class="text-nowrap pl-2 o_not_editable">|
+                            <i class="fa fa-comment text-muted mr-1"/>
+                            <a href="#discussion">
+                                <t t-esc="len(blog_post.message_ids)"/>
+                                <t t-if="len(blog_post.message_ids)>1">Comments</t>
+                                <t t-else="">Comment</t>
+                            </a>
                         </span>
                         <span t-elif="opt_blog_post_comment">| No comments yet</span>
                     </div>
@@ -379,7 +382,7 @@ list of filtered posts (by date or tag).
             <div t-attf-class="mx-auto #{readableClass}">
                 <div id="o_wblog_post_comments" t-attf-class="pt-4 o_container_small">
                     <div groups="base.group_public" class="small mb-4">
-                        <a href="/web/login" class="btn btn-sm btn-primary"><b>Sign in</b></a> to leave a comment
+                        <a t-attf-href="/web/login?redirect=/blog/{{slug(blog_post.blog_id)}}/post/{{slug(blog_post)}}#discussion" class="btn btn-sm btn-primary"><b>Sign in</b></a> to leave a comment
                     </div>
                     <t t-call="portal.message_thread">
                         <t t-set="object" t-value="blog_post"/>
