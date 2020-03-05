@@ -1039,6 +1039,26 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('aggregates digits can be set with digits field attribute', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="amount" widget="monetary" sum="Sum" digits="[69,3]"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('.o_data_row td:nth(1)').text(), '1200.00',
+            "field should still be formatted based on currency");
+        assert.strictEqual(list.$('tfoot td:nth(1)').text(), '2000.000',
+            "aggregates monetary use digits attribute if available");
+
+        list.destroy();
+    });
+
     QUnit.test('groups can be sorted on aggregates', function (assert) {
         assert.expect(10);
         var list = createView({

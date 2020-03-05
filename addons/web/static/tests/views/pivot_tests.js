@@ -130,6 +130,22 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('pivot rendering with widget (digits)', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="foo" type="measure" digits="[10,4]" widget="float"/>' +
+                '</pivot>',
+        });
+
+        assert.strictEqual($('td.o_pivot_cell_value').text(), "32.0000", "should contain a pivot cell with the sum of all records formatted according to specified digits");
+        pivot.destroy();
+    });
+
     QUnit.test('pivot rendering with string attribute on field', function (assert) {
         assert.expect(1);
 

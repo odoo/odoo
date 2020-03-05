@@ -420,7 +420,7 @@ msgid ""
 "and posted. You won't be able to modify them afterwards.</span>"
 msgstr ""
 "<span class=\"o_form_label\">Le registrazioni contabili selezionate saranno "
-"tutte validate e generate. Non sarà più possibile modificarle.</span>"
+"tutte validate e confermate. Non sarà più possibile modificarle.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -597,6 +597,11 @@ msgid "<span>Quantity</span>"
 msgstr "<span>Quantità</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Reference</span>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
 msgstr "<span>Rendicontazione</span>"
@@ -767,7 +772,7 @@ msgstr ""
 "Un registratore di cassa consente di organizzare le entrate in contanti\n"
 "                nei relativi registri. Questa funzionalità fornisce un modo semplice\n"
 "                per controllare i pagamenti su base giornaliera. È possibile aggiungere\n"
-"                le monete che sono nel cassetto e generare le registrazioni quando avvengono\n"
+"                le monete che sono nel cassetto e confermare le registrazioni quando avvengono\n"
 "                immissioni/prelievi di denaro."
 
 #. module: account
@@ -826,9 +831,9 @@ msgid ""
 "posted. Those will be posted automatically after performing the bank "
 "reconciliation."
 msgstr ""
-"Non è possibile effettuare registrazioni di pagamento manuali su registri "
+"Non è possibile confermare registrazioni di pagamento manuali su registri "
 "configurati per la generazione automatica dopo una riconciliazione bancaria."
-" Vengono registrati automaticamente dopo la riconciliazione."
+" Vengono confermate automaticamente dopo la riconciliazione."
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:681
@@ -979,7 +984,7 @@ msgstr "Titolare del conto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
 msgid "Account Holder Name"
-msgstr "Nome del titolare del conto"
+msgstr "Nome titolare del conto"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_send
@@ -1540,7 +1545,7 @@ msgstr "Tutte le righe riconciliate"
 #: selection:account.print.journal,target_move:0
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "All Posted Entries"
-msgstr "Tutte le registrazioni generate"
+msgstr "Tutte le registrazioni confermate"
 
 #. module: account
 #. openerp-web
@@ -1563,9 +1568,9 @@ msgid ""
 "and will be created in 'Posted' status."
 msgstr ""
 "Le registrazioni create in modo manuale si trovano solitamente nello stato "
-"\"Non registrato\". È possibile disattivare tale stato impostando l'opzione "
+"\"Non confermato\". È possibile disattivare tale stato impostando l'opzione "
 "che si trova nel relativo registro. In questo caso, le registrazioni vengono"
-" create automaticamente dal sistema, con stato \"Registrato\", all'atto di "
+" create automaticamente dal sistema, con stato \"Confermato\", all'atto di "
 "validazione del documento (fatture, estratti conto bancari...)."
 
 #. module: account
@@ -3477,7 +3482,7 @@ msgstr "Crea una nota di credito fornitore"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "Create and post move"
-msgstr "Crea e registra movimento"
+msgstr "Crea e conferma movimento"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:281
@@ -3924,7 +3929,7 @@ msgid ""
 "Date at which the opening entry of this company's accounting has been "
 "posted."
 msgstr ""
-"Data nella quale è stata generata la registrazione di apertura della "
+"Data nella quale è stata confermata la registrazione di apertura della "
 "contabilità aziendale."
 
 #. module: account
@@ -4944,7 +4949,7 @@ msgstr "Da"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Payable accounts"
-msgstr "Da conti di debito"
+msgstr "Da conti fornitore"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -6250,7 +6255,7 @@ msgid ""
 "Journal where the opening entry of this company's accounting has been "
 "posted."
 msgstr ""
-"Registro dove è stata generata la registrazione di apertura della "
+"Registro nel quale è stata confermata la registrazione di apertura della "
 "contabilità aziendale."
 
 #. module: account
@@ -7460,7 +7465,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:599
 #, python-format
 msgid "Only a draft payment can be posted."
-msgstr "Può essere registrato solo un pagamento in bozza."
+msgstr "Può essere confermato solo un pagamento in bozza."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:185
@@ -7525,7 +7530,7 @@ msgstr "Registrazione contabile di apertura"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_move_posted
 msgid "Opening Move Posted"
-msgstr "Movimento di apertura registrato"
+msgstr "Movimento di apertura confermato"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cashbox_line__number
@@ -7866,7 +7871,7 @@ msgstr "Conto fornitore"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Payable Accounts"
-msgstr "Conto fornitori"
+msgstr "Conti fornitore"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__debit_limit
@@ -8213,17 +8218,17 @@ msgstr "URL di accesso al portale"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Post"
-msgstr "Genera"
+msgstr "Conferma"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Post All Entries"
-msgstr "Genera tutte le registrazioni"
+msgstr "Conferma tutte le registrazioni"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__post_at_bank_rec
 msgid "Post At Bank Reconciliation"
-msgstr "Generare con riconciliazione bancaria"
+msgstr "Confermare con riconciliazione bancaria"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_from_invoices
@@ -8235,7 +8240,7 @@ msgstr "Registrare la differenza in"
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr "Genera registrazioni contabili"
+msgstr "Conferma registrazioni contabili"
 
 #. module: account
 #: selection:account.move,state:0 selection:account.payment,state:0
@@ -8243,17 +8248,17 @@ msgstr "Genera registrazioni contabili"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Posted"
-msgstr "Registrato"
+msgstr "Confermato"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "Registrazioni contabili generate"
+msgstr "Registrazioni contabili confermate"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr "Movimenti contabili registrati"
+msgstr "Movimenti contabili confermati"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__bank_account_code_prefix
@@ -8834,7 +8839,7 @@ msgstr "Limitare le categorie dei partner a"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_partner_ids
 msgid "Restrict Partners to"
-msgstr ""
+msgstr "Limita partner a"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_same_currency
@@ -9708,7 +9713,7 @@ msgstr "Sottotipo"
 #: code:addons/account/models/chart_template.py:933
 #, python-format
 msgid "Suggest a write-off."
-msgstr ""
+msgstr "Proponi uno storno."
 
 #. module: account
 #: selection:account.reconcile.model,rule_type:0
@@ -10911,7 +10916,7 @@ msgstr ""
 #: code:addons/account/wizard/account_validate_account_move.py:18
 #, python-format
 msgid "There is no journal items in draft state to post."
-msgstr "Non ci sono movimenti in stato bozza da generare."
+msgstr "Non ci sono movimenti in stato bozza da confermare."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1566
@@ -11461,7 +11466,7 @@ msgstr "Trasferimenti"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__rule_type
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_type
 msgid "Type"
-msgstr "Tipo"
+msgstr "Tipologia"
 
 #. module: account
 #: selection:account.cash.rounding,rounding_method:0
@@ -11513,17 +11518,17 @@ msgstr "fatture non pagate"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
-msgstr "Non registrato"
+msgstr "Non confermato"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
-msgstr "Registrazioni contabili non generate"
+msgstr "Registrazioni contabili non confermate"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr "Movimenti contabili non registrati"
+msgstr "Movimenti contabili non confermati"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_unread
@@ -11987,7 +11992,7 @@ msgid ""
 "performing bank reconciliation."
 msgstr ""
 "Indica se impostare a bozza i pagamenti creati in questo registro, in modo "
-"che le relative registrazioni contabili vengano generate solo con la "
+"che le relative registrazioni contabili vengano confermate solo con la "
 "riconciliazione bancaria."
 
 #. module: account
@@ -12192,7 +12197,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:611
 #, python-format
 msgid "You cannot delete a payment that is already posted."
-msgstr "Impossibile eliminare un pagamento già registrato."
+msgstr "Impossibile eliminare un pagamento già confermato."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:786
@@ -12234,7 +12239,7 @@ msgid ""
 "You cannot do this modification on a posted journal entry, you can just change some non legal fields. You must revert the journal entry to cancel it.\n"
 "%s."
 msgstr ""
-"Impossibile effettuare questa modifica, sono modificabili solo alcuni dati non legali. Per annullare una registrazione già generata è necessario prima ripristinarla.\n"
+"Impossibile effettuare questa modifica, sono modificabili solo alcuni dati non legali. Per annullare una registrazione già confermata è necessario prima ripristinarla.\n"
 "%s."
 
 #. module: account
@@ -12291,7 +12296,7 @@ msgstr "Impossibile mescolare movimenti da conti cliente e fornitore."
 msgid "You cannot modify a journal entry linked to a posted payment."
 msgstr ""
 "Impossibile modificare una registrazione collegata a un pagamento "
-"registrato."
+"confermato."
 
 #. module: account
 #: code:addons/account/models/account_move.py:331
@@ -12300,7 +12305,7 @@ msgid ""
 "You cannot modify a posted entry of this journal.\n"
 "First you should set the journal to allow cancelling entries."
 msgstr ""
-"Impossibile modificare una registrazione generata.\n"
+"Impossibile modificare una registrazione confermata.\n"
 "Abilitare prima questo registro all'annullamento delle registrazioni."
 
 #. module: account

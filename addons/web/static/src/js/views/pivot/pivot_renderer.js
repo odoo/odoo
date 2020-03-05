@@ -235,6 +235,10 @@ var PivotRenderer = AbstractRenderer.extend({
                 name = this.state.measures[j % nbrMeasures];
                 formatter = field_utils.format[this.fieldWidgets[name] || measureTypes[j % nbrMeasures]];
                 measure = this.state.fields[name];
+                var options;
+                if (this.arch.children[j % nbrMeasures] && this.arch.children[j % nbrMeasures].attrs.digits) {
+                    options = {digits: JSON.parse(this.arch.children[j % nbrMeasures].attrs.digits)}
+                }
                 if (this.compare) {
                     if (value instanceof Object) {
                         for (var origin in value) {
@@ -247,12 +251,14 @@ var PivotRenderer = AbstractRenderer.extend({
                             if (origin === 'data') {
                                 $cell.append($('<div>', {class: 'o_value'}).html(formatter(
                                     value[origin],
-                                    measure
+                                    measure,
+                                    options
                                 )));
                             } else if (origin === 'comparisonData') {
                                 $cell.append($('<div>', {class: 'o_comparison_value'}).html(formatter(
                                     value[origin],
-                                    measure
+                                    measure,
+                                    options
                                 )));
                             } else {
                                 $cell.append($('<div>', {class: 'o_variation' + value[origin].signClass}).html(
@@ -284,7 +290,7 @@ var PivotRenderer = AbstractRenderer.extend({
                                 .toggleClass('o_empty', !value)
                                 .addClass('o_pivot_cell_value text-right');
                     if (value !== undefined) {
-                        $cell.append($('<div>', {class: 'o_value'}).html(formatter(value, measure)));
+                        $cell.append($('<div>', {class: 'o_value'}).html(formatter(value, measure, options)));
                     }
                     if (((j >= length - this.state.measures.length) && shouldDisplayTotal) || i === 0){
                         $cell.css('font-weight', 'bold');

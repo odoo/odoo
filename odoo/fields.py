@@ -793,7 +793,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     @property
     def _description_sortable(self):
-        return self.store or (self.inherited and self.related_field._description_sortable)
+        return (self.column_type and self.store) or (self.inherited and self.related_field._description_sortable)
 
     def _description_string(self, env):
         if self.string and env.lang:
@@ -2779,21 +2779,20 @@ class Many2many(_RelationalMulti):
             return
 
         cr = records.env.cr
-        comodel = records.env[self.comodel_name]
+        comodel = records.env[self.comodel_name].with_context(**self.context)
 
         # determine old links (set of pairs (id1, id2))
-        clauses, params, tables = comodel.env['ir.rule'].domain_get(comodel._name)
-        if '"%s"' % self.relation not in tables:
-            tables.append('"%s"' % self.relation)
+        domain = self.domain if isinstance(self.domain, list) else []
+        wquery = comodel._where_calc(domain)
+        comodel._apply_ir_rules(wquery, 'read')
+        from_clause, where_clause, where_params = wquery.get_sql()
         query = """
-            SELECT {rel}.{id1}, {rel}.{id2} FROM {tables}
-            WHERE {rel}.{id1} IN %s AND {rel}.{id2}={table}.id AND {cond}
-        """.format(
-            rel=self.relation, id1=self.column1, id2=self.column2,
-            table=comodel._table, tables=",".join(tables),
-            cond=" AND ".join(clauses) if clauses else "1=1",
-        )
-        cr.execute(query, [tuple(records.ids)] + params)
+            SELECT {rel}.{id1}, {rel}.{id2} FROM {rel}, {from_clause}
+            WHERE {where_clause} AND {rel}.{id1} IN %s AND {rel}.{id2} = {table}.id
+        """.format(rel=self.relation, id1=self.column1, id2=self.column2,
+                   table=comodel._table, from_clause=from_clause,
+                   where_clause=where_clause or '1=1')
+        cr.execute(query, where_params + [tuple(records.ids)])
         old_links = set(cr.fetchall())
 
         # determine new links (set of pairs (id1, id2))

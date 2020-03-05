@@ -26,13 +26,14 @@
 # Rafael H L Moretti <rafael.moretti@gmail.com>, 2018
 # Marcelo Costa <marcelo@comdesk.com.br>, 2019
 # Luiz Carareto Alonso <Luiz.cararetoalonso@gmail.com>, 2019
-# Marcel Savegnago <marcel.savegnago@gmail.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # Mateus Lopes <mateus1@gmail.com>, 2019
 # grazziano <gra.negocia@gmail.com>, 2019
 # Silmar <pinheirosilmar@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Keli Brugalli <kbr@odoo.com>, 2019
+# Fernanda Marques <fem@odoo.com>, 2020
+# Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -40,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-10 14:44+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Keli Brugalli <kbr@odoo.com>, 2019\n"
+"Last-Translator: Marcel Savegnago <marcel.savegnago@gmail.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6277,7 +6278,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%S - Seconds [00,61].\""
-msgstr ""
+msgstr "%S - Segundos [00,61].\""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -6302,7 +6303,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%j - Day of the year [001,366].\""
-msgstr ""
+msgstr "%j - Dia do ano [001,366].\""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -6692,6 +6693,10 @@ msgid ""
 "                                <span colspan=\"2\">Minute: %(min)s</span>\n"
 "                                <span colspan=\"2\">Second: %(sec)s</span>"
 msgstr ""
+"<span colspan=\"2\">Hora 00-&gt;24: %(h24)s</span>\n"
+"                                <span colspan=\"2\">Hora 00-&gt;12: %(h12)s</span>\n"
+"                                <span colspan=\"2\">Minuto: %(min)s</span>\n"
+"                                <span colspan=\"2\">Segundo: %(sec)s</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -6726,7 +6731,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_kanban
 msgid "<strong><span>Current Rate: </span></strong>"
-msgstr ""
+msgstr "<strong><span>Taxa atual: </span></strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -8030,7 +8035,7 @@ msgstr "Contabilidade Analítica"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_enterprise
 msgid "Analytic Accounting Enterprise"
-msgstr ""
+msgstr "Empresa de contabilidade analítica"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_account
@@ -8040,7 +8045,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ad
 msgid "Andorra"
-msgstr ""
+msgstr "Andorra"
 
 #. module: base
 #: model:res.country,name:base.ao
@@ -9407,7 +9412,7 @@ msgstr "China"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn
 msgid "China - Accounting"
-msgstr ""
+msgstr "China - Contabilidade"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn_city
@@ -10192,7 +10197,7 @@ msgstr "Criar uma conta bancária"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_ui_view_custom
 msgid "Create a customized view"
-msgstr ""
+msgstr "Crie uma exibição personalizada"
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -11421,12 +11426,12 @@ msgstr "Documentos"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_account
 msgid "Documents - Accounting"
-msgstr ""
+msgstr "Documentos - Contabilidade"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_product
 msgid "Documents - Product"
-msgstr ""
+msgstr "Documentos - Produto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project
@@ -12549,6 +12554,46 @@ msgid ""
 "* Alexis de Lattre <alexis.delattre@akretion.com>\n"
 "\n"
 msgstr ""
+"Fichier d'Échange Informatisé (FEC) pour la France\n"
+"==================================================\n"
+"\n"
+"Ce module permet de générer le fichier FEC tel que définit par `l'arrêté du 29\n"
+"Juillet 2013 <http://legifrance.gouv.fr/eli/arrete/2013/7/29/BUDE1315492A/jo/texte>`\n"
+"portant modification des dispositions de l'article A. 47 A-1 du\n"
+"livre des procédures fiscales.\n"
+"\n"
+"Cet arrêté prévoit l'obligation pour les sociétés ayant une comptabilité\n"
+"informatisée de pouvoir fournir à l'administration fiscale un fichier\n"
+"regroupant l'ensemble des écritures comptables de l'exercice. Le format de ce\n"
+"fichier, appelé *FEC*, est définit dans l'arrêté.\n"
+"\n"
+"Le détail du format du FEC est spécifié dans le bulletin officiel des finances publiques `BOI-CF-IOR-60-40-20-20131213 <http://bofip.impots.gouv.fr/bofip/ext/pdf/createPdfWithAnnexePermalien/BOI-CF-IOR-60-40-20-20131213.pdf?doc=9028-PGP&identifiant=BOI-CF-IOR-60-40-20-20131213>` du 13 Décembre 2013. Ce module implémente le fichier\n"
+"FEC au format texte et non au format XML, car le format texte sera facilement\n"
+"lisible et vérifiable par le comptable en utilisant un tableur.\n"
+"\n"
+"La structure du fichier FEC généré par ce module a été vérifiée avec le logiciel\n"
+"*Test Compta Demat* version 1_00_05 disponible sur\n"
+"`le site de la direction générale des finances publiques <http://www.economie.gouv.fr/dgfip/outil-test-des-fichiers-des-ecritures-comptables-fec>`\n"
+"en utilisant une base de donnée Odoo réelle.\n"
+"\n"
+"Configuration\n"
+"=============\n"
+"\n"
+"Aucune configuration n'est nécessaire.\n"
+"\n"
+"Utilisation\n"
+"===========\n"
+"\n"
+"Pour générer le *FEC*, allez dans le menu *Accounting > Reporting > French Statements > FEC* qui va démarrer l'assistant de génération du FEC.\n"
+"\n"
+"Credits\n"
+"=======\n"
+"\n"
+"Contributors\n"
+"------------\n"
+"\n"
+"* Alexis de Lattre <alexis.delattre@akretion.com>\n"
+"\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_default__field_id
@@ -13258,22 +13303,22 @@ msgstr "Alemanha"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de
 msgid "Germany - Accounting"
-msgstr ""
+msgstr "Alemanha - Contabilidade"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_reports
 msgid "Germany - Accounting Reports"
-msgstr ""
+msgstr "Alemanha - Relatórios de contabilidade"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr03
 msgid "Germany SKR03 - Accounting"
-msgstr ""
+msgstr "Alemanha SKR03 - Contabilidade"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr04
 msgid "Germany SKR04 - Accounting"
-msgstr ""
+msgstr "Alemanha SKR04 - Contabilidade"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_dashboard
@@ -13557,7 +13602,7 @@ msgstr "Guiné"
 #. module: base
 #: model:res.country,name:base.gw
 msgid "Guinea-Bissau"
-msgstr ""
+msgstr "Guinea-Bissau"
 
 #. module: base
 #: model:res.country,name:base.gy
@@ -13753,7 +13798,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_contract
 msgid "Helps you manage your contracts."
-msgstr ""
+msgstr "Ajuda-o a gerenciar seus contratos."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources
@@ -14332,7 +14377,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall__module_ids
 msgid "Impacted modules"
-msgstr ""
+msgstr "Módulos Afetados"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__implementation
@@ -15042,7 +15087,7 @@ msgstr "Agendamento Just In Time"
 #. module: base
 #: selection:res.company,base_onboarding_company_state:0
 msgid "Just done"
-msgstr ""
+msgstr "Acabei de fazer"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_K
@@ -16690,12 +16735,12 @@ msgstr "Mongólia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mn
 msgid "Mongolia - Accounting"
-msgstr ""
+msgstr "Mongólia - Contabilidade"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mn_reports
 msgid "Mongolia - Accounting Reports"
-msgstr ""
+msgstr "Mongólia - Relatórios de contabilidade"
 
 #. module: base
 #: model:res.country,name:base.me
@@ -16882,7 +16927,7 @@ msgstr "Nova Zelândia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nz
 msgid "New Zealand - Accounting"
-msgstr ""
+msgstr "Nova Zelândia - Contabilidade"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mass_mailing
@@ -18496,7 +18541,7 @@ msgstr "Abrir uma janela"
 #: code:addons/base/models/ir_model.py:1275 code:addons/models.py:3074
 #, python-format
 msgid "Operation:"
-msgstr ""
+msgstr "Operação:"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_crm
@@ -18981,7 +19026,7 @@ msgstr "Menu Superior(pai)"
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_path
 #: model:ir.model.fields,field_description:base.field_res_partner_category__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "Caminho Pai"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_name
@@ -19047,7 +19092,7 @@ msgstr "Parceiros"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_geolocalize
 msgid "Partners Geolocation"
-msgstr ""
+msgstr "Geolocalização dos parceiros"
 
 #. module: base
 #: code:addons/base/models/res_partner.py:802
@@ -19433,7 +19478,7 @@ msgstr "Prioridade"
 #. module: base
 #: selection:res.partner,type:0
 msgid "Private Address"
-msgstr ""
+msgstr "Endereço privado"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
@@ -19469,12 +19514,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_plm
 msgid "Product Lifecycle Management (PLM)"
-msgstr ""
+msgstr "Gestão do Ciclo de Vida do Produto (PLM)"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity
 msgid "Productivity"
-msgstr ""
+msgstr "Produtividade"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product
@@ -20032,7 +20077,7 @@ msgstr "Registro de Regras"
 #: code:addons/models.py:3421 code:addons/models.py:4326
 #, python-format
 msgid "Records:"
-msgstr ""
+msgstr "Registros:"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_recruitment
@@ -20068,7 +20113,7 @@ msgstr "Referência"
 #: code:addons/base/models/ir_qweb_fields.py:567
 #, python-format
 msgid "Reference date"
-msgstr ""
+msgstr "Data de referência"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_id
@@ -21337,7 +21382,7 @@ msgstr "África do Sul"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_za
 msgid "South Africa - Accounting"
-msgstr ""
+msgstr "África do Sul - Contabilidade"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_za_reports
@@ -22685,7 +22730,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment__res_model
 msgid "The database object this attachment will be attached to."
-msgstr ""
+msgstr "O objeto do banco de dados a que este anexo será anexado."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -23706,7 +23751,7 @@ msgstr "URL"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_reports
 msgid "US - Accounting Reports"
-msgstr ""
+msgstr "EUA - Relatórios de contabilidade"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_check_printing
@@ -23746,7 +23791,7 @@ msgstr "Ucrânia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ua
 msgid "Ukraine - Accounting"
-msgstr ""
+msgstr "Ucrânia - Contabilidade"
 
 #. module: base
 #: code:addons/models.py:3131
@@ -23850,7 +23895,7 @@ msgstr "Envio United States Postal Service (USPS)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom
 msgid "Units of measure"
-msgstr ""
+msgstr "Unidade de medida"
 
 #. module: base
 #: code:addons/model.py:143 code:addons/model.py:152 code:addons/model.py:153
@@ -24166,7 +24211,7 @@ msgstr "Logs de Usuário"
 #. module: base
 #: model:ir.module.category,name:base.module_category_user_type
 msgid "User types"
-msgstr ""
+msgstr "Tipos de usuários"
 
 #. module: base
 #: model:ir.model,name:base.model_change_password_user
@@ -24571,7 +24616,7 @@ msgstr "Aviso"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_E
 msgid "Water supply"
-msgstr ""
+msgstr "Fornecimento de água"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_web
@@ -25424,7 +25469,7 @@ msgstr "pos_sale"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "reference"
-msgstr ""
+msgstr "referência"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0

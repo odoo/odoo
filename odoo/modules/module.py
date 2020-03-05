@@ -429,7 +429,19 @@ def get_test_modules(module):
     """ Return a list of module for the addons potentially containing tests to
     feed unittest.TestLoader.loadTestsFromModule() """
     # Try to import the module
-    modpath = 'odoo.addons.' + module
+    results = _get_tests_modules('odoo.addons', module)
+
+    try:
+        importlib.import_module('odoo.addons.base.maintenance.migrations.%s' % module)
+    except ImportError:
+        pass
+    else:
+        results += _get_tests_modules('odoo.addons.base.maintenance.migrations', module)
+
+    return results
+
+def _get_tests_modules(path, module):
+    modpath = '%s.%s' % (path, module)
     try:
         mod = importlib.import_module('.tests', modpath)
     except ImportError as e:  # will also catch subclass ModuleNotFoundError of P3.6

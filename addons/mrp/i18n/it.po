@@ -58,7 +58,7 @@ msgstr "# Distinta Base"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__used_in_bom_count
 msgid "# BoM Where Used"
-msgstr "# Distinta Base dove utilizzato"
+msgstr "N. DiBa dove utilizzata"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__workorder_done_count
@@ -80,7 +80,7 @@ msgstr "# Ordini di lavoro"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
 msgid "# of BoM Where is Used"
-msgstr "# Distinte Base"
+msgstr "N. DiBa dove utilizzata"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -520,7 +520,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
 msgid "BOM Product Variants"
-msgstr "BoM delle varianti del prodotto"
+msgstr "Varianti prodotto DiBa"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__attribute_value_ids
@@ -530,7 +530,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
 msgid "BOM Structure Report"
-msgstr "Rendiconto struttura distinta base"
+msgstr "Resoconto struttura DiBa"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_line_ids
@@ -639,7 +639,7 @@ msgstr "È un motivo di blocco"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM"
-msgstr "Distinta base"
+msgstr "DiBa"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_line_ids
@@ -647,7 +647,7 @@ msgstr "Distinta base"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_product_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_template_search_view
 msgid "BoM Components"
-msgstr "Componenti distinta base"
+msgstr "Componenti DiBa"
 
 #. module: mrp
 #. openerp-web
@@ -655,17 +655,17 @@ msgstr "Componenti distinta base"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "BoM Cost"
-msgstr "Costo del BoM"
+msgstr "Costo DiBa"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
 msgid "BoM Line"
-msgstr "Riga Distinta Base"
+msgstr "Riga DiBa"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__bom_line_ids
 msgid "BoM Lines"
-msgstr "Righe Distinta Base"
+msgstr "Righe DiBa"
 
 #. module: mrp
 #. openerp-web
@@ -673,7 +673,7 @@ msgstr "Righe Distinta Base"
 #: model:ir.actions.report,name:mrp.action_report_bom_structure
 #, python-format
 msgid "BoM Structure"
-msgstr "Struttura del BoM"
+msgstr "Struttura DiBa"
 
 #. module: mrp
 #. openerp-web
@@ -681,29 +681,28 @@ msgstr "Struttura del BoM"
 #: model:ir.actions.client,name:mrp.action_report_mrp_bom
 #, python-format
 msgid "BoM Structure & Cost"
-msgstr "Struttura e costo del BoM"
+msgstr "Struttura e costo DiBa"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Structure &amp; Cost"
-msgstr "Struttura del BoM &amp; Costo"
+msgstr "Struttura e costo DiBa"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
 msgid "BoM Type"
-msgstr "Tipo di Distinta base"
+msgstr "Tipologia DiBa"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "BoM details"
-msgstr "Dettagli distinta base"
+msgstr "Dettagli DiBa"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:86
 #, python-format
 msgid "BoM line product %s should not be same as BoM product."
-msgstr ""
-"Il prodotto finito %s non puo' essere contenuto nel BoM del prodotto stesso."
+msgstr "Il prodotto %s della riga non può corrispondere a quello della DiBa."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_bolt
@@ -1443,8 +1442,8 @@ msgstr "ID"
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
 msgstr ""
-"Se è definita una variante di prodotto la Distinta Base è disponibile solo "
-"per questo prodotto."
+"Se viene definita una variante, la DiBa è disponibile solo per il relativo "
+"prodotto."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_unread
@@ -2395,7 +2394,7 @@ msgstr "Panoramica"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
 msgid "Parent BoM"
-msgstr "Distinta base Padre"
+msgstr "DiBa padre"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__parent_product_tmpl_id
@@ -3454,7 +3453,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__valid_product_attribute_value_ids
 msgid "Technical compute"
-msgstr ""
+msgstr "Calcolo tecnico"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__is_user_working

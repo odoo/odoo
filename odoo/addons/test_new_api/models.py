@@ -231,6 +231,7 @@ class MultiTag(models.Model):
     _description = 'Test New API Multi Tag'
 
     name = fields.Char()
+    active = fields.Boolean(default=True)
 
 
 class Edition(models.Model):
