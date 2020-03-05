@@ -51,8 +51,15 @@
 
         <menuitem id="menu_sales_config"
             parent="menu_sale_config"
-            sequence="3"
+            sequence="4"
             name="Sales Orders"/>
+
+        <menuitem
+            id="menu_tag_config"
+            name="Tags"
+            parent="sale.menu_sales_config"
+            action="sales_team.sales_team_crm_tag_action"
+            sequence="2"/>
 
         <record id="product_template_action" model="ir.actions.act_window">
             <field name="name">Products</field>
@@ -202,6 +209,7 @@
                     <field name="amount_total" sum="Total Tax Included" widget="monetary" optional="show"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="invoice_status" optional="show"/>
+                    <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="state" invisible="1"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
@@ -229,6 +237,7 @@
                     <field name="currency_id" invisible="1"/>
                     <field name="state" optional="show"/>
                     <field name="invoice_status" optional="hide"/>
+                    <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
@@ -653,6 +662,7 @@
                                     <field name="require_payment"/>
                                     <field name="reference" readonly="1" attrs="{'invisible': [('reference', '=', False)]}"/>
                                     <field name="client_order_ref"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                                 </group>
                                 <group name="sale_info" string="Invoicing">
                                     <field name="fiscal_position_id" options="{'no_create': True}"/>

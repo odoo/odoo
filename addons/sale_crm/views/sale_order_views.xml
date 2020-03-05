@@ -20,28 +20,6 @@
         </field>
     </record>
 
-    <record id="view_quotation_tree" model="ir.ui.view">
-        <field name="name">sale.order.tree.inherit.sale.crm</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_quotation_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='invoice_status']" position="after">
-                <field name="tag_ids" optional="hide" widget="many2many_tags"/>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="view_order_tree" model="ir.ui.view">
-        <field name="name">sale.order.tree.inherit.sale.crm</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='invoice_status']" position="after">
-                <field name="tag_ids" optional="hide" widget="many2many_tags"/>
-            </xpath>
-        </field>
-    </record>
-
     <!-- This menu is display in CRM app when sale is installed-->
     <menuitem
         id="sale_order_menu_quotations_crm"
