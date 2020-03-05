@@ -73,6 +73,13 @@ class EventTicket(models.Model):
     _inherit = 'event.event.ticket'
     _order = "event_id, price"
 
+    currency_id = fields.Many2one('res.currency', compute="_compute_currency_id", store=True)
+
+    @api.depends('company_id')
+    def _compute_currency_id(self):
+        for ticket in self:
+            ticket.currency_id = ticket.company_id.currency_id or self.env.company.currency_id
+
     @api.depends('product_id.active')
     def _compute_sale_available(self):
         inactive_product_tickets = self.filtered(lambda ticket: not ticket.product_id.active)
