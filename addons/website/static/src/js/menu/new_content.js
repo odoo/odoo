@@ -132,6 +132,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @private
      */
     _hideMenu: function () {
+        this.shown = false;
         this.$newContentMenuChoices.addClass('o_hidden');
         $('body').removeClass('o_new_content_open');
     },
@@ -168,6 +169,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             });
         }).then(function () {
             self.firstTab = true;
+            self.shown = true;
             self.$newContentMenuChoices.removeClass('o_hidden');
             $('body').addClass('o_new_content_open');
             self.$('> a').focus();
@@ -203,9 +205,13 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @param {Event} ev
      */
     _onBackgroundKeydown: function (ev) {
+        if (!this.shown) {
+            return;
+        }
         switch (ev.which) {
             case $.ui.keyCode.ESCAPE:
                 this._hideMenu();
+                ev.stopPropagation();
                 break;
             case $.ui.keyCode.TAB:
                 if (ev.shiftKey) {

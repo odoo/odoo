@@ -50,7 +50,10 @@ var MobileMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @private
      */
     _onMobilePreviewClick: function () {
-        new MobilePreviewDialog(this, {
+        if (this.mobilePreview && !this.mobilePreview.isDestroyed()) {
+            return this.mobilePreview.close();
+        }
+        this.mobilePreview = new MobilePreviewDialog(this, {
             title: _t('Mobile preview') + ' <span class="fa fa-refresh"/>',
         }).open();
     },

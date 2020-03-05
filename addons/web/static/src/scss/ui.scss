@@ -143,3 +143,21 @@ span.o_force_ltr {
 .o_width_128 {
     width: 128px;
 }
+
+.o_web_accesskey_overlay {
+    @include o-position-absolute(0, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .6);
+    color: #FFFFFF;
+    font-size: 1rem;
+
+    // Needed as the parent button could be using font-awesome.
+    // Can't be put to a BS variable here as we are in assets common (will be
+    // overridden for backend but left with 'sans-serif' for frontend to not
+    // have an useless frontend rule.
+    font-family: sans-serif;
+}
