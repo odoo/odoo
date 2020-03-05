@@ -30,7 +30,17 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
             'keyup': '_onKeyUp',
         },
 
-        init: function () {
+        /**
+         * @constructor
+         * @param {object} [options]
+         * @param {boolean} [options.autoAccessKeys=true]
+         *      Whether accesskeys should be created automatically for buttons
+         *      without them in the page.
+         */
+        init: function (options) {
+            this.options = Object.assign({
+                autoAccessKeys: true,
+            }, options);
             this._areAccessKeyVisible = false;
             this.BrowserDetection = new BrowserDetection();
         },
@@ -130,22 +140,24 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
 
                 var usedAccessKey = this._getAllUsedAccessKeys();
 
-                var buttonsWithoutAccessKey = this.$el.find('button.btn:visible')
-                    .not('[accesskey]')
-                    .not('[disabled]')
-                    .not('[tabindex="-1"]');
-                _.each(buttonsWithoutAccessKey, function (elem) {
-                    var buttonString = [elem.innerText, elem.title, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"].join('');
-                    for (var letterIndex = 0; letterIndex < buttonString.length; letterIndex++) {
-                        var candidateAccessKey = buttonString[letterIndex].toUpperCase();
-                        if (candidateAccessKey >= 'A' && candidateAccessKey <= 'Z' &&
-                            !_.includes(usedAccessKey, candidateAccessKey)) {
-                            elem.accessKey = candidateAccessKey;
-                            usedAccessKey.push(candidateAccessKey);
-                            break;
+                if (this.options.autoAccessKeys) {
+                    var buttonsWithoutAccessKey = this.$el.find('button.btn:visible')
+                        .not('[accesskey]')
+                        .not('[disabled]')
+                        .not('[tabindex="-1"]');
+                    _.each(buttonsWithoutAccessKey, function (elem) {
+                        var buttonString = [elem.innerText, elem.title, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"].join('');
+                        for (var letterIndex = 0; letterIndex < buttonString.length; letterIndex++) {
+                            var candidateAccessKey = buttonString[letterIndex].toUpperCase();
+                            if (candidateAccessKey >= 'A' && candidateAccessKey <= 'Z' &&
+                                !_.includes(usedAccessKey, candidateAccessKey)) {
+                                elem.accessKey = candidateAccessKey;
+                                usedAccessKey.push(candidateAccessKey);
+                                break;
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
                 var elementsWithoutAriaKeyshortcut = this.$el.find('[accesskey]').not('[aria-keyshortcuts]');
                 _.each(elementsWithoutAriaKeyshortcut, function (elem) {
@@ -230,4 +242,3 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
     return KeyboardNavigationMixin;
 
 });
-
