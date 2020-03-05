@@ -268,7 +268,7 @@ class Inventory(models.Model):
                 product_data['product_uom_id'] = Product.browse(product_data['product_id']).uom_id.id
                 quant_products |= Product.browse(product_data['product_id'])
             vals.append(product_data)
-        if self.exhausted:
+        if self._allow_get_exhausted_line():
             exhausted_vals = self._get_exhausted_inventory_line(products_to_filter, quant_products)
             vals.extend(exhausted_vals)
         return vals
@@ -294,6 +294,9 @@ class Inventory(models.Model):
                 'location_id': self.location_id.id,
             })
         return vals
+
+    def _allow_get_exhausted_line(self):
+        return self.exhausted and self.filter not in ('owner', 'product_owner', 'lot', 'pack', 'partial')
 
 
 class InventoryLine(models.Model):
