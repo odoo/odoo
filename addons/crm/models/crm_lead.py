@@ -98,7 +98,7 @@ class Lead(models.Model):
         ('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')],
         string='Kanban State', compute='_compute_kanban_state')
     tag_ids = fields.Many2many(
-        'crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id', string='Tags',
+        'crm.tag', 'crm_tag_rel', 'lead_id', 'tag_id', string='Tags',
         help="Classify and analyze your lead/opportunity categories like: Training, Service")
     color = fields.Integer('Color Index', default=0)
     # Opportunity specific
@@ -1526,8 +1526,8 @@ class Lead(models.Model):
         # get all tag_ids won / lost count
         self.flush(['probability', 'active'])
         query = """select l.probability, l.active, t.id, count(l.probability) as count
-                    from crm_lead_tag_rel rel
-                    inner join crm_lead_tag t on rel.tag_id = t.id
+                    from crm_tag_rel rel
+                    inner join crm_tag t on rel.tag_id = t.id
                     inner join crm_lead l on l.id = rel.lead_id
                     where (l.probability = 0 or l.probability >= 100)
                     and l.create_date > %%s
@@ -1590,8 +1590,8 @@ class Lead(models.Model):
 
             query = """SELECT l.id as lead_id, t.id as tag_id
                         FROM crm_lead l
-                        LEFT JOIN crm_lead_tag_rel rel ON l.id = rel.lead_id
-                        LEFT JOIN crm_lead_tag t ON rel.tag_id = t.id
+                        LEFT JOIN crm_tag_rel rel ON l.id = rel.lead_id
+                        LEFT JOIN crm_tag t ON rel.tag_id = t.id
                         WHERE ((l.probability > 0 AND l.probability < 100) OR l.probability is null) AND l.active = True AND l.id in %s order by l.team_id asc"""
             self._cr.execute(query, [tuple(self.ids)])
             tag_results = self._cr.dictfetchall()

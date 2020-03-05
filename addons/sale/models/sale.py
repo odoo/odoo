@@ -251,6 +251,7 @@ class SaleOrder(models.Model):
     show_update_pricelist = fields.Boolean(string='Has Pricelist Changed',
                                            help="Technical Field, True if the pricelist was changed;\n"
                                                 " this will then display a recomputation button")
+    tag_ids = fields.Many2many('crm.tag', 'sale_order_tag_rel', 'order_id', 'tag_id', string='Tags')
 
     _sql_constraints = [
         ('date_order_conditional_required', "CHECK( (state IN ('sale', 'done') AND date_order IS NOT NULL) OR state NOT IN ('sale', 'done') )", "A confirmed sales order requires a confirmation date."),

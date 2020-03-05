@@ -1,43 +1,5 @@
 <?xml version="1.0"?>
 <odoo>
-        <!--
-            crm.lead.tag views
-        -->
-        <record id="crm_lead_tag_form" model="ir.ui.view">
-            <field name="name">crm.lead.tag.form</field>
-            <field name="model">crm.lead.tag</field>
-            <field name="arch" type="xml">
-                <form string="Lead Tags">
-                    <sheet>
-                        <div class="oe_title">
-                            <div class="oe_edit_only">
-                                <label for="name"/>
-                            </div>
-                            <h1>
-                                <field name="name"/>
-                            </h1>
-                        </div>
-                        <group>
-                            <group>
-                                <field name="color" required="True"/>
-                            </group>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="crm_lead_tag_tree" model="ir.ui.view">
-            <field name="name">crm.lead.tag.tree</field>
-            <field name="model">crm.lead.tag</field>
-            <field name="arch" type="xml">
-                <tree string="Lead Tags" editable="bottom">
-                    <field name="name"/>
-                    <field name="color" groups="base.group_no_one"/>
-                </tree>
-            </field>
-        </record>
-
         <record id="crm_lead_view_form" model="ir.ui.view">
             <field name="name">crm.lead.form</field>
             <field name="model">crm.lead</field>
@@ -954,24 +916,10 @@ if record:
             name="CRM"
             action="action_your_pipeline"/>
 
-        <!-- Configuration/Lead & Opporotunities/Lead Tags Menu -->
-        <record id="crm_lead_tag_action" model="ir.actions.act_window">
-            <field name="name">Tags</field>
-            <field name="res_model">crm.lead.tag</field>
-            <field name="view_id" ref="crm_lead_tag_tree"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create new tags for your opportunities
-              </p><p>
-                Create tags that fit your business (product structure, sales type, etc.) to better manage and track your opportunities.
-              </p>
-            </field>
-        </record>
-
         <menuitem
             id="menu_crm_lead_categ"
             name="Tags"
-            action="crm_lead_tag_action"
+            action="sales_team.sales_team_crm_tag_action"
             parent="menu_crm_config_lead"
             sequence="1"/>
 </odoo>
