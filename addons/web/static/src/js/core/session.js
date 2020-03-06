@@ -290,6 +290,11 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         if (params && params.kwargs) {
             params.kwargs.context = _.extend(params.kwargs.context || {}, this.user_context);
         }
+        if (params && params.context) {
+            // Do we want to give the user_context even if no params or params.context
+            // was given? it is the case for _rpc calls but not session.rpc calls.
+            params.context = _.extend(params.context || {}, this.user_context);
+        }
 
         // TODO: remove
         if (! _.isString(url)) {

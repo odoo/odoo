@@ -2860,6 +2860,7 @@ QUnit.module('ActionManager', {
                     assert.deepEqual(args, {
                         args: [[1]],
                         kwargs: {context: {some_key: 2}},
+                        context: {some_key: 2},
                         method: 'object',
                         model: 'partner',
                     }, "should call route with correct arguments");

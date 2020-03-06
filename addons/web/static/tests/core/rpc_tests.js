@@ -24,7 +24,7 @@ QUnit.module('core', {}, function () {
             params: {hey: 'there', model: 'test'},
         });
 
-        assert.deepEqual(query.params, {hey: 'there', model: 'test'},
+        assert.deepEqual(query.params, {hey: 'there', model: 'test', context: {}},
                     "should transfer the proper parameters");
     });
 
@@ -54,7 +54,7 @@ QUnit.module('core', {}, function () {
     });
 
     QUnit.test('basic rpc, with context, part 2', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var query = rpc.buildQuery({
             model: 'partner',
@@ -64,6 +64,8 @@ QUnit.module('core', {}, function () {
 
         assert.deepEqual(query.params.kwargs.context, {a: 1},
             "properly transfer the context");
+        assert.deepEqual(query.params.context, query.params.kwargs.context,
+            "Request and call_kw context should be the same");
 
     });
 
@@ -138,6 +140,7 @@ QUnit.module('core', {}, function () {
         });
         assert.deepEqual(query.params, {
             args: [],
+            context: {},
             kwargs: {
                 domain: ['a', '=', 1],
                 fields: ['name'],
@@ -166,6 +169,7 @@ QUnit.module('core', {}, function () {
         assert.deepEqual(query.params, {
             args: [['a', '=', 1], ['name'], 2, 32, 'yop ASC, aa DESC'],
             kwargs: {},
+            context: {},
             method: 'search_read',
             model: 'partner'
         }, "should have correct args");
@@ -186,6 +190,7 @@ QUnit.module('core', {}, function () {
 
         assert.deepEqual(query.params, {
             args: [],
+            context: {abc: 'def'},
             kwargs: {
                 context: {abc: 'def'},
                 domain: ['a', '=', 1],
@@ -222,13 +227,14 @@ QUnit.module('core', {}, function () {
                 groupby: ['product_id'],
                 lazy: false,
             },
+            context: {abc: 'def'},
             method: 'read_group',
             model: 'partner',
         }, "should have correct args");
     });
 
     QUnit.test('read_group with no domain, nor fields', function (assert) {
-        assert.expect(7);
+        assert.expect(8);
         var query = rpc.buildQuery({
             model: 'partner',
             method: 'read_group',
@@ -241,6 +247,7 @@ QUnit.module('core', {}, function () {
         assert.deepEqual(query.params.kwargs.limit, undefined, "should not enforce a default value for limit");
         assert.deepEqual(query.params.kwargs.orderby, undefined, "should not enforce a default value for orderby");
         assert.deepEqual(query.params.kwargs.lazy, undefined, "should not enforce a default value for lazy");
+        assert.deepEqual(query.params.context, {}, "should enforce an empty request context");
     });
 
     QUnit.test('read_group with args and kwargs', function (assert) {

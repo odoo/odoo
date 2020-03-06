@@ -48,7 +48,23 @@ return {
             params.model = options.model;
             params.method = options.method;
             params.kwargs = _.extend(params.kwargs || {}, options.kwargs);
-            params.kwargs.context = options.context || params.context || params.kwargs.context;
+            // Merge the different contexts, respecting the priority order
+            // options > params > params.kwargs
+            // if no context is given, do not force an empty context in kwargs
+            // the call_kw environment will be the same as the request env anyway.
+            let context = params.kwargs.context;
+            context = context ? _.extend(context || {}, params.context) : params.context;
+            context = context ? _.extend(context || {}, options.context) : options.context;
+            params.kwargs.context = context;
+            // enforce an empty dict s.t. the user_context is added
+            // later in session.js rpc().
+            params.context = context || {};
+        } else {
+            // enforce an empty dict s.t. the user_context is added
+            // later in session.js rpc().
+            let context = params.context;
+            context = _.extend(context || {}, options.context);
+            params.context = context;
         }
 
         if (options.method === 'read_group' || options.method === 'web_read_group') {
@@ -98,7 +114,6 @@ return {
             params.offset = options.offset || params.offset;
             orderBy = options.orderBy || params.orderBy;
             params.sort = orderBy ? this._serializeSort(orderBy) : orderBy;
-            params.context = options.context || params.context || {};
         }
 
         return {

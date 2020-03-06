@@ -17,6 +17,7 @@ var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
+var session = require('web.session');
 
 
 var _t = core._t;
@@ -5750,6 +5751,7 @@ QUnit.module('Views', {
                             ids: [4, 3],
                             offset: 13,
                             field: "int_field",
+                            context: session.user_context,
                         });
                     }
                     if (moves === 1) {
@@ -5758,6 +5760,7 @@ QUnit.module('Views', {
                             ids: [4, 2],
                             offset: 12,
                             field: "int_field",
+                            context: session.user_context,
                         });
                     }
                     if (moves === 2) {
@@ -5766,6 +5769,7 @@ QUnit.module('Views', {
                             ids: [2, 4],
                             offset: 12,
                             field: "int_field",
+                            context: session.user_context,
                         });
                     }
                     if (moves === 3) {
@@ -5774,6 +5778,7 @@ QUnit.module('Views', {
                             ids: [4, 2],
                             offset: 12,
                             field: "int_field",
+                            context: session.user_context,
                         });
                     }
                     moves += 1;
