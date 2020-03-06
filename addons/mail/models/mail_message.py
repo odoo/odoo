@@ -941,35 +941,29 @@ class Message(models.Model):
     # MESSAGE READ / FETCH / FAILURE API
     # ------------------------------------------------------
 
-    @api.model
-    def _message_read_dict_postprocess(self, messages, message_tree):
-        """ Post-processing on values given by message_read. This method will
-            handle partners in batch to avoid doing numerous queries.
-
-            :param list messages: list of message, as get_dict result
-            :param dict message_tree: {[msg.id]: msg browse record as super user}
-        """
+    def _message_format(self, fnames):
+        """Reads values from messages and formats them for the web client."""
+        self.check_access_rule('read')
+        vals_list = self._read_format(fnames)
         safari = request and request.httprequest.user_agent.browser == 'safari'
-
-        for message_dict in messages:
-            message_id = message_dict.get('id')
-            message = message_tree[message_id]
+        for vals in vals_list:
+            message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
 
             # Author
-            if message.author_id:
-                author = (message.author_id.id, message.author_id.display_name)
+            if message_sudo.author_id:
+                author = (message_sudo.author_id.id, message_sudo.author_id.display_name)
             else:
-                author = (0, message.email_from)
+                author = (0, message_sudo.email_from)
 
             # Notifications
             customer_email_status = (
-                (all(n.notification_status == 'sent' for n in message.notification_ids if n.notification_type == 'email') and 'sent') or
-                (any(n.notification_status == 'exception' for n in message.notification_ids if n.notification_type == 'email') and 'exception') or
-                (any(n.notification_status == 'bounce' for n in message.notification_ids if n.notification_type == 'email') and 'bounce') or
+                (all(n.notification_status == 'sent' for n in message_sudo.notification_ids if n.notification_type == 'email') and 'sent') or
+                (any(n.notification_status == 'exception' for n in message_sudo.notification_ids if n.notification_type == 'email') and 'exception') or
+                (any(n.notification_status == 'bounce' for n in message_sudo.notification_ids if n.notification_type == 'email') and 'bounce') or
                 'ready'
             )
             customer_email_data = []
-            filtered_notifications = message.notification_ids.filtered(lambda n:
+            filtered_notifications = message_sudo.notification_ids.filtered(lambda n:
                 n.notification_type == 'email' and n.res_partner_id.active and
                 (n.notification_status in ('bounce', 'exception', 'canceled') or n.res_partner_id.partner_share)
             )
@@ -978,10 +972,10 @@ class Message(models.Model):
 
             # Attachments
             main_attachment = self.env['ir.attachment']
-            if message.attachment_ids and message.res_id and issubclass(self.pool[message.model], self.pool['mail.thread']):
-                main_attachment = self.env[message.model].sudo().browse(message.res_id).message_main_attachment_id
+            if message_sudo.attachment_ids and message_sudo.res_id and issubclass(self.pool[message_sudo.model], self.pool['mail.thread']):
+                main_attachment = self.env[message_sudo.model].sudo().browse(message_sudo.res_id).message_main_attachment_id
             attachment_ids = []
-            for attachment in message.attachment_ids:
+            for attachment in message_sudo.attachment_ids:
                 attachment_ids.append({
                     'id': attachment.id,
                     'filename': attachment.name,
@@ -992,7 +986,7 @@ class Message(models.Model):
 
             # Tracking values
             tracking_value_ids = []
-            for tracking in message.tracking_value_ids:
+            for tracking in message_sudo.tracking_value_ids:
                 groups = tracking.field_groups
                 if not groups or self.env.is_superuser() or self.user_has_groups(groups):
                     tracking_value_ids.append({
@@ -1003,7 +997,7 @@ class Message(models.Model):
                         'field_type': tracking.field_type,
                     })
 
-            message_dict.update({
+            vals.update({
                 'author_id': author,
                 'customer_email_status': customer_email_status,
                 'customer_email_data': customer_email_data,
@@ -1011,7 +1005,7 @@ class Message(models.Model):
                 'tracking_value_ids': tracking_value_ids,
             })
 
-        return True
+        return vals_list
 
     def message_fetch_failed(self):
         messages = self.search([
@@ -1091,28 +1085,25 @@ class Message(models.Model):
                     'moderation_status': 'pending_moderation'
                 }
         """
-        message_values = self.read(self._get_message_format_fields())
-        message_tree = dict((m.id, m) for m in self.sudo())
-        self._message_read_dict_postprocess(message_values, message_tree)
+        vals_list = self._message_format(self._get_message_format_fields())
 
         com_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
         note_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
 
-        for message in message_values:
-            message_sudo = message_tree[message['id']]
+        for vals in vals_list:
+            message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
             notifs = message_sudo.notification_ids.filtered(lambda n: n.res_partner_id)
-            message.update({
+            vals.update({
                 'needaction_partner_ids': notifs.filtered(lambda n: not n.is_read).res_partner_id.ids,
                 'history_partner_ids': notifs.filtered(lambda n: n.is_read).res_partner_id.ids,
                 'is_note': message_sudo.subtype_id.id == note_id,
                 'is_discussion': message_sudo.subtype_id.id == com_id,
-                'subtype_description': message_sudo.subtype_id.description
+                'subtype_description': message_sudo.subtype_id.description,
+                'is_notification': vals['message_type'] == 'user_notification',
             })
-            message['is_notification'] = message['message_type'] == 'user_notification'
-
-            if message['model'] and self.env[message['model']]._original_module:
-                message['module_icon'] = modules.module.get_module_icon(self.env[message['model']]._original_module)
-        return message_values
+            if vals['model'] and self.env[vals['model']]._original_module:
+                vals['module_icon'] = modules.module.get_module_icon(self.env[vals['model']]._original_module)
+        return vals_list
 
     def _get_message_format_fields(self):
         return [

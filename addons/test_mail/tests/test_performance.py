@@ -3,7 +3,7 @@
 import base64
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.tests.common import TransactionCase, users, warmup
+from odoo.tests.common import users, warmup
 from odoo.tests import tagged
 from odoo.tools import mute_logger, formataddr
 
@@ -267,7 +267,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 'partner_ids': [(4, customer_id)],
             })
 
-        with self.assertQueryCount(__system__=33, emp=38):
+        with self.assertQueryCount(__system__=31, emp=37):
             composer.send_mail()
 
     @users('__system__', 'emp')
@@ -286,7 +286,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             }).create({})
             composer.onchange_template_id_wrapper()
 
-        with self.assertQueryCount(__system__=41, emp=45):
+        with self.assertQueryCount(__system__=39, emp=44):
             composer.send_mail()
 
         # remove created partner to ensure tests are the same each run
@@ -307,7 +307,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_assignation_inbox(self):
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(__system__=22, emp=24):
+        with self.assertQueryCount(__system__=19, emp=22):
             record.write({
                 'user_id': self.user_test.id,
             })
@@ -363,7 +363,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_message_post_one_inbox_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=17, emp=19):
+        with self.assertQueryCount(__system__=15, emp=18):
             record.message_post(
                 body='<p>Test Post Performances with an inbox ping</p>',
                 partner_ids=self.user_test.partner_id.ids,
@@ -700,9 +700,9 @@ class TestMailComplexPerformance(BaseMailPerformance):
     @users('emp')
     @warmup
     def test_message_format(self):
-        """Test performance of `_message_read_dict_postprocess` and of
-        `message_format` with multiple messages with multiple attachments,
-        different authors, various notifications, and different tracking values.
+        """Test performance of `_message_format` and of `message_format` with
+        multiple messages with multiple attachments, different authors, various
+        notifications, and different tracking values.
         Those messages might not make sense functionally but they are crafted to
         cover as much of the code as possible in regard to number of queries.
         """
@@ -794,7 +794,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             ]
         }])
 
-        with self.assertQueryCount(emp=9):
+        with self.assertQueryCount(emp=6):
             res = messages.message_format()
             self.assertEqual(len(res), 2)
             for message in res:
@@ -928,7 +928,7 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
         ]
         self.attachements = self.env['ir.attachment'].with_user(self.env.user).create(self.vals)
         attachement_ids = self.attachements.ids
-        with self.assertQueryCount(emp=88):
+        with self.assertQueryCount(emp=86):
             self.cr.sql_log = self.warm and self.cr.sql_log_count
             record.with_context({}).message_post(
                 body='<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>',
