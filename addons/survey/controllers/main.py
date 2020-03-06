@@ -275,6 +275,19 @@ class Survey(http.Controller):
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
             'format_date': lambda date: format_date(request.env, date)
         }
+        if survey_sudo.questions_layout != 'page_per_question':
+            triggering_answer_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
+            data.update({
+                'triggering_answer_by_question': {
+                    question.id: triggering_answer_by_question[question].id for question in triggering_answer_by_question.keys()
+                    if triggering_answer_by_question[question]
+                },
+                'triggered_questions_by_answer': {
+                    answer.id: [
+                        triggered_questions_by_answer[answer].ids
+                    ] for answer in triggered_questions_by_answer.keys()},
+                'selected_answers': selected_answers.ids
+            })
 
         if not answer_sudo.is_session_answer and survey_sudo.is_time_limited and answer_sudo.start_datetime:
             data.update({
@@ -287,7 +300,7 @@ class Survey(http.Controller):
         # Bypass all if page_id is specified (comes from breadcrumb or previous button)
         if 'previous_page_id' in post:
             previous_page_or_question_id = int(post['previous_page_id'])
-            new_previous_id = survey_sudo._previous_page_or_question_id(answer_sudo, previous_page_or_question_id)
+            new_previous_id = survey_sudo._get_next_page_or_question(answer_sudo, previous_page_or_question_id, go_back=True).id
             data.update({
                 page_or_question_key: request.env['survey.question'].sudo().browse(previous_page_or_question_id),
                 'previous_page_id': new_previous_id,
@@ -297,28 +310,31 @@ class Survey(http.Controller):
 
         if answer_sudo.state == 'in_progress':
             if answer_sudo.is_session_answer:
-                page_or_question_id, is_last = survey_sudo.session_question_id, False
+                next_page_or_question = survey_sudo.session_question_id
             else:
-                page_or_question_id, is_last = survey_sudo.next_page_or_question(
+                next_page_or_question = survey_sudo._get_next_page_or_question(
                     answer_sudo,
                     answer_sudo.last_displayed_page_id.id if answer_sudo.last_displayed_page_id else 0)
 
-            if answer_sudo.is_session_answer and page_or_question_id.is_time_limited:
+                if next_page_or_question:
+                    pages_or_questions = survey_sudo._get_pages_or_questions(answer_sudo)
+                    if pages_or_questions.ids.index(next_page_or_question.id) == len(pages_or_questions) - 1:
+                        data.update({'survey_last': True})
+
+            if answer_sudo.is_session_answer and next_page_or_question.is_time_limited:
                 data.update({
                     'timer_start': survey_sudo.session_question_start_time.isoformat(),
-                    'time_limit_minutes': page_or_question_id.time_limit / 60
+                    'time_limit_minutes': next_page_or_question.time_limit / 60
                 })
 
             data.update({
-                page_or_question_key: page_or_question_id,
-                'has_answered': answer_sudo.user_input_line_ids.filtered(lambda line: line.question_id == page_or_question_id)
+                page_or_question_key: next_page_or_question,
+                'has_answered': answer_sudo.user_input_line_ids.filtered(lambda line: line.question_id == next_page_or_question)
             })
             if survey_sudo.questions_layout != 'one_page':
                 data.update({
-                    'previous_page_id': survey_sudo._previous_page_or_question_id(answer_sudo, page_or_question_id.id)
+                    'previous_page_id': survey_sudo._get_next_page_or_question(answer_sudo, next_page_or_question.id, go_back=True).id
                 })
-            if is_last:
-                data.update({'last': True})
         elif answer_sudo.state == 'done' or answer_sudo.survey_time_limit_reached:
             # Display success message
             return self._prepare_survey_finished_values(survey_sudo, answer_sudo)
@@ -444,7 +460,10 @@ class Survey(http.Controller):
 
         errors = {}
         # Prepare answers / comment by question, validate and save answers
+        inactive_questions = request.env['survey.question'] if answer_sudo.is_session_answer else answer_sudo._get_inactive_conditional_questions()
         for question in questions:
+            if question in inactive_questions:  # if question is inactive, skip validation and save
+                continue
             answer, comment = self._extract_comment_from_answers(question, post.get(str(question.id)))
             errors.update(question.validate_question(answer, comment))
             if not errors.get(question.id):
@@ -452,6 +471,9 @@ class Survey(http.Controller):
 
         if errors and not (answer_sudo.survey_time_limit_reached or answer_sudo.question_time_limit_reached):
             return {'error': 'validation', 'fields': errors}
+
+        if not answer_sudo.is_session_answer:
+            answer_sudo._clear_inactive_conditional_answers()
 
         if answer_sudo.survey_time_limit_reached or survey_sudo.questions_layout == 'one_page':
             answer_sudo._mark_done()
@@ -461,8 +483,8 @@ class Survey(http.Controller):
         else:
             vals = {'last_displayed_page_id': page_or_question_id}
             if not answer_sudo.is_session_answer:
-                next_page, unused = request.env['survey.survey'].next_page_or_question(answer_sudo, page_or_question_id)
-                if next_page is None:
+                next_page = survey_sudo._get_next_page_or_question(answer_sudo, page_or_question_id)
+                if not next_page:
                     answer_sudo._mark_done()
 
             answer_sudo.write(vals)

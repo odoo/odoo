@@ -161,7 +161,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
                 this.$('.o_survey_session_leaderboard_title').text(_('Final Leaderboard'));
                 this.$('.o_survey_session_navigation_next').addClass('d-none');
             }
-            this.leaderBoard.showLeaderboard();
+            this.leaderBoard.showLeaderboard(true);
         } else {
             if (!this.isLastQuestion) {
                 this._nextQuestion();
@@ -317,12 +317,23 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
         }
 
         Promise.all([fadeOutPromise, nextQuestionPromise]).then(function (results) {
-            var $renderedTemplate = $(results[1]);
-            self.$el.replaceWith($renderedTemplate);
-            self.attachTo($renderedTemplate);
-            self.$el.fadeIn(1000, function () {
-                self._startTimer();
-            });
+            if (results[1]) {
+                var $renderedTemplate = $(results[1]);
+                self.$el.replaceWith($renderedTemplate);
+                self.attachTo($renderedTemplate);
+                self.$el.fadeIn(1000, function () {
+                    self._startTimer();
+                });
+            } else {
+                // Display last screen
+                self.isLastQuestion = true;
+                self._setupLeaderboard().then(function () {
+                    self.$('.o_survey_session_leaderboard_title').text(_('Final Leaderboard'));
+                    self.$('.o_survey_session_navigation_next').addClass('d-none');
+                    self.$('.o_survey_leaderboard_buttons').removeClass('d-none');
+                    self.leaderBoard.showLeaderboard(false);
+                });
+            }
         });
     },
 
