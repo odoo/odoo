@@ -951,32 +951,6 @@ class Message(models.Model):
         """
         safari = request and request.httprequest.user_agent.browser == 'safari'
 
-        # 1. Aggregate notifications
-        message_ids = list(message_tree.keys())
-        email_notification_tree = {}
-        for message in message_tree.values():
-            # find all notified partners
-            email_notification_tree[message.id] = message.notification_ids.filtered(
-                lambda n: n.notification_type == 'email' and n.res_partner_id.active and
-                (n.notification_status in ('bounce', 'exception', 'canceled') or n.res_partner_id.partner_share))
-
-        # 2. Aggregate tracking values
-        tracking_values = self.env['mail.tracking.value'].sudo().search([('mail_message_id', 'in', message_ids)])
-        message_to_tracking = dict()
-        tracking_tree = dict.fromkeys(tracking_values.ids, False)
-        for tracking in tracking_values:
-            groups = tracking.field_groups
-            if not groups or self.env.is_superuser() or self.user_has_groups(groups):
-                message_to_tracking.setdefault(tracking.mail_message_id.id, list()).append(tracking.id)
-                tracking_tree[tracking.id] = {
-                    'id': tracking.id,
-                    'changed_field': tracking.field_desc,
-                    'old_value': tracking.get_old_display_value()[0],
-                    'new_value': tracking.get_new_display_value()[0],
-                    'field_type': tracking.field_type,
-                }
-
-        # 3. Update message dictionaries
         for message_dict in messages:
             message_id = message_dict.get('id')
             message = message_tree[message_id]
@@ -986,6 +960,8 @@ class Message(models.Model):
                 author = (message.author_id.id, message.author_id.display_name)
             else:
                 author = (0, message.email_from)
+
+            # Notifications
             customer_email_status = (
                 (all(n.notification_status == 'sent' for n in message.notification_ids if n.notification_type == 'email') and 'sent') or
                 (any(n.notification_status == 'exception' for n in message.notification_ids if n.notification_type == 'email') and 'exception') or
@@ -993,9 +969,12 @@ class Message(models.Model):
                 'ready'
             )
             customer_email_data = []
-            for notification in email_notification_tree[message.id]:
-                partner_name_get = notification.res_partner_id.name_get()[0]
-                customer_email_data.append((partner_name_get[0], partner_name_get[1], notification.notification_status))
+            filtered_notifications = message.notification_ids.filtered(lambda n:
+                n.notification_type == 'email' and n.res_partner_id.active and
+                (n.notification_status in ('bounce', 'exception', 'canceled') or n.res_partner_id.partner_share)
+            )
+            for notification in filtered_notifications:
+                customer_email_data.append((notification.res_partner_id.id, notification.res_partner_id.display_name, notification.notification_status))
 
             # Attachments
             main_attachment = self.env['ir.attachment']
@@ -1013,9 +992,16 @@ class Message(models.Model):
 
             # Tracking values
             tracking_value_ids = []
-            for tracking_value_id in message_to_tracking.get(message_id, list()):
-                if tracking_value_id in tracking_tree:
-                    tracking_value_ids.append(tracking_tree[tracking_value_id])
+            for tracking in message.tracking_value_ids:
+                groups = tracking.field_groups
+                if not groups or self.env.is_superuser() or self.user_has_groups(groups):
+                    tracking_value_ids.append({
+                        'id': tracking.id,
+                        'changed_field': tracking.field_desc,
+                        'old_value': tracking.get_old_display_value()[0],
+                        'new_value': tracking.get_new_display_value()[0],
+                        'field_type': tracking.field_type,
+                    })
 
             message_dict.update({
                 'author_id': author,
@@ -1118,22 +1104,12 @@ class Message(models.Model):
         com_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
         note_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
 
-        # fetch notification status
-
-        notif_dict = defaultdict(lambda: defaultdict(list))
-        notifs = self.env['mail.notification'].sudo().search([('mail_message_id', 'in', list(mid for mid in message_tree)), ('res_partner_id', '!=', False)])
-
-        for notif in notifs:
-            mid = notif.mail_message_id.id
-            if notif.is_read:
-                notif_dict[mid]['history_partner_ids'].append(notif.res_partner_id.id)
-            else:
-                notif_dict[mid]['needaction_partner_ids'].append(notif.res_partner_id.id)
-
         for message in message_values:
+            message_sudo = message_tree[message['id']]
+            notifs = message_sudo.notification_ids.filtered(lambda n: n.res_partner_id)
             message.update({
-                'needaction_partner_ids': notif_dict[message['id']]['needaction_partner_ids'],
-                'history_partner_ids': notif_dict[message['id']]['history_partner_ids'],
+                'needaction_partner_ids': notifs.filtered(lambda n: not n.is_read).res_partner_id.ids,
+                'history_partner_ids': notifs.filtered(lambda n: n.is_read).res_partner_id.ids,
                 'is_note': message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == note_id,
                 'is_discussion': message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == com_id,
                 'subtype_description': message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
