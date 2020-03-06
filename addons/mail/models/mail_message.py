@@ -1095,12 +1095,6 @@ class Message(models.Model):
         message_tree = dict((m.id, m) for m in self.sudo())
         self._message_read_dict_postprocess(message_values, message_tree)
 
-        # add subtype data (is_note flag, is_discussion flag , subtype_description). Do it as sudo
-        # because portal / public may have to look for internal subtypes
-        subtype_ids = [msg['subtype_id'][0] for msg in message_values if msg['subtype_id']]
-        subtypes = self.env['mail.message.subtype'].sudo().browse(subtype_ids).read(['internal', 'description','id'])
-        subtypes_dict = dict((subtype['id'], subtype) for subtype in subtypes)
-
         com_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
         note_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
 
@@ -1110,9 +1104,9 @@ class Message(models.Model):
             message.update({
                 'needaction_partner_ids': notifs.filtered(lambda n: not n.is_read).res_partner_id.ids,
                 'history_partner_ids': notifs.filtered(lambda n: n.is_read).res_partner_id.ids,
-                'is_note': message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == note_id,
-                'is_discussion': message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == com_id,
-                'subtype_description': message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
+                'is_note': message_sudo.subtype_id.id == note_id,
+                'is_discussion': message_sudo.subtype_id.id == com_id,
+                'subtype_description': message_sudo.subtype_id.description
             })
             message['is_notification'] = message['message_type'] == 'user_notification'
 
