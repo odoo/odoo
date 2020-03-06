@@ -2479,7 +2479,7 @@ var BasicModel = AbstractModel.extend({
                             display_name: el[1],
                         },
                         modelName: model,
-                        parentID: parent,
+                        parentID: parent.id,
                     });
                     parent.data[fieldName] = referenceDp.id;
                 });
