@@ -15,6 +15,11 @@
             <script type="text/javascript" src="/sale/static/src/js/product_configurator_modal.js"></script>
         </xpath>
     </template>
+     <template id="report_assets_common_inherit_sale" inherit_id="web.report_assets_common" name="Sale report common assets">
+        <xpath expr="link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/sale/static/src/scss/sale_report.scss"/>
+        </xpath>
+    </template>
     <template id="assets_frontend_inherit_sale" inherit_id="web.assets_frontend" name="Sale frontend assets">
         <xpath expr="link[last()]" position="after">
             <link rel="stylesheet" type="text/scss" href="/sale/static/src/scss/sale_portal.scss"/>
