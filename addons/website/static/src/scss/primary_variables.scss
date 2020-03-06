@@ -4,23 +4,18 @@ $o-theme-layout: 'full';
 // Colors
 //------------------------------------------------------------------------------
 
-// Extend default color palettes with website-related colors
-$-palettes: ();
-@each $palette in $o-color-palettes {
-    $-palettes: append($-palettes, map-merge((
-        'body': $o-portal-default-body-bg,
-        'menu': #F9F9F9,
-        'footer': #F9F9F9,
-        'text': null, // Default to bootstrap
-        'h1': null, // Default to text
-        'h2': null, // Default to h1
-        'h3': null, // Default to h2
-        'h4': null, // Default to h3
-        'h5': null, // Default to h4
-        'h6': null, // Default to h5
-    ), $palette));
-}
-$o-color-palettes: $-palettes;
+$o-base-color-palette: map-merge($o-base-color-palette, (
+    'body': $o-portal-default-body-bg,
+    'menu': #F9F9F9,
+    'footer': #F9F9F9,
+    'text': null, // Default to bootstrap
+    'h1': null, // Default to text
+    'h2': null, // Default to h1
+    'h3': null, // Default to h2
+    'h4': null, // Default to h3
+    'h5': null, // Default to h4
+    'h6': null, // Default to h5
+));
 
 // By default, all user color palette values are null. Each null value is
 // automatically replaced with corresponsing color of chosen color palette.
@@ -49,16 +44,17 @@ $o-theme-figcaption-opacity: 0.6;
 // Website customizations
 //------------------------------------------------------------------------------
 
+$o-base-website-values-palette: (
+    'logo-height': null, // Default to navbar height (see portal)
+    'header-font-size': null, // Default to BS (normal font-size)
+    'font-number': 1,
+    'headings-font-number': 1,
+    'navbar-font-number': 1,
+    'buttons-font-number': 1,
+    'google-fonts': null,
+);
 $o-website-values-palettes: (
-    (
-        'logo-height': null, // Default to navbar height (see portal)
-        'header-font-size': null, // Default to BS (normal font-size)
-        'font-number': 1,
-        'headings-font-number': 1,
-        'navbar-font-number': 1,
-        'buttons-font-number': 1,
-        'google-fonts': null,
-    ),
+    (),
 ) !default;
 $o-website-values-palette-number: 1 !default;
 
