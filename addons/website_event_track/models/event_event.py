@@ -104,7 +104,7 @@ class Event(models.Model):
         super(Event, self)._update_website_menus(vals)
         for event in self:
             if 'website_track' in vals:
-                if vals['website_track']:
+                if vals['website_track'] and not event.track_menu_ids:
                     for sequence, (name, url, xml_id, menu_type) in enumerate(event._get_track_menu_entries()):
                         menu = super(Event, event)._create_menu(sequence, name, url, xml_id)
                         event.env['website.event.menu'].create({
@@ -112,10 +112,10 @@ class Event(models.Model):
                             'event_id': event.id,
                             'menu_type': menu_type,
                         })
-                else:
+                elif event.track_menu_ids and not vals['website_track']:
                     event.track_menu_ids.mapped('menu_id').unlink()
             if 'website_track_proposal' in vals:
-                if vals['website_track_proposal']:
+                if vals['website_track_proposal'] and not event.track_proposal_menu_ids:
                     for sequence, (name, url, xml_id, menu_type) in enumerate(event._get_track_proposal_menu_entries()):
                         menu = super(Event, event)._create_menu(sequence, name, url, xml_id)
                         event.env['website.event.menu'].create({
@@ -123,7 +123,7 @@ class Event(models.Model):
                             'event_id': event.id,
                             'menu_type': menu_type,
                         })
-                else:
+                elif event.track_proposal_menu_ids and not vals['website_track_proposal']:
                     event.track_proposal_menu_ids.mapped('menu_id').unlink()
 
     def _get_track_menu_entries(self):
