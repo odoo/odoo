@@ -794,7 +794,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             ]
         }])
 
-        with self.assertQueryCount(emp=13):
+        with self.assertQueryCount(emp=12):
             res = messages.message_format()
             self.assertEqual(len(res), 2)
             for message in res:
@@ -928,7 +928,7 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
         ]
         self.attachements = self.env['ir.attachment'].with_user(self.env.user).create(self.vals)
         attachement_ids = self.attachements.ids
-        with self.assertQueryCount(emp=91):
+        with self.assertQueryCount(emp=90):
             self.cr.sql_log = self.warm and self.cr.sql_log_count
             record.with_context({}).message_post(
                 body='<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>',
