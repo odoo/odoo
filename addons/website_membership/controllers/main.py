@@ -84,7 +84,7 @@ class WebsiteMembership(http.Controller):
         })
 
         # format domain for group_by and memberships
-        memberships = Product.search([('membership', '=', True)], order="website_sequence")
+        memberships = Product.sudo().search([('membership', '=', True)], order="website_sequence")
 
         # make sure we don't access to lines with unpublished membershipts
         line_domain.append(('membership_id', 'in', memberships.ids))
