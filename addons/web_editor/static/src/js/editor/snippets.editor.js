@@ -449,7 +449,7 @@ var SnippetEditor = Widget.extend({
                 node.parentNode.removeChild(node);
             }
         });
-        $optionsSection.on('mouseover', this._onOptionsSectionMouseOver.bind(this));
+        $optionsSection.on('mouseenter', this._onOptionsSectionMouseEnter.bind(this));
         $optionsSection.on('mouseleave', this._onOptionsSectionMouseLeave.bind(this));
         $optionsSection.on('click', 'we-title > span', this._onOptionsSectionClick.bind(this));
         $optionsSection.on('click', '.oe_snippet_clone', this._onCloneClick.bind(this));
@@ -660,7 +660,7 @@ var SnippetEditor = Widget.extend({
     /**
      * @private
      */
-    _onOptionsSectionMouseOver: function (ev) {
+    _onOptionsSectionMouseEnter: function (ev) {
         if (!this.$target.is(':visible')) {
             return;
         }
