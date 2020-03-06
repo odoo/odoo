@@ -49,17 +49,24 @@ class SaleOrder(models.Model):
         }
 
     def _compute_option_data_for_template_change(self, option):
+        price = option.product_id.lst_price
+        discount = 0
+
         if self.pricelist_id:
-            price = self.pricelist_id.with_context(uom=option.uom_id.id).get_product_price(option.product_id, 1, False)
-        else:
-            price = option.price_unit
+            pricelist_price = self.pricelist_id.with_context(uom=option.uom_id.id).get_product_price(option.product_id, 1, False)
+
+            if self.pricelist_id.discount_policy == 'without_discount' and price:
+                discount = max(0, (price - pricelist_price) * 100 / price)
+            else:
+                price = pricelist_price
+
         return {
             'product_id': option.product_id.id,
             'name': option.name,
             'quantity': option.quantity,
             'uom_id': option.uom_id.id,
             'price_unit': price,
-            'discount': option.discount,
+            'discount': discount
         }
 
     def update_prices(self):
@@ -71,49 +78,51 @@ class SaleOrder(models.Model):
 
     @api.onchange('sale_order_template_id')
     def onchange_sale_order_template_id(self):
+
         if not self.sale_order_template_id:
             self.require_signature = self._get_default_require_signature()
             self.require_payment = self._get_default_require_payment()
             return
+
         template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
 
+        # --- first, process the list of products from the template
         order_lines = [(5, 0, 0)]
         for line in template.sale_order_template_line_ids:
             data = self._compute_line_data_for_template_change(line)
-            if line.product_id:
-                discount = 0
-                if self.pricelist_id:
-                    price = self.pricelist_id.with_context(uom=line.product_uom_id.id).get_product_price(line.product_id, 1, False)
-                    if self.pricelist_id.discount_policy == 'without_discount' and line.price_unit:
-                        discount = (line.price_unit - price) / line.price_unit * 100
-                        # negative discounts (= surcharge) are included in the display price
-                        if discount < 0:
-                            discount = 0
-                        else:
-                            price = line.price_unit
-                    elif line.price_unit:
-                        price = line.price_unit
 
-                else:
-                    price = line.price_unit
+            if line.product_id:
+                price = line.product_id.lst_price
+                discount = 0
+
+                if self.pricelist_id:
+                    pricelist_price = self.pricelist_id.with_context(uom=line.product_uom_id.id).get_product_price(line.product_id, 1, False)
+
+                    if self.pricelist_id.discount_policy == 'without_discount' and price:
+                        discount = max(0, (price - pricelist_price) * 100 / price)
+                    else:
+                        price = pricelist_price
 
                 data.update({
                     'price_unit': price,
-                    'discount': 100 - ((100 - discount) * (100 - line.discount) / 100),
+                    'discount': discount,
                     'product_uom_qty': line.product_uom_qty,
                     'product_id': line.product_id.id,
                     'product_uom': line.product_uom_id.id,
                     'customer_lead': self._get_customer_lead(line.product_id.product_tmpl_id),
                 })
+
             order_lines.append((0, 0, data))
 
         self.order_line = order_lines
         self.order_line._compute_tax_id()
 
+        # then, process the list of optional products from the template
         option_lines = [(5, 0, 0)]
         for option in template.sale_order_template_option_ids:
             data = self._compute_option_data_for_template_change(option)
             option_lines.append((0, 0, data))
+
         self.sale_order_option_ids = option_lines
 
         if template.number_of_days > 0:
