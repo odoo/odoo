@@ -21,15 +21,16 @@ var KioskMode = AbstractAction.extend({
     start: function () {
         var self = this;
         core.bus.on('barcode_scanned', this, this._onBarcodeScanned);
+        const currentCompanyId = Session.getCompanyId();
         self.session = Session;
         var def = this._rpc({
                 model: 'res.company',
                 method: 'search_read',
-                args: [[['id', '=', this.session.company_id]], ['name']],
+                args: [[['id', '=', currentCompanyId]], ['name']],
             })
-            .then(function (companies){
+            .then(function (companies) {
                 self.company_name = companies[0].name;
-                self.company_image_url = self.session.url('/web/image', {model: 'res.company', id: self.session.company_id, field: 'logo',});
+                self.company_image_url = self.session.url('/web/image', {model: 'res.company', id: currentCompanyId, field: 'logo',});
                 self.$el.html(QWeb.render("HrAttendanceKioskMode", {widget: self}));
                 self.start_clock();
             });

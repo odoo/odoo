@@ -41,10 +41,10 @@ var SwitchCompanyMenu = Widget.extend({
         var self = this;
         this.allowed_company_ids = String(session.user_context.allowed_company_ids)
                                     .split(',')
-                                    .map(function (id) {return parseInt(id);});
-        this.user_companies = session.user_companies.allowed_companies;
+                                    .map(function (id) { return parseInt(id); });
+        this.user_companies = session.user_companies;
         this.current_company = this.allowed_company_ids[0];
-        this.current_company_name = _.find(session.user_companies.allowed_companies, function (company) {
+        this.current_company_name = _.find(session.user_companies, function (company) {
             return company[0] === self.current_company;
         })[1];
         return this._super.apply(this, arguments);

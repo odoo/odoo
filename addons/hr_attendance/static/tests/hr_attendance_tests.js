@@ -84,7 +84,7 @@ QUnit.module('HR Attendance', {
             data: this.data,
             session: {
                 uid: 1,
-                company_id: 1,
+                user_company: [1, "Company A"],
             },
             mockRPC: function(route, args) {
                 if (args.method === 'attendance_scan' && args.model === 'hr.employee') {
@@ -128,7 +128,7 @@ QUnit.module('HR Attendance', {
                 data: self.data,
                 session: {
                     uid: 1,
-                    company_id: 1,
+                    user_company: [1, "Company A"],
                 },
                 mockRPC: function(route, args) {
                     if (args.method === 'attendance_scan' && args.model === 'hr.employee') {

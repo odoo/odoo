@@ -122,16 +122,16 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         var state = $.bbq.getState();
         // If not set on the url, retrieve cids from the local storage
         // of from the default company on the user
-        var current_company_id = session.user_companies.current_company[0]
+        var userCompanyId = session.user_company[0];
+        var userCompanyIDS = session.user_companies.map(c => c[0]);
         if (!state.cids) {
-            state.cids = utils.get_cookie('cids') !== null ? utils.get_cookie('cids') : String(current_company_id);
+            state.cids = utils.get_cookie('cids') !== null ? utils.get_cookie('cids') : String(userCompanyId);
         }
         var stateCompanyIDS = _.map(state.cids.split(','), function (cid) { return parseInt(cid) });
-        var userCompanyIDS = _.map(session.user_companies.allowed_companies, function(company) {return company[0]});
         // Check that the user has access to all the companies
         if (!_.isEmpty(_.difference(stateCompanyIDS, userCompanyIDS))) {
-            state.cids = String(current_company_id);
-            stateCompanyIDS = [current_company_id]
+            state.cids = String(userCompanyId);
+            stateCompanyIDS = [userCompanyId];
         }
         // Update the user context with this configuration
         session.user_context.allowed_company_ids = stateCompanyIDS;

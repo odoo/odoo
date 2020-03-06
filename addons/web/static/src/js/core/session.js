@@ -354,7 +354,19 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     },
 
     setCompanies: function (main_company_id, company_ids) {
-        var hash = $.bbq.getState()
+        /**
+         * Updates the company information in the cookies
+         * and reload the page with appropriate cids GET param
+         *
+         * Does not verify whether there are unsaved changes !
+         *
+         * @param {Integer} main_company_id Id of the main company in
+         *      which the user does its job.
+         * @param {Array} company_ids Ids of the companies
+         *      whose records the user want to see.
+         *
+        */
+        var hash = $.bbq.getState();
         hash.cids = company_ids.sort(function(a, b) {
             if (a === main_company_id) {
                 return -1;
@@ -367,6 +379,51 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         utils.set_cookie('cids', hash.cids || String(main_company_id));
         $.bbq.pushState({'cids': hash.cids}, 0);
         location.reload();
+    },
+
+    getCompanyId: function () {
+        /**
+         * Returns the Id of the current main company.
+         *
+         * @returns {Integer} Id of the main company
+         *      (cids GET param / user_context / user main company)
+         */
+        const state = $.bbq.getState();
+        let cids = false;
+        if (state.cids) {
+            cids = _.map(state.cids.split(','), cid => parseInt(cid));
+        }
+        cids = cids || this.user_context.allowed_company_ids;
+        return cids ? cids[0] : (this.user_company && this.user_company[0]) || false;
+    },
+
+    getCompanyCurrencyId: function () {
+        /**
+         * Returns the Id of the currency of the current main company..
+         *
+         * @returns {Integer} Id of the main company currency
+         */
+        let cid = this.getCompanyId();
+        return cid ? this.companies_currency_id[cid] : this.company_currency_id;
+    },
+
+    getCompanyIds: function () {
+        /**
+         * Returns the ids of the currently enabled companies.
+         *
+         * @returns {Array} Ids of the currently enabled companies
+         *      If no companies are defined in the cids GET param or user_context
+         *      Falls back on the user main company.
+         */
+        const state = $.bbq.getState();
+        let cids = false;
+        if (state.cids) {
+            cids = _.map(state.cids.split(','), cid => parseInt(cid));
+        }
+        cids = cids || this.user_context.allowed_company_ids;
+        // In opposition to server-side logic (self.env.companies),
+        // if the context isn't defined, only the user main company id is returned.
+        return cids ? cids : (this.user_company ? [this.user_company[0]] : []);
     },
 
     //--------------------------------------------------------------------------
