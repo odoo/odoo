@@ -810,6 +810,80 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 1730.0,
         })
 
+    def test_out_invoice_line_onchange_rounding_price_subtotal(self):
+        ''' Seek for rounding issue on the price_subtotal when dealing with a price_unit having more digits than the
+        foreign currency one.
+        '''
+        decimal_precision_name = self.env['account.move.line']._fields['price_unit']._digits
+        decimal_precision = self.env['decimal.precision'].search([('name', '=', decimal_precision_name)])
+
+        self.assertTrue(decimal_precision, "Decimal precision '%s' not found" % decimal_precision_name)
+
+        self.currency_data['currency'].rounding = 0.01
+        decimal_precision.digits = 4
+
+        def check_invoice_values(invoice):
+            self.assertInvoiceValues(invoice, [
+                {
+                    'quantity': 1.0,
+                    'price_unit': 0.025,
+                    'price_subtotal': 0.03,
+                    'debit': 0.0,
+                    'credit': 0.02,
+                    'currency_id': self.currency_data['currency'].id,
+                },
+                {
+                    'quantity': 1.0,
+                    'price_unit': -0.03,
+                    'price_subtotal': -0.03,
+                    'debit': 0.02,
+                    'credit': 0.0,
+                    'currency_id': self.currency_data['currency'].id,
+                },
+            ], {
+                'amount_untaxed': 0.03,
+                'amount_tax': 0.0,
+                'amount_total': 0.03,
+            })
+
+        # == Test at the creation of the invoice ==
+
+        invoice_1 = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2017-01-01',
+            'date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'test line',
+                'price_unit': 0.025,
+                'quantity': 1,
+                'account_id': self.company_data['default_account_revenue'].id,
+            })],
+        })
+
+        check_invoice_values(invoice_1)
+
+        # == Test when writing on the invoice ==
+
+        invoice_2 = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2017-01-01',
+            'date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+        })
+        invoice_2.write({
+            'invoice_line_ids': [(0, 0, {
+                'name': 'test line',
+                'price_unit': 0.025,
+                'quantity': 1,
+                'account_id': self.company_data['default_account_revenue'].id,
+            })],
+        })
+
+        check_invoice_values(invoice_2)
+
     def test_out_invoice_line_onchange_taxes_2_price_unit_tax_included(self):
         ''' Seek for rounding issue in the price unit. Suppose a price_unit of 2300 with a 5.5% price-included tax
         applied on it.
