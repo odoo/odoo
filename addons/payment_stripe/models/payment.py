@@ -277,6 +277,9 @@ class PaymentTransactionStripe(models.Model):
             self.write(vals)
             self._set_transaction_pending()
             return True
+        if status == 'requires_payment_method':
+            self._set_transaction_cancel()
+            return False
         else:
             error = tree.get("failure_message") or tree.get('error', {}).get('message')
             self._set_transaction_error(error)
