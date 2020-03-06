@@ -3,6 +3,8 @@
 from odoo import tools
 from odoo import models, fields, api
 
+from functools import lru_cache
+
 
 class AccountInvoiceReport(models.Model):
     _name = "account.invoice.report"
@@ -84,7 +86,7 @@ class AccountInvoiceReport(models.Model):
                 line.analytic_account_id,
                 line.journal_id,
                 line.company_id,
-                COALESCE(line.currency_id, line.company_currency_id)        AS currency_id,
+                line.company_currency_id                                    AS currency_id,
                 line.partner_id AS commercial_partner_id,
                 move.name,
                 move.state,
@@ -97,41 +99,15 @@ class AccountInvoiceReport(models.Model):
                 move.invoice_date_due,
                 move.invoice_payment_term_id,
                 move.invoice_partner_bank_id,
-                ROUND(move.amount_residual_signed / (SELECT count(*) FROM account_move_line aml where line.move_id = aml.move_id AND NOT aml.exclude_from_invoice_tab),
-                  COALESCE((SELECT decimal_places
-                    FROM res_currency rc INNER JOIN res_currency_rate cr ON
-                    rc.id = cr.currency_id
-                   WHERE cr.currency_id = (COALESCE(line.currency_id, line.company_currency_id)) AND
-                         cr.company_id = line.company_id
-                   LIMIT 1
-                   ),2))                                                   AS residual,
-                ROUND(
-                  line.price_total / COALESCE(
-                    (SELECT rate FROM res_currency_rate cr WHERE
-                      cr.currency_id = line.currency_id AND
-                      cr.company_id = line.company_id AND
-                      cr.name <= COALESCE(line.date,NOW())
-                    ORDER BY cr.name DESC
-                    LIMIT 1)
-                    ,1),
-                  COALESCE((SELECT decimal_places
-                   FROM res_currency rc INNER JOIN res_currency_rate cr ON
-                    rc.id = cr.currency_id
-                   WHERE cr.currency_id = (COALESCE(line.currency_id, line.company_currency_id)) AND
-                         cr.company_id = line.company_id
-                   LIMIT 1
-                   ),2))
-                    *
-                   (CASE WHEN move.amount_total_signed < 0
-                        THEN -1
-                        ELSE 1
-                    END)                                                    AS amount_total,
+                -line.balance * (move.amount_residual_signed / move.amount_total_signed) * (line.price_total / line.price_subtotal)
+                                                                            AS residual,
+                -line.balance * (line.price_total / line.price_subtotal)    AS amount_total,
                 uom_template.id                                             AS product_uom_id,
                 template.categ_id                                           AS product_categ_id,
-                SUM(line.quantity / NULLIF(COALESCE(uom_line.factor, 1) * COALESCE(uom_template.factor, 1), 0.0))
+                line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)
                                                                             AS quantity,
-                -SUM(line.balance)                                          AS price_subtotal,
-                -SUM(line.balance / NULLIF(COALESCE(uom_line.factor, 1) * COALESCE(uom_template.factor, 1), 0.0))
+                -line.balance                                               AS price_subtotal,
+                -line.balance / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)
                                                                             AS price_average,
                 COALESCE(partner.country_id, commercial_partner.country_id) AS country_id,
                 1                                                           AS nbr_lines
@@ -187,6 +163,7 @@ class AccountInvoiceReport(models.Model):
                 move.invoice_payment_term_id,
                 move.invoice_partner_bank_id,
                 uom_template.id,
+                uom_line.factor,
                 template.categ_id,
                 COALESCE(partner.country_id, commercial_partner.country_id)
         '''
@@ -200,6 +177,23 @@ class AccountInvoiceReport(models.Model):
         ''' % (
             self._table, self._select(), self._from(), self._where(), self._group_by()
         ))
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        @lru_cache(maxsize=32)  # cache to prevent a SQL query for each data point
+        def get_rate(currency_id):
+            return self.env['res.currency']._get_conversion_rate(
+                self.env['res.currency'].browse(currency_id),
+                self.env.company.currency_id,
+                self.env.company,
+                self._fields['invoice_date'].today()
+            )
+        result = super(AccountInvoiceReport, self).read_group(domain, fields, set(groupby) | {'currency_id'}, offset, limit, orderby, False)
+        for res in result:
+            if self.env.company.currency_id.id != res['currency_id'][0]:
+                for field in {'amount_total', 'price_average', 'price_subtotal', 'residual'} & set(res):
+                    res[field] = self.env.company.currency_id.round(res[field] * get_rate(res['currency_id'][0]))
+        return result
 
 
 class ReportInvoiceWithPayment(models.AbstractModel):
