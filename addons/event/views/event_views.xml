@@ -361,7 +361,7 @@
                                             <div class="o_kanban_record_title o_text_overflow" t-att-title="record.name.value">
                                                 <field name="name"/>
                                             </div>
-                                            <div><i class="fa fa-map-marker" title="Location"/> <span class="o_text_overflow o_event_kanban_location" t-esc="record.address_id.value"/></div>
+                                            <div t-if="record.address_id.value"><i class="fa fa-map-marker" title="Location"/> <span class="o_text_overflow o_event_kanban_location" t-esc="record.address_id.value"/></div>
                                         </div>
                                         <h5 class="o_event_fontsize_11 p-0">
                                             <a name="%(act_event_registration_from_event)d" type="action" context="{'search_default_expected': True}">
