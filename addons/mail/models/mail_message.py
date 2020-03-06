@@ -949,9 +949,10 @@ class Message(models.Model):
             :param list messages: list of message, as get_dict result
             :param dict message_tree: {[msg.id]: msg browse record as super user}
         """
-        # 1. Aggregate partners (author_id and partner_ids), attachments and tracking values
+        safari = request and request.httprequest.user_agent.browser == 'safari'
+
+        # 1. Aggregate partners (author_id and partner_ids) and tracking values
         partners = self.env['res.partner'].sudo()
-        attachments = self.env['ir.attachment']
         message_ids = list(message_tree.keys())
         email_notification_tree = {}
         for message in message_tree.values():
@@ -961,24 +962,12 @@ class Message(models.Model):
             email_notification_tree[message.id] = message.notification_ids.filtered(
                 lambda n: n.notification_type == 'email' and n.res_partner_id.active and
                 (n.notification_status in ('bounce', 'exception', 'canceled') or n.res_partner_id.partner_share))
-            if message.attachment_ids:
-                attachments |= message.attachment_ids
         partners |= self.env['mail.notification'].concat(*email_notification_tree.values()).mapped('res_partner_id')
         # Read partners as SUPERUSER -> message being browsed as SUPERUSER it is already the case
         partners_names = partners.name_get()
         partner_tree = dict((partner[0], partner) for partner in partners_names)
 
-        # 2. Attachments as SUPERUSER, because could receive msg and attachments for doc uid cannot see
-        attachments_data = attachments.sudo().read(['id', 'name', 'mimetype'])
-        safari = request and request.httprequest.user_agent.browser == 'safari'
-        attachments_tree = dict((attachment['id'], {
-            'id': attachment['id'],
-            'filename': attachment['name'],
-            'name': attachment['name'],
-            'mimetype': 'application/octet-stream' if safari and attachment['mimetype'] and 'video' in attachment['mimetype'] else attachment['mimetype'],
-        }) for attachment in attachments_data)
-
-        # 3. Tracking values
+        # 2. Tracking values
         tracking_values = self.env['mail.tracking.value'].sudo().search([('mail_message_id', 'in', message_ids)])
         message_to_tracking = dict()
         tracking_tree = dict.fromkeys(tracking_values.ids, False)
@@ -994,7 +983,7 @@ class Message(models.Model):
                     'field_type': tracking.field_type,
                 }
 
-        # 4. Update message dictionaries
+        # 3. Update message dictionaries
         for message_dict in messages:
             message_id = message_dict.get('id')
             message = message_tree[message_id]
@@ -1012,15 +1001,21 @@ class Message(models.Model):
             for notification in email_notification_tree[message.id]:
                 customer_email_data.append((partner_tree[notification.res_partner_id.id][0], partner_tree[notification.res_partner_id.id][1], notification.notification_status))
 
-            has_access_to_model = message.model and self.env[message.model].check_access_rights('read', raise_exception=False)
-            main_attachment = None
-            if message.attachment_ids and message.res_id and issubclass(self.pool[message.model], self.pool['mail.thread']) and has_access_to_model:
-                main_attachment =  self.env[message.model].browse(message.res_id).message_main_attachment_id
+            # Attachments
+            main_attachment = self.env['ir.attachment']
+            if message.attachment_ids and message.res_id and issubclass(self.pool[message.model], self.pool['mail.thread']):
+                main_attachment = self.env[message.model].sudo().browse(message.res_id).message_main_attachment_id
             attachment_ids = []
             for attachment in message.attachment_ids:
-                if attachment.id in attachments_tree:
-                    attachments_tree[attachment.id]['is_main'] = main_attachment == attachment
-                    attachment_ids.append(attachments_tree[attachment.id])
+                attachment_ids.append({
+                    'id': attachment.id,
+                    'filename': attachment.name,
+                    'name': attachment.name,
+                    'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
+                    'is_main': main_attachment == attachment
+                })
+
+            # Tracking values
             tracking_value_ids = []
             for tracking_value_id in message_to_tracking.get(message_id, list()):
                 if tracking_value_id in tracking_tree:
