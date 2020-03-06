@@ -7,6 +7,14 @@ file_exists () {
 create_partition () {
     mount -o remount,rw /
 
+    if  [ -f start_upgrade ]
+    then
+        echo "Error_Upgrade_Already_Started"
+        exit 0
+    fi
+
+    touch start_upgrade
+
     echo "Fdisking"
 
     PARTITION=$(lsblk | awk 'NR==2 {print $1}')
@@ -15,6 +23,7 @@ create_partition () {
 
     if [ "${SECTORS_SIZE}" -lt 15583488 ] # self-flash not permited if SD size < 16gb
     then
+        rm start_upgrade
         echo "Error_Card_Size"
         exit 0
     fi
@@ -52,7 +61,7 @@ create_partition () {
 }
 
 download_raspbian () {
-    if ! file_exists *raspbian*.img ; then
+    if  [ ! -f *raspbian*.img ] ; then
         # download latest Raspbian image and check integrity
         LATEST_RASPBIAN=$(curl -LIsw %{url_effective} http://downloads.raspberrypi.org/raspbian_lite_latest | tail -n 1)
         wget -c "${LATEST_RASPBIAN}"
@@ -66,6 +75,7 @@ download_raspbian () {
             # Clean raspbian img
             rm "${RASPBIAN}" "${RASPBIAN}".sha256
 
+            rm start_upgrade
             echo "Error_Raspbian_Download"
             exit 0
         fi
@@ -119,6 +129,7 @@ copy_raspbian () {
     if [ "${CHECK}" != "iotbox-latest.zip: OK" ]
     then
         # Checksum is not correct so clean and reset self-flashing
+        rm start_upgrade
         echo "Error_Iotbox_Download"
         exit 0
     fi
