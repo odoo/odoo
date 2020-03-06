@@ -4,11 +4,16 @@ odoo.define('point_of_sale.chrome', function(require) {
     const { useState, useRef } = owl.hooks;
     const { debounce } = owl.utils;
     const { PosComponent } = require('point_of_sale.PosComponent');
-    const { PosModel } = require('point_of_sale.models');
     const { useListener } = require('web.custom_hooks');
     const { CrashManager } = require('web.CrashManager');
     const { BarcodeEvents } = require('barcodes.BarcodeEvents');
     const { loadCSS } = require('web.ajax');
+
+    // This is kind of a trick.
+    // We get a reference to the whole exports so that
+    // when we create an instance of one of the classes,
+    // we instantiate the extended one.
+    const models = require('point_of_sale.models');
 
     /**
      * Chrome is the root component of the PoS App.
@@ -39,10 +44,7 @@ odoo.define('point_of_sale.chrome', function(require) {
                 skipButtonIsShown: false,
             });
 
-            this.mainScreen = useState({
-                name: 'ProductScreen',
-                component: this.constructor.components.ProductScreen,
-            });
+            this.mainScreen = useState(this.constructor.startUpScreen);
             this.mainScreenProps = {};
 
             this.popup = useState({ isShown: false, name: null, component: null });
@@ -107,7 +109,7 @@ odoo.define('point_of_sale.chrome', function(require) {
                     showLoadingSkip: this.showLoadingSkip.bind(this),
                     setLoadingProgress: this.setLoadingProgress.bind(this),
                 };
-                this.env.pos = new PosModel(posModelDefaultAttributes);
+                this.env.pos = new models.PosModel(posModelDefaultAttributes);
                 await this.env.pos.ready;
                 this._buildChrome();
                 this.state.selectedCategoryId.value = this.env.pos.config.iface_start_categ_id
@@ -154,7 +156,7 @@ odoo.define('point_of_sale.chrome', function(require) {
         _showSavedScreen() {
             const order = this.env.pos.get_order();
             const { name } = order.get_screen_data('screen') || {
-                name: 'ProductScreen',
+                name: this.constructor.startUpScreen.name,
             };
             this.trigger('show-screen', { name });
         }
@@ -393,6 +395,16 @@ odoo.define('point_of_sale.chrome', function(require) {
             return scrollable;
         }
     }
+
+    Chrome.startUpScreen = {
+        name: 'ProductScreen',
+        component: Chrome.components.ProductScreen,
+    };
+
+    Chrome.setStartUpScreen = function(screenComponent) {
+        this.startUpScreen.name = screenComponent.name;
+        this.startUpScreen.component = screenComponent;
+    };
 
     return { Chrome };
 });
