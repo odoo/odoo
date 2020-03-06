@@ -8978,6 +8978,28 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('display building icon for company dependent field', async function (assert) {
+        assert.expect(2);
+        this.data.partner.fields.product_id.company_dependent = true;
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                        '<field name="trululu"/>' +
+                        '<field name="product_id"/>' +
+                    '</group>' +
+                '</form>',
+        });
+
+        assert.containsOnce(form, 'label.o_form_label:contains(Product) .fa.fa-sm.fa-building-o', 'Company dependent field shoud have a building icon');
+        assert.containsNone(form, 'label.o_form_label:contains(Trululu) .fa.fa-sm.fa-building-o', 'Regular field shoud not have a building icon');
+
+        form.destroy();
+    });
 });
 
 });
