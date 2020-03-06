@@ -2332,14 +2332,16 @@ var FieldMany2ManyTags = AbstractField.extend({
     /**
      * @private
      * @param {any} data
+     * @returns {Promise}
      */
     _addTag: function (data) {
         if (!_.contains(this.value.res_ids, data.id)) {
-            this._setValue({
+            return this._setValue({
                 operation: 'ADD_M2M',
                 ids: data
             });
         }
+        return Promise.resolve();
     },
     /**
      * @private
@@ -2459,7 +2461,9 @@ var FieldMany2ManyTags = AbstractField.extend({
         ev.stopPropagation();
         var newValue = ev.data.changes[this.name];
         if (newValue) {
-            this._addTag(newValue);
+            this._addTag(newValue)
+                .then(ev.data.onSuccess || function () {})
+                .guardedCatch(ev.data.onFailure || function () {});
             this.many2one.reinitialize(false);
         }
     },
