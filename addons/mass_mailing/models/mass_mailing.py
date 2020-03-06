@@ -145,7 +145,7 @@ class MassMailingList(models.Model):
             if mass_mailings > 0:
                 raise UserError(_("At least one of the mailing list you are trying to archive is used in an ongoing mailing campaign."))
 
-        super(MassMailingList, self).write(vals)
+        return super(MassMailingList, self).write(vals)
 
     @api.multi
     def name_get(self):
