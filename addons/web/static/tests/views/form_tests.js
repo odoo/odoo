@@ -43,6 +43,7 @@ QUnit.module('Views', {
                     date: {string: "Some Date", type: "date"},
                     datetime: {string: "Datetime Field", type: 'datetime'},
                     product_ids: {string: "one2many product", type: "one2many", relation: "product"},
+                    reference: {string: "Reference Field", type: 'reference', selection: [["product", "Product"], ["partner_type", "Partner Type"], ["partner", "Partner"]]},
                 },
                 records: [{
                     id: 1,
@@ -115,6 +116,20 @@ QUnit.module('Views', {
                     res_id: 12,
                     value: '',
                     lang_code: 'en_US'
+                }]
+            },
+            user: {
+                fields: {
+                    name: {string: "Name", type: "char"},
+                    partner_ids: {string: "one2many partners field", type: "one2many", relation: 'partner', relation_field: 'user_id'},
+                },
+                records: [{
+                    id: 17,
+                    name: "Aline",
+                    partner_ids: [1],
+                }, {
+                    id: 19,
+                    name: "Christine",
                 }]
             },
             "res.company": {
@@ -1795,6 +1810,51 @@ QUnit.module('Views', {
             },
         });
         assert.verifySteps(['default_get', 'onchange']);
+        form.destroy();
+    });
+
+    QUnit.test('reference field in one2many list', async function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].reference = 'partner,2';
+
+        var form = await createView({
+            View: FormView,
+            model: 'user',
+            data: this.data,
+            arch: `<form>
+                        <field name="name"/>
+                        <field name="partner_ids">
+                            <tree editable="bottom">
+                                <field name="display_name"/>
+                                <field name="reference"/>
+                            </tree>
+                       </field>
+                   </form>`,
+            archs: {
+                'partner,false,form': '<form><field name="display_name"/></form>',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_id') {
+                    return Promise.resolve(false);
+                }
+                return this._super(route, args);
+            },
+            res_id: 17,
+        });
+        // current form
+        await testUtils.form.clickEdit(form);
+
+        // open the modal form view of the record pointed by the reference field
+        await testUtils.dom.click(form.$('table td[title="first record"]'));
+        await testUtils.dom.click(form.$('table td button.o_external_button'));
+
+        // edit the record in the modal
+        await testUtils.fields.editInput($('.modal-body input[name="display_name"]'), 'New name');
+        await testUtils.dom.click($('.modal-dialog footer button:first-child'));
+
+        assert.containsOnce(form, '.o_field_cell[title="New name"]', 'should not crash and value must be edited');
+
         form.destroy();
     });
 
