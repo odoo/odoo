@@ -8,7 +8,7 @@ class HrEmployeeBase(models.AbstractModel):
     _inherit = "hr.employee.base"
 
     child_all_count = fields.Integer(
-        'Indirect Surbordinates Count',
+        'Indirect Subordinates Count',
         compute='_compute_subordinates', store=False,
         compute_sudo=True)
 
