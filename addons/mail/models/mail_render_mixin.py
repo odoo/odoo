@@ -80,6 +80,13 @@ class MailRenderMixin(models.AbstractModel):
     _name = 'mail.render.mixin'
     _description = 'Mail Render Mixin'
 
+    # language for rendering
+    lang = fields.Char(
+        'Language', placeholder="${object.partner_id.lang}",
+        help="Optional translation language (ISO code) to select when sending out an email. "
+             "If not set, the english version will be used. This should usually be a placeholder expression "
+             "that provides the appropriate language, e.g. ${object.partner_id.lang}.")
+    # expression builder
     model_object_field = fields.Many2one(
         'ir.model.fields', string="Field", store=False,
         help="Select target field from the related document model.\n"
@@ -250,3 +257,74 @@ class MailRenderMixin(models.AbstractModel):
             rendered = self._render_template_postprocess(rendered)
 
         return rendered
+
+    def _render_lang(self, res_ids):
+        """ Given some record ids, return the lang for each record based on
+        lang field of template or through specific context-based key.
+
+        :param list res_ids: list of ids of records (all belonging to same model
+          defined by self.model)
+
+        :return dict: {res_id: lang code (i.e. en_US)}
+        """
+        self.ensure_one()
+        if not isinstance(res_ids, (list, tuple)):
+            raise ValueError(_('Template rendering for language should be called with a list of IDs.'))
+
+        if self.env.context.get('template_preview_lang'):
+            return dict((res_id, self.env.context['template_preview_lang']) for res_id in res_ids)
+        else:
+            rendered_langs = self._render_template(self.lang, self.model, res_ids)
+            return dict((res_id, lang)
+                        for res_id, lang in rendered_langs.items())
+
+    def _classify_per_lang(self, res_ids):
+        """ Given some record ids, return for computed each lang a contextualized
+        template and its subset of res_ids.
+
+        :param list res_ids: list of ids of records (all belonging to same model
+          defined by self.model)
+
+        :return dict: {lang: (template with lang=lang_code if specific lang computed
+          or template, res_ids targeted by that language}
+        """
+        self.ensure_one()
+
+        lang_to_res_ids = {}
+        for res_id, lang in self._render_lang(res_ids).items():
+            lang_to_res_ids.setdefault(lang, []).append(res_id)
+
+        return dict(
+            (lang, (self.with_context(lang=lang) if lang else self, lang_res_ids))
+            for lang, lang_res_ids in lang_to_res_ids.items()
+        )
+
+    def _render_field(self, field, res_ids, compute_lang=False, set_lang=False, post_process=False):
+        """ Given some record ids, render a given field of template rendered on
+        all records.
+
+        :param list res_ids: list of ids of records (all belonging to same model
+          defined by self.model)
+        :param compute_lang: compute rendering language based on template.lang
+        :param set_lang: force language
+        :param post_process: perform rendered str / html post processing (see
+          ``_render_template_postprocess``)
+
+        :return dict: {res_id: string of rendered template based on record}
+        """
+        self.ensure_one()
+        if compute_lang:
+            templates_res_ids = self._classify_per_lang(res_ids)
+        elif set_lang:
+            templates_res_ids = {set_lang: (self.with_context(lang=set_lang), res_ids)}
+        else:
+            templates_res_ids = {self._context.get('lang'): (self, res_ids)}
+
+        return dict(
+            (res_id, rendered)
+            for lang, (template, tpl_res_ids) in templates_res_ids.items()
+            for res_id, rendered in template._render_template(
+                template[field], template.model, tpl_res_ids,
+                post_process=post_process
+            ).items()
+        )
