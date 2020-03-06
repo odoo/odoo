@@ -2932,11 +2932,20 @@ Fields:
                         stored_fields.add(f.name)
         self._read(stored_fields)
 
-        # retrieve results from records; this takes values from the cache and
-        # computes remaining fields
+        return self._read_format(fnames=fields, load=load)
+
+    def _read_format(self, fnames, load='_classic_read'):
+        """Returns a list of dictionaries mapping field names to their values,
+        with one dictionary per record that exists.
+
+        The output format is similar to the one expected from the `read` method.
+
+        The current method is different from `read` because it retrieves its
+        values from the cache without doing a query when it is avoidable.
+        """
         data = [(record, {'id': record._ids[0]}) for record in self]
         use_name_get = (load == '_classic_read')
-        for name in fields:
+        for name in fnames:
             convert = self._fields[name].convert_to_read
             for record, vals in data:
                 # missing records have their vals empty
