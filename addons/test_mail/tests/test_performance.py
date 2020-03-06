@@ -267,7 +267,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 'partner_ids': [(4, customer_id)],
             })
 
-        with self.assertQueryCount(__system__=34, emp=39):
+        with self.assertQueryCount(__system__=33, emp=38):
             composer.send_mail()
 
     @users('__system__', 'emp')
@@ -286,7 +286,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             }).create({})
             composer.onchange_template_id_wrapper()
 
-        with self.assertQueryCount(__system__=42, emp=46):
+        with self.assertQueryCount(__system__=41, emp=45):
             composer.send_mail()
 
         # remove created partner to ensure tests are the same each run
@@ -307,7 +307,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_assignation_inbox(self):
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(__system__=23, emp=25):
+        with self.assertQueryCount(__system__=22, emp=24):
             record.write({
                 'user_id': self.user_test.id,
             })
@@ -363,7 +363,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_message_post_one_inbox_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=18, emp=20):
+        with self.assertQueryCount(__system__=17, emp=19):
             record.message_post(
                 body='<p>Test Post Performances with an inbox ping</p>',
                 partner_ids=self.user_test.partner_id.ids,
@@ -794,7 +794,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             ]
         }])
 
-        with self.assertQueryCount(emp=10):
+        with self.assertQueryCount(emp=9):
             res = messages.message_format()
             self.assertEqual(len(res), 2)
             for message in res:
@@ -803,7 +803,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         messages.flush()
         messages.invalidate_cache()
 
-        with self.assertQueryCount(emp=19):
+        with self.assertQueryCount(emp=18):
             res = messages.message_format()
             self.assertEqual(len(res), 2)
             for message in res:
