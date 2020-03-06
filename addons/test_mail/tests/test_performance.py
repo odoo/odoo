@@ -696,6 +696,119 @@ class TestMailComplexPerformance(BaseMailPerformance):
         self.assertEqual(rec1.message_ids[2].notified_partner_ids, self.partners | self.user_portal.partner_id)
         self.assertEqual(len(rec1.message_ids), 3)
 
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @users('emp')
+    @warmup
+    def test_message_format(self):
+        """Test performance of `_message_read_dict_postprocess` and of
+        `message_format` with multiple messages with multiple attachments,
+        different authors, various notifications, and different tracking values.
+        Those messages might not make sense functionally but they are crafted to
+        cover as much of the code as possible in regard to number of queries.
+        """
+        name_field = self.env['ir.model.fields']._get(self.umbrella._name, 'name')
+        customer_id_field = self.env['ir.model.fields']._get(self.umbrella._name, 'customer_id')
+
+        messages = self.env['mail.message'].sudo().create([{
+            'subject': 'Test 0',
+            'body': '<p>Test 0</p>',
+            'author_id': self.partners[0].id,
+            'email_from': self.partners[0].email,
+            'model': 'mail.test',
+            'res_id': self.umbrella.id,
+            'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'),
+            'attachment_ids': [
+                (0, 0, {
+                    'name': 'test file 0 - %d' % j,
+                    'datas': 'data',
+                }) for j in range(2)
+            ],
+            'notification_ids': [
+                (0, 0, {
+                    'res_partner_id': self.partners[3].id,
+                    'notification_type': 'inbox',
+                }),
+                (0, 0, {
+                    'res_partner_id': self.partners[4].id,
+                    'notification_type': 'email',
+                    'notification_status': 'exception',
+                }),
+                (0, 0, {
+                    'res_partner_id': self.partners[6].id,
+                    'notification_type': 'email',
+                    'notification_status': 'exception',
+                }),
+            ],
+            'tracking_value_ids': [
+                (0, 0, {
+                    'field': name_field.id,
+                    'field_desc': 'Name',
+                    'old_value_char': 'old 0',
+                    'new_value_char': 'new 0',
+                }),
+                (0, 0, {
+                    'field': customer_id_field.id,
+                    'field_desc': 'Customer',
+                    'old_value_integer': self.partners[7].id,
+                    'new_value_integer': self.partners[8].id,
+                }),
+            ]
+        }, {
+            'subject': 'Test 1',
+            'body': '<p>Test 1</p>',
+            'author_id': self.partners[1].id,
+            'email_from': self.partners[1].email,
+            'model': 'mail.test',
+            'res_id': self.umbrella.id,
+            'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
+            'attachment_ids': [
+                (0, 0, {
+                    'name': 'test file 1 - %d' % j,
+                    'datas': 'data',
+                }) for j in range(2)
+            ],
+            'notification_ids': [
+                (0, 0, {
+                    'res_partner_id': self.partners[5].id,
+                    'notification_type': 'inbox',
+                }),
+                (0, 0, {
+                    'res_partner_id': self.partners[6].id,
+                    'notification_type': 'email',
+                    'notification_status': 'exception',
+                }),
+            ],
+            'tracking_value_ids': [
+                (0, 0, {
+                    'field': name_field.id,
+                    'field_desc': 'Name',
+                    'old_value_char': 'old 1',
+                    'new_value_char': 'new 1',
+                }),
+                (0, 0, {
+                    'field': customer_id_field.id,
+                    'field_desc': 'Customer',
+                    'old_value_integer': self.partners[7].id,
+                    'new_value_integer': self.partners[8].id,
+                }),
+            ]
+        }])
+
+        with self.assertQueryCount(emp=13):
+            res = messages.message_format()
+            self.assertEqual(len(res), 2)
+            for message in res:
+                self.assertEqual(len(message['attachment_ids']), 2)
+
+        messages.flush()
+        messages.invalidate_cache()
+
+        with self.assertQueryCount(emp=19):
+            res = messages.message_format()
+            self.assertEqual(len(res), 2)
+            for message in res:
+                self.assertEqual(len(message['attachment_ids']), 2)
+
 
 @tagged('mail_performance')
 class TestMailHeavyPerformancePost(BaseMailPerformance):
