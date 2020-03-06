@@ -520,6 +520,10 @@ var utils = {
      * Patch a class and return a function that remove the patch
      * when called.
      *
+     * In the patch object, super methods and getters are accessible thru:
+     *  - this._super() - for method
+     *  - this._super   - for getter
+     *
      * @param {Class} C Class to patch
      * @param {string} patchName
      * @param {Object} patch
@@ -531,7 +535,8 @@ var utils = {
             metadata = {
                 origMethods: {},
                 patches: {},
-                current: []
+                current: [],
+                originalDescriptors: {},
             };
             patchMap.set(C.prototype, metadata);
         }
@@ -544,20 +549,41 @@ var utils = {
         metadata.current.push(patchName);
 
         function applyPatch(proto, patch) {
-            Object.keys(patch).forEach(function (methodName) {
-                const method = patch[methodName];
-                if (typeof method === "function") {
-                    const original = proto[methodName];
-                    if (!(methodName in metadata.origMethods)) {
-                        metadata.origMethods[methodName] = original;
+            Object.keys(patch).forEach(function(property) {
+                const protoDescriptor = Object.getOwnPropertyDescriptor(proto, property);
+                const patchDescriptor = Object.getOwnPropertyDescriptor(patch, property);
+                if (!protoDescriptor && patchDescriptor) {
+                    if (!(property in metadata.originalDescriptors)) {
+                        metadata.originalDescriptors[property] = undefined;
                     }
-                    proto[methodName] = function (...args) {
+                    Object.defineProperty(proto, property, patchDescriptor);
+                    return;
+                }
+                if (protoDescriptor.value) {
+                    const method = patch[property];
+                    if (typeof method !== 'function') return;
+                    const original = proto[property];
+                    if (!(property in metadata.origMethods)) {
+                        metadata.origMethods[property] = original;
+                    }
+                    proto[property] = function(...args) {
                         const previousSuper = this._super;
                         this._super = original;
                         const res = method.call(this, ...args);
                         this._super = previousSuper;
                         return res;
                     };
+                } else if (protoDescriptor.get) {
+                    if (!(property in metadata.originalDescriptors)) {
+                        metadata.originalDescriptors[property] = protoDescriptor;
+                    }
+                    const patchDescriptor = Object.getOwnPropertyDescriptor(patch, property);
+                    Object.defineProperty(proto, property, {
+                        get() {
+                            this._super = protoDescriptor.get.apply(this);
+                            return patchDescriptor.get.apply(this);
+                        },
+                    });
                 }
             });
         }
@@ -733,6 +759,16 @@ var utils = {
         // reset to original
         for (let k in metadata.origMethods) {
             proto[k] = metadata.origMethods[k];
+        }
+
+        // reset the descriptors
+        for (let k in metadata.originalDescriptors) {
+            const descriptor = metadata.originalDescriptors[k];
+            if (descriptor === undefined) {
+                delete proto[k];
+            } else {
+                Object.defineProperty(proto, k, descriptor);
+            }
         }
 
         // apply other patches
