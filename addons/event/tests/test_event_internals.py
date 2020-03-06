@@ -254,8 +254,8 @@ class TestEventTicketData(TestEventCommon):
                     'seats_max': 30,
                 }), (0, 0, {  # limited in time, available (01/10 (start) < 01/31 (today) < 02/10 (end))
                     'name': 'Second Ticket',
-                    'start_sale_date': date(2020, 1, 10),
-                    'end_sale_date': date(2020, 2, 10),
+                    'start_sale_date': datetime.now() - timedelta(days=15),
+                    'end_sale_date': datetime.now() + timedelta(days=15),
                 })
             ],
         })
@@ -270,19 +270,19 @@ class TestEventTicketData(TestEventCommon):
         self.assertTrue(second_ticket.sale_available)
         self.assertFalse(second_ticket.is_expired)
         # sale is ended
-        second_ticket.write({'end_sale_date': date(2020, 1, 20)})
+        second_ticket.write({'end_sale_date': datetime.now() - timedelta(days=1)})
         self.assertFalse(second_ticket.sale_available)
         self.assertTrue(second_ticket.is_expired)
         # sale has not started
         second_ticket.write({
-            'start_sale_date': date(2020, 2, 10),
-            'end_sale_date': date(2020, 2, 20),
+            'start_sale_date': datetime.now() + timedelta(days=15),
+            'end_sale_date': datetime.now() + timedelta(days=20),
         })
         self.assertFalse(second_ticket.sale_available)
         self.assertFalse(second_ticket.is_expired)
         # incoherent dates are invalid
         with self.assertRaises(exceptions.UserError):
-            second_ticket.write({'end_sale_date': date(2020, 1, 20)})
+            second_ticket.write({'end_sale_date': datetime.now() - timedelta(days=5)})
 
 
 class TestEventTypeData(TestEventCommon):

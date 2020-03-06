@@ -163,7 +163,7 @@ class EventEvent(models.Model):
     date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
     is_ongoing = fields.Boolean('Is Ongoing', compute='_compute_is_ongoing', search='_search_is_ongoing')
     is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
-    start_sale_date = fields.Date('Start sale date', compute='_compute_start_sale_date')
+    start_sale_date = fields.Datetime('Start sale date', compute='_compute_start_sale_date')
     # Location and communication
     is_online = fields.Boolean('Online Event')
     address_id = fields.Many2one(
@@ -279,7 +279,7 @@ class EventEvent(models.Model):
     @api.depends('event_ticket_ids.start_sale_date')
     def _compute_start_sale_date(self):
         for event in self:
-            start_dates = [ticket.start_sale_date for ticket in event.event_ticket_ids if ticket.start_sale_date]
+            start_dates = [ticket.start_sale_date for ticket in event.event_ticket_ids if ticket.start_sale_date and ticket.start_sale_date > fields.Datetime.now()]
             event.start_sale_date = min(start_dates) if start_dates else False
 
     @api.onchange('is_online')
@@ -324,8 +324,9 @@ class EventEvent(models.Model):
 
     @api.constrains('seats_max', 'seats_available')
     def _check_seats_limit(self):
-        if any(event.seats_availability == 'limited' and event.seats_max and event.seats_available < 0 for event in self):
-            raise ValidationError(_('No more available seats.'))
+        for event in self:
+            if event.seats_availability == 'limited' and event.seats_max and event.seats_available < 0:
+                raise ValidationError(_('No more available seats.'))
 
     @api.constrains('date_begin', 'date_end')
     def _check_closing_date(self):

@@ -62,8 +62,8 @@ class EventTicket(models.Model):
         ondelete='cascade', required=True)
     company_id = fields.Many2one('res.company', related='event_id.company_id')
     # sale
-    start_sale_date = fields.Date(string="Registration Start")
-    end_sale_date = fields.Date(string="Registration End")
+    start_sale_date = fields.Datetime(string="Registration Start")
+    end_sale_date = fields.Datetime(string="Registration End")
     is_expired = fields.Boolean(string='Is Expired', compute='_compute_is_expired')
     sale_available = fields.Boolean(string='Is Available', compute='_compute_sale_available', compute_sudo=True)
     registration_ids = fields.One2many('event.registration', 'event_ticket_id', string='Registrations')
@@ -77,7 +77,7 @@ class EventTicket(models.Model):
     def _compute_is_expired(self):
         for ticket in self:
             if ticket.end_sale_date:
-                current_date = fields.Date.context_today(ticket.with_context(tz=ticket._get_ticket_tz()))
+                current_date = fields.Datetime.now()
                 ticket.is_expired = ticket.end_sale_date < current_date
             else:
                 ticket.is_expired = False
@@ -85,7 +85,7 @@ class EventTicket(models.Model):
     @api.depends('start_sale_date', 'end_sale_date', 'event_id.date_tz')
     def _compute_sale_available(self):
         for ticket in self:
-            current_date = fields.Date.context_today(ticket.with_context(tz=ticket._get_ticket_tz()))
+            current_date = fields.Datetime.now()
             if (ticket.start_sale_date and ticket.start_sale_date > current_date) or \
                     ticket.end_sale_date and ticket.end_sale_date < current_date:
                 ticket.sale_available = False
