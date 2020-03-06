@@ -101,6 +101,86 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(human_number(-1.012e+43, 2, 2), '-1.01e+43');
     });
 
+    QUnit.test('patch a class with getter', function (assert) {
+        assert.expect(13);
+
+        const { patch } = utils;
+
+        class TestClass {
+            get val() {
+                return 'aaa';
+            }
+        }
+
+        const testInstance = new TestClass();
+        assert.strictEqual(testInstance.val, 'aaa');
+
+        // Extend `val`
+
+        const removePatch1 = patch(TestClass, 'patch1', {
+            get val() {
+                return this._super + 'bbb';
+            },
+        });
+        assert.strictEqual(testInstance.val, 'aaabbb');
+
+        const removePatch2 = patch(TestClass, 'patch2', {
+            get val() {
+                return this._super + 'ccc';
+            },
+        });
+        assert.strictEqual(testInstance.val, 'aaabbbccc');
+
+        removePatch1();
+        assert.strictEqual(testInstance.val, 'aaaccc');
+
+        removePatch2();
+        assert.strictEqual(testInstance.val, 'aaa');
+
+        // Add getters
+
+        const removeMorePatch1 = patch(TestClass, 'more-patch-1', {
+            get realVal() {
+                return `${this.wrapper.start}${this.val}${this.wrapper.end}`
+            },
+            get wrapper() {
+                return {
+                    start: '(',
+                    end: ')',
+                }
+            }
+        })
+        assert.strictEqual(testInstance.realVal, '(aaa)');
+
+        const removeMorePatch2 = patch(TestClass, 'more-patch-2', {
+            get wrapper() {
+                return {
+                    start: `[${this._super.start}`,
+                    end: `${this._super.end}]`,
+                }
+            }
+        })
+        assert.strictEqual(testInstance.realVal, '[(aaa)]');
+
+        const removeMorePatch3 = patch(TestClass, 'more-patch-3', {
+            get realVal() {
+                return `${this._super} - augmented`;
+            }
+        })
+        assert.strictEqual(testInstance.realVal, '[(aaa)] - augmented');
+
+        removeMorePatch2();
+        assert.strictEqual(testInstance.realVal, '(aaa) - augmented');
+
+        removeMorePatch3();
+        assert.strictEqual(testInstance.realVal, '(aaa)');
+
+        removeMorePatch1();
+        assert.strictEqual(testInstance.realVal, undefined);
+        assert.strictEqual(testInstance.wrapper, undefined);
+        assert.strictEqual(testInstance.val, 'aaa');
+    });
+
 });
 
 });
