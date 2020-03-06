@@ -73,7 +73,7 @@ var addWebPageToSection = function (sectionName, pageName) {
     content: 'eLearning: click on tags',
     trigger: 'ul.select2-choices:first',
 }, {
-    content: 'eLearning: select gardener tag',
+    content: 'eLearning: select Theory tag',
     trigger: 'div.select2-result-label:contains("Theory")',
     in_modal: false,
 }, {
@@ -83,10 +83,59 @@ var addWebPageToSection = function (sectionName, pageName) {
 }];
 };
 
+var addExistingCourseTag = function () {
+	return [
+{
+    content: 'eLearning: click on Add Tag',
+    trigger: 'a.o_wslides_js_channel_tag_add',
+}, {
+    content: 'eLearning: click on tag dropdown',
+    trigger: 'a.select2-choice:first',
+}, {
+    content: 'eLearning: select advanced tag',
+    trigger: 'div.select2-result-label:contains("Advanced")',
+    in_modal: false,
+}, {
+    content: 'eLearning: add existing course tag',
+    trigger: 'footer.modal-footer button:contains("Add")'
+}];
+};
+
+var addNewCourseTag = function (courseTagName) {
+	return [
+{
+    content: 'eLearning: click on Add Tag',
+    trigger: 'a.o_wslides_js_channel_tag_add',
+}, {
+    content: 'eLearning: click on tag dropdown',
+	trigger: 'a.select2-choice:first',
+}, {
+    content: 'eLearning: add a new course tag',
+	trigger: 'a.select2-choice:first',
+	run: function () {
+		// directly add new tag since we can assume select2 works correctly
+		$('#tag_id').select2('data', {id:'123', text: courseTagName, create: true});
+		$('#tag_id').trigger('change');
+	}
+}, {
+    content: 'eLearning: click on tag group dropdown',
+	trigger: 'a.select2-choice:last',
+}, {
+	content: 'eLearning: select Tags tag group',
+    trigger: 'div.select2-result-label:contains("Tags")',
+	in_modal: false,
+}, {
+    content: 'eLearning: add new course tag',
+    trigger: 'footer.modal-footer button:contains("Add")'
+}];
+};
+
 return {
 	addSection: addSection,
 	addVideoToSection: addVideoToSection,
 	addWebPageToSection: addWebPageToSection,
+	addExistingCourseTag: addExistingCourseTag,
+	addNewCourseTag: addNewCourseTag,
 };
 
 });

@@ -75,6 +75,8 @@ tour.register('course_publisher', {
     run: function () {} // check membership
 }
 ].concat(
+    slidesTourTools.addExistingCourseTag(),
+    slidesTourTools.addNewCourseTag('The Most Awesome Course'),
     slidesTourTools.addSection('Introduction'),
     slidesTourTools.addVideoToSection('Introduction'),
     [{
