@@ -62,7 +62,9 @@ options.registry.SnippetPopup = options.Class.extend({
      */
     setLayout: function (previewMode, widgetValue, params) {
         const isModal = widgetValue === 'modal';
+        const isTop = widgetValue === 'fixedTop';
         this.$target.toggleClass('s_popup_fixed', !isModal);
+        this.$target.toggleClass('s_popup_fixed_top', isTop);
         this.$target.toggleClass('s_popup_center modal', isModal);
         this.$target.find('.s_popup_frame').toggleClass('modal-dialog modal-dialog-centered', isModal);
         this.$target.find('.s_popup_content').toggleClass('modal-content', isModal);
@@ -88,7 +90,32 @@ options.registry.SnippetPopup = options.Class.extend({
             case 'moveBlock':
                 return this.$target.closest('footer').length ? 'moveToFooter' : 'moveToBody';
             case 'setLayout':
-                return this.$target.hasClass('s_popup_center') ? 'modal' : 'fixed';
+                if (this.$target.hasClass('s_popup_center')) {
+                    return 'modal';
+                } else if (this.$target.hasClass('s_popup_fixed_top')) {
+                    return 'fixedTop';
+                }
+                return 'fixedBottom';
+        }
+        return this._super(...arguments);
+    },
+});
+
+options.registry.PopupContent = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Enable bg-color only if "centered AND full-size".
+     * Visibility according to the size is managed by data-dependencies.
+     *
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'popup_content_colorpicker_opt') {
+            return this.$target.closest('.s_popup_main').hasClass('s_popup_center');
         }
         return this._super(...arguments);
     },
