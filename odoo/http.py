@@ -610,7 +610,10 @@ class JsonRequest(WebRequest):
             raise werkzeug.exceptions.BadRequest(msg)
 
         self.params = dict(self.jsonrequest.get("params", {}))
-        self.context = self.params.pop('context', dict(self.session.context))
+        # Ensure we have the basic context content (i.e. lang, tz, ...)
+        context = dict(self.session.context)
+        context.update(self.params.pop('context', {}))
+        self.context = context
 
     def _json_response(self, result=None, error=None):
         response = {
