@@ -259,6 +259,7 @@ QUnit.module('Views', {
         });
 
         await testUtils.dom.click(calendar.$('.fc-event:contains(event 4) .fc-content'));
+        await testUtils.nextTick();
 
         assert.containsOnce(calendar, '.o_cw_popover',
             "should open a popover clicking on event");
@@ -343,6 +344,7 @@ QUnit.module('Views', {
         // click on an existing event to open the formViewDialog
 
         await testUtils.dom.click(calendar.$('.fc-event:contains(event 4) .fc-content'));
+        await testUtils.nextTick();
 
         assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
         assert.ok(calendar.$('.o_cw_popover .o_cw_popover_edit').length, "popover should have an edit button");
@@ -443,6 +445,7 @@ QUnit.module('Views', {
         // delete the a record
 
         await testUtils.dom.click(calendar.$('.fc-event:contains(event 4) .fc-content'));
+        await testUtils.nextTick();
         await testUtils.dom.click(calendar.$('.o_cw_popover .o_cw_popover_delete'));
         assert.ok($('.modal-footer button.btn:contains(Ok)').length, "should display the confirm message");
         await testUtils.dom.click($('.modal-footer button.btn:contains(Ok)'));
@@ -801,6 +804,7 @@ QUnit.module('Views', {
         });
 
         await testUtils.dom.click($('.fc-event:contains(event 4)'));
+        await testUtils.nextTick();
 
         assert.containsOnce(calendar, '.o_cw_popover', "should open a popover clicking on event");
         assert.strictEqual(calendar.$('.o_cw_popover .popover-header').text(), 'event 4', "popover should have a title 'event 4'");
@@ -847,6 +851,7 @@ QUnit.module('Views', {
         });
 
         await testUtils.dom.click($('.fc-event:contains(event 4)'));
+        await testUtils.nextTick();
         assert.containsNone(calendar, '.o_cw_popover .list-group-item', "popover should not contain date/time");
 
         calendar.destroy();
@@ -1631,11 +1636,13 @@ QUnit.module('Views', {
 
         // Event 1
         await testUtils.dom.click(calendar.$('.fc-event:first'));
+        await testUtils.nextTick();
         assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
         assert.strictEqual(calendar.$('.o_cw_popover').find('img').length, 1, "should have 1 avatar");
 
         // Event 2
         await testUtils.dom.click(calendar.$('.fc-event:eq(1)'));
+        await testUtils.nextTick();
         assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
         assert.strictEqual(calendar.$('.o_cw_popover').find('img').length, 5, "should have 5 avatar");
 
@@ -1683,6 +1690,7 @@ QUnit.module('Views', {
                 "should open the form view");
         });
         await testUtils.dom.click(calendar.$('.fc-event:contains(event 4) .fc-content'));
+        await testUtils.nextTick();
         await testUtils.dom.click(calendar.$('.o_cw_popover .o_cw_popover_edit'));
 
         // create a new event and edit it
@@ -1917,6 +1925,7 @@ QUnit.module('Views', {
                 "should open the form view");
         });
         await testUtils.dom.click(calendar.$('.fc-event:contains(event 4) .fc-content'));
+        await testUtils.nextTick();
         await testUtils.dom.click(calendar.$('.o_cw_popover .o_cw_popover_edit'));
 
         // create a new event and edit it
@@ -2711,10 +2720,12 @@ QUnit.module('Views', {
 
         assert.strictEqual(calendar.$('.fc-event:eq(0)').text().replace(/\s/g, ''), "08:00event1");
         await testUtils.dom.click(calendar.$('.fc-event:eq(0)'));
+        await testUtils.nextTick();
         assert.strictEqual(calendar.$('.o_field_widget[name="start"]').text(), "12/09/2016 08:00:00");
 
         assert.strictEqual(calendar.$('.fc-event:eq(5)').text().replace(/\s/g, ''), "16:00event6");
         await testUtils.dom.click(calendar.$('.fc-event:eq(5)'));
+        await testUtils.nextTick();
         assert.strictEqual(calendar.$('.o_field_widget[name="start"]').text(), "12/16/2016 16:00:00");
 
         // Move event 6 as on first day of month view (27th november 2016)
@@ -2726,10 +2737,12 @@ QUnit.module('Views', {
 
         assert.strictEqual(calendar.$('.fc-event:eq(0)').text().replace(/\s/g, ''), "16:00event6");
         await testUtils.dom.click(calendar.$('.fc-event:eq(0)'));
+        await testUtils.nextTick();
         assert.strictEqual(calendar.$('.o_field_widget[name="start"]').text(), "11/27/2016 16:00:00");
 
         assert.strictEqual(calendar.$('.fc-event:eq(1)').text().replace(/\s/g, ''), "08:00event1");
         await testUtils.dom.click(calendar.$('.fc-event:eq(1)'));
+        await testUtils.nextTick();
         assert.strictEqual(calendar.$('.o_field_widget[name="start"]').text(), "12/09/2016 08:00:00");
 
         calendar.destroy();
@@ -2778,6 +2791,7 @@ QUnit.module('Views', {
         await testUtils.nextTick();
 
         await testUtils.dom.click(calendar.$('.fc-event:contains(An event)'));
+        await testUtils.nextTick();
         assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
         assert.strictEqual(calendar.$('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last .o_field_date').text(), '12/20/2016', "should have correct start date");
 
@@ -2789,6 +2803,7 @@ QUnit.module('Views', {
         await testUtils.nextTick();
         assert.verifySteps(["2016-11-27 00:00:00"]);
         await testUtils.dom.click(calendar.$('.fc-event:contains(An event)'));
+        await testUtils.nextTick();
         assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
         assert.strictEqual(calendar.$('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last .o_field_date').text(), '11/27/2016', "should have correct start date");
 
@@ -2800,6 +2815,7 @@ QUnit.module('Views', {
         await testUtils.nextTick();
         assert.verifySteps(["2017-01-07 00:00:00"]);
         await testUtils.dom.click(calendar.$('.fc-event:contains(An event)'));
+        await testUtils.nextTick();
         assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
         assert.strictEqual(calendar.$('.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:last .o_field_date').text(), '01/07/2017', "should have correct start date");
         calendar.destroy();
@@ -2838,6 +2854,7 @@ QUnit.module('Views', {
         );
         await testUtils.nextTick();
         await testUtils.dom.click(calendar.$('.fc-event:contains("An event")'));
+        await testUtils.nextTick();
 
         assert.containsOnce(calendar, '.popover:contains("07:00")',
             "start hour shouldn't have been changed");
@@ -3296,6 +3313,7 @@ QUnit.module('Views', {
         // click on an existing event to open the formViewDialog
 
         await testUtils.dom.click(calendar.$('.fc-event:contains(event 4) .fc-content'));
+        await testUtils.nextTick();
 
         assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
         assert.ok(calendar.$('.o_cw_popover .o_cw_popover_edit').length, "popover should have an edit button");
