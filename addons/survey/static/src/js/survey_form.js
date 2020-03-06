@@ -34,6 +34,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         return this._super.apply(this, arguments).then(function () {
             self.options = self.$target.find('form').data();
             self.readonly = self.options.readonly;
+            self.selectedAnswers = self.options.selectedAnswers;
             // Init fields
             if (!self.options.isStartScreen && !self.readonly) {
                 self._initTimer();
@@ -105,6 +106,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     * @param {Event} event
     */
     _onChangeChoiceItem: function (event) {
+        var self = this;
         var $target = $(event.currentTarget);
         var $choiceItemGroup = $target.closest('.o_survey_form_choice');
         var $otherItem = $choiceItemGroup.find('.o_survey_js_form_other_comment');
@@ -126,8 +128,42 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 $matrixBtn.closest('tr').find('td').removeClass('o_survey_selected');
                 $matrixBtn.addClass('o_survey_selected');
             } else {
-                $choiceItemGroup.find('label').removeClass('o_survey_selected');
-                $target.closest('label').addClass('o_survey_selected');
+                var previouslySelectedAnswer = $choiceItemGroup.find('label.o_survey_selected');
+                previouslySelectedAnswer.removeClass('o_survey_selected');
+
+                var newlySelectedAnswer = $target.closest('label');
+                if (newlySelectedAnswer.find('input').val() !== previouslySelectedAnswer.find('input').val()) {
+                    newlySelectedAnswer.addClass('o_survey_selected');
+                }
+
+                // Conditional display
+                if (this.options.questionsLayout !== 'page_per_question') {
+                    var treatedQuestionIds = [];  // Needed to avoid show (1st 'if') then immediately hide (2nd 'if') question during conditional propagation cascade
+                    if (Object.keys(this.options.triggeredQuestionsByAnswer).includes(previouslySelectedAnswer.find('input').val())) {
+                        // Hide and clear depending question
+                        this.options.triggeredQuestionsByAnswer[previouslySelectedAnswer.find('input').val()].forEach(function (questionId) {
+                            var dependingQuestion = $('.js_question-wrapper#' + questionId);
+
+                            dependingQuestion.addClass('d-none');
+                            self._clearQuestionInputs(dependingQuestion);
+
+                            treatedQuestionIds.push(questionId);
+                        });
+                        // Remove answer from selected answer
+                        self.selectedAnswers.splice(self.selectedAnswers.indexOf(parseInt($target.val())), 1);
+                    }
+                    if (Object.keys(this.options.triggeredQuestionsByAnswer).includes($target.val())) {
+                        // Display depending question
+                        this.options.triggeredQuestionsByAnswer[$target.val()].forEach(function (questionId) {
+                            if (!treatedQuestionIds.includes(questionId)) {
+                                var dependingQuestion = $('.js_question-wrapper#' + questionId);
+                                dependingQuestion.removeClass('d-none');
+                            }
+                        });
+                        // Add answer to selected answer
+                        this.selectedAnswers.push(parseInt($target.val()));
+                    }
+                }
             }
         } else {  // $target.attr('type') === 'checkbox'
             if ($matrixBtn.length > 0) {
@@ -135,6 +171,25 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             } else {
                 var $label = $target.closest('label');
                 $label.toggleClass('o_survey_selected', !$label.hasClass('o_survey_selected'));
+
+                // Conditional display
+                if (this.options.questionsLayout !== 'page_per_question' && Object.keys(this.options.triggeredQuestionsByAnswer).includes($target.val())) {
+                    var isInputSelected = $label.hasClass('o_survey_selected');
+                    // Hide and clear or display depending question
+                    this.options.triggeredQuestionsByAnswer[$target.val()].forEach(function (questionId) {
+                        var dependingQuestion = $('.js_question-wrapper#' + questionId);
+                        dependingQuestion.toggleClass('d-none', !isInputSelected);
+                        if (!isInputSelected) {
+                            self._clearQuestionInputs(dependingQuestion);
+                        }
+                    });
+                    // Add/remove answer to/from selected answer
+                    if (!isInputSelected) {
+                        self.selectedAnswers.splice(self.selectedAnswers.indexOf(parseInt($target.val())), 1);
+                    } else {
+                        self.selectedAnswers.push(parseInt($target.val()));
+                    }
+                }
             }
         }
     },
@@ -342,6 +397,12 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         if (result && !result.error) {
             this.$(".o_survey_form_content").empty();
             this.$(".o_survey_form_content").html(result);
+
+            // Hide timer if end screen (if page_per_question in case of conditional questions)
+            if (self.options.questionsLayout === 'page_per_question' && this.$('.o_survey_finished').length > 0) {
+                options.isFinish = true;
+            }
+
             this.$('div.o_survey_form_date').each(function () {
                 self._initDateTimePicker($(this));
             });
@@ -408,16 +469,24 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             data[key] = value;
         });
 
+        var inactiveQuestionIds = this.options.sessionInProgress ? [] : this._getInactiveConditionalQuestionIds();
+
         $form.find('[data-question-type]').each(function () {
             var $input = $(this);
             var $questionWrapper = $input.closest(".js_question-wrapper");
+            var questionId = $questionWrapper.attr('id');
+
+            // If question is inactive, skip validation.
+            if (inactiveQuestionIds.includes(parseInt(questionId))) {
+                return;
+            }
+
+            var questionRequired = $questionWrapper.data('required');
             var constrErrorMsg = $questionWrapper.data('constrErrorMsg');
             var validationErrorMsg = $questionWrapper.data('validationErrorMsg');
-            var questionId = $questionWrapper.attr('id');
-            var questionRequired = $questionWrapper.data('required');
             switch ($input.data('questionType')) {
                 case 'char_box':
-                    if (questionRequired && !$input.val()) {
+                    if (questionRequired && !questionInactive && !$input.val()) {
                         errors[questionId] = constrErrorMsg;
                     } else if ($input.val() && $input.attr('type') === 'email' && !self._validateEmail($input.val())) {
                         errors[questionId] = validationEmailMsg;
@@ -833,6 +902,47 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         if ($firstTextInput.length > 0) {
             $firstTextInput.focus();
         }
+    },
+
+    // CONDITIONAL QUESTIONS MANAGEMENT TOOLS
+    // -------------------------------------------------------------------------
+
+    /**
+    * Clear / Un-select all the input from the given question
+    * + propagate conditional hierarchy by triggering change on choice inputs.
+    *
+    * @private
+    */
+    _clearQuestionInputs: function (question) {
+        question.find('input').each(function () {
+            if ($(this).attr('type') === 'text' || $(this).attr('type') === 'number') {
+                $(this).val('');
+            } else if ($(this).prop('checked')) {
+                $(this).prop('checked', false).change();
+            }
+        });
+        question.find('textarea').val('');
+    },
+
+    /**
+    * Get questions that are not supposed to be answered by the user.
+    * Those are the ones triggered by answers that the user did not selected.
+    *
+    * @private
+    */
+    _getInactiveConditionalQuestionIds: function () {
+        var self = this;
+        var inactiveQuestionIds = [];
+        if (this.options.triggeredQuestionsByAnswer) {
+            Object.keys(this.options.triggeredQuestionsByAnswer).forEach(function (answerId) {
+                if (!self.selectedAnswers.includes(parseInt(answerId))) {
+                     self.options.triggeredQuestionsByAnswer[answerId].forEach(function (questionId) {
+                        inactiveQuestionIds.push(questionId);
+                     });
+                }
+            });
+        }
+        return inactiveQuestionIds;
     },
 
     // ERRORS TOOLS
