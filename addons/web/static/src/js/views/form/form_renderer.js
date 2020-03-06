@@ -817,6 +817,13 @@ var FormRenderer = BasicRenderer.extend({
             for: this._getIDForLabel(fieldName),
             text: text,
         });
+        const field = this.state.fields[fieldName];
+        if (field && field.company_dependent) {
+            $result.append($('<span>', {
+                class: 'fa fa-sm fa-building-o ml-2',
+                title: _t("Values set here are company-specific"),
+            }));
+        }
         if (node.tag === 'label') {
             this._handleAttributes($result, node);
         }
