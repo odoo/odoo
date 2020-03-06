@@ -44,6 +44,7 @@
                 .modal-content {
                     height: 100%;
                     width: 100%;
+                    justify-content: center;
                 }
             }
             .s_popup_close {
@@ -56,11 +57,20 @@
     }
 
     &.s_popup_fixed {
+        &.s_popup_fixed_top {
+            .s_popup_content {
+                top: $o-navbar-height;
+            }
+        }
+        &:not(.s_popup_fixed_top) {
+            .s_popup_content {
+                bottom: 0;
+            }
+        }
         .s_popup_content {
             z-index: 1;
             position: fixed;
             right: 20px;
-            bottom: 0;
         }
         .modal-sm .s_popup_content {
             width: $modal-sm;
