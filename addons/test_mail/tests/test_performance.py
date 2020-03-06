@@ -253,7 +253,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
 
     @users('__system__', 'emp')
     @warmup
-    @mute_logger('odoo.addons.mail.models.mail_mail')
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail')
     def test_mail_composer(self):
         test_record = self.env['mail.test.full'].browse(self.test_record_full.id)
         customer_id = self.customer.id
@@ -272,7 +272,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
 
     @users('__system__', 'emp')
     @warmup
-    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_mail_composer_w_template(self):
         test_record = self.env['mail.test.full'].browse(self.test_record_full.id)
         test_template = self.env['mail.template'].browse(self.test_template_full.id)
@@ -292,7 +292,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         # remove created partner to ensure tests are the same each run
         self.env['res.partner'].sudo().search([('email', '=', 'nopartner.test@example.com')]).unlink()
 
-    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')
     @warmup
     def test_message_assignation_email(self):
@@ -345,7 +345,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 message_type='comment',
                 subtype_xmlid='mail.mt_comment')
 
-    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')
     @warmup
     def test_message_post_one_email_notification(self):
