@@ -57,6 +57,7 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
     function useNumberBuffer({
         decimalPoint = null,
         triggerAtEnter = null,
+        triggerAtEsc = null,
         triggerAtInput = null,
         nonKeyboardEvent = null,
         maxTimeBetweenKeys = BarcodeEvents.max_time_between_keys_in_ms,
@@ -167,6 +168,8 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
             const input = getInput(key);
             if (key === 'Enter' && triggerAtEnter) {
                 component.trigger(triggerAtEnter, state);
+            } else if (key === 'Esc' && triggerAtEsc) {
+                component.trigger(triggerAtEsc, state);
             } else if (input !== '' && triggerAtInput) {
                 component.trigger(triggerAtInput, state);
             }
@@ -187,7 +190,9 @@ odoo.define('point_of_sale.custom_hooks', function(require) {
                     // * target is input element
                     ['INPUT', 'TEXTAREA'].includes(event.target.tagName) ||
                     // * or if event key is not a valid number input
-                    !['Delete', 'Backspace'].concat('0123456789+-.,'.split('')).includes(key)
+                    !['Delete', 'Backspace', 'Enter', 'Esc']
+                        .concat('0123456789+-.,'.split(''))
+                        .includes(key)
                 ) {
                     return;
                 }

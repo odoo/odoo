@@ -5,16 +5,28 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
     const { addComponents } = require('point_of_sale.PosComponent');
     const { AbstractAwaitablePopup } = require('point_of_sale.AbstractAwaitablePopup');
     const { useNumberBuffer } = require('point_of_sale.custom_hooks');
+    const { useListener } = require('web.custom_hooks');
 
     // formerly NumberPopupWidget
     class NumberPopup extends AbstractAwaitablePopup {
         /**
          * @param {Object} props
          * @param {Boolean} props.isPassword Show password popup.
+         * @param {number|null} props.startingValue Starting value of the popup.
+         *
+         * Resolve to { confirmed, payload } when used with showPopup method.
+         * @confirmed {Boolean}
+         * @payload {String}
          */
         constructor() {
             super(...arguments);
-            useNumberBuffer({ nonKeyboardEvent: 'numpad-click-input' });
+            useListener('accept-input', this.confirm);
+            useListener('close-this-popup', this.cancel);
+            useNumberBuffer({
+                nonKeyboardEvent: 'numpad-click-input',
+                triggerAtEnter: 'accept-input',
+                triggerAtEscape: 'close-this-popup',
+            });
             if (typeof this.props.startingValue === 'number' && this.props.startingValue > 0) {
                 this.numberBuffer.set(this.props.startingValue.toString());
             }
