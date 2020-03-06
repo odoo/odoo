@@ -9,6 +9,7 @@ from odoo.addons.base.models.res_partner import _tz_get
 from odoo.tools import format_datetime
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import html_translate
+from collections import Counter
 
 _logger = logging.getLogger(__name__)
 
@@ -181,36 +182,33 @@ class EventEvent(models.Model):
     @api.depends('seats_max', 'registration_ids.state')
     def _compute_seats(self):
         """ Determine reserved, available, reserved but unconfirmed and used seats. """
-        # initialize fields to 0
-        for event in self:
-            event.seats_unconfirmed = event.seats_reserved = event.seats_used = event.seats_available = 0
         # aggregate registrations by event and by state
-        state_field = {
-            'draft': 'seats_unconfirmed',
-            'open': 'seats_reserved',
-            'done': 'seats_used',
-        }
-        base_vals = dict((fname, 0) for fname in state_field.values())
-        results = dict((event_id, dict(base_vals)) for event_id in self.ids)
-        if self.ids:
-            query = """ SELECT event_id, state, count(event_id)
-                        FROM event_registration
-                        WHERE event_id IN %s AND state IN ('draft', 'open', 'done')
-                        GROUP BY event_id, state
-                    """
-            self.env['event.registration'].flush(['event_id', 'state'])
-            self._cr.execute(query, (tuple(self.ids),))
-            res = self._cr.fetchall()
-            for event_id, state, num in res:
-                results[event_id][state_field[state]] += num
-
-        # compute seats_available
         for event in self:
-            event.update(results.get(event._origin.id or event.id, base_vals))
-            if event.seats_max > 0:
-                event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
-            seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
-            event.seats_expected = seats_expected
+                event.seats_unconfirmed = event.seats_used = event.seats_reserved = event.seats_expected = 0
+                event.seats_available = event.seats_max
+        if self.ids:
+            registration_data = self.env['event.registration'].read_group(
+                [('event_id', 'in', self.ids), ('state', 'in', ['draft', 'open', 'done'])],
+                ['event_id', 'states:array_agg(state)'],
+                ['event_id']
+            )
+
+            processed_data = {registration['event_id'][0]: {'states': registration['states']} for registration in registration_data}
+
+            state_field = {
+                'draft': 'seats_unconfirmed',
+                'open': 'seats_reserved',
+                'done': 'seats_used',
+            }
+
+            for event in self:
+                if processed_data.get(event.id):
+                    states = Counter(processed_data[event.id]['states'])
+                    for state, count in states.items():
+                        event[state_field[state]] = count
+                        if state in ['open', 'done']:
+                            event.seats_available -= count if event.seats_max > 0 else 0
+                        event.seats_expected += count
 
     @api.depends('date_end', 'seats_available', 'seats_availability', 'event_ticket_ids.sale_available')
     def _compute_event_registrations_open(self):

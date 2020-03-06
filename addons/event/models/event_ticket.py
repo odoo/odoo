@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
+from collections import Counter
 
 
 class EventTemplateTicket(models.Model):
@@ -95,36 +96,31 @@ class EventTicket(models.Model):
     @api.depends('seats_max', 'registration_ids.state')
     def _compute_seats(self):
         """ Determine reserved, available, reserved but unconfirmed and used seats. """
-        # initialize fields to 0 + compute seats availability
         for ticket in self:
-            ticket.seats_unconfirmed = ticket.seats_reserved = ticket.seats_used = ticket.seats_available = 0
-        # aggregate registrations by ticket and by state
+                ticket.seats_unconfirmed = ticket.seats_used = ticket.seats_reserved = ticket.seats_expected = 0
+                ticket.seats_available = ticket.seats_max
         if self.ids:
+            registration_data = self.env['event.registration'].read_group(
+                [('event_ticket_id', 'in', self.ids), ('state', 'in', ['draft', 'open', 'done'])],
+                ['event_ticket_id', 'states:array_agg(state)'],
+                ['event_ticket_id']
+            )
+
+            processed_data = {registration['event_ticket_id'][0]: {'states': registration['states']} for registration in registration_data}
+
             state_field = {
                 'draft': 'seats_unconfirmed',
                 'open': 'seats_reserved',
                 'done': 'seats_used',
             }
-            query = """ SELECT event_ticket_id, state, count(event_id)
-                        FROM event_registration
-                        WHERE event_ticket_id IN %s AND state IN ('draft', 'open', 'done')
-                        GROUP BY event_ticket_id, state
-                    """
-            self.env['event.registration'].flush(['event_id', 'event_ticket_id', 'state'])
-            self.env.cr.execute(query, (tuple(self.ids),))
-            for event_ticket_id, state, num in self.env.cr.fetchall():
-                ticket = self.browse(event_ticket_id)
-                ticket[state_field[state]] += num
-        # compute seats_available
-        for ticket in self:
-            if ticket.seats_max > 0:
-                ticket.seats_available = ticket.seats_max - (ticket.seats_reserved + ticket.seats_used)
 
-    @api.constrains('start_sale_date', 'end_sale_date')
-    def _constrains_dates_coherency(self):
-        for ticket in self:
-            if ticket.start_sale_date and ticket.end_sale_date and ticket.start_sale_date > ticket.end_sale_date:
-                raise UserError(_('The stop date cannot be earlier than the start date.'))
+            for ticket in self:
+                if processed_data.get(ticket.id):
+                    states = Counter(processed_data[ticket.id]['states'])
+                    for state, count in states.items():
+                        ticket[state_field[state]] = count
+                        if state in ['open', 'done']:
+                            ticket.seats_available -= count if ticket.seats_max > 0 else 0
 
     @api.constrains('seats_available', 'seats_max')
     def _constrains_seats_available(self):
