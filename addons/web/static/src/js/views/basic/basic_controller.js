@@ -824,12 +824,10 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         var res_id = record.res_id || record.res_ids[0];
         var result = await this._rpc({
             route: '/web/dataset/call_button',
-            params: {
-                model: 'ir.translation',
-                method: 'translate_fields',
-                args: [record.model, res_id, ev.data.fieldName],
-                kwargs: { context: record.getContext() },
-            }
+            model: 'ir.translation',
+            method: 'translate_fields',
+            args: [record.model, res_id, ev.data.fieldName],
+            kwargs: { context: record.getContext() },
         });
 
         this.translationDialog = new TranslationDialog(this, {

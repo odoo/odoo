@@ -841,7 +841,7 @@ var Model = Class.extend({
             model: this.name,
             method: method,
             args: args || [],
-            kwargs: {context: context},
+            context: context,
         });
     },
 });

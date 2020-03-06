@@ -624,12 +624,10 @@ ActionManager.include({
             }
             def = this._rpc({
                 route: '/web/dataset/call_button',
-                params: {
-                    args: args,
-                    kwargs: {context: context.eval()},
-                    method: actionData.name,
-                    model: env.model,
-                },
+                args: args,
+                kwargs: {context: context.eval()},
+                method: actionData.name,
+                model: env.model,
             });
         } else if (actionData.type === 'action') {
             // execute a given action, so load it first
