@@ -16,7 +16,7 @@ class PaymentRegister(models.TransientModel):
         else:
             return super()._prepare_communication(invoices)
 
-    def _get_payment_group(self, inv):
+    def _get_payment_group_key(self, inv):
         """Define group key to group invoices in payments.
         In case of ISR reference number on the supplier invoice
         the group rule must separate the invoices by payment refs.
@@ -28,4 +28,4 @@ class PaymentRegister(models.TransientModel):
             ref = inv.invoice_payment_ref or inv.ref
             return (inv.commercial_partner_id, inv.currency_id, inv.invoice_partner_bank_id, ref)
         else:
-            return super()._get_payment_group(inv)
+            return super()._get_payment_group_key(inv)
