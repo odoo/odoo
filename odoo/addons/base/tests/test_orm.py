@@ -35,10 +35,6 @@ class TestORM(TransactionCase):
         # Deleting an already deleted record should be simply ignored
         self.assertTrue(p1.unlink(), "Re-deleting should be a no-op")
 
-        # Updating an already deleted record should raise, even as admin
-        with self.assertRaises(MissingError):
-            p1.write({'name': 'foo'})
-
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_access_filtered_records(self):
         """ Verify that accessing filtered records works as expected for non-admin user """
