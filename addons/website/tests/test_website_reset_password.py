@@ -31,4 +31,32 @@ class TestWebsiteResetPassword(HttpCase):
             return original_send_mail(*args, **kwargs)
 
         with patch.object(MailMail, 'unlink', lambda self: None), patch.object(MailTemplate, 'send_mail', my_send_mail):
-            self.start_tour("/", 'website_reset_password', login="admin")
+            user = self.env['res.users'].create({
+                'login': 'test',
+                'name': 'The King',
+                'email': 'noop@example.com',
+            })
+            website_1 = self.env['website'].browse(1)
+            website_2 = self.env['website'].browse(2)
+
+            website_1.domain = "my-test-domain.com"
+            website_2.domain = "https://domain-not-used.fr"
+
+            user.partner_id.website_id = 2
+            user.invalidate_cache()  # invalidate get_base_url
+
+            user.action_reset_password()
+            self.assertIn(website_2.domain, user.signup_url)
+
+            user.invalidate_cache()
+
+            user.partner_id.website_id = 1
+            user.action_reset_password()
+            self.assertIn(website_1.domain, user.signup_url)
+
+            (website_1 + website_2).domain = ""
+
+            user.action_reset_password()
+            user.invalidate_cache()
+
+            self.start_tour(user.signup_url, 'website_reset_password', login=None)
