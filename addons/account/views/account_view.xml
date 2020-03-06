@@ -1881,7 +1881,7 @@ action = model.setting_init_bank_account_action()
 
         <menuitem id="menu_account_supplier" name="Vendors"
             parent="account.menu_finance_payables"
-            action="base.action_partner_supplier_form" sequence="200"/>
+            action="account.res_partner_action_supplier" sequence="200"/>
 
         <!-- Manual reconciliation -->
         <record id="action_manual_reconciliation" model="ir.actions.client">
