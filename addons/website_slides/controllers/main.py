@@ -549,6 +549,69 @@ class WebsiteSlides(WebsiteProfile):
             'can_create': can_create,
         }
 
+    @http.route(['/slides/channel/tag/group/search_read'], type='json', auth='user', methods=['POST'], website=True)
+    def slide_channel_tag_group_search_read(self, fields, domain):
+        can_create = request.env['slide.channel.tag.group'].check_access_rights('create', raise_exception=False)
+        return {
+            'read_results': request.env['slide.channel.tag.group'].search_read(domain, fields),
+            'can_create': can_create,
+        }
+
+    @http.route('/slides/channel/tag/add', type='json', auth='user', methods=['POST'], website=True)
+    def slide_channel_tag_add(self, channel_id, tag_id=None, group_id=None):
+        """ Adds a slide channel tag to the specified slide channel.
+
+        :param integer channel_id: Channel ID
+        :param list tag_id: Channel Tag ID as first value of list. If id=0, then this is a new tag to
+                            generate and expects a second list value of the name of the new tag.
+        :param list group_id: Channel Tag Group ID as first value of list. If id=0, then this is a new
+                              tag group to generate and expects a second list value of the name of the
+                              new tag group. This value is required for when a new tag is being created.
+
+        tag_id and group_id values are provided by a Select2. Default "None" values allow for
+        graceful failures in exceptional cases when values are not provided.
+
+        :return: channel's course page
+        """
+
+        # handle exception during addition of course tag and send error notification to the client
+        # otherwise client slide create dialog box continue processing even server fail to create a slide
+        try:
+            channel = request.env['slide.channel'].browse(int(channel_id))
+            can_upload = channel.can_upload
+            can_publish = channel.can_publish
+        except (UserError, AccessError) as e:
+            _logger.error(e)
+            return {'error': e.name}
+        else:
+            if not can_upload or not can_publish:
+                return {'error': _('You cannot add tags to this course.')}
+
+        if tag_id:
+            # handle creation of new channel tag
+            if tag_id[0] == 0:
+                if group_id:
+                    # handle creation of new channel tag group
+                    if group_id[0] == 0:
+                        tag_group = request.env['slide.channel.tag.group'].create({
+                            'name': group_id[1]['name'],
+                        })
+                        group_id = tag_group.id
+                    # use existing channel tag group
+                    else:
+                        group_id = group_id[0]
+                else:
+                    return {'error': _('Missing "Tag Group" for creating a new "Tag".')}
+
+                request.env['slide.channel.tag'].create({'name': tag_id[1]['name'],
+                                                         'channel_ids': [channel.id],
+                                                         'group_id': group_id,
+                                                         })
+            else:
+                # use existing channel tag
+                request.env['slide.channel.tag'].browse(tag_id[0]).write({'channel_ids': [(4, channel.id, 0)]})
+        return {'url': "/slides/%s" % (slug(channel))}
+
     @http.route(['/slides/channel/subscribe'], type='json', auth='user', website=True)
     def slide_channel_subscribe(self, channel_id):
         return request.env['slide.channel'].browse(channel_id).message_subscribe(partner_ids=[request.env.user.partner_id.id])

@@ -193,6 +193,22 @@
 
                             <div class="tab-content py-4 o_wslides_tabs_content mb-4" id="courseMainTabContent">
                                 <div t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'home' else '')" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                    <div class="mb-2 pt-1">
+                                        <t t-if="channel.tag_ids">
+                                            <t t-foreach="channel.tag_ids" t-as="channel_tag">
+                                                <span t-attf-class="badge o_wslides_channel_tag #{'o_tag_color_'+str(channel_tag.color)}" t-esc="channel_tag.name"/>
+                                            </t>
+                                        </t>
+                                        <a t-if="channel.can_upload"
+                                            class="o_wslides_js_channel_tag_add border badge badge-light font-weight-normal py-1 m-1"
+                                            role="button"
+                                            aria-label="Add Tag"
+                                            href="#"
+                                            t-att-data-channel-id="channel.id"
+                                            t-att-data-channel-tag-ids="channel.tag_ids.ids">
+                                            <i class="fa fa-plus mr-1"/><span>Add Tag</span>
+                                         </a>
+                                    </div>
                                     <t t-if="channel.channel_type == 'training'" t-call="website_slides.course_slides_list"/>
                                 </div>
                                 <div t-if="channel.allow_comment" t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'review' else '')" id="review" role="tabpanel" aria-labelledby="review-tab">
@@ -572,21 +588,42 @@
         </div>
     </div>
 
-    <div t-if="channel.can_upload" class="text-right container pb-2">
-        <a class="btn btn-primary py-1 o_wslides_js_slide_upload"
-            title="Upload Presentation" role="button"
-            aria-label="Upload Presentation" href="#"
-            t-att-data-channel-id="channel.id"
-            t-att-data-can-upload="channel.can_upload"
-            t-att-data-can-publish="channel.can_publish">
-            <i class="fa fa-cloud-upload mr-1"/>Upload new content
-        </a>
-        <a class="btn btn-secondary py-1 o_wslides_js_slide_section_add"
-            title="Add Section" role="button"
-            aria-label="Add Section" href="#"
-            t-att-channel_id="channel.id">
-            <i class="fa fa-folder-o mr-1"/>Add a section
-        </a>
+    <div class="container">
+        <div class="row">
+            <div class="mb-2 pt-1 text-left col">
+                <t t-if="channel.tag_ids">
+                    <t t-foreach="channel.tag_ids" t-as="channel_tag">
+                        <span t-attf-class="badge o_wslides_channel_tag #{'o_tag_color_'+str(channel_tag.color)}" t-esc="channel_tag.name"/>
+                    </t>
+                </t>
+                <a t-if="channel.can_upload"
+                    class="o_wslides_js_channel_tag_add border badge badge-light font-weight-normal py-1 m-1"
+                    role="button"
+                    aria-label="Add Tag"
+                    href="#"
+                    t-att-data-channel-id="channel.id"
+                    t-att-data-channel-tag-ids="channel.tag_ids.ids">
+                    <i class="fa fa-plus mr-1"/><span>Add Tag</span>
+                </a>
+            </div>
+
+            <div t-if="channel.can_upload" class="text-right pb-2 col-auto">
+                <a class="btn btn-primary py-1 o_wslides_js_slide_upload"
+                    title="Upload Presentation" role="button"
+                    aria-label="Upload Presentation" href="#"
+                    t-att-data-channel-id="channel.id"
+                    t-att-data-can-upload="channel.can_upload"
+                    t-att-data-can-publish="channel.can_publish">
+                    <i class="fa fa-cloud-upload mr-1"/>Upload new content
+                </a>
+                <a class="btn btn-secondary py-1 o_wslides_js_slide_section_add"
+                    title="Add Section" role="button"
+                    aria-label="Add Section" href="#"
+                    t-att-channel_id="channel.id">
+                    <i class="fa fa-folder-o mr-1"/>Add a section
+                </a>
+            </div>
+        </div>
     </div>
     <!-- Featured lesson  -->
     <t t-call="website_slides.course_promoted_slide"/>
