@@ -1607,7 +1607,9 @@ const SnippetOptionWidget = Widget.extend({
             widgetValue = `var(--${widgetValue})`;
         }
 
-        const values = widgetValue.split(/\s+/g);
+        // replacing ', ' by ',' to prevent attributes with internal space separators from being split:
+        // eg: "rgba(55, 12, 47, 1.9) 47px" should be split as ["rgba(55,12,47,1.9)", "47px"]
+        const values = widgetValue.replace(/,\s/g, ',').split(/\s+/g);
         while (values.length < cssProps.length) {
             switch (values.length) {
                 case 1:
