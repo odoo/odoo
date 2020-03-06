@@ -43,31 +43,6 @@ options.registry.TableOfContent = options.Class.extend({
         _.each($headings, el => el.dataset.anchor = anchorValue);
         this.isAnimateScrolling = !!widgetValue;
     },
-    /**
-     * Change the navbar position.
-     *
-     * @see this.selectClass for parameters
-     */
-    navbarPosition: function (previewMode, widgetValue, params) {
-        const $navbar = this.$target.find('.s_table_of_content_navbar_wrap');
-        const $mainContent = this.$target.find('.s_table_of_content_main');
-        if (widgetValue === 'top' || widgetValue === 'left') {
-            $navbar.prev().before($navbar);
-        }
-        if (widgetValue === 'left' || widgetValue === 'right') {
-            $navbar.removeClass('s_table_of_content_horizontal_navbar col-lg-12').addClass('s_table_of_content_vertical_navbar col-lg-3');
-            $mainContent.removeClass('col-lg-12').addClass('col-lg-9');
-            $navbar.find('.s_table_of_content_navbar').removeClass('list-group-horizontal-md');
-        }
-        if (widgetValue === 'right') {
-            $navbar.next().after($navbar);
-        }
-        if (widgetValue === 'top') {
-            $navbar.removeClass('s_table_of_content_vertical_navbar col-lg-3').addClass('s_table_of_content_horizontal_navbar col-lg-12');
-            $navbar.find('.s_table_of_content_navbar').addClass('list-group-horizontal-md');
-            $mainContent.removeClass('col-lg-9').addClass('col-lg-12');
-        }
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -105,12 +80,58 @@ options.registry.TableOfContent = options.Class.extend({
                     return 'true';
                 }
             }
+        }
+        return this._super(...arguments);
+    },
+});
+
+options.registry.TableOfContentNavbar = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Change the navbar position.
+     *
+     * @see this.selectClass for parameters
+     */
+    navbarPosition: function (previewMode, widgetValue, params) {
+        const $navbar = this.$target;
+        const $mainContent = this.$target.parent().find('.s_table_of_content_main');
+        if (widgetValue === 'top' || widgetValue === 'left') {
+            $navbar.prev().before($navbar);
+        }
+        if (widgetValue === 'left' || widgetValue === 'right') {
+            $navbar.removeClass('s_table_of_content_horizontal_navbar col-lg-12').addClass('s_table_of_content_vertical_navbar col-lg-3');
+            $mainContent.removeClass('col-lg-12').addClass('col-lg-9');
+            $navbar.find('.s_table_of_content_navbar').removeClass('list-group-horizontal-md');
+        }
+        if (widgetValue === 'right') {
+            $navbar.next().after($navbar);
+        }
+        if (widgetValue === 'top') {
+            $navbar.removeClass('s_table_of_content_vertical_navbar col-lg-3').addClass('s_table_of_content_horizontal_navbar col-lg-12');
+            $navbar.find('.s_table_of_content_navbar').addClass('list-group-horizontal-md');
+            $mainContent.removeClass('col-lg-9').addClass('col-lg-12');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName, params) {
+        switch (methodName) {
             case 'navbarPosition': {
-                const $navbar = this.$target.find('.s_table_of_content_navbar_wrap');
+                const $navbar = this.$target;
                 if ($navbar.hasClass('s_table_of_content_horizontal_navbar')) {
                     return 'top';
                 } else {
-                    const $mainContent = this.$target.find('.s_table_of_content_main');
+                    const $mainContent = $navbar.parent().find('.s_table_of_content_main');
                     return $navbar.prev().is($mainContent) === true ? 'right' : 'left';
                 }
             }
