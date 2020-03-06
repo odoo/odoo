@@ -168,7 +168,7 @@ class SendSMS(models.TransientModel):
     @api.onchange('composition_mode', 'res_model', 'res_id', 'template_id')
     def _onchange_template_id(self):
         if self.template_id and self.composition_mode == 'comment' and self.res_id:
-            self.body = self.template_id._get_translated_bodies([self.res_id])[self.res_id]
+            self.body = self.template_id._render_field('body', [self.res_id], compute_lang=True)[self.res_id]
         elif self.template_id:
             self.body = self.template_id.body
 
@@ -279,7 +279,7 @@ class SendSMS(models.TransientModel):
 
     def _prepare_body_values(self, records):
         if self.template_id and self.body == self.template_id.body:
-            all_bodies = self.template_id._get_translated_bodies(records.ids)
+            all_bodies = self.template_id._render_field('body', records.ids, compute_lang=True)
         else:
             all_bodies = self.env['mail.render.mixin']._render_template(self.body, records._name, records.ids)
         return all_bodies
