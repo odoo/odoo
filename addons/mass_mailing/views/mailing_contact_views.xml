@@ -52,8 +52,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_mail_mass_mailing_contact_search">
-        <field name="name">mailing.contact.search</field>
+    <record id="mailing_contact_view_search" model="ir.ui.view">
+        <field name="name">mailing.contact.view.search</field>
         <field name="model">mailing.contact</field>
         <field name="arch" type="xml">
            <search string="Mailing List Contacts">
@@ -84,8 +84,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_mail_mass_mailing_contact_tree">
-        <field name="name">mailing.contact.tree</field>
+    <record id="mailing_contact_view_tree" model="ir.ui.view">
+        <field name="name">mailing.contact.view.tree</field>
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
@@ -94,15 +94,15 @@
                 <field name="name"/>
                 <field name="company_name"/>
                 <field name="email"/>
+                <field name="is_blacklisted" string="Email Blacklisted"/>
                 <field name="message_bounce"/>
                 <field name="opt_out" invisible="'default_list_ids' not in context"/>
-                <field name="is_blacklisted"/>
             </tree>
         </field>
     </record>
 
-    <record id="view_mail_mass_mailing_contact_kanban" model="ir.ui.view">
-        <field name="name">mailing.contact.kanban</field>
+    <record id="mailing_contact_view_kanban" model="ir.ui.view">
+        <field name="name">mailing.contact.view.kanban</field>
         <field name="model">mailing.contact</field>
         <field name="arch" type="xml">
             <kanban>
@@ -143,8 +143,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_mail_mass_mailing_contact_form">
-        <field name="name">mailing.contact.form</field>
+    <record id="mailing_contact_view_form" model="ir.ui.view">
+        <field name="name">mailing.contact.view.form</field>
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
@@ -194,7 +194,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_mail_mass_mailing_contact_pivot">
+    <record id="mailing_contact_view_pivot" model="ir.ui.view">
         <field name="name">mailing.contact.pivot</field>
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
@@ -205,8 +205,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_mail_mass_mailing_contact_graph">
-        <field name="name">mailing.contact.graph</field>
+    <record id="mailing_contact_view_graph" model="ir.ui.view">
+        <field name="name">mailing.contact.view.graph</field>
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">

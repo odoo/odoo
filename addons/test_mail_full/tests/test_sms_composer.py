@@ -118,6 +118,43 @@ class TestSMSComposerComment(test_mail_full_common.TestSMSCommon, test_mail_full
 
         self.assertSMSNotification([{'partner': self.test_record.customer_id, 'number': self.test_record.mobile_nbr}], 'Dear %s this is an SMS.' % self.test_record.display_name, messages)
 
+    def test_composer_internals(self):
+        with self.with_user('employee'):
+            composer = self.env['sms.composer'].with_context(
+                default_res_model='mail.test.sms', default_res_id=self.test_record.id,
+            ).create({
+                'body': self._test_body,
+                'number_field_name': 'phone_nbr',
+            })
+
+        self.assertEqual(composer.res_model, self.test_record._name)
+        self.assertEqual(composer.res_id, self.test_record.id)
+        self.assertEqual(composer.number_field_name, 'phone_nbr')
+        self.assertTrue(composer.comment_single_recipient)
+        self.assertEqual(composer.recipient_single_description, self.test_record.customer_id.display_name)
+        self.assertEqual(composer.recipient_single_number, self.test_numbers[1])
+        self.assertEqual(composer.recipient_single_number_itf, self.test_numbers[1])
+        self.assertTrue(composer.recipient_single_valid)
+        self.assertEqual(composer.recipient_valid_count, 1)
+        self.assertEqual(composer.recipient_invalid_count, 0)
+
+        with self.with_user('employee'):
+            composer.update({'recipient_single_number_itf': '0123456789'})
+
+        self.assertFalse(composer.recipient_single_valid)
+
+        with self.with_user('employee'):
+            composer.update({'recipient_single_number_itf': self.random_numbers[0]})
+
+        self.assertTrue(composer.recipient_single_valid)
+
+        with self.with_user('employee'):
+            with self.mockSMSGateway():
+                composer.action_send_sms()
+
+        self.test_record.flush()
+        self.assertEqual(self.test_record.phone_nbr, self.random_numbers[0])
+
     def test_composer_numbers_no_model(self):
         with self.with_user('employee'):
             composer = self.env['sms.composer'].with_context(
