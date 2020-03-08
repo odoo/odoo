@@ -744,7 +744,7 @@ msgstr "활성화"
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid ""
 "Add an internal note that will be printed on the Picking Operations sheet"
-msgstr ""
+msgstr "피킹 작업 시트에 인쇄될 내부용 노트 추가하기"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_group_stock_adv_location
@@ -792,7 +792,7 @@ msgstr "고급"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Advanced Scheduling"
-msgstr ""
+msgstr "고급 예약 실행"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
@@ -1446,7 +1446,7 @@ msgstr "탁송 재고"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_consume_line_ids
 msgid "Consume Line"
-msgstr ""
+msgstr "소비 내역"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
@@ -1479,32 +1479,32 @@ msgstr "요청한 모든 제품을 예약 할 수 없습니다. 'Todo로 표시'
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking
 msgid "Count Picking"
-msgstr ""
+msgstr "선별 수"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr ""
+msgstr "밀린 주문 선별 수"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_draft
 msgid "Count Picking Draft"
-msgstr ""
+msgstr "초안 선별 수"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_late
 msgid "Count Picking Late"
-msgstr ""
+msgstr "지연 선별 수"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_ready
 msgid "Count Picking Ready"
-msgstr ""
+msgstr "시작한 선별 수"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_waiting
 msgid "Count Picking Waiting"
-msgstr ""
+msgstr "대기 선별 수"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
@@ -3059,19 +3059,19 @@ msgstr "제조자의 LOT/시리얼 번호와 다른 경우의 내부 참조 번�
 #: code:addons/stock/models/product.py:253
 #, python-format
 msgid "Invalid domain left operand %s"
-msgstr ""
+msgstr "잘못된 도메인 왼쪽 피연산자 %s"
 
 #. module: stock
 #: code:addons/stock/models/product.py:255
 #, python-format
 msgid "Invalid domain operator %s"
-msgstr ""
+msgstr "잘못된 도메인 연산자 %s"
 
 #. module: stock
 #: code:addons/stock/models/product.py:257
 #, python-format
 msgid "Invalid domain right operand %s"
-msgstr ""
+msgstr "잘못된 도메인 오른쪽 피연산자 %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_category_id
@@ -3659,7 +3659,7 @@ msgstr "LOT & 시리얼 번호"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_lots_visible
 msgid "Lots Visible"
-msgstr ""
+msgstr "로트 표시가능"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3885,7 +3885,7 @@ msgstr "이동 명세"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_move_line_nosuggest_ids
 msgid "Move Line Nosuggest"
-msgstr ""
+msgstr "이동 명세 추천 없음"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_line_form
@@ -3908,7 +3908,7 @@ msgstr "이동 날짜 : 이동이 완료 될 때까지의 예정된 날짜, 실�
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_origin_returned_move_id
 msgid "Move that created the return move"
-msgstr ""
+msgstr "반품 이동을 만든 이동"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_open
@@ -4454,7 +4454,7 @@ msgstr "포장품 바코드 (내용 포함)"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "Package Content"
-msgstr ""
+msgstr "패키지 내용"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -6421,6 +6421,8 @@ msgid ""
 "                                   rounding precision of your unit of "
 "measure."
 msgstr ""
+"제품 \"%s\"에 대해 수행된 수량 단위 \"%s\"에 정의된 반올림 정밀도를 고려하지 않습니다. 수행된 수량이나 단위의 반올림 정도를"
+" 변경해 주십시오."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7353,6 +7355,8 @@ msgid ""
 "if some stock moves have already been created with that number. This would "
 "lead to inconsistencies in your stock."
 msgstr ""
+"해당 번호로 일부 재고 이동이 이미 생성된 경우 일련번호 또는 로트 번호에 연결된 제품을 변경할 수 없습니다. 이로 인해 재고가 일치하지"
+" 않을 수 있습니다."
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:37
@@ -7491,7 +7495,7 @@ msgstr "'완료'로 설정된 재고 이동을 취소 할 수 없습니다."
 msgid ""
 "You cannot change the location type or its use as a scrap location as there "
 "are products reserved in this location. Please unreserve the products first."
-msgstr ""
+msgstr "이 위치에 예약된 제품이 있으므로 위치 유형 또는 부산물 저장소의 사용을 변경할 수 없습니다. 먼저 제품을 예약하십시오."
 
 #. module: stock
 #: code:addons/stock/models/product.py:606
@@ -7499,7 +7503,7 @@ msgstr ""
 msgid ""
 "You cannot change the ratio of this unit of mesure as some products with "
 "this UoM have already been moved or are currently reserved."
-msgstr ""
+msgstr "이 UoM이 포함 된 일부 제품이 이미 이동되었거나 현재 예약되어 있으므로 이 측정 단위의 비율을 변경할 수 없습니다."
 
 #. module: stock
 #: code:addons/stock/models/stock_scrap.py:75
@@ -7929,4 +7933,4 @@ msgstr "⇒ 수량을 0으로 설정"
 #: code:addons/stock/models/stock_move_line.py:223
 #, python-format
 msgid "Changing the product is only allowed in 'Draft' state."
-msgstr ""
+msgstr "상품 변경은 '초안' 상태에서만 허용됩니다."
