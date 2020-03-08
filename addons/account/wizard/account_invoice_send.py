@@ -75,7 +75,11 @@ class AccountInvoiceSend(models.TransientModel):
                 if invoices:
                     wizard.invoice_without_email = "%s\n%s" % (
                         _("The following invoice(s) will not be sent by email, because the customers don't have email address."),
+<<<<<<< HEAD
                         "\n".join([i.name for i in invoices])
+=======
+                        "\n".join([i.reference or i.display_name for i in invoices])
+>>>>>>> 767bf87851b... temp
                         )
                 else:
                     wizard.invoice_without_email = False
