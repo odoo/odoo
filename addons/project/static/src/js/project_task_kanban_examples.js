@@ -44,8 +44,8 @@ kanbanExamplesRegistry.add('project', {
         name: _lt('Software Development'),
         columns: [_lt('Backlog'), _lt('Specifications'), _lt('Development'), _lt('Tests'), _lt('Delivered')],
         description: escFormat(_lt('Prioritize Tasks by using the %s icon.'+
-            '%s Use the %s button to signalize to your colleagues that a task is ready for the next stage.'+
-            '%s Use the %s to signalize a problem or a need for discussion on a task.'+
+            '%s Use the %s button to inform your colleagues that a task is ready for the next stage.'+
+            '%s Use the %s to indicate a problem or a need for discussion on a task.'+
             '%s'), star, '<br/>', greenBullet, '<br/>', redBullet, description_activities),
         bullets: [greenBullet, redBullet, star],
     }, {
