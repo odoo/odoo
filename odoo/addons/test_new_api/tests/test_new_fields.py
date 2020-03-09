@@ -269,6 +269,22 @@ class TestFields(TransactionCaseWithUserDemo):
         record = self.env['test_new_api.mixed'].create({})
         self.assertTrue(record.now)
 
+    def test_10_secret(self):
+        """ test secret field """
+        field = self.env['test_new_api.secret']._fields['pwd']
+        self.assertFalse(field.groupby)
+
+        secret = self.env.ref('test_new_api.secret_0')
+        self.assertEqual(secret.with_user(self.user_demo).pwd, '')
+        self.assertEqual(secret.sudo().pwd, "you wouldn't guess it")
+
+        secret.pwd = '244466666'
+        self.assertEqual(secret.with_user(self.user_demo).pwd, '')
+        self.assertEqual(secret.sudo().pwd, 1*'2'+3*'4'+5*'6')
+
+        with self.assertRaises(ValueError):
+            secret.search([], order='pwd')
+
     def test_11_stored(self):
         """ test stored fields """
         def check_stored(disc):
