@@ -402,6 +402,7 @@
                     <field name="invoice_date" optional="show" invisible="context.get('default_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Invoice Date"/>
                     <field name="invoice_origin" optional="show" string="Source Document"/>
                     <field name="invoice_payment_ref" optional="hide" invisible="context.get('default_type') in ('out_invoice', 'out_refund','out_receipt')"/>
+                    <field name="ref" optional="hide"/>
                     <field name="invoice_user_id" optional="show" invisible="context.get('default_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Sales Person"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                     <field name="invoice_date_due" optional="show"/>
@@ -962,7 +963,7 @@
                                            name="sale_info_group"
                                            attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}">
                                         <field name="invoice_user_id"/>
-                                        <field name="invoice_origin" string="Source Document"
+                                        <field name="invoice_origin" force_save="1" string="Source Document"
                                                attrs="{'invisible': [('invoice_origin', '=', False)]}"/>
                                     </group>
                                     <group string="Accounting"
