@@ -67,12 +67,13 @@
             -->
             <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
             <t t-set="id_list" t-value="[product_variant.id] if product_variant else []"/>
+            <t t-set="compare_active" t-value="request.website.viewref('website_sale_comparison.add_to_compare').active"/>
             <t t-foreach="product.alternative_product_ids" t-as="alt_product">
                 <t t-set="alt_product_variant_id" t-value="alt_product._create_first_product_variant().id"/>
                 <t t-if="alt_product_variant_id" t-set="id_list" t-value="id_list + [alt_product_variant_id]"/>
             </t>
             <t t-set="ids" t-value="','.join([str(id) for id in id_list])"/>
-            <div><span class='h3'>Suggested alternatives: </span><a t-if="len(id_list) > 1" role="button" class="btn btn-primary" t-attf-href="/shop/compare/?products=#{ids}"><i class="fa fa-exchange"></i> Compare</a></div>
+            <div><span class='h3'>Suggested alternatives: </span><a t-if="len(id_list) > 1 and compare_active" role="button" class="btn btn-primary" t-attf-href="/shop/compare/?products=#{ids}"><i class="fa fa-exchange"></i> Compare</a></div>
         </xpath>
     </template>
 

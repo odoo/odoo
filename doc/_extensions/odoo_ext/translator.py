@@ -62,6 +62,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         self.context = []
         self.section_level = 0
 
+        self.config = self.builder.config
         self.highlightlang = self.highlightlang_base = self.builder.config.highlight_language
         self.highlightopts = getattr(builder.config, 'highlight_options', {})
 
