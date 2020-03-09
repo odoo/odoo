@@ -105,18 +105,19 @@ class Track(models.Model):
             else:
                 track.date_end = False
 
-    @api.model
-    def create(self, vals):
-        track = super(Track, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        tracks = super(Track, self).create(vals_list)
 
-        track.event_id.message_post_with_view(
-            'website_event_track.event_track_template_new',
-            values={'track': track},
-            subject=track.name,
-            subtype_id=self.env.ref('website_event_track.mt_event_track').id,
-        )
+        for track in tracks:
+            track.event_id.message_post_with_view(
+                'website_event_track.event_track_template_new',
+                values={'track': track},
+                subject=track.name,
+                subtype_id=self.env.ref('website_event_track.mt_event_track').id,
+            )
 
-        return track
+        return tracks
 
     def write(self, vals):
         if 'stage_id' in vals and 'kanban_state' not in vals:
