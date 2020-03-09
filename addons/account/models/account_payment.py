@@ -384,6 +384,8 @@ class account_payment(models.Model):
             elif payment.partner_type == 'supplier':
                 default_account = self.env['ir.property'].get('property_account_payable_id', 'res.partner')
                 payment.destination_account_id = default_account.id
+            else:
+                payment.destination_account_id = False
 
     @api.depends('move_line_ids.matched_debit_ids', 'move_line_ids.matched_credit_ids')
     def _compute_reconciled_invoice_ids(self):
