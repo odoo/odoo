@@ -852,19 +852,7 @@
             <t t-set="head_web">
                 <script type="text/javascript">
                     odoo.session_info = <t t-raw="json.dumps(session_info)"/>;
-                    odoo.reloadMenus = function () {
-                        return new Promise(function(resolve, reject) {
-                            function onLoaded() {
-                                resolve(oReq.response);
-                            }
-                            var oReq = new XMLHttpRequest();
-                            oReq.responseType = "json";
-                            oReq.addEventListener("load", onLoaded);
-                            oReq.addEventListener("error", reject);
-                            oReq.open("GET", '/web/webclient/load_menus/' + odoo.session_info.cache_hashes.load_menus);
-                            oReq.send();
-                        });
-                    }
+                    odoo.reloadMenus = () => fetch(`/web/webclient/load_menus/${odoo.session_info.cache_hashes.load_menus}`).then(res => res.json());
                     odoo.loadMenusPromise = odoo.reloadMenus();
                 </script>
                 <t t-call-assets="web.assets_common" t-js="false"/>
