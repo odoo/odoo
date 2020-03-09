@@ -110,7 +110,7 @@
                                     <div class="o_setting_right_pane">
                                         <label for="has_google_maps"/>
                                         <div class="text-muted">
-                                            Show your address on a map in the <a href="/contactus">Contact Us</a> page
+                                            Use Google Map on your website (<a href="/contactus">Contact Us</a> page, snippets, ...)
                                         </div>
                                         <div class="content-group" attrs="{'invisible': [('has_google_maps', '=', False)]}">
                                             <div class="row mt16">
@@ -122,6 +122,10 @@
                                             <a class="btn-link fa fa-arrow-right" target="_blank"
                                                href="https://console.developers.google.com/flows/enableapi?apiid=maps_backend,static_maps_backend&amp;keyType=CLIENT_SIDE&amp;reusekey=true">
                                                 Create a Google Project and Get a Key
+                                            </a>
+                                            <a class="btn-link fa fa-arrow-right" target="_blank"
+                                               href="https://cloud.google.com/maps-platform/pricing">
+                                                Enable billing on your Google Project
                                             </a>
                                         </div>
                                     </div>
