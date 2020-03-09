@@ -941,92 +941,63 @@ class Message(models.Model):
     # MESSAGE READ / FETCH / FAILURE API
     # ------------------------------------------------------
 
-    @api.model
-    def _message_read_dict_postprocess(self, messages, message_tree):
-        """ Post-processing on values given by message_read. This method will
-            handle partners in batch to avoid doing numerous queries.
-
-            :param list messages: list of message, as get_dict result
-            :param dict message_tree: {[msg.id]: msg browse record as super user}
-        """
-        # 1. Aggregate partners (author_id and partner_ids), attachments and tracking values
-        partners = self.env['res.partner'].sudo()
-        attachments = self.env['ir.attachment']
-        message_ids = list(message_tree.keys())
-        email_notification_tree = {}
-        for message in message_tree.values():
-            if message.author_id:
-                partners |= message.author_id
-            # find all notified partners
-            email_notification_tree[message.id] = message.notification_ids.filtered(
-                lambda n: n.notification_type == 'email' and n.res_partner_id.active and
-                (n.notification_status in ('bounce', 'exception', 'canceled') or n.res_partner_id.partner_share))
-            if message.attachment_ids:
-                attachments |= message.attachment_ids
-        partners |= self.env['mail.notification'].concat(*email_notification_tree.values()).mapped('res_partner_id')
-        # Read partners as SUPERUSER -> message being browsed as SUPERUSER it is already the case
-        partners_names = partners.name_get()
-        partner_tree = dict((partner[0], partner) for partner in partners_names)
-
-        # 2. Attachments as SUPERUSER, because could receive msg and attachments for doc uid cannot see
-        attachments_data = attachments.sudo().read(['id', 'name', 'mimetype'])
+    def _message_format(self, fnames):
+        """Reads values from messages and formats them for the web client."""
+        self.check_access_rule('read')
+        vals_list = self._read_format(fnames)
         safari = request and request.httprequest.user_agent.browser == 'safari'
-        attachments_tree = dict((attachment['id'], {
-            'id': attachment['id'],
-            'filename': attachment['name'],
-            'name': attachment['name'],
-            'mimetype': 'application/octet-stream' if safari and attachment['mimetype'] and 'video' in attachment['mimetype'] else attachment['mimetype'],
-        }) for attachment in attachments_data)
+        for vals in vals_list:
+            message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
 
-        # 3. Tracking values
-        tracking_values = self.env['mail.tracking.value'].sudo().search([('mail_message_id', 'in', message_ids)])
-        message_to_tracking = dict()
-        tracking_tree = dict.fromkeys(tracking_values.ids, False)
-        for tracking in tracking_values:
-            groups = tracking.field_groups
-            if not groups or self.env.is_superuser() or self.user_has_groups(groups):
-                message_to_tracking.setdefault(tracking.mail_message_id.id, list()).append(tracking.id)
-                tracking_tree[tracking.id] = {
-                    'id': tracking.id,
-                    'changed_field': tracking.field_desc,
-                    'old_value': tracking.get_old_display_value()[0],
-                    'new_value': tracking.get_new_display_value()[0],
-                    'field_type': tracking.field_type,
-                }
-
-        # 4. Update message dictionaries
-        for message_dict in messages:
-            message_id = message_dict.get('id')
-            message = message_tree[message_id]
-            if message.author_id:
-                author = partner_tree[message.author_id.id]
+            # Author
+            if message_sudo.author_id:
+                author = (message_sudo.author_id.id, message_sudo.author_id.display_name)
             else:
-                author = (0, message.email_from)
+                author = (0, message_sudo.email_from)
+
+            # Notifications
             customer_email_status = (
-                (all(n.notification_status == 'sent' for n in message.notification_ids if n.notification_type == 'email') and 'sent') or
-                (any(n.notification_status == 'exception' for n in message.notification_ids if n.notification_type == 'email') and 'exception') or
-                (any(n.notification_status == 'bounce' for n in message.notification_ids if n.notification_type == 'email') and 'bounce') or
+                (all(n.notification_status == 'sent' for n in message_sudo.notification_ids if n.notification_type == 'email') and 'sent') or
+                (any(n.notification_status == 'exception' for n in message_sudo.notification_ids if n.notification_type == 'email') and 'exception') or
+                (any(n.notification_status == 'bounce' for n in message_sudo.notification_ids if n.notification_type == 'email') and 'bounce') or
                 'ready'
             )
             customer_email_data = []
-            for notification in email_notification_tree[message.id]:
-                customer_email_data.append((partner_tree[notification.res_partner_id.id][0], partner_tree[notification.res_partner_id.id][1], notification.notification_status))
+            filtered_notifications = message_sudo.notification_ids.filtered(lambda n:
+                n.notification_type == 'email' and n.res_partner_id.active and
+                (n.notification_status in ('bounce', 'exception', 'canceled') or n.res_partner_id.partner_share)
+            )
+            for notification in filtered_notifications:
+                customer_email_data.append((notification.res_partner_id.id, notification.res_partner_id.display_name, notification.notification_status))
 
-            has_access_to_model = message.model and self.env[message.model].check_access_rights('read', raise_exception=False)
-            main_attachment = None
-            if message.attachment_ids and message.res_id and issubclass(self.pool[message.model], self.pool['mail.thread']) and has_access_to_model:
-                main_attachment =  self.env[message.model].browse(message.res_id).message_main_attachment_id
+            # Attachments
+            main_attachment = self.env['ir.attachment']
+            if message_sudo.attachment_ids and message_sudo.res_id and issubclass(self.pool[message_sudo.model], self.pool['mail.thread']):
+                main_attachment = self.env[message_sudo.model].sudo().browse(message_sudo.res_id).message_main_attachment_id
             attachment_ids = []
-            for attachment in message.attachment_ids:
-                if attachment.id in attachments_tree:
-                    attachments_tree[attachment.id]['is_main'] = main_attachment == attachment
-                    attachment_ids.append(attachments_tree[attachment.id])
-            tracking_value_ids = []
-            for tracking_value_id in message_to_tracking.get(message_id, list()):
-                if tracking_value_id in tracking_tree:
-                    tracking_value_ids.append(tracking_tree[tracking_value_id])
+            for attachment in message_sudo.attachment_ids:
+                attachment_ids.append({
+                    'id': attachment.id,
+                    'filename': attachment.name,
+                    'name': attachment.name,
+                    'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
+                    'is_main': main_attachment == attachment
+                })
 
-            message_dict.update({
+            # Tracking values
+            tracking_value_ids = []
+            for tracking in message_sudo.tracking_value_ids:
+                groups = tracking.field_groups
+                if not groups or self.env.is_superuser() or self.user_has_groups(groups):
+                    tracking_value_ids.append({
+                        'id': tracking.id,
+                        'changed_field': tracking.field_desc,
+                        'old_value': tracking.get_old_display_value()[0],
+                        'new_value': tracking.get_new_display_value()[0],
+                        'field_type': tracking.field_type,
+                    })
+
+            vals.update({
                 'author_id': author,
                 'customer_email_status': customer_email_status,
                 'customer_email_data': customer_email_data,
@@ -1034,7 +1005,7 @@ class Message(models.Model):
                 'tracking_value_ids': tracking_value_ids,
             })
 
-        return True
+        return vals_list
 
     def message_fetch_failed(self):
         messages = self.search([
@@ -1114,44 +1085,25 @@ class Message(models.Model):
                     'moderation_status': 'pending_moderation'
                 }
         """
-        message_values = self.read(self._get_message_format_fields())
-        message_tree = dict((m.id, m) for m in self.sudo())
-        self._message_read_dict_postprocess(message_values, message_tree)
-
-        # add subtype data (is_note flag, is_discussion flag , subtype_description). Do it as sudo
-        # because portal / public may have to look for internal subtypes
-        subtype_ids = [msg['subtype_id'][0] for msg in message_values if msg['subtype_id']]
-        subtypes = self.env['mail.message.subtype'].sudo().browse(subtype_ids).read(['internal', 'description','id'])
-        subtypes_dict = dict((subtype['id'], subtype) for subtype in subtypes)
+        vals_list = self._message_format(self._get_message_format_fields())
 
         com_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
         note_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
 
-        # fetch notification status
-
-        notif_dict = defaultdict(lambda: defaultdict(list))
-        notifs = self.env['mail.notification'].sudo().search([('mail_message_id', 'in', list(mid for mid in message_tree)), ('res_partner_id', '!=', False)])
-
-        for notif in notifs:
-            mid = notif.mail_message_id.id
-            if notif.is_read:
-                notif_dict[mid]['history_partner_ids'].append(notif.res_partner_id.id)
-            else:
-                notif_dict[mid]['needaction_partner_ids'].append(notif.res_partner_id.id)
-
-        for message in message_values:
-            message.update({
-                'needaction_partner_ids': notif_dict[message['id']]['needaction_partner_ids'],
-                'history_partner_ids': notif_dict[message['id']]['history_partner_ids'],
-                'is_note': message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == note_id,
-                'is_discussion': message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == com_id,
-                'subtype_description': message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
+        for vals in vals_list:
+            message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
+            notifs = message_sudo.notification_ids.filtered(lambda n: n.res_partner_id)
+            vals.update({
+                'needaction_partner_ids': notifs.filtered(lambda n: not n.is_read).res_partner_id.ids,
+                'history_partner_ids': notifs.filtered(lambda n: n.is_read).res_partner_id.ids,
+                'is_note': message_sudo.subtype_id.id == note_id,
+                'is_discussion': message_sudo.subtype_id.id == com_id,
+                'subtype_description': message_sudo.subtype_id.description,
+                'is_notification': vals['message_type'] == 'user_notification',
             })
-            message['is_notification'] = message['message_type'] == 'user_notification'
-
-            if message['model'] and self.env[message['model']]._original_module:
-                message['module_icon'] = modules.module.get_module_icon(self.env[message['model']]._original_module)
-        return message_values
+            if vals['model'] and self.env[vals['model']]._original_module:
+                vals['module_icon'] = modules.module.get_module_icon(self.env[vals['model']]._original_module)
+        return vals_list
 
     def _get_message_format_fields(self):
         return [
