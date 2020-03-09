@@ -22,20 +22,22 @@ class EventRegistration(models.Model):
         action['res_id'] = self.sale_order_id.id
         return action
 
-    @api.model
-    def create(self, vals):
-        if vals.get('sale_order_line_id'):
-            so_line_vals = self._synchronize_so_line_values(
-                self.env['sale.order.line'].browse(vals['sale_order_line_id'])
-            )
-            vals.update(so_line_vals)
-        res = super(EventRegistration, self).create(vals)
-        if res.sale_order_id:
-            res.message_post_with_view(
-                'mail.message_origin_link',
-                values={'self': res, 'origin': res.sale_order_id},
-                subtype_id=self.env.ref('mail.mt_note').id)
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('sale_order_line_id'):
+                so_line_vals = self._synchronize_so_line_values(
+                    self.env['sale.order.line'].browse(vals['sale_order_line_id'])
+                )
+                vals.update(so_line_vals)
+        registrations = super(EventRegistration, self).create(vals)
+        for registration in registrations:
+            if registration.sale_order_id:
+                registration.message_post_with_view(
+                    'mail.message_origin_link',
+                    values={'self': registration, 'origin': registration.sale_order_id},
+                    subtype_id=self.env.ref('mail.mt_note').id)
+        return registrations
 
     def write(self, vals):
         if vals.get('sale_order_line_id'):

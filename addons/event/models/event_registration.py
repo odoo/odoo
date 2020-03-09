@@ -106,13 +106,13 @@ class EventRegistration(models.Model):
     # CRUD
     # ------------------------------------------------------------
 
-    @api.model
-    def create(self, vals):
-        registration = super(EventRegistration, self).create(vals)
-        if registration._check_auto_confirmation():
-            registration.sudo().action_confirm()
+    @api.model_create_multi
+    def create(self, vals_list):
+        registrations = super(EventRegistration, self).create(vals_list)
+        if registrations._check_auto_confirmation():
+            registrations.sudo().action_confirm()
 
-        return registration
+        return registrations
 
     def write(self, vals):
         ret = super(EventRegistration, self).write(vals)
