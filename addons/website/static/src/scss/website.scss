@@ -75,6 +75,10 @@ $-font-numbers: (
     }
 }
 
+section {
+    position: relative;
+}
+
 .navbar {
     @if ($o-theme-navbar-font != $o-theme-font) {
         font-family: $o-theme-navbar-font;
@@ -805,6 +809,7 @@ table.table_desc tr td {
 
 // Scroll down button
 .o_scroll_button {
+    @include o-position-absolute(auto, 0, 1rem, 0);
     display: flex;
     width: 50px;
     height: 50px;
