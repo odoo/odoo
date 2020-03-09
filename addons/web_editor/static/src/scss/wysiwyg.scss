@@ -363,26 +363,8 @@ body .modal {
 
     // LINK EDITOR DIALOG COLOR SELECTOR
     .o_link_dialog {
-        .o_link_dialog_color > .o_link_dialog_color_item {
-            position: relative;
-            width: 30px;
-            height: 30px;
-            padding: 0; // Important for themes
-            border: 2px solid rgba(0, 0, 0, 0.25);
-            border-radius: 50%;
-
-            input:checked + i::before {
-                content: "\f00c";
-                @include o-position-absolute($top: 6px, $left: 5px);
-            }
-
-            &.btn-link {
-                padding: 3px 9px;
-
-                > span {
-                    text-decoration: underline;
-                }
-            }
+        .o_link_dialog_color > .o_link_dialog_color_item input:checked + i::after {
+            content: "\f00c";
         }
 
         .o_link_dialog_preview {

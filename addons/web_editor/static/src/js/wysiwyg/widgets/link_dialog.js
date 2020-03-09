@@ -27,19 +27,27 @@ var LinkDialog = Dialog.extend({
      * @constructor
      */
     init: function (parent, options, editable, linkInfo) {
-        var self = this;
         this.options = options || {};
-
         this._super(parent, _.extend({
             title: _t("Link to"),
         }, this.options));
 
         this.trigger_up('getRecordInfo', {
             recordInfo: this.options,
-            callback: function (recordInfo) {
-                _.defaults(self.options, recordInfo);
+            callback: recordInfo => {
+                _.defaults(this.options, recordInfo);
             },
         });
+
+        this.colorsData = [
+            ['link', _t("Link"), ''],
+            ['primary', _t("Primary"), 'primary'],
+            ['secondary', _t("Secondary"), 'secondary'],
+            // Note: by compatibility the dialog should be able to remove old
+            // colors that were suggested like the BS status colors or the
+            // alpha -> epsilon classes. This is currently done by removing
+            // all btn-* classes anyway.
+        ];
 
         this.editable = editable;
         this.data = linkInfo || {};
@@ -162,21 +170,6 @@ var LinkDialog = Dialog.extend({
             this.$('input[name="url"]').val(match ? match[1] : this.data.url);
             this._onURLInput();
         }
-
-        // Hide the duplicate color buttons (most of the times, primary = alpha
-        // and secondary = beta for example but this may depend on the theme)
-        this.opened().then(function () {
-            var colors = [];
-            _.each(self.$('.o_link_dialog_color .o_btn_preview'), function (btn) {
-                var $btn = $(btn);
-                var color = $btn.css('background-color');
-                if (_.contains(colors, color)) {
-                    $btn.hide(); // Not remove to be able to edit buttons with those styles
-                } else {
-                    colors.push(color);
-                }
-            });
-        });
 
         this._adaptPreview();
 

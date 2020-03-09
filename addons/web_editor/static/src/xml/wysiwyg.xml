@@ -484,14 +484,10 @@
                     <label class="col-form-label col-md-3">Color</label>
                     <div class="col-md-9">
                         <div class="o_link_dialog_color">
-                            <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-link text-center" data-color="">
-                                <span>L</span>
-                                <input class="d-none link-style" name="link_style_color" type="radio" value=""/>
-                                <i class="fa"/>
-                            </label>
-                            <t t-foreach="['alpha', 'beta', 'gamma', 'delta', 'epsilon', 'primary', 'secondary', 'success', 'info', 'warning', 'danger']" t-as="color">
-                                <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-#{color}" t-attf-aria-label="Color for #{color}" t-attf-title="Color for #{color}">
-                                    <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="color"/>
+                            <t t-foreach="widget.colorsData" t-as="colorData">
+                                <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-#{colorData[0]}">
+                                    <span t-esc="colorData[1]"/>
+                                    <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="colorData[2]"/>
                                     <i class="fa"/>
                                 </label>
                             </t>
