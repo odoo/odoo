@@ -486,7 +486,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             var validationErrorMsg = $questionWrapper.data('validationErrorMsg');
             switch ($input.data('questionType')) {
                 case 'char_box':
-                    if (questionRequired && !questionInactive && !$input.val()) {
+                    if (questionRequired && !$input.val()) {
                         errors[questionId] = constrErrorMsg;
                     } else if ($input.val() && $input.attr('type') === 'email' && !self._validateEmail($input.val())) {
                         errors[questionId] = validationEmailMsg;
