@@ -3,7 +3,7 @@ from odoo.tests import common
 from odoo.exceptions import ValidationError
 
 
-class TestRUCStructure(common.TransactionCase):
+class TestStructure(common.TransactionCase):
 
     def test_peru_ruc_format(self):
         """Only values that has the length of 11 will be checked as RUC, that's what we are proving. The second part
@@ -14,3 +14,24 @@ class TestRUCStructure(common.TransactionCase):
         with self.assertRaises(ValidationError):
             partner.vat = '11111111111'
         partner.vat = '20507822470'
+
+    def test_parent_validation(self):
+        """Test the validation with company and contact"""
+
+        # disable the verification to set an invalid vat number
+        self.env.user.company_id.vat_check_vies = False
+        company = self.env["res.partner"].create({
+            "name": "World Company",
+            "country_id": self.env.ref("base.at").id,
+            "vat": "ATU12345675",
+            "company_type": "company",
+        })
+        contact = self.env["res.partner"].create({
+            "name": "Sylvestre",
+            "parent_id": company.id,
+            "company_type": "person",
+        })
+
+        # reactivate it and correct the vat number
+        self.env.user.company_id.vat_check_vies = True
+        company.vat = "ATU69245667"
