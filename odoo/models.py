@@ -1980,6 +1980,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         field = self._fields.get(split[0])
         if not field:
             raise ValueError("Invalid field %r on model %r" % (split[0], self._name))
+        if not field.groupby:
+            raise UserError(_("Cannot group by field %r.") % field.name)
+
         field_type = field.type
         gb_function = split[1] if len(split) == 2 else None
         temporal = field_type in ('date', 'datetime')
@@ -2208,7 +2211,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 field = self._fields.get(fname)
                 if not field:
                     raise ValueError("Invalid field %r on model %r" % (fname, self._name))
-                if not (field.base_field.store and field.base_field.column_type):
+                if not (field.base_field.store and field.base_field.column_type) or not field.groupby:
                     raise UserError(_("Cannot aggregate field %r.") % fname)
                 if func not in VALID_AGGREGATE_FUNCTIONS:
                     raise UserError(_("Invalid aggregation function %r.") % func)
@@ -2217,8 +2220,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 field = self._fields.get(name)
                 if not field:
                     raise ValueError("Invalid field %r on model %r" % (name, self._name))
-                if not (field.base_field.store and
-                        field.base_field.column_type and field.group_operator):
+                if not (field.groupby
+                        and field.base_field.store
+                        and field.base_field.column_type
+                        and field.group_operator):
                     continue
                 func, fname = field.group_operator, name
 
@@ -4222,6 +4227,8 @@ Record ids: %(records)s
             field = self._fields.get(order_field)
             if not field:
                 raise ValueError("Invalid field %r on model %r" % (order_field, self._name))
+            elif not field.groupby:
+                raise ValueError("Cannot sort on field %r." % field)
 
             if order_field == 'id':
                 order_by_elements.append('"%s"."%s" %s' % (alias, order_field, order_direction))

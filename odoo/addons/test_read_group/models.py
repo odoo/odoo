@@ -65,3 +65,10 @@ class OrderLine(models.Model):
 
     order_id = fields.Many2one('test_read_group.order', ondelete='cascade')
     value = fields.Integer()
+
+
+class GroupOnBinary(models.Model):
+    _name = 'test_read_group.on_binary'
+    _description = 'Group Test Read On Binary'
+
+    file = fields.Binary(attachment=False)
