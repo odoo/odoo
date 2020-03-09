@@ -135,7 +135,7 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
      */
     _onClickPopoverDelete: function (ev) {
         ev.preventDefault();
-        this.trigger_up('delete_event', {id: this.event.id});
+        this.trigger_up('delete_event', {id: this.event.record.id});
     },
 });
 

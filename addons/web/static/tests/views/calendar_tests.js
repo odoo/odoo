@@ -661,7 +661,8 @@ QUnit.module('Views', {
                 stop: fieldUtils.parse.datetime("2016-12-13 08:00:00", this.data.event.fields.stop, {isUTC: true}),
                 allday: false,
                 name: "new event",
-                id: 1
+                id: 1,
+                fullcalendarId: 1
             },
             "the new record should have the utc datetime (quickCreate)");
 
@@ -979,7 +980,8 @@ QUnit.module('Views', {
                 stop: fieldUtils.parse.datetime("2016-12-13 08:00:00", this.data.event.fields.stop, {isUTC: true}),
                 allday: false,
                 name: "new event",
-                id: 1
+                id: 1,
+                fullcalendarId: 1
             },
             "the new record should have the utc datetime (formViewDialog)");
 
@@ -1090,7 +1092,8 @@ QUnit.module('Views', {
                 stop: fieldUtils.parse.datetime("2016-12-13 08:00:00", this.data.event.fields.stop, {isUTC: true}),
                 allday: false,
                 name: "new event",
-                id: 1
+                id: 1,
+                fullcalendarId: 1
             },
             "the new record should have the utc datetime (quickCreate)");
 
@@ -1263,7 +1266,8 @@ QUnit.module('Views', {
                 stop: fieldUtils.parse.datetime("2016-12-13 08:00:00", this.data.event.fields.stop, {isUTC: true}),
                 allday: false,
                 name: "new event",
-                id: 1
+                id: 1,
+                fullcalendarId: 1
             },
             "the new record should have the utc datetime (formViewDialog)");
 
@@ -1380,7 +1384,8 @@ QUnit.module('Views', {
                 stop: fieldUtils.parse.datetime("2016-12-15 00:00:00", this.data.event.fields.stop, {isUTC: true}),
                 allday: true,
                 name: "new event",
-                id: 1
+                id: 1,
+                fullcalendarId: 1
             },
             "the new record should have the utc datetime (quickCreate)");
 
@@ -1557,7 +1562,8 @@ QUnit.module('Views', {
             start: fieldUtils.parse.datetime("2016-12-14 05:00:00", this.data.event.fields.start, {isUTC: true}),
             stop: fieldUtils.parse.datetime("2016-12-15 17:00:00", this.data.event.fields.stop, {isUTC: true}),
             name: "new event",
-            id: 1
+            id: 1,
+            fullcalendarId: 1
         }, "the new record should have the utc datetime (quickCreate)");
 
         calendar.destroy();
@@ -3370,6 +3376,94 @@ QUnit.module('Views', {
 
         calendar.destroy();
     });
+
+
+    QUnit.test('attempt to create multiples events and the same day and check the ordering on month view', async function (assert) {
+        assert.expect(4);
+        /*
+         This test aims to verify that the order of the event in month view is coherent with their start date.
+         FIXME: currently calendar.reload() does not render the name of the event.
+         */
+        var initDate = new Date(2020, 2, 12, 8, 0, 0); //12 of March
+        this.data.event.records = [
+                    {id: 1, user_id: session.uid, partner_id: 1, name: "First event", start: "2020-03-12 00:12:00", stop: "2020-03-12 00:13:00", allday: false, partner_ids: [1,2,3], type: 1},
+                    {id: 2, user_id: session.uid, partner_id: 1, name: "Second event", start: "2020-03-12 00:14:00", stop: "2020-03-12 00:15:00", allday: false, partner_ids: [1,2], type: 3},
+                    {id: 3, user_id: 4, partner_id: 4, name: "Third event", start: "2020-03-12 00:20:00", stop: "2020-03-12 00:21:00", allday: false, partner_ids: [1], type: 2},
+                ];
+
+        var searchReadPass = 0;
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'string="Events" ' +
+                'event_open_popup="true" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="month"/>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initDate,
+            },
+            debug:true,
+            mockRPC: function(route, args) {
+                if (searchReadPass === 1 && route === '/web/dataset/call_kw/event/search_read') {
+                    return Promise.resolve([
+                        {id: 1, user_id: session.uid, partner_id: 1, name: "First event", start: "2020-03-12 00:12:00",
+                        stop: "2020-03-12 00:13:00", allday: false, partner_ids: [1,2,3], type: 1},
+                        {id: 2, user_id: session.uid, partner_id: 1, name: "Second event", start: "2020-03-12 00:09:00",
+                        stop: "2020-03-12 00:10:00", allday: false, partner_ids: [1,2], type: 3},
+                        {id: 3, user_id: 4, partner_id: 4, name: "Third event", start: "2020-03-12 00:21:00",
+                        stop: "2020-03-12 00:22:00", allday: false, partner_ids: [1], type: 2},
+                    ]);
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+        assert.ok(calendar.$('.o_calendar_view').find('.fc-view-container').length, "should display in the calendar"); // OK
+        // Testing the order of the events: by start date
+        assert.strictEqual(calendar.$('.o_event_title').length, 3, "3 events should be available"); // OK
+        assert.strictEqual(calendar.$('.o_event_title').first().text(), 'First event', "First event should be on top");
+        // Second event is modified to start before the first.
+        searchReadPass = 1;
+
+        //await calendar.reload()
+        /* temporary fix */
+        calendar.destroy();
+        await testUtils.nextTick();
+        this.data.event.records = [{id: 1, user_id: session.uid, partner_id: 1, name: "First event", start: "2020-03-12 00:12:00",
+                        stop: "2020-03-12 00:13:00", allday: false, partner_ids: [1,2,3], type: 1},
+                        {id: 2, user_id: session.uid, partner_id: 1, name: "Second event", start: "2020-03-12 00:09:00",
+                        stop: "2020-03-12 00:10:00", allday: false, partner_ids: [1,2], type: 3},
+                        {id: 3, user_id: 4, partner_id: 4, name: "Third event", start: "2020-03-12 00:21:00",
+                        stop: "2020-03-12 00:22:00", allday: false, partner_ids: [1], type: 2}]
+        calendar.destroy();
+        calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'string="Events" ' +
+                'event_open_popup="true" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="month"/>',
+            archs: archs,
+            //debug: true,
+            viewOptions: {
+                initialDate: initDate,
+            },
+        });
+        // Testing the order of the events after modification.
+        assert.strictEqual(calendar.$('.o_event_title').first().text(), 'Second event', "Second event should be on top");
+        calendar.destroy();
+    });
+
 });
 
 });

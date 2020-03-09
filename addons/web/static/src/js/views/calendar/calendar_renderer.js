@@ -345,6 +345,13 @@ return AbstractRenderer.extend({
      * @returns {string} the html for the rendered event
      */
     _eventRender: function (event) {
+        // The event.id is used by fullcalendar to sort the events.
+        // The record.id is the id of the record in database.
+        // setting event.id = record.id is necessary to allow fullcalendar update/delete the corresponding
+        // event in database.
+        if (event.record){
+            event.id = event.record.id;
+        }
         var qweb_context = {
             event: event,
             record: event.record,

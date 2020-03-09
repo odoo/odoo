@@ -160,7 +160,6 @@ return AbstractModel.extend({
             });
     },
     /**
-     * @todo I think this is dead code
      *
      * @param {any} ids
      * @param {any} model
@@ -482,7 +481,13 @@ return AbstractModel.extend({
             })
             .then(function (events) {
                 self._parseServerData(events);
-                self.data.data = _.map(events, self._recordToCalendarEvent.bind(self));
+                // Fullcalendarjs sort the event by ID but it is not always the same order
+                // as sorted by start date.
+                // _sortCustomId set an ID on the event that depend on the starting time of the events
+                // It force the right order in the view. This hack should be reverted once the upstream library
+                // is updated (fullcalendar V4)
+                const eventsNewIds = self._sortCustomId(events);
+                self.data.data = _.map(eventsNewIds, self._recordToCalendarEvent.bind(self));
                 return Promise.all([
                     self._loadColors(self.data, self.data.data),
                     self._loadRecordsToFilters(self.data, self.data.data)
@@ -490,6 +495,31 @@ return AbstractModel.extend({
             });
         });
     },
+        /**
+     * @private
+     * @param {any} events
+     * @returns {any} events with new property: fullcalendarId
+     */
+     _sortCustomId: function (events) {
+        // Sort events by their start_date
+        events.sort(function (a, b) {
+            if (a.start !== undefined && b.start !== undefined) {
+                return a.start.unix() - b.start.unix();
+            } else {
+                // arj fixme: when does start and stop are not defined ?
+                console.log("sorting events they don't have the start date !!");
+                console.log(events);
+                return 0;
+            }
+        });
+         let fcId = 1;
+         for (const key in events) {
+            events[key]['fullcalendarId'] = fcId;
+            fcId += 1;
+         }
+         return events;
+     },
+
     /**
      * @private
      * @param {any} element
@@ -739,7 +769,10 @@ return AbstractModel.extend({
             'r_end': date_stop.clone(),
             'title': the_title,
             'allDay': all_day,
-            'id': evt.id,
+            // id is an internal property used by fullcalendar. It impacts the ordering of events
+            // and therefore needs to be different than the record.id.
+            // This hack should be removed once fullcalendar is updated to V4.
+            'id' : evt.fullcalendarId,
             'attendees':attendees,
         };
 
