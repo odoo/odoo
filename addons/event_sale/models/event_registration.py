@@ -9,9 +9,7 @@ class EventRegistration(models.Model):
     _inherit = 'event.registration'
 
     is_paid = fields.Boolean('Is Paid')
-    # in addition to origin generic fields, add real relational fields to correctly
-    # handle attendees linked to sales orders and their lines
-    # TDE FIXME: maybe add an onchange on sale_order_id + origin
+    # TDE FIXME: maybe add an onchange on sale_order_id
     sale_order_id = fields.Many2one('sale.order', string='Source Sales Order', ondelete='cascade')
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line', ondelete='cascade')
     campaign_id = fields.Many2one('utm.campaign', 'Campaign', related="sale_order_id.campaign_id", store=True)
@@ -32,7 +30,7 @@ class EventRegistration(models.Model):
             )
             vals.update(so_line_vals)
         res = super(EventRegistration, self).create(vals)
-        if res.origin or res.sale_order_id:
+        if res.sale_order_id:
             res.message_post_with_view(
                 'mail.message_origin_link',
                 values={'self': res, 'origin': res.sale_order_id},
@@ -59,7 +57,6 @@ class EventRegistration(models.Model):
                 'partner_id': so_line.order_id.partner_id.id,
                 'event_id': so_line.event_id.id,
                 'event_ticket_id': so_line.event_ticket_id.id,
-                'origin': so_line.order_id.name,
                 'sale_order_id': so_line.order_id.id,
                 'sale_order_line_id': so_line.id,
             }

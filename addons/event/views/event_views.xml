@@ -518,7 +518,6 @@
                     <field name="mobile" optional="hide"/>
                     <field name="event_id"/>
                     <field name="event_ticket_id" domain="[('event_id', '=', event_id)]"/>
-                    <field name="origin" optional="hide"/>
                     <field name="state" readonly="0"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                     <field name="message_needaction" invisible="1"/>
@@ -649,7 +648,7 @@
             <field name="arch" type="xml">
                 <search string="Event Registration">
                     <field name="id" string="Registration ID"/>
-                    <field name="name" string="Participant" filter_domain="['|', '|', ('name', 'ilike', self), ('email', 'ilike', self), ('origin', 'ilike', self)]"/>
+                    <field name="name" string="Participant" filter_domain="['|', '|', ('name', 'ilike', self), ('email', 'ilike', self)]"/>
                     <filter string="Ongoing Events" name="filter_is_ongoing" domain="[('event_id.is_ongoing', '=', True)]"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
