@@ -1295,7 +1295,8 @@ var ManualModel = StatementModel.extend({
      * @returns {boolean} true if load more button needs to be displayed
      */
     hasMoreLines: function () {
-        if (this.manualLines.length > this.pagerIndex) {
+        //if (this.manualLines.length > this.pagerIndex) {
+        if (this.manualLines.length > 0) {
             return true;
         }
         return false;
@@ -1357,7 +1358,7 @@ var ManualModel = StatementModel.extend({
                             self.valuenow = 0;
                             self.valuemax = Object.keys(self.manualLines).length;
                             var lines = self.manualLines.splice(0, self.defaultDisplayQty);
-                            self.pagerIndex = lines.length;
+                            //self.pagerIndex = lines.length;
                             return self.loadData(lines);
                         });
                 case 'accounts':
@@ -1372,7 +1373,7 @@ var ManualModel = StatementModel.extend({
                             self.valuenow = 0;
                             self.valuemax = Object.keys(self.manualLines).length;
                             var lines = self.manualLines.splice(0, self.defaultDisplayQty);
-                            self.pagerIndex = lines.length;
+                            //self.pagerIndex = lines.length;
                             return self.loadData(lines);
                         });
                 default:
@@ -1394,7 +1395,7 @@ var ManualModel = StatementModel.extend({
                             self.valuenow = 0;
                             self.valuemax = Object.keys(self.manualLines).length;
                             var lines = self.manualLines.splice(0, self.defaultDisplayQty);
-                            self.pagerIndex = lines.length;
+                            //self.pagerIndex = lines.length;
                             return self.loadData(lines);
                         });
             }
@@ -1410,8 +1411,9 @@ var ManualModel = StatementModel.extend({
         if (qty === undefined) {
             qty = this.defaultDisplayQty;
         }
-        var lines = this.manualLines.splice(this.pagerIndex, qty);
-        this.pagerIndex += qty;
+        var lines = this.manualLines.splice(0, qty);
+        //var lines = this.manualLines.splice(this.pagerIndex, qty);
+        //this.pagerIndex += qty;
         return this.loadData(lines);
     },
     /**
