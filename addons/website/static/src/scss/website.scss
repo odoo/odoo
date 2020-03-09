@@ -61,6 +61,13 @@ $-font-numbers: (
     --logo-height: #{$o-theme-navbar-logo-height};
     --fixed-logo-height: #{$o-theme-navbar-fixed-logo-height};
     --number-of-fonts: #{length($o-theme-fonts)};
+
+    // 6) Get list of colorpalette custom colors
+    $custom-colors: ();
+    @each $key, $value in $o-color-palette {
+        $custom-colors: append($custom-colors, $key);
+    }
+    --custom-colors: #{$custom-colors};
 }
 
 #wrapwrap {
