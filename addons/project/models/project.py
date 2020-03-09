@@ -964,8 +964,6 @@ class Task(models.Model):
             return self.env['project.task']
         return children + children._get_all_subtasks()
     def action_open_parent_task(self):
-        if self.sudo().parent_id and self.sudo().parent_id.company_id.id not in self.env.companies.ids:
-            raise UserError(_('The parent task belongs to a company you do not have access to.'))
         return {
             'name': _('Parent Task'),
             'view_mode': 'form',
@@ -976,8 +974,6 @@ class Task(models.Model):
         }
 
     def action_subtask(self):
-        if self.sudo().subtask_project_id and self.sudo().subtask_project_id.company_id.id not in self.env.companies.ids:
-            raise UserError(_('The subtasks belong to a company you do not have access to.'))
         action = self.env.ref('project.project_task_action_sub_task').read()[0]
 
         # display all subtasks of current task
