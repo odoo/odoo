@@ -10,6 +10,7 @@
     'author': "Akretion,Odoo Community Association (OCA)",
     'depends': ['l10n_fr', 'account'],
     'data': [
+        'security/ir.model.access.csv',
         'wizard/account_fr_fec_view.xml',
     ],
     'auto_install': True,
