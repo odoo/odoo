@@ -65,5 +65,5 @@ class EventSaleTest(common.TransactionCase):
         # I click apply to create attendees
         self.register_person.action_make_registration()
         # I check if a registration is created
-        registrations = self.EventRegistration.search([('origin', '=', self.sale_order.name)])
+        registrations = self.EventRegistration.search([('sale_order_id', '=', self.sale_order.id)])
         self.assertTrue(registrations, "The registration is not created.")

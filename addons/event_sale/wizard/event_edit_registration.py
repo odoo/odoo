@@ -85,7 +85,6 @@ class RegistrationEditorLine(models.TransientModel):
             'phone': self.phone or self.editor_id.sale_order_id.partner_id.phone,
             'mobile': self.mobile or self.editor_id.sale_order_id.partner_id.mobile,
             'email': self.email or self.editor_id.sale_order_id.partner_id.email,
-            'origin': self.editor_id.sale_order_id.name,
             'sale_order_id': self.editor_id.sale_order_id.id,
             'sale_order_line_id': self.sale_order_line_id.id,
         }

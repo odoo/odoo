@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="event.view_event_registration_tree" />
         <field name="arch" type="xml">
             <field name="event_id" position="after">
-                <field name="origin"/>
+                <field name="sale_order_id"/>
             </field>
         </field>
     </record>
@@ -41,7 +41,6 @@
             <group name="event" position="after">
                 <group string="Origin" groups="base.group_no_one">
                     <field name="sale_order_id"/>
-                    <field name="origin" attrs="{'invisible': [('sale_order_id', '!=', False)]}"/>
                     <field name="sale_order_line_id" readonly="1" attrs="{'invisible': [('sale_order_id', '=', False)]}"/>
                 </group>
                 <group string="Marketing" name="utm_link" groups="base.group_no_one">
