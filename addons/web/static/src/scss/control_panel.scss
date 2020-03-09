@@ -90,13 +90,14 @@
 
             .o_pager_counter {
                 margin-right: 5px;
+                min-width: $o-statbutton-height;
             }
         }
 
         > .o_cp_switch_buttons > .btn:first-child {
             margin-left: $o-horizontal-padding;
             @include media-breakpoint-down(sm) {
-                margin-left: $o-horizontal-padding - 6;
+                margin-left: 0;
             }
         }
     }
