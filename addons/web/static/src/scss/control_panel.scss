@@ -6,17 +6,14 @@
 
     > div {
         display: flex;
-        justify-content: space-between;
         min-height: 30px;
         margin: 5px 0px;
     }
 
-    .breadcrumb, .o_cp_left {
-        flex: 1 1 auto;
-    }
-
-    .o_cp_searchview, .o_cp_right {
-        flex: 0 0 50%;
+    @include media-breakpoint-up(md) {
+        .breadcrumb, .o_cp_left, .o_cp_searchview, .o_cp_right {
+            width: 50%;
+        }
     }
 
     .breadcrumb {
@@ -24,10 +21,6 @@
 
         > li {
             @include o-text-overflow($max-width: 90%);
-
-            > a {
-                cursor: pointer;
-            }
         }
     }
 
