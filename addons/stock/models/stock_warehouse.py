@@ -132,10 +132,6 @@ class Warehouse(models.Model):
 
         Route = self.env['stock.location.route']
         warehouses = self.with_context(active_test=False)
-
-        if vals.get('code') or vals.get('name'):
-            warehouses._update_name_and_code(vals.get('name'), vals.get('code'))
-
         warehouses._create_missing_locations(vals)
 
         if vals.get('reception_steps'):
@@ -156,6 +152,9 @@ class Warehouse(models.Model):
             warehouses._update_partner_data(vals['partner_id'], vals.get('company_id'))
 
         res = super(Warehouse, self).write(vals)
+
+        if vals.get('code') or vals.get('name'):
+            warehouses._update_name_and_code(vals.get('name'), vals.get('code'))
 
         for warehouse in warehouses:
             # check if we need to delete and recreate route
