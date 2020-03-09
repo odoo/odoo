@@ -50,7 +50,7 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
             'mailing_domain': [('id', 'in', self.mm_recs.ids)],
         })
 
-        with self.assertQueryCount(__system__=2478, marketing=3128):
+        with self.assertQueryCount(__system__=2179, marketing=2879):
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
@@ -89,7 +89,7 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
             'mailing_domain': [('id', 'in', self.mm_recs.ids)],
         })
 
-        with self.assertQueryCount(__system__=2865, marketing=3611):
+        with self.assertQueryCount(__system__=2530, marketing=3326):
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
