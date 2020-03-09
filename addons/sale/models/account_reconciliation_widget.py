@@ -42,5 +42,7 @@ class AccountReconciliation(models.AbstractModel):
     @api.model
     def get_bank_statement_line_data(self, st_line_ids, excluded_ids=None):
         res = super(AccountReconciliation, self).get_bank_statement_line_data(st_line_ids=st_line_ids, excluded_ids=excluded_ids)
-        res = self._get_sales_order(res)
+        inject_orders = self.env['ir.config_parameter'].sudo().get_param('sale.reconciliation_with_so')
+        if inject_orders != 'no':
+            res = self._get_sales_order(res)
         return res
