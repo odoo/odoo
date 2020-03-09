@@ -3,9 +3,12 @@ odoo.define('calendar.CalendarView', function (require) {
 
 var CalendarController = require('calendar.CalendarController');
 var CalendarModel = require('calendar.CalendarModel');
-const CalendarRenderer = require('calendar.CalendarRenderer');
+var CalendarRenderer = require('calendar.CalendarRenderer');
 var CalendarView = require('web.CalendarView');
 var viewRegistry = require('web.view_registry');
+var core = require('web.core');
+var qweb = core.qweb;
+
 
 var AttendeeCalendarView = CalendarView.extend({
     config: _.extend({}, CalendarView.prototype.config, {
