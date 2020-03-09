@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import models
 
 
 class MailMessage(models.Model):
@@ -15,12 +15,10 @@ class MailMessage(models.Model):
         ])
 
     def _portal_message_format(self, fields_list):
-        message_values = self.read(fields_list)
-        message_tree = dict((m.id, m) for m in self.sudo())
-        self._message_read_dict_postprocess(message_values, message_tree)
+        vals_list = self._message_format(fields_list)
         IrAttachmentSudo = self.env['ir.attachment'].sudo()
-        for message in message_values:
-            for attachment in message.get('attachment_ids', []):
+        for vals in vals_list:
+            for attachment in vals.get('attachment_ids', []):
                 if not attachment.get('access_token'):
                     attachment['access_token'] = IrAttachmentSudo.browse(attachment['id']).generate_access_token()[0]
-        return message_values
+        return vals_list
