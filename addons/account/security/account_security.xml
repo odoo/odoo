@@ -249,20 +249,5 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
-    <!-- Some modules (i.e. sale) restrict the access for some users
-    We want the invoice group to still have all access on all moves.-->
-    <record id="account_move_rule_group_invoice" model="ir.rule">
-        <field name="name">Readonly Move</field>
-        <field name="model_id" ref="model_account_move"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
-    </record>
-
-    <record id="account_move_line_rule_group_invoice" model="ir.rule">
-        <field name="name">Readonly Move Line</field>
-        <field name="model_id" ref="model_account_move_line"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
-    </record>
 </data>
 </odoo>
