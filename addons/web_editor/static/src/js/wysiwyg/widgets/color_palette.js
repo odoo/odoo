@@ -45,6 +45,7 @@ const ColorPaletteWidget = Widget.extend({
             $editable: $(),
         }, options || {});
 
+        this.selectedColor = '';
         this.trigger_up('request_editable', {callback: val => this.options.$editable = val});
     },
     /**
@@ -113,11 +114,6 @@ const ColorPaletteWidget = Widget.extend({
             });
         }
 
-        // Render custom colors
-        this._buildCustomColors();
-
-        this._addCompatibilityColors(['primary', 'secondary', 'success', 'info', 'warning', 'danger']);
-
         // Compute class colors
         this.colorNames = [];
         this.colorToColorNames = {};
@@ -132,15 +128,29 @@ const ColorPaletteWidget = Widget.extend({
             }
         });
 
-        // Select selected Color
+        // Compute selected color
         if (this.options.selectedColor) {
             const selectedColor = ColorpickerDialog.normalizeCSSColor(this.options.selectedColor);
-            this.selectedColor = this.colorToColorNames[selectedColor] || selectedColor;
+            if (selectedColor !== 'rgba(0, 0, 0, 0)') {
+                this.selectedColor = this.colorToColorNames[selectedColor] || selectedColor;
+            }
+        }
+
+        // Render custom colors
+        this._buildCustomColors();
+
+        // Select selected Color
+        if (this.options.selectedColor) {
             const selectedButton = this.el.querySelector(`button[data-color="${this.selectedColor}"], button[style*="background-color:${this.selectedColor};"]`);
             if (selectedButton) {
                 selectedButton.classList.add('selected');
             }
         }
+
+        // Add those at the very end so that we don't mark hidden colors as
+        // selected. We want those colors to appear as selected custom colors if
+        // they are chosen somehow.
+        this._addCompatibilityColors(['primary', 'secondary', 'success', 'info', 'warning', 'danger']);
 
         return res;
     },
@@ -180,7 +190,9 @@ const ColorPaletteWidget = Widget.extend({
         if (this.options.excluded.includes('custom')) {
             return;
         }
-        const existingColors = new Set(this.summernoteCustomColorsArray);
+        const existingColors = new Set(this.summernoteCustomColorsArray.concat(
+            Object.keys(this.colorToColorNames)
+        ));
         this.trigger_up('get_custom_colors', {
             onSuccess: (colors) => {
                 colors.forEach(color => {
@@ -188,11 +200,20 @@ const ColorPaletteWidget = Widget.extend({
                 });
             },
         });
+        this.style.getPropertyValue(`--custom-colors`).trim().split(' ').forEach(v => {
+            const color = this.style.getPropertyValue(`--${v}`).trim();
+            if (ColorpickerDialog.isCSSColor(color)) {
+                this._addCustomColor(existingColors, color);
+            }
+        });
         _.each(this.options.$editable.find('[style*="color"]'), el => {
             for (const colorProp of ['color', 'backgroundColor']) {
                 this._addCustomColor(existingColors, el.style[colorProp]);
             }
         });
+        if (this.selectedColor) {
+            this._addCustomColor(existingColors, this.selectedColor);
+        }
     },
     /**
      * Add the color to the custom color section if it is not in the existingColors.
@@ -201,8 +222,14 @@ const ColorPaletteWidget = Widget.extend({
      * @param {string} color Color to add to the cuustom colors
      */
     _addCustomColor: function (existingColors, color) {
+        if (!color) {
+            return;
+        }
+        if (!ColorpickerDialog.isCSSColor(color)) {
+            color = this.style.getPropertyValue('--' + color).trim();
+        }
         const normColor = ColorpickerDialog.normalizeCSSColor(color);
-        if (color && !existingColors.has(normColor)) {
+        if (!existingColors.has(normColor)) {
             this._addCustomColorButton(normColor);
             existingColors.add(normColor);
         }
@@ -310,7 +337,7 @@ const ColorPaletteWidget = Widget.extend({
      * @param {Event} ev
      */
     _onColorResetButtonClick: function (ev) {
-        this.selectedColor = false;
+        this.selectedColor = '';
         this.trigger_up('color_reset', {
             target: ev.target,
         });
