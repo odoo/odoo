@@ -6,11 +6,14 @@ class PaymentRegister(models.TransientModel):
 
     def _prepare_communication(self, invoices):
         """Return a single ISR reference
+
         to avoid duplicate of the same number when multiple payments are done
         on the same reference. As those payments are grouped by reference,
         we want a unique reference in communication.
 
         """
+        # Only the first invoice needs to be tested as the grouping ensure
+        # invoice with same ISR are in the same group.
         if invoices[0]._is_isr_supplier_invoice():
             return invoices[0].invoice_payment_ref or invoices[0].ref
         else:
