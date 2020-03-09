@@ -35,6 +35,7 @@ registry
     .add('html', basic_fields.FieldText)
     .add('float', basic_fields.FieldFloat)
     .add('char', basic_fields.FieldChar)
+    .add('secret', basic_fields.FieldSecret)
     .add('link_button', basic_fields.LinkButton)
     .add('handle', basic_fields.HandleWidget)
     .add('email', basic_fields.FieldEmail)

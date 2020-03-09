@@ -803,6 +803,14 @@ class AttachmentHost(models.Model):
         domain=lambda self: [('res_model', '=', self._name)],
     )
 
+
+class Secret(models.Model):
+    _name = 'test_new_api.secret'
+    _description = 'Secret'
+
+    pwd = fields.Secret()
+
+
 class DecimalPrecisionTestModel(models.Model):
     _name = 'decimal.precision.test'
     _description = 'Decimal Precision Test'

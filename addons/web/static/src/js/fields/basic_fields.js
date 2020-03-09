@@ -3711,6 +3711,43 @@ var FieldColorPicker = FieldInteger.extend({
     },
 });
 
+const FieldSecret = InputField.extend({
+    init: function() {
+        this._super(...arguments);
+        this.nodeOptions.isPassword = true;
+        if (!this.attrs.placeholder) {
+            this.updatePlaceholder = function () {
+                if (this.isSet()) {
+                    this.attrs.placeholder = _t("The secret is set already.");
+                } else {
+                    this.attrs.placeholder = _t("The secret is not set yet.");
+                }
+            }
+            this.updatePlaceholder();
+            this.onChange = function () {
+                this._super(...arguments);
+                this.updatePlaceholder();
+            }
+        }
+    },
+    isSet: function() {
+        return this.value !== false;
+    },
+    _renderReadonly: function () {
+        if (this.isSet()) {
+            if (this.value === "") {
+                // A regular user receive an empty string
+                this.$el.text(_t("The secret is set already"));
+            } else {
+                // The super user receive the real secret
+                this.$el.text(this._formatValue(this.value));
+            }
+        } else {
+            this.$el.text(_t("The secret is not set yet"));
+        }
+    },
+});
+
 return {
     TranslatableFieldMixin: TranslatableFieldMixin,
     DebouncedField: DebouncedField,
@@ -3760,6 +3797,7 @@ return {
     AceEditor: AceEditor,
     FieldColor: FieldColor,
     FieldColorPicker: FieldColorPicker,
+    FieldSecret: FieldSecret,
 };
 
 });

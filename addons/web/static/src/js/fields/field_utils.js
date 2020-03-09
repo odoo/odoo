@@ -728,6 +728,7 @@ return {
         one2many: formatX2Many,
         percentage: formatPercentage,
         reference: formatMany2one,
+        secret: formatChar,
         selection: formatSelection,
         text: formatChar,
     },
@@ -749,6 +750,7 @@ return {
         one2many: _.identity,
         percentage: parsePercentage,
         reference: parseMany2one,
+        secret: _.identity, // todo
         selection: _.identity, // todo
         text: _.identity, // todo
     },
