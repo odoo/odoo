@@ -56,7 +56,7 @@ class HolidaysAllocation(models.Model):
         "\nThe status is 'Refused', when an allocation request is refused by manager." +
         "\nThe status is 'Approved', when an allocation request is approved by manager.")
     date_from = fields.Datetime(
-        'Start Date', readonly=True, index=True, copy=False,
+        'Start Date', readonly=True, index=True, copy=False, default=fields.Date.context_today,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, tracking=True)
     date_to = fields.Datetime(
         'End Date', readonly=True, copy=False,
@@ -188,7 +188,7 @@ class HolidaysAllocation(models.Model):
             # in order to not allocate him/her too much leaves
             start_date = holiday.employee_id._get_date_start_work()
             # If employee is created after the period, we cancel the computation
-            if period_end <= start_date:
+            if period_end <= start_date or period_end < holiday.date_from:
                 holiday.write(values)
                 continue
 
@@ -399,8 +399,6 @@ class HolidaysAllocation(models.Model):
     @api.model
     def create(self, values):
         """ Override to avoid automatic logging of creation """
-        if values.get('allocation_type', 'regular') == 'accrual':
-            values['date_from'] = fields.Datetime.now()
         employee_id = values.get('employee_id', False)
         if not values.get('department_id'):
             values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
@@ -446,6 +444,7 @@ class HolidaysAllocation(models.Model):
             'parent_id': self.id,
             'employee_id': employee.id,
             'allocation_type': self.allocation_type,
+            'date_from': self.date_from,
             'date_to': self.date_to,
             'interval_unit': self.interval_unit,
             'interval_number': self.interval_number,
