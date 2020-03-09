@@ -63,7 +63,7 @@ class TestEventData(TestEventCommon):
         self.assertEqual(event.address_id, self.env.user.company_id.partner_id)
         # seats: coming from event type configuration
         self.assertEqual(event.seats_availability, 'limited')
-        self.assertEqual(event.seats_available, event.event_type_id.default_registration_max)
+        self.assertEqual(event.seats_available, event.event_type_id.seats_max)
         self.assertEqual(event.seats_unconfirmed, 0)
         self.assertEqual(event.seats_reserved, 0)
         self.assertEqual(event.seats_used, 0)
@@ -92,7 +92,7 @@ class TestEventData(TestEventCommon):
             'name': 'reg_done',
         })
         reg_done.write({'state': 'done'})
-        self.assertEqual(event.seats_available, event.event_type_id.default_registration_max - 6)
+        self.assertEqual(event.seats_available, event.event_type_id.seats_max - 6)
         self.assertEqual(event.seats_unconfirmed, 1)
         self.assertEqual(event.seats_reserved, 5)
         self.assertEqual(event.seats_used, 1)
@@ -134,7 +134,7 @@ class TestEventData(TestEventCommon):
         event.write({'event_type_id': event_type.id})
         self.assertEqual(event.date_tz, 'Europe/Paris')
         self.assertEqual(event.seats_availability, 'limited')
-        self.assertEqual(event.seats_max, event_type.default_registration_max)
+        self.assertEqual(event.seats_max, event_type.seats_max)
         self.assertTrue(event.auto_confirm)
         self.assertFalse(event.is_online)
         self.assertEqual(event.event_mail_ids.interval_nbr, 1)
@@ -287,17 +287,17 @@ class TestEventTypeData(TestEventCommon):
         event_type = self.env['event.type'].create({
             'name': 'Testing fields computation',
             'has_seats_limitation': True,
-            'default_registration_max': 30,
+            'seats_max': 30,
             'use_ticket': True,
         })
         self.assertTrue(event_type.has_seats_limitation)
-        self.assertEqual(event_type.default_registration_max, 30)
+        self.assertEqual(event_type.seats_max, 30)
         self.assertEqual(event_type.event_type_ticket_ids.mapped('name'), ['Registration'])
 
         # reset seats limitation
         event_type.write({'has_seats_limitation': False})
         self.assertFalse(event_type.has_seats_limitation)
-        self.assertEqual(event_type.default_registration_max, 0)
+        self.assertEqual(event_type.seats_max, 0)
 
         # reset tickets
         event_type.write({'use_ticket': False})
