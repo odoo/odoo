@@ -12,7 +12,7 @@ class SlideQuestion(models.Model):
 
     sequence = fields.Integer("Sequence", default=10)
     question = fields.Char("Question Name", required=True, translate=True)
-    slide_id = fields.Many2one('slide.slide', string="Content", required=True)
+    slide_id = fields.Many2one('slide.slide', string="Content", required=True, ondelete='cascade')
     answer_ids = fields.One2many('slide.answer', 'question_id', string="Answer")
     # statistics
     attempts_count = fields.Integer(compute='_compute_statistics', groups='website.group_website_publisher')
@@ -65,6 +65,6 @@ class SlideAnswer(models.Model):
     _description = "Answer for a slide question"
     _order = 'question_id, id'
 
-    question_id = fields.Many2one('slide.question', string="Question", required=True)
+    question_id = fields.Many2one('slide.question', string="Question", required=True, ondelete='cascade')
     text_value = fields.Char("Answer", required=True, translate=True)
     is_correct = fields.Boolean("Is correct answer")
