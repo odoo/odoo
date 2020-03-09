@@ -7,11 +7,11 @@ from odoo import models
 class MailChannel(models.Model):
     _inherit = 'mail.channel'
 
-    def _convert_visitor_to_lead(self, partner, channel_partners, key):
+    def _convert_visitor_to_lead(self, partner, channel_partners, key, email_from=False, description=''):
         """ When website is installed, we can link the created lead from /lead command
          to the current website_visitor. We do not use the lead name as it does not correspond
          to the lead contact name."""
-        lead = super(MailChannel, self)._convert_visitor_to_lead(partner, channel_partners, key)
+        lead = super(MailChannel, self)._convert_visitor_to_lead(partner, channel_partners, key, email_from, description)
         visitor_sudo = self.livechat_visitor_id.sudo()
         if visitor_sudo:
             visitor_sudo.write({'lead_ids': [(4, lead.id)]})

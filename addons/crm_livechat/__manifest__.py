@@ -6,7 +6,11 @@
     'category': 'Sales/CRM',
     'summary': 'Create lead from livechat conversation',
     'data': [
+        'security/crm_livechat_security.xml',
         'data/utm_data.xml',
+        'data/mail_data.xml',
+        'views/res_config_settings_views.xml',
+        'views/templates.xml',
     ],
     'depends': [
         'crm',

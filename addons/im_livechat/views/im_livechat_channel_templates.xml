@@ -8,6 +8,7 @@
         <template id="assets_backend" name="im_livechat assets backend" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_backend.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_notification_manager.js"></script>
                 <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_channel_form_view.js"></script>
                 <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_channel_form_controller.js"></script>
                 <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat_history.scss"/>
@@ -204,7 +205,6 @@
                     </t>
 
                     odoo.define('im_livechat.livesupport', function (require) {
-            <t t-if="info['available']" t-translation="off">
                         var rootWidget = require('root.widget');
                         var im_livechat = require('im_livechat.im_livechat');
                         var button = new im_livechat.LivechatButton(
@@ -214,7 +214,6 @@
                         );
                         button.appendTo(document.body);
                         window.livechat_button = button;
-            </t>
                     });
                 });
             </t>

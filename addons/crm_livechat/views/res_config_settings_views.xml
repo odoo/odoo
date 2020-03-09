@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.im.livechat</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Livechat" string="Livechat" data-key="im_livechat" attrs="{'invisible': [('group_use_lead','=', False)]}">
+                    <h2>Livechat</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box" title="Lead Generation">
+                            <div class="o_setting_left_pane">
+                                <field name="group_generate_lead"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_generate_lead"/>
+                                <div class="text-muted">
+                                    Convert visitors of your website into leads when no operators are available.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="livechat_config_settings_action" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'im_livechat'}</field>
+    </record>
+
+    <menuitem id="im_livechat_config_settings_menu" name="Settings" parent="im_livechat.livechat_config" action="livechat_config_settings_action" groups="crm.group_use_lead" sequence="10"/>
+</odoo>

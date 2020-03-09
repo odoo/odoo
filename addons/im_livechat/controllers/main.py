@@ -6,6 +6,7 @@ import base64
 from odoo import http,tools, _
 from odoo.http import request
 from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.addons.bus.controllers.main import BusController
 
 
 class LivechatController(http.Controller):
@@ -54,28 +55,26 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/init', type='json', auth="public", cors="*")
     def livechat_init(self, channel_id):
-        available = len(request.env['im_livechat.channel'].sudo().browse(channel_id)._get_available_users())
         rule = {}
-        if available:
-            # find the country from the request
-            country_id = False
-            country_code = request.session.geoip and request.session.geoip.get('country_code') or False
-            if country_code:
-                country_ids = request.env['res.country'].sudo().search([('code', '=', country_code)])
-                if country_ids:
-                    country_id = country_ids[0].id
-            # extract url
-            url = request.httprequest.headers.get('Referer')
-            # find the first matching rule for the given country and url
-            matching_rule = request.env['im_livechat.channel.rule'].sudo().match_rule(channel_id, url, country_id)
-            if matching_rule:
-                rule = {
-                    'action': matching_rule.action,
-                    'auto_popup_timer': matching_rule.auto_popup_timer,
-                    'regex_url': matching_rule.regex_url,
-                }
+        # find the country from the request
+        country_id = False
+        country_code = request.session.geoip and request.session.geoip.get('country_code') or False
+        if country_code:
+            country_ids = request.env['res.country'].sudo().search([('code', '=', country_code)])
+            if country_ids:
+                country_id = country_ids[0].id
+        # extract url
+        url = request.httprequest.headers.get('Referer')
+        # find the first matching rule for the given country and url
+        matching_rule = request.env['im_livechat.channel.rule'].sudo().match_rule(channel_id, url, country_id)
+        if matching_rule:
+            rule = {
+                'action': matching_rule.action,
+                'auto_popup_timer': matching_rule.auto_popup_timer,
+                'regex_url': matching_rule.regex_url,
+            }
         return {
-            'available_for_me': available and (not rule or rule['action'] != 'hide_button'),
+            'available_for_me': not rule or rule['action'] != 'hide_button',
             'rule': rule,
         }
 
@@ -168,3 +167,26 @@ class LivechatController(http.Controller):
         mail_channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)])
         if mail_channel:
             mail_channel._close_livechat_session()
+
+class ImLiveChatController(BusController):
+    # --------------------------
+    # Extends BUS Controller Poll
+    # --------------------------
+    def _poll(self, dbname, channels, last, options):
+        res = super(ImLiveChatController, self)._poll(dbname, channels, last, options)
+        if not request.session.get('uid'):
+            notifications = []
+            for channel in request.env['mail.channel'].sudo().search([('channel_type', '=', 'livechat'), ('uuid', 'in', list(channels))]):
+                livechat_operator = channel.livechat_operator_id
+                operator_ids = channel.livechat_channel_id.user_ids.mapped('partner_id').ids
+                no_operator = livechat_operator.id not in operator_ids or livechat_operator.im_status == 'offline'
+                if no_operator != options.get('no_operator'):
+                    notifications.append({
+                        'channel': channel.uuid,
+                        'message': {
+                            '_type': 'operator_status',
+                            'no_operator': no_operator
+                        }
+                    })
+            res.extend(notifications)
+        return res
