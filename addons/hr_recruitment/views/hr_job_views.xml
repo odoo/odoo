@@ -116,12 +116,6 @@
             <xpath expr="//field[@name='department_id']" position="after">
                 <filter string="My Job Positions" name="my_positions" domain="[('user_id', '=', uid)]"/>
             </xpath>
-            <xpath expr="//group" position="after">
-                <searchpanel>
-                    <field name="company_id" groups="base.group_multi_company" icon="fa-building"/>
-                    <field name="user_id" icon="fa-users"/>
-                </searchpanel>
-            </xpath>
         </field>
     </record>
 

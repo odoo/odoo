@@ -204,11 +204,7 @@ class Job(models.Model):
             current_date_lowerbound = today + timedelta(days=-(i+1))
             amount_applications = Applications.search([('job_id', '=',self.id),'&',('date_open','>',current_date_lowerbound.strftime(DF)),('date_open','<=',current_date_upperbound.strftime(DF))])
             for app in amount_applications:
-                print(current_date_upperbound.strftime(DF))
-                print(current_date_lowerbound.strftime(DF))
-                print(app.date_open)
             data_item = build_graph_data(current_date_upperbound, len(amount_applications))
-            print(data_item)
             data.append(data_item)
 
         return [{'values': data, 'title': '', 'key': 'Applications Count', 'area': True, 'color': color, 'is_sample_data': is_sample_data}]
