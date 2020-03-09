@@ -1127,8 +1127,8 @@ class Lead(models.Model):
     @api.model
     def _notify_get_reply_to(self, res_ids, default=None):
         leads = self.sudo().browse(res_ids)
-        aliases = self.env['crm.team']._notify_get_reply_to(leads.mapped('team_id').ids, default=default)
-        return {lead.id: aliases.get(lead.team_id.id or 0, False) for lead in leads}
+        aliases = self.env['crm.team']._notify_get_reply_to(leads.mapped(lambda x: x.team_id.id or None), default=default)
+        return {lead.id: aliases.get(lead.team_id.id or None, False) for lead in leads}
 
     @api.multi
     def get_formview_id(self, access_uid=None):
