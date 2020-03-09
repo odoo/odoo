@@ -861,12 +861,6 @@
                 <t t-call-assets="web.assets_backend" t-css="false"/>
                 <t t-call="web.conditional_assets_tests"/>
 
-                <![CDATA[
-                    <!--[if lt IE 10]>
-                        <body class="ie9">
-                    <![endif]-->
-                ]]>
-
                 <script type="text/javascript" src="/web/static/src/js/main.js"></script>
             </t>
             <t t-set="head" t-value="head_web + (head or '')"/>
