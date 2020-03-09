@@ -22,6 +22,7 @@ class AccountReconciliation(models.AbstractModel):
                 OR POSITION(lower(o.reference) IN lower(stl.name)) != 0)
               AND stl.id IN %s
               AND (o.invoice_status = 'to invoice' OR o.state = 'sent')
+              AND o.amount_total != 0
               AND o.company_id = %s
             GROUP BY stl.id
             ORDER BY stl.id
