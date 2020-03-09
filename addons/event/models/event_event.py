@@ -34,7 +34,7 @@ class EventType(models.Model):
         readonly=False, store=True)
     # registration
     has_seats_limitation = fields.Boolean('Limited Seats')
-    default_registration_max = fields.Integer(
+    seats_max = fields.Integer(
         'Maximum Registrations', compute='_compute_default_registration',
         copy=True, readonly=False, store=True,
         help="It will select this default maximum value when you choose this event")
@@ -89,7 +89,7 @@ class EventType(models.Model):
     def _compute_default_registration(self):
         for template in self:
             if not template.has_seats_limitation:
-                template.default_registration_max = 0
+                template.seats_max = 0
 
 
 class EventEvent(models.Model):
@@ -324,7 +324,7 @@ class EventEvent(models.Model):
         blacklisted during create (see ``_field_computed`` attribute used in create
         to compute protected field from re-computation) """
         for event in self:
-            if event.event_type_id.default_registration_max:
+            if event.event_type_id.seats_max:
                 event.seats_availability = 'limited'
             if not event.seats_availability:
                 event.seats_availability = 'unlimited'
@@ -353,8 +353,8 @@ class EventEvent(models.Model):
                     event.event_ticket_ids = False
                 continue
 
-            if event.event_type_id.default_registration_max:
-                event.seats_max = event.event_type_id.default_registration_max
+            if event.event_type_id.seats_max:
+                event.seats_max = event.event_type_id.seats_max
 
             if event.event_type_id.auto_confirm:
                 event.auto_confirm = event.event_type_id.auto_confirm
