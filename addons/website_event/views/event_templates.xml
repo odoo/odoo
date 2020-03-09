@@ -190,8 +190,8 @@
                     <main t-attf-class="#{opt_events_list_cards and 'card-body' or (opt_events_list_columns and 'py-3' or 'px-4')}">
                         <!-- Title -->
                         <h5 t-attf-class="card-title mt-2 mb-0 text-truncate #{(not event.website_published) and 'text-danger'}">
-                            <a t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register'}" 
-                                class="text-reset text-decoration-none" 
+                            <a t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register'}"
+                                class="text-reset text-decoration-none"
                                 itemprop="url">
                                 <span t-field="event.name" itemprop="name"/>
                             </a>
@@ -420,29 +420,9 @@
                     <div class="col-lg-4 bg-light shadow-sm d-print-none">
                         <!-- Date & Time -->
                         <div class="o_wevent_sidebar_block">
-                            <h6 class="o_wevent_sidebar_title">Date &amp; Time</h6>
-                            <div class="d-flex">
-                                <h5 t-field="event.with_context(tz=event.date_tz).date_begin" class="my-1 mr-1" t-options="{'date_only': 'true', 'format': 'EEEE'}"/>
-                                <h5 class="my-1" t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'long'}" itemprop="startDate" t-att-datetime="event.date_begin"/>
-                            </div>
-                            <t t-if="not event.is_one_day">Start -</t>
-                            <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'time_only': 'true', 'format': 'short'}"/>
-                            <t t-if="event.is_one_day">
-                                <i class="fa fa-long-arrow-right mx-1"/>
-                                <span t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'time_only': 'true', 'format': 'short'}"/>
+                            <t t-call="website_event.event_dates">
+                                <t t-set="event" t-value="event"/>
                             </t>
-                            <t t-else="">
-                                <i class="fa fa-long-arrow-down d-block text-muted mx-3 my-2" style="font-size: 1.5rem"/>
-                                <div class="d-flex">
-                                    <h5 t-field="event.with_context(tz=event.date_tz).date_end" class="my-1 mr-1" t-options="{'date_only': 'true', 'format': 'EEEE'}"/>
-                                    <h5 class="my-1" t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'date_only': 'true', 'format': 'long'}"/>
-                                </div>
-                                <t t-if="not event.is_one_day">End -</t>
-                                <span t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'time_only': 'true', 'format': 'short'}"/>
-                            </t>
-                            <!-- Timezone -->
-                            <small t-esc="event.date_tz" class="d-block my-3 text-muted"/>
-
                             <div class="dropdown">
                                 <i class="fa fa-calendar mr-1"/>
                                 <a href="#" role="button" data-toggle="dropdown">Add to Calendar</a>
@@ -526,7 +506,7 @@
 
             <t t-set="tickets" t-value="event.event_ticket_ids.filtered(lambda ticket: not ticket.is_expired)"/>
             <!-- If some tickets expired and there is only one type left, we keep the same layout -->
-            <t t-if="len(event.event_ticket_ids) &gt; 1"> 
+            <t t-if="len(event.event_ticket_ids) &gt; 1">
                 <div class="d-flex align-items-center py-2 pl-3 pr-2 border-bottom">
                     <span t-if="not event.event_registrations_open" class="text-danger">
                         <i class="fa fa-ban mr-2"/>Sold Out

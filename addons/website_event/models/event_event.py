@@ -6,6 +6,7 @@ import json
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.base.models.res_partner import _tz_get
 
 GOOGLE_CALENDAR_URL = 'https://www.google.com/calendar/render?'
 
@@ -99,6 +100,11 @@ class Event(models.Model):
                         event.menu_id = root_menu
                     for sequence, (name, url, xml_id) in enumerate(event._get_menu_entries()):
                         event._create_menu(sequence, name, url, xml_id)
+
+    @api.model
+    def _event_tz_get(self):
+        # to be able to get the timezone list from the snippet template
+        return _tz_get(self)
 
     def _create_menu(self, sequence, name, url, xml_id):
         if not url:
