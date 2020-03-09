@@ -80,6 +80,7 @@ class Job(models.Model):
 
     def action_view_job(self):
         print(self)
+        print("new_source")
         return {
             'name': _('Job Position'),
             'type': 'ir.actions.act_window',
@@ -89,7 +90,15 @@ class Job(models.Model):
         }
         # action = self.with_context(active_id=self.id).env.ref('hr_recruitment.act_jobs_form_single').read()[0]
         # return action
-
+    def action_hr_job_sources_func(self):
+        return{
+            'name':_('Job Position'),
+            'type':'ir.actions.act_window',
+            'res_model':'hr.recruitment.source',
+            'view_mode':'tree',
+            'domain':'[("job_id","=",active_id)]',
+            'context':'{"default_job_id": active_id,"default_source_id":6}',
+        }
     def _get_first_stage(self):
         self.ensure_one()
         return self.env['hr.recruitment.stage'].search([
@@ -118,7 +127,14 @@ class Job(models.Model):
     @api.model
     def create(self, vals):
         vals['favorite_user_ids'] = vals.get('favorite_user_ids', []) + [(4, self.env.uid)]
-        return super(Job, self).create(vals)
+        res = super(Job, self).create(vals)
+        print(res.id)
+        new_source = self.env['hr.recruitment.source'].create({
+        'source_id': 6,
+        'job_id': res.id
+        })
+        print(new_source)
+        return res
 
     def _creation_subtype(self):
         return self.env.ref('hr_recruitment.mt_job_new')
