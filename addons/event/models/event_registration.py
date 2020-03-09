@@ -16,9 +16,6 @@ class EventRegistration(models.Model):
     _order = 'id desc'
 
     # event
-    origin = fields.Char(
-        string='Source Document', readonly=True,
-        help="Reference of the document that created the registration, for example a sales order")
     event_id = fields.Many2one(
         'event.event', string='Event', required=True,
         readonly=True, states={'draft': [('readonly', False)]})
