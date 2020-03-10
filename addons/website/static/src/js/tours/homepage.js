@@ -1,4 +1,4 @@
-odoo.define("website.tour.banner", function (require) {
+odoo.define("website.tour.homepage", function (require) {
 "use strict";
 
 var core = require("web.core");
@@ -6,7 +6,7 @@ var tour = require("web_tour.tour");
 
 var _t = core._t;
 
-tour.register("banner", {
+tour.register("homepage", {
     url: "/",
 }, [{
     trigger: "a[data-action=edit]",
@@ -79,29 +79,6 @@ tour.register("banner", {
 }, {
     trigger: ".js_publish_management .js_publish_btn",
     content: _t("<b>That's it!</b><p>Your page is all set to go live. Click the <b>Publish</b> button to publish it on the website.</p>"),
-    position: "bottom",
-}]);
-});
-
-//==============================================================================
-
-odoo.define("website.tour.contact", function (require) {
-"use strict";
-
-var core = require("web.core");
-var tour = require("web_tour.tour");
-var _t = core._t;
-
-tour.register("contact", {
-    url: "/page/contactus",
-}, [{
-    trigger: "li#customize-menu",
-    content: _t("<b>Install a contact form</b> to improve this page."),
-    extra_trigger: "#o_contact_mail",
-    position: "bottom",
-}, {
-    trigger: "li#install_apps",
-    content: _t("<b>Install new apps</b> to get more features. Let's install the <i>'Contact form'</i> app."),
     position: "bottom",
 }]);
 });
