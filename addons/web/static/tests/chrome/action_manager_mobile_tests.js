@@ -1,6 +1,7 @@
 odoo.define('web.action_manager_mobile_tests', function (require) {
 "use strict";
 
+var ActionManager = require('web.ActionManager');
 var testUtils = require('web.test_utils');
 
 var createActionManager = testUtils.createActionManager;
@@ -130,6 +131,57 @@ QUnit.module('ActionManager', {
         assert.hasClass(actionManager.$('.o_cp_switch_buttons .o_switch_view_button_icon'), 'fa-th-large');
 
         actionManager.destroy();
+    });
+
+    QUnit.test('data-mobile attribute on action button, in mobile', async function (assert) {
+        assert.expect(2);
+
+        testUtils.mock.patch(ActionManager, {
+            doAction(action, options) {
+                if (typeof action !== 'number' && action.id === 1) {
+                    assert.strictEqual(options.plop, 28);
+                } else {
+                    assert.strictEqual(options.plop, undefined);
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        this.archs['partner,75,kanban'] = `
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <field name="display_name"/>
+                            <button 
+                                name="1"
+                                string="Execute action"
+                                type="action"
+                                data-mobile='{"plop": 28}'/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`;
+
+        this.actions.push({
+            id: 100,
+            name: 'action 100',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[75, 'kanban']],
+        });
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data
+        });
+
+        await actionManager.doAction(100, {});
+        await testUtils.dom.click(actionManager.$('button[data-mobile]:first'));
+
+        actionManager.destroy();
+        testUtils.mock.unpatch(ActionManager);
     });
 });
 
