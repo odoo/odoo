@@ -2745,7 +2745,7 @@ class TestStockValuation(SavepointCase):
         self.product1.categ_id.property_cost_method = 'standard'
         self.product1.categ_id.property_valuation = 'manual_periodic'
 
-        self.product1.with_user(self.inventory_user)._change_standard_price(10)
+        self.product1._change_standard_price(10)
 
         move1 = self.env['stock.move'].with_user(self.inventory_user).create({
             'name': 'IN 10 units',
@@ -2765,7 +2765,7 @@ class TestStockValuation(SavepointCase):
         self.product1.categ_id.property_cost_method = 'standard'
         self.product1.categ_id.property_valuation = 'real_time'
 
-        self.product1.with_user(self.inventory_user)._change_standard_price(10)
+        self.product1._change_standard_price(10)
 
         move1 = self.env['stock.move'].with_user(self.inventory_user).create({
             'name': 'IN 10 units',
