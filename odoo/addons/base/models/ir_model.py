@@ -1255,7 +1255,7 @@ class IrModelConstraint(models.Model):
         for data in self.sorted(key='id', reverse=True):
             name = tools.ustr(data.name)
             if data.model.model in self.env:
-                table = self.env[data.model.model]._table    
+                table = self.env[data.model.model]._table
             else:
                 table = data.model.model.replace('.', '_')
             typ = data.type
@@ -1967,29 +1967,33 @@ class IrModelData(models.Model):
         self = self.with_context({MODULE_UNINSTALL_FLAG: True})
         loaded_xmlids = self.pool.loaded_xmlids
 
-        query = """ SELECT id, module || '.' || name, model, res_id FROM ir_model_data
-                    WHERE module IN %s AND res_id IS NOT NULL AND COALESCE(noupdate, false) != %s ORDER BY id DESC
+        query = """ SELECT id, module || '.' || name, model, res_id, noupdate FROM ir_model_data
+                    WHERE module IN %s AND res_id IS NOT NULL ORDER BY id DESC
                 """
-        self._cr.execute(query, (tuple(modules), True))
-        for (id, xmlid, model, res_id) in self._cr.fetchall():
+        self._cr.execute(query, [tuple(modules)])
+        for (id, xmlid, model, res_id, noupdate) in self._cr.fetchall():
             if xmlid not in loaded_xmlids:
-                if model in self.env:
-                    if self.search_count([
-                        ("model", "=", model),
-                        ("res_id", "=", res_id),
-                        ("id", "!=", id),
-                        ("id", "not in", bad_imd_ids),
-                    ]):
-                        # another external id is still linked to the same record, only deleting the old imd
-                        bad_imd_ids.append(id)
-                        continue
+                if noupdate:
+                    if model not in ('ir.module.module', 'ir.module.category'):
+                        _logger.warning('xmlid %s (%s(%s)) was removed from code but is noupdate. Manually remove xmlid or record.', xmlid, model, res_id)
+                else:
+                    if model in self.env:
+                        if self.search_count([
+                            ("model", "=", model),
+                            ("res_id", "=", res_id),
+                            ("id", "!=", id),
+                            ("id", "not in", bad_imd_ids),
+                        ]):
+                            # another external id is still linked to the same record, only deleting the old imd
+                            bad_imd_ids.append(id)
+                            continue
 
-                    _logger.info('Deleting %s@%s (%s)', res_id, model, xmlid)
-                    record = self.env[model].browse(res_id)
-                    if record.exists():
-                        record.unlink()
-                    else:
-                        bad_imd_ids.append(id)
+                        _logger.info('Deleting %s@%s (%s)', res_id, model, xmlid)
+                        record = self.env[model].browse(res_id)
+                        if record.exists():
+                            record.unlink()
+                        else:
+                            bad_imd_ids.append(id)
         if bad_imd_ids:
             self.browse(bad_imd_ids).unlink()
 
