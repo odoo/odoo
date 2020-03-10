@@ -29,13 +29,17 @@ class EventRegistration(models.Model):
     partner_id = fields.Many2one(
         'res.partner', string='Contact',
         states={'done': [('readonly', True)]})
-    name = fields.Char(string='Attendee Name', index=True, required=True, tracking=True)
-    email = fields.Char(string='Email')
-    phone = fields.Char(string='Phone')
-    mobile = fields.Char(string='Mobile')
+    name = fields.Char(
+        string='Attendee Name', index=True,
+        compute='_compute_contact_info', copy=True, readonly=False, store=True, tracking=10)
+    email = fields.Char(string='Email', compute='_compute_contact_info', copy=True, readonly=False, store=True, tracking=11)
+    phone = fields.Char(string='Phone', compute='_compute_contact_info', copy=True, readonly=False, store=True, tracking=12)
+    mobile = fields.Char(string='Mobile', compute='_compute_contact_info', copy=True, readonly=False, store=True, tracking=13)
     # organization
     date_open = fields.Datetime(string='Registration Date', readonly=True, default=lambda self: fields.Datetime.now())  # weird crash is directly now
-    date_closed = fields.Datetime(string='Attended Date', readonly=True)
+    date_closed = fields.Datetime(
+        string='Attended Date', compute='_compute_date_closed',
+        copy=True, readonly=False, store=True)
     event_begin_date = fields.Datetime(string="Event Start Date", related='event_id.date_begin', readonly=True)
     event_end_date = fields.Datetime(string="Event End Date", related='event_id.date_end', readonly=True)
     company_id = fields.Many2one(
@@ -46,11 +50,43 @@ class EventRegistration(models.Model):
         ('open', 'Confirmed'), ('done', 'Attended')],
         string='Status', default='draft', readonly=True, copy=False, tracking=True)
 
-    @api.onchange('event_id')
-    def _onchange_event_id(self):
-        # We reset the ticket when keeping it would lead to an inconstitent state.
-        if self.event_ticket_id and (not self.event_id or self.event_id != self.event_ticket_id.event_id):
-            self.event_ticket_id = None
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        """ Keep an explicit onchange on partner_id. Rationale : if user explicitly
+        changes the partner in interface, he want to update the whole customer
+        information. If partner_id is updated in code (e.g. updating your personal
+        information after having registered in website_event_sale) fields with a
+        value should not be reset as we don't know which one is the right one.
+
+        In other words
+          * computed fields based on partner_id should only update missing
+            information. Indeed automated code cannot decide which information
+            is more accurate;
+          * interface should allow to update all customer related information
+            at once. We consider event users really want to update all fields
+            related to the partner;
+        """
+        for registration in self:
+            if registration.partner_id:
+                registration.update(registration._synchronize_partner_values(registration.partner_id))
+
+    @api.depends('partner_id')
+    def _compute_contact_info(self):
+        for registration in self:
+            if registration.partner_id:
+                partner_vals = self._synchronize_partner_values(registration.partner_id)
+                registration.update(
+                    dict((fname, fvalue)
+                         for fname, fvalue in partner_vals.items()
+                         if fvalue and not (registration[fname] or registration._origin[fname])
+                         )
+                    )
+
+    @api.depends('state')
+    def _compute_date_closed(self):
+        for registration in self:
+            if registration.state == 'done' and not registration.date_closed:
+                registration.date_closed = fields.Datetime.now()
 
     @api.constrains('event_id', 'state')
     def _check_seats_limit(self):
@@ -64,10 +100,10 @@ class EventRegistration(models.Model):
             if record.event_ticket_id.seats_max and record.event_ticket_id.seats_available < 0:
                 raise ValidationError(_('No more available seats for this ticket'))
 
-    @api.onchange('partner_id')
-    def _onchange_partner(self):
-        if self.partner_id:
-            self.update(self._synchronize_partner_values(self.partner_id))
+    @api.constrains('event_id', 'event_ticket_id')
+    def _check_event_ticket(self):
+        if any(registration.event_id != registration.event_ticket_id.event_id for registration in self if registration.event_ticket_id):
+            raise ValidationError(_('Invalid event / ticket choice'))
 
     # ------------------------------------------------------------
     # CRUD
@@ -75,13 +111,6 @@ class EventRegistration(models.Model):
 
     @api.model
     def create(self, vals):
-        # update missing pieces of information from partner
-        if vals.get('partner_id'):
-            partner_vals = self._synchronize_partner_values(
-                self.env['res.partner'].browse(vals['partner_id'])
-            )
-            vals = dict(partner_vals, **vals)
-
         registration = super(EventRegistration, self).create(vals)
         if registration._check_auto_confirmation():
             registration.sudo().action_confirm()
@@ -89,20 +118,7 @@ class EventRegistration(models.Model):
         return registration
 
     def write(self, vals):
-        if vals.get('state') == 'done' and 'date_closed' not in vals:
-            vals['date_closed'] = fields.Datetime.now()
-
         ret = super(EventRegistration, self).write(vals)
-
-        # update missing pieces of information from partner
-        if vals.get('partner_id'):
-            partner_vals = self._synchronize_partner_values(
-                self.env['res.partner'].browse(vals['partner_id'])
-            )
-            for registration in self:
-                partner_info = dict((key, val) for key, val in partner_vals.items() if not registration[key])
-                if partner_info:
-                    registration.write(partner_info)
 
         if vals.get('state') == 'open':
             # auto-trigger after_sub (on subscribe) mail schedulers, if needed

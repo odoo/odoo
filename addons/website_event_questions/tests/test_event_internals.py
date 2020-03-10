@@ -22,7 +22,7 @@ class TestEventData(TestEventQuestionCommon):
             'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
         })
-        event._onchange_type()
+
         self.assertEqual(event.specific_question_ids.title, 'Question1')
         self.assertEqual(
             set(event.specific_question_ids.mapped('answer_ids.name')),

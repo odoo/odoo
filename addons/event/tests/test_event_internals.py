@@ -58,12 +58,12 @@ class TestEventData(TestEventCommon):
             'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
         })
-        event._onchange_type()
+
         self.assertFalse(event.is_online)
         self.assertEqual(event.address_id, self.env.user.company_id.partner_id)
         # seats: coming from event type configuration
         self.assertEqual(event.seats_availability, 'limited')
-        self.assertEqual(event.seats_available, event.event_type_id.default_registration_max)
+        self.assertEqual(event.seats_available, event.event_type_id.seats_max)
         self.assertEqual(event.seats_unconfirmed, 0)
         self.assertEqual(event.seats_reserved, 0)
         self.assertEqual(event.seats_used, 0)
@@ -71,7 +71,6 @@ class TestEventData(TestEventCommon):
 
         # set is_online: should reset the address_id field
         event.update({'is_online': True})
-        event._onchange_is_online()
         self.assertTrue(event.is_online)
         self.assertFalse(event.address_id)
 
@@ -93,7 +92,7 @@ class TestEventData(TestEventCommon):
             'name': 'reg_done',
         })
         reg_done.write({'state': 'done'})
-        self.assertEqual(event.seats_available, event.event_type_id.default_registration_max - 6)
+        self.assertEqual(event.seats_available, event.event_type_id.seats_max - 6)
         self.assertEqual(event.seats_unconfirmed, 1)
         self.assertEqual(event.seats_reserved, 5)
         self.assertEqual(event.seats_used, 1)
@@ -112,14 +111,12 @@ class TestEventData(TestEventCommon):
         event_type.write({
             'use_mail_schedule': False,
         })
-        # Event type does not use mail schedule but data is kept for compatibility and avoid recreating them
-        self.assertEqual(len(event_type.event_type_mail_ids), 2)
+        self.assertEqual(event_type.event_type_mail_ids, self.env['event.type.mail'])
 
         event = self.env['event.event'].create({
             'name': 'Event Update Type',
             'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
-            'auto_confirm': False,
             'is_online': True,
         })
         self.assertEqual(event.date_tz, self.env.user.tz)
@@ -128,22 +125,18 @@ class TestEventData(TestEventCommon):
         self.assertTrue(event.is_online)
         self.assertEqual(event.event_mail_ids, self.env['event.mail'])
 
-        event.update({'event_type_id': event_type.id})
-        event._onchange_type()
-        self.assertEqual(event.date_tz, 'Europe/Paris')
-        self.assertEqual(event.seats_availability, 'limited')
-        self.assertEqual(event.seats_max, event_type.default_registration_max)
-        self.assertTrue(event.auto_confirm)
-        self.assertFalse(event.is_online)
-        self.assertEqual(event.event_mail_ids, self.env['event.mail'])
-
         event_type.write({
             'use_mail_schedule': True,
             'event_type_mail_ids': [(5, 0), (0, 0, {
                 'interval_nbr': 1, 'interval_unit': 'days', 'interval_type': 'before_event',
                 'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})]
         })
-        event._onchange_type()
+        event.write({'event_type_id': event_type.id})
+        self.assertEqual(event.date_tz, 'Europe/Paris')
+        self.assertEqual(event.seats_availability, 'limited')
+        self.assertEqual(event.seats_max, event_type.seats_max)
+        self.assertTrue(event.auto_confirm)
+        self.assertFalse(event.is_online)
         self.assertEqual(event.event_mail_ids.interval_nbr, 1)
         self.assertEqual(event.event_mail_ids.interval_unit, 'days')
         self.assertEqual(event.event_mail_ids.interval_type, 'before_event')
@@ -194,7 +187,7 @@ class TestEventData(TestEventCommon):
         self.assertFalse(event.event_registrations_open)
 
     @users('user_eventmanager')
-    def test_ongoing_events(self):
+    def test_event_ongoing(self):
         self.patcher = patch('odoo.addons.event.models.event_event.fields.Datetime', wraps=FieldsDatetime)
         self.mock_datetime = self.patcher.start()
         self.mock_datetime.now.return_value = datetime(2020, 1, 10, 8, 0, 0)
@@ -294,19 +287,17 @@ class TestEventTypeData(TestEventCommon):
         event_type = self.env['event.type'].create({
             'name': 'Testing fields computation',
             'has_seats_limitation': True,
-            'default_registration_max': 30,
+            'seats_max': 30,
             'use_ticket': True,
         })
-        event_type._onchange_has_seats_limitation()
         self.assertTrue(event_type.has_seats_limitation)
-        self.assertEqual(event_type.default_registration_max, 30)
+        self.assertEqual(event_type.seats_max, 30)
         self.assertEqual(event_type.event_type_ticket_ids.mapped('name'), ['Registration'])
 
         # reset seats limitation
         event_type.write({'has_seats_limitation': False})
-        event_type._onchange_has_seats_limitation()
         self.assertFalse(event_type.has_seats_limitation)
-        self.assertEqual(event_type.default_registration_max, 0)
+        self.assertEqual(event_type.seats_max, 0)
 
         # reset tickets
         event_type.write({'use_ticket': False})

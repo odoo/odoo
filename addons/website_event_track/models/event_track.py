@@ -43,10 +43,16 @@ class Track(models.Model):
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', related='event_id.company_id')
     partner_id = fields.Many2one('res.partner', 'Speaker')
-    partner_name = fields.Char('Name', tracking=10)
-    partner_email = fields.Char('Email', tracking=20)
-    partner_phone = fields.Char('Phone', tracking=30)
-    partner_biography = fields.Html('Biography')
+    partner_name = fields.Char(
+        string='Name', compute='_compute_partner_info',
+        copy=True, readonly=False, store=True, tracking=10)
+    partner_email = fields.Char(
+        string='Email', compute='_compute_partner_info',
+        copy=True, readonly=False, store=True, tracking=20)
+    partner_phone = fields.Char(
+        string='Phone', compute='_compute_partner_info',
+        copy=True, readonly=False, store=True, tracking=30)
+    partner_biography = fields.Html(string='Biography')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
     stage_id = fields.Many2one(
         'event.track.stage', string='Stage', ondelete='restrict',
@@ -82,12 +88,13 @@ class Track(models.Model):
             if track.id:
                 track.website_url = '/event/%s/track/%s' % (slug(track.event_id), slug(track))
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        if self.partner_id:
-            self.partner_name = self.partner_id.name
-            self.partner_email = self.partner_id.email
-            self.partner_phone = self.partner_id.phone
+    @api.depends('partner_id')
+    def _compute_partner_info(self):
+        for track in self:
+            if track.partner_id:
+                track.partner_name = track.partner_id.name
+                track.partner_email = track.partner_id.email
+                track.partner_phone = track.partner_id.phone
 
     @api.depends('date', 'duration')
     def _compute_end_date(self):
