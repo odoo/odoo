@@ -137,7 +137,7 @@ var Tip = Widget.extend({
             $location.hasClass('dropdown-menu') ||
             $location.hasClass('o_notebook_headers') ||
             (
-                (o === "visible" || o === "hidden") &&
+                (o === "visible" || o.includes("hidden")) && // Possible case where the overflow = "hidden auto"
                 p !== "fixed" &&
                 $location[0].tagName.toUpperCase() !== 'BODY'
             )
