@@ -264,7 +264,7 @@ class TestViewSaving(common.TransactionCase):
         )
 
 
-@tagged('-at_install', 'post_install', 'JPP')
+@tagged('-at_install', 'post_install')
 class TestCowViewSaving(common.TransactionCase):
     def setUp(self):
         super(TestCowViewSaving, self).setUp()
