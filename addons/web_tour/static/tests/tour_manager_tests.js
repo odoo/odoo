@@ -64,6 +64,11 @@ odoo.define('web_tour.tour_manager_tests', async function (require) {
                     { name: "Tour 2", options: {}, steps: [{ trigger: '.anchor' }] },
                     { name: "Tour 3", options: { sequence: 5 }, steps: [{ trigger: '.anchor', content: "Oui" }] },
                 ],
+                // Use this test in "debug" mode because the tips need to be in
+                // the viewport to be able to test their normal content
+                // (otherwise, the tips would indicate to the users that they
+                // have to scroll).
+                debug: true,
             });
 
             assert.containsOnce(document.body, '.o_tooltip');
