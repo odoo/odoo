@@ -64,7 +64,7 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
         }
         orderDone() {
             this.currentOrder.finalize();
-            this.trigger('show-screen', { name: 'ProductScreen' });
+            this.showScreen('ProductScreen');
         }
         async printReceipt() {
             if (this.env.pos.proxy.printer) {

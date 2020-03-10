@@ -22,7 +22,7 @@ odoo.define('point_of_sale.chrome', function(require) {
     class Chrome extends PosComponent {
         constructor() {
             super(...arguments);
-            useListener('show-screen', this.showScreen);
+            useListener('show-main-screen', this.__showScreen);
             useListener('pos-error', this.onPosError);
             useListener('toggle-debug-widget', debounce(this._toggleDebugWidget, 100));
             useListener('show-popup', this.__showPopup);
@@ -160,7 +160,7 @@ odoo.define('point_of_sale.chrome', function(require) {
             const { name } = order.get_screen_data('screen') || {
                 name: this.constructor.startUpScreen.name,
             };
-            this.trigger('show-screen', { name });
+            this.showScreen(name);
         }
 
         _setSelectedCategoryId(event) {
@@ -196,7 +196,7 @@ odoo.define('point_of_sale.chrome', function(require) {
             // show main screen
             this.mainScreen.isShown = true;
         }
-        showScreen({ detail: { name, props } }) {
+        __showScreen({ detail: { name, props } }) {
             // 1. Set the information of the screen to display.
             this.mainScreen.isShown = true;
             this.mainScreen.name = name;

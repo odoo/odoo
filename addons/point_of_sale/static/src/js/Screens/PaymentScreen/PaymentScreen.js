@@ -213,10 +213,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             const shouldShowPrintInvoice = errorCode
                 ? this.currentOrder.is_to_invoice() && errorCode < 0
                 : false;
-            this.trigger('show-screen', {
-                name: 'ReceiptScreen',
-                props: { printInvoiceIsShown: shouldShowPrintInvoice },
-            });
+            this.showScreen('ReceiptScreen', { printInvoiceIsShown: shouldShowPrintInvoice });
 
             // If we succeeded in syncing the current order, and
             // there are still other orders that are left unsynced,

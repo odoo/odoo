@@ -34,6 +34,9 @@ odoo.define('point_of_sale.PosComponent', function(require) {
                 this.trigger('show-temp-screen', { name, props, resolve });
             });
         }
+        showScreen(name, props) {
+            this.trigger('show-main-screen', { name, props });
+        }
         /**
          * TODO jcb: This is useless! It doesn't correctly return the target.
          *      The target is still Proxy.
