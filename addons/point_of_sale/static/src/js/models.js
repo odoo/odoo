@@ -1431,9 +1431,9 @@ exports.Orderline = Backbone.Model.extend({
             var unit = this.get_unit();
             if(unit){
                 if (unit.rounding) {
-                    this.quantity    = round_pr(quant, unit.rounding);
                     var decimals = this.pos.dp['Product Unit of Measure'];
-                    this.quantity = round_di(this.quantity, decimals)
+                    var rounding = Math.max(unit.rounding, Math.pow(10, -decimals));
+                    this.quantity    = round_pr(quant, rounding);
                     this.quantityStr = field_utils.format.float(this.quantity, {digits: [69, decimals]});
                 } else {
                     this.quantity    = round_pr(quant, 1);
