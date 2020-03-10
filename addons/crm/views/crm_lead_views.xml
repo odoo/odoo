@@ -104,6 +104,12 @@
                                         <field name="is_automated_probability" invisible="1"/>
                                         <field name="probability" widget="float" class="oe_inline"/>
                                         <span class="oe_grey"> %%</span>
+                                        <button
+                                            attrs="{'invisible': ['|', '|', ('is_automated_probability', '=', False), ('probability', '=', 100), ('probability', '=', 0)]}"
+                                            name="%(crm.crm_lead_pls_description_action)d"
+                                            icon="fa-exclamation-circle"
+                                            type="action" class="btn-link"
+                                            title="See details"/>
                                     </div>
                                 </div>
                             </h2>

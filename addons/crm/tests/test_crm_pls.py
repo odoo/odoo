@@ -38,14 +38,14 @@ class TestCRMPLS(TransactionCase):
         state_ids = self.env['res.country.state'].search([], limit=3).ids
         country_ids = self.env['res.country'].search([], limit=3).ids
         stage_ids = self.env['crm.stage'].search([], limit=3).ids
-        team_ids = self.env['crm.team'].create([{'name': 'Team Test 1'}, {'name': 'Team Test 2'}]).ids
+        team_ids = self.env['crm.team'].create([{'name': 'Team Test 1'}, {'name': 'Team Test 2'}, {'name': 'Team Test 3'}]).ids
         # create bunch of lost and won crm_lead
         leads_to_create = []
         #   for team 1
         for i in range(3):
             leads_to_create.append(self._get_lead_values(team_ids[0], 'team_1_%s' % str(i), country_ids[i], state_ids[i], state_values[i], state_values[i], source_ids[i], stage_ids[i]))
         leads_to_create.append(
-            self._get_lead_values(team_ids[0], 'team_1_%s' % str(3), country_ids[0], state_ids[1], state_values[2], state_values[0], source_ids[2], stage_ids[1]))
+            self._get_lead_values(team_ids[0], 'team_1_%s' % str(3), country_ids[2], state_ids[1], state_values[2], state_values[0], source_ids[1], stage_ids[2]))
         #   for team 2
         leads_to_create.append(
             self._get_lead_values(team_ids[1], 'team_2_%s' % str(0), country_ids[0], state_ids[1], state_values[2], state_values[0], source_ids[1], stage_ids[2]))
@@ -54,7 +54,7 @@ class TestCRMPLS(TransactionCase):
         leads_to_create.append(
             self._get_lead_values(team_ids[1], 'team_2_%s' % str(2), country_ids[0], state_ids[2], state_values[0], state_values[1], source_ids[2], stage_ids[0]))
         leads_to_create.append(
-            self._get_lead_values(team_ids[1], 'team_2_%s' % str(3), country_ids[0], state_ids[1], state_values[2], state_values[0], source_ids[2], stage_ids[1]))
+            self._get_lead_values(team_ids[1], 'team_2_%s' % str(3), country_ids[0], state_ids[2], state_values[1], state_values[0], source_ids[1], stage_ids[0]))
 
         leads = Lead.create(leads_to_create)
 
@@ -77,6 +77,5 @@ class TestCRMPLS(TransactionCase):
 
         # As the cron is computing and writing in SQL queries, we need to invalidate the cache
         leads.invalidate_cache()
-
-        self.assertEqual(tools.float_compare(leads[3].automated_probability, 33.49, 2), 0)
-        self.assertEqual(tools.float_compare(leads[7].automated_probability, 7.74, 2), 0)
+        self.assertEqual(tools.float_compare(leads[3].automated_probability, 88.89, 2), 0)
+        self.assertEqual(tools.float_compare(leads[7].automated_probability, 66.67, 2), 0)
