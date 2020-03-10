@@ -194,16 +194,10 @@ class Job(models.Model):
         data = []
         is_sample_data=False
         color='#875A7B'
-        if is_sample_data:
-            data = []
-            for i in range(30, 0, -5):
-                current_date = today + timedelta(days=-i)
-                data.append(build_graph_data(current_date, random.randint(-5, 15)))
         for i in range(7, 0,-1):
             current_date_upperbound = today + timedelta(days=-i)#Use of upper and lowerbound to get Applicant with date_open equal to lowerbound date who looks like YYYY-MM-DD after strftime by testing between upper and lowerbound we get them all even if date_open is in datetime format with hours and minutes
             current_date_lowerbound = today + timedelta(days=-(i+1))
             amount_applications = Applications.search([('job_id', '=',self.id),'&',('date_open','>',current_date_lowerbound.strftime(DF)),('date_open','<=',current_date_upperbound.strftime(DF))])
-            for app in amount_applications:
             data_item = build_graph_data(current_date_upperbound, len(amount_applications))
             data.append(data_item)
 

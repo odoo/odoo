@@ -120,6 +120,7 @@
                 <field name="legend_blocked" invisible="1"/>
                 <field name="legend_done" invisible="1"/>
                 <div class="oe_title">
+                    <span class="o_form_label"><field name="name"  readonly="1" nolabel="1"/></span>
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <h2 class="o_row">
@@ -881,10 +882,10 @@ action = act
         <field name="name">hr.recruitment.source.tree</field>
         <field name="model">hr.recruitment.source</field>
         <field name="arch" type="xml">
-            <tree string="Sources of Applicants" editable="top" class="o_recruitment_list">
-                <field name="source_id"/>
-                <button name="create_alias" string="Generate email alias" type="object" icon="fa-repeat text-success" />
-                <field name="email"/>
+            <tree string="Sources of Applicants" editable="top" class="o_recruitment_list width_class">
+                <field  name="source_id"/>
+                <button  name="create_alias" string="Generate email alias" type="object" icon="fa-repeat text-success" />
+                <field  name="email"/>
             </tree>
         </field>
     </record>
