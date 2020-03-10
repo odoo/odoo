@@ -4,11 +4,12 @@
 from collections import OrderedDict
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
+from datetime import datetime
 
 from odoo import fields, http, _
 from odoo.http import request
 from odoo.tools import date_utils, groupby as groupbyelem
-from odoo.osv.expression import AND
+from odoo.osv.expression import AND, OR
 
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 
@@ -22,23 +23,30 @@ class TimesheetCustomerPortal(CustomerPortal):
         return values
 
     @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='project', **kw):
+    def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='none', **kw):
         Timesheet_sudo = request.env['account.analytic.line'].sudo()
         values = self._prepare_portal_layout_values()
         domain = request.env['account.analytic.line']._timesheet_get_portal_domain()
 
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'date desc'},
-            'name': {'label': _('Name'), 'order': 'name'},
+            'name': {'label': _('Description'), 'order': 'name'},
         }
 
         searchbar_inputs = {
             'all': {'input': 'all', 'label': _('Search in All')},
+            'project': {'input': 'project', 'label': _('Search in Project')},
+            'name': {'input': 'name', 'label': _('Search in Description')},
+            'employee': {'input': 'employee', 'label': _('Search in Employee')},
+            'task': {'input': 'task', 'label': _('Search in Task')},
         }
 
         searchbar_groupby = {
             'none': {'input': 'none', 'label': _('None')},
             'project': {'input': 'project', 'label': _('Project')},
+            'task': {'input': 'task', 'label': _('Task')},
+            'date': {'input': 'date', 'label': _('Date')},
+            'employee': {'input': 'employee', 'label': _('Employee')},
         }
 
         today = fields.Date.today()
@@ -68,7 +76,16 @@ class TimesheetCustomerPortal(CustomerPortal):
         domain = AND([domain, searchbar_filters[filterby]['domain']])
 
         if search and search_in:
-            domain = AND([domain, [('name', 'ilike', search)]])
+            search_domain = []
+            if search_in in ('project', 'all'):
+                search_domain = OR([search_domain, [('project_id', 'ilike', search)]])
+            if search_in in ('name', 'all'):
+                search_domain = OR([search_domain, [('name', 'ilike', search)]])
+            if search_in in ('employee', 'all'):
+                search_domain = OR([search_domain, [('employee_id', 'ilike', search)]])
+            if search_in in ('task', 'all'):
+                search_domain = OR([search_domain, [('task_id', 'ilike', search)]])
+            domain += search_domain
 
         timesheet_count = Timesheet_sudo.search_count(domain)
         # pager
@@ -80,13 +97,34 @@ class TimesheetCustomerPortal(CustomerPortal):
             step=self._items_per_page
         )
 
-        if groupby == 'project':
-            order = "project_id, %s" % order
-        timesheets = Timesheet_sudo.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
-        if groupby == 'project':
-            grouped_timesheets = [Timesheet_sudo.concat(*g) for k, g in groupbyelem(timesheets, itemgetter('project_id'))]
-        else:
-            grouped_timesheets = [timesheets]
+        def get_timesheets():
+            groupby_mapping = {
+                'project': 'project_id',
+                'task': 'task_id',
+                'employee': 'employee_id',
+                'date': 'date',
+            }
+            field = groupby_mapping.get(groupby, None)
+            orderby = '%s, %s' % (field, order) if field else order
+            timesheets = Timesheet_sudo.search(domain, order=orderby, limit=self._items_per_page, offset=pager['offset'])
+            if field:
+                if groupby == 'date':
+                    time_data = Timesheet_sudo.read_group(domain, ['date', 'unit_amount:sum'], ['date:day'])
+                    mapped_time = dict([(datetime.strptime(m['date:day'], '%d %b %Y').date(), m['unit_amount']) for m in time_data])
+                    grouped_timesheets = [(Timesheet_sudo.concat(*g), mapped_time[k]) for k, g in groupbyelem(timesheets, itemgetter('date'))]
+                else:
+                    time_data = time_data = Timesheet_sudo.read_group(domain, [field, 'unit_amount:sum'], [field])
+                    mapped_time = dict([(m[field][0], m['unit_amount']) for m in time_data])
+                    grouped_timesheets = [(Timesheet_sudo.concat(*g), mapped_time[k.id]) for k, g in groupbyelem(timesheets, itemgetter(field))]
+                return timesheets, grouped_timesheets
+
+            grouped_timesheets = [(
+                timesheets,
+                sum(Timesheet_sudo.search(domain).mapped('unit_amount'))
+            )] if timesheets else []
+            return timesheets, grouped_timesheets
+
+        timesheets, grouped_timesheets = get_timesheets()
 
         values.update({
             'timesheets': timesheets,
