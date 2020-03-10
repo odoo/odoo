@@ -129,7 +129,7 @@ class HrExpense(models.Model):
                 self.name = self.product_id.display_name or ''
             self.unit_amount = self.product_id.price_compute('standard_price')[self.product_id.id]
             self.product_uom_id = self.product_id.uom_id
-            self.tax_ids = self.product_id.supplier_taxes_id
+            self.tax_ids = self.product_id.supplier_taxes_id.filtered(lambda r: not self.company_id or r.company_id == self.company_id)
             account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
             if account:
                 self.account_id = account
