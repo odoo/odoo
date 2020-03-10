@@ -6142,8 +6142,12 @@ Record ids: %(records)s
         # make a snapshot based on the initial values of record
         snapshot0 = Snapshot(record, nametree)
 
-        # store changed values in cache, and update snapshot0
-        record._update_cache(changed_values, validate=False)
+        # store changed values in cache; also trigger recomputations based on
+        # subfields (e.g., line.a has been modified, line.b is computed stored
+        # and depends on line.a, but line.b is not in the form view)
+        record._update_cache(changed_values, validate=True)
+
+        # update snapshot0 with changed values
         for name in names:
             snapshot0.fetch(name)
 
