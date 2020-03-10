@@ -15,7 +15,7 @@ odoo.define('point_of_sale.LoginScreen', function(require) {
         }
         willUnmount() {
             if (this.env.pos.barcode_reader) {
-                this.env.pos.barcode_reader.reset_action_callbacks();
+                this.env.pos.barcode_reader.remove_action_callback('cashier');
             }
         }
         back() {
