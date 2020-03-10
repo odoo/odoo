@@ -694,6 +694,7 @@ return {
         integer: parseInteger,
         many2many: _.identity, // todo
         many2one: parseMany2one,
+        many2one_reference: parseInteger,
         monetary: parseMonetary,
         one2many: _.identity,
         percentage: parsePercentage,
