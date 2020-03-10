@@ -296,5 +296,28 @@
                 </form>
             </field>
         </record>
+
+        <!-- Multi form view -->
+        <record id="model_parent_form" model="ir.ui.view">
+            <field name="name">model parent form view</field>
+            <field name="model">test_new_api.model_parent_m2o</field>
+            <field name="arch" type="xml">
+                <form string="Model Parent">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="cost"/>
+                        </group>
+                        <label for="child_ids"/>
+                        <field name="child_ids">
+                            <tree string="Children" editable="bottom">
+                                <field name="name"/>
+                                <field name="cost"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
     </data>
 </odoo>

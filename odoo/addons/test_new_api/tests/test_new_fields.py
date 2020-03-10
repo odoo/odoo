@@ -1090,6 +1090,52 @@ class TestFields(TransactionCaseWithUserDemo):
         with self.assertRaises(AccessError):
             cat1.name
 
+    def test_40_real_vs_new(self):
+        """ test field access on new records vs real records. """
+        Model = self.env['test_new_api.category']
+        real_record = Model.create({'name': 'Foo'})
+        self.env.cache.invalidate()
+        new_origin = Model.new({'name': 'Bar'}, origin=real_record)
+        new_record = Model.new({'name': 'Baz'})
+
+        # non-computed non-stored field: default value
+        real_record = real_record.with_context(default_dummy='WTF')
+        new_origin = new_origin.with_context(default_dummy='WTF')
+        new_record = new_record.with_context(default_dummy='WTF')
+        self.assertEqual(real_record.dummy, 'WTF')
+        self.assertEqual(new_origin.dummy, 'WTF')
+        self.assertEqual(new_record.dummy, 'WTF')
+
+        # non-computed stored field: origin or default if no origin
+        real_record = real_record.with_context(default_color=42)
+        new_origin = new_origin.with_context(default_color=42)
+        new_record = new_record.with_context(default_color=42)
+        self.assertEqual(real_record.color, 0)
+        self.assertEqual(new_origin.color, 0)
+        self.assertEqual(new_record.color, 42)
+
+        # computed non-stored field: always computed
+        self.assertEqual(real_record.display_name, 'Foo')
+        self.assertEqual(new_origin.display_name, 'Bar')
+        self.assertEqual(new_record.display_name, 'Baz')
+
+        # computed stored field: origin or computed if no origin
+        Model = self.env['test_new_api.recursive']
+        real_record = Model.create({'name': 'Foo'})
+        new_origin = Model.new({'name': 'Bar'}, origin=real_record)
+        new_record = Model.new({'name': 'Baz'})
+        self.assertEqual(real_record.display_name, 'Foo')
+        self.assertEqual(new_origin.display_name, 'Foo')
+        self.assertEqual(new_record.display_name, 'Baz')
+
+        # computed stored field with recomputation: always computed
+        real_record.name = 'Fool'
+        new_origin.name = 'Barr'
+        new_record.name = 'Bazz'
+        self.assertEqual(real_record.display_name, 'Fool')
+        self.assertEqual(new_origin.display_name, 'Barr')
+        self.assertEqual(new_record.display_name, 'Bazz')
+
     def test_40_new_defaults(self):
         """ Test new records with defaults. """
         user = self.env.user

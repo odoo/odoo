@@ -678,3 +678,31 @@ class TestComputeOnchange(common.TransactionCase):
         form.foo = "foo6"
         self.assertEqual(form.bar, "foo6")
         self.assertEqual(form.baz, "baz5")
+
+    def test_onchange_one2many(self):
+        record = self.env['test_new_api.model_parent_m2o'].create({
+            'name': 'Family',
+            'child_ids': [
+                (0, 0, {'name': 'W', 'cost': 10}),
+                (0, 0, {'name': 'X', 'cost': 10}),
+                (0, 0, {'name': 'Y'}),
+                (0, 0, {'name': 'Z'}),
+            ],
+        })
+        record.flush()
+        self.assertEqual(record.child_ids.mapped('name'), list('WXYZ'))
+        self.assertEqual(record.cost, 22)
+
+        # modifying a line should not recompute the cost on other lines
+        with common.Form(record) as form:
+            with form.child_ids.edit(1) as line:
+                line.name = 'XXX'
+            self.assertEqual(form.cost, 15)
+
+            with form.child_ids.edit(1) as line:
+                line.cost = 20
+            self.assertEqual(form.cost, 32)
+
+            with form.child_ids.edit(2) as line:
+                line.cost = 30
+            self.assertEqual(form.cost, 61)
