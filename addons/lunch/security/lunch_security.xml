@@ -16,6 +16,7 @@
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
+    <data noupdate="1">
 
         <record id="lunch_mind_your_own_food_money" model="ir.rule">
             <field name="name">lunch.cashmove: do not see other people's cashmove</field>
@@ -60,7 +61,6 @@
             <field name="groups" eval="[(4, ref('lunch.group_lunch_manager'))]"/>
         </record>
 
-    <data noupdate="1">
         <record id="base.default_user" model="res.users">
             <field name="groups_id" eval="[(4,ref('lunch.group_lunch_manager'))]"/>
         </record>

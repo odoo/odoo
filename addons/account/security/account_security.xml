@@ -75,6 +75,10 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+</data>
+
+<data noupdate="1">
+
     <record id="account_analytic_line_rule_billing_user" model="ir.rule">
         <field name="name">account.analytic.line.billing.user</field>
         <field name="model_id" ref="analytic.model_account_analytic_line"/>
@@ -82,10 +86,6 @@
         <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
     </record>
 
-</data>
-
-
-<data noupdate="1">
     <record id="base.group_public" model="res.groups">
         <field name="implied_ids" eval="[(4, ref('account.group_show_line_subtotals_tax_excluded'))]"/>
     </record>
