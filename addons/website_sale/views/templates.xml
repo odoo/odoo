@@ -272,6 +272,13 @@
         </t>
     </template>
 
+    <!-- (Option) Products: Enable image full for all products : Images Full -->
+    <template id="products_images_full" name="Images Full" inherit_id="website_sale.products" active="False" customize_show="True">
+        <xpath expr="//t[@t-foreach='tr_product']//td" position="attributes">
+            <attribute name="t-attf-class" add="oe_image_full" separator=" "/>
+        </xpath>
+    </template>
+
     <template id="sort" inherit_id="website_sale.products" customize_show="True" name="Show Sort by">
         <xpath expr="//div[hasclass('products_pager')]/t[@t-call][last()]" position="after">
             <t t-set="list_price_desc_label">Catalog price: High to Low</t>
