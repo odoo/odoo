@@ -76,7 +76,7 @@ var EventRegistrationForm = Widget.extend({
      */
     _onRegistrationBtnClick: function (ev) {
         var $btn = $(ev.currentTarget);
-        $btn.toggleClass('btn-primary text-left pl-0');
+        $btn.toggleClass('btn-primary text-left pl-0 collapsed');
         $btn.siblings().toggleClass('d-none');
     },
 });
