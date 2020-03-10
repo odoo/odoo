@@ -9,12 +9,14 @@ BasicView.include({
     init: function () {
         this._super.apply(this, arguments);
         const post_refresh = this._getFieldOption('message_ids', 'post_refresh', false);
+        const followers_post_refresh = this._getFieldOption('message_follower_ids', 'post_refresh', false);
         this.chatterFields = {
             hasActivityIds: this._hasField('activity_ids'),
             hasMessageFollowerIds: this._hasField('message_follower_ids'),
             hasMessageIds: this._hasField('message_ids'),
             hasRecordReloadOnAttachmentsChanged: post_refresh === 'always',
             hasRecordReloadOnMessagePosted: !!post_refresh,
+            hasRecordReloadOnFollowersUpdate: !!followers_post_refresh,
             isActivityBoxVisible: this._getFieldOption('message_ids', 'open_attachments', false),
         };
         const fieldsInfo = this.fieldsInfo[this.viewType];

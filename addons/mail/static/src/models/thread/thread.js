@@ -1045,6 +1045,7 @@ function factory(dependencies) {
          * @param {boolean} [param0.mail_invite_follower_channel_only=false]
          */
         _promptAddFollower({ mail_invite_follower_channel_only = false } = {}) {
+            const self = this;
             const action = {
                 type: 'ir.actions.act_window',
                 res_model: 'mail.wizard.invite',
@@ -1061,7 +1062,10 @@ function factory(dependencies) {
             this.env.bus.trigger('do-action', {
                 action,
                 options: {
-                    on_close: () => this.refreshFollowers(),
+                    on_close: async () => {
+                       await this.async(() => this.refreshFollowers());
+                       this.env.bus.trigger('mail.thread:promptAddFollower-closed');
+                    },
                 },
             });
         }
