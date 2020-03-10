@@ -236,12 +236,7 @@ var CrashManager = AbstractService.extend({
             return;
         }
         var message = error.data ? error.data.message : error.message;
-        var title = _t("Something went wrong !");
-        if (error.type) {
-            title = _.str.capitalize(error.type);
-        } else if (error.data && error.data.title) {
-            title = _.str.capitalize(error.data.title);
-        }
+        var title = (error.data && error.data.title) || _.str.capitalize(error.type) || _t("Something went wrong !");
         return this._displayWarning(message, title, options);
     },
     show_error: function (error) {
@@ -251,7 +246,7 @@ var CrashManager = AbstractService.extend({
         error.traceback = error.data.debug;
         var dialogClass = error.data.context && ErrorDialogRegistry.get(error.data.context.exception_class) || ErrorDialog;
         var dialog = new dialogClass(this, {
-            title: _.str.capitalize(error.type) || _t("Odoo Error"),
+            title: (error.data && error.data.title) || _.str.capitalize(error.type) || _t("Odoo Error"),
         }, error);
 
 
