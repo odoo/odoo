@@ -121,6 +121,13 @@
             <field name="product_qty">80.0</field>
              <field name="location_id" ref="stock_location_components"/>
         </record>
+        <record id="stock_inventory_line_14" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_3"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_0"/>
+            <field name="product_qty">60.0</field>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
 
         <function model="stock.inventory" name="_action_start">
             <function eval="[[('state','=','draft'),('id', '=', ref('stock_inventory_0'))]]" model="stock.inventory" name="search"/>
