@@ -4,6 +4,8 @@ odoo.define('pos_hr.CashierName', function(require) {
     const { CashierName } = require('point_of_sale.CashierName');
 
     CashierName.prototype.selectCashier = async function() {
+        if (!this.env.pos.config.module_pos_hr) return;
+
         const selectionList = this.env.pos.employees
             .filter(employee => employee.id !== this.env.pos.get_cashier().id)
             .map(employee => {

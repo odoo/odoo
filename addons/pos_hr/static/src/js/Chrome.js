@@ -8,7 +8,7 @@ odoo.define('pos_hr.chrome', function(require) {
         start: async function() {
             await this._super();
             this.env.pos.on('change:client', this.render, this);
-            this.showTempScreen('LoginScreen');
+            if (this.env.pos.config.module_pos_hr) this.showTempScreen('LoginScreen');
         },
         get headerButtonIsShown() {
             return this.env.pos.get('cashier').role == 'manager';
