@@ -979,8 +979,8 @@ class Field(MetaField('DummyField', (object,), {})):
             value = env.cache.get(record, self)
 
         except KeyError:
-            # real record
-            if record.id and self.store:
+            if self.store and record.id:
+                # real record: fetch from database
                 recs = record._in_cache_without(self)
                 try:
                     recs._fetch_field(self)
@@ -993,7 +993,13 @@ class Field(MetaField('DummyField', (object,), {})):
                     ]))
                 value = env.cache.get(record, self)
 
+            elif self.store and record._origin:
+                # new record with origin: fetch from origin
+                value = self.convert_to_cache(record._origin[self.name], record)
+                env.cache.set(record, self, value)
+
             elif self.compute:
+                # non-stored field or new record without origin: compute
                 if env.is_protected(self, record):
                     value = self.convert_to_cache(False, record, validate=False)
                     env.cache.set(record, self, value)
@@ -1005,12 +1011,8 @@ class Field(MetaField('DummyField', (object,), {})):
                         self.compute_value(record)
                     value = env.cache.get(record, self)
 
-            elif (not record.id) and record._origin:
-                value = self.convert_to_cache(record._origin[self.name], record)
-                env.cache.set(record, self, value)
-
-            elif (not record.id) and self.type == 'many2one' and self.delegate:
-                # the parent record is also a new record, with the same cached
+            elif self.type == 'many2one' and self.delegate and not record.id:
+                # parent record of a new record: new record, with the same
                 # values as record for the corresponding inherited fields
                 def is_inherited_field(name):
                     field = record._fields[name]
@@ -1025,15 +1027,16 @@ class Field(MetaField('DummyField', (object,), {})):
                 env.cache.set(record, self, value)
 
             else:
+                # non-stored field or stored field on new record: default value
                 value = self.convert_to_cache(False, record, validate=False)
                 env.cache.set(record, self, value)
                 defaults = record.default_get([self.name])
                 if self.name in defaults:
-                    # The null value above is necessary to convert x2many field values.
-                    # For instance, converting [(4, id)] accesses the field's current
-                    # value, then adds the given id. Without an initial value, the
-                    # conversion ends up here to determine the field's value, and this
-                    # generates an infinite recursion.
+                    # The null value above is necessary to convert x2many field
+                    # values. For instance, converting [(4, id)] accesses the
+                    # field's current value, then adds the given id. Without an
+                    # initial value, the conversion ends up here to determine
+                    # the field's value, and generates an infinite recursion.
                     value = self.convert_to_cache(defaults[self.name], record)
                     env.cache.set(record, self, value)
 

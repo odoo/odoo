@@ -796,12 +796,18 @@ class ModelChildM2o(models.Model):
     parent_id = fields.Many2one('test_new_api.model_parent_m2o', ondelete='cascade')
     size1 = fields.Integer(compute='_compute_sizes', store=True)
     size2 = fields.Integer(compute='_compute_sizes', store=True)
+    cost = fields.Integer(compute='_compute_cost', store=True, readonly=False)
 
     @api.depends('parent_id.name')
     def _compute_sizes(self):
         for record in self:
             record.size1 = len(self.parent_id.name)
             record.size2 = len(self.parent_id.name)
+
+    @api.depends('name')
+    def _compute_cost(self):
+        for record in self:
+            record.cost = len(record.name)
 
     def write(self, vals):
         res = super(ModelChildM2o, self).write(vals)
@@ -816,6 +822,12 @@ class ModelParentM2o(models.Model):
 
     name = fields.Char('Name')
     child_ids = fields.One2many('test_new_api.model_child_m2o', 'parent_id', string="Children")
+    cost = fields.Integer(compute='_compute_cost', store=True)
+
+    @api.depends('child_ids.cost')
+    def _compute_cost(self):
+        for record in self:
+            record.cost = sum(child.cost for child in record.child_ids)
 
 
 class Country(models.Model):
