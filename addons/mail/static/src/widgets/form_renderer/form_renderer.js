@@ -40,6 +40,7 @@ FormRenderer.include({
         this.off('o_attachments_changed', this);
         this.off('o_chatter_rendered', this);
         this.off('o_message_posted', this);
+        owl.Component.env.bus.off('mail.thread:promptAddFollower-closed', this);
     },
 
     //--------------------------------------------------------------------------
@@ -74,6 +75,9 @@ FormRenderer.include({
         }
         if (this.chatterFields.hasRecordReloadOnAttachmentsChanged) {
             this.on('o_attachments_changed', this, ev => this.trigger_up('reload'));
+        }
+        if (this.chatterFields.hasRecordReloadOnFollowersUpdate) {
+            owl.Component.env.bus.on('mail.thread:promptAddFollower-closed', this, ev => this.trigger_up('reload'));
         }
     },
     /**

@@ -341,6 +341,8 @@ class Project(models.Model):
         if allowed_users_changed:
             for project in self:
                 permission_removed = allowed_users.get(project) - project.allowed_user_ids
+                allowed_portal_users_removed = permission_removed.filtered('share')
+                project.message_unsubscribe(allowed_portal_users_removed.partner_id.commercial_partner_id.ids)
                 for task in project.task_ids:
                     task.allowed_user_ids -= permission_removed
 
@@ -384,13 +386,18 @@ class Project(models.Model):
         return result
 
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None):
-        """ Subscribe to all existing active tasks when subscribing to a project """
+        """
+        Subscribe to all existing active tasks when subscribing to a project
+        And add the portal user subscribed to allowed portal users
+        """
         res = super(Project, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids)
         project_subtypes = self.env['mail.message.subtype'].browse(subtype_ids) if subtype_ids else None
         task_subtypes = project_subtypes.mapped('parent_id').ids if project_subtypes else None
         if not subtype_ids or task_subtypes:
             self.mapped('tasks').message_subscribe(
                 partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=task_subtypes)
+        if partner_ids:
+            self.allowed_portal_user_ids |= self.env['res.partner'].browse(partner_ids).user_ids.filtered('share')
         return res
 
     def message_unsubscribe(self, partner_ids=None, channel_ids=None):
@@ -779,6 +786,17 @@ class Task(models.Model):
             empty_list_help_document_name=tname,
         )
         return super(Task, self).get_empty_list_help(help)
+
+    def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None):
+        """
+        Add the users subscribed to allowed portal users
+        """
+        res = super(Task, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids)
+        if partner_ids:
+            new_allowed_users = self.env['res.partner'].browse(partner_ids).user_ids.filtered('share')
+            tasks = self.filtered(lambda task: task.project_id.privacy_visibility == 'portal')
+            tasks.write({'allowed_user_ids': [(4, user.id) for user in new_allowed_users]})
+        return res
 
     # ----------------------------------------
     # Case management
