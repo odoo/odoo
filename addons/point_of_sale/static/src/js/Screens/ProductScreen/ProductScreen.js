@@ -7,7 +7,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const { OrderWidget } = require('point_of_sale.OrderWidget');
     const { NumpadWidget } = require('point_of_sale.NumpadWidget');
     const { ActionpadWidget } = require('point_of_sale.ActionpadWidget');
-    const { useNumberBuffer } = require('point_of_sale.custom_hooks');
+    const { NumberBuffer } = require('point_of_sale.NumberBuffer');
     const { useListener } = require('web.custom_hooks');
 
     class ProductScreen extends PosComponent {
@@ -16,9 +16,10 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             useListener('update-selected-orderline', this._updateSelectedOrderline);
             useListener('new-orderline-selected', this._newOrderlineSelected);
             useListener('set-numpad-mode', this._setNumpadMode);
-            useNumberBuffer({
+            NumberBuffer.use({
                 nonKeyboardEvent: 'numpad-click-input',
                 triggerAtInput: 'update-selected-orderline',
+                useWithBarcode: true,
             });
             this.numpadMode = 'quantity';
         }
@@ -115,12 +116,12 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 quantity: weight,
             });
 
-            this.numberBuffer.reset();
+            NumberBuffer.reset();
         }
         async _setNumpadMode(event) {
             const { mode } = event.detail;
             this.numpadMode = mode;
-            this.numberBuffer.reset();
+            NumberBuffer.reset();
         }
         async _updateSelectedOrderline(event) {
             let { buffer } = event.detail;
@@ -128,7 +129,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             this._setValue(val);
         }
         async _newOrderlineSelected() {
-            this.numberBuffer.reset();
+            NumberBuffer.reset();
         }
         _setValue(val) {
             if (this.currentOrder.get_selected_orderline()) {

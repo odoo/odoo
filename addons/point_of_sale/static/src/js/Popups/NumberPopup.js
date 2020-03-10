@@ -1,10 +1,11 @@
 odoo.define('point_of_sale.NumberPopup', function(require) {
     'use strict';
 
+    const { useState } = owl;
     const { Chrome } = require('point_of_sale.chrome');
     const { addComponents } = require('point_of_sale.PosComponent');
     const { AbstractAwaitablePopup } = require('point_of_sale.AbstractAwaitablePopup');
-    const { useNumberBuffer } = require('point_of_sale.custom_hooks');
+    const { NumberBuffer } = require('point_of_sale.NumberBuffer');
     const { useListener } = require('web.custom_hooks');
 
     // formerly NumberPopupWidget
@@ -22,33 +23,39 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
             super(...arguments);
             useListener('accept-input', this.confirm);
             useListener('close-this-popup', this.cancel);
-            useNumberBuffer({
+            useListener('update-buffer', this._updateBuffer);
+            this.state = useState({ buffer: '' });
+            NumberBuffer.use({
                 nonKeyboardEvent: 'numpad-click-input',
                 triggerAtEnter: 'accept-input',
                 triggerAtEscape: 'close-this-popup',
+                triggerAtInput: 'update-buffer',
             });
             if (typeof this.props.startingValue === 'number' && this.props.startingValue > 0) {
-                this.numberBuffer.set(this.props.startingValue.toString());
+                NumberBuffer.set(this.props.startingValue.toString());
             }
         }
         get decimalSeparator() {
             return this.env._t.database.parameters.decimal_point;
         }
         get inputBuffer() {
-            if (this.numberBuffer.state.buffer === null) {
+            if (this.state.buffer === null) {
                 return '';
             }
             if (this.props.isPassword) {
-                return this.numberBuffer.state.buffer.replace(/./g, '•');
+                return this.state.buffer.replace(/./g, '•');
             } else {
-                return this.numberBuffer.state.buffer;
+                return this.state.buffer;
             }
         }
         sendInput(key) {
             this.trigger('numpad-click-input', { key });
         }
         getPayload() {
-            return this.numberBuffer.get();
+            return NumberBuffer.get();
+        }
+        _updateBuffer() {
+            this.state.buffer = NumberBuffer.get();
         }
     }
     NumberPopup.defaultProps = {

@@ -258,7 +258,11 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
                 trigger: keypad_selector + ' .input-button:contains("' + current_char + '"):visible'
             });
         }
-
+        steps.push({
+            content: 'do nothing check',
+            trigger: '.pos',
+            run: function () {},
+        })
         return steps;
     }
 

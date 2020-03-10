@@ -26,22 +26,12 @@ odoo.define('point_of_sale.PosComponent', function(require) {
          */
         showPopup(name, props) {
             return new Promise(resolve => {
-                this.trigger('show-popup', {
-                    name,
-                    props,
-                    resolve,
-                    numberBuffer: this.numberBuffer,
-                });
+                this.trigger('show-popup', { name, props, resolve });
             });
         }
         showTempScreen(name, props) {
             return new Promise(resolve => {
-                this.trigger('show-temp-screen', {
-                    name,
-                    props,
-                    resolve,
-                    numberBuffer: this.numberBuffer,
-                });
+                this.trigger('show-temp-screen', { name, props, resolve });
             });
         }
         /**
@@ -87,7 +77,7 @@ odoo.define('point_of_sale.PosComponent', function(require) {
                 parentComponent.components[component.name] = component;
             }
         }
-    };
+    }
 
     return { PosComponent, addComponents };
 });

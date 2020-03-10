@@ -8,7 +8,8 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
     const { PaymentMethodButton } = require('point_of_sale.PaymentMethodButton');
     const { PaymentScreenNumpad } = require('point_of_sale.PaymentScreenNumpad');
     const { PaymentScreenPaymentLines } = require('point_of_sale.PaymentScreenPaymentLines');
-    const { useNumberBuffer, useErrorHandlers } = require('point_of_sale.custom_hooks');
+    const { useErrorHandlers } = require('point_of_sale.custom_hooks');
+    const { NumberBuffer } = require('point_of_sale.NumberBuffer');
     const { useListener } = require('web.custom_hooks');
     const { OrderReceipt } = require('point_of_sale.OrderReceipt');
     const { Printer } = require('point_of_sale.Printer');
@@ -21,7 +22,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             useListener('new-payment-line', this.addNewPaymentLine);
             useListener('update-selected-paymentline', this._updateSelectedPaymentline);
             useErrorHandlers();
-            useNumberBuffer({
+            NumberBuffer.use({
                 // The numberBuffer listens to this event to update its state.
                 // Basically means 'update the buffer when this event is triggered'
                 nonKeyboardEvent: 'input-from-numpad',
@@ -81,7 +82,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
                 return false;
             } else {
                 this.currentOrder.add_paymentline(paymentMethod);
-                this.numberBuffer.reset();
+                NumberBuffer.reset();
                 if (paymentMethod.payment_terminal) {
                     this.currentOrder.selected_paymentline.set_payment_status('pending');
                 }
@@ -100,10 +101,10 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             ) {
                 return;
             }
-            if (this.numberBuffer.get() === null) {
+            if (NumberBuffer.get() === null) {
                 this.deletePaymentLine({ detail: { cid: this.selectedPaymentLine.cid } });
             } else {
-                this.selectedPaymentLine.set_amount(this.numberBuffer.getFloat());
+                this.selectedPaymentLine.set_amount(NumberBuffer.getFloat());
             }
         }
         toggleIsToInvoice() {
@@ -150,14 +151,14 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             }
 
             this.currentOrder.remove_paymentline(line);
-            this.numberBuffer.reset();
+            NumberBuffer.reset();
             this.render();
         }
         selectPaymentLine(event) {
             const { cid } = event.detail;
             const line = this.paymentLines.find(line => line.cid === cid);
             this.currentOrder.select_paymentline(line);
-            this.numberBuffer.reset();
+            NumberBuffer.reset();
             this.render();
         }
         async validateOrder(isForceValidate) {

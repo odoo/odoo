@@ -7,6 +7,7 @@ odoo.define('point_of_sale.chrome', function(require) {
     const { useListener } = require('web.custom_hooks');
     const { CrashManager } = require('web.CrashManager');
     const { BarcodeEvents } = require('barcodes.BarcodeEvents');
+    const { NumberBuffer } = require('point_of_sale.NumberBuffer');
     const { loadCSS } = require('web.ajax');
 
     // This is kind of a trick.
@@ -31,6 +32,7 @@ odoo.define('point_of_sale.chrome', function(require) {
             useListener('close-pos', this._closePos);
             useListener('loading-skip-callback', () => this._loadingSkipCallback());
             useListener('set-selected-category-id', this._setSelectedCategoryId);
+            NumberBuffer.activate();
 
             this.state = useState({
                 uiState: 'LOADING', // 'LOADING' | 'READY' | 'CLOSING'
@@ -166,7 +168,7 @@ odoo.define('point_of_sale.chrome', function(require) {
         }
 
         __showPopup(event) {
-            const { name, props, resolve, numberBuffer } = event.detail;
+            const { name, props, resolve } = event.detail;
             const popupConstructor = this.constructor.components[name];
             if (popupConstructor.dontShow) {
                 resolve();
@@ -175,38 +177,24 @@ odoo.define('point_of_sale.chrome', function(require) {
             this.popup.isShown = true;
             this.popup.name = name;
             this.popup.component = popupConstructor;
-            this.popupProps = { ...props, resolve, numberBuffer };
-            if (numberBuffer) {
-                numberBuffer.pause();
-            }
+            this.popupProps = { ...props, resolve };
         }
         __closePopup() {
             this.popup.isShown = false;
-            if (this.popupProps.numberBuffer) {
-                this.popupProps.numberBuffer.resume();
-            }
         }
         __showTempScreen(event) {
-            const { name, props, resolve, numberBuffer } = event.detail;
+            const { name, props, resolve } = event.detail;
             this.tempScreen.isShown = true;
             this.tempScreen.name = name;
             this.tempScreen.component = this.constructor.components[name];
-            this.tempScreenProps = { ...props, resolve, numberBuffer };
+            this.tempScreenProps = { ...props, resolve };
             // hide main screen
             this.mainScreen.isShown = false;
-            // pause numberBuffer
-            if (numberBuffer) {
-                numberBuffer.pause();
-            }
         }
         __closeTempScreen() {
             this.tempScreen.isShown = false;
             // show main screen
             this.mainScreen.isShown = true;
-            // resume numberBuffer
-            if (this.tempScreenProps.numberBuffer) {
-                this.tempScreenProps.numberBuffer.resume();
-            }
         }
         showScreen({ detail: { name, props } }) {
             // 1. Set the information of the screen to display.
