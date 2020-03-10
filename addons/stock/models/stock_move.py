@@ -430,8 +430,10 @@ class StockMove(models.Model):
                         delta_days = (new_date - current_date).total_seconds() / 86400
                         if abs(delta_days) >= move.company_id.propagation_minimum_delta:
                             old_move_date = move.move_dest_ids[0].date_expected
-                            new_move_date = (old_move_date + relativedelta.relativedelta(days=delta_days or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-                            propagated_changes_dict['date_expected'] = new_move_date
+                            # We want to propagate a negative delta, but not propagate an expected date
+                            # in the past.
+                            new_move_date = max(old_move_date + relativedelta.relativedelta(days=delta_days or 0), fields.Datetime.now())
+                            propagated_changes_dict['date_expected'] = new_move_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                     #For pushed moves as well as for pulled moves, propagate by recursive call of write().
                     #Note that, for pulled moves we intentionally don't propagate on the procurement.
                     if propagated_changes_dict:
@@ -506,7 +508,7 @@ class StockMove(models.Model):
                 else:
                     raise UserError(_('You cannot unreserve a stock move that has been set to \'Done\'.'))
             moves_to_unreserve |= move
-        moves_to_unreserve.mapped('move_line_ids').unlink()
+        moves_to_unreserve.with_context(prefetch_fields=False).mapped('move_line_ids').unlink()
         return True
 
     def _push_apply(self):
@@ -1170,7 +1172,7 @@ class StockMove(models.Model):
         if any(move.state not in ('draft', 'cancel') for move in self):
             raise UserError(_('You can only delete draft moves.'))
         # With the non plannified picking, draft moves could have some move lines.
-        self.mapped('move_line_ids').unlink()
+        self.with_context(prefetch_fields=False).mapped('move_line_ids').unlink()
         return super(StockMove, self).unlink()
 
     def _prepare_move_split_vals(self, qty):

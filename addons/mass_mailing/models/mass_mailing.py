@@ -134,6 +134,20 @@ class MassMailingList(models.Model):
             mailing_list.contact_nbr = data.get(mailing_list.id, 0)
 
     @api.multi
+    def write(self, vals):
+        # Prevent archiving used mailing list
+        if 'active' in vals and not vals.get('active'):
+            mass_mailings = self.env['mail.mass_mailing'].search_count([
+                ('state', '!=', 'done'),
+                ('contact_list_ids', 'in', self.ids),
+            ])
+
+            if mass_mailings > 0:
+                raise UserError(_("At least one of the mailing list you are trying to archive is used in an ongoing mailing campaign."))
+
+        return super(MassMailingList, self).write(vals)
+
+    @api.multi
     def name_get(self):
         return [(list.id, "%s (%s)" % (list.name, list.contact_nbr)) for list in self]
 
@@ -641,9 +655,16 @@ class MassMailing(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
+        # Cleaning archived contact_list_ids
         default = dict(default or {},
-                       name=_('%s (copy)') % self.name)
-        return super(MassMailing, self).copy(default=default)
+                       name=_('%s (copy)') % self.name,
+                       contact_list_ids=self.contact_list_ids.ids)
+        res = super(MassMailing, self).copy(default=default)
+        # Re-evaluating the domain
+        body_html = res.body_html
+        res._onchange_model_and_list()
+        res.body_html = body_html
+        return res
 
     def _group_expand_states(self, states, domain, order):
         return [key for key, val in type(self).state.selection]

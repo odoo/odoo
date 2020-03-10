@@ -12,11 +12,12 @@
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
 # Jesse Garza <jga@odoo.com>, 2019
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
 # Martin Trigaux, 2019
 # RGB Consulting <odoo@rgbconsulting.com>, 2019
 # Efrem Jimenez <efj@odoo.com>, 2019
+# Carles Antoli <carlesantoli@hotmail.com>, 2020
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Efrem Jimenez <efj@odoo.com>, 2019\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -273,7 +274,7 @@ msgstr "Se debe especificar un diario del adquirente %s."
 #: code:addons/payment/models/account_invoice.py:65
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
-msgstr "Se requiere un adquirente de pago para crear una transacción."
+msgstr "Se requiere un medio de pago para crear una transacción."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:55
@@ -637,7 +638,7 @@ msgstr "País"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_acquirer
 msgid "Create a new payment acquirer"
-msgstr "Crear un nuevo adquirente de pago"
+msgstr "Crear un nuevo medio de pago"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
@@ -995,7 +996,7 @@ msgstr "Lista de medios que soportan este icono de pago."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr "Hacer disponible este método de pago (facturas de cliente, etc)"
+msgstr "Hacer disponible este medio de pago (facturas de cliente, etc)"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
@@ -1024,9 +1025,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
-"Manual: se paga en efectivo, con cheque o cualquier otro método fuera de Odoo.\n"
-"Electrónico: se paga automáticamente a través de un adquirente de pagos al solicitar una transacción en una tarjeta guardada por el cliente al comprar o suscribirse en línea (token de pago).\n"
-"Depósito por lotes: realiza varios cheques de clientes a la vez al generar un depósito por lotes para enviar a su banco. Al codificar el extracto bancario en Odoo, se sugiere conciliar la transacción con el depósito por lotes. Habilite esta opción desde la configuración."
+"Manual: sea pagado en efectivo, con cheque o cualquier otro método fuera de Odoo.\n"
+"Electrónico: sea pagado automáticamente a través de un medio de pagos al solicitar una transacción en una tarjeta guardada por el cliente al comprar o suscribirse en línea (token de pago).\n"
+"Remesa: realice varios pagos de cliente a la vez al generar una remesa para enviar a su banco. Al codificar el extracto bancario en Odoo, se sugiere conciliar la transacción con la remesa. Habilite esta opción desde la configuración (solo enterprise)."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_medium
@@ -1132,13 +1133,13 @@ msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Acquirer menu."
 msgstr ""
-"No se puede encontrar un método de pago para esta compañía. Cree por favor "
-"uno desde el menú de métodos de pago."
+"No se puede encontrar un medio de pago para esta compañía. Cree por favor "
+"uno desde el menú de medios de pago."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "No payment acquirer found."
-msgstr "No se encontró el adquirente de pago."
+msgstr "No se encontró medio de pago."
 
 #. module: payment
 #. openerp-web
@@ -1263,7 +1264,7 @@ msgstr "Pago con PayPal"
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with another payment acquirer"
-msgstr ""
+msgstr "Pagar con otro medio de pago"
 
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
@@ -1278,7 +1279,7 @@ msgstr "PayPal"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_email_account
 msgid "PayPal Email ID"
-msgstr ""
+msgstr "Email ID de Paypal"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
@@ -1297,14 +1298,14 @@ msgstr "Pagos"
 #: model:ir.model,name:payment.model_payment_acquirer
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr "Método de pago"
+msgstr "Medio de pago"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr "Métodos de pago"
+msgstr "Medios de pago"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_flow
@@ -1464,7 +1465,7 @@ msgstr "Teléfono"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "Please configure a payment acquirer."
-msgstr "Configura un adquirente de pago."
+msgstr "Configure por favor un medio de pago."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:33
@@ -1698,7 +1699,7 @@ msgstr "Países específicos"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_acquirer_onboarding_state
 msgid "State of the onboarding payment acquirer step"
-msgstr ""
+msgstr "Estado del paso de bienvenida para el medio de pago"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
@@ -1999,7 +2000,7 @@ msgstr "Estamos procesando su pago, por favor espere ..."
 #: code:addons/payment/static/src/xml/payment_processing.xml:99
 #, python-format
 msgid "We are waiting for the payment acquirer to confirm the payment."
-msgstr "Estamos esperando que el adquirente de pago confirme el pago."
+msgstr "Estamos esperando que el medio de pago confirme el mismo."
 
 #. module: payment
 #. openerp-web
@@ -2026,7 +2027,7 @@ msgstr ""
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:135
 #, python-format
 msgid "You have to set a journal for your payment acquirer %s."
-msgstr "Debe establecer un diario para su adquirente de pago %s."
+msgstr "Debe establecer un diario para su medio de pago %s."
 
 #. module: payment
 #. openerp-web

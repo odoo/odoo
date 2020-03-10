@@ -97,6 +97,15 @@ ImageWidget.include({
             return _super.apply(self, args);
         });
     },
+    /**
+     * @override
+     */
+    fetchPage: function (pageNum) {
+        if (!this._unsplash.query) {
+            return this._super.apply(this, arguments);
+        }
+        return $.when();
+    },
 
     //--------------------------------------------------------------------------
     // Private
