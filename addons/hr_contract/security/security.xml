@@ -20,7 +20,6 @@
         <record id="ir_rule_hr_contract_multi_company" model="ir.rule">
             <field name="name">HR Contract: Multi Company</field>
             <field name="model_id" ref="model_hr_contract"/>
-            <field name="global" eval="True"/>
             <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
         </record>
 
