@@ -8,11 +8,11 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='stage_id']" position="before">
                 <field name="event_registrations_open" invisible="1"/>
-                <button name="action_invite_contacts" type="object" string="Invite"
+                <button name="action_invite_contacts" type="object" string="Invite" groups="mass_mailing.group_mass_mailing_user"
                         class="btn btn-primary" attrs="{'invisible': [('event_registrations_open', '=', False)]}"/>
-                <button name="action_invite_contacts" type="object" string="Invite"
+                <button name="action_invite_contacts" type="object" string="Invite" groups="mass_mailing.group_mass_mailing_user"
                         class="btn btn-secondary" attrs="{'invisible': [('event_registrations_open', '=', True)]}"/>
-                <button name="action_mass_mailing_attendees" string="Contact Attendees" type="object" attrs="{'invisible': [('seats_expected', '=', 0)]}"/>
+                <button name="action_mass_mailing_attendees" string="Contact Attendees" type="object" attrs="{'invisible': [('seats_expected', '=', 0)]}" groups="mass_mailing.group_mass_mailing_user"/>
             </xpath>
         </field>
     </record>
