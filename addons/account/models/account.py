@@ -58,6 +58,12 @@ class AccountAccountTag(models.Model):
     tax_negate = fields.Boolean(string="Negate Tax Balance", help="Check this box to negate the absolute value of the balance of the lines associated with this tag in tax report computation.")
     country_id = fields.Many2one(string="Country", comodel_name='res.country', help="Country for which this tag is available, when applied on taxes.")
 
+    @api.constrains('country_id', 'applicability')
+    def _validate_tag_country(self):
+        for record in self:
+            if record.applicability == 'taxes' and not record.country_id:
+                raise ValidationError(_("A tag defined to be used on taxes must always have a country set."))
+
 
 class AccountTaxReportLine(models.Model):
     _name = "account.tax.report.line"
