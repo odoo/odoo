@@ -16,6 +16,7 @@
         <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
     </record>
 
+    <data noupdate="1">
 
     <record id="rule_pos_bank_statement_user" model="ir.rule">
         <field name="name">Point Of Sale Bank Statement POS User</field>
@@ -78,7 +79,6 @@
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
-    <data noupdate="1">
         <record id="base.default_user" model="res.users">
             <field name="groups_id" eval="[(4,ref('point_of_sale.group_pos_manager'))]"/>
         </record>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="1">
+<odoo noupdate="1">
 
     <!-- Multicompay rules-->
     <record model="ir.rule" id="repair_order_rule">
@@ -19,5 +18,4 @@
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
-    </data>
 </odoo>

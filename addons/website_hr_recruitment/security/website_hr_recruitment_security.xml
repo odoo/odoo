@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<data>
+    <data noupdate="1">
     <record id="hr_job_public" model="ir.rule">
         <field name="name">Job Positions: Public</field>
         <field name="model_id" ref="hr.model_hr_job"/>
@@ -41,9 +41,10 @@
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
     </record>
+    </data>
+
 
     <record id="hr_recruitment.group_hr_recruitment_manager" model="res.groups">
         <field name="implied_ids" eval="[(4, ref('website.group_website_publisher'))]"/>
     </record>
-</data>
 </odoo>

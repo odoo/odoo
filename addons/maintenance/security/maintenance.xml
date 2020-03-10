@@ -8,6 +8,8 @@
         <field name="comment">The user will be able to manage equipments.</field>
     </record>
 
+    <data noupdate="1">
+
     <!-- Rules -->
     <record id="equipment_request_rule_user" model="ir.rule">
         <field name="name">Users are allowed to access their own maintenance requests</field>
@@ -64,5 +66,7 @@
     <record id="base.user_admin" model="res.users">
         <field name="groups_id" eval="[(4, ref('group_equipment_manager'))]"/>
     </record>
+
+    </data>
 
 </odoo>
