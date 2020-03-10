@@ -520,11 +520,57 @@
     </t>
 </template>
 
+<template id="oxp20_event_details" inherit_id="website_event.event_details">
+    <xpath expr="//t[@t-call='website.record_cover']" position="replace">
+        <t t-set="event_oxp20" t-value="request.env.ref('odoo_com.event_oxp20', raise_if_not_found=False)"/>
+        <t t-if="event.name == 'Odoo Experience 2020'">
+                <t t-call="website.record_cover">
+                    <t t-set="_record" t-value="event"/>
+                    <t t-set="use_filters" t-value="True"/>
+                    <t t-set="use_size" t-value="True"/>
+                    <t t-set="use_text_size" t-value="True"/>
+                    <t t-set="use_text_align" t-value="True"/>
+                    <t t-set="additionnal_classes" t-value="o_xp20_cover"/>
+                    <div class="container d-flex flex-column flex-grow-1 justify-content-around" t-if="event or request.env.user.login =='odo'">
+                        <div class="o_wevent_event_title text-center">
+                            <h3 class="fw_light">Get your tickets for</h3>
+                            <h1 t-field="event.name" class="o_wevent_event_name" itemprop="name" placeholder="Event Title"/>
+                            <h2 t-field="event.subtitle" class="o_wevent_event_subtitle" placeholder="Event Subtitle"/>
+                            <span t-if="event.is_participating" class="badge badge-success o_wevent_badge"><i class="fa fa-check mr-2"/>Registered</span>
+                        </div>
+                    </div>
+                    <div class="container mb-5">
+                        <t t-call="website_event.registration_template"/>
+                    </div>
+                </t>
+        </t>
+        <t t-else="">
+              <t t-call="website.record_cover">
+                    <t t-set="_record" t-value="event"/>
+                    <t t-set="use_filters" t-value="True"/>
+                    <t t-set="use_size" t-value="True"/>
+                    <t t-set="use_text_size" t-value="True"/>
+                    <t t-set="use_text_align" t-value="True"/>
+                    <div class="container d-flex flex-column flex-grow-1 justify-content-around" t-if="event or request.env.user.login =='odo'">
+                        <div class="o_wevent_event_title">
+                            <span t-if="event.is_participating" class="badge badge-success o_wevent_badge"><i class="fa fa-check mr-2"/>Registered</span>
+                            <h1 t-field="event.name" class="o_wevent_event_name" itemprop="name" placeholder="Event Title"/>
+                            <h2 t-field="event.subtitle" class="o_wevent_event_subtitle" placeholder="Event Subtitle"/>
+                        </div>
+                    </div>
+                    <div class="container mb-5">
+                        <t t-call="website_event.registration_template"/>
+                    </div>
+                </t>
+        </t>
+    </xpath>
+</template>
+
 <!-- Event - Registration -->
 <template id="registration_template">
     <t t-set="tickets_available" t-value="event.seats_available or event.seats_availability == 'unlimited'"/>
     <t t-set="buy" t-value="tickets_available and event.state == 'confirm'"/>
-    <form t-if="buy" id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post" itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer" class="mb-5">
+    <form t-if="buy" id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post" itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer" t-attf-class="mb-5 #{'col-lg-8 mx-auto' if len(event.event_ticket_ids) &gt; 1 else ''}">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <div id="o_wevent_tickets" class="bg-white rounded shadow-sm">
             <t t-id="tickets" t-call="website_event.ticket">
