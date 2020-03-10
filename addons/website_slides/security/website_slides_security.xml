@@ -29,7 +29,6 @@
         <record id="rule_slide_channel_global" model="ir.rule">
             <field name="name">Channel: always visible (sub rules exist)</field>
             <field name="model_id" ref="model_slide_channel"/>
-            <field name="global" eval="True"/>
             <field name="domain_force">[(1, '=', 1)]</field>
         </record>
 
@@ -80,7 +79,6 @@
         <record id="rule_slide_slide_global" model="ir.rule">
             <field name="name">Slide: always visible (sub rules exist)</field>
             <field name="model_id" ref="model_slide_slide"/>
-            <field name="global" eval="True"/>
             <field name="domain_force">[(1, '=', 1)]</field>
         </record>
 
