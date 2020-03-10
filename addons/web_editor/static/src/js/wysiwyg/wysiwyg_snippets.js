@@ -17,7 +17,8 @@ Wysiwyg.include({
             var self = this;
             this.editor = new (this.Editor)(this, this.options);
             this.$editor = this.editor.rte.editable();
-            await this.editor.prependTo(this.$editor[0].ownerDocument.body);
+            const $body = this.$editor[0] ? this.$editor[0].ownerDocument.body : document.body;
+            await this.editor.prependTo($body);
             this._relocateEditorBar();
             this.$el.on('content_changed', function (e) {
                 self.trigger_up('wysiwyg_change');
