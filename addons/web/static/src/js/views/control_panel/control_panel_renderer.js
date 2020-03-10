@@ -35,6 +35,8 @@ var ControlPanelRenderer = Renderer.extend({
      * @param {String} [params.template] the QWeb template to render the
      *   ControlPanel. By default, the template 'ControlPanel' will be used.
      * @param {string} [params.title=''] the title visible in control panel
+     * @param {integer} [params.maxBreadcrumbItemLength] the maximum length of
+     * a breadcrumb item before being shortened.
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
@@ -46,6 +48,7 @@ var ControlPanelRenderer = Renderer.extend({
             this.template = params.template;
         }
         this.context = params.context;
+        this.maxBreadcrumbItemLength = params.maxBreadcrumbItemLength || 64;
 
         this.$subMenus = null;
         this.action = params.action;
@@ -246,9 +249,20 @@ var ControlPanelRenderer = Renderer.extend({
         var self = this;
         var is_last = (index === length-1);
         var li_content = bc.title && _.escape(bc.title.trim()) || data.noDisplayContent;
+
+        // shorten the breadcrumb item if too long
+        if (li_content && li_content.length > this.maxBreadcrumbItemLength) {
+            li_content = li_content.slice(0, this.maxBreadcrumbItemLength - 3) + '...';
+        }
+
         var $bc = $('<li>', {class: 'breadcrumb-item'})
             .append(is_last ? li_content : $('<a>', {href: '#'}).html(li_content))
             .toggleClass('active', is_last);
+
+        if (bc.title) {
+            $bc.attr('title', bc.title);
+        }
+
         if (!is_last) {
             $bc.click(function (ev) {
                 ev.preventDefault();
