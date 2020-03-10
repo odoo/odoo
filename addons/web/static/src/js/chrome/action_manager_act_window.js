@@ -688,7 +688,7 @@ ActionManager.include({
                 };
             }
             var options = {on_close: ev.data.on_closed};
-            if (actionData.mobile) {
+            if (config.device.isMobile && actionData.mobile) {
                 options = Object.assign({}, options, actionData.mobile);
             }
             action.flags = _.extend({}, action.flags, {searchPanelDefaultNoFilter: true});
