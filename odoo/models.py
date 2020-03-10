@@ -4611,8 +4611,8 @@ Record ids: %(records)s
             return self
         query = """SELECT id FROM "%s" WHERE id IN %%s""" % self._table
         self._cr.execute(query, [tuple(ids)])
-        ids = [r[0] for r in self._cr.fetchall()]
-        return self.browse(ids + new_ids)
+        valid_ids = set([r[0] for r in self._cr.fetchall()] + new_ids)
+        return self.browse(i for i in self._ids if i in valid_ids)
 
     def _check_recursion(self, parent=None):
         """
