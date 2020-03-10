@@ -71,19 +71,23 @@ class TestRobustness(SavepointCase):
         consistent with the `reserved_quantity` on the quants.
         """
         # change stock usage
-        self.stock_location.scrap_location = True
+        test_stock_location = self.env['stock.location'].create({
+            'name': "Test Location",
+            'location_id': self.stock_location.id,
+        })
+        test_stock_location.scrap_location = True
 
         # make some stock
         self.env['stock.quant']._update_available_quantity(
             self.product1,
-            self.stock_location,
+            test_stock_location,
             1,
         )
 
         # reserve a unit
         move1 = self.env['stock.move'].create({
             'name': 'test_location_archive',
-            'location_id': self.stock_location.id,
+            'location_id': test_stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
             'product_uom': self.uom_unit.id,
@@ -94,7 +98,7 @@ class TestRobustness(SavepointCase):
         self.assertEqual(move1.state, 'assigned')
         quant = self.env['stock.quant']._gather(
             self.product1,
-            self.stock_location,
+            test_stock_location,
         )
 
         # assert the reservation
@@ -104,7 +108,7 @@ class TestRobustness(SavepointCase):
         # change the stock usage
         with self.assertRaises(UserError):
             with self.cr.savepoint():
-                self.stock_location.scrap_location = False
+                test_stock_location.scrap_location = False
 
         # unreserve
         move1._do_unreserve()
