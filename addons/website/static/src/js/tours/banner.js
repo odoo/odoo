@@ -23,6 +23,7 @@ tour.register("banner", {
     trigger: "#wrapwrap .s_cover h1",
     content: _t("<b>Click on a text</b> to start editing it. <i>It's that easy to edit your content!</i>"),
     position: "bottom",
+    consumeEvent: 'input',
     run: "text",
 }, {
     trigger: ".o_we_customize_panel",
