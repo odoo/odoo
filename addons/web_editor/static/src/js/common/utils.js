@@ -103,11 +103,11 @@ function _convertNumericToUnit(value, unitFrom, unitTo, cssProp, $target) {
  * @returns {Array|null}
  */
 function _getNumericAndUnit(value) {
-    const m = value.trim().match(/^(-?[0-9.]+)(\w*)$/);
+    const m = value.trim().match(/^(-?[0-9.]+)([A-Za-z% -]*)$/);
     if (!m) {
         return null;
     }
-    return [m[1], m[2]];
+    return [m[1].trim(), m[2].trim()];
 }
 /**
  * Checks if two css values are equal.
