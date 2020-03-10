@@ -29,6 +29,7 @@
         'views/pos_payment_method_views.xml',
         'views/pos_payment_views.xml',
         'views/pos_config_view.xml',
+        'views/pos_daily_reports.xml',
         'views/pos_session_view.xml',
         'views/point_of_sale_sequence.xml',
         'data/point_of_sale_data.xml',

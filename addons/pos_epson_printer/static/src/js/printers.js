@@ -69,6 +69,7 @@ var EpsonPrinter = core.Class.extend(PrinterMixin, {
         if (this.printer) {
             this.printer.addPulse();
             this.printer.send();
+            this.pos.increment_cash_opening();
         }
     },
 

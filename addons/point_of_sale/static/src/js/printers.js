@@ -139,6 +139,7 @@ var Printer = core.Class.extend(PrinterMixin, {
      */
     open_cashbox: function () {
         var self = this;
+        this.pos.increment_cash_opening();
         return this.connection.rpc('/hw_proxy/default_printer_action', {
             data: {
                 action: 'cashbox'

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="action_report_pos_financial_x" model="ir.actions.report">
+            <field name="name">X-report</field>
+            <field name="model">pos.session</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">point_of_sale.financial_report_template_x</field>
+            <field name="report_file">point_of_sale.financial_report_template_x</field>
+        </record>
+
+        <record id="action_report_pos_financial_z" model="ir.actions.report">
+            <field name="name">Z-report</field>
+            <field name="model">pos.session</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">point_of_sale.financial_report_template_z</field>
+            <field name="report_file">point_of_sale.financial_report_template_z</field>
+        </record>
+
+         <template id="financial_report_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <strong>THIS IS NOT A VALID VAT TICKET</strong>
+                            <t t-if="o.stop_at">
+                                <h2>Z FINANCIAL</h2>
+                            </t>
+                            <t t-if="not o.stop_at">
+                                <h2>X FINANCIAL</h2>
+                            </t>
+                            <div class="row">
+                                <div class="col-12">
+                                    <strong>Report number:</strong>
+                                    <span t-esc="o.config_id.get_next_report_sequence_number()"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <strong>POS Session:</strong>
+                                    <span t-field="o.name"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <strong>Company:</strong>
+                                    <span t-field="o.company_id.name"/>
+                                </div>
+                            </div>
+                            <div class="row mt32 mb32">
+                                <div class="col-4">
+                                    <strong>Point of Sale</strong>:<br/>
+                                    <span t-field="o.config_id"/>
+                                </div>
+                                <div class="col-4">
+                                    <strong>From</strong>:<br/>
+                                    <span t-field="o.start_at"/>
+                                </div>
+                                <div class="col-4">
+                                    <strong>To</strong>:<br/>
+                                    <t t-if="o.stop_at">
+                                        <span t-field="o.stop_at"/>
+                                    </t>
+                                    <t t-if="not o.stop_at">
+                                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%d/%Y %H:%M:%S')"/>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <strong>Total sales amount:</strong>
+                                    <span t-field="o.total_payments_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <strong>Amount of refund:</strong>
+                                    <span t-esc="o.get_amount_of_orders(lambda o: o.is_refund)" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <strong>Total of refund:</strong>
+                                    <span t-esc="o.get_total_of_orders(lambda o: o.is_refund)"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <strong>Total net:</strong>
+                                    <span t-field="o.total_payments_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <strong>Revenue per category (NS)</strong>:
+                                    <table style="margin-left: 20px">
+                                        <t t-foreach="o.get_total_sold_per_category()" t-as="category">
+                                            <tr>
+                                                <td><t t-esc="category[0]"/></td>
+                                                <td style="padding-left: 5px">
+                                                    <t t-esc="category[1]"
+                                                       t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <strong>Amount of discounts (NS)</strong>:
+                                    <span t-esc="o.get_amount_of_orders(lambda o: o.lines.filtered(lambda l: l.discount > 0))"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <strong>Total discounts (NS)</strong>:
+                                    <span t-esc="round(o.get_total_discount(), 2)"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <strong>Total cash box opening:</strong>
+                                    <span t-field="o.amount_cashbox_opening"/>
+                                </div>
+                            </div>
+                            <t t-if="o.cash_control">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <strong>Amount of money in cash register</strong>:
+                                        <span t-field="o.cash_register_balance_end"
+                                              t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </div>
+                                </div>
+                            </t>
+                            <div class="row">
+                                <div class="col-12">
+                                    <strong>Number of incomplete sales:</strong>
+                                    <span t-esc="o.get_amount_of_orders(lambda order: order.state == 'draft')"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+         <template id="financial_report_template_x">
+            <t t-call="point_of_sale.financial_report_template"/>
+        </template>
+        <template id="financial_report_template_z">
+            <t t-call="point_of_sale.financial_report_template"/>
+        </template>
+    </data>
+</odoo>

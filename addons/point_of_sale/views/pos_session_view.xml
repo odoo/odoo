@@ -25,6 +25,16 @@
                     <field name="cash_register_id" invisible="1"/>
                     <field name="failed_pickings" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="%(action_report_pos_financial_x)d" states="opening_control,opened" type="action" icon="fa-file-text-o">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Financial X</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" name="%(action_report_pos_financial_z)d" states="closing_control,closed" type="action" icon="fa-file-text-o">
+                            <div class="o_field_widget o_stat_info">
+                                <div class="o_stat_text">Financial Z</div>
+                            </div>
+                        </button>
                         <button name="action_view_order"
                             class="oe_stat_button"
                             icon="fa-shopping-basket"

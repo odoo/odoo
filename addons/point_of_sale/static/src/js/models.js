@@ -1139,6 +1139,21 @@ exports.PosModel = Backbone.Model.extend({
             });
     },
 
+    increment_cash_opening: async function() {
+        try {
+            return await rpc.query({
+                model: 'pos.session',
+                method: 'increment_cashbox_opening',
+                args: [this.pos_session.id],
+            });
+        } catch(err) {
+            this.gui.show_popup('error', {
+                'title': _t('Server error'),
+                'body':  _t('Make sure you are connected.'),
+            });
+        }
+    },
+
     scan_product: function(parsed_code){
         var selectedOrder = this.get_order();
         var product = this.db.get_product_by_barcode(parsed_code.base_code);

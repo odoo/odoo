@@ -98,6 +98,7 @@ class PosSession(models.Model):
     total_payments_amount = fields.Float(compute='_compute_total_payments_amount', string='Total Payments Amount')
     is_in_company_currency = fields.Boolean('Is Using Company Currency', compute='_compute_is_in_company_currency')
     update_stock_at_closing = fields.Boolean('Stock should be updated at closing')
+    amount_cashbox_opening = fields.Integer(default=0)
 
     _sql_constraints = [('uniq_name', 'unique(name)', "The name of this POS Session must be unique !")]
 
@@ -1091,6 +1092,60 @@ class PosSession(models.Model):
                 ) % ', '.join(draft_orders.mapped('name'))
             )
         return True
+
+    def get_total_sold_per_category(self, group_by_user_id=None):
+        total_sold_per_user_per_category = {}
+
+        for order in self.order_ids:
+            if group_by_user_id:
+                user_id = order.user_id.id
+            else:
+                # use a user_id of 0 to keep the logic between with user group and without user group the same
+                user_id = 0
+
+            if user_id not in total_sold_per_user_per_category:
+                total_sold_per_user_per_category[user_id] = {}
+
+            total_sold_per_category = total_sold_per_user_per_category[user_id]
+
+            for line in order.lines:
+                key = line.product_id.pos_categ_id.name or "None"
+
+                if key in total_sold_per_category:
+                    total_sold_per_category[key] += line.price_subtotal_incl
+            else:
+                total_sold_per_category[key] = line.price_subtotal_incl
+
+        if group_by_user_id or not total_sold_per_user_per_category:
+            return list(total_sold_per_user_per_category.items())
+        else:
+            return list(total_sold_per_user_per_category[0].items())
+
+    def get_number_of_incomplete_sales(self):
+        return len(self.order_ids.filtered(lambda order: order.state == 'draft'))
+
+    def get_amount_of_orders(self, predicate):
+        return len(self.order_ids.filtered(predicate))
+
+    def get_total_of_orders(self, predicate):
+        orders = self.order_ids.filtered(predicate)
+        amount = 0
+        for order in orders:
+            amount += order.amount_total
+        return amount
+
+    def get_total_discount(self):
+        amount = 0
+        for line in self.order_ids.filtered(lambda o: o.lines.filtered(lambda l: l.discount > 0)).mapped('lines'):
+            normal_price = line.qty * line.price_unit
+            normal_price = normal_price + (normal_price / 100 * line.tax_ids.amount)
+            amount += normal_price - line.price_subtotal_incl
+        return amount
+
+    def increment_cashbox_opening(self):
+        self.amount_cashbox_opening += 1
+        return self.amount_cashbox_opening
+
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
