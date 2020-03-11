@@ -404,7 +404,7 @@ class Environment(Mapping):
     _local = Local()
 
     @classproperty
-    def envs(cls):
+    def envs(self,cls):
         return getattr(cls._local, 'environments', ())
 
     @classmethod

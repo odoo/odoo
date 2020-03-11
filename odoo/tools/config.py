@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 try:
-    import configparser as ConfigParser
-except ImportError:
-    import ConfigParser
+    import configparser
+except:
+    from six.moves import configparser
+
 
 import errno
 import logging
@@ -582,7 +583,7 @@ class configmanager(object):
             'xmlrpc_interface': 'http_interface',
             'xmlrpc': 'http_enable',
         }
-        p = ConfigParser.RawConfigParser()
+        p = configparser.RawConfigParser()
         try:
             p.read([self.rcfile])
             for (name,value) in p.items('options'):
@@ -605,11 +606,11 @@ class configmanager(object):
                     self.misc[sec][name] = value
         except IOError:
             pass
-        except ConfigParser.NoSectionError:
+        except configparser.NoSectionError:
             pass
 
     def save(self):
-        p = ConfigParser.RawConfigParser()
+        p = configparser.RawConfigParser()
         loglevelnames = dict(zip(self._LOGLEVELS.values(), self._LOGLEVELS))
         p.add_section('options')
         for opt in sorted(self.options):
