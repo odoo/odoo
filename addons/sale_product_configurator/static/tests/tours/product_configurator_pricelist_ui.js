@@ -8,7 +8,7 @@ tour.register('sale_product_configurator_pricelist_tour', {
     test: true,
 },
 [
-tour.STEPS.SHOW_APPS_MENU_ITEM,
+tour.stepUtils.showAppsMenuItem(),
 {
     content: "navigate to the sale app",
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',

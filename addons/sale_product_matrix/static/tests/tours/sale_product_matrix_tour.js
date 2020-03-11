@@ -6,7 +6,7 @@ var tour = require('web_tour.tour');
 tour.register('sale_matrix_tour', {
     url: "/web",
     test: true,
-}, [tour.STEPS.SHOW_APPS_MENU_ITEM, {
+}, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
 }, {
     trigger: ".o_list_button_add",

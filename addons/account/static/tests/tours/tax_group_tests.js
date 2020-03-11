@@ -8,7 +8,7 @@ odoo.define('account.tax.group.tour.tests', function (require) {
     tour.register('account_tax_group', {
         test: true,
         url: "/web",
-    }, [tour.STEPS.SHOW_APPS_MENU_ITEM,
+    }, [tour.stepUtils.showAppsMenuItem(),
         {
             content: "Go to Invoicing",
             trigger: '.o_app[data-menu-xmlid="account.menu_finance"]',

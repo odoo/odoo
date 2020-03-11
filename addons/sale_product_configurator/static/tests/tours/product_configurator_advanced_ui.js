@@ -8,7 +8,7 @@ var optionVariantImage;
 tour.register('sale_product_configurator_advanced_tour', {
     url: "/web",
     test: true,
-}, [tour.STEPS.SHOW_APPS_MENU_ITEM, {
+}, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',  // Note: The module sale_management is mandatory
     edition: 'community'
 }, {
