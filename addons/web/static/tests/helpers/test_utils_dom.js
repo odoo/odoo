@@ -2,6 +2,7 @@ odoo.define('web.test_utils_dom', function (require) {
     "use strict";
 
     const concurrency = require('web.concurrency');
+    const Widget = require('web.Widget');
 
     /**
      * DOM Test Utils
@@ -68,6 +69,11 @@ odoo.define('web.test_utils_dom', function (require) {
         dragleave: { constructor: DragEvent, processParameters: onlyBubble },
         dragover: { constructor: DragEvent, processParameters: onlyBubble },
         drop: { constructor: DragEvent, processParameters: onlyBubble },
+
+        input: { constructor: InputEvent, processParameters: onlyBubble },
+
+        compositionstart: { constructor: CompositionEvent, processParameters: onlyBubble },
+        compositionend: { constructor: CompositionEvent, processParameters: onlyBubble },
     };
 
     /**
@@ -285,6 +291,44 @@ odoo.define('web.test_utils_dom', function (require) {
     }
 
     /**
+     * Helper function used to extract an HTML EventTarget element from a given
+     * target. The extracted element will depend on the target type:
+     * - Component|Widget -> el
+     * - jQuery -> associated element (must have 1)
+     * - HTMLCollection (or similar) -> first element (must have 1)
+     * - string -> result of document.querySelector with string
+     * - else -> as is
+     * @private
+     * @param {(Component|Widget|jQuery|HTMLCollection|HTMLElement|string)} target
+     * @returns {EventTarget}
+     */
+    function getNode(target) {
+        let nodes;
+        if (target instanceof owl.Component || target instanceof Widget) {
+            nodes = [target.el];
+        } else if (typeof target === 'string') {
+            nodes = document.querySelectorAll(target);
+        } else if (target === jQuery) { // jQuery (or $)
+            nodes = [document.body];
+        } else if (target.length) { // jQuery instance, HTMLCollection or array
+            nodes = target;
+        } else {
+            nodes = [target];
+        }
+        if (nodes.length !== 1) {
+            throw new Error(`Found ${nodes.length} nodes instead of 1.`);
+        }
+        const node = nodes[0];
+        if (!node) {
+            throw new Error(`Expected a node and got ${node}.`);
+        }
+        if (!_isEventTarget(node)) {
+            throw new Error(`Expected node to be an instance of EventTarget and got ${node.constructor.name}.`);
+        }
+        return node;
+    }
+
+    /**
      * Open the datepicker of a given element.
      *
      * @param {jQuery} $datepickerEl element to which a datepicker is attached
@@ -453,6 +497,7 @@ odoo.define('web.test_utils_dom', function (require) {
         clickFirst,
         clickLast,
         dragAndDrop,
+        getNode,
         openDatepicker,
         returnAfterNextAnimationFrame,
         triggerEvent,

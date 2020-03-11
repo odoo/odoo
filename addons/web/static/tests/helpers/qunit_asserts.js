@@ -13,6 +13,8 @@ odoo.define('web.qunit_asserts', function (require) {
 
     const Widget = require('web.Widget');
 
+    /** @todo use testUtilsDom.getNode to extract the element from the 'w' argument */
+
     //-------------------------------------------------------------------------
     // Private functions
     //-------------------------------------------------------------------------
