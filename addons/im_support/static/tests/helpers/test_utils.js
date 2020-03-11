@@ -24,7 +24,7 @@ mailTestUtils.MockMailService.include({
  * @param {function} [params.mockSupportRPC]
  * @param {boolean} [params.enableSupportPoll=false]
  */
-function addMockSupportEnvironment(widget, params) {
+async function addMockSupportEnvironment(widget, params) {
     // mock CORS RPCs
     var originalRPC = supportSession.rpc;
     var defaultMockSupportRPC = function (route, args) {
@@ -58,7 +58,7 @@ function addMockSupportEnvironment(widget, params) {
         }
         return result;
     };
-    testUtils.mock.addMockEnvironment(widget, params);
+    await testUtils.mock.addMockEnvironment(widget, params);
     var widgetDestroy = widget.destroy;
     widget.destroy = function () {
         supportSession.rpc = originalRPC;

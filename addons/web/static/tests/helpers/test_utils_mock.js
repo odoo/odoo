@@ -125,11 +125,11 @@ function removeSrcAttribute(el, widget) {
  * @param {boolean} [throttle=false] set to true to keep the throttling, which
  *   is completely removed by default.
  *
- * @returns {MockServer} the instance of the mock server, created by this
+ * @returns {Promise<MockServer>} the instance of the mock server, created by this
  *   function. It is necessary for createView so that method can call some
  *   other methods on it.
  */
-function addMockEnvironment(widget, params) {
+async function addMockEnvironment(widget, params) {
     var Server = MockServer;
     params.services = params.services || {};
     if (params.mockRPC) {
@@ -287,6 +287,9 @@ function addMockEnvironment(widget, params) {
             views = _.mapObject(views, function (viewParams) {
                 return fieldsViewGet(mockServer, viewParams);
             });
+            if ('search' in views && params.favoriteFilters) {
+                views.search.favoriteFilters = params.favoriteFilters;
+            }
             event.data.on_success(views);
         });
     });
@@ -312,6 +315,7 @@ function addMockEnvironment(widget, params) {
     // Deploy services
     var done = false;
     var servicesToDeploy = _.clone(params.services);
+    const servicePromises = [];
     if (!servicesToDeploy.ajax) {
         services.ajax = null; // use mocked ajax from mocked server
     }
@@ -329,8 +333,7 @@ function addMockEnvironment(widget, params) {
             intercept(service, "get_session", function (event) {
                 event.data.callback(session);
             });
-
-            service.start();
+            servicePromises.push(service.start());
         } else {
             var serviceNames = _.keys(servicesToDeploy);
             if (serviceNames.length) {
@@ -339,6 +342,8 @@ function addMockEnvironment(widget, params) {
             done = true;
         }
     }
+
+    await Promise.all(servicePromises);
 
     return mockServer;
 }
@@ -368,21 +373,28 @@ function fieldsViewGet(server, params) {
  * @param {Object} [params.archs] this archs given to the mock server
  * @param {Object} [params.data] the business data given to the mock server
  * @param {boolean} [params.debug]
+ * @param {Object} [params.env]
  * @param {function} [params.mockRPC]
+ * @param {function} [params.server] an already instantiated server to avoid
+ *      creating another one.
  * @returns {Object}
  */
-function getMockedOwlEnv(params) {
-    params = params || {};
-    let Server = MockServer;
-    if (params.mockRPC) {
-        Server = MockServer.extend({ _performRpc: params.mockRPC });
+function getMockedOwlEnv(params = {}) {
+    let server;
+    if (params.server) {
+        server = params.server;
+    } else {
+        let Server = MockServer;
+        if (params.mockRPC) {
+            Server = MockServer.extend({ _performRpc: params.mockRPC });
+        }
+        server = new Server(params.data, {
+            actions: params.actions,
+            archs: params.archs,
+            debug: params.debug,
+        });
     }
-    const server = new Server(params.data, {
-        actions: params.actions,
-        archs: params.archs,
-        debug: params.debug,
-    });
-    const env = {
+    const env = Object.assign({
         dataManager: {
             load_action: (actionID, context) => {
                 return server.performRpc('/web/action/load', {
@@ -416,7 +428,7 @@ function getMockedOwlEnv(params) {
             },
         },
         session: params.session || {},
-    };
+    }, params.env);
     return makeTestEnvironment(env, server.performRpc.bind(server));
 }
 
