@@ -19,6 +19,9 @@ class Project(models.Model):
                 result['timesheet_product_id'] = default_product.id
         return result
 
+    def _default_timesheet_product_id(self):
+        return self.env.ref('sale_timesheet.time_product', False)
+
     billable_type = fields.Selection([
         ('task_rate', 'At Task Rate'),
         ('employee_rate', 'At Employee Rate'),
@@ -40,7 +43,8 @@ class Project(models.Model):
             ('invoice_policy', '=', 'delivery'),
             ('service_type', '=', 'timesheet'),
             '|', ('company_id', '=', False), ('company_id', '=', company_id)]""",
-        help='Select a Service product with which you would like to bill your time spent on tasks.')
+        help='Select a Service product with which you would like to bill your time spent on tasks.',
+        default=_default_timesheet_product_id)
 
     _sql_constraints = [
         ('timesheet_product_required_if_billable_and_timesheets', "CHECK((allow_billable = 't' AND allow_timesheets = 't' AND timesheet_product_id IS NOT NULL) OR (allow_billable = 'f') OR (allow_timesheets = 'f'))", 'The timesheet product is required when the task can be billed and timesheets are allowed.'),
