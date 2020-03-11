@@ -16,6 +16,7 @@ class Contract(models.Model):
 
     name = fields.Char('Contract Reference', required=True)
     active = fields.Boolean(default=True)
+    structure_type_id = fields.Many2one('hr.payroll.structure.type', string="Salary Structure Type")
     employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     department_id = fields.Many2one('hr.department', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string="Department")
     job_id = fields.Many2one('hr.job', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string='Job Position')
@@ -40,6 +41,8 @@ class Contract(models.Model):
     ], string='Status', group_expand='_expand_states', copy=False,
        tracking=True, help='Status of the contract', default='draft')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
+    company_country_id = fields.Many2one('res.country', string="Company country", related='company_id.country_id', readonly=True)
+
     """
         kanban_state:
             * draft + green = "Incoming" state (will be set as Open once the contract has started)
@@ -68,7 +71,6 @@ class Contract(models.Model):
     def _expand_states(self, states, domain, order):
         return [key for key, val in type(self).state.selection]
 
-
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
         if self.employee_id:
@@ -76,6 +78,23 @@ class Contract(models.Model):
             self.department_id = self.employee_id.department_id
             self.resource_calendar_id = self.employee_id.resource_calendar_id
             self.company_id = self.employee_id.company_id
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        if self.company_id:
+            structure_types = self.env['hr.payroll.structure.type'].search([
+                '|',
+                ('country_id', '=', self.company_id.country_id.id),
+                ('country_id', '=', False)])
+            if structure_types:
+                self.structure_type_id = structure_types[0]
+            elif self.structure_type_id not in structure_types:
+                self.structure_type_id = False
+
+    @api.onchange('structure_type_id')
+    def _onchange_structure_type_id(self):
+        if self.structure_type_id.default_resource_calendar_id:
+            self.resource_calendar_id = self.structure_type_id.default_resource_calendar_id
 
     @api.constrains('employee_id', 'state', 'kanban_state', 'date_start', 'date_end')
     def _check_current_contract(self):
