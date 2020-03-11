@@ -53,6 +53,7 @@ class Project(models.Model):
     @api.depends('billable_type', 'allow_billable', 'sale_order_id', 'partner_id')
     def _compute_display_create_order(self):
         for project in self:
+            project._compute_billable_type()
             show = True
             if not project.partner_id or project.billable_type != 'no' or project.allow_billable or project.sale_order_id:
                 show = False
