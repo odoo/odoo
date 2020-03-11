@@ -135,10 +135,10 @@
             </xpath>
 
             <xpath expr="//div[hasclass('o_kanban_record_headings')]" position="inside">
-                <i class="text-success fa fa-plus-circle" t-if="record.l10n_it_send_state.raw_value == 'new'"/>
-                <i class="text-warning fa fa-paper-plane-o" t-if="record.l10n_it_send_state.raw_value == 'sent'"/>
-                <i class="text-danger fa fa-exclamation-triangle" t-if="record.l10n_it_send_state.raw_value == 'invalid'"/>
-                <i class="text-success fa fa-check" t-if="['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'].indexOf(record.l10n_it_send_state.raw_value) >= 0" />
+                <i class="text-success fa fa-plus-circle" aria-label="New" t-if="record.l10n_it_send_state.raw_value == 'new'"/>
+                <i class="text-warning fa fa-paper-plane-o" aria-label="Sent, waiting for response" t-if="record.l10n_it_send_state.raw_value == 'sent'"/>
+                <i class="text-danger fa fa-exclamation-triangle" aria-label="Sent, but invalid" t-if="record.l10n_it_send_state.raw_value == 'invalid'"/>
+                <i class="text-success fa fa-check" aria-label="Delivered Invoice" t-if="['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'].indexOf(record.l10n_it_send_state.raw_value) >= 0" />
             </xpath>
         </data>
         </field>
