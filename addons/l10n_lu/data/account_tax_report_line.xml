@@ -10,6 +10,7 @@
       <field name="name">II. ASSESSMENT OF TAX DUE (output tax)</field>
       <field name="sequence">2</field>
       <field name="report_id" ref="tax_report"/>
+      <field name="formula">None</field>
     </record>
 
     <record id="account_tax_report_line_2b_intra_community_acqui_of_goods_base" model="account.tax.report.line">
@@ -275,13 +276,15 @@
       <field name="name">I. ASSESSMENT OF TAXABLE TURNOVER</field>
       <field name="sequence">1</field>
       <field name="report_id" ref="tax_report"/>
+      <field name="formula">None</field>
     </record>
 
     <record id="account_tax_report_line_1a_overall_turnover" model="account.tax.report.line">
       <field name="name">I.A. Overall turnover (012)</field>
       <field name="sequence">1</field>
       <field name="report_id" ref="tax_report"/>
-        <field name="parent_id" ref="account_tax_report_line_1_assessment_taxable_turnover"/>
+      <field name="parent_id" ref="account_tax_report_line_1_assessment_taxable_turnover"/>
+      <field name="formula">LUTAX_471 + LUTAX_021 + LUTAX_037 + LUTAX_455 + LUTAX_456</field>
     </record>
 
     <record id="account_tax_report_line_1a_vat_acc_scheme" model="account.tax.report.line">
@@ -296,23 +299,26 @@
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_line_1a_overall_turnover"/>
         <field name="report_id" ref="tax_report"/>
-      </record>
+        <field name="formula">LUTAX_471 + LUTAX_021 + LUTAX_037</field>
+    </record>
 
+    <!-- 471 not managed, only 472 is filled in -->
     <record id="account_tax_report_line_1a_telecom_service" model="account.tax.report.line">
         <field name="name">I.A.2.a). Telecommunications services, radio and television broadcasting services... (471)</field>
         <field name="tag_name">471</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="account_tax_report_line_1a_total_sale"/>
         <field name="report_id" ref="tax_report"/>
-      </record>
+        <field name="code">LUTAX_471</field>
+    </record>
 
     <record id="account_tax_report_line_1a_other_sales" model="account.tax.report.line">
         <field name="name">I.A.2.b). Other sales / receipts (472)</field>
-        <field name="tag_name">472</field>
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_line_1a_total_sale"/>
         <field name="report_id" ref="tax_report"/>
-      </record>
+        <field name="formula">LUTAX_021 + LUTAX_037</field>
+    </record>
 
     <record id="account_tax_report_line_1a_app_goods_non_bus" model="account.tax.report.line">
         <field name="name">I.A.3. Application of goods for non-business use and for business purposes (Art.13) (455)</field>
@@ -320,7 +326,8 @@
         <field name="sequence" eval="3"/>
         <field name="parent_id" ref="account_tax_report_line_1a_overall_turnover"/>
         <field name="report_id" ref="tax_report"/>
-      </record>
+        <field name="code">LUTAX_455</field>
+    </record>
 
     <record id="account_tax_report_line_1a_non_bus_gs" model="account.tax.report.line">
         <field name="name">I.A.4. Non-business use of goods and supply of services free of charge (Art.16) (456)</field>
@@ -328,13 +335,15 @@
         <field name="sequence" eval="4"/>
         <field name="parent_id" ref="account_tax_report_line_1a_overall_turnover"/>
         <field name="report_id" ref="tax_report"/>
-      </record>
+        <field name="code">LUTAX_456</field>
+    </record>
 
     <record id="account_tax_report_line_1b_exemptions_deductible_amounts" model="account.tax.report.line">
       <field name="name">I.B. Exemptions and deductible amounts (021)</field>
       <field name="sequence">2</field>
       <field name="report_id" ref="tax_report"/>
-        <field name="parent_id" ref="account_tax_report_line_1_assessment_taxable_turnover"/>
+      <field name="parent_id" ref="account_tax_report_line_1_assessment_taxable_turnover"/>
+      <field name="code">LUTAX_021</field>
     </record>
 
     <record id="account_tax_report_line_1b_2_export" model="account.tax.report.line">
@@ -427,17 +436,19 @@
 
     <record id="account_tax_report_line_1c_taxable_turnover" model="account.tax.report.line">
       <field name="name">I.C. Taxable turnover (022)</field>
-      <field name="tag_name">022</field>
       <field name="sequence">3</field>
       <field name="report_id" ref="tax_report"/>
-        <field name="parent_id" ref="account_tax_report_line_1_assessment_taxable_turnover"/>
+      <field name="parent_id" ref="account_tax_report_line_1_assessment_taxable_turnover"/>
+      <field name="code">LUTAX_022</field>
+      <field name="formula">LUTAX_037</field>
     </record>
 
     <record id="account_tax_report_line_2a_breakdown_taxable_turnover_base" model="account.tax.report.line">
       <field name="name">II.A. Breakdown of taxable turnover – base (037)</field>
       <field name="sequence">1</field>
       <field name="report_id" ref="tax_report"/>
-        <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
+      <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
+      <field name="code">LUTAX_037</field>
     </record>
 
     <record id="account_tax_report_line_2a_base_3" model="account.tax.report.line">
@@ -484,6 +495,7 @@
       <field name="name">IV. TAX TO BE PAID OR TO BE RECLAIMED</field>
       <field name="sequence">4</field>
       <field name="report_id" ref="tax_report"/>
+      <field name="formula">None</field>
     </record>
 
     <record id="account_tax_report_line_4c_exceeding_amount" model="account.tax.report.line">
@@ -848,6 +860,7 @@
       <field name="name">III. ASSESSMENT OF DEDUCTIBLE TAX (input tax)</field>
       <field name="sequence">3</field>
       <field name="report_id" ref="tax_report"/>
+      <field name="formula">None</field>
     </record>
 
     <record id="account_tax_report_line_3a_total_input_tax" model="account.tax.report.line">
