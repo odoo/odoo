@@ -18,11 +18,13 @@ odoo.define('web.ActionMixin', function (require) {
      * action manager.
      *
      * @module web.ActionMixin
+     * @extends WidgetAdapterMixin
      */
 
     const core = require('web.core');
+    const { WidgetAdapterMixin } = require('web.OwlCompatibility');
 
-    const ActionMixin = {
+    const ActionMixin = Object.assign({}, WidgetAdapterMixin, {
         template: 'Action',
 
         /**
@@ -41,7 +43,7 @@ odoo.define('web.ActionMixin', function (require) {
          * will also implement the ParentedMixin which actually manages those
          */
         custom_events: {
-            get_controller_query_params: '_onGetControllerQueryParams',
+            get_controller_query_params: '_onGetOwnedQueryParams',
         },
 
         /**
@@ -62,16 +64,6 @@ odoo.define('web.ActionMixin', function (require) {
          * @see _setTitle
          */
         _title: '',
-
-        /**
-         * Called each time the action is attached into the DOM.
-         */
-        on_attach_callback: function () { },
-
-        /**
-         * Called each time the action is detached from the DOM.
-         */
-        on_detach_callback: function () { },
 
         /**
          * @override
@@ -177,21 +169,40 @@ odoo.define('web.ActionMixin', function (require) {
         renderButtons: function ($node) { },
 
         /**
-         * This is the main method to customize the controlpanel content.
-         *
-         * @see updateContents method in ControlPanelRenderer for more info
-         *
-         * @param {Object} [status]
-         * @param {string} [status.title]
-         * @param {Object} [options]
-         * @param {boolean} [options.clear]
+         * Method used to update the widget buttons state.
          */
-        updateControlPanel: function (status, options) {
-            if (this._controlPanel) {
-                status = status || {};
-                status.title = status.title || this.getTitle();
-                this._controlPanel.updateContents(status, options || {});
+        updateButtons: function () { },
+
+        /**
+         * The parameter newProps is used to update the props of
+         * the controlPanelWrapper before render it. The key 'cp_content'
+         * is not a prop of the control panel itself. One should if possible use
+         * the slot mechanism.
+         *
+         * @param {Object} [newProps={}]
+         * @returns {Promise}
+         */
+        updateControlPanel: async function (newProps = {}) {
+            if (!this.withControlPanel && !this.hasControlPanel) {
+                return;
             }
+            const props = Object.assign({}, newProps); // Work with a clean new object
+            if ('title' in props) {
+                this._setTitle(props.title);
+                this.controlPanelProps.title = this.getTitle();
+                delete props.title;
+            }
+            if ('cp_content' in props) {
+                // cp_content has been updated: refresh it.
+                this.controlPanelProps.cp_content = Object.assign({},
+                    this.controlPanelProps.cp_content,
+                    props.cp_content,
+                );
+                delete props.cp_content;
+            }
+            // Update props state
+            Object.assign(this.controlPanelProps, props);
+            return this._controlPanelWrapper.update(this.controlPanelProps);
         },
 
         //---------------------------------------------------------------------
@@ -204,7 +215,6 @@ odoo.define('web.ActionMixin', function (require) {
          */
         _setTitle: function (title) {
             this._title = title;
-            this.updateControlPanel({ title: this._title }, { clear: false });
         },
 
         //---------------------------------------------------------------------
@@ -218,15 +228,13 @@ odoo.define('web.ActionMixin', function (require) {
          * current controller.
          *
          * @private
-         * @param {OdooEvent} ev
-         * @param {function} ev.data.callback used to send the requested state
+         * @param {function} callback used to send the requested state
          */
-        _onGetControllerQueryParams: function (ev) {
-            ev.stopPropagation();
+        _onGetOwnedQueryParams: function (callback) {
             const state = this.getOwnedQueryParams();
-            ev.data.callback(state || {});
+            callback(state || {});
         },
-    };
+    });
 
     return ActionMixin;
 });

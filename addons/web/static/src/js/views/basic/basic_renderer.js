@@ -49,12 +49,26 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      * Called each time the renderer is attached into the DOM.
      */
     on_attach_callback: function () {
+        for (const handle in this.allFieldWidgets) {
+            this.allFieldWidgets[handle].forEach(widget => {
+                if (widget.on_attach_callback) {
+                    widget.on_attach_callback();
+                }
+            });
+        }
         WidgetAdapterMixin.on_attach_callback.call(this);
     },
     /**
      * Called each time the renderer is detached from the DOM.
      */
     on_detach_callback: function () {
+        for (const handle in this.allFieldWidgets) {
+            this.allFieldWidgets[handle].forEach(widget => {
+                if (widget.on_detach_callback) {
+                    widget.on_detach_callback();
+                }
+            });
+        }
         WidgetAdapterMixin.on_detach_callback.call(this);
     },
 

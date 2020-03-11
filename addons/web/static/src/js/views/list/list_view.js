@@ -33,7 +33,7 @@ var ListView = BasicView.extend({
      *
      * @param {Object} viewInfo
      * @param {Object} params
-     * @param {boolean} params.hasSidebar
+     * @param {boolean} params.hasActionMenus
      * @param {boolean} [params.hasSelectors=true]
      */
     init: function (viewInfo, params) {
@@ -58,7 +58,7 @@ var ListView = BasicView.extend({
 
         this.controllerParams.activeActions.export_xlsx = this.arch.attrs.export_xlsx ? !!JSON.parse(this.arch.attrs.export_xlsx): true;
         this.controllerParams.editable = editable;
-        this.controllerParams.hasSidebar = params.hasSidebar;
+        this.controllerParams.hasActionMenus = params.hasActionMenus;
         this.controllerParams.toolbarActions = viewInfo.toolbar;
         this.controllerParams.mode = editable ? 'edit' : 'readonly';
         this.controllerParams.selectedRecords = selectedRecords;
@@ -101,7 +101,7 @@ var ListView = BasicView.extend({
         var params = this._super.apply(this, arguments);
         var inDialog = action.target === 'new';
         var inline = action.target === 'inline';
-        params.hasSidebar = !inDialog && !inline;
+        params.hasActionMenus = !inDialog && !inline;
         return params;
     },
     /**

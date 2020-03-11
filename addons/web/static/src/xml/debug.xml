@@ -59,7 +59,7 @@
             <a role="menuitem" href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fieldsView.view_id" class="dropdown-item">
                 Edit View: <t t-esc="view.displayName"/>
             </a>
-            <a t-if="controlPanelView and controlPanelView.$el.is(':visible')" role="menuitem" href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="action.controlPanelFieldsView.view_id" class="dropdown-item">Edit ControlPanelView</a>
+            <a t-if="withControlPanel" role="menuitem" href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="action.controlPanelFieldsView.view_id" class="dropdown-item">Edit ControlPanelView</a>
         </t>
     </t>
 </t>

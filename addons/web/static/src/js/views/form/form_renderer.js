@@ -49,9 +49,6 @@ var FormRenderer = BasicRenderer.extend({
      */
     on_attach_callback: function () {
         this._isInDom = true;
-        _.forEach(this.allFieldWidgets, function (widgets){
-            _.invoke(widgets, 'on_attach_callback');
-        });
         this._super.apply(this, arguments);
     },
     /**

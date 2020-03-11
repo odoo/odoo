@@ -877,7 +877,7 @@ var ActionManager = Widget.extend({
     /**
      * @private
      * @param {OdooEvent} ev
-     * @param {OdooEvent} ev.data.controllerID
+     * @param {string} ev.data.controllerID
      */
     _onBreadcrumbClicked: function (ev) {
         ev.stopPropagation();
