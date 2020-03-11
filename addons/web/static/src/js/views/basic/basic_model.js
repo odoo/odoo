@@ -2431,7 +2431,7 @@ var BasicModel = AbstractModel.extend({
                 model: record.model,
                 method: 'read',
                 args: [[record.res_id], fieldNames],
-                context: _.extend({}, record.getContext(), {bin_size: true}),
+                context: _.extend({bin_size: true}, record.getContext()),
             })
             .then(function (result) {
                 if (result.length === 0) {
