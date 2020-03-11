@@ -55,6 +55,66 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(is_bin_size('64.2 Кб'), true);
     });
 
+    QUnit.test('round_decimals', function (assert) {
+        assert.expect(21);
+
+        var round_di = utils.round_decimals;
+
+        assert.strictEqual(String(round_di(1.0, 0)), '1');
+        assert.strictEqual(String(round_di(1.0, 1)), '1');
+        assert.strictEqual(String(round_di(1.0, 2)), '1');
+        assert.strictEqual(String(round_di(1.0, 3)), '1');
+        assert.strictEqual(String(round_di(1.0, 4)), '1');
+        assert.strictEqual(String(round_di(1.0, 5)), '1');
+        assert.strictEqual(String(round_di(1.0, 6)), '1');
+        assert.strictEqual(String(round_di(1.0, 7)), '1');
+        assert.strictEqual(String(round_di(1.0, 8)), '1');
+        assert.strictEqual(String(round_di(0.5, 0)), '1');
+        assert.strictEqual(String(round_di(-0.5, 0)), '-1');
+        assert.strictEqual(String(round_di(2.6745, 3)), '2.6750000000000003');
+        assert.strictEqual(String(round_di(-2.6745, 3)), '-2.6750000000000003');
+        assert.strictEqual(String(round_di(2.6744, 3)), '2.674');
+        assert.strictEqual(String(round_di(-2.6744, 3)), '-2.674');
+        assert.strictEqual(String(round_di(0.0004, 3)), '0');
+        assert.strictEqual(String(round_di(-0.0004, 3)), '0');
+        assert.strictEqual(String(round_di(357.4555, 3)), '357.456');
+        assert.strictEqual(String(round_di(-357.4555, 3)), '-357.456');
+        assert.strictEqual(String(round_di(457.4554, 3)), '457.455');
+        assert.strictEqual(String(round_di(-457.4554, 3)), '-457.455');
+    });
+
+    QUnit.test('round_precision', function (assert) {
+        assert.expect(26);
+
+        var round_pr = utils.round_precision;
+
+        assert.strictEqual(String(round_pr(1.0, 1)), '1');
+        assert.strictEqual(String(round_pr(1.0, 0.1)), '1');
+        assert.strictEqual(String(round_pr(1.0, 0.01)), '1');
+        assert.strictEqual(String(round_pr(1.0, 0.001)), '1');
+        assert.strictEqual(String(round_pr(1.0, 0.0001)), '1');
+        assert.strictEqual(String(round_pr(1.0, 0.00001)), '1');
+        assert.strictEqual(String(round_pr(1.0, 0.000001)), '1');
+        assert.strictEqual(String(round_pr(1.0, 0.0000001)), '1');
+        assert.strictEqual(String(round_pr(1.0, 0.00000001)), '1');
+        assert.strictEqual(String(round_pr(0.5, 1)), '1');
+        assert.strictEqual(String(round_pr(-0.5, 1)), '-1');
+        assert.strictEqual(String(round_pr(2.6745, 0.001)), '2.6750000000000003');
+        assert.strictEqual(String(round_pr(-2.6745, 0.001)), '-2.6750000000000003');
+        assert.strictEqual(String(round_pr(2.6744, 0.001)), '2.674');
+        assert.strictEqual(String(round_pr(-2.6744, 0.001)), '-2.674');
+        assert.strictEqual(String(round_pr(0.0004, 0.001)), '0');
+        assert.strictEqual(String(round_pr(-0.0004, 0.001)), '0');
+        assert.strictEqual(String(round_pr(357.4555, 0.001)), '357.456');
+        assert.strictEqual(String(round_pr(-357.4555, 0.001)), '-357.456');
+        assert.strictEqual(String(round_pr(457.4554, 0.001)), '457.455');
+        assert.strictEqual(String(round_pr(-457.4554, 0.001)), '-457.455');
+        assert.strictEqual(String(round_pr(-457.4554, 0.05)), '-457.45000000000005');
+        assert.strictEqual(String(round_pr(457.444, 0.5)), '457.5');
+        assert.strictEqual(String(round_pr(457.3, 5)), '455');
+        assert.strictEqual(String(round_pr(457.5, 5)), '460');
+        assert.strictEqual(String(round_pr(457.1, 3)), '456');
+    });
 });
 
 });
