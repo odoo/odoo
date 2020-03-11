@@ -545,8 +545,8 @@ class Task(models.Model):
     project_id = fields.Many2one('project.project', string='Project',
         compute='_compute_project_id', store=True, readonly=False,
         index=True, tracking=True, check_company=True, change_default=True)
-    planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.',tracking=True)
-    subtask_planned_hours = fields.Float("Subtasks", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
+    planned_hours = fields.Float("Initially Planned Hours", help='Time planned to achieve this task (including its sub-tasks).', tracking=True)
+    subtask_planned_hours = fields.Float("Sub-tasks Planned Hours", compute='_compute_subtask_planned_hours', help="Sum of the planned hours of all the sub-tasks linked to this task. Usually less or equal to the initially planned hours of this task.")
     user_id = fields.Many2one('res.users',
         string='Assigned to',
         default=lambda self: self.env.uid,
@@ -983,11 +983,17 @@ class Task(models.Model):
     def action_assign_to_me(self):
         self.write({'user_id': self.env.user.id})
 
-    def _get_all_subtasks(self):
+    # If depth == 1, return only direct children
+    # If depth == 3, return children to third generation
+    # If depth <= 0, return all children without depth limit
+    def _get_all_subtasks(self, depth=0):
         children = self.mapped('child_ids')
         if not children:
             return self.env['project.task']
-        return children + children._get_all_subtasks()
+        if depth == 1:
+            return children
+        return children + children._get_all_subtasks(depth - 1)
+
     def action_open_parent_task(self):
         return {
             'name': _('Parent Task'),
