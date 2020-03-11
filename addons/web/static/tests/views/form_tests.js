@@ -5226,6 +5226,29 @@ QUnit.module('Views', {
         await assertFormContainsNButtonsWithSizeClass(6, 7);
     });
 
+    QUnit.test('can set bin_size to false in context', async function (assert){
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo"/>' +
+                  '</form>',
+            res_id: 1,
+            context: {
+                bin_size: false,
+            },
+            mockRPC: function (route, args) {
+                assert.strictEqual(args.kwargs.context.bin_size, false,
+                    "bin_size should always be in the context and should be false");
+                return this._super(route, args);
+            }
+        });
+        form.destroy();
+    });
+
     QUnit.module('focus and scroll test', async function () {
         QUnit.test('no focus set on form when closing many2one modal if lastActivatedFieldIndex is not set', async function (assert) {
             assert.expect(8);
