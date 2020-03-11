@@ -142,10 +142,7 @@ class Registry(Mapping):
         self.cache_invalidated = False
 
         with closing(self.cursor()) as cr:
-            has_unaccent = odoo.modules.db.has_unaccent(cr)
-            if odoo.tools.config['unaccent'] and not has_unaccent:
-                _logger.warning("The option --unaccent was given but no unaccent() function was found in database.")
-            self.has_unaccent = odoo.tools.config['unaccent'] and has_unaccent
+            self.has_unaccent = odoo.modules.db.has_unaccent(cr)
 
     @classmethod
     def delete(cls, db_name):
