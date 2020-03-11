@@ -8,7 +8,7 @@
 Shorten URLs and use them to track clicks and UTMs
 """,
     'version': '1.0',
-    'depends': ['utm'],
+    'depends': ['utm', 'mail'],
     'data': [
         'views/link_tracker_views.xml',
         'views/utm_campaign_views.xml',
