@@ -163,7 +163,7 @@ odoo.define('web.OwlDialog', function () {
                 $(this.mainButton)
                     .tooltip({
                         delay: { show: 200, hide: 0 },
-                        title: () => this.env.qweb.renderToString('DialogButton.tooltip', {
+                        title: () => this.env.qweb.renderToString('web.DialogButton.tooltip', {
                             title: this.mainButton.innerText.toUpperCase(),
                         }),
                         trigger: 'manual',
@@ -263,7 +263,7 @@ odoo.define('web.OwlDialog', function () {
         technical: Boolean,
         title: String,
     };
-    Dialog.template = 'OwlDialog';
+    Dialog.template = 'web.OwlDialog';
 
     return Dialog;
 });

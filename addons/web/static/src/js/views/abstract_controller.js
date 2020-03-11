@@ -15,86 +15,93 @@ odoo.define('web.AbstractController', function (require) {
 var ActionMixin = require('web.ActionMixin');
 var ajax = require('web.ajax');
 var concurrency = require('web.concurrency');
-var config = require('web.config');
-var core = require('web.core');
+const { ComponentWrapper } = require('web.OwlCompatibility');
+const ControlPanel = require('web.ControlPanel');
 var mvc = require('web.mvc');
-var { WidgetAdapterMixin } = require('web.OwlCompatibility');
-
 var session = require('web.session');
 
-var QWeb = core.qweb;
 
-var AbstractController = mvc.Controller.extend(ActionMixin, WidgetAdapterMixin, {
+var AbstractController = mvc.Controller.extend(ActionMixin, {
     custom_events: _.extend({}, ActionMixin.custom_events, {
         navigation_move: '_onNavigationMove',
         open_record: '_onOpenRecord',
-        search: '_onSearch',
-        switch_view: '_onSwitchView',
         search_panel_domain_updated: '_onSearchPanelDomainUpdated',
+        switch_view: '_onSwitchView',
     }),
     events: {
         'click a[type="action"]': '_onActionClicked',
     },
 
     /**
-     * @override
-     * @param {string} params.modelName
-     * @param {string} [params.controllerID] an id to ease the communication
-     *   with upstream components
-     * @param {ControlPanelController} [params.controlPanel]
-     * @param {any} [params.handle] a handle that will be given to the model (some id)
-     * @param {boolean} params.isMultiRecord
+     * @param {Object} param
      * @param {Object[]} params.actionViews
+     * @param {string} params.activeActions
+     * @param {string} params.bannerRoute
+     * @param {Array[]} params.controlPanelDomain
+     * @param {ControlPanelModel} [params.controlPanelModel]
+     * @param {Object} [params.controlPanelProps]
+     * @param {string} params.controllerID an id to ease the communication with
+     *      upstream components
+     * @param {string} params.displayName
+     * @param {Object} params.initialState
+     * @param {string} params.modelName
+     * @param {string} [params.searchPanel]
      * @param {string} params.viewType
+     * @param {boolean} [params.withControlPanel]
+     * @param {boolean} [params.withSearchPanel]
      */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
-        this._controlPanel = params.controlPanel;
         this._title = params.displayName;
         this.modelName = params.modelName;
         this.activeActions = params.activeActions;
         this.controllerID = params.controllerID;
         this.initialState = params.initialState;
         this.bannerRoute = params.bannerRoute;
-        this.isMultiRecord = params.isMultiRecord;
         this.actionViews = params.actionViews;
         this.viewType = params.viewType;
         // use a DropPrevious to correctly handle concurrent updates
         this.dp = new concurrency.DropPrevious();
 
+        this.withControlPanel = params.withControlPanel;
+        if (this.withControlPanel) {
+            this.controlPanelProps = params.controlPanelProps;
+            this._controlPanelModel = params.controlPanelModel;
+        }
+
+        this.withSearchPanel = params.withSearchPanel && params.searchPanel;
         // the following attributes are used when there is a searchPanel
-        this._searchPanel = params.searchPanel;
+        if (this.withSearchPanel) {
+            this._searchPanel = params.searchPanel;
+        }
         this.controlPanelDomain = params.controlPanelDomain || [];
         this.searchPanelDomain = this._searchPanel ? this._searchPanel.getDomain() : [];
     },
+
     /**
      * Simply renders and updates the url.
      *
      * @returns {Promise}
      */
-    start: function () {
-        var self = this;
-        if (this._searchPanel) {
+    start: async function () {
+        if (this.withSearchPanel) {
             this.$('.o_content')
                 .addClass('o_controller_with_searchpanel')
                 .prepend(this._searchPanel.$el);
         }
-
         this.$el.addClass('o_view_controller');
 
-        return this._super.apply(this, arguments).then(function () {
-            var prom;
-            if (self._controlPanel) {
-                // render the ControlPanel elements (buttons, pager, sidebar...)
-                prom = self._renderControlPanelElements().then(function (elements) {
-                    self.controlPanelElements = elements;
-                    self._controlPanel.$el.prependTo(self.$el);
-                });
-            }
-            return Promise.resolve(prom);
-        }).then(function () {
-            return self._update(self.initialState);
-        });
+        this.renderButtons();
+        const promises = [this._super(...arguments)];
+        if (this.withControlPanel) {
+            this._updateControlPanelProps(this.initialState);
+            this._controlPanelWrapper = new ComponentWrapper(this, ControlPanel, this.controlPanelProps);
+            this._controlPanelWrapper.env.bus.on('focus-view', this, () => this.renderer.giveFocus());
+            promises.push(this._controlPanelWrapper.mount(this.el, { position: 'first-child' }));
+        }
+        await Promise.all(promises);
+        await this._update(this.initialState, { shouldUpdateControlPanel: false });
+        this.updateButtons();
     },
     /**
      * @override
@@ -103,34 +110,33 @@ var AbstractController = mvc.Controller.extend(ActionMixin, WidgetAdapterMixin, 
         if (this.$buttons) {
             this.$buttons.off();
         }
-        if (this.controlPanelElements && this.controlPanelElements.$switch_buttons) {
-            this.controlPanelElements.$switch_buttons.off();
-        }
+        ActionMixin.destroy.call(this);
         this._super.apply(this, arguments);
-        WidgetAdapterMixin.destroy.call(this, ...arguments);
     },
     /**
      * Called each time the controller is attached into the DOM.
      */
     on_attach_callback: function () {
-        if (this._controlPanel) {
-            this._controlPanel.on_attach_callback();
-        }
-        if (this._searchPanel) {
+        ActionMixin.on_attach_callback.call(this);
+        if (this.withSearchPanel) {
             this._searchPanel.on_attach_callback();
         }
+        if (this.withControlPanel) {
+            this._controlPanelModel.on('search', this, this._onSearch);
+            this._controlPanelModel.on('get-controller-query-params', this, this._onGetOwnedQueryParams);
+        }
         this.renderer.on_attach_callback();
-        WidgetAdapterMixin.on_attach_callback.call(this, ...arguments);
     },
     /**
      * Called each time the controller is detached from the DOM.
      */
     on_detach_callback: function () {
-        if (this._controlPanel) {
-            this._controlPanel.on_detach_callback();
+        ActionMixin.on_detach_callback.call(this);
+        if (this.withControlPanel) {
+            this._controlPanelModel.off('search', this);
+            this._controlPanelModel.off('get-controller-query-params', this);
         }
         this.renderer.on_detach_callback();
-        WidgetAdapterMixin.on_detach_callback.call(this, ...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -174,10 +180,10 @@ var AbstractController = mvc.Controller.extend(ActionMixin, WidgetAdapterMixin, 
      */
     exportState: function () {
         var state = {};
-        if (this._controlPanel) {
-            state.cpState = this._controlPanel.exportState();
+        if (this.withControlPanel) {
+            state.cpState = this._controlPanelModel.exportState();
         }
-        if (this._searchPanel) {
+        if (this.withSearchPanel) {
             state.spState = this._searchPanel.exportState();
         }
         return state;
@@ -203,21 +209,20 @@ var AbstractController = mvc.Controller.extend(ActionMixin, WidgetAdapterMixin, 
     /**
      * Short helper method to reload the view
      *
-     * @param {Object} [params] This object will simply be given to the update
+     * @param {Object} [params={}] This object will simply be given to the update
      * @returns {Promise}
      */
-    reload: async function (params) {
-        params = params || {};
-        var searchPanelUpdateProm;
-        var controllerState = params.controllerState || {};
-        var cpState = controllerState.cpState;
-        if (this._controlPanel && cpState) {
-            await this._controlPanel.importState(cpState).then(function (searchQuery) {
-                params = _.extend({}, params, searchQuery);
-            });
+    reload: async function (params = {}) {
+        let searchPanelUpdateProm;
+        const controllerState = params.controllerState || {};
+        const cpState = controllerState.cpState;
+        if (this.withControlPanel && cpState) {
+            this._controlPanelModel.importState(cpState);
+            const searchQuery = this._controlPanelModel.getQuery();
+            params = Object.assign({}, params, searchQuery);
         }
-        var postponeRendering = false;
-        if (this._searchPanel) {
+        let postponeRendering = false;
+        if (this.withSearchPanel) {
             this.controlPanelDomain = params.domain || this.controlPanelDomain;
             if (controllerState.spState) {
                 this._searchPanel.importState(controllerState.spState);
@@ -235,28 +240,6 @@ var AbstractController = mvc.Controller.extend(ActionMixin, WidgetAdapterMixin, 
         }
     },
     /**
-     * For views that require a pager, this method will be called to allow the
-     * controller to instantiate and render a pager. Note that in theory, the
-     * controller can actually render whatever he wants in the pager zone.  If
-     * your view does not want a pager, just let this method empty.
-     *
-     * @param {jQuery Node} $node
-     * @return {Promise}
-     */
-    renderPager: function ($node) {
-        return Promise.resolve();
-    },
-    /**
-     * Same as renderPager, but for the 'sidebar' zone (the zone with the menu
-     * dropdown in the control panel next to the buttons)
-     *
-     * @param {jQuery Node} $node
-     * @return {Promise}
-     */
-    renderSidebar: function ($node) {
-        return Promise.resolve();
-    },
-    /**
      * This is the main entry point for the controller.  Changes from the search
      * view arrive in this method, and internal changes can sometimes also call
      * this method.  It is basically the way everything notifies the controller
@@ -271,34 +254,21 @@ var AbstractController = mvc.Controller.extend(ActionMixin, WidgetAdapterMixin, 
      *
      * @returns {Promise}
      */
-    update: function (params, options) {
-        var self = this;
-        var shouldReload = (options && 'reload' in options) ? options.reload : true;
-        var def = shouldReload ? this.model.reload(this.handle, params) : Promise.resolve();
-        // we check here that the updateIndex of the control panel hasn't changed
-        // between the start of the update request and the moment the controller
-        // asks the control panel to update itself ; indeed, it could happen that
-        // another action/controller is executed during this one reloads itself,
-        // and if that one finishes first, it replaces this controller in the DOM,
-        // and this controller should no longer update the control panel.
-        // note that this won't be necessary as soon as each controller will have
-        // its own control panel
-        var cpUpdateIndex = this._controlPanel && this._controlPanel.updateIndex;
-        return this.dp.add(def).then(function (handle) {
-            if (self._controlPanel && cpUpdateIndex !== self._controlPanel.updateIndex) {
-                return;
-            }
-            self.handle = handle || self.handle; // update handle if we reloaded
-            var state = self.model.get(self.handle);
-            var localState = self.renderer.getLocalState();
-            return self.dp.add(self.updateRendererState(state, params)).then(function () {
-                if (self._controlPanel && cpUpdateIndex !== self._controlPanel.updateIndex) {
-                    return;
-                }
-                self.renderer.setLocalState(localState);
-                return self._update(state, params);
-            });
-        });
+    update: async function (params, options = {}) {
+        const shouldReload = 'reload' in options ? options.reload : true;
+        if (shouldReload) {
+            this.handle = await this.dp.add(this.model.reload(this.handle, params));
+        }
+        const localState = this.renderer.getLocalState();
+        const state = this.model.get(this.handle);
+        const promises = [
+            this.updateRendererState(state, params).then(() => {
+                this.renderer.setLocalState(localState);
+            }),
+            this._update(state, params),
+        ];
+        await this.dp.add(Promise.all(promises));
+        this.updateButtons();
     },
     /**
      * Update the state of the renderer (handle both Widget and Component
@@ -318,6 +288,16 @@ var AbstractController = mvc.Controller.extend(ActionMixin, WidgetAdapterMixin, 
     // Private
     //--------------------------------------------------------------------------
 
+
+    /**
+     * Meant to be overriden to return a proper object.
+     * @private
+     * @param {Object} [state]
+     * @return {(Object|null)}
+     */
+    _getPagingInfo: function (state) {
+        return null;
+    },
     /**
      * Return the current search domain. This is the searchDomain used to update
      * the searchpanel. It returns the domain coming from the controlpanel. This
@@ -329,6 +309,15 @@ var AbstractController = mvc.Controller.extend(ActionMixin, WidgetAdapterMixin, 
      */
     _getSearchDomain: function () {
         return this.controlPanelDomain;
+    },
+    /**
+     * Meant to be overriden to return a proper object.
+     * @private
+     * @param {Object} [state]
+     * @return {(Object|null)}
+     */
+    _getActionMenuItems: function (state) {
+        return null;
     },
     /**
      * This method is the way a view can notifies the outside world that
@@ -360,107 +349,33 @@ var AbstractController = mvc.Controller.extend(ActionMixin, WidgetAdapterMixin, 
      * @private
      * @returns {Promise}
      */
-    _renderBanner: function () {
+    _renderBanner: async function () {
         if (this.bannerRoute !== undefined) {
-            var self = this;
-            return this.dp
-                .add(this._rpc({route: this.bannerRoute}))
-                .then(function (response) {
-                    if (!response.html) {
-                        self.$el.removeClass('o_has_banner');
-                        return Promise.resolve();
-                    }
-                    self.$el.addClass('o_has_banner');
-                    var $banner = $(response.html);
-                    // we should only display one banner at a time
-                    if (self._$banner && self._$banner.remove) {
-                        self._$banner.remove();
-                    }
-                    // Css and js are moved to <head>
-                    var defs = [];
-                    $('link[rel="stylesheet"]', $banner).each(function (i, link) {
-                        defs.push(ajax.loadCSS(link.href));
-                        link.remove();
-                    });
-                    $('script[type="text/javascript"]', $banner).each(function (i, js) {
-                        defs.push(ajax.loadJS(js.src));
-                        js.remove();
-                    });
-                    return Promise.all(defs).then(function () {
-                        $banner.insertBefore(self.$('> .o_content'));
-                        self._$banner = $banner;
-                    });
-                });
-        }
-        return Promise.resolve();
-    },
-    /**
-     * Renders the control elements (buttons, pager and sidebar) of the current
-     * view.
-     *
-     * @private
-     * @returns {Promise<Object>} resolved with an object containing the control
-     *   panel jQuery elements
-     */
-    _renderControlPanelElements: function () {
-        var self = this;
-        var elements = {
-            $buttons: $('<div>'),
-            $sidebar: $('<div>'),
-            $pager: $('<div>'),
-        };
-
-        this.renderButtons(elements.$buttons);
-        var sidebarProm = this.renderSidebar(elements.$sidebar);
-        var pagerProm = this.renderPager(elements.$pager);
-
-        return Promise.all([sidebarProm, pagerProm]).then(function () {
-            // remove the unnecessary outer div
-            elements = _.mapObject(elements, function ($node) {
-                return $node && $node.contents();
+            const response = await this._rpc({route: this.bannerRoute});
+            if (!response.html) {
+                this.$el.removeClass('o_has_banner');
+                return Promise.resolve();
+            }
+            this.$el.addClass('o_has_banner');
+            var $banner = $(response.html);
+            // we should only display one banner at a time
+            if (this._$banner && this._$banner.remove) {
+                this._$banner.remove();
+            }
+            // Css and js are moved to <head>
+            var defs = [];
+            $('link[rel="stylesheet"]', $banner).each(function (i, link) {
+                defs.push(ajax.loadCSS(link.href));
+                link.remove();
             });
-            elements.$switch_buttons = self._renderSwitchButtons();
-
-            return elements;
-        });
-    },
-    /**
-     * Renders the switch buttons and binds listeners on them.
-     *
-     * @private
-     * @returns {jQuery}
-     */
-    _renderSwitchButtons: function () {
-        var self = this;
-        var views = _.filter(this.actionViews, {multiRecord: this.isMultiRecord});
-
-        if (views.length <= 1) {
-            return $();
+            $('script[type="text/javascript"]', $banner).each(function (i, js) {
+                defs.push(ajax.loadJS(js.src));
+                js.remove();
+            });
+            await Promise.all(defs);
+            $banner.insertBefore(this.$('> .o_content'));
+            this._$banner = $banner;
         }
-
-        var template = config.device.isMobile ? 'ControlPanel.SwitchButtons.Mobile' : 'ControlPanel.SwitchButtons';
-        var $switchButtons = $(QWeb.render(template, {
-            viewType: this.viewType,
-            views: views,
-        }));
-        // create bootstrap tooltips
-        _.each(views, function (view) {
-            $switchButtons.filter('.o_cp_switch_' + view.type).tooltip();
-        });
-        // add onclick event listener
-        var $switchButtonsFiltered = config.device.isMobile ? $switchButtons.find('button') : $switchButtons.filter('button');
-        $switchButtonsFiltered.click(_.debounce(function (event) {
-            var viewType = $(event.target).data('view-type');
-            self.trigger_up('switch_view', {view_type: viewType});
-        }, 200, true));
-
-        // set active view's icon as view switcher button's icon in mobile
-        if (config.device.isMobile) {
-            var activeView = _.findWhere(views, {type: this.viewType});
-            $switchButtons.find('.o_switch_view_button_icon').addClass('fa fa-lg ' + activeView.icon);
-        }
-
-        return $switchButtons;
     },
     /**
      * @override
@@ -483,21 +398,57 @@ var AbstractController = mvc.Controller.extend(ActionMixin, WidgetAdapterMixin, 
      *
      * @private
      * @param {Object} state the state given by the model
-     * @param {Object} [params]
-     * @param {Object[]} [params.breadcrumbs]
+     * @param {Object} [params={}]
+     * @param {Object} [params.shouldUpdateControlPanel]
      * @returns {Promise}
      */
     _update: function (state, params) {
         // AAB: update the control panel -> this will be moved elsewhere at some point
-        var cpContent = _.extend({}, this.controlPanelElements);
-        this.updateControlPanel({
-            breadcrumbs: params && params.breadcrumbs,
-            cp_content: cpContent,
+        if (!this.$buttons) {
+            this.renderButtons();
+        }
+        const promises = [this._renderBanner()];
+        if (this.withControlPanel && params.shouldUpdateControlPanel !== false) {
+            this._updateControlPanelProps(state);
+            if (params.breadcrumbs) {
+                this.controlPanelProps.breadcrumbs = params.breadcrumbs;
+            }
+            promises.push(this.updateControlPanel());
+        }
+        this._pushState();
+        return Promise.all(promises);
+    },
+    /**
+     * Can be used to update the key 'cp_content'. This method is called in start and _update methods.
+     *
+     * @private
+     * @param {Object} state the state given by the model
+     */
+     _updateControlPanelProps(state) {
+        if (!this.controlPanelProps.cp_content) {
+            this.controlPanelProps.cp_content = {};
+        }
+        if (this.$buttons) {
+            this.controlPanelProps.cp_content.$buttons = this.$buttons;
+        }
+        Object.assign(this.controlPanelProps, {
+            actionMenus: this._getActionMenuItems(state),
+            pager: this._getPagingInfo(state),
             title: this.getTitle(),
         });
-
-        this._pushState();
-        return this._renderBanner();
+    },
+    /**
+     * @private
+     * @param {Object} state
+     * @param {Object} newProps
+     * @returns {Promise}
+     */
+    _updatePaging: async function (state, newProps) {
+        const pagingInfo = this._getPagingInfo(state);
+        if (pagingInfo) {
+            Object.assign(pagingInfo, newProps);
+            return this.updateControlPanel({ pager: pagingInfo });
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -574,7 +525,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, WidgetAdapterMixin, 
         switch (ev.data.direction) {
             case 'up':
                 ev.stopPropagation();
-                this._controlPanel.focusSearchBar();
+                this._controlPanelModel.trigger('focus-control-panel');
                 break;
             case 'down':
                 ev.stopPropagation();
@@ -608,17 +559,13 @@ var AbstractController = mvc.Controller.extend(ActionMixin, WidgetAdapterMixin, 
     },
     /**
      * Called when there is a change in the search view, so the current action's
-     * environment needs to be updated with the new domain, context and groupby.
+     * environment needs to be updated with the new domain, context, groupby,...
      *
      * @private
-     * @param {OdooEvent} ev
-     * @param {Array[]} ev.data.domain
-     * @param {Object} ev.data.context
-     * @param {string[]} ev.data.groupby
+     * @param {Object} searchQuery
      */
-    _onSearch: function (ev) {
-        ev.stopPropagation();
-        this.reload(_.extend({offset: 0, groupsOffset: 0}, ev.data));
+    _onSearch: function (searchQuery) {
+        this.reload(_.extend({ offset: 0, groupsOffset: 0 }, searchQuery));
     },
     /**
      * @private

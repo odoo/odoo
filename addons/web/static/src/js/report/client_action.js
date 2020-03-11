@@ -37,7 +37,7 @@ var ReportAction = AbstractAction.extend({
     start: function () {
         var self = this;
         this.iframe = this.$('iframe')[0];
-        return Promise.all([this._super.apply(this, arguments), session.is_bound]).then(function () {
+        return Promise.all([this._super.apply(this, arguments), session.is_bound]).then(async function () {
             var web_base_url = session['web.base.url'];
             var trusted_host = utils.get_host_from_url(web_base_url);
             var trusted_protocol = utils.get_protocol_from_url(web_base_url);
@@ -46,7 +46,11 @@ var ReportAction = AbstractAction.extend({
             self.$buttons = $(QWeb.render('report.client_action.ControlButtons', {}));
             self.$buttons.on('click', '.o_report_print', self.on_click_print);
 
-            self._update_control_panel();
+            await self.updateControlPanel({
+                cp_content: {
+                    $buttons: self.$buttons,
+                },
+            });
 
             // Load the report in the iframe. Note that we use a relative URL.
             self.iframe.src = self.report_url;
@@ -54,7 +58,11 @@ var ReportAction = AbstractAction.extend({
     },
 
     do_show: function () {
-        this._update_control_panel();
+        this.updateControlPanel({
+            cp_content: {
+                $buttons: this.$buttons,
+            },
+        });
         return this._super.apply(this, arguments);
     },
 
@@ -67,14 +75,6 @@ var ReportAction = AbstractAction.extend({
 
     on_detach_callback: function () {
         $(window).off('message', this.on_message_received);
-    },
-
-    _update_control_panel: function () {
-        this.updateControlPanel({
-            cp_content: {
-                $buttons: this.$buttons,
-            },
-        });
     },
 
     /**

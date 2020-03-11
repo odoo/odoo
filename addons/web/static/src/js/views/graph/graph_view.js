@@ -16,8 +16,8 @@ var GraphRenderer = require('web.GraphRenderer');
 var _t = core._t;
 var _lt = core._lt;
 
-var controlPanelViewParameters = require('web.controlPanelViewParameters');
-var GROUPABLE_TYPES = controlPanelViewParameters.GROUPABLE_TYPES;
+var searchUtils = require('web.searchUtils');
+var GROUPABLE_TYPES = searchUtils.GROUPABLE_TYPES;
 
 var GraphView = AbstractView.extend({
     display_name: _lt('Graph'),
@@ -39,54 +39,81 @@ var GraphView = AbstractView.extend({
     init: function (viewInfo, params) {
         this._super.apply(this, arguments);
 
-        var self = this;
-        var measure;
-        var groupBys = [];
-        var measures = {__count__: {string: _t("Count"), type: "integer"}};
-        var groupableFields = {};
-        this.fields.__count__ = {string: _t("Count"), type: "integer"};
+        const additionalMeasures = params.additionalMeasures || [];
+        let measure;
+        const measures = {};
+        const measureStrings = {};
+        const groupBys = [];
+        const groupableFields = {};
+        this.fields.__count__ = { string: _t("Count"), type: 'integer' };
 
-        var measureString = {};
-
-        this.arch.children.forEach(function (field) {
-            var fieldName = field.attrs.name;
+        this.arch.children.forEach(field => {
+            let fieldName = field.attrs.name;
             if (fieldName === "id") {
                 return;
             }
-            var interval = field.attrs.interval;
+            const interval = field.attrs.interval;
             if (interval) {
                 fieldName = fieldName + ':' + interval;
             }
             if (field.attrs.type === 'measure') {
+                const { string } = this.fields[fieldName];
                 measure = fieldName;
-                measures[fieldName] = self.fields[fieldName];
+                measures[fieldName] = {
+                    description: string,
+                    fieldName,
+                    groupNumber: 0,
+                    isActive: false,
+                    itemType: 'measure',
+                };
             } else {
                 groupBys.push(fieldName);
             }
             if (field.attrs.string) {
-                measureString[fieldName] = field.attrs.string;
+                measureStrings[fieldName] = field.attrs.string;
             }
         });
 
-        _.each(this.fields, function (field, name) {
+        for (const name in this.fields) {
+            const field = this.fields[name];
             if (name !== 'id' && field.store === true) {
-                if (_.contains(['integer', 'float', 'monetary'], field.type) ||
-                    _.contains(params.additionalMeasures, name)) {
-                        measures[name] = field;
+                if (
+                    ['integer', 'float', 'monetary'].includes(field.type) ||
+                    additionalMeasures.includes(name)
+                ) {
+                    measures[name] = {
+                        description: field.string,
+                        fieldName: name,
+                        groupNumber: 0,
+                        isActive: false,
+                        itemType: 'measure',
+                    };
                 }
-                if (_.contains(GROUPABLE_TYPES, field.type)) {
+                if (GROUPABLE_TYPES.includes(field.type)) {
                     groupableFields[name] = field;
                 }
             }
-        });
-
-        _.each(measureString, function (string, name) {
+        }
+        for (const name in measureStrings) {
             if (measures[name]) {
-                measures[name].string = string;
+                measures[name].description = measureStrings[name];
             }
-        });
+        }
 
-        this.controllerParams.measures = measures;
+        const sortedMeasures = Object.values(measures).sort((a, b) => {
+                const descA = a.description.toLowerCase();
+                const descB = b.description.toLowerCase();
+                return descA > descB ? 1 : descA < descB ? -1 : 0;
+            });
+        const countMeasure = {
+            description: _t("Count"),
+            fieldName: '__count__',
+            groupNumber: 1,
+            isActive: false,
+            itemType: 'measure',
+        };
+        this.controllerParams.withButtons = params.withButtons !== false;
+        this.controllerParams.measures = [...sortedMeasures, countMeasure];
         this.controllerParams.groupableFields = groupableFields;
         this.rendererParams.fields = this.fields;
         this.rendererParams.title = this.arch.attrs.title; // TODO: use attrs.string instead
