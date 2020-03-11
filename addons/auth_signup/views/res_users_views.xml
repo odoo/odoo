@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <!-- add state field in header -->
                 <xpath expr="//header" position="inside">
-                    <button string="Send Reset Password Instructions"
+                    <button string="Send Password Reset Instructions"
                                 type="object" name="action_reset_password"
                                 attrs="{'invisible': [('state', '!=', 'active')]}"/>
                     <button string="Send an Invitation Email"
@@ -45,6 +45,15 @@
                     <field name="state" invisible="1"/>
                 </xpath>
             </field>
+        </record>
+
+        <record id="action_send_password_reset_instructions" model="ir.actions.server">
+            <field name="name">Send Password Reset Instructions</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="groups_id" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="binding_model_id" ref="base.model_res_users" />
+            <field name="state">code</field>
+            <field name="code">records.action_reset_password()</field>
         </record>
 
 </odoo>
