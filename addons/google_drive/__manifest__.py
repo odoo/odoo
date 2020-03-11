@@ -14,6 +14,7 @@
         'views/google_drive_templates.xml',
         'views/res_config_settings_views.xml',
     ],
+    'qweb': ['static/src/xml/*.xml'],
     'demo': [
         'data/google_drive_demo.xml'
     ],

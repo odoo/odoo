@@ -9,9 +9,15 @@ var ThemePreviewKanbanController = KanbanController.extend({
     /**
      * @override
      */
-    start: function () {
-        this.$el.addClass('o_view_kanban_theme_preview_controller');
-        return this._super.apply(this, arguments);
+    start: async function () {
+        await this._super(...arguments);
+        this.el.classList.add('o_view_kanban_theme_preview_controller');
+        const websiteLink = Object.assign(document.createElement('a'), {
+            className: 'btn btn-secondary ml-3',
+            href: '/',
+            innerHTML: '<i class="fa fa-close"></i>',
+        });
+        this._controlPanelWrapper.el.querySelector('.o_cp_top').appendChild(websiteLink);
     },
 });
 
@@ -21,21 +27,6 @@ var ThemePreviewKanbanView = KanbanView.extend({
     config: _.extend({}, KanbanView.prototype.config, {
         Controller: ThemePreviewKanbanController,
     }),
-
-    // -------------------------------------------------------------------------
-    // Private
-    // -------------------------------------------------------------------------
-    /**
-     * @override
-     *
-     */
-    _createControlPanel: function (parent) {
-        return this._super.apply(this, arguments).then(controlPanel => {
-            var websiteLink = '<a class="btn btn-secondary ml-3" href="/"><i class="fa fa-close"></i></a>';
-            controlPanel.$('div.o_cp_searchview').after(websiteLink);
-            return controlPanel;
-        });
-    },
 });
 
 ViewRegistry.add('theme_preview_kanban', ThemePreviewKanbanView);

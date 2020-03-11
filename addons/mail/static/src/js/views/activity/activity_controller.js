@@ -33,13 +33,18 @@ var ActivityController = BasicController.extend({
         this._super.apply(this, arguments);
         this.title = params.title;
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
      * Overridden to remove the pager as it makes no sense in this view.
      *
      * @override
      */
-    renderPager: function () {
-        return Promise.resolve();
+    _getPagingInfo: function () {
+        return null;
     },
 
     //--------------------------------------------------------------------------
