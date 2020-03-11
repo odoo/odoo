@@ -983,6 +983,7 @@ class AccountTaxTemplate(models.Model):
 
 # Tax Repartition Line Template
 
+
 class AccountTaxRepartitionLineTemplate(models.Model):
     _name = "account.tax.repartition.line.template"
     _description = "Tax Repartition Line Template"
@@ -993,6 +994,7 @@ class AccountTaxRepartitionLineTemplate(models.Model):
     invoice_tax_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this repartition on invoices. Mutually exclusive with refund_tax_id")
     refund_tax_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this repartition on refund invoices. Mutually exclusive with invoice_tax_id")
     tag_ids = fields.Many2many(string="Financial Tags", relation='account_tax_repartition_financial_tags', comodel_name='account.account.tag', copy=True, help="Additional tags that will be assigned by this repartition line for use in financial reports")
+    use_in_tax_closing = fields.Boolean(string="Tax Closing Entry")
 
     # These last two fields are helpers used to ease the declaration of account.account.tag objects in XML.
     # They are directly linked to account.tax.report.line objects, which create corresponding + and - tags
@@ -1003,13 +1005,20 @@ class AccountTaxRepartitionLineTemplate(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('plus_report_line_ids'):
-            vals['plus_report_line_ids'] =  self._convert_tag_syntax_to_orm(vals['plus_report_line_ids'])
+            vals['plus_report_line_ids'] = self._convert_tag_syntax_to_orm(vals['plus_report_line_ids'])
 
         if vals.get('minus_report_line_ids'):
             vals['minus_report_line_ids'] = self._convert_tag_syntax_to_orm(vals['minus_report_line_ids'])
 
         if vals.get('tag_ids'):
             vals['tag_ids'] = self._convert_tag_syntax_to_orm(vals['tag_ids'])
+
+        if vals.get('use_in_tax_closing') is None:
+            if not vals.get('account_id'):
+                vals['use_in_tax_closing'] = False
+            else:
+                internal_group = self.env['account.account.template'].browse(vals.get('account_id')).user_type_id.internal_group
+                vals['use_in_tax_closing'] = not (internal_group == 'income' or internal_group == 'expense')
 
         return super(AccountTaxRepartitionLineTemplate, self).create(vals)
 
@@ -1051,6 +1060,7 @@ class AccountTaxRepartitionLineTemplate(models.Model):
                 'repartition_type': record.repartition_type,
                 'tag_ids': [(6, 0, tags_to_add.ids)],
                 'company_id': company.id,
+                'use_in_tax_closing': record.use_in_tax_closing
             }))
         return rslt
 

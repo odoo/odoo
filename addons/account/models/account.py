@@ -2004,6 +2004,14 @@ class AccountTaxRepartitionLine(models.Model):
     country_id = fields.Many2one(string="Country", comodel_name='res.country', related='company_id.country_id', help="Technical field used to restrict tags domain in form view.")
     company_id = fields.Many2one(string="Company", comodel_name='res.company', compute="_compute_company", store=True, help="The company this repartition line belongs to.")
     sequence = fields.Integer(string="Sequence", default=1, help="The order in which display and match repartition lines. For refunds to work properly, invoice repartition lines should be arranged in the same order as the credit note repartition lines they correspond to.")
+    use_in_tax_closing = fields.Boolean(string="Tax Closing Entry")
+
+    @api.onchange('account_id')
+    def _on_change_account_id(self):
+        if not self.account_id:
+            self.use_in_tax_closing = False
+        else:
+            self.use_in_tax_closing = not(self.account_id.internal_group == 'income' or self.account_id.internal_group == 'expense')
 
     @api.constrains('invoice_tax_id', 'refund_tax_id')
     def validate_tax_template_link(self):
