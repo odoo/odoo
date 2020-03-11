@@ -25,6 +25,8 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         post_data = {}
         post_data['question_id'] = question.id
         post_data.update(self._prepare_post_data(question, answer, post_data))
+        if question.page_id:
+            post_data['page_id'] = question.page_id.id
         post_data.update(**additional_post_data)
         return post_data
 
@@ -142,3 +144,76 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         self.assertIn("employee@example.com", certification_email.email_to)
         self.assertEqual(len(certification_email.attachment_ids), 1)
         self.assertEqual(certification_email.attachment_ids[0].name, 'Certification Document.html')
+
+    def test_randomized_certification(self):
+        # Step: survey user creates the randomized certification
+        # --------------------------------------------------
+        with self.with_user(self.survey_user):
+            certification = self.env['survey.survey'].create({
+                'title': 'User randomized Certification',
+                'questions_layout': 'page_per_section',
+                'questions_selection': 'random',
+                'state': 'open',
+                'scoring_type': 'scoring_without_answers',
+            })
+
+            page1 = self._add_question(
+                None, 'Page 1', None,
+                sequence=1,
+                survey_id=certification.id,
+                is_page=True,
+                random_questions_count=1,
+            )
+
+            q101 = self._add_question(
+                None, 'What is the answer to the first question?', 'simple_choice',
+                sequence=2,
+                constr_mandatory=True, constr_error_msg='Please select an answer', survey_id=certification.id,
+                labels=[
+                    {'value': 'The correct answer', 'is_correct': True, 'answer_score': 1.0},
+                    {'value': 'The wrong answer'},
+                ])
+
+            q102 = self._add_question(
+                None, 'What is the answer to the second question?', 'simple_choice',
+                sequence=3,
+                constr_mandatory=True, constr_error_msg='Please select an answer', survey_id=certification.id,
+                labels=[
+                    {'value': 'The correct answer', 'is_correct': True, 'answer_score': 1.0},
+                    {'value': 'The wrong answer'},
+                ])
+
+        # Step: employee takes the randomized certification
+        # --------------------------------------------------
+        self.authenticate('user_emp', 'user_emp')
+
+        # Employee opens start page
+        response = self._access_start(certification)
+
+        # -> this should have generated a new user_input with a token
+        user_inputs = self.env['survey.user_input'].search([('survey_id', '=', certification.id)])
+        self.assertEqual(len(user_inputs), 1)
+        self.assertEqual(user_inputs.partner_id, self.user_emp.partner_id)
+        answer_token = user_inputs.access_token
+
+        # Employee begins survey with first page
+        response = self._access_page(certification, answer_token)
+        self.assertResponse(response, 200)
+        csrf_token = self._find_csrf_token(response.text)
+
+        r = self._access_begin(certification, answer_token)
+        self.assertResponse(r, 200)
+
+        with patch.object(IrMailServer, 'connect'):
+            question_ids = user_inputs.predefined_question_ids
+            self.assertEqual(len(question_ids), 1, 'Only one question should have been selected by the randomization')
+            # Whatever which question was selected, the correct answer is the first one
+            self._answer_question(question_ids, question_ids.suggested_answer_ids.ids[0], answer_token, csrf_token)
+
+        statistics = user_inputs._prepare_statistics()
+        self.assertEqual(statistics, [[
+            {'text': 'Correct', 'count': 1},
+            {'text': 'Partially', 'count': 0},
+            {'text': 'Incorrect', 'count': 0},
+            {'text': 'Unanswered', 'count': 0},
+        ]], "With the configured randomization, there should be exactly 1 correctly answered question and none skipped.")
