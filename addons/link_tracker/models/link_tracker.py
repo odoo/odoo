@@ -1,28 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-import datetime
 import random
-import re
 import requests
 import string
 
 from lxml import html
-from werkzeug import urls, utils
+from werkzeug import urls
 
-from odoo import models, fields, api, _
-
-
-URL_REGEX = r'(\bhref=[\'"](?!mailto:|tel:|sms:)([^\'"]+)[\'"])'
-TEXT_URL_REGEX = r'https?://[a-zA-Z0-9@:%._\+~#=/-]+(?:\?\S+)?'
-
-
-def VALIDATE_URL(url):
-    if urls.url_parse(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
-        return 'http://' + url
-
-    return url
+from odoo import tools, models, fields, api, _
 
 
 class LinkTracker(models.Model):
@@ -101,7 +87,7 @@ class LinkTracker(models.Model):
         if 'url' not in create_vals:
             raise ValueError('URL field required')
         else:
-            create_vals['url'] = VALIDATE_URL(vals['url'])
+            create_vals['url'] = tools.validate_url(vals['url'])
 
         search_domain = []
         for fname, value in create_vals.items():
@@ -129,44 +115,10 @@ class LinkTracker(models.Model):
 
     @api.model
     def convert_links(self, html, vals, blacklist=None):
-        for match in re.findall(URL_REGEX, html):
-
-            short_schema = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/r/'
-
-            href = match[0]
-            long_url = match[1]
-
-            vals['url'] = utils.unescape(long_url)
-
-            if not blacklist or not [s for s in blacklist if s in long_url] and not long_url.startswith(short_schema):
-                link = self.create(vals)
-                shorten_url = self.browse(link.id)[0].short_url
-
-                if shorten_url:
-                    new_href = href.replace(long_url, shorten_url)
-                    html = html.replace(href, new_href)
-
-        return html
+        raise NotImplementedError('Moved on mail.render.mixin')
 
     def _convert_links_text(self, body, vals, blacklist=None):
-        shortened_schema = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/r/'
-        unsubscribe_schema = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/sms/'
-        for original_url in re.findall(TEXT_URL_REGEX, body):
-            # don't shorten already-shortened links or links towards unsubscribe page
-            if original_url.startswith(shortened_schema) or original_url.startswith(unsubscribe_schema):
-                continue
-            # support blacklist items in path, like /u/
-            parsed = urls.url_parse(original_url, scheme='http')
-            if blacklist and any(item in parsed.path for item in blacklist):
-                continue
-
-            vals['url'] = utils.unescape(original_url)
-            link = self.create(vals)
-            shortened_url = link.short_url
-            if shortened_url:
-                body = body.replace(original_url, shortened_url, 1)
-
-        return body
+        raise NotImplementedError('Moved on mail.render.mixin')
 
     def action_view_statistics(self):
         action = self.env['ir.actions.act_window'].for_xml_id('link_tracker', 'link_tracker_click_action_statistics')
