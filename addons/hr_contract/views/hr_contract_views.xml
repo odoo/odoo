@@ -24,7 +24,7 @@
                             class="oe_stat_button"
                             icon="fa-book"
                             type="action"
-                            groups="hr_contract.group_hr_contract_manager">
+                            groups="hr_contract.group_hr_payroll_user">
                             <div attrs="{'invisible' : [('first_contract_date', '=', False)]}" class="o_stat_info">
                                 <span class="o_stat_text text-success" attrs="{'invisible' : [('contract_warning', '=', True)]}" title="In Contract Since"> In Contract Since</span>
                                 <span class="o_stat_value text-success" attrs="{'invisible' : [('contract_warning', '=', True)]}">
@@ -334,7 +334,7 @@
             action="action_hr_contract"
             parent="hr.menu_hr_employee_payroll"
             sequence="4"
-            groups="hr_contract.group_hr_contract_manager"/>
+            groups="hr_contract.group_hr_payroll_user"/>
 
 
 </odoo>
