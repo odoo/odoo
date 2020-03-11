@@ -149,6 +149,10 @@ class HrEmployeeBase(models.AbstractModel):
         if 'parent_id' in values:
             manager = self.env['hr.employee'].browse(values['parent_id']).user_id
             values['leave_manager_id'] = values.get('leave_manager_id', manager.id)
+        if values.get('leave_manager_id', False):
+            approver_group = self.env.ref('hr_holidays.group_hr_holidays_responsible', raise_if_not_found=False)
+            if approver_group:
+                approver_group.sudo().write({'users': [(4, values['leave_manager_id'])]})
         return super(HrEmployeeBase, self).create(values)
 
     def write(self, values):
@@ -158,7 +162,19 @@ class HrEmployeeBase(models.AbstractModel):
                 to_change = self.filtered(lambda e: e.leave_manager_id == e.parent_id.user_id or not e.leave_manager_id)
                 to_change.write({'leave_manager_id': values.get('leave_manager_id', manager.id)})
 
+        old_managers = self.env['res.users']
+        if 'leave_manager_id' in values:
+            old_managers = self.mapped('leave_manager_id')
+            if values['leave_manager_id']:
+                old_managers -= self.env['res.users'].browse(values['leave_manager_id'])
+                approver_group = self.env.ref('hr_holidays.group_hr_holidays_responsible', raise_if_not_found=False)
+                if approver_group:
+                    approver_group.sudo().write({'users': [(4, values['leave_manager_id'])]})
+
         res = super(HrEmployeeBase, self).write(values)
+        # remove users from the Responsible group if they are no longer leave managers
+        old_managers._clean_leave_responsible_users()
+
         if 'parent_id' in values or 'department_id' in values:
             today_date = fields.Datetime.now()
             hr_vals = {}
