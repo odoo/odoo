@@ -7,6 +7,7 @@ import datetime
 import dateutil.relativedelta as relativedelta
 import functools
 import logging
+import re
 
 from werkzeug import urls
 
@@ -147,6 +148,42 @@ class MailRenderMixin(models.AbstractModel):
         return expression
 
     # ------------------------------------------------------------
+    # TOOLS
+    # ------------------------------------------------------------
+
+    def _replace_local_links(self, html, base_url=None):
+        """ Replace local links by absolute links. It is required in various
+        cases, for example when sending emails on chatter or sending mass
+        mailings. It replaces
+
+         * href of links (mailto will not match the regex)
+         * src of images (base64 hardcoded data will not match the regex)
+         * styling using url like background-image: url
+
+        It is done using regex because it is shorten than using an html parser
+        to create a potentially complex soupe and hope to have a result that
+        has not been harmed.
+        """
+        if not html:
+            return html
+
+        html = tools.ustr(html)
+
+        def _sub_relative2absolute(match):
+            # compute here to do it only if really necessary + cache will ensure it is done only once
+            # if not base_url
+            if not _sub_relative2absolute.base_url:
+                _sub_relative2absolute.base_url = self.env["ir.config_parameter"].sudo().get_param("web.base.url")
+            return match.group(1) + urls.url_join(_sub_relative2absolute.base_url, match.group(2))
+
+        _sub_relative2absolute.base_url = base_url
+        html = re.sub(r"""(<img(?=\s)[^>]*\ssrc=")(/[^/][^"]+)""", _sub_relative2absolute, html)
+        html = re.sub(r"""(<a(?=\s)[^>]*\shref=")(/[^/][^"]+)""", _sub_relative2absolute, html)
+        html = re.sub(r"""(<[^>]+\bstyle="[^"]+\burl\('?)(/[^/'][^'")]+)""", _sub_relative2absolute, html)
+
+        return html
+
+    # ------------------------------------------------------------
     # RENDERING
     # ------------------------------------------------------------
 
@@ -230,7 +267,7 @@ class MailRenderMixin(models.AbstractModel):
         :return dict: updated version of rendered
         """
         for res_id, html in rendered.items():
-            rendered[res_id] = self.env['mail.thread']._replace_local_links(html)
+            rendered[res_id] = self._replace_local_links(html)
         return rendered
 
     @api.model
