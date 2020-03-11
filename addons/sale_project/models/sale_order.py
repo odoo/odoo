@@ -97,6 +97,11 @@ class SaleOrder(models.Model):
         }
         return action
 
+    def write(self, values):
+        if 'state' in values and values['state'] == 'cancel':
+            self.project_id.sale_line_id = False
+        return super(SaleOrder, self).write(values)
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
