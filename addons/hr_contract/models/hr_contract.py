@@ -9,6 +9,13 @@ from odoo.exceptions import ValidationError
 
 from odoo.osv import expression
 
+CONTRACT_STATES = [
+    ('draft', 'New'),
+    ('open', 'Running'),
+    ('close', 'Expired'),
+    ('cancel', 'Cancelled'),
+]
+
 class Contract(models.Model):
     _name = 'hr.contract'
     _description = 'Contract'
@@ -34,12 +41,7 @@ class Contract(models.Model):
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.")
     notes = fields.Text('Notes')
-    state = fields.Selection([
-        ('draft', 'New'),
-        ('open', 'Running'),
-        ('close', 'Expired'),
-        ('cancel', 'Cancelled')
-    ], string='Status', group_expand='_expand_states', copy=False,
+    state = fields.Selection(CONTRACT_STATES, string='Status', group_expand='_expand_states', copy=False,
        tracking=True, help='Status of the contract', default='draft')
     company_id = fields.Many2one('res.company', compute='_compute_employee_contract', store=True, readonly=False,
         default=lambda self: self.env.company, required=True)

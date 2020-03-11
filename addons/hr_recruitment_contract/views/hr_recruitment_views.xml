@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="hr_applicant_action_wages" model="ir.actions.act_window">
+        <field name="name">Contract Wages</field>
+        <field name="res_model">hr.contract.wage</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem
+        name="Wages"
+        id="menu_hr_contract_wage"
+        action="hr_applicant_action_wages"
+        parent="hr_recruitment.report_hr_recruitment"
+        groups="hr_recruitment.group_hr_recruitment_manager"
+        sequence="80"/>
+</odoo>

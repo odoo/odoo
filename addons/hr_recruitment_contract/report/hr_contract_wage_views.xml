@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="hr_contract_wage_view_list" model="ir.ui.view">
+        <field name="name">Contract</field>
+        <field name="model">hr.contract.wage</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="department_id"/>
+                <field name="job_id"/>
+                <field name="resource_calendar_id"/>
+                <field name="employee_experience"/>
+                <field name="wage" widget="monetary"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="state" optional="show"/>
+                <field name="company_id" optional="hidden"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_contract_wage_search_list" model="ir.ui.view">
+        <field name="name">Contracts</field>
+        <field name="model">hr.contract.wage</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="job_id"/>
+                <filter string="Running" name="running" domain="[('state', '=', 'open')]"/>
+            </search>
+        </field>
+    </record>
+</odoo>
