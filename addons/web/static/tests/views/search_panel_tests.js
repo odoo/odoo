@@ -7,6 +7,7 @@ var KanbanView = require('web.KanbanView');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 
+const cpHelpers = testUtils.controlPanel;
 var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 
@@ -1396,7 +1397,7 @@ QUnit.module('Views', {
         ]);
 
         // go to page 2 (the domain doesn't change, so the filters should not be reloaded)
-        await testUtils.dom.click(kanban.$('.o_pager_next'));
+        await cpHelpers.pagerNext(kanban);
 
         assert.verifySteps([
             '/web/dataset/search_read',
@@ -1935,16 +1936,17 @@ QUnit.module('Views', {
             archs: this.archs,
             data: this.data,
         });
-
         await actionManager.doAction(1);
+
         assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_kanban_view');
         assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_search_panel');
 
-        await testUtils.dom.click(actionManager.$('.o_cp_switch_pivot'));
+        await cpHelpers.switchView(actionManager, 'pivot');
+        await testUtils.nextTick();
         assert.containsOnce(actionManager, '.o_content .o_pivot');
         assert.containsNone(actionManager, '.o_content .o_search_panel');
 
-        await testUtils.dom.click(actionManager.$('.o_cp_switch_list'));
+        await cpHelpers.switchView(actionManager, 'list');
         assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_list_view');
         assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_search_panel');
 
@@ -1972,16 +1974,16 @@ QUnit.module('Views', {
             archs: this.archs,
             data: this.data,
         });
-
         await actionManager.doAction(1);
+
         assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_kanban_view');
         assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_search_panel');
 
-        await testUtils.dom.click(actionManager.$('.o_cp_switch_list'));
+        await cpHelpers.switchView(actionManager, 'list');
         assert.containsOnce(actionManager, '.o_content .o_list_view');
         assert.containsNone(actionManager, '.o_content .o_search_panel');
 
-        await testUtils.dom.click(actionManager.$('.o_cp_switch_pivot'));
+        await cpHelpers.switchView(actionManager, 'pivot');
         assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_pivot');
         assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_search_panel');
 
@@ -2003,8 +2005,8 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
         });
-
         await actionManager.doAction(1);
+
         assert.hasClass(actionManager.$('.o_search_panel_category_value:first header'), 'active');
         assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 4);
 
@@ -2013,7 +2015,7 @@ QUnit.module('Views', {
         assert.hasClass(actionManager.$('.o_search_panel_category_value:nth(1) header'), 'active');
         assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 2);
 
-        await testUtils.dom.click(actionManager.$('.o_cp_switch_list'));
+        await cpHelpers.switchView(actionManager, 'list');
         assert.hasClass(actionManager.$('.o_search_panel_category_value:nth(1) header'), 'active');
         assert.containsN(actionManager, '.o_data_row', 2);
 
@@ -2022,7 +2024,7 @@ QUnit.module('Views', {
         assert.hasClass(actionManager.$('.o_search_panel_category_value:nth(2) header'), 'active');
         assert.containsN(actionManager, '.o_data_row', 2);
 
-        await testUtils.dom.click(actionManager.$('.o_cp_switch_kanban'));
+        await cpHelpers.switchView(actionManager, 'kanban');
         assert.hasClass(actionManager.$('.o_search_panel_category_value:nth(2) header'), 'active');
         assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 2);
 
@@ -2052,8 +2054,8 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
         });
-
         await actionManager.doAction(1);
+
         assert.containsNone(actionManager, '.o_search_panel_filter_value input:checked');
         assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 4);
 
@@ -2062,7 +2064,7 @@ QUnit.module('Views', {
         assert.containsOnce(actionManager, '.o_search_panel_filter_value input:checked');
         assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
-        await testUtils.dom.click(actionManager.$('.o_cp_switch_list'));
+        await cpHelpers.switchView(actionManager, 'list');
         assert.containsOnce(actionManager, '.o_search_panel_filter_value input:checked');
         assert.containsN(actionManager, '.o_data_row', 1);
 
@@ -2071,7 +2073,7 @@ QUnit.module('Views', {
         assert.containsN(actionManager, '.o_search_panel_filter_value input:checked', 2);
         assert.containsN(actionManager, '.o_data_row', 4);
 
-        await testUtils.dom.click(actionManager.$('.o_cp_switch_kanban'));
+        await cpHelpers.switchView(actionManager, 'kanban');
         assert.containsN(actionManager, '.o_search_panel_filter_value input:checked', 2);
         assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 4);
 
@@ -2094,8 +2096,8 @@ QUnit.module('Views', {
             archs: this.archs,
             data: this.data,
         });
-
         await actionManager.doAction(1);
+
         assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_kanban_view');
         assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_search_panel');
         assert.containsNone(actionManager, '.o_search_panel_filter_value input:checked');
@@ -2107,13 +2109,13 @@ QUnit.module('Views', {
         assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
         // switch to pivot
-        await testUtils.dom.click(actionManager.$('.o_cp_switch_pivot'));
+        await cpHelpers.switchView(actionManager, 'pivot');
         assert.containsOnce(actionManager, '.o_content .o_pivot');
         assert.containsNone(actionManager, '.o_content .o_search_panel');
         assert.strictEqual(actionManager.$('.o_pivot_cell_value').text(), '15');
 
         // switch to list
-        await testUtils.dom.click(actionManager.$('.o_cp_switch_list'));
+        await cpHelpers.switchView(actionManager, 'list');
         assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_list_view');
         assert.containsOnce(actionManager, '.o_content.o_controller_with_searchpanel .o_search_panel');
         assert.containsOnce(actionManager, '.o_search_panel_filter_value input:checked');
@@ -2192,10 +2194,10 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
         });
-
         await actionManager.doAction(1);
-        await testUtils.dom.click(actionManager.$('.o_cp_switch_list'));
-        await testUtils.dom.click(actionManager.$('.o_cp_switch_kanban'));
+
+        await cpHelpers.switchView(actionManager, 'list');
+        await cpHelpers.switchView(actionManager, 'kanban');
 
         assert.verifySteps([
             '/web/action/load',
@@ -2226,18 +2228,19 @@ QUnit.module('Views', {
         actionManager.$el.css('max-height', 300);
 
         await actionManager.doAction(1);
+
         assert.containsOnce(actionManager, '.o_content .o_kanban_view');
         assert.strictEqual(actionManager.$('.o_search_panel').scrollTop(), 0);
 
         // simulate a scroll in the search panel and switch into list
         actionManager.$('.o_search_panel').scrollTop(50);
-        await testUtils.dom.click(actionManager.$('.o_cp_switch_list'));
+        await cpHelpers.switchView(actionManager, 'list');
         assert.containsOnce(actionManager, '.o_content .o_list_view');
         assert.strictEqual(actionManager.$('.o_search_panel').scrollTop(), 50);
 
         // simulate another scroll and switch back to kanban
         actionManager.$('.o_search_panel').scrollTop(30);
-        await testUtils.dom.click(actionManager.$('.o_cp_switch_kanban'));
+        await cpHelpers.switchView(actionManager, 'kanban');
         assert.containsOnce(actionManager, '.o_content .o_kanban_view');
         assert.strictEqual(actionManager.$('.o_search_panel').scrollTop(), 30);
 

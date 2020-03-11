@@ -8,6 +8,7 @@ var RamStorage = require('web.RamStorage');
 var relationalFields = require('web.relational_fields');
 var testUtils = require('web.test_utils');
 
+const cpHelpers = testUtils.controlPanel;
 var createView = testUtils.createView;
 
 QUnit.module('fields', {}, function () {
@@ -153,24 +154,10 @@ QUnit.module('relational_fields', {
 
     QUnit.test('search more pager is reset when doing a new search', async function (assert) {
         assert.expect(6);
-        for(var i = 10; i < 180; i++) {
-            this.data.partner.records.push({
-                id: i,
-                display_name: "Partner " + i,
-            });
-        }
 
-        async function stringToEvent ($element, string) {
-            for (var i = 0; i < string.length; i++) {
-                var keyAscii = string.charCodeAt(i);
-                $element.val($element.val()+string[i]);
-                $element.trigger($.Event('keyup', {which: keyAscii, keyCode:keyAscii}));
-                await testUtils.nextTick();
-            }
-            $element.trigger($.Event('keyup', {which: $.ui.keyCode.ENTER, keyCode:$.ui.keyCode.ENTER}));
-            await testUtils.nextTick();
-        }
-
+        this.data.partner.records.push(
+            ...new Array(170).fill().map((_, i) => ({ id: i + 10, name: "Partner " + i }))
+        );
         this.data.partner.fields.datetime.searchable = true;
         var form = await createView({
             View: FormView,
@@ -192,7 +179,6 @@ QUnit.module('relational_fields', {
 
         await testUtils.form.clickEdit(form);
 
-
         await testUtils.fields.many2one.clickOpenDropdown('trululu');
         await testUtils.fields.many2one.clickItem('trululu','Search');
         await testUtils.dom.click($('.modal .o_pager_next'));
@@ -201,7 +187,8 @@ QUnit.module('relational_fields', {
         assert.strictEqual($('.o_pager_value').text(), "181-160", "should display the second page");
         assert.strictEqual($('tr.o_data_row').length, 80, "should display 80 record");
 
-        await stringToEvent($('.modal .o_searchview_input'), 'first');
+        await cpHelpers.editSearch('.modal', "first");
+        await cpHelpers.validateSearch('.modal');
 
         assert.strictEqual($('.o_pager_limit').text(), "11", "there should be 1 record");
         assert.strictEqual($('.o_pager_value').text(), "11-1", "should display the first page");
@@ -1708,8 +1695,8 @@ QUnit.module('relational_fields', {
         });
         await testUtils.fields.many2one.clickOpenDropdown('trululu');
         await testUtils.fields.many2one.clickItem('trululu', 'Search');
-        await testUtils.dom.click($('.modal .o_search_options .fa-bars'));
-        await testUtils.dom.click($('.modal .o_search_options .o_group_by_menu a:contains(Bar)'));
+        await cpHelpers.toggleGroupByMenu('.modal');
+        await cpHelpers.toggleMenuItem('.modal', "Bar");
 
         await testUtils.dom.click($('.modal .o_group_header:first'));
 
@@ -1977,7 +1964,7 @@ QUnit.module('relational_fields', {
 
         await testUtils.form.clickSave(form);
 
-        assert.strictEqual(form.el.querySelector('.o_field_many2manytags').innerText, 'new value');
+        assert.strictEqual(form.el.querySelector('.o_field_many2manytags').innerText.trim(), "new value");
 
         form.destroy();
     });
