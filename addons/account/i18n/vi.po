@@ -576,7 +576,7 @@ msgstr "<span>Số lượng</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Reference</span>"
-msgstr ""
+msgstr "<span>Liên quan</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -869,6 +869,10 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
+"Một người dùng không thể có cả hai thuế B2B và thuế B2C.\n"
+"Bạn nên vào Thiết lập chung, và chọn hiển thị Giá sản phẩm\n"
+"ở chế độ 'Đã bao gồm Thuế' hoặc trong chế độ 'Chưa bao gồm Thuế'\n"
+"(hoặc chuyển qua lại hai chế độ nếu bạn đã ở chế độ mong muốn)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -13036,9 +13040,9 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. module: account
 #: code:addons/account/models/account_analytic_line.py:0
-#, python-format
-msgid ""
-"You can't set a different company on your analytic tags since there are some"
-" journal items linked to it."
+#: code:addons/account/models/account.py:56
+#, python-format, python-format
+msgid "A tag defined to be used on taxes must always have a country set."
 msgstr ""
