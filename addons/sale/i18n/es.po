@@ -4,7 +4,6 @@
 # 
 # Translators:
 # e2f <projects@e2f.com>, 2019
-# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2019
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2019
 # Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2019
 # Hbto [ Vauxoo ] <hbto@vauxoo.com>, 2019
@@ -34,11 +33,18 @@
 # Jesse Garza <jga@odoo.com>, 2019
 # Miguel Orueta <mo@landoo.es>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
 # Jon Perez <jop@odoo.com>, 2019
 # Nicolás Broggi <rnbroggi@gmail.com>, 2019
 # Gelo Joga Landoo <gj@landoo.es>, 2019
 # Martin Trigaux, 2020
+# Jorge Luis Quinteros <quinterosorellana04@gmail.com>, 2020
+# Juan Pablo Mora <jpm@odoo.com>, 2020
+# Erick Herrera <erick.herrera@jarsa.com.mx>, 2020
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
+# Marco Alejandro Martinez <martinezsuarezmarcoalejandro@gmail.com>, 2020
+# Jesus Vicente Alcala Rodriguez <jesus.alcala@jarsa.com.mx>, 2020
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2020
+# Carles Antoli <carlesantoli@hotmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -46,7 +52,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-01-03 14:57+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,7 +112,7 @@ msgstr "&amp;times;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO-FORMA - %s' % (object.name)"
-msgstr ""
+msgstr "'PRO-FORMA - %s' % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -114,6 +120,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in ('draft', 'sent') and 'Presupuesto - %s' % (object.name)) "
+"or 'Pedido - %s' % (object.name)"
 
 #. module: sale
 #: model:product.product,description_sale:sale.product_product_4e
@@ -923,7 +931,7 @@ msgstr "Le permite enviar una factura pro-forma."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
 msgid "Amazon Sync"
-msgstr ""
+msgstr "Sincronización con Amazon"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1549,12 +1557,12 @@ msgstr ""
 #: model:product.product,name:sale.advance_product_0
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
-msgstr "Depósito"
+msgstr "Adelanto"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
 msgid "Deposit Product"
-msgstr "Producto de Depósito"
+msgstr "Producto para adelanto"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__name
@@ -1634,13 +1642,13 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
 msgid "Down Payment Product"
-msgstr "Producto de Depósito"
+msgstr "Producto para adelanto"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %s"
-msgstr ""
+msgstr "Pago Anticipado: %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -1688,7 +1696,7 @@ msgstr "Conector con Easypost"
 #: code:addons/sale/static/src/js/product_configurator_widget.js:0
 #, python-format
 msgid "Edit Configuration"
-msgstr ""
+msgstr "Editar Configuración"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_email_account
@@ -1728,7 +1736,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
 msgid "Expiration"
-msgstr ""
+msgstr "Expiración"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1938,6 +1946,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
 msgstr ""
+"Si cambia la lista de precios, solo se verán afectadas las líneas recién "
+"agregadas."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2450,7 +2460,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found"
-msgstr ""
+msgstr "No se encontraron pedidos para aumento de ventas"
 
 #. module: sale
 #. openerp-web
@@ -2658,7 +2668,7 @@ msgstr "Estado del pedido"
 #. module: sale
 #: model:mail.activity.type,name:sale.mail_act_sale_upsell
 msgid "Order Upsell"
-msgstr ""
+msgstr "Pedido para aumentar las ventas"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -2765,7 +2775,7 @@ msgstr "Pagar con"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__other
 msgid "Pay with another payment acquirer"
-msgstr ""
+msgstr "Pagar amb un altre adquirent de pagaments"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
@@ -2953,7 +2963,7 @@ msgstr "Variantes de producto"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
-msgstr "Producto usado para pagos anticipados"
+msgstr "Producto usado para pagos adelantados"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
@@ -3156,7 +3166,7 @@ msgstr "Rechazar este Presupuesto"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__remaining_validity_days
 msgid "Remaining Days Before Expiration"
-msgstr ""
+msgstr "Días restantes antes de la expiración"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report
@@ -3636,17 +3646,17 @@ msgstr "Mostrar márgenes en pedidos"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Sign &amp; Pay"
-msgstr ""
+msgstr "Firmar &amp; pagar"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Sign &amp; Pay Quotation"
-msgstr ""
+msgstr "Firmar &amp; pagar presupuesto"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
 msgid "Sign online"
-msgstr ""
+msgstr "Firmar en línea"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signature
@@ -3947,7 +3957,7 @@ msgid ""
 msgstr ""
 "El producto usado para facturar un adelanto de pago debe tener una política "
 "de facturación configurada como \"Cantidad pedida\". Por favor actualice su "
-"producto para poder crear la factura de depósito."
+"producto para poder crear la factura adelantada."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__currency_rate
@@ -3986,6 +3996,9 @@ msgid ""
 "There is no invoiceable line. If a product has a Delivered quantities "
 "invoicing policy, please make sure that a quantity has been delivered."
 msgstr ""
+"No hay línea facturable. Si un producto tiene una política de facturación de"
+" cantidades entregadas, por favor, asegúrese de que la cantidad haya sido "
+"entregada."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4093,7 +4106,7 @@ msgstr "Cantidad a Facturar"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
-msgstr ""
+msgstr "Para aumentar las ventas"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4158,7 +4171,7 @@ msgstr "Transacciones"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__type_name
 msgid "Type Name"
-msgstr ""
+msgstr "Tipo de Nombre"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_decoration
@@ -4279,6 +4292,8 @@ msgid ""
 "Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a"
 " href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
 msgstr ""
+"Aumentar ventas <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> para "
+"cliente <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
@@ -4315,7 +4330,7 @@ msgstr "Validar pedido"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Variant Grid Entry"
-msgstr ""
+msgstr "Variante del producto de la linea"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
@@ -4428,6 +4443,9 @@ msgid ""
 "                than initially ordered, with an invoicing policy based on\n"
 "                ordered quantities."
 msgstr ""
+"Puedes crear un pedido para aumentar las ventas cuando se ha entregado una "
+"cantidad mayor a la que se ordenó inicialmente, con una política de "
+"facturación sobre cantidades ordenadas."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -4476,6 +4494,8 @@ msgid ""
 "Your quotation contains products from company %s whereas your quotation belongs to company %s. \n"
 " Please change the company of your quotation or remove the products from other companies (%s)."
 msgstr ""
+"Tu solicitud contiene productos de %s mientras que su presupuesto pertenece a la empresa %s. \n"
+" Por favor cambie la compañía de su cotización o remueva los productos pertenecientes a otras compañías (%s)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
@@ -4522,4 +4542,15 @@ msgstr "Tipo: [(nombre, importe, base, importe formateado, base formateada)]"
 #: code:addons/sale/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "uninvoiced sales orders"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
+msgid "Mark Quotation as Sent"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/sale.py:0
+#, python-format
+msgid "Only draft orders can be marked as sent directly."
 msgstr ""
