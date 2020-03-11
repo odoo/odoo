@@ -104,7 +104,6 @@ class account_abstract_payment(models.AbstractModel):
             or inv.account_id != invoices[0].account_id
             or inv.partner_bank_id != invoices[0].partner_bank_id
             for inv in invoices)
-        multi = multi or (len(invoices.mapped('partner_id')) == 1 and len(invoices) > 1)
 
         currency = invoices[0].currency_id
 
@@ -118,7 +117,7 @@ class account_abstract_payment(models.AbstractModel):
             'partner_type': False if multi else MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
             'communication': ' '.join([ref for ref in invoices.mapped('reference') if ref])[:2000],
             'invoice_ids': [(6, 0, invoices.ids)],
-            'multi': multi,
+            'multi': multi or (len(invoices.mapped('partner_id')) == 1 and len(invoices) > 1),
         })
         return rec
 
