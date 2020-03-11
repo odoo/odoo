@@ -8,6 +8,7 @@ var testUtils = require('web.test_utils');
 var ListRenderer = require('web.ListRenderer');
 var pyUtils = require('web.py_utils');
 
+const cpHelpers = testUtils.controlPanel;
 var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 
@@ -701,7 +702,7 @@ QUnit.test('save actions to dashboard', async function (assert) {
             var result = this._super.apply(this, arguments);
             result.context = {
                 'fire': 'on the bayou',
-            }
+            };
             return result;
         }
     });
@@ -733,7 +734,7 @@ QUnit.test('save actions to dashboard', async function (assert) {
                 return Promise.resolve(true);
             }
             return this._super.apply(this, arguments);
-        },
+        }
     });
 
     await actionManager.doAction({
@@ -750,15 +751,16 @@ QUnit.test('save actions to dashboard', async function (assert) {
     await testUtils.dom.click($('.o_column_sortable'));
 
     // Group It
-    await testUtils.dom.click($('.o_search_options .o_dropdown button:contains(Group By)'));
-    await testUtils.dom.click($('.o_search_options .o_group_by_menu button'));
-    await testUtils.dom.click($('.o_search_options .o_group_by_menu button.o_apply_group'));
+    await cpHelpers.toggleGroupByMenu(actionManager);
+    await cpHelpers.toggleAddCustomGroup(actionManager);
+    await cpHelpers.applyGroup(actionManager);
 
     // add this action to dashboard
-    await testUtils.dom.click($('.o_search_options .o_dropdown button:contains(Favorites)'));
-    await testUtils.dom.click($('.o_add_to_board.o_menu_header'));
-    testUtils.fields.editInput($('input.o_add_to_board_input'), 'a name');
-    await testUtils.dom.click($('.o_add_to_board_confirm_button'));
+    await cpHelpers.toggleFavoriteMenu(actionManager);
+
+    await testUtils.dom.click($('.o_add_to_board > button'));
+    await testUtils.fields.editInput($('.o_add_to_board input'), 'a name');
+    await testUtils.dom.click($('.o_add_to_board div button'));
 
     testUtils.unpatch(ListController);
 
@@ -802,38 +804,28 @@ QUnit.test('save two searches to dashboard', async function (assert) {
 
     var filter_count = 0;
     // Add a first filter
-    await testUtils.dom.click(actionManager.$('.o_filters_menu_button'));
-    await testUtils.dom.click(actionManager.$('.o_add_custom_filter'));
-    actionManager.$('.o_searchview_extended_prop_value .o_input').val('a');
-    await testUtils.dom.click(actionManager.$('.o_apply_filter'));
+    await cpHelpers.toggleFilterMenu(actionManager);
+    await cpHelpers.toggleAddCustomFilter(actionManager);
+    await testUtils.fields.editInput(actionManager.el.querySelector('.o_generator_menu_value .o_input'), 'a');
+    await cpHelpers.applyFilter(actionManager);
+
     // Add it to dashboard
-    await testUtils.dom.click(actionManager.$('.o_favorites_menu_button'));
-    $('.o_search_options .dropdown-menu.o_favorites_menu').one('click', function (ev) {
-        // This handler is on the webClient
-        // But since the test suite doesn't have one
-        // We manually set it here
-        ev.stopPropagation();
-    });
-    await testUtils.dom.click(actionManager.$('.o_add_to_board'));
-    await testUtils.dom.click(actionManager.$('.o_add_to_board_confirm_button'));
+    await cpHelpers.toggleFavoriteMenu(actionManager);
+    await testUtils.dom.click($('.o_add_to_board > button'));
+    await testUtils.dom.click($('.o_add_to_board div button'));
+
     // Remove it
-    await testUtils.dom.click(actionManager.$('.o_facet_remove'));
+    await testUtils.dom.click(actionManager.el.querySelector('.o_facet_remove'));
 
     // Add the second filter
-    await testUtils.dom.click(actionManager.$('.o_filters_menu_button'));
-    await testUtils.dom.click(actionManager.$('.o_add_custom_filter'));
-    actionManager.$('.o_searchview_extended_prop_value .o_input').val('b');
-    await testUtils.dom.click(actionManager.$('.o_apply_filter'));
+    await cpHelpers.toggleFilterMenu(actionManager);
+    await cpHelpers.toggleAddCustomFilter(actionManager);
+    await testUtils.fields.editInput(actionManager.el.querySelector('.o_generator_menu_value .o_input'), "b");
+    await cpHelpers.applyFilter(actionManager);
     // Add it to dashboard
-    await testUtils.dom.click(actionManager.$('.o_favorites_menu_button'));
-    $('.o_search_options .dropdown-menu.o_favorites_menu').one('click', function (ev) {
-        // This handler is on the webClient
-        // But since the test suite doesn't have one
-        // We manually set it here
-        ev.stopPropagation();
-    });
-    await testUtils.dom.click(actionManager.$('.o_add_to_board'));
-    await testUtils.dom.click(actionManager.$('.o_add_to_board_confirm_button'));
+    await cpHelpers.toggleFavoriteMenu(actionManager);
+    await testUtils.dom.click(actionManager.el.querySelector('.o_add_to_board > button'));
+    await testUtils.dom.click(actionManager.el.querySelector('.o_add_to_board div button'));
 
     actionManager.destroy();
 });
@@ -846,7 +838,7 @@ QUnit.test('save a action domain to dashboard', async function (assert) {
     var filter_domain = ["display_name", "ilike", "b"];
 
     // The filter domain already contains the view domain, but is always added by dashboard..,
-    var expected_domain = ['&', '&', view_domain, view_domain, filter_domain]
+    var expected_domain = ['&', '&', view_domain, view_domain, filter_domain];
 
     var actionManager = await createActionManager({
         data: this.data,
@@ -873,14 +865,18 @@ QUnit.test('save a action domain to dashboard', async function (assert) {
     });
 
     // Add a filter
-    await testUtils.dom.click(actionManager.$('.o_filters_menu_button'));
-    await testUtils.dom.click(actionManager.$('.o_add_custom_filter'));
-    actionManager.$('.o_searchview_extended_prop_value .o_input').val('b');
-    await testUtils.dom.click(actionManager.$('.o_apply_filter'));
+    await cpHelpers.toggleFilterMenu(actionManager);
+    await cpHelpers.toggleAddCustomFilter(actionManager);
+    await testUtils.fields.editInput(
+        actionManager.el.querySelector('.o_generator_menu_value .o_input'),
+        "b"
+    );
+    await cpHelpers.applyFilter(actionManager);
     // Add it to dashboard
-    await testUtils.dom.click(actionManager.$('.o_favorites_menu_button'));
-    await testUtils.dom.click(actionManager.$('.o_add_to_board'));
-    await testUtils.dom.click(actionManager.$('.o_add_to_board_confirm_button'));
+    await cpHelpers.toggleFavoriteMenu(actionManager);
+    await testUtils.dom.click(actionManager.el.querySelector('.o_add_to_board > button'));
+    // add
+    await testUtils.dom.click(actionManager.el.querySelector('.o_add_to_board div button'));
 
     actionManager.destroy();
 });

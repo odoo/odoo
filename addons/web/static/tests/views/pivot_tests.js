@@ -3,11 +3,11 @@ odoo.define('web.pivot_tests', function (require) {
 
 var core = require('web.core');
 var PivotView = require('web.PivotView');
-var PivotRenderer = require('web.PivotRenderer');
 var testUtils = require('web.test_utils');
 var testUtilsDom = require('web.test_utils_dom');
 
 var _t = core._t;
+const cpHelpers = testUtils.controlPanel;
 var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 var patchDate = testUtils.mock.patchDate;
@@ -388,10 +388,9 @@ QUnit.module('Views', {
 
         var unpatchDate = patchDate(2016, 11, 20, 1, 0, 0);
         var context = {
-            timeRangeMenuData: {
-                timeRange: ["&",["date",">=","2016-12-01"],["date","<","2017-01-01"]],
-                timeRangeDescription: 'This Month',
-                comparisonTimeRange: [],
+            time_ranges: {
+                field: 'date',
+                range: 'this_month'
             }
         };
         var pivot = await createView({
@@ -411,7 +410,7 @@ QUnit.module('Views', {
             viewOptions: {
                 context: context,
                 title: 'Partners',
-            }
+            },
         });
 
         assert.hasClass(pivot.$('table'), 'o_enable_linking',
@@ -433,11 +432,10 @@ QUnit.module('Views', {
         this.data.partner.records[3].date = '2016-11-03';
 
         var context = {
-            timeRangeMenuData: {
-                timeRange: ["&",["date",">=","2016-12-01"],["date","<","2017-01-01"]],
-                timeRangeDescription: 'This Month',
-                comparisonTimeRange: ["&",["date",">=","2016-11-01"],["date","<","2017-12-01"]],
-                comparisonTimeRangeDescription: 'Previous Period'
+            time_ranges: {
+                field: 'date',
+                range: 'this_month',
+                comparisonRange: 'previous_period',
             }
         };
 
@@ -470,7 +468,7 @@ QUnit.module('Views', {
             viewOptions: {
                 context: context,
                 title: 'Partners',
-            }
+            },
         });
         assert.hasClass(pivot.$('table'), 'o_enable_linking',
             "root node should have classname 'o_enable_linking'");
@@ -1945,7 +1943,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('rendering of pivot view with comparison', async function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         this.data.partner.records[0].date = '2016-12-15';
         this.data.partner.records[1].date = '2016-12-17';
@@ -1966,31 +1964,40 @@ QUnit.module('Views', {
             viewOptions: {
                 additionalMeasures: ['product_id'],
             },
-            intercepts: {
-                create_filter: function (ev) {
-                    var data = ev.data;
-                    assert.deepEqual(data.filter.context.timeRangeMenuData, {
-                        timeRange: ["&", ["date", ">=", "2016-12-01"], ["date", "<", "2017-01-01"]],
-                        timeRangeDescription: 'This Month',
-                        comparisonTimeRange: ["&", ["date", ">=", "2016-11-01"], ["date", "<", "2016-12-01"]],
-                        comparisonTimeRangeDescription: 'Previous Period',
-                    });
+            mockRPC: function () {
+                return this._super.apply(this, arguments);
+            },
+            env: {
+                dataManager: {
+                    create_filter: async function (filter) {
+                        assert.deepEqual(filter.context, {
+                            pivot_measures: ['__count'],
+                            pivot_column_groupby: [],
+                            pivot_row_groupby: ['product_id'],
+                            group_by: [],
+                            time_ranges: {
+                                field: 'date',
+                                range: 'this_month',
+                                comparisonRange: 'previous_period',
+                            }
+                        })
+                    }
                 }
             },
         });
 
+
         // with no data
-        await testUtils.dom.click(pivot.$('.o_time_range_menu_button'));
-        await testUtils.dom.click(pivot.$('.o_time_range_menu .o_comparison_checkbox'));
-        pivot.$('.o_time_range_selector').val('today');
-        await testUtils.dom.click(pivot.$('.o_time_range_menu .o_apply_range'));
+        await cpHelpers.toggleTimeRangeMenu(pivot);
+        await cpHelpers.toggleTimeRangeMenuBox(pivot);
+        await cpHelpers.selectRange(pivot, 'today');
+        await cpHelpers.applyTimeRange(pivot);
 
         assert.strictEqual(pivot.$('.o_pivot p.o_view_nocontent_empty_folder').length, 1);
 
         // with data, no row groupby
-        await testUtils.dom.click(pivot.$('.o_time_range_menu_button'));
-        pivot.$('.o_time_range_selector').val('this_month');
-        await testUtils.dom.click(pivot.$('.o_time_range_menu .o_apply_range'));
+        await cpHelpers.selectRange(pivot, 'this_month');
+        await cpHelpers.applyTimeRange(pivot);
         assert.containsN(pivot, '.o_pivot thead tr:last th', 9,
             "last header row should contains 9 cells (3*[This month, Previous Period, Variation]");
         var values = [
@@ -2035,11 +2042,10 @@ QUnit.module('Views', {
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
-        pivot.$('.o_search_options button:contains("Favorites")').click();
-        var $favorites = pivot.$('.dropdown-menu.o_favorites_menu');
-        $favorites.find('a.o_save_search').click();
-        $favorites.find('.o_input').val('Fav').trigger('input');
-        $favorites.find('button').click();
+        await cpHelpers.toggleFavoriteMenu(pivot);
+        await cpHelpers.toggleSaveFavorite(pivot);
+        await cpHelpers.editFavoriteName(pivot, 'Fav');
+        await cpHelpers.saveFavorite(pivot);
 
         unpatchDate();
         pivot.destroy();
@@ -2093,14 +2099,15 @@ QUnit.module('Views', {
             },
         });
 
+
         // open time range menu
-        await testUtils.dom.click(pivot.$('.o_control_panel .o_time_range_menu_button'));
+        await cpHelpers.toggleTimeRangeMenu(pivot);
         // select 'Today' as range
-        pivot.$('.o_control_panel .o_time_range_selector').val('today');
+        await cpHelpers.selectRange(pivot, 'today');
         // check checkbox 'Compare To'
-        await testUtils.dom.click(pivot.$('.o_control_panel .o_time_range_menu .o_comparison_checkbox'));
+        await cpHelpers.toggleTimeRangeMenuBox(pivot);
         // Click on 'Apply' button
-        await testUtils.dom.click(pivot.$('.o_control_panel .o_time_range_menu .o_apply_range'));
+        await cpHelpers.applyTimeRange(pivot);
 
         // the time range menu configuration is by now: Date, Today, checkbox checked, Previous Period
         // With the data above, the time ranges contain no record.
@@ -2109,13 +2116,11 @@ QUnit.module('Views', {
         // are deactivated (exception: the 'Measures' button).
         assert.ok(pivot.$('.o_control_panel button.o_pivot_download').prop('disabled'));
 
-        // open time range menu
-        await testUtils.dom.click(pivot.$('.o_control_panel .o_time_range_menu_button'));
         // select 'This Month' as date range
-        pivot.$('.o_control_panel .o_time_range_selector').val('this_month');
+        await cpHelpers.selectRange(pivot, 'this_month');
 
         // Click on 'Apply' button
-        await testUtils.dom.click(pivot.$('.o_control_panel .o_time_range_menu .o_apply_range'));
+        await cpHelpers.applyTimeRange(pivot);
         // the time range menu configuration is by now: Date, This Month, checkbox checked, Previous Period
         // With the data above, the time ranges contain some records.
         // export data. Should execute 'get_file'
@@ -2177,11 +2182,12 @@ QUnit.module('Views', {
 
         mockMock = true;
 
+
         // activate 'This Month' and 'Previous Period' in time range menu
-        await testUtils.dom.click(pivot.$('.o_control_panel .o_time_range_menu_button'));
-        pivot.$('.o_control_panel .o_time_range_selector').val('this_month');
-        await testUtils.dom.click(pivot.$('.o_control_panel .o_time_range_menu .o_comparison_checkbox'));
-        await testUtils.dom.click(pivot.$('.o_control_panel .o_time_range_menu .o_apply_range'));
+        await cpHelpers.toggleTimeRangeMenu(pivot);
+        await cpHelpers.selectRange(pivot, 'this_month');
+        await cpHelpers.toggleTimeRangeMenuBox(pivot);
+        await cpHelpers.applyTimeRange(pivot);
 
         var values = [
             "4", "0", "100%",
@@ -2219,16 +2225,12 @@ QUnit.module('Views', {
             },
         });
 
+
         // enable comparison mode
-        var $cp = pivot.$('.o_control_panel');
-        // open time range menu
-        await testUtils.dom.click($cp.find('.o_time_range_menu_button'));
-        // select 'This month' as range
-        await testUtils.fields.editInput($cp.find('.o_time_range_selector'), 'this_month');
-        // check checkbox 'Compare To'
-        await testUtils.dom.click($cp.find('.o_time_range_menu .o_comparison_checkbox'));
-        // click on 'Apply' button
-        await testUtils.dom.click($cp.find('.o_time_range_menu .o_apply_range'));
+        await cpHelpers.toggleTimeRangeMenu(pivot);
+        await cpHelpers.selectRange(pivot, 'this_month');
+        await cpHelpers.toggleTimeRangeMenuBox(pivot);
+        await cpHelpers.applyTimeRange(pivot);
 
         // initial sanity check
         var values = [
@@ -2303,6 +2305,7 @@ QUnit.module('Views', {
         assert.expect(16);
         // create an action manager to test the interactions with the search view
         var readGroupCount = 0;
+
         var actionManager = await createActionManager({
             data: this.data,
             archs: {
@@ -2322,9 +2325,9 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (args.method === 'read_group') {
                     assert.step('read_group');
-                    var domain = args.kwargs.domain;
+                    const domain = args.kwargs.domain;
                     if ([0,1].indexOf(readGroupCount) !== -1) {
-                        assert.deepEqual(domain, [], 'initial domain empty');
+                        assert.deepEqual(domain, [], 'domain empty');
                     } else if ([2,3,4,5].indexOf(readGroupCount) !== -1) {
                         assert.deepEqual(domain, [['foo', '=', 12]],
                             'domain conserved when back with breadcrumbs');
@@ -2333,12 +2336,12 @@ QUnit.module('Views', {
                 }
                 if (route === '/web/dataset/search_read') {
                     assert.step('search_read');
-                    var domain = args.domain;
+                    const domain = args.domain;
                     assert.deepEqual(domain, [['customer', '=', 1], ['foo', '=', 12]],
                         'list domain is correct');
                 }
                 return this._super.apply(this, arguments);
-            }
+            },
         });
 
         await actionManager.doAction({
@@ -2347,20 +2350,23 @@ QUnit.module('Views', {
             views: [[false, 'pivot']],
         });
 
-        await testUtilsDom.click(actionManager.$('.o_filters_menu_button'));
-        await testUtilsDom.click(actionManager.$('.o_menu_item:contains("Bayou")'));
 
-        await testUtilsDom.click(actionManager.$('.o_pivot_cell_value:nth(1)'))
+        await cpHelpers.toggleFilterMenu(actionManager);
+        await cpHelpers.toggleMenuItem(actionManager, 0);
+        await testUtils.nextTick();
+
+        await testUtilsDom.click(actionManager.$('.o_pivot_cell_value:nth(1)'));
+        await testUtils.nextTick();
 
         assert.containsOnce(actionManager, '.o_list_view');
 
-        await testUtilsDom.click(actionManager.$('.o_control_panel .breadcrumb-item:first() a'));
+        await testUtilsDom.click(actionManager.$('.o_control_panel ol.breadcrumb li.breadcrumb-item').eq(0));
 
         assert.verifySteps([
             'read_group', 'read_group',
             'read_group', 'read_group',
             'search_read',
-            'read_group', 'read_group'])
+            'read_group', 'read_group']);
         actionManager.destroy();
     });
 
@@ -2387,16 +2393,12 @@ QUnit.module('Views', {
             },
         });
 
+
         // enable comparison mode
-        var $cp = pivot.$('.o_control_panel');
-        // open time range menu
-        await testUtils.dom.click($cp.find('.o_time_range_menu_button'));
-        // select 'This month' as range
-        await testUtils.fields.editInput($cp.find('.o_time_range_selector'), 'this_month');
-        // check checkbox 'Compare To'
-        await testUtils.dom.click($cp.find('.o_time_range_menu .o_comparison_checkbox'));
-        // click on 'Apply' button
-        await testUtils.dom.click($cp.find('.o_time_range_menu .o_apply_range'));
+        await cpHelpers.toggleTimeRangeMenu(pivot);
+        await cpHelpers.selectRange(pivot, 'this_month');
+        await cpHelpers.toggleTimeRangeMenuBox(pivot);
+        await cpHelpers.applyTimeRange(pivot);
 
         // initial sanity check
         var values = [
@@ -2474,8 +2476,7 @@ QUnit.module('Views', {
             [
                 '', 'Total',                                                '',
                     '2016-12-15', '2016-12-17', '2016-11-22', '2016-11-03',
-            ].join('')
-            ,
+            ].join(''),
             "The col headers should be as expected"
         );
         assert.strictEqual(
@@ -2489,24 +2490,19 @@ QUnit.module('Views', {
             "The row headers should be as expected"
         );
 
+
         // enable comparison mode
-        var $cp = pivot.$('.o_control_panel');
-        // open time range menu
-        await testUtils.dom.click($cp.find('.o_time_range_menu_button'));
-        // select 'This month' as range
-        await testUtils.fields.editInput($cp.find('.o_time_range_selector'), 'this_month');
-        // check checkbox 'Compare To'
-        await testUtils.dom.click($cp.find('.o_time_range_menu .o_comparison_checkbox'));
-        // click on 'Apply' button
-        await testUtils.dom.click($cp.find('.o_time_range_menu .o_apply_range'));
+        await cpHelpers.toggleTimeRangeMenu(pivot);
+        await cpHelpers.selectRange(pivot, 'this_month');
+        await cpHelpers.toggleTimeRangeMenuBox(pivot);
+        await cpHelpers.applyTimeRange(pivot);
 
         assert.strictEqual(
             pivot.$('th').slice(0, 7).text(),
             [
                 '', 'Total',                                                '',
                     '2016-12-15', '2016-12-17', '2016-11-22', '2016-11-03',
-            ].join('')
-            ,
+            ].join(''),
             "The col headers should be as expected"
         );
         assert.strictEqual(
@@ -2551,10 +2547,10 @@ QUnit.module('Views', {
     QUnit.test('Does not identify "false" with false as keys when creating group trees', async function (assert) {
         assert.expect(2);
 
-        this.data.partner.fields['favorite_animal'] = {string: "Favorite animal", type: "char", store: true}
-        this.data.partner.records[0]['favorite_animal'] = 'Dog'
-        this.data.partner.records[1]['favorite_animal'] = 'false'
-        this.data.partner.records[2]['favorite_animal'] = 'Undefined'
+        this.data.partner.fields.favorite_animal = {string: "Favorite animal", type: "char", store: true};
+        this.data.partner.records[0].favorite_animal = 'Dog';
+        this.data.partner.records[1].favorite_animal = 'false';
+        this.data.partner.records[2].favorite_animal = 'Undefined';
 
         var unpatchDate = patchDate(2016, 11, 20, 1, 0, 0);
         var pivot = await createView({
@@ -2571,8 +2567,7 @@ QUnit.module('Views', {
             pivot.$('th').slice(0, 2).text(),
             [
                 '', 'Total',                                                '',
-            ].join('')
-            ,
+            ].join(''),
             "The col headers should be as expected"
         );
         assert.strictEqual(
@@ -2595,7 +2590,7 @@ QUnit.module('Views', {
     QUnit.test('group bys added via control panel and expand Header do not stack', async function (assert) {
         assert.expect(8);
 
-        delete this.data.partner.fields['date'];
+        delete this.data.partner.fields.date;
 
         var pivot = await createView({
             View: PivotView,
@@ -2624,11 +2619,11 @@ QUnit.module('Views', {
             "The row headers should be as expected"
         );
 
-        var $cp = pivot.$('.o_control_panel');
+
         // open group by menu and add new groupby
-        await testUtils.dom.click($cp.find('button span.fa-bars'));
-        await testUtils.dom.click($cp.find('button.o_add_custom_group'));
-        await testUtils.dom.click($cp.find('button.o_apply_group'));
+        await cpHelpers.toggleGroupByMenu(pivot);
+        await cpHelpers.toggleAddCustomGroup(pivot);
+        await cpHelpers.applyGroup(pivot);
 
         assert.strictEqual(
             pivot.$('th').slice(0, 2).text(),
@@ -2670,10 +2665,11 @@ QUnit.module('Views', {
             "The row headers should be as expected"
         );
 
-        // open group by menu and add new groupby
-        await testUtils.dom.click($cp.find('button span.fa-bars'));
-        await testUtils.dom.click($cp.find('button.o_add_custom_group'));
-        await testUtils.dom.click($cp.find('button.o_apply_group'));
+        // open groupby menu generator and add a new groupby
+        await cpHelpers.toggleGroupByMenu(pivot);
+        await cpHelpers.toggleAddCustomGroup(pivot);
+        await cpHelpers.selectGroup(pivot, 'bar');
+        await cpHelpers.applyGroup(pivot);
 
         assert.strictEqual(
             pivot.$('th').slice(0, 2).text(),

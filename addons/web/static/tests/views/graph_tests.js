@@ -1,24 +1,26 @@
 odoo.define('web.graph_view_tests', function (require) {
 "use strict";
 
-var concurrency = require('web.concurrency');
-var controlPanelViewParameters = require('web.controlPanelViewParameters');
+var searchUtils = require('web.searchUtils');
 var GraphView = require('web.GraphView');
 var testUtils = require('web.test_utils');
 
+const cpHelpers = testUtils.controlPanel;
 var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 var patchDate = testUtils.mock.patchDate;
 
-var INTERVAL_OPTIONS = controlPanelViewParameters.INTERVAL_OPTIONS.map(o => o.optionId);
-var TIME_RANGE_OPTIONS = controlPanelViewParameters.TIME_RANGE_OPTIONS.map(o => o.optionId);
-var COMPARISON_TIME_RANGE_OPTIONS = controlPanelViewParameters.COMPARISON_TIME_RANGE_OPTIONS.map(o => o.optionId);
+const { INTERVAL_OPTIONS, TIME_RANGE_OPTIONS, COMPARISON_TIME_RANGE_OPTIONS } = searchUtils;
+
+var INTERVAL_OPTION_IDS = Object.keys(INTERVAL_OPTIONS);
+var TIME_RANGE_OPTION_IDS = Object.keys(TIME_RANGE_OPTIONS);
+var COMPARISON_TIME_RANGE_OPTION_IDS = Object.keys(COMPARISON_TIME_RANGE_OPTIONS);
 
 var f = (a, b) => [].concat(...a.map(d => b.map(e => [].concat(d, e))));
 var cartesian = (a, b, ...c) => (b ? cartesian(f(a, b), ...c) : a);
 
-var COMBINATIONS = cartesian(TIME_RANGE_OPTIONS, COMPARISON_TIME_RANGE_OPTIONS);
-var COMBINATIONS_WITH_DATE = cartesian(TIME_RANGE_OPTIONS, COMPARISON_TIME_RANGE_OPTIONS, INTERVAL_OPTIONS);
+var COMBINATIONS = cartesian(TIME_RANGE_OPTION_IDS, COMPARISON_TIME_RANGE_OPTION_IDS);
+var COMBINATIONS_WITH_DATE = cartesian(TIME_RANGE_OPTION_IDS, COMPARISON_TIME_RANGE_OPTION_IDS, INTERVAL_OPTION_IDS);
 
 QUnit.assert.checkDatasets = function (graph, keys, expectedDatasets) {
     keys = keys instanceof Array ? keys : [keys];
@@ -192,7 +194,7 @@ QUnit.module('Views', {
                         'groupby should not contain id field');
                 }
                 return this._super.apply(this, arguments);
-            }
+            },
         });
         graph.destroy();
     });
@@ -298,9 +300,9 @@ QUnit.module('Views', {
                 return this._super(route, args);
             },
         });
+        await cpHelpers.toggleMenu(graph, "Measures");
+        await cpHelpers.toggleMenuItem(graph, "Foo");
 
-        testUtils.dom.click(graph.$buttons.find('.dropdown-toggle:contains(Measures)'));
-        await testUtils.dom.click(graph.$buttons.find('.dropdown-item[data-field="foo"]'));
         assert.checkLegend(graph, 'Foo');
         assert.strictEqual(rpcCount, 2, "should have done 2 rpcs (2 readgroups)");
 
@@ -330,7 +332,7 @@ QUnit.module('Views', {
 
     QUnit.test('no content helper (pie chart)', async function (assert) {
         assert.expect(2);
-        this.data.foo.records =  []
+        this.data.foo.records =  [];
 
         var graph = await createView({
             View: GraphView,
@@ -357,14 +359,11 @@ QUnit.module('Views', {
             model: "foo",
             data: this.data,
             context: {
-                timeRangeMenuData: {
-                    //Q3 2018
-                    timeRange: ['&', ["date", ">=", "2018-07-01"],["date", "<=", "2018-09-30"]],
-                    timeRangeDescription: 'This Quarter',
-                    //Q4 2018
-                    comparisonTimeRange: ['&', ["date", ">=", "2018-10-01"],["date", "<=", "2018-12-31"]],
-                    comparisonTimeRangeDescription: 'Previous Period',
-                },
+                time_ranges: {
+                    field: 'date',
+                    range: 'this_quarter',
+                    comparisonRange: 'previous_period',
+                }
             },
             arch: '<graph type="pie">' +
                         '<field name="product_id"/>' +
@@ -443,8 +442,9 @@ QUnit.module('Views', {
             }
         }, "context should be correct");
 
-        testUtils.dom.click(graph.$buttons.find('.dropdown-toggle:contains(Measures)'));
-        await testUtils.dom.click(graph.$buttons.find('.dropdown-item[data-field="foo"]'));
+        await cpHelpers.toggleMenu(graph, "Measures");
+        await cpHelpers.toggleMenuItem(graph, "Foo");
+
         assert.deepEqual(graph.getOwnedQueryParams(), {
             context: {
                 graph_mode: 'bar',
@@ -567,7 +567,7 @@ QUnit.module('Views', {
         assert.hasClass(graph.$buttons.find('button[data-mode="line"]'),'active',
             'line chart button should be active');
         // check groupby values ('Undefined' is rejected in line chart) are in labels
-        assert.checkLabels(graph, [['red'], ['black']])
+        assert.checkLabels(graph, [['red'], ['black']]);
 
         graph.destroy();
     });
@@ -687,10 +687,11 @@ QUnit.module('Views', {
                 additionalMeasures: ['product_id'],
             },
         });
+
         // need to set the measure this way because it cannot be set in the
         // arch.
-        await testUtils.dom.click(graph.$buttons.find('.dropdown-toggle:contains(Measures)'));
-        await testUtils.dom.click(graph.$buttons.find('.dropdown-item[data-field="product_id"]'));
+        await cpHelpers.toggleMenu(graph, "Measures");
+        await cpHelpers.toggleMenuItem(graph, "Product");
 
         assert.checkLabels(graph, [['xphone'], ['xpad']]);
         assert.checkLegend(graph, 'Product');
@@ -729,8 +730,10 @@ QUnit.module('Views', {
                 additionalMeasures: ['product_id'],
             },
         });
-        assert.ok(graph.measures.product_id,
+
+        assert.ok(graph.measures.find(m => m.fieldName === 'product_id'),
             "should have product_id as measure");
+
         graph.destroy();
     });
 
@@ -766,9 +769,10 @@ QUnit.module('Views', {
                   '</graph>',
         });
 
-        assert.strictEqual(graph.$buttons.find('.o_graph_measures_list .dropdown-item:first').data('field'), 'bouh',
+        await cpHelpers.toggleMenu(graph, "Measures");
+        assert.strictEqual(graph.$buttons.find('.o_graph_measures_list .dropdown-item:first').text(), 'bouh',
             "Bouh should be the first measure");
-        assert.strictEqual(graph.$buttons.find('.o_graph_measures_list .dropdown-item:last').data('field'), '__count__',
+        assert.strictEqual(graph.$buttons.find('.o_graph_measures_list .dropdown-item:last').text(), 'Count',
             "Count should be the last measure");
 
         graph.destroy();
@@ -788,7 +792,7 @@ QUnit.module('Views', {
         });
 
         function _indexOf (label) {
-            return graph.renderer._indexOf(graph.renderer.chart.data.labels, label)
+            return graph.renderer._indexOf(graph.renderer.chart.data.labels, label);
         }
 
         assert.strictEqual(_indexOf(['Undefined']), -1);
@@ -816,7 +820,7 @@ QUnit.module('Views', {
         });
 
         function _indexOf (label) {
-            return graph.renderer._indexOf(graph.renderer.chart.data.labels, label)
+            return graph.renderer._indexOf(graph.renderer.chart.data.labels, label);
         }
 
         assert.strictEqual(_indexOf(['Undefined']), -1);
@@ -825,7 +829,7 @@ QUnit.module('Views', {
         assert.ok(_indexOf(['Undefined']) >= 0);
 
         await testUtils.dom.click(graph.$buttons.find('.o_graph_button[data-mode=pie]'));
-        var labels = graph.renderer.chart.data.labels
+        var labels = graph.renderer.chart.data.labels;
         assert.ok(labels.filter(label => /Undefined/.test(label.join(''))).length >= 1);
 
         // Undefined should not appear after switching back to line chart
@@ -908,7 +912,7 @@ QUnit.module('Views', {
             groupBy: ['product_id', 'color_id'],
         });
 
-        assert.checkLabels(graph, [['xphone'], ['xpad']])
+        assert.checkLabels(graph, [['xphone'], ['xpad']]);
         assert.checkLegend(graph, ['Undefined', 'red']);
         assert.checkDatasets(graph, ['label', 'data'], [
             {
@@ -922,7 +926,7 @@ QUnit.module('Views', {
         ]);
 
         await testUtils.dom.click(graph.$('.o_graph_button[data-mode=line]'));
-        assert.checkLabels(graph, [['xphone'], ['xpad']])
+        assert.checkLabels(graph, [['xphone'], ['xpad']]);
         assert.checkLegend(graph, ['Undefined', 'red']);
         assert.checkDatasets(graph, ['label', 'data'], [
             {
@@ -936,7 +940,7 @@ QUnit.module('Views', {
         ]);
 
         await testUtils.dom.click(graph.$('.o_graph_button[data-mode=pie]'));
-        assert.checkLabels(graph, [['xphone', 'Undefined'], ['xphone', 'red'], ['xpad', 'Undefined']])
+        assert.checkLabels(graph, [['xphone', 'Undefined'], ['xphone', 'red'], ['xpad', 'Undefined']]);
         assert.checkLegend(graph, ['xphone/Undefined', 'xphone/red', 'xpad/Undefined']);
         assert.checkDatasets(graph, ['label', 'data'], {
                 label: '',
@@ -1015,7 +1019,7 @@ QUnit.module('Views', {
                     if (exhaustiveTest) {
                         i++;
                     } else {
-                        i += Math.floor(1 + Math.random() * 20)
+                        i += Math.floor(1 + Math.random() * 20);
                     }
                     yield combination;
                 }
@@ -1033,7 +1037,7 @@ QUnit.module('Views', {
                                 self.combinationsToCheck[combination].errorMessage
                             );
                         } else {
-                            assert.checkLabels(graph, self.combinationsToCheck[combination].labels)
+                            assert.checkLabels(graph, self.combinationsToCheck[combination].labels);
                             assert.checkLegend(graph, self.combinationsToCheck[combination].legend);
                             assert.checkDatasets(graph, ['label', 'data'], self.combinationsToCheck[combination].datasets);
                         }
@@ -1041,76 +1045,62 @@ QUnit.module('Views', {
                 }
             };
 
+            const GROUPBY_NAMES = ['Date', 'Bar', 'Product', 'Color'];
+
             // time range menu is assumed to be closed
             this.selectTimeRanges = async function (timeRangeOption, comparisonTimeRangeOption) {
                 comparisonTimeRangeOption = comparisonTimeRangeOption || 'previous_period';
-                // open time range menu
-                await testUtils.dom.click($('.o_control_panel .o_time_range_menu_button'));
-                // select range
-                await testUtils.fields.editInput($('.o_control_panel .o_time_range_selector'), timeRangeOption);
-                // check checkbox 'Compare To'
-                if (!$('.o_control_panel .o_time_range_menu .o_comparison_checkbox').prop('checked')) {
-                    await testUtils.dom.click($('.o_control_panel .o_time_range_menu .o_comparison_checkbox'));
+                await cpHelpers.toggleTimeRangeMenu(document);
+                await cpHelpers.selectRange(document, timeRangeOption);
+                if (!document.querySelector('div.o_time_range_section input').checked) {
+                    await cpHelpers.toggleTimeRangeMenuBox(document);
                 }
-                // select 'Previous period' or 'Previous year' acording to comparisonTimeRangeOption
-                await testUtils.fields.editInput($('.o_control_panel .o_comparison_time_range_selector'), comparisonTimeRangeOption);
-                // Click on 'Apply' button
-                await testUtils.dom.click($('.o_control_panel .o_time_range_menu .o_apply_range'));
+                await cpHelpers.selectComparisonRange(document, comparisonTimeRangeOption);
+                await cpHelpers.applyTimeRange(document);
+                await cpHelpers.toggleTimeRangeMenu(document);
             };
 
             // groupby menu is assumed to be closed
             this.selectDateIntervalOption = async function (intervalOption) {
-                const self = this;
                 intervalOption = intervalOption || 'month';
+                const optionIndex = INTERVAL_OPTION_IDS.indexOf(intervalOption);
 
-                // open group by menu
-                await testUtils.dom.click($('.o_control_panel .o_dropdown span.fa-bars'));
-
+                await cpHelpers.toggleGroupByMenu(document);
                 let wasSelected = false;
                 if (this.keepFirst) {
-                    if ($('.o_control_panel .o_group_by_menu .o_menu_item:contains(Product) a').hasClass('selected')) {
+                    if (cpHelpers.isItemSelected(document, 2)) {
                         wasSelected = true;
-                        await testUtils.dom.click($('.o_control_panel .o_group_by_menu .o_menu_item:contains(Product)'));
+                        await cpHelpers.toggleMenuItem(document, 2);
                     }
                 }
-
-                // open option submenu
-                await testUtils.dom.click($('.o_control_panel .o_group_by_menu .o_menu_item:contains("Date")'));
-                // check interval option if not already selected
-                if (!$('.o_control_panel .o_group_by_menu .o_item_option[data-option_id="' + intervalOption + '"] a').hasClass('selected')) {
-                    await testUtils.dom.click($('.o_control_panel .o_group_by_menu .o_item_option[data-option_id="' + intervalOption + '"]'));
+                await cpHelpers.toggleMenuItem(document, 0);
+                if (!cpHelpers.isOptionSelected(document, 0, optionIndex)) {
+                    await cpHelpers.toggleMenuItemOption(document, 0, optionIndex);
                 }
-                await INTERVAL_OPTIONS.filter(oId => oId !== intervalOption).forEach(async function(oId) {
-                    if ($('.o_control_panel .o_group_by_menu .o_item_option[data-option_id="' + oId + '"] a').hasClass('selected')) {
-                        await testUtils.dom.click($('.o_control_panel .o_group_by_menu .o_item_option[data-option_id="' + oId + '"]'));
+                for (let i = 0; i < INTERVAL_OPTION_IDS.length; i++) {
+                    const oId = INTERVAL_OPTION_IDS[i];
+                    if (oId !== intervalOption && cpHelpers.isOptionSelected(document, 0, i)) {
+                        await cpHelpers.toggleMenuItemOption(document, 0, i);
                     }
-                });
+                }
 
                 if (this.keepFirst) {
-                    if (wasSelected && !$('.o_control_panel .o_group_by_menu .o_menu_item:contains(Product) a').hasClass('selected')) {
-                        await testUtils.dom.click($('.o_control_panel .o_group_by_menu .o_menu_item:contains(Product)'));
+                    if (wasSelected && !cpHelpers.isItemSelected(document, 2)) {
+                        await cpHelpers.toggleMenuItem(document, 2);
                     }
                 }
+                await cpHelpers.toggleGroupByMenu(document);
 
-                // close group by menu
-                await testUtils.dom.click($('.o_control_panel .o_dropdown span.fa-bars'));
             };
 
             // groupby menu is assumed to be closed
             this.selectGroupBy = async function (groupByName) {
-                // open group by menu
-                await testUtils.dom.click($('.o_control_panel .o_dropdown span.fa-bars'));
-                // check groupBy if not already selected
-                if (!$('.o_control_panel .o_group_by_menu .o_menu_item:contains(' + groupByName + ') a').hasClass('selected')) {
-                    await testUtils.dom.click($('.o_control_panel .o_group_by_menu .o_menu_item:contains(' + groupByName + ')'));
+                await cpHelpers.toggleGroupByMenu(document);
+                const index = GROUPBY_NAMES.indexOf(groupByName);
+                if (!cpHelpers.isItemSelected(document, index)) {
+                    await cpHelpers.toggleMenuItem(document, index);
                 }
-                // close group by menu
-                await testUtils.dom.click($('.o_control_panel .o_dropdown span.fa-bars'));
-            };
-            // groupby menu is assumed to be closed
-            this.unselectGroupBy = async function (groupByName) {
-                // check groupBy if already selected
-
+                await cpHelpers.toggleGroupByMenu(document);
             };
 
             this.setConfig = async function (combination) {
@@ -1121,7 +1111,7 @@ QUnit.module('Views', {
             };
 
             this.setMode = async function (mode) {
-                await testUtils.dom.click($('.o_control_panel .o_graph_button[data-mode=' + mode + ']'));
+                await testUtils.dom.click($(`.o_control_panel .o_graph_button[data-mode="${mode}"]`));
             };
 
             // // create an action manager to test the interactions with the search view
@@ -1148,7 +1138,7 @@ QUnit.module('Views', {
                     graph: {
                         additionalMeasures: ['product_id'],
                     }
-                }
+                },
             });
         },
         afterEach: function () {

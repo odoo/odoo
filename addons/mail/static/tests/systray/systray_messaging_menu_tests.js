@@ -105,7 +105,7 @@ QUnit.test('messaging menu widget: menu with no records', async function (assert
     assert.expect(1);
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
             services: this.services,
             mockRPC: function (route, args) {
                 if (args.method === 'message_fetch') {
@@ -114,7 +114,7 @@ QUnit.test('messaging menu widget: menu with no records', async function (assert
                 return this._super.apply(this, arguments);
             }
         });
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
     assert.hasClass(messagingMenu.$('.o_no_activity'),'o_no_activity', "should not have instance of widget");
     messagingMenu.destroy();
@@ -126,7 +126,7 @@ QUnit.test('messaging menu widget: messaging not ready', async function (assert)
     const messagingReadyProm = testUtils.makeTestPromise();
 
     const messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         async mockRPC(route, args) {
             if (route === '/mail/init_messaging') {
@@ -142,7 +142,7 @@ QUnit.test('messaging menu widget: messaging not ready', async function (assert)
             return this._super(...arguments);
         },
     });
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
     assert.verifySteps(['/mail/init_messaging:pending']);
     assert.ok(
         messagingMenu.el,
@@ -170,11 +170,11 @@ QUnit.test('messaging menu widget: messaging not ready', async function (assert)
 QUnit.test('messaging menu widget: messaging menu with 1 record', async function (assert) {
     assert.expect(3);
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
     });
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
 
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
@@ -197,14 +197,14 @@ QUnit.test('messaging menu widget: open inbox for needaction not linked to any d
     assert.expect(4);
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: {
             partner_id: 1,
         },
     });
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
 
     // Simulate received needaction message without associated document,
     // so that we have a message in inbox without a model and a resID
@@ -272,12 +272,12 @@ QUnit.test("messaging menu widget: mark as read on thread preview", async functi
     }];
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
     });
 
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
     assert.hasClass(messagingMenu.$el,'o_mail_systray_item',
         'should be the instance of widget');
@@ -335,14 +335,14 @@ QUnit.test('needaction messages in channels should appear, in addition to channe
     this.data['mail.message'].records = [needactionMessage, lastMessage];
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: {
             partner_id: partnerID,
         },
     });
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
 
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
@@ -391,14 +391,15 @@ QUnit.test('preview of message on a document + mark as read', async function (as
     this.data['mail.message'].records.push(needactionMessage);
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: {
             partner_id: partnerID,
         },
     });
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
+    await testUtils.nextTick();
     assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '1',
         "should display a counter of 1 on the messaging menu icon");
 
@@ -427,11 +428,11 @@ QUnit.test('update messaging preview on receiving a new message in channel previ
     assert.expect(8);
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
     });
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
 
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
@@ -478,11 +479,11 @@ QUnit.test('new message of type "notification" are not considered as unread mess
     assert.expect(8);
 
     const messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         data: this.data,
         services: this.services,
     });
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
     // open messaging menu
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
     assert.containsOnce(
@@ -580,7 +581,7 @@ QUnit.test('preview of inbox message not linked to document + mark as read', asy
         this.data['mail.message'].records.concat(needactionMessages);
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: {
@@ -593,7 +594,9 @@ QUnit.test('preview of inbox message not linked to document + mark as read', asy
             return this._super.apply(this, arguments);
         },
     });
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
+    await testUtils.nextTick();
+
     assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '2',
         "should display a counter of 2 on the messaging menu icon");
 
@@ -673,14 +676,14 @@ QUnit.test('grouped preview for needaction messages linked to same document', as
     this.data.initMessaging.needaction_inbox_counter = 2;
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: {
             partner_id: 44,
         },
     });
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
 
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
     var $previews = messagingMenu.$('.o_mail_preview');
@@ -719,13 +722,13 @@ QUnit.test("messaging menu widget: channel seen notification", async function (a
     };
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: { partner_id: 3 },
     });
 
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
     assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '1',
@@ -767,13 +770,13 @@ QUnit.test("messaging menu widget: no traceback when receiving channel_fetched n
     };
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: { partner_id: 3 },
     });
 
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
     assert.containsOnce(messagingMenu, '.o_new_message',
         "should have button to open blank thread window");
@@ -806,12 +809,12 @@ QUnit.test("messaging menu widget: preview with no message should be undated", a
     this.data['mail.message'].records[0].channel_ids = [];
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
     });
 
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
     assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 1,
@@ -836,12 +839,12 @@ QUnit.test("messaging menu widget: sort dated previews before undated previews",
     this.data.initMessaging.channel_slots.direct_message = [dm];
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
     });
 
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
     assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 2,
@@ -924,16 +927,19 @@ QUnit.test('global counter with channel previews', async function (assert) {
     this.data['mail.message'].records = messages;
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: {
             partner_id: 3,
         },
     });
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
+    await testUtils.nextTick();
+
     assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '2',
         "should display a counter of 2 on the messaging menu icon");
+
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
     assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 3,
@@ -965,7 +971,7 @@ QUnit.test('messaging menu widget: do not open chat window twice on preview clic
     var messageFetchDef = testUtils.makeTestPromise();
 
     var messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: { partner_id: 1 },
@@ -991,7 +997,7 @@ QUnit.test('messaging menu widget: do not open chat window twice on preview clic
             return this._super.apply(this, arguments);
         },
     });
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
 
     // Opening chat window from messaging menu (pending from `messageFetchDef`)
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
@@ -1023,7 +1029,7 @@ QUnit.test('messaging menu widget: expand on thread preview', async function (as
     });
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: { partner_id: 44 },
@@ -1036,7 +1042,7 @@ QUnit.test('messaging menu widget: expand on thread preview', async function (as
             },
         },
     });
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
 
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
     var $preview = messagingMenu.$('.o_mail_preview');
@@ -1062,7 +1068,7 @@ QUnit.test('messaging menu widget: click twice preview on slow message_fetch sho
     const messageFetchProm = testUtils.makeTestPromise();
 
     const messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: { partner_id: 1 },
@@ -1086,7 +1092,7 @@ QUnit.test('messaging menu widget: click twice preview on slow message_fetch sho
             return this._super(...arguments);
         },
     });
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
 
     // Opening chat window 1st time from messaging menu (pending from `messageFetchDef`)
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
@@ -1113,11 +1119,11 @@ QUnit.test('no code injection in message body preview', async function (assert) 
         `<p><script>throw new Error('CodeInjectionError');</script></p>`;
 
     const messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
     });
-    await messagingMenu.appendTo($('#qunit-fixture'));
+    await messagingMenu.appendTo(testUtils.prepareTarget());
     await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
     assert.containsOnce(
         messagingMenu,

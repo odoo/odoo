@@ -91,7 +91,7 @@ QUnit.test('open a document thread in a thread window', async function (assert) 
     assert.expect(6);
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: this.session,
@@ -129,7 +129,7 @@ QUnit.test('expand a document thread window', async function (assert) {
     assert.expect(4);
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: this.session,
@@ -177,7 +177,7 @@ QUnit.test('post messages in a document thread window', async function (assert) 
         res_id: 1,
     };
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: this.session,
@@ -229,7 +229,7 @@ QUnit.test('post messages in a document thread window', async function (assert) 
 QUnit.test('open, fold, unfold and close a document thread window', async function (assert) {
     assert.expect(20);
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: this.session,
@@ -285,7 +285,7 @@ QUnit.test('do not open thread window on fetch message failure', async function 
     assert.expect(4);
 
     var messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: this.session,

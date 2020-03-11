@@ -33,7 +33,7 @@ QUnit.test('messaging menu displays the Support channel', async function (assert
     assert.expect(1);
 
     var messagingMenu = new MessagingMenu();
-    addMockSupportEnvironment(messagingMenu, {
+    await addMockSupportEnvironment(messagingMenu, {
         data: this.data,
         services: this.services,
         session: this.supportParams,
@@ -51,7 +51,7 @@ QUnit.test('clicking on Support channel: channel not available', async function 
     assert.expect(9);
 
     var messagingMenu = new MessagingMenu();
-    addMockSupportEnvironment(messagingMenu, {
+    await addMockSupportEnvironment(messagingMenu, {
         data: this.data,
         mockRPC: function (route, args) {
             if (!_.string.endsWith(route, '.png')) { // ignore images
@@ -100,7 +100,7 @@ QUnit.test('clicking on Support channel: channel available', async function (ass
     assert.expect(9);
 
     var messagingMenu = new MessagingMenu();
-    addMockSupportEnvironment(messagingMenu, {
+    await addMockSupportEnvironment(messagingMenu, {
         data: this.data,
         mockRPC: function (route, args) {
             if (!_.string.endsWith(route, '.png')) { // ignore images
@@ -145,7 +145,7 @@ QUnit.test('post messages in Support channel', async function (assert) {
     assert.expect(8);
 
     var messagingMenu = new MessagingMenu();
-    addMockSupportEnvironment(messagingMenu, {
+    await addMockSupportEnvironment(messagingMenu, {
         data: this.data,
         mockRPC: function (route, args) {
             if (!_.string.endsWith(route, '.png')) { // ignore images
@@ -190,7 +190,7 @@ QUnit.test('fold Support channel', async function (assert) {
     assert.expect(11);
 
     var messagingMenu = new MessagingMenu();
-    addMockSupportEnvironment(messagingMenu, {
+    await addMockSupportEnvironment(messagingMenu, {
         data: this.data,
         mockRPC: function (route, args) {
             if (!_.string.endsWith(route, '.png')) { // ignore images
@@ -245,7 +245,7 @@ QUnit.test('restore Support channel if necessary', async function (assert) {
     assert.expect(5);
 
     var messagingMenu = new MessagingMenu();
-    addMockSupportEnvironment(messagingMenu, {
+    await addMockSupportEnvironment(messagingMenu, {
         data: this.data,
         enableSupportPoll: true,
         mockRPC: function (route, args) {
@@ -270,8 +270,8 @@ QUnit.test('restore Support channel if necessary', async function (assert) {
         "should have open a chat window");
 
     assert.verifySteps([
-        'cors: /odoo_im_support/get_support_channel',
         '/mail/init_messaging',
+        'cors: /odoo_im_support/get_support_channel',
         'cors: /odoo_im_support/fetch_messages',
     ]);
 
@@ -284,7 +284,7 @@ QUnit.test('receive messages in the Support channel', async function (assert) {
     var supportChannelID;
 
     var messagingMenu = new MessagingMenu();
-    addMockSupportEnvironment(messagingMenu, {
+    await addMockSupportEnvironment(messagingMenu, {
         data: this.data,
         enableSupportPoll: true,
         mockRPC: function (route, args) {
@@ -330,8 +330,8 @@ QUnit.test('receive messages in the Support channel', async function (assert) {
         'A message', "message is correct");
 
     assert.verifySteps([
-        'cors: /odoo_im_support/get_support_channel',
         '/mail/init_messaging',
+        'cors: /odoo_im_support/get_support_channel',
         'cors: /odoo_im_support/fetch_messages',
     ]);
 
