@@ -1147,10 +1147,9 @@ QUnit.module('Views', {
     });
 
     QUnit.test('kanban view with default_group_by', function (assert) {
-        assert.expect(7);
+        assert.expect(6);
         this.data.partner.records.product_id = 1;
         this.data.product.records.push({id: 1, display_name: "third product"});
-
         var readGroupCount = 0;
         var kanban = createView({
             View: KanbanView,
@@ -1170,7 +1169,7 @@ QUnit.module('Views', {
                     } else {
                         correctGroupBy = ['bar'];
                     }
-                    // this is done three times
+                    // this is done two times
                     assert.ok(_.isEqual(args.kwargs.groupby, correctGroupBy),
                         "groupby args should be correct");
                 }
@@ -1188,7 +1187,7 @@ QUnit.module('Views', {
 
         // simulate an update coming from the searchview, removing the previously set groupby
         kanban.update({groupBy: []});
-        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have " + 2 + " columns again");
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 0, "should have " + 0 + " columns");
         kanban.destroy();
     });
 

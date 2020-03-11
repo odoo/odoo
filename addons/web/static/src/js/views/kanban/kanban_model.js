@@ -216,11 +216,6 @@ var KanbanModel = BasicModel.extend({
      * @override
      */
     reload: function (id, options) {
-        // if the groupBy is given in the options and if it is an empty array,
-        // fallback on the default groupBy
-        if (options && options.groupBy && !options.groupBy.length) {
-            options.groupBy = this.defaultGroupedBy;
-        }
         var def = this._super(id, options);
         if (options && options.loadMoreOffset) {
             return def;
