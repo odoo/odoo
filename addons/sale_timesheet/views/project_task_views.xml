@@ -14,8 +14,8 @@
                     <group>
                         <field name="display_create_order" invisible="1"/>
                         <field name="billable_type" invisible="1"/>
-                        <field name="sale_order_id" attrs="{'invisible': [('billable_type', '=', 'no')]}"/>
-                        <field name="sale_line_id" attrs="{'invisible': [('billable_type', '=', 'no')]}" context="{'create': False, 'edit': False, 'delete': False}"/>
+                        <field name="sale_order_id" attrs="{'invisible': [('billable_type', '=', 'no')], 'readonly': [('sale_order_id', '!=', False)]}" context="{'default_partner_id': partner_id}"/>
+                        <field name="sale_line_id" attrs="{'invisible': [('billable_type', '=', 'no')], 'readonly': [('sale_order_id', '=', False)]}" options="{'no_create': True, 'no_edit': True, 'delete': False}"/>
                     </group>
                     <field name="sale_line_employee_ids">
                         <tree editable="top">
