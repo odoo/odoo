@@ -1453,6 +1453,27 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(count(message), 1)
         self.assertEqual(count(message1), 0)
 
+    def test_85_binary_guess_zip(self):
+        from odoo.addons.base.tests.test_mimetypes import ZIP
+        # Regular ZIP files can be uploaded by non-admin users
+        self.env['test_new_api.binary_svg'].with_user(
+            self.env.ref('base.user_demo'),
+        ).create({
+            'name': 'Test without attachment',
+            'image_wo_attachment': base64.b64decode(ZIP),
+        })
+
+    def test_86_text_base64_guess_svg(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        with self.assertRaises(UserError) as e:
+            self.env['test_new_api.binary_svg'].with_user(
+                self.env.ref('base.user_demo'),
+            ).create({
+                'name': 'Test without attachment',
+                'image_wo_attachment': SVG.decode("utf-8"),
+            })
+        self.assertEqual(e.exception.name, 'Only admins can upload SVG files.')
+
     def test_90_binary_svg(self):
         from odoo.addons.base.tests.test_mimetypes import SVG
         # This should work without problems
