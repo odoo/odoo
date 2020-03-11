@@ -28,8 +28,8 @@
 # Simo Suurla <simo@suurla.fi>, 2019
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2019
 # Henri Komulainen <henri.komulainen@web-veistamo.fi>, 2019
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
 # 
 msgid ""
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-01-03 14:57+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -405,6 +405,8 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                                <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Asiakkaan</span>\n"
+"                                <span class=\"o_stat_text\">Esikatselu</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -1610,7 +1612,7 @@ msgstr "Kielletyt arvot ei-myymättömällä myyntitilauksen rivillä"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__auth_signup_uninvited__b2c
 msgid "Free sign up"
-msgstr ""
+msgstr "Vapaa rekisteröityminen"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -2338,7 +2340,7 @@ msgstr "Lukemattomia viestejä"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__auth_signup_uninvited__b2b
 msgid "On invitation"
-msgstr ""
+msgstr "Vain kutsulla"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2610,7 +2612,7 @@ msgstr "Maksutapa"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__reference
 msgid "Payment Ref."
-msgstr "Maksu Ref."
+msgstr "Maksun viite"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__payment_term_id
@@ -2910,7 +2912,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Quotations"
-msgstr "tarjousta"
+msgstr "Tarjoukset"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3441,7 +3443,7 @@ msgstr "Näytä kaikki tietueet joissa on toimenpide myöhässä."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show margins on orders"
-msgstr "Näytä tilausten marginaalit"
+msgstr "Näytä tilausten katteet"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3917,6 +3919,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"Lähettääksesi kutsuja B2B-tilassa, avaa kontakti tai valitse useita "
+"listanäkymässä, ja klikkaa \"Portaalin käyttöoikeuksien hallinta\" "
+"\"Toiminto\"-pudotusvalikosta."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4339,4 +4344,15 @@ msgstr "tyyppi: [(nimi, määrä, perus, muokattu arvo, muokattu perusarvo)]"
 #: code:addons/sale/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "uninvoiced sales orders"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
+msgid "Mark Quotation as Sent"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/sale.py:0
+#, python-format
+msgid "Only draft orders can be marked as sent directly."
 msgstr ""

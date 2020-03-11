@@ -3,7 +3,7 @@
 # 	* website_sale
 # 
 # Translators:
-# Moshe Flam <pashute@gmail.com>, 2019
+# Leandro Noijovich <eliel.sorcerer@gmail.com>, 2019
 # yoav sc <yoav19991@gmail.com>, 2019
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2019
 # yacov mosbacher <ymosba@gmail.com>, 2019
@@ -12,7 +12,6 @@
 # hed shefetr <hed@laylinetech.com>, 2019
 # Amit Spilman <amit@laylinetech.com>, 2019
 # Martin Trigaux, 2019
-# Leandro Noijovich <eliel.sorcerer@gmail.com>, 2019
 # Yihya Hugirat <hugirat@gmail.com>, 2019
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
@@ -34,23 +33,23 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "\" category."
-msgstr ""
+msgstr "\" קטגוריה."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.option_collapse_categories_recursive
 msgid "#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}"
-msgstr ""
+msgstr "#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "&amp; Shipping"
-msgstr ""
+msgstr "ומשלוח"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "/shop/address"
-msgstr ""
+msgstr "/חנות/כתובת"
 
 #. module: website_sale
 #: model:product.template.attribute.value,name:website_sale.product_1_attribute_3_value_1
@@ -178,12 +177,12 @@ msgstr "<b>תקשורת: </b>"
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "<b>Shipping: </b>"
-msgstr ""
+msgstr "<b>משלוח: </b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 msgid "<b>Your order: </b>"
-msgstr ""
+msgstr "<b>ההזמנה שלך: </b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -193,12 +192,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_buy_now
 msgid "<i class=\"fa fa-bolt\"/> Buy Now"
-msgstr ""
+msgstr "<i class=\"fa fa-bolt\"/> קנה עכשיו"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "<i class=\"fa fa-cart-plus\"/> Choose number of products"
-msgstr ""
+msgstr "<i class=\"fa fa-cart-plus\"/> בחר את מספר המוצרים"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
@@ -335,6 +334,8 @@ msgid ""
 "<span class=\"o_form_label\">Abandoned Carts</span>\n"
 "                            <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
+"<span class=\"o_form_label\">עגלות נטושות</span>\n"
+"                            <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -359,6 +360,8 @@ msgid ""
 "<span>Confirm</span>\n"
 "                                    <i class=\"fa fa-chevron-right\"/>"
 msgstr ""
+"<span>אשר</span>\n"
+"                                    <i class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -471,12 +474,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Abandoned"
-msgstr ""
+msgstr "נטוש"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__is_abandoned_cart
 msgid "Abandoned Cart"
-msgstr ""
+msgstr "עגלה נטושה"
 
 #. module: website_sale
 #. openerp-web
@@ -487,7 +490,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_sale.menu_orders_abandoned_orders
 #, python-format
 msgid "Abandoned Carts"
-msgstr ""
+msgstr "עגלות נטושות"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.crm_team_salesteams_view_kanban_inherit_website_sale
@@ -525,7 +528,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__accessory_product_ids
 msgid "Accessory Products"
-msgstr "פריט נלווה"
+msgstr "מוצרים נלווים"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__acc_number
@@ -550,7 +553,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_recently_viewed.xml:0
 #, python-format
 msgid "Add to Cart"
-msgstr "הוספה לסל"
+msgstr "הוסף לסל"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -588,7 +591,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__alternative_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__alternative_product_ids
 msgid "Alternative Products"
-msgstr "פריט חלופי"
+msgstr "מוצרים חלופיים"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.recommended_products
@@ -689,8 +692,8 @@ msgid ""
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
 "הגדל את המכירות שלך עם שני סוגים של תוכניות הנחה: מבצעים וקודי קופונים. ניתן"
-" לקבוע תנאים ספציפיים (מוצרים, לקוחות, סכום רכישה מינימלי, תקופה). תגמולים "
-"יכולים להיות הנחות (אחוז או סכום) או מוצרים בחינם."
+" לקבוע תנאים מסוימים (מוצרים, לקוחות, סכום רכישה מינימלי, תקופה). הטבות "
+"יכולות להיות הנחות (אחוז או סכום) או מוצרים בחינם."
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes
@@ -713,7 +716,7 @@ msgstr "קמפיינים"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr ""
+msgstr "האם ניתן להתקרב לתמונה 1024"
 
 #. module: website_sale
 #. openerp-web
@@ -731,7 +734,7 @@ msgstr "כמות בסל"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_recovery_mail_template
 #: model:ir.model.fields,field_description:website_sale.field_website__cart_recovery_mail_template_id
 msgid "Cart Recovery Email"
-msgstr ""
+msgstr "דוא\"ל לשחזור עגלה"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -741,7 +744,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__cart_recovery_email_sent
 msgid "Cart recovery email already sent"
-msgstr ""
+msgstr "דוא\"ל לשחזור העגלה כבר נשלח"
 
 #. module: website_sale
 #. openerp-web
@@ -769,7 +772,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Categories"
-msgstr "קטיגוריות"
+msgstr "קטגוריות"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -791,7 +794,7 @@ msgstr "כסאות"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
-msgstr "קטגוריות ילדים"
+msgstr "תתי קטגוריות"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
@@ -918,7 +921,7 @@ msgstr "אשר הזמנה"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Confirm Order <span class=\"fa fa-chevron-right\"/>"
-msgstr ""
+msgstr "אשר הזמנה <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #. openerp-web
@@ -930,7 +933,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Confirmed"
-msgstr "אושר"
+msgstr "מאושר"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -948,23 +951,23 @@ msgstr "איש קשר"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Conversion"
-msgstr ""
+msgstr "המרה"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_country
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Country"
-msgstr "מדינה"
+msgstr "ארץ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Country..."
-msgstr "ארץ .."
+msgstr "ארץ..."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
 msgid "Create a new product"
-msgstr "יצירת מוצר חדש"
+msgstr "צור מוצר חדש"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__create_uid
@@ -985,7 +988,7 @@ msgstr "נוצר ב-"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Creation Date"
-msgstr "תאריך היווצרות"
+msgstr "תאריך יצירה"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1010,7 +1013,7 @@ msgstr "לקוחות"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "DHL"
-msgstr ""
+msgstr "DHL"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__currency_id
@@ -1052,7 +1055,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_description
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_description
 msgid "Description for the website"
-msgstr "תיאור עבור האתר"
+msgstr "תיאור עבור אתר האינטרנט"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks
@@ -1063,7 +1066,7 @@ msgstr "שולחנות עבודה"
 #: model:ir.model.fields,help:website_sale.field_product_product__website_sequence
 #: model:ir.model.fields,help:website_sale.field_product_template__website_sequence
 msgid "Determine the display order in the Website E-commerce"
-msgstr "הגדרת סדר תצוגה לחנות באתר האינטרנט"
+msgstr "קבע את סדר התצוגה במסחר אלקטרוני באתר האינטרנט"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_digest_digest
@@ -1103,13 +1106,13 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
 #, python-format
 msgid "Display product"
-msgstr ""
+msgstr "הצג מוצר"
 
 #. module: website_sale
 #: code:addons/website_sale/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "אין לך גישה, לדלג על נתונים אלה עבור אל תקציר דוא\"ל של המשתמשים"
+msgstr "אין לך גישה, דלג על נתונים אלה עבור תקציר דוא\"ל של המשתמשים"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_acquirer_state__done
@@ -1138,7 +1141,7 @@ msgstr ""
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers
 msgid "Drawers"
-msgstr ""
+msgstr "מגירות"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
@@ -1153,7 +1156,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Easypost"
-msgstr ""
+msgstr "Easypost"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -1165,12 +1168,12 @@ msgstr "ערוך"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Edit the price of this product by clicking on the amount."
-msgstr "עריכת המחיר לפריט זה על ידי לחיצה על הסכום"
+msgstr "ערוך את מחיר המוצר על ידי לחיצה על הסכום."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
 msgid "Edit this address"
-msgstr ""
+msgstr "ערוך כתובת זו"
 
 #. module: website_sale
 #. openerp-web
@@ -1212,7 +1215,7 @@ msgstr ""
 #: code:addons/website_sale/models/product.py:0
 #, python-format
 msgid "Error ! You cannot create recursive categories."
-msgstr "שגיאה! לא ניתן ליצור קטגוריות רקורסיביות"
+msgstr "שגיאה! לא ניתן ליצור קטגוריות רקורסיביות."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info_option
@@ -1239,12 +1242,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "FedEx"
-msgstr ""
+msgstr "FedEx"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "From Website"
-msgstr ""
+msgstr "מאתר אינטרנט"
 
 #. module: website_sale
 #. openerp-web
@@ -1262,17 +1265,17 @@ msgstr "הפק את החשבונית באופן אוטומטי לאחר אישו
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Give us your feedback"
-msgstr ""
+msgstr "תן לנו את המשוב שלך"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__sequence
 msgid "Gives the sequence order when displaying a list of product categories."
-msgstr "קובע את המקום הסידורי ברשימת סוגי מוצר."
+msgstr "נותן את סדר הרצף בעת הצגת רשימה של קטגוריות מוצרים."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Grant discounts on sales order lines"
-msgstr "הענקת הנחות בהזמנת מכירה"
+msgstr "הענק הנחות בשורות הזמנת לקוח"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
@@ -1303,7 +1306,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_sale_note
 msgid "I agree to the"
-msgstr ""
+msgstr "אני מסכים ל"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.reduction_code
@@ -1316,7 +1319,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_style__id
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__id
 msgid "ID"
-msgstr "תעודה מזהה"
+msgstr "מזהה"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
@@ -1367,7 +1370,7 @@ msgstr "תמונה 512"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
-msgstr ""
+msgstr "שם תמונה"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__module_website_sale_stock
@@ -1378,7 +1381,7 @@ msgstr ""
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr ""
+msgstr "דוא\"ל שגוי! אנא הכנס כתובת דוא\"ל נכונה."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_stock
@@ -1394,7 +1397,7 @@ msgstr "חשבוניות"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_account
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Invoicing"
-msgstr "הפקת חשבוניות"
+msgstr "חיוב"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1410,12 +1413,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
 msgid "Journal Entries"
-msgstr "רשומות יומן"
+msgstr "פקודות יומן"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_acquirer_state__just_done
 msgid "Just done"
-msgstr "הרגע נעשה"
+msgstr "הרגע בוצע"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total_value
@@ -1425,7 +1428,7 @@ msgstr ""
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps
 msgid "Lamps"
-msgstr ""
+msgstr "מנורות"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image____last_update
@@ -1535,14 +1538,14 @@ msgstr "שיטה"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_multimedia
 msgid "Multimedia"
-msgstr ""
+msgstr "מולטימדיה"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale.js:0
 #, python-format
 msgid "My Cart"
-msgstr ""
+msgstr "העגלה שלי"
 
 #. module: website_sale
 #. openerp-web
@@ -1563,12 +1566,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Name: A to Z"
-msgstr ""
+msgstr "שם: א' עד ת'"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Name: Z to A"
-msgstr ""
+msgstr "שם: ת' עד א'"
 
 #. module: website_sale
 #. openerp-web
@@ -1576,7 +1579,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:0
 #, python-format
 msgid "New Product"
-msgstr "פריט חדש"
+msgstr "מוצר חדש"
 
 #. module: website_sale
 #. openerp-web
@@ -1588,38 +1591,38 @@ msgstr "הבא"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Next <span class=\"fa fa-chevron-right\"/>"
-msgstr ""
+msgstr "הבא <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "No abandoned carts found"
-msgstr ""
+msgstr "לא נמצאו עגלות נטושות"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined"
-msgstr ""
+msgstr "לא מוגדר מוצר"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined in category \""
-msgstr ""
+msgstr "אין מוצר מוגדר בקטגוריה \""
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
 msgid "No product views yet for this visitor"
-msgstr ""
+msgstr "אין עדיין צפיות במוצר עבור מבקר זה"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No results"
-msgstr ""
+msgstr "אין תוצאות"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No results for \""
-msgstr ""
+msgstr "אין תוצאות עבור \""
 
 #. module: website_sale
 #. openerp-web
@@ -1636,12 +1639,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_acquirer_state__not_done
 msgid "Not done"
-msgstr "לא מוכן"
+msgstr "לא בוצע"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_count
 msgid "Number of Abandoned Carts"
-msgstr ""
+msgstr "מספר העגלות הנטושות"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_ppr
@@ -1663,7 +1666,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale.xml:0
 #, python-format
 msgid "OK"
-msgstr "אוקי"
+msgstr "בסדר"
 
 #. module: website_sale
 #. openerp-web
@@ -1675,17 +1678,17 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_report_sales
 msgid "Online Sales"
-msgstr ""
+msgstr "מכירות מקוונות"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_report_action_dashboard
 msgid "Online Sales Analysis"
-msgstr ""
+msgstr "ניתוח מכירות מקוונות"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__only_services
 msgid "Only Services"
-msgstr ""
+msgstr "שירותים בלבד"
 
 #. module: website_sale
 #: code:addons/website_sale/models/product.py:0
@@ -1705,7 +1708,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Open your website app here."
-msgstr ""
+msgstr "פתח את יישום אתר האינטרנט שלך כאן."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -1718,18 +1721,18 @@ msgstr ""
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "Option for: %s"
-msgstr ""
+msgstr "אפשרות עבור: %s"
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "Option: %s"
-msgstr ""
+msgstr "אפשרות: %s"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Optional Products"
-msgstr "פריטים אופציונליים"
+msgstr "מוצרים אופציונליים"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__option_line_ids
@@ -1739,7 +1742,7 @@ msgstr "אפשרויות מקושרות"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "Or scan me with your banking app."
-msgstr ""
+msgstr "או סרוק אותי עם היישום הבנקאי שלך."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -1752,14 +1755,14 @@ msgstr "תאריך הזמנה"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__website_order_line
 msgid "Order Lines displayed on Website"
-msgstr "סדר שורות תצוגה בחנות האתר"
+msgstr "שורות הזמנה מוצגות באתר האינטרנט"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_sale_order__website_order_line
 msgid ""
 "Order Lines to be displayed on the website. They should not be used for "
 "computation purpose."
-msgstr "סידור תצוגת השורות באתר. אלה יכולות לשמש לצרכי מיחשוב"
+msgstr "שורות הזמנה שיוצגו באתר. אין להשתמש בהן למטרת חישוב."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
@@ -1808,12 +1811,12 @@ msgstr "הזמנות"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Orders Followup"
-msgstr ""
+msgstr "מעקב הזמנות"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_order_action_to_invoice
 msgid "Orders To Invoice"
-msgstr ""
+msgstr "הזמנות לחיוב"
 
 #. module: website_sale
 #. openerp-web
@@ -1828,17 +1831,17 @@ msgstr "הזמנות לחיוב"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Orders/Day"
-msgstr ""
+msgstr "הזמנות /יום"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr ""
+msgstr "אסימון מזהה PDT"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
 msgid "Parent Category"
-msgstr "קטגורית הורה"
+msgstr "קטגורית אב"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_path
@@ -1853,12 +1856,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Pay Now"
-msgstr "לשלם עכשיו"
+msgstr "שלם עכשיו"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Pay Now <span class=\"fa fa-chevron-right\"/>"
-msgstr ""
+msgstr "שלם עכשיו <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -1868,7 +1871,7 @@ msgstr "שלם עם"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_acquirers
 msgid "Payment Acquirers"
-msgstr "תשלום רוכשים"
+msgstr "ספקי שירות תשלום"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_icons
@@ -1900,7 +1903,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_user_type
 msgid "Paypal User Type"
-msgstr ""
+msgstr "סוג משתמש Paypal "
 
 #. module: website_sale
 #. openerp-web
@@ -1918,7 +1921,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Please proceed your current cart."
-msgstr ""
+msgstr "אנא המשך עם העגלה הנוכחית שלך."
 
 #. module: website_sale
 #. openerp-web
@@ -1931,19 +1934,19 @@ msgstr "קודם"
 #: code:addons/website_sale/controllers/backend.py:0
 #, python-format
 msgid "Previous Month"
-msgstr ""
+msgstr "חודש שעבר"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/backend.py:0
 #, python-format
 msgid "Previous Week"
-msgstr ""
+msgstr "שבוע שעבר "
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/backend.py:0
 #, python-format
 msgid "Previous Year"
-msgstr ""
+msgstr "שנה שעברה"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -1966,7 +1969,7 @@ msgstr "מחירון"
 #: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Pricelists"
-msgstr "מחירון"
+msgstr "מחירונים"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1982,7 +1985,7 @@ msgstr "הדפס"
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "Process the order once the payment is received."
-msgstr ""
+msgstr "עבד את ההזמנה לאחר קבלת התשלום."
 
 #. module: website_sale
 #. openerp-web
@@ -2005,7 +2008,7 @@ msgstr "קטגורית מוצר"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_comparison
 msgid "Product Comparison Tool"
-msgstr ""
+msgstr "כלי השוואת מוצרים"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_image
@@ -2016,7 +2019,7 @@ msgstr "תמונת מוצר"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Product Images"
-msgstr ""
+msgstr "תמונות מוצר"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -2036,13 +2039,13 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_style
 msgid "Product Style"
-msgstr ""
+msgstr "סגנון מוצר"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_tmpl_id
 msgid "Product Template"
-msgstr "תבנית למוצר "
+msgstr "תבנית מוצר "
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template_attribute_line
@@ -2057,17 +2060,17 @@ msgstr "תבנית מוצר"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_variant_id
 msgid "Product Variant"
-msgstr "גרסת מוצר"
+msgstr "וריאנט מוצר"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.product_catalog_variants
 msgid "Product Variants"
-msgstr "וריאנט מוצר"
+msgstr "וריאנטים של מוצר"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__visitor_product_count
 msgid "Product Views"
-msgstr ""
+msgstr "צפיות במוצר"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.website_sale_visitor_product_action
@@ -2077,7 +2080,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.404
 msgid "Product not found!"
-msgstr "הפריט לא נמצא !"
+msgstr "המוצר לא נמצא!"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2087,7 +2090,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_form
 msgid "Product views"
-msgstr ""
+msgstr "צפיות במוצר"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
@@ -2105,17 +2108,17 @@ msgstr "מוצרים"
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:0
 #, python-format
 msgid "Products Search Bar"
-msgstr ""
+msgstr "סרגל חיפוש מוצרים"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
 msgid "Products Views"
-msgstr ""
+msgstr "צפיות במוצרים"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Promote"
-msgstr "קידום"
+msgstr "קדם"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2141,27 +2144,27 @@ msgstr "פורסם"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Push down"
-msgstr "למטה"
+msgstr "דחוף למטה"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Push to bottom"
-msgstr "לתחתית"
+msgstr "דחוף לתחתית"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Push to top"
-msgstr "עד למעלה"
+msgstr "דחוף לחלק העליון"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Push up"
-msgstr "למעלה"
+msgstr "דחוף למעלה"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "Qty:"
-msgstr ""
+msgstr "כמות:"
 
 #. module: website_sale
 #. openerp-web
@@ -2187,17 +2190,17 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email Sent"
-msgstr ""
+msgstr "דוא\"ל שחזור נשלח"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email to Send"
-msgstr ""
+msgstr "דוא\"ל שחזור לשליחה"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 msgid "Remove from cart"
-msgstr ""
+msgstr "הסר מהעגלה"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -2214,22 +2217,22 @@ msgstr "דוחות"
 #: model:ir.model.fields,help:website_sale.field_product_product__website_id
 #: model:ir.model.fields,help:website_sale.field_product_public_category__website_id
 msgid "Restrict publishing to this website."
-msgstr "הגבל פרסום באתר זה."
+msgstr "הגבל את הפרסום לאתר זה."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Return to Cart"
-msgstr ""
+msgstr "החזר לעגלה"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.404
 msgid "Return to the product list."
-msgstr "חזרה לרשימת הפריטים."
+msgstr "חזור לרשימת המוצרים."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "Review Order"
-msgstr ""
+msgstr "בדוק הזמנה"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__is_seo_optimized
@@ -2244,7 +2247,7 @@ msgstr "מכירה"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_graph_website
 msgid "Sale Report"
-msgstr ""
+msgstr "דוח מכירה"
 
 #. module: website_sale
 #. openerp-web
@@ -2275,7 +2278,7 @@ msgstr "שורת הזמנת לקוח"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_pivot_website
 msgid "Sales Report"
-msgstr ""
+msgstr "דוח מכירות"
 
 #. module: website_sale
 #. openerp-web
@@ -2322,7 +2325,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
 #, python-format
 msgid "Search filter to use"
-msgstr ""
+msgstr "חיפוש מסנן לשימוש"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_products_searchbar
@@ -2341,7 +2344,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
 msgid "Select this address"
-msgstr ""
+msgstr "בחר כתובת זו"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__selectable
@@ -2361,29 +2364,29 @@ msgstr "מכור במספר מטבעות"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr "מכור וריאנטים של מוצר באמצעות תכונות (גודל, צבע וכו ')"
+msgstr "מכור וריאנטים של מוצר באמצעות תכונות (גודל, צבע וכו')"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_actions_server_sale_cart_recovery_email
 msgid "Send a Cart Recovery Email"
-msgstr ""
+msgstr "שלח דוא\"ל לשחזור עגלה"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
 msgid "Send a Recovery Email"
-msgstr ""
+msgstr "שלח דוא\"ל לשחזור"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Send a recovery email to visitors who haven't completed their order."
-msgstr ""
+msgstr "שלח דוא\"ל לשחזור למבקרים שלא השלימו את ההזמנה."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Send a recovery email when a cart is abandoned"
-msgstr ""
+msgstr "שלח דוא\"ל לשחזור כאשר העגלה ננטשת"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__sequence
@@ -2413,7 +2416,7 @@ msgstr "משלוח"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
 msgid "Shipping Address"
-msgstr ""
+msgstr "כתובת לאספקה"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2423,7 +2426,7 @@ msgstr "עלויות משלוח"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__sale_delivery_settings
 msgid "Shipping Management"
-msgstr ""
+msgstr "ניהול משלוחים"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -2435,12 +2438,12 @@ msgstr "חנות"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
 msgid "Shop - Checkout"
-msgstr "קופת החנות"
+msgstr "Shop - Checkout"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Shop - Confirmed"
-msgstr "חנות - אישור הזמנה"
+msgstr "חנות - מאושר"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -2455,12 +2458,12 @@ msgstr "עגלת קניות"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories
 msgid "Show categories"
-msgstr ""
+msgstr "הצג קטגוריות"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
 msgid "Show options"
-msgstr ""
+msgstr "הצג אפשרויות"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -2496,39 +2499,39 @@ msgstr "נמכר"
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Some required fields are empty."
-msgstr ""
+msgstr "חלק משדות החובה ריקים."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.404
 msgid "Sorry, this product is not available anymore."
-msgstr "אופס, פריט זה אינו זמין יותר"
+msgstr "מצטערים, מוצר זה אינו זמין יותר."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Sort by"
-msgstr ""
+msgstr "מיין לפי"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Sorting by :"
-msgstr ""
+msgstr "מיון לפי:"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Sources"
-msgstr ""
+msgstr "מקורות"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "State / Province"
-msgstr "אזור \\ מחוז"
+msgstr "מדינה \\ מחוז"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "State / Province..."
-msgstr "אזור \\ מחוז ..."
+msgstr "מדינה \\ מחוז ..."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
@@ -2543,17 +2546,17 @@ msgstr "סטטוס"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Street 2"
-msgstr ""
+msgstr "רחוב 2"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Street <span class=\"d-none d-md-inline\"> and Number</span>"
-msgstr ""
+msgstr "רחוב <span class=\"d-none d-md-inline\"> ומספר</span>"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr "Stripe מפתח שניתן לפרסם"
+msgstr "מפתח Stripe שניתן לפרסם"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__stripe_secret_key
@@ -2588,7 +2591,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
 msgid "Suggested Accessories:"
-msgstr ""
+msgstr "אביזרים מוצעים:"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
@@ -2608,12 +2611,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
 msgid "Terms &amp;amp; Conditions"
-msgstr ""
+msgstr "תנאים והגבלות"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Thank you for your order."
-msgstr "תודה רבה לך על ההזמנה."
+msgstr "תודה על הזמנתך."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
@@ -2636,20 +2639,20 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
 msgid "The full URL to access the document through the website."
-msgstr "כתובת האתר המלאה כדי לגשת למסמך דרך האתר."
+msgstr "כתובת האתר המלאה לגישה למסמך דרך אתר האינטרנט."
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid ""
 "The given combination does not exist therefore it cannot be added to cart."
-msgstr ""
+msgstr "השילוב הנתון אינו קיים ולכן לא ניתן להוסיף אותו לעגלה."
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "The given product does not exist therefore it cannot be added to cart."
-msgstr ""
+msgstr "המוצר הנתון אינו קיים ולכן לא ניתן להוסיף אותו לעגלה."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2671,25 +2674,25 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "The time to mark a cart as abandoned can be changed in the settings."
-msgstr ""
+msgstr "ניתן לשנות בהגדרות את הזמן לסימון עגלה כנטושה."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_orders_ecommerce
 msgid "There is no confirmed order from the website"
-msgstr ""
+msgstr "אין הזמנה מאושרת מאתר האינטרנט"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "There is no recent confirmed order."
-msgstr ""
+msgstr "אין הזמנה מאושרת לאחרונה."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "There is no unpaid order from the website yet"
-msgstr ""
+msgstr "אין עדיין הזמנות מאתר האינטרנט שלא שולמו"
 
 #. module: website_sale
 #. openerp-web
@@ -2701,7 +2704,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "This adds the choice of a currency on pricelists."
-msgstr "זה מוסיף את הבחירה של מטבע במחירונים"
+msgstr "זה מוסיף את הבחירה של מטבע במחירונים."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -2724,7 +2727,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "This is your current cart."
-msgstr ""
+msgstr "זו העגלה הנוכחית שלך."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -2749,22 +2752,22 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_visitor__product_count
 msgid "Total number of product viewed"
-msgstr ""
+msgstr "סה\"כ מוצרים שנצפו"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_visitor__visitor_product_count
 msgid "Total number of views on products"
-msgstr ""
+msgstr "סה\"כ צפיות במוצרים"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "True"
-msgstr ""
+msgstr "נכון"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "UPS"
-msgstr ""
+msgstr "UPS"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_image__video_url
@@ -2774,7 +2777,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "USPS"
-msgstr ""
+msgstr "USPS"
 
 #. module: website_sale
 #: model:product.product,uom_name:website_sale.product_product_1
@@ -2786,7 +2789,7 @@ msgstr "יחידות"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Unpaid"
-msgstr ""
+msgstr "לא שולם"
 
 #. module: website_sale
 #. openerp-web
@@ -2796,7 +2799,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
 #, python-format
 msgid "Unpaid Orders"
-msgstr ""
+msgstr "הזמנות שלא שולמו"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
@@ -2815,7 +2818,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Upload a file from your local library."
-msgstr ""
+msgstr "העלה קובץ מהספרייה המקומית שלך."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__video_url
@@ -2826,18 +2829,18 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "View Cart ("
-msgstr ""
+msgstr "צפה בעגלה ("
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_track
 msgid "Visited Pages"
-msgstr ""
+msgstr "דפים שביקרו בהם"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_ids
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_kanban
 msgid "Visited Products"
-msgstr ""
+msgstr "מוצרים שביקרו בהם"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_graph
@@ -2854,7 +2857,7 @@ msgstr ""
 #: model:product.product,name:website_sale.product_product_1b
 #: model:product.template,name:website_sale.product_product_1b_product_template
 msgid "Warranty"
-msgstr "אחראיות"
+msgstr "אחריות"
 
 #. module: website_sale
 #: model:product.product,description_sale:website_sale.product_product_1
@@ -2876,7 +2879,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_products_searchbar
 msgid "We have amazing products in our shop, check them now !"
-msgstr ""
+msgstr "יש לנו מוצרים מדהימים בחנות שלנו, בדוק אותם עכשיו!"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website
@@ -2889,7 +2892,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "Website"
-msgstr "אתר"
+msgstr "אתר אינטרנט"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_sale_payment_acquirer_onboarding_wizard
@@ -2901,7 +2904,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__public_categ_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__public_categ_ids
 msgid "Website Product Category"
-msgstr ""
+msgstr "קטגורית מוצרים באתר האינטרנט"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
@@ -2912,37 +2915,37 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_sequence
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_sequence
 msgid "Website Sequence"
-msgstr ""
+msgstr "רצף אתר אינטרנט"
 
 #. module: website_sale
 #: model:ir.actions.act_url,name:website_sale.action_open_website
 msgid "Website Shop"
-msgstr "חנות האינטרנט"
+msgstr "חנות אתר האינטרנט"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_url
 msgid "Website URL"
-msgstr "כתובת אתר (url)"
+msgstr "כתובת אתר אינטרנט"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_visitor
 msgid "Website Visitor"
-msgstr ""
+msgstr "מבקר אתר אינטרנט"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_description
 msgid "Website meta description"
-msgstr "תיאור מקוצר לאתר ( meta description)"
+msgstr "מידע על תיאור אתר אינטרנט"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_keywords
 msgid "Website meta keywords"
-msgstr "מילות מפתח לאתר (meta keywords)"
+msgstr "מידע על מילות מפתח של אתר אינטרנט"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_title
 msgid "Website meta title"
-msgstr "שורת כותרת לאתר (meta title)"
+msgstr "מידע כותרת של אתר אינטרנט"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_og_img
@@ -2952,7 +2955,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_account_move__website_id
 msgid "Website through which this invoice was created."
-msgstr ""
+msgstr "אתר אינטרנט דרכו נוצרה חשבונית זו."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_sale_order__website_id
@@ -2972,7 +2975,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_wishlist
 msgid "Wishlists"
-msgstr ""
+msgstr "רשימת מוצרים"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2999,17 +3002,17 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
-msgstr ""
+msgstr "אין לך שום הזמנה מאתר האינטרנט"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_order_action_to_invoice
 msgid "You don't have any order to invoice from the website"
-msgstr ""
+msgstr "אין לך שום הזמנה לחיוב מאתר האינטרנט"
 
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
 msgid "You left items in your cart!"
-msgstr ""
+msgstr "השארת פריטים בעגלה שלך!"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
@@ -3030,47 +3033,49 @@ msgid ""
 "Your Address\n"
 "                                        <small> or </small>"
 msgstr ""
+"הכתובת שלך\n"
+"                                        <small> או </small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Your Reference"
-msgstr ""
+msgstr "המזהה שלך"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 msgid "Your cart is empty!"
-msgstr "סל הקניות ריק !"
+msgstr "העגלה שלך ריקה!"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Your previous cart has already been completed."
-msgstr ""
+msgstr "העגלה הקודמת שלך כבר הושלמה."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Zip Code"
-msgstr ""
+msgstr "מיקוד"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
 #, python-format
 msgid "and allow to search in"
-msgstr ""
+msgstr "ולאפשר חיפוש ב"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "bpost"
-msgstr ""
+msgstr "bpost"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
 #, python-format
 msgid "by default"
-msgstr ""
+msgstr "כברירת מחדל"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -3082,7 +3087,7 @@ msgstr "קוד..."
 #: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
 #, python-format
 msgid "description"
-msgstr ""
+msgstr "תיאור"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
@@ -3109,12 +3114,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.search_count_box
 msgid "found)"
-msgstr ""
+msgstr "נמצא)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "hours."
-msgstr ""
+msgstr "שעות."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -3133,7 +3138,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
 #, python-format
 msgid "image"
-msgstr ""
+msgstr "תמונה"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -3143,7 +3148,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "items)"
-msgstr ""
+msgstr "פריטים)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -3158,24 +3163,24 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "new address"
-msgstr ""
+msgstr "כתובת חדשה"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
 #, python-format
 msgid "price"
-msgstr ""
+msgstr "מחיר"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_sale_note
 msgid "terms &amp; conditions"
-msgstr ""
+msgstr "תנאים והגבלות"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "to follow your order."
-msgstr ""
+msgstr "כדי לעקוב אחר ההזמנה שלך."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
