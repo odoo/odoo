@@ -109,11 +109,11 @@ class Task(models.Model):
     analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active')
     allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.", readonly=True)
     remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', store=True, readonly=True, help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
-    effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True, help="Computed using the sum of the task work done.")
-    total_hours_spent = fields.Float("Total Hours", compute='_compute_total_hours_spent', store=True, help="Computed as: Time Spent + Sub-tasks Hours.")
+    effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True, help="Time spent on this task, excluding its sub-tasks.")
+    total_hours_spent = fields.Float("Total Hours", compute='_compute_total_hours_spent', store=True, help="Time spent on this task, including its sub-tasks.")
     progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, group_operator="avg", help="Display progress of current task.")
     overtime = fields.Float(compute='_compute_progress_hours', store=True)
-    subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Sum of actually spent hours on the subtask(s)")
+    subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
 
     # YTI FIXME: Those field seems quite useless
@@ -192,12 +192,13 @@ class Task(models.Model):
 
     def action_view_subtask_timesheet(self):
         self.ensure_one()
+        tasks = self._get_all_subtasks()
         return {
             'type': 'ir.actions.act_window',
             'name': _('Timesheets'),
             'res_model': 'account.analytic.line',
             'view_mode': 'list,form',
-            'domain': [('project_id', '!=', False), ('task_id', 'in', self.child_ids.ids)],
+            'domain': [('project_id', '!=', False), ('task_id', 'in', tasks.ids)],
         }
 
     def write(self, values):
