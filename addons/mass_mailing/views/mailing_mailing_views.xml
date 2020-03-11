@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                <search string="Mailings">
                     <field name="name" string="Mailing" filter_domain="['|', ('name', 'ilike', self), ('subject', 'ilike', self)]"/>
-                    <field name="campaign_id" string="Campaign"/>
+                    <field name="campaign_id" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign"/>
                     <filter string="My Mailings" name="assigned_to_me"
                             domain="[('user_id', '=', uid)]"
                             help="Mailings that are assigned to me"/>
