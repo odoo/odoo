@@ -77,6 +77,11 @@ odoo.define('web.test.x2many', function (require) {
     }, { // add message a
         content: "Select First Tab",
         trigger: 'a[role=tab]:first',
+        // We check the "Save" button is in the DOM to ensure that the form renderer
+        // is fully loaded and is on the right pane (right now the renderer dispatches
+        // a click on its last active pane header. We can remove this assert once the
+        // form renderer behaves properly).
+        extra_trigger: 'button.o_form_button_save',
     }, {
         content: "create new message a",
         trigger: '.o_form_sheet .tab-pane:eq(0) .o_field_x2many_list_row_add a'
