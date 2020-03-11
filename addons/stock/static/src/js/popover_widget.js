@@ -20,7 +20,7 @@ var PopoverWidgetField = AbstractField.extend({
     supportedFieldTypes: ['char'],
     buttonTemplape: 'stock.popoverButton',
     popoverTemplate: 'stock.popoverContent',
-    trigger: 'hover focus',
+    trigger: 'focus',
     placement: 'top',
     html: true,
     color: 'text-primary',
