@@ -69,7 +69,7 @@ class MailMail(models.Model):
             if tracking_url:
                 body = tools.append_content_to_html(body, tracking_url, plaintext=False, container_tag='div')
 
-        body = self.env['mail.thread']._replace_local_links(body)
+        body = self.env['mail.render.mixin']._replace_local_links(body)
 
         return body
 

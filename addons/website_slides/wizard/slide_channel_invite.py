@@ -124,6 +124,6 @@ class SlideChannelInvite(models.TransientModel):
                     'company': self.env.company,
                 }
                 body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
-                mail_values['body_html'] = self.env['mail.thread']._replace_local_links(body)
+                mail_values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
 
         return mail_values
