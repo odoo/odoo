@@ -132,28 +132,6 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
             transform: scale(1);
         }
     }
-
-    // Ribbon for promotions on products
-    .ribbon-wrapper {
-        display: none;
-        width: 85px;
-        height: 88px;
-        z-index: 5;
-        overflow: hidden;
-        @include o-position-absolute($left: 0, $top: 0);
-    }
-    .ribbon {
-        font: bold 15px Sans-Serif;
-        color: white;
-        text-align: center;
-        transform: rotate(-45deg);
-        position: relative;
-        padding: 7px 0;
-        left: -31px;
-        top: 14px;
-        width: 120px;
-        cursor: default;
-    }
 }
 
 // Options relative to where the product card is put
@@ -166,11 +144,6 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         .o_wsale_product_information {
             @include o-position-absolute(auto, 0, 0, 0); // The wrapper is always relatively positioned
         }
-    }
-
-    // Enable product promo ribbon
-    &.oe_ribbon_promo .ribbon-wrapper {
-        display: block;
     }
 }
 
