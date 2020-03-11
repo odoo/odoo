@@ -121,7 +121,16 @@ class account_payment(models.Model):
                         (dtype == 'out_invoice' and inv.type == 'out_refund')):
                     raise UserError(_("You cannot register payments for customer invoices and credit notes at the same time."))
 
+<<<<<<< HEAD
         amount = self._compute_payment_amount(invoices, invoices[0].currency_id)
+=======
+        # Look if we are mixin multiple commercial_partner or customer invoices with vendor bills
+        multi = any(inv.commercial_partner_id != invoices[0].commercial_partner_id
+            or MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type]
+            or inv.account_id != invoices[0].account_id
+            or inv.partner_bank_id != invoices[0].partner_bank_id
+            for inv in invoices)
+>>>>>>> d315b452fe5... temp
 
         if invoices[0].partner_id.type == 'invoice':
             partner_id = invoices[0].partner_id
@@ -136,6 +145,10 @@ class account_payment(models.Model):
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
             'communication': invoices[0].reference or invoices[0].number,
             'invoice_ids': [(6, 0, invoices.ids)],
+<<<<<<< HEAD
+=======
+            'multi': multi or (len(invoices.mapped('partner_id')) == 1 and len(invoices) > 1),
+>>>>>>> d315b452fe5... temp
         })
         return rec
 
