@@ -21,8 +21,8 @@ ActionManager.include({
         if (action.res_model === 'board.board' && action.view_mode === 'form') {
             action.target = 'inline';
             _.extend(action.flags, {
+                hasActionMenus: false,
                 hasSearchView: false,
-                hasSidebar: false,
                 headless: true,
             });
         }

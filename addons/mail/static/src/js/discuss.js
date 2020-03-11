@@ -243,7 +243,6 @@ var Discuss = AbstractAction.extend({
     custom_events: _.extend({}, AbstractAction.prototype.custom_events, {
         discard_extended_composer: '_onDiscardExtendedComposer',
         message_moderation: '_onMessageModeration',
-        search: '_onSearch',
         update_moderation_buttons: '_onUpdateModerationButtons',
     }),
     events: {
@@ -292,7 +291,7 @@ var Discuss = AbstractAction.extend({
         this._throttledUpdateThreads = _.throttle(
             this._updateThreads.bind(this), 100, { leading: false });
 
-        this.controlPanelParams.modelName = 'mail.message';
+        this.controlPanelModelConfig.modelName = 'mail.message';
         this.call('mail_service', 'getMailBus').on('messaging_ready', this, this._onMessagingReady);
     },
     /**
@@ -313,7 +312,7 @@ var Discuss = AbstractAction.extend({
      */
     do_show: function () {
         this._super.apply(this, arguments);
-        this._updateControlPanel();
+        this.updateControlPanel();
         this.action_manager.do_push_state({
             action: this.action.id,
             active_id: this._thread.getID(),
@@ -332,6 +331,7 @@ var Discuss = AbstractAction.extend({
      * @override
      */
     on_attach_callback: function () {
+        this._super();
         this.call('mail_service', 'getMailBus').trigger('discuss_open', true);
         if (this._thread) {
             this._threadWidget.scrollToPosition(this._threadsScrolltop[this._thread.getID()]);
@@ -342,6 +342,7 @@ var Discuss = AbstractAction.extend({
      * @override
      */
     on_detach_callback: function () {
+        this._super();
         this.call('mail_service', 'getMailBus').trigger('discuss_open', false);
         this._threadsScrolltop[this._thread.getID()] = this._threadWidget.getScrolltop();
     },
@@ -937,9 +938,7 @@ var Discuss = AbstractAction.extend({
      * @param {integer} threadID a thread with such ID
      * @returns {Promise}
      */
-    _setThread: function (threadID) {
-        var self = this;
-
+    _setThread: async function (threadID) {
         this.$('.o_out_of_office').remove();
         // Store scroll position and composer state of the previous thread
         this._storeThreadState();
@@ -960,36 +959,39 @@ var Discuss = AbstractAction.extend({
         this._basicComposer.setThread(this._thread);
         this._extendedComposer.setThread(this._thread);
 
-        return this._fetchAndRenderThread().then(function () {
-            // Mark thread's messages as read and clear needactions
-            if (self._thread.getType() !== 'mailbox') {
-                self._thread.markAsRead();
-            }
-            // Restore scroll position and composer of the new current thread
-            self._restoreThreadState();
+        await this._fetchAndRenderThread();
+        // Mark thread's messages as read and clear needactions
+        if (this._thread.getType() !== 'mailbox') {
+            this._thread.markAsRead();
+        }
+        // Restore scroll position and composer of the new current thread
+        this._restoreThreadState();
 
-            // Update control panel before focusing the composer, otherwise
-            // focus is on the searchview
-            self._setTitle('#' + self._thread.getName());
-            self._updateControlPanel();
-            self._updateControlPanelButtons(self._thread);
+        // Update control panel before focusing the composer, otherwise
+        // focus is on the searchview
+        await this.updateControlPanel({
+            title: '#' + this._thread.getName(),
+            cp_content: {
+                $buttons: this.$buttons,
+            },
+        });
+        this._updateControlPanelButtons(this._thread);
 
-            // Display and focus the adequate composer, and unselect possibly
-            // selected message to prevent sending messages as reply to that
-            // message
-            self._unselectMessage();
+        // Display and focus the adequate composer, and unselect possibly
+        // selected message to prevent sending messages as reply to that
+        // message
+        this._unselectMessage();
 
-            if (self._thread.hasOutOfOffice()) {
-                const $outOfOffice = $(QWeb.render('mail.thread.OutOfOffice', {
-                    thread: self._thread
-                }));
-                $outOfOffice.prependTo(self.$('.o_mail_discuss_content'));
-            }
+        if (this._thread.hasOutOfOffice()) {
+            const $outOfOffice = $(QWeb.render('mail.thread.OutOfOffice', {
+                thread: this._thread
+            }));
+            $outOfOffice.prependTo(this.$('.o_mail_discuss_content'));
+        }
 
-            self.action_manager.do_push_state({
-                action: self.action.id,
-                active_id: self._thread.getID(),
-            });
+        this.action_manager.do_push_state({
+            action: this.action.id,
+            active_id: this._thread.getID(),
         });
     },
     /**
@@ -1096,16 +1098,6 @@ var Discuss = AbstractAction.extend({
         ) {
             this._updateModerationButtons();
         }
-    },
-    /**
-     * @private
-     */
-    _updateControlPanel: function () {
-        this.updateControlPanel({
-            cp_content: {
-                $buttons: this.$buttons,
-            },
-        });
     },
     /**
      * Updates the control panel buttons visibility based on thread type
@@ -1530,11 +1522,10 @@ var Discuss = AbstractAction.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} ev
+     * @param {Object} searchQuery
      */
-    _onSearch: function (ev) {
-        ev.stopPropagation();
-        this.domain = ev.data.domain;
+    _onSearch: function (searchQuery) {
+        this.domain = searchQuery.domain;
         if (this._thread) {
             // initially (when _onSearch is called manually), there is no
             // thread set yet, so don't try to fetch and render the thread as
