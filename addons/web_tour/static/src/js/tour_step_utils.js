@@ -121,15 +121,15 @@ return core.Class.extend({
             extra_trigger: '.modal:not(.o_inactive_modal) .dropdown-menu.o_searchview_autocomplete',
             position: 'bottom',
             run: action => {
-                const keyboardEventUp = new KeyboardEvent('keyup', {
+                const keyEventEnter = new KeyboardEvent('keydown', {
                     bubbles: true,
                     cancelable: true,
                     key: 'Enter',
                     code: 'Enter',
                     which: 13,
-                    keyCode: 13
+                    keyCode: 13,
                 });
-                action.tip_widget.$anchor[0].dispatchEvent(keyboardEventUp);
+                action.tip_widget.$anchor[0].dispatchEvent(keyEventEnter);
             },
             debugHelp: this._getHelpMessage('simulateEnterKeyboardInSearchModal'),
         };
