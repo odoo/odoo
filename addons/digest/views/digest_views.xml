@@ -135,4 +135,53 @@
         parent="base.menu_email"
         groups="base.group_erp_manager"
         sequence="80"/>
+
+    <!-- DIGEST.TIP -->
+    <record id="digest_tip_view_tree" model="ir.ui.view">
+        <field name="name">digest.tip.view.tree</field>
+        <field name="model">digest.tip</field>
+        <field name="arch" type="xml">
+            <tree string="KPI Digest Tips">
+                <field name="sequence" widget="handle"/>
+                <field name="group_id"/>
+            </tree>
+        </field>
+    </record>
+    <record id="digest_tip_view_form" model="ir.ui.view">
+        <field name="name">digest.tip.view.form</field>
+        <field name="model">digest.tip</field>
+        <field name="arch" type="xml">
+            <form string="KPI Digest Tip">
+                <sheet>
+                    <group>
+                        <field name="tip_description"/>
+                        <field name="group_id"/>
+                        <field name="user_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="digest_tip_view_search" model="ir.ui.view">
+        <field name="name">digest.tip.view.search</field>
+        <field name="model">digest.tip</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="tip_description"/>
+                <field name="group_id"/>
+            </search>
+        </field>
+    </record>
+    <record id="digest_tip_action" model="ir.actions.act_window">
+        <field name="name">Digest Tips</field>
+        <field name="res_model">digest.tip</field>
+        <field name="search_view_id" ref="digest_tip_view_search"/>
+    </record>
+
+    <menuitem id="digest_tip_menu"
+        action="digest_tip_action"
+        parent="base.menu_email"
+        groups="base.group_erp_manager"
+        sequence="81"/>
+
 </odoo>
