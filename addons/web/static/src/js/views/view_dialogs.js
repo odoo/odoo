@@ -220,6 +220,7 @@ var FormViewDialog = ViewDialog.extend({
                             callbacks: [{widget: self.form_view}],
                             in_DOM: true,
                         });
+                        self.form_view.updateButtons();
                     });
                     return _super();
                 });

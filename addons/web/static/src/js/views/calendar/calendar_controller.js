@@ -37,6 +37,9 @@ var CalendarController = AbstractController.extend({
         updateRecord: '_onUpdateRecord',
         viewUpdated: '_onViewUpdated',
     }),
+    events: _.extend({}, AbstractController.prototype.events, {
+        today_button_click: '_onTodayButtonClicked'
+    }),
     /**
      * @override
      * @param {Widget} parent
@@ -60,34 +63,16 @@ var CalendarController = AbstractController.extend({
         // The quickCreating attribute ensures that we don't do several create
         this.quickCreating = false;
     },
-    /**
-     * Overrides to unbind handler on the control panel mobile 'Today' button.
-     *
-     * @override
-     */
-    destroy: function () {
-        this._super.apply(this, arguments);
-        if (this.$todayButton) {
-            this.$todayButton.off();
-        }
-    },
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
     /**
-     * @override
-     * @returns {string}
-     */
-    getTitle: function () {
-        return this._title;
-    },
-    /**
      * Render the buttons according to the CalendarView.buttons template and
      * add listeners on it. Set this.$buttons with the produced jQuery element
      *
-     * @param {jQueryElement} [$node] a jQuery node where the rendered buttons
+     * @param {jQuery} [$node] a jQuery node where the rendered buttons
      *   should be inserted. $node may be undefined, in which case the Calendar
      *   inserts them into this.options.$buttons or into a div of its template
      */
@@ -118,25 +103,6 @@ var CalendarController = AbstractController.extend({
             this.$buttons.appendTo($node);
         } else {
             this.$('.o_calendar_buttons').replaceWith(this.$buttons);
-        }
-    },
-    /**
-     * In mobile, we want to display a special 'Today' button on the bottom
-     * right corner of the control panel. This is the pager area, and as there
-     * is no pager in Calendar views, we fool the system by defining a fake
-     * pager (which is actually our button) such that it will be inserted in the
-     * desired place.
-     *
-     * @todo get rid of this hack once the ControlPanel layout will be reworked
-     *
-     * @param {jQueryElement} $node the button should be appended to this
-     *   element to be displayed in the bottom right corner of the control panel
-     */
-    renderPager: function ($node) {
-        if (config.device.isMobile) {
-            this.$todayButton = $(QWeb.render('CalendarView.TodayButtonMobile'));
-            this.$todayButton.on('click', this._move.bind(this, 'today'));
-            $node.append(this.$todayButton);
         }
     },
 
@@ -424,7 +390,14 @@ var CalendarController = AbstractController.extend({
                 event.data.data.on_save = self.quick.destroy.bind(self.quick);
                 self._onOpenCreate(event.data);
                 self.quickCreating = false;
-            })
+            });
+    },
+    /**
+     * In mobile, we display a special 'Today' button on the bottom right corner
+     * of the control panel. Its click events are handled here.
+     */
+    _onTodayButtonClicked: function () {
+        this._move('today');
     },
     /**
      * @private
@@ -446,7 +419,8 @@ var CalendarController = AbstractController.extend({
             this.$buttons.find('.active').removeClass('active');
             this.$buttons.find('.o_calendar_button_' + this.mode).addClass('active');
         }
-        this._setTitle(this.displayName + ' (' + event.data.title + ')');
+        const title = `${this.displayName} (${event.data.title})`;
+        return this.updateControlPanel({ title });
     },
 });
 

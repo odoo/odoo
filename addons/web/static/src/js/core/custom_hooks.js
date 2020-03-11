@@ -5,35 +5,37 @@ odoo.define('web.custom_hooks', function () {
     const { onMounted, onPatched, onWillUnmount } = hooks;
 
     /**
-     * Returns a function which purpose is to focus the given selector on the next
-     * repaint (mount or patch). Its default selector is the first element having
-     * an `autofocus' attribute. Text selection will be set at the end of the value
-     * if the target is a text element. The action is lost if no element was found.
-     *
-     * @returns {Function}
+     * Focus a given selector as soon as it appears in the DOM and if it was not
+     * displayed before. If the selected target is an input|textarea, set the selection
+     * at the end.
+     * @param {Object} [params]
+     * @param {string} [params.selector='autofocus'] default: select the first element
+     *                 with an `autofocus` attribute.
+     * @returns {Function} function that forces the focus on the next update if visible.
      */
-    function useFocusOnUpdate() {
-        const component = Component.current;
-        let willFocus = null;
-
-        function _focusSelector() {
-            if (willFocus) {
-                const target = component.el.querySelector(willFocus);
-                if (target) {
-                    target.focus();
-                    if (['INPUT', 'TEXTAREA'].includes(target.tagName)) {
-                        target.selectionStart = target.selectionEnd = target.value.length;
-                    }
+    function useAutofocus(params = {}) {
+        const comp = Component.current;
+        // Prevent autofocus in mobile
+        if (comp.env.device.isMobile) {
+            return () => {};
+        }
+        const selector = params.selector || '[autofocus]';
+        let target = null;
+        function autofocus() {
+            const prevTarget = target;
+            target = comp.el.querySelector(selector);
+            if (target && target !== prevTarget) {
+                target.focus();
+                if (['INPUT', 'TEXTAREA'].includes(target.tagName)) {
+                    target.selectionStart = target.selectionEnd = target.value.length;
                 }
-                willFocus = null;
             }
         }
+        onMounted(autofocus);
+        onPatched(autofocus);
 
-        onMounted(_focusSelector);
-        onPatched(_focusSelector);
-
-        return function focusOnUpdate(selector = '[autofocus]') {
-            willFocus = selector;
+        return function focusOnUpdate() {
+            target = null;
         };
     }
 
@@ -110,7 +112,7 @@ odoo.define('web.custom_hooks', function () {
     }
 
     return {
-        useFocusOnUpdate,
+        useAutofocus,
         useListener,
     };
 });
