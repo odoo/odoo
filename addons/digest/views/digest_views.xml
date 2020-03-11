@@ -143,6 +143,7 @@
         <field name="arch" type="xml">
             <tree string="KPI Digest Tips">
                 <field name="sequence" widget="handle"/>
+                <field name="name"/>
                 <field name="group_id"/>
             </tree>
         </field>
@@ -154,6 +155,7 @@
             <form string="KPI Digest Tip">
                 <sheet>
                     <group>
+                        <field name="name"/>
                         <field name="tip_description"/>
                         <field name="group_id"/>
                         <field name="user_ids" widget="many2many_tags"/>
@@ -167,6 +169,7 @@
         <field name="model">digest.tip</field>
         <field name="arch" type="xml">
             <search>
+                <field name="name"/>
                 <field name="tip_description"/>
                 <field name="group_id"/>
             </search>
