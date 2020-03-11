@@ -268,7 +268,7 @@ class MailTemplate(models.Model):
                     'record': record,
                 }
                 body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
-                values['body_html'] = self.env['mail.thread']._replace_local_links(body)
+                values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
         mail = self.env['mail.mail'].sudo().create(values)
 
         # manage attachments

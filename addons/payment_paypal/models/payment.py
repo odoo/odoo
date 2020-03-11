@@ -195,7 +195,7 @@ class TxPaypal(models.Model):
                 render_template = template.render({
                     'acquirer': self.acquirer_id,
                 }, engine='ir.qweb')
-                mail_body = self.env['mail.thread']._replace_local_links(render_template)
+                mail_body = self.env['mail.render.mixin']._replace_local_links(render_template)
                 mail_values = {
                     'body_html': mail_body,
                     'subject': _('Add your Paypal account to Odoo'),
