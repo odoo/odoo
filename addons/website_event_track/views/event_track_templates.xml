@@ -18,21 +18,17 @@
             <div class="row">
                 <div t-attf-class="col-sm-6 col-lg-#{(len(event.sponsor_ids) > 6) and 2 or (12 // len(event.sponsor_ids))} text-center mb16 oe_sponsor" t-foreach="event.sponsor_ids" t-as="sponsor">
                     <t t-if="sponsor.url">
-                        <a t-att-href="sponsor.url" style="position: relative; display: inline-block;" class="bg-white">
+                        <a t-att-href="sponsor.url" class="bg-white o_wevent_sponsor">
                             <span t-field="sponsor.image_128"
                                 t-options='{"widget": "image", "class": "shadow"}'/>
-                            <div class="ribbon-wrapper">
-                                <div t-field="sponsor.sponsor_type_id" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id.name}"/>
-                            </div>
+                            <span t-field="sponsor.sponsor_type_id" t-attf-class="o_ribbon o_ribbon_right ribbon_#{sponsor.sponsor_type_id.name}"/>
                         </a>
                     </t>
                     <t t-if="not sponsor.url">
-                        <span style="position: relative; display: inline-block;" class="bg-white">
+                        <span class="bg-white o_wevent_sponsor">
                             <span t-field="sponsor.image_128"
                                 t-options='{"widget": "image", "class": "shadow"}'/>
-                            <div class="ribbon-wrapper">
-                                <div t-field="sponsor.sponsor_type_id" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id.name}"/>
-                            </div>
+                            <span t-field="sponsor.sponsor_type_id" t-attf-class="o_ribbon o_ribbon_right ribbon_#{sponsor.sponsor_type_id.name}"/>
                         </span>
                     </t>
                 </div>

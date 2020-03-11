@@ -62,8 +62,30 @@
                 </table>
             </div>
 
-            <div name="style" data-no-preview="true">
-                <!-- Placeholder to be filled in JS -->
+            <we-row data-name="ribbon_options">
+                <we-select string="Ribbon" data-no-preview="true" class="o_wsale_ribbon_select">
+                    <we-button data-set-ribbon="" data-name="no_ribbon_opt">None</we-button>
+                    <!-- Ribbons are filled in JS -->
+                </we-select>
+                <we-button data-edit-ribbon="" class="fa fa-edit" data-no-preview="true" data-dependencies="!no_ribbon_opt"/>
+                <we-button data-create-ribbon="" class="fa fa-plus text-success" data-no-preview="true"/>
+            </we-row>
+            <div class="d-none" data-name="ribbon_customize_opt">
+                <we-row string="Ribbon">
+                    <we-input data-set-ribbon-html="" data-apply-to=".o_wsale_ribbon_dummy" data-no-preview="true"/>
+                    <we-button class="fa fa-check" data-save-ribbon="" title="Validate" data-no-preview="true"/>
+                    <we-button class="fa fa-trash" data-delete-ribbon="" title="Delete" data-no-preview="true"/>
+                </we-row>
+                <we-colorpicker string="Background Color" title="" data-select-style="" data-apply-to=".o_wsale_ribbon_dummy" data-css-property="background-color" data-color-prefix="bg-" data-no-preview="true"/>
+                <we-colorpicker string="Text Color" title="" data-select-style="" data-apply-to=".o_wsale_ribbon_dummy" data-css-property="color" data-no-preview="true"/>
+                <we-select string="Mode">
+                    <we-button data-set-ribbon-mode="ribbon">Slanted</we-button>
+                    <we-button data-set-ribbon-mode="tag">Tag</we-button>
+                </we-select>
+                <we-select string="Position">
+                    <we-button data-set-ribbon-position="left">Left</we-button>
+                    <we-button data-set-ribbon-position="right">Right</we-button>
+                </we-select>
             </div>
 
             <div name="reordering" data-no-preview="true">
