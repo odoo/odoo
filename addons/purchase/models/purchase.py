@@ -52,7 +52,11 @@ class PurchaseOrder(models.Model):
 
             if any(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) == -1 for line in order.order_line):
                 order.invoice_status = 'to invoice'
-            elif all(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) >= 0 for line in order.order_line) and order.invoice_ids:
+            elif all(
+                (line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received)
+                and float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) >= 0
+                for line in order.order_line
+            ):
                 order.invoice_status = 'invoiced'
             else:
                 order.invoice_status = 'no'
