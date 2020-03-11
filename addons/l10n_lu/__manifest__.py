@@ -33,7 +33,7 @@ Notes:
     'data': [
         # basic accounting data
         'data/l10n_lu_chart_data.xml',
-        'data/account.account.template-2011.csv',
+        'data/account.account.template.csv',
         'data/account_tax_report_line.xml',
         'data/account.tax.group.csv',
         'data/account_tax_template_2015.xml',
