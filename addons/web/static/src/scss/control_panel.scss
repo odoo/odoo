@@ -45,7 +45,7 @@
         display: flex;
         justify-content: space-between;
 
-        > .o_cp_sidebar {
+        > .o_cp_action_menus {
             padding-right: 10px;
 
             .o_hidden_input_file {
@@ -83,14 +83,14 @@
             text-align: center;
             user-select: none;
 
-            > div {
+            .o_pager {
                 display: flex;
                 align-items: center;
-            }
 
-            .o_pager_counter {
-                margin-right: 5px;
-                min-width: $o-statbutton-height;
+                .o_pager_counter {
+                    margin-right: 5px;
+                    min-width: $o-statbutton-height;
+                }
             }
         }
 
@@ -123,12 +123,17 @@
     }
 }
 
-// Pager input (to edit pager values)
-.o_pager_value > input {
+.o_pager_value {
     display: inline-block;
-    width: 60px;
-    text-align: right;
+}
 
+span.o_pager_value {
+    border-bottom: 1px solid transparent;
+}
+
+input.o_pager_value {
+    text-align: right;
+    width: 60px;
     &:focus {
         outline: none;
     }
