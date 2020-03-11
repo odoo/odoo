@@ -135,6 +135,7 @@ var Tip = Widget.extend({
             p = $location.css("position");
         } while (
             $location.hasClass('dropdown-menu') ||
+            $location.hasClass('o_notebook_headers') ||
             (
                 (o === "visible" || o === "hidden") &&
                 p !== "fixed" &&
@@ -318,6 +319,10 @@ Tip.getConsumeEventType = function ($element) {
         // FieldDateRange triggers a special event when using the widget
         if ($element.hasClass("o_field_date_range")) {
             return "apply.daterangepicker input";
+        }
+        if (config.device.isMobile &&
+            $element.closest('.o_field_widget').is('.o_field_many2one, .o_field_many2many')) {
+            return "click";
         }
         return "input";
     } else if ($element.hasClass('ui-draggable-handle')) {

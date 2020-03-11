@@ -9,7 +9,7 @@ odoo.define('account.dashboard.setup.tour', function (require) {
     tour.register('account_render_report', {
         test: true,
         url: '/web',
-    }, [tour.STEPS.SHOW_APPS_MENU_ITEM,
+    }, [tour.stepUtils.showAppsMenuItem(),
     {
         id: 'account_menu_click',
         trigger: '.o_app[data-menu-xmlid="account.menu_finance"]',
