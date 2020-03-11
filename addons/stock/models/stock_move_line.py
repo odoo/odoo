@@ -333,7 +333,8 @@ class StockMoveLine(models.Model):
         if updates or 'qty_done' in vals:
             moves = self.filtered(lambda ml: ml.move_id.state == 'done').mapped('move_id')
             for move in moves:
-                move.product_uom_qty = move.quantity_done
+                if move.product_uom_qty != move.quantity_done:
+                    move.product_uom_qty = move.quantity_done
         next_moves._do_unreserve()
         next_moves._action_assign()
         return res
