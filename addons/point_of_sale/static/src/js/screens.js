@@ -1711,19 +1711,6 @@ var ReceiptScreenWidget = ScreenWidget.extend({
                 self.print();
             }
         });
-        var button_print_invoice = this.$('.button.print_invoice');
-        button_print_invoice.click(function () {
-            var order = self.pos.get_order();
-            var invoiced = self.pos.push_and_invoice_order(order);
-            self.invoicing = true;
-
-            invoiced.fail(self._handleFailedPushForInvoice.bind(self, order, true)); // refresh
-
-            invoiced.done(function(){
-                self.invoicing = false;
-                self.gui.show_screen('receipt', {button_print_invoice: false}, true); // refresh
-            });
-        });
 
     },
     render_change: function() {
@@ -1731,7 +1718,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         this.$('.change-value').html(this.format_currency(this.pos.get_order().get_change()));
         var order = this.pos.get_order();
         var order_screen_params = order.get_screen_data('params');
-        var button_print_invoice = this.$('.button.print_invoice');
+        var button_print_invoice = this.$('h2.print_invoice');
         if (order_screen_params && order_screen_params.button_print_invoice) {
             button_print_invoice.show();
         } else {
