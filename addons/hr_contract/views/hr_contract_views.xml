@@ -172,8 +172,10 @@
                             <field name="department_id"/>
                             <field name="job_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_country_id" invisible="1"/>
+                            <field name="structure_type_id" domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
                         </group>
-                        <group>
+                        <group name="duration_group">
                             <field name="date_start"/>
                             <field name="first_contract_date" attrs="{'invisible': ['|', ('first_contract_date', '=', False), ('first_contract_date', '=', 'date_start')]}"/>
                             <field name="date_end"/>
