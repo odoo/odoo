@@ -94,7 +94,7 @@
                             <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
                             <field name="alternative_product_ids" widget="many2many_tags" domain="[('id', '!=', active_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
                             <field name="accessory_product_ids" widget="many2many_tags"/>
-                            <field name="website_style_ids" widget="many2many_tags" groups="base.group_no_one"/>
+                            <field name="website_ribbon_id" groups="base.group_no_one"/>
                         </group>
                     </group>
                     <group name="product_template_images" string="Extra Product Media">
