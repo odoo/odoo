@@ -7,7 +7,7 @@ import re
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import remove_accents
+from odoo.tools import remove_accents, is_html_empty
 
 _logger = logging.getLogger(__name__)
 
@@ -68,6 +68,9 @@ class Alias(models.Model):
              "- everyone: everyone can post\n"
              "- partners: only authenticated partners\n"
              "- followers: only followers of the related document or members of following channels\n")
+    alias_bounced_content = fields.Html(
+        "Custom Bounced Message", translate=True,
+        help="If set, this content will automatically be sent out to unauthorized users instead of the default message.")
 
     _sql_constraints = [
         ('alias_unique', 'UNIQUE(alias_name)', 'Unfortunately this email alias is already used, please choose a unique one')
@@ -171,6 +174,36 @@ class Alias(models.Model):
             'type': 'ir.actions.act_window',
         }
 
+    def _get_alias_bounced_body_fallback(self, message_dict):
+        return _("""Hi,<br/>
+The following email sent to %s cannot be accepted because this is a private email address.
+Only allowed people can contact us at this address.""" % message_dict.get('to'))
+
+    def _get_alias_bounced_body(self, message_dict):
+        """Get the body of the email return in case of bounced email.
+
+        :param message_dict: dictionary of mail values
+        """
+        lang_author = False
+        if message_dict.get('author_id'):
+            try:
+                lang_author = self.env['res.partner'].browse(message_dict['author_id']).lang
+            except:
+                pass
+
+        if lang_author:
+            self = self.with_context(lang=lang_author)
+
+        if not is_html_empty(self.alias_bounced_content):
+            body = self.alias_bounced_content
+        else:
+            body = self._get_alias_bounced_body_fallback(message_dict)
+        template = self.env.ref('mail.mail_bounce_alias_security', raise_if_not_found=True)
+        return template.render({
+            'body': body,
+            'message': message_dict
+        }, engine='ir.qweb', minimal_qcontext=True)
+
 
 class AliasMixin(models.AbstractModel):
     """ A mixin for models that inherits mail.alias. This mixin initializes the
@@ -255,20 +288,12 @@ class AliasMixin(models.AbstractModel):
         author = self.env['res.partner'].browse(message_dict.get('author_id', False))
         if alias.alias_contact == 'followers':
             if not record.ids:
-                return {
-                    'error_message': _('incorrectly configured alias (unknown reference record)'),
-                }
+                return _('incorrectly configured alias (unknown reference record)')
             if not hasattr(record, "message_partner_ids") or not hasattr(record, "message_channel_ids"):
-                return {
-                    'error_message': _('incorrectly configured alias'),
-                }
+                return _('incorrectly configured alias')
             accepted_partner_ids = record.message_partner_ids | record.message_channel_ids.mapped('channel_partner_ids')
             if not author or author not in accepted_partner_ids:
-                return {
-                    'error_message': _('restricted to followers'),
-                }
+                return _('restricted to followers')
         elif alias.alias_contact == 'partners' and not author:
-            return {
-                'error_message': _('restricted to known authors')
-            }
+            return _('restricted to known authors')
         return True

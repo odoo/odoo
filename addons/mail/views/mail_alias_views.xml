@@ -26,6 +26,7 @@
                             <field name="alias_user_id"/>
                             <field name="alias_parent_model_id"/>
                             <field name="alias_parent_thread_id"/>
+                            <field name="alias_bounced_content" attrs="{'invisible':[('alias_contact', '=', 'everyone')]}"/>
                         </group>
                     </sheet>
                 </form>
