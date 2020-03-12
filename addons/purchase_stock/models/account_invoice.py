@@ -74,8 +74,9 @@ class AccountMove(models.Model):
                             # In case val_stock_move is a return move, its valuation entries have been made with the
                             # currency rate corresponding to the original stock move
                             valuation_date = val_stock_move.origin_returned_move_id.date or val_stock_move.date
-                            layers_qty = sum(val_stock_move.mapped('stock_valuation_layer_ids.quantity'))
-                            layers_values = sum(val_stock_move.mapped('stock_valuation_layer_ids.value'))
+                            svl = val_stock_move.mapped('stock_valuation_layer_ids').filtered(lambda l: l.quantity)
+                            layers_qty = sum(svl.mapped('quantity'))
+                            layers_values = sum(svl.mapped('value'))
                             valuation_price_unit_total += line.company_currency_id._convert(
                                 layers_values, move.currency_id,
                                 move.company_id, valuation_date, round=False,
