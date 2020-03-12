@@ -1,43 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-extend="slide.slide.quiz.validation">
-        <t t-jquery="#validation" t-operation="append">
-            <div t-if="widget.readonly &amp;&amp; widget.publicUser &amp;&amp; widget.channel.channelEnroll == 'payment'" class="alert alert-info d-flex align-items-center justify-content-between">
-                <div>
-                    <b class="h5 mb-0">Sign in and buy the course to join it and take the quiz!</b>
-                    <span class="my-0 h4" style="line-height: 1">
-                        <span title="Succeed and gain karma" aria-label="Succeed and gain karma" class="badge badge-pill badge-warning text-white font-weight-bold ml-3 px-2 py-1">
-                            + <t t-esc="widget.quiz.quizKarmaGain"/> XP
-                        </span>
-                    </span>
-                </div>
-                <div>
-                    <a t-att-href="'/web/login?redirect=' + widget.redirectURL" class="btn btn-primary font-weight-bold text-uppercase">Sign in</a>
-                    <span t-if="widget.channel.signupAllowed" class="d-block mt-2">Don't have an account ? <a class="font-weight-bold" t-att-href="'/web/signup?redirect=' + widget.url">Sign Up !</a></span>
-                </div>
-            </div>
-            <div t-if="widget.readonly &amp;&amp; !widget.publicUser &amp;&amp; widget.channel.channelEnroll == 'payment'" class="card col-md-3">
-                <div class="card-body d-flex flex-column align-items-center">
-                    <a role="button"
-                        class="btn btn-primary btn-block o_wslides_js_course_join_link d-block mb-2"
-                        title="Start Course" aria-label="Start Course Channel"
-                        t-attf-href="/shop/cart/update?product_id=#{widget.channel.productId}&amp;express=1"
-                        t-att-data-channel-id="widget.slide.channelId">
-                        <span class="text-white text-uppercase font-weight-bold">
-                            Buy the course
-                        </span>
-                    </a>
-                    <div class="text-center">
-                        <del t-if="widget.channel.hasDiscountedPrice"
-                            class="text-600 text-nowrap oe_default_price d-inline"
-                            t-esc="widget.channel.listPrice"/>
-                        <span class="oe_price font-weight-bold text-nowrap h3 my-2"
-                            t-esc="widget.channel.price"/>
-                        <span t-if="widget.channel.currencySymbol" class="text-nowrap font-weight-bold h3 my-2" itemprop="priceCurrency" t-esc="widget.channel.currencySymbol"/>
-                        <span t-else="" class="text-nowrap ml-1" itemprop="priceCurrency" t-esc="widget.channel.currencyName"/>
-                    </div>
-                </div>
-            </div>
+        <t t-jquery=".o_wslides_quiz_join_course_message" t-operation="append">
+            <span t-if="widget.channel.channelEnroll == 'payment'">
+                <t t-if="widget.publicUser">
+                    Sign in and buy the course to take the quiz
+                </t>
+                <t t-else="">
+                    To validate your answers, buy the course!
+                </t>
+            </span>
         </t>
     </t>
 </templates>
