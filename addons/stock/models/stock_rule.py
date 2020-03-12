@@ -581,7 +581,14 @@ class ProcurementGroup(models.Model):
 
                 for orderpoint_context, orderpoints_by_context in orderpoints_contexts.items():
                     substract_quantity = orderpoints_by_context._quantity_in_progress()
-                    product_quantity = orderpoints_by_context.product_id.with_context(orderpoint_context)._product_available()
+                    product_with_context = orderpoints_by_context.product_id.with_context(orderpoint_context)
+                    product_quantity = product_with_context._compute_quantities_dict(
+                        product_with_context.env.context.get('lot_id'),
+                        product_with_context.env.context.get('owner_id'),
+                        product_with_context.env.context.get('package_id'),
+                        product_with_context.env.context.get('from_date'),
+                        product_with_context.env.context.get('to_date')
+                    )
 
                     for orderpoint in orderpoints_by_context:
                         op_product_virtual = product_quantity[orderpoint.product_id.id]['virtual_available']

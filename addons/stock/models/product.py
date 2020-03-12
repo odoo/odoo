@@ -113,10 +113,6 @@ class Product(models.Model):
         services.virtual_available = 0.0
         services.free_qty = 0.0
 
-    def _product_available(self, field_names=None, arg=False):
-        """ Compatibility method """
-        return self._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
-
     def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
         domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
         domain_quant = [('product_id', 'in', self.ids)] + domain_quant_loc
@@ -587,10 +583,8 @@ class ProductTemplate(models.Model):
         compute='_compute_nbr_reordering_rules', compute_sudo=False)
     reordering_max_qty = fields.Float(
         compute='_compute_nbr_reordering_rules', compute_sudo=False)
-    # TDE FIXME: seems only visible in a view - remove me ?
     route_from_categ_ids = fields.Many2many(
-        relation="stock.location.route", string="Category Routes",
-        related='categ_id.total_route_ids', readonly=False)
+        string="Category Routes", related='categ_id.total_route_ids')
 
     @api.depends(
         'product_variant_ids',
@@ -606,12 +600,14 @@ class ProductTemplate(models.Model):
             template.incoming_qty = res[template.id]['incoming_qty']
             template.outgoing_qty = res[template.id]['outgoing_qty']
 
-    def _product_available(self, name, arg):
-        return self._compute_quantities_dict()
-
     def _compute_quantities_dict(self):
-        # TDE FIXME: why not using directly the function fields ?
-        variants_available = self.mapped('product_variant_ids')._product_available()
+        variants_available = self.mapped('product_variant_ids')._compute_quantities_dict(
+            self.env.context.get('lot_id'),
+            self.env.context.get('owner_id'),
+            self.env.context.get('package_id'),
+            self.env.context.get('from_date'),
+            self.env.context.get('to_date')
+        )
         prod_available = {}
         for template in self:
             qty_available = 0
