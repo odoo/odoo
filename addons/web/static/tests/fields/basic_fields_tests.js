@@ -1065,6 +1065,29 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('email field trim user value', async function (assert) {
+        assert.expect(1);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="foo" widget="email"/></form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        await testUtils.fields.editInput(form.$('input[name="foo"]'), '  abc@abc.com  ');
+        await testUtils.form.clickSave(form);
+        await testUtils.form.clickEdit(form);
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'abc@abc.com',
+            "Foo value should have been trimmed");
+
+        form.destroy();
+    });
+
 
     QUnit.module('FieldChar');
 
