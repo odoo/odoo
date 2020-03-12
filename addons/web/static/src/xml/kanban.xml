@@ -77,18 +77,16 @@
 </t>
 
 <t t-name="KanbanColorPicker">
-    <li><a role="menuitem" href="#" data-color="0" class="oe_kanban_color_0" title="No color" aria-label="No color"/></li>
-    <li><a role="menuitem" href="#" data-color="1" class="oe_kanban_color_1" title="Red" aria-label="Red"/></li>
-    <li><a role="menuitem" href="#" data-color="2" class="oe_kanban_color_2" title="Orange" aria-label="Orange"/></li>
-    <li><a role="menuitem" href="#" data-color="3" class="oe_kanban_color_3" title="Yellow" aria-label="Yellow"/></li>
-    <li><a role="menuitem" href="#" data-color="4" class="oe_kanban_color_4" title="Light blue" aria-label="Light blue"/></li>
-    <li><a role="menuitem" href="#" data-color="5" class="oe_kanban_color_5" title="Dark purple" aria-label="Dark purple"/></li>
-    <li><a role="menuitem" href="#" data-color="6" class="oe_kanban_color_6" title="Salmon pink" aria-label="Salmon pink"/></li>
-    <li><a role="menuitem" href="#" data-color="7" class="oe_kanban_color_7" title="Medium blue" aria-label="Medium blue"/></li>
-    <li><a role="menuitem" href="#" data-color="8" class="oe_kanban_color_8" title="Dark blue" aria-label="Dark blue"/></li>
-    <li><a role="menuitem" href="#" data-color="9" class="oe_kanban_color_9" title="Fushia" aria-label="Fushia"/></li>
-    <li><a role="menuitem" href="#" data-color="10" class="oe_kanban_color_10" title="Green" aria-label="Green"/></li>
-    <li><a role="menuitem" href="#" data-color="11" class="oe_kanban_color_11" title="Purple" aria-label="Purple"/></li>
+    <t t-foreach="colors" t-as="color">
+        <li>
+            <a role="menuitem"
+               href="#"
+               t-att-data-color="color_index"
+               t-attf-class="oe_kanban_color_#{color_index}"
+               t-att-title="color"
+               t-att-aria-label="color"/>
+        </li>
+    </t>
 </t>
 
 <t t-name="GraphCustomTooltip">

@@ -3312,6 +3312,21 @@ var FieldColor = AbstractField.extend({
 });
 
 var FieldColorPicker = FieldInteger.extend({
+    RECORD_COLORS: [
+        _t('No color'),
+        _t('Red'),
+        _t('Orange'),
+        _t('Yellow'),
+        _t('Light blue'),
+        _t('Dark purple'),
+        _t('Salmon pink'),
+        _t('Medium blue'),
+        _t('Dark blue'),
+        _t('Fushia'),
+        _t('Green'),
+        _t('Purple'),
+    ],
+
     /**
      * Prepares the rendering, since we are based on an input but not using it
      * setting tagName after parent init force the widget to not render an input
@@ -3338,7 +3353,8 @@ var FieldColorPicker = FieldInteger.extend({
      * @override
      */
     _renderReadonly: function () {
-        this.$el.html(qweb.render('ColorPickerReadonly', {active_color: this.value,}));
+        var selectedColorName = this.RECORD_COLORS[this.value];
+        this.$el.html(qweb.render('ColorPickerReadonly', { active_color: this.value, name_color: selectedColorName }));
         this.$el.on('click', 'a', function(ev){ ev.preventDefault(); });
     },
     /**
@@ -3353,7 +3369,7 @@ var FieldColorPicker = FieldInteger.extend({
         if (!$colorpicker.length) {
             return;
         }
-        $colorpicker.html(qweb.render('KanbanColorPicker'));
+        $colorpicker.html(qweb.render('KanbanColorPicker', { colors: this.RECORD_COLORS }));
         $colorpicker.on('click', 'a', this._onColorChanged.bind(this));
     },
     /**
