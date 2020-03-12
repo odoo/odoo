@@ -12,9 +12,27 @@ class EventRegistration(models.Model):
     # TDE FIXME: maybe add an onchange on sale_order_id
     sale_order_id = fields.Many2one('sale.order', string='Source Sales Order', ondelete='cascade')
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line', ondelete='cascade')
-    campaign_id = fields.Many2one('utm.campaign', 'Campaign', related="sale_order_id.campaign_id", store=True)
-    source_id = fields.Many2one('utm.source', 'Source', related="sale_order_id.source_id", store=True)
-    medium_id = fields.Many2one('utm.medium', 'Medium', related="sale_order_id.medium_id", store=True)
+    utm_campaign_id = fields.Many2one(compute='_compute_utm_campaign_id', copy=True, readonly=False, store=True)
+    utm_source_id = fields.Many2one(compute='_compute_utm_source_id', copy=True, readonly=False, store=True)
+    utm_medium_id = fields.Many2one(compute='_compute_utm_medium_id', copy=True, readonly=False, store=True)
+
+    @api.depends('sale_order_id')
+    def _compute_utm_campaign_id(self):
+        for registration in self:
+            if registration.sale_order_id.campaign_id:
+                registration.utm_campaign_id = registration.sale_order_id.campaign_id
+
+    @api.depends('sale_order_id')
+    def _compute_utm_source_id(self):
+        for registration in self:
+            if registration.sale_order_id.source_id:
+                registration.utm_source_id = registration.sale_order_id.source_id
+
+    @api.depends('sale_order_id')
+    def _compute_utm_medium_id(self):
+        for registration in self:
+            if registration.sale_order_id.medium_id:
+                registration.utm_medium_id = registration.sale_order_id.medium_id
 
     def action_view_sale_order(self):
         action = self.env.ref('sale.action_orders').read()[0]
