@@ -21,7 +21,7 @@ class Employee(models.Model):
     @api.depends('contract_ids.state')
     def _compute_first_contract_date(self):
         for employee in self:
-            contracts = employee.contract_ids.filtered(lambda c: c.state != 'cancel')
+            contracts = employee.sudo().contract_ids.filtered(lambda c: c.state != 'cancel')
             if contracts:
                 employee.first_contract_date = min(contracts.mapped('date_start'))
             else:
