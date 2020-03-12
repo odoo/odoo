@@ -1506,6 +1506,20 @@ var FieldEmail = InputField.extend({
             this.$el.text('');
         }
     },
+    /**
+     * Trim the value input by the user.
+     *
+     * @override
+     * @private
+     * @param {any} value
+     * @param {Object} [options]
+     */
+    _setValue: function (value, options) {
+        if (this.field.trim) {
+            value = value.trim();
+        }
+        return this._super(value, options);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
