@@ -4,6 +4,7 @@ odoo.define('point_of_sale.OfflineErrorPopup', function(require) {
     const { Chrome } = require('point_of_sale.chrome');
     const { addComponents } = require('point_of_sale.PosComponent');
     const { AbstractAwaitablePopup } = require('point_of_sale.AbstractAwaitablePopup');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     /**
      * This is a special kind of error popup as it introduces
@@ -25,6 +26,8 @@ odoo.define('point_of_sale.OfflineErrorPopup', function(require) {
     };
 
     addComponents(Chrome, [OfflineErrorPopup]);
+
+    Registry.add('OfflineErrorPopup', OfflineErrorPopup);
 
     return { OfflineErrorPopup };
 });

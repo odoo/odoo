@@ -5,6 +5,7 @@ odoo.define('point_of_sale.TextInputPopup', function(require) {
     const { addComponents } = require('point_of_sale.PosComponent');
     const { Chrome } = require('point_of_sale.chrome');
     const { AbstractAwaitablePopup } = require('point_of_sale.AbstractAwaitablePopup');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     // formerly TextInputPopupWidget
     class TextInputPopup extends AbstractAwaitablePopup {
@@ -29,6 +30,8 @@ odoo.define('point_of_sale.TextInputPopup', function(require) {
     };
 
     addComponents(Chrome, [TextInputPopup]);
+
+    Registry.add('TextInputPopup', TextInputPopup);
 
     return { TextInputPopup };
 });

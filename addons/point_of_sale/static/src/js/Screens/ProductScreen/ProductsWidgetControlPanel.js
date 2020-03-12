@@ -7,6 +7,7 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
     const { CategoryBreadcrumb } = require('point_of_sale.CategoryBreadcrumb');
     const { CategorySimpleButton } = require('point_of_sale.CategorySimpleButton');
     const { CategoryButton } = require('point_of_sale.CategoryButton');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     class ProductsWidgetControlPanel extends PosComponent {
         static template = 'ProductsWidgetControlPanel';
@@ -32,6 +33,8 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
         CategorySimpleButton,
         CategoryButton,
     };
+
+    Registry.add('ProductsWidgetControlPanel', ProductsWidgetControlPanel);
 
     return { ProductsWidgetControlPanel };
 });

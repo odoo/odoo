@@ -4,6 +4,7 @@ odoo.define('point_of_sale.ClientScreenButton', function(require) {
     const { useState } = owl;
     const { Chrome } = require('point_of_sale.chrome');
     const { PosComponent, addComponents } = require('point_of_sale.PosComponent');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     // Formerly ClientScreenWidget
     class ClientScreenButton extends PosComponent {
@@ -82,6 +83,8 @@ odoo.define('point_of_sale.ClientScreenButton', function(require) {
     }
 
     addComponents(Chrome, [ClientScreenButton]);
+
+    Registry.add('ClientScreenButton', ClientScreenButton);
 
     return { ClientScreenButton };
 });

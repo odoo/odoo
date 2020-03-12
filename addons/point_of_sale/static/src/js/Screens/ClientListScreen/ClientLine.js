@@ -2,6 +2,7 @@ odoo.define('point_of_sale.ClientLine', function(require) {
     'use strict';
 
     const { PosComponent } = require('point_of_sale.PosComponent');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     class ClientLine extends PosComponent {
         static template = 'ClientLine';
@@ -13,6 +14,8 @@ odoo.define('point_of_sale.ClientLine', function(require) {
             }
         }
     }
+
+    Registry.add('ClientLine', ClientLine);
 
     return { ClientLine };
 });

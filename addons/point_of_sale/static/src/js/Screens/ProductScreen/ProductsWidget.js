@@ -6,6 +6,7 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
     const { ProductsWidgetControlPanel } = require('point_of_sale.ProductsWidgetControlPanel');
     const { ProductsList } = require('point_of_sale.ProductsList');
     const { useListener } = require('web.custom_hooks');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     class ProductsWidget extends PosComponent {
         static template = 'ProductsWidget';
@@ -60,6 +61,8 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
         }
     }
     ProductsWidget.components = { ProductsWidgetControlPanel, ProductsList };
+
+    Registry.add('ProductsWidget', ProductsWidget);
 
     return { ProductsWidget };
 });

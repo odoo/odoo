@@ -2,6 +2,7 @@ odoo.define('point_of_sale.OrderSummary', function(require) {
     'use strict';
 
     const { PosComponent } = require('point_of_sale.PosComponent');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     class OrderSummary extends PosComponent {
         static template = 'OrderSummary';
@@ -22,6 +23,8 @@ odoo.define('point_of_sale.OrderSummary', function(require) {
             this.tax = this.env.pos.format_currency(tax);
         }
     }
+
+    Registry.add('OrderSummary', OrderSummary);
 
     return { OrderSummary };
 });

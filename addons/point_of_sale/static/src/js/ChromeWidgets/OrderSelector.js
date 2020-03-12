@@ -3,6 +3,7 @@ odoo.define('point_of_sale.OrderSelector', function(require) {
 
     const { Chrome } = require('point_of_sale.chrome');
     const { PosComponent, addComponents } = require('point_of_sale.PosComponent');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     // Previously OrderSelectorWidget
     class OrderSelector extends PosComponent {
@@ -41,6 +42,8 @@ odoo.define('point_of_sale.OrderSelector', function(require) {
     }
 
     addComponents(Chrome, [OrderSelector]);
+
+    Registry.add('OrderSelector', OrderSelector);
 
     return { OrderSelector };
 });

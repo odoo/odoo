@@ -7,6 +7,7 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
     const { PosComponent, addComponents } = require('point_of_sale.PosComponent');
     const { OrderReceipt } = require('point_of_sale.OrderReceipt');
     const { useErrorHandlers } = require('point_of_sale.custom_hooks');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     const _t = core._t;
 
@@ -139,6 +140,8 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
 
     // register screen component
     addComponents(Chrome, [ReceiptScreen]);
+
+    Registry.add('ReceiptScreen', ReceiptScreen);
 
     return { ReceiptScreen };
 });

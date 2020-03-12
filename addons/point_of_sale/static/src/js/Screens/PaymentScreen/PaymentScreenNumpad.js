@@ -3,6 +3,7 @@ odoo.define('point_of_sale.PaymentScreenNumpad', function(require) {
 
     const { PosComponent } = require('point_of_sale.PosComponent');
     const { PSNumpadInputButton } = require('point_of_sale.PSNumpadInputButton');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     class PaymentScreenNumpad extends PosComponent {
         static template = 'PaymentScreenNumpad';
@@ -13,6 +14,8 @@ odoo.define('point_of_sale.PaymentScreenNumpad', function(require) {
     }
 
     PaymentScreenNumpad.components = { PSNumpadInputButton };
+
+    Registry.add('PaymentScreenNumpad', PaymentScreenNumpad);
 
     return { PaymentScreenNumpad };
 });

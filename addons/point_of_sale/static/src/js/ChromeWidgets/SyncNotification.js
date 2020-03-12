@@ -4,6 +4,7 @@ odoo.define('point_of_sale.SyncNotification', function(require) {
     const { useState } = owl;
     const { Chrome } = require('point_of_sale.chrome');
     const { PosComponent, addComponents } = require('point_of_sale.PosComponent');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     // Previously SynchNotificationWidget
     class SyncNotification extends PosComponent {
@@ -32,6 +33,8 @@ odoo.define('point_of_sale.SyncNotification', function(require) {
     }
 
     addComponents(Chrome, [SyncNotification]);
+
+    Registry.add('SyncNotification', SyncNotification);
 
     return { SyncNotification };
 });

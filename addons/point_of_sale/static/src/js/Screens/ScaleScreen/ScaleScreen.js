@@ -5,6 +5,7 @@ odoo.define('point_of_sale.ScaleScreen', function(require) {
     const { PosComponent, addComponents } = require('point_of_sale.PosComponent');
     const { Chrome } = require('point_of_sale.chrome');
     const { round_precision: round_pr } = require('web.utils');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     class ScaleScreen extends PosComponent {
         static template = 'ScaleScreen';
@@ -95,6 +96,8 @@ odoo.define('point_of_sale.ScaleScreen', function(require) {
     ScaleScreen.components = {};
 
     addComponents(Chrome, [ScaleScreen]);
+
+    Registry.add('ScaleScreen', ScaleScreen);
 
     return { ScaleScreen };
 });

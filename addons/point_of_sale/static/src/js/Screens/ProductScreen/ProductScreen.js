@@ -9,6 +9,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const { ActionpadWidget } = require('point_of_sale.ActionpadWidget');
     const { NumberBuffer } = require('point_of_sale.NumberBuffer');
     const { useListener } = require('web.custom_hooks');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     class ProductScreen extends PosComponent {
         static template = 'ProductScreen';
@@ -249,6 +250,8 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     };
 
     addComponents(Chrome, [ProductScreen]);
+
+    Registry.add('ProductScreen', ProductScreen);
 
     return { ProductScreen };
 });

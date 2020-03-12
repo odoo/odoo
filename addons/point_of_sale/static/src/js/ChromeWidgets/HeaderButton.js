@@ -4,6 +4,7 @@ odoo.define('point_of_sale.HeaderButton', function(require) {
     const { useState } = owl;
     const { Chrome } = require('point_of_sale.chrome');
     const { PosComponent, addComponents } = require('point_of_sale.PosComponent');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     // Previously HeaderButtonWidget
     // This is the close session button
@@ -31,6 +32,8 @@ odoo.define('point_of_sale.HeaderButton', function(require) {
     }
 
     addComponents(Chrome, [HeaderButton]);
+
+    Registry.add('HeaderButton', HeaderButton);
 
     return { HeaderButton };
 });

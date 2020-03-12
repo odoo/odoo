@@ -2,6 +2,7 @@ odoo.define('point_of_sale.ActionpadWidget', function(require) {
     'use strict';
 
     const { PosComponent } = require('point_of_sale.PosComponent');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     // const { ConfirmDialog } = require('point_of_sale.ConfirmDialog');
 
@@ -57,6 +58,8 @@ odoo.define('point_of_sale.ActionpadWidget', function(require) {
             await this.showTempScreen('ClientListScreen');
         }
     }
+
+    Registry.add('ActionpadWidget', ActionpadWidget);
 
     return { ActionpadWidget };
 });

@@ -5,6 +5,7 @@ odoo.define('point_of_sale.OrderReceipt', function(require) {
     const {
         WrappedProductNameLines,
     } = require('point_of_sale.WrappedProductNameLines');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     class OrderReceipt extends PosComponent {
         static template = 'OrderReceipt';
@@ -31,6 +32,8 @@ odoo.define('point_of_sale.OrderReceipt', function(require) {
         }
     }
     OrderReceipt.components = { WrappedProductNameLines }
+
+    Registry.add('OrderReceipt', OrderReceipt);
 
     return { OrderReceipt };
 });

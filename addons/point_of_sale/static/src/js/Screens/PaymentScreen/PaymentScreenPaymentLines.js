@@ -6,6 +6,7 @@ odoo.define('point_of_sale.PaymentScreenPaymentLines', function(require) {
     const {
         PaymentScreenElectronicPayment,
     } = require('point_of_sale.PaymentScreenElectronicPayment');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     class PaymentScreenPaymentLines extends PosComponent {
         static template = 'PaymentScreenPaymentLines';
@@ -31,6 +32,8 @@ odoo.define('point_of_sale.PaymentScreenPaymentLines', function(require) {
     }
 
     PaymentScreenPaymentLines.components = { PaymentScreenElectronicPayment };
+
+    Registry.add('PaymentScreenPaymentLines', PaymentScreenPaymentLines);
 
     return { PaymentScreenPaymentLines };
 });

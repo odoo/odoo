@@ -5,6 +5,7 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
     const { PosComponent } = require('point_of_sale.PosComponent');
     const { Orderline } = require('point_of_sale.Orderline');
     const { OrderSummary } = require('point_of_sale.OrderSummary');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     class OrderWidget extends PosComponent {
         static template = 'OrderWidget';
@@ -152,6 +153,8 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
     }
 
     OrderWidget.components = { Orderline, OrderSummary };
+
+    Registry.add('OrderWidget', OrderWidget);
 
     return { OrderWidget };
 });
