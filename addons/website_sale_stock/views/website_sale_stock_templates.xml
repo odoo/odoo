@@ -41,7 +41,7 @@
     <!-- Shopping Cart Lines -->
     <template id="website_sale_stock_cart_lines" inherit_id="website_sale.cart_lines" name="Shopping Cart Lines">
         <xpath expr="//input[@type='text'][hasclass('quantity')]" position="attributes">
-          <attribute name='t-att-data-max'>(line.product_uom_qty + (line.product_id.virtual_available - line.product_id.cart_qty)) if line.product_id.inventory_availability in ['always', 'threshold'] else None</attribute>
+          <attribute name='t-att-data-max'>(line.product_uom_qty + (line.product_id.virtual_available - line.product_id.cart_qty)) if line.product_id.type == 'product' and line.product_id.inventory_availability in ['always', 'threshold'] else None</attribute>
         </xpath>
         <xpath expr="//div[hasclass('css_quantity')]//i[hasclass('fa-plus')]/.." position="replace">
           <t t-if="line._get_stock_warning(clear=False)">
