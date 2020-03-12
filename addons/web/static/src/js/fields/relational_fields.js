@@ -1875,6 +1875,7 @@ var FieldMany2ManyTags = AbstractField.extend({
     fieldsToFetch: {
         display_name: {type: 'char'},
     },
+    limit: 1000,
 
     /**
      * @constructor
