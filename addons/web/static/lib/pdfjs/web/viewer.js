@@ -5077,7 +5077,10 @@ function () {
         return;
       }
 
-      if (!this._switchView(view, true)) {
+      // Odoo: This change is needed here as we can't change this parameter in an iframe.
+      // pass forceOpen argument to false to restrict opening of sidebar forcefully when
+      // pdf viewer opens initially.
+      if (!this._switchView(view, false)) {
         this._dispatchEvent();
       }
     }
