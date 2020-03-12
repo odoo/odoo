@@ -20,6 +20,16 @@
             <xpath expr="//div[hasclass('o_kanban_record_body')]" position="inside">
                 <field name="payment_status"/>
             </xpath>
+            <xpath expr="//div[hasclass('o_kanban_record_body')]" position="after">
+                <div class="o_kanban_record_bottom">
+                    <div t-if="record.event_ticket_id.raw_value" class="oe_kanban_bottom_left">
+                        <div class="o_field_many2manytags o_field_widget">
+                            <div t-attf-class="badge badge-pill o_tag_color_#{record.event_ticket_id.raw_value % 10}" >
+                                <span class="o_badge_text" title="Bug"><t t-esc="record.event_ticket_id.value"/></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </xpath>
         </field>
     </record>
