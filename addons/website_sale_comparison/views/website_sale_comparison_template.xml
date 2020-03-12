@@ -33,7 +33,7 @@
     <template id="product_attributes_body" inherit_id="website_sale.product" customize_show="True" name="Product attributes table">
         <xpath expr="//div[@id='product_attributes_simple']" position="replace"/>
         <xpath expr="//div[@id='product_full_description']" position="after">
-            <section class="container" id="product_full_spec">
+            <section class="container pt-5" id="product_full_spec">
                 <t t-set="categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
                 <t t-if="categories">
                     <h3 class="text-center mb32">Specifications for <t t-esc="product.name"/></h3>
@@ -98,8 +98,8 @@
         <t t-call="website.layout">
             <t t-set="additional_title">Shop Comparator</t>
             <div id="wrap" class="js_sale">
-                <div class="oe_structure" id="oe_structure_website_sale_comparison_product_compare_1"/>
-                <div class="container oe_website_sale">
+                <div class="oe_structure oe_empty" id="oe_structure_website_sale_comparison_product_compare_1"/>
+                <div class="container oe_website_sale pt-3">
                     <section class="container">
                         <h3>Compare Products</h3>
                         <table class="table table-bordered table-hover text-center mt16 table-comparator" id="o_comparelist_table">
@@ -160,6 +160,7 @@
                         </table>
                     </section>
                 </div>
+                <div class="oe_structure" id="oe_structure_website_sale_comparison_product_compare_2"/>
             </div>
         </t>
     </template>
