@@ -171,20 +171,23 @@ class IapAccount(models.Model):
         ]
         accounts = self.search(domain, order='id desc')
         if not accounts:
-            if force_create:
-                with self.pool.cursor() as cr:
-                    # Since the account did not exist yet, we will encounter a NoCreditError,
-                    # which is going to rollback the database and undo the account creation,
-                    # preventing the process to continue any further.
-                    IapAccount = self.with_env(self.env(cr=cr))
-                    account = IapAccount.search(domain, order='id desc', limit=1)
-                    if not account:
-                        account = IapAccount.create({'service_name': service_name})
-                    # fetch 'account_token' into cache with this cursor,
-                    # as self's cursor cannot see this account
-                    account.account_token
-                return self.browse(account.id)
-            return accounts
+            with self.pool.cursor() as cr:
+                # Since the account did not exist yet, we will encounter a NoCreditError,
+                # which is going to rollback the database and undo the account creation,
+                # preventing the process to continue any further.
+
+                # Flush the pending operations to avoid a deadlock.
+                self.flush()
+                IapAccount = self.with_env(self.env(cr=cr))
+                account = IapAccount.search(domain, order='id desc', limit=1)
+                if not account:
+                    if not force_create:
+                        return account
+                    account = IapAccount.create({'service_name': service_name})
+                # fetch 'account_token' into cache with this cursor,
+                # as self's cursor cannot see this account
+                account.account_token
+            return self.browse(account.id)
         accounts_with_company = accounts.filtered(lambda acc: acc.company_ids)
         if accounts_with_company:
             return accounts_with_company[0]
