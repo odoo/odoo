@@ -209,7 +209,7 @@
         <t t-call="website.layout">
             <t t-set="additional_title">Shop</t>
             <div id="wrap" class="js_sale">
-                <div class="oe_structure" id="oe_structure_website_sale_products_1"/>
+                <div class="oe_structure oe_empty" id="oe_structure_website_sale_products_1"/>
                 <div class="container oe_website_sale">
                     <div class="products_pager form-inline flex-md-nowrap justify-content-between justify-content-md-center">
                         <t t-call="website_sale.search">
@@ -273,11 +273,11 @@
                             </t>
                         </div>
                     </div>
-                    <div class="products_pager form-inline justify-content-center mt-3">
+                    <div class="products_pager form-inline justify-content-center py-3">
                         <t t-call="website.pager"/>
                     </div>
                 </div>
-                <div class="oe_structure mb32" id="oe_structure_website_sale_products_2"/>
+                <div class="oe_structure oe_empty" id="oe_structure_website_sale_products_2"/>
             </div>
         </t>
     </template>
@@ -550,22 +550,22 @@
                                 </div>
                             </div>
                             <hr />
-                            <t t-call="website_sale.product_custom_text"/>
                         </div>
                     </div>
                 </section>
-                <div itemprop="description" t-field="product.website_description" class="oe_structure mt16" id="product_full_description" />
+                <div itemprop="description" t-field="product.website_description" class="oe_structure oe_empty mt16" id="product_full_description"/>
             </div>
         </t>
     </template>
 
-    <!-- Dedicated template to not prevent updates on main view -->
-    <template id="product_custom_text" name="Product Custom Text">
-        <p class="text-muted">
-            30-day money-back guarantee<br/>
-            Free Shipping in U.S.<br/>
-            Buy now, get in 2 days
-        </p>
+    <template id="product_custom_text" inherit_id="website_sale.product" active="True" customize_show="True" name="Terms and Conditions">
+        <xpath expr="//div[@id='product_details']" position="inside">
+            <p class="text-muted">
+                <a href="/shop/terms">Terms and Conditions</a><br/>
+                30-day money-back guarantee<br/>
+                Shipping: 2-3 Business Days
+            </p>
+        </xpath>
     </template>
 
     <template inherit_id='website_sale.product' id="product_picture_magnify" customize_show="True" name="Image Zoom">

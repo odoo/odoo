@@ -11,7 +11,7 @@
             <!-- Topbar -->
             <t t-call="website_event.index_topbar"/>
             <!-- Drag/Drop Area -->
-            <div id="oe_structure_we_index_1" class="oe_structure"/>
+            <div id="oe_structure_we_index_1" class="oe_structure oe_empty"/>
             <!-- Content -->
             <div t-attf-class="o_wevent_events_list #{opt_events_list_cards and 'opt_event_list_cards_bg'}">
                 <div class="container">
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <!-- Drag/Drop Area -->
-            <div id="oe_structure_we_index_2" class="oe_structure"/>
+            <div id="oe_structure_we_index_2" class="oe_structure oe_empty"/>
         </div>
     </t>
 </template>
@@ -394,7 +394,8 @@
                 </nav>
             </t>
             <t t-raw="0"/>
-            <div class="oe_structure" id="oe_structure_website_event_layout_1" t-att-data-editor-sub-message="'Following content will appear on all events.'"/>
+            <t t-set="editor_sub_message">Following content will appear on all events.</t>
+            <div class="oe_structure oe_empty" id="oe_structure_website_event_layout_1" t-att-data-editor-sub-message="editor_sub_message"/>
         </div>
     </t>
 </template>
@@ -431,7 +432,7 @@
             <div class="container overflow-hidden">
                 <div class="row no-gutters mt-n4 mb-3">
                     <!-- Description -->
-                    <div id="o_wevent_event_main_col" class="col-lg-8 bg-white px-5 pt64 pb-0 shadow-sm">
+                    <div id="o_wevent_event_main_col" class="col-lg-8 bg-white px-5 pt48 pb-0 shadow-sm">
                         <span t-field="event.description" itemprop="description"/>
                     </div>
                     <div class="col-lg-4 bg-light shadow-sm d-print-none">

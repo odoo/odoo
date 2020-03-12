@@ -3,7 +3,7 @@ $-editor-messages-margin-x: 2%;
     width: 100% - $-editor-messages-margin-x * 2; // Need to be forced here to avoid flickering
     margin: 20px $-editor-messages-margin-x;
     border: 2px dashed #999999;
-    padding: 112px 0px;
+    padding: 12px 0px;
     text-align: center;
     color: #999999;
 
@@ -46,11 +46,9 @@ $-editor-messages-margin-x: 2%;
     }
 
     &.oe_structure.oe_empty, &[data-oe-type=html], .oe_structure.oe_empty {
-        &:empty {
+        &#wrap:empty, &#wrap > .oe_drop_zone.oe_insert:not(.oe_vertical):only-child {
             @extend %o-editor-messages;
-            &.oe_structure_small {
-                padding: 15px 0px;
-            }
+            padding: 112px 0px;
         }
         > .oe_drop_zone.oe_insert:not(.oe_vertical):only-child {
             @extend %o-editor-messages;

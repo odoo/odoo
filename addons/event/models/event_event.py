@@ -102,9 +102,12 @@ class EventEvent(models.Model):
         event_stages = self.env['event.stage'].search([])
         return event_stages[0] if event_stages else False
 
+    def _default_description(self):
+        return self.env['ir.ui.view']._render_template('event.event_default_descripton')
+
     name = fields.Char(string='Event', translate=True, required=True)
     note = fields.Text(string='Note')
-    description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False, sanitize_form=False)
+    description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False, sanitize_form=False, default=_default_description)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
         'res.users', string='Responsible', tracking=True,
