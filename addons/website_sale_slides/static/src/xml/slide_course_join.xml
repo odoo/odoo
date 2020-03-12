@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-extend="slide.course.join">
+        <t t-jquery=".o_wslides_js_course_join_link" t-operation="append">
+            <t t-if="widget.channel.channelEnroll == 'payment'">
+                <t t-if="widget.publicUser">
+                    Sign in
+                </t>
+                <t t-else="">
+                    Buy course
+                </t>
+            </t>
+        </t>
+    </t>
+</templates>
