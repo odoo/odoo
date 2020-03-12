@@ -27,7 +27,7 @@ class EventRegistration(models.Model):
         states={'draft': [('readonly', False)]})
     # attendee
     partner_id = fields.Many2one(
-        'res.partner', string='Contact',
+        'res.partner', string='Booked by',
         states={'done': [('readonly', True)]})
     name = fields.Char(
         string='Attendee Name', index=True,
