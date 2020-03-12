@@ -1,12 +1,17 @@
 .o_field_color_picker {
     display: flex;
+    float: right;
+    margin-right: 7px;
     ul {
         display: flex;
+        justify-content: flex-end;
         flex-wrap: wrap;
-        width: 100%;
         @include o-kanban-colorpicker;
         @include o-kanban-record-color;
+        width: 100%;
         max-width: unset;
+        margin: 0;
+        padding: 0;
         > li {
             border: 2px solid white;
             box-shadow: 0 0 0 1px gray('300');
@@ -16,6 +21,9 @@
 
 .o_field_color_picker_preview {
     @include o-kanban-record-color;
+    width: 400px;
+    float: right;
+    margin-right: 7px;
     > li {
         display: inline-block;
         margin: $o-kanban-inner-hmargin $o-kanban-inner-hmargin 0 0;
