@@ -603,6 +603,15 @@ class SaleOrder(models.Model):
     def _get_invoice_grouping_keys(self):
         return ['company_id', 'partner_id', 'currency_id']
 
+    @api.model
+    def _nothing_to_invoice_error(self):
+        msg = _("""There is nothing to invoice!\n
+Reason(s) of this behavior could be:
+- You should deliver your products before invoicing them: Click on the "truck" icon (top-right of your screen) and follow instructions.
+- You should modify the invoicing policy of your product: Open the product, go to the "Sales tab" and modify invoicing policy from "delivered quantities" to "ordered quantities".
+        """)
+        return UserError(msg)
+
     def _create_invoices(self, grouped=False, final=False, date=None):
         """
         Create the invoice associated to the SO.
@@ -642,13 +651,12 @@ class SaleOrder(models.Model):
                     invoice_vals['invoice_line_ids'].append((0, 0, line._prepare_invoice_line()))
 
             if not invoice_vals['invoice_line_ids']:
-                raise UserError(_('There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
+                raise self._nothing_to_invoice_error()
 
             invoice_vals_list.append(invoice_vals)
 
         if not invoice_vals_list:
-            raise UserError(_(
-                'There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
+            raise self._nothing_to_invoice_error()
 
         # 2) Manage 'grouped' parameter: group by (partner_id, currency_id).
         if not grouped:
