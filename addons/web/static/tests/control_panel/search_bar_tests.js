@@ -411,5 +411,27 @@ odoo.define('web.search_bar_tests', function (require) {
 
             actionManager.destroy();
         });
+
+        QUnit.test('open search view autocomplete on paste value using mouse', async function (assert) {
+            assert.expect(1);
+    
+            const actionManager = await createActionManager({
+                actions: this.actions,
+                archs: this.archs,
+                data: this.data,
+            });
+    
+            await actionManager.doAction(1);
+            // Simulate paste text through the mouse.
+            const searchInput = actionManager.el.querySelector('.o_searchview_input');
+            searchInput.value = "ABC";
+            await testUtils.dom.triggerEvent(searchInput, 'input',
+                    { inputType: 'insertFromPaste' });
+            await testUtils.nextTick();
+            assert.containsOnce(actionManager, '.o_searchview_autocomplete',
+                "should display autocomplete dropdown menu on paste in search view");
+    
+            actionManager.destroy();
+        });
     });
 });
