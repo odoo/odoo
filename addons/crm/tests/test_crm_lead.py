@@ -521,6 +521,37 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.probability, 100.0)
         self.assertEqual(lead.stage_id, self.stage_gen_won)  # generic won stage has lower sequence than team won stage
 
+    @users('user_sales_manager')
+    def test_crm_lead_unlink_calendar_event(self):
+        """ Test res_id / res_model is reset (and hide document button in calendar
+        event form view) when lead is unlinked """
+        lead = self.env['crm.lead'].create({'name': 'Lead With Meetings'})
+        meetings = self.env['calendar.event'].create([
+            {
+                'name': 'Meeting 1 of Lead',
+                'res_id': lead.id,
+                'res_model_id': self.env['ir.model']._get_id(lead._name),
+                'start': '2022-07-12 08:00:00',
+                'stop': '2022-07-12 10:00:00',
+            }, {
+                'name': 'Meeting 2 of Lead',
+                'opportunity_id': lead.id,
+                'res_id': lead.id,
+                'res_model_id': self.env['ir.model']._get_id(lead._name),
+                'start': '2022-07-13 08:00:00',
+                'stop': '2022-07-13 10:00:00',
+            }
+        ])
+        self.assertEqual(lead.calendar_event_count, 1)
+        self.assertEqual(meetings.opportunity_id, lead)
+        self.assertEqual(meetings.mapped('res_id'), [lead.id, lead.id])
+        self.assertEqual(meetings.mapped('res_model'), ['crm.lead', 'crm.lead'])
+        lead.unlink()
+        self.assertEqual(meetings.exists(), meetings)
+        self.assertFalse(meetings.opportunity_id)
+        self.assertEqual(set(meetings.mapped('res_id')), set([0]))
+        self.assertEqual(set(meetings.mapped('res_model')), set([False]))
+
     @users('user_sales_leads')
     def test_crm_lead_update_contact(self):
         # ensure initial data, especially for corner cases
