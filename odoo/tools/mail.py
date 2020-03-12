@@ -254,6 +254,21 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
 # HTML/Text management
 #----------------------------------------------------------
 
+
+def is_html_empty(html_content):
+    """Check if a html content is empty. If there are only formatting tags or
+    a void content return True. Famous use case if a '<p><br></p>' added by
+    some web editor.
+
+    :param str html_content: html content, coming from example from an HTML field
+    :returns: bool, True if no content found or if containing only void formatting tags
+    """
+    if not html_content:
+        return True
+    tag_re = re.compile(r'\<\s*\/?(?:p|div|span|br|b|i)\s*\>')
+    return not bool(re.sub(tag_re, '', html_content).strip())
+
+
 def html_keep_url(text):
     """ Transform the url into clickable link with <a/> tag """
     idx = 0
