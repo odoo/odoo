@@ -205,7 +205,7 @@ class FleetVehicle(models.Model):
             res.create_driver_history(vals['driver_id'])
         if 'future_driver_id' in vals and vals['future_driver_id']:
             future_driver = self.env['res.partner'].browse(vals['future_driver_id'])
-            future_driver.write({'plan_to_change_car': True})
+            future_driver.sudo().write({'plan_to_change_car': True})
         return res
 
     def write(self, vals):
@@ -215,7 +215,7 @@ class FleetVehicle(models.Model):
 
         if 'future_driver_id' in vals and vals['future_driver_id']:
             future_driver = self.env['res.partner'].browse(vals['future_driver_id'])
-            future_driver.write({'plan_to_change_car': True})
+            future_driver.sudo().write({'plan_to_change_car': True})
 
         res = super(FleetVehicle, self).write(vals)
         if 'active' in vals and not vals['active']:
@@ -246,7 +246,7 @@ class FleetVehicle(models.Model):
         vehicles._close_driver_history()
 
         for vehicle in self:
-            vehicle.future_driver_id.write({'plan_to_change_car': False})
+            vehicle.future_driver_id.sudo().write({'plan_to_change_car': False})
             vehicle.driver_id = vehicle.future_driver_id
             vehicle.future_driver_id = False
 
