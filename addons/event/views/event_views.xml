@@ -178,6 +178,10 @@
            <field name="view_mode">tree,kanban,form,calendar,graph</field>
         </record>
 
+        <record id="event.menu_event_registration_desk" model="ir.ui.menu">
+            <field name="action" ref="event_barcode.event_barcode_action_main_view"/>
+        </record>
+
         <!-- EVENT.EVENT VIEWS -->
         <record id="event_event_action_pivot" model="ir.actions.act_window" >
             <field name="name">Events Analysis</field>
