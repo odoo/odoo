@@ -156,7 +156,6 @@
 // Filters
 .o_filters_menu {
     .o_filter_condition {
-        @include o-search-options-dropdown-custom-item;
         margin-bottom: 8px;
         .o_or_filter { // or between conditions
             display: none;  // hidden for the first condition
@@ -183,7 +182,9 @@
     }
     .o_add_filter_menu { // apply and add buttons
         display: none;  // Needed by the webclient
-        @include o-search-options-dropdown-custom-item;
+    }
+    .o_add_filter_menu, .o_filter_condition {
+        padding-left: 3rem;
     }
 }
 
