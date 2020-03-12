@@ -1,72 +1,72 @@
 odoo.define('calendar.CalendarView', function (require) {
-"use strict";
+    "use strict";
 
-var CalendarPopover = require('web.CalendarPopover');
-var CalendarRenderer = require('web.CalendarRenderer');
-var CalendarView = require('web.CalendarView');
-var viewRegistry = require('web.view_registry');
+    const CalendarPopover = require('web.CalendarPopover');
+    const CalendarRenderer = require('web.CalendarRenderer');
+    const CalendarView = require('web.CalendarView');
+    const viewRegistry = require('web.view_registry');
 
-var AttendeeCalendarPopover = CalendarPopover.extend({
-    template: 'Calendar.attendee.status.popover',
-    events: _.extend({}, CalendarPopover.prototype.events, {
-        'click .o-calendar-attendee-status .dropdown-item': '_onClickAttendeeStatus'
-    }),
-    /**
-     * @constructor
-     */
-    init: function () {
-        var self = this;
-        this._super.apply(this, arguments);
-        var session = this.getSession();
-        // Show status dropdown if user is in attendees list
-        this.showStatusDropdown = _.contains(this.event.record.partner_ids, session.partner_id);
-        if (this.showStatusDropdown) {
-            this.statusColors = {accepted: 'text-success', declined: 'text-danger', tentative: 'text-muted', needsAction: 'text-dark'};
-            this.statusInfo = {};
-            _.each(this.fields.attendee_status.selection, function (selection) {
-                self.statusInfo[selection[0]] = {text: selection[1], color: self.statusColors[selection[0]]};
-            });
-            this.selectedStatusInfo = this.statusInfo[this.event.record.attendee_status];
+    class AttendeeCalendarPopover extends CalendarPopover {
+        /**
+         * @constructor
+         */
+        constructor(parent, props) {
+            super(...arguments);
+            // Show status dropdown if user is in attendees list
+            this.showStatusDropdown = _.contains(this.event.record.partner_ids, this.env.session.partner_id);
+            if (this.showStatusDropdown) {
+                this.statusColors = {accepted: 'text-success', declined: 'text-danger', tentative: 'text-muted', needsAction: 'text-dark'};
+                this.statusInfo = {};
+                (this.fields.attendee_status.selection).forEach((selection) => {
+                    this.statusInfo[selection[0]] = {text: selection[1], color: this.statusColors[selection[0]]};
+                });
+                this.selectedStatusInfo = this.statusInfo[this.event.record.attendee_status];
+            }
         }
-    },
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
+        // Handlers
+        //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickAttendeeStatus: function (ev) {
-        ev.preventDefault();
-        var self = this;
-        var selectedStatus = $(ev.currentTarget).attr('data-action');
-        this._rpc({
-            model: 'calendar.event',
-            method: 'change_attendee_status',
-            args: [this.event.id, selectedStatus],
-        }).then(function () {
-            self.event.record.attendee_status = selectedStatus;  // FIXEME: Maybe we have to reload view
-            self.$('.o-calendar-attendee-status-text').text(self.statusInfo[selectedStatus].text);
-            self.$('.o-calendar-attendee-status-icon').removeClass(_.values(self.statusColors).join(' ')).addClass(self.statusInfo[selectedStatus].color);
-        });
-    },
-});
+        /**
+         * @private
+         * @param {MouseEvent} ev
+         */
+        _onClickAttendeeStatus(ev) {
+            ev.preventDefault();
+            const selectedStatus = $(ev.currentTarget).attr('data-action');
+            this.env.services.rpc({
+                model: 'calendar.event',
+                method: 'change_attendee_status',
+                args: [this.event.id, selectedStatus],
+            }).then(() => {
+                this.event.record.attendee_status = selectedStatus;  // FIXEME: Maybe we have to reload view
+                this.el.querySelectorAll('.o-calendar-attendee-status-text').forEach(node => {
+                    node.innerHTML = this.statusInfo[selectedStatus].text;
+                });
+                this.el.querySelectorAll('.o-calendar-attendee-status-icon').forEach(node => {
+                    for (const key in this.statusColors) {
+                        node.classList.remove(this.statusColors[key]);
+                    }
+                    node.classList.add(this.statusInfo[selectedStatus].color);
+                });
+            });
+        }
+    }
 
-var AttendeeCalendarRenderer = CalendarRenderer.extend({
-    config: _.extend({}, CalendarRenderer.prototype.config, {
-        CalendarPopover: AttendeeCalendarPopover,
-    }),
-});
+    AttendeeCalendarPopover.template = "Calendar.attendee.status.popover";
 
+    const AttendeeCalendarRenderer = CalendarRenderer;
+    AttendeeCalendarRenderer.prototype.config = Object.assign(CalendarRenderer.prototype.config, {
+        CalendarPopover: AttendeeCalendarPopover
+    });
 
-var AttendeeCalendarView = CalendarView.extend({
-    config: _.extend({}, CalendarView.prototype.config, {
-        Renderer: AttendeeCalendarRenderer,
-    }),
-});
+    const AttendeeCalendarView = CalendarView.extend({
+        config: _.extend({}, CalendarView.prototype.config, {
+            Renderer: AttendeeCalendarRenderer,
+        }),
+    });
 
-viewRegistry.add('attendee_calendar', AttendeeCalendarView);
+    viewRegistry.add('attendee_calendar', AttendeeCalendarView);
 
 });

@@ -140,7 +140,6 @@ odoo.define("web.env", function (require) {
         qweb,
         services: Object.assign(services, {
             ajaxJsonRPC,
-            blockUI,
             getCookie,
             httpRequest,
             navigate,
