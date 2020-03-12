@@ -19,10 +19,12 @@ class StockMoveInvoice(AccountTestCommon):
         self.product_cable_management_box = self.env['product.product'].create({
             'name': 'Another product to deliver',
             'weight': 1.0,
+            'invoice_policy': 'order',
         })
         self.product_uom_unit = self.env.ref('uom.product_uom_unit')
         self.product_delivery_normal = self.env['product.product'].create({
             'name': 'Normal Delivery Charges',
+            'invoice_policy': 'order',
             'type': 'service',
             'list_price': 10.0,
             'categ_id': self.env.ref('delivery.product_category_deliveries').id,

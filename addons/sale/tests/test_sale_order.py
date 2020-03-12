@@ -306,6 +306,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
 
         product_shared = self.env['product.template'].create({
             'name': 'shared product',
+            'invoice_policy': 'order',
             'taxes_id': [(6, False, [tax_company_1.id, tax_company_2.id])],
             'property_account_income_id': self.account_receivable.id,
         })

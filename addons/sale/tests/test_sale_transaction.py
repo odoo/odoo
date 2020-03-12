@@ -9,6 +9,7 @@ class TestSaleTransaction(AccountTestCommon):
     def setUpClass(cls):
         super(TestSaleTransaction, cls).setUpClass()
         cls.product = cls.env['product.product'].create({
+            'invoice_policy': 'order',
             'name': 'Product A',
         })
         cls.order = cls.env['sale.order'].create({
