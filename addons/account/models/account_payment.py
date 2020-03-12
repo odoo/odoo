@@ -44,6 +44,7 @@ class account_payment(models.Model):
         default=False, copy=False,
         help="Technical field holding the number given to the journal entry, automatically set when the statement line is reconciled then stored to set the same number again if the line is cancelled, set to draft and re-processed again.")
 
+<<<<<<< HEAD
     # Money flows from the journal_id's default_debit_account_id or default_credit_account_id to the destination_account_id
     destination_account_id = fields.Many2one('account.account', compute='_compute_destination_account_id', readonly=True)
     # For money transfer, money goes from journal_id to a transfer account, then from the transfer account to destination_journal_id
@@ -58,6 +59,11 @@ class account_payment(models.Model):
 
     move_line_ids = fields.One2many('account.move.line', 'payment_id', readonly=True, copy=False, ondelete='restrict')
     move_reconciled = fields.Boolean(compute="_get_move_reconciled", readonly=True)
+=======
+    invoice_ids = fields.Many2many('account.invoice', string='Invoices', copy=False)
+    multi = fields.Boolean(string='Multi',
+                           help='Technical field indicating if the registering payment will generate multiple payments or not.')
+>>>>>>> 86be4357f24... temp
 
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancelled', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money'), ('transfer', 'Internal Transfer')], string='Payment Type', required=True, readonly=True, states={'draft': [('readonly', False)]})
@@ -96,6 +102,15 @@ class account_payment(models.Model):
     require_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be required or not in the payments form views')
 
     @api.model
+    def is_multi(self, invoices):
+        multi = any(inv.commercial_partner_id != invoices[0].commercial_partner_id
+            or MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type]
+            or inv.account_id != invoices[0].account_id
+            or inv.partner_bank_id != invoices[0].partner_bank_id
+            for inv in invoices)
+        return multi
+
+    @api.model
     def default_get(self, fields):
         rec = super(account_payment, self).default_get(fields)
         active_ids = self._context.get('active_ids') or self._context.get('active_id')
@@ -121,7 +136,12 @@ class account_payment(models.Model):
                         (dtype == 'out_invoice' and inv.type == 'out_refund')):
                     raise UserError(_("You cannot register payments for customer invoices and credit notes at the same time."))
 
+<<<<<<< HEAD
         amount = self._compute_payment_amount(invoices, invoices[0].currency_id)
+=======
+        # Look if we are mixin multiple commercial_partner or customer invoices with vendor bills
+        multi = self.is_multi(invoices)
+>>>>>>> 86be4357f24... temp
 
         if invoices[0].partner_id.type == 'invoice':
             partner_id = invoices[0].partner_id
@@ -335,6 +355,135 @@ class account_payment(models.Model):
                 )
         return total
 
+<<<<<<< HEAD
+=======
+
+class account_register_payments(models.TransientModel):
+    _name = "account.register.payments"
+    _inherit = 'account.abstract.payment'
+    _description = "Register Payments"
+
+    group_invoices = fields.Boolean(string="Group Invoices", help="""If enabled, groups invoices by commercial partner, invoice account,
+                                                                    type and recipient bank account in the generated payments. If disabled,
+                                                                    a distinct payment will be generated for each invoice.""")
+    show_communication_field = fields.Boolean(compute='_compute_show_communication_field')
+
+    @api.depends('invoice_ids.partner_id', 'group_invoices')
+    def _compute_show_communication_field(self):
+        """ We allow choosing a common communication for payments if the group
+        option has been activated, and all the invoices relate to the same
+        partner.
+        """
+        for record in self:
+            record.show_communication_field = len(record.invoice_ids) == 1 \
+                                              or record.group_invoices and len(record.mapped('invoice_ids.partner_id.commercial_partner_id')) == 1
+
+    @api.onchange('group_invoices')
+    def _onchange_group_invoices(self):
+        multi = self.is_multi(self.invoice_ids)
+        # Only one payment is made when grouping several invoices for the same partner
+        self.multi = multi or ((len(self.invoice_ids.mapped('partner_id')) == 1 and len(self.invoice_ids) > 1) and not self.group_invoices)
+
+    @api.onchange('journal_id')
+    def _onchange_journal(self):
+        res = super(account_register_payments, self)._onchange_journal()
+        active_ids = self._context.get('active_ids')
+        invoices = self.env['account.invoice'].browse(active_ids)
+        self.amount = abs(self._compute_payment_amount(invoices))
+        return res
+
+    @api.model
+    def default_get(self, fields):
+        rec = super(account_register_payments, self).default_get(fields)
+        active_ids = self._context.get('active_ids')
+
+        if not active_ids:
+            raise UserError(_("Programming error: wizard action executed without active_ids in context."))
+
+        return rec
+
+    @api.multi
+    def _groupby_invoices(self):
+        '''Groups the invoices linked to the wizard.
+
+        If the group_invoices option is activated, invoices will be grouped
+        according to their commercial partner, their account, their type and
+        the account where the payment they expect should end up. Otherwise,
+        invoices will be grouped so that each of them belongs to a
+        distinct group.
+
+        :return: a dictionary mapping, grouping invoices as a recordset under each of its keys.
+        '''
+        if not self.group_invoices:
+            return {inv.id: inv for inv in self.invoice_ids}
+
+        results = {}
+        # Create a dict dispatching invoices according to their commercial_partner_id, account_id, invoice_type and partner_bank_id
+        for inv in self.invoice_ids:
+            if inv.partner_id.type == 'invoice':
+                partner_id = inv.partner_id.id
+            else:
+                partner_id = inv.commercial_partner_id.id
+            account_id = inv.account_id.id
+            invoice_type = MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type]
+            recipient_account =  inv.partner_bank_id
+            key = (partner_id, account_id, invoice_type, recipient_account)
+            if not key in results:
+                results[key] = self.env['account.invoice']
+            results[key] += inv
+        return results
+
+    @api.multi
+    def _prepare_payment_vals(self, invoices):
+        '''Create the payment values.
+
+        :param invoices: The invoices that should have the same commercial partner and the same type.
+        :return: The payment values as a dictionary.
+        '''
+        amount = self._compute_payment_amount(invoices=invoices) if self.multi else self.amount
+        payment_type = ('inbound' if amount > 0 else 'outbound') if self.multi else self.payment_type
+        bank_account = self.multi and invoices[0].partner_bank_id or self.partner_bank_account_id
+        pmt_communication = self.show_communication_field and self.communication \
+                            or self.group_invoices and ' '.join([inv.reference or inv.number for inv in invoices]) \
+                            or invoices[0].reference # in this case, invoices contains only one element, since group_invoices is False
+
+        if invoices[0].partner_id.type == 'invoice':
+            partner_id = invoices[0].partner_id
+        else:
+            partner_id = invoices[0].commercial_partner_id
+
+        values = {
+            'journal_id': self.journal_id.id,
+            'payment_method_id': self.payment_method_id.id,
+            'payment_date': self.payment_date,
+            'communication': pmt_communication,
+            'invoice_ids': [(6, 0, invoices.ids)],
+            'payment_type': payment_type,
+            'amount': abs(amount),
+            'currency_id': self.currency_id.id,
+            'partner_id': partner_id.id,
+            'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
+            'partner_bank_account_id': bank_account.id,
+            'multi': False,
+            'payment_difference_handling': self.payment_difference_handling,
+            'writeoff_account_id': self.writeoff_account_id.id,
+            'writeoff_label': self.writeoff_label,
+        }
+
+        return values
+
+    @api.multi
+    def get_payments_vals(self):
+        '''Compute the values for payments.
+
+        :return: a list of payment values (dictionary).
+        '''
+        if self.multi:
+            groups = self._groupby_invoices()
+            return [self._prepare_payment_vals(invoices) for invoices in groups.values()]
+        return [self._prepare_payment_vals(self.invoice_ids)]
+
+>>>>>>> 86be4357f24... temp
     @api.multi
     def name_get(self):
         return [(payment.id, payment.name or _('Draft Payment')) for payment in self]
