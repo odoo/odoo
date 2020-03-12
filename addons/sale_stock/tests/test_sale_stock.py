@@ -126,6 +126,7 @@ class TestSaleStock(TestSaleCommon):
         advance_product = self.env['product.product'].create({
             'name': 'Deposit',
             'type': 'service',
+            'invoice_policy': 'order',
         })
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
             'advance_payment_method': 'percentage',
