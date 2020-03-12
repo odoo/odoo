@@ -260,7 +260,7 @@ class StockMove(models.Model):
                 todo_valued_moves._sanity_check_for_valuation()
                 stock_valuation_layers |= getattr(todo_valued_moves, '_create_%s_svl' % valued_type)()
 
-        for svl in stock_valuation_layers:
+        for svl in stock_valuation_layers.with_context(active_test=False):
             if not svl.product_id.valuation == 'real_time':
                 continue
             if svl.currency_id.is_zero(svl.value):
@@ -272,7 +272,7 @@ class StockMove(models.Model):
         # For every in move, run the vacuum for the linked product.
         products_to_vacuum = valued_moves['in'].mapped('product_id')
         company = valued_moves['in'].mapped('company_id') and valued_moves['in'].mapped('company_id')[0] or self.env.company
-        for product_to_vacuum in products_to_vacuum:
+        for product_to_vacuum in products_to_vacuum.with_context(active_test=False):
             product_to_vacuum._run_fifo_vacuum(company)
 
         return res
