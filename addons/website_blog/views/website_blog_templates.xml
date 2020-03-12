@@ -32,7 +32,7 @@
 
             <!-- Droppable-area shared across all blog's pages -->
             <t t-set="oe_structure_blog_footer_description">Visible in all blogs' pages</t>
-            <div class="oe_structure oe_structure_small"
+            <div class="oe_structure oe_empty"
                 id="oe_structure_blog_footer"
                 t-att-data-editor-sub-message="oe_structure_blog_footer_description"/>
         </div>
@@ -403,7 +403,7 @@ list of filtered posts (by date or tag).
 -->
 <template id="opt_blog_post_read_next" name="Read Next Article" inherit_id="website_blog.blog_post_complete" active="True" customize_show="True">
     <xpath expr="//section[@id='o_wblog_post_footer']" position="inside">
-        <div t-if="next_post" class="css_editable_mode_hidden mt-5">
+        <div t-if="next_post" class="mt-5">
             <t t-if="opt_blog_post_regular_cover">
                 <t t-if="opt_blog_post_sidebar" t-set="readableClass" t-value="'o_wblog_read_with_sidebar'"/>
                 <t t-else="" t-set="readableClass" t-value="'o_container_small'"/>
