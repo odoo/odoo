@@ -916,6 +916,44 @@ Andrew</p>]]></field>
             <field name="source_id" ref="utm.utm_source_search_engine"/>
         </record>
 
+        <record id="crm_case_33" model="crm.lead">
+            <field name="create_date" eval="datetime.now() - relativedelta(months=2)"/>
+            <field name="type">opportunity</field>
+            <field name="name">Quote for 600 Burritos</field>
+            <field name="planned_revenue">22500</field>
+            <field name="probability">20.0</field>
+            <field name="contact_name">Erik N. French</field>
+            <field name="email_from">ErikNFrench@armyspy.com</field>
+            <field name="country_id" ref="base.au"/>
+            <field name="city">Chevy Chase</field>
+            <field name="street">1920 Del Dew Drive</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="priority">1</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
+
+        <!--Event Demo-->
+        <record id="event_crm_case_33" model="calendar.event">
+            <field name="name">Club Office Furnitures</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="partner_ids" eval="[(6,0,[ref('base.res_partner_1')])]"/>
+            <field name="description">Meeting to discuss project plan and hash out the details of implementation.</field>
+            <field name="start" eval="time.strftime('%Y-%m-03 10:20:00')"/>
+            <field name="stop" eval="time.strftime('%Y-%m-03 16:30:00')"/>
+            <field name="duration" eval="6.3"/>
+            <field name="allday" eval="False"/>
+            <field name="state">open</field>
+            <field name="res_id" ref="crm_case_33"/>
+            <field name="res_model_id" ref="crm.model_crm_lead"/>
+        </record>
+
 <record id="crm_case_graph_1" model="crm.lead">
 <field name="create_date" eval="datetime.now() - relativedelta(months=1)"/>
 <field name="type">lead</field>

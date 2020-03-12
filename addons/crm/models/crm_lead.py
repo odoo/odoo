@@ -430,6 +430,20 @@ class Lead(models.Model):
 
         return write_result
 
+    def unlink(self):
+        # Delete those fields in order to make the Document button in the
+        # event form view invisible.
+        for lead in self:
+            events = lead.env['calendar.event'].search([
+                ('res_id', '=', lead.id),
+                ('res_model_id', '=', self._name),
+            ])
+            events.write({
+                'res_id': False,
+                'res_model_id': False,
+            })
+        return super(Lead, self).unlink()
+
     def _update_probability(self):
         lead_probabilities = self.sudo()._pls_get_naive_bayes_probabilities()
         for lead in self:

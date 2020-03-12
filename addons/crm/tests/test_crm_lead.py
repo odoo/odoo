@@ -23,6 +23,15 @@ class TestCRMLead(TestCrmCases):
         # Only Sales manager Unlink the Lead so test with Manager's access rights
         self.env.ref('crm.crm_case_4').with_user(self.crm_salemanager).unlink()
 
+    def test_crm_lead_unlink_calendar_event(self):
+        # Document button in event form view is invisible once related lead
+        # is deleted
+        self.env.ref('crm.crm_case_33').unlink()
+        event = self.env['calendar.event'].browse(
+            self.ref('crm.event_crm_case_33'))
+        self.assertFalse(event.res_id, 'Resource id is not unset')
+        self.assertFalse(event.res_model_id, 'Resource model is not unset')
+
     def test_find_stage(self):
         # I create a new lead
         lead = self.env['crm.lead'].create({
