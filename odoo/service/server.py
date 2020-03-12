@@ -109,6 +109,19 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
         me = threading.currentThread()
         me.name = 'odoo.service.http.request.%s' % (me.ident,)
 
+    def send_response(self, code, message=None):
+        # if we get an HTTP/1.1 compatible request and werkzeug would respond with HTTP/1.0
+        # we "upgrade" to HTTP/1.1 for chrome to use the ETag header and not just using HTTP/1.0 caching behaviour
+        if self.request_version == 'HTTP/1.1' and self.protocol_version == 'HTTP/1.0':
+            """Send the response header and log the response code."""
+            self.log_request(code)
+            if message is None:
+                message = code in self.responses and self.responses[code][0] or ''
+            hdr = "%s %d %s\r\n" % (self.request_version, code, message)
+            self.wfile.write(hdr.encode('ascii'))
+        else:
+            super(RequestHandler, self).send_response(code, message)
+
 
 class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
