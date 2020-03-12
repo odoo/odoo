@@ -6,6 +6,7 @@ odoo.define('point_of_sale.SetPricelistButton', function(require) {
     const { useListener } = require('web.custom_hooks');
 
     class SetPricelistButton extends PosComponent {
+        static template = 'SetPricelistButton';
         constructor() {
             super(...arguments);
             useListener('click', this.onClick);

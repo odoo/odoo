@@ -7,6 +7,7 @@ odoo.define('point_of_sale.ClientScreenButton', function(require) {
 
     // Formerly ClientScreenWidget
     class ClientScreenButton extends PosComponent {
+        static template = 'ClientScreenButton';
         constructor() {
             super(...arguments);
             this.state = useState({ status: 'failure' });

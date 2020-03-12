@@ -8,6 +8,7 @@ odoo.define('point_of_sale.PaymentScreenPaymentLines', function(require) {
     } = require('point_of_sale.PaymentScreenElectronicPayment');
 
     class PaymentScreenPaymentLines extends PosComponent {
+        static template = 'PaymentScreenPaymentLines';
         formatLineAmount(paymentline) {
             return this.env.pos.format_currency_no_symbol(paymentline.get_amount());
         }

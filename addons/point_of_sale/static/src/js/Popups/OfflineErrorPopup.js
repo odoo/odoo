@@ -10,6 +10,7 @@ odoo.define('point_of_sale.OfflineErrorPopup', function(require) {
      * an option to not show it again.
      */
     class OfflineErrorPopup extends AbstractAwaitablePopup {
+        static template = 'OfflineErrorPopup';
         dontShowAgain() {
             this.constructor.dontShow = true;
             this.cancel();

@@ -3,7 +3,9 @@ odoo.define('point_of_sale.DraggableHandle', function(require) {
 
     const { PosComponent } = require('point_of_sale.PosComponent');
 
-    class DraggableHandle extends PosComponent {}
+    class DraggableHandle extends PosComponent {
+        static template = 'DraggableHandle';
+    }
 
     return { DraggableHandle };
 });

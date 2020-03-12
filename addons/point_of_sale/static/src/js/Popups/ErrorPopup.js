@@ -6,7 +6,9 @@ odoo.define('point_of_sale.ErrorPopup', function(require) {
     const { AbstractAwaitablePopup } = require('point_of_sale.AbstractAwaitablePopup');
 
     // formerly ErrorPopupWidget
-    class ErrorPopup extends AbstractAwaitablePopup {}
+    class ErrorPopup extends AbstractAwaitablePopup {
+        static template = 'ErrorPopup';
+    }
     ErrorPopup.defaultProps = {
         confirmText: 'Ok',
         cancelText: 'Cancel',

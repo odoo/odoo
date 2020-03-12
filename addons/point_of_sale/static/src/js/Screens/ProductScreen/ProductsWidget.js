@@ -8,6 +8,7 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
     const { useListener } = require('web.custom_hooks');
 
     class ProductsWidget extends PosComponent {
+        static template = 'ProductsWidget';
         /**
          * @param {Object} props
          * @param {number?} props.startCategoryId

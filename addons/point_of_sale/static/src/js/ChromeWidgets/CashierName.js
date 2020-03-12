@@ -6,6 +6,7 @@ odoo.define('point_of_sale.CashierName', function(require) {
 
     // Previously UsernameWidget
     class CashierName extends PosComponent {
+        static template = 'CashierName';
         get username() {
             const cashier = this.env.pos.get_cashier();
             if (cashier) {

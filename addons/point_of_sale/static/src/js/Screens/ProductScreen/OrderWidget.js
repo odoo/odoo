@@ -7,6 +7,7 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
     const { OrderSummary } = require('point_of_sale.OrderSummary');
 
     class OrderWidget extends PosComponent {
+        static template = 'OrderWidget';
         constructor() {
             super(...arguments);
             this.scrollableRef = useRef('scrollable');

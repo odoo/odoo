@@ -7,6 +7,7 @@ odoo.define('point_of_sale.SyncNotification', function(require) {
 
     // Previously SynchNotificationWidget
     class SyncNotification extends PosComponent {
+        static template = 'SyncNotification';
         constructor() {
             super(...arguments);
             const synch = this.env.pos.get('synch');

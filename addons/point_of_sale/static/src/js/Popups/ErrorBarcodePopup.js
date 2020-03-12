@@ -7,6 +7,7 @@ odoo.define('point_of_sale.ErrorBarcodePopup', function(require) {
 
     // formerly ErrorBarcodePopupWidget
     class ErrorBarcodePopup extends AbstractAwaitablePopup {
+        static template = 'ErrorBarcodePopup';
         get translatedMessage() {
             return this.env._t(this.props.message);
         }

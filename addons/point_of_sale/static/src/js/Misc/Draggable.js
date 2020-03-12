@@ -34,6 +34,7 @@ odoo.define('point_of_sale.Draggable', function(require) {
      * out of the screen.
      */
     class Draggable extends PosComponent {
+        static template = 'Draggable';
         constructor() {
             super(...arguments);
             this.isDragging = false;

@@ -6,6 +6,7 @@ odoo.define('point_of_sale.OrderSelector', function(require) {
 
     // Previously OrderSelectorWidget
     class OrderSelector extends PosComponent {
+        static template = 'OrderSelector';
         mounted() {
             this.env.pos.get('orders').on('add remove change', () => this.render(), this);
             this.env.pos.on('change:selectedOrder', () => this.render(), this);

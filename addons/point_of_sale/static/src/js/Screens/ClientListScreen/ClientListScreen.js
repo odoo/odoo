@@ -10,6 +10,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
     const { ClientDetailsEdit } = require('point_of_sale.ClientDetailsEdit');
 
     class ClientListScreen extends PosComponent {
+        static template = 'ClientListScreen';
         constructor() {
             super(...arguments);
             this.state = {

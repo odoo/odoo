@@ -10,6 +10,7 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
 
     // formerly NumberPopupWidget
     class NumberPopup extends AbstractAwaitablePopup {
+        static template = 'NumberPopup';
         /**
          * @param {Object} props
          * @param {Boolean} props.isPassword Show password popup.

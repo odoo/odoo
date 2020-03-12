@@ -5,6 +5,7 @@ odoo.define('point_of_sale.SaleDetailsButton', function(require) {
     const { PosComponent, addComponents } = require('point_of_sale.PosComponent');
 
     class SaleDetailsButton extends PosComponent {
+        static template = 'SaleDetailsButton';
         async onClick() {
             const saleDetails = await this.rpc({
                 model: 'report.point_of_sale.report_saledetails',

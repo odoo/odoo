@@ -5,8 +5,9 @@ odoo.define('point_of_sale.PaymentScreenNumpad', function(require) {
     const { PSNumpadInputButton } = require('point_of_sale.PSNumpadInputButton');
 
     class PaymentScreenNumpad extends PosComponent {
+        static template = 'PaymentScreenNumpad';
         constructor() {
-            super(...arguments)
+            super(...arguments);
             this.decimalPoint = this.env._t.database.parameters.decimal_point;
         }
     }

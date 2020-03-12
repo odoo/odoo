@@ -15,6 +15,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
     const { Printer } = require('point_of_sale.Printer');
 
     class PaymentScreen extends PosComponent {
+        static template = 'PaymentScreen';
         constructor() {
             super(...arguments);
             useListener('delete-payment-line', this.deletePaymentLine);

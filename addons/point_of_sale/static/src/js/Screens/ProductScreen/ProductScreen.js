@@ -11,6 +11,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const { useListener } = require('web.custom_hooks');
 
     class ProductScreen extends PosComponent {
+        static template = 'ProductScreen';
         constructor() {
             super(...arguments);
             useListener('update-selected-orderline', this._updateSelectedOrderline);

@@ -7,6 +7,7 @@ odoo.define('point_of_sale.OrderImportPopup', function(require) {
 
     // formerly OrderImportPopupWidget
     class OrderImportPopup extends AbstractAwaitablePopup {
+        static template = 'OrderImportPopup';
         get unpaidSkipped() {
             return (
                 (this.props.report.unpaid_skipped_existing || 0) +

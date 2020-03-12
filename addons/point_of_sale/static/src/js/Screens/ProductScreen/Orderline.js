@@ -4,6 +4,7 @@ odoo.define('point_of_sale.Orderline', function(require) {
     const { PosComponent } = require('point_of_sale.PosComponent');
 
     class Orderline extends PosComponent {
+        static template = 'Orderline';
         selectLine() {
             this.trigger('select-line', { orderline: this.props.line });
         }

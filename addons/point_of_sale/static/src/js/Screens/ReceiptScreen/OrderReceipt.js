@@ -7,6 +7,7 @@ odoo.define('point_of_sale.OrderReceipt', function(require) {
     } = require('point_of_sale.WrappedProductNameLines');
 
     class OrderReceipt extends PosComponent {
+        static template = 'OrderReceipt';
         constructor() {
             super(...arguments);
             this.order = this.props.order;

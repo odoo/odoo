@@ -20,6 +20,7 @@ odoo.define('point_of_sale.chrome', function(require) {
      * Chrome is the root component of the PoS App.
      */
     class Chrome extends PosComponent {
+        static template = 'Chrome';
         constructor() {
             super(...arguments);
             useListener('show-main-screen', this.__showScreen);

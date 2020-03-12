@@ -5,6 +5,7 @@ odoo.define('point_of_sale.EditListInput', function(require) {
     const { PosComponent } = require('point_of_sale.PosComponent');
 
     class EditListInput extends PosComponent {
+        static template = 'EditListInput';
         inputRef = useRef('input');
         mounted() {
             this.inputRef.el.focus();

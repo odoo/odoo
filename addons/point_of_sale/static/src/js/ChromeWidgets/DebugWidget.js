@@ -11,6 +11,7 @@ odoo.define('point_of_sale.DebugWidget', function(require) {
     const { DraggableHandle } = require('point_of_sale.DraggableHandle');
 
     class DebugWidget extends PosComponent {
+        static template = 'DebugWidget';
         constructor() {
             super(...arguments);
             this.state = useState({

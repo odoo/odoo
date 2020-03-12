@@ -9,6 +9,7 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
     const { CategoryButton } = require('point_of_sale.CategoryButton');
 
     class ProductsWidgetControlPanel extends PosComponent {
+        static template = 'ProductsWidgetControlPanel';
         constructor() {
             super(...arguments);
             this.searchTimeout = null;

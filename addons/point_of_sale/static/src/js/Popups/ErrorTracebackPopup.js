@@ -7,6 +7,7 @@ odoo.define('point_of_sale.ErrorTracebackPopup', function(require) {
 
     // formerly ErrorTracebackPopupWidget
     class ErrorTracebackPopup extends AbstractAwaitablePopup {
+        static template = 'ErrorTracebackPopup';
         get tracebackUrl() {
             const blob = new Blob([this.props.body]);
             const URL = window.URL || window.webkitURL;

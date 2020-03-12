@@ -10,6 +10,7 @@ odoo.define('point_of_sale.TextAreaPopup', function(require) {
     // IMPROVEMENT: This code is very similar to TextInputPopup.
     //      Combining them would reduce the code.
     class TextAreaPopup extends AbstractAwaitablePopup {
+        static template = 'TextAreaPopup';
         constructor() {
             super(...arguments);
             this.state = useState({ inputValue: '' });

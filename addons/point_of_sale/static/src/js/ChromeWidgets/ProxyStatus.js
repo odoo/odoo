@@ -7,6 +7,7 @@ odoo.define('point_of_sale.ProxyStatus', function(require) {
 
     // Previously ProxyStatusWidget
     class ProxyStatus extends PosComponent {
+        static template = 'ProxyStatus';
         constructor() {
             super(...arguments);
             const initialProxyStatus = this.env.pos.proxy.get('status');

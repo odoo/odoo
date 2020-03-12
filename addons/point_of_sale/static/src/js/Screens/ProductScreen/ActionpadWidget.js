@@ -6,6 +6,7 @@ odoo.define('point_of_sale.ActionpadWidget', function(require) {
     // const { ConfirmDialog } = require('point_of_sale.ConfirmDialog');
 
     class ActionpadWidget extends PosComponent {
+        static template = 'ActionpadWidget';
         mounted() {
             this.env.pos.on(
                 'change:selectedClient',

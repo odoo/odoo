@@ -7,6 +7,7 @@ odoo.define('point_of_sale.ScaleScreen', function(require) {
     const { round_precision: round_pr } = require('web.utils');
 
     class ScaleScreen extends PosComponent {
+        static template = 'ScaleScreen';
         /**
          * @param {Object} props
          * @param {Object} props.product The product to weight.

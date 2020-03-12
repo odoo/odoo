@@ -6,6 +6,7 @@ odoo.define('point_of_sale.SetFiscalPositionButton', function(require) {
     const { useListener } = require('web.custom_hooks');
 
     class SetFiscalPositionButton extends PosComponent {
+        static template = 'SetFiscalPositionButton';
         constructor() {
             super(...arguments);
             useListener('click', this.onClick);

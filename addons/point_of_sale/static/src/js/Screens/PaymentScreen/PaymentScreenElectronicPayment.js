@@ -3,7 +3,9 @@ odoo.define('point_of_sale.PaymentScreenElectronicPayment', function(require) {
 
     const { PosComponent } = require('point_of_sale.PosComponent');
 
-    class PaymentScreenElectronicPayment extends PosComponent {}
+    class PaymentScreenElectronicPayment extends PosComponent {
+        static template = 'PaymentScreenElectronicPayment';
+    }
 
     return { PaymentScreenElectronicPayment };
 });

@@ -40,6 +40,7 @@ odoo.define('point_of_sale.EditListPopup', function(require) {
      * ```
      */
     class EditListPopup extends AbstractAwaitablePopup {
+        static template = 'EditListPopup';
         /**
          * @param {String} title required title of popup
          * @param {Array} [props.array=[]] the array of { id, text } to be edited

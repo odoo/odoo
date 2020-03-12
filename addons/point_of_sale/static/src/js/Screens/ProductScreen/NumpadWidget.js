@@ -5,6 +5,7 @@ odoo.define('point_of_sale.NumpadWidget', function(require) {
     const { PosComponent } = require('point_of_sale.PosComponent');
 
     class NumpadWidget extends PosComponent {
+        static template = 'NumpadWidget';
         constructor() {
             super(...arguments);
             this.state = useState({ mode: 'quantity' });
