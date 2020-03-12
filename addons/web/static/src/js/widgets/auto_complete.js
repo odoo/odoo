@@ -54,7 +54,9 @@ return Widget.extend({
             self._updateSearch();
         });
         this.$input.on('input', function (ev) {
-            if (ev.originalEvent && ev.originalEvent.inputType === 'insertCompositionText') {
+            if (ev.originalEvent &&
+                ev.originalEvent.inputType === 'insertCompositionText' ||
+                ev.originalEvent.inputType === 'insertFromPaste') {
                 // click inside keyboard IME suggestions menu
                 self._updateSearch();
             }
