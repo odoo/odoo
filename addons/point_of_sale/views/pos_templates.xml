@@ -39,6 +39,7 @@
         <t t-call-assets="web.assets_common" t-css="false"/>
         <t t-call-assets="point_of_sale.pos_assets_backend" t-css="false"/>
         <t t-call-assets="point_of_sale.assets"/>
+        <t t-call-assets="point_of_sale.main"/>
         <t t-call="web.conditional_assets_tests"/>
 
         <script type="text/javascript" id="loading-script" t-raw="init">
@@ -63,6 +64,7 @@
     <t t-call-assets="web.assets_common" t-css="false"/>
     <t t-call-assets="point_of_sale.pos_assets_backend" t-css="false"/>
     <t t-call-assets="point_of_sale.assets"/>
+    <t t-call-assets="point_of_sale.main"/>
 
     <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-2.9.1.css"/>
     <script type="text/javascript" src="/web/static/lib/qunit/qunit-2.9.1.js"></script>

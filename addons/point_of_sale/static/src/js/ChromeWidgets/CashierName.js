@@ -3,6 +3,7 @@ odoo.define('point_of_sale.CashierName', function(require) {
 
     const { Chrome } = require('point_of_sale.chrome');
     const { PosComponent, addComponents } = require('point_of_sale.PosComponent');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     // Previously UsernameWidget
     class CashierName extends PosComponent {
@@ -18,6 +19,8 @@ odoo.define('point_of_sale.CashierName', function(require) {
     }
 
     addComponents(Chrome, [CashierName]);
+
+    Registry.add('CashierName', CashierName);
 
     return { CashierName };
 });

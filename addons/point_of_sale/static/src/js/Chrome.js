@@ -9,6 +9,7 @@ odoo.define('point_of_sale.chrome', function(require) {
     const { BarcodeEvents } = require('barcodes.BarcodeEvents');
     const { NumberBuffer } = require('point_of_sale.NumberBuffer');
     const { loadCSS } = require('web.ajax');
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     // This is kind of a trick.
     // We get a reference to the whole exports so that
@@ -387,13 +388,15 @@ odoo.define('point_of_sale.chrome', function(require) {
 
     Chrome.startUpScreen = {
         name: 'ProductScreen',
-        component: Chrome.components.ProductScreen,
+        isShown: false,
+        component: null,
     };
 
     Chrome.setStartUpScreen = function(screenComponent) {
         this.startUpScreen.name = screenComponent.name;
-        this.startUpScreen.component = screenComponent;
     };
+
+    Registry.add(Chrome.name, Chrome);
 
     return { Chrome };
 });

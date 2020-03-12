@@ -2,6 +2,7 @@ odoo.define('point_of_sale.PosComponent', function(require) {
     'use strict';
 
     const { Component } = owl;
+    const Registry = require('point_of_sale.ComponentsRegistry');
 
     class PosComponent extends Component {
         /**
@@ -60,6 +61,14 @@ odoo.define('point_of_sale.PosComponent', function(require) {
             return this.__owl__.observer.weakMap.get(state).value;
         }
     }
+    PosComponent.components = new Proxy(
+        {},
+        {
+            get(target, key) {
+                return Registry.get(key) ? Registry.get(key) : target[key];
+            },
+        }
+    );
 
     /**
      * Extends the static `components` of parentComponent with the given components array.
@@ -72,13 +81,7 @@ odoo.define('point_of_sale.PosComponent', function(require) {
             return;
         }
         for (let component of components) {
-            if (component.name in parentComponent.components) {
-                console.warn(
-                    `${component.name} already exists in ${parentComponent.name}'s components so it was skipped.`
-                );
-            } else {
-                parentComponent.components[component.name] = component;
-            }
+            parentComponent.components[component.name] = component;
         }
     }
 
