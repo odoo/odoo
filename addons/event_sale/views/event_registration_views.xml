@@ -17,9 +17,9 @@
         <field name="model">event.registration</field>
         <field name="inherit_id" ref="event.event_registration_view_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='event_id']" position="after">
-                <br/>
-                <field name="event_ticket_id"/>
+            <xpath expr="//div[hasclass('o_kanban_record_body')]" position="inside">
+                <field name="payment_status"/>
+            </xpath>
             </xpath>
         </field>
     </record>

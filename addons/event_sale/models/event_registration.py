@@ -17,6 +17,7 @@ class EventRegistration(models.Model):
     campaign_id = fields.Many2one('utm.campaign', 'Campaign', related="sale_order_id.campaign_id", store=True)
     source_id = fields.Many2one('utm.source', 'Source', related="sale_order_id.source_id", store=True)
     medium_id = fields.Many2one('utm.medium', 'Medium', related="sale_order_id.medium_id", store=True)
+    payment_status = fields.Char(compute="_compute_payment_status")
 
     def action_view_sale_order(self):
         action = self.env.ref('sale.action_orders').read()[0]
@@ -86,17 +87,23 @@ class EventRegistration(models.Model):
     def _get_registration_summary(self):
         res = super(EventRegistration, self)._get_registration_summary()
         order = self.sale_order_id.sudo()
-        order_line = self.sale_order_line_id.sudo()
         has_to_pay = False
-        if not order or float_is_zero(order_line.price_total, precision_digits=order.currency_id.rounding):
-            payment_status = _('Free')
-        elif not order.invoice_ids or any(invoice.payment_state != 'paid' for invoice in order.invoice_ids):
-            payment_status = _('To pay')
+        if not order.invoice_ids or any(invoice.payment_state != 'paid' for invoice in order.invoice_ids):
             has_to_pay = True
-        else:
-            payment_status = _('Paid')
         res.update({
-            'payment_status': payment_status,
+            'payment_status': self.payment_status,
             'has_to_pay': has_to_pay
         })
         return res
+
+    @api.depends('sale_order_id', 'sale_order_line_id')
+    def _compute_payment_status(self):
+        for record in self:
+            order = record.sale_order_id.sudo()
+            order_line = record.sale_order_line_id.sudo()
+            if not order or float_is_zero(order_line.price_total, precision_digits=order.currency_id.rounding):
+                record.payment_status = _('Free')
+            elif not order.invoice_ids or any(invoice.payment_state != 'paid' for invoice in order.invoice_ids):
+                record.payment_status = _('To pay')
+            else:
+                record.payment_status = _('Paid')
