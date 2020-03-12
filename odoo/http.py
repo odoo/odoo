@@ -1356,7 +1356,13 @@ class Root(object):
 
         if statics:
             _logger.info("HTTP Configuring static files")
-        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, statics, cache_timeout=STATIC_CACHE)
+        try:
+            cache_timeout = int(os.environ.get('ODOO_ADDONS_STATIC_CACHE_TIMEOUT', STATIC_CACHE))
+        except ValueError as e:
+            _logger.warning("Only integer values are supported for ODOO_ADDONS_STATIC_CACHE_TIMEOUT,"
+                            " setting default cache timeout: %s", e)
+            cache_timeout = STATIC_CACHE
+        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, statics, cache_timeout=cache_timeout)
         self.dispatch = DisableCacheMiddleware(app)
 
     def setup_session(self, httprequest):
