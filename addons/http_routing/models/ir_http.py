@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import hashlib
-import json
 import logging
 import os
 import re
@@ -302,18 +300,12 @@ class IrHttp(models.AbstractModel):
         modules = IrHttpModel.get_translation_frontend_modules()
         user_context = request.session.get_context() if request.session.uid else {}
         lang = user_context.get('lang')
-        translations, lang_params = request.env['ir.translation'].get_translations_for_webclient(modules, lang)
-        translation_cache = {
-            'lang_parameters': lang_params,
-            'modules': translations,
-            'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,
-            'lang': lang,
-        }
+        translation_hash = request.env['ir.translation'].get_web_translations_hash(modules, lang)
 
         session_info.update({
             'translationURL': '/website/translations',
             'cache_hashes': {
-                'translations': hashlib.sha512(json.dumps(translation_cache, sort_keys=True).encode()).hexdigest()[:64],  # sha512/256
+                'translations': translation_hash,
             },
         })
         return session_info
