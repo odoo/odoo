@@ -90,7 +90,7 @@
 
 <template id="opt_industry_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Industry" priority="20">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
-        <h3>References by Sectors of Activity</h3>
+        <h3>References by Industries</h3>
         <ul class="nav nav-pills flex-column mt16 mb32">
             <t t-foreach="industries" t-as="industry_dict">
                 <t t-if="industry_dict['industry_id']">
