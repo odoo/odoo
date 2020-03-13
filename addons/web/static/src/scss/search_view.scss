@@ -158,15 +158,21 @@
     .o_filter_condition {
         @include o-search-options-dropdown-custom-item;
         margin-bottom: 8px;
+        padding-right: 2rem;
         .o_or_filter { // or between conditions
             display: none;  // hidden for the first condition
-            @include o-position-absolute($top: 3px, $left: 4px);
+            margin-bottom: 12px;
+            font-style: italic;
         }
     }
     .o_filter_condition + .o_filter_condition {
         .o_or_filter {
             display: block; // displayed from second condition
         }
+    }
+    .o_filter_field {
+        display: block;
+        position: relative;
     }
     .o_searchview_extended_prop_op {
         margin: 3px 0px; // vertical gap between selects
@@ -178,7 +184,7 @@
         }
     }
     .o_searchview_extended_delete_prop { // delete condition button position
-        @include o-position-absolute($top: 6px, $right: 4px);
+        @include o-position-absolute($top: 5px, $right: -18px);
         cursor: pointer;
     }
     .o_add_filter_menu { // apply and add buttons
