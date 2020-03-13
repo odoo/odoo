@@ -235,6 +235,7 @@ class Registry(Mapping):
             This must be called after loading modules and before using the ORM.
         """
         lazy_property.reset_all(self)
+        self.registry_invalidated = True
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
 
         if env.all.tocompute:
@@ -302,8 +303,6 @@ class Registry(Mapping):
 
         for model in models:
             model._setup_complete()
-
-        self.registry_invalidated = True
 
     def post_init(self, func, *args, **kwargs):
         """ Register a function to call at the end of :meth:`~.init_models`. """
