@@ -138,10 +138,14 @@ def init_logger():
     # ignore deprecation warnings from invalid escape (there's a ton and it's
     # pretty likely a super low-value signal)
     warnings.filterwarnings('ignore', r'^invalid escape sequence \\.', category=DeprecationWarning)
-    # ignore warning from older setuptools version using imp
-    warnings.filterwarnings('ignore', category=DeprecationWarning, module='setuptools.depends')
-    # ignore warning from zeep using defusedxml.lxml
-    warnings.filterwarnings('ignore', category=DeprecationWarning, module='zeep.loader')
+    # ignore a bunch of warnings we can't really fix ourselves
+    for module in [
+        'setuptools.depends',# older setuptools version using imp
+        'zeep.loader',# zeep using defusedxml.lxml
+        'reportlab.lib.rl_safe_eval',# reportlab importing ABC from collections
+        'xlrd/xlsx',# xlrd mischecks iter() on trees or something so calls deprecated getiterator() instead of iter()
+    ]:
+        warnings.filterwarnings('ignore', category=DeprecationWarning, module=module)
 
     from .tools.translate import resetlocale
     resetlocale()

@@ -5,7 +5,8 @@ import os.path
 import re
 import traceback
 
-from collections import OrderedDict, Sized, Mapping
+from collections import OrderedDict
+from collections.abc import Sized, Mapping
 from functools import reduce
 from itertools import tee, count
 from textwrap import dedent
@@ -18,13 +19,8 @@ from werkzeug.utils import escape as _escape
 
 from odoo.tools import pycompat, freehash
 
-try:
-    import builtins
-    builtin_defaults = {name: getattr(builtins, name) for name in dir(builtins)}
-except ImportError:
-    # pylint: disable=bad-python3-import
-    import __builtin__
-    builtin_defaults = {name: getattr(__builtin__, name) for name in dir(__builtin__)}
+import builtins
+builtin_defaults = {name: getattr(builtins, name) for name in dir(builtins)}
 
 try:
     import astor
