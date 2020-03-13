@@ -1587,7 +1587,7 @@ class MailThread(models.AbstractModel):
         on partner like ('user_ids', '!=', False) that would not be efficient. """
         domain = [('email_normalized', 'in', normalized_emails)]
         if extra_domain:
-            domain = expression.AND(domain, extra_domain)
+            domain = expression.AND([domain, extra_domain])
         partners = self.env['res.users'].sudo().search(domain, order='name ASC').mapped('partner_id')
         # return a search on partner to filter results current user should not see (multi company for example)
         return self.env['res.partner'].search([('id', 'in', partners.ids)])
@@ -1595,7 +1595,7 @@ class MailThread(models.AbstractModel):
     def _mail_search_on_partner(self, normalized_emails, extra_domain=False):
         domain = [('email_normalized', 'in', normalized_emails)]
         if extra_domain:
-            domain = expression.AND(domain, extra_domain)
+            domain = expression.AND([domain, extra_domain])
         return self.env['res.partner'].search(domain)
 
     def _mail_find_user_for_gateway(self, email, alias=None):
