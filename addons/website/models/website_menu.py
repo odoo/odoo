@@ -68,6 +68,7 @@ class Menu(models.Model):
                   Be careful to return correct record for ir.model.data xml_id in case
                   of default main menus creation.
         '''
+        self.clear_caches()
         # Only used when creating website_data.xml default menu
         if vals.get('url') == '/default-main-menu':
             return super(Menu, self).create(vals)
@@ -91,7 +92,14 @@ class Menu(models.Model):
                 res = super(Menu, self).create(vals)
         return res  # Only one record is returned but multiple could have been created
 
+    def write(self, values):
+        res = super().write(values)
+        if 'website_id' in values:
+            self.clear_caches()
+        return res
+
     def unlink(self):
+        self.clear_caches()
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         menus_to_remove = self
         for menu in self.filtered(lambda m: default_menu and m.parent_id.id == default_menu.id):
