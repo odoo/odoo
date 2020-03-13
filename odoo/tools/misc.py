@@ -5,54 +5,47 @@
 """
 Miscellaneous tools used by OpenERP.
 """
-from functools import wraps
-import babel
-import babel.dates
-from contextlib import contextmanager
+import cProfile
+import collections
 import datetime
-import math
-import subprocess
 import io
 import os
-
-import collections
-import passlib.utils
 import pickle as pickle_
-import pytz
 import re
 import socket
+import subprocess
 import sys
 import threading
 import time
+import traceback
 import types
 import unicodedata
-import werkzeug.utils
 import zipfile
-from collections import defaultdict, Iterable, Mapping, MutableMapping, MutableSet, OrderedDict
+from collections import defaultdict, OrderedDict
+from collections.abc import Iterable, Mapping, MutableMapping, MutableSet
+from contextlib import contextmanager
 from difflib import HtmlDiff
-from itertools import islice, groupby as itergroupby, repeat
-from lxml import etree
-
-from .which import which
-import traceback
+from functools import wraps
+from itertools import islice, groupby as itergroupby
 from operator import itemgetter
 
-try:
-    # pylint: disable=bad-python3-import
-    import cProfile
-except ImportError:
-    import profile as cProfile
-
-
-from .config import config
-from .cache import *
-from .parse_version import parse_version
-from . import pycompat
+import babel
+import babel.dates
+import passlib.utils
+import pytz
+import werkzeug.utils
+from lxml import etree
 
 import odoo
+import odoo.addons
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
 from odoo.loglevels import get_encodings, ustr, exception_to_unicode     # noqa
+from . import pycompat
+from .cache import *
+from .config import config
+from .parse_version import parse_version
+from .which import which
 
 _logger = logging.getLogger(__name__)
 
@@ -158,7 +151,6 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
 
     @return fileobject if pathinfo is False else (fileobject, filepath)
     """
-    import odoo.modules as addons
     adps = odoo.addons.__path__
     rtp = os.path.normcase(os.path.abspath(config['root_path']))
 
@@ -206,7 +198,6 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
 def _fileopen(path, mode, basedir, pathinfo, basename=None):
     name = os.path.normpath(os.path.normcase(os.path.join(basedir, path)))
 
-    import odoo.modules as addons
     paths = odoo.addons.__path__ + [config['root_path']]
     for addons_path in paths:
         addons_path = os.path.normpath(os.path.normcase(addons_path)) + os.sep
