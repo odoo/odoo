@@ -66,32 +66,31 @@ var CalendarView = AbstractView.extend({
             if (child.tag !== 'field') return;
             var fieldName = child.attrs.name;
             fieldNames.push(fieldName);
-            if (!child.attrs.invisible) {
-                child.attrs.options = child.attrs.options ? pyUtils.py_eval(child.attrs.options) : {};
-                displayFields[fieldName] = {attrs: child.attrs};
 
-                if (params.sidebar === false) return; // if we have not sidebar, (eg: Dashboard), we don't use the filter "coworkers"
+            child.attrs.options = child.attrs.options ? pyUtils.py_eval(child.attrs.options) : {};
+            displayFields[fieldName] = {attrs: child.attrs};
 
-                if (child.attrs.avatar_field) {
-                    filters[fieldName] = filters[fieldName] || {
-                        'title': fields[fieldName].string,
-                        'fieldName': fieldName,
-                        'filters': [],
-                    };
-                    filters[fieldName].avatar_field = child.attrs.avatar_field;
-                    filters[fieldName].avatar_model = fields[fieldName].relation;
-                }
-                if (child.attrs.write_model) {
-                    filters[fieldName] = filters[fieldName] || {
-                        'title': fields[fieldName].string,
-                        'fieldName': fieldName,
-                        'filters': [],
-                    };
-                    filters[fieldName].write_model = child.attrs.write_model;
-                    filters[fieldName].write_field = child.attrs.write_field; // can't use a x2many fields
+            if (params.sidebar === false) return; // if we have not sidebar, (eg: Dashboard), we don't use the filter "coworkers"
 
-                    modelFilters.push(fields[fieldName].relation);
-                }
+            if (child.attrs.avatar_field) {
+                filters[fieldName] = filters[fieldName] || {
+                    'title': fields[fieldName].string,
+                    'fieldName': fieldName,
+                    'filters': [],
+                };
+                filters[fieldName].avatar_field = child.attrs.avatar_field;
+                filters[fieldName].avatar_model = fields[fieldName].relation;
+            }
+            if (child.attrs.write_model) {
+                filters[fieldName] = filters[fieldName] || {
+                    'title': fields[fieldName].string,
+                    'fieldName': fieldName,
+                    'filters': [],
+                };
+                filters[fieldName].write_model = child.attrs.write_model;
+                filters[fieldName].write_field = child.attrs.write_field; // can't use a x2many fields
+
+                modelFilters.push(fields[fieldName].relation);
             }
         });
 
