@@ -62,7 +62,7 @@ class TestUiHtmlEditor(odoo.tests.HttpCase):
         Website = self.env['website']
         View = self.env['ir.ui.view']
         Page = self.env['website.page']
-        
+
         self.generic_view = View.create({
             'name': 'Generic',
             'type': 'qweb',
@@ -169,4 +169,23 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour("/", "public_user_editor", login=None)
 
     def test_07_snippet_version(self):
+        website_snippets = self.env.ref('website.snippets')
+        self.env['ir.ui.view'].create([{
+            'name': 'Test snip',
+            'type': 'qweb',
+            'key': 'website.s_test_snip',
+            'arch': """
+                <section class="s_test_snip">
+                    <t t-snippet-call="website.s_share"/>
+                </section>
+            """,
+        }, {
+            'type': 'qweb',
+            'inherit_id': website_snippets.id,
+            'arch': """
+                <xpath expr="//t[@t-snippet='website.s_parallax']" position="after">
+                    <t t-snippet="website.s_test_snip" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.png"/>
+                </xpath>
+            """,
+        }])
         self.start_tour("/", 'snippet_version', login='admin')
