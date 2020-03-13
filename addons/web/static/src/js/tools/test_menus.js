@@ -216,8 +216,8 @@
     function testFilters() {
         if (appsMenusOnly === true) return Promise.resolve();
         var filterProm = Promise.resolve();
-        // var $filters = $('div.o_control_panel div.btn-group.o_dropdown > ul.o_filters_menu > li:not(.o_add_custom_filter)');
-        var $filters = $('.o_filters_menu > .o_menu_item:not(.d-none)');
+        // var $filters = $('div.o_control_panel div.btn-group.o_dropdown > ul.o_filter_menu > li:not(.o_add_custom_filter)');
+        var $filters = $('.o_filter_menu > .o_menu_item:not(.d-none)');
         console.log("Testing " + $filters.length + " filters");
         var filter_ids = _.compact(_.map($filters, function(f) { return f.dataset.id}));
         filter_ids.forEach(function(filter_id){

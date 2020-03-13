@@ -30,7 +30,7 @@ var QtyTagWidget = Widget.extend({
 
     /**
      * Add a quantity when add(+) button clicked.
-     * 
+     *
      * @private
      */
     _onClickAddQty: function () {
@@ -143,9 +143,8 @@ var GeneratePriceList = AbstractAction.extend(StandaloneFieldManagerMixin, {
      * @override
      */
     start: function () {
+        this.controlPanelProps.cp_content = this._renderComponent();
         return this._super.apply(this, arguments).then(() => {
-            this._renderComponent();
-            this.update_cp();
             this.$('.o_content').html(this.reportHtml);
         });
     },
@@ -161,22 +160,6 @@ var GeneratePriceList = AbstractAction.extend(StandaloneFieldManagerMixin, {
     },
     getTitle: function() {
         return _t('Pricelist Report');
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    update_cp: function () {
-        this.updateControlPanel({
-            cp_content: {
-                $buttons: this.$buttonPrint,
-                $searchview_buttons: this.$searchView,
-            },
-        });
     },
 
     //--------------------------------------------------------------------------
@@ -215,16 +198,17 @@ var GeneratePriceList = AbstractAction.extend(StandaloneFieldManagerMixin, {
      * @private
      */
     _renderComponent: function () {
-        this.$buttonPrint = $('<button>', {
+        const $buttons = $('<button>', {
             class: 'btn btn-primary',
             text: _t("Print"),
         }).on('click', this._onClickPrint.bind(this));
 
-        this.$searchView = $(QWeb.render('product.report_pricelist_search'));
-        this.many2one.appendTo(this.$searchView.find('.o_pricelist'));
+        const $searchview = $(QWeb.render('product.report_pricelist_search'));
+        this.many2one.appendTo($searchview.find('.o_pricelist'));
 
         this.qtyTagWidget = new QtyTagWidget(this, this.context.quantities);
-        this.qtyTagWidget.replace(this.$searchView.find('.o_product_qty'));
+        this.qtyTagWidget.replace($searchview.find('.o_product_qty'));
+        return { $buttons, $searchview };
     },
 
     //--------------------------------------------------------------------------

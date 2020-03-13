@@ -4798,7 +4798,7 @@ var BasicModel = AbstractModel.extend({
             element.context = options.context;
         }
         if (options.orderedBy !== undefined) {
-            element.orderedBy = options.orderedBy || element.orderedBy;
+            element.orderedBy = (options.orderedBy.length && options.orderedBy) || element.orderedBy;
         }
         if (options.domain !== undefined) {
             element.domain = options.domain;
