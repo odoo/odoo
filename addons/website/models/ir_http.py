@@ -17,7 +17,7 @@ from odoo import api, models
 from odoo import registry, SUPERUSER_ID
 from odoo.http import request
 from odoo.tools.safe_eval import safe_eval
-from odoo.osv.expression import FALSE_DOMAIN, OR
+from odoo.osv.expression import FALSE_DOMAIN
 
 from odoo.addons.http_routing.models.ir_http import ModelConverter, _guess_mimetype
 from odoo.addons.portal.controllers.portal import _build_url_w_params
@@ -226,9 +226,10 @@ class Http(models.AbstractModel):
         return super(Http, cls)._get_default_lang()
 
     @classmethod
-    def _get_translation_frontend_modules_domain(cls):
-        domain = super(Http, cls)._get_translation_frontend_modules_domain()
-        return OR([domain, [('name', 'ilike', 'website')]])
+    def _get_translation_frontend_modules_name(cls):
+        mods = super(Http, cls)._get_translation_frontend_modules_name()
+        installed = request.registry._init_modules | set(odoo.conf.server_wide_modules)
+        return mods + [mod for mod in installed if mod.startswith('website')]
 
     @classmethod
     def _serve_page(cls):
