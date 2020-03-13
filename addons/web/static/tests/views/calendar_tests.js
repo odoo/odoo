@@ -305,6 +305,8 @@ QUnit.module('Views', {
         });
 
         await actionManager.doAction(1);
+        await testUtils.nextTick();
+
         // displays month mode by default
         assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
             'Meetings Test (Dec 11 – 17, 2016)', "should display the current week");

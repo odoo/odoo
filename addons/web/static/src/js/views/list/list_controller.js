@@ -12,7 +12,6 @@ var BasicController = require('web.BasicController');
 var DataExport = require('web.DataExport');
 var Dialog = require('web.Dialog');
 var ListConfirmDialog = require('web.ListConfirmDialog');
-var Sidebar = require('web.Sidebar');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -42,19 +41,20 @@ var ListController = BasicController.extend({
      * @override
      * @param {Object} params
      * @param {boolean} params.editable
-     * @param {boolean} params.hasSidebar
+     * @param {boolean} params.hasActionMenus
      * @param {Object} params.toolbarActions
      * @param {boolean} params.noLeaf
      */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
-        this.hasSidebar = params.hasSidebar;
+        this.hasActionMenus = params.hasActionMenus;
         this.toolbarActions = params.toolbarActions || {};
         this.editable = params.editable;
         this.noLeaf = params.noLeaf;
         this.selectedRecords = params.selectedRecords || [];
         this.multipleRecordsSavingPromise = null;
         this.fieldChangedPrevented = false;
+        this.selectAll = false;
         Object.defineProperty(this, 'mode', {
             get: () => this.renderer.isEditable() ? 'edit' : 'readonly',
             set: () => {},
@@ -78,8 +78,8 @@ var ListController = BasicController.extend({
      */
     getActiveDomain: function () {
         var self = this;
-        if (this.$('thead .o_list_record_selector input').prop('checked')) {
-            var searchQuery = this._controlPanel ? this._controlPanel.getSearchQuery() : {};
+        if (this.selectAll) {
+            var searchQuery = this._controlPanelModel ? this._controlPanelModel.getQuery() : {};
             var record = self.model.get(self.handle, {raw: true});
             return record.getDomain().concat(searchQuery.domain || []);
         }
@@ -125,74 +125,26 @@ var ListController = BasicController.extend({
      * induce the leaving of the current row.
      *
      * @override
-     * @param {jQuery} $node
      */
     renderButtons: function ($node) {
-        if (!this.noLeaf && this.hasButtons) {
-            this.$buttons = $(qweb.render(this.buttons_template, {widget: this}));
-            this.$buttons.on('click', '.o_list_button_add', this._onCreateRecord.bind(this));
-
-            this._assignCreateKeyboardBehavior(this.$buttons.find('.o_list_button_add'));
-            this.$buttons.find('.o_list_button_add').tooltip({
-                delay: {show: 200, hide: 0},
-                title: function () {
-                    return qweb.render('CreateButton.tooltip');
-                },
-                trigger: 'manual',
-            });
-            this.$buttons.on('mousedown', '.o_list_button_discard', this._onDiscardMousedown.bind(this));
-            this.$buttons.on('click', '.o_list_button_discard', this._onDiscard.bind(this));
+        if (this.noLeaf || !this.hasButtons) {
+            return;
+        }
+        this.$buttons = $(qweb.render(this.buttons_template, {widget: this}));
+        this.$buttons.on('click', '.o_list_button_add', this._onCreateRecord.bind(this));
+        this._assignCreateKeyboardBehavior(this.$buttons.find('.o_list_button_add'));
+        this.$buttons.find('.o_list_button_add').tooltip({
+            delay: {show: 200, hide: 0},
+            title: function () {
+                return qweb.render('CreateButton.tooltip');
+            },
+            trigger: 'manual',
+        });
+        this.$buttons.on('mousedown', '.o_list_button_discard', this._onDiscardMousedown.bind(this));
+        this.$buttons.on('click', '.o_list_button_discard', this._onDiscard.bind(this));
+        if ($node) {
             this.$buttons.appendTo($node);
         }
-    },
-    /**
-     * Render the sidebar (the 'action' menu in the control panel, right of the
-     * main buttons)
-     *
-     * @param {jQuery Node} $node
-     * @returns {Promise}
-     */
-    renderSidebar: function ($node) {
-        var self = this;
-        if (this.hasSidebar) {
-            var other = [{
-                label: _t("Export"),
-                callback: this._onExportData.bind(this)
-            }];
-            if (this.archiveEnabled) {
-                other.push({
-                    label: _t("Archive"),
-                    callback: function () {
-                        Dialog.confirm(self, _t("Are you sure that you want to archive all the selected records?"), {
-                            confirm_callback: self._toggleArchiveState.bind(self, true),
-                        });
-                    }
-                });
-                other.push({
-                    label: _t("Unarchive"),
-                    callback: this._toggleArchiveState.bind(this, false)
-                });
-            }
-            if (this.is_action_enabled('delete')) {
-                other.push({
-                    label: _t('Delete'),
-                    callback: this._onDeleteSelectedRecords.bind(this)
-                });
-            }
-            this.sidebar = new Sidebar(this, {
-                editable: this.is_action_enabled('edit'),
-                env: {
-                    context: this.model.get(this.handle, {raw: true}).getContext(),
-                    activeIds: this.getSelectedIds(),
-                    model: this.modelName,
-                },
-                actions: _.extend(this.toolbarActions, {other: other}),
-            });
-            return this.sidebar.appendTo($node).then(function() {
-                self._toggleSidebar();
-            });
-        }
-        return Promise.resolve();
     },
     /**
      * Overrides to update the list of selected records
@@ -214,6 +166,25 @@ var ListController = BasicController.extend({
         params.selectedRecords = this.selectedRecords;
         return this._super.apply(this, arguments);
     },
+    /**
+     * This helper simply makes sure that the control panel buttons matches the
+     * current mode.
+     *
+     * @override
+     * @param {string} mode either 'readonly' or 'edit'
+     */
+    updateButtons: function (mode) {
+        if (!this.$buttons) {
+            return;
+        }
+        this.$buttons.toggleClass('o-editing', mode === 'edit');
+        const state = this.model.get(this.handle, {raw: true});
+        if (state.count) {
+            this.$('.o_list_export_xlsx').show();
+        } else {
+            this.$('.o_list_export_xlsx').hide();
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -233,7 +204,7 @@ var ListController = BasicController.extend({
         if ((recordID || this.handle) !== this.handle) {
             var state = this.model.get(this.handle);
             this.renderer.removeLine(state, recordID);
-            this._updatePager();
+            this._updatePaging(state);
         }
     },
     /**
@@ -257,7 +228,10 @@ var ListController = BasicController.extend({
             self.renderer.updateState(state, {keepWidths: true})
                 .then(function () {
                     self.renderer.editRecord(recordID);
-                }).then(self._updatePager.bind(self));
+                })
+                .then(() => {
+                    self._updatePaging(state);
+                });
         }).then(this._enableButtons.bind(this)).guardedCatch(this._enableButtons.bind(this));
     },
     /**
@@ -342,7 +316,7 @@ var ListController = BasicController.extend({
         }
         var self = this;
         return this._super(recordID).then(function () {
-            self._updateButtons('readonly');
+            self.updateButtons('readonly');
         });
     },
     /**
@@ -357,26 +331,55 @@ var ListController = BasicController.extend({
             this.getActiveDomain(), this.getSelectedIds());
     },
     /**
-     * @override
-     * @private
-     */
-    _getSidebarEnv: function () {
-        var env = this._super.apply(this, arguments);
-        var record = this.model.get(this.handle);
-        return _.extend(env, {
-            domain: record.getDomain(),
-            selectAll: !!this.$('thead .o_list_record_selector input').prop('checked'),
-        });
-    },
-    /**
      * Only display the pager when there are data to display.
      *
      * @override
      * @private
      */
-    _isPagerVisible: function () {
-        var state = this.model.get(this.handle, {raw: true});
-        return !!state.count;
+    _getPagingInfo: function (state) {
+        if (!state.count) {
+            return null;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     * @private
+     */
+    _getActionMenuItems: function (state) {
+        if (!this.hasActionMenus || !this.selectedRecords.length) {
+            return null;
+        }
+        const props = this._super(...arguments);
+        const otherActionItems = [{
+            description: _t("Export"),
+            callback: () => this._onExportData(),
+        }];
+        if (this.archiveEnabled) {
+            otherActionItems.push({
+                description: _t("Archive"),
+                callback: () => {
+                    Dialog.confirm(this, _t("Are you sure that you want to archive all the selected records?"), {
+                        confirm_callback: () => this._toggleArchiveState(true),
+                    });
+                }
+            }, {
+                description: _t("Unarchive"),
+                callback: () => this._toggleArchiveState(false)
+            });
+        }
+        if (this.activeActions.delete) {
+            otherActionItems.push({
+                description: _t("Delete"),
+                callback: () => this._onDeleteSelectedRecords()
+            });
+        }
+        return Object.assign(props, {
+            items: Object.assign({}, this.toolbarActions, { other: otherActionItems }),
+            context: this.model.get(this.handle, { raw: true }).getContext(),
+            domain: state.getDomain(),
+            selectAll: this.selectAll,
+        });
     },
     /**
      * Saves multiple records at once. This method is called by the _onFieldChanged method
@@ -406,7 +409,7 @@ var ListController = BasicController.extend({
             const saveRecords = () => {
                 this.model.saveRecords(this.handle, recordId, validRecordIds, fieldName)
                     .then(async () => {
-                        this._updateButtons('readonly');
+                        this.updateButtons('readonly');
                         const state = this.model.get(this.handle);
                         // We need to check the current multi-editable state here
                         // in case the selection is changed. If there are changes
@@ -481,7 +484,7 @@ var ListController = BasicController.extend({
      */
     _setMode: function (mode, recordID) {
         if ((recordID || this.handle) !== this.handle) {
-            this._updateButtons(mode);
+            this.updateButtons(mode);
             return this.renderer.setRowMode(recordID, mode);
         } else {
             return this._super.apply(this, arguments);
@@ -510,40 +513,13 @@ var ListController = BasicController.extend({
         }
     },
     /**
-     * Display the sidebar (the 'action' menu in the control panel) if we have
-     * some selected records.
-     */
-    _toggleSidebar: function () {
-        if (this.sidebar) {
-            this.sidebar.do_toggle(this.selectedRecords.length > 0);
-        }
-    },
-    /**
      * @override
      * @returns {Promise}
      */
-    _update: function () {
-        return this._super.apply(this, arguments)
-            .then(this._toggleSidebar.bind(this))
-            .then(this._toggleCreateButton.bind(this))
-            .then(this._updateButtons.bind(this, 'readonly'));
-    },
-    /**
-     * This helper simply makes sure that the control panel buttons matches the
-     * current mode.
-     *
-     * @param {string} mode either 'readonly' or 'edit'
-     */
-    _updateButtons: function (mode) {
-        if (this.$buttons) {
-            this.$buttons.toggleClass('o-editing', mode === 'edit');
-            const state = this.model.get(this.handle, {raw: true});
-            if (state.count) {
-                this.$('.o_list_export_xlsx').show();
-            } else {
-                this.$('.o_list_export_xlsx').hide();
-            }
-        }
+    _update: async function () {
+        await this._super(...arguments);
+        this._toggleCreateButton();
+        this.updateButtons('readonly');
     },
 
     //--------------------------------------------------------------------------
@@ -745,7 +721,8 @@ var ListController = BasicController.extend({
      */
     _onSelectionChanged: function (ev) {
         this.selectedRecords = ev.data.selection;
-        this._toggleSidebar();
+        this.selectAll = ev.data.allChecked;
+        this._updateControlPanel();
     },
     /**
      * If the record is set as dirty while in multiple record edition,
@@ -780,12 +757,12 @@ var ListController = BasicController.extend({
      */
     _onToggleColumnOrder: function (ev) {
         ev.stopPropagation();
-        var data = this.model.get(this.handle);
-        if (!data.groupedBy) {
-            this.pager.updateState({current_min: 1});
+        var state = this.model.get(this.handle);
+        if (!state.groupedBy) {
+            this._updatePaging(state, { currentMinimum: 1 });
         }
         var self = this;
-        this.model.setSort(data.id, ev.data.name).then(function () {
+        this.model.setSort(state.id, ev.data.name).then(function () {
             self.update({});
         });
     },

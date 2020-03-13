@@ -70,7 +70,7 @@ QUnit.test('messaging menu widget: rendering with OdooBot has a request', async 
     assert.expect(5);
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         data: this.data,
         services: this.services,
     });
@@ -99,7 +99,7 @@ QUnit.test('messaging menu widget: rendering without OdooBot has a request (deni
     window.Notification.permission = 'denied';
 
     var messagingMenu = new MessagingMenu();
-    testUtils.mock.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         data: this.data,
         services: this.services,
     });
@@ -122,7 +122,7 @@ QUnit.test('messaging menu widget: rendering without OdooBot has a request (acce
     window.Notification.permission = 'granted';
 
     var messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         data: this.data,
         services: this.services,
     });
@@ -143,7 +143,7 @@ QUnit.test('messaging menu widget: respond to notification prompt', async functi
     assert.expect(4);
 
     var messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    await testUtils.mock.addMockEnvironment(messagingMenu, {
         data: this.data,
         services: this.services,
     });

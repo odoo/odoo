@@ -82,7 +82,7 @@ odoo.define('web.CustomFileInput', function (require) {
         model: { type: String, optional: 1 },
         multi_upload: { type: Boolean, optional: 1 },
     };
-    CustomFileInput.template = 'CustomFileInput';
+    CustomFileInput.template = 'web.CustomFileInput';
 
     return CustomFileInput;
 });

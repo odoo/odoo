@@ -7,6 +7,7 @@ var mailTestUtils = require('mail.testUtils');
 var testUtils = require('web.test_utils');
 
 var createDiscuss = mailTestUtils.createDiscuss;
+const cpHelpers = testUtils.controlPanel;
 
 QUnit.module('mail', {}, function () {
 QUnit.module('Discuss', {
@@ -139,6 +140,7 @@ QUnit.test('basic rendering', async function (assert) {
     var $history = $sidebar.find('.o_mail_discuss_item[data-thread-id=mailbox_history]');
     assert.strictEqual($history.length, 1,
         "should have the mailbox item 'mailbox_history' in the sidebar");
+
     discuss.destroy();
 });
 
@@ -305,43 +307,44 @@ QUnit.test('searchview filter messages', async function (assert) {
                 '</search>',
         },
     });
-        assert.containsN(discuss, '.o_thread_message', 2,
-            "there should be two messages in the inbox mailbox");
-        assert.strictEqual($('.o_searchview_input').length, 1,
-            "there should be a searchview on discuss");
-        assert.strictEqual($('.o_searchview_input').val(), '',
-            "the searchview should be empty initially");
+    // needed to handle events triggered by the controlPanelModel
+    discuss.on_attach_callback();
+    await testUtils.nextTick();
 
-        // interact with searchview so that there is only once message
-        $('.o_searchview_input').val("ab").trigger('keyup');
-        await testUtils.nextTick();
-        $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER }));
-        await testUtils.nextTick();
-        assert.strictEqual($('.o_searchview_facet').length, 1,
-            "the searchview should have a facet");
-        assert.strictEqual($('.o_facet_values').text().trim(), 'ab',
-            "the facet should be a search on 'ab'");
-        assert.containsOnce(discuss, '.o_thread_message',
-            "there should be a single message after filter");
+    assert.containsN(discuss, '.o_thread_message', 2,
+        "there should be two messages in the inbox mailbox");
+    assert.strictEqual($('.o_searchview_input').length, 1,
+        "there should be a searchview on discuss");
+    assert.strictEqual($('.o_searchview_input').val(), '',
+        "the searchview should be empty initially");
 
-        // interact with search view so that there are no matching messages
-        await testUtils.dom.click($('.o_facet_remove'));
-        $('.o_searchview_input').val("abcd").trigger('keyup');
-        await testUtils.nextTick();
-        $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER }));
-        await testUtils.nextTick();
+    // interact with searchview so that there is only once message
+    await cpHelpers.editSearch(discuss, "ab");
+    await cpHelpers.validateSearch(discuss);
+    assert.strictEqual($('.o_searchview_facet').length, 1,
+        "the searchview should have a facet");
+    assert.strictEqual($('.o_facet_values').text().trim(), 'ab',
+        "the facet should be a search on 'ab'");
+    assert.containsOnce(discuss, '.o_thread_message',
+        "there should be a single message after filter");
 
-        assert.strictEqual($('.o_searchview_facet').length, 1,
-            "the searchview should have a facet");
-        assert.strictEqual($('.o_facet_values').text().trim(), 'abcd',
-            "the facet should be a search on 'abcd'");
-        assert.containsNone(discuss, '.o_thread_message',
-            "there should be no message after 2nd filter");
-        assert.strictEqual(discuss.$('.o_thread_title').text().trim(),
-            "No matches found",
-            "should display that there are no matching messages");
+    // interact with search view so that there are no matching messages
+    await testUtils.dom.click($('.o_facet_remove'));
+    await cpHelpers.editSearch(discuss, "abcd");
+    await cpHelpers.validateSearch(discuss);
 
-        discuss.destroy();
+    assert.strictEqual($('.o_searchview_facet').length, 1,
+        "the searchview should have a facet");
+    assert.strictEqual($('.o_facet_values').text().trim(), 'abcd',
+        "the facet should be a search on 'abcd'");
+    assert.containsNone(discuss, '.o_thread_message',
+        "there should be no message after 2nd filter");
+    assert.strictEqual(discuss.$('.o_thread_title').text().trim(),
+        "No matches found",
+        "should display that there are no matching messages");
+
+    discuss.on_detach_callback();
+    discuss.destroy();
 
 });
 
@@ -1146,6 +1149,7 @@ QUnit.test('mark all messages as read from Inbox', async function (assert) {
         "the 'Mark All As Read' button should not be disabled");
 
     await testUtils.dom.click($markAllReadButton);
+
 
     markAllReadDef.then(function () {
         // immediately jump to end of the fadeout animation on messages
@@ -1964,33 +1968,38 @@ QUnit.test('save filter discuss', async function (assert) {
             }
             return this._super.apply(this,arguments);
         },
-        intercepts: {
-            create_filter: function (ev) {
-                assert.deepEqual(
-                    JSON.parse(ev.data.filter.domain), [
-                        "|",
-                        ["subject", "ilike", "she was born in a hurricane"],
-                        ["body", "ilike", "she was born in a hurricane"]
-                    ], 'The filter should have been saved with the right domain');
+        env: {
+            dataManager: {
+                create_filter: async function (filter) {
+                    assert.deepEqual(
+                        JSON.parse(filter.domain), [
+                            "|",
+                            ["subject", "ilike", "she was born in a hurricane"],
+                            ["body", "ilike", "she was born in a hurricane"]
+                        ], 'The filter should have been saved with the right domain');
+                }
             }
         }
     });
+    // needed to handle events triggered by the controlPanelModel
+    discuss.on_attach_callback();
+    await testUtils.nextTick();
 
     assert.containsOnce(discuss, '.o_searchview_input_container', 'search view input present');
 
-    $('.o_searchview_input').val("she was born in a hurricane").trigger('keyup');
-    await testUtils.nextTick();
+    await cpHelpers.editSearch(discuss, "she was born in a hurricane");
 
     messageFetchCount = 1;
-    $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER }));
-    await testUtils.nextTick();
 
-    await testUtils.dom.click(discuss.$('.o_favorites_menu_button'));
-    await testUtils.dom.click(discuss.$('.o_add_favorite'));
+    await cpHelpers.validateSearch(discuss);
 
-    await testUtils.fields.editInput(discuss.$('.o_favorite_name input'), 'War');
-    await testUtils.dom.click(discuss.$('.o_save_favorite button'));
+    await cpHelpers.toggleFavoriteMenu(discuss);
+    await cpHelpers.toggleSaveFavorite(discuss);
 
+    await cpHelpers.editFavoriteName(discuss, "War");
+    await cpHelpers.saveFavorite(discuss);
+
+    discuss.on_detach_callback();
     discuss.destroy();
 });
 

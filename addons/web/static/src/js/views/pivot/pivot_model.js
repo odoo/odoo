@@ -530,18 +530,15 @@ var PivotModel = AbstractModel.extend({
      * @param {boolean} [params.compare=false]
      * @param {Object} params.context
      * @param {Object} params.fields
-     * @param {Array[]} [params.comparisonTimeRange=[]]
      * @param {string[]} [params.groupedBy]
-     * @param {Array[]} [params.timeRange=[]]
      * @param {string[]} params.colGroupBys
      * @param {Array[]} params.domain
      * @param {string[]} params.measures
      * @param {string[]} params.rowGroupBys
-     * @param {string} [params.comparisonTimeRangeDescription=""]
      * @param {string} [params.default_order]
-     * @param {string} [params.timeRangeDescription=""]
      * @param {string} params.modelName
      * @param {Object[]} params.groupableFields
+     * @param {Object} params.timeRanges
      * @returns {Promise}
      */
     load: function (params) {
@@ -556,19 +553,14 @@ var PivotModel = AbstractModel.extend({
             expandedRowGroupBys: [],
             expandedColGroupBys: [],
             domain: this.initialDomain,
-            timeRange: params.timeRange || [],
-            timeRangeDescription: params.timeRangeDescription || "",
-            comparisonTimeRange: params.comparisonTimeRange || [],
-            comparisonTimeRangeDescription: params.comparisonTimeRangeDescription || "",
-            compare: params.compare || false,
             context: _.extend({}, session.user_context, params.context),
             groupedBy: params.context.pivot_row_groupby || params.groupedBy,
             colGroupBys: params.context.pivot_column_groupby || params.colGroupBys,
             measures: this._processMeasures(params.context.pivot_measures) || params.measures,
+            timeRanges: params.timeRanges,
         };
+        this._computeDerivedParams();
 
-        this.data.domains = this._getDomains();
-        this.data.origins = this._getOrigins();
         this.data.rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys;
 
         var defaultOrder = params.default_order && params.default_order.split(' ');
@@ -588,14 +580,11 @@ var PivotModel = AbstractModel.extend({
      * @param {Object} params
      * @param {boolean} [params.compare=false]
      * @param {Object} params.context
-     * @param {Array[]} [params.comparisonTimeRange=[]]
      * @param {string[]} [params.groupedBy]
-     * @param {Array[]} [params.timeRange=[]]
      * @param {Array[]} params.domain
      * @param {string[]} params.groupBy
      * @param {string[]} params.measures
-     * @param {string} [params.comparisonTimeRangeDescription=""]
-     * @param {string} [params.timeRangeDescription=""]
+     * @param {Object} [params.timeRanges]
      * @returns {Promise}
      */
     reload: function (handle, params) {
@@ -608,21 +597,6 @@ var PivotModel = AbstractModel.extend({
             this.data.groupedBy = params.context.pivot_row_groupby || this.data.groupedBy;
             this.data.measures = this._processMeasures(params.context.pivot_measures) || this.data.measures;
             this.defaultGroupedBy = this.data.groupedBy.length ? this.data.groupedBy : this.defaultGroupedBy;
-            var timeRangeMenuData = params.context.timeRangeMenuData;
-            if (timeRangeMenuData) {
-                this.data.timeRange = timeRangeMenuData.timeRange || [];
-                this.data.timeRangeDescription = timeRangeMenuData.timeRangeDescription || "";
-                this.data.comparisonTimeRange = timeRangeMenuData.comparisonTimeRange || [];
-                this.data.comparisonTimeRangeDescription = timeRangeMenuData.comparisonTimeRangeDescription || "";
-                this.data.compare = this.data.comparisonTimeRange.length > 0;
-            } else {
-                this.data.timeRange = [];
-                this.data.timeRangeDescription = "";
-                this.data.comparisonTimeRange = [];
-                this.data.comparisonTimeRangeDescription = "";
-                this.data.compare = false;
-                this.data.context = _.omit(this.data.context, 'timeRangeMenuData');
-            }
         }
         if ('domain' in params) {
             this.data.domain = params.domain;
@@ -633,9 +607,11 @@ var PivotModel = AbstractModel.extend({
         if ('groupBy' in params) {
             this.data.groupedBy = params.groupBy.length ? params.groupBy : this.defaultGroupedBy;
         }
+        if ('timeRanges' in params) {
+            this.data.timeRanges = params.timeRanges;
+        }
+        this._computeDerivedParams();
 
-        this.data.domains = this._getDomains();
-        this.data.origins = this._getOrigins();
         this.data.rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys;
 
         if (!_.isEqual(oldRowGroupBys, self.data.rowGroupBys)) {
@@ -790,20 +766,6 @@ var PivotModel = AbstractModel.extend({
         } else {
             return values[0];
         }
-    },
-    /**
-     * Returns the principal domains used by the pivot model to fetch data.
-     * The domains represent two main groups of records.
-     *
-     * @private
-     * @returns {Array[][]}
-     */
-    _getDomains: function () {
-        var domains = [this.data.domain.concat(this.data.timeRange)];
-        if (this.data.compare) {
-            domains.push(this.data.domain.concat(this.data.comparisonTimeRange));
-        }
-        return domains;
     },
     /**
      * Returns the rowGroupBys and colGroupBys arrays that
@@ -1082,19 +1044,6 @@ var PivotModel = AbstractModel.extend({
         });
 
         return originRow;
-    },
-    /**
-     * Create an array with the origin descriptions.
-     *
-     * @private
-     * @returns {string[]}
-     */
-    _getOrigins: function () {
-        var origins = [this.data.timeRangeDescription || ""];
-        if (this.data.compare) {
-            origins.push(this.data.comparisonTimeRangeDescription);
-        }
-        return origins;
     },
 
     /**
@@ -1435,6 +1384,26 @@ var PivotModel = AbstractModel.extend({
             return _.map(measures, function (measure) {
                 return measure === '__count__' ? '__count' : measure;
             });
+        }
+    },
+    /**
+     * Determine this.data.domains and this.data.origins from
+     * this.data.domain and this.data.timeRanges;
+     *
+     * @private
+     */
+    _computeDerivedParams: function () {
+        const { range, rangeDescription, comparisonRange, comparisonRangeDescription } = this.data.timeRanges;
+        if (range) {
+            this.data.domains = [this.data.domain.concat(range)];
+            this.data.origins = [rangeDescription];
+            if (comparisonRange) {
+                this.data.domains.push(this.data.domain.concat(comparisonRange));
+                this.data.origins.push(comparisonRangeDescription);
+            }
+        } else {
+            this.data.domains = [this.data.domain];
+            this.data.origins = [""];
         }
     },
     /**

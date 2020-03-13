@@ -9,6 +9,7 @@ var StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 
+const cpHelpers = testUtils.controlPanel;
 var createView = testUtils.createView;
 
 QUnit.module('fields', {}, function () {
@@ -244,11 +245,11 @@ QUnit.module('fields', {}, function () {
             // save form
             await testUtils.form.clickSave(form);
             // click next on pager
-            await testUtils.dom.click(form.pager.$('.o_pager_next'));
+            await testUtils.dom.click(form.el.querySelector('.o_pager .o_pager_next'));
 
             // this checks that the view did not ask for confirmation that the
             // record is dirty
-            assert.strictEqual(form.pager.$el.text().trim(), '2 / 2',
+            assert.strictEqual(form.el.querySelector('.o_pager').innerText.trim(), '2 / 2',
                 'pager should be at second page');
             form.destroy();
         });
@@ -316,11 +317,11 @@ QUnit.module('fields', {}, function () {
             // save form
             await testUtils.form.clickSave(form);
             // click next on pager
-            await testUtils.dom.click(form.pager.$('.o_pager_next'));
+            await testUtils.dom.click(form.el.querySelector('.o_pager .o_pager_next'));
 
             // this checks that the view did not ask for confirmation that the
             // record is dirty
-            assert.strictEqual(form.pager.$el.text().trim(), '2 / 2',
+            assert.strictEqual(form.el.querySelector('.o_pager').innerText.trim(), '2 / 2',
                 'pager should be at second page');
             form.destroy();
         });
@@ -506,11 +507,11 @@ QUnit.module('fields', {}, function () {
 
             assert.strictEqual($('tr.o_data_row').length, 9, "should display 9 records");
 
-            await testUtils.dom.click($('button:contains(Filters)'));
-            await testUtils.dom.click($('.o_add_custom_filter:visible'));
-            assert.strictEqual($('.o_filter_condition select.o_searchview_extended_prop_field').val(), 'datetime',
+            await cpHelpers.toggleFilterMenu('.modal');
+            await cpHelpers.toggleAddCustomFilter('.modal');
+            assert.strictEqual(document.querySelector('.modal .o_generator_menu_field').value, 'datetime',
                 "datetime field should be selected");
-            await testUtils.dom.click($('.o_apply_filter'));
+            await cpHelpers.applyFilter('.modal');
 
             assert.strictEqual($('tr.o_data_row').length, 0, "should display 0 records");
             form.destroy();
@@ -592,7 +593,6 @@ QUnit.module('fields', {}, function () {
             assert.containsNone(document.body, '.modal',
                 "No save should be triggered when removing value");
 
-            await testUtils.fields.many2one.clickOpenDropdown('trululu');
             await testUtils.fields.many2one.clickHighlightedItem('trululu');
 
             assert.containsOnce(document.body, '.modal',
@@ -741,8 +741,8 @@ QUnit.module('fields', {}, function () {
             assert.ok(!$('.modal .modal-footer .o_select_button').length,
                 "there should be no 'Select' button in the footer");
             assert.ok($('.modal tbody tr').length > 10, "list should contain more than 10 records");
-            await testUtils.fields.triggerKey('press', $('.modal .o_searchview_input'), 'P'),
-            await testUtils.fields.triggerKeydown($('.modal .o_searchview_input'), 'enter');
+            await cpHelpers.editSearch('.modal', "P");
+            await cpHelpers.validateSearch('.modal');
             assert.strictEqual($('.modal tbody tr').length, 10,
                 "list should be restricted to records containing a P (10 records)");
             // choose a record

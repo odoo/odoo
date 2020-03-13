@@ -99,26 +99,28 @@ return core.Class.extend({
                 },
                 model: model,
                 method: 'load_views',
-            }).then(function (result) {
+            }).then(async result => {
                 // Freeze the fields dict as it will be shared between views and
                 // no one should edit it
                 utils.deepFreeze(result.fields);
 
                 // Insert views into the fields_views cache
-                _.each(views_descr, function (view_descr) {
+                for (const view_descr of views_descr) {
                     var toolbar = options.toolbar && view_descr[1] !== 'search';
                     var fv_key = self._gen_key(model, view_descr[0], view_descr[1], toolbar, context);
                     var fvg = result.fields_views[view_descr[1]];
+                    if (view_descr[1] === 'search') {
+                        fvg.favoriteFilters = result.filters;
+                    }
                     fvg.viewFields = fvg.fields;
                     fvg.fields = result.fields;
                     self._cache.fields_views[fv_key] = Promise.resolve(fvg);
-                });
+                }
 
                 // Insert filters, if any, into the filters cache
                 if (result.filters) {
                     self._cache.filters[filters_key] = Promise.resolve(result.filters);
                 }
-
                 return result.fields_views;
             }, this._invalidate.bind(this, this._cache.views, key));
         }

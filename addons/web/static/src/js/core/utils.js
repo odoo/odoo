@@ -629,6 +629,28 @@ var utils = {
         ].join(';');
     },
     /**
+     * Returns a string formatted using given values.
+     * If the value is an object, its keys will replace `%(key)s` expressions.
+     * If the values are a set of strings, they will replace `%s` expressions.
+     * If no value is given, the string will not be formatted.
+     *
+     * @param {string} string
+     * @param  {(Object|...string)} values
+     */
+    sprintf: function (string, ...values) {
+        if (values.length === 1 && typeof values[0] === 'object') {
+            const valuesDict = values[0];
+            for (const value in valuesDict) {
+                string = string.replace(`%(${value})s`, valuesDict[value]);
+            }
+        } else {
+            for (const value of values) {
+                string = string.replace(/%s/, value);
+            }
+        }
+        return string;
+    },
+    /**
      * Sort an array in place, keeping the initial order for identical values.
      *
      * @param {Array} array
