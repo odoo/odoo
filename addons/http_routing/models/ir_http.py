@@ -313,17 +313,28 @@ class IrHttp(models.AbstractModel):
     @api.model
     def get_translation_frontend_modules(self):
         Modules = request.env['ir.module.module'].sudo()
-        domain = self._get_translation_frontend_modules_domain()
-        return Modules.search(
-            expression.AND([domain, [('state', '=', 'installed')]])
-        ).mapped('name')
+        extra_modules_domain = self._get_translation_frontend_modules_domain()
+        extra_modules_name = self._get_translation_frontend_modules_name()
+        if extra_modules_domain:
+            new = Modules.search(
+                expression.AND([extra_modules_domain, [('state', '=', 'installed')]])
+            ).mapped('name')
+            extra_modules_name += new
+        return extra_modules_name
 
     @classmethod
     def _get_translation_frontend_modules_domain(cls):
         """ Return a domain to list the domain adding web-translations and
             dynamic resources that may be used frontend views
         """
-        return [('name', '=', 'web')]
+        return []
+
+    @classmethod
+    def _get_translation_frontend_modules_name(cls):
+        """ Return a list of module name where web-translations and
+            dynamic resources may be used in frontend views
+        """
+        return ['web']
 
     bots = "bot|crawl|slurp|spider|curl|wget|facebookexternalhit".split("|")
 
