@@ -35,6 +35,7 @@ Key Features
     ],
     'demo': [
         'data/res_users_demo.xml',
+        'data/res_partner_demo.xml',
         'data/event_demo.xml',
         'data/event_registration_demo.xml',
     ],

@@ -4,7 +4,7 @@
         <field name="is_published">True</field>
         <field name="subtitle">Get Inspired • Stay Connected • Have Fun</field>
         <field name="cover_properties">{"background-image": "url('/website_event/static/src/img/event_cover_0.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}</field>
-        <field name="description"><![CDATA[
+        <field name="description" type="html">
             <div class="oe_structure">
                 <h5>Join us for this 3-day Event</h5>
                 <p class="lead mb-3">Every year we invite our community, partners and end-users to come and meet us! It's the ideal event to get together and present new features, roadmap of future versions, achievements of the software, workshops, training sessions, etc....</p>
@@ -28,14 +28,14 @@
                     <li><b>Workshop Room</b> - Mainly for developers.</li>
                 </ul>
                 <div class="bg-light rounded-right border-left border-secondary p-3 mb-3" style="border-left-width: 3px !important;">
-                    <p class="mb-0">If you wish to make a presentation, please send your topic proposal as soon as possible for approval to Mr. Famke Jenssens at ngh (a) yourcompany (dot) com. The presentations should be, for example, a presentation of a community module, a case study, methodology feedback, technical, etc. Each presentation must be in English.</em></p>
+                    <p class="mb-0"><em>If you wish to make a presentation, please send your topic proposal as soon as possible for approval to Mr. Famke Jenssens at ngh (a) yourcompany (dot) com. The presentations should be, for example, a presentation of a community module, a case study, methodology feedback, technical, etc. Each presentation must be in English.</em></p>
                 </div>
                 <p class="mb-3">For any additional information, please contact us at <a href="mailto:events@yourcompany.com">events@yourcompany.com</a>.</p>
                 <div class="bg-light rounded-right border-left border-secondary p-3 mb-5" style="border-left-width: 3px !important;">
                     <p class="mb-0">OpenElec Applications reserves the right to cancel, re-name or re-locate the event or change the dates on which it is held.</p>
                 </div>
             </div>
-        ]]></field>
+        </field>
     </record>
 
     <record id="event.event_1" model="event.event">
@@ -43,13 +43,26 @@
         <field name="website_published">True</field>
         <field name="subtitle">The Great Reno Balloon Race is the world's largest free hot-air ballooning event.</field>
         <field name="cover_properties">{"background-image": "url('/website_event/static/src/img/event_cover_1.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}</field>
+        <field name="description" type="html">
+            <div class="oe_structure">
+                <h5>Join us for the greatest ballon race of all times !</h5>
+                <p class="lead mb-3">The best aeronauts of the world will gather on this event to offer you the most spectacular show.</p>
+                <p class="lead mb-3">Around one hundred ballons will simultaneously take flight and turn the sky into a beautiful canvas of colours.</p>
+                <p class="lead mb-3">This is the perfect place for spending a nice day with your family, we guarantee you will be leaving with beautiful everlasting memories !</p>
+                <p class="mb-3">For any additional information, please contact us at <a href="mailto:events@yourcompany.com">events@yourcompany.com</a>.</p>
+                <div class="bg-light rounded-right border-left border-secondary p-3 mb-5" style="border-left-width: 3px !important;">
+                    <p class="mb-1">We reserve the right to cancel, re-name or re-locate the event or change the dates on which it is held in case the weather fails us.</p>
+                    <p class="mb0">The safety of our attendees and our aeronauts comes first !</p>
+                </div>
+            </div>
+        </field>
     </record>
 
     <record id="event.event_2" model="event.event">
         <field name="website_published">True</field>
         <field name="subtitle">Enhance your architectural business and improve professional skills.</field>
         <field name="cover_properties">{"background-image": "url('/website_event/static/src/img/event_cover_2.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}</field>
-        <field name="description"><![CDATA[
+        <field name="description" type="html">
 <div class="oe_structure">
     <h5>Conference for Architects</h5>
     <p class="lead">During this conference, our team will give a detailed overview of our business applications. You’ll know all the benefits of using it.</p>
@@ -84,13 +97,25 @@
         <p class="mb-0">Chamber Works reserves the right to cancel, re-name or re-locate the event or change the dates on which it is held.</p>
     </div>
 </div>
-        ]]></field>
+        </field>
     </record>
 
     <record id="event.event_3" model="event.event">
         <field name="website_published">True</field>
         <field name="subtitle">Experience live music, local food and beverages.</field>
         <field name="cover_properties">{"background-image": "url('/website_event/static/src/img/event_cover_3.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}</field>
+        <field name="description" type="html">
+            <div class="oe_structure">
+                <h5>Here it is, the 12th edition of our Live Musical Festival !</h5>
+                <p class="lead mb-3">Once again we assembled the most legendary bands in Rock history.</p>
+                <p class="lead mb-3">Bands like Bar Fighters, Led Slippers and Link Floyd will offer you the show of the century during our three day event.</p>
+                <p class="lead mb-3">This is the perfect place for spending a nice time with your friends while listening to some of the most iconic rock songs of all times!</p>
+                <p class="mb-3">For any additional information, please contact us at <a href="mailto:events@yourcompany.com">events@yourcompany.com</a>.</p>
+                <div class="bg-light rounded-right border-left border-secondary p-3 mb-5" style="border-left-width: 3px !important;">
+                    <p class="mb-1">We reserve the right to cancel, re-name or re-locate the event or change the dates on which it is held in case the weather fails us.</p>
+                </div>
+            </div>
+        </field>
     </record>
 
     <record id="event.event_4" model="event.event">
@@ -103,6 +128,19 @@
         <field name="website_published">True</field>
         <field name="subtitle">Bring your outdoor field hockey season to the next level by taking the field at this 9th annual Field Hockey tournament.</field>
         <field name="cover_properties">{"background-image": "url('/website_event/static/src/img/event_cover_5.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}</field>
+        <field name="description" type="html">
+            <div class="oe_structure">
+                <h5>Seasoned Hockey Fans and curious people, this tournament is for you !</h5>
+                <p class="lead mb-3">The best Hockey teams of the country will compete for the national Hockey trophy.</p>
+                <p class="lead mb-3">If you don't know anything about Hockey, this is a great introduction to this wonderful sport as you will will be able to see some training process and also have some time
+                to chat with experienced players and trainers once the tournament is over !
+                </p>
+                <p class="mb-3">For any additional information, please contact us at <a href="mailto:events@yourcompany.com">events@yourcompany.com</a>.</p>
+                <div class="bg-light rounded-right border-left border-secondary p-3 mb-5" style="border-left-width: 3px !important;">
+                    <p class="mb-1">We reserve the right to cancel, re-name or re-locate the event or change the dates on which it is held in case the weather fails us.</p>
+                </div>
+            </div>
+        </field>
     </record>
 
     <record id="event.event_6" model="event.event">
