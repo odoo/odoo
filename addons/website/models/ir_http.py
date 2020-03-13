@@ -237,22 +237,15 @@ class Http(models.AbstractModel):
         page_domain = [('url', '=', req_page)] + request.website.website_domain()
 
         published_domain = page_domain
-        # need to bypass website_published, to apply is_most_specific
-        # filter later if not publisher
-        pages = request.env['website.page'].sudo().search(published_domain, order='website_id')
-        pages = pages.filtered(pages._is_most_specific_page)
-
-        if not request.website.is_publisher():
-            pages = pages.filtered('is_visible')
-
-        mypage = pages[0] if pages else False
-        _, ext = os.path.splitext(req_page)
-        if mypage:
-            return request.render(mypage.get_view_identifier(), {
-                # 'path': req_page[1:],
+        # specific page first
+        page = request.env['website.page'].sudo().search(published_domain, order='website_id asc', limit=1)
+        if page and (request.website.is_publisher() or page.is_visible):
+            _, ext = os.path.splitext(req_page)
+            return request.render(page.get_view_identifier(), {
                 'deletable': True,
-                'main_object': mypage,
+                'main_object': page,
             }, mimetype=_guess_mimetype(ext))
+        return False
 
     @classmethod
     def _serve_redirect(cls):
