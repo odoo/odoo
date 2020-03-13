@@ -76,7 +76,7 @@
                             <field name="lead_type" groups="crm.group_use_lead"/>
                             <field name="suffix"/>
                             <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
-                            <field name="user_id"/>
+                            <field name="user_id" domain="[('share', '=', False)]"/>
                         </group>
                         <group>
                             <field name="tag_ids" widget="many2many_tags"/>

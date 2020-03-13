@@ -51,7 +51,7 @@
                         <group name="lead_info" string="Lead Information">
                             <field name="lead_type" groups="crm.group_use_lead" invisible="context.get('is_modal')" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="team_id" attrs="{'readonly': [('state', '!=', 'draft')]}" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
-                            <field name="user_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="user_id" attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('share', '=', False)]"/>
                             <field name="tag_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         </group>
                     </group>

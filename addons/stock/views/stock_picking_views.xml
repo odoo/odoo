@@ -404,7 +404,7 @@
                                     <field name="picking_type_code" invisible="1"/>
                                     <field name="move_type" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
                                     <field name="priority" widget="priority"/>
-                                    <field name="user_id"/>
+                                    <field name="user_id" domain="[('share', '=', False)]"/>
                                     <field name="group_id" groups="base.group_no_one"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" force_save="1"/>
                                 </group>

@@ -223,7 +223,7 @@
                                     context="{'show_address': 1}"
                                     options='{"always_reload": True}'/>
                                 <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="user_id"/>
+                                <field name="user_id" domain="[('share', '=', False)]"/>
                             </group>
                             <group>
                                 <field name="event_type_id" options="{'no_create':True}"/>

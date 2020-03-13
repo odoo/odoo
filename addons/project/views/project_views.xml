@@ -135,7 +135,7 @@
                             <group>
                                 <group>
                                     <field name="active" invisible="1"/>
-                                    <field name="user_id" string="Project Manager" attrs="{'readonly':[('active','=',False)]}"/>
+                                    <field name="user_id" string="Project Manager" attrs="{'readonly':[('active','=',False)]}" domain="[('share', '=', False)]"/>
                                     <field name="partner_id" string="Customer"/>
                                 </group>
                                 <group>
@@ -508,7 +508,7 @@
                             <field name="project_id" required="1" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
                             <field name="user_id"
                                 class="o_task_user_field"
-                                options='{"no_open": True}'/>
+                                options='{"no_open": True}' domain="[('share', '=', False)]"/>
                             <field
                                 name="parent_id"
                                 domain="[('parent_id', '=', False)]"
