@@ -49,65 +49,9 @@ class AccountMove(models.Model):
         return self.journal_id.sequence_override_regex or super()._sequence_fixed_regex
 
     @api.model
-    def _get_default_journal(self):
-        ''' Get the default journal.
-        It could either be passed through the context using the 'default_journal_id' key containing its id,
-        either be determined by the default type.
-        '''
-        move_type = self._context.get('default_move_type', 'entry')
-        journal_type = 'general'
-        if move_type in self.get_sale_types(include_receipts=True):
-            journal_type = 'sale'
-        elif move_type in self.get_purchase_types(include_receipts=True):
-            journal_type = 'purchase'
-
-        if self._context.get('default_journal_id'):
-            journal = self.env['account.journal'].browse(self._context['default_journal_id'])
-
-            if move_type != 'entry' and journal.type != journal_type:
-                raise UserError(_("Cannot create an invoice of type %s with a journal having %s as type.") % (move_type, journal.type))
-        else:
-            company_id = self._context.get('force_company', self._context.get('default_company_id', self.env.company.id))
-            domain = [('company_id', '=', company_id), ('type', '=', journal_type)]
-
-            journal = None
-            if self._context.get('default_currency_id'):
-                currency_domain = domain + [('currency_id', '=', self._context['default_currency_id'])]
-                journal = self.env['account.journal'].search(currency_domain, limit=1)
-
-            if not journal:
-                journal = self.env['account.journal'].search(domain, limit=1)
-
-            if not journal:
-                error_msg = _('Please define an accounting miscellaneous journal in your company')
-                if journal_type == 'sale':
-                    error_msg = _('Please define an accounting sale journal in your company')
-                elif journal_type == 'purchase':
-                    error_msg = _('Please define an accounting purchase journal in your company')
-                raise UserError(error_msg)
-        return journal
-
-    @api.model
     def _get_default_invoice_date(self):
         return fields.Date.today() if self._context.get('default_move_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') else False
 
-    @api.model
-    def default_get(self, default_fields):
-        values = super(AccountMove, self).default_get(default_fields)
-        if not values.get('journal_id'):
-            values['journal_id'] = self.env.context.get('default_journal_id') or self._get_default_journal().id
-        if not values.get('currency_id') and (values.get('partner_id') or self.env.context.get('default_partner_id')) and values.get('move_type', 'entry') in self.get_purchase_types():
-            partner_id = self.env['res.partner'].browse(values.get('partner_id') or self.env.context.get('default_partner_id'))
-            values['currency_id'] = partner_id.property_purchase_currency_id.id
-        if not values.get('currency_id') and values.get('journal_id'):
-            journal_id = self.env['account.journal'].browse(values['journal_id'])
-            values['currency_id'] = journal_id.currency_id.id or journal_id.company_id.currency_id.id
-        return values
-
-    @api.model
-    def _get_default_invoice_incoterm(self):
-        ''' Get the default incoterm for invoice. '''
-        return self.env.company.incoterm_id
 
     # ==== Business fields ====
     name = fields.Char(string='Number', copy=False, compute='_compute_name', readonly=False, store=True, index=True, tracking=True)
@@ -138,15 +82,13 @@ class AccountMove(models.Model):
     type_name = fields.Char('Type Name', compute='_compute_type_name')
     to_check = fields.Boolean(string='To Check', default=False,
         help='If this checkbox is ticked, it means that the user was not sure of all the related informations at the time of the creation of the move and that the move needs to be checked again.')
-    journal_id = fields.Many2one('account.journal', string='Journal', required=True, readonly=True,
-        states={'draft': [('readonly', False)]},
+    journal_id = fields.Many2one('account.journal', string='Journal', readonly=False, store=True, compute='_compute_journal_id', copy=True,
         domain="[('company_id', '=', company_id)]")
     company_id = fields.Many2one(string='Company', store=True, readonly=True,
         related='journal_id.company_id', change_default=True)
     company_currency_id = fields.Many2one(string='Company Currency', readonly=True,
         related='journal_id.company_id.currency_id')
-    currency_id = fields.Many2one('res.currency', store=True, readonly=True, tracking=True, required=True,
-        states={'draft': [('readonly', False)]},
+    currency_id = fields.Many2one('res.currency', store=True, readonly=False, tracking=True, compute='_compute_currency_id', copy=True,
         string='Currency')
     line_ids = fields.One2many('account.move.line', 'move_id', string='Journal Items', copy=True, readonly=True,
         states={'draft': [('readonly', False)]})
@@ -241,7 +183,7 @@ class AccountMove(models.Model):
         help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Credit Note, otherwise a Partner bank account number.',
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     invoice_incoterm_id = fields.Many2one('account.incoterms', string='Incoterm',
-        default=_get_default_invoice_incoterm,
+        compute='_compute_invoice_incoterm_id', store=True, readonly=False,
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
 
     # ==== Payment widget fields ====
@@ -929,9 +871,46 @@ class AccountMove(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
+    @api.depends('move_type')
+    def _compute_journal_id(self):
+        ''' Get the default journal.
+        It could either be passed through the context using the 'default_journal_id' key containing its id,
+        either be determined by the default type.
+        '''
+        for record in self:
+            journal_type = 'general'
+            if record.move_type in self.get_sale_types(include_receipts=True):
+                journal_type = 'sale'
+            elif record.move_type in self.get_purchase_types(include_receipts=True):
+                journal_type = 'purchase'
+
+            domain = [('company_id', '=', record.company_id.id or self.env.company.id), ('type', '=', journal_type)]
+
+            journal = None
+            if self._context.get('default_currency_id'):
+                currency_domain = domain + [('currency_id', '=', self._context['default_currency_id'])]
+                journal = self.env['account.journal'].search(currency_domain, limit=1)
+
+            if not journal:
+                journal = self.env['account.journal'].search(domain, limit=1)
+            record.journal_id = journal
+
+    @api.depends('journal_id', 'partner_id')
+    def _compute_currency_id(self):
+        for record in self.filtered(lambda r: not r.currency_id):
+            if record.is_purchase_document() and record.partner_id.property_purchase_currency_id:
+                record.currency_id = record.partner_id.property_purchase_currency_id
+            else:
+                record.currency_id = record.journal_id.currency_id or record.journal_id.company_id.currency_id
+
+    @api.depends('company_id')
+    def _compute_invoice_incoterm_id(self):
+        for record in self:
+            record.invoice_incoterm_id = record.company_id.incoterm_id
+
     @api.depends('journal_id', 'date', 'state', 'highest_name')
     def _compute_name(self):
-        for record in self.sorted(lambda m: (m.date, m.ref or '', m.id)):
+        for record in self.sorted(lambda m: (m.date, m.ref or '', m.id or 0)):
             if not record.name or record.name == '/':
                 if record.state == 'draft' and not record.posted_before and not record.highest_name:
                     # First name of the period for the journal, no name yet
@@ -1392,6 +1371,27 @@ class AccountMove(models.Model):
     # CONSTRAINS METHODS
     # -------------------------------------------------------------------------
 
+    @api.constrains('journal_id', 'move_type')
+    def _constrains_move_type_journal_id(self):
+        for record in self:
+            journal_type = 'general'
+            if record.is_sale_document(include_receipts=True):
+                journal_type = 'sale'
+            elif record.is_purchase_document(include_receipts=True):
+                journal_type = 'purchase'
+            if not record.journal_id:
+                error_msg = _('Please define an accounting miscellaneous journal in your company')
+                if journal_type == 'sale':
+                    error_msg = _('Please define an accounting sale journal in your company')
+                elif journal_type == 'purchase':
+                    error_msg = _('Please define an accounting purchase journal in your company')
+                raise UserError(error_msg)
+            if record.move_type != 'entry' and record.journal_id.type != journal_type:
+                raise UserError(_("Cannot create a %s with a journal having %s as type.") % (
+                    dict(self.env['account.move']._fields['move_type'].selection)[record.move_type],
+                    dict(self.env['account.journal']._fields['type'].selection)[record.journal_id.type]
+                ))
+
     @api.constrains('line_ids', 'journal_id')
     def _validate_move_modification(self):
         if 'posted' in self.mapped('line_ids.payment_id.state'):
@@ -1586,6 +1586,8 @@ class AccountMove(models.Model):
             new_vals = self_ctx._add_missing_default_values(vals)
 
             move = self_ctx.new(new_vals)
+            move._compute_journal_id()
+            move._compute_currency_id()
             new_vals_list.append(move._move_autocomplete_invoice_lines_values())
 
         return new_vals_list
@@ -1606,7 +1608,9 @@ class AccountMove(models.Model):
 
         vals['line_ids'] = vals.pop('invoice_line_ids')
         for invoice in self:
-            invoice_new = invoice.with_context(default_move_type=invoice.move_type, default_journal_id=invoice.journal_id.id).new(origin=invoice)
+            invoice_new = invoice.with_context(default_move_type=invoice.move_type).new(origin=invoice)
+            invoice_new.journal_id = invoice.journal_id
+            invoice_new.currency_id = invoice.currency_id
             invoice_new.update(vals)
             values = invoice_new._move_autocomplete_invoice_lines_values()
             values.pop('invoice_line_ids', None)
@@ -2934,7 +2938,7 @@ class AccountMoveLine(models.Model):
                 line.price_unit = line._get_fields_onchange_balance(balance=balance).get('price_unit', line.price_unit)
 
             # Convert the unit price to the invoice's currency.
-            company = line.move_id.company_id
+            company = line.move_id.journal_id.company_id
             line.price_unit = company.currency_id._convert(line.price_unit, line.move_id.currency_id, company, line.move_id.date)
 
     @api.onchange('product_uom_id')
@@ -2951,7 +2955,7 @@ class AccountMoveLine(models.Model):
             price_unit = self._get_fields_onchange_balance(balance=balance).get('price_unit', price_unit)
 
         # Convert the unit price to the invoice's currency.
-        company = self.move_id.company_id
+        company = self.move_id.journal_id.company_id
         self.price_unit = company.currency_id._convert(price_unit, self.move_id.currency_id, company, self.move_id.date)
 
     @api.onchange('account_id')
@@ -3127,7 +3131,7 @@ class AccountMoveLine(models.Model):
 
             #computing the `reconciled` field.
             reconciled = False
-            digits_rounding_precision = line.move_id.company_id.currency_id.rounding
+            digits_rounding_precision = line.move_id.journal_id.company_id.currency_id.rounding
             if float_is_zero(amount, precision_rounding=digits_rounding_precision):
                 if line.currency_id and line.amount_currency:
                     if float_is_zero(amount_residual_currency, precision_rounding=line.currency_id.rounding):
@@ -3530,6 +3534,8 @@ class AccountMoveLine(models.Model):
             values['account_id'] = journal.default_debit_account_id.id
         elif self._context.get('line_ids') and any(field_name in default_fields for field_name in ('debit', 'credit', 'account_id', 'partner_id')):
             move = self.env['account.move'].new({'line_ids': self._context['line_ids']})
+            move._compute_journal_id()
+            move._compute_currency_id()
 
             # Suggest default value for debit / credit to balance the journal entry.
             balance = sum(line['debit'] - line['credit'] for line in move.line_ids)
