@@ -481,10 +481,9 @@ return AbstractModel.extend({
             })
             .then(function (events) {
                 self._parseServerData(events);
-                // Fullcalendarjs sort the event by ID but it is not always the same order
-                // as sorted by start date.
+                // Fullcalendarjs sort the event by ID, it may differ from sorted by start date.
                 // _sortCustomId set an ID on the event that depend on the starting time of the events
-                // It force the right order in the view. This hack should be reverted once the upstream library
+                // It forces the right order in the view. This hack should be reverted once the upstream library
                 // is updated (fullcalendar V4)
                 const eventsNewIds = self._sortCustomId(events);
                 self.data.data = _.map(eventsNewIds, self._recordToCalendarEvent.bind(self));
@@ -503,14 +502,10 @@ return AbstractModel.extend({
      _sortCustomId: function (events) {
         // Sort events by their start_date
         events.sort(function (a, b) {
-            if (a.start !== undefined && b.start !== undefined) {
-                return a.start.unix() - b.start.unix();
-            } else {
-                // arj fixme: when does start and stop are not defined ?
-                console.log("sorting events they don't have the start date !!");
-                console.log(events);
+            if (a.start == undefined || b.start == undefined){
                 return 0;
             }
+            return a.start.unix() - b.start.unix();
         });
          let fcId = 1;
          for (const key in events) {

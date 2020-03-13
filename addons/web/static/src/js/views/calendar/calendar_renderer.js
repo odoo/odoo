@@ -349,6 +349,7 @@ return AbstractRenderer.extend({
         // The record.id is the id of the record in database.
         // setting event.id = record.id is necessary to allow fullcalendar update/delete the corresponding
         // event in database.
+        // This hack should be reverted once the upstream library is updated (fullcalendar V4)
         if (event.record){
             event.id = event.record.id;
         }

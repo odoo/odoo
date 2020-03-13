@@ -3378,16 +3378,15 @@ QUnit.module('Views', {
     });
 
 
-    QUnit.only('attempt to create multiples events and the same day and check the ordering on month view', async function (assert) {
+    QUnit.test('attempt to create multiples events and the same day and check the ordering on month view', async function (assert) {
         assert.expect(3);
         /*
          This test aims to verify that the order of the event in month view is coherent with their start date.
-         FIXME: currently calendar.reload() does not render the name of the event.
          */
         var initDate = new Date(2020, 2, 12, 8, 0, 0); //12 of March
         this.data.event.records = [
-                    {id: 1, user_id: session.uid, partner_id: 1, name: "First event", start: "2020-03-12 00:12:00", stop: "2020-03-12 00:13:00", allday: false, partner_ids: [1,2,3], type: 1},
-                    {id: 2, user_id: session.uid, partner_id: 1, name: "Second event", start: "2020-03-12 00:09:00", stop: "2020-03-12 00:10:00", allday: false, partner_ids: [1,2], type: 3},
+                    {id: 1, user_id: session.uid, partner_id: 1, name: "Second event", start: "2020-03-12 00:12:00", stop: "2020-03-12 00:13:00", allday: false, partner_ids: [1,2,3], type: 1},
+                    {id: 2, user_id: session.uid, partner_id: 1, name: "First event", start: "2020-03-12 00:09:00", stop: "2020-03-12 00:10:00", allday: false, partner_ids: [1,2], type: 3},
                     {id: 3, user_id: 4, partner_id: 4, name: "Third event", start: "2020-03-12 00:20:00", stop: "2020-03-12 00:21:00", allday: false, partner_ids: [1], type: 2},
                 ];;
         var calendar = await createCalendarView({
@@ -3406,12 +3405,11 @@ QUnit.module('Views', {
             viewOptions: {
                 initialDate: initDate,
             },
-            //debug:true
         });
         assert.ok(calendar.$('.o_calendar_view').find('.fc-view-container').length, "should display in the calendar"); // OK
         // Testing the order of the events: by start date
         assert.strictEqual(calendar.$('.o_event_title').length, 3, "3 events should be available"); // OK
-        assert.strictEqual(calendar.$('.o_event_title').first().text(), 'Second event', "First event should be on top");
+        assert.strictEqual(calendar.$('.o_event_title').first().text(), 'First event', "First event should be on top");
         calendar.destroy();
     });
 
