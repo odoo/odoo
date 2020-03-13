@@ -31,7 +31,7 @@
                     </div>
                     <group id="top-group">
                         <field name="name" string="Campaign Name"/>
-                        <field name="user_id"/>
+                        <field name="user_id" domain="[('share', '=', False)]"/>
                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                     </group>
                     <notebook>

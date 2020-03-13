@@ -197,7 +197,7 @@
                                     <group>
                                         <field name="id" invisible="1"/>
                                         <field name="name" required="False" groups="base.group_no_one" string="Name"/>
-                                        <field name="user_id"/>
+                                        <field name="user_id" domain="[('share', '=', False)]"/>
                                         <field name="email_from" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <label for="reply_to"/>
                                         <div name="reply_to_details">

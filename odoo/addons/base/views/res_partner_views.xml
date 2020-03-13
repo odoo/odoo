@@ -390,7 +390,7 @@
                         <page name='sales_purchases' string="Sales &amp; Purchase">
                             <group name="container_row_2">
                                 <group string="Sales" name="sale" priority="1">
-                                    <field name="user_id"/>
+                                    <field name="user_id" domain="[('share', '=', False)]"/>
                                 </group>
                                 <group string="Purchase" name="purchase" priority="2">
                                 </group>

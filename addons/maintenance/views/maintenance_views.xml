@@ -357,7 +357,7 @@
                         </group>
                         <group>
                             <field name="maintenance_team_id" attrs="{'required': [('period', '!=', 0)]}" context="{'default_company_id':company_id}"/>
-                            <field name="technician_user_id"/>
+                            <field name="technician_user_id" domain="[('share', '=', False)]"/>
                             <field name="assign_date" groups="base.group_no_one"/>
                             <field name="scrap_date" groups="base.group_no_one"/>
                             <field name="location" string="Used in location"/>
@@ -601,7 +601,7 @@
                     </h1>
                 </div>
                 <group>
-                    <field name="technician_user_id" class="oe_inline"/>
+                    <field name="technician_user_id" class="oe_inline" domain="[('share', '=', False)]"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" class="oe_inline"/>
                 </group>
                 <group name="group_alias" attrs="{'invisible': [('alias_domain', '=', False)]}" groups="base.group_no_one">
@@ -764,7 +764,7 @@
                 <group>
                     <group>
                         <field name="active" invisible="1"/>
-                        <field name="member_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True}"/>
+                        <field name="member_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True}" domain="[('share', '=', False)]"/>
                     </group>
                     <group>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
@@ -781,7 +781,7 @@
         <field name="arch" type="xml">
             <tree string="Maintenance Team" editable="bottom">
                 <field name="name"/>
-                <field name="member_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True}"/>
+                <field name="member_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True}" domain="[('share', '=', False)]"/>
                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
             </tree>
         </field>

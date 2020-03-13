@@ -88,7 +88,7 @@
                                 <group>
                                     <group name="course" string="Course">
                                         <field string="Type" name="channel_type" widget="radio"/>
-                                        <field name="user_id"/>
+                                        <field name="user_id" domain="[('share', '=', False)]"/>
                                         <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                     </group>
                                     <group name="access_rights" string="Access Rights">
