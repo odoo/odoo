@@ -88,7 +88,7 @@
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group string="Contract" name="contract">
-                            <field name="manager_id"/>
+                            <field name="manager_id" domain="[('share', '=', False)]"/>
                             <field name="first_contract_date"/>
                         </group>
                         <group string="Model">

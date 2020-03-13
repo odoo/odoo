@@ -522,7 +522,7 @@
                         <group name="employee_details">
                             <field name="employee_id" context="{'default_company_id': company_id}"/>
                             <field name="payment_mode"/>
-                            <field name="user_id"/>
+                            <field name="user_id" domain="[('share', '=', False)]"/>
                             <field name="address_id" invisible="1" context="{'default_company_id': company_id}"/>
                             <field name="department_id" invisible="1" context="{'default_company_id': company_id}"/>
                             <field name="company_id" groups="base.group_multi_company"/>

@@ -178,7 +178,7 @@
                                 <field name="delay_alert_date" invisible="1"/>
                                 <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('delay_alert_date', '=', False)]}"/>
                             </div>
-                            <field name="user_id"/>
+                            <field name="user_id" domain="[('share', '=', False)]"/>
                             <field name="origin"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
                             <field name="show_final_lots" invisible="1"/>

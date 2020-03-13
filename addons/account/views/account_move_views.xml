@@ -974,7 +974,7 @@
                                     <group string="Invoice"
                                            name="sale_info_group"
                                            attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}">
-                                        <field name="invoice_user_id"/>
+                                        <field name="invoice_user_id" domain="[('share', '=', False)]"/>
                                         <field name="invoice_origin" force_save="1" string="Source Document"
                                                attrs="{'invisible': [('invoice_origin', '=', False)]}"/>
                                     </group>
