@@ -72,6 +72,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     def _prepare_invoice_values(self, order, name, amount, so_line):
         invoice_vals = {
+            'ref': order.client_order_ref,
             'move_type': 'out_invoice',
             'invoice_origin': order.name,
             'invoice_user_id': order.user_id.id,
@@ -80,7 +81,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'fiscal_position_id': (order.fiscal_position_id or order.fiscal_position_id.get_fiscal_position(order.partner_id.id)).id,
             'partner_shipping_id': order.partner_shipping_id.id,
             'currency_id': order.pricelist_id.currency_id.id,
-            'invoice_payment_ref': order.client_order_ref,
+            'invoice_payment_ref': order.reference,
             'invoice_payment_term_id': order.payment_term_id.id,
             'invoice_partner_bank_id': order.company_id.partner_id.bank_ids[:1].id,
             'team_id': order.team_id.id,
