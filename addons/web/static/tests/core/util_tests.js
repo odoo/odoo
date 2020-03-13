@@ -101,85 +101,40 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(human_number(-1.012e+43, 2, 2), '-1.01e+43');
     });
 
-    QUnit.test('patch a class with getter', function (assert) {
-        assert.expect(13);
+    QUnit.test('patch a class', function(assert) {
+        assert.expect(4);
 
-        const { patch } = utils;
-
-        class TestClass {
-            get val() {
-                return 'aaa';
+        class Parent {
+            foo() {
+                return 'Parent foo';
             }
         }
 
-        const testInstance = new TestClass();
-        assert.strictEqual(testInstance.val, 'aaa');
+        class Child extends Parent {
+            bar() {
+                return 'Child bar';
+            }
+        }
 
-        // Extend `val`
-
-        const removePatch1 = patch(TestClass, 'patch1', {
-            get val() {
-                return this._super + 'bbb';
+        const removePatch = utils.patch(Child, 'patch', {
+            foo() {
+                return this._super() + ' patch foo';
             },
-        });
-        assert.strictEqual(testInstance.val, 'aaabbb');
-
-        const removePatch2 = patch(TestClass, 'patch2', {
-            get val() {
-                return this._super + 'ccc';
-            },
-        });
-        assert.strictEqual(testInstance.val, 'aaabbbccc');
-
-        removePatch1();
-        assert.strictEqual(testInstance.val, 'aaaccc');
-
-        removePatch2();
-        assert.strictEqual(testInstance.val, 'aaa');
-
-        // Add getters
-
-        const removeMorePatch1 = patch(TestClass, 'more-patch-1', {
-            get realVal() {
-                return `${this.wrapper.start}${this.val}${this.wrapper.end}`
-            },
-            get wrapper() {
-                return {
-                    start: '(',
-                    end: ')',
-                }
+            bar() {
+                return this._super() + ' patch bar';
             }
         })
-        assert.strictEqual(testInstance.realVal, '(aaa)');
 
-        const removeMorePatch2 = patch(TestClass, 'more-patch-2', {
-            get wrapper() {
-                return {
-                    start: `[${this._super.start}`,
-                    end: `${this._super.end}]`,
-                }
-            }
-        })
-        assert.strictEqual(testInstance.realVal, '[(aaa)]');
+        const child = new Child();
 
-        const removeMorePatch3 = patch(TestClass, 'more-patch-3', {
-            get realVal() {
-                return `${this._super} - augmented`;
-            }
-        })
-        assert.strictEqual(testInstance.realVal, '[(aaa)] - augmented');
+        assert.strictEqual(child.foo(), 'Parent foo patch foo')
+        assert.strictEqual(child.bar(), 'Child bar patch bar')
 
-        removeMorePatch2();
-        assert.strictEqual(testInstance.realVal, '(aaa) - augmented');
+        removePatch();
 
-        removeMorePatch3();
-        assert.strictEqual(testInstance.realVal, '(aaa)');
-
-        removeMorePatch1();
-        assert.strictEqual(testInstance.realVal, undefined);
-        assert.strictEqual(testInstance.wrapper, undefined);
-        assert.strictEqual(testInstance.val, 'aaa');
-    });
+        assert.strictEqual(child.foo(), 'Parent foo');
+        assert.strictEqual(child.bar(), 'Child bar');
+    })
 
 });
 
