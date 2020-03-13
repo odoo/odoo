@@ -400,7 +400,10 @@ class Channel(models.Model):
         return self.action_redirect_to_members('running')
 
     def action_redirect_to_done_members(self):
-        return self.action_redirect_to_members('completed')
+        # Return an emty action if zero attendees so that
+        # the action button in the form view is disabled.
+        return self.action_redirect_to_members('completed') \
+            if self.members_done_count != 0 else {}
 
     def action_channel_invite(self):
         self.ensure_one()
