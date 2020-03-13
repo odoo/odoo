@@ -172,6 +172,9 @@ class WebsiteVisitor(models.Model):
         access_token = request.httprequest.cookies.get('visitor_uuid')
         if access_token:
             visitor = Visitor.with_context(active_test=False).search([('access_token', '=', access_token)])
+            # Prefetch access_token and other fields. Since access_token has a restricted group and we access
+            # a non restricted field (partner_id) first it is not fetched and will require an additional query to be retrieved.
+            visitor.access_token
 
         if not self.env.user._is_public():
             partner_id = self.env.user.partner_id
