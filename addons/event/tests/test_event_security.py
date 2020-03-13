@@ -84,8 +84,8 @@ class TestEventSecurity(TestEventCommon):
         registration = self.env['event.registration'].create({'event_id': event.id, 'name': 'Myself'})
         registration.write({'name': 'Myself2'})
 
-        stage = self.env.ref('event.event_stage_done')
-        stage.write({'name': 'ManagerEnded'})
+        stage = self.env['event.stage'].create({'name': 'test'})
+        stage.write({'name': 'ManagerTest'})
         event.write({'stage_id': stage.id})
 
         registration.unlink()
