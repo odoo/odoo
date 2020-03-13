@@ -150,7 +150,7 @@ def url_lang(path_or_uri, lang_code=None):
         location = werkzeug.urls.url_join(request.httprequest.path, location)
         lang_url_codes = [url_code for _, url_code, _ in Lang.get_available()]
         lang_code = pycompat.to_text(lang_code or request.context['lang'])
-        lang_url_code = Lang._lang_get(lang_code).url_code
+        lang_url_code = Lang._lang_code_to_urlcode(lang_code)
         lang_url_code = lang_url_code if lang_url_code in lang_url_codes else lang_code
 
         if (len(lang_url_codes) > 1 or force_lang) and is_multilang_url(location, lang_url_codes):
