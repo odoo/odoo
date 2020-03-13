@@ -54,6 +54,7 @@
             <field name="type_ids" eval="[(4, ref('project_stage_0')), (4, ref('project_stage_1')), (4, ref('project_stage_2')), (4, ref('project_stage_3'))]"/>
             <field name="partner_id" ref="base.partner_demo_portal"/>
             <field name="privacy_visibility">portal</field>
+            <field name="favorite_user_ids" eval="[(4, ref('base.user_admin'))]"/>
         </record>
 
         <record id="project_project_2" model="project.project">
@@ -61,6 +62,7 @@
             <field name="privacy_visibility">followers</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="type_ids" eval="[(4, ref('project_stage_0')), (4, ref('project_stage_1')), (4, ref('project_stage_2')), (4, ref('project_stage_3'))]"/>
+            <field name="favorite_user_ids" eval="[(4, ref('base.user_admin'))]"/>
         </record>
 
         <!-- Channel -->
