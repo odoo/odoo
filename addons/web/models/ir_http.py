@@ -50,19 +50,12 @@ class Http(models.AbstractModel):
             mods = module_boot()
             qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(addons=mods, debug=request.session.debug)
             lang = user_context.get("lang")
-            translations_per_module, lang_params = request.env['ir.translation'].get_translations_for_webclient(mods, lang)
-            translation_cache = {
-                'lang': lang,
-                'lang_parameters': lang_params,
-                'modules': translations_per_module,
-                'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,
-            }
+            translation_hash = request.env['ir.translation'].get_web_translations_hash(mods, lang)
             menu_json_utf8 = json.dumps(request.env['ir.ui.menu'].load_menus(request.session.debug), default=ustr, sort_keys=True).encode()
-            translations_json_utf8 = json.dumps(translation_cache, sort_keys=True).encode()
             cache_hashes = {
                 "load_menus": hashlib.sha1(menu_json_utf8).hexdigest(),
                 "qweb": qweb_checksum,
-                "translations": hashlib.sha1(translations_json_utf8).hexdigest(),
+                "translations": translation_hash,
             }
             session_info.update({
                 # current_company should be default_company
