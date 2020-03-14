@@ -312,7 +312,7 @@ class AccountAccount(models.Model):
         # This field should have been a char, but the aim is to use it in a side panel view with hierarchy, and it's only supported by many2one fields so far.
         # So instead, we make it a many2one to a psql view with what we need as records.
         for record in self:
-            record.root_id = (ord(record.code[0]) * 1000 + ord(record.code[1:2] or ' ')) if record.code else False
+            record.root_id = (ord(record.code[0]) * 1000 + ord(record.code[1:2] or '\x00')) if record.code else False
 
     def _search_used(self, operator, value):
         if operator not in ['=', '!='] or not isinstance(value, bool):
