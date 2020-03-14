@@ -861,7 +861,11 @@ class MailThread(models.AbstractModel):
 
         # compute references to find if message is a reply to an existing thread
         thread_references = message_dict['references'] or message_dict['in_reply_to']
-        msg_references = [ref for ref in tools.mail_header_msgid_re.findall(thread_references) if 'reply_to' not in ref]
+        msg_references = [
+            re.sub(r'[\r\n\t ]+', r'', ref)  # "Unfold" buggy references
+            for ref in tools.mail_header_msgid_re.findall(thread_references)
+            if 'reply_to' not in ref
+        ]
         mail_messages = self.env['mail.message'].sudo().search([('message_id', 'in', msg_references)], limit=1, order='id desc, message_id')
         is_a_reply = bool(mail_messages)
         reply_model, reply_thread_id = mail_messages.model, mail_messages.res_id
