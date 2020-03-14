@@ -34,20 +34,30 @@ class TestReplenishWizard(TestStockCommon):
         a purchase order is created with the correct values
         """
         self.product_uom_qty = 42
+        # user to test if po user_id is correct
+        user_1 = self.env['res.users'].create({
+            'name': 'test_user',
+            'login': 'test@example.com',
+            'groups_id': [
+                (4, self.env.ref('purchase.group_purchase_user').id),
+                (4, self.env.ref('stock.group_stock_user').id),
+            ],
+        })
 
-        replenish_wizard = self.env['product.replenish'].create({
+        replenish_wizard = self.env['product.replenish'].with_user(user_1).create({
             'product_id': self.product1.id,
             'product_tmpl_id': self.product1.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
             'quantity': self.product_uom_qty,
             'warehouse_id': self.wh.id,
         })
-        replenish_wizard.launch_replenishment()
+        replenish_wizard.with_user(user_1).launch_replenishment()
         last_po_id = self.env['purchase.order'].search([
             ('origin', 'ilike', '%Manual Replenishment%'),
             ('partner_id', '=', self.vendor.id)
         ])[-1]
         self.assertTrue(last_po_id, 'Purchase Order not found')
+        self.assertEqual(last_po_id.user_id.id, user_1.id, 'User does not match')
         order_line = last_po_id.order_line.search([('product_id', '=', self.product1.id)])
         self.assertTrue(order_line, 'The product is not in the Purchase Order')
         self.assertEqual(order_line.product_qty, self.product_uom_qty, 'Quantities does not match')

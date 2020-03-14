@@ -75,6 +75,7 @@ class StockRule(models.Model):
                 # the same domain for PO and the _prepare_purchase_order method
                 # should only uses the common rules's fields.
                 vals = rules[0]._prepare_purchase_order(company_id, origins, [p.values for p in procurements])
+                vals['user_id'] = self.env.user.id
                 # The company_id is the same for all procurements since
                 # _make_po_get_domain add the company in the domain.
                 po = self.env['purchase.order'].with_context(force_company=company_id.id).sudo().create(vals)
