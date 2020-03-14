@@ -20,10 +20,14 @@ class MailThread(models.AbstractModel):
     def message_route(self, message, message_dict, model=None, thread_id=None, custom_values=None):
         """ Override to udpate mass mailing statistics based on bounce emails """
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
+        alias_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
+        # activate strict alias domain check for stable, will be falsy by default to be backward compatible
+        alias_domain_check = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain.strict")
         email_to = decode_message_header(message, 'To')
         email_to_localparts = [
             e.split('@', 1)[0].lower()
             for e in (tools.email_split(email_to) or [''])
+            if not alias_domain_check or (not alias_domain or e.endswith('@%s' % alias_domain))
         ]
 
         if bounce_alias and any(email.startswith(bounce_alias) for email in email_to_localparts):
