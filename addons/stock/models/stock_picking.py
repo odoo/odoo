@@ -859,7 +859,7 @@ class Picking(models.Model):
                 product = line.product_id
                 if product and product.tracking != 'none':
                     if not line.lot_name and not line.lot_id:
-                        raise UserError(_('You need to supply a Lot/Serial number for product %s.') % product.display_name)
+                        raise UserError(_('You need to supply a Lot/Serial number for product %s.' % product.display_name))
 
         # Propose to use the sms mechanism the first time a delivery
         # picking is validated. Whatever the user's decision (use it or not),
