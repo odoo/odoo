@@ -236,7 +236,7 @@ return Widget.extend({
         };
     },
     clear_selection: function () {
-        this.$('.selected').removeClass('selected');
+        this.$('.selected').removeClass('selected').attr('aria-checked', 'false');
     },
     /**
      * Adds a filter description to the filters dict
@@ -262,7 +262,7 @@ return Widget.extend({
             var $filter = $('<div>', {class: 'position-relative'})
                 .addClass(filter.user_id ? 'o-searchview-custom-private'
                                          : 'o-searchview-custom-public')
-                .append($('<a>', {role: 'menuitem', href: '#', class: 'dropdown-item'}).text(filter.name))
+                .append($('<a>', {role: 'menuitemradio', href: '#', class: 'dropdown-item'}).text(filter.name))
                 .append($('<span>', {
                     class: 'fa fa-trash-o o-remove-filter',
                     on: {
@@ -285,7 +285,7 @@ return Widget.extend({
         });
         if (current) {
             this.query.remove(current);
-            this.$filters[this.key_for(filter)].find('.dropdown-item').removeClass('selected');
+            this.$filters[this.key_for(filter)].find('.dropdown-item').removeClass('selected').attr('aria-checked', 'false');
             return;
         }
         this.query.reset([this.facet_for(filter)], {
@@ -297,7 +297,7 @@ return Widget.extend({
             this.searchview.dataset.set_sort(sort_items);
         }
 
-        this.$filters[this.key_for(filter)].find('.dropdown-item').addClass('selected');
+        this.$filters[this.key_for(filter)].find('.dropdown-item').addClass('selected').attr('aria-checked', 'true');
     },
     remove_filter: function (filter, $filter, key) {
         var self = this;
