@@ -23,7 +23,6 @@
 # Cris Martin <cristina.marrod@gmail.com>, 2019
 # Omar Torres <otorresgi18@gmail.com>, 2019
 # Sabina Batlle <sbb@odoo.com>, 2019
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # Alejandro Santana <alejandrosantana@anubia.es>, 2019
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
 # Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
@@ -44,7 +43,7 @@
 # Marco Alejandro Martinez <martinezsuarezmarcoalejandro@gmail.com>, 2020
 # Jesus Vicente Alcala Rodriguez <jesus.alcala@jarsa.com.mx>, 2020
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2020
-# Carles Antoli <carlesantoli@hotmail.com>, 2020
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -52,7 +51,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-01-03 14:57+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2020\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1946,8 +1945,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
 msgstr ""
-"Si cambia la lista de precios, solo se verán afectadas las líneas recién "
-"agregadas."
+"Si cambia la tarifa, solo se verán afectadas las líneas que añada o cambie a"
+" partir de ese momento."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2775,7 +2774,7 @@ msgstr "Pagar con"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__other
 msgid "Pay with another payment acquirer"
-msgstr "Pagar amb un altre adquirent de pagaments"
+msgstr "Pagar con otro medio de pago"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
@@ -4443,9 +4442,9 @@ msgid ""
 "                than initially ordered, with an invoicing policy based on\n"
 "                ordered quantities."
 msgstr ""
-"Puedes crear un pedido para aumentar las ventas cuando se ha entregado una "
-"cantidad mayor a la que se ordenó inicialmente, con una política de "
-"facturación sobre cantidades ordenadas."
+"Puede aumentar las ventas de un pedido cuando se ha entregado una cantidad "
+"mayor a la que se pidió inicialmente, con una política de facturación sobre "
+"cantidades pedidas."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -4494,8 +4493,8 @@ msgid ""
 "Your quotation contains products from company %s whereas your quotation belongs to company %s. \n"
 " Please change the company of your quotation or remove the products from other companies (%s)."
 msgstr ""
-"Tu solicitud contiene productos de %s mientras que su presupuesto pertenece a la empresa %s. \n"
-" Por favor cambie la compañía de su cotización o remueva los productos pertenecientes a otras compañías (%s)."
+"Su presupuesto contiene productos de la compañía %s mientras que pertenece a la compañía %s. \n"
+"Cambie por favor cambie la compañía del presupuesto o elimine los productos de otras compañías (%s)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
@@ -4547,10 +4546,11 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
 msgid "Mark Quotation as Sent"
-msgstr ""
+msgstr "Marcar presupuesto como enviado"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Only draft orders can be marked as sent directly."
 msgstr ""
+"Solo los pedidos en borrador pueden ser marcados directamente como enviados."
