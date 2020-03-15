@@ -32,6 +32,10 @@ class Bank(models.Model):
     active = fields.Boolean(default=True)
     bic = fields.Char('Bank Identifier Code', index=True, help="Sometimes called BIC or Swift.")
 
+    _sql_constraints = [
+        ('bic_uniq', 'unique (bic)', 'The Bank Identifier Code must be unique!')
+    ]
+
     def name_get(self):
         result = []
         for bank in self:
