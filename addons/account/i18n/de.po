@@ -67,6 +67,7 @@
 # Leon Grill <leg@odoo.com>, 2020
 # Chris Egal <sodaswed@web.de>, 2020
 # UteHaus <j.v@posteo.de>, 2020
+# JEK Odoo <jek@odoo.com>, 2020
 # philku79 <philip.kuss@gmx.de>, 2020
 # 
 msgid ""
@@ -656,7 +657,7 @@ msgstr "<span>Menge</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Reference</span>"
-msgstr ""
+msgstr "<span>Referenz</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -974,6 +975,10 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
+"Ein Benutzer kann nicht sowohl Tax B2B als auch Tax B2C haben.\n"
+"Sie sollten in den Allgemeinen Einstellungen gehen und wählen, ob die Produktpreise\n"
+"entweder im Modus 'Steuer inbegriffen' oder 'Steuer ausgeschlossen' \n"
+"(oder wechseln Sie den Modus zwei Mal, wenn Sie sich bereits im gewünschten Modus befinden)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -1148,7 +1153,7 @@ msgstr "Debitorenkonto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
 msgid "Account Root"
-msgstr ""
+msgstr "Konto Root"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__account_src_id
@@ -1182,7 +1187,7 @@ msgstr "Steuerkonto"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_tree
 msgid "Account Tax Group"
-msgstr ""
+msgstr "Konto Steuergruppe"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report
@@ -4205,6 +4210,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash"
 msgstr ""
+"Definieren Sie die kleinste Münzeinheit der Währung, die zur Bezahlung "
+"genutzt wird."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
@@ -10354,13 +10361,13 @@ msgstr "Steuerliches Rundungsverfahren"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_tax_payable_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_payable_account_id
 msgid "Tax current account (payable)"
-msgstr ""
+msgstr "Steuer aktuelles Konto (bezahlen)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_tax_receivable_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_receivable_account_id
 msgid "Tax current account (receivable)"
-msgstr ""
+msgstr "Steuer aktuelles Konto (empfangen)"
 
 #. module: account
 #: model:res.groups,name:account.group_show_line_subtotals_tax_excluded

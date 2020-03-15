@@ -852,13 +852,13 @@ msgstr "Виписка по касі"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__rounding_method
 msgid "Cash rounding"
-msgstr ""
+msgstr "Округлення готівки"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "Cash rounding strategy must be: 'Add a rounding line'"
-msgstr ""
+msgstr "Стратегія округлення готівки повинна бути: 'Додати рядок округлення'"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.account_cashbox_line_view_tree
@@ -1426,6 +1426,7 @@ msgstr "Визначіть нову категорію"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Define the smallest coinage of the currency used to pay"
 msgstr ""
+"Визначте найменшу монету грошової одиниці, яка використовується для оплати"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2672,7 +2673,7 @@ msgstr "Один або більше товарів вимагають сері�
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
 msgid "Only apply rounding on cash"
-msgstr ""
+msgstr "Застосовуйте округлення лише готівкою"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__restrict_price_control
@@ -3666,7 +3667,7 @@ msgstr "Кількість"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "ROUNDED"
-msgstr ""
+msgstr "ОКРУГЛЕНО"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4449,6 +4450,8 @@ msgid ""
 "The Point of Sale only support the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
+"Точка продажу підтримує лише стратегію округлення \"додати рядок "
+"округлення\"."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -4526,6 +4529,15 @@ msgid ""
 msgstr ""
 "Замовлення було синхронізовано раніше. Будь ласка, зробіть рахунок-фактуру з"
 " бекенду для замовлення:"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:715
+#, python-format
+msgid ""
+"The order has been synchronized earlier. To print the invoice please refer "
+"to the order in the backend"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_precompute_cash
@@ -4951,7 +4963,7 @@ msgstr "Загальна сума заборгованості"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Total Paid (with rounding)"
-msgstr ""
+msgstr "Всього оплачено (з округленням)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__total_payments_amount
@@ -5288,6 +5300,8 @@ msgid ""
 "You are not allowed to change the cash rounding configuration while a pos "
 "session using it is already opened."
 msgstr ""
+"Ви не можете змінювати налаштування округлення готівки під час відкритої "
+"сесії точки продажу."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
