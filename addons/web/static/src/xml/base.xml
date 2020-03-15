@@ -219,7 +219,8 @@
         <t t-if="canBeOpened">
             <a class="o_menu_item_parent dropdown-item"
                 t-att-class="{ selected: props.isActive }"
-                role="menuitem"
+                t-att-aria-checked="props.isActive ? 'true' : 'false'"
+                role="menuitemcheckbox"
                 href="#"
                 t-ref="fallback-focus"
                 t-on-click.prevent="state.open = !state.open"
@@ -237,7 +238,8 @@
                     <li class="o_item_option" role="menuitem">
                         <a class="dropdown-item pl-5"
                             t-att-class="{ selected: option.isActive }"
-                            role="menuitem"
+                            t-att-aria-checked="option.isActive ? 'true' : 'false'"
+                            role="menuitemcheckbox"
                             t-att-href="option.url or '#'"
                             t-esc="option.description"
                             t-on-click.prevent="trigger('item-selected', { item: props, option: option })"
@@ -249,7 +251,8 @@
         </t>
         <a t-else="" class="dropdown-item"
             t-att-class="{ selected: props.isActive, [props.className]: props.className }"
-            role="menuitem"
+            t-att-aria-checked="props.isActive ? 'true' : 'false'"
+            role="menuitemcheckbox"
             t-att-href="props.url or '#'"
             t-on-click.prevent="trigger('item-selected', { item: props })"
             >
