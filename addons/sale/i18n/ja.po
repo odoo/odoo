@@ -14,6 +14,7 @@
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2019
 # NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2019
 # Tim Siu Lai <tl@roomsfor.hk>, 2019
+# Hau Dao <hau@quartile.co>, 2020
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # 
 msgid ""
@@ -272,7 +273,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Contact us to get a new quotation."
-msgstr ""
+msgstr "<i class=\"fa fa-comment\"/> 新しくお見積が必要な場合はお知らせください。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -400,7 +401,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>Accepted on the behalf of:</span>"
-msgstr ""
+msgstr "<span>次の組織を代表:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -410,7 +411,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By signing this proposal, I agree to the following terms:</span>"
-msgstr ""
+msgstr "<span>この提案への署名をもち、次の条件に同意します:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -421,7 +422,7 @@ msgstr "<span>値引%</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>For an amount of:</span>"
-msgstr ""
+msgstr "<span>金額:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -446,7 +447,7 @@ msgstr "<strong class=\"d-block mb-1\">請求書</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Shipping Address:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">出荷先:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -467,7 +468,7 @@ msgstr "<strong>有効期日:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration:</strong>"
-msgstr ""
+msgstr "<strong>有効期日:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -495,7 +496,7 @@ msgstr "<strong>販売担当者:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping Address:</strong>"
-msgstr ""
+msgstr "<strong>出荷先:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1865,7 +1866,7 @@ msgstr "請求"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing Address:"
-msgstr ""
+msgstr "請求先:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
@@ -1883,7 +1884,7 @@ msgstr "請求ターゲット"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing and Shipping Address:"
-msgstr "請求書先と送付先:"
+msgstr "請求・出荷先:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_is_follower
@@ -3467,6 +3468,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"活動に基づく状態\n"
+"延滞：期限は既に過ぎました\n"
+"当日：活動日は本日です\n"
+"予定：将来の活動。"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__stripe
@@ -3615,7 +3620,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
-msgstr ""
+msgstr "このオーダは顧客署名が必要なステータスではありません。"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:0
