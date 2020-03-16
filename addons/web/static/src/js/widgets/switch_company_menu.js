@@ -19,7 +19,9 @@ var SwitchCompanyMenu = Widget.extend({
     template: 'SwitchCompanyMenu',
     events: {
         'click .dropdown-item[data-menu] div.log_into': '_onSwitchCompanyClick',
+        'keydown .dropdown-item[data-menu] div.log_into': '_onSwitchCompanyClick',
         'click .dropdown-item[data-menu] div.toggle_company': '_onToggleCompanyClick',
+        'keydown .dropdown-item[data-menu] div.toggle_company': '_onToggleCompanyClick',
     },
     // force this item to be the first one to the left of the UserMenu in the systray
     sequence: 1,
@@ -54,9 +56,13 @@ var SwitchCompanyMenu = Widget.extend({
 
     /**
      * @private
-     * @param {MouseEvent} ev
+     * @param {MouseEvent|KeyEvent} ev
      */
     _onSwitchCompanyClick: function (ev) {
+        if (ev.type == 'keydown' && ev.which != $.ui.keyCode.ENTER && ev.which != $.ui.keyCode.SPACE) {
+            return;
+        }
+        ev.preventDefault();
         ev.stopPropagation();
         var dropdownItem = $(ev.currentTarget).parent();
         var dropdownMenu = dropdownItem.parent();
@@ -76,6 +82,7 @@ var SwitchCompanyMenu = Widget.extend({
                 dropdownItem.find('.fa-square-o').removeClass('fa-square-o').addClass('fa-check-square');
             }
         }
+        $(ev.currentTarget).attr('aria-pressed', 'true');
         session.setCompanies(companyID, allowed_company_ids);
     },
 
@@ -85,9 +92,13 @@ var SwitchCompanyMenu = Widget.extend({
 
     /**
      * @private
-     * @param {MouseEvent} ev
+     * @param {MouseEvent|KeyEvent} ev
      */
     _onToggleCompanyClick: function (ev) {
+        if (ev.type == 'keydown' && ev.which != $.ui.keyCode.ENTER && ev.which != $.ui.keyCode.SPACE) {
+            return;
+        }
+        ev.preventDefault();
         ev.stopPropagation();
         var dropdownItem = $(ev.currentTarget).parent();
         var companyID = dropdownItem.data('company-id');
@@ -96,9 +107,11 @@ var SwitchCompanyMenu = Widget.extend({
         if (dropdownItem.find('.fa-square-o').length) {
             allowed_company_ids.push(companyID);
             dropdownItem.find('.fa-square-o').removeClass('fa-square-o').addClass('fa-check-square');
+            $(ev.currentTarget).attr('aria-checked', 'true');
         } else {
             allowed_company_ids.splice(allowed_company_ids.indexOf(companyID), 1);
             dropdownItem.find('.fa-check-square').addClass('fa-square-o').removeClass('fa-check-square');
+            $(ev.currentTarget).attr('aria-checked', 'false');
         }
         session.setCompanies(current_company_id, allowed_company_ids);
     },
