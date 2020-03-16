@@ -1,7 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json	
+from datetime import datetime, timedelta
+from babel.dates import format_datetime, format_date
 from odoo import api, fields, models, _
-
+from odoo.osv import expression
+from odoo.release import version	
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF	
+from odoo.tools.misc import formatLang, format_date as odoo_format_date, get_lang	
+import random		
+import ast
 
 class Job(models.Model):
     _name = "hr.job"
@@ -36,7 +44,7 @@ class Job(models.Model):
     alias_id = fields.Many2one(
         'mail.alias', "Alias", ondelete="restrict", required=True,
         help="Email alias for this job position. New emails will automatically create new applicants for this job position.")
-    color = fields.Integer("Color Index")
+    color = fields.Integer("Color Index",default=0)
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite')
     favorite_user_ids = fields.Many2many('res.users', 'job_favorite_user_rel', 'job_id', 'user_id', default=_get_default_favorite_user_ids)
 
@@ -78,6 +86,23 @@ class Job(models.Model):
         for job in self:
             job.application_count = result.get(job.id, 0)
 
+    def action_view_job(self):
+        return {
+            'name': _('Job Position'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'hr.job',
+            'res_id': self.id,
+        }
+    def action_hr_job_sources_func(self):
+        return{
+            'name':_('Job Position'),
+            'type':'ir.actions.act_window',
+            'res_model':'hr.recruitment.source',
+            'view_mode':'tree',
+            'domain':'[("job_id","=",active_id)]',
+            'context':'{"default_job_id": active_id,"default_source_id":6}',
+        }
     def _get_first_stage(self):
         self.ensure_one()
         return self.env['hr.recruitment.stage'].search([
@@ -106,7 +131,12 @@ class Job(models.Model):
     @api.model
     def create(self, vals):
         vals['favorite_user_ids'] = vals.get('favorite_user_ids', []) + [(4, self.env.uid)]
-        return super(Job, self).create(vals)
+        res = super(Job, self).create(vals)
+        new_source = self.env['hr.recruitment.source'].create({
+            'source_id': 6,
+            'job_id': res.id
+        })
+        return res
 
     def _creation_subtype(self):
         return self.env.ref('hr_recruitment.mt_job_new')
@@ -134,3 +164,31 @@ class Job(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'inline'
         }
+    kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph')
+    def _kanban_dashboard_graph(self):
+        for job in self:
+                job.kanban_dashboard_graph = json.dumps(job.get_line_graph_datas())
+
+    def get_line_graph_datas(self):
+
+        locale = get_lang(self.env).code
+        def build_graph_data(date, amount):
+            #display date in locale format
+            name = format_date(date, 'd LLLL Y', locale=locale)
+            short_name = format_date(date, 'd MMM', locale=locale)
+            return {'x':short_name,'y': amount, 'name':name}
+
+        self.ensure_one()
+        today = datetime.today()
+        Applications = self.env['hr.applicant']
+        data = []
+        is_sample_data=False
+        color='#875A7B'
+        for i in range(7, 0,-1):
+            current_date_upperbound = today + timedelta(days=-i)#Use of upper and lowerbound to get Applicant with date_open equal to lowerbound date who looks like YYYY-MM-DD after strftime by testing between upper and lowerbound we get them all even if date_open is in datetime format with hours and minutes
+            current_date_lowerbound = today + timedelta(days=-(i+1))
+            amount_applications = Applications.search([('job_id', '=',self.id),'&',('date_open','>',current_date_lowerbound.strftime(DF)),('date_open','<=',current_date_upperbound.strftime(DF))])
+            data_item = build_graph_data(current_date_upperbound, len(amount_applications))
+            data.append(data_item)
+
+        return [{'values': data, 'title': '', 'key': 'Applications Count', 'area': True, 'color': color, 'is_sample_data': is_sample_data}]
