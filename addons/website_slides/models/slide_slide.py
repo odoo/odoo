@@ -457,6 +457,11 @@ class Slide(models.Model):
         rec.sequence = 0
         return rec
 
+    def unlink(self):
+        if self.question_ids and self.channel_id.channel_partner_ids:
+            raise UserError(_("People already took this quiz. To keep course progression it should not be deleted."))
+        super(Slide, self).unlink()
+
     # ---------------------------------------------------------
     # Mail/Rating
     # ---------------------------------------------------------
