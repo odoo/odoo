@@ -38,7 +38,7 @@ models.Order = models.Order.extend({
       return round_pr(change, this.pos.currency.rounding);
     },
     get_rounding_applied: function() {
-        if(this.pos.config.cash_rounding) {
+        if(this.pos.config.cash_rounding && this.selected_paymentline && this.selected_paymentline.payment_method.is_cash_count) {
             var total = round_pr(this.get_total_with_tax(), this.pos.cash_rounding[0].rounding);
 
             var rounding_applied = total - this.get_total_with_tax();
