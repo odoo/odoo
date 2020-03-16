@@ -115,8 +115,23 @@ var GraphView = AbstractView.extend({
         this.controllerParams.withButtons = params.withButtons !== false;
         this.controllerParams.measures = [...sortedMeasures, countMeasure];
         this.controllerParams.groupableFields = groupableFields;
+        this.controllerParams.title = params.title || this.arch.attrs.string || _t("Untitled");
+        // retrieve form and list view ids from the action to open those views
+        // when the graph is clicked
+        function _findView(views, viewType) {
+            const view = views.find(view => {
+                return view.type === viewType;
+            });
+            return [view ? view.viewID : false, viewType];
+        }
+        this.controllerParams.views = [
+            _findView(params.actionViews, 'list'),
+            _findView(params.actionViews, 'form'),
+        ];
+
         this.rendererParams.fields = this.fields;
         this.rendererParams.title = this.arch.attrs.title; // TODO: use attrs.string instead
+        this.rendererParams.disableLinking = !!JSON.parse(this.arch.attrs.disable_linking || '0');
 
         this.loadParams.mode = this.arch.attrs.type || 'bar';
         this.loadParams.measure = measure || '__count__';

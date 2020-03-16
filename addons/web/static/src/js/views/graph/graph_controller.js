@@ -23,6 +23,7 @@ class CarretDropdownMenu extends DropdownMenu {
 var GraphController = AbstractController.extend({
     custom_events: _.extend({}, AbstractController.prototype.custom_events, {
         item_selected: '_onItemSelected',
+        open_view: '_onOpenView',
     }),
 
     /**
@@ -42,6 +43,9 @@ var GraphController = AbstractController.extend({
         // button in the control panel owned by the graph view.
         this.isEmbedded = params.isEmbedded;
         this.withButtons = params.withButtons;
+        // views to use in the action triggered when the graph is clicked
+        this.views = params.views;
+        this.title = params.title;
 
         // this parameter determines what is the list of fields
         // that may be used within the groupby menu available when
@@ -295,6 +299,32 @@ var GraphController = AbstractController.extend({
             this.measures.forEach(m => m.isActive = m.fieldName === item.fieldName);
             this.measureMenu.update({ items: this.measures });
         }
+    },
+
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     * @param {Array[]} ev.data.domain
+     */
+    _onOpenView(ev) {
+        ev.stopPropagation();
+        const state = this.model.get();
+        const context = Object.assign({}, state.context);
+        Object.keys(context).forEach(x => {
+            if (x === 'group_by' || x.startsWith('search_default_')) {
+                delete context[x];
+            }
+        });
+        this.do_action({
+            context: context,
+            domain: ev.data.domain,
+            name: this.title,
+            res_model: this.modelName,
+            target: 'current',
+            type: 'ir.actions.act_window',
+            view_mode: 'list',
+            views: this.views,
+        });
     },
 });
 

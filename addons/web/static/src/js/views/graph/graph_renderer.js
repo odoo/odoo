@@ -68,6 +68,7 @@ return AbstractRenderer.extend({
         this.isEmbedded = params.isEmbedded || false;
         this.title = params.title || '';
         this.fields = params.fields || {};
+        this.disableLinking = params.disableLinking;
 
         this.chart = null;
         this.chartId = _.uniqueId('chart');
@@ -134,6 +135,7 @@ return AbstractRenderer.extend({
      * @param {Object} tooltipModel see chartjs documentation
      */
     _customTooltip: function (tooltipModel) {
+        this.$el.css({ cursor: 'default' });
         if (this.$tooltip) {
             this.$tooltip.remove();
         }
@@ -142,6 +144,10 @@ return AbstractRenderer.extend({
         }
         if (tooltipModel.dataPoints.length === 0) {
             return;
+        }
+
+        if (this._isRedirectionEnabled()) {
+            this.$el.css({ cursor: 'pointer' });
         }
 
         const chartArea = this.chart.chartArea;
@@ -579,6 +585,17 @@ return AbstractRenderer.extend({
         return tooltipOptions;
     },
     /**
+     * Returns true iff the current graph can be clicked on to redirect to the
+     * list of records.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isRedirectionEnabled: function () {
+        return !this.disableLinking &&
+               (this.state.mode === 'bar' || this.state.mode === 'pie');
+    },
+    /**
      * Return the first index of the array list where label can be found
      * or -1.
      *
@@ -642,9 +659,11 @@ return AbstractRenderer.extend({
 
         var newDataset = function (datasetLabel, originIndex) {
             var data = new Array(self._getDatasetDataLength(originIndex, labels.length)).fill(0);
+            const domain = new Array(self._getDatasetDataLength(originIndex, labels.length)).fill([]);
             return {
                 label: datasetLabel,
                 data: data,
+                domain: domain,
                 originIndex: originIndex,
             };
         };
@@ -658,6 +677,7 @@ return AbstractRenderer.extend({
                 }
                 var labelIndex = dataPt.labelIndex;
                 acc[datasetLabel].data[labelIndex] = dataPt.value;
+                acc[datasetLabel].domain[labelIndex] = dataPt.domain;
                 return acc;
             },
             {}
@@ -682,13 +702,17 @@ return AbstractRenderer.extend({
      * @returns {Object} the chart options used for the current mode
      */
     _prepareOptions: function (datasetsCount) {
-        return {
+        const options = {
             maintainAspectRatio: false,
             scales: this._getScaleOptions(),
             legend: this._getLegendOptions(datasetsCount),
             tooltips: this._getTooltipOptions(),
             elements: this._getElementOptions(),
         };
+        if (this._isRedirectionEnabled()) {
+            options.onClick = this._onGraphClicked.bind(this);
+        }
+        return options;
     },
     /**
      * Determine how to relabel a label according to a given origin.
@@ -987,6 +1011,23 @@ return AbstractRenderer.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onGraphClicked: function (ev) {
+        const activeElement = this.chart.getElementAtEvent(ev);
+        if (activeElement.length === 0) {
+            return;
+        }
+        const domain = this.chart.data.datasets[activeElement[0]._datasetIndex].domain;
+        if (!domain) {
+            return; // empty dataset
+        }
+        this.trigger_up('open_view', {
+            domain: domain[activeElement[0]._index],
+        });
+    },
     /**
      * If the text of a legend item has been shortened and the user mouse over
      * that item (actually the event type is mousemove), a tooltip with the item
