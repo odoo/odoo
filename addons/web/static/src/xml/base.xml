@@ -282,29 +282,32 @@
                     t-on-keydown="_onInputKeydown"
                 />
             </div>
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox"
-                    t-att-id="useByDefaultId"
-                    class="custom-control-input"
-                    t-att-checked="state.isDefault"
-                    t-on-change="_onCheckboxChange"
-                />
-                <label class="custom-control-label" t-att-for="useByDefaultId">
-                    <t>Use by default</t>
-                </label>
-            </div>
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox"
-                    t-att-id="shareAllUsersId"
-                    class="custom-control-input"
-                    t-att-checked="state.isShared"
-                    t-on-change="_onCheckboxChange"
-                />
-                <label class="custom-control-label" t-att-for="shareAllUsersId">
-                    <t>Share with all users</t>
-                    <i class="fa fa-users" role="img" aria-label="Users" title="Users"/>
-                </label>
-            </div>
+            <!-- TODO(jum): find a better way to render these only in control panel -->
+            <t t-if="env.modelKey === 'controlPanelModel'">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox"
+                        t-att-id="useByDefaultId"
+                        class="custom-control-input"
+                        t-att-checked="state.isDefault"
+                        t-on-change="_onCheckboxChange"
+                    />
+                    <label class="custom-control-label" t-att-for="useByDefaultId">
+                        <t>Use by default</t>
+                    </label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox"
+                        t-att-id="shareAllUsersId"
+                        class="custom-control-input"
+                        t-att-checked="state.isShared"
+                        t-on-change="_onCheckboxChange"
+                    />
+                    <label class="custom-control-label" t-att-for="shareAllUsersId">
+                        <t>Share with all users</t>
+                        <i class="fa fa-users" role="img" aria-label="Users" title="Users"/>
+                    </label>
+                </div>
+            </t>
             <div class="dropdown-item-text">
                 <button type="button" class="o_save_favorite btn btn-primary" t-on-click="_saveFavorite">Save</button>
             </div>

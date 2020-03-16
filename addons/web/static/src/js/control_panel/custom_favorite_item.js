@@ -39,7 +39,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
             this.shareAllUsersId = `o_favorite_share_all_users_${favId}`;
 
             this.descriptionRef = useRef('description');
-            this.model = useModel('controlPanelModel');
+            this.model = useModel(this.env.modelKey);
             this.interactive = true;
             Object.assign(this.state, {
                 description: this.env.action.name || "",

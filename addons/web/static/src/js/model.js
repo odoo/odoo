@@ -48,6 +48,7 @@ odoo.define('web.model', function () {
             super();
             this.rev = 1;
             this.mapping = {}; // could be a weak map
+            this.subscriptions.update = [];
         }
 
         //---------------------------------------------------------------------

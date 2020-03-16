@@ -190,12 +190,13 @@ var DomainTree = DomainNode.extend({
      * @see DomainNode.start
      * @returns {Promise}
      */
-    start: function () {
+    start: async function () {
         this._postRender();
-        return Promise.all([
-            this._super.apply(this, arguments),
-            this._renderChildrenTo(this.$childrenContainer)
+        await Promise.all([
+            this._super(...arguments),
+            this._prepareChildren(),
         ]);
+        this.children.forEach(child => this.childrenContainer.append(child.el));
     },
 
     //--------------------------------------------------------------------------
@@ -343,7 +344,9 @@ var DomainTree = DomainNode.extend({
      * @private
      */
     _postRender: function () {
-        this.$childrenContainer = this.$("> .o_domain_node_children_container");
+        this.childrenContainer = this.el.querySelector(
+            ':scope > .o_domain_node_children_container'
+        );
     },
     /**
      * Removes a given child from the widget.
@@ -371,19 +374,12 @@ var DomainTree = DomainNode.extend({
      * synchronous.
      *
      * @private
-     * @param {jQuery} $to - the jQuery node to which the children must be added
      * @returns {Promise}
      */
-    _renderChildrenTo: function ($to) {
-        var $div = $("<div/>");
-        return Promise.all(_.map(this.children, (function (child) {
-            return child.appendTo($div);
-        }).bind(this))).then((function () {
-            _.each(this.children, function (child) {
-                child.$el.appendTo($to); // Forced to do it this way so that the
-                                         // children are not misordered
-            });
-        }).bind(this));
+    _prepareChildren: function () {
+        const fragment = document.createDocumentFragment();
+        const childPromises = this.children.map(child => child.appendTo(fragment));
+        return Promise.all(childPromises);
     },
     /**
      * @param {string} domain
@@ -547,15 +543,14 @@ var DomainSelector = DomainTree.extend({
      * @param {Array|string} domain
      * @returns {Promise}
      */
-    _redraw: function (domain) {
-        var oldChildren = this.children.slice();
+    _redraw: async function (domain) {
+        const oldChildren = this.children.slice();
         this._initialize(domain || this.getDomain());
-        return this._renderChildrenTo($("<div/>")).then((function () {
-            _.each(oldChildren, function (child) { child.destroy(); });
-            this.renderElement();
-            this._postRender();
-            _.each(this.children, (function (child) { child.$el.appendTo(this.$childrenContainer); }).bind(this));
-        }).bind(this));
+        await this._prepareChildren();
+        oldChildren.forEach(child => child.destroy());
+        this.renderElement();
+        this._postRender();
+        this.children.forEach(child => this.childrenContainer.append(child.el));
     },
 
     //--------------------------------------------------------------------------

@@ -23,6 +23,10 @@ var view_dialogs = require('web.view_dialogs');
 var field_utils = require('web.field_utils');
 var time = require('web.time');
 var ColorpickerDialog = require('web.ColorpickerDialog');
+const { ComponentWrapper, WidgetAdapterMixin } = require('web.OwlCompatibility');
+const FavoriteMenu = require('web.FavoriteMenu');
+const { Model, useModel } = require('web.model');
+const { irFilterToFavorite, favoriteToIrFilter } = require('web.searchUtils');
 
 require("web.zoomodoo");
 
@@ -1336,7 +1340,7 @@ var FieldPercentage = FieldFloat.extend({
         if (this.mode === 'edit') {
             this.tagName = 'div';
             this.className += ' o_input';
-            
+
             // do not display % in the input in edit
             this.formatOptions.noSymbol = true;
         }
@@ -2987,6 +2991,120 @@ var JournalDashboardGraph = AbstractField.extend({
     },
 });
 
+let favoriteId = 0;
+class FavoriteMenuModel extends Model {
+    constructor(config) {
+        super(...arguments);
+        this.context = config.context;
+        this.env = config.env;
+        this.model = config.model;
+        this.modelString = null;
+
+        this.isReady = Promise.all([
+            this._loadFilters(),
+            this._loadModelName(),
+        ]).then(results => results[1]);
+    }
+
+    async createNewFavorite(filterInfo) {
+        const preFilter = Object.assign(filterInfo, {
+            context: {},
+            domain: this.domain,
+            userId: this.env.session.uid,
+        });
+        const irFilter = this._toIrFilter(preFilter);
+        const serverSideId = await this.env.dataManager.create_filter(irFilter);
+
+        const favorite = this._toFavorite(irFilter);
+        favorite.serverSideId = serverSideId;
+        this.favorites.push(favorite);
+    }
+
+    toggleFilter(filterId) {
+        const { domain } = this.favorites.find(f => f.id === filterId);
+        this.trigger('update-domain', domain);
+    }
+
+    async deleteFavorite(favoriteId) {
+        const index = this.favorites.findIndex(f => f.id === favoriteId);
+        const favorite = this.favorites[index];
+        await this.env.dataManager.delete_filter(favorite.serverSideId);
+        this.favorites.splice(index, 1);
+    }
+
+    getFiltersOfType() {
+        return this.favorites;
+    }
+
+    updateDomain(domain) {
+        this.domain = domain;
+    }
+
+    updateModel(model) {
+        this.model = model;
+        this.isReady = Promise.all([
+            this._loadFilters(),
+            this._loadModelName(),
+        ]).then(results => results[1]);
+        return this.isReady;
+    }
+
+    async _loadFilters() {
+        const results = await this.env.dataManager.load_filters({
+            actionId: false,
+            context: this.context,
+            modelName: this.model,
+        });
+        this.favorites = results.map(filter => this._toFavorite(filter));
+    }
+
+    async _loadModelName() {
+        try {
+            const result = await this.env.services.rpc({
+                args: [
+                    [['model', '=', this.model]],
+                    ['name'],
+                ],
+                method: 'search_read',
+                model: 'ir.model',
+            });
+            this.modelString = result[0].name;
+        } catch (err) {
+            this.modelString = this.model;
+        }
+        return this.modelString;
+    }
+
+    _toFavorite(irFilter) {
+        const favorite = irFilterToFavorite(irFilter, { userContext: this.env.session.user_context });
+        favorite.id = favoriteId++;
+        return favorite;
+
+    }
+
+    _toIrFilter(favorite) {
+        return favoriteToIrFilter(favorite, false, this.model);
+    }
+}
+
+class FavoriteMenuWrapper extends ComponentWrapper {
+    constructor() {
+        super(...arguments);
+        owl.hooks.useSubEnv({
+            action: this.props.action,
+            favoriteMenuModel: this.props.favoriteMenuModel,
+            modelKey: 'favoriteMenuModel',
+        });
+        delete this.props.action;
+        delete this.props.favoriteMenuModel;
+    }
+}
+
+FavoriteMenuWrapper.props = Object.assign({}, FavoriteMenu.props, {
+    action: Object,
+    favoriteMenuModel: FavoriteMenuModel,
+});
+
 /**
  * The "Domain" field allows the user to construct a technical-prefix domain
  * thanks to a tree-like interface and see the selected records in real time.
@@ -2994,7 +3112,20 @@ var JournalDashboardGraph = AbstractField.extend({
  * domain directly (or to build advanced domains the tree-like interface does
  * not allow to).
  */
-var FieldDomain = AbstractField.extend({
+const FieldDomain = AbstractField.extend(WidgetAdapterMixin, {
+
+    custom_events: _.extend({}, AbstractField.prototype.custom_events, {
+        domain_changed: "_onDomainSelectorValueChange",
+        domain_selected: "_onDomainSelectorDialogValueChange",
+        open_record: "_onOpenRecord",
+        create_favorite: '_onCreateFavorite',
+        item_selected: '_onItemSelected',
+        remove_favorite: '_onRemoveFavorite',
+    }),
+    events: _.extend({}, AbstractField.prototype.events, {
+        "click .o_domain_show_selection_button": "_onShowSelectionButtonClick",
+        "click .o_field_domain_dialog_button": "_onDialogEditButtonClick",
+    }),
     /**
      * Fetches the number of records which are matched by the domain (if the
      * domain is not server-valid, the value is false) and the model the
@@ -3002,23 +3133,13 @@ var FieldDomain = AbstractField.extend({
      */
     specialData: "_fetchSpecialDomain",
 
-    events: _.extend({}, AbstractField.prototype.events, {
-        "click .o_domain_show_selection_button": "_onShowSelectionButtonClick",
-        "click .o_field_domain_dialog_button": "_onDialogEditButtonClick",
-    }),
-    custom_events: _.extend({}, AbstractField.prototype.custom_events, {
-        domain_changed: "_onDomainSelectorValueChange",
-        domain_selected: "_onDomainSelectorDialogValueChange",
-        open_record: "_onOpenRecord",
-    }),
     /**
      * @constructor
-     * @override init from AbstractField
      */
-    init: function () {
-        this._super.apply(this, arguments);
+    init() {
+        this._super(...arguments);
 
-        this.inDialog = !!this.nodeOptions.in_dialog;
+        this.inDialog = Boolean(this.nodeOptions.in_dialog);
         this.fsFilters = this.nodeOptions.fs_filters || {};
 
         this.className = "o_field_domain";
@@ -3029,184 +3150,226 @@ var FieldDomain = AbstractField.extend({
             this.className += " o_inline_mode";
         }
 
-        this._setState();
+        const { model, nbRecords } = this.record.specialData[this.name];
+        this.domainModel = model;
+        this.isValidForModel = nbRecords !== false;
+        this.favoriteMenuModel = new FavoriteMenuModel({
+            context: this.record.getContext(),
+            env: owl.Component.env,
+            model: this.domainModel,
+        });
+        this.favoriteMenuProps = {
+            action: { id: false },
+            favoriteMenuModel: this.favoriteMenuModel,
+        };
     },
 
-    //--------------------------------------------------------------------------
+    async willStart() {
+        console.log("WILLSTART", { domainModel: this.domainModel });
+        const promises = [this._super(...arguments)];
+        promises.push(this.favoriteMenuModel.isReady.then(modelString => {
+            this.favoriteMenuProps.action.name = modelString;
+        }));
+        return Promise.all(promises);
+    },
+
+    async start() {
+        console.log("START", { domainModel: this.domainModel });
+        this.favoriteMenuModel.on('update-domain', this, this._onUpdateDomain);
+        return this._super(...arguments);
+    },
+
+    destroy() {
+        this._super(...arguments);
+        WidgetAdapterMixin.destroy.apply(this, arguments);
+    },
+
+    //-------------------------------------------------------------------------
     // Public
-    //--------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
     /**
      * A domain field is always set since the false value is considered to be
-     * equal to "[]" (match all records).
-     *
+     * equal to '[]' (match all records).
      * @override
      */
-    isSet: function () {
+    isSet() {
         return true;
     },
+
     /**
-     * @override isValid from AbstractField.isValid
      * Parsing the char value is not enough for this field. It is considered
      * valid if the internal domain selector was built correctly and that the
      * query to the model to test the domain did not fail.
-     *
-     * @returns {boolean}
+     * @override
      */
-    isValid: function () {
+    isValid() {
         return (
-            this._super.apply(this, arguments)
-            && (!this.domainSelector || this.domainSelector.isValid())
-            && this._isValidForModel
+            this._super(...arguments) &&
+            (!this.domainSelector || this.domainSelector.isValid()) &&
+            this.isValidForModel
         );
     },
 
-    //--------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // Private
-    //--------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
     /**
-     * @private
-     * @override _render from AbstractField
-     * @returns {Promise}
+     * @override
      */
-    _render: function () {
+    async _render() {
         // If there is no model, only change the non-domain-selector content
-        if (!this._domainModel) {
-            this._replaceContent();
-            return Promise.resolve();
-        }
+        if (this.domainModel) {
+            await this.favoriteMenuModel.isReady;
 
-        // Convert char value to array value
-        var value = this.value || "[]";
+            // Convert char value to array value
+            const value = this.value || "[]";
 
-        // Create the domain selector or change the value of the current one...
-        var def;
-        if (!this.domainSelector) {
-            this.domainSelector = new DomainSelector(this, this._domainModel, value, {
-                readonly: this.mode === "readonly" || this.inDialog,
-                filters: this.fsFilters,
-                debugMode: config.isDebug(),
-            });
-            def = this.domainSelector.prependTo(this.$el);
-        } else {
-            def = this.domainSelector.setDomain(value);
+            // Create the domain selector or change the value of the current one...
+            if (!this.domainSelector) {
+                this.domainSelector = new DomainSelector(this, this.domainModel, value, {
+                    readonly: this.mode === "readonly" || this.inDialog,
+                    filters: this.fsFilters,
+                    debugMode: config.isDebug(),
+                });
+                await this.domainSelector.prependTo(this.el);
+                this.favoriteMenuModel.dispatch('updateDomain', this.domainSelector.getDomain());
+            } else {
+                await this.domainSelector.setDomain(value);
+            }
         }
         // ... then replace the other content (matched records, etc)
-        return def.then(this._replaceContent.bind(this));
-    },
-    /**
-     * Render the field DOM except for the domain selector part. The full field
-     * DOM is composed of a DIV which contains the domain selector widget,
-     * followed by other content. This other content is handled by this method.
-     *
-     * @private
-     */
-    _replaceContent: function () {
-        if (this._$content) {
-            this._$content.remove();
+        if (this.domContent) {
+            this.domContent.remove();
         }
-        this._$content = $(qweb.render("FieldDomain.content", {
-            hasModel: !!this._domainModel,
-            isValid: !!this._isValidForModel,
+        this.domContent = $(qweb.render('FieldDomain.content', {
+            hasModel: Boolean(this.domainModel),
+            inDialogEdit: this.inDialog && this.mode === 'edit',
+            isValid: this.isValidForModel,
             nbRecords: this.record.specialData[this.name].nbRecords || 0,
-            inDialogEdit: this.inDialog && this.mode === "edit",
-        }));
-        this._$content.appendTo(this.$el);
-    },
-    /**
-     * @override _reset from AbstractField
-     * Check if the model the field works with has (to be) changed.
-     *
-     * @private
-     */
-    _reset: function () {
-        this._super.apply(this, arguments);
-        var oldDomainModel = this._domainModel;
-        this._setState();
-        if (this.domainSelector && this._domainModel !== oldDomainModel) {
-            // If the model has changed, destroy the current domain selector
-            this.domainSelector.destroy();
-            this.domainSelector = null;
+        }))[0];
+        this.el.append(this.domContent);
+
+        if (this.domainModel && this.mode !== 'readonly') {
+            if (!this.favoriteMenu) {
+                this.favoriteMenu = new FavoriteMenuWrapper(this, FavoriteMenu,
+                    Object.assign({}, this.favoriteMenuProps)
+                );
+            }
+            await this.favoriteMenu.mount(this.domContent, { position: 'first-child' });
+            this.favoriteMenu.el.classList.add('o_favorite_menu');
         }
-    },
-    /**
-     * Sets the model the field must work with and whether or not the current
-     * domain value is valid for this particular model. This is inferred from
-     * the received special data.
-     *
-     * @private
-     */
-    _setState: function () {
-        var specialData = this.record.specialData[this.name];
-        this._domainModel = specialData.model;
-        this._isValidForModel = (specialData.nbRecords !== false);
     },
 
-    //--------------------------------------------------------------------------
+    /**
+     * Check if the model the field works with has (to be) changed.
+     * @override
+     */
+    _reset() {
+        this._super(...arguments);
+        const oldDomainModel = this.domainModel;
+        const { model, nbRecords } = this.record.specialData[this.name];
+        this.domainModel = model;
+        this.isValidForModel = nbRecords !== false;
+        if (model !== oldDomainModel) {
+            if (this.domainSelector) {
+                // If the model has changed, destroy the current domain selector
+                this.domainSelector.destroy();
+                this.domainSelector = null;
+            }
+            this.favoriteMenuModel.dispatch('updateModel', model).then(modelString => {
+                this.favoriteMenuProps.action.name = modelString;
+            });
+        }
+    },
+
+    _setValue(domain) {
+        this.favoriteMenuModel.dispatch('updateDomain', domain);
+        return this._super(...arguments);
+    },
+
+    //-------------------------------------------------------------------------
     // Handlers
-    //--------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
     /**
      * Called when the "Show selection" button is clicked
      * -> Open a modal to see the matched records
-     *
-     * @param {Event} e
+     * @private
+     * @param {MouseEvent} ev
      */
-    _onShowSelectionButtonClick: function (e) {
-        e.preventDefault();
-        new view_dialogs.SelectCreateDialog(this, {
-            title: _t("Selected records"),
-            res_model: this._domainModel,
-            context: this.record.getContext({fieldName: this.name, viewType: this.viewType}),
-            domain: this.value || "[]",
+    _onShowSelectionButtonClick(ev) {
+        ev.preventDefault();
+        const dialog = new view_dialogs.SelectCreateDialog(this, {
+            context: this.record.getContext({ fieldName: this.name, viewType: this.viewType }),
+            disable_multiple_selection: true,
+            domain: this.value || '[]',
             no_create: true,
             readonly: true,
-            disable_multiple_selection: true,
-        }).open();
+            res_model: this.domainModel,
+            title: _t("Selected records"),
+        });
+        dialog.open();
     },
+    /**
+     * @private
+     * @param {string} domain
+     */
+    _onUpdateDomain(domain) {
+        this._setValue(domain);
+        this.domainSelector.setDomain(domain);
+    },
+
     /**
      * Called when the "Edit domain" button is clicked (when using the in_dialog
      * option) -> Open a DomainSelectorDialog to edit the value
-     *
-     * @param {Event} e
+     * @private
+     * @param {MouseEvent} ev
      */
-    _onDialogEditButtonClick: function (e) {
-        e.preventDefault();
-        new DomainSelectorDialog(this, this._domainModel, this.value || "[]", {
-            readonly: this.mode === "readonly",
+    _onDialogEditButtonClick(ev) {
+        ev.preventDefault();
+        const dialog = new DomainSelectorDialog(this, this.domainModel, this.value || '[]', {
+            readonly: this.mode === 'readonly',
             filters: this.fsFilters,
             debugMode: config.isDebug(),
-        }).open();
+        });
+        dialog.open();
     },
+
     /**
      * Called when the domain selector value is changed (do nothing if it is the
      * one which is in a dialog (@see _onDomainSelectorDialogValueChange))
      * -> Adapt the internal value state
-     *
-     * @param {OdooEvent} e
+     * @private
      */
-    _onDomainSelectorValueChange: function (e) {
-        if (this.inDialog) return;
-        this._setValue(Domain.prototype.arrayToString(this.domainSelector.getDomain()));
+    _onDomainSelectorValueChange() {
+        if (!this.inDialog) {
+            const domain = Domain.prototype.arrayToString(this.domainSelector.getDomain());
+            this._setValue(domain);
+            this.favoriteMenuModel.dispatch('updateDomain', domain);
+        }
     },
+
     /**
      * Called when the in-dialog domain selector value is confirmed
      * -> Adapt the internal value state
-     *
-     * @param {OdooEvent} e
+     * @private
      */
-    _onDomainSelectorDialogValueChange: function (e) {
-        this._setValue(Domain.prototype.arrayToString(e.data.domain));
+    _onDomainSelectorDialogValueChange() {
+        const domain = Domain.prototype.arrayToString(e.data.domain);
+        this._setValue(domain);
+        this.favoriteMenuModel.dispatch('updateDomain', domain);
     },
+
     /**
      * Stops the propagation of the 'open_record' event, as we don't want the
      * user to be able to open records from the list opened in a dialog.
-     *
-     * @param {OdooEvent} event
+     * @private
+     * @param {OdooEvent} ev
      */
-    _onOpenRecord: function (event) {
-        event.stopPropagation();
+    _onOpenRecord(ev) {
+        ev.stopPropagation();
     },
 });
 

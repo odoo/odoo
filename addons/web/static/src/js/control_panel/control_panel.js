@@ -107,6 +107,7 @@ odoo.define('web.ControlPanel', function (require) {
             useSubEnv({
                 action: this.props.action,
                 controlPanelModel: this.props.controlPanelModel,
+                modelKey: 'controlPanelModel',
                 view: this.props.view,
             });
 

@@ -1,7 +1,9 @@
 odoo.define('web.searchUtils', function (require) {
     "use strict";
 
-    const { _lt } = require('web.core');
+    const Domain = require('web.Domain');
+    const { _lt, _t } = require('web.core');
+    const pyUtils = require('web.py_utils');
 
     // Filter menu parameters
     const FIELD_OPERATORS = {
@@ -94,10 +96,6 @@ odoo.define('web.searchUtils', function (require) {
     };
     const OPTION_GENERATORS = Object.assign({}, MONTH_OPTIONS, QUARTER_OPTIONS, YEAR_OPTIONS);
 
-    function rankPeriod(oId) {
-        return Object.keys(OPTION_GENERATORS).indexOf(oId);
-    }
-
     // GroupBy menu parameters
     const GROUPABLE_TYPES = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime', 'integer'];
     const DEFAULT_INTERVAL = 'month';
@@ -108,9 +106,6 @@ odoo.define('web.searchUtils', function (require) {
         week: { description: _lt("Week"), id: 'week', groupNumber: 1 },
         day: { description: _lt("Day"), id: 'day', groupNumber: 1 }
     };
-    function rankInterval(oId) {
-        return Object.keys(INTERVAL_OPTIONS).indexOf(oId);
-    }
 
     // TimeRange menu parameters
     const TIME_RANGE_OPTIONS = {
@@ -142,6 +137,181 @@ odoo.define('web.searchUtils', function (require) {
         timeRange: 'fa-calendar',
     };
 
+    /**
+     * Construct a timeRange object from the given fieldName, rangeId, comparisonRangeId
+     * parameters.
+     *
+     * @private
+     * @param {string} filter.fieldName
+     * @param {string} filter.rangeId
+     * @param {string} filter.comparisonRangeId
+     * @param {Object} fields
+     */
+    function extractTimeRange({ fieldName, rangeId, comparisonRangeId }, fields) {
+        const field = fields[fieldName];
+        const timeRange = {
+            fieldName,
+            fieldDescription: field.string || fieldName,
+            rangeId,
+            range: Domain.prototype.constructDomain(fieldName, rangeId, field.type),
+            rangeDescription: TIME_RANGE_OPTIONS[rangeId].description.toString(),
+        };
+        if (comparisonRangeId) {
+            timeRange.comparisonRangeId = comparisonRangeId;
+            timeRange.comparisonRange = Domain.prototype.constructDomain(
+                fieldName, rangeId, field.type, comparisonRangeId
+            );
+            const { description } = COMPARISON_TIME_RANGE_OPTIONS[comparisonRangeId];
+            timeRange.comparisonRangeDescription = description.toString();
+        }
+        return timeRange;
+    }
+
+    /**
+     * Returns an object irFilter serving to create an ir_filte in db
+     * starting from a filter of type 'favorite'.
+     *
+     * @private
+     * @param {Object} favorite
+     * @param {string} action_id
+     * @param {string} model_id
+     * @returns {Object}
+     */
+    function favoriteToIrFilter(favorite, action_id, model_id) {
+        const irFilter = { action_id, model_id };
+
+        // ir.filter fields
+        if ('description' in favorite) {
+            irFilter.name = favorite.description;
+        }
+        if ('domain' in favorite) {
+            irFilter.domain = favorite.domain;
+        }
+        if ('isDefault' in favorite) {
+            irFilter.is_default = favorite.isDefault;
+        }
+        if ('orderedBy' in favorite) {
+            const sort = favorite.orderedBy.map(
+                ob => ob.name + (ob.asc === false ? " desc" : "")
+            );
+            irFilter.sort = JSON.stringify(sort);
+        }
+        if ('serverSideId' in favorite) {
+            irFilter.id = favorite.serverSideId;
+        }
+        if ('userId' in favorite) {
+            irFilter.user_id = favorite.userId;
+        }
+
+        // Context
+        const context = Object.assign({}, favorite.context);
+        if ('groupBys' in favorite) {
+            context.group_by = favorite.groupBys;
+        }
+        if ('timeRanges' in favorite) {
+            const { fieldName, rangeId, comparisonRangeId } = favorite.timeRanges;
+            context.time_ranges = {
+                field: fieldName,
+                range: rangeId,
+                comparisonRange: comparisonRangeId,
+            };
+        }
+        if (Object.keys(context).length) {
+            irFilter.context = context;
+        }
+
+        return irFilter;
+    }
+
+    /**
+     * Returns a filter of type 'favorite' starting from an ir_filter comming from db.
+     *
+     * @private
+     * @param {Object} irFilter
+     * @param {Object} params.userContext
+     * @param {Object} [params.fields]
+     * @returns {Object}
+     */
+    function irFilterToFavorite(irFilter, { userContext, fields }) {
+        let userId = irFilter.user_id || false;
+        if (Array.isArray(userId)) {
+            userId = userId[0];
+        }
+        const groupNumber = userId ? 1 : 2;
+        const context = pyUtils.eval('context', irFilter.context, userContext);
+        let groupBys = [];
+        if (context.group_by) {
+            groupBys = context.group_by;
+            delete context.group_by;
+        }
+        let timeRanges;
+        if (fields && context.time_ranges) {
+            const { field, range, comparisonRange } = context.time_ranges;
+            timeRanges = extractTimeRange({
+                fieldName: field,
+                rangeId: range,
+                comparisonRangeId: comparisonRange,
+            }, fields);
+            delete context.time_ranges;
+        }
+        let sort;
+        try {
+            sort = JSON.parse(irFilter.sort);
+        } catch (err) {
+            if (err instanceof SyntaxError) {
+                sort = [];
+            } else {
+                throw err;
+            }
+        }
+        const orderedBy = sort.map(order => {
+            let fieldName;
+            let asc;
+            const sqlNotation = order.split(' ');
+            if (sqlNotation.length > 1) {
+                // regex: \fieldName (asc|desc)?\
+                fieldName = sqlNotation[0];
+                asc = sqlNotation[1] === 'asc';
+            } else {
+                // legacy notation -- regex: \-?fieldName\
+                fieldName = order[0] === '-' ? order.slice(1) : order;
+                asc = order[0] === '-' ? false : true;
+            }
+            return {
+                asc: asc,
+                name: fieldName,
+            };
+        });
+        const favorite = {
+            context,
+            description: irFilter.name,
+            domain: irFilter.domain,
+            groupBys,
+            groupNumber,
+            orderedBy,
+            removable: true,
+            serverSideId: irFilter.id,
+            type: 'favorite',
+            userId,
+        };
+        if (irFilter.is_default) {
+            favorite.isDefault = irFilter.is_default;
+        }
+        if (timeRanges) {
+            favorite.timeRanges = timeRanges;
+        }
+        return favorite;
+
+    }
+
+    function rankInterval(oId) {
+        return Object.keys(INTERVAL_OPTIONS).indexOf(oId);
+    }
+
+    function rankPeriod(oId) {
+        return Object.keys(OPTION_GENERATORS).indexOf(oId);
+    }
+
     return {
         COMPARISON_TIME_RANGE_OPTIONS,
         DEFAULT_INTERVAL,
@@ -155,6 +325,9 @@ odoo.define('web.searchUtils', function (require) {
         TIME_RANGE_OPTIONS,
         YEAR_OPTIONS,
 
+        extractTimeRange,
+        favoriteToIrFilter,
+        irFilterToFavorite,
         rankInterval,
         rankPeriod,
     };

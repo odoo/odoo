@@ -21,7 +21,7 @@ odoo.define('web.FavoriteMenu', function (require) {
         constructor() {
             super(...arguments);
 
-            this.model = useModel('controlPanelModel');
+            this.model = useModel(this.env.modelKey);
             this.state.deletedFavorite = false;
         }
 

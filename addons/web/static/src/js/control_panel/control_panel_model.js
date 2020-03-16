@@ -6,14 +6,10 @@ odoo.define('web.ControlPanelModel', function (require) {
     const { parseArch } = require('web.viewUtils');
     const pyUtils = require('web.py_utils');
 
-    const { COMPARISON_TIME_RANGE_OPTIONS,
-        DEFAULT_INTERVAL, DEFAULT_PERIOD, FACET_ICONS,
-        INTERVAL_OPTIONS, OPTION_GENERATORS,
-        TIME_RANGE_OPTIONS, YEAR_OPTIONS,
+    const { DEFAULT_INTERVAL, DEFAULT_PERIOD,
+        INTERVAL_OPTIONS, OPTION_GENERATORS, YEAR_OPTIONS, FACET_ICONS,
+        extractTimeRange, favoriteToIrFilter, irFilterToFavorite,
         rankPeriod, rankInterval } = require('web.searchUtils');
-
-    const FAVORITE_PRIVATE_GROUP = 1;
-    const FAVORITE_SHARED_GROUP = 2;
 
     let filterId = 0;
     let groupId = 0;
@@ -610,7 +606,10 @@ odoo.define('web.ControlPanelModel', function (require) {
          */
         _createGroupOfFavorites() {
             this.favoriteFilters.forEach(irFilter => {
-                const favorite = this._irFilterToFavorite(irFilter);
+                const favorite = irFilterToFavorite(irFilter, {
+                    userContext: this.env.session.user_context,
+                    fields: this.fields,
+                });
                 this._createGroupOfFilters([favorite]);
             });
         }
@@ -762,7 +761,7 @@ odoo.define('web.ControlPanelModel', function (require) {
                     break;
                 case 'timeRange':
                     if (filterQueryElements.length) {
-                        const timeRange = this._extractTimeRange(filterQueryElements[0]);
+                        const timeRange = extractTimeRange(filterQueryElements[0], this.fields);
                         Object.assign(f, timeRange);
                     }
                     break;
@@ -915,91 +914,6 @@ odoo.define('web.ControlPanelModel', function (require) {
                 });
             }
             return results;
-        }
-
-        /**
-         * Construct a timeRange object from the given fieldName, rangeId, comparisonRangeId
-         * parameters.
-         * @private
-         * @param {string} fieldName
-         * @param {string} rangeId
-         * @param {string} comparisonRangeId
-         * @returns {Object}
-         */
-        _extractTimeRange({ fieldName, rangeId, comparisonRangeId }) {
-            const field = this.fields[fieldName];
-            const timeRange = {
-                fieldName,
-                fieldDescription: field.string || fieldName,
-                rangeId,
-                range: Domain.prototype.constructDomain(fieldName, rangeId, field.type),
-                rangeDescription: TIME_RANGE_OPTIONS[rangeId].description.toString(),
-            };
-            if (comparisonRangeId) {
-                timeRange.comparisonRangeId = comparisonRangeId;
-                timeRange.comparisonRange = Domain.prototype.constructDomain(
-                    fieldName, rangeId, field.type, comparisonRangeId
-                );
-                const { description } = COMPARISON_TIME_RANGE_OPTIONS[comparisonRangeId];
-                timeRange.comparisonRangeDescription = description.toString();
-            }
-            return timeRange;
-        }
-
-        /**
-         * Returns an object irFilter serving to create an ir_filte in db
-         * starting from a filter of type 'favorite'.
-         * @private
-         * @param {Object} favorite
-         * @returns {Object}
-         */
-        _favoriteToIrFilter(favorite) {
-            const irFilter = {
-                action_id: this.actionId,
-                model_id: this.modelName,
-            };
-
-            // ir.filter fields
-            if ('description' in favorite) {
-                irFilter.name = favorite.description;
-            }
-            if ('domain' in favorite) {
-                irFilter.domain = favorite.domain;
-            }
-            if ('isDefault' in favorite) {
-                irFilter.is_default = favorite.isDefault;
-            }
-            if ('orderedBy' in favorite) {
-                const sort = favorite.orderedBy.map(
-                    ob => ob.name + (ob.asc === false ? " desc" : "")
-                );
-                irFilter.sort = JSON.stringify(sort);
-            }
-            if ('serverSideId' in favorite) {
-                irFilter.id = favorite.serverSideId;
-            }
-            if ('userId' in favorite) {
-                irFilter.user_id = favorite.userId;
-            }
-
-            // Context
-            const context = Object.assign({}, favorite.context);
-            if ('groupBys' in favorite) {
-                context.group_by = favorite.groupBys;
-            }
-            if ('timeRanges' in favorite) {
-                const { fieldName, rangeId, comparisonRangeId } = favorite.timeRanges;
-                context.time_ranges = {
-                    field: fieldName,
-                    range: rangeId,
-                    comparisonRange: comparisonRangeId,
-                };
-            }
-            if (Object.keys(context).length) {
-                irFilter.context = context;
-            }
-
-            return irFilter;
         }
 
         /**
@@ -1352,11 +1266,11 @@ odoo.define('web.ControlPanelModel', function (require) {
             for (const queryElem of this.state.query.slice().reverse()) {
                 const filter = this.state.filters[queryElem.filterId];
                 if (filter.type === 'timeRange') {
-                    timeRanges = this._extractTimeRange(queryElem);
+                    timeRanges = extractTimeRange(queryElem, this.fields);
                     break;
                 } else if (filter.type === 'favorite' && filter.timeRanges) {
                     // we want to make sure that last is not observed! (it is change below in case of evaluation)
-                    timeRanges = this._extractTimeRange(filter.timeRanges);
+                    timeRanges = extractTimeRange(filter.timeRanges, this.fields);
                     break;
                 }
             }
@@ -1371,83 +1285,6 @@ odoo.define('web.ControlPanelModel', function (require) {
                 }
                 return timeRanges;
             }
-        }
-
-        /**
-         * Returns a filter of type 'favorite' starting from an ir_filter comming from db.
-         * @private
-         * @param {Object} irFilter
-         * @returns {Object}
-         */
-        _irFilterToFavorite(irFilter) {
-            let userId = irFilter.user_id || false;
-            if (Array.isArray(userId)) {
-                userId = userId[0];
-            }
-            const groupNumber = userId ? FAVORITE_PRIVATE_GROUP : FAVORITE_SHARED_GROUP;
-            const context = pyUtils.eval('context', irFilter.context, this.env.session.user_context);
-            let groupBys = [];
-            if (context.group_by) {
-                groupBys = context.group_by;
-                delete context.group_by;
-            }
-            let timeRanges;
-            if (context.time_ranges) {
-                const { field, range, comparisonRange } = context.time_ranges;
-                timeRanges = this._extractTimeRange({
-                    fieldName: field,
-                    rangeId: range,
-                    comparisonRangeId: comparisonRange,
-                });
-                delete context.time_ranges;
-            }
-            let sort;
-            try {
-                sort = JSON.parse(irFilter.sort);
-            } catch (err) {
-                if (err instanceof SyntaxError) {
-                    sort = [];
-                } else {
-                    throw err;
-                }
-            }
-            const orderedBy = sort.map(order => {
-                let fieldName;
-                let asc;
-                const sqlNotation = order.split(' ');
-                if (sqlNotation.length > 1) {
-                    // regex: \fieldName (asc|desc)?\
-                    fieldName = sqlNotation[0];
-                    asc = sqlNotation[1] === 'asc';
-                } else {
-                    // legacy notation -- regex: \-?fieldName\
-                    fieldName = order[0] === '-' ? order.slice(1) : order;
-                    asc = order[0] === '-' ? false : true;
-                }
-                return {
-                    asc: asc,
-                    name: fieldName,
-                };
-            });
-            const favorite = {
-                context,
-                description: irFilter.name,
-                domain: irFilter.domain,
-                groupBys,
-                groupNumber,
-                orderedBy,
-                removable: true,
-                serverSideId: irFilter.id,
-                type: 'favorite',
-                userId,
-            };
-            if (irFilter.is_default) {
-                favorite.isDefault = irFilter.is_default;
-            }
-            if (timeRanges) {
-                favorite.timeRanges = timeRanges;
-            }
-            return favorite;
         }
 
         /**
@@ -1586,7 +1423,7 @@ odoo.define('web.ControlPanelModel', function (require) {
                 context,
                 domain,
                 groupBys,
-                groupNumber: userId ? FAVORITE_PRIVATE_GROUP : FAVORITE_SHARED_GROUP,
+                groupNumber: userId ? 1 : 2,
                 orderedBy,
                 removable: true,
                 userId,
@@ -1594,7 +1431,7 @@ odoo.define('web.ControlPanelModel', function (require) {
             if (timeRanges) {
                 preFilter.timeRanges = timeRanges;
             }
-            const irFilter = this._favoriteToIrFilter(preFilter);
+            const irFilter = favoriteToIrFilter(preFilter, this.actionId, this.modelName);
             const serverSideId = await this.env.dataManager.create_filter(irFilter);
 
             preFilter.serverSideId = serverSideId;
@@ -1633,7 +1470,7 @@ odoo.define('web.ControlPanelModel', function (require) {
                 let facetDescription;
                 for (const { filter, filterQueryElements } of activities) {
                     if (type === 'timeRange') {
-                        const tr = this._extractTimeRange(filterQueryElements[0]);
+                        const tr = extractTimeRange(filterQueryElements[0], this.fields);
                         facetDescription = `${tr.fieldDescription}: ${tr.rangeDescription}`;
                         if (tr.comparisonRangeDescription) {
                             facetDescription += ` / ${tr.comparisonRangeDescription}`;

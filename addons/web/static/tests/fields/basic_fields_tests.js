@@ -6289,7 +6289,7 @@ QUnit.module('basic_fields', {
                         '</group>' +
                     '</sheet>' +
                 '</form>',
-            mockRPC: function (route, args) {
+            async mockRPC(route, args) {
                 if (args.method === 'search_count') {
                     assert.deepEqual(args.args[0], [], "should send a valid domain");
                 }
@@ -6375,6 +6375,90 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual($('.modal .o_data_row').text(), '1214',
             "should have picked the correct list view");
+
+        form.destroy();
+    });
+
+    QUnit.test("favorite menu in field domain", async function (assert) {
+        assert.expect(14);
+
+        this.data.partner.records[0].foo = "[]";
+        this.data['ir.model'] = {
+            fields: {},
+            records: [{ model: 'partner_type', name: "Foo" }],
+        };
+
+        const form = await createView({
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="domain" options="{'model': 'partner_type'}"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            data: this.data,
+            env: {
+                dataManager: {
+                    async create_filter() {
+                        assert.step('create_filter');
+                    },
+                    async delete_filter() {
+                        assert.step('delete_filter');
+                    },
+                    async load_filters(params) {
+                        assert.step('load_filters');
+                        return [{
+                            domain: '[["name", "ilike", "Patrick"]]',
+                            id: 23,
+                            name: "Guys named Patrick",
+                        }];
+                    },
+                },
+            },
+            model: 'partner',
+            res_id: 1,
+            View: FormView,
+        });
+        assert.containsNone(form, '.o_dropdown');
+
+        await testUtils.form.clickEdit(form);
+
+        assert.containsOnce(form, '.o_dropdown');
+
+        await testUtils.controlPanel.toggleFavoriteMenu(form);
+
+        assert.deepEqual(testUtils.controlPanel.getMenuItemTexts(form),
+            ["Guys named Patrick", "Save Current Search"],
+            "Filter should have the right name");
+
+        await testUtils.controlPanel.toggleMenuItem(form, "Guys named Patrick");
+
+        assert.strictEqual(form.el.querySelector('.o_field_selector_value').innerText.trim(), "Partner Type");
+        assert.strictEqual(form.el.querySelector('.o_domain_leaf_operator_select').value, 'ilike');
+        assert.strictEqual(form.el.querySelector('.o_domain_leaf_value_input').value, "Patrick");
+
+        await testUtils.fields.editSelect(form.el.querySelector('.o_domain_leaf_value_input'), "John");
+        await testUtils.controlPanel.toggleSaveFavorite(form);
+
+        assert.containsNone(form, 'input[type=checkbox]',
+            "the favorite menu should have checkbox options");
+
+        await testUtils.controlPanel.editFavoriteName(form, "Guys named John");
+        await testUtils.controlPanel.saveFavorite(form);
+
+        assert.deepEqual(testUtils.controlPanel.getMenuItemTexts(form),
+            ["Guys named Patrick", "Guys named John", "Save Current Search"],
+            "Filter should have been added");
+
+        await testUtils.controlPanel.deleteFavorite(form, "Guys named Patrick");
+        await testUtils.dom.click(document.querySelector('.modal .btn-primary'));
+
+        assert.deepEqual(testUtils.controlPanel.getMenuItemTexts(form),
+            ["Guys named John", "Save Current Search"],
+            "Filter should have been removed");
+
+        assert.verifySteps(['load_filters', 'load_filters', 'create_filter', 'delete_filter']);
 
         form.destroy();
     });
