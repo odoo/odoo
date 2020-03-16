@@ -199,6 +199,8 @@ class WebsitePayment(http.Controller):
         acquirers = None
         if acquirer_id:
             acquirers = env['payment.acquirer'].browse(int(acquirer_id))
+        if order_id:
+            acquirers = env['payment.acquirer'].search([('state', 'in', ['enabled', 'test']), ('company_id', '=', order.company_id.id)])
         if not acquirers:
             acquirers = env['payment.acquirer'].search([('state', 'in', ['enabled', 'test']), ('company_id', '=', user.company_id.id)])
 
