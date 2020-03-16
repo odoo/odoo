@@ -245,9 +245,10 @@ var Wysiwyg = Widget.extend({
             var mimetype = $croppedImg.data('crop:mimetype');
             var originalSrc = $croppedImg.data('crop:originalSrc');
             var datas = $croppedImg.attr('src').split(',')[1];
+            var def;
             if (!cropID) {
                 var name = originalSrc + '.crop';
-                return self._rpc({
+                def = self._rpc({
                     model: 'ir.attachment',
                     method: 'create',
                     args: [{
@@ -259,22 +260,25 @@ var Wysiwyg = Widget.extend({
                         mimetype: mimetype,
                         url: originalSrc, // To save the original image that was cropped
                     }],
-                }).then(function (attachmentID) {
-                    return self._rpc({
-                        model: 'ir.attachment',
-                        method: 'generate_access_token',
-                        args: [[attachmentID]],
-                    }).then(function (access_token) {
-                        $croppedImg.attr('src', '/web/image/' + attachmentID + '?access_token=' + access_token[0]);
-                    });
                 });
             } else {
-                return self._rpc({
+                def = self._rpc({
                     model: 'ir.attachment',
                     method: 'write',
                     args: [[cropID], {datas: datas}],
+                }).then(function () {
+                    return cropID;
                 });
             }
+            return def.then(function (attachmentID) {
+                return self._rpc({
+                    model: 'ir.attachment',
+                    method: 'generate_access_token',
+                    args: [[attachmentID]],
+                }).then(function (access_token) {
+                    $croppedImg.attr('src', '/web/image/' + attachmentID + '?access_token=' + access_token[0]);
+                });
+            });
         }).get();
         return Promise.all(defs);
     },
