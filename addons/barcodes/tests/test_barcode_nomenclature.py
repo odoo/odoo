@@ -12,15 +12,12 @@ class TestBarcodeNomenclature(common.TransactionCase):
             'name': 'Barcode Nomenclature Test',
         })
 
-    def test_ean8_checksum(self):
+    def test_barcode_check_digit(self):
         barcode_nomenclature = self.env['barcode.nomenclature']
         ean8 = "87111125"
-        checksum = barcode_nomenclature.ean8_checksum(ean8)
-        self.assertEqual(checksum, int(ean8[-1]))
-        checksum = barcode_nomenclature.ean8_checksum("8711112")
-        self.assertEqual(checksum, -1)
-        checksum = barcode_nomenclature.ean8_checksum("871111256")
-        self.assertEqual(checksum, -1)
+        self.assertEqual(barcode_nomenclature.get_barcode_check_digit("0" * 10 + ean8), int(ean8[-1]))
+        ean13 = "1234567891231"
+        self.assertEqual(barcode_nomenclature.get_barcode_check_digit("0" * 5 + ean13), int(ean13[-1]))
 
     def test_barcode_nomenclature_parse_barcode_ean8_01(self):
         """ Parses some barcodes with a simple EAN-8 barcode rule and checks the result.
