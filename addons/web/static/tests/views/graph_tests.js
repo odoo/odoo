@@ -979,6 +979,146 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
+    QUnit.test('clicking on bar and pie charts triggers a do_action', async function (assert) {
+        assert.expect(5);
+
+        const graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Foo Analysis"><field name="bar"/></graph>',
+            intercepts: {
+                do_action: function (ev) {
+                    assert.deepEqual(ev.data.action, {
+                        context: {},
+                        domain: [["bar", "=", true]],
+                        name: "Foo Analysis",
+                        res_model: "foo",
+                        target: 'current',
+                        type: 'ir.actions.act_window',
+                        view_mode: 'list',
+                        views: [[false, 'list'], [false, 'form']],
+                    }, "should trigger do_action with correct action parameter");
+                }
+            },
+        });
+        await testUtils.nextTick(); // wait for the graph to be rendered
+
+        // bar mode
+        assert.strictEqual(graph.renderer.state.mode, "bar", "should be in bar chart mode");
+        assert.checkDatasets(graph, ['domain'], {
+            domain: [[["bar", "=", true]], [["bar", "=", false]]],
+        });
+
+        let myChart = graph.renderer.chart;
+        let meta = myChart.getDatasetMeta(0);
+        let rectangle = myChart.canvas.getBoundingClientRect();
+        let point = meta.data[0].getCenterPoint();
+        await testUtils.dom.triggerEvent(myChart.canvas, 'click', {
+            pageX: rectangle.left + point.x,
+            pageY: rectangle.top + point.y
+        });
+
+        // pie mode
+        await testUtils.dom.click(graph.$('.o_graph_button[data-mode=pie]'));
+        assert.strictEqual(graph.renderer.state.mode, "pie", "should be in pie chart mode");
+
+        myChart = graph.renderer.chart;
+        meta = myChart.getDatasetMeta(0);
+        rectangle = myChart.canvas.getBoundingClientRect();
+        point = meta.data[0].getCenterPoint();
+        await testUtils.dom.triggerEvent(myChart.canvas, 'click', {
+            pageX: rectangle.left + point.x,
+            pageY: rectangle.top + point.y
+        });
+
+        graph.destroy();
+    });
+
+    QUnit.test('clicking charts trigger a do_action with correct views', async function (assert) {
+        assert.expect(3);
+
+        const graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Foo Analysis"><field name="bar"/></graph>',
+            intercepts: {
+                do_action: function (ev) {
+                    assert.deepEqual(ev.data.action, {
+                        context: {},
+                        domain: [["bar", "=", true]],
+                        name: "Foo Analysis",
+                        res_model: "foo",
+                        target: 'current',
+                        type: 'ir.actions.act_window',
+                        view_mode: 'list',
+                        views: [[364, 'list'], [29, 'form']],
+                    }, "should trigger do_action with correct action parameter");
+                }
+            },
+            viewOptions: {
+                actionViews: [{
+                    type: 'list',
+                    viewID: 364,
+                }, {
+                    type: 'form',
+                    viewID: 29,
+                }],
+            },
+        });
+        await testUtils.nextTick(); // wait for the graph to be rendered
+
+        assert.strictEqual(graph.renderer.state.mode, "bar", "should be in bar chart mode");
+        assert.checkDatasets(graph, ['domain'], {
+            domain: [[["bar", "=", true]], [["bar", "=", false]]],
+        });
+
+        let myChart = graph.renderer.chart;
+        let meta = myChart.getDatasetMeta(0);
+        let rectangle = myChart.canvas.getBoundingClientRect();
+        let point = meta.data[0].getCenterPoint();
+        await testUtils.dom.triggerEvent(myChart.canvas, 'click', {
+            pageX: rectangle.left + point.x,
+            pageY: rectangle.top + point.y
+        });
+
+        graph.destroy();
+    });
+
+    QUnit.test('graph view with attribute disable_linking="True"', async function (assert) {
+        assert.expect(2);
+
+        const graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph disable_linking="1"><field name="bar"/></graph>',
+            intercepts: {
+                do_action: function () {
+                    throw new Error('Should not perform a do_action');
+                },
+            },
+        });
+        await testUtils.nextTick(); // wait for the graph to be rendered
+
+        assert.strictEqual(graph.renderer.state.mode, "bar", "should be in bar chart mode");
+        assert.checkDatasets(graph, ['domain'], {
+            domain: [[["bar", "=", true]], [["bar", "=", false]]],
+        });
+
+        let myChart = graph.renderer.chart;
+        let meta = myChart.getDatasetMeta(0);
+        let rectangle = myChart.canvas.getBoundingClientRect();
+        let point = meta.data[0].getCenterPoint();
+        await testUtils.dom.triggerEvent(myChart.canvas, 'click', {
+            pageX: rectangle.left + point.x,
+            pageY: rectangle.top + point.y
+        });
+
+        graph.destroy();
+    });
+
     QUnit.module('GraphView: comparison mode', {
         beforeEach: async function () {
             this.data.foo.records[0].date = '2016-12-15';

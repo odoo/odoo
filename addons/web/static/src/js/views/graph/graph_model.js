@@ -244,6 +244,7 @@ return AbstractModel.extend({
             self.chart.dataPoints.push({
                 resId: dataPt[self.chart.groupBy[0]] instanceof Array ? dataPt[self.chart.groupBy[0]][0] : -1,
                 count: count,
+                domain: dataPt.__domain,
                 value: value,
                 labels: labels,
                 originIndex: originIndex,
