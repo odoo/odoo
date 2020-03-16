@@ -839,7 +839,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         extracted = self._extract_records(fields, data, log=messages.append)
         converted = self._convert_records(extracted, log=messages.append)
         unknown_msg = _(u"Unknown database error: '%s'")
-        for id, xid, record, info in converted:
+        for i, (id, xid, record, info) in enumerate(converted, 1):
             try:
                 cr.execute('SAVEPOINT model_load_save')
             except psycopg2.InternalError as e:
@@ -868,6 +868,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 message = (_(u'Unknown error during import:') + u' %s: %s' % (type(e), e))
                 moreinfo = _('Resolve other errors first')
                 messages.append(dict(info, type='error', message=message, moreinfo=moreinfo))
+            if len(messages) >= 10 and (len(messages) >= i / 10):
+                messages.append({
+                    'type': 'warning',
+                    'message': _(u"Found more than 10 errors and more than one error per 10 records, interrupted to avoid showing too many errors.")
+                })
+                break
         if any(message['type'] == 'error' for message in messages):
             cr.execute('ROLLBACK TO SAVEPOINT model_load')
             ids = False
