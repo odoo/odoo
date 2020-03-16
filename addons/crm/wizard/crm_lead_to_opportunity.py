@@ -12,7 +12,7 @@ class Lead2OpportunityPartner(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        """ Default get for name, opportunity_ids.
+        """ Default get for name, duplicated_lead_ids.
             If there is an exisitng partner link to the lead, find all existing
             opportunities links with this partner to merge all information together
         """
@@ -34,8 +34,8 @@ class Lead2OpportunityPartner(models.TransientModel):
                 result['partner_id'] = partner.id
             if 'name' in fields:
                 result['name'] = 'merge' if len(tomerge) >= 2 else 'convert'
-            if 'opportunity_ids' in fields and len(tomerge) >= 2:
-                result['opportunity_ids'] = list(tomerge)
+            if 'duplicated_lead_ids' in fields and len(tomerge) >= 2:
+                result['duplicated_lead_ids'] = list(tomerge)
             if lead.user_id:
                 result['user_id'] = lead.user_id.id
             if lead.team_id:
@@ -55,10 +55,14 @@ class Lead2OpportunityPartner(models.TransientModel):
         ('nothing', 'Do not link to a customer')
     ], string='Related Customer', required=True)
     lead_id = fields.Many2one('crm.lead', "Associated Lead")
-    opportunity_ids = fields.Many2many('crm.lead', string='Opportunities')
+    duplicated_lead_ids = fields.Many2many(
+        'crm.lead', string='Duplicates', context={'active_test': False})
     partner_id = fields.Many2one('res.partner', 'Customer')
     user_id = fields.Many2one('res.users', 'Salesperson')
     team_id = fields.Many2one('crm.team', 'Sales Team')
+    force_assignment = fields.Boolean(
+        'Force assignment', default=True,
+        help='If checked, forces salesman to be updated on updated opportunities even if already set.')
 
     @api.onchange('action')
     def onchange_action(self):
@@ -99,17 +103,18 @@ class Lead2OpportunityPartner(models.TransientModel):
         return result_opportunity.redirect_lead_opportunity_view()
 
     def _action_merge(self):
-        result_opportunity = self.with_context(active_test=False).opportunity_ids.merge_opportunity()
+        result_opportunity = self.duplicated_lead_ids.merge_opportunity()
         if not result_opportunity.active:
             result_opportunity.write({'active': True, 'activity_type_id': False, 'lost_reason': False})
 
         if result_opportunity.type == "lead":
             self._convert_and_allocate(result_opportunity, [self.user_id.id], team_id=self.team_id.id)
-        elif not self._context.get('no_force_assignation') or not result_opportunity.user_id:
-            result_opportunity.write({
-                'user_id': self.user_id.id,
-                'team_id': self.team_id.id,
-            })
+        else:
+            if not result_opportunity.user_id or self.force_assignment:
+                result_opportunity.write({
+                    'user_id': self.user_id.id,
+                    'team_id': self.team_id.id,
+                })
         return result_opportunity
 
     def _action_convert(self):
@@ -129,7 +134,7 @@ class Lead2OpportunityPartner(models.TransientModel):
             lead.convert_opportunity(lead.partner_id.id, [], False)
 
         leads_to_allocate = leads
-        if self._context.get('no_force_assignation'):
+        if not self.force_assignment:
             leads_to_allocate = leads_to_allocate.filtered(lambda lead: not lead.user_id)
 
         if user_ids:
