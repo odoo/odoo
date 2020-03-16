@@ -23,56 +23,49 @@ class BarcodeNomenclature(models.Model):
     upc_ean_conv = fields.Selection(UPC_EAN_CONVERSIONS, string='UPC/EAN Conversion', required=True, default='always',
         help="UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding.")
 
-    # returns the checksum of the ean13, or -1 if the ean has not the correct length, ean must be a string
-    def ean_checksum(self, ean):
-        code = list(ean)
-        if len(code) != 13:
+    def get_barcode_check_digit(self, numeric_barcode):
+        """This algorithm is identical for all fixed length numeric GS1 data structures.
+
+        It is also valid for ean8,12(upca),13 check digit.
+        https://www.gs1.org/sites/default/files/docs/barcodes/GS1_General_Specifications.pdf
+
+        `numeric_barcode` need to have a length of 18, and the last numeric char is the checksum (or '0')
+        """
+        code = list(numeric_barcode)
+        if len(code) != 18:
             return -1
 
+        # Multiply value of each position by
+        # N1  N2  N3  N4  N5  N6  N7  N8  N9  N10 N11 N12 N13 N14 N15 N16 N17 N18
+        # x3  X1  x3  x1  x3  x1  x3  x1  x3  x1  x3  x1  x3  x1  x3  x1  x3  CHECKSUM
         oddsum = evensum = total = 0
-        code = code[:-1] # Remove checksum
+        code = code[:-1]  # Remove checksum
         for i in range(len(code)):
             if i % 2 == 0:
                 evensum += int(code[i])
             else:
                 oddsum += int(code[i])
-        total = oddsum * 3 + evensum
+        total = evensum * 3 + oddsum
         return int((10 - total % 10) % 10)
 
-    # returns the checksum of the ean8, or -1 if the ean has not the correct length, ean must be a string
-    def ean8_checksum(self,ean):
-        code = list(ean)
-        if len(code) != 8:
-            return -1
-
-        sum1  = int(ean[1]) + int(ean[3]) + int(ean[5])
-        sum2  = int(ean[0]) + int(ean[2]) + int(ean[4]) + int(ean[6])
-        total = sum1 + 3 * sum2
-        return int((10 - total % 10) % 10)
-
-    # returns true if the barcode is a valid EAN barcode
-    def check_ean(self, ean):
-       return re.match("^\d+$", ean) and self.ean_checksum(ean) == int(ean[-1])
-
-    # returns true if the barcode string is encoded with the provided encoding.
+    # Returns true if the barcode string is encoded with the provided encoding.
     def check_encoding(self, barcode, encoding):
         if encoding == 'ean13':
-            return len(barcode) == 13 and re.match("^\d+$", barcode) and self.ean_checksum(barcode) == int(barcode[-1]) 
-        elif encoding == 'ean8':
-            return len(barcode) == 8 and re.match("^\d+$", barcode) and self.ean8_checksum(barcode) == int(barcode[-1])
+            return len(barcode) == 13 and re.match(r"^\d+$", barcode) and self.get_barcode_check_digit("0" * 5 + barcode) == int(barcode[-1])
         elif encoding == 'upca':
-            return len(barcode) == 12 and re.match("^\d+$", barcode) and self.ean_checksum("0"+barcode) == int(barcode[-1])
+            return len(barcode) == 12 and re.match(r"^\d+$", barcode) and self.get_barcode_check_digit("0" * 6 + barcode) == int(barcode[-1])
+        elif encoding == 'ean8':
+            return len(barcode) == 8 and re.match(r"^\d+$", barcode) and self.get_barcode_check_digit("0" * 10 + barcode) == int(barcode[-1])
         elif encoding == 'any':
             return True
         else:
             return False
 
-
     # Returns a valid zero padded ean13 from an ean prefix. the ean prefix must be a string.
     def sanitize_ean(self, ean):
         ean = ean[0:13]
         ean = ean + (13-len(ean))*'0'
-        return ean[0:12] + str(self.ean_checksum(ean))
+        return ean[0:12] + str(self.get_barcode_check_digit("0" * 5 + ean))
 
     # Returns a valid zero padded UPC-A from a UPC-A prefix. the UPC-A prefix must be a string.
     def sanitize_upc(self, upc):
