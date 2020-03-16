@@ -1421,7 +1421,7 @@ var ManualModel = StatementModel.extend({
                             self.manualLines = result;
                             self.valuenow = 0;
                             self.valuemax = Object.keys(self.manualLines).length;
-                            var lines = self.manualLines.splice(0, self.defaultDisplayQty);
+                            var lines = self.manualLines.slice(0, self.defaultDisplayQty);
                             self.pagerIndex = lines.length;
                             return self.loadData(lines);
                         });
@@ -1436,7 +1436,7 @@ var ManualModel = StatementModel.extend({
                             self.manualLines = result;
                             self.valuenow = 0;
                             self.valuemax = Object.keys(self.manualLines).length;
-                            var lines = self.manualLines.splice(0, self.defaultDisplayQty);
+                            var lines = self.manualLines.slice(0, self.defaultDisplayQty);
                             self.pagerIndex = lines.length;
                             return self.loadData(lines);
                         });
@@ -1454,7 +1454,7 @@ var ManualModel = StatementModel.extend({
                             self.manualLines = [].concat(result.accounts, result.customers, result.suppliers);
                             self.valuenow = 0;
                             self.valuemax = Object.keys(self.manualLines).length;
-                            var lines = self.manualLines.splice(0, self.defaultDisplayQty);
+                            var lines = self.manualLines.slice(0, self.defaultDisplayQty);
                             self.pagerIndex = lines.length;
                             return self.loadData(lines);
                         });
@@ -1471,7 +1471,7 @@ var ManualModel = StatementModel.extend({
         if (qty === undefined) {
             qty = this.defaultDisplayQty;
         }
-        var lines = this.manualLines.splice(this.pagerIndex, qty);
+        var lines = this.manualLines.slice(this.pagerIndex, this.pagerIndex + qty);
         this.pagerIndex += qty;
         return this.loadData(lines);
     },
