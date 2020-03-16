@@ -1072,6 +1072,8 @@ attributes:
 ``stacked``
   only used for ``bar`` charts. If present and set to ``True``, stacks bars
   within a group
+``disable_linking``
+  set to ``True`` to prevent from redirecting clicks on graph to list view
 
 The only allowed element within a graph view is ``field`` which can have the
 following attributes:
