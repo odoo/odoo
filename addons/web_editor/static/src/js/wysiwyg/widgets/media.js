@@ -140,6 +140,7 @@ var FileWidget = SearchableMediaWidget.extend({
 
         this.options = _.extend({
             showQuickUpload: config.isDebug(),
+            mediaWidth: media && media.clientWidth,
         }, options || {});
 
         this.attachments = [];
