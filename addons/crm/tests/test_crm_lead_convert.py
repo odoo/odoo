@@ -15,6 +15,14 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         date = Datetime.from_string('2020-01-20 16:00:00')
         cls.crm_lead_dt_mock.now.return_value = date
 
+    def test_initial_data(self):
+        """ Ensure initial data to avoid spaghetti test update afterwards """
+        self.assertFalse(self.lead_1.date_conversion)
+        self.assertEqual(self.lead_1.date_open, Datetime.from_string('2020-01-15 11:30:00'))
+        self.assertEqual(self.lead_1.user_id, self.user_sales_leads)
+        self.assertEqual(self.lead_1.team_id, self.sales_team_1)
+        self.assertEqual(self.lead_1.stage_id, self.stage_team1_1)
+
     @users('user_sales_manager')
     def test_lead_convert_base(self):
         """ Test base method ``convert_opportunity`` or crm.lead model """
@@ -133,13 +141,6 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
     @users('user_sales_manager')
     def test_lead_convert_internals(self):
         """ Test internals of convert wizard """
-        # ensure initial data to avoid spaghetti test update afterwards
-        self.assertFalse(self.lead_1.date_conversion)
-        self.assertEqual(self.lead_1.date_open, Datetime.from_string('2020-01-15 11:30:00'))
-        self.assertEqual(self.lead_1.user_id, self.user_sales_leads)
-        self.assertEqual(self.lead_1.team_id, self.sales_team_1)
-        self.assertEqual(self.lead_1.stage_id, self.stage_team1_1)
-
         convert = self.env['crm.lead2opportunity.partner'].with_context({
             'active_model': 'crm.lead',
             'active_id': self.lead_1.id,
@@ -308,6 +309,34 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
 @tagged('lead_manage')
 class TestLeadConvertBatch(crm_common.TestLeadConvertMassCommon):
 
+    def test_initial_data(self):
+        """ Ensure initial data to avoid spaghetti test update afterwards """
+        self.assertFalse(self.lead_1.date_conversion)
+        self.assertEqual(self.lead_1.date_open, Datetime.from_string('2020-01-15 11:30:00'))
+        self.assertEqual(self.lead_1.user_id, self.user_sales_leads)
+        self.assertEqual(self.lead_1.team_id, self.sales_team_1)
+        self.assertEqual(self.lead_1.stage_id, self.stage_team1_1)
+
+        self.assertEqual(self.lead_w_partner.stage_id, self.env['crm.stage'])
+        self.assertEqual(self.lead_w_partner.user_id, self.user_sales_manager)
+        self.assertEqual(self.lead_w_partner.team_id, self.sales_team_1)
+
+        self.assertEqual(self.lead_w_partner_company.stage_id, self.stage_team1_1)
+        self.assertEqual(self.lead_w_partner_company.user_id, self.user_sales_manager)
+        self.assertEqual(self.lead_w_partner_company.team_id, self.sales_team_1)
+
+        self.assertEqual(self.lead_w_contact.stage_id, self.stage_gen_1)
+        self.assertEqual(self.lead_w_contact.user_id, self.user_sales_salesman)
+        self.assertEqual(self.lead_w_contact.team_id, self.sales_team_convert)
+
+        self.assertEqual(self.lead_w_email.stage_id, self.stage_gen_1)
+        self.assertEqual(self.lead_w_email.user_id, self.user_sales_salesman)
+        self.assertEqual(self.lead_w_email.team_id, self.sales_team_convert)
+
+        self.assertEqual(self.lead_w_email_lost.stage_id, self.stage_team1_2)
+        self.assertEqual(self.lead_w_email_lost.user_id, self.user_sales_leads)
+        self.assertEqual(self.lead_w_email_lost.team_id, self.sales_team_1)
+
     @users('user_sales_manager')
     def test_lead_convert_batch_internals(self):
         """ Test internals of convert wizard, working in batch mode """
@@ -315,17 +344,8 @@ class TestLeadConvertBatch(crm_common.TestLeadConvertMassCommon):
         self.crm_lead_dt_mock.now.return_value = date
 
         lead_w_partner = self.lead_w_partner
-        self.assertEqual(lead_w_partner.user_id, self.user_sales_manager)
-        self.assertEqual(lead_w_partner.team_id, self.sales_team_1)
-        self.assertEqual(lead_w_partner.stage_id, self.env['crm.stage'])
         lead_w_contact = self.lead_w_contact
-        self.assertEqual(lead_w_contact.user_id, self.user_sales_salesman)
-        self.assertEqual(lead_w_contact.team_id, self.sales_team_convert)
-        self.assertEqual(lead_w_contact.stage_id, self.stage_gen_1)
         lead_w_email_lost = self.lead_w_email_lost
-        self.assertEqual(lead_w_email_lost.user_id, self.user_sales_leads)
-        self.assertEqual(lead_w_email_lost.team_id, self.sales_team_1)
-        self.assertEqual(lead_w_email_lost.stage_id, self.stage_team1_2)
         lead_w_email_lost.action_set_lost()
         self.assertEqual(lead_w_email_lost.active, False)
 
