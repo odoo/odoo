@@ -1083,7 +1083,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
      * @returns {Promise}
      */
     saveCroppedImages: function ($editable) {
-        var defs = _.map($editable.find('.o_cropped_img_to_save'), croppedImg => {
+        var defs = _.map($editable.find('.o_cropped_img_to_save'), async croppedImg => {
             var $croppedImg = $(croppedImg);
             $croppedImg.removeClass('o_cropped_img_to_save');
 
@@ -1094,10 +1094,10 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
             var originalSrc = $croppedImg.data('crop:originalSrc');
 
             var datas = $croppedImg.attr('src').split(',')[1];
-
+            let attachmentID = cropID;
             if (!cropID) {
                 var name = originalSrc + '.crop';
-                return this._rpc({
+                attachmentID = await this._rpc({
                     model: 'ir.attachment',
                     method: 'create',
                     args: [{
@@ -1108,22 +1108,20 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
                         mimetype: mimetype,
                         url: originalSrc, // To save the original image that was cropped
                     }],
-                }).then(attachmentID => {
-                    return this._rpc({
-                        model: 'ir.attachment',
-                        method: 'generate_access_token',
-                        args: [[attachmentID]],
-                    }).then(access_token => {
-                        $croppedImg.attr('src', '/web/image/' + attachmentID + '?access_token=' + access_token[0]);
-                    });
                 });
             } else {
-                return this._rpc({
+                await this._rpc({
                     model: 'ir.attachment',
                     method: 'write',
                     args: [[cropID], {datas: datas}],
                 });
             }
+            const access_token = await this._rpc({
+                model: 'ir.attachment',
+                method: 'generate_access_token',
+                args: [[attachmentID]],
+            });
+            $croppedImg.attr('src', '/web/image/' + attachmentID + '?access_token=' + access_token[0]);
         });
         return Promise.all(defs);
     },
