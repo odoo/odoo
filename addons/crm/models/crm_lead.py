@@ -912,9 +912,9 @@ class Lead(models.Model):
 
         :param partner : optional customer when searching duplicated
         :param email: email (possibly formatted) to search
-        :param boolean include_lost: if True, search for archived leads or
-          active opportunities. If False, search for active and not won leads
-          and opportunities;
+        :param boolean include_lost: if True, search includes archived opportunities
+          (still only active leads are considered). If False, search for active
+          and not won leads and opportunities;
         """
         if not email:
             return self.env['crm.lead']
@@ -927,11 +927,12 @@ class Lead(models.Model):
         if not partner_match_domain:
             return self.env['crm.lead']
         domain = partner_match_domain
-        if not include_lost:
-            domain += ['&', ('active', '=', True), ('probability', '<', 100)]
+        if include_lost:
+            domain += ['|', ('type', '=', 'opportunity'), ('active', '=', True)]
         else:
-            domain += ['|', '&', ('type', '=', 'lead'), ('active', '=', True), ('type', '=', 'opportunity')]
-        return self.search(domain)
+            domain += ['&', ('active', '=', True), ('probability', '<', 100)]
+
+        return self.with_context(active_test=False).search(domain)
 
     def _create_customer(self):
         """ Create a partner from lead data and link it to the lead.
