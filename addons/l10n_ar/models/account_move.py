@@ -76,6 +76,8 @@ class AccountMove(models.Model):
             codes = self.journal_id._get_journal_codes()
             if codes:
                 domain.append(('code', 'in', codes))
+            if self.move_type == 'in_refund':
+                domain = ['|', ('code', 'in', ['99'])] + domain
         return domain
 
     def _check_argentinian_invoice_taxes(self):
