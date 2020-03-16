@@ -54,6 +54,9 @@
                     <field name="code"/>
                     <field name="name"/>
                     <field name="user_type_id"/>
+                    <field name="internal_type" invisible="1"/>
+                    <field name="internal_group" invisible="1"/>
+                    <field name="reconcile" widget="boolean_toggle" attrs="{'invisible': ['|', ('internal_type','=','liquidity'), ('internal_group', '=', 'off_balance')]}"/>
                     <field name="reconcile" widget="boolean_toggle"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tags"/>
                     <field name="tag_ids" optional="hide" widget="many2many_tags"/>
