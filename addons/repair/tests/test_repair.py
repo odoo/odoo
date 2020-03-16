@@ -278,3 +278,19 @@ class TestRepair(AccountTestCommon):
         # I define Invoice Method 'No Invoice' option in this repair order.
         # So, I check that Invoice has not been created for this repair order.
         self.assertNotEqual(len(repair.invoice_id), 1, "Invoice should not exist for this repair order")
+
+    def test_repair_state(self):
+        repair = self._create_simple_repair_order('b4repair')
+        repair.with_user(self.res_repair_user).action_repair_confirm()
+        repair.action_repair_invoice_create()
+        repair.invoice_id.unlink()
+        # Repair order state should be changed to 2binvoiced so that new invoice can be created
+        self.assertEqual(repair.state, '2binvoiced', 'Repair order should be in 2binvoiced state, if invoice is deleted.')
+        repair.action_repair_invoice_create()
+        repair.action_repair_cancel()
+        # Repair order and linked invoice both should be cancelled.
+        self.assertEqual(repair.state, 'cancel', 'Repair order should be in cancel state.')
+        self.assertEqual(repair.invoice_id.state, 'cancel', 'Invoice should be in cancel state.')
+        repair.action_repair_cancel_draft()
+        # Linked invoice should be unlinked
+        self.assertEqual(len(repair.invoice_id), 0, "No invoice should be exists for this repair order")
