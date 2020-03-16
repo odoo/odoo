@@ -845,3 +845,14 @@ class City(models.Model):
 
     name = fields.Char()
     country_id = fields.Many2one('test_new_api.country')
+
+# abstract model with a selection field
+class StateMixin(models.AbstractModel):
+    _name = 'test_new_api.state_mixin'
+    _description = 'Dummy state mixin model'
+
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirmed', 'Confirmed'),
+        ('done', 'Done'),
+    ])
