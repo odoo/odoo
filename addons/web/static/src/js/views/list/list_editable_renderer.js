@@ -1703,6 +1703,11 @@ ListRenderer.include({
             'mouseup',
         ];
 
+        // Fix container width to prevent the table from overflowing when being resized
+        if (!this.el.style.width) {
+            this.el.style.width = `${initialTableWidth}px`;
+        }
+
         // Apply classes to table and selected column
         table.classList.add('o_resizing');
         resizingColumnElements.forEach(el => el.classList.add('o_column_resizing'));
