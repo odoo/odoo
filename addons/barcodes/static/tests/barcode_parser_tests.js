@@ -41,17 +41,17 @@ QUnit.module('Barcode Parser', {
         await barcodeNomenclature.loaded;
 
         let ean8 = "87111125";
-        assert.equal(barcodeNomenclature.ean8_checksum(ean8, 'ean8'), ean8.charAt(ean8.length - 1));
+        assert.equal(barcodeNomenclature.get_barcode_check_digit(ean8), ean8[ean8.length - 1]);
         ean8 = "4725992";
-        assert.equal(barcodeNomenclature.ean8_checksum(ean8 + "0", 'ean8'), 8);
+        assert.equal(barcodeNomenclature.get_barcode_check_digit(ean8 + "0"), 8);
         let ean13 = "1234567891231";
-        assert.equal(barcodeNomenclature.ean_checksum(ean13, 'ean13'), ean13.charAt(ean13.length - 1));
+        assert.equal(barcodeNomenclature.get_barcode_check_digit(ean13), ean13[ean13.length - 1]);
         ean13 = "962434754318";
-        assert.equal(barcodeNomenclature.ean_checksum(ean13 + "0", 'ean13'), 4);
+        assert.equal(barcodeNomenclature.get_barcode_check_digit(ean13 + "0"), 4);
         let utca = "692771981161";
-        assert.equal(barcodeNomenclature.ean_checksum("0" + utca, 'upca'), utca.charAt(utca.length - 1));
+        assert.equal(barcodeNomenclature.get_barcode_check_digit(utca), utca[utca.length - 1]);
         utca = "71679131569";
-        assert.equal(barcodeNomenclature.ean_checksum("0" + utca + "0", 'upca'), 7);
+        assert.equal(barcodeNomenclature.get_barcode_check_digit(utca + "0"), 7);
     });
 });
 });
