@@ -36,6 +36,15 @@ class Partner(models.Model):
                 )
         return rec
 
+    @api.model
+    def name_create(self, name):
+        context = dict(self._context)
+        default_type = context.get('default_type', False)
+        if default_type and not dict(self._fields['type'].selection).get(default_type, False):
+            context.pop('default_type', None)
+            self = self.with_context(context)
+        return super(Partner, self).name_create(name)
+
     @api.multi
     def _compute_opportunity_count(self):
         for partner in self:
