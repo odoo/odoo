@@ -25,17 +25,17 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
             super(...arguments);
             useListener('accept-input', this.confirm);
             useListener('close-this-popup', this.cancel);
-            useListener('update-buffer', this._updateBuffer);
-            this.state = useState({ buffer: '' });
+            let startingBuffer = '';
+            if (typeof this.props.startingValue === 'number' && this.props.startingValue > 0) {
+                startingBuffer = this.props.startingValue.toString();
+            }
+            this.state = useState({ buffer: startingBuffer });
             NumberBuffer.use({
                 nonKeyboardEvent: 'numpad-click-input',
                 triggerAtEnter: 'accept-input',
                 triggerAtEscape: 'close-this-popup',
-                triggerAtInput: 'update-buffer',
+                state: this.state,
             });
-            if (typeof this.props.startingValue === 'number' && this.props.startingValue > 0) {
-                NumberBuffer.set(this.props.startingValue.toString());
-            }
         }
         get decimalSeparator() {
             return this.env._t.database.parameters.decimal_point;
@@ -55,9 +55,6 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
         }
         getPayload() {
             return NumberBuffer.get();
-        }
-        _updateBuffer() {
-            this.state.buffer = NumberBuffer.get();
         }
     }
     NumberPopup.defaultProps = {

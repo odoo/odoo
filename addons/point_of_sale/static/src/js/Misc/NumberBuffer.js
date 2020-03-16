@@ -118,7 +118,7 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
             onMounted(() => {
                 this.bufferHolderStack.push({
                     component: currentComponent,
-                    state: useState({ buffer: '' }),
+                    state: config.state ? config.state : useState({ buffer: '' }),
                     config,
                 });
                 this._setUp();
@@ -154,7 +154,7 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
         }
         _bufferEvents(handler) {
             return event => {
-                if (['INPUT', 'TEXTAREA'].includes(event.target.tagName)) return;
+                if (['INPUT', 'TEXTAREA'].includes(event.target.tagName) || !this.eventsBuffer) return;
                 clearTimeout(this._timeout);
                 this.eventsBuffer.push(event);
                 this._timeout = setTimeout(handler, this.maxTimeBetweenKeys);
