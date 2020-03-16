@@ -5,7 +5,6 @@ from odoo import api, fields, models
 
 
 class Lead2OpportunityMassConvert(models.TransientModel):
-
     _name = 'crm.lead2opportunity.partner.mass'
     _description = 'Convert Lead to Opportunity (in mass)'
     _inherit = 'crm.lead2opportunity.partner'
@@ -19,8 +18,8 @@ class Lead2OpportunityMassConvert(models.TransientModel):
             res['action'] = 'each_exist_or_create'
         if 'name' in fields:
             res['name'] = 'convert'
-        if 'opportunity_ids' in fields:
-            res['opportunity_ids'] = False
+        if 'duplicated_lead_ids' in fields:
+            res['duplicated_lead_ids'] = False
         return res
 
     user_ids = fields.Many2many('res.users', string='Salesmen')
@@ -29,7 +28,7 @@ class Lead2OpportunityMassConvert(models.TransientModel):
     action = fields.Selection(selection_add=[
         ('each_exist_or_create', 'Use existing partner or create'),
     ], string='Related Customer', required=True)
-    force_assignation = fields.Boolean('Force assignment', help='If unchecked, this will leave the salesman of duplicated opportunities')
+    force_assignment = fields.Boolean(default=False)
 
     @api.onchange('action')
     def _onchange_action(self):
@@ -52,7 +51,7 @@ class Lead2OpportunityMassConvert(models.TransientModel):
             if len(partners_duplicated_leads.get(lead_tuple, [])) > 1:
                 leads_with_duplicates.append(lead.id)
 
-        self.opportunity_ids = self.env['crm.lead'].browse(leads_with_duplicates)
+        self.duplicated_lead_ids = self.env['crm.lead'].browse(leads_with_duplicates)
 
     def _convert_and_allocate(self, leads, user_ids, team_id=False):
         """ When "massively" (more than one at a time) converting leads to
@@ -87,8 +86,7 @@ class Lead2OpportunityMassConvert(models.TransientModel):
             active_ids = (active_ids - merged_lead_ids) | remaining_lead_ids
 
             self = self.with_context(active_ids=list(active_ids))  # only update active_ids when there are set
-        no_force_assignation = self._context.get('no_force_assignation', not self.force_assignation)
-        return self.with_context(no_force_assignation=no_force_assignation).action_apply()
+        return self.action_apply()
 
     def _convert_handle_partner(self, lead, action, partner_id):
         if self.action == 'each_exist_or_create':

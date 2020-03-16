@@ -231,7 +231,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         }).create({})
 
         # test internals of convert wizard
-        self.assertEqual(convert.opportunity_ids, self.lead_1 | leads)
+        self.assertEqual(convert.duplicated_lead_ids, self.lead_1 | leads)
         self.assertEqual(convert.user_id, self.lead_1.user_id)
         self.assertEqual(convert.team_id, self.lead_1.team_id)
         self.assertFalse(convert.partner_id)
@@ -263,8 +263,8 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         }).create({})
         self.assertEqual(convert.partner_id, self.customer)
         # TDE FIXME: should not give priority to partner email if it is void
-        # self.assertEqual(convert.opportunity_ids, self.lead_1 | lead_email_from | lead_email_normalized | lead_partner)
-        self.assertEqual(convert.opportunity_ids, self.env['crm.lead'])
+        # self.assertEqual(convert.duplicated_lead_ids, self.lead_1 | lead_email_from | lead_email_normalized | lead_partner)
+        self.assertEqual(convert.duplicated_lead_ids, self.env['crm.lead'])
 
         # Check: partner fallbacks
         self.lead_1.write({
@@ -278,9 +278,9 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
             'active_ids': self.lead_1.ids,
         }).create({})
         self.assertEqual(convert.partner_id, self.customer)
-        # TDE FIXME: CHECKME: 2917b38f28d5c2d6c53c706e613da7b8e2ad7b52
-        # self.assertEqual(convert.opportunity_ids, self.lead_1 | lead_partner)
-        self.assertEqual(convert.opportunity_ids, self.env['crm.lead'])
+        # TDE FIXME: CHECKME: 2917b38f28d5c2d6c53c706e613da7b8e2ad7b52 for lead without email
+        # self.assertEqual(convert.duplicated_lead_ids, self.lead_1 | lead_partner)
+        self.assertEqual(convert.duplicated_lead_ids, self.env['crm.lead'])
 
     @users('user_sales_manager')
     def test_lead_merge_duplicates_flow(self):
@@ -299,9 +299,8 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         }).create({})
         self.assertEqual(convert.partner_id, self.customer)
         # TDE FIXME: should check for email_normalized -> lead_email_normalized not correctly found
-        # self.assertEqual(convert.opportunity_ids, self.lead_1 | lead_email_from | lead_email_normalized | lead_partner | opp_lost)
-        # TDE FIXME: add a active test context on opportunity_ids fields
-        self.assertEqual(convert.with_context(active_test=False).opportunity_ids, self.lead_1 | self.lead_email_from | self.lead_partner | self.opp_lost)
+        # self.assertEqual(convert.duplicated_lead_ids, self.lead_1 | lead_email_from | lead_email_normalized | lead_partner | opp_lost)
+        self.assertEqual(convert.duplicated_lead_ids, self.lead_1 | self.lead_email_from | self.lead_partner | self.opp_lost)
 
         convert.action_apply()
         self.assertEqual(
@@ -421,7 +420,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         }).create({
             'deduplicate': False,
             'user_id': self.user_sales_salesman.id,
-            'force_assignation': False,
+            'force_assignment': False,
         })
         mass_convert.onchange_action()
         mass_convert._onchange_user()
@@ -463,7 +462,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         # self.assertEqual(self.lead_w_email_lost.partner_id, self.env['res.partner'])
 
     def test_mass_convert_deduplicate(self):
-        """ Test opportunity_ids fields having another behavior in mass convert
+        """ Test duplicated_lead_ids fields having another behavior in mass convert
         because why not. Its use is: among leads under convert, store those with
         duplicates if deduplicate is set to True. """
         lead_1_dups = self._create_duplicates(self.lead_1, create_opp=False)
@@ -483,7 +482,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         mass_convert._onchange_deduplicate()
         self.assertEqual(mass_convert.action, 'each_exist_or_create')
         self.assertEqual(mass_convert.name, 'convert')
-        self.assertEqual(mass_convert.opportunity_ids, self.lead_1 | self.lead_w_partner)
+        self.assertEqual(mass_convert.duplicated_lead_ids, self.lead_1 | self.lead_w_partner)
 
         mass_convert.action_mass_convert()
 
@@ -508,7 +507,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         }).create({
             'deduplicate': False,
             'user_ids': self.assign_users.ids,
-            'force_assignation': True,
+            'force_assignment': True,
         })
 
         # TDE FIXME: what happens if we mix people from different sales team ? currently nothing, to check
