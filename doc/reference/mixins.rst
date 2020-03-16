@@ -479,6 +479,8 @@ including (but not limited to):
     the required access rights to be able to post a message on the model; by
     default a ``write`` access is needed, can be set to ``read`` as well
 
+``_mail_post_sudo`` - :bool: post the message on the record under SUDO rights
+
 Context keys:
     These context keys can be used to somewhat control ``mail.thread`` features
     like auto-subscription or field tracking during calls to ``create()`` or

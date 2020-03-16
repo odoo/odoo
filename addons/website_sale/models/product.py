@@ -169,6 +169,7 @@ class ProductTemplate(models.Model):
     _inherit = ["product.template", "website.seo.metadata", 'website.published.multi.mixin', 'rating.mixin']
     _name = 'product.template'
     _mail_post_access = 'read'
+    _mail_post_sudo = True
     _check_company_auto = True
 
     website_description = fields.Html('Description for the website', sanitize_attributes=False, translate=html_translate)

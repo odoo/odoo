@@ -61,6 +61,8 @@ def _message_post_helper(res_model, res_id, message, token='', _hash=False, pid=
             record = record.sudo()
         else:
             raise Forbidden()
+    elif getattr(request.env[res_model], '_mail_post_sudo', False):
+        record = record.sudo()
 
     # deduce author of message
     author_id = request.env.user.partner_id.id if request.env.user.partner_id else False

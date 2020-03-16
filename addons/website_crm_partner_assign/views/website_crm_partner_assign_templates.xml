@@ -492,6 +492,7 @@
                 <div class="col-lg-10 offset-lg-1 mt16">
                     <t t-call="portal.message_thread">
                         <t t-set="object" t-value="lead"/>
+                        <t t-set="token" t-value="lead.access_token"/>
                     </t>
                 </div>
             </div>
@@ -809,6 +810,7 @@
                 <div class="mt16">
                     <t t-call="portal.message_thread">
                         <t t-set="object" t-value="opportunity"/>
+                        <t t-set="token" t-value="opportunity.access_token"/>
                     </t>
                 </div>
             </div>

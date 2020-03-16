@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import hmac
+import hashlib
 from datetime import timedelta
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
@@ -523,6 +525,7 @@ class Task(models.Model):
     working_days_close = fields.Float(compute='_compute_elapsed', string='Working days to close', store=True, group_operator="avg")
     # customer portal: include comment and incoming emails in communication history
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
+    access_token = fields.Char('Access token', compute='_compute_access_token')
 
     @api.depends('date_deadline')
     def _compute_date_deadline_formatted(self):
@@ -595,6 +598,14 @@ class Task(models.Model):
         for task in self:
             task.subtask_count = len(self._get_all_subtasks())
 
+    def _compute_access_token(self):
+        db_secret = self.env['ir.config_parameter'].sudo().get_param('database.secret').encode('utf-8')
+        for record in self:
+            record.access_token = hmac.new(
+                db_secret,
+                repr((self.env.cr.dbname, 'project.task', record.id)).encode('utf-8'),
+                hashlib.sha256).hexdigest()
+
     @api.onchange('project_id')
     def _onchange_project(self):
         if self.project_id:
@@ -608,7 +619,7 @@ class Task(models.Model):
             self.company_id = self.project_id.company_id
         else:
             self.stage_id = False
-    
+
     @api.onchange('company_id')
     def _onchange_task_company(self):
         if self.project_id.company_id != self.company_id:

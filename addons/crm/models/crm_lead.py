@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import hmac
+import hashlib
 import logging
 from psycopg2 import sql, extras
 from datetime import datetime, timedelta, date
@@ -141,6 +143,7 @@ class Lead(models.Model):
     company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company.id)
     meeting_count = fields.Integer('# Meetings', compute='_compute_meeting_count')
     lost_reason = fields.Many2one('crm.lost.reason', string='Lost Reason', index=True, tracking=True)
+    access_token = fields.Char('Access token', compute='_compute_access_token')
 
     _sql_constraints = [
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
@@ -245,6 +248,14 @@ class Lead(models.Model):
         mapped_data = {m['opportunity_id'][0]: m['opportunity_id_count'] for m in meeting_data}
         for lead in self:
             lead.meeting_count = mapped_data.get(lead.id, 0)
+
+    def _compute_access_token(self):
+        db_secret = self.env['ir.config_parameter'].sudo().get_param('database.secret').encode('utf-8')
+        for record in self:
+            record.access_token = hmac.new(
+                db_secret,
+                repr((self.env.cr.dbname, 'crm.lead', record.id)).encode('utf-8'),
+                hashlib.sha256).hexdigest()
 
     def _onchange_partner_id_values(self, partner_id):
         """ returns the new values when partner_id has changed """

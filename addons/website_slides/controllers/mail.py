@@ -57,7 +57,7 @@ class SlidesPortalChatter(PortalChatter):
         message = request.env['mail.message'].search(domain, limit=1)
         if not message:
             raise NotFound()
-        message.write({
+        message.sudo().write({
             'body': message_body,
             'attachment_ids': [(4, aid) for aid in attachment_ids],
         })

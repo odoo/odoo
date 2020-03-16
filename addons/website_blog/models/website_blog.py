@@ -117,6 +117,7 @@ class BlogPost(models.Model):
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin']
     _order = 'id DESC'
     _mail_post_access = 'read'
+    _mail_post_sudo = True
 
     def _compute_website_url(self):
         super(BlogPost, self)._compute_website_url()
