@@ -20,25 +20,25 @@
             t-on-reloading-legacy.stop="_onReloadingLegacy"
             t-on-dialog-closed="_onDialogClosed">
 
-             <t t-set="mainRenderingInfo" t-value="renderingInfo.main"/>
+            <t t-set='dialog' t-value='renderingInfo.dialog' />
+            <t t-set="main" t-value="renderingInfo.main"/>
             <!-- fixme: class below totally ignored -->
-            <Action t-if="mainRenderingInfo" class="o_action" t-ref="currentControllerComponent"
-                    t-key="mainRenderingInfo.controller.jsID"
-                    Component="mainRenderingInfo.controller.Component"
-                    action="mainRenderingInfo.action"
-                    options="mainRenderingInfo.controller.options"
-                    shouldUpdate='mainRenderingInfo.reload'/>
+            <Action t-if="main" class="o_action" t-ref="currentControllerComponent"
+                    t-key="main.controller.jsID"
+                    Component="main.controller.Component"
+                    action="main.action"
+                    options="main.controller.options"
+                    reload="main.reload"/>
 
-             <t t-set='dialogRenderingInfo' t-value='renderingInfo.dialog' />
-            <DialogAction t-if='dialogRenderingInfo'
-                contentClass="dialogRenderingInfo.controller.className"
+            <DialogAction t-if='dialog'
+                contentClass="dialog.controller.className"
                 target="'.o_dialogs'"
-                title="dialogRenderingInfo.action.name">
-                <Action class="o_action" t-key="dialogRenderingInfo.controller.jsID"
+                title="dialog.action.name">
+                <Action class="o_action" t-key="dialog.controller.jsID"
                     t-ref="currentDialogComponent"
-                    Component="dialogRenderingInfo.controller.Component"
-                    action="dialogRenderingInfo.action"
-                    options="dialogRenderingInfo.controller.options"
+                    Component="dialog.controller.Component"
+                    action="dialog.action"
+                    options="dialog.controller.options"
                     inDialog=""/>
             </DialogAction>
         </div>

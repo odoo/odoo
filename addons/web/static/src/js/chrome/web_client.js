@@ -26,18 +26,7 @@ class WebClient extends Component {
                 this.__owl__.currentFiber.cancel();
             }
         });
-        this.actionManager.on('update', this, payload => {
-            this.renderingInfo = payload;
-            if (!this.renderingInfo.menuID && !this.state.menu_id && payload.main) {
-                // retrieve menu_id from action
-                const menu = Object.values(this.menus).find(menu => {
-                    return menu.actionID === payload.main.action.id;
-                });
-                this.renderingInfo.menuID = menu && menu.id;
-            }
-            this._domCleaning();
-            this.render();
-        });
+        this.actionManager.on('update', this, this._onActionManagerUpdated);
         this.menu = useRef('menu');
 
         this.ignoreHashchange = false;
@@ -61,17 +50,31 @@ class WebClient extends Component {
 
     async willStart() {
         this.menus = await this._loadMenus();
-        this.actionManager.menus = this.menus;
-
         const state = this._getUrlState();
         this._determineCompanyIds(state);
-        return this.actionManager.loadState(state, { menuID: state.menu_id });
+        return this.loadState(state);
+    }
+    async loadState(state) {
+        let stateLoaded = await this.actionManager.loadState(state, { menuID: state.menu_id });
+        if (stateLoaded === null) {
+            if ('menu_id' in state) {
+                const action = this.menus[state.menu_id].actionID;
+                return this.actionManager.doAction(action, state);
+            } else if (('home' in state || Object.keys(state).filter(key => key !== 'cids').length === 0)) {
+                const menuID = this.menus ? this.menus.root.children[0] : null;
+                const actionID =  menuID ? this.menus[menuID].actionID : null;
+                if (actionID) {
+                    return this.actionManager.doAction(actionID, {menuID, clear_breadcrumbs: true});
+                }
+            }
+        }
+        return stateLoaded;
     }
     mounted() {
         this._onHashchange = () => {
             if (!this.ignoreHashchange) {
                 const state = this._getUrlState();
-                this.actionManager.loadState(state, { menuID: state.menu_id });
+                this.loadState(state);
             }
             this.ignoreHashchange = false;
             // TODO: reset oldURL in case of failure?
@@ -85,7 +88,7 @@ class WebClient extends Component {
     willPatch() {
         super.willPatch();
         const scrollPosition = this._getScrollPosition();
-        this.actionManager.storeScrollPosition(scrollPosition);
+        this._storeScrollPosition(scrollPosition);
     }
     patched() {
         super.patched();
@@ -100,7 +103,9 @@ class WebClient extends Component {
         // Errors that have been handled before
         console.warn(e);
         if (this.renderingInfo) {
-            this.renderingInfo.onFail();
+            const newStack = this.renderingInfo.controllerStack;
+            const newDialog = this.renderingInfo.dialog;
+            this.actionManager.rollback(newStack, newDialog);
         }
         this.actionManager.restoreController();
     }
@@ -179,19 +184,6 @@ class WebClient extends Component {
                     app.action = child.action;
                 }
             }
-
-            // sanitize menu data:
-            //  - menus ({menuID: menu}): flat representation of all menus
-            //  - menu: {
-            //      id
-            //      name
-            //      children (array of menu ids)
-            //      appID (id of the parent app)
-            //      actionID
-            //      actionModel (e.g. ir.actions.act_window)
-            //      xmlid
-            //    }
-            // - menu.root.children: array of app ids
             const menus = {};
             function processMenu(menu, appID) {
                 appID = appID || menu.id;
@@ -246,20 +238,60 @@ class WebClient extends Component {
         const fullTitle = this._computeTitle();
         this._setWindowTitle(fullTitle);
     }
+    _onActionManagerUpdated(payload) {
+        const { controllerStack, dialog, onCommit, doOwlReload } = payload;
+        const breadcrumbs = [];
+        let fullscreen = false;
+        let menuID;
+        controllerStack.forEach((elm, index) =>{
+            const controller = elm.controller;
+            menuID = controller.options && controller.options.menuID || menuID;
+            if (elm.action.target === 'fullscreen') {
+                fullscreen = true;
+            }
+            const component = controller.component;
+            breadcrumbs.push({
+                controllerID: controller.jsID,
+                title: component && component.title || elm.action.name,
+            });
+            controller.viewOptions = controller.viewOptions || {};
+            controller.viewOptions.breadcrumbs = breadcrumbs.slice(0, index);
+        });
+        const main = controllerStack[controllerStack.length - 1];
+        if (!menuID) {
+            if (this.state.menu_id) {
+                menuID = this.state.menu_id;
+            } else if (main) {
+                const menu = Object.values(this.menus).find(menu => {
+                    return menu.actionID === main.action.id;
+                });
+                menuID = menu && menu.id;
+            }
+        }
+        if (main) {
+            main.reload = doOwlReload !== undefined ? doOwlReload && !dialog : !dialog;
+        }
+        this.renderingInfo = {
+            main, dialog, menuID, fullscreen,
+            controllerStack, onCommit
+        };
+        this._domCleaning();
+        this.render();
+    }
     _wcUpdated() {
         if (this.renderingInfo) {
-            let mainComponent;
             let state = {};
             if (this.renderingInfo.main) {
-                const mainAction = this.renderingInfo.main.action;
-                mainComponent = this.currentControllerComponent.comp;
+                const main = this.renderingInfo.main;
+                const mainComponent = this.currentControllerComponent.comp;
+                main.controller.component = mainComponent;
                 Object.assign(state, mainComponent.getState());
-                state.action = mainAction.id;
+                state.action = main.action.id;
                 let active_id = null;
                 let active_ids = null;
-                if (mainAction.context) {
-                    active_id = mainAction.context.active_id || null;
-                    active_ids = mainAction.context.active_ids;
+                if (main.action.context) {
+                    active_id = main.action.context.active_id || null;
+                    active_ids = main.action.context.active_ids;
                     if (active_ids && !(active_ids.length === 1 && active_ids[0] === active_id)) {
                         active_ids = active_ids.join(',');
                     } else {
@@ -282,10 +314,13 @@ class WebClient extends Component {
                     this._scrollTo(scrollPosition);
                 }
             }
-            if (this.renderingInfo.onSuccess) {
-                const dialogComponent = this.currentDialogComponent.comp;
-                this.renderingInfo.onSuccess(mainComponent, dialogComponent); // FIXME: onSuccess not called if no background controller
+            if (this.renderingInfo.dialog) {
+                this.renderingInfo.dialog.controller.component = this.currentDialogComponent.comp;
             }
+            const newStack = this.renderingInfo.controllerStack;
+            const newDialog = this.renderingInfo.dialog;
+            this.actionManager.commit(newStack, newDialog, this.renderingInfo.onCommit);
+
             if (this.renderingInfo.menuID) {
                 state.menu_id = this.renderingInfo.menuID;
             }
@@ -329,6 +364,13 @@ class WebClient extends Component {
             top: scrollingEl ? scrollingEl.scrollTop : 0,
         };
     }
+    _storeScrollPosition(scrollPosition) {
+        const cStack = this.renderingInfo.controllerStack;
+        const { controller } = cStack[cStack.length-2] || {};
+        if (controller) {
+            controller.scrollPosition = scrollPosition;
+        }
+    }
     _setWindowTitle(title) {
         document.title = title;
     }
@@ -340,17 +382,6 @@ class WebClient extends Component {
         if (!scrollingEl) {
             return;
         }
-        // TODO: handle scrollTo events ( + scrolling to a selector)
-        // let offset = {
-        //     top: scrollPosition.top,
-        //     left: scrollPosition.left || 0,
-        // };
-        // if (!offset.top) {
-        //     offset = dom.getPosition(document.querySelector(ev.data.selector));
-        //     // Substract the position of the scrolling element
-        //     offset.top -= dom.getPosition(scrollingEl).top;
-        // }
-
         scrollingEl.scrollTop = scrollPosition.top || 0;
         scrollingEl.scrollLeft = scrollPosition.left || 0;
     }
@@ -415,7 +446,7 @@ class WebClient extends Component {
      * @param {Object} ev.detail
      */
     _onExecuteAction(ev) {
-        this.actionManager.executeContextualActionTODONAME(ev.detail);
+        this.actionManager.executeInFlowAction(ev.detail);
     }
     /**
      * @private

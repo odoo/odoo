@@ -84,12 +84,12 @@ class Action extends ComponentAdapter {
         const evType = ev.name;
         if (!this.inDialog && this.legacy === 'view' && this.widget && (evType === "switch_view" || evType === "execute_action")) {
             const controllerState = this.widget.exportState();
-            this.env.bus.trigger('legacy-reloaded', { controllerState });
+            this.env.bus.trigger('legacy-export-state', { controllerState });
         }
         return super._trigger_up(...arguments);
     }
     async updateWidget(nextProps) {
-        if (nextProps.shouldUpdate === false) {
+        if (this.widgetReloadProm || ('reload' in nextProps && !nextProps.reload)) {
             return this.widgetReloadProm;
         }
         if (this.legacy === 'view') {
@@ -117,15 +117,22 @@ class Action extends ComponentAdapter {
         const controllerReload = widget.reload;
         this.widget.reload = function() {
             self.widgetReloadProm = controllerReload.call(widget, ...arguments);
-            return self.widgetReloadProm;
+            return self.widgetReloadProm.then(() => {
+                self.widgetReloadProm = null;
+            });
         };
         const controllerUpdate = widget.update;
         this.widget.update = function() {
             const updateProm = controllerUpdate.call(widget, ...arguments);
-            if (!self.widgetReloadProm) {
+            const manualUpdate = !self.widgetReloadProm;
+            if (manualUpdate) {
                 self.widgetReloadProm = updateProm;
             }
-            return updateProm;
+            return updateProm.then(() => {
+                if (manualUpdate) {
+                    self.widgetReloadProm = null;
+                }
+            });
         };
     }
 
