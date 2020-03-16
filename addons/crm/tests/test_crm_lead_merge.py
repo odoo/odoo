@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.crm.tests.common import TestLeadConvertMassCommon
+from odoo.fields import Datetime
 from odoo.tests.common import tagged, users
 
 
@@ -27,6 +28,34 @@ class TestLeadMerge(TestLeadConvertMassCommon):
 
         cls.assign_users = cls.user_sales_manager + cls.user_sales_leads_convert + cls.user_sales_salesman
 
+    def test_initial_data(self):
+        """ Ensure initial data to avoid spaghetti test update afterwards """
+        self.assertFalse(self.lead_1.date_conversion)
+        self.assertEqual(self.lead_1.date_open, Datetime.from_string('2020-01-15 11:30:00'))
+        self.assertEqual(self.lead_1.user_id, self.user_sales_leads)
+        self.assertEqual(self.lead_1.team_id, self.sales_team_1)
+        self.assertEqual(self.lead_1.stage_id, self.stage_team1_1)
+
+        self.assertEqual(self.lead_w_partner.stage_id, self.env['crm.stage'])
+        self.assertEqual(self.lead_w_partner.user_id, self.env['res.users'])
+        self.assertEqual(self.lead_w_partner.team_id, self.sales_team_1)
+
+        self.assertEqual(self.lead_w_partner_company.stage_id, self.stage_team1_1)
+        self.assertEqual(self.lead_w_partner_company.user_id, self.user_sales_manager)
+        self.assertEqual(self.lead_w_partner_company.team_id, self.sales_team_1)
+
+        self.assertEqual(self.lead_w_contact.stage_id, self.stage_gen_1)
+        self.assertEqual(self.lead_w_contact.user_id, self.user_sales_salesman)
+        self.assertEqual(self.lead_w_contact.team_id, self.sales_team_convert)
+
+        self.assertEqual(self.lead_w_email.stage_id, self.stage_gen_1)
+        self.assertEqual(self.lead_w_email.user_id, self.user_sales_salesman)
+        self.assertEqual(self.lead_w_email.team_id, self.sales_team_convert)
+
+        self.assertEqual(self.lead_w_email_lost.stage_id, self.stage_team1_2)
+        self.assertEqual(self.lead_w_email_lost.user_id, self.env['res.users'])
+        self.assertEqual(self.lead_w_email_lost.team_id, self.sales_team_1)
+
     @users('user_sales_manager')
     def test_lead_merge_internals(self):
         """ Test internals of merge wizard. In this test leads are ordered as
@@ -37,9 +66,6 @@ class TestLeadMerge(TestLeadConvertMassCommon):
         lead_w_partner --lead---seq=False
         """
         # ensure initial data
-        self.assertEqual(self.lead_1.user_id, self.user_sales_leads)
-        self.assertEqual(self.lead_1.team_id, self.sales_team_1)
-        self.assertEqual(self.lead_1.stage_id, self.stage_team1_1)
         self.lead_w_partner_company.action_set_won()  # won opps should be excluded
 
         merge = self.env['crm.merge.opportunity'].with_context({
