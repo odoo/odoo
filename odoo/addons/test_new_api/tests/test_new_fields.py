@@ -2428,3 +2428,16 @@ class TestMany2oneReference(common.TransactionCase):
         # fake record to emulate the unlink of a non-existant record
         foo = m.browse(1 if not ids[0] else (ids[0] + 1))
         self.assertTrue(foo.unlink())
+
+
+@common.tagged('selection_abstract')
+class TestSelectionDeleteUpdate(common.TransactionCase):
+
+    MODEL_ABSTRACT = 'test_new_api.state_mixin'
+
+    def test_unlink_asbtract(self):
+        self.env['ir.model.fields.selection'].search([
+            ('field_id.model', '=', self.MODEL_ABSTRACT),
+            ('field_id.name', '=', 'state'),
+            ('value', '=', 'confirmed'),
+        ], limit=1).unlink()
