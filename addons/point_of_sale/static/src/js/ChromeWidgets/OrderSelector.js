@@ -22,6 +22,9 @@ odoo.define('point_of_sale.OrderSelector', function(require) {
         addNewOrder() {
             this.env.pos.add_new_order();
         }
+        get orderList() {
+            return this.env.pos.get_order_list();
+        }
         async deleteCurrentOrder() {
             const order = this.env.pos.get_order();
             if (!order) {

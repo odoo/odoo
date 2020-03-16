@@ -51,10 +51,6 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
          * This function is called outside the rendering call stack. This way,
          * we don't block the displaying of ReceiptScreen when it is mounted; additionally,
          * any error that can happen during the printing does not affect the rendering.
-         * Nevertheless, we still wanted to handle error in generic way -- that
-         * we make the parent component aware of any error and it is responsible of
-         * showing the right error message.Thus, instead of throwing the error, we trigger an
-         * event (an error event) that will be properly handled in Chrome Component.
          */
         async handleAutoPrint() {
             if (this._shouldAutoPrint() && !this.currentOrder.is_to_email()) {
