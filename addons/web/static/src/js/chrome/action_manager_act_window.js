@@ -26,9 +26,9 @@ odoo.define('web.ActWindowActionManager', function (require) {
         loadState(state, options) {
             let action;
             if (state.action) {
-                const x = this._getCurrentAction(); // FIXME
-                const currentAction = x.action;
-                const currentController = x.controller;
+                const mainDescriptors = this._getMainActionDescriptors();
+                const currentAction = mainDescriptors.action;
+                const currentController = mainDescriptors.controller;
                 if (currentAction && currentAction.id === state.action &&
                     currentAction.type === 'ir.actions.act_window') {
                     // the action to load is already the current one, so update it
@@ -43,9 +43,6 @@ odoo.define('web.ActWindowActionManager', function (require) {
                         context.active_id = state.active_id;
                     }
                     if (state.active_ids) {
-                        // jQuery's BBQ plugin does some parsing on values that are valid integers
-                        // which means that if there's only one item, it will do parseInt() on it,
-                        // otherwise it will keep the comma seperated list as string
                         context.active_ids = state.active_ids.split(',').map(function (id) {
                             return parseInt(id, 10) || id;
                         });
@@ -111,7 +108,6 @@ odoo.define('web.ActWindowActionManager', function (require) {
             options = options || {};
             if (action.controllers[viewType]) {
                 action.controller = action.controllers[viewType];
-                action.controller.viewOptions.breadcrumbs = this._getBreadcrumbs(options.virtualStack || this.currentStack.slice(0, action.controller.index));
                 if (action.controllerState && action.controllerState.currentId) {
                    action.controller.viewOptions.currentId = action.controllerState.currentId;
                 }
@@ -121,31 +117,24 @@ odoo.define('web.ActWindowActionManager', function (require) {
             }
 
             const viewDescr = action.views.find(view => view.type === viewType);
-            // FIXME
             if (!viewDescr) {
-                return this.restoreController();
+                throw new Error('Plugin Error');
             }
-
-            const index = options.index || 0;
-            const controllerID = options.controllerID || this._nextID('controller');
+            const params = Object.assign({}, options, {Component: viewDescr.View});
+            const newController = this.makeBaseController(action, params);
             // build the view options from different sources
             const flags = action.flags || {};
             viewOptions = Object.assign({}, flags, flags[viewType], viewOptions, {
                 action: action,
-                breadcrumbs: this._getBreadcrumbs(options.virtualStack || this.currentStack.slice(0, index)),
                 // pass the controllerID to the views as an hook for further communication
-                controllerID: controllerID,
+                controllerID: newController.jsID,
             });
-            action.controller = {
-                actionID: action.jsID,
+            Object.assign(newController, {
                 className: 'o_act_window', // used to remove the padding in dialogs
-                Component: viewDescr.View,
-                index: index,
-                jsID: controllerID,
-                viewType: viewType,
-                viewOptions: viewOptions,
-            };
-            action.controllers[viewType] = action.controller;
+                viewType,
+                viewOptions
+            });
+            action.controllers[viewType] = newController;
         }
         /**
          * Executes actions of type 'ir.actions.act_window'.
@@ -185,35 +174,29 @@ odoo.define('web.ActWindowActionManager', function (require) {
                     lazyView = this._findMobileView(views, lazyView.multiRecord) || lazyView;
                 }
             }
-
-            let index = this._getControllerStackIndex(options);
-            const virtualStack = this.currentStack.slice(0, index);
-
-            let lazyControllerID;
+            let baseControllerParams;
+            if ('index' in options) {
+                baseControllerParams = { index: options.index };
+            } else {
+                baseControllerParams = options;
+            }
+            const controllers = [];
             if (lazyView) {
-                this._createViewController(action, lazyView.type, {controllerState: options.controllerState}, {
-                    index,
-                    virtualStack,
-                });
+                this._createViewController(action, lazyView.type, {controllerState: options.controllerState}, baseControllerParams);
                 action.controller.options = options;
                 this.controllers[action.controller.jsID] = action.controller;
-                virtualStack.push(action.controller.jsID);
-                index += 1;
-                lazyControllerID = action.controller.jsID;
+                controllers.push(action.controller);
+                baseControllerParams = { index: action.controller.index + 1 };
             }
 
             const viewOptions = {
                 controllerState: options.controllerState,
                 currentId: options.resID,
             };
-            this._createViewController(action, curView.type, viewOptions, { index, virtualStack });
+            this._createViewController(action, curView.type, viewOptions, baseControllerParams);
             action.controller.options = options;
-            this._pushController(action.controller, () => {
-                // FIXME: can we find a better way?
-                if (lazyControllerID) {
-                    this.currentStack.splice(this.currentStack.length - 1, 0, lazyControllerID);
-                }
-            });
+            controllers.push(action.controller);
+            this.pushControllers(controllers);
         }
         /**
          * Helper function to find the first mobile-friendly view, if any.
@@ -263,6 +246,15 @@ odoo.define('web.ActWindowActionManager', function (require) {
                 }
             });
             return views;
+        }
+        _getMainActionDescriptors() {
+            const controllerID = this.currentStack[this.currentStack.length-1];
+            let action, controller;
+            if (controllerID) {
+                controller = this.controllers[controllerID];
+                action = this.actions[controller.actionID];
+            }
+            return {action, controller};
         }
         /**
          * Loads the fields_views and fields for the given action.
@@ -352,56 +344,16 @@ odoo.define('web.ActWindowActionManager', function (require) {
                     return c.viewType === viewType && c.actionID === action.jsID;
                 });
             }
-
-            this._createViewController(action, viewType, viewOptions, { index });
-            this._pushController(action.controller);
-
-            // var newController = function (controllerID) {
-            //     var options = {
-            //         controllerID: controllerID,
-            //         index: index,
-            //     };
-            //     return self
-            //         ._createViewController(action, viewType, viewOptions, options)
-            //         .then(function (controller) {
-            //             return self._startController(controller);
-            //         });
-            // };
-
-            // var controllerDef = action.controllers[viewType];
-            // if (controllerDef) {
-            //     controllerDef = controllerDef.then(function (controller) {
-            //         if (!controller.widget) {
-            //             // lazy loaded -> load it now (with same jsID)
-            //             return newController(controller.jsID);
-            //         } else {
-            //             return Promise.resolve(controller.widget.willRestore()).then(function () {
-            //                 viewOptions = _.extend({}, viewOptions, {
-            //                     breadcrumbs: self._getBreadcrumbs(self.controllerStack.slice(0, index)),
-            //                     shouldUpdateControlPanel: true, // FIXME: aab rebase
-            //                 });
-            //                 return controller.widget.reload(viewOptions).then(function () {
-            //                     return controller;
-            //                 });
-            //             });
-            //         }
-            //     }, function () {
-            //         // if the controllerDef is rejected, it probably means that the js
-            //         // code or the requests made to the server crashed.  In that case,
-            //         // if we reuse the same promise, then the switch to the view is
-            //         // definitely blocked.  We want to use a new controller, even though
-            //         // it is very likely that it will recrash again.  At least, it will
-            //         // give more feedback to the user, and it could happen that one
-            //         // record crashes, but not another.
-            //         return newController();
-            //     });
-            // } else {
-            //     controllerDef = newController();
-            // }
-
-            // return this.dp.add(controllerDef).then(function (controller) {
-            //     return self._pushController(controller);
-            // });
+            try {
+                this._createViewController(action, viewType, viewOptions, { index });
+            } catch (e) {
+                if (e.message === 'Plugin Error') {
+                    action.controller = currentController;
+                } else {
+                    throw e;
+                }
+            }
+            this.pushControllers([action.controller]);
         }
 
         //--------------------------------------------------------------------------
@@ -421,7 +373,7 @@ odoo.define('web.ActWindowActionManager', function (require) {
          */
         _onSwitchView(payload) {
             const viewType = payload.view_type;
-            const { action } = this._getCurrentAction();
+            const { action } = this._getMainActionDescriptors();
             // TODO: find a way to save/restore state
             // const currentController = action.controller;
             // var currentControllerState = currentController.widget.exportState();
@@ -433,7 +385,6 @@ odoo.define('web.ActWindowActionManager', function (require) {
             if (payload.mode) {
                 options.mode = payload.mode;
             }
-            console.log('switch view', viewType);
             this._switchController(action, viewType, options);
         }
     }

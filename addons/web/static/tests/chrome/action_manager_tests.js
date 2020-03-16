@@ -4167,7 +4167,7 @@ QUnit.module('ActionManager', {
     });
 
     QUnit.test('execute smart button and fails', async function (assert) {
-        assert.expect(12);
+        assert.expect(11);
 
         const webClient = await createWebClient({
             actions: this.actions,
@@ -4202,7 +4202,7 @@ QUnit.module('ActionManager', {
             '/web/action/load',
             '/web/dataset/call_kw/partner',
             '/web/dataset/search_read',
-            '/web/dataset/call_kw/partner/read',
+            // '/web/dataset/call_kw/partner/read', checked in master 20-03-19
         ]);
         webClient.destroy();
     });

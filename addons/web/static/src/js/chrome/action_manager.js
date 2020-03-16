@@ -17,6 +17,9 @@ class ActionManagerPlugin {
         this.actionManager = actionManager;
         this.env = env;
     }
+    /**
+     * @throws {Error} message: Plugin Error
+     */
     async executeAction(/*action, options*/) {
         throw new Error(`ActionManagerPlugin for type ${this.type} doesn't implement executeAction.`);
     }
@@ -27,22 +30,11 @@ class ActionManagerPlugin {
         return this.actionManager._resolveLast(...arguments);
     }
     loadState(/* state, options */) {}
-
-    // FIXME: create a 'createController' or something function and get rid of these
-    _getBreadcrumbs() {
-        return this.actionManager._getBreadcrumbs(...arguments);
+    makeBaseController() {
+        return this.actionManager.makeBaseController(...arguments);
     }
-    _getControllerStackIndex() {
-        return this.actionManager._getControllerStackIndex(...arguments);
-    }
-    _pushController() {
-        return this.actionManager._pushController(...arguments);
-    }
-    _nextID() {
-        return this.actionManager._nextID(...arguments);
-    }
-    restoreController(controllerID) {
-        return this.actionManager.restoreController(controllerID);
+    pushControllers() {
+        return this.actionManager.pushControllers(...arguments);
     }
     get currentStack() {
         return this.actionManager.currentStack;
@@ -50,18 +42,14 @@ class ActionManagerPlugin {
     get controllers() {
         return this.actionManager.controllers;
     }
+    get currentDialogController() {
+        return this.actionManager.currentDialogController;
+    }
     get actions() {
         return this.actionManager.actions;
     }
     doAction() {
         return this.actionManager.doAction(...arguments);
-    }
-    _getCurrentAction() {
-        const currentState = this.getCurrentState();
-        return currentState.main || {};
-    }
-    getCurrentState() {
-        return this.actionManager.getCurrentState();
     }
 }
 ActionManagerPlugin.type = null;
@@ -150,21 +138,12 @@ class ClientActionPlugin extends ActionManagerPlugin {
                 return;
             }
         }
-
-        const controllerID = this._nextID('controller');
-        const index = this._getControllerStackIndex(options);
-        options.breadcrumbs = this._getBreadcrumbs(this.currentStack.slice(0, index));
-        options.controllerID = controllerID;
-        action.controller = {
-            actionID: action.jsID,
-            Component: ClientAction,
-            index: index,
-            jsID: controllerID,
-            options: options,
-            // title: widget.getTitle(),
-        };
+        const params = Object.assign({}, options, {Component: ClientAction});
+        const controller = this.makeBaseController(action, params);
+        options.controllerID = controller.jsID;
+        controller.options = options;
         action.id = action.id || action.tag;
-        this._pushController(action.controller);
+        this.pushControllers([controller]);
     }
     /**
      * @override
@@ -184,31 +163,36 @@ ClientActionPlugin.type = 'ir.actions.client';
 
 class CloseActionPlugin extends ActionManagerPlugin {
     async executeAction(action, options) {
-        let owlReload = true;
-        const { main , dialog } = this.getCurrentState();
-        if (dialog && !dialog.controller.isClosing) {
-            if (dialog.controller.options && dialog.controller.options.on_close) {
-                dialog.controller.options.on_close(action.infos);
-                owlReload = false;
-                dialog.controller.isClosing = true;
+        const dialog = this.currentDialogController;
+        // I'm afraid this is mandatory
+        // some legacy modals make their main controller
+        // do weird stuff (like triggering onchanges)
+        // in those cases, owl should not reload those components
+        let doOwlReload = true;
+        if (dialog && !dialog.isClosing) {
+            if (dialog.options && dialog.options.on_close) {
+                dialog.options.on_close(action.infos);
+                dialog.isClosing = true;
+                doOwlReload = false;
             }
         } else if (options.on_close) {
             options.on_close(action.infos);
-            owlReload = false;
+            doOwlReload = false;
         }
-        let pushCallBack = null;
+        let onCommit = null;
         if (action.effect) {
-            pushCallBack = () => {
+            onCommit = () => {
                 this.env.bus.trigger('show-effect', action.effect);
-            }
+            };
         }
-        const controller = main ? main.controller : null;
-        if (controller) {
-            controller.owlReload = owlReload;
+        const controllerID = this.currentStack[this.currentStack.length-1];
+        let controller;
+        if (controllerID) {
+            controller = this.controllers[controllerID];
             controller.options = controller.options || {};
             controller.options.on_success = options.on_success;
         }
-        return this._pushController(controller, pushCallBack);
+        return this.pushControllers([controller], { onCommit , doOwlReload });
     }
 }
 CloseActionPlugin.type = 'ir.actions.act_window_close';
@@ -229,10 +213,10 @@ class ActionManager extends core.EventBus {
         this.env.bus.on('do-action', this, payload => {
             this.doAction(payload.action, payload.options);
         });
-        // same as above except it is triggered on their reload
-        // Made for clarity and transparency
-        this.env.bus.on('legacy-reloaded', this, payload => {
-            this.legacyLoaded(payload);
+        // Before switching views, an event is triggered
+        // containing the state of the current controller
+        this.env.bus.on('legacy-export-state', this, payload => {
+            this.legacyStateExported(payload);
         });
         this.env.bus.on('history-back', this, this._onHistoryBack);
         this.plugins = new WeakMap();
@@ -253,7 +237,6 @@ class ActionManager extends core.EventBus {
         this.currentDialogController = null;
 
         this.currentRequestID = 0;
-        this.menus = null;
     }
     //--------------------------------------------------------------------------
     // Public
@@ -311,13 +294,11 @@ class ActionManager extends core.EventBus {
             clear_breadcrumbs: false,
             on_close: function () {},
             on_reverse_breadcrumb: function () {},
-            // pushState: true,
             replace_last_action: false,
-            shouldReload: !options || !options.on_close,
         };
         options = Object.assign(defaultOptions, options);
 
-        if (!options.shouldReload) {
+        if (options && options.on_close) {
             console.warn('doAction: on_close callback is deprecated');
         }
 
@@ -363,7 +344,7 @@ class ActionManager extends core.EventBus {
      * @param {function} [params.on_fail]
      * @param {function} [params.on_success]
      */
-    async executeContextualActionTODONAME(params) {
+    async executeInFlowAction(params) {
         // cancel potential current rendering
         this.trigger('cancel');
         this.currentRequestID++;
@@ -415,58 +396,62 @@ class ActionManager extends core.EventBus {
             prom = Promise.reject();
         }
 
-        return this._resolveLast(prom).then(action => {
-            // show effect if button have effect attribute
-            // rainbowman can be displayed from two places: from attribute on a button or from python
-            // code below handles the first case i.e 'effect' attribute on button.
-            let effect = false;
-            if (actionData.effect) {
-                effect = pyUtils.py_eval(actionData.effect);
-            }
+        let action = await this._resolveLast(prom);
+        // show effect if button have effect attribute
+        // rainbowman can be displayed from two places: from attribute on a button or from python
+        // code below handles the first case i.e 'effect' attribute on button.
+        let effect = false;
+        if (actionData.effect) {
+            effect = pyUtils.py_eval(actionData.effect);
+        }
 
-            if (action && action.constructor === Object) {
-                // filter out context keys that are specific to the current action, because:
-                //  - wrong default_* and search_default_* values won't give the expected result
-                //  - wrong group_by values will fail and forbid rendering of the destination view
-                const ctx = new Context(
-                    _.object(_.reject(_.pairs(env.context), function (pair) {
-                        return pair[0].match('^(?:(?:default_|search_default_|show_).+|' +
-                                             '.+_view_ref|group_by|group_by_no_leaf|active_id|' +
-                                             'active_ids|orderedBy)$') !== null;
-                    }))
-                );
-                ctx.add(actionData.context || {});
-                ctx.add({active_model: env.model});
-                if (recordID) {
-                    ctx.add({
-                        active_id: recordID,
-                        active_ids: [recordID],
-                    });
+        if (action && action.constructor === Object) {
+            // filter out context keys that are specific to the current action, because:
+            //  - wrong default_* and search_default_* values won't give the expected result
+            //  - wrong group_by values will fail and forbid rendering of the destination view
+            this.rejectKeysRegex = this.rejectKeysRegex || new RegExp(`\
+                ^(?:(?:default_|search_default_|show_).+|\
+                .+_view_ref|group_by|group_by_no_leaf|active_id|\
+                active_ids|orderedBy)$`
+            );
+            const oldCtx = {};
+            for (const key in env.context) {
+                if (!key.match(this.rejectKeysRegex)) {
+                    oldCtx[key] = env.context[key];
                 }
-                ctx.add(action.context || {});
-                action.context = ctx;
-                // in case an effect is returned from python and there is already an effect
-                // attribute on the button, the priority is given to the button attribute
-                action.effect = effect || action.effect;
-            } else {
-                // if action doesn't return anything, but there is an effect
-                // attribute on the button, display rainbowman
-                action = {
-                    effect: effect,
-                    type: 'ir.actions.act_window_close',
-                };
             }
-            let options = {
-                on_close: params.on_closed,
-                on_success: params.on_success,
-                on_fail: params.on_fail,
+            const ctx = new Context(oldCtx);
+            ctx.add(actionData.context || {});
+            ctx.add({active_model: env.model});
+            if (recordID) {
+                ctx.add({
+                    active_id: recordID,
+                    active_ids: [recordID],
+                });
+            }
+            ctx.add(action.context || {});
+            action.context = ctx;
+            // in case an effect is returned from python and there is already an effect
+            // attribute on the button, the priority is given to the button attribute
+            action.effect = effect || action.effect;
+        } else {
+            // if action doesn't return anything, but there is an effect
+            // attribute on the button, display rainbowman
+            action = {
+                effect: effect,
+                type: 'ir.actions.act_window_close',
             };
-            if (this.env.device.isMobile && actionData.mobile) {
-                options = Object.assign({}, options, actionData.mobile);
-            }
-            action.flags = Object.assign({}, action.flags, { searchPanelDefaultNoFilter: true });
-            return this.doAction(action, options);
-        });
+        }
+        let options = {
+            on_close: params.on_closed,
+            on_success: params.on_success,
+            on_fail: params.on_fail,
+        };
+        if (this.env.device.isMobile && actionData.mobile) {
+            options = Object.assign({}, options, actionData.mobile);
+        }
+        action.flags = Object.assign({}, action.flags, { searchPanelDefaultNoFilter: true });
+        return this.doAction(action, options);
     }
     getStateFromController(controllerID) {
         const controller = this.controllers[controllerID];
@@ -482,7 +467,6 @@ class ActionManager extends core.EventBus {
         const res = {
             main: null,
             dialog: null,
-            menuID: this.menuID,
         };
         const currentControllerID = this.currentStack[this.currentStack.length - 1];
         if (currentControllerID) {
@@ -515,22 +499,12 @@ class ActionManager extends core.EventBus {
                 break;
             }
         }
-        if (!result && 'menu_id' in state) {
-            const action = this.menus[state.menu_id].actionID;
-            return this.doAction(action, state);
-        }
-        if (!result && ('home' in state || Object.keys(state).filter(key => key !== 'cids').length === 0)) {
-            const { menuID , actionID } = this._getHomeAction();
-            if (actionID) {
-                return this.doAction(actionID, {menuID, clear_breadcrumbs: true});
-            }
+        if (!result) {
+            // no suitable plugin or state
+            // the caller must handle this
+            return null;
         }
         return result;
-    }
-    _getHomeAction() {
-        const menuID = this.menus ? this.menus.root.children[0] : null;
-        const actionID =  menuID ? this.menus[menuID].actionID : null;
-        return { menuID, actionID };
     }
     /**
      * Restores a controller from the controllerStack and removes all
@@ -560,7 +534,7 @@ class ActionManager extends core.EventBus {
                 return plugin.restoreControllerHook(action, controller);
             }
         }
-        this._pushController(this.controllers[controllerID]);
+        this.pushControllers([this.controllers[controllerID]]);
 
         // AAB: AbstractAction should define a proper hook to execute code when
         // it is restored (other than do_show), and it should return a promise
@@ -571,17 +545,10 @@ class ActionManager extends core.EventBus {
         // return Promise.resolve(def).then(function () {
         //     return Promise.resolve(controller.widget.do_show()).then(function () {
         //         var index = _.indexOf(self.controllerStack, controllerID);
-        //         self._pushController(controller, index);
+        //         self.pushControllers(controller, index);
         //     });
         // });
     }
-    storeScrollPosition(scrollPosition) {
-        const currentState = this.getCurrentState();
-        if (currentState.main) {
-            currentState.main.controller.scrollPosition = scrollPosition;
-        }
-    }
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -613,27 +580,6 @@ class ActionManager extends core.EventBus {
         unusedActionIDs.forEach(actionID => delete this.actions[actionID]);
     }
     /**
-     * Returns a description of the controllers in the given controller stack.
-     * It is used to render the breadcrumbs. It is an array of Objects with keys
-     * 'title' (what to display in the breadcrumbs) and 'controllerID' (the ID
-     * of the corresponding controller, used to restore it when this part of the
-     * breadcrumbs is clicked).
-     *
-     * @private
-     * @param {string[]} controllerStack
-     * @returns {Object[]}
-     */
-    _getBreadcrumbs(controllerStack) {
-        return controllerStack.map(controllerID => {
-            const controller = this.controllers[controllerID];
-            const component = controller.component;
-            return {
-                controllerID: controllerID,
-                title: component && component.title || this.actions[controller.actionID].name,
-            };
-        });
-    }
-    /**
      * Returns the index where a controller should be inserted in the controller
      * stack according to the given options. By default, a controller is pushed
      * on the top of the stack.
@@ -658,6 +604,19 @@ class ActionManager extends core.EventBus {
             index = this.currentStack.length;
         }
         return index;
+    }
+    makeBaseController(action, params) {
+        const controllerID = params.controllerID || this._nextID('controller');
+        const index = this._getControllerStackIndex(params);
+        const newController = {
+            actionID: action.jsID,
+            Component: params.Component,
+            index: index,
+            jsID: controllerID,
+        };
+        action.controller = newController;
+        this.controllers[controllerID] = newController;
+        return newController;
     }
     _getPlugin(actionType) {
         const Plugin = ActionManager.Plugins[actionType];
@@ -692,14 +651,20 @@ class ActionManager extends core.EventBus {
         }
         const plugin = this._getPlugin(action.type);
         if (!plugin) {return Promise.reject();}
-        return plugin.executeAction(action, options);
-        //     // case 'ir.actions.act_window_close':
-        //     //     return this._executeCloseAction(action);
+        try {
+            return plugin.executeAction(action, options);
+        } catch (e) {
+            if (e.message === 'Plugin Error') {
+                return this.restoreController();
+            } else {
+                throw e;
+            }
+        }
     }
     _nextID(type) {
         return `${type}${nextID++}`;
     }
-    legacyLoaded(payload, initialLoading) {
+    legacyStateExported(payload) {
         const { action } = this.getCurrentState().main;
         Object.assign(action, payload.commonState);
         action.controllerState = Object.assign({}, action.controllerState, payload.controllerState);
@@ -739,119 +704,101 @@ class ActionManager extends core.EventBus {
      * @private
      * @param {Object} controller
      */
-    _pushController(controller, cb) {
+    pushControllers(controllerArray, options) {
+        let nextStack = this.currentStack;
+        if (controllerArray && controllerArray.length > 1) {
+            nextStack = nextStack.slice(0, controllerArray[0].index || 0);
+            for (const cont of controllerArray) {
+                nextStack.push(cont.jsID);
+            }
+        }
+        const controller = controllerArray && controllerArray[controllerArray.length -1];
         if (!controller) {
             this.trigger('update', {
-                main: null,
+                controllerStack: [],
                 dialog: null,
-                onSuccess: () => {
-                    this.currentDialogController = null;
-                },
-                onFail: () => {},
+                onCommit: options && options.onCommit,
+                doOwlReload: options && 'doOwlReload' in options ? options.doOwlReload : true,
             });
             return;
         }
-        this.controllers[controller.jsID] = controller;
         const action = this.actions[controller.actionID];
 
-        const { main, dialog } = this.getCurrentState();
-        let newMain = null;
-        let newDialog = null;
-        let newMenuID;
+        let dialog;
         if (action.target !== 'new') {
-            newMain = {};
-            newMain.reload = 'owlReload' in controller ? controller.owlReload : true;
-            delete controller.owlReload;
-            newMain.action = action;
-            newMain.controller = controller;
-            newMenuID = controller.options && controller.options.menuID || this.menuID;
+            nextStack = nextStack.slice(0, controller.index || 0);
+            nextStack.push(controller.jsID);
+            dialog = null;
+            if (controller.options && controller.options.on_reverse_breadcrumb) {
+               const currentControllerID = this.currentStack[this.currentStack.length - 1];
+               if (currentControllerID) {
+                   const currentController = this.controllers[currentControllerID];
+                   currentController.onReverseBreadcrumb = controller.options.on_reverse_breadcrumb;
+               }
+            }
         } else {
-            if (main) {
-                newMain = main;
-                newMain.reload = false;
-            }
-            newDialog = {};
-            newDialog.action = action;
-            newDialog.controller = controller;
-            newMenuID = this.currentMenuID;
-        }
-        if (dialog) {
-            const oldCt = dialog.controller;
-            if (newDialog) {
-                const newCt = newDialog.controller;
-                newCt.options.on_close = oldCt.options.on_close;
-            } else {
-                newMain.reload = oldCt.options.shouldReload;
+            dialog = { action , controller };
+            if (this.currentDialogController) {
+                const dialogController = this.currentDialogController;
+                controller.options.on_close = dialogController.options.on_close;
             }
         }
-        const nextStack = this.currentStack.slice(0, newMain ? newMain.controller.index : 0);
-        if (newMain) {
-            nextStack.push(newMain.controller.jsID);
-        }
-        const onFail = () => {
-            if (action.target !== 'new') {
-                if (newMain.controller.options && newMain.controller.options.on_fail) {
-                    newMain.controller.options.on_fail();
-                }
-            } else {
-                if (newDialog.controller.options && newDialog.controller.options.on_fail) {
-                    newDialog.controller.options.on_fail();
-                }
-            }
-        };
-        const onSuccess = (mainComponent, dialogComponent) => {
-            if (action.target !== 'new') {
-                newMain.controller.component = mainComponent;
-                this.currentDialogController = newDialog;
-                this.menuID = newMenuID || this.menuID;
-                // FIXME: we could probably get rid of this on_reverse_breadcrumb stuff, and use
-                // the willRestore hook instead (but some client actions would need to be adapted)
-                if (controller.options && controller.options.on_reverse_breadcrumb) {
-                    const currentControllerID = this.currentStack[this.currentStack.length - 1];
-                    if (currentControllerID) {
-                        const currentController = this.controllers[currentControllerID];
-                        currentController.onReverseBreadcrumb = controller.options.on_reverse_breadcrumb;
-                    }
-                }
 
-                // always close dialogs when the current controller changes
-                // use case: have a controller that opens a dialog, and from this dialog, have a
-                // link/button to perform an action that will be stacked in the breadcrumbs
-                // (for instance, a many2one in readonly)
-                this.env.bus.trigger('close_dialogs');
-
-                // store the action into the sessionStorage so that it can be fully restored on F5
-                this.env.services.session_storage.setItem('current_action', action._originalAction);
-            } else {
-                newDialog.controller.component = dialogComponent;
-                this.currentDialogController = newDialog.controller;
-            }
-            if (controller && controller.options && controller.options.on_success) {
-                controller.options.on_success();
-            }
-            this.currentStack = nextStack;
-            this._cleanActions();
-
-            // FIXME: for lazy loaded controllers... we must find a better solution
-            if (cb) {
-                cb();
-            }
-        };
-        const payload = {
-            main: newMain,
-            dialog: newDialog,
-            fullscreen: this.getFullScreen(nextStack),
-            menuID: newMenuID,
-            onSuccess: onSuccess,
-            onFail: onFail,
-        };
-        this.trigger('update', payload);
-    }
-    getFullScreen(nextStack) {
-        return nextStack.find(controllerID => {
-            const controller = this.controllers[controllerID];
-            return this.actions[controller.actionID].target === 'fullscreen';
+        const controllerStack = nextStack.map(jsID => {
+            const controller = this.controllers[jsID];
+            const action = this.actions[controller.actionID];
+            return { action, controller };
         });
+        this.trigger('update', {
+            controllerStack,
+            dialog,
+            onCommit: options && options.onCommit,
+            doOwlReload: options && 'doOwlReload' in options ? options.doOwlReload : true,
+        });
+    }
+    commit(newStack, newDialog, onCommit) {
+        this.currentStack = newStack.map(obj => {
+            return obj.controller.jsID;
+        });
+        let controller, action;
+        if (!newDialog && newStack.length) {
+            const main = newStack[newStack.length - 1];
+            controller = main.controller;
+            action = main.action;
+            // always close dialogs when the current controller changes
+            // use case: have a controller that opens a dialog, and from this dialog, have a
+            // link/button to perform an action that will be stacked in the breadcrumbs
+            // (for instance, a many2one in readonly)
+            this.env.bus.trigger('close_dialogs');
+            this.currentDialogController = null;
+
+            // store the action into the sessionStorage so that it can be fully restored on F5
+            this.env.services.session_storage.setItem('current_action', action._originalAction);
+        } else if (newDialog) {
+            controller = newDialog.controller;
+            this.currentDialogController = controller;
+        }
+
+        if (controller && controller.options && controller.options.on_success) {
+            controller.options.on_success();
+            controller.options.on_success = null;
+        }
+        if (onCommit) {
+            onCommit();
+        }
+        this._cleanActions();
+    }
+    rollback(newStack, newDialog) {
+        let controller;
+        if (!newDialog) {
+            const main = newStack[newStack.length - 1];
+            controller = main.controller;
+        } else {
+            controller = newDialog.controller;
+        }
+        if (controller.options && controller.options.on_fail) {
+            controller.options.on_fail();
+        }
     }
     /**
      * Wraps a promise to resolve/reject it when it is resolved/rejected: iff
