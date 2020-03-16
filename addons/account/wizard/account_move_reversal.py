@@ -54,6 +54,7 @@ class AccountMoveReversal(models.TransientModel):
             'journal_id': self.journal_id and self.journal_id.id or move.journal_id.id,
             'invoice_payment_term_id': None,
             'auto_post': True if self.date > fields.Date.context_today(self) else False,
+            'invoice_user_id': move.invoice_user_id.id,
         }
 
     def reverse_moves(self):
