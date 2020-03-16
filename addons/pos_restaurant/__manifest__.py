@@ -26,11 +26,12 @@ This module adds several features to the Point of Sale that are specific to rest
         'views/pos_restaurant_templates.xml',
     ],
     'qweb': [
-        'static/src/xml/multiprint.xml',
-        'static/src/xml/splitbill.xml',
-        'static/src/xml/printbill.xml',
-        'static/src/xml/notes.xml',
-        'static/src/xml/floors.xml',
+        'static/src/xml/Screens/ProductScreen/ControlButtons/OrderlineNoteButton.xml',
+        'static/src/xml/Screens/ProductScreen/ControlButtons/TableGuestsButton.xml',
+        'static/src/xml/Screens/ProductScreen/ControlButtons/PrintBillButton.xml',
+        'static/src/xml/Screens/BillScreen.xml',
+        'static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml',
+        'static/src/xml/Screens/ProductScreen/Orderline.xml',
     ],
     'demo': [
         'data/pos_restaurant_demo.xml',
