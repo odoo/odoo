@@ -54,7 +54,8 @@ LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
 WHERE
     pt.type = 'product' AND
     product_qty != 0 AND
-    (whs.id IS NULL or whd.id IS NULL OR whs.id != whd.id) AND
+    (whs.id IS NOT NULL OR whd.id IS NOT NULL) AND
+    (whs.id IS NULL OR whd.id IS NULL OR whs.id != whd.id) AND
     m.state NOT IN ('cancel', 'draft', 'done')
 UNION
 SELECT
@@ -72,7 +73,8 @@ FROM
 LEFT JOIN stock_location l on (l.id=q.location_id)
 LEFT JOIN stock_warehouse wh ON l.parent_path like concat('%/', wh.view_location_id, '/%')
 WHERE
-    l.usage = 'internal'
+    l.usage = 'internal' AND
+    wh IS NOT NULL
 UNION
 SELECT
     m.id,
@@ -109,6 +111,7 @@ LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
 WHERE
     pt.type = 'product' AND
     product_qty != 0 AND
+    (whs.id IS NOT NULL OR whd.id IS NOT NULL) AND
     (whs.id IS NULL or whd.id IS NULL OR whs.id != whd.id) AND
     m.state NOT IN ('cancel', 'draft')
 );
