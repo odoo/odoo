@@ -28,7 +28,8 @@ class WebsiteSaleProductComparison(WebsiteSale):
                 cat_name = var.attribute_id.category_id.name or _('Uncategorized')
                 att_name = var.attribute_id.name
                 val = product.attribute_value_ids.filtered(lambda x: x.attribute_id == var.attribute_id)
-                res[cat_name][att_name][num] = val[0].name
+                if val:
+                    res[cat_name][att_name][num] = val[0].name
         values['specs'] = res
         values['compute_currency'] = self._get_compute_currency_and_context()[0]
         return request.render("website_sale_comparison.product_compare", values)
