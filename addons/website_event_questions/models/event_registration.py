@@ -17,6 +17,7 @@ class EventRegistrationAnswer(models.Model):
 
     question_id = fields.Many2one('event.question', required=True, ondelete='cascade')
     registration_id = fields.Many2one('event.registration', required=True, ondelete='cascade')
+    partner_id = fields.Many2one('res.partner', related='registration_id.partner_id')
     event_id = fields.Many2one('event.event', related='registration_id.event_id')
     question_type = fields.Selection(related='question_id.question_type')
     value_answer_id = fields.Many2one('event.question.answer', string="Suggested answer")
