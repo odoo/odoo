@@ -1181,16 +1181,15 @@ table.table_desc tr td {
         > .navbar {
             background-color: transparent !important;
             border-color: transparent;
+            color: inherit;
 
             .nav-item {
                 > .nav-link {
                     background-color: transparent;
                     color: inherit;
-                }
-                &.show, &.active {
-                    > .nav-link {
-                        background-color: white;
-                        color: black;
+
+                    &.active {
+                        font-weight: bolder;
                     }
                 }
             }
