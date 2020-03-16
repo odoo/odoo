@@ -9464,6 +9464,54 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('resize column with several x2many lists in form group', async function (assert) {
+        assert.expect(3);
+
+        this.data.bar.fields.text = {string: "Text field", type: "char"};
+        this.data.foo.records[0].o2m = [1, 2];
+
+        const form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="o2m">
+                            <tree editable="bottom">
+                                <field name="display_name"/>
+                                <field name="text"/>
+                            </tree>
+                        </field>
+                        <field name="m2m">
+                            <tree editable="bottom">
+                                <field name="display_name"/>
+                                <field name="text"/>
+                            </tree>
+                        </field>
+                    </group>
+                </form>`,
+            res_id: 1,
+        });
+
+        const th = form.el.getElementsByTagName('th')[0];
+        const resizeHandle = th.getElementsByClassName('o_resize')[0];
+        const firstTableInitialWidth = form.el.querySelectorAll('.o_field_x2many_list table')[0].offsetWidth;
+        const secondTableInititalWidth = form.el.querySelectorAll('.o_field_x2many_list table')[1].offsetWidth;
+
+        assert.strictEqual(firstTableInitialWidth, secondTableInititalWidth,
+            "both table columns have same width");
+
+        await testUtils.dom.dragAndDrop(resizeHandle, form.el.getElementsByTagName('th')[1], { position: "right" });
+
+        assert.notEqual(firstTableInitialWidth, form.el.querySelectorAll('thead')[0].offsetWidth,
+            "first o2m table is resized and width of table has changed");
+        assert.strictEqual(secondTableInititalWidth, form.el.querySelectorAll('thead')[1].offsetWidth,
+            "second o2m table should not be impacted on first o2m in group resized");
+
+        form.destroy();
+    });
+
     QUnit.test('enter edition in editable list with <widget>', async function (assert) {
         assert.expect(1);
 
