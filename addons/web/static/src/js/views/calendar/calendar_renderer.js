@@ -413,7 +413,7 @@ return AbstractRenderer.extend({
                 if (self.$('.o_cw_popover').length) {
                     self._unselectEvent();
                 } else {
-                    var data = {start: selectionInfo.start, end: selectionInfo.end};
+                    var data = {start: selectionInfo.start, end: selectionInfo.end, allDay: selectionInfo.allDay};
                     if (self.state.context.default_name) {
                         data.title = self.state.context.default_name;
                     }
