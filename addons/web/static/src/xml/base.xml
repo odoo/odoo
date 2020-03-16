@@ -505,6 +505,21 @@
     </Portal>
 </t>
 
+<t t-name="Popover" owl="1">
+    <div t-on-click="openPopover" data-popover="1">
+        <t t-slot="default"/>
+        <Portal t-if="state.displayed" target="'body'">
+            <div role="tooltip" class="o_popover" t-ref="popover">
+                <div class="arrow"/>
+                <h3 t-if="props.title" class="o_popover_header"><t t-esc="props.title"/></h3>
+                <div class="popover-body">
+                    <t t-slot="opened"/>
+                </div>
+            </div>
+        </Portal>
+    </div>
+</t>
+
 <t t-name="web.Pager" owl="1">
     <nav class="o_pager" aria-label="Pager">
         <span class="o_pager_counter" t-on-click.stop="">
