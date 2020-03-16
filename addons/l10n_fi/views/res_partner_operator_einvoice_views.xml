@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_partner_operator_einvoice_view_form" model="ir.ui.view">
+        <field name="name">res.partner.operator.einvoice.view.form</field>
+        <field name="model">res.partner.operator.einvoice</field>
+        <field name="arch" type="xml">
+            <form string="eInvoice Operator">
+                <sheet>
+                    <widget name="web_ribbon"
+                            text="Archived"
+                            attrs="{'invisible': [('active', '=', True)]}"
+                            bg_color="bg-danger"
+                    />
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Operator Name"/>
+                        </h1>
+                    </div>
+                    <group name="main_info">
+                        <group name="main_info_left">
+                            <field name="identifier"/>
+                        </group>
+                        <group name="main_info_right">
+                            <field name="ttype"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="res_partner_operator_einvoice_view_tree" model="ir.ui.view">
+        <field name="name">res.partner.operator.einvoice.view.tree</field>
+        <field name="model">res.partner.operator.einvoice</field>
+        <field name="arch" type="xml">
+            <tree string="eInvoice Operators">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="identifier"/>
+                <field name="ttype"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="res_partner_operator_einvoice_view_search" model="ir.ui.view">
+        <field name="name">res.partner.operator.einvoice.view.search</field>
+        <field name="model">res.partner.operator.einvoice</field>
+        <field name="arch" type="xml">
+            <search string="Search for eInvoice Operator">
+                <field name="name"/>
+                <filter name="inactive"
+                        string="Archived"
+                        domain="[('active', '=', False)]"
+                />
+                <group  expand="0" string="Group by...">
+                    <filter name="groupby_ttype"
+                            string="Operator Type"
+                            context="{'group_by' : 'ttype'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="res_partner_operator_einvoice_action" model="ir.actions.act_window">
+        <field name="name">eInvoice Operators</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner.operator.einvoice</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="res_partner_operator_einvoice_menu"
+              action="res_partner_operator_einvoice_action"
+              parent="account_einvoicing_menu"
+              name="eInvoice Operators"
+              groups="account.group_account_manager"
+              sequence="10"/>
+
+</odoo>

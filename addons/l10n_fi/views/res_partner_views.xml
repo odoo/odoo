@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_l10n_fi" model="ir.ui.view">
+        <field name="name">view.partner.form.l10n_fi</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//h1[1]" position="after">
+                <h2 attrs="{'invisible': [('is_company', '=', False)]}">
+                    <field name="business_code" placeholder="Business ID"/>
+                </h2>
+            </xpath>
+
+            <xpath expr="//page[@name='sales_purchases']//field[@name='user_id']" position="after">
+                <field name="edicode"/>
+                <field name="einvoice_operator_id"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_res_partner_filter_l10n_fi" model="ir.ui.view">
+        <field name="name">res.partner.select.l10n_fi</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+
+            <field name="name" position="after">
+                <field name="business_code" filter_domain="[('business_code','like',self)]" />
+            </field>
+
+        </field>
+    </record>
+
+</odoo>
