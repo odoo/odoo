@@ -3370,6 +3370,35 @@ QUnit.module('Views', {
 
         calendar.destroy();
     });
+
+    QUnit.test('attempt to create multiples events and the same day and check the ordering on month view', async function (assert) {
+        assert.expect(3);
+        /*
+         This test aims to verify that the order of the event in month view is coherent with their start date.
+         */
+        var initDate = new Date(2020, 2, 12, 8, 0, 0); //12 of March
+        this.data.event.records = [
+            {id: 1, name: "Second event", start: "2020-03-12 05:00:00", stop: "2020-03-12 07:00:00", allday: false},
+            {id: 2, name: "First event", start: "2020-03-12 02:00:00", stop: "2020-03-12 03:00:00", allday: false},
+            {id: 3, name: "Third event", start: "2020-03-12 08:00:00", stop: "2020-03-12 09:00:00", allday: false},
+        ];
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch: `<calendar date_start="start" date_stop="stop" all_day="allday" mode="month" />`,
+            archs: archs,
+            viewOptions: {
+                initialDate: initDate,
+            },
+        });
+        assert.ok(calendar.$('.o_calendar_view').find('.fc-view-container').length, "should display in the calendar"); // OK
+        // Testing the order of the events: by start date
+        assert.strictEqual(calendar.$('.o_event_title').length, 3, "3 events should be available"); // OK
+        assert.strictEqual(calendar.$('.o_event_title').first().text(), 'First event', "First event should be on top");
+        calendar.destroy();
+    });
+
 });
 
 });
