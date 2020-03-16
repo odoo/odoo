@@ -9,6 +9,7 @@
     'data': [
         'views/assets.xml',
         'views/event_views.xml',
+        'views/event_registration_answer_views.xml',
         'views/event_registration_views.xml',
         'views/event_question_views.xml',
         'views/event_templates.xml',

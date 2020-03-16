@@ -40,6 +40,19 @@ class EventQuestion(models.Model):
                     raise UserError(_("You cannot change the question type of a question that already has answers!"))
         return super(EventQuestion, self).write(vals)
 
+    def action_view_question_answers(self):
+        """ Allow analyzing the attendees answers to event questions in a convenient way:
+        - A graph view showing counts of each suggestions for simple_choice questions
+          (Along with secondary pivot and tree views)
+        - A tree view showing textual answers values for text_box questions. """
+        self.ensure_one()
+        action = self.env.ref('website_event_questions.action_event_registration_report').read()[0]
+        action['domain'] = [('question_id', '=', self.id)]
+        if self.question_type == 'simple_choice':
+            action['views'] = [(False, 'graph'), (False, 'pivot'), (False, 'tree')]
+        elif self.question_type == 'text_box':
+            action['views'] = [(False, 'tree')]
+        return action
 
 class EventQuestionAnswer(models.Model):
     """ Contains suggested answers to a 'simple_choice' event.question. """

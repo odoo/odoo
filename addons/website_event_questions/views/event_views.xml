@@ -44,6 +44,7 @@
                                 <field name="question_type" string="Type" />
                                 <field name="answer_ids" widget="many2many_tags"
                                     attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}" />
+                                <button name="action_view_question_answers" type="object" class="fa fa-bar-chart p-0" title="Answer Breakdown" />
                             </tree>
                             <!-- Need to repeat the whole tree form here to be able to create answers properly
                                 Without this, the sub-fields of answer_ids are unknown to the web framework.
