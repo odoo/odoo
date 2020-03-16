@@ -3,6 +3,7 @@
 
 from odoo import api, models, _
 from odoo.tools import config
+from odoo.tools import format_datetime
 
 
 rec = 0
@@ -120,7 +121,7 @@ class MrpStockReport(models.TransientModel):
         data = [{
             'level': level,
             'unfoldable': unfoldable,
-            'date': move_line.move_id.date,
+            'date': format_datetime(self.env, move_line.move_id.date, tz=False, dt_format=False),
             'parent_id': parent_id,
             'is_used': bool(is_used),
             'usage': self._get_usage(move_line),
