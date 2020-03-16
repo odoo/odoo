@@ -76,7 +76,7 @@ class ChangeProductionQty(models.TransientModel):
                             documents[key] = [value]
 
                 production._update_raw_move(line, line_data)
-
+            production._update_non_bom_moves()
             production._log_manufacture_exception(documents)
             operation_bom_qty = {}
             for bom, bom_data in boms:

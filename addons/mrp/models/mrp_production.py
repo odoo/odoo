@@ -600,6 +600,7 @@ class MrpProduction(models.Model):
             'product_uom': product_uom,
             'operation_id': operation_id,
             'byproduct_id': byproduct_id,
+            'unit_factor': product_uom_qty / self.product_qty,
             'name': self.name,
             'date': self.date_planned_start,
             'date_expected': date_planned_finished,
@@ -688,16 +689,19 @@ class MrpProduction(models.Model):
         self.ensure_one()
         move = self.move_raw_ids.filtered(lambda x: x.bom_line_id.id == bom_line.id and x.state not in ('done', 'cancel'))
         if move:
-            old_qty = move[0].product_uom_qty
+            move = move[0]
+            remaining_qty = move.raw_material_production_id.product_qty - move.raw_material_production_id.qty_produced
+            old_qty = move.product_uom_qty
             if quantity > 0:
-                move[0].write({'product_uom_qty': quantity})
-                move[0]._action_assign()
-                return move[0], old_qty, quantity
+                move.write({'product_uom_qty': quantity})
+                move._action_assign()
+                move.unit_factor = remaining_qty and (quantity - move.quantity_done) / remaining_qty or 1.0
+                return move, old_qty, quantity
             else:
-                if move[0].quantity_done > 0:
+                if move.quantity_done > 0:
                     raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
-                move[0]._action_cancel()
-                move[0].unlink()
+                move._action_cancel()
+                move.unlink()
                 return self.env['stock.move'], old_qty, quantity
         else:
             operation = bom_line.operation_id.id or line_data['parent_line'] and line_data['parent_line'].operation_id.id
@@ -710,6 +714,15 @@ class MrpProduction(models.Model):
             )
             move = self.env['stock.move'].create(move_values)
             return move, 0, quantity
+
+    def _update_non_bom_moves(self):
+        """Update additional stock move, not created from a bom line."""
+        self.ensure_one()
+        additional_moves = self.move_raw_ids.filtered(lambda move: move.additional and move.state not in ('done', 'cancel'))
+        for move in additional_moves:
+            quantity = self.product_qty * move.unit_factor
+            remaining_qty = move.raw_material_production_id.product_qty - move.raw_material_production_id.qty_produced
+            move.unit_factor = remaining_qty and (quantity - move.quantity_done) / remaining_qty or 1.0
 
     def _get_ready_to_produce_state(self):
         """ returns 'assigned' if enough components are reserved in order to complete
@@ -750,6 +763,8 @@ class MrpProduction(models.Model):
                 'group_id': production.procurement_group_id.id,
                 'reference': production.name,  # set reference when MO name is different than 'New'
             })
+            for move in additional_moves:
+                move.unit_factor = move.product_uom_qty / (production.product_qty - production.qty_produced)
             additional_moves._adjust_procure_method()
             moves_to_confirm |= additional_moves
             moves_to_confirm |= production.move_finished_ids.filtered(
@@ -804,6 +819,12 @@ class MrpProduction(models.Model):
             production.consumption = production.bom_id.consumption
             if not production.move_raw_ids:
                 raise UserError(_("Add some materials to consume before marking this MO as to do."))
+            for move_raw in production.move_raw_ids:
+                move_raw.write({
+                    'group_id': production.procurement_group_id.id,
+                    'unit_factor': move_raw.product_uom_qty / production.product_qty,
+                    'reference': production.name,  # set reference when MO name is different than 'New'
+                })
             production._generate_finished_moves()
             production.move_raw_ids._adjust_procure_method()
             (production.move_raw_ids | production.move_finished_ids)._action_confirm()
