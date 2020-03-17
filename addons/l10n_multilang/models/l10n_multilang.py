@@ -75,6 +75,8 @@ class AccountChartTemplate(models.Model):
                     for company in company_ids:
                         # write account.account translations in the real COA
                         chart_template_id._process_accounts_translations(company.id, langs, 'name')
+                        # write account.group translations
+                        chart_template_id._process_account_group_translations(company.id, langs, 'name')
                         # copy account.tax name translations
                         chart_template_id._process_taxes_translations(company.id, langs, 'name')
                         # copy account.tax description translations
@@ -85,6 +87,10 @@ class AccountChartTemplate(models.Model):
 
     def _process_accounts_translations(self, company_id, langs, field):
         in_ids, out_ids = self._get_template_from_model(company_id, 'account.account')
+        return self.process_translations(langs, field, in_ids, out_ids)
+
+    def _process_account_group_translations(self, company_id, langs, field):
+        in_ids, out_ids = self._get_template_from_model(company_id, 'account.group')
         return self.process_translations(langs, field, in_ids, out_ids)
 
     def _process_taxes_translations(self, company_id, langs, field):
@@ -148,6 +154,8 @@ class BaseLanguageInstall(models.TransientModel):
                 for company in self.env['res.company'].search([('chart_template_id', '=', coa.id)]):
                     # write account.account translations in the real COA
                     coa._process_accounts_translations(company.id, [self.lang], 'name')
+                    # write account.group translations
+                    coa._process_account_group_translations(company.id, [self.lang], 'name')
                     # copy account.tax name translations
                     coa._process_taxes_translations(company.id, [self.lang], 'name')
                     # copy account.tax description translations
