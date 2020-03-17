@@ -42,10 +42,8 @@ class SeoMetadata(models.AbstractModel):
         title = (request.website or company).name
         if 'name' in self:
             title = '%s | %s' % (self.name, title)
-        if request.website.social_default_image:
-            img = request.website.image_url(request.website, 'social_default_image')
-        else:
-            img = request.website.image_url(company, 'logo')
+        img_field = 'social_default_image' if request.website.has_social_default_image else 'logo'
+        img = request.website.image_url(request.website, img_field)
         # Default meta for OpenGraph
         default_opengraph = {
             'og:type': 'website',
