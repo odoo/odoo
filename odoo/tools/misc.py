@@ -1256,3 +1256,20 @@ class DotDict(dict):
     def __getattr__(self, attrib):
         val = self.get(attrib)
         return DotDict(val) if type(val) is dict else val
+
+def traverse_containers(val, type_):
+    """ Yields atoms filtered by specified type_ (or type tuple), traverses
+    through standard containers (non-string mappings or sequences) *unless*
+    they're selected by the type filter
+    """
+    if isinstance(val, type_):
+        yield val
+    elif isinstance(val, (str, bytes)):
+        return
+    elif isinstance(val, Mapping):
+        for k, v in val.items():
+            yield from traverse_containers(k, type_)
+            yield from traverse_containers(v, type_)
+    elif isinstance(val, collections.abc.Sequence):
+        for v in val:
+            yield from traverse_containers(v, type_)
