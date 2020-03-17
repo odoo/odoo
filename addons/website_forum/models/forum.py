@@ -533,7 +533,7 @@ class Post(models.Model):
 
     def post_notification(self):
         for post in self:
-            tag_partners = post.tag_ids.mapped('message_partner_ids')
+            tag_partners = post.tag_ids.sudo().mapped('message_partner_ids')
 
             if post.state == 'active' and post.parent_id:
                 post.parent_id.message_post_with_view(
