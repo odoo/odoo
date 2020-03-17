@@ -96,7 +96,13 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='group_lots_and_weight']" position="before">
                     <group string="Operations" name="operations">
-                        <field name="route_ids" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'in', ['service', 'digital'])]}"/>
+                        <label for="route_ids" attrs="{'invisible': [('type', 'in', ['service', 'digital'])]}"/>
+                        <div>
+                            <field name="route_ids" class="mb-0" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'in', ['service', 'digital'])]}"/>
+                            <button string="See routes diagram" type="action" name="%(action_stock_rules_report)d" icon="fa-cogs"
+                                 attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
+                                 class="btn btn-link pt-0" context="{'default_product_tmpl_id': id}"/>
+                        </div>
                         <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('route_from_categ_ids', '=', [])]}"/>
                         <label for="sale_delay" attrs="{'invisible': [('sale_ok', '=', False)]}"/>
                         <div attrs="{'invisible': [('sale_ok', '=', False)]}">
@@ -258,18 +264,17 @@
                             name="action_open_product_lot"
                             attrs="{'invisible': [('tracking', '=', 'none')]}"
                             class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot"/>
-                       <button string="Routes" type="action"
-                            name="%(action_stock_rules_report)d"
-                            attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
-                            class="oe_stat_button" icon="fa-cogs"
-                            context="{'default_product_id': id}"
-                            groups="stock.group_stock_multi_locations"/>
                         <button string="Putaway Rules" type="object"
                             name="action_view_related_putaway_rules"
                             class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
                             attrs="{'invisible': [('type', '=', 'service')]}"
                             context="{'invisible_handle': True, 'single_product': True}"/>
                     </div>
+                    <xpath expr="//button[@name='%(action_stock_rules_report)d']" position="attributes">
+                        <attribute name="context">
+                            {'default_product_id': id}
+                        </attribute>
+                    </xpath>
                 </data>
             </field>
         </record>
@@ -348,12 +353,6 @@
                             name="action_open_product_lot"
                             attrs="{'invisible': [('tracking', '=', 'none')]}"
                             class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot"/>
-                        <button string="Routes" type="action"
-                            name="%(action_stock_rules_report)d"
-                            attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
-                            class="oe_stat_button" icon="fa-cogs"
-                            context="{'default_product_tmpl_id': id}"
-                            groups="stock.group_stock_multi_locations"/>
                         <button string="Putaway Rules" type="object"
                             name="action_view_related_putaway_rules"
                             class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
