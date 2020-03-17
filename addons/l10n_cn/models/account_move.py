@@ -13,5 +13,5 @@ class AccountMove(models.Model):
     @api.constrains('fapiao')
     def _check_fapiao(self):
         for record in self:
-            if not record.fapiao.isdecimal():
+            if record.fapiao and (len(record.fapiao) != 8 or not record.fapiao.isdecimal()):
                 raise ValidationError(_("Fapiao number is an 8-digit number. Please enter a correct one."))
