@@ -6,8 +6,8 @@ from odoo import api, fields, models, _
 class ChannelPartner(models.Model):
     _inherit = 'mail.channel.partner'
 
-    @api.model
-    def unpin_old_livechat_sessions(self):
+    @api.autovacuum
+    def _gc_unpin_livechat_sessions(self):
         """ Unpin livechat sessions with no activity for at least one day to
             clean the operator's interface """
         self.env.cr.execute("""
@@ -116,8 +116,8 @@ class MailChannel(models.Model):
             return self.anonymous_name
         return _("Visitor")
 
-    @api.model
-    def remove_empty_livechat_sessions(self):
+    @api.autovacuum
+    def _gc_empty_livechat_sessions(self):
         hours = 1  # never remove empty session created within the last hour
         self.env.cr.execute("""
             SELECT id as id

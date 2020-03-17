@@ -134,8 +134,8 @@ class IrAttachment(models.Model):
                     os.makedirs(dirname)
             open(full_path, 'ab').close()
 
-    @api.model
-    def _file_gc(self):
+    @api.autovacuum
+    def _gc_file_store(self):
         """ Perform the garbage collection of the filestore. """
         if self._storage() != 'file':
             return

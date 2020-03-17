@@ -496,3 +496,13 @@ class EventEvent(models.Model):
 
             result[event.id] = cal.serialize().encode('utf-8')
         return result
+
+    @api.autovacuum
+    def _gc_mark_events_done(self):
+        """ move every ended events in the next 'ended stage' """
+        ended_events = self.env['event.event'].search([
+            ('date_end', '<', fields.Datetime.now()),
+            ('stage_id.pipe_end', '=', False),
+        ])
+        if ended_events:
+            ended_events.action_set_done()

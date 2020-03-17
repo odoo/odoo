@@ -288,6 +288,17 @@ def split_context(method, args, kwargs):
     return kwargs.pop('context', None), args, kwargs
 
 
+def autovacuum(method):
+    """
+    Decorate a method so that it is called by the daily vacuum cron job (model
+    ``ir.autovacuum``).  This is typically used for garbage-collection-like
+    tasks that do not deserve a specific cron job.
+    """
+    assert method.__name__.startswith('_'), "%s: autovacuum methods must be private" % method.__name__
+    method._autovacuum = True
+    return method
+
+
 def model(method):
     """ Decorate a record-style method where ``self`` is a recordset, but its
         contents is not relevant, only the model is. Such a method::
