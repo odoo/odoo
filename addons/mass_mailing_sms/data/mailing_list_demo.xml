@@ -1,32 +1,706 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo><data noupdate="0">
-    <record id="mailing_list_sms_0" model="mailing.list">
-        <field name="name">Interested in Tree Promotions</field>
-    </record>
+<odoo>
+    <data noupdate="0">
+        <record id="mailing_list_sms_0" model="mailing.list">
+            <field name="name">Interested in Tree Promotions</field>
+        </record>
 
-    <record id="mailing_contact_0_0" model="mailing.contact">
-        <field name="name">Hubert Farnsworth</field>
-        <field name="mobile">+32456001100</field>
-        <field name="list_ids" eval="[(4, ref('mass_mailing_sms.mailing_list_sms_0'))]"/>
-    </record>
-    <record id="mailing_contact_0_1" model="mailing.contact">
-        <field name="name">Philip Fry</field>
-        <field name="mobile">+32456001111</field>
-        <field name="list_ids" eval="[(4, ref('mass_mailing_sms.mailing_list_sms_0'))]"/>
-    </record>
-    <record id="mailing_contact_0_2" model="mailing.contact">
-        <field name="name">Turanga Leela</field>
-        <field name="mobile">+32456001122</field>
-        <field name="list_ids" eval="[(4, ref('mass_mailing_sms.mailing_list_sms_0'))]"/>
-    </record>
-    <record id="mailing_contact_0_3" model="mailing.contact">
-        <field name="name">John Zoidberg</field>
-        <field name="mobile">+32456001133</field>
-        <field name="list_ids" eval="[(4, ref('mass_mailing_sms.mailing_list_sms_0'))]"/>
-    </record>
-    <record id="mailing_contact_0_4" model="mailing.contact">
-        <field name="name">Zapp Brannigan</field>
-        <field name="mobile">dummy</field>
-        <field name="list_ids" eval="[(4, ref('mass_mailing_sms.mailing_list_sms_0'))]"/>
-    </record>
-</data></odoo>
+        <record id="mailing_contact_0_0" model="mailing.contact">
+            <field name="name">Jessica Smith</field>
+            <field name="mobile">+0495582895</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_1" model="mailing.contact">
+            <field name="name">Linda Smith</field>
+            <field name="mobile">+0437178722</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_2" model="mailing.contact">
+            <field name="name">Austin Buchanan</field>
+            <field name="mobile">+0442308940</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_3" model="mailing.contact">
+            <field name="name">Miranda Williamson</field>
+            <field name="mobile">+0471496459</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_4" model="mailing.contact">
+            <field name="name">Peter Barker</field>
+            <field name="mobile">+0450146574</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_5" model="mailing.contact">
+            <field name="name">Jose Crawford</field>
+            <field name="mobile">+0468541449</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_6" model="mailing.contact">
+            <field name="name">Tyler Simpson</field>
+            <field name="mobile">+0436847067</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_7" model="mailing.contact">
+            <field name="name">Micheal Turner</field>
+            <field name="mobile">+0421158316</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_8" model="mailing.contact">
+            <field name="name">Susan Rios</field>
+            <field name="mobile">+0432717935</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_9" model="mailing.contact">
+            <field name="name">Mr. Justin Marquez</field>
+            <field name="mobile">+0449261941</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_10" model="mailing.contact">
+            <field name="name">Sheila Gordon</field>
+            <field name="mobile">+0456351525</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_11" model="mailing.contact">
+            <field name="name">Kristin Rich</field>
+            <field name="mobile">+0451170345</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_12" model="mailing.contact">
+            <field name="name">Brittany Carr</field>
+            <field name="mobile">+0460384096</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_13" model="mailing.contact">
+            <field name="name">Stephanie Ellis</field>
+            <field name="mobile">+0477278873</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_14" model="mailing.contact">
+            <field name="name">Elizabeth Cobb</field>
+            <field name="mobile">+0484303002</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_15" model="mailing.contact">
+            <field name="name">Kent Francis</field>
+            <field name="mobile">+0425443323</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_16" model="mailing.contact">
+            <field name="name">Hannah Williams</field>
+            <field name="mobile">+0463883964</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_17" model="mailing.contact">
+            <field name="name">Jordan Palmer</field>
+            <field name="mobile">+0440129490</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_18" model="mailing.contact">
+            <field name="name">Carlos Gaines</field>
+            <field name="mobile">+0459931288</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_19" model="mailing.contact">
+            <field name="name">Julie Klein</field>
+            <field name="mobile">+0431665134</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_20" model="mailing.contact">
+            <field name="name">Samuel Hoffman</field>
+            <field name="mobile">+0483921595</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_21" model="mailing.contact">
+            <field name="name">Michael Hahn</field>
+            <field name="mobile">+0454321700</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_22" model="mailing.contact">
+            <field name="name">Christine Ramos</field>
+            <field name="mobile">+0444650438</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_23" model="mailing.contact">
+            <field name="name">Elizabeth White</field>
+            <field name="mobile">+0446093607</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_24" model="mailing.contact">
+            <field name="name">Sheena Rodriguez</field>
+            <field name="mobile">+0436067032</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_25" model="mailing.contact">
+            <field name="name">Kurt Barron</field>
+            <field name="mobile">+0408945247</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_26" model="mailing.contact">
+            <field name="name">Todd Kirk</field>
+            <field name="mobile">+0401973712</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_27" model="mailing.contact">
+            <field name="name">Susan Rodriguez</field>
+            <field name="mobile">+0483361382</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_28" model="mailing.contact">
+            <field name="name">Russell Wilson</field>
+            <field name="mobile">+0404451375</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_29" model="mailing.contact">
+            <field name="name">Joseph Anderson</field>
+            <field name="mobile">+0482379299</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_30" model="mailing.contact">
+            <field name="name">Kristina Snyder</field>
+            <field name="mobile">+0454309875</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_31" model="mailing.contact">
+            <field name="name">Denise Howard</field>
+            <field name="mobile">+0475474437</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_32" model="mailing.contact">
+            <field name="name">Sherry Payne</field>
+            <field name="mobile">+0424998492</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_33" model="mailing.contact">
+            <field name="name">Jason Ortiz</field>
+            <field name="mobile">+0492837713</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_34" model="mailing.contact">
+            <field name="name">Taylor Lane</field>
+            <field name="mobile">+0424886259</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_35" model="mailing.contact">
+            <field name="name">Katrina Brown</field>
+            <field name="mobile">+0405884753</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_36" model="mailing.contact">
+            <field name="name">Ann Chase</field>
+            <field name="mobile">+0475768948</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_37" model="mailing.contact">
+            <field name="name">Allison Foster</field>
+            <field name="mobile">+0424525216</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_38" model="mailing.contact">
+            <field name="name">John Huff</field>
+            <field name="mobile">+0473967191</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_39" model="mailing.contact">
+            <field name="name">Megan Farrell</field>
+            <field name="mobile">+0436399647</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_40" model="mailing.contact">
+            <field name="name">Christopher Small</field>
+            <field name="mobile">+0425502162</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_41" model="mailing.contact">
+            <field name="name">Melvin Rodriguez</field>
+            <field name="mobile">+0424329733</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_42" model="mailing.contact">
+            <field name="name">James Bass</field>
+            <field name="mobile">+0465898731</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_43" model="mailing.contact">
+            <field name="name">Jennifer Stephenson</field>
+            <field name="mobile">+0448256751</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_44" model="mailing.contact">
+            <field name="name">Elizabeth Schaefer</field>
+            <field name="mobile">+0406192875</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_45" model="mailing.contact">
+            <field name="name">Joseph Scott</field>
+            <field name="mobile">+0479523996</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_46" model="mailing.contact">
+            <field name="name">Kristine Franco</field>
+            <field name="mobile">+0419546144</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_47" model="mailing.contact">
+            <field name="name">Brian Barber</field>
+            <field name="mobile">+0431217747</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+        <record id="mailing_contact_0_48" model="mailing.contact">
+            <field name="name">Heather Doyle</field>
+            <field name="mobile">+0434429952</field>
+        </record>
+        <record id="mailing_contact_0_49" model="mailing.contact">
+            <field name="name">Gregory Jones</field>
+            <field name="mobile">+32456001133</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_0')])]"/>
+        </record>
+
+        <!-- Create Opt-out Records -->
+        <record id="mass_mailing_sms_contact_rel_0_0" model="mailing.contact.subscription">
+            <field name="list_id" ref="mass_mailing_sms.mailing_list_sms_0"/>
+            <field name="contact_id" ref="mailing_contact_0_48"/>
+            <field name="opt_out">True</field>
+        </record>
+
+        <!-- Create Blacklist Phone Records -->
+        <record id="blacklist_phone_0_1" model="phone.blacklist">
+            <field name="number">+32456001133</field>
+        </record>
+
+        <record id="mailing_list_sms_1" model="mailing.list">
+            <field name="name">Mailinig list with sms and email</field>
+        </record>
+
+        <record id="mailing_contact_1_0" model="mailing.contact">
+            <field name="name">Cesar Kim</field>
+            <field name="mobile">+0437010246</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_1" model="mailing.contact">
+            <field name="name">Brooke Ryan</field>
+            <field name="mobile">+0409804964</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_2" model="mailing.contact">
+            <field name="name">Jennifer Daniels</field>
+            <field name="mobile">+0406267320</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_3" model="mailing.contact">
+            <field name="name">Robert Hayes</field>
+            <field name="mobile">+0458882472</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_4" model="mailing.contact">
+            <field name="name">Jason Bruce</field>
+            <field name="mobile">+0412172311</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_5" model="mailing.contact">
+            <field name="name">Lindsay Wright</field>
+            <field name="mobile">+0461283250</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_6" model="mailing.contact">
+            <field name="name">Alison Lawson</field>
+            <field name="mobile">+0477056127</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_7" model="mailing.contact">
+            <field name="name">April Hernandez</field>
+            <field name="mobile">+0463221741</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_8" model="mailing.contact">
+            <field name="name">Victor Garcia MD</field>
+            <field name="mobile">+0451727279</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_9" model="mailing.contact">
+            <field name="name">Karen Lopez</field>
+            <field name="mobile">+0475059428</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_10" model="mailing.contact">
+            <field name="name">Lauren Fowler</field>
+            <field name="mobile">+0473665200</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_11" model="mailing.contact">
+            <field name="name">Alex Rivas</field>
+            <field name="mobile">+0477442336</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_12" model="mailing.contact">
+            <field name="name">Mr. Timothy Wright</field>
+            <field name="mobile">+0404631167</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_13" model="mailing.contact">
+            <field name="name">Stacey Lawrence</field>
+            <field name="mobile">+0435154436</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_14" model="mailing.contact">
+            <field name="name">Paige Bradley</field>
+            <field name="mobile">+0485633935</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_15" model="mailing.contact">
+            <field name="name">Nicholas Smith</field>
+            <field name="mobile">+0434472942</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_16" model="mailing.contact">
+            <field name="name">Lawrence Lozano</field>
+            <field name="mobile">+0487479779</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_17" model="mailing.contact">
+            <field name="name">Julie Cannon</field>
+            <field name="mobile">+0401213532</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_18" model="mailing.contact">
+            <field name="name">Mary Allen</field>
+            <field name="mobile">+0408466565</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_19" model="mailing.contact">
+            <field name="name">John Bennett</field>
+            <field name="mobile">+0474396727</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_20" model="mailing.contact">
+            <field name="name">Joshua Olson MD</field>
+            <field name="mobile">+0492777538</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_21" model="mailing.contact">
+            <field name="name">Charles Daniel</field>
+            <field name="mobile">+0424389321</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_22" model="mailing.contact">
+            <field name="name">Angela Gates</field>
+            <field name="mobile">+0456607474</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_23" model="mailing.contact">
+            <field name="name">Joseph Price</field>
+            <field name="mobile">+0415354640</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_24" model="mailing.contact">
+            <field name="name">James Mendoza DVM</field>
+            <field name="mobile">+0493903155</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_25" model="mailing.contact">
+            <field name="name">Thomas Norton</field>
+            <field name="mobile">+0484713918</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_26" model="mailing.contact">
+            <field name="name">Natasha Clark</field>
+            <field name="mobile">+0497933394</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_27" model="mailing.contact">
+            <field name="name">David Kelly</field>
+            <field name="mobile">+0421766214</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_28" model="mailing.contact">
+            <field name="name">Kelli Parsons</field>
+            <field name="mobile">+0412464679</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_29" model="mailing.contact">
+            <field name="name">Derek Dean</field>
+            <field name="mobile">+0447556245</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_30" model="mailing.contact">
+            <field name="name">Brandon Bullock MD</field>
+            <field name="mobile">+0412607585</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_31" model="mailing.contact">
+            <field name="name">Kyle Randolph</field>
+            <field name="mobile">+0476420717</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_32" model="mailing.contact">
+            <field name="name">Michael Huffman</field>
+            <field name="mobile">+0461770102</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_33" model="mailing.contact">
+            <field name="name">Cody Perez</field>
+            <field name="mobile">+0473677881</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_34" model="mailing.contact">
+            <field name="name">Ana Williams</field>
+            <field name="mobile">+0494142769</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_35" model="mailing.contact">
+            <field name="name">Alexis Roman</field>
+            <field name="mobile">+0481953024</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_36" model="mailing.contact">
+            <field name="name">Deborah Russo</field>
+            <field name="mobile">+0443103303</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_37" model="mailing.contact">
+            <field name="name">Keith Bell</field>
+            <field name="mobile">+0427243345</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_38" model="mailing.contact">
+            <field name="name">Alexandra Cherry</field>
+            <field name="mobile">+0413094905</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_39" model="mailing.contact">
+            <field name="name">Sandra Lawrence</field>
+            <field name="mobile">+0499541488</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_40" model="mailing.contact">
+            <field name="name">Jim Davies MD</field>
+            <field name="mobile">+0478640804</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_41" model="mailing.contact">
+            <field name="name">Jason Lee</field>
+            <field name="mobile">+0477535985</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_42" model="mailing.contact">
+            <field name="name">Brittany Hudson</field>
+            <field name="mobile">+0436695555</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_43" model="mailing.contact">
+            <field name="name">Sarah Griffith</field>
+            <field name="mobile">+0401183480</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_44" model="mailing.contact">
+            <field name="name">Catherine Gonzales</field>
+            <field name="mobile">+0469100458</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_45" model="mailing.contact">
+            <field name="name">Joshua Parker</field>
+            <field name="mobile">+0487010844</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_46" model="mailing.contact">
+            <field name="name">Tammy Harris</field>
+            <field name="mobile">+0447810474</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_47" model="mailing.contact">
+            <field name="name">Jennifer Huang</field>
+            <field name="mobile">+0450780335</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_48" model="mailing.contact">
+            <field name="name">Karen Haley</field>
+            <field name="mobile">+0411636151</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_49" model="mailing.contact">
+            <field name="name">Sherry Webb</field>
+            <field name="mobile">+0470977856</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+
+        <record id="mailing_contact_1_50" model="mailing.contact">
+            <field name="name">Nathan Wilson</field>
+            <field name="email">darlene42@yahoo.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_51" model="mailing.contact">
+            <field name="name">Lynn Allen</field>
+            <field name="email">zachary70@hotmail.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_52" model="mailing.contact">
+            <field name="name">James Riley</field>
+            <field name="email">mariacollins@powell.net</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_53" model="mailing.contact">
+            <field name="name">Jeffrey Davis</field>
+            <field name="email">hector54@gmail.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_54" model="mailing.contact">
+            <field name="name">Joshua Christensen</field>
+            <field name="email">vanessameyers@ellis.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_55" model="mailing.contact">
+            <field name="name">Brenda Krueger</field>
+            <field name="email">donna86@yahoo.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_56" model="mailing.contact">
+            <field name="name">Jeremy Ford</field>
+            <field name="email">kennethjordan@romero.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_57" model="mailing.contact">
+            <field name="name">Toni Young</field>
+            <field name="email">zturner@hotmail.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_58" model="mailing.contact">
+            <field name="name">Austin Orozco</field>
+            <field name="email">johnsonkatherine@alvarado.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_59" model="mailing.contact">
+            <field name="name">Linda Wilson</field>
+            <field name="email">elizabethromero@yahoo.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_60" model="mailing.contact">
+            <field name="name">Leslie Mayo</field>
+            <field name="email">triggs@yahoo.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_61" model="mailing.contact">
+            <field name="name">Bryan Perez</field>
+            <field name="email">nicholecollins@yahoo.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_62" model="mailing.contact">
+            <field name="name">Jesus Hodge</field>
+            <field name="email">samuelsmith@pratt.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_63" model="mailing.contact">
+            <field name="name">Brandon Mcdonald</field>
+            <field name="email">barkerjustin@collins.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_64" model="mailing.contact">
+            <field name="name">Dr. Logan Harris</field>
+            <field name="email">marygross@griffith.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_65" model="mailing.contact">
+            <field name="name">Tyler Anderson</field>
+            <field name="email">johnrhodes@haynes.net</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_66" model="mailing.contact">
+            <field name="name">Stephanie Knight</field>
+            <field name="email">pamelalogan@smith.info</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_67" model="mailing.contact">
+            <field name="name">Sabrina Zavala</field>
+            <field name="email">ethan46@gmail.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_68" model="mailing.contact">
+            <field name="name">Christopher Jensen</field>
+            <field name="email">nathaniel85@alvarez.biz</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_69" model="mailing.contact">
+            <field name="name">Kristen Taylor</field>
+            <field name="email">cmills@yahoo.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+
+        <record id="mailing_contact_1_70" model="mailing.contact">
+            <field name="name">Adam Black</field>
+            <field name="email">julia08@cole.net</field>
+            <field name="mobile">+0433159578</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_71" model="mailing.contact">
+            <field name="name">Sandy Davis</field>
+            <field name="email">michellesanders@conway.net</field>
+            <field name="mobile">+0499303195</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_72" model="mailing.contact">
+            <field name="name">Shawn Cardenas</field>
+            <field name="email">grayvincent@santiago.biz</field>
+            <field name="mobile">+0417178026</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_73" model="mailing.contact">
+            <field name="name">Scott Velasquez</field>
+            <field name="email">antonio38@owens.com</field>
+            <field name="mobile">+0489356993</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_74" model="mailing.contact">
+            <field name="name">Susan Schwartz</field>
+            <field name="email">elizabeth85@hotmail.com</field>
+            <field name="mobile">+0488870080</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_75" model="mailing.contact">
+            <field name="name">Jack Heath</field>
+            <field name="email">kellyliu@castro-solis.com</field>
+            <field name="mobile">+0452071581</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_76" model="mailing.contact">
+            <field name="name">Walter Martinez</field>
+            <field name="email">sharplarry@gmail.com</field>
+            <field name="mobile">+0435885501</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_77" model="mailing.contact">
+            <field name="name">William Miller</field>
+            <field name="email">kholt@peck.com</field>
+            <field name="mobile">+0485040205</field>
+        </record>
+        <record id="mailing_contact_1_78" model="mailing.contact">
+            <field name="name">Brandon Green</field>
+            <field name="email">rachel28@gmail.com</field>
+            <field name="mobile">+0451969936</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+        <record id="mailing_contact_1_79" model="mailing.contact">
+            <field name="name">Samuel Thomas</field>
+            <field name="email">hernandezheather@shelton-hayes.com</field>
+            <field name="mobile">+32456002133</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing_sms.mailing_list_sms_1')])]"/>
+        </record>
+
+
+        <!-- Create Opt-out Records -->
+        <record id="mass_mailing_sms_contact_rel_1_0" model="mailing.contact.subscription">
+            <field name="list_id" ref="mass_mailing_sms.mailing_list_sms_1"/>
+            <field name="contact_id" ref="mailing_contact_1_77"/>
+            <field name="opt_out">True</field>
+        </record>
+
+        <!-- Create Blacklist Email Records -->
+        <record id="blacklist_email_1_1" model="mail.blacklist">
+            <field name="email">rachel28@gmail.com</field>
+        </record>
+
+        <!-- Create Blacklist Phone Records -->
+        <record id="blacklist_phone_1_1" model="phone.blacklist">
+            <field name="number">+32456001133</field>
+        </record>
+
+
+    </data>
+</odoo>

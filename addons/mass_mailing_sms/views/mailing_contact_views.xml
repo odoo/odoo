@@ -9,16 +9,25 @@
                 <field name="mobile"/>
                 <field name="phone_sanitized" invisible="1"/>
             </xpath>
-            <xpath expr="//filter[@name='filter_not_optout']" position="after">
-                <separator/>
+            <xpath expr="//filter[@name='filter_valid_email']" position="after">
                 <filter string="Valid SMS Recipients"
-                    name="filter_valid_sms_recipient"
-                    domain="[('opt_out', '=', False), ('phone_sanitized_blacklisted', '=', False), ('phone_sanitized', '!=', False)]"
-                    invisible="not context.get('default_list_ids')"/>
-                <separator/>
-                <filter string="Exclude Blacklisted Phone"
-                    name="filter_not_phone_bl"
-                    domain="[('phone_sanitized_blacklisted', '=', False)]"/>
+                    name="filter_valid_sms"
+                    domain="[('opt_out', '=', False), ('phone_sanitized_blacklisted', '=', False), ('phone_sanitized', '!=', False)]" />
+                <filter string="Valid Email and SMS Recipients"
+                    name="filter_valid_email_sms"
+                    domain="[('opt_out', '=', False),
+                            ('is_blacklisted', '=', False),
+                            ('phone_sanitized_blacklisted', '=', False),
+                            '|', ('email_normalized', '!=', False), ('phone_sanitized', '!=', False)]"
+                    invisible="1"/>
+            </xpath>
+            <xpath expr="//filter[@name='filter_blacklisted']" position="after">
+                <filter string="Blacklisted Phone"
+                    name="filter_phone_blacklisted"
+                    domain="['|', 
+                            ('phone_sanitized_blacklisted', '=', True),
+                            ('is_blacklisted', '=', True)]"
+                    invisible="1"/>
             </xpath>
         </field>
     </record>
@@ -76,7 +85,11 @@
         <field name="name">Contacts</field>
         <field name="res_model">mailing.contact</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{'mailing_sms': True, 'search_default_filter_not_phone_bl': 1, }</field>
+        <field name="context">{'mailing_sms': True,
+        'search_default_filter_valid_email': 1,
+        'search_default_filter_valid_sms': 1 
+        }
+        </field>
         <field name="view_id" ref="mailing_contact_view_tree"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

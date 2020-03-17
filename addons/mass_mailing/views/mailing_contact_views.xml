@@ -12,6 +12,7 @@
                         <field name="list_id"/>
                         <field name="is_blacklisted" invisible="1"/>
                         <label for="contact_id" class="oe_inline"/>
+                        <t t-esc="context"></t>
                         <div class="o_row o_row_readonly">
                             <i class="fa fa-ban text-danger" role="img" title="This email is blacklisted for mass mailings"
                                 aria-label="Blacklisted" attrs="{'invisible': [('is_blacklisted', '=', False)]}" groups="base.group_user"></i>
@@ -64,18 +65,21 @@
                 <field name="list_ids"/>
                 <separator/>
                 <filter string="Valid Email Recipients"
-                    name="filter_valid_email_recipient"
-                    domain="[('opt_out', '=', False), ('is_blacklisted', '=', False), ('email_normalized', '!=', False)]"
-                    invisible="not context.get('default_list_ids')"/>
+                    name="filter_valid_email"
+                    domain="[('opt_out', '=', False), ('is_blacklisted', '=', False), ('email_normalized', '!=', False)]" />
                 <separator/>
-                <filter string="Exclude Blacklisted Emails"
-                    name="filter_not_email_bl"
-                    domain="[('is_blacklisted', '=', False)]"/>
-                <separator/>
-                <filter string="Exclude Opt Out"
-                    name="filter_not_optout"
-                    domain="[('opt_out', '=', False)]"
-                    invisible="not context.get('default_list_ids')"/>
+                <filter string="Opt Out"
+                        name="filter_opt_out"
+                        domain="[('opt_out', '=', True)]"
+                        invisible="1" />
+                <filter string="Blacklisted Mail"
+                        name="filter_blacklisted"
+                        domain="[('is_blacklisted', '=', True)]"
+                        invisible="1" />
+                <filter string="Has Bounced mail"
+                        name="filter_bounced"
+                        domain="[('message_bounce', '>', 0)]"
+                        invisible="1" />
                 <group expand="0" string="Group By">
                     <filter string="Creation Date" name="group_create_date"
                         context="{'group_by': 'create_date'}"/>
@@ -222,7 +226,7 @@
         <field name="name">Mailing List Contacts</field>
         <field name="res_model">mailing.contact</field>
         <field name="view_mode">tree,kanban,form,graph,pivot</field>
-        <field name="context">{'search_default_filter_not_email_bl': 1}</field>
+        <field name="context">{'search_default_filter_valid_email': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a mailing contact

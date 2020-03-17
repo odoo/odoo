@@ -13,35 +13,90 @@ class MassMailingList(models.Model):
 
     name = fields.Char(string='Mailing List', required=True)
     active = fields.Boolean(default=True)
-    contact_nbr = fields.Integer(compute="_compute_contact_nbr", string='Number of Contacts')
     contact_ids = fields.Many2many(
         'mailing.contact', 'mailing_contact_list_rel', 'list_id', 'contact_id',
-        string='Mailing Lists')
-    subscription_ids = fields.One2many('mailing.contact.subscription', 'list_id',
-        string='Subscription Information')
-    is_public = fields.Boolean(default=True, help="The mailing list can be accessible by recipient in the unsubscription"
-                                                  " page to allows him to update his subscription preferences.")
+        string='Contact Lists')
 
-    # Compute number of contacts non opt-out, non blacklisted and valid email recipient for a mailing list
-    def _compute_contact_nbr(self):
-        self.env.cr.execute('''
-            select
-                list_id, count(*)
-            from
-                mailing_contact_list_rel r
-                left join mailing_contact c on (r.contact_id=c.id)
-                left join mail_blacklist bl on c.email_normalized = bl.email and bl.active
-            where
-                list_id in %s
-                AND COALESCE(r.opt_out,FALSE) = FALSE
-                AND c.email_normalized IS NOT NULL
-                AND bl.id IS NULL
-            group by
-                list_id
-        ''', (tuple(self.ids), ))
-        data = dict(self.env.cr.fetchall())
+    mailing_list_ids = fields.Many2many('mailing.mailing', 'mail_mass_mailing_list_rel', string='Mailing Lists')
+    contact_ids_valid_email = fields.Many2many(
+        'mailing.contact', 'mailing_contact_list_rel', 'list_id', 'contact_id',
+        compute='_compute_statistic', string='Valid Email'
+    )
+    contact_ids_valid = fields.Many2many(
+        'mailing.contact', 'mailing_contact_list_rel', 'list_id', 'contact_id',
+        compute='_compute_statistic', string='Valid Contact'
+    )
+    contact_ids_message_bounce = fields.Many2many(
+        'mailing.contact', 'mailing_contact_list_rel', 'list_id', 'contact_id',
+        compute='_compute_statistic', string='Message Bounced'
+    )
+    contact_ids_opt_out = fields.Many2many(
+        'mailing.contact', 'mailing_contact_list_rel', 'list_id', 'contact_id',
+        compute='_compute_statistic', string='Opt Out'
+    )
+    contact_ids_blacklisted = fields.Many2many(
+        'mailing.contact', 'mailing_contact_list_rel', 'list_id', 'contact_id',
+        compute='_compute_statistic', string='Blacklisted Email'
+    )
+
+    contact_count = fields.Integer(compute='_compute_statistic', string='Total Contacts')
+    contact_valid_count = fields.Integer(compute='_compute_statistic', string='Total Valid Contacts')
+    contact_valid_email_count = fields.Integer(compute='_compute_statistic', string='Valid Email Contacts')
+    mailing_list_count = fields.Integer(compute='_compute_statistic', string='Valid Contacts')
+
+    contact_message_bounce_percentage = fields.Float(
+        compute='_compute_statistic',
+        string='Number of email that have at least one bounced message'
+    )
+
+    contact_blacklist_percentage = fields.Float(compute='_compute_statistic', string='Percentage black listed contact')
+    contact_opt_out_percentage = fields.Float(compute='_compute_statistic', string='Percentage opt out contact')
+    contact_message_bounce_percentage_str = fields.Char(compute='_compute_statistic')
+    contact_blacklist_percentage_str = fields.Char(compute='_compute_statistic')
+    contact_opt_out_percentage_str = fields.Char(compute='_compute_statistic')
+
+    subscription_ids = fields.One2many(
+        'mailing.contact.subscription', 'list_id', string='Subscription Information'
+    )
+
+    is_public = fields.Boolean(
+        default=True,
+        help="The mailing list can be accessible by recipient in the unsubscription"
+        " page to allows him to update his subscription preferences."
+    )
+
+
+    @api.depends('contact_ids')
+    def _compute_statistic(self):
         for mailing_list in self:
-            mailing_list.contact_nbr = data.get(mailing_list.id, 0)
+            contact_ids = mailing_list.contact_ids.with_context({'default_list_ids': [mailing_list.id]})
+            mailing_list.contact_ids_opt_out = contact_ids.filtered('opt_out')
+            mailing_list.contact_ids_blacklisted = contact_ids.filtered('is_blacklisted')
+            mailing_list.contact_ids_message_bounce = contact_ids.filtered('message_bounce')
+            mailing_list.contact_ids_valid_email = contact_ids.filtered(
+                lambda contact: contact.email and not contact.is_blacklisted and not contact.opt_out
+            )
+            mailing_list.contact_ids_valid = mailing_list.contact_ids_valid_email
+
+            mailing_list.contact_count = len(contact_ids)
+            mailing_list.contact_valid_email_count = len(mailing_list.contact_ids_valid_email)
+            mailing_list.contact_valid_count = len(mailing_list.contact_ids_valid)
+            mailing_list.mailing_list_count = len(mailing_list.mailing_list_ids)
+
+            mailing_list.contact_message_bounce_percentage = fields.float_round(
+                len(mailing_list.contact_ids_message_bounce) / mailing_list.contact_count * 100, 2
+            ) if mailing_list.contact_count > 0 else 0
+            mailing_list.contact_blacklist_percentage = fields.float_round(
+                len(mailing_list.contact_ids_blacklisted) / mailing_list.contact_count * 100, 2
+            ) if mailing_list.contact_count > 0 else 0
+            mailing_list.contact_opt_out_percentage = fields.float_round(
+                len(mailing_list.contact_ids_opt_out) / mailing_list.contact_count * 100, 2
+            ) if mailing_list.contact_count > 0 else 0
+
+            mailing_list.contact_message_bounce_percentage_str = str(mailing_list.contact_message_bounce_percentage) + '%'
+            mailing_list.contact_opt_out_percentage_str = str(mailing_list.contact_opt_out_percentage) + '%'
+            mailing_list.contact_blacklist_percentage_str = str(mailing_list.contact_blacklist_percentage) + '%'
+
 
     def write(self, vals):
         # Prevent archiving used mailing list
@@ -57,12 +112,62 @@ class MassMailingList(models.Model):
         return super(MassMailingList, self).write(vals)
 
     def name_get(self):
-        return [(list.id, "%s (%s)" % (list.name, list.contact_nbr)) for list in self]
+        return [(list.id, "%s (%s)" % (list.name, list.contact_valid_email_count)) for list in self]
 
-    def action_view_contacts(self):
+
+    def action_view_full_contacts(self):
         action = self.env.ref('mass_mailing.action_view_mass_mailing_contacts').read()[0]
         action['domain'] = [('list_ids', 'in', self.ids)]
-        context = dict(self.env.context, search_default_filter_valid_email_recipient=1, default_list_ids=self.ids)
+        action['context'] = dict(self.env.context, default_list_ids=self.ids)
+        return action
+
+    def action_view_valid_email_contacts(self):
+        action = self.env.ref('mass_mailing.action_view_mass_mailing_contacts').read()[0]
+        action['domain'] = [('list_ids', 'in', self.ids)]
+        action['context'] = dict(
+            self.env.context,
+            default_list_ids=self.ids,
+            search_default_filter_valid_email=1
+        )
+        return action
+
+    def action_view_valid_contacts(self):
+        return self.action_view_valid_email_contacts()
+
+    def action_view_message_bounce_contacts(self):
+        action = self.env.ref('mass_mailing.action_view_mass_mailing_contacts').read()[0]
+        action['domain'] = [('list_ids', 'in', self.ids)]
+        action['context'] = dict(
+            self.env.context,
+            default_list_ids=self.ids,
+            search_default_filter_bounced=1,
+        )
+        return action
+
+    def action_view_blacklisted_contacts(self):
+        action = self.env.ref('mass_mailing.action_view_mass_mailing_contacts').read()[0]
+        action['domain'] = [('list_ids', 'in', self.ids)]
+        action['context'] = dict(
+            self.env.context,
+            default_list_ids=self.ids,
+            search_default_filter_blacklisted=1
+        )
+        return action
+
+    def action_view_opt_out_contacts(self):
+        action = self.env.ref('mass_mailing.action_view_mass_mailing_contacts').read()[0]
+        action['domain'] = [('list_ids', 'in', self.ids)]
+        action['context'] = dict(
+            self.env.context,
+            default_list_ids=self.ids,
+            search_default_filter_opt_out=1
+        )
+        return action
+
+    def action_view_mailing(self):
+        action = self.env.ref('mass_mailing.mailing_mailing_action_mail').read()[0]
+        action['domain'] = [('id', 'in', self.mailing_list_ids.ids)]
+        context = dict(self.env.context)
         action['context'] = context
         return action
 
