@@ -1019,7 +1019,7 @@ registry.background = SnippetOption.extend({
      * @param {Object} data
      */
     _onSaveMediaDialog: function (data) {
-        this._setCustomBackground(data.src);
+        this._setCustomBackground($(data).attr('src'));
     },
 });
 
