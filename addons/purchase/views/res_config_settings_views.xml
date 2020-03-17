@@ -109,6 +109,23 @@
                     </div>
                     <h2>Products</h2>
                     <div class="row mt16 o_settings_container" name="matrix_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="variant_options">
+                            <div class="o_setting_left_pane">
+                                <field name="group_product_variant"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_product_variant"/>
+                                    <a href="https://www.odoo.com/documentation/user/13.0/sales/products_prices/products/variants.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
+                                <div class="text-muted">
+                                    Purchase variants of a product using attributes (size, color, etc.)
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('group_product_variant','=',False)]}">
+                                    <div class="mt8">
+                                        <button name="%(product.attribute_action)d" icon="fa-arrow-right" type="action" string="Attributes" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-12 col-lg-6 o_setting_box"
                             id="product_matrix"
                             title="If installed, the product variants will be added to purchase orders through a grid entry.">

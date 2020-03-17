@@ -98,7 +98,9 @@ class PurchaseOrder(models.Model):
     ], string='Billing Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
 
     # There is no inverse function on purpose since the date may be different on each line
-    date_planned = fields.Datetime(string='Receipt Date', index=True)
+    date_planned = fields.Datetime(string='Receipt Date', index=True,
+                                   help='This is the Receipt Date promised by the supplier. If set, the receipt will be scheduled at this date.')
+    date_calendar_start = fields.Datetime(compute='_compute_date_calendar_start', readonly=True, store=True)
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=True)
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
@@ -127,6 +129,11 @@ class PurchaseOrder(models.Model):
         super(PurchaseOrder, self)._compute_access_url()
         for order in self:
             order.access_url = '/my/purchase/%s' % (order.id)
+
+    @api.depends('state', 'date_order', 'date_approve')
+    def _compute_date_calendar_start(self):
+        for order in self:
+            order.date_calendar_start = order.date_approve if (order.state in ['purchase', 'done']) else order.date_order
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
