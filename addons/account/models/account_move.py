@@ -1836,7 +1836,10 @@ class AccountFullReconcile(models.Model):
                 # (reversing will cause a nested attempt to drop the full reconciliation)
                 to_reverse = rec.exchange_move_id
                 rec.exchange_move_id = False
-                to_reverse.reverse_moves()
+                if to_reverse.date > (to_reverse.company_id.period_lock_date or date.min):
+                    to_reverse.reverse_moves(date=to_reverse.date)
+                else:
+                    to_reverse.reverse_moves()
         return super(AccountFullReconcile, self).unlink()
 
     @api.model
