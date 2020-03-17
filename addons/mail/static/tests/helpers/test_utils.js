@@ -9,12 +9,13 @@ var mailUtils = require('mail.utils');
 
 var AbstractStorageService = require('web.AbstractStorageService');
 var Class = require('web.Class');
+const dom = require('web.dom');
 var RamStorage = require('web.RamStorage');
 const makeTestEnvironment = require('web.test_env');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 
-const { prepareTarget, nextTick } = testUtils;
+const { prepareTarget } = testUtils;
 /**
  * Test Utils
  *
@@ -30,31 +31,38 @@ const { prepareTarget, nextTick } = testUtils;
  * @returns {Promise<Discuss>}
  */
 async function createDiscuss(params) {
-    var Parent = Widget.extend({
+    const target = prepareTarget(params.debug);
+    const Parent = Widget.extend({
         do_push_state: function () {},
     });
-    var parent = new Parent();
+    const parent = new Parent();
     params.archs = params.archs || {
         'mail.message,false,search': '<search/>',
     };
-    testUtils.mock.addMockEnvironment(parent, params);
+    await testUtils.mock.addMockEnvironment(parent, params);
 
     const env = params.env || {};
     owl.Component.env = makeTestEnvironment(env);
 
-    var discuss = new Discuss(parent, params);
+    const discuss = new Discuss(parent, params);
 
     // override 'destroy' of discuss so that it calls 'destroy' on the parent
     // instead, which is the parent of discuss and the mockServer.
+    const _destroy = discuss.destroy;
     discuss.destroy = function () {
         // remove the override to properly destroy discuss and its children
         // when it will be called the second time (by its parent)
-        delete discuss.destroy;
+        discuss.destroy = _destroy;
+        discuss.on_detach_callback();
         parent.destroy();
     };
 
-    await discuss.appendTo(prepareTarget(params.debug));
-    await nextTick();
+    const fragment = document.createDocumentFragment();
+    await discuss.appendTo(fragment);
+    dom.prepend(target, fragment, {
+        callbacks: [{ widget: discuss }],
+        in_DOM: true,
+    });
     return discuss;
 }
 
