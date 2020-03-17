@@ -99,19 +99,16 @@ odoo.define('web.ActionMenus', function (require) {
                 active_id: this.props.activeIds[0],
                 active_ids: this.props.activeIds,
                 active_model: this.env.action.res_model,
-                select_all: this.props.selectAll,
+                select_all: this.props.selectAll || false,
             };
             if (this.props.domain) {
                 activeIdsContext.active_domain = this.props.domain;
             }
 
-            const context = pyUtils.eval('context', new Context(this.props.context, activeIdsContext));
+            const context = new Context(this.props.context, activeIdsContext).eval();
             const result = await this.rpc({
                 route: '/web/action/load',
-                params: {
-                    action_id: action.id,
-                    context: context,
-                },
+                params: { action_id: action.id, context },
             });
             result.context = new Context(result.context || {}, activeIdsContext)
                 .set_eval_context(context);
