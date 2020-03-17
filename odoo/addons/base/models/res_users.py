@@ -190,6 +190,17 @@ class ResUsersLog(models.Model):
     # Currenly only uses the magical fields: create_uid, create_date,
     # for recording logins. To be extended for other uses (chat presence, etc.)
 
+    @api.autovacuum
+    def _gc_user_logs(self):
+        self._cr.execute("""
+            DELETE FROM res_users_log log1 WHERE EXISTS (
+                SELECT 1 FROM res_users_log log2
+                WHERE log1.create_uid = log2.create_uid
+                AND log1.create_date < log2.create_date
+            )
+        """)
+        _logger.info("GC'd %d user log entries", self._cr.rowcount)
+
 
 class Users(models.Model):
     """ User class. A res.users record models an OpenERP user and is different

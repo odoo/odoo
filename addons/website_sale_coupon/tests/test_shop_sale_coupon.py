@@ -138,7 +138,7 @@ class TestWebsiteSaleCoupon(TransactionCase):
         self.assertEqual(self.coupon.state, 'used')
 
         # 3. Test recent order -> Should not be removed
-        order._garbage_collector()
+        order._gc_abandoned_coupons()
 
         self.assertEqual(len(order.applied_coupon_ids), 1, "The coupon shouldn't have been removed from the order no more than 4 days")
         self.assertEqual(self.coupon.state, 'used', "Should not have been changed")
@@ -149,14 +149,14 @@ class TestWebsiteSaleCoupon(TransactionCase):
         order.flush()
         query = """UPDATE %s SET write_date = %%s WHERE id = %%s""" % (order._table,)
         self.env.cr.execute(query, (fields.Datetime.to_string(fields.datetime.now() - timedelta(days=4, hours=2)), order.id))
-        order._garbage_collector()
+        order._gc_abandoned_coupons()
 
         self.assertEqual(len(order.applied_coupon_ids), 1, "The coupon shouldn't have been removed from the order the order is 4 days old but icp validity is 5 days")
         self.assertEqual(self.coupon.state, 'used', "Should not have been changed (2)")
 
         # 5. Test order with no ICP and older then 4 default days -> Should be removed
         icp_validity.unlink()
-        order._garbage_collector()
+        order._gc_abandoned_coupons()
 
         self.assertEqual(len(order.applied_coupon_ids), 0, "The coupon should've been removed from the order as more than 4 days")
         self.assertEqual(self.coupon.state, 'new', "Should have been reset.")
