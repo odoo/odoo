@@ -86,9 +86,10 @@ class FleetVehicle(models.Model):
     contract_renewal_name = fields.Text(compute='_compute_contract_reminder', string='Name of contract to renew soon')
     contract_renewal_total = fields.Text(compute='_compute_contract_reminder', string='Total of contracts due or overdue minus one')
     car_value = fields.Float(string="Catalog Value (VAT Incl.)", help='Value of the bought vehicle')
-    net_car_value = fields.Float(string="Purchase Value", help="Purchase Value of the car")
+    net_car_value = fields.Float(string="Purchase Value", help="Purchase value of the vehicle")
     residual_value = fields.Float()
     plan_to_change_car = fields.Boolean(related='driver_id.plan_to_change_car', store=True, readonly=False)
+    vehicle_type = fields.Selection(related='model_id.vehicle_type')
 
     @api.depends('model_id.brand_id.name', 'model_id.name', 'license_plate')
     def _compute_vehicle_name(self):
