@@ -22,7 +22,7 @@
                        readonly="context.get('fixed_location', False)"/>
                 <field name="location_out_id" attrs="{'readonly': [('location_in_id', '=', False)]}"
                        options="{'no_create': True}"/>
-                <field name="company_id" groups="stock.group_stock_multi_locations" force_save="1" readonly="context.get('fixed_location', False)"/>
+                <field name="company_id" groups="stock.group_stock_multi_locations" force_save="1" readonly="context.get('fixed_location', False)" options="{'no_create': True}"/>
             </tree>
         </field>
     </record>
