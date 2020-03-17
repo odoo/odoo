@@ -307,10 +307,6 @@ QUnit.test('searchview filter messages', async function (assert) {
                 '</search>',
         },
     });
-    // needed to handle events triggered by the controlPanelModel
-    discuss.on_attach_callback();
-    await testUtils.nextTick();
-
     assert.containsN(discuss, '.o_thread_message', 2,
         "there should be two messages in the inbox mailbox");
     assert.strictEqual($('.o_searchview_input').length, 1,
@@ -343,7 +339,6 @@ QUnit.test('searchview filter messages', async function (assert) {
         "No matches found",
         "should display that there are no matching messages");
 
-    discuss.on_detach_callback();
     discuss.destroy();
 
 });
@@ -1981,10 +1976,6 @@ QUnit.test('save filter discuss', async function (assert) {
             }
         }
     });
-    // needed to handle events triggered by the controlPanelModel
-    discuss.on_attach_callback();
-    await testUtils.nextTick();
-
     assert.containsOnce(discuss, '.o_searchview_input_container', 'search view input present');
 
     await cpHelpers.editSearch(discuss, "she was born in a hurricane");
@@ -1999,7 +1990,6 @@ QUnit.test('save filter discuss', async function (assert) {
     await cpHelpers.editFavoriteName(discuss, "War");
     await cpHelpers.saveFavorite(discuss);
 
-    discuss.on_detach_callback();
     discuss.destroy();
 });
 
