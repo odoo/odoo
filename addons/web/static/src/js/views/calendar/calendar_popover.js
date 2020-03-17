@@ -58,16 +58,26 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
     _processFields: function () {
         var self = this;
         var fieldsToGenerate = [];
-        _.each(this.displayFields, function (displayFieldInfo, fieldName) {
+        var fields = _.keys(this.displayFields);
+        for (var i=0; i<fields.length; i++) {
+            var fieldName = fields[i];
+            var displayFieldInfo = self.displayFields[fieldName] || {attrs: {invisible: 1}};
             var fieldInfo = self.fields[fieldName];
             var field = {
                 name: fieldName,
                 string: displayFieldInfo.attrs.string || fieldInfo.string,
                 value: self.event.record[fieldName],
                 type: fieldInfo.type,
+                invisible: displayFieldInfo.attrs.invisible
             };
             if (field.type === 'selection') {
                 field.selection = fieldInfo.selection;
+            }
+            if (field.type === 'monetary') {
+                var currencyField = field.currency_field || 'currency_id';
+                if (!fields.includes(currencyField) && _.has(self.event.record, currencyField)) {
+                    fields.push(currencyField);
+                }
             }
             if (fieldInfo.relation) {
                 field.relation = fieldInfo.relation;
@@ -87,7 +97,7 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
                 }];
             }
             fieldsToGenerate.push(field);
-        });
+        };
 
         this.$fieldsList = [];
         return this.model.makeRecord(this.modelName, fieldsToGenerate).then(function (recordID) {
@@ -95,6 +105,7 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
 
             var record = self.model.get(recordID);
             _.each(fieldsToGenerate, function (field) {
+                if (field.invisible) return;
                 var FieldClass = fieldRegistry.getAny([field.widget, field.type]);
                 var fieldWidget = new FieldClass(self, field.name, record, self.displayFields[field.name]);
                 self._registerWidget(recordID, field.name, fieldWidget);
