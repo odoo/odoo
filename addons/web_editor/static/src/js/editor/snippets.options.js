@@ -2613,7 +2613,7 @@ registry.background = SnippetOptionWidget.extend({
      * @returns {Promise}
      */
     _onSaveMediaDialog: async function (data) {
-        await this._setCustomBackground(data.src);
+        await this._setCustomBackground($(data).attr('src'));
     },
 });
 
