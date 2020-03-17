@@ -5,7 +5,7 @@ from collections import defaultdict
 import json
 
 from odoo.tests.common import TransactionCase, users, warmup, tagged
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, json_default
 
 
 class TestPerformance(TransactionCase):
@@ -413,7 +413,7 @@ class TestPerformance(TransactionCase):
                 self.assertEqual(res['value'], exp['value'])
         # now serialize to json, which should force evaluation
         with self.assertQueryCount(__system__=1, demo=1):
-            json.dumps(result)
+            json.dumps(result, default=json_default)
 
 
 @tagged('bacon_and_eggs')
