@@ -2066,7 +2066,7 @@ class TestViews(ViewCase):
                 'arch': arch % ('', '<field name="noupdate"/><field name="fake_field"/>'),
             })
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_check_xml_on_reenable(self):
         view1 = self.View.create({
             'name': 'valid _check_xml',
