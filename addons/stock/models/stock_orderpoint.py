@@ -236,6 +236,22 @@ class StockWarehouseOrderpoint(models.Model):
                     qty_to_order += orderpoint.qty_multiple - remainder
             orderpoint.qty_to_order = qty_to_order
 
+    def _set_default_route_id(self):
+        """ Write the `route_id` field on `self`. This method is intendend to be called on the
+        orderpoints generated when openning the replenish report.
+        """
+        self = self.filtered(lambda o: not o.route_id)
+        rules_groups = self.env['stock.rule'].read_group([
+            ('route_id.product_selectable', '!=', False),
+            ('location_id', 'in', self.location_id.ids),
+            ('action', 'in', ['pull_push', 'pull'])
+        ], ['location_id', 'route_id'], ['location_id', 'route_id'], lazy=False)
+        for g in rules_groups:
+            if not g.get('route_id'):
+                continue
+            orderpoints = self.filtered(lambda o: o.location_id == g['location_id'])
+            orderpoints.route_id = g['route_id']
+
     def _get_product_context(self):
         """Used to call `virtual_available` when running an orderpoint."""
         self.ensure_one()
@@ -319,7 +335,8 @@ class StockWarehouseOrderpoint(models.Model):
 
         orderpoints = self.env['stock.warehouse.orderpoint'].with_user(SUPERUSER_ID).create(orderpoint_values_list)
         for orderpoint in orderpoints:
-            orderpoint.route_id = orderpoint._get_default_route_id()
+            orderpoint.route_id = orderpoint.product_id.route_ids[:1]
+        orderpoints.filtered(lambda o: not o.route_id)._set_default_route_id()
         return action
 
     @api.model

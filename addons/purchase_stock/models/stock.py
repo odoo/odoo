@@ -206,6 +206,15 @@ class Orderpoint(models.Model):
             res[orderpoint.id] += product_uom_qty
         return res
 
+    def _set_default_route_id(self):
+        route_id = self.env['stock.rule'].search([
+            ('action', '=', 'buy')
+        ]).route_id
+        orderpoint_wh_supplier = self.filtered(lambda o: o.product_id.seller_ids)
+        if route_id and orderpoint_wh_supplier:
+            orderpoint_wh_supplier.route_id = route_id[0].id
+        return super()._set_default_route_id()
+
 
 class ProductionLot(models.Model):
     _inherit = 'stock.production.lot'
