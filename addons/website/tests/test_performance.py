@@ -77,20 +77,20 @@ class TestWebsitePerformance(UtilPerf):
 
     def test_10_perf_sql_queries_page(self):
         # standard untracked website.page
-        self.assertEqual(self._get_url_hot_query(self.page.url), 12)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 11)
         self.menu.unlink()
-        self.assertEqual(self._get_url_hot_query(self.page.url), 14)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 13)
 
     def test_15_perf_sql_queries_page(self):
         # standard tracked website.page
         self.page.track = True
-        self.assertEqual(self._get_url_hot_query(self.page.url), 20)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 19)
         self.menu.unlink()
-        self.assertEqual(self._get_url_hot_query(self.page.url), 22)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 21)
 
     def test_20_perf_sql_queries_homepage(self):
         # homepage "/" has its own controller
-        self.assertEqual(self._get_url_hot_query('/'), 19)
+        self.assertEqual(self._get_url_hot_query('/'), 18)
 
     def test_30_perf_sql_queries_page_no_layout(self):
         # website.page with no call to layout templates
@@ -113,7 +113,7 @@ class TestWebsitePerformance(UtilPerf):
         menu_bb.parent_id = menu_b
         menu_aa.parent_id = menu_a
 
-        self.assertEqual(self._get_url_hot_query(self.page.url), 12)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 11)
 
     def test_50_perf_sql_web_content(self):
         # assets route /web/content/..

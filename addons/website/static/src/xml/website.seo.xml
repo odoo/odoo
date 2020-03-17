@@ -126,7 +126,7 @@
         <div class="row">
             <div class="col-lg-6">
                 <t t-foreach="widget.images" t-as="image">
-                    <div t-attf-class="o_meta_img mt4 #{image === widget.activeMetaImg and ' o_active_image' or ''}">
+                    <div t-attf-class="o_meta_img mt4 #{new window.URL(image, window.location.origin).pathname === new window.URL(widget.activeMetaImg, window.location.origin).pathname and ' o_active_image' or ''}">
                         <img t-att-src="image"/>
                     </div>
                 </t>

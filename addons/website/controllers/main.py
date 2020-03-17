@@ -334,6 +334,18 @@ class Website(Home):
         xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
+    @http.route(['/website/get_seo_data'], type='json', auth="user", website=True)
+    def get_seo_data(self, res_id, res_model):
+        if not request.env.user.has_group('website.group_website_publisher'):
+            raise werkzeug.exceptions.Forbidden()
+
+        fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
+        if res_model == 'website.page':
+            fields.extend(['website_indexed', 'website_id'])
+        res = request.env[res_model].browse(res_id).read(fields)[0]
+        res['has_social_default_image'] = request.website.has_social_default_image
+        return res
+
     @http.route(['/google<string(length=16):key>.html'], type='http', auth="public", website=True, sitemap=False)
     def google_console_search(self, key, **kwargs):
         if not request.website.google_search_console:
