@@ -1141,7 +1141,7 @@ class MailThread(models.AbstractModel):
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
         alias_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
         # activate strict alias domain check for stable, will be falsy by default to be backward compatible
-        alias_domain_check = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain.strict")
+        alias_domain_check = tools.str2bool(self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain.strict", "False"))
         fallback_model = model
 
         # get email.message.Message variables for future processing
@@ -1275,7 +1275,7 @@ class MailThread(models.AbstractModel):
             message_dict.pop('parent_id', None)
 
             # check it does not directly contact catchall
-            if catchall_alias and any(email.startswith(catchall_alias) for email in email_to_localparts):
+            if catchall_alias and all(email_localpart == catchall_alias for email_localpart in email_to_localparts):
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct write to catchall, bounce', email_from, email_to, message_id)
                 body = self.env.ref('mail.mail_bounce_catchall').render({
                     'message': message,
