@@ -247,7 +247,7 @@ class ProductProduct(models.Model):
                         valuation_account_id = product.categ_id.property_stock_valuation_account_id.id
                         value, quantity, aml_ids = fifo_automated_values.get((product.id, valuation_account_id)) or (0, 0, [])
                         product.stock_value = value
-                        product.qty_at_date = quantity
+                        product.qty_at_date = product.with_context(company_owned=True, owner_id=False).qty_available
                         product.stock_fifo_real_time_aml_ids = self.env['account.move.line'].browse(aml_ids)
                 else:
                     product.stock_value = product_values[product.id]
@@ -257,6 +257,7 @@ class ProductProduct(models.Model):
                     elif product.product_tmpl_id.valuation == 'real_time':
                         valuation_account_id = product.categ_id.property_stock_valuation_account_id.id
                         value, quantity, aml_ids = fifo_automated_values.get((product.id, valuation_account_id)) or (0, 0, [])
+                        product.stock_value = value
                         product.stock_fifo_real_time_aml_ids = self.env['account.move.line'].browse(aml_ids)
 
     def action_valuation_at_date_details(self):
