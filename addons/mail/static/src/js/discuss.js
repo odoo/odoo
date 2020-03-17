@@ -344,7 +344,9 @@ var Discuss = AbstractAction.extend({
     on_detach_callback: function () {
         this._super();
         this.call('mail_service', 'getMailBus').trigger('discuss_open', false);
-        this._threadsScrolltop[this._thread.getID()] = this._threadWidget.getScrolltop();
+        if (this._thread) {
+            this._threadsScrolltop[this._thread.getID()] = this._threadWidget.getScrolltop();
+        }
     },
 
     //--------------------------------------------------------------------------
