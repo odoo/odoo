@@ -39,7 +39,8 @@
                             class="oe_stat_button"
                             icon="fa-tachometer"
                             context="{'xml_id':'fleet_vehicle_odometer_action'}"
-                            help="show the odometer logs for this vehicle" >
+                            help="show the odometer logs for this vehicle"
+                            attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
                             <field name="odometer_count" widget="statinfo" string="Odometer"/>
                         </button>
                     </div>
@@ -60,6 +61,7 @@
                     <group col="2">
                         <group string="Driver">
                             <field name="active" invisible="1"/>
+                            <field name="vehicle_type" invisible="1"/>
                             <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]"/>
                             <label for="future_driver_id"/>
                             <div class="o_row">
@@ -75,12 +77,12 @@
                             <field name="location"/>
                         </group>
                         <group string="Vehicle">
-                            <label for="odometer"/>
-                            <div class="o_row">
+                            <label for="odometer" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
+                            <div class="o_row" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
                                 <field name="odometer"/>
                                 <field name="odometer_unit"/>
                             </div>
-                            <field name="acquisition_date"/>
+                            <field name="acquisition_date" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
                             <field name="vin_sn"/>
                             <field name="car_value" widget="monetary"/>
                             <field name="net_car_value" widget="monetary"/>
@@ -92,12 +94,12 @@
                             <field name="first_contract_date"/>
                         </group>
                         <group string="Model">
-                            <field name="seats"/>
-                            <field name="doors"/>
+                            <field name="seats" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
+                            <field name="doors" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
                             <field name="color"/>
                             <field name="model_year"/>
                         </group>
-                        <group string="Engine">
+                        <group string="Engine" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
                             <field name="transmission"/>
                             <field name="fuel_type"/>
                             <label for="co2"/>
