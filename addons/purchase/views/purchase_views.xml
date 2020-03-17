@@ -742,4 +742,13 @@
         </field>
     </record>
 
+    <record id="action_rfq_form" model="ir.actions.act_window">
+        <field name="name">Requests for Quotation</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="purchase.purchase_order_form"/>
+        <field name="search_view_id" ref="view_purchase_order_filter"/>
+        <field name="target">main</field>
+    </record>
+
 </odoo>

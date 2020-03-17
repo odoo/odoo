@@ -6,7 +6,7 @@ from collections import defaultdict, namedtuple
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models, registry
+from odoo import SUPERUSER_ID, _, api, fields, models, registry
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero, html_escape
@@ -502,7 +502,7 @@ class ProcurementGroup(models.Model):
         # Minimum stock rules
         domain = self._get_orderpoint_domain(company_id=company_id)
         orderpoints = self.env['stock.warehouse.orderpoint'].search(domain)
-        orderpoints.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id)
+        orderpoints.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id, raise_user_error=False)
 
         # Search all confirmed stock_moves and try to assign them
         domain = self._get_moves_to_assign_domain()
@@ -518,6 +518,7 @@ class ProcurementGroup(models.Model):
 
         # Merge duplicated quants
         self.env['stock.quant']._quant_tasks()
+
         if use_new_cursor:
             self._cr.commit()
 
@@ -542,6 +543,7 @@ class ProcurementGroup(models.Model):
 
     @api.model
     def _get_orderpoint_domain(self, company_id=False):
-        domain = [('company_id', '=', company_id)] if company_id else []
-        domain += [('product_id.active', '=', True)]
+        domain = [('trigger', '=', 'auto'), ('product_id.active', '=', True)]
+        if company_id:
+            domain += [('company_id', '=', company_id)]
         return domain

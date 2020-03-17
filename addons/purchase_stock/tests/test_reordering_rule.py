@@ -4,6 +4,7 @@
 from datetime import datetime as dt
 from datetime import timedelta as td
 
+from odoo import SUPERUSER_ID
 from odoo.tests import Form
 from odoo.tests.common import SavepointCase
 
@@ -45,7 +46,7 @@ class TestReorderingRule(SavepointCase):
         orderpoint_form.product_min_qty = 0.000
         orderpoint_form.product_max_qty = 0.000
         order_point = orderpoint_form.save()
-
+        print('picking')
         # Create Delivery Order of 10 product
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = self.partner
@@ -54,10 +55,8 @@ class TestReorderingRule(SavepointCase):
             move.product_id = self.product_01
             move.product_uom_qty = 10.0
         customer_picking = picking_form.save()
-
         # picking confirm
         customer_picking.action_confirm()
-
         # Run scheduler
         self.env['procurement.group'].run_scheduler()
 
@@ -156,6 +155,203 @@ class TestReorderingRule(SavepointCase):
 
         self.assertEqual(purchase_order.picking_ids.move_lines[-1].product_qty, 5)
         self.assertEqual(purchase_order.picking_ids.move_lines[-1].location_dest_id, warehouse_1.lot_stock_id)
+
+    def test_replenish_report_1(self):
+        """Tests the auto generation of manual orderpoints.
+
+        Opening multiple times the report should not duplicate the generated orderpoints.
+        MTO products should not trigger the creation of generated orderpoints
+        """
+        partner = self.env['res.partner'].create({
+            'name': 'Tintin'
+        })
+        route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
+        route_mto = self.env.ref('stock.route_warehouse0_mto')
+
+        product_form = Form(self.env['product.product'])
+        product_form.name = 'Simple Product'
+        product_form.type = 'product'
+        with product_form.seller_ids.new() as s:
+            s.name = partner
+        product = product_form.save()
+
+        product_form = Form(self.env['product.product'])
+        product_form.name = 'Product BUY + MTO'
+        product_form.type = 'product'
+        product_form.route_ids.add(route_buy)
+        product_form.route_ids.add(route_mto)
+        with product_form.seller_ids.new() as s:
+            s.name = partner
+        product_buy_mto = product_form.save()
+
+        # Create Delivery Order of 20 product and 10 buy + MTO
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.partner_id = partner
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = product
+            move.product_uom_qty = 10.0
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = product
+            move.product_uom_qty = 10.0
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = product_buy_mto
+            move.product_uom_qty = 10.0
+        customer_picking = picking_form.save()
+        customer_picking.move_lines.filtered(lambda m: m.product_id == product_buy_mto).procure_method = 'make_to_order'
+        customer_picking.action_confirm()
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+
+        orderpoint_product = self.env['stock.warehouse.orderpoint'].search(
+            [('product_id', '=', product.id)])
+        orderpoint_product_mto_buy = self.env['stock.warehouse.orderpoint'].search(
+            [('product_id', '=', product_buy_mto.id)])
+        self.assertFalse(orderpoint_product_mto_buy)
+        self.assertEqual(len(orderpoint_product), 1.0)
+        self.assertEqual(orderpoint_product.qty_to_order, 20.0)
+        self.assertEqual(orderpoint_product.trigger, 'manual')
+        self.assertEqual(orderpoint_product.create_uid.id, SUPERUSER_ID)
+
+        orderpoint_product.action_replenish()
+        po = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
+        self.assertTrue(po)
+        self.assertEqual(len(po.order_line), 2.0)
+        po_line_product_mto = po.order_line.filtered(lambda l: l.product_id == product_buy_mto)
+        po_line_product = po.order_line.filtered(lambda l: l.product_id == product)
+        self.assertEqual(po_line_product_mto.product_uom_qty, 10.0)
+        self.assertEqual(po_line_product.product_uom_qty, 20.0)
+
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        orderpoint_product = self.env['stock.warehouse.orderpoint'].search(
+            [('product_id', '=', product.id)])
+        orderpoint_product_mto_buy = self.env['stock.warehouse.orderpoint'].search(
+            [('product_id', '=', product_buy_mto.id)])
+        self.assertFalse(orderpoint_product)
+        self.assertFalse(orderpoint_product_mto_buy)
+
+        # Create Delivery Order of 10 product and 10 buy + MTO
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.partner_id = partner
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = product
+            move.product_uom_qty = 10.0
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = product_buy_mto
+            move.product_uom_qty = 10.0
+        customer_picking = picking_form.save()
+        customer_picking.move_lines.filtered(lambda m: m.product_id == product_buy_mto).procure_method = 'make_to_order'
+        customer_picking.action_confirm()
+        self.env['stock.warehouse.orderpoint'].flush()
+
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        orderpoint_product = self.env['stock.warehouse.orderpoint'].search(
+            [('product_id', '=', product.id)])
+        orderpoint_product_mto_buy = self.env['stock.warehouse.orderpoint'].search(
+            [('product_id', '=', product_buy_mto.id)])
+        self.assertFalse(orderpoint_product_mto_buy)
+        self.assertEqual(len(orderpoint_product), 1.0)
+        self.assertEqual(orderpoint_product.qty_to_order, 10.0)
+        self.assertEqual(orderpoint_product.trigger, 'manual')
+        self.assertEqual(orderpoint_product.create_uid.id, SUPERUSER_ID)
+
+    def test_replenish_report_2(self):
+        """Same then `test_replenish_report_1` but with two steps receipt enabled"""
+        partner = self.env['res.partner'].create({
+            'name': 'Tintin'
+        })
+        for wh in self.env['stock.warehouse'].search([]):
+            wh.write({'reception_steps': 'two_steps'})
+        route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
+        route_mto = self.env.ref('stock.route_warehouse0_mto')
+
+        product_form = Form(self.env['product.product'])
+        product_form.name = 'Simple Product'
+        product_form.type = 'product'
+        with product_form.seller_ids.new() as s:
+            s.name = partner
+        product = product_form.save()
+
+        product_form = Form(self.env['product.product'])
+        product_form.name = 'Product BUY + MTO'
+        product_form.type = 'product'
+        product_form.route_ids.add(route_buy)
+        product_form.route_ids.add(route_mto)
+        with product_form.seller_ids.new() as s:
+            s.name = partner
+        product_buy_mto = product_form.save()
+
+        # Create Delivery Order of 20 product and 10 buy + MTO
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.partner_id = partner
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = product
+            move.product_uom_qty = 10.0
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = product
+            move.product_uom_qty = 10.0
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = product_buy_mto
+            move.product_uom_qty = 10.0
+        customer_picking = picking_form.save()
+        customer_picking.move_lines.filtered(lambda m: m.product_id == product_buy_mto).procure_method = 'make_to_order'
+        customer_picking.action_confirm()
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        orderpoint_product = self.env['stock.warehouse.orderpoint'].search(
+            [('product_id', '=', product.id)])
+        orderpoint_product_mto_buy = self.env['stock.warehouse.orderpoint'].search(
+            [('product_id', '=', product_buy_mto.id)])
+        self.assertFalse(orderpoint_product_mto_buy)
+        self.assertEqual(len(orderpoint_product), 1.0)
+        self.assertEqual(orderpoint_product.qty_to_order, 20.0)
+        self.assertEqual(orderpoint_product.trigger, 'manual')
+        self.assertEqual(orderpoint_product.create_uid.id, SUPERUSER_ID)
+
+        orderpoint_product.action_replenish()
+        po = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
+        self.assertTrue(po)
+        self.assertEqual(len(po.order_line), 2.0)
+        po_line_product_mto = po.order_line.filtered(lambda l: l.product_id == product_buy_mto)
+        po_line_product = po.order_line.filtered(lambda l: l.product_id == product)
+        self.assertEqual(po_line_product_mto.product_uom_qty, 10.0)
+        self.assertEqual(po_line_product.product_uom_qty, 20.0)
+
+        self.env['stock.warehouse.orderpoint'].flush()
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        orderpoint_product = self.env['stock.warehouse.orderpoint'].search(
+            [('product_id', '=', product.id)])
+        orderpoint_product_mto_buy = self.env['stock.warehouse.orderpoint'].search(
+            [('product_id', '=', product_buy_mto.id)])
+        self.assertFalse(orderpoint_product)
+        self.assertFalse(orderpoint_product_mto_buy)
+
+        # Create Delivery Order of 10 product and 10 buy + MTO
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.partner_id = partner
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = product
+            move.product_uom_qty = 10.0
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = product_buy_mto
+            move.product_uom_qty = 10.0
+        customer_picking = picking_form.save()
+        customer_picking.move_lines.filtered(lambda m: m.product_id == product_buy_mto).procure_method = 'make_to_order'
+        customer_picking.action_confirm()
+        self.env['stock.warehouse.orderpoint'].flush()
+
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        orderpoint_product = self.env['stock.warehouse.orderpoint'].search(
+            [('product_id', '=', product.id)])
+        orderpoint_product_mto_buy = self.env['stock.warehouse.orderpoint'].search(
+            [('product_id', '=', product_buy_mto.id)])
+        self.assertFalse(orderpoint_product_mto_buy)
+        self.assertEqual(len(orderpoint_product), 1.0)
+        self.assertEqual(orderpoint_product.qty_to_order, 10.0)
+        self.assertEqual(orderpoint_product.trigger, 'manual')
+        self.assertEqual(orderpoint_product.create_uid.id, SUPERUSER_ID)
 
     def test_procure_not_default_partner(self):
         """Define a product with 2 vendors. First run a "standard" procurement,

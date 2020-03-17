@@ -52,6 +52,7 @@
         'wizard/stock_warn_insufficient_qty_views.xml',
         'wizard/product_replenish_views.xml',
         'wizard/stock_track_confirmation_views.xml',
+        'wizard/stock_orderpoint_snooze_views.xml',
         'wizard/stock_package_destination_views.xml',
 
         'views/res_partner_views.xml',
@@ -81,7 +82,7 @@
         'static/src/xml/inventory_report.xml',
         'static/src/xml/inventory_lines.xml',
         'static/src/xml/popover_widget.xml',
-        'static/src/xml/stock_orderpoint_lead_days_widget.xml',
+        'static/src/xml/stock_orderpoint.xml',
         'static/src/xml/stock_traceability_report_backend.xml',
     ],
     'installable': True,
