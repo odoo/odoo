@@ -59,11 +59,11 @@ class StockWarehouseOrderpoint(models.Model):
         'uom.uom', 'Unit of Measure', related='product_id.uom_id')
     product_uom_name = fields.Char(string='Product unit of measure label', related='product_uom.display_name', readonly=True)
     product_min_qty = fields.Float(
-        'Minimum Quantity', digits='Product Unit of Measure', required=True,
+        'Minimum Quantity', digits='Product Unit of Measure', required=True, default=0.0,
         help="When the virtual stock equals to or goes below the Min Quantity specified for this field, Odoo generates "
              "a procurement to bring the forecasted quantity to the Max Quantity.")
     product_max_qty = fields.Float(
-        'Maximum Quantity', digits='Product Unit of Measure', required=True,
+        'Maximum Quantity', digits='Product Unit of Measure', required=True, default=0.0,
         help="When the virtual stock goes below the Min Quantity, Odoo generates "
              "a procurement to bring the forecasted quantity to the Quantity specified as Max Quantity.")
     qty_multiple = fields.Float(
