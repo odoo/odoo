@@ -631,6 +631,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
     def test_message_process_crash_alien_domain_same_alias(self):
         """Incoming email to the same address in an alien domain must raise."""
         self.env['ir.config_parameter'].set_param('mail.catchall.domain', 'example.com')
+        self.env['ir.config_parameter'].set_param('mail.catchall.domain.strict', True)
         with self.assertRaises(ValueError):
             self.format_and_process(
                 MAIL_TEMPLATE,
