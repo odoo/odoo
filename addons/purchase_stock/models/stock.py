@@ -163,12 +163,6 @@ class ReturnPicking(models.TransientModel):
 class Orderpoint(models.Model):
     _inherit = "stock.warehouse.orderpoint"
 
-    def _quantity_in_progress(self):
-        res = super(Orderpoint, self)._quantity_in_progress()
-        for poline in self.env['purchase.order.line'].search([('state', 'in', ('draft', 'sent', 'to approve')), ('orderpoint_id', 'in', self.ids), ('move_dest_ids', '=', False)]):
-            res[poline.orderpoint_id.id] += poline.product_uom._compute_quantity(poline.product_qty, poline.orderpoint_id.product_uom, round=False)
-        return res
-
     def action_view_purchase(self):
         """ This function returns an action that display existing
         purchase orders of given orderpoint.
@@ -184,6 +178,33 @@ class Orderpoint(models.Model):
         result['domain'] = "[('id','in',%s)]" % (purchase_ids.ids)
 
         return result
+
+    def _get_replenishment_order_notification(self):
+        self.ensure_one()
+        order = self.env['purchase.order.line'].search([
+            ('orderpoint_id', 'in', self.ids)
+        ], limit=1).order_id
+        if order:
+            action = self.env.ref('purchase.action_rfq_form')
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('The following replenishment order has been generated'),
+                    'message': '<a href="#action=%d&id=%d&model=purchase.order" target="_blank">%s</a>' % (action.id, order.id, order.display_name),
+                    'sticky': False,
+                }
+            }
+        return super()._get_replenishment_order_notification()
+
+    def _quantity_in_progress(self):
+        res = super()._quantity_in_progress()
+        qty_by_product_location, dummy = self.product_id._get_quantity_in_progress(self.location_id.ids)
+        for orderpoint in self:
+            product_qty = qty_by_product_location.get((orderpoint.product_id.id, orderpoint.location_id.id), 0.0)
+            product_uom_qty = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.product_uom, round=False)
+            res[orderpoint.id] += product_uom_qty
+        return res
 
 
 class ProductionLot(models.Model):
