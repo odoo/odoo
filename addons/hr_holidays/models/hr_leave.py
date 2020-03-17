@@ -70,7 +70,11 @@ class HolidaysRequest(models.Model):
         defaults = super(HolidaysRequest, self).default_get(fields_list)
         defaults = self._default_get_request_parameters(defaults)
 
-        LeaveType = self.env['hr.leave.type'].with_context(employee_id=defaults.get('employee_id'), default_date_from=defaults.get('date_from', fields.Datetime.now()))
+        LeaveType = self.env['hr.leave.type'].with_context(
+            employee_id=defaults.get('employee_id', self._context.get('employee_id')),
+            default_date_from=defaults.get('date_from', fields.Datetime.now())
+        )
+
         lt = LeaveType.search([('valid', '=', True)], limit=1)
 
         defaults['holiday_status_id'] = lt.id if lt else defaults.get('holiday_status_id')
@@ -625,14 +629,13 @@ class HolidaysRequest(models.Model):
     @api.model
     def create(self, values):
         """ Override to avoid automatic logging of creation """
+        employee_id = values.get('employee_id', False)
         if not self._context.get('leave_fast_create'):
-            employee_id = values.get('employee_id', False)
             leave_type_id = values.get('holiday_status_id')
             leave_type = self.env['hr.leave.type'].browse(leave_type_id)
             # Handle automatic department_id
             if not values.get('department_id'):
                 values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
-
             # Handle no_validation
             if leave_type.validation_type == 'no_validation':
                 values.update({'state': 'confirm'})
@@ -641,7 +644,7 @@ class HolidaysRequest(models.Model):
             if leave_type.validation_type == 'both':
                 self._check_double_validation_rules(employee_id, values.get('state', False))
 
-        holiday = super(HolidaysRequest, self.with_context(mail_create_nosubscribe=True)).create(values)
+        holiday = super(HolidaysRequest, self.with_context(mail_create_nosubscribe=True, employee_id=employee_id)).create(values)
         if self._context.get('import_file'):
             holiday._onchange_leave_dates()
         if not self._context.get('leave_fast_create'):
