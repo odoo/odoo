@@ -13,6 +13,7 @@ Allows users to send documents by post
         'views/report_assets.xml',
         'views/snailmail_views.xml',
         'views/assets.xml',
+        'wizard/snailmail_confirm_views.xml',
         'wizard/snailmail_letter_cancel_views.xml',
         'wizard/snailmail_letter_format_error_views.xml',
         'wizard/snailmail_letter_missing_required_fields_views.xml',

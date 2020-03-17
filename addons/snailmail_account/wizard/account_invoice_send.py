@@ -57,9 +57,21 @@ class AccountInvoiceSend(models.TransientModel):
 
     def send_and_print_action(self):
         if self.snailmail_is_letter:
-            if self.invalid_addresses and self.composition_mode == "mass_mail":
-                self.notify_invalid_addresses()
-            self.snailmail_print_action()
+            if self.env['snailmail.confirm.invoice'].show_warning():
+                wizard = self.env['snailmail.confirm.invoice'].create({'model_name': _('Invoice'), 'invoice_send_id': self.id})
+                return wizard.action_open()
+            self._print_action()
+        return self.send_and_print()
+    
+    def _print_action(self):
+        if not self.snailmail_is_letter:
+            return
+
+        if self.invalid_addresses and self.composition_mode == "mass_mail":
+            self.notify_invalid_addresses()
+        self.snailmail_print_action()
+
+    def send_and_print(self):
         res = super(AccountInvoiceSend, self).send_and_print_action()
         return res
 
