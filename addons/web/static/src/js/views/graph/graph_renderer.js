@@ -622,12 +622,18 @@ return AbstractRenderer.extend({
     _prepareData: function (dataPoints) {
         var self = this;
 
+        var labelMap = {};
         var labels = dataPoints.reduce(
             function (acc, dataPt) {
                 var label = self._getLabel(dataPt);
-                var index = self._indexOf(acc, label);
-                if (index === -1) {
+                var labelKey = dataPt.resId + ':' + JSON.stringify(label);
+                var index = labelMap[labelKey];
+                if (index === undefined) {
+                    labelMap[labelKey] = dataPt.labelIndex = acc.length;
                     acc.push(label);
+                }
+                else{
+                    dataPt.labelIndex = index;
                 }
                 return acc;
             },
@@ -650,8 +656,7 @@ return AbstractRenderer.extend({
                 if (!(datasetLabel in acc)) {
                     acc[datasetLabel] = newDataset(datasetLabel, dataPt.originIndex);
                 }
-                var label = self._getLabel(dataPt);
-                var labelIndex = self._indexOf(labels, label);
+                var labelIndex = dataPt.labelIndex;
                 acc[datasetLabel].data[labelIndex] = dataPt.value;
                 return acc;
             },
