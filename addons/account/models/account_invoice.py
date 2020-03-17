@@ -410,7 +410,7 @@ class AccountInvoice(models.Model):
     @api.depends('partner_id', 'source_email')
     def _get_vendor_display_info(self):
         for invoice in self:
-            vendor_display_name = invoice.partner_id.name
+            vendor_display_name = invoice.partner_id.display_name
             invoice.invoice_icon = ''
             if not vendor_display_name:
                 if invoice.source_email:
