@@ -91,7 +91,8 @@ class Website(models.Model):
     social_linkedin = fields.Char('LinkedIn Account', default=_default_social_linkedin)
     social_youtube = fields.Char('Youtube Account', default=_default_social_youtube)
     social_instagram = fields.Char('Instagram Account', default=_default_social_instagram)
-    social_default_image = fields.Binary(string="Default Social Share Image", help="If set, replaces the company logo as the default social share image.")
+    social_default_image = fields.Binary(string="Default Social Share Image", help="If set, replaces the website logo as the default social share image.")
+    has_social_default_image = fields.Boolean(compute='_compute_has_social_default_image', store=True)
 
     google_analytics_key = fields.Char('Google Analytics Key')
     google_management_client_id = fields.Char('Google Client ID')
@@ -131,6 +132,11 @@ class Website(models.Model):
         language_ids = self.language_ids._origin
         if language_ids and self.default_lang_id not in language_ids:
             self.default_lang_id = language_ids[0]
+
+    @api.depends('social_default_image')
+    def _compute_has_social_default_image(self):
+        for website in self:
+            website.has_social_default_image = bool(website.social_default_image)
 
     def _compute_menu(self):
         for website in self:
