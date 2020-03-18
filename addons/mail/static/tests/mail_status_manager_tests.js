@@ -17,9 +17,9 @@ QUnit.module('Status manager', {
         this.timeoutMock = mailTestUtils.patchMailTimeouts();
     },
 });
-QUnit.test('simple set im_status', function (assert) {
+QUnit.test('simple set im_status', async function (assert) {
     assert.expect(1);
-    var parent = testUtils.createParent({
+    var parent = await testUtils.createParent({
         services: this.services,
         mockRPC: function (route, args) {
             if (route === '/mail/init_messaging') {
@@ -41,7 +41,7 @@ QUnit.test('simple set im_status', function (assert) {
 QUnit.test('multi get_im_status', async function (assert) {
     assert.expect(8);
     var readCount = 0;
-    var parent = testUtils.createParent({
+    var parent = await testUtils.createParent({
         //data: this.data,
         services: this.services,
         mockRPC: function (route, args) {
@@ -86,7 +86,7 @@ QUnit.test('multi get_im_status', async function (assert) {
 QUnit.test('update loop', async function (assert) {
     assert.expect(10);
     var readCount = 0;
-    var parent = testUtils.createParent({
+    var parent = await testUtils.createParent({
         services: this.services,
         mockRPC: function (route, args) {
             if (route === '/mail/init_messaging') {
@@ -162,7 +162,7 @@ QUnit.test('update status', async function (assert) {
         }
     });
     var statusWidget = new StatusWidget();
-    testUtils.mock.addMockEnvironment(statusWidget, {
+    await testUtils.mock.addMockEnvironment(statusWidget, {
         services: this.services,
         mockRPC: function (route, args) {
             if (route === '/mail/init_messaging') {

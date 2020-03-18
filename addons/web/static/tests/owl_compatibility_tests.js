@@ -453,7 +453,7 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
                     <ComponentAdapter Component="MyWidget"/>
                 </div>`;
             Parent.components = { ComponentAdapter };
-            const cleanUp = setMockedOwlEnv(Parent, {
+            const cleanUp = await setMockedOwlEnv(Parent, {
                 mockRPC: function (route, args) {
                     assert.step(`${route} ${args.val}`);
                     return Promise.resolve();
@@ -529,7 +529,7 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
                     <ComponentAdapter Component="MyWidget"/>
                 </div>`;
             Parent.components = { ComponentAdapter };
-            const cleanUp = setMockedOwlEnv(Parent, {
+            const cleanUp = await setMockedOwlEnv(Parent, {
                 session: { key: 'value' },
             });
 
@@ -560,7 +560,7 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
                     <ComponentAdapter Component="MyWidget"/>
                 </div>`;
             Parent.components = { ComponentAdapter };
-            const cleanUp = setMockedOwlEnv(Parent, {
+            const cleanUp = await setMockedOwlEnv(Parent, {
                 mockRPC: function (route, args) {
                     assert.strictEqual(route, '/web/dataset/call_kw/some_model');
                     assert.deepEqual(args.kwargs.context, { x: 2 });

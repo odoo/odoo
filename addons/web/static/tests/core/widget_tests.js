@@ -402,7 +402,7 @@ QUnit.module('core', {}, function () {
 
         var def;
         var parent = new Widget();
-        testUtils.mock.addMockEnvironment(parent, {
+        await testUtils.mock.addMockEnvironment(parent, {
             session: {
                 rpc: function () {
                     def = testUtils.makeTestPromise();

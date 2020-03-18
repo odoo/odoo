@@ -86,7 +86,7 @@ QUnit.test('hidden thread windows dropdown when not enough horizontal space (ver
         },
     };
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
     });
@@ -172,7 +172,7 @@ QUnit.test('hidden thread windows dropdown when not enough horizontal space (ver
         },
     };
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
     });
@@ -266,7 +266,7 @@ QUnit.test('receive message from hidden thread window', async function (assert) 
         },
     };
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
     });

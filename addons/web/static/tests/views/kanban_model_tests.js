@@ -67,7 +67,7 @@ QUnit.module('Views', {
         assert.expect(22);
 
         var calledRoutes = {};
-        var model = createModel({
+        var model = await createModel({
             Model: KanbanModel,
             data: this.data,
             mockRPC: function (route) {
@@ -132,7 +132,7 @@ QUnit.module('Views', {
         var done = assert.async();
         assert.expect(4);
 
-        var model = createModel({
+        var model = await createModel({
             Model: KanbanModel,
             data: this.data,
             mockRPC: function (route, args) {
@@ -173,7 +173,7 @@ QUnit.module('Views', {
         var done = assert.async();
         assert.expect(2);
 
-        var model = createModel({
+        var model = await createModel({
             Model: KanbanModel,
             data: this.data,
             mockRPC: function (route, args) {
@@ -210,7 +210,7 @@ QUnit.module('Views', {
         this.data.partner.records.push({id: 3, foo: 'aaa', product_id: 37});
 
         var nbReseq = 0;
-        var model = createModel({
+        var model = await createModel({
             Model: KanbanModel,
             data: this.data,
             mockRPC: function (route, args) {
@@ -270,7 +270,7 @@ QUnit.module('Views', {
         assert.expect(8);
 
         var self = this;
-        var model = createModel({
+        var model = await createModel({
             Model: KanbanModel,
             data: this.data,
         });

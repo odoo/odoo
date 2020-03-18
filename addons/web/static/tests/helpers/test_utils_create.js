@@ -62,7 +62,7 @@ odoo.define('web.test_utils_create', function (require) {
 
         const target = prepareTarget(params.debug);
         params.services = Object.assign({}, params.services);
-        const cleanUp = testUtilsMock.setMockedOwlEnv(WebClient, params);
+        const cleanUp = await testUtilsMock.setMockedOwlEnv(Component, params);
 
         const SystrayItems = SystrayMenu.Items;
         SystrayMenu.Items = params.SystrayItems || [];
@@ -269,12 +269,12 @@ odoo.define('web.test_utils_create', function (require) {
      * @param {Class} params.Model the model class to use
      * @returns {Model}
      */
-    function createModel(params) {
+    async function createModel(params) {
         const widget = new Widget();
 
         const model = new params.Model(widget);
 
-        testUtilsMock.addMockEnvironment(widget, params);
+        await testUtilsMock.addMockEnvironment(widget, params);
 
         // override the model's 'destroy' so that it calls 'destroy' on the widget
         // instead, as the widget is the parent of the model and the mockServer.
@@ -295,9 +295,9 @@ odoo.define('web.test_utils_create', function (require) {
      *   any parameters from that method applies
      * @returns {Widget}
      */
-    function createParent(params) {
+    async function createParent(params) {
         const widget = new Widget();
-        testUtilsMock.addMockEnvironment(widget, params);
+        await testUtilsMock.addMockEnvironment(widget, params);
         return widget;
     }
 

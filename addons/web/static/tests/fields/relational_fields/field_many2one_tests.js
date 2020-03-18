@@ -991,7 +991,7 @@ QUnit.module('fields', {}, function () {
             var fixture = $('#qunit-fixture');
             var self = this;
 
-            var model = testUtils.createModel({
+            var model = await testUtils.createModel({
                 Model: BasicModel,
                 data: this.data,
             });

@@ -56,7 +56,7 @@ QUnit.module('Basic', {
         this.services = mailTestUtils.getMailServices();
         this.ORIGINAL_THREAD_WINDOW_APPENDTO = this.services.mail_service.prototype.THREAD_WINDOW_APPENDTO;
 
-        this.createParent = function (params) {
+        this.createParent = async function (params) {
             var widget = new Widget();
 
             // in non-debug mode, append thread windows in qunit-fixture
@@ -68,7 +68,7 @@ QUnit.module('Basic', {
                 self.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = '#qunit-fixture';
             }
 
-            testUtils.mock.addMockEnvironment(widget, params);
+            await testUtils.mock.addMockEnvironment(widget, params);
             return widget;
         };
     },
@@ -81,7 +81,7 @@ QUnit.module('Basic', {
 QUnit.test('basic rendering thread window', async function (assert) {
     assert.expect(10);
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
     });
@@ -128,7 +128,7 @@ QUnit.test('basic rendering thread window', async function (assert) {
 QUnit.test('close thread window using ESCAPE key', async function (assert) {
     assert.expect(5);
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
         mockRPC: function (route, args) {
@@ -169,7 +169,7 @@ QUnit.test('close thread window using ESCAPE key', async function (assert) {
 QUnit.test('thread window\'s input can still be focused when the UI is blocked', async function (assert) {
     assert.expect(2);
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
     });
@@ -205,7 +205,7 @@ QUnit.test('thread window\'s input can still be focused when the UI is blocked',
 QUnit.test('emoji popover should open correctly in thread windows', async function (assert) {
     assert.expect(1);
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
     });
@@ -227,7 +227,7 @@ QUnit.test('emoji popover should open correctly in thread windows', async functi
 QUnit.test('do not increase unread counter when receiving message with myself as author', async function (assert) {
     assert.expect(4);
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
         session: { partner_id: 3 }
@@ -274,7 +274,7 @@ QUnit.test('do not increment unread counter with focus on thread window', async 
     // order to set the focus on it.
     assert.expect(2);
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
         session: { partner_id: 3 }
@@ -322,7 +322,7 @@ QUnit.test('do not mark as read the newly open thread window from received messa
         message_unread_counter: 0,
     }];
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
         session: { partner_id: 3 },
@@ -393,7 +393,7 @@ QUnit.test('show document link of message linked to a document', async function 
         channel_type: "public",
     });
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
         session: { partner_id: 3 },
@@ -510,7 +510,7 @@ QUnit.test('do not auto-focus chat window on receiving new message from new DM',
         state: 'open',
     }];
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
         session: { partner_id: 3 },
@@ -600,7 +600,7 @@ QUnit.test('no out-of-office status in thread window', async function (assert) {
             }],
         },
     };
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
     });
@@ -650,7 +650,7 @@ QUnit.test('receive 2 new DM messages in quick succession (no chat window initia
         }],
     };
 
-    const parent = this.createParent({
+    const parent = await this.createParent({
         data: this.data,
         mockRPC(route, args) {
             if (args.method === 'channel_minimize') {
@@ -740,7 +740,7 @@ QUnit.test('non-deletable message attachments', async function (assert) {
         record_name: "general",
         res_id: 1,
     }];
-    const parent = this.createParent({
+    const parent = await this.createParent({
         data: this.data,
         services: this.services,
     });
@@ -781,7 +781,7 @@ QUnit.test('join channel from click channel mention', async function (assert) {
         channel_ids: [1],
     });
 
-    const parent = this.createParent({
+    const parent = await this.createParent({
         data: this.data,
         services: this.services,
         session: { partner_id: 3 },

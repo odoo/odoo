@@ -76,7 +76,7 @@ QUnit.module('Typing', {
 QUnit.test('receive typing notification', async function (assert) {
     assert.expect(4);
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
         mockRPC: function (route, args) {
