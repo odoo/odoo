@@ -244,6 +244,15 @@ class WebsiteEventController(http.Controller):
     @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'], website=True)
     def registration_new(self, event, **post):
         tickets = self._process_tickets_details(post)
+        if event.seats_availability != 'unlimited':
+            ordered_seats = 0
+            index = 0
+            for ticket in tickets:
+                if event.seats_available < ordered_seats + ticket['quantity']:
+                    tickets.pop(index)
+                else:
+                    ordered_seats += ticket['quantity']
+                index += 1
         if not tickets:
             return False
         return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details", {'tickets': tickets, 'event': event})

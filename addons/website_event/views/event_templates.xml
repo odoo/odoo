@@ -444,6 +444,7 @@
             <div class="card-footer">
                 <div class="row">
                     <div class="col-lg-4 offset-lg-8 col-xl-3 offset-xl-9">
+                        <span t-if="event.seats_availability != 'unlimited'">Available seats: <t t-esc="event.seats_available"/></span>
                         <button type="submit" class="btn btn-primary btn-lg btn-block a-submit" t-attf-id="#{event.id}">
                             Register Now
                         </button>
