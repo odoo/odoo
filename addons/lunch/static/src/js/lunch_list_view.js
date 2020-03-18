@@ -1,23 +1,23 @@
-odoo.define('lunch.LunchKanbanView', function (require) {
+odoo.define('lunch.LunchListView', function (require) {
 "use strict";
 
-var LunchKanbanController = require('lunch.LunchKanbanController');
+var LunchListController = require('lunch.LunchListController');
 var LunchModel = require('lunch.LunchModel');
-var LunchKanbanRenderer = require('lunch.LunchKanbanRenderer');
+var LunchListRenderer = require('lunch.LunchListRenderer');
 
 var core = require('web.core');
-var KanbanView = require('web.KanbanView');
+var ListView = require('web.ListView');
 var view_registry = require('web.view_registry');
 
 var _lt = core._lt;
 
-var LunchKanbanView = KanbanView.extend({
-    config: _.extend({}, KanbanView.prototype.config, {
-        Controller: LunchKanbanController,
+var LunchListView = ListView.extend({
+    config: _.extend({}, ListView.prototype.config, {
+        Controller: LunchListController,
         Model: LunchModel,
-        Renderer: LunchKanbanRenderer,
+        Renderer: LunchListRenderer,
     }),
-    display_name: _lt('Lunch Kanban'),
+    display_name: _lt('Lunch List'),
 
     //--------------------------------------------------------------------------
     // Private
@@ -32,8 +32,8 @@ var LunchKanbanView = KanbanView.extend({
     },
 });
 
-view_registry.add('lunch_kanban', LunchKanbanView);
+view_registry.add('lunch_list', LunchListView);
 
-return LunchKanbanView;
+return LunchListView;
 
 });
