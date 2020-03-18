@@ -45,7 +45,7 @@ QUnit.test('basic rendering', async function (assert) {
     livechat.setMessages(messages);
 
     var chatWindow = new ChatWindow(parent, livechat);
-    testUtils.mock.addMockEnvironment(parent, {});
+    await testUtils.mock.addMockEnvironment(parent, {});
     await chatWindow.appendTo($('#qunit-fixture'));
     chatWindow.render();
 
@@ -95,7 +95,7 @@ QUnit.test('define several livechat colors', async function (assert) {
         headerBackgroundColor: 'yellow',
         titleColor: 'green',
     });
-    testUtils.mock.addMockEnvironment(parent, {});
+    await testUtils.mock.addMockEnvironment(parent, {});
     await chatWindow.appendTo($('#qunit-fixture'));
     chatWindow.render();
     assert.strictEqual(

@@ -31,7 +31,7 @@ QUnit.module('mail', {
 QUnit.module('model', {}, function () {
 QUnit.module('CC Throttle Function');
 
-QUnit.test('cancel()', function (assert) {
+QUnit.test('cancel()', async function (assert) {
     var done = assert.async();
     assert.expect(3);
 
@@ -39,7 +39,7 @@ QUnit.test('cancel()', function (assert) {
     var def = testUtils.makeTestPromise();
     var step = 1;
 
-    var widget = testUtils.createParent({
+    var widget = await testUtils.createParent({
         mockRPC: function (route, args) {
             if (args.method === '__rpc__') {
                 assert.step(args.method + args.args[0]);
@@ -87,7 +87,7 @@ QUnit.test('cancel()', function (assert) {
     });
 });
 
-QUnit.test('clear()', function (assert) {
+QUnit.test('clear()', async function (assert) {
     var done = assert.async();
     assert.expect(5);
 
@@ -96,7 +96,7 @@ QUnit.test('clear()', function (assert) {
     var def2 = testUtils.makeTestPromise();
     var step = 1;
 
-    var widget = testUtils.createParent({
+    var widget = await testUtils.createParent({
         mockRPC: function (route, args) {
             if (args.method === '__rpc__') {
                 assert.step(args.method + args.args[0]);

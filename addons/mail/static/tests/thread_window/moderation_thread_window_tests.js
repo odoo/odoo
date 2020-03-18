@@ -110,7 +110,7 @@ QUnit.test('moderator: moderated channel with pending moderation message', async
         res_id: 1,
     }];
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
     });

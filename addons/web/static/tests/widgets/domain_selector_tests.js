@@ -60,7 +60,7 @@ QUnit.module('DomainSelector', {
             readonly: false,
             debugMode: true,
         });
-        testUtils.mock.addMockEnvironment(domainSelector, {data: this.data});
+        await testUtils.mock.addMockEnvironment(domainSelector, {data: this.data});
         await domainSelector.appendTo($target);
 
         // As we gave an empty domain, there should be a visible button to add
@@ -161,7 +161,7 @@ QUnit.module('DomainSelector', {
         var domainSelector = new DomainSelector(null, "partner", [["nice_datetime", "=", "2017-03-27 15:42:00"]], {
             readonly: false,
         });
-        testUtils.mock.addMockEnvironment(domainSelector, {data: this.data});
+        await testUtils.mock.addMockEnvironment(domainSelector, {data: this.data});
         await domainSelector.appendTo($target);
 
         // Check that there is a datepicker to choose the date
@@ -189,7 +189,7 @@ QUnit.module('DomainSelector', {
             debugMode: true,
             readonly: false,
         });
-        testUtils.mock.addMockEnvironment(domainSelector, {data: this.data});
+        await testUtils.mock.addMockEnvironment(domainSelector, {data: this.data});
         await domainSelector.appendTo($target);
 
         await testUtils.fields.editAndTrigger(domainSelector.$('.o_domain_leaf_value_input'),
@@ -210,7 +210,7 @@ QUnit.module('DomainSelector', {
             debugMode: true,
             readonly: false,
         });
-        testUtils.mock.addMockEnvironment(domainSelector, {data: this.data});
+        await testUtils.mock.addMockEnvironment(domainSelector, {data: this.data});
         await domainSelector.appendTo($target);
 
         assert.strictEqual(domainSelector.$el.text(), "This domain is not supported.",
@@ -230,7 +230,7 @@ QUnit.module('DomainSelector', {
             debugMode: true,
             default: [["foo","=","kikou"]],
         });
-        testUtils.mock.addMockEnvironment(domainSelector, {data: this.data});
+        await testUtils.mock.addMockEnvironment(domainSelector, {data: this.data});
         await domainSelector.appendTo($target);
 
         // Clicking on the button should add a visible field selector in the
