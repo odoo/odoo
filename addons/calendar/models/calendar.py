@@ -1768,7 +1768,9 @@ class Meeting(models.Model):
                 new_arg = (arg[0], arg[1], get_real_ids(arg[2]))
             new_args.append(new_arg)
 
-        if not self._context.get('virtual_id', True):
+        # update_custom_fields: context used by the ORM to check if custom fields (studio) should be updated
+        virtual_id_fallback = not self._context.get('update_custom_fields')
+        if not self._context.get('virtual_id', virtual_id_fallback):
             return super(Meeting, self)._search(new_args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
         if any(arg[0] == 'start' for arg in args) and \
