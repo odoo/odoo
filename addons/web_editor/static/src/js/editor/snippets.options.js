@@ -1813,8 +1813,8 @@ registry.sizing = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    updateUI: function () {
-        this._super(...arguments);
+    updateUI: async function () {
+        await this._super(...arguments);
         const resizeValues = this._getSize();
         _.each(resizeValues, (value, key) => {
             this.$handles.filter('.' + key).toggleClass('readonly', !value);

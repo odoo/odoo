@@ -367,8 +367,8 @@ options.registry.CarouselItem = options.Class.extend({
      *
      * @override
      */
-    updateUI: function () {
-        this._super(...arguments);
+    updateUI: async function () {
+        await this._super(...arguments);
         const $items = this.$carousel.find('.carousel-item');
         const $activeSlide = $items.filter('.active');
         const updatedText = ` (${$activeSlide.index() + 1}/${$items.length})`;
@@ -1603,8 +1603,8 @@ options.registry.topMenuColor = options.Class.extend({
     /**
      * @override
      */
-    updateUI: function () {
-        this._super(...arguments);
+    updateUI: async function () {
+        await this._super(...arguments);
         this.trigger_up('action_demand', {
             actionName: 'get_page_option',
             params: ['header_overlay'],
