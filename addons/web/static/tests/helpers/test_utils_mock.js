@@ -315,7 +315,6 @@ async function addMockEnvironment(widget, params) {
     // Deploy services
     var done = false;
     var servicesToDeploy = _.clone(params.services);
-    const servicePromises = [];
     if (!servicesToDeploy.ajax) {
         services.ajax = null; // use mocked ajax from mocked server
     }
@@ -333,7 +332,7 @@ async function addMockEnvironment(widget, params) {
             intercept(service, "get_session", function (event) {
                 event.data.callback(session);
             });
-            servicePromises.push(service.start());
+            service.start();
         } else {
             var serviceNames = _.keys(servicesToDeploy);
             if (serviceNames.length) {
@@ -343,7 +342,8 @@ async function addMockEnvironment(widget, params) {
         }
     }
 
-    await Promise.all(servicePromises);
+    // Wait for asynchronous services to properly start
+    await new Promise(setTimeout);
 
     return mockServer;
 }
