@@ -348,7 +348,7 @@ odoo.define('web.ActWindowActionManager', function (require) {
                 this._createViewController(action, viewType, viewOptions, { index });
             } catch (e) {
                 if (e.message === 'Plugin Error') {
-                    action.controller = currentController;
+                    return Promise.reject();
                 } else {
                     throw e;
                 }
