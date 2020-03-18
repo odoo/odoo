@@ -1596,6 +1596,22 @@ options.registry.topMenuColor = options.Class.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    selectStyle(previewMode, widgetValue, params) {
+        this._super(...arguments);
+        const className = widgetValue ? (params.colorPrefix + widgetValue) : '';
+        this.trigger_up('action_demand', {
+            actionName: 'toggle_page_option',
+            params: [{name: 'header_color', value: className}],
+        });
+    },
+
+    //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
@@ -1610,24 +1626,6 @@ options.registry.topMenuColor = options.Class.extend({
             onSuccess: value => {
                 this.$el.toggleClass('d-none', !value);
             },
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _onColorButtonClick: function () {
-        this._super.apply(this, arguments);
-        var bgs = this.$target.attr('class').match(/bg-(\w|-)+/g);
-        var allowedBgs = this.classes.split(' ');
-        var color = _.intersection(bgs, allowedBgs).join(' ');
-        this.trigger_up('action_demand', {
-            actionName: 'toggle_page_option',
-            params: [{name: 'header_color', value: color}],
         });
     },
 });
