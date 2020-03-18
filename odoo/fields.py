@@ -1820,7 +1820,7 @@ class Binary(Field):
             value = value.encode()
         if value[:1] in magic_bytes:
             try:
-                decoded_value = base64.b64decode(value.translate(None, delete=b'\r\n'), validate=True)
+                decoded_value = base64.b64decode(value.translate(None, b'\r\n'), validate=True)
             except binascii.Error:
                 decoded_value = value
             # Full mimetype detection
