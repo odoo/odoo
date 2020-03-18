@@ -14,7 +14,7 @@ class TestMenusAdmin(odoo.tests.HttpCase):
         for app in menus['children']:
                 with self.subTest(app=app['name']):
                     _logger.runbot('Testing %s', app['name'])
-                    self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere'](%d);" % app['id'], "odoo.isReady === true", login="admin", timeout=300)
+                    self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere']('%s');" % app['xmlid'], "odoo.isReady === true", login="admin", timeout=300)
                     self.terminate_browser()
 
 
@@ -26,7 +26,7 @@ class TestMenusDemo(odoo.tests.HttpCase):
         for app in menus['children']:
                 with self.subTest(app=app['name']):
                     _logger.runbot('Testing %s', app['name'])
-                    self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere'](%d);" % app['id'], "odoo.isReady === true", login="demo", timeout=300)
+                    self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere']('%s');" % app['xmlid'], "odoo.isReady === true", login="demo", timeout=300)
                     self.terminate_browser()
 
 @odoo.tests.tagged('post_install', '-at_install')
