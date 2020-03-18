@@ -493,8 +493,8 @@ QUnit.test('Activity view: discard an activity creation dialog', async function 
     });
 
     await testUtils.actionManager.doAction(1);
-    await testUtils.owlCompatibilityExtraNextTick();
     await testUtils.dom.click($(webClient.el).find('.o_activity_view .o_data_row .o_activity_empty_cell:first'));
+    await testUtils.owlCompatibilityExtraNextTick();
     assert.containsOnce(document.body, '.modal.o_technical_modal',
         "Activity Modal should be opened");
 

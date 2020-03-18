@@ -165,8 +165,8 @@ QUnit.module('WebClient', {
         assert.containsOnce(webClient, '.o_list_view');
         assert.strictEqual(webClient.el.querySelector('.o_menu_brand').innerText, 'Partners');
         assert.strictEqual(webClient.el.querySelector('.breadcrumb').innerText, 'Partners');
-
         await testUtils.dom.click(webClient.el.querySelector('a[data-menu-id="3"]'));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(webClient, '.o_form_view');
         assert.strictEqual(webClient.el.querySelector('.o_menu_brand').innerText, 'Partners');
         assert.strictEqual(webClient.el.querySelector('.breadcrumb').innerText, 'New');
@@ -190,6 +190,7 @@ QUnit.module('WebClient', {
 
         await testUtils.dom.click(webClient.el.querySelector('.o_menu_apps li a'));
         await testUtils.dom.click(webClient.el.querySelector('.o_menu_apps a[data-menu-id="5"]'));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(webClient, '.o_kanban_view');
         assert.strictEqual(webClient.el.querySelector('.o_menu_brand').innerText, 'Tasks');
         assert.strictEqual(webClient.el.querySelector('.breadcrumb').innerText, 'Tasks');
@@ -206,16 +207,18 @@ QUnit.module('WebClient', {
             archs: this.archs,
             menus: this.menus,
         });
-        
+
         // Open Partner form view and enter some text
         await testUtils.dom.click(webClient.el.querySelector('.o_menu_sections a[data-menu-id="3"]'));
+        await testUtils.owlCompatibilityExtraNextTick();
         await testUtils.fields.editInput(webClient.el.querySelector('.o_input[name=display_name]'), "TEST");
 
         // Open dialog without saving should not ask to discard
         await testUtils.dom.click(webClient.el.querySelector('.o_menu_sections a[data-menu-id="6"]'));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(webClient, '.o_dialog');
         assert.containsOnce(webClient, '.o_dialog .o_act_window .o_view_controller');
-        
+
         webClient.destroy();
     });
 
@@ -230,18 +233,22 @@ QUnit.module('WebClient', {
         });
 
         await testUtils.dom.click(webClient.el.querySelector('.o_data_row'));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(webClient, '.o_form_buttons_view .o_form_button_edit');
 
         await testUtils.dom.click(webClient.el.querySelector('.o_form_buttons_view .o_form_button_edit'));
+        await testUtils.owlCompatibilityExtraNextTick();
 
         assert.containsOnce(webClient, '.o_form_buttons_edit .o_form_button_save');
         assert.containsOnce(webClient, '.o_statusbar_buttons button[name=do_something]');
 
         await testUtils.dom.click(webClient.el.querySelector('.o_statusbar_buttons button[name=do_something]'));
+        await testUtils.owlCompatibilityExtraNextTick();
 
         assert.containsOnce(webClient, '.o_form_buttons_edit .o_form_button_save');
 
         await testUtils.dom.click(webClient.el.querySelector('.o_form_buttons_edit .o_form_button_save'));
+        await testUtils.owlCompatibilityExtraNextTick();
 
         assert.containsOnce(webClient, '.o_form_buttons_view .o_form_button_edit');
 

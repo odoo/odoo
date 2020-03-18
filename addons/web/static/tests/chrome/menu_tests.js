@@ -262,6 +262,7 @@ odoo.define('web.menu_tests', function (require) {
             assert.containsNone(webClient, '.o_extra_menu_items');
             await testUtils.dom.click(webClient.el.querySelector('.o_menu_apps [data-toggle="dropdown"]'));
             await testUtils.dom.click(webClient.el.querySelector('.o_menu_apps [data-menu-id="999"]'));
+            await testUtils.owlCompatibilityExtraNextTick();
             // FIXME
             for (let i=0; i<16; i++) {
                 await testUtils.nextTick();

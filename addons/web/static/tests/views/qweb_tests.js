@@ -53,6 +53,7 @@ QUnit.module("Views", {
             assert.ok(!resolved, "Action cannot be resolved synchronously");
 
             await utils.nextTick();
+            await utils.owlCompatibilityExtraNextTick();
             assert.ok(resolved, "Action is resolved asynchronously");
 
             var $content = webClient.$('.o_content');

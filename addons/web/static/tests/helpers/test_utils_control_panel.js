@@ -2,6 +2,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
     "use strict";
 
     const { click, triggerEvent, getNode } = require('web.test_utils_dom');
+    const { owlCompatibilityExtraNextTick } = require('web.test_utils_async');
     const { editInput, editSelect, editAndTrigger } = require('web.test_utils_fields');
 
     //-------------------------------------------------------------------------
@@ -393,6 +394,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      */
     async function switchView(el, viewType) {
         await click(getNode(el).querySelector(`button.o_switch_view.o_${viewType}`));
+        await owlCompatibilityExtraNextTick();
     }
 
     return {

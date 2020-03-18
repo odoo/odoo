@@ -126,7 +126,9 @@ QUnit.module('base_settings_tests', {
 
         await testUtils.actionManager.doAction(1);
         await testUtils.dom.click(webClient.el.querySelector('button[name="4"]'));
+        await testUtils.owlCompatibilityExtraNextTick();
         await testUtils.dom.click($('.o_control_panel .breadcrumb-item a'));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.hasClass(webClient.el.querySelector('.o_form_view'), 'o_form_editable');
         assert.verifySteps([
             'load_views', // initial setting action
@@ -212,27 +214,34 @@ QUnit.module('base_settings_tests', {
             "checkbox should be checked");
 
         await testUtils.dom.click(webClient.$('button[name="4"]'));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(document.body, '.modal', "should open a warning dialog");
 
         await testUtils.dom.click($('.modal button:contains(Ok)'));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(webClient, '.o_list_view', "should be open list view");
 
         await testUtils.dom.click($('.o_control_panel .breadcrumb-item a'));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsNone(webClient, '.o_field_boolean input:checked',
             "checkbox should not be checked");
 
         await testUtils.dom.click(webClient.$("input[type='checkbox']"));
         await testUtils.dom.click(webClient.$('button[name="4"]'));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(document.body, '.modal', "should open a warning dialog");
 
         await testUtils.dom.click($('.modal button:contains(Cancel)'));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(webClient, '.o_form_view' ,"should be remain on form view");
 
         await testUtils.dom.click(webClient.$("button[name='execute']"));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsNone(document.body, '.modal', "should not open a warning dialog");
 
         await testUtils.dom.click(webClient.$("input[type='checkbox']"));
         await testUtils.dom.click(webClient.$("button[name='cancel']"));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsNone(document.body, '.modal', "should not open a warning dialog");
 
         webClient.destroy();

@@ -2263,7 +2263,6 @@ QUnit.module('Views', {
         assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_search_panel');
 
         await cpHelpers.switchView(webClient, 'pivot');
-        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(webClient, '.o_content .o_pivot');
         assert.containsNone(webClient, '.o_content .o_search_panel');
 
@@ -2272,6 +2271,7 @@ QUnit.module('Views', {
         assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_search_panel');
 
         await testUtils.dom.click($(webClient.el).find('.o_data_row .o_data_cell:first'));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(webClient, '.o_content .o_form_view');
         assert.containsNone(webClient, '.o_content .o_search_panel');
 
@@ -2305,7 +2305,6 @@ QUnit.module('Views', {
         assert.containsNone(webClient, '.o_content .o_search_panel');
 
         await cpHelpers.switchView(webClient, 'pivot');
-        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_pivot');
         assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_search_panel');
 
@@ -2432,7 +2431,6 @@ QUnit.module('Views', {
 
         // switch to pivot
         await cpHelpers.switchView(webClient, 'pivot');
-        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(webClient, '.o_content .o_pivot');
         assert.containsNone(webClient, '.o_content .o_search_panel');
         assert.strictEqual(webClient.$('.o_pivot_cell_value').text(), '15');
@@ -2474,6 +2472,7 @@ QUnit.module('Views', {
 
         await testUtils.actionManager.doAction(2);
         await testUtils.dom.click(webClient.$('.o_form_view button:contains("multi view")'));
+        await testUtils.owlCompatibilityExtraNextTick();
 
         assert.containsOnce(webClient, '.o_kanban_view');
         assert.containsOnce(webClient, '.o_search_panel');
@@ -2497,6 +2496,7 @@ QUnit.module('Views', {
 
         await testUtils.actionManager.doAction(2);
         await testUtils.dom.click(webClient.$('.o_form_view button:contains("multi view")'));
+        await testUtils.owlCompatibilityExtraNextTick();
 
         assert.containsOnce(webClient, '.o_kanban_view');
         assert.containsNone(webClient, '.o_search_panel');
