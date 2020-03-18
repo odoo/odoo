@@ -1676,7 +1676,10 @@ odoo.define('web.ControlPanelModel', function (require) {
             for (const key in this.actionContext) {
                 const match = /^search_default_(.*)$/.exec(key);
                 if (match) {
-                    this.searchDefaults[match[1]] = this.actionContext[key];
+                    const val = this.actionContext[key];
+                    if (val) {
+                        this.searchDefaults[match[1]] = val;
+                    }
                     delete this.actionContext[key];
                 }
             }

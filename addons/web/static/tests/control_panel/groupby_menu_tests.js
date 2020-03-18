@@ -443,5 +443,30 @@ odoo.define('web.groupby_menu_tests', function (require) {
 
             controlPanel.destroy();
         });
+
+        QUnit.test('falsy search default groupbys are not activated', async function (assert) {
+            assert.expect(2);
+
+            const arch = `
+                <search>
+                    <filter string="Birthday" name="birthday" context="{'group_by': 'birthday'}"/>
+                    <filter string="Date" name="date" context="{'group_by': 'foo'}"/>
+                </search>`;
+            const params = {
+                cpStoreConfig: {
+                    viewInfo: { arch, fields: this.fields },
+                    searchMenuTypes,
+                    actionContext: { search_default_birthday: false, search_default_foo: 0 }
+                },
+                cpProps: { fields: this.fields, searchMenuTypes },
+            };
+
+            const controlPanel = await createControlPanel(params);
+            const { groupBy } = controlPanel.getQuery();
+            assert.deepEqual(groupBy, []);
+            assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), []);
+
+            controlPanel.destroy();
+        });
     });
 });
