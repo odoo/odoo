@@ -10,6 +10,7 @@
     var testedMenus;
     var blackListedMenus = ['base.menu_theme_store', 'base.menu_third_party'];
     var appsMenusOnly = false;
+    let isEnterprise = odoo.session_info.server_version_info[5] === 'e';
 
     function createWebClientHooks() {
         var AbstractController = odoo.__DEBUG__.services['web.AbstractController'];
@@ -46,49 +47,46 @@
         }
     }
 
-    function clickEverywhere(menu_id, light){
+    function clickEverywhere(xmlId, light){
         appsMenusOnly = light;
-        setTimeout(_clickEverywhere, 1000, menu_id);
+        setTimeout(_clickEverywhere, 1000, xmlId);
     }
 
     // Main function that starts orchestration of tests
-    function _clickEverywhere(menu_id){
+    async function _clickEverywhere(xmlId){
         console.log("Starting ClickEverywhere test");
         var startTime = performance.now();
         createWebClientHooks();
         testedApps = [];
         testedMenus = [];
-        var isEnterprise = odoo.session_info.server_version_info[5] === 'e';
         // finding applications menus
-        var $listOfAppMenuItems;
+        let appMenuItems;
         if (isEnterprise) {
             console.log("Odoo flavor: Enterprise");
-            if (menu_id !== undefined) {
-                $listOfAppMenuItems = $('a.o_app.o_menuitem[data-menu=' + menu_id + ']');
-            } else {
-                $listOfAppMenuItems = $('a.o_app.o_menuitem');
-            }
+            appMenuItems = document.querySelectorAll(xmlId ?
+                `a.o_app.o_menuitem[data-menu-xmlid="${xmlId}"]` :
+                'a.o_app.o_menuitem'
+            );
         } else {
             console.log("Odoo flavor: Community");
-            if (menu_id !== undefined) {
-                $listOfAppMenuItems = $('a.o_app[data-menu-id=' + menu_id + ']');
-            } else {
-                $listOfAppMenuItems = $('a.o_app');
-            }
+            appMenuItems = document.querySelectorAll(xmlId ?
+                `a.o_app[data-menu-xmlid="${xmlId}"]` :
+                'a.o_app'
+            );
         }
-        console.log('Found ', $listOfAppMenuItems.length, 'apps to test');
-
-        var testPromise = Promise.resolve();
-        testPromise = chainDeferred($listOfAppMenuItems, testPromise, testApp);
-        return testPromise.then(function () {
-            console.log("Test took ", (performance.now() - startTime) / 1000, " seconds");
-            console.log("Successfully tested ", testedApps.length, " apps");
-            console.log("Successfully tested ", testedMenus.length - testedApps.length, " menus");
+        console.log("Found", appMenuItems.length, "apps to test");
+        try {
+            for (const app of appMenuItems) {
+                await testApp(app);
+            }
+            console.log("Test took", (performance.now() - startTime) / 1000, "seconds");
+            console.log("Successfully tested", testedApps.length, " apps");
+            console.log("Successfully tested", testedMenus.length - testedApps.length, "menus");
             console.log("test successful");
-        }).catch(function (error) {
-            console.log("Test took ", (performance.now() - startTime) / 1000, " seconds");
-            console.error(error || 'test failed');
-        });
+        } catch (err) {
+            console.log("Test took", (performance.now() - startTime) / 1000, "seconds");
+            console.error(err || "test failed");
+        }
     }
 
 
@@ -101,27 +99,20 @@
      * @param {DomElement} element: the App menu item
      * @returns {Promise}
      */
-    function testApp(element){
+    async function testApp(element) {
         console.log("Testing app menu:", element.dataset.menuXmlid);
-        if (testedApps.indexOf(element.dataset.menuXmlid) >= 0) return Promise.resolve(); // Another infinite loop protection
+        if (testedApps.indexOf(element.dataset.menuXmlid) >= 0) return; // Another infinite loop protection
         testedApps.push(element.dataset.menuXmlid);
-        return testMenuItem(element).then(function () {
-            if (appsMenusOnly === true) return Promise.resolve();
-            var $subMenuItems;
-            $subMenuItems = $('.o_menu_entry_lvl_1, .o_menu_entry_lvl_2, .o_menu_entry_lvl_3, .o_menu_entry_lvl_4');
-            var testMenuPromise = Promise.resolve();
-            testMenuPromise = chainDeferred($subMenuItems, testMenuPromise, testMenuItem);
-            return testMenuPromise;
-        }).then(function(){
-                // no effect in community
-                var $homeMenu = $("nav.o_main_navbar > a.o_menu_toggle.fa-th");
-                _click($homeMenu);
-                return new Promise(function(resolve){
-                    setTimeout(function(){
-                      resolve();
-                    }, 0);
-                });
-        });
+        await testMenuItem(element);
+        if (appsMenusOnly === true) return;
+        const subMenuItems = document.querySelectorAll('.o_menu_entry_lvl_1, .o_menu_entry_lvl_2, .o_menu_entry_lvl_3, .o_menu_entry_lvl_4');
+        for (const subMenuItem of subMenuItems) {
+            await testMenuItem(subMenuItem);
+        }
+        if (isEnterprise) {
+            const homeMenu = document.querySelector('nav.o_main_navbar > a.o_menu_toggle.fa-th');
+            return triggerClick(homeMenu, "home menu toggle button");
+        }
     }
 
 
@@ -133,27 +124,27 @@
      *  @param {DomElement} element: the menu item
      *  @returns {Promise}
      */
-    function testMenuItem(element){
+    async function testMenuItem(element){
         if (testedMenus.indexOf(element.dataset.menuXmlid) >= 0) return Promise.resolve(); // Avoid infinite loop
         console.log("Testing menu", element.innerText.trim(), " ", element.dataset.menuXmlid);
         testedMenus.push(element.dataset.menuXmlid);
         if (blackListedMenus.includes(element.dataset.menuXmlid)) return Promise.resolve(); // Skip black listed menus
         var startActionCount = clientActionCount;
-        _click($(element));
+        await triggerClick(element, `menu item "${element.innerText.trim()}"`);
         var isModal = false;
-        return waitForCondition(function() {
+        return waitForCondition(function () {
             // sometimes, the app is just a modal that needs to be closed
             var $modal = $('.modal[role="dialog"][open="open"]');
             if ($modal.length > 0) {
-                var $closeButton = $('header > button.close');
-                if ($closeButton.length > 0) {
-                  $closeButton.focus();
-                  _click($closeButton);
+                const closeButton = document.querySelector('header > button.close');
+                if (closeButton) {
+                    closeButton.focus();
+                    triggerClick(closeButton, "modal close button");
                 } else { $modal.modal('hide'); }
                 isModal = true;
                 return true;
             }
-            return startActionCount != clientActionCount;
+            return startActionCount !== clientActionCount;
         }).then(function() {
             if (!isModal) {
                 return testFilters();
@@ -162,9 +153,9 @@
             if (!isModal) {
                 return testViews();
             }
-        }).catch(function () {
+        }).catch(function (err) {
             console.error("Error while testing", element);
-            return Promise.reject();
+            return Promise.reject(err);
         });
     };
 
@@ -173,81 +164,62 @@
      * Orchestrate the test of views
      * This function finds the buttons that permit to switch views and orchestrate
      * the click on each of them
+     * @returns {Promise}
      */
-    function testViews() {
-            if (appsMenusOnly === true) return Promise.resolve();
-            var $switches = $("nav.o_cp_switch_buttons > button:not(.active):visible");
-            var testSwitchPromise = Promise.resolve();
-            // chainDeferred($switches, testSwitchPromise, testViewSwitch # FIXME
-            _.each($switches, function(switchButton) {
-                testSwitchPromise = testSwitchPromise.then(function () {
-                    // get the view view-type data attribute
-                    return testViewSwitch(switchButton.dataset.viewType);
-                });
-            });
-            return testSwitchPromise;
-    }
-
-    /**
-     * Test a view button
-     * @param {string} viewType: a string for the view type to test (list, kanban ...)
-     * @returns {Promise} a promise that wait for the view to be loaded
-     */
-    function testViewSwitch(viewType){
-        console.log("Testing view switch: ", viewType);
-        // timeout to avoid click debounce
-        setTimeout(function() {
-            var $element = $("nav.o_cp_switch_buttons > button[data-view-type=" + viewType + "]");
-            console.log('Clicking on: ', $element[0].dataset.viewType,  ' view switcher');
-            _click($element);
-        },250);
-        var waitViewSwitch = waitForCondition(function(){
-            return $('.o_action_manager> .o_action.o_view_controller').data('view-type') === viewType;
-        });
-        return waitViewSwitch.then(function() {
-            return testFilters();
-        });
+    async function testViews() {
+        if (appsMenusOnly === true) {
+            return;
+        }
+        const switchButtons = document.querySelectorAll('nav.o_cp_switch_buttons > button:not(.active)');
+        for (const switchButton of switchButtons) {
+            // Only way to get the viewType from the switchButton
+            const viewType = [...switchButton.classList]
+                .find(cls => cls !== 'o_switch_view' && cls.startsWith('o_'))
+                .slice(2);
+            console.log("Testing view switch:", viewType);
+            // timeout to avoid click debounce
+            setTimeout(function () {
+                const target = document.querySelector(`nav.o_cp_switch_buttons > button.o_switch_view.o_${viewType}`);
+                if (target) {
+                    triggerClick(target, `${viewType} view switcher`);
+                }
+            }, 250);
+            await waitForCondition(() => document.querySelector('.o_action_manager > .o_action.o_view_controller').dataset.viewType === viewType);
+            await testFilters();
+        }
     }
 
     /**
      * Test filters
      * Click on each filter in the control pannel
      */
-    function testFilters() {
-        if (appsMenusOnly === true) return Promise.resolve();
-        var filterProm = Promise.resolve();
-        // var $filters = $('div.o_control_panel div.btn-group.o_dropdown > ul.o_filter_menu > li:not(.o_add_custom_filter)');
-        var $filters = $('.o_filter_menu > .o_menu_item:not(.d-none)');
-        console.log("Testing " + $filters.length + " filters");
-        var filter_ids = _.compact(_.map($filters, function(f) { return f.dataset.id}));
-        filter_ids.forEach(function(filter_id){
-            filterProm = filterProm.then(function(){
-                var currentViewCount = viewUpdateCount;
-                var $filter = $('.o_menu_item[data-id="' + filter_id + '"] a');
-                // with some customized search views, the filter cannot be found
-                if ($filter[0] === undefined) {
-                    console.warn('Filter with ID ', filter_id , 'cannot be found');
-                    return Promise.resolve();
-                }
-                console.log('Clicking on filter "', $filter.text().trim(), '"');
-                _click($filter);
-                setTimeout(function() {
-                    var $filterOption = $('.o_menu_item .o_item_option[data-item_id="' + filter_id + '"]:not(.selected) a');
-                    // In case the filter is a date filter, we need to click on the first filter option (like 'today','This week' ...)
-                    if ($filterOption.length > 0) {
-                        console.log('Clicking on filter option "', $filterOption[0], '"');
-                        _click($filterOption);
-                        console.log('And now on filter again');
-                        $filter = $('.o_menu_item[data-id="' + filter_id + '"] a');
-                        _click($filter); // To avoid that the next view fold the options
-                    }
-                }, 250);
-                return waitForCondition(function() {
-                    return currentViewCount !== viewUpdateCount;
-                });
-            });
-        });
-        return filterProm;
+    async function testFilters() {
+        if (appsMenusOnly === true) {
+            return;
+        }
+        const filterMenuButton = document.querySelector('.o_control_panel .o_filter_menu > button');
+        if (!filterMenuButton) {
+            return;
+        }
+        // Open the filter menu dropdown
+        await triggerClick(filterMenuButton, `toggling menu "${filterMenuButton.innerText.trim()}"`);
+
+        const filterMenuItems = document.querySelectorAll('.o_control_panel .o_filter_menu > ul > li.o_menu_item');
+        console.log("Testing", filterMenuItems.length, "filters");
+
+        for (const filter of filterMenuItems) {
+            const currentViewCount = viewUpdateCount;
+            const filterLink = filter.querySelector('a');
+            await triggerClick(filterLink, `filter "${filter.innerText.trim()}"`);
+            if (filterLink.classList.contains('o_menu_item_parent')) {
+                // If a fitler has options, it will simply unfold and show all options.
+                // We then click on the first one.
+                const firstOption = filter.querySelector('.o_menu_item_options > li.o_item_option > a');
+                console.log();
+                await triggerClick(firstOption, `filter option "${firstOption.innerText.trim()}"`);
+            }
+            await waitForCondition(() => currentViewCount !== viewUpdateCount);
+        }
     }
 
     // utility functions
@@ -298,24 +270,32 @@
         return promise;
     }
 
+    const MOUSE_EVENTS = [
+        'mouseover',
+        'mouseenter',
+        'mousedown',
+        'mouseup',
+        'click',
+    ];
 
-    /*
-     * More realistic click action.
-     * @param {jQueryElement} $element the element on which to perform the click
+    /**
+     * Simulate all of the mouse events triggered during a click action.
+     * @param {EventTarget} target the element on which to perform the click
+     * @param {string} elDescription description of the item
+     * @returns {Promise} resolved after next animation frame
      */
-    function _click($element) {
-        if ($element.length == 0) return;
-        triggerMouseEvent($element, "mouseover");
-        triggerMouseEvent($element, "mouseenter");
-        triggerMouseEvent($element, "mousedown");
-        triggerMouseEvent($element, "mouseup");
-        triggerMouseEvent($element, "click");
-
-        function triggerMouseEvent($el, type, count) {
-            var e = document.createEvent("MouseEvents");
-            e.initMouseEvent(type, true, true, window, count || 0, 0, 0, 0, 0, false, false, false, false, 0, $el[0]);
-            $el[0].dispatchEvent(e);
+    async function triggerClick(target, elDescription) {
+        if (target) {
+            console.log("Clicking on", elDescription);
+        } else {
+            throw new Error(`No element "${elDescription}" found.`);
         }
+        MOUSE_EVENTS.forEach(type => {
+            const event = new MouseEvent(type, { bubbles: true, cancelable: true, view: window });
+            target.dispatchEvent(event);
+        });
+        await new Promise(setTimeout);
+        await new Promise(r => requestAnimationFrame(r));
     }
 
     exports.clickEverywhere = clickEverywhere;
