@@ -2835,7 +2835,7 @@ QUnit.module('ActionManager', {
 
         assert.containsOnce(webClient, '.o_report_iframe',
             "should have opened the report client action");
-        assert.containsOnce(actionManager, '.o_cp_buttons .o_report_buttons .o_report_print');
+        assert.containsOnce(webClient, '.o_cp_buttons .o_report_buttons .o_report_print');
 
         assert.verifySteps([
             '/web/action/load',
