@@ -557,7 +557,10 @@ class MrpProduction(models.Model):
             if picking_type_id:
                 values['name'] = picking_type_id.sequence_id.next_by_id()
             else:
-                values['name'] = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
+                try:
+                    values['name'] = self.env['ir.sequence'].next_by_code('mrp.production')
+                except UserError:
+                    values['name'] = _('New')
         if not values.get('procurement_group_id'):
             values['procurement_group_id'] = self.env["procurement.group"].create({'name': values['name']}).id
         production = super(MrpProduction, self).create(values)

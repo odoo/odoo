@@ -127,7 +127,10 @@ class MrpUnbuild(models.Model):
     @api.model
     def create(self, vals):
         if not vals.get('name') or vals['name'] == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('mrp.unbuild') or _('New')
+            try:
+                vals['name'] = self.env['ir.sequence'].next_by_code('mrp.unbuild')
+            except UserError:
+                vals['name'] = _('New')
         return super(MrpUnbuild, self).create(vals)
 
     def unlink(self):

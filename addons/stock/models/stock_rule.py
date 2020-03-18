@@ -369,12 +369,18 @@ class ProcurementGroup(models.Model):
     _description = 'Procurement Group'
     _order = "id desc"
 
+    def _default_name(self):
+        try:
+            return self.env['ir.sequence'].next_by_code('procurement.group')
+        except UserError:
+            return ''
+
     Procurement = namedtuple('Procurement', ['product_id', 'product_qty',
         'product_uom', 'location_id', 'name', 'origin', 'company_id', 'values'])
     partner_id = fields.Many2one('res.partner', 'Partner')
     name = fields.Char(
         'Reference',
-        default=lambda self: self.env['ir.sequence'].next_by_code('procurement.group') or '',
+        default=_default_name,
         required=True)
     move_type = fields.Selection([
         ('direct', 'Partial'),

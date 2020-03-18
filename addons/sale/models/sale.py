@@ -460,7 +460,10 @@ class SaleOrder(models.Model):
             seq_date = None
             if 'date_order' in vals:
                 seq_date = fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(vals['date_order']))
-            vals['name'] = self.env['ir.sequence'].next_by_code('sale.order', sequence_date=seq_date) or _('New')
+            try:
+                vals['name'] = self.env['ir.sequence'].next_by_code('sale.order', sequence_date=seq_date)
+            except UserError:
+                vals['name'] = _('New')
 
         # Makes sure partner_invoice_id', 'partner_shipping_id' and 'pricelist_id' are defined
         if any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id']):

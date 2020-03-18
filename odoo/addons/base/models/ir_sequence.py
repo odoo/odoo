@@ -271,7 +271,7 @@ class IrSequence(models.Model):
         seq_ids = self.search([('code', '=', sequence_code), ('company_id', 'in', [company_id, False])], order='company_id')
         if not seq_ids:
             _logger.debug("No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company." % sequence_code)
-            return False
+            raise UserError(_("No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company.") % sequence_code)
         seq_id = seq_ids[0]
         return seq_id._next(sequence_date=sequence_date)
 

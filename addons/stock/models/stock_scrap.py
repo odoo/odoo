@@ -132,7 +132,10 @@ class StockScrap(models.Model):
     def do_scrap(self):
         self._check_company()
         for scrap in self:
-            scrap.name = self.env['ir.sequence'].next_by_code('stock.scrap') or _('New')
+            try:
+                scrap.name = self.env['ir.sequence'].next_by_code('stock.scrap')
+            except UserError:
+                scrap.name = _('New')
             move = self.env['stock.move'].create(scrap._prepare_move_values())
             # master: replace context by cancel_backorder
             move.with_context(is_scrap=True)._action_done()

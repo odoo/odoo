@@ -650,9 +650,15 @@ class QuantPackage(models.Model):
     _description = "Packages"
     _order = 'name'
 
+    def _default_name(self):
+        try:
+            return self.env['ir.sequence'].next_by_code('stock.quant.package')
+        except UserError:
+            return _('Unknown Pack')
+
     name = fields.Char(
         'Package Reference', copy=False, index=True,
-        default=lambda self: self.env['ir.sequence'].next_by_code('stock.quant.package') or _('Unknown Pack'))
+        default=_default_name)
     quant_ids = fields.One2many('stock.quant', 'package_id', 'Bulk Content', readonly=True,
         domain=['|', ('quantity', '!=', 0), ('reserved_quantity', '!=', 0)])
     packaging_id = fields.Many2one(

@@ -110,7 +110,10 @@ class StockPickingBatch(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('name', '/') == '/':
-            vals['name'] = self.env['ir.sequence'].next_by_code('picking.batch') or '/'
+            try:
+                vals['name'] = self.env['ir.sequence'].next_by_code('picking.batch')
+            except UserError:
+                vals['name'] = '/'
         return super().create(vals)
 
     def write(self, vals):

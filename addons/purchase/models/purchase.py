@@ -175,7 +175,10 @@ class PurchaseOrder(models.Model):
             seq_date = None
             if 'date_order' in vals:
                 seq_date = fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(vals['date_order']))
-            vals['name'] = self.env['ir.sequence'].next_by_code('purchase.order', sequence_date=seq_date) or '/'
+            try:
+                vals['name'] = self.env['ir.sequence'].next_by_code('purchase.order', sequence_date=seq_date)
+            except UserError:
+                vals['name'] = '/'
         return super(PurchaseOrder, self).create(vals)
 
     def unlink(self):

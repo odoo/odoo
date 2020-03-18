@@ -4,7 +4,7 @@
 import logging
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.addons.iap import jsonrpc, InsufficientCreditError
 
 _logger = logging.getLogger(__name__)
@@ -194,7 +194,10 @@ class CRMLeadMiningRequest(models.Model):
     def action_submit(self):
         self.ensure_one()
         if self.name == _('New'):
-            self.name = self.env['ir.sequence'].next_by_code('crm.iap.lead.mining.request') or _('New')
+            try:
+                self.name = self.env['ir.sequence'].next_by_code('crm.iap.lead.mining.request')
+            except UserError:
+                self.name = _('New')
         results = self._perform_request()
         if results:
             self._create_leads_from_response(results)

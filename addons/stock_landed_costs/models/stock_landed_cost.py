@@ -104,7 +104,10 @@ class StockLandedCost(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('name', _('New')) == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('stock.landed.cost')
+            try:
+                vals['name'] = self.env['ir.sequence'].next_by_code('stock.landed.cost')
+            except UserError:
+                vals['name'] = ''
         return super().create(vals)
 
     def unlink(self):

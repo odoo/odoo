@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class MrpRouting(models.Model):
@@ -26,7 +27,10 @@ class MrpRouting(models.Model):
     @api.model
     def create(self, vals):
         if 'code' not in vals or vals['code'] == _('New'):
-            vals['code'] = self.env['ir.sequence'].next_by_code('mrp.routing') or _('New')
+            try:
+                vals['code'] = self.env['ir.sequence'].next_by_code('mrp.routing')
+            except UserError:
+                vals['code'] = _('New')
         return super(MrpRouting, self).create(vals)
 
 
