@@ -202,15 +202,15 @@ odoo.define('web.action_menus_tests', function (require) {
             const actionMenus = await createComponent(ActionMenus, {
                 env: {
                     action: this.action,
-                    services: {
-                        navigate(url) {
-                            assert.step(url);
-                        },
-                    },
                     view: this.view,
                 },
+                services: {
+                    navigate(url) {
+                        assert.step(url);
+                    },
+                },
                 props: this.props,
-                async mockRPC(route, args) {
+                async mockRPC(route) {
                     switch (route) {
                         case '/web/action/load':
                             throw new Error("No action should be loaded.");

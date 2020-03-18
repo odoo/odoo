@@ -17,16 +17,14 @@ odoo.define('web.custom_file_input_tests', function (require) {
             assert.expect(6);
 
             const customFileInput = await createComponent(CustomFileInput, {
-                env: {
-                    services: {
-                        async httpRequest(route, params) {
-                            assert.deepEqual(params, {
-                                csrf_token: odoo.csrf_token,
-                                ufile: [],
-                            });
-                            assert.step(route);
-                            return '[]';
-                        },
+                services: {
+                    async httpRequest(route, params) {
+                        assert.deepEqual(params, {
+                            csrf_token: odoo.csrf_token,
+                            ufile: [],
+                        });
+                        assert.step(route);
+                        return '[]';
                     },
                 },
             });
@@ -49,18 +47,16 @@ odoo.define('web.custom_file_input_tests', function (require) {
             assert.expect(6);
 
             const customFileInput = await createComponent(CustomFileInput, {
-                env: {
-                    services: {
-                        async httpRequest(route, params) {
-                            assert.deepEqual(params, {
-                                id: 5,
-                                model: 'res.model',
-                                csrf_token: odoo.csrf_token,
-                                ufile: [],
-                            });
-                            assert.step(route);
-                            return '[]';
-                        },
+                services: {
+                    async httpRequest(route, params) {
+                        assert.deepEqual(params, {
+                            id: 5,
+                            model: 'res.model',
+                            csrf_token: odoo.csrf_token,
+                            ufile: [],
+                        });
+                        assert.step(route);
+                        return '[]';
                     },
                 },
                 props: {

@@ -11,7 +11,6 @@ var AbstractStorageService = require('web.AbstractStorageService');
 var Class = require('web.Class');
 const dom = require('web.dom');
 var RamStorage = require('web.RamStorage');
-const makeTestEnvironment = require('web.test_env');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 

@@ -126,13 +126,11 @@ odoo.define('web.favorite_menu_tests', function (require) {
                         ]
                     });
                 },
-                env: {
-                    dataManager: {
-                        create_filter: async function (filter) {
-                            assert.strictEqual(filter.sort, '["foo","bar desc"]',
-                                'The right format for the string "sort" should be sent to the server'
-                            );
-                        }
+                dataManager: {
+                    create_filter: async function (filter) {
+                        assert.strictEqual(filter.sort, '["foo","bar desc"]',
+                            'The right format for the string "sort" should be sent to the server'
+                        );
                     }
                 },
             };
@@ -171,15 +169,13 @@ odoo.define('web.favorite_menu_tests', function (require) {
                 'get-controller-query-params': function (callback) {
                     callback();
                 },
-                env: {
-                    dataManager: {
-                        create_filter: async function (filter) {
-                            assert.strictEqual(
-                                filter.domain,
-                                "[(\"date_field\", \">=\", (context_today() + relativedelta()).strftime(\"%Y-%m-%d\"))]"
-                            );
-                            return 1; // serverSideId
-                        }
+                dataManager: {
+                    create_filter: async function (filter) {
+                        assert.strictEqual(
+                            filter.domain,
+                            "[(\"date_field\", \">=\", (context_today() + relativedelta()).strftime(\"%Y-%m-%d\"))]"
+                        );
+                        return 1; // serverSideId
                     }
                 },
             };
@@ -214,15 +210,13 @@ odoo.define('web.favorite_menu_tests', function (require) {
                 'get-controller-query-params': function (callback) {
                     callback();
                 },
-                env: {
-                    dataManager: {
-                        create_filter: async function (filter) {
-                            assert.strictEqual(
-                                filter.domain,
-                                `[["foo", "ilike", "a"]]`
-                            );
-                            return 1; // serverSideId
-                        }
+                dataManager: {
+                    create_filter: async function (filter) {
+                        assert.strictEqual(
+                            filter.domain,
+                            `[["foo", "ilike", "a"]]`
+                        );
+                        return 1; // serverSideId
                     }
                 },
             };
@@ -264,11 +258,9 @@ odoo.define('web.favorite_menu_tests', function (require) {
                     const { domain } = searchQuery;
                     assert.deepEqual(domain, []);
                 },
-                env: {
-                    dataManager: {
-                        delete_filter: function () {
-                            return Promise.resolve();
-                        }
+                dataManager: {
+                    delete_filter: function () {
+                        return Promise.resolve();
                     }
                 },
             };
@@ -438,33 +430,33 @@ odoo.define('web.favorite_menu_tests', function (require) {
                 'get-controller-query-params': function (callback) {
                     callback();
                 },
-                env: {
-                    session: { uid: 4 },
-                    services: {
-                        notification: {
-                            notify: function (params) {
-                                assert.deepEqual(params, {
-                                    title: "Error",
-                                    message: "Filter with same name already exists.",
-                                    type: "danger"
-                                });
-                            },
-                        }
-                    },
-                    dataManager: {
-                        create_filter: async function (irFilter) {
-                            assert.deepEqual(irFilter, {
-                                "action_id": undefined,
-                                "context": { "group_by": [] },
-                                "domain": "[]",
-                                "is_default": false,
-                                "model_id": undefined,
-                                "name": "My favorite 2",
-                                "sort": "[]",
-                                "user_id": 4,
+                session: {
+                    uid: 4,
+                },
+                services: {
+                    notification: {
+                        notify: function (params) {
+                            assert.deepEqual(params, {
+                                title: "Error",
+                                message: "Filter with same name already exists.",
+                                type: "danger"
                             });
-                            return 2; // serverSideId
-                        }
+                        },
+                    }
+                },
+                dataManager: {
+                    create_filter: async function (irFilter) {
+                        assert.deepEqual(irFilter, {
+                            "action_id": undefined,
+                            "context": { "group_by": [] },
+                            "domain": "[]",
+                            "is_default": false,
+                            "model_id": undefined,
+                            "name": "My favorite 2",
+                            "sort": "[]",
+                            "user_id": 4,
+                        });
+                        return 2; // serverSideId
                     }
                 },
             };
@@ -530,13 +522,11 @@ odoo.define('web.favorite_menu_tests', function (require) {
                 model: 'partner',
                 res_id: 1,
                 View: FormView,
-                env: {
-                    dataManager: {
-                        create_filter(filter) {
-                            assert.strictEqual(filter.name, "Awesome Test Customer Filter",
-                                "filter name should be correct");
-                        },
-                    }
+                dataManager: {
+                    create_filter(filter) {
+                        assert.strictEqual(filter.name, "Awesome Test Customer Filter",
+                            "filter name should be correct");
+                    },
                 },
             });
 

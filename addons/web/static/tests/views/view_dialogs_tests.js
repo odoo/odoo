@@ -450,19 +450,17 @@ QUnit.module('Views', {
                     '</search>',
 
             },
-            env: {
-                dataManager: {
-                    create_filter: function (filter) {
-                        assert.strictEqual(filter.domain, `[("bar", "=", True)]`,
-                            "should save the correct domain");
-                        const expectedContext = {
-                            group_by: [], // default groupby is an empty list
-                            shouldBeInFilterContext: true,
-                        };
-                        assert.deepEqual(filter.context, expectedContext,
-                            "should save the correct context");
-                    },
-                }
+            dataManager: {
+                create_filter: function (filter) {
+                    assert.strictEqual(filter.domain, `[("bar", "=", True)]`,
+                        "should save the correct domain");
+                    const expectedContext = {
+                        group_by: [], // default groupby is an empty list
+                        shouldBeInFilterContext: true,
+                    };
+                    assert.deepEqual(filter.context, expectedContext,
+                        "should save the correct context");
+                },
             },
         });
 
