@@ -6,7 +6,7 @@ odoo.define('web.search_bar_tests', function (require) {
     const testUtils = require('web.test_utils');
 
     const cpHelpers = testUtils.controlPanel;
-    const { createActionManager, createComponent } = testUtils;
+    const { createComponent, createWebClient } = testUtils;
 
     QUnit.module('Components', {
         beforeEach: function () {
@@ -60,55 +60,55 @@ odoo.define('web.search_bar_tests', function (require) {
         QUnit.test('basic rendering', async function (assert) {
             assert.expect(1);
 
-            const actionManager = await createActionManager({
+            const webClient = await createWebClient({
                 actions: this.actions,
                 archs: this.archs,
                 data: this.data,
             });
-            await actionManager.doAction(1);
+            await testUtils.actionManager.doAction(1);
 
             assert.strictEqual(document.activeElement,
-                actionManager.el.querySelector('.o_searchview input.o_searchview_input'),
+                webClient.el.querySelector('.o_searchview input.o_searchview_input'),
                 "searchview input should be focused");
 
-            actionManager.destroy();
+            webClient.destroy();
         });
 
         QUnit.test('navigation with facets', async function (assert) {
             assert.expect(4);
 
-            const actionManager = await createActionManager({
+            const webClient = await createWebClient({
                 actions: this.actions,
                 archs: this.archs,
                 data: this.data,
             });
-            await actionManager.doAction(1);
+            await testUtils.actionManager.doAction(1);
 
             // add a facet
-            await cpHelpers.toggleGroupByMenu(actionManager);
-            await cpHelpers.toggleMenuItem(actionManager, 0);
-            await cpHelpers.toggleMenuItemOption(actionManager, 0, 0);
-            assert.containsOnce(actionManager, '.o_searchview .o_searchview_facet',
+            await cpHelpers.toggleGroupByMenu(webClient);
+            await cpHelpers.toggleMenuItem(webClient, 0);
+            await cpHelpers.toggleMenuItemOption(webClient, 0, 0);
+            assert.containsOnce(webClient, '.o_searchview .o_searchview_facet',
                 "there should be one facet");
             assert.strictEqual(document.activeElement,
-                actionManager.el.querySelector('.o_searchview input.o_searchview_input'));
+                webClient.el.querySelector('.o_searchview input.o_searchview_input'));
 
             // press left to focus the facet
             await testUtils.dom.triggerEvent(document.activeElement, 'keydown', { key: 'ArrowLeft' });
-            assert.strictEqual(document.activeElement, actionManager.el.querySelector('.o_searchview .o_searchview_facet'));
+            assert.strictEqual(document.activeElement, webClient.el.querySelector('.o_searchview .o_searchview_facet'));
 
             // press right to focus the input
             await testUtils.dom.triggerEvent(document.activeElement, 'keydown', { key: 'ArrowRight' });
-            assert.strictEqual(document.activeElement, actionManager.el.querySelector('.o_searchview input.o_searchview_input'));
+            assert.strictEqual(document.activeElement, webClient.el.querySelector('.o_searchview input.o_searchview_input'));
 
-            actionManager.destroy();
+            webClient.destroy();
         });
 
         QUnit.test('search date and datetime fields. Support of timezones', async function (assert) {
             assert.expect(4);
 
             let searchReadCount = 0;
-            const actionManager = await createActionManager({
+            const webClient = await createWebClient({
                 actions: this.actions,
                 archs: this.archs,
                 data: this.data,
@@ -140,15 +140,15 @@ odoo.define('web.search_bar_tests', function (require) {
                     return this._super(...arguments);
                 },
             });
-            await actionManager.doAction(1);
+            await testUtils.actionManager.doAction(1);
 
             // Date case
-            let searchInput = actionManager.el.querySelector('.o_searchview_input');
+            let searchInput = webClient.el.querySelector('.o_searchview_input');
             await testUtils.fields.editInput(searchInput, '07/15/1983');
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'ArrowDown' });
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'Enter' });
 
-            assert.strictEqual(actionManager.el.querySelector('.o_searchview_facet .o_facet_values').innerText.trim(),
+            assert.strictEqual(webClient.el.querySelector('.o_searchview_facet .o_facet_values').innerText.trim(),
                 '07/15/1983',
                 'The format of the date in the facet should be in locale');
 
@@ -156,17 +156,17 @@ odoo.define('web.search_bar_tests', function (require) {
             await testUtils.dom.click($('.o_searchview_facet .o_facet_remove'));
 
             // DateTime case
-            searchInput = actionManager.el.querySelector('.o_searchview_input');
+            searchInput = webClient.el.querySelector('.o_searchview_input');
             await testUtils.fields.editInput(searchInput, '07/15/1983 00:00:00');
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'ArrowDown' });
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'ArrowDown' });
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'Enter' });
 
-            assert.strictEqual(actionManager.el.querySelector('.o_searchview_facet .o_facet_values').innerText.trim(),
+            assert.strictEqual(webClient.el.querySelector('.o_searchview_facet .o_facet_values').innerText.trim(),
                 '07/15/1983 00:00:00',
                 'The format of the datetime in the facet should be in locale');
 
-            actionManager.destroy();
+            webClient.destroy();
         });
 
         QUnit.test("autocomplete menu clickout interactions", async function (assert) {
@@ -222,7 +222,7 @@ odoo.define('web.search_bar_tests', function (require) {
             assert.expect(3);
 
             let searchReadCount = 0;
-            const actionManager = await createActionManager({
+            const webClient = await createWebClient({
                 actions: this.actions,
                 archs: this.archs,
                 data: this.data,
@@ -241,18 +241,18 @@ odoo.define('web.search_bar_tests', function (require) {
                     return this._super(...arguments);
                 },
             });
-            await actionManager.doAction(1);
+            await testUtils.actionManager.doAction(1);
 
-            const searchInput = actionManager.el.querySelector('.o_searchview_input');
+            const searchInput = webClient.el.querySelector('.o_searchview_input');
             await testUtils.fields.editInput(searchInput, 'a');
-            assert.containsN(actionManager, '.o_searchview_autocomplete li', 2,
+            assert.containsN(webClient, '.o_searchview_autocomplete li', 2,
                 "there should be 2 result for 'a' in search bar autocomplete");
 
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'Enter' });
-            assert.strictEqual(actionManager.el.querySelector('.o_searchview_input_container .o_facet_values').innerText.trim(),
+            assert.strictEqual(webClient.el.querySelector('.o_searchview_input_container .o_facet_values').innerText.trim(),
                 "a", "There should be a field facet with label 'a'");
 
-            actionManager.destroy();
+            webClient.destroy();
         });
 
         QUnit.test('select an autocomplete field with `context` key', async function (assert) {
@@ -260,7 +260,7 @@ odoo.define('web.search_bar_tests', function (require) {
 
             let searchReadCount = 0;
             const firstLoading = testUtils.makeTestPromise();
-            const actionManager = await createActionManager({
+            const webClient = await createWebClient({
                 actions: this.actions,
                 archs: this.archs,
                 data: this.data,
@@ -284,10 +284,10 @@ odoo.define('web.search_bar_tests', function (require) {
                     return this._super(...arguments);
                 },
             });
-            await actionManager.doAction(1);
+            await testUtils.actionManager.doAction(1);
             await firstLoading;
             assert.strictEqual(searchReadCount, 1, "there should be 1 search_read");
-            const searchInput = actionManager.el.querySelector('.o_searchview_input');
+            const searchInput = webClient.el.querySelector('.o_searchview_input');
 
             // 'r' key to filter on bar "First Record"
             await testUtils.fields.editInput(searchInput, 'record');
@@ -296,7 +296,7 @@ odoo.define('web.search_bar_tests', function (require) {
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'ArrowDown' });
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'Enter' });
 
-            assert.strictEqual(actionManager.el.querySelector('.o_searchview_input_container .o_facet_values').innerText.trim(),
+            assert.strictEqual(webClient.el.querySelector('.o_searchview_input_container .o_facet_values').innerText.trim(),
                 "First record",
                 "the autocompletion facet should be correct");
             assert.strictEqual(searchReadCount, 2, "there should be 2 search_read");
@@ -309,12 +309,12 @@ odoo.define('web.search_bar_tests', function (require) {
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'ArrowDown' });
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'Enter' });
 
-            assert.strictEqual(actionManager.el.querySelector('.o_searchview_input_container .o_facet_values').innerText.trim(),
+            assert.strictEqual(webClient.el.querySelector('.o_searchview_input_container .o_facet_values').innerText.trim(),
                 "First recordorSecond record",
                 "the autocompletion facet should be correct");
             assert.strictEqual(searchReadCount, 3, "there should be 3 search_read");
 
-            actionManager.destroy();
+            webClient.destroy();
         });
 
         QUnit.test('no search text triggers a reload', async function (assert) {
@@ -329,7 +329,7 @@ odoo.define('web.search_bar_tests', function (require) {
             </pivot>`;
 
             let rpcs;
-            const actionManager = await createActionManager({
+            const webClient = await createWebClient({
                 actions: this.actions,
                 archs: this.archs,
                 data: this.data,
@@ -338,30 +338,30 @@ odoo.define('web.search_bar_tests', function (require) {
                     return this._super.apply(this, arguments);
                 },
             });
-            await actionManager.doAction(1);
+            await testUtils.actionManager.doAction(1);
 
-            const searchInput = actionManager.el.querySelector('.o_searchview_input');
+            const searchInput = webClient.el.querySelector('.o_searchview_input');
             rpcs = 0;
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'Enter' });
 
-            assert.containsNone(actionManager, '.o_searchview_facet_label');
+            assert.containsNone(webClient, '.o_searchview_facet_label');
             assert.strictEqual(rpcs, 2, "should have reloaded");
 
-            actionManager.destroy();
+            webClient.destroy();
         });
 
         QUnit.test('selecting (no result) triggers a re-render', async function (assert) {
             assert.expect(3);
 
-            const actionManager = await createActionManager({
+            const webClient = await createWebClient({
                 actions: this.actions,
                 archs: this.archs,
                 data: this.data,
             });
 
-            await actionManager.doAction(1);
+            await testUtils.actionManager.doAction(1);
 
-            const searchInput = actionManager.el.querySelector('.o_searchview_input');
+            const searchInput = webClient.el.querySelector('.o_searchview_input');
 
             // 'a' key to filter nothing on bar
             await testUtils.fields.editInput(searchInput, 'hello there');
@@ -369,16 +369,16 @@ odoo.define('web.search_bar_tests', function (require) {
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'ArrowRight' });
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'ArrowDown' });
 
-            assert.strictEqual(actionManager.el.querySelector('.o_searchview_autocomplete .o_selection_focus').innerText.trim(), "(no result)",
+            assert.strictEqual(webClient.el.querySelector('.o_searchview_autocomplete .o_selection_focus').innerText.trim(), "(no result)",
                 "there should be no result for 'a' in bar");
 
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'Enter' });
 
-            assert.containsNone(actionManager, '.o_searchview_facet_label');
-            assert.strictEqual(actionManager.el.querySelector('.o_searchview_input').value, "",
+            assert.containsNone(webClient, '.o_searchview_facet_label');
+            assert.strictEqual(webClient.el.querySelector('.o_searchview_input').value, "",
                 "the search input should be re-rendered");
 
-            actionManager.destroy();
+            webClient.destroy();
         });
 
         QUnit.test('update suggested filters in autocomplete menu with Japanese IME', async function (assert) {
@@ -389,13 +389,13 @@ odoo.define('web.search_bar_tests', function (require) {
             // not handled but are triggered to ensure they do not interfere.
             const TEST = "TEST";
             const テスト = "テスト";
-            const actionManager = await createActionManager({
+            const webClient = await createWebClient({
                 actions: this.actions,
                 archs: this.archs,
                 data: this.data,
             });
-            await actionManager.doAction(1);
-            const searchInput = actionManager.el.querySelector('.o_searchview_input');
+            await testUtils.actionManager.doAction(1);
+            const searchInput = webClient.el.querySelector('.o_searchview_input');
 
             // Simulate typing "TEST" on search view.
             for (let i = 0; i < TEST.length; i++) {
@@ -414,11 +414,11 @@ odoo.define('web.search_bar_tests', function (require) {
                 await testUtils.dom.triggerEvent(searchInput, 'input',
                     { inputType: 'insertCompositionText', isComposing: true });
             }
-            assert.containsOnce(actionManager.el, '.o_searchview_autocomplete',
+            assert.containsOnce(webClient.el, '.o_searchview_autocomplete',
                 "should display autocomplete dropdown menu on typing something in search view"
             );
             assert.strictEqual(
-                actionManager.el.querySelector('.o_searchview_autocomplete li').innerText.trim(),
+                webClient.el.querySelector('.o_searchview_autocomplete li').innerText.trim(),
                 "Search Foo for: TEST",
                 `1st filter suggestion should be based on typed word "TEST"`
             );
@@ -435,7 +435,7 @@ odoo.define('web.search_bar_tests', function (require) {
                 { inputType: 'insertCompositionText', isComposing: true });
 
             assert.strictEqual(
-                actionManager.el.querySelector('.o_searchview_autocomplete li').innerText.trim(),
+                webClient.el.querySelector('.o_searchview_autocomplete li').innerText.trim(),
                 "Search Foo for: テスト",
                 `1st filter suggestion should be updated with soft-selection typed word "テスト"`
             );
@@ -455,34 +455,34 @@ odoo.define('web.search_bar_tests', function (require) {
             await testUtils.dom.triggerEvent(searchInput, 'compositionend');
 
             assert.strictEqual(
-                actionManager.el.querySelector('.o_searchview_autocomplete li').innerText.trim(),
+                webClient.el.querySelector('.o_searchview_autocomplete li').innerText.trim(),
                 "Search Foo for: TEST",
                 `1st filter suggestion should finally be updated with click selection on word "TEST" from IME`
             );
 
-            actionManager.destroy();
+            webClient.destroy();
         });
 
         QUnit.test('open search view autocomplete on paste value using mouse', async function (assert) {
             assert.expect(1);
 
-            const actionManager = await createActionManager({
+            const webClient = await createWebClient({
                 actions: this.actions,
                 archs: this.archs,
                 data: this.data,
             });
 
-            await actionManager.doAction(1);
+            await testUtils.actionManager.doAction(1);
             // Simulate paste text through the mouse.
-            const searchInput = actionManager.el.querySelector('.o_searchview_input');
+            const searchInput = webClient.el.querySelector('.o_searchview_input');
             searchInput.value = "ABC";
             await testUtils.dom.triggerEvent(searchInput, 'input',
                     { inputType: 'insertFromPaste' });
             await testUtils.nextTick();
-            assert.containsOnce(actionManager, '.o_searchview_autocomplete',
+            assert.containsOnce(webClient, '.o_searchview_autocomplete',
                 "should display autocomplete dropdown menu on paste in search view");
 
-            actionManager.destroy();
+            webClient.destroy();
         });
     });
 });
