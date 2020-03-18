@@ -455,6 +455,7 @@
                 </t>
             </t>
             <div class="card-footer">
+                <span t-if="event.seats_availability != 'unlimited'">Available seats: <t t-esc="event.seats_available"/></span>
                 <button type="submit" class="btn btn-primary a-submit float-right" t-attf-id="#{event.id}">Register Now</button>
             </div>
         </form>
@@ -525,7 +526,7 @@
                         <div class="container">
                             <t t-set="counter_type" t-value="1"/>
                             <t t-set="counter" t-value="0"/>
-                            <t t-foreach="tickets" t-as="ticket">
+                            <t t-foreach="tickets" t-as="ticket" t-if="availability_check">
                                 <h4 class="o_page_header">
                                     <strong>
                                         Ticket Type: <t t-esc="ticket['name']"/>
@@ -573,11 +574,14 @@
                                 </t>
                                 <t t-set="counter_type" t-value="counter_type + 1"/>
                             </t>
+                            <t t-else="">
+                                <strong> You ordered more tickets than available seats</strong>
+                            </t>
                         </div>
                     </main>
                     <footer class="modal-footer">
                         <button type="button" class="btn btn-secondary js_goto_event" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Continue Registration</button>
+                        <button type="submit" t-if="availability_check" class="btn btn-primary">Continue Registration</button>
                     </footer>
                 </div>
             </form>
