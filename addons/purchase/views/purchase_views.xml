@@ -434,11 +434,11 @@
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
                     <field name="name"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" readonly="1"/>
                     <field name="amount_total"/>
                     <field name="state"/>
                     <field name="date_order"/>
-                    <field name="currency_id"/>
+                    <field name="currency_id" readonly="1"/>
                     <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
