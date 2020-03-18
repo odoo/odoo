@@ -27,10 +27,10 @@ var InventoryValidationController = ListController.extend({
     /**
      * @override
      */
-    renderButtons: function ($node) {
+    renderButtons: function () {
         this._super.apply(this, arguments);
         var $validationButton = $(qweb.render('InventoryLines.Buttons'));
-        $validationButton.prependTo($node.find('.o_list_buttons'));
+        this.$buttons.prepend($validationButton);
     },
 
     // -------------------------------------------------------------------------
