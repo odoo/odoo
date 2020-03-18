@@ -1966,21 +1966,19 @@ QUnit.module('Views', {
             mockRPC: function () {
                 return this._super.apply(this, arguments);
             },
-            env: {
-                dataManager: {
-                    create_filter: async function (filter) {
-                        assert.deepEqual(filter.context, {
-                            pivot_measures: ['__count'],
-                            pivot_column_groupby: [],
-                            pivot_row_groupby: ['product_id'],
-                            group_by: [],
-                            time_ranges: {
-                                field: 'date',
-                                range: 'this_month',
-                                comparisonRange: 'previous_period',
-                            }
-                        })
-                    }
+            dataManager: {
+                create_filter: async function (filter) {
+                    assert.deepEqual(filter.context, {
+                        pivot_measures: ['__count'],
+                        pivot_column_groupby: [],
+                        pivot_row_groupby: ['product_id'],
+                        group_by: [],
+                        time_ranges: {
+                            field: 'date',
+                            range: 'this_month',
+                            comparisonRange: 'previous_period',
+                        }
+                    });
                 }
             },
         });

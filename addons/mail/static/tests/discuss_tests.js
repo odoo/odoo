@@ -1963,16 +1963,14 @@ QUnit.test('save filter discuss', async function (assert) {
             }
             return this._super.apply(this,arguments);
         },
-        env: {
-            dataManager: {
-                create_filter: async function (filter) {
-                    assert.deepEqual(
-                        JSON.parse(filter.domain), [
-                            "|",
-                            ["subject", "ilike", "she was born in a hurricane"],
-                            ["body", "ilike", "she was born in a hurricane"]
-                        ], 'The filter should have been saved with the right domain');
-                }
+        dataManager: {
+            create_filter: async function (filter) {
+                assert.deepEqual(
+                    JSON.parse(filter.domain), [
+                        "|",
+                        ["subject", "ilike", "she was born in a hurricane"],
+                        ["body", "ilike", "she was born in a hurricane"]
+                    ], 'The filter should have been saved with the right domain');
             }
         }
     });
