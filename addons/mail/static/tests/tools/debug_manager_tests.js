@@ -93,10 +93,12 @@ QUnit.module('Mail DebugManager', {
         assert.containsNone(debugDropdown, 'a[data-action="getMailMessages"]');
 
         await testUtils.dom.click('.o_data_row:first');
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(debugDropdown, 'a[data-action="getMailMessages"]');
 
         await testUtils.dom.click(webClient.el.querySelector('.o_debug_manager > a')); // open dropdown
         await testUtils.dom.click(debugDropdown.querySelector('a[data-action="getMailMessages"]'));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(webClient, '.o_list_view');
         assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb').text(),
             "PartnersFirst partnerManage Messages");

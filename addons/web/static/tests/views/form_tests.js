@@ -559,6 +559,8 @@ QUnit.module('Views', {
             bus: bus,
         });
         await testUtils.dom.click(form.$('.o_field_widget[name="product_id"]'));
+        await testUtils.owlCompatibilityExtraNextTick();
+
         form.destroy();
         webClient.destroy();
         bus.destroy();
@@ -8253,10 +8255,13 @@ QUnit.module('Views', {
         await testUtils.actionManager.doAction(1);
 
         await testUtils.dom.click('.o_control_panel .o-kanban-button-new');
+        await testUtils.owlCompatibilityExtraNextTick();
 
         // cannot save because there is a required field
         await testUtils.dom.click('.o_control_panel .o_form_button_save');
+        await testUtils.owlCompatibilityExtraNextTick();
         await testUtils.dom.click('.o_control_panel .o_form_button_cancel');
+        await testUtils.owlCompatibilityExtraNextTick();
 
         assert.containsNone(webClient, '.o_form_view');
         assert.containsOnce(webClient, '.o_kanban_view');

@@ -93,6 +93,7 @@ QUnit.module('DebugManager', {
 
         await doAction(10);
         await testUtils.dom.click('.o_data_row:first');
+        await testUtils.owlCompatibilityExtraNextTick();
 
         const debugDropdown = webClient.el.querySelector('.o_debug_manager .o_debug_dropdown');
         assert.containsOnce(debugDropdown, 'a[data-action="edit"][data-model="ir.actions.act_window"][data-id="10"]'); // action
@@ -121,6 +122,7 @@ QUnit.module('DebugManager', {
 
         await doAction(10);
         await testUtils.dom.click(webClient.$('.o_list_button_add'));
+        await testUtils.owlCompatibilityExtraNextTick();
 
         const debugDropdown = webClient.el.querySelector('.o_debug_manager .o_debug_dropdown');
         assert.containsOnce(debugDropdown, 'a[data-action="edit"][data-model="ir.actions.act_window"][data-id="10"]'); // action
@@ -177,6 +179,7 @@ QUnit.module('DebugManager', {
 
         await doAction(10);
         await testUtils.dom.click('.o_data_row:first');
+        await testUtils.owlCompatibilityExtraNextTick();
 
         const debugDropdown = webClient.el.querySelector('.o_debug_manager .o_debug_dropdown');
         assert.containsOnce(debugDropdown, 'a[data-action="edit"][data-model="ir.actions.act_window"][data-id="10"]'); // action
@@ -236,10 +239,12 @@ QUnit.module('DebugManager', {
         assert.containsNone(debugDropdown, 'a[data-action="get_attachments"]');
 
         await testUtils.dom.click('.o_data_row:first');
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(debugDropdown, 'a[data-action="get_attachments"]');
 
         await testUtils.dom.click(webClient.el.querySelector('.o_debug_manager > a')); // open dropdown
         await testUtils.dom.click(debugDropdown.querySelector('a[data-action="get_attachments"]'));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(webClient, '.o_list_view');
         assert.strictEqual($(webClient.el).find('.o_control_panel .breadcrumb').text(),
             "PartnersFirst partnerManage Attachments");
@@ -276,15 +281,18 @@ QUnit.module('DebugManager', {
         assert.containsNone(debugDropdown, 'a[data-action="set_defaults"]');
 
         await testUtils.dom.click('.o_data_row:first');
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(debugDropdown, 'a[data-action="set_defaults"]');
 
         await testUtils.dom.click(webClient.el.querySelector('.o_debug_manager > a')); // open dropdown
         await testUtils.dom.click(debugDropdown.querySelector('a[data-action="set_defaults"]'));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(document.body, '.modal');
 
         // set a default and save
         $('.modal').find('select[id=formview_default_fields] option[value=display_name]').prop('selected', true);
         await testUtils.dom.click($('.modal').find('.modal-footer button').eq(1));
+        await testUtils.owlCompatibilityExtraNextTick();
 
         webClient.destroy();
     });
@@ -303,7 +311,6 @@ QUnit.module('DebugManager', {
 
         await doAction(10);
         await doAction(12);
-        await testUtils.owlCompatibilityExtraNextTick();
 
         const mainDebugDropdown = webClient.el.querySelector('.o_debug_manager .o_debug_dropdown');
         assert.containsOnce(mainDebugDropdown, 'a[data-action="edit"][data-model="ir.actions.act_window"][data-id="10"]'); // action

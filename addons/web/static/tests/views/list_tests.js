@@ -1159,7 +1159,7 @@ QUnit.module('Views', {
     QUnit.test('editable list view: check that controlpanel buttons are updating when groupby applied', async function (assert) {
         assert.expect(4);
 
-        this.data.foo.fields.foo = {string: "Foo", type: "char", required:true};
+        this.data.foo.fields.foo = {string: "Foo", type: "char", required: true};
 
         var webClient = await createWebClient({
             actions: [{
@@ -1170,18 +1170,19 @@ QUnit.module('Views', {
                views: [[3, 'list']],
                search_view_id: [9, 'search'],
             }],
-            archs:  {
+            archs: {
                'foo,3,list': '<tree editable="top"><field name="display_name"/><field name="foo"/></tree>',
-
-               'foo,9,search': '<search>'+
-                                    '<filter string="candle" name="itsName" context="{\'group_by\': \'foo\'}"/>'  +
-                                    '</search>',
+               'foo,9,search': `
+                    <search>
+                        <filter string="candle" name="itsName" context="{'group_by': 'foo'}"/>
+                    </search>`,
             },
             data: this.data,
         });
 
         await testUtils.actionManager.doAction(11);
         await testUtils.dom.click(webClient.$('.o_list_button_add'));
+        await testUtils.owlCompatibilityExtraNextTick();
 
         assert.isNotVisible(webClient.$('.o_list_button_add'),
             "create button should be invisible");
@@ -8973,6 +8974,7 @@ QUnit.module('Views', {
         newHash = '#action=2&view_type=kanban';
         window.dispatchEvent(new Event('hashchange'));
         await testUtils.nextTick();
+        await testUtils.owlCompatibilityExtraNextTick();
 
         assert.containsNone(webClient, '.o_list_view',
             "should not display the list view anymore");
@@ -8983,6 +8985,7 @@ QUnit.module('Views', {
         newHash = '#action=2&view_type=list';
         window.dispatchEvent(new Event('hashchange'));
         await testUtils.nextTick();
+        await testUtils.owlCompatibilityExtraNextTick();
 
         assert.containsNone(webClient, '.o_kanban_view',
             "should not display the kanban view anymore");
