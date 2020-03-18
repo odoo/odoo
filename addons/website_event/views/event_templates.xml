@@ -377,7 +377,7 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div id="o_wevent_event_submenu" class="collapse navbar-collapse">
-                            <ul class="navbar-nav w-100">
+                            <ul class="navbar-nav w-100" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id">
                                 <t t-foreach="event.menu_id.child_id" t-as="submenu">
                                     <t t-call="website.submenu">
                                         <t t-set="item_class" t-value="'nav-item'"/>
