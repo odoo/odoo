@@ -342,10 +342,6 @@ class MrpWorkorder(models.Model):
                 move_line.lot_produced_id = self.final_lot_id.id
                 move_line.done_wo = True
 
-        # One a piece is produced, you can launch the next work order
-        if self.next_work_order_id.state == 'pending':
-            self.next_work_order_id.state = 'ready'
-
         self.move_line_ids.filtered(
             lambda move_line: not move_line.done_move and not move_line.lot_produced_id and move_line.qty_done > 0
         ).write({
@@ -411,8 +407,15 @@ class MrpWorkorder(models.Model):
         if self.next_work_order_id and self.production_id.product_id.tracking != 'none':
             self.next_work_order_id._assign_default_final_lot_id()
 
+        if self.next_work_order_id.state == 'pending' and self.operation_id.batch == 'yes':
+            if float_compare(self.qty_produced, self.operation_id.batch_size, precision_rounding=rounding) >= 0:
+                self.next_work_order_id.state = 'ready'
+
         if float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0:
             self.button_finish()
+            if self.next_work_order_id.state == 'pending' and self.operation_id.batch == 'no':
+                self.next_work_order_id.state = 'ready'
+
         return True
 
     @api.multi
