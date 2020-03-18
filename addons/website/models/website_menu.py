@@ -94,7 +94,7 @@ class Menu(models.Model):
 
     def write(self, values):
         res = super().write(values)
-        if 'website_id' in values:
+        if 'website_id' in values or 'group_ids' in values:
             self.clear_caches()
         return res
 
