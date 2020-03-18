@@ -37,20 +37,16 @@ var ReportAction = AbstractAction.extend({
     start: function () {
         var self = this;
         this.iframe = this.$('iframe')[0];
+        this.$buttons = $(QWeb.render('report.client_action.ControlButtons', {}));
+        this.$buttons.on('click', '.o_report_print', this.on_click_print);
+        this.controlPanelProps.cp_content = {
+            $buttons: this.$buttons,
+        };
         return Promise.all([this._super.apply(this, arguments), session.is_bound]).then(async function () {
             var web_base_url = session['web.base.url'];
             var trusted_host = utils.get_host_from_url(web_base_url);
             var trusted_protocol = utils.get_protocol_from_url(web_base_url);
             self.trusted_origin = utils.build_origin(trusted_protocol, trusted_host);
-
-            self.$buttons = $(QWeb.render('report.client_action.ControlButtons', {}));
-            self.$buttons.on('click', '.o_report_print', self.on_click_print);
-
-            await self.updateControlPanel({
-                cp_content: {
-                    $buttons: self.$buttons,
-                },
-            });
 
             // Load the report in the iframe. Note that we use a relative URL.
             self.iframe.src = self.report_url;
@@ -71,10 +67,12 @@ var ReportAction = AbstractAction.extend({
         // messages and we can only filter them by their origin, so we chose to ignore the
         // messages that do not come from `web.base.url`.
         $(window).on('message', this, this.on_message_received);
+        this._super();
     },
 
     on_detach_callback: function () {
         $(window).off('message', this.on_message_received);
+        this._super();
     },
 
     /**
