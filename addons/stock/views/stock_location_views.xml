@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <act_window
-        context="{'location': active_id, 'search_default_real_stock_available': 1, 'search_default_virtual_stock_available': 1,
-                    'search_default_virtual_stock_negative': 1, 'search_default_real_stock_negative': 1}"
-        id="act_product_location_open"
-        name="Products"
-        res_model="product.product"
-        src_model="stock.location"/>
+    <record id="act_product_location_open" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">product.product</field>
+        <field name="src_model">stock.location</field>
+        <field name="search_view_id" ref="stock_product_search_form_view"/>
+        <field name="context">
+            {'location': active_id, 'search_default_real_stock_available': 1, 'search_default_virtual_stock_available': 1,
+             'search_default_virtual_stock_negative': 1, 'search_default_real_stock_negative': 1}</field>
+    </record>
 
     <record id="view_location_form" model="ir.ui.view">
         <field name="name">stock.location.form</field>
