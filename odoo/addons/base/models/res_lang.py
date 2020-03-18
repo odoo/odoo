@@ -207,6 +207,14 @@ class Lang(models.Model):
         return sorted([(lang.code, lang.url_code, lang.name) for lang in langs], key=itemgetter(2))
 
     @api.model
+    @tools.ormcache('code')
+    def _lang_code_to_urlcode(self, code):
+        for c, urlc, name in self.get_available():
+            if c == code:
+                return urlc
+        return self._lang_get(code).url_code
+
+    @api.model
     @tools.ormcache()
     def get_installed(self):
         """ Return the installed languages as a list of (code, name) sorted by name. """
