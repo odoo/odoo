@@ -72,7 +72,12 @@ class AccountMove(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         # OVERRIDE
-        moves = super(AccountMove, self).create(vals_list)
+        # purchase user may create bills from a purchase order where the context `create_bill` is available
+        # in such the case, sudo is required to ensure the user can create bills
+        if self._context.get('create_bill', False):
+            moves = super(AccountMove, self.sudo()).create(vals_list).sudo()
+        else:
+            moves = super(AccountMove, self).create(vals_list)
         for move in moves:
             if move.reversed_entry_id:
                 continue
