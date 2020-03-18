@@ -2194,7 +2194,7 @@ QUnit.module('ActionManager', {
     });
 
     QUnit.test('should open the report client action if wkhtmltopdf is broken', async function (assert) {
-        assert.expect(6);
+        assert.expect(7);
 
         // patch the report client action to override its iframe's url so that
         // it doesn't trigger an RPC when it is appended to the DOM (for this
@@ -2244,6 +2244,7 @@ QUnit.module('ActionManager', {
 
         assert.containsOnce(actionManager, '.o_report_iframe',
             "should have opened the report client action");
+        assert.containsOnce(actionManager, '.o_cp_buttons .o_report_buttons .o_report_print');
 
         assert.verifySteps([
             '/web/action/load',
