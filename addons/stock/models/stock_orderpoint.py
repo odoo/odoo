@@ -51,6 +51,7 @@ class StockWarehouseOrderpoint(models.Model):
     location_id = fields.Many2one(
         'stock.location', 'Location', index=True,
         ondelete="cascade", required=True, check_company=True)
+    product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id')
     product_id = fields.Many2one(
         'product.product', 'Product', index=True,
         domain="[('type', '=', 'product'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", ondelete='cascade', required=True, check_company=True)
@@ -87,6 +88,7 @@ class StockWarehouseOrderpoint(models.Model):
     qty_on_hand = fields.Float('On Hand', readonly=True, compute='_compute_qty')
     qty_forecast = fields.Float('Forecast', readonly=True, compute='_compute_qty')
     qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', store=True, readonly=False)
+
 
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
