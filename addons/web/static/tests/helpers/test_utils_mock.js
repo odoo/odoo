@@ -174,6 +174,7 @@ async function setMockedOwlEnv(Component, params, mockServer) {
     bus.trigger = busTrigger;
 
     // build the env
+    const favoriteFilters = params.favoriteFilters;
     const services = {};
     const env = Object.assign({}, params.env, {
         bus: bus,
@@ -197,9 +198,13 @@ async function setMockedOwlEnv(Component, params, mockServer) {
                     method: 'load_views',
                     model: params.model,
                 }).then(function (views) {
-                    return _.mapObject(views, viewParams => {
+                    views = _.mapObject(views, viewParams => {
                         return fieldsViewGet(mockServer, viewParams);
                     });
+                    if (favoriteFilters && 'search' in views) {
+                        views.search.favoriteFilters = favoriteFilters;
+                    }
+                    return views;
                 });
             },
             load_filters: params => {
