@@ -681,7 +681,7 @@ msgstr "<span>Cantidad</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Reference</span>"
-msgstr ""
+msgstr "<span>Referencia</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1256,7 +1256,7 @@ msgstr "Tipos de cuenta permitidos"
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr "Desconciliar cuenta"
+msgstr "Romper conciliación de cuenta"
 
 #. module: account
 #: model:ir.model,name:account.model_account_root
@@ -5440,7 +5440,7 @@ msgstr "Tiene Entradas Reconciliadas"
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
 #: model:ir.model.fields,field_description:account.field_res_users__has_unreconciled_entries
 msgid "Has Unreconciled Entries"
-msgstr "Tiene entradas no conciliadas"
+msgstr "Tiene apuntes no conciliados"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__qr_code_valid
@@ -11643,6 +11643,8 @@ msgid ""
 "There is more than one receivable/payable account in the concerned invoices."
 " You cannot group payments in that case."
 msgstr ""
+"Hay más de una cuenta por cobrar/a pagar en las facturas involucradas. No "
+"puede agrupar pagos en ese caso."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12915,7 +12917,7 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %s (%s)"
 msgstr ""
-"No puede hacer esta modificación en una entrada de diario conciliada. Puede cambiar algunos campos no legales o primero debe no reconciliarse.\n"
+"No puede hacer esta modificación en una entrada de diario conciliada. Puede cambiar algunos campos no legales o primero debe romper conciliación.\n"
 "Entrada de diario (id): %s (%s)"
 
 #. module: account
@@ -13413,7 +13415,7 @@ msgstr "facturas sin pago"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "unreconciled entries"
-msgstr "entradas sin conciliar"
+msgstr "apuntes sin conciliar"
 
 #. module: account
 #. openerp-web
@@ -13468,11 +13470,11 @@ msgstr ""
 " algunos elementos de diario vinculados a ella."
 
 #. module: account
+#. module: account
 #: code:addons/account/models/account_analytic_line.py:0
-#, python-format
-msgid ""
-"You can't set a different company on your analytic tags since there are some"
-" journal items linked to it."
+#: code:addons/account/models/account.py:56
+#, python-format, python-format
+msgid "A tag defined to be used on taxes must always have a country set."
 msgstr ""
-"No puede establecer una compañía diferente en sus etiquetas analíticas ya "
-"que hay algunos elementos de diario vinculados a ella."
+"Una etiqueta definida para ser usada en los impuestos debe tener siempre un "
+"país establecido."

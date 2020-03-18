@@ -400,7 +400,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
+"        % set doc_name = 'offerte' if object.state in ('draft', 'sent') else 'orderbevestiging'\n"
 "        Hallo,\n"
 "        <br/><br/>\n"
 "        Uw\n"
@@ -418,7 +418,7 @@ msgstr ""
 "            voor het bedrag van <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> staat klaar voor u om te bekijken.\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Aarzal niet om ons te contacteren als u vragen heeft.\n"
+"        Aarzel niet om ons te contacteren als u vragen heeft.\n"
 "        <br/>\n"
 "    </p>\n"
 "</div>\n"
@@ -3936,7 +3936,7 @@ msgstr ""
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "De bestelde hoeveelheid is bijgewerkt."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
@@ -4564,3 +4564,14 @@ msgstr "Soort: [(name, amount, base, formated amount, formated base)]"
 #, python-format
 msgid "uninvoiced sales orders"
 msgstr "niet gefactureerde verkooporders"
+
+#. module: sale
+#: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
+msgid "Mark Quotation as Sent"
+msgstr "Markeer offerte als verzonden"
+
+#. module: sale
+#: code:addons/sale/models/sale.py:0
+#, python-format
+msgid "Only draft orders can be marked as sent directly."
+msgstr "Alleen conceptorders kunnen gemarkeerd wordt als direct verzenden."

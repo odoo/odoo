@@ -13,7 +13,7 @@
 # Amit Spilman <amit@laylinetech.com>, 2019
 # hed shefetr <hed@laylinetech.com>, 2019
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +32,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
 msgid "# Days to Deadline"
-msgstr "מס' ימים עד למועד אחרון"
+msgstr "מס' ימים עד לתאריך היעד"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner__task_count
@@ -356,7 +356,7 @@ msgstr "<strong style=\"font-size: 16px;\">נסה את שער הדוא\"ל</stro
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Assigned to</strong>"
-msgstr "<strong>מוקצה ל</strong>"
+msgstr "<strong>משויך ל</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -366,7 +366,7 @@ msgstr "<strong>תאריך:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Deadline:</strong>"
-msgstr "<strong>מועד אחרון:</strong>"
+msgstr "<strong>תאריך יעד:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -572,14 +572,14 @@ msgstr "משימות שהוקצו"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_id
 msgid "Assigned To"
-msgstr "מוקצה ל"
+msgstr "משויך ל"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__user_id
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Assigned to"
-msgstr "מוקצה ל"
+msgstr "משויך ל"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
@@ -594,8 +594,8 @@ msgid ""
 "                                of the default labels."
 msgstr ""
 "בכל שלב יכולים העובדים לחסום או להפוך את המשימה / הנושא למוכנים לשלב הבא.\n"
-"                                אתה יכול להגדיר כאן תוויות שיוצגו עבור המצב במקום\n"
-"                                תוויות ברירת המחדל."
+" אתה יכול להגדיר כאן תוויות שיוצגו עבור המצב במקום\n"
+" תוויות ברירת המחדל."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_attachment_count
@@ -1000,7 +1000,7 @@ msgstr "ימים"
 #: model:ir.model.fields,field_description:project.field_project_task__date_deadline
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_deadline
 msgid "Deadline"
-msgstr "תאריך אחרון"
+msgstr "תאריך יעד"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
@@ -1164,7 +1164,7 @@ msgstr "דוא\"ל"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Email Alias"
-msgstr "שם נוסף דוא\"ל"
+msgstr "כינוי דוא\"ל"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__mail_template_id
@@ -2273,7 +2273,7 @@ msgstr "משימות הפרויקט"
 #. module: project
 #: model:ir.actions.server,name:project.ir_actions_server_project_sample
 msgid "Project: Activate Sample Project"
-msgstr "פרויקט: הפעל פרויקט לדוגמא"
+msgstr "פרויקט: הפעל פרויקט לדוגמה"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
@@ -2605,7 +2605,7 @@ msgstr "הגדרות"
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Share"
-msgstr "שיתוף"
+msgstr "שתף"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -3108,7 +3108,7 @@ msgstr "סוג פעילות חריגה ברשומה."
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unassigned"
-msgstr "לא מוקצה"
+msgstr "לא משויך"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3290,7 +3290,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 msgid "activate a sample project"
-msgstr "הפעל פרויקט לדוגמא"
+msgstr "הפעל פרויקט לדוגמה"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
@@ -3326,4 +3326,4 @@ msgstr "משימה"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 msgid "to play with."
-msgstr "לשחק עם."
+msgstr "כדי לשחק איתו."

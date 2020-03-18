@@ -89,7 +89,9 @@ class SaleOrder(models.Model):
                 ['order_id', 'invoice_status'], lazy=False)]
         for order in confirmed_orders:
             line_invoice_status = [d[1] for d in line_invoice_status_all if d[0] == order.id]
-            if any(invoice_status == 'to invoice' for invoice_status in line_invoice_status):
+            if order.state not in ('sale', 'done'):
+                order.invoice_status = 'no'
+            elif any(invoice_status == 'to invoice' for invoice_status in line_invoice_status):
                 order.invoice_status = 'to invoice'
             elif line_invoice_status and all(invoice_status == 'invoiced' for invoice_status in line_invoice_status):
                 order.invoice_status = 'invoiced'
@@ -541,8 +543,17 @@ class SaleOrder(models.Model):
             'invoice_payment_ref': self.reference,
             'transaction_ids': [(6, 0, self.transaction_ids.ids)],
             'invoice_line_ids': [],
+            'company_id': self.company_id.id,
         }
         return invoice_vals
+
+    @api.model
+    def action_quotation_sent(self):
+        if self.filtered(lambda so: so.state != 'draft'):
+            raise UserError(_('Only draft orders can be marked as sent directly.'))
+        for order in self:
+            order.message_subscribe(partner_ids=order.partner_id.ids)
+        self.write({'state': 'sent'})
 
     def action_view_invoice(self):
         invoices = self.mapped('invoice_ids')
@@ -572,6 +583,9 @@ class SaleOrder(models.Model):
             })
         action['context'] = context
         return action
+
+    def _get_invoice_grouping_keys(self):
+        return ['company_id', 'partner_id', 'currency_id']
 
     def _create_invoices(self, grouped=False, final=False):
         """
@@ -623,7 +637,8 @@ class SaleOrder(models.Model):
         # 2) Manage 'grouped' parameter: group by (partner_id, currency_id).
         if not grouped:
             new_invoice_vals_list = []
-            for grouping_keys, invoices in groupby(invoice_vals_list, key=lambda x: (x.get('partner_id'), x.get('currency_id'))):
+            invoice_grouping_keys = self._get_invoice_grouping_keys()
+            for grouping_keys, invoices in groupby(invoice_vals_list, key=lambda x: [x.get(grouping_key) for grouping_key in invoice_grouping_keys]):
                 origins = set()
                 payment_refs = set()
                 refs = set()
@@ -1034,7 +1049,7 @@ class SaleOrderLine(models.Model):
             else:
                 line.qty_to_invoice = 0
 
-    @api.depends('product_uom', 'invoice_lines.move_id.state', 'invoice_lines.quantity', 'invoice_lines.product_uom_id')
+    @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity')
     def _get_invoice_qty(self):
         """
         Compute the quantity invoiced. If case of a refund, the quantity invoiced is decreased. Note
@@ -1042,40 +1057,15 @@ class SaleOrderLine(models.Model):
         a refund made would automatically decrease the invoiced quantity, then there is a risk of reinvoicing
         it automatically, which may not be wanted at all. That's why the refund has to be created from the SO
         """
-        origin_lines = self._origin
-        if origin_lines:
-            # PSQL ROUND does round sometimes down, which isn't the rounding_method we want.
-            # We therefore use CEIL, but as CEIL doesn't support decimal rounding,
-            # we divide by the uom rounding, before ceiling and multiply after to preserve the decimal places.
-            # (and the default rounding method of UOM _compute_quantity)
-            self.flush(['product_uom'])
-            self.env['account.move'].flush(['state'])
-            self.env['account.move.line'].flush(['quantity', 'product_uom_id'])
-            self.env.cr.execute('''
-                SELECT
-                    rel.order_line_id as id,
-                    SUM(CASE WHEN am.type = 'out_invoice' THEN
-                        CEIL(aml.quantity / aml_uom.factor * sol_uom.factor / sol_uom.rounding) * sol_uom.rounding
-                        ELSE 0 END) as out_invoice,
-                    SUM(CASE WHEN am.type = 'out_refund' THEN
-                        CEIL(aml.quantity / aml_uom.factor * sol_uom.factor / sol_uom.rounding) * sol_uom.rounding
-                        ELSE 0 END) as out_refund
-                FROM sale_order_line_invoice_rel rel
-                JOIN sale_order_line sol on sol.id = rel.order_line_id
-                JOIN account_move_line aml on aml.id = rel.invoice_line_id
-                JOIN account_move am on am.id = aml.move_id
-                JOIN uom_uom sol_uom on (sol_uom.id=sol.product_uom)
-                JOIN uom_uom aml_uom on (aml_uom.id=aml.product_uom_id)
-                WHERE rel.order_line_id IN %s AND am.state != 'cancel'
-                GROUP BY rel.order_line_id
-            ''', [tuple(origin_lines.ids)])
-
-            query_res = self._cr.fetchall()
-        else:
-            query_res = []
-        results = {res[0]: res[1]-res[2] for res in query_res}
         for line in self:
-            line.qty_invoiced = results.get(line._origin.id, 0.0)
+            qty_invoiced = 0.0
+            for invoice_line in line.invoice_lines:
+                if invoice_line.move_id.state != 'cancel':
+                    if invoice_line.move_id.type == 'out_invoice':
+                        qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
+                    elif invoice_line.move_id.type == 'out_refund':
+                        qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
+            line.qty_invoiced = qty_invoiced
 
     @api.depends('price_unit', 'discount')
     def _get_price_reduce(self):

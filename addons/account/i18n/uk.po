@@ -645,7 +645,7 @@ msgstr "<span>Кількість</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Reference</span>"
-msgstr ""
+msgstr "<span>Референс</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -11542,6 +11542,8 @@ msgid ""
 "There is more than one receivable/payable account in the concerned invoices."
 " You cannot group payments in that case."
 msgstr ""
+"У відповідних рахунках-фактурах є більше одного дебіторського/кредиторського"
+" рахунку. У цьому випадку ви не можете групувати платежі."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -13350,11 +13352,11 @@ msgstr ""
 "з ним пов'язані деякі елементи журналу."
 
 #. module: account
+#. module: account
 #: code:addons/account/models/account_analytic_line.py:0
-#, python-format
-msgid ""
-"You can't set a different company on your analytic tags since there are some"
-" journal items linked to it."
+#: code:addons/account/models/account.py:56
+#, python-format, python-format
+msgid "A tag defined to be used on taxes must always have a country set."
 msgstr ""
-"Ви не можете встановити різні компанії на ваші аналітичні мітки, оскільки з "
-"ними пов'язані деякі елементи журналу."
+"Тег, визначений для використання на податках, повинен завжди містити "
+"встановлену країну."

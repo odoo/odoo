@@ -24,6 +24,7 @@ import odoo.tools as tools
 import odoo.release as release
 from odoo import SUPERUSER_ID, api
 from odoo.tools import pycompat
+from odoo.tools.misc import mute_logger
 
 MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
 README = ['README.rst', 'README.md', 'README.txt']
@@ -442,7 +443,19 @@ def get_test_modules(module):
     """ Return a list of module for the addons potentially containing tests to
     feed unittest.TestLoader.loadTestsFromModule() """
     # Try to import the module
-    modpath = 'odoo.addons.' + module
+    results = _get_tests_modules('odoo.addons', module)
+
+    try:
+        importlib.import_module('odoo.upgrade.%s' % module)
+    except ImportError:
+        pass
+    else:
+        results += _get_tests_modules('odoo.upgrade', module)
+
+    return results
+
+def _get_tests_modules(path, module):
+    modpath = '%s.%s' % (path, module)
     try:
         mod = importlib.import_module('.tests', modpath)
     except ImportError as e:  # will also catch subclass ModuleNotFoundError of P3.6

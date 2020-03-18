@@ -24,7 +24,7 @@ msgstr ""
 #: code:addons/snailmail_account/wizard/account_invoice_send.py:76
 #, python-format
 msgid "%s of the selected invoice(s) had an invalid address and were not sent"
-msgstr ""
+msgstr "선택한 송장 중 %s에 주소가 잘못되어 전송되지 않았습니다"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -51,6 +51,9 @@ msgid ""
 "                                            The customer address is not complete.\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"text-danger\">\n"
+"                                            고객 주소가 완전하지 않습니다.\n"
+"                                        </span>"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -59,11 +62,14 @@ msgid ""
 "                                        Some customer addresses are not complete.\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"text-danger\">\n"
+"                                        일부 고객의 주소가 완전하지 않습니다.\n"
+"                                    </span>"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
 msgid "<span> to: </span>"
-msgstr ""
+msgstr "<span> 받는 사람 : </span>"
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_account_invoice_send
@@ -75,7 +81,7 @@ msgstr "계정 청구서 전송"
 msgid ""
 "Allows to send the document by Snailmail (coventional posting delivery "
 "service)"
-msgstr ""
+msgstr "Snailmail (협약 게시 전달 서비스)로 문서를 보낼 수 있습니다"
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_res_company
@@ -85,7 +91,7 @@ msgstr "회사"
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_res_config_settings
 msgid "Config Settings"
-msgstr "설정"
+msgstr "설정 구성"
 
 #. module: snailmail_account
 #: code:addons/snailmail_account/wizard/account_invoice_send.py:75
@@ -93,12 +99,12 @@ msgstr "설정"
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_invoice_ids
 #, python-format
 msgid "Invalid Addresses"
-msgstr ""
+msgstr "잘못된 주소"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_addresses
 msgid "Invalid Addresses Count"
-msgstr ""
+msgstr "잘못된 주소 수"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__partner_id
@@ -110,12 +116,12 @@ msgstr "협력사"
 #: model:ir.model.fields,field_description:snailmail_account.field_res_company__invoice_is_snailmail
 #: model:ir.model.fields,field_description:snailmail_account.field_res_config_settings__invoice_is_snailmail
 msgid "Send by Post"
-msgstr ""
+msgstr "우편으로 보내기"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__snailmail_cost
 msgid "Stamp(s)"
-msgstr ""
+msgstr "우표"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
