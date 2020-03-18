@@ -278,6 +278,42 @@
         </field>
     </record>
 
+     <record id="lunch_product_category_view_kanban" model="ir.ui.view">
+        <field name="name">Product category Kanban</field>
+        <field name="model">lunch.product.category</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_kanban_record">
+                            <div class="o_kanban_image_fill_left d-none d-md-block"
+                                t-attf-style="background-image:url('#{kanban_image('lunch.product.category', 'image_128', record.id.raw_value)}')"/>
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <div class="float-right">
+                                            <button class="badge badge-primary" type="action"
+                                                name="%(lunch.lunch_product_action_statbutton)d"
+                                                context="{'search_default_category_id': active_id,'default_category_id': active_id}"
+                                                attrs="{'invisible': [('product_count', '=', 0)]}">
+                                                <field string="Products" name="product_count" widget="statinfo"/>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <strong><field name="name"/></strong><br/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="lunch_product_action" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">lunch.product</field>
@@ -310,7 +346,7 @@
     <record id="lunch_product_category_action" model="ir.actions.act_window">
         <field name="name">Product Categories</field>
         <field name="res_model">lunch.product.category</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,kanban</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             Create a new product category
