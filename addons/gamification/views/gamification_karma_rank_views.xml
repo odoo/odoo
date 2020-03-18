@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!-- ACTIONS -->
+        <record id="action_current_rank_users" model="ir.actions.act_window">
+            <field name="name">Users</field>
+            <field name="res_model">res.users</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('rank_id', '=', active_id)]</field>
+        </record>
+
         <!-- Ranks views -->
         <record id="gamification_karma_ranks_action" model="ir.actions.act_window">
             <field name="name">Ranks</field>
@@ -36,6 +44,7 @@
                 <tree string="Ranks List">
                     <field name="name"/>
                     <field name="karma_min"/>
+                    <field name="rank_users_count"/>
                 </tree>
             </field>
         </record>
@@ -46,7 +55,16 @@
             <field name="arch" type="xml">
                 <form string="Rank">
                     <sheet>
-                        <div class="oe_button_box" name="button_box"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button type="action" class="oe_stat_button" icon="fa-users" name="%(action_current_rank_users)d">
+                                <div class="o_form_field o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="rank_users_count" />
+                                    </span>
+                                    <span class="o_stat_text">Users</span>
+                                </div>
+                            </button>
+                        </div>
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -56,13 +74,16 @@
                         </div>
                         <group>
                             <field name="karma_min"/>
-                            <field name="description" placeholder="e.g. A Master Chief knows quite everything on the forum! You cannot beat him!"/>
-                            <field name="description_motivational" placeholder="e.g. Reach this rank to gain a free mug !"/>
                             <field name="create_date" invisible="1"/>
                         </group>
-                        <group string="Users to that rank" attrs="{'invisible': [('create_date','=',False)]}">
-                            <field name="user_ids" readonly="1" />
-                        </group>
+                        <notebook>
+                            <page string="Description" name="description">
+                                <field name="description" placeholder="e.g. A Master Chief knows quite everything on the forum! You cannot beat him!"/>
+                            </page>
+                            <page string="Motivational" name="motivational">
+                                <field name="description_motivational" placeholder="e.g. Reach this rank to gain a free mug !"/>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
