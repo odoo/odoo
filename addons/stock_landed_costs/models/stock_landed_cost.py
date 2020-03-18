@@ -60,7 +60,7 @@ class StockLandedCost(models.Model):
         'Item Description', states={'done': [('readonly', True)]})
     amount_total = fields.Monetary(
         'Total', compute='_compute_total_amount',
-        digits=0, store=True, tracking=True)
+        store=True, tracking=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Posted'),
@@ -319,7 +319,7 @@ class StockLandedCostLine(models.Model):
         'stock.landed.cost', 'Landed Cost',
         required=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', 'Product', required=True)
-    price_unit = fields.Monetary('Cost', digits='Product Price', required=True)
+    price_unit = fields.Monetary('Cost', required=True)
     split_method = fields.Selection(
         SPLIT_METHOD,
         string='Split Method',
@@ -365,13 +365,12 @@ class AdjustmentLines(models.Model):
     volume = fields.Float(
         'Volume', default=1.0, digits='Volume')
     former_cost = fields.Monetary(
-        'Original Value', digits='Product Price')
+        'Original Value')
     additional_landed_cost = fields.Monetary(
-        'Additional Landed Cost',
-        digits='Product Price')
+        'Additional Landed Cost')
     final_cost = fields.Monetary(
         'New Value', compute='_compute_final_cost',
-        digits=0, store=True)
+        store=True)
     currency_id = fields.Many2one('res.currency', related='cost_id.company_id.currency_id')
 
     @api.depends('cost_line_id.name', 'product_id.code', 'product_id.name')
