@@ -785,6 +785,23 @@ class ProductTemplate(models.Model):
             })
         return action
 
+    def action_open_routes_diagram(self):
+        products = False
+        if self.env.context.get('default_product_id'):
+            products = self.env['product.product'].browse(self.env.context['default_product_id'])
+        if not products and self.env.context.get('default_product_tmpl_id'):
+            products = self.env['product.template'].browse(self.env.context['default_product_tmpl_id']).product_variant_ids
+        if not self.user_has_groups('stock.group_stock_multi_warehouses') and len(products) == 1:
+            company = products.company_id or self.env.company
+            warehouse = self.env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1)
+            return self.env.ref('stock.action_report_stock_rule').report_action(None, data={
+                'product_id': products.id,
+                'warehouse_ids': warehouse.ids,
+            })
+        action = self.env.ref('stock.action_stock_rules_report').read()[0]
+        action['context'] = self.env.context
+        return action
+
     def action_product_tmpl_forecast_report(self):
         action = self.env.ref('stock.report_stock_quantity_action_product').read()[0]
         product_ids = self.with_context(active_test=False).product_variant_ids.filtered(lambda p: p.virtual_available != 0)
