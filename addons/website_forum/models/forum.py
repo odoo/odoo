@@ -11,6 +11,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import misc
 from odoo.tools.translate import html_translate
+from odoo.addons.http_routing.models.ir_http import slug
 
 _logger = logging.getLogger(__name__)
 
@@ -132,7 +133,7 @@ class Forum(models.Model):
     def _compute_forum_statistics(self):
         result = dict((cid, dict(total_posts=0, total_views=0, total_answers=0, total_favorites=0)) for cid in self.ids)
         read_group_res = self.env['forum.post'].read_group(
-            [('forum_id', 'in', self.ids), ('state', 'in', ('active', 'close'))],
+            [('forum_id', 'in', self.ids), ('state', 'in', ('active', 'close')), ('parent_id', '=', False)],
             ['forum_id', 'views', 'child_count', 'favourite_count'],
             groupby=['forum_id'],
             lazy=False)
@@ -141,7 +142,7 @@ class Forum(models.Model):
             result[cid]['total_posts'] += res_group.get('__count', 0)
             result[cid]['total_views'] += res_group.get('views', 0)
             result[cid]['total_answers'] += res_group.get('child_count', 0)
-            result[cid]['total_favorites'] += res_group.get('favourite_count', 0)
+            result[cid]['total_favorites'] += 1 if res_group.get('favourite_count', 0) else 0
 
         for record in self:
             record.update(result[record.id])
@@ -202,11 +203,21 @@ class Forum(models.Model):
         post_tags.insert(0, [6, 0, existing_keep])
         return post_tags
 
+    def _compute_website_url(self):
+        return '/forum/%s' % (slug(self))
+
     def get_tags_first_char(self):
         """ get set of first letter of forum tags """
         tags = self.env['forum.tag'].search([('forum_id', '=', self.id), ('posts_count', '>', 0)])
         return sorted(set([tag.name[0].upper() for tag in tags if len(tag.name)]))
 
+    def go_to_website(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': self._compute_website_url(),
+        }
 
 class Post(models.Model):
 
@@ -249,9 +260,9 @@ class Post(models.Model):
 
     # hierarchy
     is_correct = fields.Boolean('Correct', help='Correct answer or answer accepted')
-    parent_id = fields.Many2one('forum.post', string='Question', ondelete='cascade', readonly=True)
+    parent_id = fields.Many2one('forum.post', string='Question', ondelete='cascade', readonly=True, index=True)
     self_reply = fields.Boolean('Reply to own question', compute='_is_self_reply', store=True)
-    child_ids = fields.One2many('forum.post', 'parent_id', string='Answers')
+    child_ids = fields.One2many('forum.post', 'parent_id', string='Post Answers')
     child_count = fields.Integer('Answers', compute='_get_child_count', store=True)
     uid_has_answered = fields.Boolean('Has Answered', compute='_get_uid_has_answered')
     has_validated_answer = fields.Boolean('Is answered', compute='_get_has_validated_answer', store=True)
@@ -364,17 +375,10 @@ class Post(models.Model):
         for post in self:
             post.self_reply = post.parent_id.create_uid.id == post._uid
 
-    @api.depends('child_ids.create_uid', 'website_message_ids')
+    @api.depends('child_ids')
     def _get_child_count(self):
         for post in self:
-            children = self.search([('id', 'child_of', post.id)])
-            children_count = len(children)
-            message_count = self.env['mail.message'].search_count([
-                ('model', '=', post._name),
-                ('message_type', 'in', ['email', 'comment']),
-                ('res_id', 'in', children.ids + [post.id]),
-            ])
-            post.child_count = children_count + message_count
+            post.child_count = len(post.child_ids)
 
     def _get_uid_has_answered(self):
         for post in self:
@@ -869,6 +873,21 @@ class Post(models.Model):
             return
         return super(Post, self)._notify_record_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
 
+    def _compute_website_url(self):
+        return '/forum/{forum}/question/{post}{anchor}'.format(
+            forum=slug(self.forum_id),
+            post=slug(self),
+            anchor=self.parent_id and '#answer_%d' % self.id or ''
+        )
+
+    def go_to_website(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': self._compute_website_url(),
+        }
+
 
 class PostReason(models.Model):
     _name = "forum.post.reason"
@@ -876,7 +895,7 @@ class PostReason(models.Model):
     _order = 'name'
 
     name = fields.Char(string='Closing Reason', required=True, translate=True)
-    reason_type = fields.Char(string='Reason Type')
+    reason_type = fields.Selection([('basic', 'Basic'), ('offensive', 'Offensive')], string='Reason Type', default='basic')
 
 
 class Vote(models.Model):
