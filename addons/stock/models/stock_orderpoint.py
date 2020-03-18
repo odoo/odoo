@@ -104,6 +104,7 @@ class StockWarehouseOrderpoint(models.Model):
 
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
+        ('product_location_check', 'unique (product_id, location_id, company_id)', 'The combination of product and location must be unique.'),
     ]
 
     @api.depends('warehouse_id')
