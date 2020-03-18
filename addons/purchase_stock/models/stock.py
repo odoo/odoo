@@ -163,6 +163,19 @@ class ReturnPicking(models.TransientModel):
 class Orderpoint(models.Model):
     _inherit = "stock.warehouse.orderpoint"
 
+    show_supplier = fields.Boolean('Show supplier column', compute='_compute_show_suppplier')
+    supplier_id = fields.Many2one(
+        'product.supplierinfo', string='Vendor', check_company=True,
+        domain="['|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
+
+    @api.depends('route_id')
+    def _compute_show_suppplier(self):
+        buy_route = []
+        for res in self.env['stock.rule'].search_read([('action', '=', 'buy')], ['route_id']):
+            buy_route.append(res['route_id'][0])
+        for orderpoint in self:
+            orderpoint.show_supplier = orderpoint.route_id.id in buy_route
+
     def action_view_purchase(self):
         """ This function returns an action that display existing
         purchase orders of given orderpoint.
@@ -196,6 +209,11 @@ class Orderpoint(models.Model):
                 }
             }
         return super()._get_replenishment_order_notification()
+
+    def _prepare_procurement_values(self, date=False, group=False):
+        values = super()._prepare_procurement_values(date=date, group=group)
+        values['supplierinfo_id'] = self.supplier_id
+        return values
 
     def _quantity_in_progress(self):
         res = super()._quantity_in_progress()

@@ -426,7 +426,7 @@ class TestReorderingRule(SavepointCase):
                     "rule_id": warehouse.buy_pull_id,
                     "group_id": False,
                     "route_ids": [],
-                    "supplier_id": secondary_vendor,
+                    "supplierinfo_name": secondary_vendor,
                 }
             )])
         po_line = self.env["purchase.order.line"].search(

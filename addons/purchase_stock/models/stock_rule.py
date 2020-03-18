@@ -50,11 +50,15 @@ class StockRule(models.Model):
             procurement_date_planned = fields.Datetime.from_string(procurement.values['date_planned'])
             schedule_date = (procurement_date_planned - relativedelta(days=procurement.company_id.po_lead))
 
-            supplier = procurement.product_id._select_seller(
-                partner_id=procurement.values.get("supplier_id"),
-                quantity=procurement.product_qty,
-                date=schedule_date.date(),
-                uom_id=procurement.product_uom)
+            supplier = False
+            if procurement.values.get('supplierinfo_id'):
+                supplier = procurement.values['supplierinfo_id']
+            else:
+                supplier = procurement.product_id._select_seller(
+                    partner_id=procurement.values.get("supplierinfo_name"),
+                    quantity=procurement.product_qty,
+                    date=schedule_date.date(),
+                    uom_id=procurement.product_uom)
 
             if not supplier:
                 msg = _('There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors.') % (procurement.product_id.display_name)
