@@ -1,16 +1,17 @@
-odoo.define('lunch.LunchKanbanMobile', function (require) {
+odoo.define('lunch.LunchMobile', function (require) {
 "use strict";
 
 var config = require('web.config');
-var LunchKanbanWidget = require('lunch.LunchKanbanWidget');
+var LunchWidget = require('lunch.LunchWidget');
 var LunchKanbanController = require('lunch.LunchKanbanController');
+var LunchListController = require('lunch.LunchListController');
 
 if (!config.device.isMobile) {
     return;
 }
 
-LunchKanbanWidget.include({
-    template: "LunchKanbanWidgetMobile",
+LunchWidget.include({
+    template: "LunchWidgetMobile",
 
     /**
      * Override to set the toggle state allowing initially open it.
@@ -23,7 +24,7 @@ LunchKanbanWidget.include({
     },
 });
 
-LunchKanbanController.include({
+var mobileFunctions = {
     /**
      * @override
      */
@@ -42,7 +43,7 @@ LunchKanbanController.include({
      * @override
      * @private
      */
-    _renderLunchKanbanWidget: function () {
+    _renderLunchWidget: function () {
         this.widgetData.keepOpen = this.openWidget;
         this.openWidget = false;
         return this._super.apply(this, arguments);
@@ -69,6 +70,9 @@ LunchKanbanController.include({
         this.openWidget = true;
         this._super.apply(this, arguments);
     },
-});
+};
+
+LunchKanbanController.include(mobileFunctions);
+LunchListController.include(mobileFunctions);
 
 });

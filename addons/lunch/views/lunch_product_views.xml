@@ -91,6 +91,21 @@
             </form>
         </field>
     </record>
+    <record id="lunch_product_report_view_tree" model="ir.ui.view">
+        <field name="name">lunch.product.tree</field>
+        <field name="model">lunch.product.report</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <tree js_class="lunch_list">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="supplier_id"/>
+                <field name="description"/>
+                <field name="product_id" invisible="1"/>
+                <field name="price" widget="monetary"/>
+            </tree>
+        </field>
+    </record>
 
     <record id="view_lunch_product_kanban_order" model="ir.ui.view">
         <field name="name">lunch.product.kanban</field>
@@ -330,7 +345,7 @@
     <record id="lunch_product_action_order" model="ir.actions.act_window">
         <field name="name">Order Your Lunch</field>
         <field name="res_model">lunch.product.report</field>
-        <field name="view_mode">kanban</field>
+        <field name="view_mode">kanban,tree</field>
         <field name="view_id" ref="view_lunch_product_kanban_order"/>
         <field name="search_view_id" ref="lunch_product_report_view_search"/>
         <field name="domain">[('supplier_id.available_today', '=', True), '|', ('user_id', '=', False), ('user_id', '=', uid)]</field>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <span t-name="LunchKanbanWidget">
+    <span t-name="LunchWidget">
         <t t-foreach="widget.alerts" t-as="alert">
             <div class="alert alert-warning mb-0" role="alert">
                 <t t-raw="alert.message"/> <!-- alert.message is coming from a fields.Html so it should be safe -->
             </div>
         </t>
-        <div class="o_lunch_kanban_banner container-fluid">
+        <div class="o_lunch_banner container-fluid">
             <div class="o_lunch_widget row py-3 py-md-0">
                 <div class="o_lunch_widget_info col-12 col-md-4 card border-0">
                     <div class="card-body row no-gutters align-items-center">
@@ -116,7 +116,7 @@
         <span t-esc="widget.message"/>
     </div>
 
-    <t t-name="LunchKanbanWidgetMobile">
+    <t t-name="LunchWidgetMobile">
         <details class="fixed-bottom" t-attf-open="#{widget.keepOpen}">
             <summary class="o_lunch_toggle_cart btn btn-primary w-100">
                 <i class="fa fa-fw fa-shopping-cart"/>
@@ -126,7 +126,7 @@
                     <t t-set="currency" t-value="widget.currency"/>
                 </t>)
             </summary>
-            <t t-call="LunchKanbanWidget"/>
+            <t t-call="LunchWidget"/>
         </details>
     </t>
 </templates>

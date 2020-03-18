@@ -4,7 +4,7 @@ odoo.define('lunch.lunchKanbanMobileTests', function (require) {
 const LunchKanbanView = require('lunch.LunchKanbanView');
 
 const testUtils = require('web.test_utils');
-const {createLunchKanbanView, mockLunchRPC} = require('lunch.test_utils');
+const {createLunchView, mockLunchRPC} = require('lunch.test_utils');
 
 QUnit.module('Views');
 
@@ -61,7 +61,7 @@ QUnit.module('LunchKanbanView Mobile', {
     QUnit.test('basic rendering', async function (assert) {
         assert.expect(7);
 
-        const kanban = await createLunchKanbanView({
+        const kanban = await createLunchView({
             View: LunchKanbanView,
             model: 'product',
             data: this.data,
@@ -84,27 +84,27 @@ QUnit.module('LunchKanbanView Mobile', {
             "should have 1 records in the renderer");
 
         // check view layout
-        assert.containsOnce(kanban, '.o_content > .o_lunch_kanban',
+        assert.containsOnce(kanban, '.o_content > .o_lunch_content',
             "should have a 'kanban lunch wrapper' column");
-        assert.containsOnce(kanban, '.o_lunch_kanban > .o_kanban_view',
+        assert.containsOnce(kanban, '.o_lunch_content > .o_kanban_view',
             "should have a 'classical kanban view' column");
         assert.hasClass(kanban.$('.o_kanban_view'), 'o_lunch_kanban_view',
             "should have classname 'o_lunch_kanban_view'");
-        assert.containsOnce($('.o_lunch_kanban'), '> details',
+        assert.containsOnce($('.o_lunch_content'), '> details',
             "should have a 'lunch kanban' details/summary discolure panel");
-        assert.hasClass($('.o_lunch_kanban > details'), 'fixed-bottom',
+        assert.hasClass($('.o_lunch_content > details'), 'fixed-bottom',
             "should have classname 'fixed-bottom'");
-        assert.isNotVisible($('.o_lunch_kanban > details .o_lunch_kanban_banner'),
+        assert.isNotVisible($('.o_lunch_content > details .o_lunch_banner'),
             "shouldn't have a visible 'lunch kanban' banner");
 
         kanban.destroy();
     });
 
-    QUnit.module('LunchKanbanWidget', function () {
+    QUnit.module('LunchWidget', function () {
         QUnit.test('toggle', async function (assert) {
             assert.expect(6);
 
-            const kanban = await createLunchKanbanView({
+            const kanban = await createLunchView({
                 View: LunchKanbanView,
                 model: 'product',
                 data: this.data,
@@ -125,8 +125,8 @@ QUnit.module('LunchKanbanView Mobile', {
                 }),
             });
 
-            const $details = $('.o_lunch_kanban > details');
-            assert.isNotVisible($details.find('.o_lunch_kanban_banner'),
+            const $details = $('.o_lunch_content > details');
+            assert.isNotVisible($details.find('.o_lunch_banner'),
                 "shouldn't have a visible 'lunch kanban' banner");
             assert.isVisible($details.find('> summary'),
                 "should hava a visible cart toggle button");
@@ -136,11 +136,11 @@ QUnit.module('LunchKanbanView Mobile', {
                 "should have '3.00' in the button text");
 
             await testUtils.dom.click($details.find('> summary'));
-            assert.isVisible($details.find('.o_lunch_kanban_banner'),
+            assert.isVisible($details.find('.o_lunch_banner'),
                 "should have a visible 'lunch kanban' banner");
 
             await testUtils.dom.click($details.find('> summary'));
-            assert.isNotVisible($details.find('.o_lunch_kanban_banner'),
+            assert.isNotVisible($details.find('.o_lunch_banner'),
                 "shouldn't have a visible 'lunch kanban' banner");
 
             kanban.destroy();
@@ -149,7 +149,7 @@ QUnit.module('LunchKanbanView Mobile', {
         QUnit.test('keep open when adding quantities', async function (assert) {
             assert.expect(6);
 
-            const kanban = await createLunchKanbanView({
+            const kanban = await createLunchView({
                 View: LunchKanbanView,
                 model: 'product',
                 data: this.data,
@@ -177,14 +177,14 @@ QUnit.module('LunchKanbanView Mobile', {
                 }),
             });
 
-            const $details = $('.o_lunch_kanban > details');
-            assert.isNotVisible($details.find('.o_lunch_kanban_banner'),
+            const $details = $('.o_lunch_content > details');
+            assert.isNotVisible($details.find('.o_lunch_banner'),
                 "shouldn't have a visible 'lunch kanban' banner");
             assert.isVisible($details.find('> summary'),
                 "should hava a visible cart toggle button");
 
             await testUtils.dom.click($details.find('> summary'));
-            assert.isVisible($details.find('.o_lunch_kanban_banner'),
+            assert.isVisible($details.find('.o_lunch_banner'),
                 "should have a visible 'lunch kanban' banner");
 
             const $widgetSecondColumn = kanban.$('.o_lunch_widget .o_lunch_widget_info:eq(1)');
@@ -195,13 +195,13 @@ QUnit.module('LunchKanbanView Mobile', {
             let $firstLine = $widgetSecondColumn.find('.o_lunch_widget_lines > li:first');
 
             await testUtils.dom.click($firstLine.find('button.o_add_product'));
-            assert.isVisible($('.o_lunch_kanban > details .o_lunch_kanban_banner'),
+            assert.isVisible($('.o_lunch_content > details .o_lunch_banner'),
                 "add quantity should keep 'lunch kanban' banner open");
 
             $firstLine = kanban.$('.o_lunch_widget .o_lunch_widget_info:eq(1) .o_lunch_widget_lines > li:first');
 
             await testUtils.dom.click($firstLine.find('button.o_remove_product'));
-            assert.isVisible($('.o_lunch_kanban > details .o_lunch_kanban_banner'),
+            assert.isVisible($('.o_lunch_content > details .o_lunch_banner'),
                 "remove quantity should keep 'lunch kanban' banner open");
 
             kanban.destroy();

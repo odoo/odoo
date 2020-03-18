@@ -1,4 +1,4 @@
-odoo.define('lunch.LunchKanbanModel', function (require) {
+odoo.define('lunch.LunchModel', function (require) {
 "use strict";
 
 /**
@@ -7,9 +7,9 @@ odoo.define('lunch.LunchKanbanModel', function (require) {
  */
 
 var session = require('web.session');
-var KanbanModel = require('web.KanbanModel');
+var BasicModel = require('web.BasicModel');
 
-var LunchKanbanModel = KanbanModel.extend({
+var LunchModel = BasicModel.extend({
     init: function () {
         this.locationId = false;
         this.userId = false;
@@ -125,6 +125,6 @@ var LunchKanbanModel = KanbanModel.extend({
     }
 });
 
-return LunchKanbanModel;
+return LunchModel;
 
 });

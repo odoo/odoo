@@ -2,17 +2,22 @@
 <odoo>
     <template id="assets_backend" name="lunch assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/lunch/static/src/scss/lunch_view.scss"/>
             <link rel="stylesheet" type="text/scss" href="/lunch/static/src/scss/lunch_kanban.scss"/>
             <link rel="stylesheet" type="text/scss" href="/lunch/static/src/scss/lunch_list.scss"/>
 
-            <script type="text/javascript" src="/lunch/static/src/js/lunch_kanban_widget.js"></script>
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_controller_common.js"></script>
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_model.js"></script>
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_widget.js"></script>
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_mobile.js"></script>
             <script type="text/javascript" src="/lunch/static/src/js/lunch_payment_dialog.js"></script>
             <script type="text/javascript" src="/lunch/static/src/js/lunch_kanban_view.js"></script>
             <script type="text/javascript" src="/lunch/static/src/js/lunch_kanban_controller.js"></script>
             <script type="text/javascript" src="/lunch/static/src/js/lunch_kanban_renderer.js"></script>
             <script type="text/javascript" src="/lunch/static/src/js/lunch_kanban_record.js"></script>
-            <script type="text/javascript" src="/lunch/static/src/js/lunch_kanban_model.js"></script>
-            <script type="text/javascript" src="/lunch/static/src/js/lunch_kanban_mobile.js"></script>
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_list_view.js"></script>
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_list_controller.js"></script>
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_list_renderer.js"></script>
         </xpath>
     </template>
 
@@ -20,6 +25,7 @@
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/lunch/static/tests/lunch_test_utils.js"></script>
             <script type="text/javascript" src="/lunch/static/tests/lunch_kanban_tests.js"></script>
+            <script type="text/javascript" src="/lunch/static/tests/lunch_list_tests.js"></script>
         </xpath>
     </template>
 

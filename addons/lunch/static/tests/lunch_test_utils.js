@@ -6,11 +6,11 @@ const RamStorage = require('web.RamStorage');
 const {createView} = require('web.test_utils');
 
 /**
- * Helper to create a lunch kanban view with searchpanel
+ * Helper to create a lunch view with searchpanel
  *
  * @param {object} params
  */
-async function createLunchKanbanView(params) {
+async function createLunchView(params) {
     params.archs = params.archs || {};
     var searchArch = params.archs[`${params.model},false,search`] || '<search></search>';
     var searchPanelArch = `
@@ -52,7 +52,7 @@ function mockLunchRPC({infos, userLocation}) {
 }
 
 return {
-    createLunchKanbanView,
+    createLunchView,
     mockLunchRPC,
 };
 

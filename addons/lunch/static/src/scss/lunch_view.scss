@@ -1,0 +1,81 @@
+.o_lunch_content {
+    display: flex;
+    flex-direction: column; // display lunch widget above kanban renderer
+    flex: 1 1 100%; // displayed to the right of the searchPanel
+    min-width: 0; // prevent grouped kanban from horizontally overflowing
+    max-width: 100%;
+    height: 100%;
+    .o_lunch_banner {
+        flex: 0 0 auto;
+        border-bottom: 1px solid #CED4DA;
+        background-color: white;
+    }
+
+    .o_lunch_purple {
+        color: $o-brand-odoo;
+    }
+
+    .o_flex_basis_0 {
+        flex-basis: 0;
+    }
+
+    .o_lunch_widget {
+        min-height: 90px;
+        max-height: 33vh;
+        overflow-y: auto;
+
+        .o_lunch_widget_info.card {
+            &, .card-title, .card-body {
+                color: $o-main-text-color;
+                background-color: inherit !important;
+            }
+
+            .card-title {
+                font-weight: bold;
+                margin-bottom: 0;
+            }
+
+            .card-body {
+                padding: 0.5rem 1rem;
+            }
+
+            .btn-link {
+                padding: 0;
+                &.o_lunch_open_wizard {
+                    color: $o-main-text-color;
+                    font-weight: normal;
+                }
+            }
+        }
+    }
+}
+
+.o_lunch_image {
+    img {
+        max-width: 128px;
+        max-height: 128px !important;
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .o_lunch_content {
+        details summary {
+            // Hide the caret. For details see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/summary
+            list-style-type: none;
+            &::-webkit-details-marker {
+                display: none
+            }
+        }
+        .o_lunch_widget {
+            max-height: 100%
+        }
+    }
+}
+
+.o_lunch_wizard {
+    .col-10 {
+        .o_form_label {
+            font-weight: normal !important;
+        }
+    }
+}
