@@ -38,7 +38,7 @@ If you want to save your employees' time and avoid them to always have coins in 
         'data/ir_cron_data.xml'
     ],
     'demo': ['data/lunch_demo.xml'],
-    'qweb': ['static/src/xml/lunch_kanban.xml', ],
+    'qweb': ['static/src/xml/lunch_templates.xml', ],
     'installable': True,
     'application': True,
     'certificate': '001292377792581874189',
