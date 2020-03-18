@@ -22,6 +22,7 @@ class AccountReconciliation(models.AbstractModel):
                 OR POSITION(lower(o.reference) IN lower(stl.name)) != 0)
               AND stl.id IN %s
               AND (o.invoice_status = 'to invoice' OR o.state = 'sent')
+              AND o.amount_total != 0
               AND o.company_id = %s
             GROUP BY stl.id
             ORDER BY stl.id
@@ -41,5 +42,7 @@ class AccountReconciliation(models.AbstractModel):
     @api.model
     def get_bank_statement_line_data(self, st_line_ids, excluded_ids=None):
         res = super(AccountReconciliation, self).get_bank_statement_line_data(st_line_ids=st_line_ids, excluded_ids=excluded_ids)
-        res = self._get_sales_order(res)
+        inject_orders = self.env['ir.config_parameter'].sudo().get_param('sale.reconciliation_with_so')
+        if inject_orders != 'no':
+            res = self._get_sales_order(res)
         return res

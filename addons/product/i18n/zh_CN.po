@@ -24,8 +24,9 @@
 # guohuadeng <guohuadeng@hotmail.com>, 2019
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # Martin Trigaux, 2019
-# Felix Yang - Elico Corp <felix.yang@elico-corp.com>, 2019
+# Felix Yang/杨孟泽 <felixyangsh@aliyun.com>, 2019
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# as co02 <asco02@163.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -33,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
+"Last-Translator: as co02 <asco02@163.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,18 +80,18 @@ msgstr "%s (副本)"
 #: model:ir.actions.report,print_report_name:product.report_product_label
 #: model:ir.actions.report,print_report_name:product.report_product_template_label
 msgid "'Products Labels - %s' % (object.name)"
-msgstr ""
+msgstr "'产品标签 - %s' % (object.name)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_product_barcode
 #: model:ir.actions.report,print_report_name:product.report_product_template_barcode
 msgid "'Products barcode - %s' % (object.name)"
-msgstr ""
+msgstr "'产品条码 - %s' % (object.name)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.name)"
-msgstr ""
+msgstr "'产品包装 - %s' % (object.name)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -158,7 +159,7 @@ msgstr "<span class=\"text-muted\">没有可用的条码</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
-msgstr ""
+msgstr "<span>有关此产品的所有常规设置都在</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -292,7 +293,7 @@ msgstr "高级价格表"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__advanced
 msgid "Advanced price rules (discounts, formulas)"
-msgstr ""
+msgstr "高级价格规则（折扣，公式）"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -364,7 +365,7 @@ msgstr "属性"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
 msgid "Attribute Line"
-msgstr ""
+msgstr "属性行"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -432,7 +433,7 @@ msgstr "基于"
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Basic Pricelists"
-msgstr ""
+msgstr "基本价目表"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
@@ -693,12 +694,12 @@ msgstr "创建时间"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__1
 msgid "Cubic Feet"
-msgstr ""
+msgstr "立方英尺"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__0
 msgid "Cubic Meters"
-msgstr ""
+msgstr "立方米"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__currency_id
@@ -739,7 +740,7 @@ msgstr "小数精度"
 #: code:addons/product/models/res_company.py:0
 #, python-format
 msgid "Default %(currency)s pricelist"
-msgstr ""
+msgstr "默认 %(currency)s 价目表"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -867,7 +868,7 @@ msgstr "动态"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
-msgstr ""
+msgstr "每个产品的每个属性只能定义一次。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_end
@@ -901,7 +902,7 @@ msgstr "价格表明细的详细规则名称"
 msgid ""
 "Extra price for the variant with this attribute value on sale price. eg. 200"
 " price extra, 1000 + 200 = 1200."
-msgstr ""
+msgstr "价格附加: 变体的销售价格随着附加价格进行变化,如:原销售价格是1000,额外收费是200,当前售价是1200 = 1000 + 200."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
@@ -1361,7 +1362,7 @@ msgstr "最小数量"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__basic
 msgid "Multiple prices per product"
-msgstr ""
+msgstr "每个产品多个售价"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_config_settings__product_pricelist_setting
@@ -1434,7 +1435,7 @@ msgstr "递送错误消息数量"
 #: model:ir.model.fields,field_description:product.field_product_product__pricelist_item_count
 #: model:ir.model.fields,field_description:product.field_product_template__pricelist_item_count
 msgid "Number of price rules"
-msgstr ""
+msgstr "价格规则数量"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_unread_counter
@@ -1659,7 +1660,7 @@ msgstr "价格表名称"
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
 msgid "Pricelist Rule"
-msgstr ""
+msgstr "价目表规则"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
@@ -1865,7 +1866,7 @@ msgstr "产品变体"
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "Product: %s"
-msgstr ""
+msgstr "产品: %s"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action
@@ -1893,7 +1894,7 @@ msgstr "产品价格表"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 msgid "Products Price Rules Search"
-msgstr ""
+msgstr "产品价格规则搜索"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -2043,7 +2044,7 @@ msgstr "为当前产品选择一个类别"
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__sequence
 #: model:ir.model.fields,field_description:product.field_product_template__sequence
 msgid "Sequence"
-msgstr "单号规则"
+msgstr "序号"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__type__service
@@ -2439,7 +2440,7 @@ msgstr "未读消息计数器"
 #: model:ir.model.fields,field_description:product.field_product_attribute__is_used_on_products
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
 msgid "Used on Products"
-msgstr ""
+msgstr "用于产品"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
@@ -2612,13 +2613,13 @@ msgstr "体积"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_volume_volume_in_cubic_feet
 msgid "Volume unit of measure"
-msgstr ""
+msgstr "体积计量单位"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__volume_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__volume_uom_name
 msgid "Volume unit of measure label"
-msgstr ""
+msgstr "体积计量单位标签"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view

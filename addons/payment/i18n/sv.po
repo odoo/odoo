@@ -8,7 +8,6 @@
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2019
 # Leif Persson <leifpz54@gmail.com>, 2019
 # Patrik Lermon <patrik.lermon@gmail.com>, 2019
-# Kim Asplund <kim.asplund@gmail.com>, 2019
 # Kristoffer Grundström <hamnisdude@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
@@ -17,6 +16,7 @@
 # Daniel Osser <danielosser@gmail.com>, 2019
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2019
 # fah_odoo <fah@odoo.com>, 2020
+# Kim Asplund <kim.asplund@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-18 09:47+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: fah_odoo <fah@odoo.com>, 2020\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2020\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -470,7 +470,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment.action_open_payment_onboarding_payment_acquirer_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Choose a payment method"
-msgstr ""
+msgstr "Välj en betalmetod"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
@@ -684,13 +684,14 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__disabled
+#: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Disabled"
 msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Dismiss"
-msgstr ""
+msgstr "Avfärda"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__display_name
@@ -841,7 +842,7 @@ msgstr "Gruppera efter"
 #. module: payment
 #: model:ir.model,name:payment.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP Routing"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_processed
@@ -980,7 +981,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_acquirer_onboarding_state__just_done
 msgid "Just done"
-msgstr ""
+msgstr "Nästan färdig"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
@@ -1162,7 +1163,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_acquirer_onboarding_state__not_done
 msgid "Not done"
-msgstr ""
+msgstr "Inte färdig"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__payment_token_id
@@ -1237,7 +1238,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Or scan me with your banking app."
-msgstr ""
+msgstr "Eller skanna mig med din bank app."
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__other
@@ -1433,7 +1434,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_user_type
 msgid "Paypal User Type"
-msgstr ""
+msgstr "Paypal Användar Typ"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__pending
@@ -1617,7 +1618,7 @@ msgstr "Sekvens"
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Server Error"
-msgstr ""
+msgstr "Server Fel"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__type__server2server
@@ -1698,6 +1699,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__test
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
+#: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Test Mode"
 msgstr "Testläge"
 

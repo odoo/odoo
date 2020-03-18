@@ -9472,7 +9472,7 @@ msgstr "九月"
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__sequence
 #: model:ir.model.fields,field_description:account.field_account_tax_template__sequence
 msgid "Sequence"
-msgstr "单号规则"
+msgstr "序号"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__sequence
@@ -10006,9 +10006,7 @@ msgstr "应有税金"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Tax Excluded"
-msgstr ""
-" \n"
-"外税"
+msgstr "不含税"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids
@@ -12784,9 +12782,9 @@ msgid ""
 msgstr "您不能在您的分析账户上设置一个不同的公司，因为有一些与之相关的凭证明细。"
 
 #. module: account
+#. module: account
 #: code:addons/account/models/account_analytic_line.py:0
-#, python-format
-msgid ""
-"You can't set a different company on your analytic tags since there are some"
-" journal items linked to it."
-msgstr "您不能在您的分析标签上设置一个不同的公司，因为有一些与之相关的凭证明细。"
+#: code:addons/account/models/account.py:56
+#, python-format, python-format
+msgid "A tag defined to be used on taxes must always have a country set."
+msgstr ""

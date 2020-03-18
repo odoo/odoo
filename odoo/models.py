@@ -2964,14 +2964,6 @@ Fields:
             else:
                 _logger.warning("%s.read() with unknown field '%s'", self._name, name)
 
-        env = self.env
-        cr, user, context, su = env.args
-
-        # make a query object for selecting ids, and apply security rules to it
-        param_ids = object()
-        query = Query(['"%s"' % self._table], ['"%s".id IN %%s' % self._table], [param_ids])
-        self._apply_ir_rules(query, 'read')
-
         # determine the fields that are stored as columns in tables; ignore 'id'
         fields_pre = [
             field
@@ -2981,30 +2973,42 @@ Fields:
             if not (field.inherited and callable(field.base_field.translate))
         ]
 
-        # the query may involve several tables: we need fully-qualified names
-        def qualify(field):
-            col = field.name
-            res = self._inherits_join_calc(self._table, field.name, query)
-            if field.type == 'binary' and (context.get('bin_size') or context.get('bin_size_' + col)):
-                # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast
-                res = 'pg_size_pretty(length(%s)::bigint)' % res
-            return '%s as "%s"' % (res, col)
+        if fields_pre:
+            env = self.env
+            cr, user, context, su = env.args
 
-        # selected fields are: 'id' followed by fields_pre
-        qual_names = [qualify(name) for name in [self._fields['id']] + fields_pre]
+            # make a query object for selecting ids, and apply security rules to it
+            param_ids = object()
+            query = Query(['"%s"' % self._table], ['"%s".id IN %%s' % self._table], [param_ids])
+            self._apply_ir_rules(query, 'read')
 
-        # determine the actual query to execute
-        from_clause, where_clause, params = query.get_sql()
-        query_str = "SELECT %s FROM %s WHERE %s" % (",".join(qual_names), from_clause, where_clause)
+            # the query may involve several tables: we need fully-qualified names
+            def qualify(field):
+                col = field.name
+                res = self._inherits_join_calc(self._table, field.name, query)
+                if field.type == 'binary' and (context.get('bin_size') or context.get('bin_size_' + col)):
+                    # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast
+                    res = 'pg_size_pretty(length(%s)::bigint)' % res
+                return '%s as "%s"' % (res, col)
 
-        # fetch one list of record values per field
-        param_pos = params.index(param_ids)
+            # selected fields are: 'id' followed by fields_pre
+            qual_names = [qualify(name) for name in [self._fields['id']] + fields_pre]
 
-        result = []
-        for sub_ids in cr.split_for_in_conditions(self.ids):
-            params[param_pos] = tuple(sub_ids)
-            cr.execute(query_str, params)
-            result += cr.fetchall()
+            # determine the actual query to execute
+            from_clause, where_clause, params = query.get_sql()
+            query_str = "SELECT %s FROM %s WHERE %s" % (",".join(qual_names), from_clause, where_clause)
+
+            # fetch one list of record values per field
+            param_pos = params.index(param_ids)
+
+            result = []
+            for sub_ids in cr.split_for_in_conditions(self.ids):
+                params[param_pos] = tuple(sub_ids)
+                cr.execute(query_str, params)
+                result += cr.fetchall()
+        else:
+            self.check_access_rule('read')
+            result = [(id_,) for id_ in self.ids]
 
         fetched = self.browse()
         if result:
@@ -5763,6 +5767,9 @@ Record ids: %(records)s
             if not recs:
                 return
             if field.compute and field.store:
+                # do not force recomputation on new records; those will be
+                # recomputed by accessing the field on the records
+                recs = recs.filtered('id')
                 try:
                     recs.mapped(field.name)
                 except MissingError:
@@ -5779,9 +5786,8 @@ Record ids: %(records)s
 
         if fnames is None:
             # recompute everything
-            fields_to_compute = self.env.fields_to_compute()
-            while fields_to_compute:
-                process(next(iter(fields_to_compute)))
+            for field in list(self.env.fields_to_compute()):
+                process(field)
         else:
             fields = [self._fields[fname] for fname in fnames]
 

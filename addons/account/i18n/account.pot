@@ -6995,6 +6995,12 @@ msgid "Next Number Prefix"
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_bank_statement.py:545
+#, python-format
+msgid "No default debit and credit account defined on journal %s (ids: %s)"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
 msgid "No Follow-up"
 msgstr ""
@@ -12511,4 +12517,9 @@ msgstr ""
 #: code:addons/account/models/account_analytic_line.py:0
 #, python-format
 msgid "You can't set a different company on your analytic tags since there are some journal items linked to it."
+
+#. module: account
+#: code:addons/account/models/account.py:56
+#, python-format
+msgid "A tag defined to be used on taxes must always have a country set."
 msgstr ""

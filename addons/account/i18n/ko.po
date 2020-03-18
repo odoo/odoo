@@ -642,7 +642,7 @@ msgstr "<span>수량</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Reference</span>"
-msgstr ""
+msgstr "<span>참조</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -12846,9 +12846,9 @@ msgid ""
 msgstr "연결된 분개장 기입 항목이 있으므로 분석 계정에 다른 회사를 설정할 수 없습니다."
 
 #. module: account
+#. module: account
 #: code:addons/account/models/account_analytic_line.py:0
-#, python-format
-msgid ""
-"You can't set a different company on your analytic tags since there are some"
-" journal items linked to it."
-msgstr "연결된 분개장 기입 항목이 있으므로 분석 태그에 다른 회사를 설정할 수 없습니다."
+#: code:addons/account/models/account.py:56
+#, python-format, python-format
+msgid "A tag defined to be used on taxes must always have a country set."
+msgstr "세금에 사용하도록 정의된 태그에는 항상 국가 세트가 있어야 합니다."

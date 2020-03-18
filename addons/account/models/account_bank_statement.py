@@ -537,12 +537,18 @@ class AccountBankStatementLine(models.Model):
         # last case is company in currency A, statement in currency A and transaction in currency A
         # and in this case counterpart line does not need any second currency nor amount_currency
 
+        # Check if default_debit or default_credit account are properly configured
+        account_id = amount >= 0 \
+            and self.statement_id.journal_id.default_credit_account_id.id \
+            or self.statement_id.journal_id.default_debit_account_id.id
+
+        if not account_id:
+            raise UserError(_('No default debit and credit account defined on journal %s (ids: %s).' % (self.statement_id.journal_id.name, self.statement_id.journal_id.ids)))
+
         aml_dict = {
             'name': self.name,
             'partner_id': self.partner_id and self.partner_id.id or False,
-            'account_id': amount >= 0 \
-                and self.statement_id.journal_id.default_credit_account_id.id \
-                or self.statement_id.journal_id.default_debit_account_id.id,
+            'account_id': account_id,
             'credit': amount < 0 and -amount or 0.0,
             'debit': amount > 0 and amount or 0.0,
             'statement_line_id': self.id,
@@ -649,6 +655,17 @@ class AccountBankStatementLine(models.Model):
             'communication': self._get_communication(payment_methods[0] if payment_methods else False),
             'name': self.statement_id.name or _("Bank Statement %s") %  self.date,
         }
+
+    def _find_or_create_bank_account(self):
+        bank_account = self.env['res.partner.bank'].search(
+            [('company_id', '=', self.company_id.id), ('acc_number', '=', self.account_number)])
+        if not bank_account:
+            bank_account = self.env['res.partner.bank'].create({
+                'acc_number': self.account_number,
+                'partner_id': self.partner_id.id,
+                'company_id': self.company_id.id,
+            })
+        return bank_account
 
     def process_reconciliation(self, counterpart_aml_dicts=None, payment_aml_rec=None, new_aml_dicts=None):
         """ Match statement lines with existing payments (eg. checks) and/or payables/receivables (eg. invoices and credit notes) and/or new move lines (eg. write-offs).
@@ -808,12 +825,7 @@ class AccountBankStatementLine(models.Model):
         if self.account_number and self.partner_id and not self.bank_account_id:
             # Search bank account without partner to handle the case the res.partner.bank already exists but is set
             # on a different partner.
-            bank_account = self.env['res.partner.bank'].search([('company_id', '=', self.company_id.id),('acc_number', '=', self.account_number)])
-            if not bank_account:
-                bank_account = self.env['res.partner.bank'].create({
-                    'acc_number': self.account_number, 'partner_id': self.partner_id.id
-                })
-            self.bank_account_id = bank_account
+            self.bank_account_id = self._find_or_create_bank_account()
 
         counterpart_moves._check_balanced()
         return counterpart_moves

@@ -2334,7 +2334,7 @@ var BasicModel = AbstractModel.extend({
                 model: record.model,
                 method: 'read',
                 args: [[record.res_id], fieldNames],
-                context: _.extend({}, record.getContext(), {bin_size: true}),
+                context: _.extend({bin_size: true}, record.getContext()),
             })
             .then(function (result) {
                 if (result.length === 0) {
@@ -2420,7 +2420,7 @@ var BasicModel = AbstractModel.extend({
                             display_name: el[1],
                         },
                         modelName: model,
-                        parentID: parent,
+                        parentID: parent.id,
                     });
                     parent.data[fieldName] = referenceDp.id;
                 });
