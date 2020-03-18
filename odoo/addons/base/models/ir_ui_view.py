@@ -441,7 +441,21 @@ actual arch.
             custom_view.unlink()
 
         self.clear_caches()
-        return super(View, self).write(self._compute_defaults(vals))
+
+        res = super(View, self).write(self._compute_defaults(vals))
+
+        # Check the xml of the view if it gets re-activated.
+        # Ideally, `active` shoud have been added to the `api.constrains` of `_check_xml`,
+        # but the ORM writes and validates regular field (such as `active`) before inverse fields (such as `arch`),
+        # and therefore when writing `active` and `arch` at the same time, `_check_xml` is called twice,
+        # and the first time it tries to validate the view without the modification to the arch,
+        # which is problematic if the user corrects the view at the same time he re-enables it.
+        if vals.get('active'):
+            # Call `_validate_fields` instead of `_check_xml` to have the regular constrains error dialog
+            # instead of the traceback dialog.
+            self._validate_fields(['arch_db'])
+
+        return res
 
     def unlink(self):
         # if in uninstall mode and has children views, emulate an ondelete cascade
@@ -483,6 +497,26 @@ actual arch.
     # Inheritance mecanism
     #------------------------------------------------------
     @api.model
+    def _get_inheriting_views(self, view_id, model):
+        conditions = self._get_inheriting_views_arch_domain(view_id, model)
+
+        if self.pool._init and not self._context.get('load_all_views'):
+            # Module init currently in progress, only consider views from
+            # modules whose code is already loaded
+
+            # Search terms inside an OR branch in a domain
+            # cannot currently use relationships that are
+            # not required. The root cause is the INNER JOIN
+            # used to implement it.
+            modules = tuple(self.pool._init_modules) + (self._context.get('install_module'),)
+            views = self.search(conditions + [('model_ids.module', 'in', modules)])
+            views_cond = [('id', 'in', list(self._context.get('check_view_ids') or (0,)) + views.ids)]
+            views = self.search(conditions + views_cond, order=INHERIT_ORDER)
+        else:
+            views = self.search(conditions, order=INHERIT_ORDER)
+        return views
+
+    @api.model
     def _get_inheriting_views_arch_domain(self, view_id, model):
         return [
             ['inherit_id', '=', view_id],
@@ -505,23 +539,9 @@ actual arch.
            :rtype: list of tuples
            :return: [(view_arch,view_id), ...]
         """
+
         user_groups = self.env.user.groups_id
-        conditions = self._get_inheriting_views_arch_domain(view_id, model)
-
-        if self.pool._init and not self._context.get('load_all_views'):
-            # Module init currently in progress, only consider views from
-            # modules whose code is already loaded
-
-            # Search terms inside an OR branch in a domain
-            # cannot currently use relationships that are
-            # not required. The root cause is the INNER JOIN
-            # used to implement it.
-            modules = tuple(self.pool._init_modules) + (self._context.get('install_module'),)
-            views = self.search(conditions + [('model_ids.module', 'in', modules)])
-            views_cond = [('id', 'in', list(self._context.get('check_view_ids') or (0,)) + views.ids)]
-            views = self.search(conditions + views_cond, order=INHERIT_ORDER)
-        else:
-            views = self.search(conditions, order=INHERIT_ORDER)
+        views = self._get_inheriting_views(view_id, model)
 
         return [(view.arch, view.id)
                 for view in views.sudo()

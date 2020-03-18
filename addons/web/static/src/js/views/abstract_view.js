@@ -162,9 +162,13 @@ var AbstractView = Class.extend({
             this.controllerParams.withControlPanel = params.withControlPanel;
         }
 
-        var groupBy = params.groupBy;
-        if (typeof groupBy === 'string') {
-            groupBy = [groupBy];
+        // set groupBy only if view is groupable
+        var groupBy = [];
+        if (this.groupable) {
+            groupBy = params.groupBy;
+            if (typeof groupBy === 'string') {
+                groupBy = [groupBy];
+            }
         }
 
         this.loadParams = {

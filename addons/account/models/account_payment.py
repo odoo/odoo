@@ -36,7 +36,7 @@ class account_abstract_payment(models.AbstractModel):
 
     invoice_ids = fields.Many2many('account.invoice', string='Invoices', copy=False)
     multi = fields.Boolean(string='Multi',
-                           help='Technical field indicating if the user selected invoices from multiple partners or from different types.')
+                           help='Technical field indicating if the registering payment will generate multiple payments or not.')
 
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')], string='Payment Type', required=True)
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type', required=True, oldname="payment_method",
@@ -70,6 +70,15 @@ class account_abstract_payment(models.AbstractModel):
     show_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be displayed or not in the payments form views')
 
     @api.model
+    def is_multi(self, invoices):
+        multi = any(inv.commercial_partner_id != invoices[0].commercial_partner_id
+            or MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type]
+            or inv.account_id != invoices[0].account_id
+            or inv.partner_bank_id != invoices[0].partner_bank_id
+            for inv in invoices)
+        return multi
+
+    @api.model
     def default_get(self, fields):
         rec = super(account_abstract_payment, self).default_get(fields)
         active_ids = self._context.get('active_ids')
@@ -99,12 +108,7 @@ class account_abstract_payment(models.AbstractModel):
                     raise UserError(_("You cannot register payments for customer invoices and credit notes at the same time."))
 
         # Look if we are mixin multiple commercial_partner or customer invoices with vendor bills
-        multi = any(inv.commercial_partner_id != invoices[0].commercial_partner_id
-            or MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type]
-            or inv.account_id != invoices[0].account_id
-            or inv.partner_bank_id != invoices[0].partner_bank_id
-            for inv in invoices)
-        multi = multi or (len(invoices.mapped('partner_id')) == 1 and len(invoices) > 1)
+        multi = self.is_multi(invoices)
 
         currency = invoices[0].currency_id
 
@@ -118,7 +122,7 @@ class account_abstract_payment(models.AbstractModel):
             'partner_type': False if multi else MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
             'communication': ' '.join([ref for ref in invoices.mapped('reference') if ref])[:2000],
             'invoice_ids': [(6, 0, invoices.ids)],
-            'multi': multi,
+            'multi': multi or (len(invoices.mapped('partner_id')) == 1 and len(invoices) > 1),
         })
         return rec
 
@@ -291,6 +295,12 @@ class account_register_payments(models.TransientModel):
         for record in self:
             record.show_communication_field = len(record.invoice_ids) == 1 \
                                               or record.group_invoices and len(record.mapped('invoice_ids.partner_id.commercial_partner_id')) == 1
+
+    @api.onchange('group_invoices')
+    def _onchange_group_invoices(self):
+        multi = self.is_multi(self.invoice_ids)
+        # Only one payment is made when grouping several invoices for the same partner
+        self.multi = multi or ((len(self.invoice_ids.mapped('partner_id')) == 1 and len(self.invoice_ids) > 1) and not self.group_invoices)
 
     @api.onchange('journal_id')
     def _onchange_journal(self):
