@@ -144,6 +144,17 @@
             <field name="perm_create" eval="1"/>
         </record>
 
+        <record id="rule_slide_channel_partner_manager" model="ir.rule">
+            <field name="name">Channel Partner: manager: crud all</field>
+            <field name="model_id" ref="model_slide_channel_partner"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_website_slides_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+
         <!-- SLIDE PARTNER -->
         <record id="rule_slide_slide_partner_officer" model="ir.rule">
             <field name="name">Slide Partner: officer: create/write/unlink own only</field>
@@ -153,6 +164,17 @@
             <field name="perm_unlink" eval="1"/>
             <field name="perm_write" eval="1"/>
             <field name="perm_read" eval="0"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+
+        <record id="rule_slide_slide_partner_manager" model="ir.rule">
+            <field name="name">Slide Partner: manager: crud all</field>
+            <field name="model_id" ref="model_slide_slide_partner"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_website_slides_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
             <field name="perm_create" eval="1"/>
         </record>
 
