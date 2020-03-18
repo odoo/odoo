@@ -296,8 +296,8 @@ QUnit.test('restore Support channel if necessary', async function (assert) {
         "should have open a chat window");
 
     assert.verifySteps([
-        '/mail/init_messaging',
         'cors: /odoo_im_support/get_support_channel',
+        '/mail/init_messaging',
         'cors: /odoo_im_support/fetch_messages',
     ]);
 
@@ -366,8 +366,8 @@ QUnit.test('receive messages in the Support channel', async function (assert) {
         'A message', "message is correct");
 
     assert.verifySteps([
-        '/mail/init_messaging',
         'cors: /odoo_im_support/get_support_channel',
+        '/mail/init_messaging',
         'cors: /odoo_im_support/fetch_messages',
     ]);
 
