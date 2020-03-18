@@ -48,6 +48,7 @@ In simple words does Odoo became CMS+ERP platform?</p>]]></field>
         <!-- Answer -->
         <record id="answer_0" model="forum.post">
             <field name="forum_id" ref="website_forum.forum_help"/>
+            <field name="name">Re: How to configure alerts for employee contract expiration</field>
             <field name="content"><![CDATA[<p>Just for posterity so other can see. Here are the steps to set automatic alerts on any contract.. i.e. HR Employee, or Fleet for example. I will use fleet as an example.</p>
 <ul>
     <li>Step 1. As a user who has access rights to Technical Features, go to Settings --> Automated Actions. Create A new Automated Action. For the Related Document Model choose.. Contract information on a vehicle (you can also type in the actual model name.. fleet.vehicle.log.contract ) . Set the trigger date to ... Contract Expiration Date. The Next Field (Delay After Trigger Date) is a bit ridiculous. Who wants to be reminded of a contract expiration AFTER the fact? The field should say Days Before Date to Fire Action and the number should be converted to a negative. IMHO. Any way... to get a workable solution you must enter in the number in the negative. So for instance like me if you want to be warned 35 days BEFORE the expiration... put in Delay After Trigger Date.. the number -35 But the sake of testing, right now just put in -1 for 1 day before. Save the Action.
@@ -59,6 +60,7 @@ In simple words does Odoo became CMS+ERP platform?</p>]]></field>
         </record>
         <record id="answer_1" model="forum.post">
             <field name="forum_id" ref="website_forum.forum_help"/>
+            <field name="name">Re: CMS replacement for ERP and eCommerce</field>
             <field name="content"><![CDATA[
 <p>Odoo v8 provides a web module and an e-commerce module: www.odoo.com/page/website-builder
 The CMS editor in Odoo web is nice but I prefer Drupal for customization and there is a Drupal module for Odoo. I think WP is better than Odoo web too.

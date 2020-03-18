@@ -30,9 +30,9 @@ class Forum(models.Model):
     name = fields.Char('Forum Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1)
     mode = fields.Selection([
-        ('questions', 'Questions'),
-        ('discussions', 'Discussions')],
-        string='Forum Mode', required=True, default='questions',
+        ('questions', 'Questions (1 answer)'),
+        ('discussions', 'Discussions (multiple answers)')],
+        string='Mode', required=True, default='questions',
         help='Questions mode: only one answer allowed\n Discussions mode: multiple answers allowed')
     privacy = fields.Selection([
         ('public', 'Public'),
@@ -84,10 +84,10 @@ class Forum(models.Model):
                                       'of the forum content.')
     # posts statistics
     post_ids = fields.One2many('forum.post', 'forum_id', string='Posts')
-    total_posts = fields.Integer('Post Count', compute='_compute_forum_statistics')
-    total_views = fields.Integer('Views Count', compute='_compute_forum_statistics')
-    total_answers = fields.Integer('Answers Count', compute='_compute_forum_statistics')
-    total_favorites = fields.Integer('Favorites Count', compute='_compute_forum_statistics')
+    total_posts = fields.Integer('Posts', compute='_compute_forum_statistics')
+    total_views = fields.Integer('Views', compute='_compute_forum_statistics')
+    total_answers = fields.Integer('Answers', compute='_compute_forum_statistics')
+    total_favorites = fields.Integer('Favorites', compute='_compute_forum_statistics')
     count_posts_waiting_validation = fields.Integer(string="Number of posts waiting for validation", compute='_compute_count_posts_waiting_validation')
     count_flagged_posts = fields.Integer(string='Number of flagged posts', compute='_compute_count_flagged_posts')
     # karma generation
@@ -220,8 +220,8 @@ class Post(models.Model):
     content = fields.Html('Content', strip_style=True)
     plain_content = fields.Text('Plain Content', compute='_get_plain_content', store=True)
     tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
-    state = fields.Selection([('active', 'Active'), ('pending', 'Waiting Validation'), ('close', 'Close'), ('offensive', 'Offensive'), ('flagged', 'Flagged')], string='Status', default='active')
-    views = fields.Integer('Number of Views', default=0)
+    state = fields.Selection([('active', 'Active'), ('pending', 'Waiting Validation'), ('close', 'Closed'), ('offensive', 'Offensive'), ('flagged', 'Flagged')], string='Status', default='active')
+    views = fields.Integer('Views', default=0, readonly=True)
     active = fields.Boolean('Active', default=True)
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
     website_id = fields.Many2one(related='forum_id.website_id', readonly=True)
@@ -229,7 +229,7 @@ class Post(models.Model):
     # history
     create_date = fields.Datetime('Asked on', index=True, readonly=True)
     create_uid = fields.Many2one('res.users', string='Created by', index=True, readonly=True)
-    write_date = fields.Datetime('Update on', index=True, readonly=True)
+    write_date = fields.Datetime('Updated on', index=True, readonly=True)
     bump_date = fields.Datetime('Bumped on', readonly=True,
                                 help="Technical field allowing to bump a question. Writing on this field will trigger "
                                      "a write on write_date and therefore bump the post. Directly writing on write_date "
@@ -245,14 +245,14 @@ class Post(models.Model):
     # favorite
     favourite_ids = fields.Many2many('res.users', string='Favourite')
     user_favourite = fields.Boolean('Is Favourite', compute='_get_user_favourite')
-    favourite_count = fields.Integer('Favorite Count', compute='_get_favorite_count', store=True)
+    favourite_count = fields.Integer('Favorite', compute='_get_favorite_count', store=True)
 
     # hierarchy
     is_correct = fields.Boolean('Correct', help='Correct answer or answer accepted')
-    parent_id = fields.Many2one('forum.post', string='Question', ondelete='cascade')
+    parent_id = fields.Many2one('forum.post', string='Question', ondelete='cascade', readonly=True)
     self_reply = fields.Boolean('Reply to own question', compute='_is_self_reply', store=True)
     child_ids = fields.One2many('forum.post', 'parent_id', string='Answers')
-    child_count = fields.Integer('Number of answers', compute='_get_child_count', store=True)
+    child_count = fields.Integer('Answers', compute='_get_child_count', store=True)
     uid_has_answered = fields.Boolean('Has Answered', compute='_get_uid_has_answered')
     has_validated_answer = fields.Boolean('Is answered', compute='_get_has_validated_answer', store=True)
 
@@ -262,7 +262,7 @@ class Post(models.Model):
 
     # closing
     closed_reason_id = fields.Many2one('forum.post.reason', string='Reason')
-    closed_uid = fields.Many2one('res.users', string='Closed by', index=True)
+    closed_uid = fields.Many2one('res.users', string='Closed by', index=True, readonly=True)
     closed_date = fields.Datetime('Closed on', readonly=True)
 
     # karma calculation and access

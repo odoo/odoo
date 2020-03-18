@@ -26,7 +26,7 @@ odoo.define('website_forum.tour_forum_question', function (require) {
     }, {
         content: "Click to post your question.",
         extra_trigger: "#wrap:not(:has(input[id=s2id_autogen2]:propValue('')))",
-        trigger: 'button:contains("Post Your Question")',
+        trigger: 'button:contains("Post")',
     }, {
         content: "This page contain new created question.",
         trigger: '#wrap:has(".fa-star")',

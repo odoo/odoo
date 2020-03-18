@@ -89,8 +89,8 @@
                                     <li t-if="queue_type == 'flagged'" class="breadcrumb-item">Flagged</li>
                                     <li t-if="queue_type == 'offensive'" class="breadcrumb-item">Offensive</li>
                                     <li t-if="reasons and offensive" class="breadcrumb-item">Offensive Post</li>
-                                    <li t-if="reasons and not offensive" class="breadcrumb-item">Close post</li>
-                                    <li t-if="new_question" class="breadcrumb-item">Ask a Question</li>
+                                    <li t-if="reasons and not offensive" class="breadcrumb-item">Close Post</li>
+                                    <li t-if="new_question" class="breadcrumb-item">New Post</li>
                                     <t t-if="is_edit">
                                         <t t-set="target" t-value="post.parent_id if is_answer else post"/>
                                         <li class="breadcrumb-item text-truncate" style="max-width:150px">
@@ -166,7 +166,7 @@
                         <t t-elif="searches.get('badges')">Badges</t>
                         <t t-elif="header.get('is_guidelines')">About</t>
                         <t t-elif="uid and my == 'favourites'">Favourites</t>
-                        <t t-elif="uid and my == 'mine'">My questions</t>
+                        <t t-elif="uid and my == 'mine'">My Posts</t>
                         <t t-elif="uid and my == 'followed'">Following</t>
                         <t t-elif="question">Question</t>
                         <t t-else="">All Topics</t>
@@ -181,7 +181,7 @@
                             <div class="dropdown-divider"/>
                             <a t-att-href="'/forum/%s/user/%s?forum_origin=%s' % (slug(forum), uid, request.httprequest.path)"
                                 class="dropdown-item">My profile</a>
-                            <a t-if="my != 'mine'" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'filters', my='mine')" class="dropdown-item">My Questions</a>
+                            <a t-if="my != 'mine'" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'filters', my='mine')" class="dropdown-item">My Posts</a>
                             <a t-if="my != 'favourites'" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'filters', my='favourites')" class="dropdown-item">My Favourites</a>
                             <a t-if="my != 'followed'" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'filters', my='followed')" class="dropdown-item">I'm Following</a>
                             <a t-if="my != 'tagged'" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'filters', my='tagged')" class="dropdown-item">Tags I Follow</a>
@@ -370,7 +370,7 @@
               <div class="card-body">
                 <p>The goal of this site is create a relevant knowledge base that would answer questions related to Odoo.</p>
                 <p>Therefore questions and answers can be edited like wiki pages by experienced users of this site in order to improve the overall quality of the knowledge base content. Such privileges are granted based on user karma level: you will be able to do the same once your karma gets high enough.</p>
-                <p>If this approach is not for you, please respect the community and use Google+ communities instead.</p>
+                <p>If this approach is not for you, please respect the community.</p>
                     <table class="table table-striped mt-4 bg-white">
                         <tbody>
                             <tr>
@@ -503,13 +503,13 @@
 
         <t t-set="location" t-value="url_for('/forum/') + slug(forum) + ( ('/tag/' + slug(tag) + '/questions?') if tag else '?' )"/>
 
-        <!-- My Questions -->
+        <!-- My Posts -->
         <span t-if="my == 'mine'" class="nav-link rounded-pill mb-2 active font-weight-bold">
-            <i class="fa fa-question-circle-o fa-fw"/> My Questions
+            <i class="fa fa-question-circle-o fa-fw"/> My Posts
             <a class="text-reset pull-right no-decoration" t-att-href="location + keep_query('search', 'filters', 'sorting')">&#215;</a>
         </span>
         <a t-else="" class="nav-link rounded-pill mb-2 text-reset" t-att-href="location + keep_query('search', 'filters', 'sorting', my='mine')">
-            <i class="fa fa-question-circle-o fa-fw"/> My Questions
+            <i class="fa fa-question-circle-o fa-fw"/> My Posts
         </a>
 
         <!-- My Favourites -->
@@ -581,7 +581,7 @@
                             <img t-if="uid" class="o_forum_avatar rounded-circle mr-1" t-att-src="website.image_url(user, 'image_128', '16x16')" alt="Avatar"/>
                             <span t-if="my == 'favourites'"> My <b>Favourites</b></span>
                             <span t-elif="my == 'followed'"> I'm <b>Following</b></span>
-                            <span t-elif="my == 'mine'"> My <b>Questions</b></span>
+                            <span t-elif="my == 'mine'"> My <b>Posts</b></span>
                             <span t-elif="my == 'tagged'"> <b>Tags</b> I Follow</span>
                         </div>
                         <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', 'sorting')" class="btn py-1">&#215;</a>
@@ -597,9 +597,9 @@
                 <div t-if="uid and request.env.user.forum_waiting_posts_count"
                     title="You already have a pending post"
                     data-toggle="popover" data-trigger="hover" data-content="Please wait for a moderator to validate your previous post before continuing.">
-                    <a class="disabled btn btn-secondary btn-block mb-3 mb-md-0" t-attf-href="/forum/#{slug(forum)}/ask">Ask a Question</a>
+                    <a class="disabled btn btn-secondary btn-block mb-3 mb-md-0" t-attf-href="/forum/#{slug(forum)}/ask">New Post</a>
                 </div>
-                <a t-else="" role="button" type="button" class="btn btn-primary btn-block o_forum_ask_btn mb-3 mb-md-0" t-att-href="uid and '/forum/' + slug(forum) + '/ask' or '/web/login'">Ask a Question</a>
+                <a t-else="" role="button" type="button" class="btn btn-primary btn-block o_forum_ask_btn mb-3 mb-md-0" t-att-href="uid and '/forum/' + slug(forum) + '/ask' or '/web/login'">New Post</a>
             </div>
 
             <t t-set="no_filters" t-value="not filters in ('solved', 'unsolved', 'unanswered')"/>
@@ -689,7 +689,7 @@
                 </t>
             </div>
 
-            <!-- No questions or search/filters result -->
+            <!-- No posts or search/filters result -->
             <div t-if="question_count == 0" class="col">
                 <div t-if="search or tag or (not no_filters)" class="alert alert-info">
                     <t t-set="_filters_str">
@@ -700,7 +700,7 @@
                     <t t-set="_my_str">
                         <t t-if="my == 'favourites'">in your favourites</t>
                         <t t-if="my == 'followed'">in your followed list</t>
-                        <t t-if="my == 'mine'">in your questions</t>
+                        <t t-if="my == 'mine'">in your posts</t>
                     </t>
                     <t t-set="_search_str"><t t-if="search">matching "<em class="font-weight-bold" t-esc="search"/>"</t></t>
                     <t t-set="_search_and_tag_str"><t t-if="search and tag">&amp;nbsp;and&amp;nbsp;</t></t>
@@ -721,7 +721,7 @@
                         No favourite questions in this forum (yet).<br/>
                         <a t-attf-href="/forum/#{slug(forum)}/">Browse All</a>
                     </div>
-                    <div t-elif="my == 'mine'" class="alert border">You have no questions in this forum (yet).</div>
+                    <div t-elif="my == 'mine'" class="alert border">You have no posts in this forum (yet).</div>
                 </t>
 
                 <div t-elif="filters == 'unanswered'" class="alert alert-info">Amazing! There are no unanswered questions left!</div>
@@ -770,7 +770,7 @@
                 <label for="content">Title</label>
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="text" name="post_name" required="required" pattern=".*\S.*" t-attf-value="#{post_name}"
-                    class="form-control form-control-lg" placeholder="A clear, explicit and concise question title" title="Title must not be empty"/>
+                    class="form-control form-control-lg" placeholder="A clear, explicit and concise title" title="Title must not be empty"/>
                 <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
                 <div class="form-text small text-muted">
                     <a data-toggle="collapse" href="#newQuestionExample" role="button" aria-expanded="false" aria-controls="newQuestionExample">
@@ -782,7 +782,7 @@
                             <i class="fa fa-check"/> How to configure TPS and TVQ's canadian taxes?
                         </div>
                         <div class="text-danger">
-                            <i class="fa fa-times"/> Good morning to all! Please, can someone help solve solve my tax computation problem in Canada? Thanks!
+                            <i class="fa fa-times"/> Good morning to all! Please, can someone help solve my tax computation problem in Canada? Thanks!
                         </div>
                     </div>
                 </div>
@@ -830,12 +830,12 @@
                         <i class="fa fa-question-circle"/>
                     </a>
                     <div class="collapse" id="newQuestionExample">
-                        <div class="my-2">Use a clear, explicit and concise question title</div>
+                        <div class="my-2">Use a clear, explicit and concise title</div>
                         <div class="text-success">
                             <i class="fa fa-check"/> How to configure TPS and TVQ's canadian taxes?
                         </div>
                         <div class="text-danger">
-                            <i class="fa fa-times"/> Good morning to all! Please, can someone help solve solve my tax computation problem in Canada? Thanks!
+                            <i class="fa fa-times"/> Good morning to all! Please, can someone help solve my tax computation problem in Canada? Thanks!
                         </div>
                     </div>
                 </div>
