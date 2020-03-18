@@ -572,7 +572,7 @@
                     </div>
                     <div class="row no-gutters">
                         <div class="col-md-4 offset-md-8 py-2 pl-md-0 pr-md-2">
-                            <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" t-att-disabled="not event.event_registrations_open or None" t-attf-id="#{event.id}">Register</button>
+                            <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" t-att-disabled="not event.event_registrations_open or None" t-attf-id="#{event.id}">Register<t t-if="event.seats_availability != 'unlimited'">(Available seats: <t t-esc="event.seats_available"/>)</t></button>
                         </div>
                     </div>
                 </div>
@@ -639,7 +639,7 @@
                     </div>
                     <t t-set="counter_type" t-value="1"/>
                     <t t-set="counter" t-value="0"/>
-                    <t t-foreach="tickets" t-as="ticket">
+                    <t t-foreach="tickets" t-as="ticket" t-if="availability_check">
                         <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter" name="attendee_loop">
                             <t t-set="counter" t-value="counter + 1"/>
                             <div class="modal-body bg-light border-bottom">
@@ -663,9 +663,12 @@
                         </t>
                         <t t-set="counter_type" t-value="counter_type + 1"/>
                     </t>
+                    <t t-if="not availability_check">
+                        <strong> You ordered more tickets than available seats</strong>
+                    </t>
                     <div class="modal-footer border-0 justify-content-between">
                         <button type="button" class="btn btn-secondary js_goto_event" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Continue</button>
+                        <button type="submit" class="btn btn-primary" t-if="availability_check">Continue</button>
                     </div>
                 </div>
             </form>
