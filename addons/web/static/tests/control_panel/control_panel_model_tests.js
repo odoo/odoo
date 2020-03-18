@@ -290,5 +290,48 @@ odoo.define('web.control_panel_model_tests', function (require) {
             ]);
 
         });
+
+        QUnit.test('falsy search defaults are not activated', async function (assert) {
+            assert.expect(1);
+
+            const actionContext = {
+                search_default_filter: false,
+                search_default_bar: 0,
+                search_default_groupby: 2,
+            };
+            const arch = `
+                <search>
+                    <filter name="filter" string="Hello" domain="[]"/>
+                    <filter name="groupby" string="Goodbye" context="{'group_by': 'foo'}"/>
+                    <field name="bar"/>
+                </search>`;
+            const fields = this.fields;
+            const model = createControlPanelModel({ viewInfo: { arch, fields }, actionContext });
+            // only the truthy filter 'groupby' has isDefault true
+            assert.deepEqual(sanitizeFilters(model), [
+                {
+                    description: 'Hello',
+                    domain: "[]",
+                    type: 'filter',
+                },
+                {
+                    description: 'Bar',
+                    fieldName: 'bar',
+                    fieldType: 'many2one',
+                    type: 'field',
+                },
+                {
+                    defaultRank: 2,
+                    description: 'Goodbye',
+                    fieldName: 'foo',
+                    fieldType: 'char',
+                    isDefault: true,
+                    type: 'groupBy',
+                },
+                { type: 'timeRange' },
+            ]);
+
+        });
+
     });
 });
