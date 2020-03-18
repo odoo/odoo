@@ -338,7 +338,6 @@ return AbstractRenderer.extend({
                 event = Object.assign({}, event, {
                     r_start: fc4Event.extendedProps.r_start && moment(fc4Event.extendedProps.r_start).utcOffset(0, true),
                     r_end: fc4Event.extendedProps.r_end && moment(fc4Event.extendedProps.r_end).utcOffset(0, true),
-                    reset_allday: fc4Event.extendedProps.reset_allday,
                     record: fc4Event.extendedProps.record,
                     attendees: fc4Event.extendedProps.attendees,
                 });
