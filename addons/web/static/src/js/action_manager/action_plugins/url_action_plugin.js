@@ -5,11 +5,11 @@ odoo.define('web.UrlActionPlugin', function (require) {
      * The purpose of this file is to add the support of Odoo actions of type
      * 'ir.actions.act_window' to the ActionManager.
      */
-    const AbstractActionPlugin = require('web.AbstractActionPlugin');
+    const ActionAbstractPlugin = require('web.ActionAbstractPlugin');
     const ActionManager = require('web.ActionManager');
     const { redirect } = require('web.framework');
 
-    class UrlActionPlugin extends AbstractActionPlugin {
+    class UrlActionPlugin extends ActionAbstractPlugin {
         /**
          * Executes actions of type 'ir.actions.act_url', i.e. redirects to the
          * given url.

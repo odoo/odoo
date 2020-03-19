@@ -6,13 +6,13 @@ odoo.define('web.ClientActionPlugin', function (require) {
      * 'ir.actions.report' to the ActionManager.
      */
 
-    const AbstractActionPlugin = require('web.AbstractActionPlugin');
+    const ActionAbstractPlugin = require('web.ActionAbstractPlugin');
     const ActionManager = require('web.ActionManager');
     const { action_registry } = require('web.core');
     const { Component } = owl;
     const Widget = require('web.Widget');
 
-    class ClientActionPlugin extends AbstractActionPlugin {
+    class ClientActionPlugin extends ActionAbstractPlugin {
     /**
      * Executes actions of type 'ir.actions.client'.
      *

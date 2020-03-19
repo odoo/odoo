@@ -6,7 +6,7 @@ odoo.define('web.ReportActionPlugin', function (require) {
      * 'ir.actions.report' to the ActionManager.
      */
 
-    const AbstractActionPlugin = require('web.AbstractActionPlugin');
+    const ActionAbstractPlugin = require('web.ActionAbstractPlugin');
     const ActionManager = require('web.ActionManager');
     const core = require('web.core');
     const session = require('web.session');
@@ -28,7 +28,7 @@ odoo.define('web.ReportActionPlugin', function (require) {
                      'the reports.'),
     };
 
-    class ReportActionPlugin extends AbstractActionPlugin {
+    class ReportActionPlugin extends ActionAbstractPlugin {
 
         //----------------------------------------------------------------------
         // Public

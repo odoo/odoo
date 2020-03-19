@@ -6,10 +6,10 @@ odoo.define('web.ServerActionPlugin', function (require) {
      * 'ir.actions.report' to the ActionManager.
      */
 
-    const AbstractActionPlugin = require('web.AbstractActionPlugin');
+    const ActionAbstractPlugin = require('web.ActionAbstractPlugin');
     const ActionManager = require('web.ActionManager');
 
-    class ServerActionPlugin extends AbstractActionPlugin {
+    class ServerActionPlugin extends ActionAbstractPlugin {
         /**
          * Executes actions of type 'ir.actions.server'.
          *
