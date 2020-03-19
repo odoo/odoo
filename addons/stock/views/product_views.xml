@@ -276,9 +276,6 @@
                             attrs="{'invisible': [('type', '=', 'service')]}"
                             context="{'invisible_handle': True, 'single_product': True}"/>
                     </div>
-                    <xpath expr="//field[@name='product_tmpl_id']" position="attributes">
-                        <attribute name="context">{'quantity_available_locations_domain': ('internal',)}</attribute>
-                    </xpath>
                 </data>
             </field>
         </record>
@@ -392,7 +389,7 @@
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="search_view_id" ref="product_template_search_form_view_stock"/>
-        <field name="context">{"search_default_consumable": 1, 'default_type': 'product', 'quantity_available_locations_domain': ('internal',)}</field>
+        <field name="context">{"search_default_consumable": 1, 'default_type': 'product'}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new product
@@ -405,7 +402,6 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.product</field>
         <field name="view_mode">tree,form,kanban</field>
-        <field name="context">{'quantity_available_locations_domain': ('internal',)}</field>
         <field name="search_view_id" ref="stock_product_search_form_view"/>
     </record>
 
