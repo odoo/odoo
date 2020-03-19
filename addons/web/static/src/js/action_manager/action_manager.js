@@ -1,207 +1,19 @@
 odoo.define('web.ActionManager', function (require) {
 "use strict";
 
-// const AbstractAction = require('web.AbstractAction');
+const AbstractActionPlugin = require('web.AbstractActionPlugin');
 const Context = require('web.Context');
-const { _t, action_registry } = require('web.core');
-const { redirect } = require('web.framework');
+const { action_registry } = require('web.core');
+
 var pyUtils = require('web.py_utils');
-const Widget = require('web.Widget');
 const { TransactionalChain } = require('web.concurrency');
 
-const { Component, core } = owl;
-
-let nextID = 1;
-
-class ActionManagerPlugin {
-    constructor(actionManager, env) {
-        this.actionManager = actionManager;
-        this.env = env;
-    }
-    /**
-     * @throws {Error} message: Plugin Error
-     */
-    async executeAction(/*action, options*/) {
-        throw new Error(`ActionManagerPlugin for type ${this.type} doesn't implement executeAction.`);
-    }
-    rpc() {
-        return this.transactionAdd(this.env.services.rpc(...arguments));
-    }
-    transactionAdd() {
-        return this.actionManager._transaction.add(...arguments);
-    }
-    loadState(/* state, options */) {}
-    makeBaseController() {
-        return this.actionManager.makeBaseController(...arguments);
-    }
-    pushControllers() {
-        return this.actionManager.pushControllers(...arguments);
-    }
-    get currentStack() {
-        return this.actionManager.currentStack;
-    }
-    get controllers() {
-        return this.actionManager.controllers;
-    }
-    get currentDialogController() {
-        return this.actionManager.currentDialogController;
-    }
-    get actions() {
-        return this.actionManager.actions;
-    }
-    doAction() {
-        return this.actionManager.doAction(...arguments);
-    }
-}
-ActionManagerPlugin.type = null;
-
-class UrlActionPlugin extends ActionManagerPlugin {
-    /**
-     * Executes actions of type 'ir.actions.act_url', i.e. redirects to the
-     * given url.
-     *
-     * @param {Object} action the description of the action to execute
-     * @param {string} action.url
-     * @param {string} [action.target] set to 'self' to redirect in the current page,
-     *   redirects to a new page by default
-     * @param {Object} options @see doAction for details
-     */
-    executeAction(action, options) {
-        if (action.target === 'self') {
-            redirect(action.url);
-        } else {
-            const w = window.open(action.url, '_blank');
-            if (!w || w.closed || typeof w.closed === 'undefined') {
-                const message = _t('A popup window has been blocked. You ' +
-                    'may need to change your browser settings to allow ' +
-                    'popup windows for this page.');
-                this.env.services.notification.notify({
-                    title: _t('Warning'),
-                    type: 'danger',
-                    message: message,
-                    sticky: true,
-                });
-            }
-            options.on_close();
-        }
-    }
-}
-UrlActionPlugin.type = 'ir.actions.act_url';
-
-class ServerActionPlugin extends ActionManagerPlugin {
-    /**
-     * Executes actions of type 'ir.actions.server'.
-     *
-     * @param {Object} action the description of the action to execute
-     * @param {integer} action.id the db ID of the action to execute
-     * @param {Object} [action.context]
-     * @param {Object} options @see doAction for details
-     * @returns {Promise} resolved when the action has been executed
-     */
-    async executeAction(action, options) {
-        action = await this.rpc({
-            route: '/web/action/run',
-            params: {
-                action_id: action.id,
-                context: action.context || {},
-            },
-        });
-        action = action || { type: 'ir.actions.act_window_close' };
-        return this.actionManager.doAction(action, options);
-    }
-}
-ServerActionPlugin.type = 'ir.actions.server';
-
-class ClientActionPlugin extends ActionManagerPlugin {
-    /**
-     * Executes actions of type 'ir.actions.client'.
-     *
-     * @param {Object} action the description of the action to execute
-     * @param {string} action.tag the key of the action in the action_registry
-     * @param {Object} options @see doAction for details
-     */
-    async executeAction(action, options) {
-        const ClientAction = action_registry.get(action.tag);
-        if (!ClientAction) {
-            console.error(`Could not find client action ${action.tag}`, action);
-            return Promise.reject();
-        } else {
-            const proto = ClientAction.prototype;
-            if (!(proto instanceof Component) && !(proto instanceof Widget)) {
-                // the client action might be a function, which is executed and
-                // whose returned value might be another action to execute
-                const nextAction = ClientAction(this.env, action);
-                if (nextAction) {
-                    action = nextAction;
-                    return this.doAction(action);
-                }
-                return;
-            }
-        }
-        const params = Object.assign({}, options, {Component: ClientAction});
-        const controller = this.makeBaseController(action, params);
-        options.controllerID = controller.jsID;
-        controller.options = options;
-        action.id = action.id || action.tag;
-        this.pushControllers([controller]);
-    }
-    /**
-     * @override
-     */
-    loadState(state, options) {
-        if (typeof state.action === 'string' && action_registry.contains(state.action)) {
-            const action = {
-                params: state,
-                tag: state.action,
-                type: 'ir.actions.client',
-            };
-            return this.doAction(action, options);
-        }
-    }
-}
-ClientActionPlugin.type = 'ir.actions.client';
-
-class CloseActionPlugin extends ActionManagerPlugin {
-    async executeAction(action, options) {
-        const dialog = this.currentDialogController;
-        // I'm afraid this is mandatory
-        // some legacy modals make their main controller
-        // do weird stuff (like triggering onchanges)
-        // in those cases, owl should not reload those components
-        let doOwlReload = true;
-        if (dialog && !dialog.isClosing) {
-            if (dialog.options && dialog.options.on_close) {
-                dialog.options.on_close(action.infos);
-                dialog.isClosing = true;
-                doOwlReload = false;
-            }
-        } else if (options.on_close) {
-            options.on_close(action.infos);
-            doOwlReload = false;
-        }
-        let onCommit = null;
-        if (action.effect) {
-            onCommit = () => {
-                this.env.bus.trigger('show-effect', action.effect);
-            };
-        }
-        const controllerID = this.currentStack[this.currentStack.length-1];
-        let controller;
-        if (controllerID) {
-            controller = this.controllers[controllerID];
-            controller.options = controller.options || {};
-            controller.options.on_success = options.on_success;
-        }
-        return this.pushControllers([controller], { onCommit , doOwlReload });
-    }
-}
-CloseActionPlugin.type = 'ir.actions.act_window_close';
-
+const { core } = owl;
 
 class ActionManager extends core.EventBus {
     static registerPlugin(Plugin) {
-        if (!(Plugin.prototype instanceof ActionManagerPlugin)) {
-            throw new Error('Plugin must be sublass of ActionManagerPlugin');
+        if (!(Plugin.prototype instanceof AbstractActionPlugin)) {
+            throw new Error('Plugin must be sublass of AbstractActionPlugin');
         }
         // TODO control Plugin.type
         ActionManager.Plugins[Plugin.type] = Plugin;
@@ -659,7 +471,7 @@ class ActionManager extends core.EventBus {
         }
     }
     _nextID(type) {
-        return `${type}${nextID++}`;
+        return `${type}${this.prototype.nextID++}`;
     }
     legacyStateExported(payload) {
         const { action } = this.getCurrentState().main;
@@ -815,13 +627,8 @@ class ActionManager extends core.EventBus {
         }
     }
 }
+ActionManager.nextID = 1;
 ActionManager.Plugins = {};
-ActionManager.AbstractPlugin = ActionManagerPlugin;
-
-ActionManager.registerPlugin(ServerActionPlugin);
-ActionManager.registerPlugin(ClientActionPlugin);
-ActionManager.registerPlugin(UrlActionPlugin);
-ActionManager.registerPlugin(CloseActionPlugin);
 
 return ActionManager;
 

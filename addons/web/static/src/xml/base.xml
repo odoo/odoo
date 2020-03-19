@@ -23,7 +23,7 @@
             <t t-set='dialog' t-value='renderingInfo.dialog' />
             <t t-set="main" t-value="renderingInfo.main"/>
             <!-- fixme: class below totally ignored -->
-            <Action t-if="main" class="o_action" t-ref="currentControllerComponent"
+            <ActionAdapter t-if="main" class="o_action" t-ref="currentControllerComponent"
                     t-key="main.controller.jsID"
                     Component="main.controller.Component"
                     action="main.action"
@@ -34,7 +34,7 @@
                 contentClass="dialog.controller.className"
                 target="'.o_dialogs'"
                 title="dialog.action.name">
-                <Action class="o_action" t-key="dialog.controller.jsID"
+                <ActionAdapter class="o_action" t-key="dialog.controller.jsID"
                     t-ref="currentDialogComponent"
                     Component="dialog.controller.Component"
                     action="dialog.action"
