@@ -989,6 +989,10 @@ class Picking(models.Model):
         if the picking is a planned transfer and one of its move was added after the initial
         call to `action_confirm`. Note that `action_confirm` will only work on draft moves.
         """
+        # Clean-up the context key to avoid forcing the creation of immediate transfers.
+        ctx = dict(self.env.context)
+        ctx.pop('default_immediate_transfer', None)
+        self = self.with_context(ctx)
         for picking in self:
             if picking.state in ('done', 'cancel'):
                 continue
