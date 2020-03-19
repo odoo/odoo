@@ -220,8 +220,7 @@ class ProductProduct(models.Model):
             product.combination_indices = product.product_template_attribute_value_ids._ids2str()
 
     def _compute_is_product_variant(self):
-        for product in self:
-            product.is_product_variant = True
+        self.is_product_variant = True
 
     @api.depends_context('pricelist', 'partner', 'quantity', 'uom', 'date', 'no_variant_attributes_price_extra')
     def _compute_product_price(self):
