@@ -118,3 +118,8 @@ class AccountAnalyticLine(models.Model):
         """
         domain = super(AccountAnalyticLine, self)._timesheet_get_portal_domain()
         return expression.AND([domain, [('timesheet_invoice_type', 'in', ['billable_time', 'non_billable'])]])
+
+    def unlink(self):
+        if any(line.timesheet_invoice_id and line.timesheet_invoice_id.state == 'posted' for line in self):
+            raise UserError(_('You cannot remove a timesheet that has already been invoiced.'))
+        return super(AccountAnalyticLine, self).unlink()
