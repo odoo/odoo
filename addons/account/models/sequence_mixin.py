@@ -151,6 +151,27 @@ class SequenceMixin(models.AbstractModel):
         self.env.cr.execute(query, param)
         return (self.env.cr.fetchone() or [None])[0]
 
+    def _get_next_sequence(self):
+        """ Determines and returns the next sequence. Could be useful to get the
+        next sequence without alterer the record.
+
+        :return: next sequence name
+        :rtype: str
+        """
+        last_sequence = self._get_last_sequence()
+        new = not last_sequence
+        if new:
+            last_sequence = self._get_last_sequence(relaxed=True) or self._get_starting_sequence()
+
+        format, format_values = self._get_sequence_format_param(last_sequence)
+        if new:
+            format_values['seq'] = 0
+            format_values['year'] = self[self._sequence_date_field].year % (10 ** format_values['year_length'])
+            format_values['month'] = self[self._sequence_date_field].month
+        format_values['seq'] = format_values['seq'] + 1
+
+        return format.format(**format_values)
+
     def _get_sequence_format_param(self, previous):
         """Get the python format and format values for the sequence.
 
@@ -197,17 +218,5 @@ class SequenceMixin(models.AbstractModel):
         :param field_name: the field that contains the sequence.
         """
         self.ensure_one()
-        last_sequence = self._get_last_sequence()
-        new = not last_sequence
-        if new:
-            last_sequence = self._get_last_sequence(relaxed=True) or self._get_starting_sequence()
-
-        format, format_values = self._get_sequence_format_param(last_sequence)
-        if new:
-            format_values['seq'] = 0
-            format_values['year'] = self[self._sequence_date_field].year % (10 ** format_values['year_length'])
-            format_values['month'] = self[self._sequence_date_field].month
-        format_values['seq'] = format_values['seq'] + 1
-
-        self[self._sequence_field] = format.format(**format_values)
+        self[self._sequence_field] = self._get_next_sequence()
         self._compute_split_sequence()
