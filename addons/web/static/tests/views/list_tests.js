@@ -5836,6 +5836,51 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('list with handle widget, create, move and discard', async function (assert) {
+        // When there are less than 4 records in the table, empty lines are added
+        // to have at least 4 rows. This test ensures that the empty line added
+        // when a new record is discarded is correctly added on the bottom of
+        // the list, even if the discarded record wasn't.
+        assert.expect(11);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree editable="bottom">
+                    <field name="int_field" widget="handle"/>
+                    <field name="foo" required="1"/>
+                </tree>`,
+            domain: [['bar', '=', false]],
+        });
+
+        assert.containsOnce(list, '.o_data_row');
+        assert.containsN(list, 'tbody tr', 4);
+
+        await testUtils.dom.click(list.$('.o_list_button_add'));
+        assert.containsN(list, '.o_data_row', 2);
+        assert.doesNotHaveClass(list.$('.o_data_row:first'), 'o_selected_row');
+        assert.hasClass(list.$('.o_data_row:nth(1)'), 'o_selected_row');
+
+        // Drag and drop the first line after creating record row
+        await testUtils.dom.dragAndDrop(
+            list.$('.ui-sortable-handle').eq(0),
+            list.$('tbody tr.o_data_row').eq(1),
+            { position: 'bottom' }
+        );
+        assert.containsN(list, '.o_data_row', 2);
+        assert.hasClass(list.$('.o_data_row:first'), 'o_selected_row');
+        assert.doesNotHaveClass(list.$('.o_data_row:nth(1)'), 'o_selected_row');
+
+        await testUtils.dom.click(list.$('.o_list_button_discard'));
+        assert.containsOnce(list, '.o_data_row');
+        assert.hasClass(list.$('tbody tr:first'), 'o_data_row');
+        assert.containsN(list, 'tbody tr', 4);
+
+        list.destroy();
+    });
+
     QUnit.test('multiple clicks on Add do not create invalid rows', async function (assert) {
         assert.expect(2);
 
