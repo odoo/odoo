@@ -24,7 +24,20 @@ class ActionManager extends core.EventBus {
         this.env = env;
         this._transaction = new TransactionalChain();
         this.env.bus.on('do-action', this, payload => {
-            this.doAction(payload.action, payload.options);
+            // Calling on_success and on_fail is necessary for legacy
+            // compatibility. Some widget may need to do stuff when a report
+            // has been printed
+            return this.doAction(payload.action, payload.options)
+                .then(() => {
+                    if (payload.on_success) {
+                        payload.on_success();
+                    }
+                })
+                .guardedCatch(() => {
+                    if (payload.on_fail) {
+                        payload.on_fail();
+                    }
+                });
         });
         // Before switching views, an event is triggered
         // containing the state of the current controller
