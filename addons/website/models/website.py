@@ -133,9 +133,23 @@ class Website(models.Model):
             self.default_lang_id = language_ids[0]
 
     def _compute_menu(self):
-        Menu = self.env['website.menu']
         for website in self:
-            website.menu_id = Menu.search([('parent_id', '=', False), ('website_id', '=', website.id)], order='id', limit=1).id
+            menus = self.env['website.menu'].browse(website._get_menu_ids())
+
+            # use field parent_id (1 query) to determine field child_id (2 queries by level)"
+            for menu in menus:
+                menu._cache['child_id'] = ()
+            for menu in menus:
+                # don't add child menu if parent is forbidden
+                if menu.parent_id and menu.parent_id in menus:
+                    menu.parent_id._cache['child_id'] += (menu.id,)
+
+            website.menu_id = menus and menus.filtered(lambda m: not m.parent_id)[0].id or False
+
+    # self.env.uid for ir.rule groups on menu
+    @tools.ormcache('self.env.uid', 'self.id')
+    def _get_menu_ids(self):
+        return self.env['website.menu'].search([('website_id', '=', self.id)]).ids
 
     @api.model
     def create(self, vals):
