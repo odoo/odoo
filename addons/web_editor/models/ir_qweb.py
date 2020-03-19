@@ -47,10 +47,25 @@ class QWeb(models.AbstractModel):
 
     # compile directives
 
+    def _compile_node(self, el, options):
+        if options.get('snippet-key') == options['template']:
+            # Get the path of the template's content
+            path = options['root'].getpath(el).replace('/t', '')
+            # Only append the template key on template's first node.
+            # If it already has a data-snippet it is a saved snippet.
+            # Do not override it.
+            size = len(path.split('/'))
+            if size == 2 and 'data-snippet' not in el.attrib:
+                el.attrib['data-snippet'] = options['template'].split('.', 1)[-1]
+
+        return super()._compile_node(el, options)
+
     def _compile_directive_snippet(self, el, options):
-        el.set('t-call', el.attrib.pop('t-snippet'))
+        key = el.attrib.pop('t-snippet')
+        el.set('t-call', key)
+        el.set('t-call-options', "{'snippet-key': '" + key + "'}")
         View = self.env['ir.ui.view']
-        view_id = View.get_view_id(el.attrib.get('t-call'))
+        view_id = View.get_view_id(key)
         name = View.browse(view_id).name
         thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
         div = u'<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s" data-oe-snippet-id="%s">' % (
@@ -59,6 +74,12 @@ class QWeb(models.AbstractModel):
             escape(pycompat.to_text(view_id)),
         )
         return [self._append(ast.Str(div))] + self._compile_node(el, options) + [self._append(ast.Str(u'</div>'))]
+
+    def _compile_directive_snippet_call(self, el, options):
+        key = el.attrib.pop('t-snippet-call')
+        el.set('t-call', key)
+        el.set('t-call-options', "{'snippet-key': '" + key + "'}")
+        return self._compile_node(el, options)
 
     def _compile_directive_install(self, el, options):
         if self.user_has_groups('base.group_system'):
@@ -86,6 +107,7 @@ class QWeb(models.AbstractModel):
     def _directives_eval_order(self):
         directives = super(QWeb, self)._directives_eval_order()
         directives.insert(directives.index('call'), 'snippet')
+        directives.insert(directives.index('call'), 'snippet-call')
         directives.insert(directives.index('call'), 'install')
         return directives
 
