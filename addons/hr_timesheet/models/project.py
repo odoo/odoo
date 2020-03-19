@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, RedirectWarning
 
 
 class Project(models.Model):
@@ -22,6 +22,8 @@ class Project(models.Model):
         readonly=False,
         store=True,
         help="Use a timer to record timesheets on tasks")
+
+    timesheet_ids = fields.One2many('account.analytic.line', 'project_id', 'Associated Timesheets')
 
     _sql_constraints = [
         ('timer_only_when_timesheet', "CHECK((allow_timesheets = 'f' AND allow_timesheet_timer = 'f') OR (allow_timesheets = 't'))", 'The timesheet timer can only be activated on project allowing timesheets.'),
@@ -80,6 +82,25 @@ class Project(models.Model):
     @api.model
     def _init_data_analytic_account(self):
         self.search([('analytic_account_id', '=', False), ('allow_timesheets', '=', True)])._create_analytic_account()
+
+    def unlink(self):
+        """
+        If some projects to unlink have some timesheets entries, these
+        timesheets entries must be unlinked first.
+        In this case, a warning message is displayed through a RedirectWarning
+        and allows the user to see timesheets entries to unlink.
+        """
+        projects_with_timesheets = self.filtered(lambda p: p.timesheet_ids)
+        if projects_with_timesheets:
+            if len(projects_with_timesheets) > 1:
+                warning_msg = _("These projects have some timesheet entries referencing them. Before removing these projects, you have to remove these timesheet entries.")
+            else:
+                warning_msg = _("This project has some timesheet entries referencing it. Before removing this project, you have to remove these timesheet entries.")
+            raise RedirectWarning(
+                warning_msg, self.env.ref('hr_timesheet.timesheet_action_project').id,
+                _('See timesheet entries'), {'active_ids': projects_with_timesheets.ids})
+        return super(Project, self).unlink()
+
 
 class Task(models.Model):
     _name = "project.task"
@@ -231,3 +252,21 @@ class Task(models.Model):
                 'default_time_spent': time_spent,
             },
         }
+
+    def unlink(self):
+        """
+        If some tasks to unlink have some timesheets entries, these
+        timesheets entries must be unlinked first.
+        In this case, a warning message is displayed through a RedirectWarning
+        and allows the user to see timesheets entries to unlink.
+        """
+        tasks_with_timesheets = self.filtered(lambda t: t.timesheet_ids)
+        if tasks_with_timesheets:
+            if len(tasks_with_timesheets) > 1:
+                warning_msg = _("These tasks have some timesheet entries referencing them. Before removing these tasks, you have to remove these timesheet entries.")
+            else:
+                warning_msg = _("This task has some timesheet entries referencing it. Before removing this task, you have to remove these timesheet entries.")
+            raise RedirectWarning(
+                warning_msg, self.env.ref('hr_timesheet.timesheet_action_task').id,
+                _('See timesheet entries'), {'active_ids': tasks_with_timesheets.ids})
+        return super(Task, self).unlink()
