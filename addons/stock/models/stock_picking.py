@@ -950,6 +950,10 @@ class Picking(models.Model):
         return any(quantity_done[x] < quantity_todo.get(x, 0) for x in quantity_done)
 
     def _autoconfirm_picking(self):
+        # Clean-up the context key to avoid forcing the creation of immediate transfers.
+        ctx = dict(self.env.context)
+        ctx.pop('default_immediate_transfer', None)
+        self = self.with_context(ctx)
         for picking in self.filtered(lambda picking: picking.immediate_transfer and picking.state not in ('done', 'cancel') and (picking.move_lines or picking.package_level_ids)):
             picking.action_confirm()
 
