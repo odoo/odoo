@@ -774,6 +774,8 @@
         <field name="description">S_IVA0</field>
         <field name="type_tax_use">sale</field>
         <field name="name">IVA Exento Repercutido</field>
+        <field name="account_id" ref="l10n_es.account_common_472"/>
+        <field name="refund_account_id" ref="l10n_es.account_common_472"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="0"/>
         <field name="amount_type">percent</field>
@@ -876,6 +878,8 @@
         <field name="description">P_IVA0_BC</field>
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA Soportado exento (operaciones corrientes)</field>
+        <field name="account_id" ref="l10n_es.account_common_472"/>
+        <field name="refund_account_id" ref="l10n_es.account_common_472"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="0"/>
         <field name="amount_type">percent</field>
