@@ -1,3 +1,13 @@
+.o_mass_mail_form .o_form_sheet_bg .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body {
+    // cancel padding of form_sheet and remove iframe's top border
+    margin-top: -$o-horizontal-padding;
+    margin-bottom: -($o-sheet-vpadding + $o-horizontal-padding);
+    @include o-form-sheet-negative-margin;
+    .wysiwyg_iframe {
+        border-top: 0;
+    }
+}
+
 .o_kanban_view {
     .oe_kanban_mass_mailing {
         .o_title {

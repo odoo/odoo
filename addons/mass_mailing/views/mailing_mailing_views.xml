@@ -46,7 +46,7 @@
             <field name="name">mailing.mailing.form</field>
             <field name="model">mailing.mailing</field>
             <field name="arch" type="xml">
-                <form string="Mailing">
+                <form string="Mailing" class="o_mass_mail_form">
                     <header style="min-height:31px;">
                         <button name="action_put_in_queue" type="object" attrs="{'invisible': [('state', 'in', ('in_queue', 'done'))]}" class="oe_highlight" string="Send"
                             confirm="This will send the email to all recipients. Do you still want to proceed ?"/>
