@@ -327,7 +327,7 @@
 <template id="index_sidebar_country_event" inherit_id="website_event.index_sidebar" active="True" customize_show="True" name="Country Events" priority="70">
     <xpath expr="//div[@id='o_wevent_index_sidebar']" position="inside">
         <div class="o_wevent_sidebar_block">
-            <t t-call="website_event.s_country_events"/>
+            <t t-snippet-call="website_event.s_country_events"/>
         </div>
     </xpath>
 </template>
@@ -485,7 +485,7 @@
                             <h6 class="o_wevent_sidebar_title">SHARE</h6>
                             <p class="mb-2">Find out what people see and say about this event, and join the conversation.</p>
                             <p t-if="event.twitter_hashtag" class="font-weight-bold">Hashtag: <a t-att-href="'http://twitter.com/search?q=%23'+event.twitter_hashtag" target="_blank">#<span t-field="event.twitter_hashtag"/></a></p>
-                            <t t-call="website.s_share">
+                            <t t-snippet-call="website.s_share">
                                 <t t-set="_no_title" t-value="True"/>
                                 <t t-set="_classes" t-valuef="o_wevent_sidebar_social mx-n1"/>
                                 <t t-set="_link_classes" t-valuef="o_wevent_social_link"/>
@@ -528,7 +528,7 @@
 
             <t t-set="tickets" t-value="event.event_ticket_ids.filtered(lambda ticket: not ticket.is_expired)"/>
             <!-- If some tickets expired and there is only one type left, we keep the same layout -->
-            <t t-if="len(event.event_ticket_ids) &gt; 1"> 
+            <t t-if="len(event.event_ticket_ids) &gt; 1">
                 <div class="d-flex align-items-center py-2 pl-3 pr-2 border-bottom">
                     <span t-if="not event.event_registrations_open" class="text-danger">
                         <i class="fa fa-ban mr-2"/>Sold Out
@@ -760,7 +760,7 @@
 <!-- Multipage event - Default template for the Introduction page -->
 <template id="template_intro">
     <t t-call="website_event.layout">
-        <section class="s_title pt48 pb48" data-vcss="001">
+        <section class="s_title pt48 pb48" data-vcss="001" data-snippet="s_title">
             <div class="container">
                 <h1>Introduction</h1>
             </div>

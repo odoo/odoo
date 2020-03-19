@@ -808,6 +808,7 @@ var SnippetsMenu = Widget.extend({
         'cover_update': '_onOverlaysCoverUpdate',
         'deactivate_snippet': '_onDeactivateSnippet',
         'drag_and_drop_stop': '_onDragAndDropStop',
+        'get_snippet_versions': '_onGetSnippetVersions',
         'go_to_parent': '_onGoToParent',
         'remove_snippet': '_onRemoveSnippet',
         'snippet_edition_request': '_onSnippetEditionRequest',
@@ -2088,6 +2089,18 @@ var SnippetsMenu = Widget.extend({
                 close: true,
             }],
         }).open();
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onGetSnippetVersions: function (ev) {
+        const snippet = this.el.querySelector(`.oe_snippet > [data-snippet="${ev.data.snippetName}"]`);
+        ev.data.onSuccess(snippet && {
+            vcss: snippet.dataset.vcss,
+            vjs: snippet.dataset.vjs,
+            vxml: snippet.dataset.vxml,
+        });
     },
     /**
      * @private

@@ -14,7 +14,7 @@
 
     <!-- Default Theme -->
     <template id="theme_default_template">
-        <div class="o_mail_block_header_logo mb16">
+        <div class="o_mail_block_header_logo mb16" data-snippet="s_mail_block_header_logo">
             <div class="o_mail_snippet_general">
                 <table align="center" cellspacing="0" cellpadding="0" border="0" class="o_mail_table_styles o_mail_h_padding">
                     <tr>
@@ -29,7 +29,7 @@
                 </table>
             </div>
         </div>
-        <t t-call="mass_mailing.s_mail_block_title_text" />
-        <t t-call="mass_mailing.s_mail_block_footer_social_left"/>
+        <t t-snippet-call="mass_mailing.s_mail_block_title_text" />
+        <t t-snippet-call="mass_mailing.s_mail_block_footer_social_left"/>
     </template>
 </odoo>
