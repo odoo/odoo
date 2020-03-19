@@ -152,3 +152,6 @@ class TestUi(odoo.tests.HttpCase):
             </t>
         """
         self.start_tour("/", "public_user_editor", login=None)
+
+    def test_07_snippet_version(self):
+        self.start_tour("/", 'snippet_version', login='admin')
