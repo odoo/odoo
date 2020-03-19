@@ -812,6 +812,29 @@ var ActionManager = Widget.extend({
         action.pushState = options.pushState;
     },
     /**
+     * @private
+     * @param {string} resModel
+     * @param {integer} resID
+     */
+    _redirectDefault: function (resModel, resID) {
+        var self = this;
+        this._rpc({
+                model: resModel,
+                method: 'get_formview_id',
+                args: [[resID], self.user_context],
+            })
+            .then(function (viewID) {
+                self.do_action({
+                    type: 'ir.actions.act_window',
+                    view_type: 'form',
+                    view_mode: 'form',
+                    res_model: resModel,
+                    views: [[viewID || false, 'form']],
+                    res_id: resID,
+                });
+            });
+    },
+    /**
      * Unlinks the given action and its controller from the internal structures
      * and destroys its controllers.
      *
@@ -964,14 +987,7 @@ var ActionManager = Widget.extend({
      * @param {string} ev.data.res_model
      */
     _onRedirect: function (ev) {
-        this.do_action({
-            type:'ir.actions.act_window',
-            view_type: 'form',
-            view_mode: 'form',
-            res_model: ev.data.res_model,
-            views: [[false, 'form']],
-            res_id: ev.data.res_id,
-        });
+        this._redirectDefault(ev.data.res_model, ev.data.res_id);
     },
 });
 
