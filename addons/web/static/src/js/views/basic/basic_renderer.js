@@ -812,6 +812,9 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
     _rerenderFieldWidget: function (widget, record, options) {
         // Render the new field widget
         var $el = this._renderFieldWidget(widget.__node, record, options);
+        // get the new widget that has just been pushed in allFieldWidgets
+        const recordWidgets = this.allFieldWidgets[record.id];
+        const newWidget = recordWidgets[recordWidgets.length - 1];
         const def = this.defs[this.defs.length - 1]; // this is the widget's def, resolved when it is ready
         const $div = $('<div>');
         $div.append($el); // $el will be replaced when widget is ready (see _renderFieldWidget)
@@ -819,9 +822,9 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
             widget.$el.replaceWith($div.children());
 
             // Destroy the old widget and position the new one at the old one's
+            // (it has been temporarily inserted at the end of the list)
+            recordWidgets.splice(recordWidgets.indexOf(newWidget), 1);
             var oldIndex = this._destroyFieldWidget(record.id, widget);
-            var recordWidgets = this.allFieldWidgets[record.id];
-            let newWidget = recordWidgets.pop();
             recordWidgets.splice(oldIndex, 0, newWidget);
 
             // Mount new widget if necessary (mainly for Owl components)
