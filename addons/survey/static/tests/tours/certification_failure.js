@@ -48,19 +48,39 @@ var failSteps = [{ // Page-1
     trigger: 'div.js_question-wrapper:contains("Do you think we have missing products in our catalog") textarea',
     run: "text I don't know products enough to be able to answer that",
 }, { // Page-2 Question: How much do we sell our Cable Management Box?
-    content: "Selecting answer '80$'",
-    trigger: 'div.js_question-wrapper:contains("How much do we sell our Cable Management Box") label:contains("80$")',
-}, { // Question: Select all the the products that sell for 100$ or more
+    content: "Selecting answer '$80'",
+    trigger: 'div.js_question-wrapper:contains("How much do we sell our Cable Management Box") label:contains("$80")',
+}, { // Question: Select all the the products that sell for $100 or more
     content: "Ticking answer 'Corner Desk Right Sit'",
-    trigger: 'div.js_question-wrapper:contains("Select all the the products that sell for 100$ or more") label:contains("Corner Desk Right Sit")'
+    trigger: 'div.js_question-wrapper:contains("Select all the the products that sell for $100 or more") label:contains("Corner Desk Right Sit")'
 }, {
     content: "Ticking answer 'Desk Combination'",
-    trigger: 'div.js_question-wrapper:contains("Select all the the products that sell for 100$ or more") label:contains("Desk Combination")'
+    trigger: 'div.js_question-wrapper:contains("Select all the the products that sell for $100 or more") label:contains("Desk Combination")'
 }, {
     content: "Ticking answer 'Office Chair Black'",
-    trigger: 'div.js_question-wrapper:contains("Select all the the products that sell for 100$ or more") label:contains("Office Chair Black")'
+    trigger: 'div.js_question-wrapper:contains("Select all the the products that sell for $100 or more") label:contains("Office Chair Black")'
 }, { // Question: What do you think about our prices (not rated)?
     trigger: 'div.js_question-wrapper:contains("What do you think about our prices") label:contains("Correctly priced")',
+}, { // Page-3 Question: How many days is our money-back guarantee?
+    content: "Inputting answer '60'",
+    trigger: 'div.js_question-wrapper:contains("How many days is our money-back guarantee") input',
+    run: 'text 60'
+}, { // Question: If a customer purchases a product on 6 January 2020, what is the latest day we expect to ship it?
+    content: "Inputting answer '01/06/2020'",
+    trigger: 'div.js_question-wrapper:contains("If a customer purchases a product on 6 January 2020, what is the latest day we expect to ship it") input',
+    run: 'text 01/06/2020'
+}, { // Question: If a customer purchases a 1 year warranty on 6 January 2020, when do we expect the warranty to expire?
+    content: "Inputting answer '01/06/2021 00:00:01'",
+    trigger: 'div.js_question-wrapper:contains("If a customer purchases a 1 year warranty on 6 January 2020, when do we expect the warranty to expire") input',
+    run: 'text 01/06/2021 00:00:01'
+}, { // Question: What day to you think is best for us to start having an annual sale (not rated)?
+    trigger: 'div.js_question-wrapper:contains("What day to you think is best for us to start having an annual sale (not rated)") input',
+}, { // Question: What day and time do you think most customers are most likely to call customer service (not rated)?
+    trigger: 'div.js_question-wrapper:contains("What day and time do you think most customers are most likely to call customer service (not rated)") input',
+}, { // Question: How many chairs do you think we should aim to sell in a year (not rated)?
+    content: "Inputting answer '0'",
+    trigger: 'div.js_question-wrapper:contains("How many chairs do you think we should aim to sell in a year (not rated)") input',
+    run: 'text 0'
 }, {
     content: "Finish Survey",
     trigger: 'button[type="submit"]',

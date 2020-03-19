@@ -55,13 +55,16 @@ class SurveyUserInput(models.Model):
         ('unique_token', 'UNIQUE (access_token)', 'An access token must be unique!'),
     ]
 
-    @api.depends('user_input_line_ids.answer_score', 'user_input_line_ids.question_id', 'predefined_question_ids')
+    @api.depends('user_input_line_ids.answer_score', 'user_input_line_ids.question_id', 'predefined_question_ids.answer_score')
     def _compute_scoring_values(self):
         for user_input in self:
-            total_possible_score = sum([
-                answer_score if answer_score > 0 else 0
-                for answer_score in user_input.predefined_question_ids.mapped('suggested_answer_ids.answer_score')
-            ])
+            # sum(multi-choice question scores) + sum(simple answer_type scores)
+            total_possible_score = 0
+            for question in user_input.predefined_question_ids:
+                if question.question_type in ['simple_choice', 'multiple_choice']:
+                    total_possible_score += sum(score for score in question.mapped('suggested_answer_ids.answer_score') if score > 0)
+                elif question.is_scored_question:
+                    total_possible_score += question.answer_score
 
             if total_possible_score == 0:
                 user_input.scoring_percentage = 0
@@ -335,25 +338,17 @@ class SurveyUserInput(models.Model):
             'skipped': 0,
         }) for user_input in self)
 
-        scored_questions = self.mapped('predefined_question_ids').filtered(
-            lambda question: question.question_type in ['simple_choice', 'multiple_choice']
-        )
+        scored_questions = self.mapped('predefined_question_ids').filtered(lambda question: question.is_scored_question)
 
         for question in scored_questions:
-            question_answer_correct = question.suggested_answer_ids.filtered(lambda answer: answer.is_correct)
+            if question.question_type in ['simple_choice', 'multiple_choice']:
+                question_correct_suggested_answers = question.suggested_answer_ids.filtered(lambda answer: answer.is_correct)
             for user_input in self:
-                user_answer_lines_question = user_input.user_input_line_ids.filtered(lambda line: line.question_id == question)
-                user_answer_correct = user_answer_lines_question.filtered(lambda line: line.answer_is_correct and not line.skipped).mapped('suggested_answer_id')
-                user_answer_incorrect = user_answer_lines_question.filtered(lambda line: not line.answer_is_correct and not line.skipped)
-
-                if user_answer_correct == question_answer_correct:
-                    res[user_input]['correct'] += 1
-                elif user_answer_correct and user_answer_correct < question_answer_correct:
-                    res[user_input]['partial'] += 1
-                if not user_answer_correct and user_answer_incorrect:
-                    res[user_input]['incorrect'] += 1
-                if not user_answer_correct and not user_answer_incorrect:
-                    res[user_input]['skipped'] += 1
+                user_input_lines = user_input.user_input_line_ids.filtered(lambda line: line.question_id == question)
+                if question.question_type in ['simple_choice', 'multiple_choice']:
+                    res[user_input][self._choice_question_answer_result(user_input_lines, question_correct_suggested_answers)] += 1
+                else:
+                    res[user_input][self._simple_question_answer_result(user_input_lines)] += 1
 
         return [[
             {'text': _("Correct"), 'count': res[user_input]['correct']},
@@ -361,6 +356,26 @@ class SurveyUserInput(models.Model):
             {'text': _("Incorrect"), 'count': res[user_input]['incorrect']},
             {'text': _("Unanswered"), 'count': res[user_input]['skipped']}
         ] for user_input in self]
+
+    def _choice_question_answer_result(self, user_input_lines, question_correct_suggested_answers):
+        correct_user_input_lines = user_input_lines.filtered(lambda line: line.answer_is_correct and not line.skipped).mapped('suggested_answer_id')
+        incorrect_user_input_lines = user_input_lines.filtered(lambda line: not line.answer_is_correct and not line.skipped)
+        if correct_user_input_lines == question_correct_suggested_answers:
+            return 'correct'
+        elif correct_user_input_lines and correct_user_input_lines < question_correct_suggested_answers:
+            return 'partial'
+        elif not correct_user_input_lines and incorrect_user_input_lines:
+            return 'incorrect'
+        else:
+            return 'skipped'
+
+    def _simple_question_answer_result(self, user_input_line):
+        if user_input_line.skipped:
+            return 'skipped'
+        elif user_input_line.answer_is_correct:
+            return 'correct'
+        else:
+            return 'incorrect'
 
     # ------------------------------------------------------------
     # Conditional Questions Management
@@ -477,15 +492,7 @@ class SurveyUserInputLine(models.Model):
     matrix_row_id = fields.Many2one('survey.question.answer', string="Row answer")
     # scoring
     answer_score = fields.Float('Score')
-    answer_is_correct = fields.Boolean('Correct', compute='_compute_answer_is_correct')
-
-    @api.depends('suggested_answer_id', 'question_id')
-    def _compute_answer_is_correct(self):
-        for answer in self:
-            if answer.suggested_answer_id and answer.question_id.question_type in ['simple_choice', 'multiple_choice']:
-                answer.answer_is_correct = answer.suggested_answer_id.is_correct
-            else:
-                answer.answer_is_correct = False
+    answer_is_correct = fields.Boolean('Correct')
 
     @api.constrains('skipped', 'answer_type')
     def _check_answer_type_skipped(self):
@@ -509,53 +516,90 @@ class SurveyUserInputLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            score = self._get_answer_score(vals.get('user_input_id'), vals.get('suggested_answer_id'))
-            if score and not vals.get('answer_score'):
-                vals.update({'answer_score': score})
+            score_vals = self._get_answer_score_values(vals)
+            if not vals.get('answer_score'):
+                vals.update(score_vals)
         return super(SurveyUserInputLine, self).create(vals_list)
 
     def write(self, vals):
-        score = self._get_answer_score(
-            vals.get('user_input_id'),
-            vals.get('suggested_answer_id'),
-            compute_speed_score=False)
-        if score and not vals.get('answer_score'):
-            vals.update({'answer_score': score})
+        score_vals = self._get_answer_score_values(vals, compute_speed_score=False)
+        if not vals.get('answer_score'):
+            vals.update(score_vals)
         return super(SurveyUserInputLine, self).write(vals)
 
     @api.model
-    def _get_answer_score(self, user_input_id, suggested_answer_id, compute_speed_score=True):
-        """ If score depends on the speed of the answer, we need to compute it.
-        If the user answers in less than 2 seconds, he gets 100% of the points.
-        If he answers after that, he gets minimum 50% of the points.
-        The 50 other % are ponderated between the time limit and the time it took him to answer.
+    def _get_answer_score_values(self, vals, compute_speed_score=True):
+        """ Get values for: answer_is_correct and associated answer_score.
 
-        If the score does not depend on the speed, we just return the answer_score field of the
-        suggested survey.question.answer. """
+        Requires vals to contain 'answer_type', 'question_id', and 'user_input_id'.
+        Depending on 'answer_type' additional value of 'suggested_answer_id' may also be
+        required.
 
-        if not suggested_answer_id:
-            return None
+        Calculates whether an answer_is_correct and its score based on 'answer_type' and
+        corresponding question. Handles choice (answer_type == 'suggestion') questions
+        separately from other question types. Each selected choice answer is handled as an
+        individual answer.
 
-        answer = self.env['survey.question.answer'].search([('id', '=', suggested_answer_id)], limit=1)
-        answer_score = answer.answer_score
+        If score depends on the speed of the answer, it is adjusted as follows:
+         - If the user answers in less than 2 seconds, they receive 100% of the possible points.
+         - If user answers after that, they receive 50% of the possible points + the remaining
+            50% scaled by the time limit and time taken to answer [i.e. a minimum of 50% of the
+            possible points is given to all correct answers]
 
-        if compute_speed_score:
+        Example of returned values:
+            * {'answer_is_correct': False, 'answer_score': 0} (default)
+            * {'answer_is_correct': True, 'answer_score': 2.0}
+        """
+        user_input_id = vals.get('user_input_id')
+        answer_type = vals.get('answer_type')
+        question_id = vals.get('question_id')
+        if not question_id:
+            raise ValueError(_('Computing score requires a question in arguments.'))
+        question = self.env['survey.question'].browse(int(question_id))
+
+        # default and non-scored questions
+        answer_is_correct = False
+        answer_score = 0
+
+        # record selected suggested choice answer_score (can be: pos, neg, or 0)
+        if question.question_type in ['simple_choice', 'multiple_choice']:
+            if answer_type == 'suggestion':
+                suggested_answer_id = vals.get('suggested_answer_id')
+                if suggested_answer_id:
+                    question_answer = self.env['survey.question.answer'].browse(int(suggested_answer_id))
+                    answer_score = question_answer.answer_score
+                    answer_is_correct = question_answer.is_correct
+        # for all other scored question cases, record question answer_score (can be: pos or 0)
+        elif question.is_scored_question:
+            answer = vals.get('value_%s' % answer_type)
+            if answer_type == 'numerical_box':
+                answer = float(answer)
+            elif answer_type == 'date':
+                answer = fields.Date.from_string(answer)
+            elif answer_type == 'datetime':
+                answer = fields.Datetime.from_string(answer)
+            if answer and answer == question['answer_%s' % answer_type]:
+                answer_is_correct = True
+                answer_score = question.answer_score
+
+        if compute_speed_score and answer_score > 0:
             user_input = self.env['survey.user_input'].browse(user_input_id)
             session_speed_rating = user_input.exists() and user_input.is_session_answer and user_input.survey_id.session_speed_rating
-            if session_speed_rating and answer.answer_score and answer.answer_score > 0:
+            if session_speed_rating:
                 max_score_delay = 2
-                time_limit = answer.question_id.time_limit
+                time_limit = question.time_limit
                 now = fields.Datetime.now()
                 seconds_to_answer = (now - user_input.survey_id.session_question_start_time).total_seconds()
                 question_remaining_time = time_limit - seconds_to_answer
-                if seconds_to_answer < max_score_delay:  # if answered within the max_score_delay
-                    answer_score = answer.answer_score
-                elif question_remaining_time < 0:  # if no time left
-                    answer_score = answer.answer_score / 2
-                else:
+                # if answered within the max_score_delay => leave score as is
+                if question_remaining_time < 0:  # if no time left
+                    answer_score /= 2
+                elif seconds_to_answer > max_score_delay:
                     time_limit -= max_score_delay  # we remove the max_score_delay to have all possible values
-                    question_remaining_time -= max_score_delay
                     score_proportion = (time_limit - seconds_to_answer) / time_limit
-                    answer_score = (answer.answer_score / 2) * (1 + score_proportion)
+                    answer_score = (answer_score / 2) * (1 + score_proportion)
 
-        return answer_score
+        return {
+            'answer_is_correct': answer_is_correct,
+            'answer_score': answer_score
+        }
