@@ -97,7 +97,7 @@
             <attribute name="t-attf-class" remove="#{_classes}" separator=" "/>
         </xpath>
         <xpath expr="//div[@role='search']" position="replace">
-            <form t-attf-class="o_wsale_products_searchbar_form o_wait_lazy_js #{_classes}" t-att-action="action if action else '/shop'" method="get">
+            <form t-attf-class="o_wsale_products_searchbar_form o_wait_lazy_js #{_classes}" t-att-action="action if action else '/shop'" method="get" t-att-data-snippet="_snippet">
                 <t>$0</t>
                 <input name="order" type="hidden" class="o_wsale_search_order_by" value=""/>
                 <t t-raw="0"/>
@@ -592,7 +592,7 @@
 
     <template id="recently_viewed_products_product" inherit_id="website_sale.product" active="True" customize_show="True" name="Recently Viewed Products" priority="16">
         <xpath expr="//div[@t-field='product.website_description']" position="after">
-            <t t-call="website_sale.s_products_recently_viewed"/>
+            <t t-snippet-call="website_sale.s_products_recently_viewed"/>
         </xpath>
     </template>
 
@@ -746,7 +746,7 @@
                             <t t-call="website_sale.cart_summary"/>
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
-                            <section class="s_website_form" data-vcss="001">
+                            <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
                                 <div class="container">
                                     <form action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-force_action="shop.sale.order" data-model_name="sale.order" data-success-mode="redirect" data-success-page="/shop/payment" hide-change-model="true">
                                         <div class="s_website_form_rows row s_col_no_bgcolor">
@@ -1704,7 +1704,7 @@
                     </div>
                   </div>
                 </section>
-                <section class="s_text_block">
+                <section class="s_text_block" data-snippet="s_text_block">
                   <div class="container">
                     <div class="row">
                       <div class="col-lg-12 mb16 mt16">
