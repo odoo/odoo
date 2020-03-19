@@ -507,7 +507,7 @@ class StockQuant(models.Model):
         """
         precision_digits = max(6, self.sudo().env.ref('product.decimal_product_uom').digits * 2)
         # Use a select instead of ORM search for UoM robustness.
-        query = """SELECT id FROM stock_quant WHERE round(quantity::numeric, %s) = 0 AND round(reserved_quantity::numeric, %s) = 0;"""
+        query = """SELECT id FROM stock_quant WHERE (round(quantity::numeric, %s) = 0 OR quantity IS NULL) AND round(reserved_quantity::numeric, %s) = 0;"""
         params = (precision_digits, precision_digits)
         self.env.cr.execute(query, params)
         quant_ids = self.env['stock.quant'].browse([quant['id'] for quant in self.env.cr.dictfetchall()])
