@@ -326,7 +326,10 @@ return {
      * the returned promise stays pending forever.
      *
      * TODO: find a better name, and validate this solution (!= DropPrevious)
-     * TODO: memory leak?
+     * TODO: memory leak? DONE: in principle, if no one holds a reference to
+     * a pending promise, it is eligible to the GC. The Promises here are not
+     * chained, which shouldn't make memory leaks.
+     * https://github.com/tj/co/issues/180#issuecomment-68094905
      *
      * @private
      * @param {Promise} promise
@@ -336,11 +339,8 @@ return {
         constructor() {
             this.transactionId = 0;
         }
-        initiate(promise) {
-            this.transactionId++;
-            return this.add(promise);
-        }
         add(promise) {
+            this.transactionId++;
             const transactionId = this.transactionId;
             return new Promise((resolve, reject) => {
                 promise.then(result => {

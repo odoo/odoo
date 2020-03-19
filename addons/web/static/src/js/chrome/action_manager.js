@@ -312,7 +312,7 @@ class ActionManager extends core.EventBus {
                 active_ids: options.additional_context.active_ids,
                 active_model: options.additional_context.active_model,
             });
-            action = await this._transaction.initiate(loadActionProm);
+            action = await this._transaction.add(loadActionProm);
         }
         if (!this.currentDialogController && action.target !== 'new') {
             await this.clearUncommittedChanges();
@@ -393,7 +393,7 @@ class ActionManager extends core.EventBus {
             prom = Promise.reject();
         }
 
-        let action = await this._transaction.initiate(prom);
+        let action = await this._transaction.add(prom);
         // show effect if button have effect attribute
         // rainbowman can be displayed from two places: from attribute on a button or from python
         // code below handles the first case i.e 'effect' attribute on button.
