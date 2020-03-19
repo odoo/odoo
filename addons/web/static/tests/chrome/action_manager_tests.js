@@ -2628,7 +2628,7 @@ QUnit.module('ActionManager', {
     QUnit.module('Report actions');
 
     QUnit.test('can execute report actions from db ID', async function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         const webClient = await createWebClient({
             actions: this.actions,
@@ -2656,11 +2656,16 @@ QUnit.module('ActionManager', {
                 },
             },
         });
-        await doAction(7, {
-            on_close: function () {
-                assert.step('on_close');
+        await doAction(7,
+            {
+                on_close: function () {
+                    assert.step('on_close');
+                }
             },
-        });
+            () => {
+                    assert.step('action fully done'); // necessary to ensure reports are downloaded
+            }
+        );
         assert.verifySteps([
             '/web/action/load',
             '/report/check_wkhtmltopdf',
@@ -2668,6 +2673,7 @@ QUnit.module('ActionManager', {
             '/report/download',
             'unblockUI',
             'on_close',
+            'action fully done'
         ]);
 
         webClient.destroy();

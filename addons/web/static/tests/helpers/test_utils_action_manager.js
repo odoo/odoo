@@ -4,8 +4,8 @@ odoo.define('web.test_utils_action_manager', function (require) {
 const WebClient = require('web.WebClient');
 const testUtilsAsync = require('web.test_utils_async');
 
-async function doAction(action, options) {
-    WebClient.env.bus.trigger('do-action', {action, options});
+async function doAction(action, options, on_success, on_fail) {
+    WebClient.env.bus.trigger('do-action', {action, options, on_success, on_fail});
     await testUtilsAsync.owlCompatibilityExtraNextTick();
     return testUtilsAsync.nextTick();
 }
