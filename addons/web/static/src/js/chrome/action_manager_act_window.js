@@ -148,7 +148,7 @@ odoo.define('web.ActWindowActionManager', function (require) {
          * @returns {Promise} resolved when the action is appended to the DOM
          */
         async executeAction(action, options) {
-            const fieldsViews = await this._resolveLast(this._loadViews(action));
+            const fieldsViews = await this.transactionAdd(this._loadViews(action));
             const views = this._generateActionViews(action, fieldsViews);
             action._views = action.views; // save the initial attribute
             action.views = views;
@@ -281,7 +281,7 @@ odoo.define('web.ActWindowActionManager', function (require) {
                 context: action.context,
                 views_descr: views,
             };
-            return this._resolveLast(this.env.dataManager.load_views(params, options)); // remove _resolveLast
+            return this.env.dataManager.load_views(params, options);
         }
         /**
          * Overrides to handle the case where the controller to restore is from an

@@ -317,6 +317,44 @@ return {
             target_def.then(resolve).guardedCatch(reject);
             reference_def.then(reject).guardedCatch(reject);
         });
+    },
+    /**
+     * TODOOOO: Rewrite DOC
+     * Wraps a promise to resolve/reject it when it is resolved/rejected: iff
+     * the pending controller hasn't changed between the moment when the request
+     * was initiated and the moment it is completed. If the controller changed,
+     * the returned promise stays pending forever.
+     *
+     * TODO: find a better name, and validate this solution (!= DropPrevious)
+     * TODO: memory leak?
+     *
+     * @private
+     * @param {Promise} promise
+     * @returns {Promise}
+     */
+    TransactionalChain: class TransactionalChain {
+        constructor() {
+            this.transactionId = 0;
+        }
+        initiate(promise) {
+            this.transactionId++;
+            return this.add(promise);
+        }
+        add(promise) {
+            const transactionId = this.transactionId;
+            return new Promise((resolve, reject) => {
+                promise.then(result => {
+                    if (transactionId === this.transactionId) {
+                        resolve(result);
+                    }
+                });
+                promise.guardedCatch(reason => {
+                    if (transactionId === this.transactionId) {
+                        reject(reason);
+                    }
+                });
+            });
+        }
     }
 };
 
