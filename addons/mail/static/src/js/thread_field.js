@@ -217,11 +217,13 @@ var ThreadField = AbstractField.extend({
      * @private
      * @param {string} resModel
      * @param {integer} resID
+     * @param {integer} [viewID]
      */
-    _onRedirect: function (resModel, resID) {
+    _onRedirect: function (resModel, resID, viewID) {
         this.trigger_up('redirect', {
             res_id: resID,
             res_model: resModel,
+            view_id: viewID,
         });
     },
     /**
