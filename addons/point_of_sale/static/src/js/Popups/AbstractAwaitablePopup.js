@@ -9,7 +9,6 @@ odoo.define('point_of_sale.AbstractAwaitablePopup', function(require) {
     const { useExternalListener } = owl.hooks;
     const { PosComponent, addComponents } = require('point_of_sale.PosComponent');
     const { Draggable } = require('point_of_sale.Draggable');
-    const { DraggableHandle } = require('point_of_sale.DraggableHandle');
 
     class AbstractAwaitablePopup extends PosComponent {
         constructor() {
@@ -43,7 +42,7 @@ odoo.define('point_of_sale.AbstractAwaitablePopup', function(require) {
         }
     }
 
-    addComponents(AbstractAwaitablePopup, [Draggable, DraggableHandle]);
+    addComponents(AbstractAwaitablePopup, [Draggable]);
 
     return { AbstractAwaitablePopup };
 });

@@ -2102,6 +2102,9 @@ td {
 .pos .debug-widget .content{
     overflow: hidden;
 }
+.pos .debug-widget header {
+    position: relative;
+}
 .pos .debug-widget h1{
     background:black;
     padding-top: 10px;
@@ -2163,6 +2166,9 @@ td {
     height:100%;
     background-color: rgba(0,0,0,0.5);
     z-index:1000;
+}
+.pos .modal-dialog header{
+    position: relative;
 }
 .pos .modal-dialog .popup{
     position: absolute;
@@ -2512,14 +2518,14 @@ td {
     z-index:1000;
 }
 
-.draggable-handle {
+.drag-handle {
     cursor: move; /* fallback if grab cursor is unsupported */
     cursor: grab;
     cursor: -moz-grab;
     cursor: -webkit-grab;
 }
 
-.draggable-handle:active {
+.drag-handle:active {
     cursor: grabbing;
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;

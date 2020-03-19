@@ -5,11 +5,9 @@
         <div role="dialog" class="modal-dialog">
             <Draggable>
                 <div class="popup popup-confirm">
-                    <DraggableHandle>
-                        <header class="title">
-                            <t t-esc="props.title" />
-                        </header>
-                    </DraggableHandle>
+                    <header class="title drag-handle">
+                        <t t-esc="props.title" />
+                    </header>
                     <main class="body">
                         <t t-esc=" props.body" />
                     </main>

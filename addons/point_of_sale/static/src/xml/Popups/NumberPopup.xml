@@ -5,11 +5,9 @@
         <div role="dialog" class="modal-dialog">
             <Draggable>
                 <div class="popup popup-number" t-att-class="{ 'popup-password': props.isPassword }">
-                    <DraggableHandle>
-                        <header class="title">
-                            <t t-esc="props.title" />
-                        </header>
-                    </DraggableHandle>
+                    <header class="title drag-handle">
+                        <t t-esc="props.title" />
+                    </header>
                     <div class="popup-input value active">
                         <t t-esc="inputBuffer" />
                     </div>
