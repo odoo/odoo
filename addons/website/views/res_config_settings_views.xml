@@ -68,7 +68,7 @@
                                     <div class="text-muted">
                                         The company this website belongs to
                                     </div>
-                                    <field name="website_company_id"/>
+                                    <field name="website_company_id" attrs="{'required': [('website_id', '!=', False)]}" />
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="languages_setting">
