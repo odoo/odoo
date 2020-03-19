@@ -23,6 +23,7 @@ class ProductTemplate(models.Model):
 
     @api.onchange('sale_ok')
     def _onchange_sale_ok(self):
+        result = super(ProductTemplate, self)._onchange_sale_ok()
         if not self.sale_ok:
             self.available_in_pos = False
 

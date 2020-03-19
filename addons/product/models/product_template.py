@@ -334,6 +334,10 @@ class ProductTemplate(models.Model):
             raise ValidationError(_('You cannot define two attribute lines for the same attribute.'))
         return True
 
+    @api.onchange('sale_ok')
+    def _onchange_sale_ok(self):
+        pass
+
     @api.onchange('uom_id')
     def _onchange_uom_id(self):
         if self.uom_id:
