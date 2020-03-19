@@ -173,8 +173,7 @@ class ProductTemplate(models.Model):
 
     @api.depends_context('company')
     def _compute_cost_currency_id(self):
-        for template in self:
-            template.cost_currency_id = self.env.company.currency_id.id
+        self.cost_currency_id = self.env.company.currency_id.id
 
     def _compute_template_price(self):
         prices = self._compute_template_price_no_inverse()
@@ -259,8 +258,7 @@ class ProductTemplate(models.Model):
             template.weight = 0.0
 
     def _compute_is_product_variant(self):
-        for template in self:
-            template.is_product_variant = False
+        self.is_product_variant = False
 
     @api.depends('product_variant_ids.barcode')
     def _compute_barcode(self):
@@ -329,12 +327,10 @@ class ProductTemplate(models.Model):
         return self._get_volume_uom_id_from_ir_config_parameter().display_name
 
     def _compute_weight_uom_name(self):
-        for template in self:
-            template.weight_uom_name = self._get_weight_uom_name_from_ir_config_parameter()
+        self.weight_uom_name = self._get_weight_uom_name_from_ir_config_parameter()
 
     def _compute_volume_uom_name(self):
-        for template in self:
-            template.volume_uom_name = self._get_volume_uom_name_from_ir_config_parameter()
+        self.volume_uom_name = self._get_volume_uom_name_from_ir_config_parameter()
 
     def _set_weight(self):
         for template in self:
