@@ -120,7 +120,6 @@ class SequenceMixin(models.AbstractModel):
         would only work when the numbering makes a new start (domain returns by
         _get_last_sequence_domain is [], i.e: a new year).
 
-        :param field_name: the field that contains the sequence.
         :param relaxed: this should be set to True when a previous request didn't find
             something without. This allows to find a pattern from a previous period, and
             try to adapt it for the new period.
@@ -214,8 +213,6 @@ class SequenceMixin(models.AbstractModel):
         This method ensures that the field is set both in the ORM and in the database.
         This is necessary because we use a database query to get the previous sequence,
         and we need that query to always be executed on the latest data.
-
-        :param field_name: the field that contains the sequence.
         """
         self.ensure_one()
         self[self._sequence_field] = self._get_next_sequence()
