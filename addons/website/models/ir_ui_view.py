@@ -384,8 +384,9 @@ class View(models.Model):
                 elif request.env.user.has_group('website.group_website_publisher'):
                     new_context = dict(self._context, inherit_branding_auto=True)
             if values and 'main_object' in values:
-                func = getattr(values['main_object'], 'get_backend_menu_id', False)
-                values['backend_menu_id'] = func and func() or self.env.ref('website.menu_website_configuration').id
+                if request.env.user.has_group('website.group_website_publisher'):
+                    func = getattr(values['main_object'], 'get_backend_menu_id', False)
+                    values['backend_menu_id'] = func and func() or self.env.ref('website.menu_website_configuration').id
 
                 # Fallback incase main_object dont't inherit 'website.seo.metadata'
                 if not hasattr(values['main_object'], 'get_website_meta'):
