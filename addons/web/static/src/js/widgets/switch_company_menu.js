@@ -65,9 +65,12 @@ var SwitchCompanyMenu = Widget.extend({
         if (dropdownItem.find('.fa-square-o').length) {
             // 1 enabled company: Stay in single company mode
             if (this.allowed_company_ids.length === 1) {
+                if (this.isMobile) {
+                    dropdownMenu = dropdownMenu.parent();
+                }
                 dropdownMenu.find('.fa-check-square').removeClass('fa-check-square').addClass('fa-square-o');
                 dropdownItem.find('.fa-square-o').removeClass('fa-square-o').addClass('fa-check-square');
-                allowed_company_ids = [companyID]
+                allowed_company_ids = [companyID];
             } else { // Multi company mode
                 allowed_company_ids.push(companyID);
                 dropdownItem.find('.fa-square-o').removeClass('fa-square-o').addClass('fa-check-square');
