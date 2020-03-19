@@ -21,7 +21,8 @@
                         <tree editable="top">
                             <field name="employee_id" options="{'no_create': True}"/>
                             <field name="sale_line_id" options="{'no_create': True}" domain="[('order_id','=',parent.sale_order_id), ('is_service', '=', True)]"/>
-                            <field name="price_unit"/>
+                            <field name="price_unit" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
                         </tree>
                     </field>
                 </page>
