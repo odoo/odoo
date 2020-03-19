@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, api, fields
+from odoo import models, fields
+
 
 class res_company(models.Model):
     _inherit = "res.company"
 
     # This field needs to be overridden with `selection_add` in the modules which intends to add report layouts.
     # The xmlID of all the report actions which are actually Check Layouts has to be kept as key of the selection.
-    account_check_printing_layout = fields.Selection(string="Check Layout", required=True,
+    account_check_printing_layout = fields.Selection(string="Check Layout",
         help="Select the format corresponding to the check paper you will be printing your checks on.\n"
              "In order to disable the printing feature, select 'None'.",
         selection=[
