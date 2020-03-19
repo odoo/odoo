@@ -85,7 +85,8 @@
                 <field name="attribute_id"/>
                 <field name="name"/>
                 <field name="ptav_active" optional="hide"/>
-                <field name="price_extra"/>
+                <field name="price_extra" widget="monetary"/>
+                <field name="currency_id" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -100,7 +101,8 @@
                     <group>
                         <field name="ptav_active" readonly="1" attrs="{'invisible': [('ptav_active', '=', True)]}"/>
                         <field name="name"/>
-                        <field name="price_extra" />
+                        <field name="price_extra" widget="monetary"/>
+                        <field name="currency_id" invisible="1"/>
                         <field name="exclude_for" widget="one2many" mode="tree">
                             <tree editable="bottom">
                                 <field name="product_tmpl_id" />
