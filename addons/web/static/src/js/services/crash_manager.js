@@ -357,17 +357,17 @@ var RedirectWarningHandler = Widget.extend(ExceptionHandler, {
     display: function() {
         var self = this;
         var error = this.error;
+        var additional_context = _.extend({}, this.context, error.data.arguments[3]);
 
         new WarningDialog(this, {
             title: _.str.capitalize(error.type) || _t("Odoo Warning"),
             buttons: [
                 {text: error.data.arguments[2], classes : "btn-primary", click: function() {
-                    $.bbq.pushState({
-                        'action': error.data.arguments[1],
-                        'cids': $.bbq.getState().cids,
-                    }, 2);
-                    self.destroy();
-                    location.reload();
+                    self.do_action(
+                        error.data.arguments[1],
+                        {
+                            additional_context: additional_context,
+                        });
                 }},
                 {text: _t("Cancel"), click: function() { self.destroy(); }, close: true}
             ]
