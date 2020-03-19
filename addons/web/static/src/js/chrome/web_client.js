@@ -2,8 +2,9 @@ odoo.define('web.WebClient', function (require) {
 "use strict";
 
 const ActionManager = require('web.ActionManager');
-const { Action, DialogAction } = require('web.Action');
+const ActionAdapter = require('web.ActionAdapter');
 const { ComponentAdapter } = require('web.OwlCompatibility');
+const DialogAction = require('web.DialogAction');
 const LoadingWidget = require('web.Loading');
 const Menu = require('web.Menu');
 const RainbowMan = require('web.RainbowMan');
@@ -523,7 +524,7 @@ class WebClient extends Component {
         }
     }
 }
-WebClient.components = { Action, Menu, DialogAction, ComponentAdapter };
+WebClient.components = { ActionAdapter, Menu, DialogAction, ComponentAdapter };
 WebClient.template = 'web.WebClient';
 
 return WebClient;
