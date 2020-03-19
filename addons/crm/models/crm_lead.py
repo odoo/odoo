@@ -1186,29 +1186,20 @@ class Lead(models.Model):
             through message_process.
             This override updates the document according to the email.
         """
-        # remove default author when going through the mail gateway. Indeed we
-        # do not want to explicitly set user_id to False; however we do not
-        # want the gateway user to be responsible if no other responsible is
-        # found.
-        if self._uid == self.env.ref('base.user_root').id:
-            self = self.with_context(default_user_id=False)
-
-        if custom_values is None:
-            custom_values = {}
-        defaults = {
-            'name':  msg_dict.get('subject') or _("No Subject"),
-            'email_from': msg_dict.get('from'),
-            'partner_id': msg_dict.get('author_id', False),
-        }
+        defaults = {'email_from': msg_dict.get('email_from')}
         if msg_dict.get('author_id'):
-            defaults.update(self._onchange_partner_id_values(msg_dict.get('author_id')))
-        if msg_dict.get('priority') in dict(crm_stage.AVAILABLE_PRIORITIES):
-            defaults['priority'] = msg_dict.get('priority')
-        defaults.update(custom_values)
+            defaults['partner_id'] = msg_dict.get('author_id', False)
+
+        if defaults.get('partner_id'):
+            defaults.update(self._onchange_partner_id_values(defaults['partner_id']))
+
+        if custom_values:
+            defaults.update(custom_values)
 
         # assign right company
         if 'company_id' not in defaults and 'team_id' in defaults:
             defaults['company_id'] = self.env['crm.team'].browse(defaults['team_id']).company_id.id
+
         return super(Lead, self).message_new(msg_dict, custom_values=defaults)
 
     def _message_post_after_hook(self, message, msg_vals):
