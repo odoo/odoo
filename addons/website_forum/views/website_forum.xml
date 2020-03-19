@@ -157,7 +157,8 @@
                     <a t-attf-href="/forum/#{ slug(forum) }/tag" t-attf-class="nav-link #{searches.get('tags') and 'active'}">Tags</a>
                 </li>
                 <li class="nav-item">
-                    <a t-attf-href="/profile/ranks_badges?badge_category=forum" t-attf-class="nav-link #{searches.get('badges') and 'active'}">Badges</a>
+                    <a t-attf-href="/profile/ranks_badges?badge_category=forum&amp;url_origin=#{request.httprequest.path}&amp;name_origin=#{forum.name}"
+                    t-attf-class="nav-link #{searches.get('badges') and 'active'}">Badges</a>
                 </li>
                 <li class="nav-item">
                     <a t-attf-href="/forum/#{ slug(forum) }/faq" t-attf-class="nav-link #{header.get('is_guidelines') and 'active'}">About</a>
@@ -183,7 +184,7 @@
                         <a t-if="searches or my or question" t-attf-href="/forum/#{ slug(forum) }" class="dropdown-item">All Topics</a>
                         <a t-if="not searches.get('users')" t-attf-href="/profile/users?forum_origin=#{request.httprequest.path}" class="dropdown-item">People</a>
                         <a t-if="not searches.get('tags')" t-attf-href="/forum/#{slug(forum)}/tag" class="dropdown-item">Tags</a>
-                        <a t-if="not searches.get('badges')" t-attf-href="/profile/ranks_badges?badge_category=forum" class="dropdown-item">Badges</a>
+                        <a t-if="not searches.get('badges')" t-attf-href="/profile/ranks_badges?badge_category=forum&amp;url_origin=#{request.httprequest.path}&amp;name_origin=#{forum.name}" class="dropdown-item">Badges</a>
                         <a t-if="not header.get('is_guidelines')" t-attf-href="/forum/#{ slug(forum) }/faq" class="dropdown-item">About</a>
                         <t t-if="uid">
                             <div class="dropdown-divider"/>
