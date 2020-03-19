@@ -46,6 +46,12 @@ class ProductTemplate(models.Model):
         for product_template in self:
             product_template.visible_expense_policy = visibility
 
+
+    @api.onchange('sale_ok')
+    def _change_sale_ok(self):
+        if not self.sale_ok:
+            self.expense_policy = 'no'
+
     @api.depends('product_variant_ids.sales_count')
     def _compute_sales_count(self):
         for product in self:
