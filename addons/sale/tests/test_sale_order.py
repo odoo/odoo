@@ -329,7 +329,6 @@ class TestSaleOrder(TestCommonSaleNoChart):
         inv=so_1.sudo().with_context(allowed_company_ids=[company_2.id, company_1.id])._create_invoices()
         self.assertEqual(inv.company_id, company_1, 'invoices should be created in the company of the SO, not the main company of the context')
 
-
     def test_group_invoice(self):
         """ Test that invoicing multiple sales order for the same customer works. """
         # Create 3 SOs for the same partner, one of which that uses another currency
@@ -347,3 +346,26 @@ class TestSaleOrder(TestCommonSaleNoChart):
         res = wiz.create_invoices()
         # Check that exactly 2 invoices are generated
         self.assertEqual(len(res['domain'][0][2]),2, "Grouping invoicing 3 orders for the same partner with 2 currencies should create exactly 2 invoices")
+
+    def test_so_note_to_invoice(self):
+        """Test that notes from SO are pushed into invoices"""
+
+        sol_note = self.env['sale.order.line'].create({
+            'name': 'This is a note',
+            'display_type': 'line_note',
+            'product_id': False,
+            'product_uom_qty': 0,
+            'product_uom': False,
+            'price_unit': 0,
+            'order_id': self.sale_order.id,
+            'tax_id': False,
+        })
+
+        # confirm quotation
+        self.sale_order.action_confirm()
+
+        # create invoice
+        invoice = self.sale_order._create_invoices()
+
+        # check note from SO has been pushed in invoice
+        self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'line_note')), 1, 'Note SO line should have been pushed to the invoice')

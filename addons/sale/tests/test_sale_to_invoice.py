@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import _
 from odoo.tools import float_is_zero
 from .test_sale_common import TestCommonSaleNoChart
 from odoo.tests import Form
@@ -100,7 +101,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         self.assertEqual(len(self.sale_order.invoice_ids), 2, 'Invoice should be created for the SO')
 
         invoice = self.sale_order.invoice_ids.sorted()[-1]
-        self.assertEqual(len(invoice.invoice_line_ids), len(self.sale_order.order_line), 'All lines should be invoiced')
+        self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))), len(self.sale_order.order_line), 'All lines should be invoiced')
         self.assertEqual(invoice.amount_total, self.sale_order.amount_total - downpayment_line.price_unit, 'Downpayment should be applied')
 
     def test_invoice_with_discount(self):

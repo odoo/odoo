@@ -632,27 +632,48 @@ Reason(s) of this behavior could be:
 
         # 1) Create invoices.
         invoice_vals_list = []
+        invoice_item_sequence = 0
         for order in self:
-            pending_section = None
+            current_section_vals = None
+            down_payments = self.env['sale.order.line']
 
             # Invoice values.
             invoice_vals = order._prepare_invoice()
 
             # Invoice line values (keep only necessary sections).
+            invoice_lines_vals = []
             for line in order.order_line:
                 if line.display_type == 'line_section':
-                    pending_section = line
+                    current_section_vals = line._prepare_invoice_line(sequence=invoice_item_sequence + 1)
                     continue
-                if float_is_zero(line.qty_to_invoice, precision_digits=precision):
+                if line.display_type != 'line_note' and float_is_zero(line.qty_to_invoice, precision_digits=precision):
                     continue
-                if line.qty_to_invoice > 0 or (line.qty_to_invoice < 0 and final):
-                    if pending_section:
-                        invoice_vals['invoice_line_ids'].append((0, 0, pending_section._prepare_invoice_line()))
-                        pending_section = None
-                    invoice_vals['invoice_line_ids'].append((0, 0, line._prepare_invoice_line()))
+                if line.qty_to_invoice > 0 or (line.qty_to_invoice < 0 and final) or line.display_type == 'line_note':
+                    if line.is_downpayment:
+                        down_payments += line
+                        continue
+                    if current_section_vals:
+                        invoice_item_sequence += 1
+                        invoice_lines_vals.append(current_section_vals)
+                        current_section_vals = None
+                    invoice_item_sequence += 1
+                    prepared_line = line._prepare_invoice_line(sequence=invoice_item_sequence)
+                    invoice_lines_vals.append(prepared_line)
 
-            if not invoice_vals['invoice_line_ids']:
+            # If down payments are present in SO, group them under common section
+            if down_payments:
+                invoice_item_sequence += 1
+                down_payments_section = self._prepare_down_payment_section_line(sequence=invoice_item_sequence)
+                invoice_lines_vals.append(down_payments_section)
+                for down_payment in down_payments:
+                    invoice_item_sequence += 1
+                    invoice_down_payment_vals = down_payment._prepare_invoice_line(sequence=invoice_item_sequence)
+                    invoice_lines_vals.append(invoice_down_payment_vals)
+
+            if not any(new_line['display_type'] is False for new_line in invoice_lines_vals):
                 raise self._nothing_to_invoice_error()
+
+            invoice_vals['invoice_line_ids'] = [(0, 0, invoice_line_id) for invoice_line_id in invoice_lines_vals]
 
             invoice_vals_list.append(invoice_vals)
 
@@ -1019,6 +1040,27 @@ Reason(s) of this behavior could be:
         """ Return the action used to display orders when returning from customer portal. """
         self.ensure_one()
         return self.env.ref('sale.action_quotations_with_onboarding')
+
+    @api.model
+    def _prepare_down_payment_section_line(self, **optional_values):
+        """
+        Prepare the dict of values to create a new down payment section for a sales order line.
+
+        :param optional_values: any parameter that should be added to the returned down payment section
+        """
+        down_payments_section_line = {
+            'display_type': 'line_section',
+            'name': _('Down Payments'),
+            'product_id': False,
+            'product_uom_id': False,
+            'quantity': 0,
+            'discount': 0,
+            'price_unit': 0,
+            'account_id': False
+        }
+        if optional_values:
+            down_payments_section_line.update(optional_values)
+        return down_payments_section_line
 
 
 class SaleOrderLine(models.Model):
@@ -1438,11 +1480,12 @@ class SaleOrderLine(models.Model):
                 amount_to_invoice = price_subtotal - line.untaxed_amount_invoiced
             line.untaxed_amount_to_invoice = amount_to_invoice
 
-    def _prepare_invoice_line(self):
+    def _prepare_invoice_line(self, **optional_values):
         """
         Prepare the dict of values to create the new invoice line for a sales order line.
 
         :param qty: float quantity to invoice
+        :param optional_values: any parameter that should be added to the returned invoice line
         """
         self.ensure_one()
         res = {
@@ -1459,6 +1502,8 @@ class SaleOrderLine(models.Model):
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'sale_line_ids': [(4, self.id)],
         }
+        if optional_values:
+            res.update(optional_values)
         if self.display_type:
             res['account_id'] = False
         return res
