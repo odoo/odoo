@@ -1208,8 +1208,6 @@ class HttpCase(TransactionCase):
 
     def setUp(self):
         super(HttpCase, self).setUp()
-        if not self.env.registry.loaded:
-            self._logger.warning('HttpCase test should be in post_install only')
         if self.registry_test_mode:
             self.registry.enter_test_mode(self.cr)
             self.addCleanup(self.registry.leave_test_mode)
@@ -1291,6 +1289,9 @@ class HttpCase(TransactionCase):
         To signal success test do: console.log('test successful')
         To signal test failure raise an exception or call console.error
         """
+        if not self.env.registry.loaded:
+            self._logger.warning('HttpCase test should be in post_install only')
+
         # increase timeout if coverage is running
         if any(f.filename.endswith('/coverage/execfile.py') for f in inspect.stack()  if f.filename):
             timeout = timeout * 1.5
