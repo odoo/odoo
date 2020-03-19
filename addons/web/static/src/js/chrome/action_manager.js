@@ -7,6 +7,7 @@ const { _t, action_registry } = require('web.core');
 const { redirect } = require('web.framework');
 var pyUtils = require('web.py_utils');
 const Widget = require('web.Widget');
+const { TransactionalChain } = require('web.concurrency');
 
 const { Component, core } = owl;
 
@@ -24,10 +25,10 @@ class ActionManagerPlugin {
         throw new Error(`ActionManagerPlugin for type ${this.type} doesn't implement executeAction.`);
     }
     rpc() {
-        return this.env.services.rpc(...arguments);
+        return this.transactionAdd(this.env.services.rpc(...arguments));
     }
-    _resolveLast() {
-        return this.actionManager._resolveLast(...arguments);
+    transactionAdd() {
+        return this.actionManager._transaction.add(...arguments);
     }
     loadState(/* state, options */) {}
     makeBaseController() {
@@ -98,14 +99,13 @@ class ServerActionPlugin extends ActionManagerPlugin {
      * @returns {Promise} resolved when the action has been executed
      */
     async executeAction(action, options) {
-        const runActionProm = this.rpc({
+        action = await this.rpc({
             route: '/web/action/run',
             params: {
                 action_id: action.id,
                 context: action.context || {},
             },
         });
-        action = await this._resolveLast(runActionProm);
         action = action || { type: 'ir.actions.act_window_close' };
         return this.actionManager.doAction(action, options);
     }
@@ -133,7 +133,7 @@ class ClientActionPlugin extends ActionManagerPlugin {
                 const nextAction = ClientAction(this.env, action);
                 if (nextAction) {
                     action = nextAction;
-                    return this._resolveLast(this.doAction(action)); // _resolveLast necessary here??
+                    return this.doAction(action);
                 }
                 return;
             }
@@ -210,6 +210,7 @@ class ActionManager extends core.EventBus {
     constructor(env) {
         super();
         this.env = env;
+        this._transaction = new TransactionalChain();
         this.env.bus.on('do-action', this, payload => {
             this.doAction(payload.action, payload.options);
         });
@@ -235,8 +236,6 @@ class ActionManager extends core.EventBus {
         // displayed in the current window
         this.currentStack = [];
         this.currentDialogController = null;
-
-        this.currentRequestID = 0;
     }
     //--------------------------------------------------------------------------
     // Public
@@ -287,7 +286,6 @@ class ActionManager extends core.EventBus {
     async doAction(action, options) {
         // cancel potential current rendering
         this.trigger('cancel');
-        this.currentRequestID++;
 
         const defaultOptions = {
             additional_context: {},
@@ -314,7 +312,7 @@ class ActionManager extends core.EventBus {
                 active_ids: options.additional_context.active_ids,
                 active_model: options.additional_context.active_model,
             });
-            action = await this._resolveLast(loadActionProm);
+            action = await this._transaction.initiate(loadActionProm);
         }
         if (!this.currentDialogController && action.target !== 'new') {
             await this.clearUncommittedChanges();
@@ -347,7 +345,6 @@ class ActionManager extends core.EventBus {
     async executeInFlowAction(params) {
         // cancel potential current rendering
         this.trigger('cancel');
-        this.currentRequestID++;
 
         const actionData = params.action_data;
         const env = params.env;
@@ -396,7 +393,7 @@ class ActionManager extends core.EventBus {
             prom = Promise.reject();
         }
 
-        let action = await this._resolveLast(prom);
+        let action = await this._transaction.initiate(prom);
         // show effect if button have effect attribute
         // rainbowman can be displayed from two places: from attribute on a button or from python
         // code below handles the first case i.e 'effect' attribute on button.
@@ -799,34 +796,6 @@ class ActionManager extends core.EventBus {
         if (controller.options && controller.options.on_fail) {
             controller.options.on_fail();
         }
-    }
-    /**
-     * Wraps a promise to resolve/reject it when it is resolved/rejected: iff
-     * the pending controller hasn't changed between the moment when the request
-     * was initiated and the moment it is completed. If the controller changed,
-     * the returned promise stays pending forever.
-     *
-     * TODO: find a better name, and validate this solution (!= DropPrevious)
-     * TODO: memory leak?
-     *
-     * @private
-     * @param {Promise} promise
-     * @returns {Promise}
-     */
-    _resolveLast(promise) {
-        const currentRequestID = this.currentRequestID;
-        return new Promise((resolve, reject) => {
-            promise.then(result => {
-                if (currentRequestID === this.currentRequestID) {
-                    resolve(result);
-                }
-            });
-            promise.guardedCatch(reason => {
-                if (currentRequestID === this.currentRequestID) {
-                    reject(reason);
-                }
-            });
-        });
     }
     /**
      * Goes back in the history: if a controller is opened in a dialog, closes
