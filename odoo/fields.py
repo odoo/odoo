@@ -1431,11 +1431,7 @@ class _String(Field):
                 return self.translate(src_trans.get, value)
 
         else:
-            rec_trans = records.env['ir.translation']._get_ids(
-                '%s,%s' % (self.model_name, self.name), 'model', records.env.lang, records.ids)
-
-            def translate(record_id, value):
-                return rec_trans.get(record_id) or value
+            raise Exception("Unexpected use of get_trans_func")
 
         return translate
 
