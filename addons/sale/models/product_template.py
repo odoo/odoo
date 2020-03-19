@@ -36,6 +36,11 @@ class ProductTemplate(models.Model):
              'Delivered Quantity: Invoice quantities delivered to the customer.',
         default='order')
 
+    @api.onchange('sale_ok')
+    def _change_sale_ok(self):
+        if not self.sale_ok:
+            self.expense_policy = 'no'
+
     @api.multi
     @api.depends('name')
     def _compute_visible_expense_policy(self):
