@@ -49,7 +49,6 @@ class ProductTemplate(models.Model):
         help='A storable product is a product for which you manage stock. The Inventory app has to be installed.\n'
              'A consumable product is a product for which stock is not managed.\n'
              'A service is a non-material product you provide.')
-    rental = fields.Boolean('Can be Rent')
     categ_id = fields.Many2one(
         'product.category', 'Product Category',
         change_default=True, default=_get_default_category_id, group_expand='_read_group_categ_id',
