@@ -40,9 +40,9 @@
                             <div class="row align-items-start">
                                 <div class="col-12 col-sm-4">
                                     <a t-attf-href="/forum/#{slug(forum)}">
-                                        <div class="oe_img_bg rounded shadow-sm py-4 px-5 o_wforum_forum_card_bg flex-shrink-0"
-                                             t-attf-style="#{forum.image_256 and ('background-image: url(%s);' % website.image_url(forum, 'image_256'))} background-position: center;">
-                                            <div class="p-5"/>
+                                        <div t-attf-class="h-100 w-100 o_editable #{not forum.image_1920 and 'rounded o_wforum_forum_card_bg shadow-sm flex-shrink-0'}">
+                                            <div t-if="forum.image_1920 or editable" t-attf-class="h-100"
+                                            t-field="forum.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_256', 'class': 'w-100 h-100 o_object_fit_cover rounded'}" />
                                         </div>
                                     </a>
                                 </div>
@@ -52,7 +52,7 @@
                                     </a>
                                     <p t-attf-class="m-0 lead #{not forum.description and 'css_non_editable_mode_hidden'}"
                                        placeholder="Description"
-                                       t-field="forum.description"/>
+                                       t-field="forum.teaser"/>
                                 </div>
                             </div>
                         </div>

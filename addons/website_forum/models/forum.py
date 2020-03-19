@@ -22,11 +22,6 @@ class Forum(models.Model):
     _inherit = ['mail.thread', 'image.mixin', 'website.seo.metadata', 'website.multi.mixin']
     _order = "sequence"
 
-    @api.model
-    def _get_default_faq(self):
-        with misc.file_open('website_forum/data/forum_default_faq.html', 'r') as f:
-            return f.read()
-
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1)
@@ -44,8 +39,9 @@ class Forum(models.Model):
     authorized_group_id = fields.Many2one('res.groups', 'Authorized Group')
     menu_id = fields.Many2one('website.menu', 'Menu', copy=False)
     active = fields.Boolean(default=True)
-    faq = fields.Html('Guidelines', default=_get_default_faq, translate=html_translate, sanitize=False)
+    faq = fields.Html('Guidelines', translate=html_translate, sanitize=False)
     description = fields.Text('Description', translate=True)
+    teaser = fields.Text('Teaser', compute='_compute_teaser', store=True)
     welcome_message = fields.Html(
         'Welcome Message',
         translate=True,
@@ -85,10 +81,11 @@ class Forum(models.Model):
                                       'of the forum content.')
     # posts statistics
     post_ids = fields.One2many('forum.post', 'forum_id', string='Posts')
-    total_posts = fields.Integer('Posts', compute='_compute_forum_statistics')
-    total_views = fields.Integer('Views', compute='_compute_forum_statistics')
-    total_answers = fields.Integer('Answers', compute='_compute_forum_statistics')
-    total_favorites = fields.Integer('Favorites', compute='_compute_forum_statistics')
+    last_post_id = fields.Many2one('forum.post', compute='_compute_last_post')
+    total_posts = fields.Integer('# Posts', compute='_compute_forum_statistics')
+    total_views = fields.Integer('# Views', compute='_compute_forum_statistics')
+    total_answers = fields.Integer('# Answers', compute='_compute_forum_statistics')
+    total_favorites = fields.Integer('# Favorites', compute='_compute_forum_statistics')
     count_posts_waiting_validation = fields.Integer(string="Number of posts waiting for validation", compute='_compute_count_posts_waiting_validation')
     count_flagged_posts = fields.Integer(string='Number of flagged posts', compute='_compute_count_flagged_posts')
     # karma generation
@@ -129,6 +126,23 @@ class Forum(models.Model):
     karma_post = fields.Integer(string='Ask questions without validation', default=100)
     karma_moderate = fields.Integer(string='Moderate posts', default=1000)
 
+    @api.depends('post_ids')
+    def _compute_last_post(self):
+        for forum in self:
+            forum.last_post_id = forum.post_ids.search([('forum_id', '=', forum.id), ('parent_id', '=', False), ('state', '=', 'active')], order='create_date desc', limit=1)
+
+    @api.depends('description')
+    def _compute_teaser(self):
+        for forum in self:
+            if forum.description:
+                desc = forum.description.replace('\n', ' ')
+                if len(forum.description) > 180:
+                    forum.teaser = desc[:180] + '...'
+                else:
+                    forum.teaser = forum.description
+            else:
+                forum.teaser = ""
+
     @api.depends('post_ids.state', 'post_ids.views', 'post_ids.child_count', 'post_ids.favourite_count')
     def _compute_forum_statistics(self):
         result = dict((cid, dict(total_posts=0, total_views=0, total_answers=0, total_favorites=0)) for cid in self.ids)
@@ -157,9 +171,14 @@ class Forum(models.Model):
             domain = [('forum_id', '=', forum.id), ('state', '=', 'flagged')]
             forum.count_flagged_posts = self.env['forum.post'].search_count(domain)
 
+    def _set_default_faq(self):
+        self.faq = self.env['ir.ui.view'].render_template('website_forum.faq_accordion', {"forum": self}).decode('utf-8')
+
     @api.model
     def create(self, values):
-        return super(Forum, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
+        res = super(Forum, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
+        res._set_default_faq()
+        return res
 
     def write(self, vals):
         if 'privacy' in vals:
@@ -411,8 +430,8 @@ class Post(models.Model):
             post.can_edit = is_admin or user.karma >= post.karma_edit
             post.can_close = is_admin or user.karma >= post.karma_close
             post.can_unlink = is_admin or user.karma >= post.karma_unlink
-            post.can_upvote = is_admin or user.karma >= post.forum_id.karma_upvote
-            post.can_downvote = is_admin or user.karma >= post.forum_id.karma_downvote
+            post.can_upvote = is_admin or user.karma >= post.forum_id.karma_upvote or post.user_vote == -1
+            post.can_downvote = is_admin or user.karma >= post.forum_id.karma_downvote or post.user_vote == 1
             post.can_comment = is_admin or user.karma >= post.karma_comment
             post.can_comment_convert = is_admin or user.karma >= post.karma_comment_convert
             post.can_view = is_admin or user.karma >= post.karma_close or (post_sudo.create_uid.karma > 0 and (post_sudo.active or post_sudo.create_uid == user))
