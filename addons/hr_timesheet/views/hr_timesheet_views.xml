@@ -241,6 +241,22 @@
             parent="menu_hr_time_tracking"
             action="act_hr_timesheet_line"/>
 
+        <record id="timesheet_action_task" model="ir.actions.act_window">
+            <field name="name">Task's Timesheets</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="domain">[('task_id', 'in', active_ids)]</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="timesheet_view_tree_user"/>
+        </record>
+
+        <record id="timesheet_action_project" model="ir.actions.act_window">
+            <field name="name">Project's Timesheets</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="domain">[('project_id', 'in', active_ids)]</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="timesheet_view_tree_user"/>
+        </record>
+
         <record id="timesheet_action_all" model="ir.actions.act_window">
             <field name="name">All Timesheets</field>
             <field name="res_model">account.analytic.line</field>
