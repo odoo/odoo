@@ -32,7 +32,7 @@ class Pricelist(models.Model):
     discount_policy = fields.Selection([
         ('with_discount', 'Discount included in the price'),
         ('without_discount', 'Show public price & discount to the customer')],
-        default='with_discount')
+        default='with_discount', required=True)
 
     def name_get(self):
         return [(pricelist.id, '%s (%s)' % (pricelist.name, pricelist.currency_id.name)) for pricelist in self]
