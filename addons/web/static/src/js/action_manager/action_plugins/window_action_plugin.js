@@ -5,12 +5,12 @@ odoo.define('web.WindowActionPlugin', function (require) {
      * The purpose of this file is to add the support of Odoo actions of type
      * 'ir.actions.act_window' to the ActionManager.
      */
-    const AbstractActionPlugin = require('web.AbstractActionPlugin');
+    const ActionAbstractPlugin = require('web.ActionAbstractPlugin');
     const ActionManager = require('web.ActionManager');
     const { action_registry } = require('web.core');
     const viewRegistry = require('web.view_registry');
 
-    class WindowActionPlugin extends AbstractActionPlugin {
+    class WindowActionPlugin extends ActionAbstractPlugin {
         constructor() {
             super(...arguments);
             this.env.bus.on('switch-view', this, this._onSwitchView);

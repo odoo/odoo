@@ -1,7 +1,7 @@
 odoo.define('web.ActionManager', function (require) {
 "use strict";
 
-const AbstractActionPlugin = require('web.AbstractActionPlugin');
+const ActionAbstractPlugin = require('web.ActionAbstractPlugin');
 const Context = require('web.Context');
 const { action_registry } = require('web.core');
 
@@ -12,8 +12,8 @@ const { core } = owl;
 
 class ActionManager extends core.EventBus {
     static registerPlugin(Plugin) {
-        if (!(Plugin.prototype instanceof AbstractActionPlugin)) {
-            throw new Error('Plugin must be sublass of AbstractActionPlugin');
+        if (!(Plugin.prototype instanceof ActionAbstractPlugin)) {
+            throw new Error('Plugin must be sublass of ActionAbstractPlugin');
         }
         // TODO control Plugin.type
         ActionManager.Plugins[Plugin.type] = Plugin;
@@ -471,7 +471,7 @@ class ActionManager extends core.EventBus {
         }
     }
     _nextID(type) {
-        return `${type}${this.prototype.nextID++}`;
+        return `${type}${this.constructor.nextID++}`;
     }
     legacyStateExported(payload) {
         const { action } = this.getCurrentState().main;

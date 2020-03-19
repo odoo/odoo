@@ -6,10 +6,10 @@ odoo.define('web.CloseActionPlugin', function (require) {
      * 'ir.actions.report' to the ActionManager.
      */
 
-    const AbstractActionPlugin = require('web.AbstractActionPlugin');
+    const ActionAbstractPlugin = require('web.ActionAbstractPlugin');
     const ActionManager = require('web.ActionManager');
 
-    class CloseActionPlugin extends AbstractActionPlugin {
+    class CloseActionPlugin extends ActionAbstractPlugin {
         async executeAction(action, options) {
             const dialog = this.currentDialogController;
             // I'm afraid this is mandatory

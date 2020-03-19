@@ -1,7 +1,7 @@
 odoo.define('web.DebugManager.Backend', function (require) {
 "use strict";
 
-const { DialogAction } = require('web.Action');
+const DialogAction = require('web.DialogAction');
 var DebugManager = require('web.DebugManager');
 var dialogs = require('web.view_dialogs');
 var startClickEverywhere = require('web.clickEverywhere');
