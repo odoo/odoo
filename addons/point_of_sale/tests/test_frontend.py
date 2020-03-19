@@ -401,6 +401,8 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_01_pos_basic_order(self):
 
         # open a session, the /pos/web controller will redirect to it
+        self.main_pos_config.module_account = True
+        pos_orders = self.env['pos.order'].search([])
         self.main_pos_config.open_session_cb(check_coa=False)
 
         # needed because tests are run before the module is marked as
@@ -413,5 +415,9 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'pos_basic_order', login="admin")
 
-        for order in self.env['pos.order'].search([]):
-            self.assertEqual(order.state, 'paid', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))
+        invoiced_orders = 0
+        for order in self.env['pos.order'].search([('id', 'not in', pos_orders.ids)]):
+            self.assertIn(order.state, ['paid', 'invoiced'], "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))
+            if order.state == 'invoiced':
+                invoiced_orders = invoiced_orders + 1
+        self.assertGreater(invoiced_orders, 0)

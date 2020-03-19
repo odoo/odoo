@@ -331,11 +331,24 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
         }, {
             content: "next order",
             trigger: '.button.next:visible',
+            extra_trigger: '.pos-receipt',
         }, { // Leave category displayed by default
             content: "click category switch",
             trigger: ".js-category-switch",
             run: 'click',
         }];
+    }
+
+    function finish_order_invoiced() {
+        const finished = finish_order();
+        const invoicing = [
+            {
+                content: "click to issue an invoice",
+                trigger: ".button.js_invoice  ",
+                run: 'click',
+            }
+        ];
+        return invoicing.concat(finished);
     }
 
     var steps = [{
@@ -399,7 +412,7 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
     }]);
 
     steps = steps.concat(activate_email_and_select_a_customer_then_deactivate_email());
-    steps = steps.concat(finish_order());
+    steps = steps.concat(finish_order_invoiced());
 
     // test opw-672118 orderline subtotal rounding
     steps = steps.concat(add_product_to_order('Desk Organizer'));
