@@ -1568,7 +1568,7 @@ class AccountInvoice(models.Model):
                                     description=description, journal_id=journal_id)
             refund_invoice = self.create(values)
             if invoice.type == 'out_invoice':
-                message = _("This customer invoice credit note has been created from: <a href=# data-oe-model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s") % (invoice.id, invoice.number, description)
+                message = _("This customer invoice credit note has been created from: %s<br>Reason: %s") % (invoice.number, description)
             else:
                 message = _("This vendor bill credit note has been created from: <a href=# data-oe-model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s") % (invoice.id, invoice.number, description)
 
