@@ -1203,45 +1203,52 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
-        """Called by ``message_process`` when a new message is received
-           for a given thread model, if the message did not belong to
-           an existing thread.
-           The default behavior is to create a new record of the corresponding
-           model (based on some very basic info extracted from the message).
-           Additional behavior may be implemented by overriding this method.
+        """ Called by ``message_process`` when an incoming email intends to create
+        a new record instead of updating an existing one. The default behavior is
+        to create a new record of the corresponding model with subject of email
+        being used to populate the rec_name of the record. Model specific behavior
+        may be implemented with override.
 
-           :param dict msg_dict: a map containing the email details and
-                                 attachments. See ``message_process`` and
-                                ``mail.message.parse`` for details.
-           :param dict custom_values: optional dictionary of additional
-                                      field values to pass to create()
-                                      when creating the new thread record.
-                                      Be careful, these values may override
-                                      any other values coming from the message.
-           :rtype: int
-           :return: the id of the newly created thread object
+        :param dict msg_dict: a dictionary of all values extracted from the incoming
+          email, including recipients and attachments. See ``message_process`` and
+          ``message_parse`` for more details;
+        :param dict custom_values: optional dictionary of additional field values
+          o pass to create when creating the new thread record. Be careful these
+          values may override any other values coming from the message;
+
+       :return: newly-created record
         """
-        data = {}
         if isinstance(custom_values, dict):
-            data = custom_values.copy()
-        fields = self.fields_get()
+            create_data = custom_values.copy()
+        else:
+            create_data = {}
+
+        # remove default author when going through the mail gateway. Indeed we
+        # do not want to explicitly set user_id to False; however we do not
+        # want the gateway user to be responsible if no other responsible is
+        # found.
+        if 'user_id' in self._fields and self._uid == self.env.ref('base.user_root').id:
+            self = self.with_context(default_user_id=False)
+
         name_field = self._rec_name or 'name'
-        if name_field in fields and not data.get('name'):
-            data[name_field] = msg_dict.get('subject', '')
-        return self.create(data)
+        if name_field in self._fields and not create_data.get(name_field) and msg_dict.get('subject'):
+            create_data[name_field] = msg_dict['subject']
+
+        return self.create(create_data)
 
     def message_update(self, msg_dict, update_vals=None):
-        """Called by ``message_process`` when a new message is received
-           for an existing thread. The default behavior is to update the record
-           with update_vals taken from the incoming email.
-           Additional behavior may be implemented by overriding this
-           method.
-           :param dict msg_dict: a map containing the email details and
-                               attachments. See ``message_process`` and
-                               ``mail.message.parse()`` for details.
-           :param dict update_vals: a dict containing values to update records
-                              given their ids; if the dict is None or is
-                              void, no write operation is performed.
+        """ Called by ``message_process`` when an incoming email intends to update
+        an existing record (thread) instead of creating a new one. Default behavior
+        is to update the record with values coming from the route (i.e. values linked
+        to the alias) and email values. Model specific behavior
+        may be implemented with override.
+
+        :param dict msg_dict: a dictionary of all values extracted from the incoming
+          email, including recipients and attachments. See ``message_process`` and
+          ``message_parse`` for more details;
+        :param dict update_vals: optional dictionary of additional field values
+          o pass to create when creating the new thread record. Be careful these
+          values may override any other values coming from the message;
         """
         if update_vals:
             self.write(update_vals)
