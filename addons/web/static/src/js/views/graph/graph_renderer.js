@@ -73,6 +73,7 @@ return AbstractRenderer.extend({
         this.chartId = _.uniqueId('chart');
         this.$legendTooltip = null;
         this.$tooltip = null;
+        this.$canvasContainer = null;
     },
     /**
      * @override
@@ -752,11 +753,11 @@ return AbstractRenderer.extend({
             // happens typically after an update), otherwise, it will be
             // rendered when the widget will be attached to the DOM (see
             // 'on_attach_callback')
-            var $canvasContainer = $('<div/>', {class: 'o_graph_canvas_container'});
+            this.$canvasContainer = $('<div/>', {class: 'o_graph_canvas_container'});
             var $canvas = $('<canvas/>').attr('id', this.chartId);
-            $canvasContainer.append($canvas);
-            this.$el.append($canvasContainer);
 
+            this.$canvasContainer.append($canvas);
+            this.$el.append(this.$canvasContainer);
             var i = this.state.comparisonFieldIndex;
             if (i === 0) {
                 this.dateClasses = this._getDateClasses(dataPoints);
@@ -792,7 +793,6 @@ return AbstractRenderer.extend({
             var color = self._getColor(index);
             dataset.backgroundColor = color;
         });
-
         // prepare options
         var options = this._prepareOptions(data.datasets.length);
 
