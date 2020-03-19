@@ -35,7 +35,13 @@ odoo.define('website_forum.tour_forum_question', function (require) {
         content: "Close modal once modal animation is done.",
         extra_trigger: 'div.modal.modal_shown',
         trigger: ".modal-header button.close",
-    }, {
+    },
+    {
+        trigger: "a:contains(\"Answer\").collapsed",
+        content: "Click to answer.",
+        position: "bottom",
+    },
+    {
         content: "Put your answer here.",
         trigger: '.note-editable p',
         run: 'text First Answer',

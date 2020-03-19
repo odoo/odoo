@@ -39,7 +39,13 @@ odoo.define("website_forum.tour_forum", function (require) {
         extra_trigger: 'div.modal.modal_shown',
         trigger: ".modal-header button.close",
         auto: true,
-    }, {
+    },
+    {
+        trigger: "a:contains(\"Answer\").collapsed",
+        content: _t("Click to answer."),
+        position: "bottom",
+    },
+    {
         trigger: ".note-editable p",
         content: _t("Put your answer here."),
         position: "bottom",
