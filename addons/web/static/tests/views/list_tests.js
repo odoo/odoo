@@ -6370,6 +6370,42 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list with fields with readonly modifier', async function (assert) {
+        assert.expect(8);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree editable="top">
+                    <field name="bar"/>
+                    <field name="foo" attrs="{'readonly': [['bar','=',True]]}"/>
+                    <field name="m2o" attrs="{'readonly': [['bar','=',False]]}"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        await testUtils.dom.click(list.$('.o_list_button_add'));
+
+        assert.containsOnce(list, '.o_selected_row');
+        assert.notOk(list.$('.o_selected_row .o_field_boolean input').is(':checked'));
+        assert.doesNotHaveClass(list.$('.o_selected_row .o_list_char'), 'o_readonly_modifier');
+        assert.hasClass(list.$('.o_selected_row .o_list_many2one'), 'o_readonly_modifier');
+
+        await testUtils.dom.click(list.$('.o_selected_row .o_field_boolean input'));
+
+        assert.ok(list.$('.o_selected_row .o_field_boolean input').is(':checked'));
+        assert.hasClass(list.$('.o_selected_row .o_list_char'), 'o_readonly_modifier');
+        assert.doesNotHaveClass(list.$('.o_selected_row .o_list_many2one'), 'o_readonly_modifier');
+
+        await testUtils.dom.click(list.$('.o_selected_row .o_field_many2one input'));
+
+        assert.strictEqual(document.activeElement, list.$('.o_selected_row .o_field_many2one input')[0]);
+
+        list.destroy();
+    });
+
     QUnit.test('list grouped by date:month', async function (assert) {
         assert.expect(1);
 
