@@ -172,7 +172,7 @@ class Forum(models.Model):
             forum.count_flagged_posts = self.env['forum.post'].search_count(domain)
 
     def _set_default_faq(self):
-        self.faq = self.env['ir.ui.view'].render_template('website_forum.faq_accordion', {"forum": self}).decode('utf-8')
+        self.faq = self.env['ir.ui.view']._render_template('website_forum.faq_accordion', {"forum": self}).decode('utf-8')
 
     @api.model
     def create(self, values):
