@@ -45,7 +45,9 @@
                                 <label for="subject"/>
                                 <h2 style="display: inline-block;"><field name="subject" placeholder="Subject (placeholders may be used here)"/></h2>
                                 <field name="body_html" widget="html" options="{'style-inline': true}"/>
-                                <field name="attachment_ids" widget="many2many_binary"/>
+                                <group>
+                                    <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                                </group>
                             </page>
                             <page string="Email Configuration" name="email_configuration">
                                 <group>
