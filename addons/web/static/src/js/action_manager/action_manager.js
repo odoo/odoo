@@ -491,9 +491,11 @@ class ActionManager extends core.EventBus {
      *   rejected otherwise.
      */
     _clearUncommittedChanges() {
-        return new Promise((resolve) => {
-            this.trigger('clear-uncommitted-changes', resolve);
-        });
+        if (this.currentStack.length) {
+            return new Promise((resolve) => {
+                this.trigger('clear-uncommitted-changes', resolve);
+            });
+        }
     }
     /**
      * Returns the index where a controller should be inserted in the controller

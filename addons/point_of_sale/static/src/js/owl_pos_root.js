@@ -11,7 +11,6 @@ odoo.define('point_of_sale.owlPosRoot', function (require) {
             // Pos needs to be able to print Invoices
             // this is the SOLE purpose of this actionManager
             this.actionManager = new ActionManager(this.env);
-            this.actionManager.on('clear-uncommitted-changes', this, callBack => callBack());
             this.PosChrome = chrome.Chrome;
         }
         mounted() {
