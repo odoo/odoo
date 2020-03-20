@@ -28,7 +28,7 @@ odoo.define('web.ServerActionPlugin', function (require) {
                 },
             });
             action = action || { type: 'ir.actions.act_window_close' };
-            return this.actionManager.doAction(action, options);
+            return this.doAction(action, options);
         }
     }
     ServerActionPlugin.type = 'ir.actions.server';
