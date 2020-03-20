@@ -71,13 +71,7 @@ var InventoryValidationController = ListController.extend({
                     self.do_notify(
                         _t("Success"),
                         _t("The inventory has been validated"));
-                    self.do_action({
-                        type: 'ir.actions.act_window',
-                        res_model: 'stock.inventory',
-                        res_id: self.inventory_id,
-                        views: [[false, 'form']],
-                        target: 'main'
-                    });
+                    self.trigger_up('history_back');
                 };
 
                 if (_.isObject(res)) {

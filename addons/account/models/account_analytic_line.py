@@ -1,7 +1,54 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
-from math import copysign
+from odoo.exceptions import UserError
+
+
+class AccountAnalyticAccount(models.Model):
+    _inherit = 'account.analytic.account'
+
+    @api.constrains('company_id')
+    def _check_company_consistency(self):
+        analytic_accounts = self.filtered('company_id')
+
+        if not analytic_accounts:
+            return
+
+        self.flush(['company_id'])
+        self._cr.execute('''
+            SELECT line.id
+            FROM account_move_line line
+            JOIN account_analytic_account account ON account.id = line.analytic_account_id
+            WHERE line.analytic_account_id IN %s
+            AND line.company_id != account.company_id
+        ''', [tuple(analytic_accounts.ids)])
+
+        if self._cr.fetchone():
+            raise UserError(_("You can't set a different company on your analytic account since there are some journal items linked to it."))
+
+
+class AccountAnalyticTag(models.Model):
+    _inherit = 'account.analytic.tag'
+
+    @api.constrains('company_id')
+    def _check_company_consistency(self):
+        analytic_tags = self.filtered('company_id')
+
+        if not analytic_tags:
+            return
+
+        self.flush(['company_id'])
+        self._cr.execute('''
+            SELECT line.id
+            FROM account_analytic_tag_account_move_line_rel tag_rel
+            JOIN account_analytic_tag tag ON tag.id = tag_rel.account_analytic_tag_id
+            JOIN account_move_line line ON line.id = tag_rel.account_move_line_id
+            WHERE tag_rel.account_analytic_tag_id IN %s
+            AND line.company_id != tag.company_id
+        ''', [tuple(analytic_tags.ids)])
+
+        if self._cr.fetchone():
+            raise UserError(_("You can't set a different company on your analytic tags since there are some journal items linked to it."))
 
 
 class AccountAnalyticLine(models.Model):

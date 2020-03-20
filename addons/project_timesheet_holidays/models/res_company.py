@@ -19,7 +19,7 @@ class Company(models.Model):
     def _check_leave_timesheet_project_id_company(self):
         for company in self:
             if company.leave_timesheet_project_id:
-                if company.leave_timesheet_project_id.company_id != company:
+                if company.leave_timesheet_project_id.sudo().company_id != company:
                     raise ValidationError(_('The Internal Project of a company should be in that company.'))
 
     def init(self):

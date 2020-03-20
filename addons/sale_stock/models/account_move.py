@@ -32,7 +32,7 @@ class AccountMove(models.Model):
 
         # Get the other customer invoices and refunds.
         ordered_invoice_ids = sale_orders.mapped('invoice_ids')\
-            .filtered(lambda i: i.state != 'draft')\
+            .filtered(lambda i: i.state not in ['draft', 'cancel'])\
             .sorted(lambda i: (i.invoice_date, i.id))
 
         # Get the position of self in other customer invoices and refunds.
@@ -88,7 +88,7 @@ class AccountMove(models.Model):
             if float_is_zero(qty, precision_rounding=lot_id.product_id.uom_id.rounding):
                 continue
             lot_values.append({
-                'product_name': lot_id.product_id.name,
+                'product_name': lot_id.product_id.display_name,
                 'quantity': qty,
                 'uom_name': lot_id.product_uom_id.name,
                 'lot_name': lot_id.name,

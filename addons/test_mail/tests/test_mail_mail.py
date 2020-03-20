@@ -97,6 +97,8 @@ class TestMailRace(common.TransactionCase, mail_common.MockEmails):
         self.assertEqual(notif.notification_status, 'sent')
 
         # some cleaning since we commited the cr
+        self.env['ir.mail_server']._revert_method('send_email')
+
         notif.unlink()
         message.unlink()
         mail.unlink()

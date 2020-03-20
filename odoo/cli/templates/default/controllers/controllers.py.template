@@ -2,7 +2,8 @@
 {%- set model = "%s.%s"|format(mod, mod) -%}
 {%- set root = "/%s/%s"|format(mod, mod) -%}
 # -*- coding: utf-8 -*-
-from odoo import http
+# from odoo import http
+
 
 # class {{ mod|pascal }}(http.Controller):
 #     @http.route('{{ root }}/', auth='public')
@@ -21,3 +22,4 @@ from odoo import http
 #         return http.request.render('{{ mod }}.object', {
 #             'object': obj
 #         })
+

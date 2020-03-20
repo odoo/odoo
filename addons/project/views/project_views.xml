@@ -109,7 +109,7 @@
                             </div>
                         </button>
                     </div>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
                         <h1>
                             <field name="name" placeholder="Project Name"/>
@@ -455,7 +455,7 @@
                             <field name="rating_count" string="Rating" widget="statinfo"/>
                         </button>
                     </div>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title pr-0">
                         <h1 class="d-flex flex-row justify-content-between">
                             <field name="priority" widget="priority" class="mr-3"/>
@@ -564,6 +564,7 @@
                     <field name="partner_id"/>
                     <field name="sequence"/>
                     <field name="date_deadline"/>
+                    <field name="date_deadline_formatted"/>
                     <field name="message_needaction_counter"/>
                     <field name="displayed_image_id"/>
                     <field name="active"/>
@@ -634,7 +635,7 @@
                                             <t t-set="deadline_class" t-value="'text-warning font-weight-bold'" />
                                         </t>
                                         <!-- Date value -->
-                                        <t t-if="record.date_deadline.raw_value" t-set="date" t-value="moment(record.date_deadline.raw_value.toISOString()).format(date_format)" />
+                                        <t t-if="record.date_deadline.raw_value" t-set="date" t-value="record.date_deadline_formatted.raw_value" />
                                         <span name="date" t-attf-class="#{deadline_class || ''}"><t t-esc="date" /></span>
                                     </div>
                                     <div class="oe_kanban_bottom_right" t-if="!selection_mode">

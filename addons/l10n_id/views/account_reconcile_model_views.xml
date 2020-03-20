@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_reconcile_model_form" model="ir.ui.view">
+            <field name="name">account.reconcile.model.form</field>
+            <field name="model">account.reconcile.model</field>
+            <field name="inherit_id" ref="account.view_account_reconcile_model_form"/>
+            <field name="arch" type="xml">
+                <field name="match_total_amount_param" position="attributes">
+                    <attribute name="digits">[42,6]</attribute>
+                </field>
+                <field name="amount" position="attributes">
+                    <attribute name="digits">[42,6]</attribute>
+                </field>
+                <field name="second_amount" position="attributes">
+                    <attribute name="digits">[42,6]</attribute>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

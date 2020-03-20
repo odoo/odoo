@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class EventTypeMail(models.Model):
@@ -12,6 +12,10 @@ class EventTypeMail(models.Model):
         'sms.template', string='SMS Template',
         domain=[('model', '=', 'event.registration')], ondelete='restrict',
         help='This field contains the template of the SMS that will be automatically sent')
+
+    @api.model
+    def _get_event_mail_fields_whitelist(self):
+        return super(EventTypeMail, self)._get_event_mail_fields_whitelist() + ['sms_template_id']
 
 
 class EventMailScheduler(models.Model):

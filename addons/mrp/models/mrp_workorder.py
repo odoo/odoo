@@ -422,7 +422,7 @@ class MrpWorkorder(models.Model):
         self.qty_produced += self.qty_producing
 
         # Suggest a finished lot on the next workorder
-        if self.next_work_order_id and self.production_id.product_id.tracking != 'none' and not self.next_work_order_id.finished_lot_id:
+        if self.next_work_order_id and self.product_tracking != 'none' and (not self.next_work_order_id.finished_lot_id or self.next_work_order_id.finished_lot_id == self.finished_lot_id):
             self.next_work_order_id._defaults_from_finished_workorder_line(self.finished_workorder_line_ids)
             # As we may have changed the quantity to produce on the next workorder,
             # make sure to update its wokorder lines

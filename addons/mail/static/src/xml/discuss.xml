@@ -341,7 +341,7 @@
                         <t t-elif="preview.author">
                             <t t-esc="preview.author"/>:
                         </t>
-                        <t t-raw="preview.body"/>
+                        <t t-esc="preview.body"/>
                     </t>
                 </div>
                 <span title="Mark as Read" class="o_discuss_icon o_mail_preview_mark_as_read fa fa-check" t-if="preview.unreadCounter"/>

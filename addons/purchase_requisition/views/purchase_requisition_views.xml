@@ -163,7 +163,8 @@
                     <page string="Products">
                         <field name="line_ids">
                             <tree string="Products" editable="bottom">
-                                <field name="product_id" context="{'default_purchase_requisition': 'tenders'}" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                <field name="product_id" context="{'default_purchase_requisition': 'tenders'}"
+                                       domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                 <field name="product_qty"/>
                                 <field name="qty_ordered" optional="show"/>
                                 <field name="product_uom_category_id" invisible="1"/>
@@ -175,7 +176,8 @@
                             </tree>
                             <form string="Products">
                                 <group>
-                                    <field name="product_id" />
+                                    <field name="product_id" context="{'default_purchase_requisition': 'tenders'}"
+                                           domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" />
                                     <field name="product_qty"/>
                                     <field name="qty_ordered"/>
                                     <field name="product_uom_category_id" invisible="1"/>
@@ -234,7 +236,7 @@
                                 <div class="o_kanban_record_headings mt4">
                                     <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
                                 </div>
-                                <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'in_progress': 'default', 'open': 'success', 'done': 'success', 'close': 'danger'}}"/>
+                                <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'in_progress': 'default', 'open': 'success', 'done': 'success', 'close': 'danger'}}" readonly="1" />
                             </div>
                             <div class="o_kanban_record_body">
                                 <span class="text-muted"><field name="type_id"/></span>

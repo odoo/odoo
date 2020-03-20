@@ -126,7 +126,7 @@ class StockWarehouse(models.Model):
             'manufacture_mto_pull_id': {
                 'depends': ['manufacture_steps', 'manufacture_to_resupply'],
                 'create_values': {
-                    'procure_method': 'make_to_order',
+                    'procure_method': 'mts_else_mto',
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
@@ -188,7 +188,7 @@ class StockWarehouse(models.Model):
         values = super(StockWarehouse, self)._get_locations_values(vals, code=code)
         def_values = self.default_get(['manufacture_steps'])
         manufacture_steps = vals.get('manufacture_steps', def_values['manufacture_steps'])
-        code = vals.get('code') or code
+        code = vals.get('code') or code or ''
         code = code.replace(' ', '').upper()
         company_id = vals.get('company_id', self.company_id.id)
         values.update({

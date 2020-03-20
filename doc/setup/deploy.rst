@@ -210,7 +210,7 @@ memory size calculation
 -----------------------
 
 * We consider 20% of the requests are heavy requests, while 80% are simpler ones
-* A heavy worker, when all computed field are well designed, SQL requests are well designed, ... is estimated to consume around 1Go of RAM
+* A heavy worker, when all computed field are well designed, SQL requests are well designed, ... is estimated to consume around 1GB of RAM
 * A lighter worker, in the same scenario, is estimated to consume around 150MB of RAM
 
 Needed RAM = #worker * ( (light_worker_ratio * light_worker_ram_estimation) + (heavy_worker_ratio * heavy_worker_ram_estimation) )
@@ -272,12 +272,6 @@ just about any SSL termination proxy, but requires the following setup:
 * Set up the proxying itself (`Nginx proxying example`_)
 * Your SSL termination proxy should also automatically redirect non-secure
   connections to the secure port
-
-.. warning::
-
-  In case you are using the Point of Sale module in combination with a `POSBox`_,
-  you must disable the HTTPS configuration for the route ``/pos/web`` to avoid
-  mixed-content errors.
 
 Configuration sample
 --------------------
@@ -598,14 +592,17 @@ Supported Browsers
 
 Odoo is supported by multiple browsers for each of its versions. No
 distinction is made according to the browser version in order to be
-up-to-date. Odoo is supported on the current browser version. The list
-of the supported browsers is the following:
+up-to-date. Odoo is supported on the current browser version. We support
+the following browsers:
 
-- IE11,
-- Mozilla Firefox,
-- Google Chrome,
-- Safari,
+- Mozilla Firefox
+- Google Chrome
+- Safari
 - Microsoft Edge
+
+.. note::
+
+    Since Odoo 13.0, ES6 is supported.  Therefore, IE support is dropped.
 
 
 .. [#different-machines]

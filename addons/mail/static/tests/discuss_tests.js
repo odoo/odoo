@@ -1733,57 +1733,6 @@ QUnit.test('receive channel message notification then delayed needaction notific
     discuss.destroy();
 });
 
-QUnit.test('input not cleared on unresolved message_post rpc', async function (assert) {
-    assert.expect(2);
-    // Promise to simulate late server response on message post
-    var messagePostPromise = testUtils.makeTestPromise();
-
-    this.data.initMessaging = {
-        channel_slots: {
-            channel_channel: [{
-                id: 1,
-                channel_type: "channel",
-                name: "general",
-            }],
-        },
-    };
-
-    var discuss = await createDiscuss({
-        id: 1,
-        context: {},
-        params: {},
-        data: this.data,
-        services: this.services,
-        mockRPC: function (route, args) {
-            if (args.method === 'message_post') {
-                return messagePostPromise;
-            }
-            return this._super.apply(this, arguments);
-        },
-    });
-
-    // Click on channel 'general'
-    var $general = discuss.$('.o_mail_discuss_sidebar').find('.o_mail_discuss_item[data-thread-id=1]');
-    await testUtils.dom.click($general);
-
-    // Type message
-    var $input = discuss.$('textarea.o_composer_text_field').first();
-    $input.focus();
-    $input.val('test message');
-
-    // Send message
-    await testUtils.fields.triggerKeydown($input, 'enter');
-    assert.strictEqual($input.val(), 'test message', "composer should not be cleared on send without server response");
-
-    // Simulate server response
-    messagePostPromise.resolve();
-
-    await testUtils.nextTick();
-    assert.strictEqual($input.val(), '', "composer should be cleared on send after server response");
-
-    discuss.destroy();
-});
-
 QUnit.test('messages marked as read move to "History" mailbox', async function (assert) {
     assert.expect(3);
 
@@ -2020,6 +1969,55 @@ QUnit.test('save filter discuss', async function (assert) {
 
     await testUtils.fields.editInput(discuss.$('.o_favorite_name input'), 'War');
     await testUtils.dom.click(discuss.$('.o_save_favorite button'));
+
+    discuss.destroy();
+});
+
+QUnit.test('no crash on receiving needaction channel message notif with messaging not ready', async function (assert) {
+    assert.expect(1);
+
+    const message = {
+        author_id: [5, 'Demo User'],
+        body: '<p>test</p>',
+        channel_ids: [1],
+        id: 100,
+        model: 'mail.channel',
+        needaction: true,
+        needaction_partner_ids: [3],
+        res_id: 1,
+    };
+
+    const discuss = await createDiscuss({
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        session: {
+            partner_id: 3
+        },
+        async mockRPC(route, args) {
+            if (route === '/mail/init_messaging') {
+                // infinite messaging not ready
+                await new Promise(() => {});
+            }
+            return this._super(...arguments);
+        },
+    });
+
+    // simulate new needaction message posted on channnel
+    this.data['mail.message'].records.push(message);
+    // simulate receiving channel notification
+    discuss.call('bus_service', 'trigger', 'notification', [
+        [['myDB', 'mail.channel', 1], message]
+    ]);
+    // short delay after receiving needaction notification
+    await testUtils.nextTick();
+    // simulate receiving needaction message notification after a short delay
+    discuss.call('bus_service', 'trigger', 'notification', [
+        [['myDB', 'ir.needaction', 3], message]
+    ]);
+    await testUtils.nextTick();
+    assert.ok(true, "should not crash on receiving new needaction message when messaging is not ready");
 
     discuss.destroy();
 });

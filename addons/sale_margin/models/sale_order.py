@@ -40,6 +40,13 @@ class SaleOrderLine(models.Model):
             return
         self.purchase_price = self._compute_margin(self.order_id, self.product_id, self.product_uom)
 
+    @api.onchange('product_id')
+    def product_id_change(self):
+        # VFE FIXME : bugfix for matrix, the purchase_price will be changed to a computed field in master.
+        res = super(SaleOrderLine, self).product_id_change()
+        self.product_id_change_margin()
+        return res
+
     @api.model
     def create(self, vals):
         vals.update(self._prepare_add_missing_fields(vals))

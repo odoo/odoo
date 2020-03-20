@@ -16,7 +16,7 @@
                         </div>
 
                         <img class="swissqr" t-att-src="o.invoice_partner_bank_id.build_swiss_code_url(o.amount_residual, o.currency_id.name, o.invoice_date_due, o.partner_id, 'QRR',
-                        (o.invoice_partner_bank_id.l10n_ch_isr_subscription_chf) if (o.invoice_partner_bank_id.currency_id.name == 'CHF') else o.invoice_partner_bank_id.l10n_ch_isr_subscription_chf,
+                        (o.invoice_partner_bank_id.l10n_ch_isr_subscription_chf) if (o.invoice_partner_bank_id.currency_id.name == 'CHF') else o.invoice_partner_bank_id.l10n_ch_isr_subscription_eur,
                         (o.ref) if (o.ref) else o.name)"/>
                         <img class="ch_cross" src="/l10n_ch/static/src/img/CH-Cross_7mm.png"/>
 

@@ -109,7 +109,7 @@ var CrossTabBus = Longpolling.extend({
             peers[this._id] = new Date().getTime();
             this._callLocalStorage('setItem', 'peers', peers);
 
-            $(window).on('unload.' + this._id, this._onUnload.bind(this));
+            this._registerWindowUnload();
 
             if (!this._callLocalStorage('getItem', 'master')) {
                 this._startElection();
@@ -231,6 +231,12 @@ var CrossTabBus = Longpolling.extend({
         this._heartbeatTimeout = setTimeout(this._heartbeat.bind(this), hbPeriod);
     },
     /**
+     * @private
+     */
+    _registerWindowUnload: function () {
+        $(window).on('unload.' + this._id, this._onUnload.bind(this));
+    },
+    /**
      * Check with the local storage if the current tab is the master tab.
      * If this tab became the master, trigger 'become_master' event
      *
@@ -342,7 +348,7 @@ var CrossTabBus = Longpolling.extend({
      */
     _onUnload: function () {
         // unload peer
-        var peers = this._callLocalStorage('getItem', 'peers', {});
+        var peers = this._callLocalStorage('getItem', 'peers') || {};
         delete peers[this._id];
         this._callLocalStorage('setItem', 'peers', peers);
 

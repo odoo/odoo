@@ -4,7 +4,7 @@
         <field name="name">pos.payment.form</field>
         <field name="model">pos.payment</field>
         <field name="arch" type="xml">
-            <form string="Payments" create="0">
+            <form string="Payments" create="0" delete="0">
                 <sheet>
                     <group>
                         <field name="currency_id" invisible="1" />
@@ -25,7 +25,7 @@
         <field name="name">pos.payment.tree</field>
         <field name="model">pos.payment</field>
         <field name="arch" type="xml">
-            <tree string="Payments" create="0">
+            <tree string="Payments" create="0" delete="0">
                 <field name="currency_id" invisible="1" />
                 <field name="payment_date" widget="date" />
                 <field name="payment_method_id" />

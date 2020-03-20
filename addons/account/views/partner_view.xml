@@ -8,7 +8,7 @@
                 <form string="Fiscal Position">
                     <sheet>
                     <div class="oe_button_box" name="button_box"/>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
                         <group>
                             <field name="active" invisible="1"/>
@@ -76,6 +76,7 @@
             <field name="model">account.fiscal.position</field>
             <field name="arch" type="xml">
                 <search string="Search Fiscal Positions">
+                    <field name="name" string="Fiscal Position"/>
                     <filter name="active" string="Archived" domain="[('active', '=', False)]"/>
                 </search>
             </field>
@@ -240,7 +241,7 @@
         </record>
 
         <record id="res_partner_action_supplier" model="ir.actions.act_window">
-            <field name="name">Suppliers</field>
+            <field name="name">Vendors</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_mode">kanban,tree,form</field>

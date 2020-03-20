@@ -12,6 +12,7 @@ import pytz
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, _
+from odoo.osv import expression
 from odoo.tools import exception_to_unicode
 
 _logger = logging.getLogger(__name__)
@@ -402,7 +403,7 @@ class GoogleCalendar(models.AbstractModel):
         if event_new.allday:
             _originalStartTime['date'] = event_new.recurrent_id_date.strftime("%Y-%m-%d")
         else:
-            _originalStartTime['datetime'] = event_new.recurrent_id_date.strftime("%Y-%m-%dT%H:%M:%S.%fz")
+            _originalStartTime['dateTime'] = event_new.recurrent_id_date.strftime("%Y-%m-%dT%H:%M:%S.%fz")
 
         data.update(
             recurringEventId=event_ori_google_id,
@@ -550,7 +551,15 @@ class GoogleCalendar(models.AbstractModel):
     @api.model
     def synchronize_events_cron(self):
         """ Call by the cron. """
-        users = self.env['res.users'].search([('google_calendar_last_sync_date', '!=', False)])
+        domain = [('google_calendar_last_sync_date', '!=', False)]
+        if self.env.context.get('last_sync_hours'):
+            last_sync_hours = self.env.context['last_sync_hours']
+            last_sync_date = datetime.now() - timedelta(hours=last_sync_hours)
+            domain = expression.AND([
+                domain,
+                [('google_calendar_last_sync_date', '<=', fields.Datetime.to_string(last_sync_date))]
+            ])
+        users = self.env['res.users'].search(domain, order='google_calendar_last_sync_date')
         _logger.info("Calendar Synchro - Started by cron")
 
         for user_to_sync in users.ids:
@@ -830,10 +839,15 @@ class GoogleCalendar(models.AbstractModel):
                         recs.delete_an_event(current_event[0])
                     elif actSrc == 'GG':
                         new_google_event_id = event.GG.event['id'].rsplit('_', 1)[1]
+                        parent_oe = event_to_synchronize[base_event][0][1].OE.event
                         if 'T' in new_google_event_id:
                             new_google_event_id = new_google_event_id.replace('T', '')[:-1]
                         else:
-                            new_google_event_id = new_google_event_id + "000000"
+                            #allday event, need to match the changes that will be applied with _inverse_dates otherwise the exclusion will not occur
+                            if parent_oe:
+                                new_google_event_id = new_google_event_id + parent_oe.start.strftime("%H%M%S")
+                            else:
+                                new_google_event_id = new_google_event_id + "000000"
 
                         if event.GG.status:
                             parent_event = {}
@@ -847,9 +861,8 @@ class GoogleCalendar(models.AbstractModel):
                             else:
                                 recs.create_from_google(event, my_partner_id)
                         else:
-                            parent_oe_id = event_to_synchronize[base_event][0][1].OE.event_id
-                            if parent_oe_id:
-                                CalendarEvent.browse("%s-%s" % (parent_oe_id, new_google_event_id)).with_context(curr_attendee=event.OE.attendee_id).unlink(can_be_deleted=True)
+                            if parent_oe:
+                                CalendarEvent.browse("%s-%s" % (parent_oe.id, new_google_event_id)).with_context(curr_attendee=event.OE.attendee_id).unlink(can_be_deleted=True)
                             else:
                                 main_att = CalendarAttendee.with_context(context_novirtual).search([('partner_id', '=', my_partner_id), ('google_internal_event_id', '=', event.GG.event['id'].rsplit('_', 1)[0])], limit=1)
                                 if main_att:

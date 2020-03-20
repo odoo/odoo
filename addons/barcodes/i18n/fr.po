@@ -10,6 +10,7 @@
 # Laura Piraux <lap@odoo.com>, 2019
 # Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2019
 # William Olhasque <william.olhasque@scopea.fr>, 2019
+# Cécile Collart <cco@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: William Olhasque <william.olhasque@scopea.fr>, 2019\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,9 +60,9 @@ msgid ""
 "                                if the regular expression matches a prefix of the barcode."
 msgstr ""
 "<i>La nomenclature des codes-barres</i> défini comment les codes-barres sont reconnus et catégorisés.\n"
-"                                Lorsqu'un code-barre est scanné, il est associé à la <i>première</i> règle avec un modèle \n"
-"correspondant. La syntaxe du modèle est celui de l'expression régulière, et un code-barre est associé\n"
-"                                si l'expression régulière correspond à un préfixe du code-barre."
+"                                Lorsqu'un code-barres est scanné, il est associé à la <i>première</i> règle avec un modèle \n"
+"correspondant. La syntaxe du modèle est celui de l'expression régulière, et un code-barres est associé\n"
+"                                si l'expression régulière correspond à un préfixe du code-barres."
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -70,12 +71,12 @@ msgid ""
 " barcodes"
 msgstr ""
 "Une nomenclature de code barre définit la façon dont le point de vente "
-"identifie et interprète le code barre."
+"identifie et interprète le code-barres."
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Add a new barcode nomenclature"
-msgstr "Ajouter une nouvelle nomenclature de code-barre"
+msgstr "Ajouter une nouvelle nomenclature de code-barres"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
@@ -92,7 +93,7 @@ msgstr "Toujours"
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__name
 msgid "An internal identification for this barcode nomenclature rule"
 msgstr ""
-"Une identification interne pour cette règle de nomenclature du code-barre"
+"Une identification interne pour cette règle de nomenclature du code-barres"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__name
@@ -121,7 +122,7 @@ msgstr "Nomenclature de code-barres"
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
 msgid "Barcode Nomenclatures"
-msgstr "Nomenclatures de code-barre"
+msgstr "Nomenclatures de code-barres"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
@@ -137,7 +138,7 @@ msgstr "Règle de code-barres"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Barcode Scanned"
-msgstr "Code barre scanné"
+msgstr "Code-barres scanné"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
@@ -209,7 +210,7 @@ msgstr "Erreur: Document non-éditable"
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Error: No last scanned barcode"
-msgstr "Erreur: pas de dernier barcode scanné "
+msgstr "Erreur: pas de dernier code-barres scanné "
 
 #. module: barcodes
 #. openerp-web
@@ -321,7 +322,7 @@ msgstr "Le code-barres correspondant au modèle"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
 msgid "The list of barcode rules"
-msgstr "Liste des règles des codes barres"
+msgstr "Liste des règles des codes-barres"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__alias

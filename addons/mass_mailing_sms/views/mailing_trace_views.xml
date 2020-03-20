@@ -111,6 +111,7 @@
                             <field name="clicked"/>
                             <field name="bounced"/>
                             <field name="exception"/>
+                            <field name="failure_type" attrs="{'invisible': [('exception', '=', False)]}"/>
                             <field name="ignored"/>
                         </group>
                     </group>

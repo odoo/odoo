@@ -87,7 +87,8 @@ function _genericJsonRpc (fct_name, params, settings, fct) {
                     data: {
                         type: "xhr"+textStatus,
                         debug: error.responseText,
-                        objects: [error, errorThrown]
+                        objects: [error, errorThrown],
+                        arguments: [reason || textStatus]
                     },
                 };
                 reject({message: nerror, event: $.Event()});

@@ -2,6 +2,7 @@
 from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
+from odoo.exceptions import UserError
 from odoo import fields
 
 
@@ -189,7 +190,7 @@ class TestAccountMoveOutRefundOnchanges(InvoiceTestCommon):
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
             # Current price_unit is 1000.
-            # We set quantity = 4, discount = 50%, price_unit = 500 because (4 * 500) * 0.5 = 1000.
+            # We set quantity = 4, discount = 50%, price_unit = 400. The debit/credit fields don't change because (4 * 500) * 0.5 = 1000.
             line_form.quantity = 4
             line_form.discount = 50
             line_form.price_unit = 500
@@ -771,6 +772,14 @@ class TestAccountMoveOutRefundOnchanges(InvoiceTestCommon):
             'amount_total': 260.006,
         })
 
+        # The journal forces you to provide a secondary currency.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            move_form = Form(self.invoice)
+            move_form.currency_id = self.company_data['currency']
+            move_form.save()
+
+        # Exit the multi-currencies.
+        journal.currency_id = False
         move_form = Form(self.invoice)
         move_form.currency_id = self.company_data['currency']
         move_form.save()
@@ -779,7 +788,7 @@ class TestAccountMoveOutRefundOnchanges(InvoiceTestCommon):
             {
                 **self.product_line_vals_1,
                 'quantity': 0.1,
-                'price_unit': 0.1,
+                'price_unit': 0.05,
                 'price_subtotal': 0.01,
                 'price_total': 0.01,
                 'debit': 0.01,
@@ -829,7 +838,10 @@ class TestAccountMoveOutRefundOnchanges(InvoiceTestCommon):
 
         self.assertRecordValues(self.invoice, [{'name': 'RINV/2019/0042'}])
 
-        invoice_copy = self.invoice.copy()
+        values = {
+            'invoice_date': self.invoice.invoice_date,
+        }
+        invoice_copy = self.invoice.copy(default=values)
         invoice_copy.post()
 
         self.assertRecordValues(invoice_copy, [{'name': 'RINV/2019/0043'}])

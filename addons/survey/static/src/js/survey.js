@@ -6,6 +6,7 @@ var core = require('web.core');
 var time = require('web.time');
 var ajax = require('web.ajax');
 var field_utils = require('web.field_utils');
+var Dialog = require('web.Dialog');
 
 var _t = core._t;
 /*
@@ -192,32 +193,39 @@ if(!the_form.length) {
     // so wait until DOM ready with locale then init datetimepicker
     load_locale().then(function(){
         _.each($('.input-group.date'), function(date_field){
-            var disabledDates = []
+            var disabledDates = [];
+            var minDate, maxDate;
+
+            // Set the datetimepicker format depending on the question type
+            var datetimepickerFormat = $(date_field).data('questiontype') === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat();
+
+            // Retrieving min date & format it for datetimepicker compatibility
             if ($(date_field).data('mindate')) {
-                var minDate = field_utils.format.datetime(moment($(date_field).data('mindate')), null, {timezone: true});
+                minDate = moment(field_utils.format.datetime(moment($(date_field).data('mindate')), null, {timezone: true}), datetimepickerFormat);
             }
+
+            // Retrieving max date & format it for datetimepicker compatibility
             if ($(date_field).data('maxdate')) {
-                var maxDate = field_utils.format.datetime(moment($(date_field).data('maxdate')), null, {timezone: true});
+                maxDate = moment(field_utils.format.datetime(moment($(date_field).data('maxdate')), null, {timezone: true}), datetimepickerFormat);
             }
-            else {
-                var minDate = $(date_field).data('mindate') || moment({ y: 1900 });
-                var maxDate = $(date_field).data('maxdate') || moment().add(200, "y");
+
+            // Fallback in case dates are invalid or empty
+            minDate = minDate ? minDate : moment({ y: 1900 });
+            maxDate = maxDate ? maxDate : moment().add(200, "y");
+
+            // Setting up maxDate & disabledDates for date-only questions
+            if ($(date_field).data('questiontype') === 'date') {
+                maxDate = maxDate.add(1, "d");
+                disabledDates = [maxDate];
             }
-            var datetimepickerFormat = time.getLangDateFormat()
-            if ($(date_field).data('questiontype') === 'datetime') {
-                datetimepickerFormat = time.getLangDatetimeFormat()
-            }
-            else{
-                maxDate = moment(maxDate).add(1, "d");
-                disabledDates = [maxDate]
-            }
+
             $('#' + date_field.id).datetimepicker({
-                format : datetimepickerFormat,
+                format: datetimepickerFormat,
                 minDate: minDate,
                 maxDate: maxDate,
                 disabledDates: disabledDates,
                 useCurrent: false,
-                viewDate: moment(new Date()).hours(0).minutes(0).seconds(0).milliseconds(0),
+                viewDate: moment(new Date()).hours(minDate.hours()).minutes(minDate.minutes()).seconds(minDate.seconds()).milliseconds(minDate.milliseconds()),
                 calendarWeeks: true,
                 icons: {
                     time: 'fa fa-clock-o',
@@ -231,7 +239,16 @@ if(!the_form.length) {
                 allowInputToggle: true,
                 keyBinds: null,
             });
-            $('#' + date_field.id).on('error.datetimepicker', function () {
+            $('#' + date_field.id).on('error.datetimepicker', function (err) {
+                if (err.date) {
+                    if (err.date < minDate) {
+                        Dialog.alert(this, _t('The date you selected is lower than the minimum date: ') + minDate.format(datetimepickerFormat));
+                    }
+
+                    if (err.date > maxDate) {
+                        Dialog.alert(this, _t('The date you selected is greater than the maximum date: ') + maxDate.format(datetimepickerFormat));
+                    }
+                }
                 return false;
             });
         });

@@ -1108,7 +1108,7 @@ var FieldX2Many = AbstractField.extend({
             // 'UPDATE' commands with no data can be ignored: they occur in
             // one2manys when the record is updated from a dialog and in this
             // case, we can re-render the whole subview.
-            if (command.operation === 'UPDATE' && command.data) {
+            if (command && command.operation === 'UPDATE' && command.data) {
                 var state = record.data[this.name];
                 var fieldNames = state.getFieldNames();
                 this._reset(record, ev);
@@ -1714,7 +1714,7 @@ var FieldOne2Many = FieldX2Many.extend({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             if (ev && ev.target === self && ev.data.changes && self.view.arch.tag === 'tree') {
-                if (ev.data.changes[self.name].operation === 'CREATE') {
+                if (ev.data.changes[self.name] && ev.data.changes[self.name].operation === 'CREATE') {
                     var index = 0;
                     if (self.editable !== 'top') {
                         index = self.value.data.length - 1;
@@ -2520,7 +2520,11 @@ var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
      */
     _render: function () {
         var self = this;
-        this.$el.empty().addClass('o_field_many2manytags o_kanban_tags');
+
+        if (this.$el) {
+            this.$el.empty().addClass('o_field_many2manytags o_kanban_tags');
+        }
+
         _.each(this.value.data, function (m2m) {
             if (self.colorField in m2m.data && !m2m.data[self.colorField]) {
                 // When a color field is specified and that color is the default
@@ -2566,17 +2570,27 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
     /**
      * @private
      */
-    _render: function () {
+    _renderCheckboxes: function () {
         var self = this;
-        this._super.apply(this, arguments);
+        this.m2mValues = this.record.specialData[this.name];
+        this.$el.html(qweb.render(this.template, {widget: this}));
         _.each(this.value.res_ids, function (id) {
             self.$('input[data-record-id="' + id + '"]').prop('checked', true);
         });
     },
     /**
+     * @override
+     * @private
+     */
+    _renderEdit: function () {
+        this._renderCheckboxes();
+    },
+    /**
+     * @override
      * @private
      */
     _renderReadonly: function () {
+        this._renderCheckboxes();
         this.$("input").prop("disabled", true);
     },
 

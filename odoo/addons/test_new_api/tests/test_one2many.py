@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.tests.common import TransactionCase
+from odoo.exceptions import ValidationError
 
 
 class One2manyCase(TransactionCase):
@@ -226,3 +227,23 @@ class One2manyCase(TransactionCase):
         # self.assertIn(message, discussion.messages)
         # discussion.with_context(compute_name='Y').write({'messages': [(4, message.id)]})
         # self.assertEqual(message.name, 'X')
+
+    def test_dont_write_the_existing_childs(self):
+        """ test that the existing child should not be changed when adding a new child to the parent.
+        This is the behaviour of the form view."""
+        parent = self.env['test_new_api.model_parent_m2o'].create({
+            'name': 'parent',
+            'child_ids': [(0, 0, {'name': 'A'})],
+        })
+        a = parent.child_ids[0]
+        parent.write({'child_ids': [(4, a.id), (0, 0, {'name': 'B'})]})
+
+    def test_recomputation_ends(self):
+        """ Regression test for neverending recomputation. """
+        parent = self.env['test_new_api.model_parent_m2o'].create({'name': 'parent'})
+        child = self.env['test_new_api.model_child_m2o'].create({'name': 'A', 'parent_id': parent.id})
+        self.assertEqual(child.size1, 6)
+
+        # delete parent, and check that recomputation ends
+        parent.unlink()
+        parent.flush()

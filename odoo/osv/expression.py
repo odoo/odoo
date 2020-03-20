@@ -191,7 +191,7 @@ def normalize_domain(domain):
     """
     assert isinstance(domain, (list, tuple)), "Domains to normalize must have a 'domain' form: a list or tuple of domain components"
     if not domain:
-        return TRUE_DOMAIN
+        return [TRUE_LEAF]
     result = []
     expected = 1                            # expected number of expressions
     op_arity = {NOT_OPERATOR: 1, AND_OPERATOR: 2, OR_OPERATOR: 2}
@@ -269,12 +269,12 @@ def combine(operator, unit, zero, domains):
 
 def AND(domains):
     """AND([D1,D2,...]) returns a domain representing D1 and D2 and ... """
-    return combine(AND_OPERATOR, TRUE_DOMAIN, FALSE_DOMAIN, domains)
+    return combine(AND_OPERATOR, [TRUE_LEAF], [FALSE_LEAF], domains)
 
 
 def OR(domains):
     """OR([D1,D2,...]) returns a domain representing D1 or D2 or ... """
-    return combine(OR_OPERATOR, FALSE_DOMAIN, TRUE_DOMAIN, domains)
+    return combine(OR_OPERATOR, [FALSE_LEAF], [TRUE_LEAF], domains)
 
 
 def distribute_not(domain):
@@ -441,19 +441,20 @@ def select_from_where(cr, select_field, from_table, where_field, where_ids, wher
     res = []
     if where_ids:
         if where_operator in ['<', '>', '>=', '<=']:
-            cr.execute('SELECT "%s" FROM "%s" WHERE "%s" %s %%s' % \
+            cr.execute('SELECT DISTINCT "%s" FROM "%s" WHERE "%s" %s %%s' % \
                 (select_field, from_table, where_field, where_operator),
                 (where_ids[0],))  # TODO shouldn't this be min/max(where_ids) ?
             res = [r[0] for r in cr.fetchall()]
         else:  # TODO where_operator is supposed to be 'in'? It is called with child_of...
             for i in range(0, len(where_ids), cr.IN_MAX):
                 subids = where_ids[i:i + cr.IN_MAX]
-                cr.execute('SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % \
+                cr.execute('SELECT DISTINCT "%s" FROM "%s" WHERE "%s" IN %%s' % \
                     (select_field, from_table, where_field), (tuple(subids),))
                 res.extend([r[0] for r in cr.fetchall()])
     return res
 
 def select_distinct_from_where_not_null(cr, select_field, from_table):
+    # This method helper is deprecated, to remove in master
     cr.execute('SELECT distinct("%s") FROM "%s" where "%s" is not null' % (select_field, from_table, select_field))
     return [r[0] for r in cr.fetchall()]
 
@@ -752,7 +753,7 @@ class expression(object):
                 either as a range using the parent_path tree lookup field
                 (when available), or as an expanded [(left,in,child_ids)] """
             if not ids:
-                return FALSE_DOMAIN
+                return [FALSE_LEAF]
             if left_model._parent_store:
                 doms = OR([
                     [('parent_path', '=like', rec.parent_path + '%')]
@@ -982,19 +983,21 @@ class expression(object):
                     push(create_substitution_leaf(leaf, ('id', op1, ids1), model))
 
                 else:
-                    # determine ids1 = records with lines
                     if comodel._fields[field.inverse_name].store and not (inverse_is_int and domain):
-                        ids1 = select_distinct_from_where_not_null(cr, field.inverse_name, comodel._table)
+                        # rewrite condition to match records with/without lines
+                        op1 = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
+                        subquery = 'SELECT "%s" FROM "%s" where "%s" is not null' % (field.inverse_name, comodel._table, field.inverse_name)
+                        push(create_substitution_leaf(leaf, ('id', op1, (subquery, [])), internal=True))
                     else:
                         comodel_domain = [(field.inverse_name, '!=', False)]
                         if inverse_is_int and domain:
                             comodel_domain += domain
                         recs = comodel.search(comodel_domain).sudo().with_context(prefetch_fields=False)
+                        # determine ids1 = records with lines
                         ids1 = unwrap_inverse(recs.mapped(field.inverse_name))
-
-                    # rewrite condition to match records with/without lines
-                    op1 = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                    push(create_substitution_leaf(leaf, ('id', op1, ids1), model))
+                        # rewrite condition to match records with/without lines
+                        op1 = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
+                        push(create_substitution_leaf(leaf, ('id', op1, ids1), model))
 
             elif field.type == 'many2many':
                 rel_table, rel_id1, rel_id2 = field.relation, field.column1, field.column2
@@ -1010,7 +1013,7 @@ class expression(object):
                         push(create_substitution_leaf(leaf, ('id', 'in', ids2), model))
                     else:
                         subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
-                        push(create_substitution_leaf(leaf, ('id', 'inselect', (subquery, [tuple(ids2)])), internal=True))
+                        push(create_substitution_leaf(leaf, ('id', 'inselect', (subquery, [tuple(ids2) or (None,)])), internal=True))
 
                 elif right is not False:
                     # determine ids2 in comodel
@@ -1031,12 +1034,10 @@ class expression(object):
                     push(create_substitution_leaf(leaf, ('id', subop, (subquery, [ids2])), internal=True))
 
                 else:
-                    # determine ids1 = records with relations
-                    ids1 = select_distinct_from_where_not_null(cr, rel_id1, rel_table)
-
                     # rewrite condition to match records with/without relations
-                    op1 = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                    push(create_substitution_leaf(leaf, ('id', op1, ids1), model))
+                    op1 = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
+                    subquery = 'SELECT "%s" FROM "%s" where "%s" is not null' % (rel_id1, rel_table, rel_id1)
+                    push(create_substitution_leaf(leaf, ('id', op1, (subquery, [])), internal=True))
 
             elif field.type == 'many2one':
                 if operator in HIERARCHY_FUNCS:

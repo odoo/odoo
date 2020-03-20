@@ -10,3 +10,4 @@ Tutorials
     howtos/backend
     howtos/web
     howtos/profilecode
+    howtos/company

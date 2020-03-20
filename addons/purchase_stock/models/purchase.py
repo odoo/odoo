@@ -57,7 +57,9 @@ class PurchaseOrder(models.Model):
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
-        self.picking_type_id = self._get_picking_type(self.company_id.id)
+        p_type = self.picking_type_id
+        if not(p_type and p_type.code == 'incoming' and (p_type.warehouse_id.company_id == self.company_id or not p_type.warehouse_id)):
+            self.picking_type_id = self._get_picking_type(self.company_id.id)
 
     # --------------------------------------------------
     # CRUD
@@ -252,7 +254,9 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             if line.qty_received_method == 'stock_moves':
                 total = 0.0
-                for move in line.move_ids:
+                # In case of a BOM in kit, the products delivered do not correspond to the products in
+                # the PO. Therefore, we can skip them since they will be handled later on.
+                for move in line.move_ids.filtered(lambda m: m.product_id == line.product_id):
                     if move.state == 'done':
                         if move.location_dest_id.usage == "supplier":
                             if move.to_refund:

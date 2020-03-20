@@ -43,6 +43,10 @@ var MassMailingFieldHtml = FieldHtml.extend({
      */
     commitChanges: function () {
         var self = this;
+        if (config.isDebug() && this.mode === 'edit') {
+            var layoutInfo = $.summernote.core.dom.makeLayoutInfo(this.wysiwyg.$editor);
+            $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
+        }
         if (this.mode === 'readonly' || !this.isRendered) {
             return this._super();
         }
@@ -54,21 +58,23 @@ var MassMailingFieldHtml = FieldHtml.extend({
 
         var $editable = this.wysiwyg.getEditable();
 
-        return this.wysiwyg.save().then(function (result) {
-            self._isDirty = result.isDirty;
+        return this.wysiwyg.saveCroppedImages(this.$content).then(function () {
+            return self.wysiwyg.save().then(function (result) {
+                self._isDirty = result.isDirty;
 
-            convertInline.attachmentThumbnailToLinkImg($editable);
-            convertInline.fontToImg($editable);
-            convertInline.classToStyle($editable);
+                convertInline.attachmentThumbnailToLinkImg($editable);
+                convertInline.fontToImg($editable);
+                convertInline.classToStyle($editable);
 
-            self.trigger_up('field_changed', {
-                dataPointID: self.dataPointID,
-                changes: _.object([fieldName], [self._unWrap($editable.html())])
+                self.trigger_up('field_changed', {
+                    dataPointID: self.dataPointID,
+                    changes: _.object([fieldName], [self._unWrap($editable.html())])
+                });
+
+                if (self._isDirty && self.mode === 'edit') {
+                    return self._doAction();
+                }
             });
-
-            if (self._isDirty && self.mode === 'edit') {
-                return self._doAction();
-            }
         });
     },
     /**
@@ -131,7 +137,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
      * @override
      */
     _renderEdit: function () {
-        this._isFromInline = !this.value;
+        this._isFromInline = !!this.value;
         if (!this.value) {
             this.value = this.recordData[this.nodeOptions['inline-field']];
         }

@@ -113,11 +113,13 @@ class Website(Home):
 
     @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
     def change_lang(self, lang, r='/', **kwargs):
+        """ :param lang: supposed to be value of `url_code` field """
         if lang == 'default':
             lang = request.website.default_lang_id.url_code
             r = '/%s%s' % (lang, r or '/')
         redirect = werkzeug.utils.redirect(r or ('/%s' % lang), 303)
-        redirect.set_cookie('frontend_lang', lang)
+        lang_code = request.env['res.lang']._lang_get_code(lang)
+        redirect.set_cookie('frontend_lang', lang_code)
         return redirect
 
     @http.route(['/website/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)
@@ -304,7 +306,7 @@ class Website(Home):
         view.with_context(website_id=None).reset_arch(mode)
         return request.redirect(redirect)
 
-    @http.route(['/website/publish'], type='json', auth="public", website=True)
+    @http.route(['/website/publish'], type='json', auth="user", website=True)
     def publish(self, id, object):
         Model = request.env[object]
         record = Model.browse(int(id))
@@ -468,7 +470,7 @@ class WebsiteBinary(http.Controller):
                 kw['unique'] = unique
         return Binary().content_image(**kw)
 
-    @http.route(['/favicon.ico'], type='http', auth='public', website=True, sitemap=False)
+    @http.route(['/favicon.ico'], type='http', auth='public', website=True, multilang=False, sitemap=False)
     def favicon(self, **kw):
         # when opening a pdf in chrome, chrome tries to open the default favicon url
         return self.content_image(model='website', id=str(request.website.id), field='favicon', **kw)

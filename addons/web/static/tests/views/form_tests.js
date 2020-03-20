@@ -43,6 +43,7 @@ QUnit.module('Views', {
                     date: {string: "Some Date", type: "date"},
                     datetime: {string: "Datetime Field", type: 'datetime'},
                     product_ids: {string: "one2many product", type: "one2many", relation: "product"},
+                    reference: {string: "Reference Field", type: 'reference', selection: [["product", "Product"], ["partner_type", "Partner Type"], ["partner", "Partner"]]},
                 },
                 records: [{
                     id: 1,
@@ -115,6 +116,20 @@ QUnit.module('Views', {
                     res_id: 12,
                     value: '',
                     lang_code: 'en_US'
+                }]
+            },
+            user: {
+                fields: {
+                    name: {string: "Name", type: "char"},
+                    partner_ids: {string: "one2many partners field", type: "one2many", relation: 'partner', relation_field: 'user_id'},
+                },
+                records: [{
+                    id: 17,
+                    name: "Aline",
+                    partner_ids: [1],
+                }, {
+                    id: 19,
+                    name: "Christine",
                 }]
             },
         };
@@ -1790,6 +1805,51 @@ QUnit.module('Views', {
             },
         });
         assert.verifySteps(['default_get', 'onchange']);
+        form.destroy();
+    });
+
+    QUnit.test('reference field in one2many list', async function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].reference = 'partner,2';
+
+        var form = await createView({
+            View: FormView,
+            model: 'user',
+            data: this.data,
+            arch: `<form>
+                        <field name="name"/>
+                        <field name="partner_ids">
+                            <tree editable="bottom">
+                                <field name="display_name"/>
+                                <field name="reference"/>
+                            </tree>
+                       </field>
+                   </form>`,
+            archs: {
+                'partner,false,form': '<form><field name="display_name"/></form>',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_id') {
+                    return Promise.resolve(false);
+                }
+                return this._super(route, args);
+            },
+            res_id: 17,
+        });
+        // current form
+        await testUtils.form.clickEdit(form);
+
+        // open the modal form view of the record pointed by the reference field
+        await testUtils.dom.click(form.$('table td[title="first record"]'));
+        await testUtils.dom.click(form.$('table td button.o_external_button'));
+
+        // edit the record in the modal
+        await testUtils.fields.editInput($('.modal-body input[name="display_name"]'), 'New name');
+        await testUtils.dom.click($('.modal-dialog footer button:first-child'));
+
+        assert.containsOnce(form, '.o_field_cell[title="New name"]', 'should not crash and value must be edited');
+
         form.destroy();
     });
 
@@ -4838,6 +4898,33 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('readonly set by modifier do not break many2many_tags', async function (assert) {
+        assert.expect(0);
+
+        this.data.partner.onchanges = {
+            bar: function (obj) {
+                obj.timmy = [[6, false, [12]]];
+            },
+        };
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                      '<sheet>' +
+                          '<field name="bar"/>' +
+                          '<field name="timmy" widget="many2many_tags" attrs="{\'readonly\': [(\'bar\',\'=\',True)]}"/>' +
+                      '</sheet>' +
+                  '</form>',
+            res_id: 5,
+        });
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.click(form.$('.o_field_widget[name=bar] input'));
+
+        form.destroy();
+    });
+
     QUnit.test('check if id and active_id are defined', async function (assert) {
         assert.expect(2);
 
@@ -5132,6 +5219,29 @@ QUnit.module('Views', {
         await assertFormContainsNButtonsWithSizeClass(4, 7);
         await assertFormContainsNButtonsWithSizeClass(5, 7);
         await assertFormContainsNButtonsWithSizeClass(6, 7);
+    });
+
+    QUnit.test('can set bin_size to false in context', async function (assert){
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo"/>' +
+                  '</form>',
+            res_id: 1,
+            context: {
+                bin_size: false,
+            },
+            mockRPC: function (route, args) {
+                assert.strictEqual(args.kwargs.context.bin_size, false,
+                    "bin_size should always be in the context and should be false");
+                return this._super(route, args);
+            }
+        });
+        form.destroy();
     });
 
     QUnit.module('focus and scroll test', async function () {
@@ -6048,13 +6158,13 @@ QUnit.module('Views', {
         await testUtils.form.clickEdit(form);
         await testUtils.fields.editInput(form.$('input[name="foo"]'), "test");
         await testUtils.form.clickSave(form);
-        assert.containsOnce(form, '.o_form_view > .alert > div .oe_field_translate',
+        assert.containsOnce(form, '.o_form_view .alert > div .oe_field_translate',
                             "should have single translation alert");
 
         await testUtils.form.clickEdit(form);
         await testUtils.fields.editInput(form.$('input[name="display_name"]'), "test2");
         await testUtils.form.clickSave(form);
-        assert.containsN(form, '.o_form_view > .alert > div .oe_field_translate', 2,
+        assert.containsN(form, '.o_form_view .alert > div .oe_field_translate', 2,
                          "should have two translate fields in translation alert");
 
         form.destroy();
@@ -6090,24 +6200,23 @@ QUnit.module('Views', {
         await testUtils.fields.editInput(form.$('input[name="foo"]'), "test");
         await testUtils.form.clickSave(form);
 
-        assert.containsOnce(form, '.o_form_view > .alert > div',"should have a translation alert");
-
+        assert.containsOnce(form, '.o_form_view .alert > div',"should have a translation alert");
 
         // click on the pager to switch to the next record
         await testUtils.dom.click(form.pager.$('.o_pager_next'));
-        assert.strictEqual(form.$('.o_form_view > .alert > div').length, 0,
+        assert.strictEqual(form.$('.o_form_view .alert > div').length, 0,
             "should not have a translation alert");
 
         // click on the pager to switch back to the previous record
         await testUtils.dom.click(form.pager.$('.o_pager_previous'));
-        assert.containsOnce(form, '.o_form_view > .alert > div',"should have a translation alert");
+        assert.containsOnce(form, '.o_form_view .alert > div',"should have a translation alert");
 
         // remove translation alert by click X and check alert even after form reload
-        await testUtils.dom.click(form.$('.o_form_view > .alert > .close'));
+        await testUtils.dom.click(form.$('.o_form_view .alert > .close'));
         assert.strictEqual(form.$('.o_form_view > .alert > div').length, 0,
             "should not have a translation alert");
         await form.reload();
-        assert.strictEqual(form.$('.o_form_view > .alert > div').length, 0,
+        assert.strictEqual(form.$('.o_form_view .alert > div').length, 0,
             "should not have a translation alert after reload");
 
         form.destroy();
@@ -6172,7 +6281,7 @@ QUnit.module('Views', {
         actionManager.$('input[name="foo"]').val("test").trigger("input");
         await testUtils.dom.click(actionManager.$('.o_form_button_save'));
 
-        assert.strictEqual(actionManager.$('.o_form_view > .alert > div').length, 1,
+        assert.strictEqual(actionManager.$('.o_form_view .alert > div').length, 1,
             "should have a translation alert");
 
         var currentController = actionManager.getCurrentController().widget;
@@ -6186,7 +6295,7 @@ QUnit.module('Views', {
         });
 
         await testUtils.dom.click($('.o_control_panel .breadcrumb a:first'));
-        assert.strictEqual(actionManager.$('.o_form_view > .alert > div').length, 1,
+        assert.strictEqual(actionManager.$('.o_form_view .alert > div').length, 1,
             "should have a translation alert");
 
         actionManager.destroy();

@@ -1103,6 +1103,7 @@ class Database(http.Controller):
             if not re.match(DBNAME_PATTERN, new_name):
                 raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
             dispatch_rpc('db', 'duplicate_database', [master_pwd, name, new_name])
+            request._cr = None  # duplicating a database leads to an unusable cursor
             return http.local_redirect('/web/database/manager')
         except Exception as e:
             error = "Database duplication error: %s" % (str(e) or repr(e))
@@ -1445,6 +1446,10 @@ class Binary(http.Controller):
         if status in [301, 304] or (status != 200 and download):
             return request.env['ir.http']._response_by_status(status, headers, image_base64)
         if not image_base64:
+            # Since we set a placeholder for any missing image, the status must be 200. In case one
+            # wants to configure a specific 404 page (e.g. though nginx), a 404 status will cause
+            # troubles.
+            status = 200
             image_base64 = base64.b64encode(self.placeholder(image=placeholder))
             if not (width or height):
                 width, height = odoo.tools.image_guess_size_from_field_name(field)
@@ -1673,7 +1678,8 @@ class Export(http.Controller):
         fields = self.fields_get(model)
         if import_compat:
             if parent_field_type in ['many2one', 'many2many']:
-                fields = {'id': fields['id'], 'name': fields['name']}
+                rec_name = request.env[model]._rec_name
+                fields = {'id': fields['id'], rec_name: fields[rec_name]}
         else:
             fields['.id'] = {**fields['id']}
 

@@ -61,6 +61,12 @@ class SaleOrder(models.Model):
                 expected_date = min(dates_list) if order.picking_policy == 'direct' else max(dates_list)
                 order.expected_date = fields.Datetime.to_string(expected_date)
 
+    @api.model
+    def create(self, vals):
+        if 'warehouse_id' not in vals and 'company_id' in vals and vals.get('company_id') != self.env.company.id:
+            vals['warehouse_id'] = self.env['stock.warehouse'].search([('company_id', '=', vals.get('company_id'))], limit=1).id
+        return super(SaleOrder, self).create(vals)
+
     def write(self, values):
         if values.get('order_line') and self.state == 'sale':
             for order in self:
@@ -229,6 +235,7 @@ class SaleOrderLine(models.Model):
         grouped_lines = defaultdict(lambda: self.env['sale.order.line'])
         # We first loop over the SO lines to group them by warehouse and schedule
         # date in order to batch the read of the quantities computed field.
+        now = fields.Datetime.now()
         for line in self:
             if not line.display_qty_widget:
                 continue
@@ -236,7 +243,7 @@ class SaleOrderLine(models.Model):
             if line.order_id.commitment_date:
                 date = line.order_id.commitment_date
             else:
-                confirm_date = line.order_id.date_order if line.order_id.state in ['sale', 'done'] else datetime.now()
+                confirm_date = line.order_id.date_order if line.order_id.state in ['sale', 'done'] else now
                 date = confirm_date + timedelta(days=line.customer_lead or 0.0)
             grouped_lines[(line.warehouse_id.id, date)] |= line
 

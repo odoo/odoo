@@ -8,7 +8,7 @@ class Unit(models.Model):
     _name = 'test.unit'
     _description = 'Test Unit'
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, translate=True)
     state = fields.Selection([('a', 'A'), ('b', 'B')], string='State')
     surname = fields.Char(compute='_compute_surname')
     line_ids = fields.One2many('test.unit.line', 'unit_id')

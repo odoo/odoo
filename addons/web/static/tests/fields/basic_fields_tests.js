@@ -837,6 +837,42 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('float field with type number option and comma decimal separator', async function (assert) {
+        assert.expect(4);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<field name="qux" options="{\'type\': \'number\'}"/>' +
+            '</form>',
+            res_id: 4,
+            translateParameters: {
+                thousands_sep: ".",
+                decimal_point: ",",
+                grouping: [3, 0],
+            },
+        });
+
+        await testUtils.form.clickEdit(form);
+        assert.ok(form.$('.o_field_widget')[0].hasAttribute('type'),
+            'Float field with option type must have a type attribute.');
+        assert.hasAttrValue(form.$('.o_field_widget'), 'type', 'number',
+            'Float field with option type must have a type attribute equals to "number".');
+        await testUtils.fields.editInput(form.$('input[name=qux]'), '123456.789');
+        await testUtils.form.clickSave(form);
+        await testUtils.form.clickEdit(form);
+        assert.strictEqual(form.$('.o_field_widget').val(), '123456.789',
+            'Float value must be not formatted if input type is number.');
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').text(), '123.456,8',
+            'Float value must be formatted in readonly view even if the input type is number.');
+
+        form.destroy();
+    });
+
+
     QUnit.test('float field without type number option', async function (assert) {
         assert.expect(2);
 

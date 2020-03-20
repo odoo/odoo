@@ -161,7 +161,8 @@ class Company(models.Model):
 
     @api.onchange('state_id')
     def _onchange_state(self):
-        self.country_id = self.state_id.country_id
+        if self.state_id.country_id:
+            self.country_id = self.state_id.country_id
 
     def on_change_country(self, country_id):
         # This function is called from account/models/chart_template.py, hence decorated with `multi`.
@@ -224,6 +225,8 @@ class Company(models.Model):
             'website': vals.get('website'),
             'vat': vals.get('vat'),
         })
+        # compute stored fields, for example address dependent fields
+        partner.flush()
         vals['partner_id'] = partner.id
         self.clear_caches()
         company = super(Company, self).create(vals)
@@ -310,22 +313,5 @@ class Company(models.Model):
         return main_company
 
     def update_scss(self):
-        """ update the company scss stylesheet """
-        scss_properties = []
-        if self.primary_color:
-            scss_properties.append('$o-company-primary-color:%s;' % self.primary_color)
-        if self.secondary_color:
-            scss_properties.append('$o-company-secondary-color:%s;' % self.secondary_color)
-        if self.font:
-            scss_properties.append('$o-company-font:%s;' % self.font)
-        scss_string = '\n'.join(scss_properties)
-
-        if not len(scss_string):
-            scss_string = ""
-
-        scss_data = base64.b64encode((scss_string).encode('utf-8'))
-
-        attachment = self.env['ir.attachment'].search([('name', '=', 'res.company.scss')])
-        attachment.write({'datas': scss_data})
-
+        # Deprecated, to be deleted in master
         return ''

@@ -44,13 +44,14 @@ class AccountInvoiceSend(models.TransientModel):
     @api.onchange('invoice_ids')
     def _compute_composition_mode(self):
         for wizard in self:
-            wizard.composition_mode = 'comment' if len(wizard.invoice_ids) == 1 else 'mass_mail'
+            wizard.composer_id.composition_mode = 'comment' if len(wizard.invoice_ids) == 1 else 'mass_mail'
 
     @api.onchange('template_id')
     def onchange_template_id(self):
-        if self.composer_id:
-            self.composer_id.template_id = self.template_id.id
-            self.composer_id.onchange_template_id_wrapper()
+        for wizard in self:
+            if wizard.composer_id:
+                wizard.composer_id.template_id = wizard.template_id.id
+                wizard.composer_id.onchange_template_id_wrapper()
 
     @api.onchange('is_email')
     def onchange_is_email(self):
@@ -74,7 +75,7 @@ class AccountInvoiceSend(models.TransientModel):
                 if invoices:
                     wizard.invoice_without_email = "%s\n%s" % (
                         _("The following invoice(s) will not be sent by email, because the customers don't have email address."),
-                        "\n".join([i.reference for i in invoices])
+                        "\n".join([i.name for i in invoices])
                         )
                 else:
                     wizard.invoice_without_email = False
@@ -85,7 +86,9 @@ class AccountInvoiceSend(models.TransientModel):
         if self.is_email:
             self.composer_id.send_mail()
             if self.env.context.get('mark_invoice_as_sent'):
-                self.mapped('invoice_ids').write({'invoice_sent': True})
+                #Salesman send posted invoice, without the right to write
+                #but they should have the right to change this flag
+                self.mapped('invoice_ids').sudo().write({'invoice_sent': True})
 
     def _print_document(self):
         """ to override for each type of models that will use this composer."""
@@ -119,6 +122,7 @@ class AccountInvoiceSend(models.TransientModel):
     def save_as_template(self):
         self.ensure_one()
         self.composer_id.save_as_template()
+        self.template_id = self.composer_id.template_id.id
         action = _reopen(self, self.id, self.model, context=self._context)
         action.update({'name': _('Send Invoice')})
         return action

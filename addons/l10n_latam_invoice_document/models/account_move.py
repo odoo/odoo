@@ -14,7 +14,7 @@ class AccountMove(models.Model):
     l10n_latam_tax_ids = fields.One2many(compute="_compute_l10n_latam_amount_and_taxes", comodel_name='account.move.line')
     l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_l10n_latam_available_document_types')
     l10n_latam_document_type_id = fields.Many2one(
-        'l10n_latam.document.type', string='Document Type', copy=False, readonly=False, auto_join=True, index=True,
+        'l10n_latam.document.type', string='Document Type', readonly=False, auto_join=True, index=True,
         states={'posted': [('readonly', True)]}, compute='_compute_l10n_latam_document_type', store=True)
     l10n_latam_sequence_id = fields.Many2one('ir.sequence', compute='_compute_l10n_latam_sequence')
     l10n_latam_document_number = fields.Char(
@@ -80,7 +80,7 @@ class AccountMove(models.Model):
             invoice.l10n_latam_tax_ids = not_included_invoice_taxes
         remaining = self - recs_invoice
         remaining.l10n_latam_amount_untaxed = False
-        remaining.l10n_latam_tax_ids = []
+        remaining.l10n_latam_tax_ids = [(5, 0)]
 
     def _compute_invoice_sequence_number_next(self):
         """ If journal use documents disable the next number header"""
@@ -90,7 +90,7 @@ class AccountMove(models.Model):
         return super(AccountMove, self - with_latam_document_number)._compute_invoice_sequence_number_next()
 
     def post(self):
-        for rec in self.filtered(lambda x: x.l10n_latam_use_documents and (not x.name or x.name == '/')):
+        for rec in self.filtered(lambda x: x.l10n_latam_use_documents and not x.l10n_latam_document_number):
             if not rec.l10n_latam_sequence_id:
                 raise UserError(_('No sequence or document number linked to invoice id %s') % rec.id)
             if rec.type in ('in_receipt', 'out_receipt'):
@@ -100,18 +100,19 @@ class AccountMove(models.Model):
 
     @api.constrains('name', 'journal_id', 'state')
     def _check_unique_sequence_number(self):
-        """ Do not apply unique sequence number for vendoer bills and refunds.
-        Also apply constraint when state change """
-        vendor = self.filtered(lambda x: x.type in ['in_refund', 'in_invoice'])
-        try:
-            return super(AccountMove, self - vendor)._check_unique_sequence_number()
-        except ValidationError:
-            raise ValidationError(_('Duplicated invoice number detected. You probably added twice the same vendor'
-                                    ' bill/debit note.'))
+        """ This uniqueness verification is only valid for customer invoices, and vendor bills that does not use
+        documents. A new constraint method _check_unique_vendor_number has been created just for validate for this purpose """
+        vendor = self.filtered(lambda x: x.is_purchase_document() and x.l10n_latam_use_documents)
+        return super(AccountMove, self - vendor)._check_unique_sequence_number()
 
     @api.constrains('state', 'l10n_latam_document_type_id')
     def _check_l10n_latam_documents(self):
-        validated_invoices = self.filtered(lambda x: x.l10n_latam_use_documents and x.state in ['open', 'done'])
+        """ This constraint checks that if a invoice is posted and does not have a document type configured will raise
+        an error. This only applies to invoices related to journals that has the "Use Documents" set as True.
+
+        And if the document type is set then check if the invoice number has been set, because a posted invoice
+        without a document number is not valid in the case that the related journals has "Use Docuemnts" set as True """
+        validated_invoices = self.filtered(lambda x: x.l10n_latam_use_documents and x.state == 'posted')
         without_doc_type = validated_invoices.filtered(lambda x: not x.l10n_latam_document_type_id)
         if without_doc_type:
             raise ValidationError(_(
@@ -128,7 +129,8 @@ class AccountMove(models.Model):
         for rec in self.filtered('l10n_latam_document_type_id.internal_type'):
             internal_type = rec.l10n_latam_document_type_id.internal_type
             invoice_type = rec.type
-            if internal_type in ['debit_note', 'invoice'] and invoice_type in ['out_refund', 'in_refund']:
+            if internal_type in ['debit_note', 'invoice'] and invoice_type in ['out_refund', 'in_refund'] and \
+               rec.l10n_latam_document_type_id.code != '99':
                 raise ValidationError(_('You can not use a %s document type with a refund invoice') % internal_type)
             elif internal_type == 'credit_note' and invoice_type in ['out_invoice', 'in_invoice']:
                 raise ValidationError(_('You can not use a %s document type with a invoice') % (internal_type))
@@ -151,21 +153,32 @@ class AccountMove(models.Model):
     @api.depends_context('internal_type')
     def _compute_l10n_latam_document_type(self):
         internal_type = self._context.get('internal_type', False)
-        for rec in self.filtered(lambda x: x.state == 'draft' and x.l10n_latam_available_document_type_ids):
+        for rec in self.filtered(lambda x: x.state == 'draft'):
             document_types = rec.l10n_latam_available_document_type_ids._origin
             document_types = internal_type and document_types.filtered(lambda x: x.internal_type == internal_type) or document_types
             rec.l10n_latam_document_type_id = document_types and document_types[0].id
 
     def _compute_invoice_taxes_by_group(self):
+        report_or_portal_view = 'commit_assetsbundle' in self.env.context or \
+            not self.env.context.get('params', {}).get('view_type') == 'form'
+        if not report_or_portal_view:
+            return super()._compute_invoice_taxes_by_group()
+
         move_with_doc_type = self.filtered('l10n_latam_document_type_id')
         for move in move_with_doc_type:
             lang_env = move.with_context(lang=move.partner_id.lang).env
             tax_lines = move.l10n_latam_tax_ids
             res = {}
+            # There are as many tax line as there are repartition lines
+            done_taxes = set()
             for line in tax_lines:
                 res.setdefault(line.tax_line_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
                 res[line.tax_line_id.tax_group_id]['amount'] += line.price_subtotal
-                res[line.tax_line_id.tax_group_id]['base'] += line.tax_base_amount
+                tax_key_add_base = tuple(move._get_tax_key_for_group_add_base(line))
+                if tax_key_add_base not in done_taxes:
+                    # The base should be added ONCE
+                    res[line.tax_line_id.tax_group_id]['base'] += line.tax_base_amount
+                    done_taxes.add(tax_key_add_base)
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             move.amount_by_group = [(
                 group.name, amounts['amount'],
@@ -173,6 +186,7 @@ class AccountMove(models.Model):
                 formatLang(lang_env, amounts['amount'], currency_obj=move.currency_id),
                 formatLang(lang_env, amounts['base'], currency_obj=move.currency_id),
                 len(res),
+                group.id,
             ) for group, amounts in res]
         super(AccountMove, self - move_with_doc_type)._compute_invoice_taxes_by_group()
 
@@ -197,3 +211,9 @@ class AccountMove(models.Model):
             ]
             if rec.search(domain):
                 raise ValidationError(_('Vendor bill number must be unique per vendor and company.'))
+
+    def unlink(self):
+        """ When using documents, on vendor bills the document_number is set manually by the number given from the vendor,
+        the odoo sequence is not used. In this case We allow to delete vendor bills with document_number/move_name """
+        self.filtered(lambda x: x.type in x.get_purchase_types() and x.state in ('draft', 'cancel') and x.l10n_latam_use_documents).write({'name': '/'})
+        return super().unlink()

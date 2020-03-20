@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sale.tests.test_sale_common import TestCommonSaleNoChart
+from odoo.addons.sale.tests.test_sale_common import TestCommonSaleNoChart, TestCommonSaleMultiCompanyNoChart
 
 
 class TestCommonSaleTimesheetNoChart(TestCommonSaleNoChart):
@@ -284,4 +284,36 @@ class TestCommonSaleTimesheetNoChart(TestCommonSaleNoChart):
             'project_template_id': cls.project_template.id,
             'taxes_id': False,
             'property_account_income_id': cls.account_sale.id,
+        })
+
+
+class TestCommonSaleTimesheetMultiCompanyNoChart(TestCommonSaleMultiCompanyNoChart, TestCommonSaleTimesheetNoChart):
+
+    @classmethod
+    def setUpEmployees(cls):
+        # Create employees
+        cls.setUpUsers()
+        super(TestCommonSaleTimesheetMultiCompanyNoChart, cls).setUpEmployees()
+
+        cls.employee_company_B = cls.env['hr.employee'].create({
+            'name': 'Gregor Clegane',
+            'user_id': cls.user_employee_company_B.id,
+            'timesheet_cost': 15,
+        })
+
+        cls.manager_company_B = cls.env['hr.employee'].create({
+            'name': 'Cersei Lannister',
+            'user_id': cls.user_manager_company_B.id,
+            'timesheet_cost': 45,
+        })
+
+    @classmethod
+    def setUpServiceProducts(cls):
+        """ Create Service product for all kind, with each tracking policy. """
+        super(TestCommonSaleTimesheetMultiCompanyNoChart, cls).setUpServiceProducts()
+        # Account and project
+        cls.analytic_account_sale_company_B = cls.env['account.analytic.account'].create({
+            'name': 'Project for selling timesheet Company B - AA',
+            'code': 'AA-2030',
+            'company_id': cls.company_B.id,
         })

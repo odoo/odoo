@@ -174,7 +174,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
         serial number.
         """
         lines = []
-        is_tracked = move.product_id.tracking != 'none'
+        is_tracked = move.product_id.tracking == 'serial'
         if move in self.move_raw_ids._origin:
             # Get the inverse_name (many2one on line) of raw_workorder_line_ids
             initial_line_values = {self.raw_workorder_line_ids._get_raw_workorder_inverse_name(): self.id}
@@ -293,8 +293,11 @@ class MrpAbstractWorkorder(models.AbstractModel):
         if self.consumption == 'strict':
             for move in self.move_raw_ids:
                 lines = self._workorder_line_ids().filtered(lambda l: l.move_id == move)
-                qty_done = sum(lines.mapped('qty_done'))
-                qty_to_consume = sum(lines.mapped('qty_to_consume'))
+                qty_done = 0.0
+                qty_to_consume = 0.0
+                for line in lines:
+                    qty_done += line.product_uom_id._compute_quantity(line.qty_done, line.product_id.uom_id)
+                    qty_to_consume += line.product_uom_id._compute_quantity(line.qty_to_consume, line.product_id.uom_id)
                 rounding = self.product_uom_id.rounding
                 if float_compare(qty_done, qty_to_consume, precision_rounding=rounding) != 0:
                     raise UserError(_('You should consume the quantity of %s defined in the BoM. If you want to consume more or less components, change the consumption setting on the BoM.') % lines[0].product_id.name)
@@ -312,7 +315,7 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
     lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial Number',
         check_company=True,
-        domain="[('product_id', '=', product_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        domain="[('product_id', '=', product_id), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]")
     qty_to_consume = fields.Float('To Consume', digits='Product Unit of Measure')
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure')
     qty_done = fields.Float('Consumed', digits='Product Unit of Measure')
@@ -405,9 +408,10 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
         # reservation is made, so it is still possible to change it afterwards.
         for quant in quants:
             quantity = quant.quantity - quant.reserved_quantity
+            quantity = self.product_id.uom_id._compute_quantity(quantity, self.product_uom_id, rounding_method='HALF-UP')
             rounding = quant.product_uom_id.rounding
             if (float_compare(quant.quantity, 0, precision_rounding=rounding) <= 0 or
-                    float_compare(quantity, 0, precision_rounding=rounding) <= 0):
+                    float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) <= 0):
                 continue
             vals = {
                 'move_id': self.move_id.id,
@@ -415,7 +419,7 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
                 'location_id': quant.location_id.id,
                 'location_dest_id': self.move_id.location_dest_id.id,
                 'product_uom_qty': 0,
-                'product_uom_id': quant.product_uom_id.id,
+                'product_uom_id': self.product_uom_id.id,
                 'qty_done': min(quantity, self.qty_done),
                 'lot_produced_ids': self._get_produced_lots(),
             }
@@ -425,10 +429,10 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
             vals_list.append(vals)
             self.qty_done -= vals['qty_done']
             # If all the qty_done is distributed, we can close the loop
-            if float_compare(self.qty_done, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
+            if float_compare(self.qty_done, 0, precision_rounding=self.product_id.uom_id.rounding) <= 0:
                 break
 
-        if float_compare(self.qty_done, 0, precision_rounding=self.product_uom_id.rounding) > 0:
+        if float_compare(self.qty_done, 0, precision_rounding=self.product_id.uom_id.rounding) > 0:
             vals = {
                 'move_id': self.move_id.id,
                 'product_id': self.product_id.id,

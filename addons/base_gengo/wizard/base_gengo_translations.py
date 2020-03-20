@@ -15,6 +15,7 @@ _logger = logging.getLogger(__name__)
 try:
     from gengo import Gengo
 except ImportError:
+    Gengo = None
     _logger.warning('Gengo library not found, Gengo features disabled. If you plan to use it, please install the gengo library from http://pypi.python.org/pypi/gengo')
 
 GENGO_DEFAULT_LIMIT = 20
@@ -78,6 +79,8 @@ class BaseGengoTranslations(models.TransientModel):
         user = self.env.user
         if not user.company_id.gengo_public_key or not user.company_id.gengo_private_key:
             return (False, _("Gengo `Public Key` or `Private Key` are missing. Enter your Gengo authentication parameters under `Settings > Companies > Gengo Parameters`."))
+        if not Gengo:
+            return (False, _("Gengo library not installed. Contact your system administrator to use it."))
         try:
             gengo = Gengo(
                 public_key=user.company_id.gengo_public_key.encode('ascii'),

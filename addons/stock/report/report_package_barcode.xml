@@ -12,7 +12,7 @@
                             <th>
                               <h1 t-field="o.name" class="mt0 float-left"/>
                             </th>
-                            <th style="text-align: center">
+                            <th name="td_pk_barcode" style="text-align: center">
                                 <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" alt="Barcode"
                                   style="width:300px;height:50px"/>
                                   <p t-field="o.name"/>
@@ -30,9 +30,9 @@
                         <thead>
                             <tr>
                                 <th>Product</th>
-                                <th class="text-right">Quantity</th>
-                                <th groups="uom.group_uom"/>
-                                <th class="text-right" t-if="has_serial_number">Lot/Serial Number</th>
+                                <th name="th_quantity" class="text-right">Quantity</th>
+                                <th name="th_uom" groups="uom.group_uom"/>
+                                <th name="th_serial" class="text-right" t-if="has_serial_number">Lot/Serial Number</th>
                             </tr>
                         </thead>
                         <tbody>

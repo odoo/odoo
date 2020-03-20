@@ -382,6 +382,17 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product1.value_svl, 0)
         self.assertEqual(self.product1.quantity_svl, 0)
 
+    def test_negative_3(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        move1 = self._make_out_move(self.product1, 2, force_assign=True)
+        self.assertEqual(move1.stock_valuation_layer_ids.value, 0)
+        move2 = self._make_in_move(self.product1, 20, unit_cost=3.33)
+        self.assertEqual(move1.stock_valuation_layer_ids[1].value, -6.66)
+
+        self.assertEqual(self.product1.standard_price, 3.33)
+        self.assertEqual(self.product1.value_svl, 59.94)
+        self.assertEqual(self.product1.quantity_svl, 18)
+
     def test_return_receipt_1(self):
         move1 = self._make_in_move(self.product1, 1, unit_cost=10, create_picking=True)
         move2 = self._make_in_move(self.product1, 1, unit_cost=20)
@@ -768,7 +779,10 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
             'property_stock_journal': self.stock_journal.id,
         })
 
-        self.product1.categ_id = cat2
+        # Try to change the product category with a `default_type` key in the context and
+        # check it doesn't break the account move generation.
+        self.product1.with_context(default_type='product').categ_id = cat2
+        self.assertEqual(self.product1.categ_id, cat2)
 
         self.assertEqual(self.product1.value_svl, 100)
         self.assertEqual(self.product1.quantity_svl, 10)

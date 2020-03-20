@@ -94,6 +94,7 @@ class Contextifier(ast.NodeTransformer):
                 # handle that cross-version
                 kwonlyargs=[],
                 kw_defaults=[],
+                posonlyargs=[],
             ),
             body=Contextifier(self._safe_names + tuple(names)).visit(node.body)
         ), node)
@@ -542,7 +543,7 @@ class QWeb(object):
                 ast.arg(arg='values', annotation=None),
                 ast.arg(arg='options', annotation=None),
                 ast.arg(arg='log', annotation=None),
-            ], defaults=[], vararg=None, kwarg=None, kwonlyargs=[], kw_defaults=[]),
+            ], defaults=[], vararg=None, kwarg=None, posonlyargs=[], kwonlyargs=[], kw_defaults=[]),
             body=body or [ast.Return()],
             decorator_list=[])
         if lineno is not None:

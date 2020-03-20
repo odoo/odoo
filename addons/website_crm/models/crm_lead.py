@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, SUPERUSER_ID
 
 
 class Lead(models.Model):
@@ -49,6 +49,7 @@ class Lead(models.Model):
                             request.website.crm_default_team_id.id
         values['user_id'] = values.get('user_id') or \
                             request.website.crm_default_user_id.id
+        values['type'] = 'lead' if self.with_user(SUPERUSER_ID).env['res.users'].has_group('crm.group_use_lead') else 'opportunity'
         return values
 
 

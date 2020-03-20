@@ -30,6 +30,7 @@
             <field name="model">im_livechat.report.operator</field>
             <field name="arch" type="xml">
                 <search string="Search report">
+                    <field name="partner_id"/>
                     <filter name="last_24h" string="Last 24h" domain="[('start_date','&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%%Y-%%m-%%d') )]"/>
                     <filter name="start_date_filter" string="This Week" domain="[
                         ('start_date', '>=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1,days=1,weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),

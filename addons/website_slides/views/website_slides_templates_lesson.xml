@@ -137,8 +137,8 @@
         <ul class="collapse show p-0 m-0 list-unstyled" t-att-id="('collapse-%s') % (category.id if category else 0)" >
             <t t-foreach="category_slide_ids" t-as="aside_slide">
                 <t t-set="slide_completed" t-value="channel_progress[aside_slide.id].get('completed')"/>
-                <t t-set="is_member" t-value="aside_slide.channel_id.is_member"/>
-                <t t-set="can_access" t-value="aside_slide.is_preview or is_member or aside_slide.channel_id.can_publish"/>
+                <t t-set="is_member" t-value="slide.channel_id.is_member"/>
+                <t t-set="can_access" t-value="aside_slide.is_preview or is_member or slide.channel_id.can_publish"/>
                 <li class="p-0 pb-1">
                     <a t-att-href="'/slides/slide/%s' % (slug(aside_slide)) if can_access else '#'"
                         t-att-class="'o_wslides_lesson_aside_list_link d-flex align-items-top px-2 pt-1 text-decoration-none %s%s' % (('bg-100 py-1 active' if aside_slide == slide else ''), 'text-muted' if not can_access else '')">

@@ -12,6 +12,16 @@
             <field name="perm_read" eval="False"/>
         </record>
 
+        <record model="ir.rule" id="res_partner_rule">
+            <field name="name">res.partner company</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <!-- We exclude partners that have internal users (`partner_share` field) from
+            the multi-company rule because it might interfere with the user's company rule
+            and make some users unselectable in relational fields. This means that partners
+            of internal users are always visible, not matter the company setting. -->
+            <field name="domain_force">['|', '|', ('partner_share', '=', False), ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+        </record>
+
         <record model="ir.rule" id="res_partner_portal_public_rule">
             <field name="name">res_partner: portal/public: read access on my commercial partner</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -161,7 +171,7 @@
             <field name="name">user rule</field>
             <field name="model_id" ref="model_res_users"/>
             <field eval="True" name="global"/>
-            <field name="domain_force">[('company_ids', 'in', company_ids)]</field>
+            <field name="domain_force">['|', ('share', '=', False), ('company_ids', 'in', company_ids)]</field>
         </record>
     </data>
 </odoo>

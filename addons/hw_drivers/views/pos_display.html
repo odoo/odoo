@@ -9,6 +9,7 @@
         <script class="origin" type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.min.js"></script>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
         <script type="text/javascript" class="origin">
+            var display_identifier = '{{ display_identifier }}';
             {{ cust_js|safe }}
         </script>
         <style class="origin">
@@ -59,7 +60,7 @@
                 <tbody>
                     {% for display_iface in display_ifaces -%}
                         <tr>
-                            <td><i class="fa fa-{{ display_iface.icon }}"></i></td>
+                            <td><i class="fa fa-{{ display_iface.icon }}"/> {{ display_iface.essid }}</td>
                             <td>{{ display_iface.addr }}</td>
                         </tr>
                     {%- endfor %}

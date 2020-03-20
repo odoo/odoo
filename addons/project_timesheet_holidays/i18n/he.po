@@ -6,6 +6,7 @@
 # Martin Trigaux, 2019
 # Yihya Hugirat <hugirat@gmail.com>, 2019
 # hed shefetr <hed@laylinetech.com>, 2019
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: hed shefetr <hed@laylinetech.com>, 2019\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +40,8 @@ msgid ""
 "the time off. If you don't want a timesheet, you should leave the internal "
 "project and task empty."
 msgstr ""
+"גם הפרויקט הפנימי וגם המשימה נדרשים להפיק גיליון זמנים לחופשה. אם אינך "
+"מעוניין בגיליון זמנים, עליך להשאיר את הפרוייקט והמשימה הפנימיים ריקים."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
@@ -54,12 +57,12 @@ msgstr "הגדרות תצורה"
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_company__leave_timesheet_project_id
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_project_id
 msgid "Default project value for timesheet generated from time off type."
-msgstr ""
+msgstr "ערך ברירת מחדל לפרויקט עבור גיליון זמנים שנוצר מסוג חופשה."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
 msgid "Generate Timesheet"
-msgstr ""
+msgstr "צור גיליון זמנים"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
@@ -67,6 +70,7 @@ msgid ""
 "If checked, when validating a time off, timesheet will be generated in the "
 "Vacation Project of the company."
 msgstr ""
+"אם מסומן, בעת אימות חופשה ייווצר גיליון זמנים בפרויקט החופשה של החברה."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
@@ -74,12 +78,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_project_id
 #, python-format
 msgid "Internal Project"
-msgstr ""
+msgstr "פרויקט פנימי"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__holiday_id
 msgid "Leave Request"
-msgstr ""
+msgstr "בקשת חופשה"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
@@ -95,43 +99,43 @@ msgstr "משימה"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_task_id
 msgid "Task for timesheet"
-msgstr ""
+msgstr "משימה לגיליון זמנים"
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
 #, python-format
 msgid "The Internal Project of a company should be in that company."
-msgstr ""
+msgstr "פרויקט הפנימי של חברה צריך להיות באותה חברה."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
 msgid ""
 "The project will contain the timesheet generated when a time off is "
 "validated."
-msgstr ""
+msgstr "הפרוייקט יכיל את גיליון הזמנים שנוצר כאשר החופשה תאומת."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave
 #, python-format
 msgid "Time Off"
-msgstr ""
+msgstr "חופשה"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Time Off Task"
-msgstr ""
+msgstr "משימת חופשה"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
 msgid "Time Off Type"
-msgstr ""
+msgstr "סוג חופשה"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
 msgid "Timesheet"
-msgstr ""
+msgstr "גיליון זמנים"
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
@@ -140,3 +144,5 @@ msgid ""
 "You cannot delete timesheet lines attached to a leaves. Please cancel the "
 "leaves instead."
 msgstr ""
+"אינך יכול למחוק שורות גיליון זמנים המחוברות לחופשות. אנא בטל את החופשות "
+"במקום."

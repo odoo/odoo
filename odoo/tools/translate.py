@@ -632,7 +632,7 @@ class PoFileReader:
                         'src': source,
                         'value': translation,
                         'comments': comments,
-                        'res_id': int(line_number or 0),
+                        'res_id': int(line_number),
                         'module': module,
                     }
                     continue
@@ -878,7 +878,14 @@ def trans_generate(lang, modules, cr):
     env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
     to_translate = set()
 
-    def push_translation(module, type, name, id, source, comments=None):
+    def push_translation(module, type, name, id, source, comments=None, record_id=None):
+        """ Insert a translation that will be used in the file generation
+        In po file will create an entry
+        #: <type>:<name>:<res_id>
+        #, <comment>
+        msgid "<source>"
+        record_id is the database id of the record being translated
+        """
         # empty and one-letter terms are ignored, they probably are not meant to be
         # translated, and would be very hard to translate anyway.
         sanitized_term = (source or '').strip()
@@ -887,7 +894,7 @@ def trans_generate(lang, modules, cr):
         if not sanitized_term or len(sanitized_term) <= 1:
             return
 
-        tnx = (module, source, name, id, type, tuple(comments or ()))
+        tnx = (module, source, name, id, type, tuple(comments or ()), record_id)
         to_translate.add(tnx)
 
     def translatable_model(record):
@@ -945,7 +952,7 @@ def trans_generate(lang, modules, cr):
                     continue
                 for term in set(field.get_trans_terms(value)):
                     trans_type = 'model_terms' if callable(field.translate) else 'model'
-                    push_translation(module, trans_type, name, xml_name, term)
+                    push_translation(module, trans_type, name, xml_name, term, record_id=record.id)
 
         # End of data for ir.model.data query results
 
@@ -1028,8 +1035,12 @@ def trans_generate(lang, modules, cr):
     out = []
     # translate strings marked as to be translated
     Translation = env['ir.translation']
-    for module, source, name, id, type, comments in sorted(to_translate):
-        trans = Translation._get_source(name, type, lang, source) if lang else ""
+    for module, source, name, id, type, comments, record_id in sorted(to_translate):
+        trans = (
+            Translation._get_source(name if type != "code" else None, type, lang, source, res_id=record_id)
+            if lang
+            else ""
+        )
         out.append((module, type, name, id, source, encode(trans) or '', comments))
     return out
 

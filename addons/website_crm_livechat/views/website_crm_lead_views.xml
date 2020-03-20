@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_redirect_to_page_views']" position="after">
                 <button name="action_redirect_to_livechat_sessions" type="object" class="oe_stat_button" icon="fa-comment"
-                        attrs="{'invisible': [('visitor_sessions_count', '=', 0)]}">
+                        attrs="{'invisible': [('visitor_sessions_count', '=', 0)]}" groups="im_livechat.im_livechat_group_user">
                     <field name="visitor_sessions_count" widget="statinfo" string="Sessions"/>
                 </button>
             </xpath>

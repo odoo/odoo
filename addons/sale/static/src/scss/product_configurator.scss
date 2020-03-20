@@ -45,12 +45,14 @@
 }
 
 .css_quantity {
-    max-width: 125px;
+    width: initial; // We don't want the quantity form to be full-width
 
     input[name="add_qty"] {
+        max-width: 50px;
         text-align: center;
     }
 }
+
 
 option.css_not_available {
     color: #ccc;

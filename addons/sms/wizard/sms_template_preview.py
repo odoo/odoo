@@ -53,4 +53,4 @@ class SMSTemplatePreview(models.TransientModel):
             self.res_id = self.resource_ref.id
         if self.sms_template_id:
             template = self.sms_template_id.with_context(lang=self.lang)
-            self.body = template._render_template(template.body, template.model, self.res_id or 0)
+            self.body = template._render_template(template.body, template.model, self.res_id or 0) if self.resource_ref else template.body

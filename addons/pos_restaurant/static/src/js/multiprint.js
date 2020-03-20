@@ -125,6 +125,18 @@ models.Orderline = models.Orderline.extend({
     },
 });
 
+var _super_posModel = models.PosModel.prototype;
+
+models.PosModel = models.PosModel.extend({
+    _save_to_server: function (orders, options) {
+        orders.forEach(function(order){
+            if(order.data.multiprint_resume && typeof(order.data.multiprint_resume) === "object")
+                order.data.multiprint_resume = JSON.stringify(order.data.multiprint_resume? order.data.multiprint_resume : false);
+        });
+        return _super_posModel._save_to_server.apply(this,arguments);
+    }
+});
+
 screens.OrderWidget.include({
     render_orderline: function(orderline) {
         var node = this._super(orderline);
@@ -199,9 +211,17 @@ models.Order = models.Order.extend({
 
         for ( line_hash in current_res) {
             var curr = current_res[line_hash];
-            var old  = old_res[line_hash];
+            var old  = {};
+            var found = false;
+            for(var id in old_res) {
+                if(old_res[id].product_id === curr.product_id){
+                    found = true;
+                    old = old_res[id];
+                    break;
+                }
+            }
 
-            if (typeof old === 'undefined') {
+            if (!found) {
                 add.push({
                     'id':       curr.product_id,
                     'name':     this.pos.db.get_product_by_id(curr.product_id).display_name,
@@ -229,7 +249,12 @@ models.Order = models.Order.extend({
         }
 
         for (line_hash in old_res) {
-            if (typeof current_res[line_hash] === 'undefined') {
+            var found = false;
+            for(var id in current_res) {
+                if(current_res[id].product_id === old_res[line_hash].product_id)
+                    found = true;
+            }
+            if (!found) {
                 var old = old_res[line_hash];
                 rem.push({
                     'id':       old.product_id,
@@ -284,13 +309,13 @@ models.Order = models.Order.extend({
         };
 
     },
-    printChanges: function(){
+    printChanges: async function(){
         var printers = this.pos.printers;
         for(var i = 0; i < printers.length; i++){
             var changes = this.computeChanges(printers[i].config.product_categories_ids);
             if ( changes['new'].length > 0 || changes['cancelled'].length > 0){
                 var receipt = QWeb.render('OrderChangeReceipt',{changes:changes, widget:this});
-                printers[i].print_receipt(receipt);
+                await printers[i].print_receipt(receipt);
             }
         }
     },
@@ -326,10 +351,10 @@ models.Order = models.Order.extend({
 
 var SubmitOrderButton = screens.ActionButtonWidget.extend({
     'template': 'SubmitOrderButton',
-    button_click: function(){
+    button_click: async function(){
         var order = this.pos.get_order();
         if(order.hasChangesToPrint()){
-            order.printChanges();
+            await order.printChanges();
             order.saveChanges();
         }
     },

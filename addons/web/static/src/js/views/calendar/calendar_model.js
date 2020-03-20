@@ -65,10 +65,11 @@ return AbstractModel.extend({
         }
 
         var isDateEvent = this.fields[this.mapping.date_start].type === 'date';
+        var keepRecordTime = !this.mapping.all_day || (this.data.scale === 'month' && event.record && !event.record[this.mapping.all_day]);
         // An "allDay" event without the "all_day" option is not considered
         // as a 24h day. It's just a part of the day (by default: 7h-19h).
         if (event.allDay) {
-            if (!this.mapping.all_day && !isDateEvent) {
+            if (keepRecordTime && !isDateEvent) {
                 if (event.r_start) {
                     start.hours(event.r_start.hours())
                          .minutes(event.r_start.minutes())
@@ -94,7 +95,7 @@ return AbstractModel.extend({
         if (this.mapping.all_day) {
             if (event.record) {
                 data[this.mapping.all_day] =
-                    (this.scale !== 'month' && event.allDay) ||
+                    (this.data.scale !== 'month' && event.allDay) ||
                     event.record[this.mapping.all_day] &&
                     end.diff(start) < 10 ||
                     false;
@@ -296,8 +297,15 @@ return AbstractModel.extend({
                 this.data.end_date = this.data.start_date.clone().add(5, 'week').day(this.week_stop).endOf('day');
                 break;
             case 'week':
-                this.data.start_date = this.data.start_date.clone().day(this.week_start).startOf('day');
-                this.data.end_date = this.data.end_date.clone().day(this.week_stop).endOf('day');
+                var weekStart = this.data.start_date.clone().startOf('week');
+                var weekStartDay = this.week_start;
+                if (this.data.start_date.day() < this.week_start) {
+                    // The week's first day is after our current day
+                    // Then we should go back to the previous week
+                    weekStartDay -= 7;
+                }
+                this.data.start_date = this.data.start_date.clone().day(weekStartDay).startOf('day');
+                this.data.end_date = this.data.end_date.clone().day(weekStartDay + 6).endOf('day');
                 break;
             default:
                 this.data.start_date = this.data.start_date.clone().startOf('day');
@@ -384,10 +392,10 @@ return AbstractModel.extend({
                         authorizedValues[filter.fieldName].push(f.value);
                     }
                 } else {
-                    if (!avoidValues[filter.fieldName])
-                        avoidValues[filter.fieldName] = [];
-
                     if (!f.active) {
+                        if (!avoidValues[filter.fieldName])
+                            avoidValues[filter.fieldName] = [];
+
                         avoidValues[filter.fieldName].push(f.value);
                     }
                 }
@@ -714,13 +722,12 @@ return AbstractModel.extend({
         } else if (this.data.scale === 'month' && this.fields[this.mapping.date_start].type !== 'date') {
             // In month, FullCalendar gives the end day as the
             // next day at midnight (instead of 23h59).
-            date_stop.add(1, 'days');
+            r.end = date_stop.clone().add(1, 'days').startOf('day').format('YYYY-MM-DD');
+            r.start = date_start.clone().format('YYYY-MM-DD');
 
             // allow to resize in month mode
             r.reset_allday = r.allDay;
             r.allDay = true;
-            r.start = date_start.format('YYYY-MM-DD');
-            r.end = date_stop.startOf('day').format('YYYY-MM-DD');
         }
 
         return r;

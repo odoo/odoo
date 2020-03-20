@@ -34,7 +34,7 @@ class TestAutoBlacklist(common.TransactionCase):
             })
             base_parsed_values.update({
                 'bounced_email': tools.email_normalize(self.mailing_contact_1.email),
-                'bounced_msg_id': '<123.00%s@iron.sky>' % idx
+                'bounced_msg_id': ['<123.00%s@iron.sky>' % idx]
             })
             self.env['mail.thread']._routing_handle_bounce(False, base_parsed_values)
 
@@ -71,7 +71,7 @@ class TestAutoBlacklist(common.TransactionCase):
         })
         base_parsed_values.update({
             'bounced_email': tools.email_normalize(self.mailing_contact_1.email),
-            'bounced_msg_id': '<123.004@iron.sky>'
+            'bounced_msg_id': ['<123.004@iron.sky>']
         })
         # call bounced
         self.env['mail.thread']._routing_handle_bounce(False, base_parsed_values)

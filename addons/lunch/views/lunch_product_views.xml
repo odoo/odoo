@@ -67,7 +67,7 @@
             <form string="Products Form">
                 <field name="currency_id" invisible="1"/>
                 <sheet>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                     <div class="oe_title">
                         <label for="name" class="oe-edit-only"/>
@@ -97,7 +97,7 @@
         <field name="model">lunch.product.report</field>
         <field name="priority">999</field>
         <field name="arch" type="xml">
-            <kanban js_class="lunch_kanban" create="0" edit="0" class="o_kanban_mobile">
+            <kanban js_class="lunch_kanban" create="0" edit="0" group_create="0" class="o_kanban_mobile">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="category_id"/>

@@ -19,7 +19,7 @@
                     <field name='is_product_variant' invisible='1'/>
                     <field name='attribute_line_ids' invisible='1'/>
                     <div class="oe_button_box" name="button_box"/>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="id" invisible="True"/>
                     <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                     <div class="oe_title">
@@ -131,7 +131,7 @@
         <field name="model">product.template</field>
         <field name="arch" type="xml">
             <search string="Product">
-                <field name="name" string="Product" filter_domain="['|', '|', ('product_variant_ids.default_code', 'ilike', self),('name', 'ilike', self), ('barcode', 'ilike', self)]"/>
+                <field name="name" string="Product" filter_domain="['|', '|', '|', ('default_code', 'ilike', self), ('product_variant_ids.default_code', 'ilike', self),('name', 'ilike', self), ('barcode', 'ilike', self)]"/>
                 <field name="categ_id" filter_domain="[('categ_id', 'child_of', raw_value)]"/>
                 <separator/>
                 <filter string="Services" name="services" domain="[('type','=','service')]"/>
@@ -217,7 +217,7 @@
                 <form string="Variant Information" duplicate="false">
                     <sheet>
                         <div class="oe_button_box" name="button_box"/>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
                         <field name="id" invisible="1"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
@@ -252,7 +252,7 @@
                                 <label for="volume"/>
                                 <div class="o_row">
                                     <field name="volume"/>
-                                    <span>m³</span>
+                                    <span><field name="volume_uom_name"/></span>
                                 </div>
                                 <label for="weight"/>
                                 <div class="o_row">
@@ -449,7 +449,7 @@
                                 name="%(product_template_action_all)d"
                                 icon="fa-th-list"
                                 type="action"
-                                context="{'search_default_categ_id': active_id, 'default_categ_id': active_id}">
+                                context="{'search_default_categ_id': active_id, 'default_categ_id': active_id, 'group_expand': True}">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value"><field name="product_count"/></span>
                                     <span class="o_stat_text"> Products</span>
@@ -657,7 +657,7 @@
             <field name="model">product.supplierinfo</field>
             <field name="arch" type="xml">
                 <tree string="Vendor Information" multi_edit="1">
-                    <field name="sequence" widget="handle" readonly="1"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="name" readonly="1"/>
                     <field name="product_id" readonly="1" optional="hide"
                         invisible="context.get('product_template_invisible_variant', False)"

@@ -386,7 +386,7 @@ class WebsiteSale(http.Controller):
         if access_token:
             abandoned_order = request.env['sale.order'].sudo().search([('access_token', '=', access_token)], limit=1)
             if not abandoned_order:  # wrong token (or SO has been deleted)
-                return request.render('website.404')
+                raise NotFound()
             if abandoned_order.state != 'draft':  # abandoned cart already finished
                 values.update({'abandoned_proceed': True})
             elif revive == 'squash' or (revive == 'merge' and not request.session.get('sale_order_id')):  # restore old cart or merge with unexistant
@@ -404,6 +404,7 @@ class WebsiteSale(http.Controller):
             'suggested_products': [],
         })
         if order:
+            order.order_line.filtered(lambda l: not l.product_id.active).unlink()
             _order = order
             if not request.env.context.get('pricelist'):
                 _order = order.with_context(pricelist=order.pricelist_id.id)
@@ -584,7 +585,7 @@ class WebsiteSale(http.Controller):
     def _checkout_form_save(self, mode, checkout, all_values):
         Partner = request.env['res.partner']
         if mode[0] == 'new':
-            partner_id = Partner.sudo().create(checkout).id
+            partner_id = Partner.sudo().with_context(tracking_disable=True).create(checkout).id
         elif mode[0] == 'edit':
             partner_id = int(all_values.get('partner_id', 0))
             if partner_id:

@@ -15,7 +15,7 @@ publicWidget.registry.WebsiteSalePayment = publicWidget.Widget.extend({
     start: function () {
         this.$checkbox = this.$('#checkbox_cgv');
         this.$payButton = $('button#o_payment_form_pay');
-        this._adaptPayButton();
+        this.$checkbox.trigger('change');
         return this._super.apply(this, arguments);
     },
 

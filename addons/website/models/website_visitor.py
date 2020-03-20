@@ -70,16 +70,16 @@ class WebsiteVisitor(models.Model):
             (record.name or _('Website Visitor #%s') % record.id)
         ) for record in self]
 
-    @api.depends('partner_id.email_normalized', 'partner_id.mobile')
+    @api.depends('partner_id.email_normalized', 'partner_id.mobile', 'partner_id.phone')
     def _compute_email_phone(self):
         results = self.env['res.partner'].search_read(
             [('id', 'in', self.partner_id.ids)],
-            ['id', 'email_normalized', 'mobile'],
+            ['id', 'email_normalized', 'mobile', 'phone'],
         )
         mapped_data = {
             result['id']: {
                 'email_normalized': result['email_normalized'],
-                'mobile': result['mobile']
+                'mobile': result['mobile'] if result['mobile'] else result['phone']
             } for result in results
         }
 
@@ -117,13 +117,9 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('last_connection_datetime')
     def _compute_time_statistics(self):
-        results = self.env['website.visitor'].search_read([('id', 'in', self.ids)], ['id', 'last_connection_datetime'])
-        mapped_data = {result['id']: result['last_connection_datetime'] for result in results}
-
         for visitor in self:
-            last_connection_date = mapped_data[visitor.id]
-            visitor.time_since_last_action = _format_time_ago(self.env, (datetime.now() - last_connection_date))
-            visitor.is_connected = (datetime.now() - last_connection_date) < timedelta(minutes=5)
+            visitor.time_since_last_action = _format_time_ago(self.env, (datetime.now() - visitor.last_connection_datetime))
+            visitor.is_connected = (datetime.now() - visitor.last_connection_datetime) < timedelta(minutes=5)
 
     def _prepare_visitor_send_mail_values(self):
         if self.partner_id.email:
@@ -175,6 +171,9 @@ class WebsiteVisitor(models.Model):
         access_token = request.httprequest.cookies.get('visitor_uuid')
         if access_token:
             visitor = Visitor.with_context(active_test=False).search([('access_token', '=', access_token)])
+            # Prefetch access_token and other fields. Since access_token has a restricted group and we access
+            # a non restricted field (partner_id) first it is not fetched and will require an additional query to be retrieved.
+            visitor.access_token
 
         if not self.env.user._is_public():
             partner_id = self.env.user.partner_id
@@ -251,7 +250,7 @@ class WebsiteVisitor(models.Model):
         """ We need to do this part here to avoid concurrent updates error. """
         try:
             with self.env.cr.savepoint():
-                query_lock = "SELECT * FROM website_visitor where id = %s FOR UPDATE NOWAIT"
+                query_lock = "SELECT * FROM website_visitor where id = %s FOR NO KEY UPDATE NOWAIT"
                 self.env.cr.execute(query_lock, (self.id,), log_exceptions=False)
 
                 date_now = datetime.now()

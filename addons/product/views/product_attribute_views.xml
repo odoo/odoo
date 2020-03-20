@@ -117,6 +117,7 @@
         <field name="model">product.template.attribute.value</field>
         <field name="arch" type="xml">
             <search>
+                <field name="name"/>
                 <filter string="Active" name="active" domain="[('ptav_active', '=', True)]"/>
                 <filter string="Inactive" name="inactive" domain="[('ptav_active', '=', False)]"/>
             </search>

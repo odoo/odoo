@@ -2314,6 +2314,35 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('widget many2many_checkboxes: values are updated when domain changes', async function (assert) {
+        assert.expect(5);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form>
+                    <field name="int_field"/>
+                    <field name="timmy" widget="many2many_checkboxes" domain="[['id', '>', int_field]]"/>
+                </form>`,
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_widget[name=int_field]').val(), '10');
+        assert.containsN(form, '.o_field_widget[name=timmy] .custom-checkbox', 2);
+        assert.strictEqual(form.$('.o_field_widget[name=timmy] .o_form_label').text(), 'goldsilver');
+
+        await testUtils.fields.editInput(form.$('.o_field_widget[name=int_field]'), 13);
+
+        assert.containsOnce(form, '.o_field_widget[name=timmy] .custom-checkbox');
+        assert.strictEqual(form.$('.o_field_widget[name=timmy] .o_form_label').text(), 'silver');
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2ManyBinaryMultiFiles');
 
     QUnit.test('widget many2many_binary', async function (assert) {

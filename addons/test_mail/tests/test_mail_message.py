@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-from email.utils import formataddr
 
+from unittest.mock import patch
 from odoo.addons.test_mail.tests import common
 from odoo.addons.test_mail.tests.common import mail_new_test_user
+from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.exceptions import AccessError, except_orm
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, formataddr
 from odoo.tests import tagged
 
 
@@ -70,7 +71,7 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
         reply_to_name = '%s %s' % (self.env.user.company_id.name, self.alias_record.name)
         reply_to_email = '%s@%s' % (self.alias_record.alias_name, self.alias_domain)
         self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
         # no alias domain -> author
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
@@ -320,6 +321,40 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
         self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
         self.env['mail.message'].with_user(self.user_employee).create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test', 'parent_id': self.message.id})
 
+    def test_mail_message_access_create_wo_parent_access(self):
+        """ Purpose is to test posting a message on a record whose first message / parent
+        is not accessible by current user. """
+        test_record = self.env['mail.test.simple'].with_context(self._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+        message = test_record.message_post(
+            body='<p>This is First Message</p>', subject='Subject',
+            message_type='comment', subtype='mail.mt_note')
+        # portal user have no rights to read the message
+        with self.assertRaises(except_orm):
+            message.with_user(self.user_portal).read(['subject, body'])
+
+        with patch.object(MailTestSimple, 'check_access_rights', return_value=True):
+            with self.assertRaises(except_orm):
+                message.with_user(self.user_portal).read(['subject, body'])
+
+            # parent message is accessible to references notification mail values
+            # for _notify method and portal user have no rights to send the message for this model
+            new_msg = test_record.with_user(self.user_portal).message_post(
+                body='<p>This is Second Message</p>',
+                subject='Subject',
+                parent_id=message.id,
+                partner_ids=[self.user_admin.partner_id.id],
+                message_type='comment',
+                subtype='mail.mt_comment',
+                mail_auto_delete=False)
+
+        new_mail = self.env['mail.mail'].search([
+            ('mail_message_id', '=', new_msg.id),
+            ('references', '=', message.message_id),
+        ])
+
+        self.assertTrue(new_mail)
+        self.assertEqual(new_msg.parent_id, message)
+
     # --------------------------------------------------
     # WRITE
     # --------------------------------------------------
@@ -358,17 +393,19 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
         ).with_context({'mail_create_nosubscribe': False})
 
         # mark all as read clear needactions
-        group_private.message_post(body='Test', message_type='comment', subtype='mail.mt_comment', partner_ids=[emp_partner.id])
+        msg1 = group_private.message_post(body='Test', message_type='comment', subtype='mail.mt_comment', partner_ids=[emp_partner.id])
+        self._clear_bus()
         emp_partner.env['mail.message'].mark_all_as_read(domain=[])
+        self.assertBusNotification([(self.cr.dbname, 'res.partner', emp_partner.id)], [{ 'type': 'mark_as_read', 'message_ids': [msg1.id] }])
         na_count = emp_partner.get_needaction_count()
         self.assertEqual(na_count, 0, "mark all as read should conclude all needactions")
 
         # mark all as read also clear inaccessible needactions
-        new_msg = group_private.message_post(body='Zest', message_type='comment', subtype='mail.mt_comment', partner_ids=[emp_partner.id])
+        msg2 = group_private.message_post(body='Zest', message_type='comment', subtype='mail.mt_comment', partner_ids=[emp_partner.id])
         needaction_accessible = len(emp_partner.env['mail.message'].search([['needaction', '=', True]]))
         self.assertEqual(needaction_accessible, 1, "a new message to a partner is readable to that partner")
 
-        new_msg.sudo().partner_ids = self.env['res.partner']
+        msg2.sudo().partner_ids = self.env['res.partner']
         emp_partner.env['mail.message'].search([['needaction', '=', True]])
         needaction_length = len(emp_partner.env['mail.message'].search([['needaction', '=', True]]))
         self.assertEqual(needaction_length, 1, "message should still be readable when notified")
@@ -376,7 +413,9 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
         na_count = emp_partner.get_needaction_count()
         self.assertEqual(na_count, 1, "message not accessible is currently still counted")
 
+        self._clear_bus()
         emp_partner.env['mail.message'].mark_all_as_read(domain=[])
+        self.assertBusNotification([(self.cr.dbname, 'res.partner', emp_partner.id)], [{ 'type': 'mark_as_read', 'message_ids': [msg2.id] }])
         na_count = emp_partner.get_needaction_count()
         self.assertEqual(na_count, 0, "mark all read should conclude all needactions even inacessible ones")
 

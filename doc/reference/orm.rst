@@ -127,7 +127,11 @@ Basic Fields
 Advanced Fields
 ---------------
 
+.. autoclass:: Binary()
+
 .. autoclass:: Html()
+
+.. autoclass:: Image()
 
 .. autoclass:: Monetary()
 
@@ -402,6 +406,16 @@ behavior is desired:
 
   :class:`~odoo.fields.Char`
 
+.. attribute:: company_id
+
+  Main field name used for Odoo multi-company behavior.
+
+  Used by `:meth:~odoo.models._check_company` to check multi company consistency.
+  Defines whether a record is shared between companies (no value) or only
+  accessible by the users of a given company.
+
+  :class:`~odoo.fields.Many2one`
+  :type: :class:`~odoo.addons.base.models.res_company`
 
 Recordsets
 ==========
@@ -512,7 +526,7 @@ Method decorators
 =================
 
 .. automodule:: odoo.api
-    :members: depends, depends_context, constrains, onchange, returns, model_create_multi
+    :members: depends, depends_context, constrains, onchange, returns, model, model_create_multi
 
 .. .. currentmodule:: odoo.api
 
@@ -848,6 +862,16 @@ Map
 '''
 
 .. automethod:: Model.mapped
+
+.. note::
+
+    Since V13, multi-relational field access is supported and works like a mapped call:
+
+    .. code-block:: python3
+
+        records.partner_id  # == records.mapped('partner_id')
+        records.partner_id.bank_ids  # == records.mapped('partner_id.bank_ids')
+        records.partner_id.mapped('name')  # == records.mapped('partner_id.name')
 
 Sort
 ''''

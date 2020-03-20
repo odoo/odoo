@@ -396,31 +396,65 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test('invisible filters are not rendered', async function (assert) {
-        assert.expect(5);
+    QUnit.test('fiels and filters with groups/invisible attribute are not always rendered but activable as search default', async function (assert) {
+        assert.expect(13);
         var controlPanel = await createControlPanel({
             model: 'partner',
-            arch: `<search>
-                        <filter name="filterA" string="A" domain="[]"/>
-                        <filter name="filterB" string="B" invisible="1" domain="[]"/>
-                    </search>`,
+            arch: "<search>" +
+                        "<field name=\"display_name\" string=\"Foo B\" invisible=\"1\"/>" +
+                        "<field name=\"foo\" string=\"Foo A\"/>" +
+                        "<filter name=\"filterA\" string=\"FA\" domain=\"[]\"/>" +
+                        "<filter name=\"filterB\" string=\"FB\" invisible=\"1\" domain=\"[]\"/>" +
+                        "<filter name=\"groupByA\" string=\"GA\" context=\"{'group_by': 'date_field:day'}\"/>" +
+                        "<filter name=\"groupByB\" string=\"GB\" context=\"{'group_by': 'date_field:day'}\" invisible=\"1\"/>" +
+                    "</search>",
             data: this.data,
-            searchMenuTypes: ['filter'],
+            searchMenuTypes: ['filter', 'groupBy'],
             context: {
+                search_default_display_name: 'value',
                 search_default_filterB: true,
+                search_default_groupByB: true,
             },
         });
-        await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
-        assert.containsOnce(controlPanel, '.o_menu_item a:contains("A")');
-        assert.containsNone(controlPanel, '.o_menu_item a:contains("B")');
-        // default filter should be activated even if invisible
-        assert.containsOnce(controlPanel, '.o_searchview_facet .o_facet_values:contains(B)');
 
-        // Triggers an update of the filter menu
-        await testUtils.dom.click(controlPanel.$('.o_filters_menu .o_menu_item'));
-        // The displayed filters shhould be the same as before
-        assert.containsOnce(controlPanel, '.o_menu_item a:contains("A")');
-        assert.containsNone(controlPanel, '.o_menu_item a:contains("B")');
+        // default filters/fields should be activated even if invisible
+        assert.containsN(controlPanel, '.o_searchview_facet', 3);
+
+
+        await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
+        assert.containsOnce(controlPanel, '.o_menu_item a:contains("FA")');
+        assert.containsNone(controlPanel, '.o_menu_item a:contains("FB")');
+        // default filter should be activated even if invisible
+        assert.containsOnce(controlPanel, '.o_searchview_facet .o_facet_values:contains(FB)');
+
+        await testUtils.dom.click(controlPanel.$('button span.fa-bars'));
+        assert.containsOnce(controlPanel, '.o_menu_item a:contains("GA")');
+        assert.containsNone(controlPanel, '.o_menu_item a:contains("GB")');
+        // default filter should be activated even if invisible
+        assert.containsOnce(controlPanel, '.o_searchview_facet .o_facet_values:contains(GB)');
+
+        assert.strictEqual(controlPanel.$('.o_searchview_facet').eq(0).text().replace(/[\s\t]+/g, ""), "FooBvalue");
+
+
+        // 'a' key to filter nothing on bar
+        controlPanel.$('.o_searchview_input').val('a');
+        controlPanel.$('.o_searchview_input').trigger($.Event('keypress', { which: 65, keyCode: 65 }));
+        await testUtils.nextTick();
+        // the only item in autocomplete menu should be FooA: a
+        assert.strictEqual(controlPanel.$('div.o_searchview_autocomplete').text().replace(/[\s\t]+/g, ""), "SearchFooAfor:A");
+        controlPanel.$('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER, keyCode: $.ui.keyCode.ENTER }));
+        await testUtils.nextTick();
+
+
+        // The items in the Filters menu and the Group By menu should be the same as before
+        await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
+        assert.containsOnce(controlPanel, '.o_menu_item a:contains("FA")');
+        assert.containsNone(controlPanel, '.o_menu_item a:contains("FB")');
+
+        await testUtils.dom.click(controlPanel.$('button span.fa-bars'));
+        assert.containsOnce(controlPanel, '.o_menu_item a:contains("GA")');
+        assert.containsNone(controlPanel, '.o_menu_item a:contains("GB")');
+
 
         controlPanel.destroy();
     });

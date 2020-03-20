@@ -5,7 +5,6 @@
 # Translators:
 # Felix Yuen <fyu@odoo.com>, 2019
 # bower Guo <124358678@qq.com>, 2019
-# 张宏奎 <zhanghongkui@inspur.com>, 2019
 # Maie <m@maie.name>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # 老窦 北京 <2662059195@qq.com>, 2019
@@ -18,18 +17,19 @@
 # Jeanphy <hzh0292@qq.com>, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
 # Martin Trigaux, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
 # Gary Wei <Gary.wei@elico-corp.com>, 2019
 # bf2549c5415a9287249cba2b8a5823c7, 2019
 # keecome <7017511@qq.com>, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# as co02 <asco02@163.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-18 09:46+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: keecome <7017511@qq.com>, 2019\n"
+"Last-Translator: as co02 <asco02@163.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -534,7 +534,9 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
 msgstr "已归档"
@@ -793,7 +795,7 @@ msgstr "配置设置"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
 msgid "Configuration"
-msgstr "基础配置"
+msgstr "配置"
 
 #. module: project
 #. openerp-web
@@ -968,6 +970,11 @@ msgstr "客户通过EMail提出反馈; Odoo自动创建任务，您可以直接�
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
 msgid "Daily"
 msgstr "每天"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__date_deadline_formatted
+msgid "Date Deadline Formatted"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2499,7 +2506,7 @@ msgstr "安全令牌"
 #: model:ir.model.fields,field_description:project.field_project_task__sequence
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
 msgid "Sequence"
-msgstr "单号规则"
+msgstr "序号"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -2853,11 +2860,23 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
+msgid "The parent task belongs to a company you do not have access to."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
 msgid ""
 "The project cannot be shared with the recipient(s) because the privacy of "
 "the project is too restricted. Set the privacy to 'Visible by following "
 "customers' in order to make it accessible by the recipient(s)."
 msgstr "项目无法与收件人共享，因为项目的隐私受限制。 将隐私设置为“以下客户可见”，以便收件人可以访问。"
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "The subtasks belong to a company you do not have access to."
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0

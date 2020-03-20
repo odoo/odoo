@@ -3,15 +3,16 @@
 # 	* website
 # 
 # Translators:
-# Aefgh Threenine <aefgh3962@gmail.com>, 2019
 # Manami Hashi <manami@roomsfor.hk>, 2019
 # Martin Trigaux, 2019
 # NOKA Shigekazu <shigekazu.noka@gmail.com>, 2019
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2019
 # Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2019
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2019
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
 # Tim Siu Lai <tl@roomsfor.hk>, 2019
+# 江口 和志 <k_eguchi@enzantrades.co.jp>, 2020
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
+# Hau Dao <hau@quartile.co>, 2020
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-18 09:46+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Tim Siu Lai <tl@roomsfor.hk>, 2019\n"
+"Last-Translator: Hau Dao <hau@quartile.co>, 2020\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -566,6 +567,8 @@ msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-circle text-danger\"/>\n"
 "                            <span>Offline</span>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-circle text-danger\"/>\n"
+"<span>オフライン</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
@@ -602,7 +605,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "<i class=\"fa fa-puzzle-piece\"/> Mega Menu"
-msgstr ""
+msgstr "<i class=\"fa fa-puzzle-piece\"/> メガメニュー"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -684,7 +687,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "<small>/ month</small>"
-msgstr ""
+msgstr "<small>/ 月</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -719,12 +722,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<span class=\"fa fa-pencil mr-2\"/>Edit"
-msgstr ""
+msgstr "<span class=\"fa fa-pencil mr-2\"/>編集"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<span class=\"fa fa-plus mr-2\"/>New"
-msgstr ""
+msgstr "<span class=\"fa fa-plus mr-2\"/>新規"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
@@ -789,6 +792,9 @@ msgid ""
 "                            <span class=\"css_publish\">Unpublished</span>\n"
 "                            <span class=\"css_unpublish\">Published</span>"
 msgstr ""
+"<span/>\n"
+"                            <span class=\"css_publish\">未公開</span>\n"
+"                            <span class=\"css_unpublish\">公開済</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_call_to_action
@@ -953,14 +959,14 @@ msgstr "機能を追加"
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
 #, python-format
 msgid "Add Mega Menu Item"
-msgstr ""
+msgstr "メガメニューを追加"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
 #, python-format
 msgid "Add Menu Item"
-msgstr ""
+msgstr "メニューを追加"
 
 #. module: website
 #. openerp-web
@@ -980,7 +986,7 @@ msgstr ""
 #: code:addons/website/static/src/js/menu/content.js:0
 #, python-format
 msgid "Add a menu item"
-msgstr ""
+msgstr "メニューを追加"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1497,7 +1503,7 @@ msgstr "確認"
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
 msgid "Connect Google Analytics"
-msgstr ""
+msgstr "Googleアナリティクスに接続"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -1654,7 +1660,7 @@ msgstr ""
 #: code:addons/website/static/src/js/menu/edit.js:0
 #, python-format
 msgid "DRAG BUILDING BLOCKS HERE"
-msgstr ""
+msgstr "ここにブロックをドラッグ"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_dashboard
@@ -1703,7 +1709,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website__social_default_image
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Default Social Share Image"
-msgstr ""
+msgstr "デフォルトソーシャルシェア画像"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_default_lang_id
@@ -1788,7 +1794,7 @@ msgstr "自動再生を無効にする"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Disabled"
-msgstr ""
+msgstr "無効"
 
 #. module: website
 #. openerp-web
@@ -1854,7 +1860,7 @@ msgstr "ロゴをウェブサイトに表示"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display this website when users visit this domain"
-msgstr ""
+msgstr "ユーザがこのドメインを訪問する際にこのウェブサイトを表示"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
@@ -1928,7 +1934,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
 #, python-format
 msgid "Drag to the right to get a submenu"
-msgstr ""
+msgstr "サブメニューを作成するには、メニューを右にドラッグ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -2184,7 +2190,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__create_date
 msgid "First connection date"
-msgstr ""
+msgstr "初回接続日"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -2271,7 +2277,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website__auth_signup_uninvited__b2c
 msgid "Free sign up"
-msgstr "自由にアインアップ"
+msgstr "自由にサインアップ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
@@ -2328,7 +2334,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
 msgid "Go to"
-msgstr "移動"
+msgstr "移動:"
 
 #. module: website
 #. openerp-web
@@ -2474,7 +2480,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "HTML/CSS/JS Editor"
-msgstr ""
+msgstr "HTML/CSS/JSエディタ"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_http
@@ -2581,7 +2587,7 @@ msgstr "高"
 #, python-format
 msgid ""
 "Hint: Type '/' to search an existing page and '#' to link to an anchor."
-msgstr ""
+msgstr "ヒント：「/」を入力すると既存のページを検索し、「＃」を入力するとアンカーにリンクします。"
 
 #. module: website
 #. openerp-web
@@ -2673,7 +2679,7 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_website__social_default_image
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "If set, replaces the company logo as the default social share image."
-msgstr ""
+msgstr "設定した場合、デフォルトソーシャルシェア画像を会社ロゴから置き換え。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -2728,6 +2734,7 @@ msgid ""
 "In this mode, you can only translate texts. To change the structure of the page, you must edit the master page.\n"
 "        Each modification on the master page is automatically applied to all translated versions."
 msgstr ""
+"このモードではテキストの翻訳のみ可能です。ページの構成を変更するには、マスターページを編集してください。マスターページへの変更は自動的に翻訳版に反映されます。"
 
 #. module: website
 #: code:addons/website/controllers/backend.py:0
@@ -2842,7 +2849,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__is_mega_menu
 msgid "Is Mega Menu"
-msgstr ""
+msgstr "メガメニュー"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_partner__is_published
@@ -2851,7 +2858,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__is_published
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__is_published
 msgid "Is Published"
-msgstr ""
+msgstr "公開済"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__is_visible
@@ -2903,7 +2910,7 @@ msgstr "私たちの輪に参加してあなたの会社をより良い場所に
 #: code:addons/website/static/src/xml/website.seo.xml:0
 #, python-format
 msgid "Keep empty to use default value"
-msgstr ""
+msgstr "空白の場合デフォルト値が適用される"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_attachment__key
@@ -2925,7 +2932,7 @@ msgstr "キーワード"
 #: code:addons/website/static/src/xml/website.seo.xml:0
 #, python-format
 msgid "Keywords"
-msgstr ""
+msgstr "キーワード"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__lang_id
@@ -2965,7 +2972,7 @@ msgstr "最終アクション"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__last_connection_datetime
 msgid "Last Connection"
-msgstr ""
+msgstr "最終接続"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_multi_menus
@@ -2997,7 +3004,7 @@ msgstr "先月"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Last Page"
-msgstr ""
+msgstr "最後の訪問ページ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__write_uid
@@ -3124,7 +3131,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__partner_id
 msgid "Linked Partner"
-msgstr ""
+msgstr "リンクされた取引先"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3231,7 +3238,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
 #, python-format
 msgid "Mega Menu"
-msgstr ""
+msgstr "メガメニュー"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__mega_menu_classes
@@ -3300,7 +3307,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__mobile
 msgid "Mobile Phone"
-msgstr ""
+msgstr "携帯電話"
 
 #. module: website
 #. openerp-web
@@ -3380,7 +3387,7 @@ msgstr "マルチウェブサイト"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.layout
 msgid "My Website"
-msgstr "私のウェブサイト"
+msgstr "自分のウェブサイト"
 
 #. module: website
 #. openerp-web
@@ -3423,7 +3430,7 @@ msgstr "新しいブログ投稿"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "New Course"
-msgstr ""
+msgstr "新しいコース"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -3433,17 +3440,17 @@ msgstr "新しいイベント"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "New Forum"
-msgstr ""
+msgstr "新しいフォーラム"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "New Job Offer"
-msgstr ""
+msgstr "新しい求人"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "New Livechat Channel"
-msgstr ""
+msgstr "新しいライブチャットチャンネル"
 
 #. module: website
 #. openerp-web
@@ -3570,7 +3577,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__visit_count
 msgid "Number of visits"
-msgstr ""
+msgstr "最後の訪問ページ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns
@@ -3631,7 +3638,7 @@ msgstr "OK"
 #: code:addons/website/static/src/js/editor/editor_menu_translate.js:0
 #, python-format
 msgid "Ok, never show me this again"
-msgstr ""
+msgstr "今後このメッセージを表示しない"
 
 #. module: website
 #. openerp-web
@@ -3650,7 +3657,7 @@ msgstr "招待制"
 msgid ""
 "Once the selection of available websites by domain is done, you can filter "
 "by country group."
-msgstr ""
+msgstr "ドメインでのウェブサイト選択後、国グループでのフィルタを適用。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
@@ -3775,7 +3782,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__website_indexed
 msgid "Page Indexed"
-msgstr ""
+msgstr "索引対象"
 
 #. module: website
 #. openerp-web
@@ -3795,7 +3802,7 @@ msgstr "ページプロパティ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_tree_view
 msgid "Page Published"
-msgstr ""
+msgstr "ページ公開済"
 
 #. module: website
 #. openerp-web
@@ -3816,7 +3823,7 @@ msgstr "ページURL"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__visitor_page_count
 msgid "Page Views"
-msgstr ""
+msgstr "ページビュー"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.website_visitor_page_action
@@ -3826,7 +3833,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
 msgid "Page views"
-msgstr ""
+msgstr "ページビュー"
 
 #. module: website
 #: code:addons/website/models/website.py:0
@@ -3929,7 +3936,7 @@ msgstr "プライマリ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Products Recently Viewed"
-msgstr ""
+msgstr "最近チェックした商品"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
@@ -4069,7 +4076,7 @@ msgstr "標準"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_form_view
 msgid "Related Menu Items"
-msgstr ""
+msgstr "関連メニュー項目"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__menu_ids
@@ -4151,7 +4158,7 @@ msgstr "レビュー"
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_rewrite_list
 msgid "Rewrite"
-msgstr ""
+msgstr "リライト"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4280,7 +4287,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.seo.xml:0
 #, python-format
 msgid "Select an image for social share"
-msgstr ""
+msgstr "ソーシャルシェアの画像を選択してください"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -4434,7 +4441,7 @@ msgstr "ソーシャルメディア"
 #: code:addons/website/static/src/xml/website.seo.xml:0
 #, python-format
 msgid "Social Preview"
-msgstr ""
+msgstr "ソーシャルプレビュー"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4612,7 +4619,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "The company this website belongs to"
-msgstr ""
+msgstr "このウェブサイトの会社"
 
 #. module: website
 #. openerp-web
@@ -4809,7 +4816,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.facebook_page.xml:0
 #, python-format
 msgid "Timeline"
-msgstr ""
+msgstr "タイムライン"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__timezone
@@ -4906,7 +4913,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/track_page.xml:0
 #, python-format
 msgid "Track visitor"
-msgstr ""
+msgstr "訪問者を追跡"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -4949,7 +4956,7 @@ msgstr "翻訳されたコンテンツ"
 #: code:addons/website/static/src/js/editor/editor_menu_translate.js:0
 #, python-format
 msgid "Translation Info"
-msgstr ""
+msgstr "翻訳情報"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5015,7 +5022,7 @@ msgstr "UA-XXXXXXXX-Y"
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_from
 #: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
 msgid "URL from"
-msgstr ""
+msgstr "リライトURL元"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__cdn_filters
@@ -5026,7 +5033,7 @@ msgstr "これらのフィルタに一致するURLは、CDNベースURLを使用
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
 msgid "URL to"
-msgstr ""
+msgstr "リライトURL先"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5161,15 +5168,6 @@ msgid "User need to be at least in one of these groups to see the menu"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.robots
-msgid ""
-"User-agent: *\n"
-"Sitemap:"
-msgstr ""
-"User-agent: *\n"
-"Sitemap:"
-
-#. module: website
 #: model:ir.model,name:website.model_res_users
 msgid "Users"
 msgstr "ユーザ"
@@ -5240,7 +5238,7 @@ msgstr "表示"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__group_ids
 msgid "Visible Groups"
-msgstr ""
+msgstr "表示グループ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_partner__website_published
@@ -5254,14 +5252,14 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_track__visit_datetime
 msgid "Visit Date"
-msgstr ""
+msgstr "訪問日"
 
 #. module: website
 #: model:ir.model,name:website.model_website_track
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_ids
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Visited Pages"
-msgstr ""
+msgstr "訪問したページ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__website_track_ids
@@ -5273,12 +5271,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Visitor"
-msgstr ""
+msgstr "訪問者"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
 msgid "Visitor Informations"
-msgstr ""
+msgstr "訪問者情報"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_graph
@@ -5309,7 +5307,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_graph
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Visitors"
-msgstr ""
+msgstr "訪問者"
 
 #. module: website
 #. openerp-web
@@ -5446,7 +5444,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.website_pages_tree_view
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
 msgid "Website Pages"
-msgstr ""
+msgstr "ウェブサイトのページ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_base_automation__website_path

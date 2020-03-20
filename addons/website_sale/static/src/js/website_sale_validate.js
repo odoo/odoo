@@ -2,6 +2,8 @@ odoo.define('website_sale.validate', function (require) {
 'use strict';
 
 var publicWidget = require('web.public.widget');
+var core = require('web.core');
+var _t = core._t;
 
 publicWidget.registry.websiteSaleValidate = publicWidget.Widget.extend({
     selector: 'div.oe_website_sale_tx_status[data-order-id]',
@@ -36,9 +38,9 @@ publicWidget.registry.websiteSaleValidate = publicWidget.Widget.extend({
                     }, Math.ceil(self._poll_nbr / 3) * 1000);
                 } else {
                     var $message = $(result.message);
-                    $message.find('span:first').prepend(
-                        $("<i title='We are waiting the confirmation of the bank or payment provider' class='fa fa-warning' style='margin-right:10px;'>")
-                    );
+                    var $warning =  $("<i class='fa fa-warning' style='margin-right:10px;'>");
+                    $warning.attr("title", _t("We are waiting the confirmation of the bank or payment provider"));
+                    $message.find('span:first').prepend($warning);
                     result.message = $message.html();
                 }
             }

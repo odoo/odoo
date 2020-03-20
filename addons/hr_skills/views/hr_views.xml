@@ -49,7 +49,7 @@
                 <group>
                     <group>
                         <field name="line_type_id"/>
-                        <field name="display_type" invisible="1"/>
+                        <field name="display_type" required="1"/>
                     </group>
                     <group>
                         <field name="date_start" required="True"/>
@@ -261,7 +261,10 @@
                     <group>
                         <group>
                             <field name="skill_type_id"/>
-                            <field name="skill_id" domain="[('skill_type_id', '=', skill_type_id)]"/>
+                            <field
+                                name="skill_id"
+                                domain="[('skill_type_id', '=', skill_type_id)]"
+                                options="{'no_create_edit':True}"/>
                         </group>
                         <group>
                             <field name="skill_level_id" domain="[('skill_type_id', '=', skill_type_id)]"/>

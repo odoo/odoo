@@ -9,6 +9,9 @@
 .ui-autocomplete {
     z-index: $zindex-modal + 1;
     max-width: 600px;
+    .ui-menu-item > a {
+        display: block;
+    }
 }
 
 [aria-hidden="true"], [aria-hidden="1"] {
@@ -129,4 +132,13 @@ span.o_force_ltr {
 .o_image_64_max {
     max-width: 64px;
     max-height: 64px;
+}
+
+.o_image_128_max {
+    max-width: 128px !important;
+    max-height: 128px !important;
+}
+
+.o_width_128 {
+    width: 128px;
 }

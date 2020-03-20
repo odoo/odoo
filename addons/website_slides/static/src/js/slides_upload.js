@@ -145,7 +145,7 @@ var SlideUploadDialog = Dialog.extend({
 
         if (this.file.type === 'application/pdf') {
             _.extend(values, {
-                'image': canvas.toDataURL().split(',')[1],
+                'image_1920': canvas.toDataURL().split(',')[1],
                 'slide_type': canvas.height > canvas.width ? 'document' : 'presentation',
                 'mime_type': this.file.type,
                 'datas': this.file.data
@@ -153,7 +153,7 @@ var SlideUploadDialog = Dialog.extend({
         } else if (values['slide_type'] === 'webpage') {
             _.extend(values, {
                 'mime_type': 'text/html',
-                'image': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data,
+                'image_1920': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data,
             });
         } else if (/^image\/.*/.test(this.file.type)) {
             if (values['slide_type'] === 'presentation') {
@@ -164,7 +164,7 @@ var SlideUploadDialog = Dialog.extend({
                 });
             } else {
                 _.extend(values, {
-                    'image': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data,
+                    'image_1920': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data,
                 });
             }
         }
@@ -360,6 +360,15 @@ var SlideUploadDialog = Dialog.extend({
         this.$modal.find('.modal-dialog').addClass('modal-lg');
     },
     /**
+     * Hide the preview/right column and resize the modal
+     * @private
+     */
+    _hidePreviewColumn: function () {
+        this.$('#o_wslides_js_slide_upload_left_column').addClass('col').removeClass('col-md-6');
+        this.$('#o_wslides_js_slide_upload_preview_column').addClass('d-none');
+        this.$modal.find('.modal-dialog').removeClass('modal-lg');
+    },
+    /**
      * @private
      */
     // TODO: Remove this part, as now SVG support in image resize tools is included
@@ -416,6 +425,11 @@ var SlideUploadDialog = Dialog.extend({
         var preventOnchange = $input.data('preventOnchange');
 
         var file = ev.target.files[0];
+        if (!file) {
+            this.$('#slide-image').attr('src', '/website_slides/static/src/img/document.png');
+            this._hidePreviewColumn();
+            return;
+        }
         var isImage = /^image\/.*/.test(file.type);
         var loaded = false;
         this.file.name = file.name;
@@ -423,11 +437,13 @@ var SlideUploadDialog = Dialog.extend({
         if (!(isImage || this.file.type === 'application/pdf')) {
             this._alertDisplay(_t("Invalid file type. Please select pdf or image file"));
             this._fileReset();
+            this._hidePreviewColumn();
             return;
         }
         if (file.size / 1024 / 1024 > 25) {
             this._alertDisplay(_t("File is too big. File size cannot exceed 25MB"));
             this._fileReset();
+            this._hidePreviewColumn();
             return;
         }
 

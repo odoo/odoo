@@ -8,19 +8,20 @@
 # Manami Hashi <manami@roomsfor.hk>, 2019
 # NOKA Shigekazu <shigekazu.noka@gmail.com>, 2019
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2019
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2019
 # 森岡広道 <hiromichi.morioka@pro-spire.co.jp>, 2019
 # Martin Trigaux, 2019
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2019
 # Tim Siu Lai <tl@roomsfor.hk>, 2019
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
+# Hau Dao <hau@quartile.co>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
+"POT-Creation-Date: 2019-11-25 15:03+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2019\n"
+"Last-Translator: Hau Dao <hau@quartile.co>, 2020\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -607,7 +608,7 @@ msgstr "本当に選択した全レコードをアーカイブしますか？"
 #: code:addons/web/static/src/js/views/form/form_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive this record?"
-msgstr ""
+msgstr "選択したレコードを本当にアーカイブしますか？"
 
 #. module: web
 #. openerp-web
@@ -1199,7 +1200,7 @@ msgstr "日付"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Date & Time"
-msgstr ""
+msgstr "日時"
 
 #. module: web
 #. openerp-web
@@ -1402,7 +1403,7 @@ msgstr "カラム編集"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Edit ControlPanelView"
-msgstr ""
+msgstr "コントロールパネルビューを編集"
 
 #. module: web
 #. openerp-web
@@ -1820,7 +1821,7 @@ msgstr "間違いありません。"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "I want to update data (import-compatible export)"
-msgstr ""
+msgstr "データを更新したい(インポート可能な項目のエクスポート)"
 
 #. module: web
 #. openerp-web
@@ -2427,6 +2428,13 @@ msgstr ""
 #, python-format
 msgid "No valid record to save"
 msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/core/utils.js:0
+#, python-format
+msgid "Node [%s] is not a JSONified XML node"
+msgstr "ノード [%s] はJSONified XMLノードではありません"
 
 #. module: web
 #. openerp-web
@@ -3214,7 +3222,7 @@ msgstr "詳細を見る"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "See examples"
-msgstr ""
+msgstr "例を見る"
 
 #. module: web
 #. openerp-web
@@ -3768,7 +3776,7 @@ msgstr "True"
 msgid ""
 "Try to add some records, or make sure that there is at least one measure and"
 " no active filter in the search bar."
-msgstr ""
+msgstr "レコードを追加するか、検索バーに有効なフィルタが設定されていないことを確認してください。"
 
 #. module: web
 #. openerp-web
@@ -3777,7 +3785,7 @@ msgstr ""
 msgid ""
 "Try to add some records, or make sure that there is no\n"
 "                active filter in the search bar."
-msgstr ""
+msgstr "レコードを追加するか、検索バーに有効なフィルタが設定されていないことを確認してください。"
 
 #. module: web
 #. openerp-web
@@ -3987,7 +3995,7 @@ msgstr "検証エラー"
 #: code:addons/web/static/src/js/views/pivot/pivot_model.js:0
 #, python-format
 msgid "Variation"
-msgstr ""
+msgstr "変化"
 
 #. module: web
 #. openerp-web
@@ -4223,15 +4231,6 @@ msgid "Your name"
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
-#, python-format
-msgid ""
-"Your password is the default (admin)! If this system is exposed to untrusted"
-" users it is important to change it immediately for security reasons. I will"
-" keep nagging you about it!"
-msgstr ""
-
-#. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
 #, python-format
@@ -4355,7 +4354,7 @@ msgstr "が次である"
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is after"
-msgstr "が次以降である"
+msgstr "が次より後である"
 
 #. module: web
 #. openerp-web
@@ -4363,7 +4362,7 @@ msgstr "が次以降である"
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is after or equal to"
-msgstr ""
+msgstr "が次以降である"
 
 #. module: web
 #. openerp-web
@@ -4371,7 +4370,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is before"
-msgstr "が次以前である"
+msgstr "が次より前である"
 
 #. module: web
 #. openerp-web
@@ -4379,7 +4378,7 @@ msgstr "が次以前である"
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is before or equal to"
-msgstr ""
+msgstr "が次以前である"
 
 #. module: web
 #. openerp-web

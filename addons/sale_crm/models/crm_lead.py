@@ -79,7 +79,6 @@ class CrmLead(models.Model):
             'default_campaign_id': self.campaign_id.id,
             'default_medium_id': self.medium_id.id,
             'default_origin': self.name,
-            'default_name': self.name,
             'default_source_id': self.source_id.id,
             'default_company_id': self.company_id.id or self.env.company.id,
         }

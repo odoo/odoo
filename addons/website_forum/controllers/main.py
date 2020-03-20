@@ -49,7 +49,11 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/new', type='json', auth="user", methods=['POST'], website=True)
     def forum_create(self, forum_name="New Forum", forum_mode="questions", add_menu=False):
-        forum_id = request.env['forum.forum'].create({'name': forum_name, 'mode': forum_mode})
+        forum_id = request.env['forum.forum'].create({
+            'name': forum_name,
+            'mode': forum_mode,
+            'website_id': request.website.id,
+        })
         if add_menu:
             request.env['website.menu'].create({
                 'name': forum_name,
@@ -230,6 +234,8 @@ class WebsiteForum(WebsiteProfile):
             'filters': filters,
             'reversed': reversed,
         })
+        if (request.httprequest.referrer or "").startswith(request.httprequest.url_root):
+            values['back_button_url'] = request.httprequest.referrer
         return request.render("website_forum.post_description_full", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/toggle_favourite', type='json', auth="user", methods=['POST'], website=True)

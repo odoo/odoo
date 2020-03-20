@@ -147,7 +147,7 @@
                                             <tr>
                                                 <td class="text-center align-middle">
                                                     <t t-if="move_line.lot_name or move_line.lot_id">
-                                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', move_line.lot_name, 600, 150)" style="width:100%;height:4rem" alt="Barcode"/>
+                                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', move_line.lot_name, 600, 150)" style="width:100%;height:4rem" alt="Barcode"/>
                                                         <span t-esc="move_line.lot_name or move_line.lot_id.name"/>
                                                     </t>
                                                     <t t-else="">

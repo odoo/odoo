@@ -686,7 +686,8 @@ def serialize_exception(e):
         "debug": traceback.format_exc(),
         "message": ustr(e),
         "arguments": e.args,
-        "exception_type": "internal_error"
+        "exception_type": "internal_error",
+        "context": getattr(e, 'context', {}),
     }
     if isinstance(e, odoo.exceptions.UserError):
         tmp["exception_type"] = "user_error"
@@ -1049,7 +1050,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         :returns: the new context
         """
         assert self.uid, "The user needs to be logged-in to initialize his context"
-        self.context = request.env['res.users'].context_get() or {}
+        self.context = dict(request.env['res.users'].context_get() or {})
         self.context['uid'] = self.uid
         self._fix_lang(self.context)
         return self.context

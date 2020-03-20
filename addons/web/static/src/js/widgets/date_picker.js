@@ -207,7 +207,8 @@ var DateWidget = Widget.extend({
             this.$warning.attr('title', title);
             this.$input.after(this.$warning);
         }
-        if (currentDate && currentDate.isAfter(moment())) {
+        // Get rid of time and TZ crap for comparison
+        if (currentDate && currentDate.format('YYYY-MM-DD') > moment().format('YYYY-MM-DD')) {
             this.$warning.show();
         } else {
             this.$warning.hide();

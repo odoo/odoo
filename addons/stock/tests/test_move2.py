@@ -2323,6 +2323,175 @@ class TestRoutes(TestStockCommon):
             self.assertEquals(len(picking.move_lines), 1)
             self.assertEquals(picking.move_lines.product_uom_qty, 2)
 
+    def test_mtso_mto_adjust_01(self):
+        """ Run '_adjust_procure_method' for products A & B:
+        - Product A has 5.0 available
+        - Product B has 3.0 available
+        Stock moves (SM) are created for 4.0 units
+        After '_adjust_procure_method':
+        - SM for A is 'make_to_stock'
+        - SM for B is 'make_to_order'
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        final_location = self.partner.property_stock_customer
+        product_A = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+        })
+        product_B = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+        })
+
+        # We alter one rule and we set it to 'mts_else_mto'
+        rule = self.env['procurement.group']._get_rule(product_A, final_location, {'warehouse_id': warehouse})
+        rule.procure_method = 'mts_else_mto'
+
+        self.env['stock.quant']._update_available_quantity(product_A, warehouse.lot_stock_id, 5.0)
+        self.env['stock.quant']._update_available_quantity(product_B, warehouse.lot_stock_id, 3.0)
+
+        move_tmpl = {
+            'name': 'Product',
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 4.0,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.partner.property_stock_customer.id,
+            'warehouse_id': warehouse.id,
+        }
+        move_A_vals = dict(move_tmpl)
+        move_A_vals.update({
+            'product_id': product_A.id,
+        })
+        move_A = self.env['stock.move'].create(move_A_vals)
+        move_B_vals = dict(move_tmpl)
+        move_B_vals.update({
+            'product_id': product_B.id,
+        })
+        move_B = self.env['stock.move'].create(move_B_vals)
+        moves = move_A + move_B
+
+        self.assertEqual(move_A.procure_method, 'make_to_stock', 'Move A should be "make_to_stock"')
+        self.assertEqual(move_B.procure_method, 'make_to_stock', 'Move A should be "make_to_order"')
+        moves._adjust_procure_method()
+        self.assertEqual(move_A.procure_method, 'make_to_stock', 'Move A should be "make_to_stock"')
+        self.assertEqual(move_B.procure_method, 'make_to_order', 'Move A should be "make_to_order"')
+
+    def test_mtso_mto_adjust_02(self):
+        """ Run '_adjust_procure_method' for products A & B:
+        - Product A has 5.0 available
+        - Product B has 3.0 available
+        Stock moves (SM) are created for 2.0 + 2.0 units
+        After '_adjust_procure_method':
+        - SM for A is 'make_to_stock'
+        - SM for B is 'make_to_stock' and 'make_to_order'
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        final_location = self.partner.property_stock_customer
+        product_A = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+        })
+        product_B = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+        })
+
+        # We alter one rule and we set it to 'mts_else_mto'
+        rule = self.env['procurement.group']._get_rule(product_A, final_location, {'warehouse_id': warehouse})
+        rule.procure_method = 'mts_else_mto'
+
+        self.env['stock.quant']._update_available_quantity(product_A, warehouse.lot_stock_id, 5.0)
+        self.env['stock.quant']._update_available_quantity(product_B, warehouse.lot_stock_id, 3.0)
+
+        move_tmpl = {
+            'name': 'Product',
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.partner.property_stock_customer.id,
+            'warehouse_id': warehouse.id,
+        }
+        move_A1_vals = dict(move_tmpl)
+        move_A1_vals.update({
+            'product_id': product_A.id,
+        })
+        move_A1 = self.env['stock.move'].create(move_A1_vals)
+        move_A2_vals = dict(move_tmpl)
+        move_A2_vals.update({
+            'product_id': product_A.id,
+        })
+        move_A2 = self.env['stock.move'].create(move_A2_vals)
+        move_B1_vals = dict(move_tmpl)
+        move_B1_vals.update({
+            'product_id': product_B.id,
+        })
+        move_B1 = self.env['stock.move'].create(move_B1_vals)
+        move_B2_vals = dict(move_tmpl)
+        move_B2_vals.update({
+            'product_id': product_B.id,
+        })
+        move_B2 = self.env['stock.move'].create(move_B2_vals)
+        moves = move_A1 + move_A2 + move_B1 + move_B2
+
+        self.assertEqual(move_A1.procure_method, 'make_to_stock', 'Move A1 should be "make_to_stock"')
+        self.assertEqual(move_A2.procure_method, 'make_to_stock', 'Move A2 should be "make_to_stock"')
+        self.assertEqual(move_B1.procure_method, 'make_to_stock', 'Move B1 should be "make_to_stock"')
+        self.assertEqual(move_B2.procure_method, 'make_to_stock', 'Move B2 should be "make_to_stock"')
+        moves._adjust_procure_method()
+        self.assertEqual(move_A1.procure_method, 'make_to_stock', 'Move A1 should be "make_to_stock"')
+        self.assertEqual(move_A2.procure_method, 'make_to_stock', 'Move A2 should be "make_to_stock"')
+        self.assertEqual(move_B1.procure_method, 'make_to_stock', 'Move B1 should be "make_to_stock"')
+        self.assertEqual(move_B2.procure_method, 'make_to_order', 'Move B2 should be "make_to_order"')
+
+    def test_mtso_mto_adjust_03(self):
+        """ Run '_adjust_procure_method' for products A with 4.0 available
+        2 Stock moves (SM) are created:
+        - SM1 for 5.0 Units
+        - SM2 for 3.0 Units
+        SM1 is confirmed, so 'virtual_available' is -1.0.
+        SM1 should become 'make_to_order'
+        SM2 should remain 'make_to_stock'
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        final_location = self.partner.property_stock_customer
+        product_A = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+        })
+
+        # We alter one rule and we set it to 'mts_else_mto'
+        rule = self.env['procurement.group']._get_rule(product_A, final_location, {'warehouse_id': warehouse})
+        rule.procure_method = 'mts_else_mto'
+
+        self.env['stock.quant']._update_available_quantity(product_A, warehouse.lot_stock_id, 4.0)
+
+        move_tmpl = {
+            'name': 'Product',
+            'product_id': product_A.id,
+            'product_uom': self.uom_unit.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.partner.property_stock_customer.id,
+            'warehouse_id': warehouse.id,
+        }
+        move_A1_vals = dict(move_tmpl)
+        move_A1_vals.update({
+            'product_uom_qty': 5.0,
+        })
+        move_A1 = self.env['stock.move'].create(move_A1_vals)
+        move_A2_vals = dict(move_tmpl)
+        move_A2_vals.update({
+            'product_uom_qty': 3.0,
+        })
+        move_A2 = self.env['stock.move'].create(move_A2_vals)
+        moves = move_A1 + move_A2
+
+        self.assertEqual(move_A1.procure_method, 'make_to_stock', 'Move A1 should be "make_to_stock"')
+        self.assertEqual(move_A2.procure_method, 'make_to_stock', 'Move A2 should be "make_to_stock"')
+        move_A1._action_confirm()
+        moves._adjust_procure_method()
+        self.assertEqual(move_A1.procure_method, 'make_to_order', 'Move A should be "make_to_stock"')
+        self.assertEqual(move_A2.procure_method, 'make_to_stock', 'Move A should be "make_to_order"')
+
     def test_delay_alert_1(self):
         """ On a pick pack ship scenario, enable the delay alert flag on the pack rule. Edit the
         schedule date on the pick, a delay alert should be created for the ship.

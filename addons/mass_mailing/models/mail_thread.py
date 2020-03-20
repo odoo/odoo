@@ -50,7 +50,7 @@ class MailThread(models.AbstractModel):
         bounced_partner = message_dict['bounced_partner']
 
         if bounced_msg_id:
-            self.env['mailing.trace'].set_bounced(mail_message_ids=[bounced_msg_id])
+            self.env['mailing.trace'].set_bounced(mail_message_ids=bounced_msg_id)
         if bounced_email:
             three_months_ago = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(weeks=13))
             stats = self.env['mailing.trace'].search(['&', ('bounced', '>', three_months_ago), ('email', '=ilike', bounced_email)]).mapped('bounced')

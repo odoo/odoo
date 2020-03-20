@@ -21,7 +21,6 @@ except ImportError:
 
 from collections import namedtuple
 from email.message import Message
-from email.utils import formataddr
 from lxml import etree
 from werkzeug import url_encode
 from werkzeug import urls
@@ -586,6 +585,14 @@ class MailThread(models.AbstractModel):
     def _message_track_post_template(self, changes):
         if not changes:
             return True
+        # Clean the context to get rid of residual default_* keys
+        # that could cause issues afterward during the mail.message
+        # generation. Example: 'default_parent_id' would refer to
+        # the parent_id of the current record that was used during
+        # its creation, but could refer to wrong parent message id,
+        # leading to a traceback in case the related message_id
+        # doesn't exist
+        self = self.with_context(clean_context(self._context))
         templates = self._track_template(changes)
         for field_name, (template, post_kwargs) in templates.items():
             if not template:
@@ -1518,7 +1525,7 @@ class MailThread(models.AbstractModel):
         on partner like ('user_ids', '!=', False) that would not be efficient. """
         domain = [('email_normalized', 'in', normalized_emails)]
         if extra_domain:
-            domain = expression.AND(domain, extra_domain)
+            domain = expression.AND([domain, extra_domain])
         partners = self.env['res.users'].sudo().search(domain, order='name ASC').mapped('partner_id')
         # return a search on partner to filter results current user should not see (multi company for example)
         return self.env['res.partner'].search([('id', 'in', partners.ids)])
@@ -1526,7 +1533,7 @@ class MailThread(models.AbstractModel):
     def _mail_search_on_partner(self, normalized_emails, extra_domain=False):
         domain = [('email_normalized', 'in', normalized_emails)]
         if extra_domain:
-            domain = expression.AND(domain, extra_domain)
+            domain = expression.AND([domain, extra_domain])
         return self.env['res.partner'].search(domain)
 
     def _mail_find_user_for_gateway(self, email, alias=None):
@@ -1635,7 +1642,7 @@ class MailThread(models.AbstractModel):
             normalized_email = tools.email_normalize(contact)
             partner = next((partner for partner in done_partners if partner.email_normalized == normalized_email), self.env['res.partner'])
             if not partner and force_create and normalized_email in normalized_emails:
-                partner = self.env['res.partner'].name_create(contact)[0]
+                partner = self.env['res.partner'].browse(self.env['res.partner'].name_create(contact)[0])
             partners.append(partner)
         return partners
 
@@ -1684,9 +1691,14 @@ class MailThread(models.AbstractModel):
             # taking advantage of cache looks better in this case, to check
             filtered_attachment_ids = self.env['ir.attachment'].sudo().browse(attachment_ids).filtered(
                 lambda a: a.res_model == 'mail.compose.message' and a.create_uid.id == self._uid)
+            # update filtered (pending) attachments to link them to the proper record
             if filtered_attachment_ids:
                 filtered_attachment_ids.write({'res_model': model, 'res_id': res_id})
-            m2m_attachment_ids += [(4, id) for id in filtered_attachment_ids.ids]
+            # prevent public and portal users from using attachments that are not theirs
+            if not self.env.user.has_group('base.group_user'):
+                attachment_ids = filtered_attachment_ids.ids
+
+            m2m_attachment_ids += [(4, id) for id in attachment_ids]
         # Handle attachments parameter, that is a dictionary of attachments
 
         if attachments: # generate 
@@ -2217,7 +2229,8 @@ class MailThread(models.AbstractModel):
             'mail_message_id': message.id,
             'mail_server_id': message.mail_server_id.id, # 2 query, check acces + read, may be useless, Falsy, when will it be used?
             'auto_delete': mail_auto_delete,
-            'references': message.parent_id.message_id if message.parent_id else False,
+            # due to ir.rule, user have no right to access parent message if message is not published
+            'references': message.parent_id.sudo().message_id if message.parent_id else False,
             'subject': mail_subject,
         }
         headers = self._notify_email_headers()
@@ -2644,7 +2657,7 @@ class MailThread(models.AbstractModel):
             company_name = company.name if company else self.env.company.name
             for res_id in result_email.keys():
                 name = '%s%s%s' % (company_name, ' ' if doc_names.get(res_id) else '', doc_names.get(res_id, ''))
-                result[res_id] = formataddr((name, result_email[res_id]))
+                result[res_id] = tools.formataddr((name, result_email[res_id]))
 
         left_ids = set(_res_ids) - set(result_email)
         if left_ids:

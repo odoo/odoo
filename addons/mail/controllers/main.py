@@ -90,7 +90,7 @@ class MailController(http.Controller):
                     #   redirect to the messaging.
                     suggested_company = record_sudo._get_mail_redirect_suggested_company()
                     if not suggested_company:
-                        raise AccessError()
+                        raise AccessError('')
                     cids = cids + [suggested_company.id]
                     record_sudo.with_user(uid).with_context(allowed_company_ids=cids).check_access_rule('read')
             except AccessError:
@@ -143,7 +143,9 @@ class MailController(http.Controller):
     @http.route('/mail/read_followers', type='json', auth='user')
     def read_followers(self, follower_ids, res_model):
         followers = []
-        is_editable = request.env['mail.followers'].user_has_groups('base.group_no_one')
+        # When editing the followers, the "pencil" icon that leads to the edition of subtypes
+        # should be always be displayed and not only when "debug" mode is activated.
+        is_editable = True
         partner_id = request.env.user.partner_id
         follower_id = None
         follower_recs = request.env['mail.followers'].sudo().browse(follower_ids)

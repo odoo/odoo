@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
-
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheetNoChart
 
 
@@ -169,6 +168,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
                 6. add new SO line (delivered service)
         """
         # create SO and confirm it
+        self.env['res.currency.rate'].search([]).unlink()
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_customer_usd.id,
             'partner_invoice_id': self.partner_customer_usd.id,

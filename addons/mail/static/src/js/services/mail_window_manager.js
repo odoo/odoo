@@ -381,6 +381,7 @@ MailManager.include({
                     }
                 })
                 .on('click', '.o_thread_window_close', function (ev) {
+                    ev.preventDefault();
                     var threadID = $(ev.currentTarget).closest('.o_thread_window_header')
                                                       .data('thread-id');
                     var threadWindow = self._getHiddenThreadWindow(threadID);
@@ -435,13 +436,15 @@ MailManager.include({
      * @param {integer} partnerID
      * @returns {Promise<integer>} resolved with ID of the DM chat
      */
-    _openAndDetachDMChat: function (partnerID) {
-        return this._rpc({
+    _openAndDetachDMChat: async function (partnerID) {
+        const data = await this._rpc({
             model: 'mail.channel',
-            method: 'channel_get_and_minimize',
+            method: config.device.isMobile ? 'channel_get' : 'channel_get_and_minimize',
             args: [[partnerID]],
-        })
-        .then(this._addChannel.bind(this));
+        });
+        const channelID = await this._addChannel(data);
+        const channel = this.getChannel(channelID);
+        channel.detach();
     },
     /**
      * On opening a new thread window, place it with other thread windows:
@@ -656,11 +659,13 @@ MailManager.include({
      */
     _onNewChannel: function (channel, proms) {
         if (channel.isDetached()) {
-            var prom = this.openThreadWindow(channel.getID(), {
-                keepFoldState: true,
-                passively: true,
-            });
-            proms.push(prom);
+            if (!config.device.isMobile) {
+                var prom = this.openThreadWindow(channel.getID(), {
+                    keepFoldState: true,
+                    passively: true,
+                });
+                proms.push(prom);
+            }
         } else {
             this._closeThreadWindow(channel.getID());
         }

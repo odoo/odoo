@@ -93,6 +93,7 @@ var BasicRenderer = AbstractRenderer.extend({
      *                                      that have been reset
      */
     confirmChange: function (state, id, fields, ev) {
+        var self = this;
         this.state = state;
         var record = this._getRecord(id);
         if (!record) {
@@ -106,12 +107,10 @@ var BasicRenderer = AbstractRenderer.extend({
 
         // Reset all the field widgets that are marked as changed and the ones
         // which are configured to always be reset on any change
-        var resetWidgets = [];
         _.each(this.allFieldWidgets[id], function (widget) {
             var fieldChanged = _.contains(fields, widget.name);
             if (fieldChanged || widget.resetOnAnyFieldChange) {
                 defs.push(widget.reset(record, ev, fieldChanged));
-                resetWidgets.push(widget);
             }
         });
 
@@ -121,7 +120,10 @@ var BasicRenderer = AbstractRenderer.extend({
         defs.push(this._updateAllModifiers(record));
 
         return Promise.all(defs).then(function () {
-            return resetWidgets;
+            return _.filter(self.allFieldWidgets[id], function (widget) {
+                var fieldChanged = _.contains(fields, widget.name);
+                return fieldChanged || widget.resetOnAnyFieldChange;
+            });
         });
     },
     /**

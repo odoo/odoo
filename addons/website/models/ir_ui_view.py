@@ -266,7 +266,16 @@ class View(models.Model):
         if not self._context.get('website_id'):
             return super(View, self).get_inheriting_views_arch(view_id, model)
 
-        inheriting_views = super(View, self.with_context(active_test=False)).get_inheriting_views_arch(view_id, model)
+        get_inheriting_self = self.with_context(active_test=False)
+        if self.pool._init and not self._context.get('load_all_views'):
+            view = self.browse(view_id)
+            if view.website_id:
+                original_view = view._get_original_view()
+                original_keys = self.with_context(website_id=False)._get_inheriting_views(original_view.id, model).mapped('key')
+                specific_views = self.search([('key', 'in', original_keys), ('website_id', '=', self._context.get('website_id'))])
+                check_view_ids = list(self._context.get('check_view_ids') or ()) + specific_views.ids
+                get_inheriting_self = self.with_context(check_view_ids=check_view_ids)
+        inheriting_views = super(View, get_inheriting_self).get_inheriting_views_arch(view_id, model)
 
         # prefer inactive website-specific views over active generic ones
         inheriting_views = self.browse([view[1] for view in inheriting_views]).filter_duplicate().filtered('active')
@@ -323,8 +332,9 @@ class View(models.Model):
                 elif request.env.user.has_group('website.group_website_publisher'):
                     new_context = dict(self._context, inherit_branding_auto=True)
             if values and 'main_object' in values:
-                func = getattr(values['main_object'], 'get_backend_menu_id', False)
-                values['backend_menu_id'] = func and func() or self.env.ref('website.menu_website_configuration').id
+                if request.env.user.has_group('website.group_website_publisher'):
+                    func = getattr(values['main_object'], 'get_backend_menu_id', False)
+                    values['backend_menu_id'] = func and func() or self.env.ref('website.menu_website_configuration').id
 
                 # Fallback incase main_object dont't inherit 'website.seo.metadata'
                 if not hasattr(values['main_object'], 'get_website_meta'):
@@ -372,7 +382,8 @@ class View(models.Model):
                 languages=request.env['res.lang'].get_available(),
                 translatable=translatable,
                 editable=editable,
-                menu_data=self.env['ir.ui.menu'].load_menus_root() if request.website.is_user() else None,
+                # retrocompatibility, remove me in master
+                menu_data={'children': []} if request.website.is_user() else None,
             ))
 
         return qcontext

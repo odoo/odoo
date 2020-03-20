@@ -100,20 +100,20 @@ class IrSequence(models.Model):
             seq.write({'number_next': seq.number_next_actual or 1})
 
     @api.model
-    def _get_current_sequence(self):
+    def _get_current_sequence(self, sequence_date=None):
         '''Returns the object on which we can find the number_next to consider for the sequence.
         It could be an ir.sequence or an ir.sequence.date_range depending if use_date_range is checked
         or not. This function will also create the ir.sequence.date_range if none exists yet for today
         '''
         if not self.use_date_range:
             return self
-        now = fields.Date.today()
+        sequence_date = sequence_date or fields.Date.today()
         seq_date = self.env['ir.sequence.date_range'].search(
-            [('sequence_id', '=', self.id), ('date_from', '<=', now), ('date_to', '>=', now)], limit=1)
+            [('sequence_id', '=', self.id), ('date_from', '<=', sequence_date), ('date_to', '>=', sequence_date)], limit=1)
         if seq_date:
             return seq_date[0]
         #no date_range sequence was found, we create a new one
-        return self._create_date_range_seq(now)
+        return self._create_date_range_seq(sequence_date)
 
     name = fields.Char(required=True)
     code = fields.Char(string='Sequence Code')

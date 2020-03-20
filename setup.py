@@ -59,7 +59,7 @@ setup(
     ],
     python_requires='>=3.6',
     extras_require={
-        'ldap': ['pyldap'],
+        'ldap': ['python-ldap'],
         'SSL': ['pyopenssl'],
     },
     tests_require=[

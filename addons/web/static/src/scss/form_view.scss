@@ -332,7 +332,8 @@
         .btn.oe_stat_button {
             color: $o-main-text-color;
             height: $o-statbutton-height;
-            padding: 0 $o-statbutton-spacing 0 0; // padding-left will be achieved through margin-left of content
+            // Use !important to avoid touch_device style
+            padding: 0 $o-statbutton-spacing 0 0 !important; // padding-left will be achieved through margin-left of content
             text-align: left;
             white-space: nowrap;
             background-color: transparent;
@@ -436,8 +437,6 @@
                 @include media-breakpoint-down(sm) {
                     display: inline-block;
                     width: percentage(1/3);
-                    // avoid touch_device style
-                    padding: inherit!important;
                 }
             }
         }

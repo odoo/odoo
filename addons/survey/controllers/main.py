@@ -174,6 +174,7 @@ class Survey(http.Controller):
                 partner=answer_sudo.partner_id,
                 email=answer_sudo.email,
                 invite_token=answer_sudo.invite_token,
+                test_entry=answer_sudo.test_entry,
                 **self._prepare_retry_additional_values(answer_sudo)
             )
         except:

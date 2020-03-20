@@ -20,14 +20,15 @@
 # Jairo Llopis <yajo.sk8@gmail.com>, 2019
 # RGB Consulting <odoo@rgbconsulting.com>, 2019
 # Nicolás Broggi <rnbroggi@gmail.com>, 2019
+# anderson buitron <andersonbuitron@unicauca.edu.co>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-18 09:47+0000\n"
+"POT-Creation-Date: 2019-12-05 12:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Nicolás Broggi <rnbroggi@gmail.com>, 2019\n"
+"Last-Translator: anderson buitron <andersonbuitron@unicauca.edu.co>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +51,7 @@ msgstr "%s (copia)"
 #: model:ir.actions.report,print_report_name:event.report_event_registration_badge
 msgid ""
 "'Registration Event - %s' % (object.name or 'Attendee').replace('/','')"
-msgstr ""
+msgstr "'Evento de registro %s' % (object.name or 'Attendee').replace('/','')"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -73,6 +74,8 @@ msgid ""
 "<b>Business Room</b> - To discuss implementation methodologies, best sales "
 "practices, etc."
 msgstr ""
+"<b>sala de negocios </b>: para discutir metodologías de implementación, "
+"mejores prácticas de ventas, etc."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -80,6 +83,8 @@ msgid ""
 "<b>Technical Rooms</b> - One dedicated to advanced Odoo developers, one for "
 "new developers."
 msgstr ""
+"<b>salas técnicas</b>: una dedicada a desarrolladores avanzados de Odoo, una"
+" para  desarrolladores nuevos "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -87,6 +92,9 @@ msgid ""
 "<b>The Design Fair is preceded by 2 days of Training Sessions for "
 "experts!</b><br> We propose 3 different training sessions, 2 days each."
 msgstr ""
+"<b>¡La exposición de diseño está precedida por 2 días de sesiones de "
+"formación para los expertos!</b><br> Proponemos 3 sesiones de entrenamiento "
+"diferentes, 2 días cada una."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -95,6 +103,9 @@ msgid ""
 "more time for thematical meetings, conferences, workshops and tutorial "
 "sessions in the afternoon."
 msgstr ""
+"<b>Las sesiones plenarias de la mañana serán más cortas </b> y daremos más "
+"tiempo para las reuniones temáticas, conferencias, talleres y sesiones de "
+"tutoría por la tarde."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -105,11 +116,13 @@ msgid ""
 "contribute, there is a free ticket, therefore, catering and access to "
 "evening events aren't included."
 msgstr ""
+"<b>¡Todo el evento está abierto a todo el público!</b> <br>Solicitamos una tarifa de participación de 49.50 € por los costos de los 3 días (café de la mañana, refrigerios, bebidas y la sorprendente fiesta de la cerveza del miércoles por la noche). <br>Para aquellos que no quieren contribuir, hay un boleto gratis, por lo tanto, el servicio de comidas y el acceso a los eventos nocturnos no están incluidos.\n"
+" "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "<b>Workshop Room</b> - Mainly for developers."
-msgstr ""
+msgstr "<b>sala de talleres</b>: principalmente para desarrolladores"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -144,6 +157,8 @@ msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
 msgstr ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
+"title=\"Confirm Registration\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -151,6 +166,8 @@ msgid ""
 "<i class=\"fa fa-info-circle mr-2\"></i>This event and all the conferences "
 "are in <b>English</b>!"
 msgstr ""
+"<i class=\"fa fa-info-circle mr-2\"></i>Estos eventos y todas las "
+"conferencias son en <b>Inglés </b>!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -158,6 +175,8 @@ msgid ""
 "<i class=\"fa fa-level-down\" role=\"img\" aria-label=\"Attended button\" "
 "title=\"Attended the Event\"/>"
 msgstr ""
+"<i class=\"fa fa-level-down\" role=\"img\" aria-label=\"Attended button\" "
+"title=\"Attended the Event\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -165,6 +184,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -172,6 +193,8 @@ msgid ""
 "<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
 "title=\"Cancel Registration\"/>"
 msgstr ""
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
+"title=\"Cancel Registration\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -196,6 +219,8 @@ msgid ""
 "<span class=\"badge badge-secondary o_wevent_badge float-"
 "right\">SPEAKER</span>"
 msgstr ""
+"<span class=\"badge badge-secondary o_wevent_badge float-"
+"right\">ALTAVOZ</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -667,6 +692,7 @@ msgid "An unpublished event"
 msgstr ""
 
 #. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Archived"
 msgstr "Archivado"

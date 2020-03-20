@@ -230,6 +230,7 @@ class HrEmployeePrivate(models.Model):
         vals = dict(
             image_1920=user.image_1920,
             work_email=user.email,
+            user_id=user.id,
         )
         if user.tz:
             vals['tz'] = user.tz
@@ -291,7 +292,7 @@ class HrEmployeePrivate(models.Model):
 
     def generate_random_barcode(self):
         for employee in self:
-            employee.barcode = "".join(choice(digits) for i in range(8))
+            employee.barcode = '041'+"".join(choice(digits) for i in range(9))
 
     @api.depends('address_home_id.parent_id')
     def _compute_is_address_home_a_company(self):

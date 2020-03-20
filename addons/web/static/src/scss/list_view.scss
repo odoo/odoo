@@ -206,12 +206,22 @@
             width: 32px;
         }
 
-        // checkboxes in editable lists should be clickable and activate the row
         .o_data_row:not(.o_selected_row) .o_data_cell {
-            &.o_toggle_button_cell:not(.o_readonly_modifier) button, // registry: toggle_button
-            &.o_boolean_favorite_cell:not(.o_readonly_modifier) .o_favorite, // registry: boolean_favorite
-            .custom-checkbox:not(.o_readonly_modifier) {
+
+            // Boolean fields in non-selected rows completely disabled.
+            .custom-checkbox {
                 pointer-events: none;
+            }
+
+            // These widgets enable the checkbox if there is no readonly modifier.
+            &.o_boolean_button_cell,
+            &.o_boolean_favorite_cell,
+            &.o_boolean_toggle_cell,
+            &.o_toggle_button_cell {
+
+                &:not(.o_readonly_modifier) .custom-checkbox {
+                    pointer-events: auto;
+                }
             }
         }
 
@@ -300,7 +310,7 @@
 
     .o_optional_columns_dropdown_toggle {
         cursor: pointer;
-        width: 10px;
+        padding: 0 5px;
         text-align: center;
         line-height: 30px;
         z-index: 1; // must be over the resize handle

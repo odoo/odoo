@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import hashlib
-import json
 import logging
 import os
 import re
@@ -150,7 +148,7 @@ def url_lang(path_or_uri, lang_code=None):
         location = werkzeug.urls.url_join(request.httprequest.path, location)
         lang_url_codes = [url_code for _, url_code, _ in Lang.get_available()]
         lang_code = pycompat.to_text(lang_code or request.context['lang'])
-        lang_url_code = Lang._lang_get(lang_code).url_code
+        lang_url_code = Lang._lang_code_to_urlcode(lang_code)
         lang_url_code = lang_url_code if lang_url_code in lang_url_codes else lang_code
 
         if (len(lang_url_codes) > 1 or force_lang) and is_multilang_url(location, lang_url_codes):
@@ -222,23 +220,29 @@ def is_multilang_url(local_url, lang_url_codes=None):
     if spath[1] in lang_url_codes:
         spath.pop(1)
         local_url = '/'.join(spath)
-    try:
-        # Try to match an endpoint in werkzeug's routing table
-        url = local_url.partition('#')[0].split('?')
-        path = url[0]
-        query_string = url[1] if len(url) > 1 else None
-        router = request.httprequest.app.get_db_router(request.db).bind('')
-        # Force to check method to POST. Odoo uses methods : ['POST'] and ['GET', 'POST']
-        func = router.match(path, method='POST', query_args=query_string)[0]
-        return (func.routing.get('website', False) and
+
+    url = local_url.partition('#')[0].split('?')
+    path = url[0]
+    query_string = url[1] if len(url) > 1 else None
+    router = request.httprequest.app.get_db_router(request.db).bind('')
+
+    def is_multilang_func(func):
+        return (func and func.routing.get('website', False) and
                 func.routing.get('multilang', func.routing['type'] == 'http'))
+    # Try to match an endpoint in werkzeug's routing table
+    try:
+        func = router.match(path, method='POST', query_args=query_string)[0]
+        return is_multilang_func(func)
+    except werkzeug.exceptions.MethodNotAllowed:
+        func = router.match(path, method='GET', query_args=query_string)[0]
+        return is_multilang_func(func)
     except werkzeug.exceptions.NotFound:
         # Consider /static/ files as non-multilang
         static_index = path.find('/static/', 1)
         if static_index != -1 and static_index == path.find('/', 1):
             return False
         return True
-    except Exception as e:
+    except Exception:
         return False
 
 
@@ -294,18 +298,12 @@ class IrHttp(models.AbstractModel):
         modules = IrHttpModel.get_translation_frontend_modules()
         user_context = request.session.get_context() if request.session.uid else {}
         lang = user_context.get('lang')
-        translations, lang_params = request.env['ir.translation'].get_translations_for_webclient(modules, lang)
-        translation_cache = {
-            'lang_parameters': lang_params,
-            'modules': translations,
-            'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,
-            'lang': lang,
-        }
+        translation_hash = request.env['ir.translation'].get_web_translations_hash(modules, lang)
 
         session_info.update({
             'translationURL': '/website/translations',
             'cache_hashes': {
-                'translations': hashlib.sha1(json.dumps(translation_cache, sort_keys=True).encode()).hexdigest(),
+                'translations': translation_hash,
             },
         })
         return session_info
@@ -313,10 +311,14 @@ class IrHttp(models.AbstractModel):
     @api.model
     def get_translation_frontend_modules(self):
         Modules = request.env['ir.module.module'].sudo()
-        domain = self._get_translation_frontend_modules_domain()
-        return Modules.search(
-            expression.AND([domain, [('state', '=', 'installed')]])
-        ).mapped('name')
+        extra_modules_domain = self._get_translation_frontend_modules_domain()
+        extra_modules_name = self._get_translation_frontend_modules_name()
+        if extra_modules_domain:
+            new = Modules.search(
+                expression.AND([extra_modules_domain, [('state', '=', 'installed')]])
+            ).mapped('name')
+            extra_modules_name += new
+        return extra_modules_name
 
     @classmethod
     def _get_translation_frontend_modules_domain(cls):
@@ -324,6 +326,13 @@ class IrHttp(models.AbstractModel):
             dynamic resources that may be used frontend views
         """
         return []
+
+    @classmethod
+    def _get_translation_frontend_modules_name(cls):
+        """ Return a list of module name where web-translations and
+            dynamic resources may be used in frontend views
+        """
+        return ['web']
 
     bots = "bot|crawl|slurp|spider|curl|wget|facebookexternalhit".split("|")
 
@@ -338,6 +347,10 @@ class IrHttp(models.AbstractModel):
             return any(bot in user_agent.encode('ascii', 'ignore') for bot in cls.bots)
 
     @classmethod
+    def _get_frontend_langs(cls):
+        return [code for code, _ in request.env['res.lang'].get_installed()]
+
+    @classmethod
     def get_nearest_lang(cls, lang_code):
         """ Try to find a similar lang. Eg: fr_BE and fr_FR
             :param lang_code: the lang `code` (en_US)
@@ -346,7 +359,7 @@ class IrHttp(models.AbstractModel):
             return False
         short_match = False
         short = lang_code.partition('_')[0]
-        for (code, _) in request.env['res.lang'].get_installed():
+        for code in cls._get_frontend_langs():
             if code == lang_code:
                 return code
             if not short_match and code.startswith(short):
@@ -391,8 +404,9 @@ class IrHttp(models.AbstractModel):
                 lang = Lang._lang_get(nearest_lang)
             else:
                 nearest_ctx_lg = not is_a_bot and cls.get_nearest_lang(request.env.context['lang'])
-                preferred_lang = Lang._lang_get(cook_lang or nearest_ctx_lg) or cls._get_default_lang()
-                lang = preferred_lang
+                nearest_ctx_lg = nearest_ctx_lg in lang_codes and nearest_ctx_lg
+                preferred_lang = Lang._lang_get(cook_lang or nearest_ctx_lg)
+                lang = preferred_lang or cls._get_default_lang()
 
             request.lang = lang
             context['lang'] = lang.code
@@ -616,6 +630,21 @@ class IrHttp(models.AbstractModel):
 
         if not request.uid:
             cls._auth_method_public()
+
+        # We rollback the current transaction before initializing a new
+        # cursor to avoid potential deadlocks.
+
+        # If the current (failed) transaction was holding a lock, the new
+        # cursor might have to wait for this lock to be released further
+        # down the line. However, this will only happen after the
+        # request is done (and in fact it won't happen). As a result, the
+        # current thread/worker is frozen until its timeout is reached.
+
+        # So rolling back the transaction will release any potential lock
+        # and, since we are in a case where an exception was raised, the
+        # transaction shouldn't be committed in the first place.
+        request.env.cr.rollback()
+
         with registry(request.env.cr.dbname).cursor() as cr:
             env = api.Environment(cr, request.uid, request.env.context)
             if code == 500:

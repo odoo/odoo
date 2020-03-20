@@ -6,6 +6,7 @@ import logging
 
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
+from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_round
 
 _logger = logging.getLogger(__name__)
@@ -13,6 +14,9 @@ _logger = logging.getLogger(__name__)
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
+
+    def _default_visible_expense_policy(self):
+        return self.user_has_groups('analytic.group_analytic_accounting')
 
     service_type = fields.Selection([('manual', 'Manually set quantities on order')], string='Track Service',
         help="Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
@@ -27,7 +31,7 @@ class ProductTemplate(models.Model):
         default='no',
         help="Expenses and vendor bills can be re-invoiced to a customer."
              "With this option, a validated expense can be re-invoice to a customer at its cost or sales price.")
-    visible_expense_policy = fields.Boolean("Re-Invoice Policy visible", compute='_compute_visible_expense_policy')
+    visible_expense_policy = fields.Boolean("Re-Invoice Policy visible", compute='_compute_visible_expense_policy', default=lambda self: self._default_visible_expense_policy())
     sales_count = fields.Float(compute='_compute_sales_count', string='Sold')
     invoice_policy = fields.Selection([
         ('order', 'Ordered quantities'),
@@ -46,6 +50,25 @@ class ProductTemplate(models.Model):
     def _compute_sales_count(self):
         for product in self:
             product.sales_count = float_round(sum([p.sales_count for p in product.with_context(active_test=False).product_variant_ids]), precision_rounding=product.uom_id.rounding)
+
+
+    @api.constrains('company_id')
+    def _check_sale_product_company(self):
+        """Ensure the product is not being restricted to a single company while
+        having been sold in another one in the past, as this could cause issues."""
+        target_company = self.company_id
+        if target_company:  # don't prevent writing `False`, should always work
+            product_data = self.env['product.product'].sudo().with_context(active_test=False).search_read([('product_tmpl_id', 'in', self.ids)], fields=['id'])
+            product_ids = list(map(lambda p: p['id'], product_data))
+            so_lines = self.env['sale.order.line'].sudo().search_read([('product_id', 'in', product_ids), ('company_id', '!=', target_company.id)], fields=['id', 'product_id'])
+            used_products = list(map(lambda sol: sol['product_id'][1], so_lines))
+            if so_lines:
+                raise ValidationError(_('The following products cannot be restricted to the company'
+                                        ' %s because they have already been used in quotations or '
+                                        'sales orders in another company:\n%s\n'
+                                        'You can archive these products and recreate them '
+                                        'with your company restriction instead, or leave them as '
+                                        'shared product.') % (target_company.name, ', '.join(used_products)))
 
     def action_view_sales(self):
         action = self.env.ref('sale.report_all_channels_sales_action').read()[0]
@@ -113,9 +136,6 @@ class ProductTemplate(models.Model):
                 return [{
                     'label': _('Import Template for Products'),
                     'template': '/product/static/xls/product_template.xls'
-                }, {
-                    'label': _('Import Template for Products (with several prices)'),
-                    'template': '/sale/static/xls/product_pricelist_several.xls'
                 }]
         return res
 

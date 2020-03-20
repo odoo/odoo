@@ -218,7 +218,8 @@ class MailActivity(models.Model):
                 base = fields.Date.from_string(self.env.context.get('activity_previous_deadline'))
             self.date_deadline = base + relativedelta(**{self.activity_type_id.delay_unit: self.activity_type_id.delay_count})
             self.user_id = self.activity_type_id.default_user_id or self.env.user
-            self.note = self.activity_type_id.default_description
+            if self.activity_type_id.default_description:
+                self.note = self.activity_type_id.default_description
 
     @api.onchange('recommended_activity_type_id')
     def _onchange_recommended_activity_type_id(self):
@@ -388,8 +389,14 @@ class MailActivity(models.Model):
     def action_notify(self):
         if not self:
             return
+        original_context = self.env.context
         body_template = self.env.ref('mail.message_activity_assigned')
         for activity in self:
+            if activity.user_id.lang:
+                # Send the notification in the assigned user's language
+                self = self.with_context(lang=activity.user_id.lang)
+                body_template = body_template.with_context(lang=activity.user_id.lang)
+                activity = activity.with_context(lang=activity.user_id.lang)
             model_description = self.env['ir.model']._get(activity.res_model).display_name
             body = body_template.render(
                 dict(activity=activity, model_description=model_description),
@@ -406,6 +413,8 @@ class MailActivity(models.Model):
                     model_description=model_description,
                     email_layout_xmlid='mail.mail_notification_light',
                 )
+            body_template = body_template.with_context(original_context)
+            self = self.with_context(original_context)
 
     def action_done(self):
         """ Wrapper without feedback because web button add context as
@@ -414,6 +423,7 @@ class MailActivity(models.Model):
         return messages.ids and messages.ids[0] or False
 
     def action_feedback(self, feedback=False, attachment_ids=None):
+        self = self.with_context(clean_context(self.env.context))
         messages, next_activities = self._action_done(feedback=feedback, attachment_ids=attachment_ids)
         return messages.ids and messages.ids[0] or False
 
@@ -455,6 +465,19 @@ class MailActivity(models.Model):
         # marking as 'done'
         messages = self.env['mail.message']
         next_activities_values = []
+
+        # Search for all attachments linked to the activities we are about to unlink. This way, we
+        # can link them to the message posted and prevent their deletion.
+        attachments = self.env['ir.attachment'].search_read([
+            ('res_model', '=', self._name),
+            ('res_id', 'in', self.ids),
+        ], ['id', 'res_id'])
+
+        activity_attachments = defaultdict(list)
+        for attachment in attachments:
+            activity_id = attachment['res_id']
+            activity_attachments[activity_id].append(attachment['id'])
+
         for activity in self:
             # extract value to generate next activities
             if activity.force_next:
@@ -485,7 +508,19 @@ class MailActivity(models.Model):
                 mail_activity_type_id=activity.activity_type_id.id,
                 attachment_ids=[(4, attachment_id) for attachment_id in attachment_ids] if attachment_ids else [],
             )
-            messages |= record.message_ids[0]
+
+            # Moving the attachments in the message
+            # TODO: Fix void res_id on attachment when you create an activity with an image
+            # directly, see route /web_editor/attachment/add
+            activity_message = record.message_ids[0]
+            message_attachments = self.env['ir.attachment'].browse(activity_attachments[activity.id])
+            if message_attachments:
+                message_attachments.write({
+                    'res_id': activity_message.id,
+                    'res_model': activity_message._name,
+                })
+                activity_message.attachment_ids = message_attachments
+            messages |= activity_message
 
         next_activities = self.env['mail.activity'].create(next_activities_values)
         self.unlink()  # will unlink activity, dont access `self` after that
@@ -524,7 +559,7 @@ class MailActivity(models.Model):
         activity_data = defaultdict(dict)
         for group in grouped_activities:
             res_id = group['res_id']
-            activity_type_id = group['activity_type_id'][0]
+            activity_type_id = (group.get('activity_type_id') or (False, False))[0]
             res_id_to_deadline[res_id] = group['date_deadline'] if (res_id not in res_id_to_deadline or group['date_deadline'] < res_id_to_deadline[res_id]) else res_id_to_deadline[res_id]
             state = self._compute_state_from_date(group['date_deadline'], self.user_id.sudo().tz)
             activity_data[res_id][activity_type_id] = {

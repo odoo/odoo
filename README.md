@@ -18,7 +18,6 @@ The main Odoo Apps include an <a href="https://www.odoo.com/page/crm">Open Sourc
 <a href="https://www.odoo.com/page/employees">Human Resources</a>,
 <a href="https://www.odoo.com/page/lead-automation">Marketing</a>,
 <a href="https://www.odoo.com/page/manufacturing">Manufacturing</a>,
-<a href="https://www.odoo.com/page/purchase">Purchase Management</a>,
 <a href="https://www.odoo.com/#apps">...</a>
 
 Odoo Apps can be used as stand-alone applications, but they also integrate seamlessly so you get
@@ -30,4 +29,4 @@ Getting started with Odoo
 For a standard installation please follow the <a href="https://www.odoo.com/documentation/master/setup/install.html">Setup instructions</a>
 from the documentation.
 
-Then follow <a href="https://www.odoo.com/documentation/master/tutorials.html">the developer tutorials</a>
+To learn the software, we recommend the <a href="https://www.odoo.com/slides">Odoo eLearning</a>, or <a href="https://www.odoo.com/page/scale-up-business-game">Scale-up</a>, the <a href="https://www.odoo.com/page/scale-up-business-game">business game</a>. Developers can start with <a href="https://www.odoo.com/documentation/master/tutorials.html">the developer tutorials</a>

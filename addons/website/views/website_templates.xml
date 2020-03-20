@@ -24,6 +24,7 @@
         <script type="text/javascript" src="/website/static/tests/tours/html_editor.js"/>
         <script type="text/javascript" src="/website/static/tests/tours/restricted_editor.js"/>
         <script type="text/javascript" src="/website/static/tests/tours/dashboard_tour.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/website_navbar_menu.js"/>
     </xpath>
 </template>
 
@@ -897,8 +898,10 @@
 </template>
 
 <template id="robots">
+<t t-translation="off">
 User-agent: *
 Sitemap: <t t-esc="url_root"/>sitemap.xml
+</t>
 </template>
 
 <template id="sitemap_locs">

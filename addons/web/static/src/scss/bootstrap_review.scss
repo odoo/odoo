@@ -84,3 +84,13 @@
 .btn:not(:disabled):not(.disabled) {
     cursor: pointer;
 }
+
+// Disable RTL for the popover position
+.popover {
+    right: auto#{"/*rtl:ignore*/"};
+}
+
+// Restore height to prevent flex to be ignored
+.input-group .form-control {
+    height: initial;
+}

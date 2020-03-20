@@ -253,6 +253,7 @@ class SaleOrder(models.Model):
                     'quantity': quantity,
                     'date': order.date_order,
                     'pricelist': order.pricelist_id.id,
+                    'force_company': order.company_id.id,
                 })
                 product_with_context = self.env['product.product'].with_context(product_context)
                 product = product_with_context.browse(product_id)
@@ -294,7 +295,8 @@ class SaleOrder(models.Model):
                 accessory_products |= line.product_id.accessory_product_ids.filtered(lambda product:
                     product.website_published and
                     product not in products and
-                    product._is_variant_possible(parent_combination=combination)
+                    product._is_variant_possible(parent_combination=combination) and
+                    (product.company_id == line.company_id or not product.company_id)
                 )
 
             return random.sample(accessory_products, len(accessory_products))

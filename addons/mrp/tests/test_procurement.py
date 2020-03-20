@@ -135,6 +135,74 @@ class TestProcurement(TestMrpCommon):
             production_product_4 = production_form.save()
             production_product_4.action_confirm()
 
+    def test_procurement_3(self):
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        warehouse.write({'reception_steps': 'three_steps'})
+        self.env['stock.location']._parent_store_compute()
+        warehouse.reception_route_id.rule_ids.filtered(
+            lambda p: p.location_src_id == warehouse.wh_input_stock_loc_id and
+            p.location_id == warehouse.wh_qc_stock_loc_id).write({
+                'procure_method': 'make_to_stock'
+            })
+
+        finished_product = self.env['product.product'].create({
+            'name': 'Finished Product',
+            'type': 'product',
+        })
+        component = self.env['product.product'].create({
+            'name': 'Component',
+            'type': 'product',
+            'route_ids': [(4, warehouse.mto_pull_id.route_id.id)]
+        })
+        self.env['stock.quant']._update_available_quantity(component, warehouse.wh_input_stock_loc_id, 100)
+        bom = self.env['mrp.bom'].create({
+            'product_id': finished_product.id,
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': 1.0})
+            ]})
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = finished_product
+        mo_form.bom_id = bom
+        mo_form.product_qty = 5
+        mo_form.product_uom_id = finished_product.uom_id
+        mo_form.location_src_id = warehouse.lot_stock_id
+        mo = mo_form.save()
+        mo.action_confirm()
+        pickings = self.env['stock.picking'].search([('product_id', '=', component.id)])
+        self.assertEqual(len(pickings), 2.0)
+        picking_input_to_qc = pickings.filtered(lambda p: p.location_id == warehouse.wh_input_stock_loc_id)
+        picking_qc_to_stock = pickings - picking_input_to_qc
+        self.assertTrue(picking_input_to_qc)
+        self.assertTrue(picking_qc_to_stock)
+        picking_input_to_qc.action_assign()
+        self.assertEqual(picking_input_to_qc.state, 'assigned')
+        picking_input_to_qc.move_line_ids.write({'qty_done': 5.0})
+        picking_input_to_qc.action_done()
+        picking_qc_to_stock.action_assign()
+        self.assertEqual(picking_qc_to_stock.state, 'assigned')
+        picking_qc_to_stock.move_line_ids.write({'qty_done': 3.0})
+        self.env['stock.backorder.confirmation'].create({
+            'pick_ids': [(4, picking_qc_to_stock.id)]
+        }).process_cancel_backorder()
+        self.assertEqual(picking_qc_to_stock.state, 'done')
+        mo.action_assign()
+        self.assertEqual(mo.move_raw_ids.reserved_availability, 3.0)
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        produce_form.qty_producing = 3.0
+        produce_wizard = produce_form.save()
+        produce_wizard.do_produce()
+        self.assertEqual(mo.move_raw_ids.quantity_done, 3.0)
+        picking_qc_to_stock.move_line_ids.qty_done = 5.0
+        self.assertEqual(mo.move_raw_ids.reserved_availability, 5.0)
+        self.assertEqual(mo.move_raw_ids.quantity_done, 3.0)
+
     def test_date_propagation(self):
         """ Check propagation of shedule date for manufaturing route."""
 
@@ -197,3 +265,46 @@ class TestProcurement(TestMrpCommon):
         # Adding 5 days to the date planned start makes the next move's date 4 days and 23 hours
         # later since the date planned start was set one hour before the date_planned_end.
         self.assertAlmostEqual(move_dest.date_expected, move_dest_scheduled_date + timedelta(days=4, hours=23), delta=timedelta(seconds=1), msg='date is not propagated')
+
+    def test_finished_move_cancellation(self):
+        """Check state of finished move on cancellation of raw moves. """
+        product_bottle = self.env['product.product'].create({
+            'name': 'Plastic Bottle',
+            'route_ids': [(4, self.ref('mrp.route_warehouse0_manufacture'))]
+        })
+
+        component_mold = self.env['product.product'].create({
+            'name': 'Plastic Mold',
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product_bottle.id,
+            'product_tmpl_id': product_bottle.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component_mold.id, 'product_qty': 1}),
+            ]})
+
+        move_dest = self.env['stock.move'].create({
+            'name': 'move_bottle',
+            'product_id': product_bottle.id,
+            'product_uom': self.ref('uom.product_uom_unit'),
+            'propagate_date': True,
+            'propagate_date_minimum_delta': 1,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_output'),
+            'product_uom_qty': 10,
+            'procure_method': 'make_to_order',
+        })
+
+        move_dest._action_confirm()
+        mo = self.env['mrp.production'].search([
+            ('product_id', '=', product_bottle.id),
+            ('state', '=', 'confirmed')
+        ])
+        mo.move_raw_ids[0]._action_cancel()
+        self.assertEqual(mo.state, 'cancel', 'Manufacturing order should be cancelled.')
+        self.assertEqual(mo.move_finished_ids[0].state, 'cancel', 'Finished move should be cancelled if mo is cancelled.')
+        self.assertEqual(mo.move_dest_ids[0].state, 'waiting', 'Destination move should not be cancelled if prapogation cancel is False on manufacturing rule.')

@@ -230,7 +230,6 @@ var ThemeCustomizeDialog = Dialog.extend({
             var editor = new weWidgets.MediaDialog(self, {
                 mediaWidth: 1920,
                 onlyImages: true,
-                firstFilters: ['background'],
             }, $image[0]);
 
             editor.on('save', self, function (media) { // TODO use scss customization instead (like for user colors)
@@ -588,7 +587,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         var self = this;
         var text = $inputData.text().trim();
         var value = parseFloat(text) || '';
-        var unit = text.match(/([^\s\d]+)$/)[1];
+        var unit = (text.match(/[^\s\d]+$/) || ['px'])[0];
 
         return new Promise(function (resolve, reject) {
             var qEdit = new QuickEdit(self, value, unit);

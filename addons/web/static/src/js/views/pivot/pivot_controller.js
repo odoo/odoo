@@ -291,7 +291,7 @@ var PivotController = AbstractController.extend({
         } else {
             var position = $target.position();
             var top = position.top + $target.height();
-            var left = position.left + ev.offsetX;
+            var left = ev.clientX;
             this._renderGroupBySelection(top, left);
         }
     },

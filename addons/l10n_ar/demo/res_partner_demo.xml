@@ -133,6 +133,24 @@
         <field name="website">http://www.foreign-inc.com</field>
         <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
         <field name='vat'>30222222229</field>
+        <field name='l10n_ar_afip_responsibility_type_id' ref="l10n_ar.res_EXT"/>
+    </record>
+
+    <!-- "MiPyme" IVA Inscripto -->
+    <record id="res_partner_mipyme" model="res.partner">
+        <field name="name">Belgrano Cargas Y Logistica S (Mipyme)</field>
+        <field eval="[(6, 0, [ref('base.res_partner_category_14'), ref('base.res_partner_category_12')])]" name="category_id"/>
+        <field name="is_company">1</field>
+        <field name="street">Av. Santa Fe 4636</field>
+        <field name="city">Buenos Aires</field>
+        <field name="state_id" ref='base.state_ar_c'/>
+        <field name="zip">1425</field>
+        <field name="country_id" ref="base.ar"/>
+        <field name="email">mipyme@example.com</field>
+        <field name="phone">(123)-456-7890</field>
+        <field name="website">http://www.mypime-inc.com</field>
+        <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
+        <field name='vat'>30714101443</field>
         <field name='l10n_ar_afip_responsibility_type_id' ref="l10n_ar.res_IVARI"/>
     </record>
 

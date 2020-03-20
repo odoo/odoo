@@ -3,6 +3,15 @@ odoo.define('test_website.reset_views', function (require) {
 
 var tour = require("web_tour.tour");
 
+var BROKEN_STEP = {
+    // because saving a broken template opens a recovery page with no assets
+    // there's no way for the tour to resume on the new page, and thus no way
+    // to properly wait for the page to be saved & reloaded in order to fix the
+    // race condition of a tour ending on a side-effect (with the possible
+    // exception of somehow telling the harness / browser to do it)
+    trigger: 'body',
+    run: function () {}
+};
 tour.register('test_reset_page_view_complete_flow_part1', {
     test: true,
     url: '/test_page_view',
@@ -45,9 +54,8 @@ tour.register('test_reset_page_view_complete_flow_part1', {
             content: "save the html editor",
             extra_trigger: '.ace_content:contains("not.exist")',
             trigger: ".o_ace_view_editor button[data-action=save]",
-        }
-
-        // 3. Reset the broken view
+        },
+        BROKEN_STEP
     ]
 );
 
@@ -93,7 +101,8 @@ tour.register('test_reset_page_view_complete_flow_part2', {
         {
             content: "save the html editor",
             trigger: ".o_ace_view_editor button[data-action=save]",
-        }
+        },
+        BROKEN_STEP
     ]
 );
 

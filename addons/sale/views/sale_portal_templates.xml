@@ -215,7 +215,7 @@
                                         <ul>
                                             <li><span>Accepted on the behalf of:</span> <b t-field="sale_order.partner_id.commercial_partner_id"/></li>
                                             <li><span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/></li>
-                                            <li t-if="sale_order.payment_term_id"><span>With payment terms:</span> <b t-field="sale_order.payment_term_id"/></li>
+                                            <li t-if="sale_order.payment_term_id"><span>With payment terms:</span> <b t-field="sale_order.payment_term_id.note"/></li>
                                         </ul>
                                     </p>
                                     <t t-call="portal.signature_form">
@@ -238,7 +238,7 @@
                                         <ul>
                                             <li><span>Accepted on the behalf of:</span> <b t-field="sale_order.partner_id.commercial_partner_id"/></li>
                                             <li><span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/></li>
-                                            <li t-if="sale_order.payment_term_id"><span>With payment terms:</span> <b t-field="sale_order.payment_term_id"/></li>
+                                            <li t-if="sale_order.payment_term_id"><span>With payment terms:</span> <b t-field="sale_order.payment_term_id.note"/></li>
                                         </ul>
                                     </p>
                                     <div t-if="pms or acquirers" id="payment_method" class="text-left">
@@ -416,7 +416,7 @@
                                         </a>
                                         <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
                                     </div>
-                                    <span t-if="i.state == 'paid'" class="small badge badge-success orders_label_text_align"><i class="fa fa-fw fa-check"/> <b>Paid</b></span>
+                                    <span t-if="i.invoice_payment_state == 'paid'" class="small badge badge-success orders_label_text_align"><i class="fa fa-fw fa-check"/> <b>Paid</b></span>
                                     <span t-else="" class="small badge badge-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> <b>Waiting Payment</b></span>
                                 </div>
                             </t>

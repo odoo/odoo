@@ -6,7 +6,6 @@
     <!-- Invoice from gritti support service, auto fiscal position set VAT Not Applicable -->
     <record id="demo_sup_invoice_1" model="account.move">
         <field name="partner_id" ref="res_partner_gritti_agrimensura"/>
-        <field name="fiscal_position_id" model="account.fiscal.position" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'Compras IVA no corresponde')], limit=1).id"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="type">in_invoice</field>
@@ -87,7 +86,6 @@
     <record id="demo_sup_invoice_6" model="account.move">
         <field name="partner_id" ref="res_partner_odoo"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
-        <field name="fiscal_position_id" model="account.fiscal.position" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'Compras / Ventas al exterior')], limit=1).id"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="type">in_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-26'"/>
@@ -101,7 +99,6 @@
     <record id="demo_sup_invoice_7" model="account.move">
         <field name="partner_id" ref="res_partner_odoo"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
-        <field name="fiscal_position_id" model="account.fiscal.position" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'Compras / Ventas al exterior')], limit=1).id"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         <field name="type">in_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-27'"/>
@@ -219,37 +216,6 @@
         <field name="account_id" model="account.move.line" eval="obj().env.ref('product.product_category_all').property_account_income_categ_id.id"/>
     </record>
 
-    <!-- TODO add this once odoo tell us how manual taxes are encoded -->
-    <!-- <record id="demo_despacho_1_tax_line_1" model="account.move.tax">
-        <field name="amount">2138.0</field>
-        <field name="sequence">99</field>
-        <field name="manual" eval="True"/>
-        <field name="move_id" ref="demo_despacho_1"/>
-        <field name="tax_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'Percepción Ganancias Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).id"/>
-        <field name="name" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'Percepción Ganancias Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).name"/>
-        <field name="account_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'Percepción Ganancias Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).account_id.id"/>
-    </record>
-
-    <record id="demo_despacho_1_tax_line_2" model="account.move.tax">
-        <field name="amount">890.84</field>
-        <field name="sequence">99</field>
-        <field name="manual" eval="True"/>
-        <field name="move_id" ref="demo_despacho_1"/>
-        <field name="tax_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'Percepción IIBB CABA Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).id"/>
-        <field name="name" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'Percepción IIBB CABA Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).name"/>
-        <field name="account_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'Percepción IIBB CABA Sufrida'), ('type_tax_use', '=', 'purchase')], limit=1).account_id.id"/>
-    </record>
-
-    <record id="demo_despacho_1_tax_line_3" model="account.move.tax">
-        <field name="amount">7126.67</field>
-        <field name="sequence">99</field>
-        <field name="manual" eval="True"/>
-        <field name="move_id" ref="demo_despacho_1"/>
-        <field name="tax_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA Adicional 20%'), ('type_tax_use', '=', 'purchase')], limit=1).id"/>
-        <field name="name" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA Adicional 20%'), ('type_tax_use', '=', 'purchase')], limit=1).name"/>
-        <field name="account_id" model="account.tax" eval="obj().search([('company_id', '=', obj().env.ref('l10n_ar.company_ri').id), ('name', '=', 'IVA Adicional 20%'), ('type_tax_use', '=', 'purchase')], limit=1).account_id.id"/>
-    </record> -->
-
     <record id="demo_sup_invoice_1" model="account.move">
         <field name="l10n_latam_document_number">0001-00000008</field>
     </record>
@@ -274,6 +240,31 @@
     <record id="demo_despacho_1" model="account.move">
         <field name="l10n_latam_document_number">16052IC04000605L</field>
     </record>
+
+    <function model="account.move" name="_onchange_partner_id" context="{'check_move_validity': False}">
+        <value eval="[ref('demo_sup_invoice_1')]"/>
+    </function>
+    <function model="account.move" name="_onchange_partner_id" context="{'check_move_validity': False}">
+        <value eval="[ref('demo_sup_invoice_2')]"/>
+    </function>
+    <function model="account.move" name="_onchange_partner_id" context="{'check_move_validity': False}">
+        <value eval="[ref('demo_sup_invoice_3')]"/>
+    </function>
+    <function model="account.move" name="_onchange_partner_id" context="{'check_move_validity': False}">
+        <value eval="[ref('demo_sup_invoice_4')]"/>
+    </function>
+    <function model="account.move" name="_onchange_partner_id" context="{'check_move_validity': False}">
+        <value eval="[ref('demo_sup_invoice_5')]"/>
+    </function>
+    <function model="account.move" name="_onchange_partner_id" context="{'check_move_validity': False}">
+        <value eval="[ref('demo_sup_invoice_6')]"/>
+    </function>
+    <function model="account.move" name="_onchange_partner_id" context="{'check_move_validity': False}">
+        <value eval="[ref('demo_sup_invoice_7')]"/>
+    </function>
+    <function model="account.move" name="_onchange_partner_id" context="{'check_move_validity': False}">
+        <value eval="[ref('demo_despacho_1')]"/>
+    </function>
 
     <function model="account.move.line" name="_onchange_product_id" context="{'check_move_validity': False}">
         <value model="account.move.line" eval="obj().search([('move_id', 'in', [ref('demo_sup_invoice_1'), ref('demo_sup_invoice_2'), ref('demo_sup_invoice_3'), ref('demo_sup_invoice_4'), ref('demo_sup_invoice_5'), ref('demo_sup_invoice_6'), ref('demo_sup_invoice_7')])]).ids"/>

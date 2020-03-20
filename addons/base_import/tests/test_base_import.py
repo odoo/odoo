@@ -468,6 +468,27 @@ class test_convert_import_data(TransactionCase):
         self.assertEqual(float(result[0][-1]), 5.69)
         self.assertEqual(str(result[0][-2]), '2017-10-12')
 
+    def test_parse_scientific_notation(self):
+        """ Ensure that scientific notation is correctly converted to decimal """
+        import_wizard = self.env['base_import.import']
+
+        test_options = {}
+        test_data = [
+            ["1E+05"],
+            ["1.20E-05"],
+            ["1,9e5"],
+            ["9,5e-5"],
+        ]
+        expected_result = [
+            ["100000.000000"],
+            ["0.000012"],
+            ["190000.000000"],
+            ["0.000095"],
+        ]
+
+        import_wizard._parse_float_from_data(test_data, 0, 'test-name', test_options)
+        self.assertEqual(test_data, expected_result)
+
     def test_filtered(self):
         """ If ``False`` is provided as field mapping for a column,
         that column should be removed from importable data

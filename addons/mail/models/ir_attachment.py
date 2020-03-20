@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
-
+from odoo.exceptions import AccessError
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
@@ -26,4 +26,9 @@ class IrAttachment(models.Model):
         # we are just checking that it exists on the model before writing it
         if related_record and hasattr(related_record, 'message_main_attachment_id'):
             if force or not related_record.message_main_attachment_id:
-                related_record.message_main_attachment_id = self
+                #Ignore AccessError, if you don't have access to modify the document
+                #Just don't set the value
+                try:
+                    related_record.message_main_attachment_id = self
+                except AccessError:
+                    pass

@@ -132,6 +132,7 @@ class ProductProduct(models.Model):
                 AND i.invoice_date BETWEEN %s AND  %s
                 AND i.company_id = %s
                 AND l.display_type IS NULL
+                AND l.exclude_from_invoice_tab = false
                 """.format(self.env['res.currency']._select_companies_rates())
             invoice_types = ('out_invoice', 'in_refund')
             self.env.cr.execute(sqlstr, (val.id, states, invoice_payment_states, invoice_types, date_from, date_to, company_id))

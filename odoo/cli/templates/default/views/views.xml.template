@@ -3,7 +3,7 @@
 <odoo>
   <data>
     <!-- explicit list view definition -->
-    <!--
+<!--
     <record model="ir.ui.view" id="{{mod}}.list">
       <field name="name">{{name}} list</field>
       <field name="model">{{model}}</field>
@@ -15,19 +15,19 @@
         </tree>
       </field>
     </record>
-    -->
+-->
 
     <!-- actions opening views on models -->
-    <!--
+<!--
     <record model="ir.actions.act_window" id="{{mod}}.action_window">
       <field name="name">{{name}} window</field>
       <field name="res_model">{{model}}</field>
       <field name="view_mode">tree,form</field>
     </record>
-    -->
+-->
 
     <!-- server action to the one above -->
-    <!--
+<!--
     <record model="ir.actions.server" id="{{mod}}.action_server">
       <field name="name">{{name}} server</field>
       <field name="model_id" ref="model_{{mod}}_{{mod}}"/>
@@ -36,27 +36,27 @@
         action = {
           "type": "ir.actions.act_window",
           "view_mode": "tree,form",
-          "res_model": self._name,
+          "res_model": model._name,
         }
       </field>
     </record>
-    -->
+-->
 
     <!-- Top menu item -->
-    <!--
+<!--
     <menuitem name="{{name}}" id="{{mod}}.menu_root"/>
-    -->
+-->
     <!-- menu categories -->
-    <!--
+<!--
     <menuitem name="Menu 1" id="{{mod}}.menu_1" parent="{{mod}}.menu_root"/>
     <menuitem name="Menu 2" id="{{mod}}.menu_2" parent="{{mod}}.menu_root"/>
-    -->
+-->
     <!-- actions -->
-    <!--
+<!--
     <menuitem name="List" id="{{mod}}.menu_1_list" parent="{{mod}}.menu_1"
               action="{{mod}}.action_window"/>
     <menuitem name="Server to list" id="{{mod}}" parent="{{mod}}.menu_2"
               action="{{mod}}.action_server"/>
-    -->
+-->
   </data>
 </odoo>

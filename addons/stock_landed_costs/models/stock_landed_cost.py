@@ -45,6 +45,7 @@ class LandedCost(models.Model):
     picking_ids = fields.Many2many(
         'stock.picking', string='Transfers',
         copy=False, states={'done': [('readonly', True)]})
+    allowed_picking_ids = fields.Many2many('stock.picking', compute='_compute_allowed_picking_ids')
     cost_lines = fields.One2many(
         'stock.landed.cost.lines', 'cost_id', 'Cost Lines',
         copy=True, states={'done': [('readonly', True)]})
@@ -78,6 +79,18 @@ class LandedCost(models.Model):
     def _compute_total_amount(self):
         for cost in self:
             cost.amount_total = sum(line.price_unit for line in cost.cost_lines)
+
+    @api.depends('company_id')
+    def _compute_allowed_picking_ids(self):
+        self.env.cr.execute("""SELECT sm.picking_id, sm.company_id
+                                 FROM stock_move AS sm
+                           INNER JOIN stock_valuation_layer AS svl ON svl.stock_move_id = sm.id
+                                WHERE sm.picking_id IS NOT NULL""")
+        valued_picking_ids_per_company = defaultdict(list)
+        for res in self.env.cr.fetchall():
+            valued_picking_ids_per_company[res[1]].append(res[0])
+        for cost in self:
+            cost.allowed_picking_ids = valued_picking_ids_per_company[cost.company_id.id]
 
     @api.model
     def create(self, vals):
@@ -120,9 +133,10 @@ class LandedCost(models.Model):
                 'line_ids': [],
                 'type': 'entry',
             }
+            valuation_layer_ids = []
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
                 remaining_qty = sum(line.move_id.stock_valuation_layer_ids.mapped('remaining_qty'))
-                linked_layer = line.move_id.stock_valuation_layer_ids[-1]  # Maybe the LC layer should be linked to multiple IN layer?
+                linked_layer = line.move_id.stock_valuation_layer_ids[:1]
 
                 # Prorate the value at what's still in stock
                 cost_to_add = (remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
@@ -139,8 +153,8 @@ class LandedCost(models.Model):
                         'stock_landed_cost_id': cost.id,
                         'company_id': cost.company_id.id,
                     })
-                    move_vals['stock_valuation_layer_ids'] = [(6, None, [valuation_layer.id])]
                     linked_layer.remaining_value += cost_to_add
+                    valuation_layer_ids.append(valuation_layer.id)
                 # Update the AVCO
                 product = line.move_id.product_id
                 if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
@@ -154,6 +168,7 @@ class LandedCost(models.Model):
                     qty_out = line.move_id.product_qty
                 move_vals['line_ids'] += line._create_accounting_entries(move, qty_out)
 
+            move_vals['stock_valuation_layer_ids'] = [(6, None, valuation_layer_ids)]
             move = move.create(move_vals)
             cost.write({'state': 'done', 'account_move_id': move.id})
             move.post()
@@ -163,7 +178,7 @@ class LandedCost(models.Model):
                 for product in cost.cost_lines.product_id:
                     accounts = product.product_tmpl_id.get_product_accounts()
                     input_account = accounts['stock_input']
-                    all_amls.filtered(lambda aml: aml.account_id == input_account).reconcile()
+                    all_amls.filtered(lambda aml: aml.account_id == input_account and not aml.full_reconcile_id).reconcile()
         return True
 
     def _check_sum(self):
@@ -188,7 +203,7 @@ class LandedCost(models.Model):
 
         for move in self.mapped('picking_ids').mapped('move_lines'):
             # it doesn't make sense to make a landed cost for a product that isn't set as being valuated in real time at real cost
-            if move.product_id.valuation != 'real_time' or move.product_id.cost_method not in ('fifo', 'average'):
+            if move.product_id.valuation != 'real_time' or move.product_id.cost_method not in ('fifo', 'average') or move.state == 'cancel':
                 continue
             vals = {
                 'product_id': move.product_id.id,
@@ -292,7 +307,7 @@ class LandedCostLine(models.Model):
         if not self.product_id:
             self.quantity = 0.0
         self.name = self.product_id.name or ''
-        self.split_method = 'equal'
+        self.split_method = self.split_method or 'equal'
         self.price_unit = self.product_id.standard_price or 0.0
         accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
         self.account_id = accounts_data['stock_input']
@@ -318,7 +333,7 @@ class AdjustmentLines(models.Model):
         'Weight', default=1.0,
         digits='Stock Weight')
     volume = fields.Float(
-        'Volume', default=1.0)
+        'Volume', default=1.0, digits='Volume')
     former_cost = fields.Float(
         'Original Value', digits='Product Price')
     additional_landed_cost = fields.Float(

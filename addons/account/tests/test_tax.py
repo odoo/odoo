@@ -106,9 +106,32 @@ class TestTax(AccountTestUsers):
                 }),
             ],
         })
+
+        self.tax_12_percent = self.tax_model.create({
+            'name': "test_12_percent",
+            'amount_type': 'percent',
+            'amount': 12,
+        })
+
+        self.tax_19_percent = self.tax_model.create({
+            'name': "test_19_percent",
+            'amount_type': 'percent',
+            'amount': 19,
+        })
+
+        self.tax_21_percent = self.tax_model.create({
+            'name': "test_21_percent",
+            'amount_type': 'percent',
+            'amount': 21,
+        })
+
         self.bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', self.account_manager.company_id.id)])[0]
         self.bank_account = self.bank_journal.default_debit_account_id
         self.expense_account = self.env['account.account'].search([('user_type_id.type', '=', 'payable')], limit=1) #Should be done by onchange later
+
+        # Ensure the rounding method is 'round_per_line' to avoid issue when launching the tests on
+        # an existing DB.
+        self.env.user.company_id.tax_calculation_rounding_method = 'round_per_line'
 
     def _check_compute_all_results(self, total_included, total_excluded, taxes, res):
         self.assertAlmostEqual(res['total_included'], total_included)
@@ -639,4 +662,127 @@ class TestTax(AccountTestUsers):
                 # ---------------
             ],
             tax.compute_all(-1.0)
+        )
+
+    def test_rounding_tax_excluded_round_per_line_01(self):
+        ''' Test the rounding of a 19% price excluded tax in an invoice having 22689 and 9176 as lines.
+        The decimal precision is set to zero.
+        The computation must be similar to round(22689 * 0.19) + round(9176 * 0.19).
+        '''
+        self.tax_19_percent.company_id.currency_id.rounding = 1.0
+        self.tax_19_percent.company_id.tax_calculation_rounding_method = 'round_per_line'
+
+        res1 = self.tax_19_percent.compute_all(22689)
+        self._check_compute_all_results(
+            27000,      # 'total_included'
+            22689,      # 'total_excluded'
+            [
+                # base, amount
+                # ---------------
+                (22689, 4311),
+                # ---------------
+            ],
+            res1
+        )
+
+        res2 = self.tax_19_percent.compute_all(9176)
+        self._check_compute_all_results(
+            10919,      # 'total_included'
+            9176,       # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (9176,  1743),
+                # ---------------
+            ],
+            res2
+        )
+
+    def test_rounding_tax_included_round_per_line_01(self):
+        ''' Test the rounding of a 19% price included tax in an invoice having 27000 and 10920 as lines.
+        The decimal precision is set to zero.
+        The computation must be similar to round(27000 / 1.19) + round(10920 / 1.19).
+        '''
+        self.tax_19_percent.price_include = True
+        self.tax_19_percent.company_id.currency_id.rounding = 1.0
+        self.tax_19_percent.company_id.tax_calculation_rounding_method = 'round_per_line'
+
+        res1 = self.tax_19_percent.compute_all(27000)
+        self._check_compute_all_results(
+            27000,      # 'total_included'
+            22689,      # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (22689, 4311),
+                # ---------------
+            ],
+            res1
+        )
+
+        res2 = self.tax_19_percent.compute_all(10920)
+        self._check_compute_all_results(
+            10920,      # 'total_included'
+            9176,       # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (9176,  1744),
+                # ---------------
+            ],
+            res2
+        )
+
+    def test_rounding_tax_included_round_per_line_02(self):
+        ''' Test the rounding of a 12% price included tax in an invoice having 52.50 as line.
+        The decimal precision is set to 2.
+        '''
+        self.tax_12_percent.price_include = True
+        self.tax_12_percent.company_id.currency_id.rounding = 0.01
+
+        res1 = self.tax_12_percent.compute_all(52.50)
+        self._check_compute_all_results(
+            52.50,      # 'total_included'
+            46.88,      # 'total_excluded'
+            [
+                # base , amount
+                # -------------
+                (46.88, 5.62),
+                # -------------
+            ],
+            res1
+        )
+
+    def test_rounding_tax_included_round_globally_01(self):
+        ''' Test the rounding of a 21% price included tax in an invoice having 11.90 and 2.80 as lines.
+        The decimal precision is set to 2.
+        '''
+        self.tax_21_percent.price_include = True
+        self.tax_21_percent.company_id.currency_id.rounding = 0.01
+        self.tax_21_percent.company_id.tax_calculation_rounding_method = 'round_globally'
+
+        res1 = self.tax_21_percent.compute_all(11.90)
+        self._check_compute_all_results(
+            11.90,      # 'total_included'
+            9.83,       # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (9.8347107, 2.0652893),
+                # ---------------
+            ],
+            res1
+        )
+
+        res2 = self.tax_21_percent.compute_all(2.80)
+        self._check_compute_all_results(
+            2.80,      # 'total_included'
+            2.31,      # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (2.3140496,  0.4859504),
+                # ---------------
+            ],
+            res2
         )

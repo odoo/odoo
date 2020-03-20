@@ -44,12 +44,12 @@
             <table class="table table-sm o_main_table">
                 <thead>
                     <tr>
-                        <th><strong>Description</strong></th>
-                        <th><strong>Taxes</strong></th>
-                        <th class="text-center"><strong>Date Req.</strong></th>
-                        <th class="text-right"><strong>Qty</strong></th>
-                        <th class="text-right"><strong>Unit Price</strong></th>
-                        <th class="text-right"><strong>Amount</strong></th>
+                        <th name="th_description"><strong>Description</strong></th>
+                        <th name="th_taxes"><strong>Taxes</strong></th>
+                        <th name="th_date_req" class="text-center"><strong>Date Req.</strong></th>
+                        <th name="th_quantity" class="text-right"><strong>Qty</strong></th>
+                        <th name="th_price_unit" class="text-right"><strong>Unit Price</strong></th>
+                        <th name="th_amount" class="text-right"><strong>Amount</strong></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,7 +63,7 @@
                                 <td id="product">
                                     <span t-field="line.name"/>
                                 </td>
-                                <td>
+                                <td name="td_taxes">
                                     <span t-esc="', '.join(map(lambda x: x.name, line.taxes_id))"/>
                                 </td>
                                 <td class="text-center">
@@ -113,21 +113,21 @@
                 <div class="col-4">
                     <table class="table table-sm">
                         <tr class="border-black">
-                            <td><strong>Subtotal</strong></td>
+                            <td name="td_subtotal_label"><strong>Subtotal</strong></td>
                             <td class="text-right">
                                 <span t-field="o.amount_untaxed"
                                     t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                             </td>
                         </tr>
                         <tr>
-                            <td>Taxes</td>
+                            <td name="td_taxes_label">Taxes</td>
                             <td class="text-right">
                                 <span t-field="o.amount_tax"
                                     t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                             </td>
                         </tr>
                         <tr class="border-black o_total">
-                            <td><strong>Total</strong></td>
+                            <td name="td_amount_total_label"><strong>Total</strong></td>
                             <td class="text-right">
                                 <span t-field="o.amount_total"
                                     t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>

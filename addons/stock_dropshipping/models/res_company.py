@@ -26,7 +26,7 @@ class ResCompany(models.Model):
     @api.model
     def create_missing_dropship_sequence(self):
         company_ids  = self.env['res.company'].search([])
-        company_has_dropship_seq = self.env['ir.sequence'].search([('code', '=', 'stock.dropshippping')]).mapped('company_id')
+        company_has_dropship_seq = self.env['ir.sequence'].search([('code', '=', 'stock.dropshipping')]).mapped('company_id')
         company_todo_sequence = company_ids - company_has_dropship_seq
         company_todo_sequence._create_dropship_sequence()
 

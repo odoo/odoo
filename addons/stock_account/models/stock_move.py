@@ -33,8 +33,8 @@ class StockMove(models.Model):
         self.ensure_one()
         price_unit = self.price_unit
         # If the move is a return, use the original move's price unit.
-        if self.origin_returned_move_id:
-            price_unit = self.origin_returned_move_id.price_unit
+        if self.origin_returned_move_id and self.origin_returned_move_id.stock_valuation_layer_ids:
+            price_unit = self.origin_returned_move_id.stock_valuation_layer_ids[-1].unit_cost
         return not self.company_id.currency_id.is_zero(price_unit) and price_unit or self.product_id.standard_price
 
     @api.model
@@ -137,7 +137,7 @@ class StockMove(models.Model):
             'stock_move_id': self.id,
             'company_id': self.company_id.id,
             'product_id': self.product_id.id,
-            'description': self.name,
+            'description': self.reference and '%s - %s' % (self.reference, self.product_id.name) or self.product_id.name,
         }
 
     def _create_in_svl(self, forced_quantity=None):
@@ -263,8 +263,7 @@ class StockMove(models.Model):
                 stock_valuation_layers |= getattr(todo_valued_moves, '_create_%s_svl' % valued_type)()
                 continue
 
-
-        for svl in stock_valuation_layers:
+        for svl in stock_valuation_layers.with_context(active_test=False):
             if not svl.product_id.valuation == 'real_time':
                 continue
             if svl.currency_id.is_zero(svl.value):
@@ -276,7 +275,7 @@ class StockMove(models.Model):
         # For every in move, run the vacuum for the linked product.
         products_to_vacuum = valued_moves['in'].mapped('product_id')
         company = valued_moves['in'].mapped('company_id') and valued_moves['in'].mapped('company_id')[0] or self.env.company
-        for product_to_vacuum in products_to_vacuum:
+        for product_to_vacuum in products_to_vacuum.with_context(active_test=False):
             product_to_vacuum._run_fifo_vacuum(company)
 
         return res
@@ -304,7 +303,7 @@ class StockMove(models.Model):
         # adapt standard price on incomming moves if the product cost_method is 'average'
         std_price_update = {}
         for move in self.filtered(lambda move: move._is_in() and move.with_context(force_company=move.company_id.id).product_id.cost_method == 'average'):
-            product_tot_qty_available = move.product_id.with_context(force_company=move.company_id.id).quantity_svl + tmpl_dict[move.product_id.id]
+            product_tot_qty_available = move.product_id.sudo().with_context(force_company=move.company_id.id).quantity_svl + tmpl_dict[move.product_id.id]
             rounding = move.product_id.uom_id.rounding
 
             valued_move_lines = move._get_in_move_lines()
@@ -380,7 +379,7 @@ class StockMove(models.Model):
         # This method returns a dictionary to provide an easy extension hook to modify the valuation lines (see purchase for an example)
         self.ensure_one()
         debit_line_vals = {
-            'name': self.name,
+            'name': description,
             'product_id': self.product_id.id,
             'quantity': qty,
             'product_uom_id': self.product_id.uom_id.id,
@@ -392,7 +391,7 @@ class StockMove(models.Model):
         }
 
         credit_line_vals = {
-            'name': self.name,
+            'name': description,
             'product_id': self.product_id.id,
             'quantity': qty,
             'product_uom_id': self.product_id.uom_id.id,

@@ -37,7 +37,7 @@ class AccountBankStatementImport(models.TransientModel):
         for data_file in self.attachment_ids:
             currency_code, account_number, stmts_vals = self.with_context(active_id=self.ids[0])._parse_file(base64.b64decode(data_file.datas))
             # Check raw data
-            self._check_parsed_data(stmts_vals)
+            self._check_parsed_data(stmts_vals, account_number)
             # Try to find the currency and journal in odoo
             currency, journal = self._find_additional_data(currency_code, account_number)
             # If no journal found, ask the user about creating one
@@ -111,10 +111,14 @@ class AccountBankStatementImport(models.TransientModel):
         """
         raise UserError(_('Could not make sense of the given file.\nDid you install the module to support this type of file ?'))
 
-    def _check_parsed_data(self, stmts_vals):
+    def _check_parsed_data(self, stmts_vals, account_number):
         """ Basic and structural verifications """
+        extra_msg = _('If it contains transactions for more than one account, it must be imported on each of them.')
         if len(stmts_vals) == 0:
-            raise UserError(_('This file doesn\'t contain any statement.'))
+            raise UserError(
+                _('This file doesn\'t contain any statement for account %s.') % (account_number,)
+                + '\n' + extra_msg
+            )
 
         no_st_line = True
         for vals in stmts_vals:
@@ -122,7 +126,10 @@ class AccountBankStatementImport(models.TransientModel):
                 no_st_line = False
                 break
         if no_st_line:
-            raise UserError(_('This file doesn\'t contain any transaction.'))
+            raise UserError(
+                _('This file doesn\'t contain any transaction for account %s.') % (account_number,)
+                + '\n' + extra_msg
+            )
 
     def _check_journal_bank_account(self, journal, account_number):
         # Needed for CH to accommodate for non-unique account numbers

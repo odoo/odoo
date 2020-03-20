@@ -15,6 +15,7 @@
                 <group expand='0' string='Filters'>
                     <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
                     <filter name='transit_loc' string="Transit Locations" domain="[('location_id.usage' ,'=', 'transit')]"/>
+                    <filter name="on_hand" string="On Hand" domain="[('on_hand', '=', True)]"/>
                     <separator/>
                     <filter name="negative" string="Negative Stock" domain="[('quantity', '&lt;', 0.0)]"/>
                     <filter name="positive" string="Positive Stock" domain="[('quantity', '&gt;', 0.0)]"/>
@@ -75,7 +76,7 @@
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
             <tree decoration-danger="inventory_quantity &lt; 0" editable="bottom"
-                  create="1" edit="1" js_class="singleton_list">
+                  create="1" edit="1" import="0" js_class="singleton_list">
                 <field name="id" invisible="1"/>
                 <field name="tracking" invisible="1"/>
                 <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}"

@@ -156,6 +156,34 @@ class Field(MetaField('DummyField', (object,), {})):
     :param bool store: whether the field is stored in database
         (default:``True``, ``False`` for computed fields)
 
+    :param str group_operator: aggregate function used by :meth:`~odoo.models.Model.read_group`
+        when grouping on this field.
+
+        Supported aggregate functions are:
+
+        * ``array_agg`` : values, including nulls, concatenated into an array
+        * ``count`` : number of rows
+        * ``count_distinct`` : number of distinct rows
+        * ``bool_and`` : true if all values are true, otherwise false
+        * ``bool_or`` : true if at least one value is true, otherwise false
+        * ``max`` : maximum value of all values
+        * ``min`` : minimum value of all values
+        * ``avg`` : the average (arithmetic mean) of all values
+        * ``sum`` : sum of all values
+
+    :param str group_expand: function used to expand read_group results when grouping on
+        the current field.
+
+        .. code-block:: python
+
+            @api.model
+            def _read_group_selection_field(self, values, domain, order):
+                return ['choice1', 'choice2', ...] # available selection choices.
+
+            @api.model
+            def _read_group_many2one_field(self, records, domain, order):
+                return records + self.search([custom_domain])
+
     .. rubric:: Computed Fields
 
     :param str compute: name of a method that computes the field
@@ -439,7 +467,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
         # display_name may depend on context['lang'] (`test_lp1071710`)
         if self.automatic and self.name == 'display_name' and model._rec_name:
-            if model._fields[model._rec_name].translate:
+            if model._fields[model._rec_name].base_field.translate:
                 self.depends_context += ('lang',)
 
     #
@@ -622,9 +650,8 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def cache_key(self, env):
         """ Return the cache key corresponding to ``self.depends_context``. """
-        get_context = env.context.get
 
-        def get(key):
+        def get(key, get_context=env.context.get):
             if key == 'force_company':
                 return get_context('force_company') or env.company.id
             elif key == 'uid':
@@ -632,7 +659,21 @@ class Field(MetaField('DummyField', (object,), {})):
             elif key == 'active_test':
                 return get_context('active_test', self.context.get('active_test', True))
             else:
-                return get_context(key)
+                v = get_context(key)
+                # The web client may set a list in the context:
+                # https://github.com/odoo/odoo/blob/4b06fe19fa68255b7982d15e5847da2f6d6209fd/addons/web/static/src/js/views/control_panel/control_panel_model.js#L962
+                # Therefore, we automatically convert lists into tuples
+                if type(v) is list:
+                    v = tuple(v)
+                try: hash(v)
+                except TypeError:
+                    raise TypeError(
+                        "Can only create cache keys from hashable values, "
+                        "got non-hashable value {!r} at context key {!r} "
+                        "(dependency of field {})".format(v, key, self)
+                    ) from None # we don't need to chain the exception created 2 lines above
+                else:
+                    return v
 
         return tuple(get(key) for key in self.depends_context)
 
@@ -706,7 +747,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     @property
     def _description_sortable(self):
-        return self.store or (self.inherited and self.related_field._description_sortable)
+        return (self.column_type and self.store) or (self.inherited and self.related_field._description_sortable)
 
     def _description_string(self, env):
         if self.string and env.lang:
@@ -854,7 +895,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 model.flush([self.name])
 
         if self.required and not has_notnull:
-            sql.set_not_null(model._cr, model._table, self.name)
+            model.pool.post_constraint(sql.set_not_null, model._cr, model._table, self.name)
         elif not self.required and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)
 
@@ -974,7 +1015,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     value = self.convert_to_cache(False, record, validate=False)
                     env.cache.set(record, self, value)
                 else:
-                    recs = record if self.recursive or not record.id else record._in_cache_without(self)
+                    recs = record if self.recursive else record._in_cache_without(self)
                     try:
                         self.compute_value(recs)
                     except AccessError:
@@ -1051,7 +1092,11 @@ class Field(MetaField('DummyField', (object,), {})):
             records = records.sudo()
         fields = records._field_computed[self]
 
-        # just in case the compute method does not assign a value
+        # Just in case the compute method does not assign a value, we already
+        # mark the computation as done. This is also necessary if the compute
+        # method accesses the old value of the field: the field will be fetched
+        # with _read(), which will flush() it. If the field is still to compute,
+        # the latter flush() will recursively compute this field!
         for field in fields:
             env.remove_to_compute(field, records)
 
@@ -1136,10 +1181,10 @@ class Integer(Field):
 
 
 class Float(Field):
-    """The precision digits are given by the attribute
+    """The precision digits are given by the (optional) digits attribute.
 
-    :param digits: a pair (total, decimal) or a
-        string referencing a `decimal.precision` record.
+    :param digits: a pair (total, decimal) or a string referencing a
+        :class:`~odoo.addons.base.models.decimal_precision.DecimalPrecision` record name.
     :type digits: tuple(int,int) or str
     """
 
@@ -1258,10 +1303,14 @@ class Monetary(Field):
     def convert_to_cache(self, value, record, validate=True):
         # cache format: float
         value = float(value or 0.0)
-        if validate and record.sudo()[self.currency_field]:
+        if value and validate:
             # FIXME @rco-odoo: currency may not be already initialized if it is
             # a function or related field!
-            value = record[self.currency_field].round(value)
+            currency = record.sudo()[self.currency_field]
+            if len(currency) > 1:
+                raise ValueError("Got multiple currencies while assigning values of monetary field %s" % str(self))
+            elif currency:
+                value = currency.round(value)
         return value
 
     def convert_to_record(self, value, record):
@@ -1278,6 +1327,7 @@ class _String(Field):
     """ Abstract class for string fields. """
     _slots = {
         'translate': False,             # whether the field is translated
+        'prefetch': None,
     }
 
     def __init__(self, string=Default, **kwargs):
@@ -1285,6 +1335,12 @@ class _String(Field):
         if 'translate' in kwargs and not callable(kwargs['translate']):
             kwargs['translate'] = bool(kwargs['translate'])
         super(_String, self).__init__(string=string, **kwargs)
+
+    def _setup_attrs(self, model, name):
+        super()._setup_attrs(model, name)
+        if self.prefetch is None:
+            # do not prefetch complex translated fields by default
+            self.prefetch = not callable(self.translate)
 
     _related_translate = property(attrgetter('translate'))
 
@@ -1507,11 +1563,13 @@ class Html(_String):
         'strip_classes': False,         # whether to strip classes attributes
     }
 
-    def _setup_attrs(self, model, name):
-        super(Html, self)._setup_attrs(model, name)
+    def _get_attrs(self, model, name):
+        # called by _setup_attrs(), working together with _String._setup_attrs()
+        attrs = super()._get_attrs(model, name)
         # Translated sanitized html fields must use html_translate or a callable.
-        if self.translate is True and self.sanitize:
-            self.translate = html_translate
+        if attrs.get('translate') is True and attrs.get('sanitize', True):
+            attrs['translate'] = html_translate
+        return attrs
 
     _related_sanitize = property(attrgetter('sanitize'))
     _related_sanitize_tags = property(attrgetter('sanitize_tags'))
@@ -1791,8 +1849,17 @@ class Binary(Field):
             return None
         # Detect if the binary content is an SVG for restricting its upload
         # only to system users.
-        if value[:1] in (b'P', 'P'):  # Fast detection of first 6 bits of '<' (0x3C)
-            decoded_value = base64.b64decode(value)
+        magic_bytes = {
+            b'P',  # first 6 bits of '<' (0x3C) b64 encoded
+            b'<',  # plaintext XML tag opening
+        }
+        if isinstance(value, str):
+            value = value.encode()
+        if value[:1] in magic_bytes:
+            try:
+                decoded_value = base64.b64decode(value.translate(None, delete=b'\r\n'), validate=True)
+            except binascii.Error:
+                decoded_value = value
             # Full mimetype detection
             if (guess_mimetype(decoded_value).startswith('image/svg') and
                     not record.env.is_system()):
@@ -2220,7 +2287,18 @@ class _Relational(Field):
 
     def _description_domain(self, env):
         if self.check_company and not self.domain:
-            return "['|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+            if self.company_dependent:
+                if self.comodel_name == "res.users":
+                    # user needs access to current company (self.env.company)
+                    return "[('company_ids', 'in', allowed_company_ids[0])]"
+                else:
+                    return "[('company_id', 'in', [allowed_company_ids[0], False])]"
+            else:
+                if self.comodel_name == "res.users":
+                    # User allowed company ids = user.company_ids
+                    return "['|', (not company_id, '=', True), ('company_ids', 'in', [company_id])]"
+                else:
+                    return "[('company_id', 'in', [company_id, False])]"
         return self.domain(env[self.model_name]) if callable(self.domain) else self.domain
 
     def null(self, record):
@@ -2249,9 +2327,9 @@ class Many2one(_Relational):
     :param bool delegate: set it to ``True`` to make fields of the target model
         accessible from the current model (corresponds to ``_inherits``)
 
-    :param check_company: add default domain ``['|', ('company_id', '=', False),
-        ('company_id', '=', company_id)]``. Mark the field to be verified in
-        ``_check_company``.
+    :param bool check_company: Mark the field to be verified in
+        :meth:`~odoo.models.Model._check_company`. Add a default company
+        domain depending on the field attributes.
     """
     type = 'many2one'
     column_type = ('int4', 'int4')
@@ -2492,6 +2570,8 @@ class Many2oneReference(Integer):
 
     def _update_inverses(self, records, value):
         """ Add `records` to the cached values of the inverse fields of `self`. """
+        if not value:
+            return
         cache = records.env.cache
         model_ids = self._record_ids_per_res_model(records)
 
@@ -2616,7 +2696,10 @@ class _RelationalMulti(_Relational):
         # use registry to avoid creating a recordset for the model
         prefetch_ids = IterableGenerator(prefetch_x2many_ids, record, self)
         corecords = record.pool[self.comodel_name]._browse(record.env, value, prefetch_ids)
-        if 'active' in corecords and record.env.context.get('active_test', True):
+        if (
+            'active' in corecords
+            and self.context.get('active_test', record.env.context.get('active_test', True))
+        ):
             corecords = corecords.filtered('active').with_prefetch(prefetch_ids)
         return corecords
 
@@ -2841,7 +2924,9 @@ class One2many(_RelationalMulti):
                     to_create.clear()
                 if to_inverse:
                     for record, inverse_ids in to_inverse.items():
-                        comodel.browse(inverse_ids)[inverse] = record
+                        lines = comodel.browse(inverse_ids)
+                        lines = lines.filtered(lambda line: int(line[inverse]) != record.id)
+                        lines[inverse] = record
 
             for recs, commands in records_commands_list:
                 for command in (commands or ()):
@@ -3011,9 +3096,9 @@ class Many2many(_RelationalMulti):
     :param dict context: an optional context to use on the client side when
         handling that field
 
-    :param check_company: add default domain ``['|', ('company_id', '=', False),
-        ('company_id', '=', company_id)]``. Mark the field to be verified in
-        ``_check_company``.
+    :param bool check_company: Mark the field to be verified in
+        :meth:`~odoo.models.Model._check_company`. Add a default company
+        domain depending on the field attributes.
 
     :param int limit: optional limit to use upon read
     """
@@ -3222,10 +3307,9 @@ class Many2many(_RelationalMulti):
             for ys1 in new_relation.values():
                 ys1 -= ys
 
-        to_create = []                  # line vals to create
-        to_delete = []                  # line ids to delete
-
         for recs, commands in records_commands_list:
+            to_create = []  # line vals to create
+            to_delete = []  # line ids to delete
             for command in (commands or ()):
                 if not isinstance(command, (list, tuple)) or not command:
                     continue
@@ -3444,9 +3528,9 @@ class Id(Field):
         # the code below is written to make record.id as quick as possible
         ids = record._ids
         size = len(ids)
-        if size is 0:
+        if size == 0:
             return False
-        elif size is 1:
+        elif size == 1:
             return ids[0]
         raise ValueError("Expected singleton: %s" % record)
 

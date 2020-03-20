@@ -3,6 +3,7 @@ odoo.define('web_editor.field.html', function (require) {
 
 var ajax = require('web.ajax');
 var basic_fields = require('web.basic_fields');
+var config = require('web.config');
 var core = require('web.core');
 var Wysiwyg = require('web_editor.wysiwyg.root');
 var field_registry = require('web.field_registry');
@@ -13,6 +14,8 @@ var _lt = core._lt;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
 var QWeb = core.qweb;
 var assetsLoaded;
+
+var jinjaRegex = /(^|\n)\s*%\s(end|set\s)/;
 
 /**
  * FieldHtml Widget
@@ -96,20 +99,27 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     commitChanges: function () {
         var self = this;
+        if (config.isDebug() && this.mode === 'edit') {
+            var layoutInfo = $.summernote.core.dom.makeLayoutInfo(this.wysiwyg.$editor);
+            $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
+        }
         if (this.mode == "readonly" || !this.isRendered) {
             return this._super();
         }
         var _super = this._super.bind(this);
-        return this.wysiwyg.save().then(function (result) {
-            self._isDirty = result.isDirty;
-            _super();
+        return this.wysiwyg.saveCroppedImages(this.$content).then(function () {
+            return self.wysiwyg.save().then(function (result) {
+                self._isDirty = result.isDirty;
+                _super();
+            });
         });
     },
     /**
      * @override
      */
     isSet: function () {
-        return this.value && this.value !== "<p><br/></p>" && this.value.match(/\S/);
+        var value = this.value && this.value.split('&nbsp;').join('').replace(/\s/g, ''); // Removing spaces & html spaces
+        return value && value !== "<p></p>" && value !== "<p><br></p>" && value.match(/\S/);
     },
     /**
      * @override
@@ -179,6 +189,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @returns {Object}
      */
     _getWysiwygOptions: function () {
+        var self = this;
         return Object.assign({}, this.nodeOptions, {
             recordInfo: {
                 context: this.record.getContext(this.recordParams),
@@ -193,12 +204,30 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             tabsize: 0,
             height: 180,
             generateOptions: function (options) {
-                var para = _.find(options.toolbar, function (item) {
+                var toolbar = options.toolbar || options.airPopover || {};
+                var para = _.find(toolbar, function (item) {
                     return item[0] === 'para';
                 });
                 if (para && para[1] && para[1].indexOf('checklist') === -1) {
                     para[1].splice(2, 0, 'checklist');
                 }
+                if (config.isDebug()) {
+                    options.codeview = true;
+                    var view = _.find(toolbar, function (item) {
+                        return item[0] === 'view';
+                    });
+                    if (view) {
+                        if (!view[1].includes('codeview')) {
+                            view[1].splice(-1, 0, 'codeview');
+                        }
+                    } else {
+                        toolbar.splice(-1, 0, ['view', ['codeview']]);
+                    }
+                }
+                if ("mailing.mailing" === self.model) {
+                    options.noVideos = true;
+                }
+                options.prettifyHtml = false;
                 return options;
             },
         });
@@ -341,7 +370,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _textToHtml: function (text) {
         var value = text || "";
-        if (/%\send/.test(value)) { // is jinja
+        if (jinjaRegex.test(value)) { // is jinja
             return value;
         }
         try {

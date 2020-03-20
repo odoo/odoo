@@ -16,12 +16,12 @@ import threading
 import odoo
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
-from odoo.tools import (assertion_report, config, existing_tables,
-                        lazy_classproperty, lazy_property, table_exists,
-                        topological_sort, OrderedSet)
+from odoo.tools import (assertion_report, config, existing_tables, ignore,
+                        lazy_classproperty, lazy_property, OrderedSet)
 from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
+_schema = logging.getLogger('odoo.schema')
 
 
 class Registry(Mapping):
@@ -110,6 +110,7 @@ class Registry(Mapping):
         self._assertion_report = assertion_report.assertion_report()
         self._fields_by_model = None
         self._post_init_queue = deque()
+        self._constraint_queue = deque()
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
@@ -230,6 +231,12 @@ class Registry(Mapping):
         lazy_property.reset_all(self)
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
 
+        if env.all.tocompute:
+            _logger.error(
+                "Remaining fields to compute before setting up registry: %s",
+                env.all.tocompute, stack_info=True,
+            )
+
         # add manual models
         if self._init_modules:
             env['ir.model']._add_manual_models()
@@ -248,13 +255,15 @@ class Registry(Mapping):
             model._setup_fields()
 
         # determine field dependencies
-        Model = odoo.models.Model
-        dependencies = {
-            field: set(field.resolve_depends(model))
-            for model in models
-            if isinstance(model, Model)
-            for field in model._fields.values()
-        }
+        dependencies = {}
+        for model in models:
+            if model._abstract:
+                continue
+            for field in model._fields.values():
+                # dependencies of custom fields may not exist; ignore that case
+                exceptions = (Exception,) if field.base_field.manual else ()
+                with ignore(*exceptions):
+                    dependencies[field] = set(field.resolve_depends(model))
 
         # determine transitive dependencies
         def transitive_dependencies(field, seen=[]):
@@ -294,7 +303,27 @@ class Registry(Mapping):
         """ Register a function to call at the end of :meth:`~.init_models`. """
         self._post_init_queue.append(partial(func, *args, **kwargs))
 
-    def init_models(self, cr, model_names, context):
+    def post_constraint(self, func, *args, **kwargs):
+        """ Call the given function, and delay it if it fails during an upgrade. """
+        try:
+            func(*args, **kwargs)
+        except Exception as e:
+            if self._is_install:
+                _schema.error(*e.args)
+            else:
+                _schema.info(*e.args)
+                self._constraint_queue.append(partial(func, *args, **kwargs))
+
+    def finalize_constraints(self):
+        """ Call the delayed functions from above. """
+        while self._constraint_queue:
+            func = self._constraint_queue.popleft()
+            try:
+                func()
+            except Exception as e:
+                _schema.error(*e.args)
+
+    def init_models(self, cr, model_names, context, install=True):
         """ Initialize a list of models (given by their name). Call methods
             ``_auto_init`` and ``init`` on each model to create or update the
             database tables supporting the models.
@@ -310,6 +339,10 @@ class Registry(Mapping):
 
         env = odoo.api.Environment(cr, SUPERUSER_ID, context)
         models = [env[model_name] for model_name in model_names]
+
+        # make sure the queue does not contain some leftover from a former call
+        self._post_init_queue.clear()
+        self._is_install = install
 
         for model in models:
             model._auto_init()
@@ -408,8 +441,9 @@ class Registry(Mapping):
             # Check if the model caches must be invalidated.
             elif self.cache_sequence != c:
                 _logger.info("Invalidating all model caches after database signaling.")
-                self.clear_caches()
-                self.cache_invalidated = False
+                # Bypass self.clear_caches() to avoid invalidation loops in multi-threaded
+                # configs due to the `cache_invalidated` flag being set, causing more signaling.
+                self.cache.clear()
             self.registry_sequence = r
             self.cache_sequence = c
 

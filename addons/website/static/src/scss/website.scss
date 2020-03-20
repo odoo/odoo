@@ -916,7 +916,12 @@ table.table_desc tr td {
 // Parallax
 .parallax {
     position: relative;
-    overflow: hidden;
+
+    // TODO this introduces a limitation: no dropdown will be able to
+    // overflow. Maybe there is a better way to find.
+    &:not(.s_parallax_no_overflow_hidden) {
+        overflow: hidden;
+    }
 
     > * {
         position: relative;
@@ -1176,16 +1181,15 @@ table.table_desc tr td {
         > .navbar {
             background-color: transparent !important;
             border-color: transparent;
+            color: inherit;
 
             .nav-item {
                 > .nav-link {
                     background-color: transparent;
                     color: inherit;
-                }
-                &.show, &.active {
-                    > .nav-link {
-                        background-color: white;
-                        color: black;
+
+                    &.active {
+                        font-weight: bolder;
                     }
                 }
             }
@@ -1236,4 +1240,9 @@ table.table_desc tr td {
         background-position: center;
         background-repeat: no-repeat;
     }
+}
+
+// Fixing job perks icons in website_hr_recruitement by making them full-width
+.o_perk span {
+    display: block;
 }

@@ -8,15 +8,15 @@
 # Martin Trigaux, 2019
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2019
 # Michal Veselý <michal@veselyberanek.net>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# trendspotter <j.podhorecky@volny.cz>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:13+0000\n"
+"POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -543,6 +543,7 @@ msgid "Appears in"
 msgstr "Objeví se v"
 
 #. module: gamification
+#: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_badge_view_search
 msgid "Archived"
 msgstr "Archivováno"
@@ -559,6 +560,9 @@ msgid ""
 "                The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                The goals are created for the specified users or member of the group."
 msgstr ""
+"Vybraným uživatelům přiřaďte seznam cílů k jejich vyhodnocení.\n"
+"Výzva může použít období (týdenní, měsíční ...) pro automatické vytváření cílů.\n"
+"Cíle jsou vytvářeny pro určené uživatele nebo člena skupiny."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_attachment_count
@@ -1464,7 +1468,7 @@ msgstr "Řádky"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__line_ids
 msgid "List of goals that will be set"
-msgstr ""
+msgstr "Seznam cílů, které budou nastaveny"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__user_ids
@@ -1594,7 +1598,7 @@ msgstr "Byl udělen nový odznak ${object.badge_id.name}"
 #. module: gamification
 #: model:mail.template,subject:gamification.mail_template_data_new_rank_reached
 msgid "New rank: ${object.rank_id.name}"
-msgstr ""
+msgstr "Nová úroveň: ${object.rank_id.name}"
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_newbie
@@ -1878,7 +1882,7 @@ msgstr "Požadované odznaky"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__karma_min
 msgid "Required Karma"
-msgstr ""
+msgstr "Vyžadovaná Karma"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
@@ -2003,7 +2007,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Set the current value you have reached for this goal"
-msgstr ""
+msgstr "Nastavte aktuální hodnotu, kterou jste pro tento cíl dosáhli"
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_admin1
@@ -2155,7 +2159,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__field_id
 msgid "The field containing the value to evaluate"
-msgstr ""
+msgstr "Pole obsahující hodnotu k vyhodnocení"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__res_id_field
@@ -2189,6 +2193,8 @@ msgstr "Čím nižší, tím lépe"
 msgid ""
 "The maximum number of time this badge can be sent per month per person."
 msgstr ""
+"Maximální počet opakování, kolikrát může být tento odznak odeslán za měsíc "
+"jedné osobě."
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:0
@@ -2226,7 +2232,7 @@ msgstr ""
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_this_month
 msgid ""
 "The number of time the current user has received this badge this month."
-msgstr ""
+msgstr "Počet, kolikrát tento uživatel tento měsíc obdržel tento odznak."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my
@@ -2263,12 +2269,12 @@ msgstr "Cílová a aktuální hodnota jsou definovány v měně společnosti."
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_suffix
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__suffix
 msgid "The unit of the target and current values"
-msgstr ""
+msgstr "Jednotka cíle a aktuální hodnoty"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__manager_id
 msgid "The user responsible for the challenge."
-msgstr ""
+msgstr "Uživatel odpovědný za výzvu."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user__sender_id
@@ -2305,7 +2311,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__closed
 msgid "These goals will not be recomputed."
-msgstr ""
+msgstr "Tyto cíle nebudou přičítány."
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:0
@@ -2436,7 +2442,7 @@ msgstr "Ročně"
 #: code:addons/gamification/models/badge.py:0
 #, python-format
 msgid "You are not in the user allowed list."
-msgstr ""
+msgstr "Nejste v seznamu povolených uživatelů."
 
 #. module: gamification
 #: code:addons/gamification/wizard/grant_badge.py:0
@@ -2533,7 +2539,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "e.g. Reach this rank to gain a free mug !"
-msgstr ""
+msgstr "např. Dosáhněte této úrovně a získejte hrnek zdarma!"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view

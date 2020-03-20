@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -34,6 +34,7 @@ msgid "Active"
 msgstr "啟用"
 
 #. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Archived"
@@ -64,11 +65,6 @@ msgstr "顏色"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__company_id
 msgid "Company"
 msgstr "公司"
-
-#. module: hr_work_entry
-#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__confirmed
-msgid "Confirmed"
-msgstr "已確認"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__conflict
@@ -258,13 +254,6 @@ msgid "Validated"
 msgstr "已驗證"
 
 #. module: hr_work_entry
-#. openerp-web
-#: code:addons/hr_work_entry/static/src/xml/work_entry_templates.xml:0
-#, python-format
-msgid "We found some conflicts,"
-msgstr "我們發現一些衝突"
-
-#. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_attendance
 msgid "Work Detail"
 msgstr "工作詳情"
@@ -314,10 +303,3 @@ msgstr "工作條目必須有起訖時間。請定義結束日期或持續時間
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique
 msgid "You cannot have the same employee twice."
 msgstr "不能讓同一員工兩次。"
-
-#. module: hr_work_entry
-#. openerp-web
-#: code:addons/hr_work_entry/static/src/xml/work_entry_templates.xml:0
-#, python-format
-msgid "click here to revise them"
-msgstr "點選此處來進行修改"

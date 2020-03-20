@@ -5,13 +5,12 @@ import base64
 import logging
 import re
 
-from email.utils import formataddr
 from uuid import uuid4
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import ormcache
+from odoo.tools import ormcache, formataddr
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 MODERATION_FIELDS = ['moderation', 'moderator_ids', 'moderation_ids', 'moderation_notify', 'moderation_notify_msg', 'moderation_guidelines', 'moderation_guidelines_msg']
@@ -418,14 +417,14 @@ class Channel(models.Model):
             ('channel_id', 'in', self.ids)
         ]).mapped('email')
         for partner in partners.filtered(lambda p: p.email and not (p.email in banned_emails)):
+            company = partner.company_id or self.env.company
             create_values = {
                 'body_html': view.render({'channel': self, 'partner': partner}, engine='ir.qweb', minimal_qcontext=True),
                 'subject': _("Guidelines of channel %s") % self.name,
-                'email_from': partner.company_id.catchall or partner.company_id.email,
+                'email_from': company.catchall or company.email,
                 'recipient_ids': [(4, partner.id)]
             }
             mail = self.env['mail.mail'].create(create_values)
-            mail.send()
         return True
 
     def _update_moderation_email(self, emails, status):
@@ -471,7 +470,10 @@ class Channel(models.Model):
         for partner in self.env['res.partner'].browse(partner_ids):
             user_id = partner.user_ids and partner.user_ids[0] or False
             if user_id:
-                for channel_info in self.with_user(user_id).channel_info():
+                user_channels = self.with_user(user_id).with_context(
+                    allowed_company_ids=user_id.company_ids.ids
+                )
+                for channel_info in user_channels.channel_info():
                     notifications.append([(self._cr.dbname, 'res.partner', partner.id), channel_info])
         return notifications
 

@@ -141,7 +141,10 @@
                                         <i class="fa fa-user text-primary"/>
                                         <t t-esc="track.partner_id.sudo().name"/>
                                     </li>
-                                    <li t-if="track.date" class="list-inline-item"> <i class="fa fa-calendar text-primary"/><span t-field="track.date" t-options='{"hide_seconds":"True"}'/></li>
+                                    <li t-if="track.date" class="list-inline-item">
+                                        <i class="fa fa-calendar text-primary"/>
+                                        <span t-field="track.date" t-options='{"hide_seconds":"True"}'/>
+                                    </li>
                                     <li class="list-inline-item" t-if="track.location_id">
                                         <i class="fa fa-map-marker"/>
                                         <span t-field="track.location_id"/>

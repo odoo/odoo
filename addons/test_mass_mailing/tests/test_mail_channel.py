@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from email.utils import formataddr
 from odoo.addons.test_mail.tests import common
+from odoo.tools import formataddr
 
 
 class TestChannelPartnersNotification(common.MockEmails):

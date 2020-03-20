@@ -253,11 +253,11 @@ class Users(models.Model):
     email = fields.Char(related='partner_id.email', inherited=True, readonly=False)
 
     accesses_count = fields.Integer('# Access Rights', help='Number of access rights that apply to the current user',
-                                    compute='_compute_accesses_count')
+                                    compute='_compute_accesses_count', compute_sudo=True)
     rules_count = fields.Integer('# Record Rules', help='Number of record rules that apply to the current user',
-                                 compute='_compute_accesses_count')
+                                 compute='_compute_accesses_count', compute_sudo=True)
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
-                                  compute='_compute_accesses_count')
+                                  compute='_compute_accesses_count', compute_sudo=True)
 
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
@@ -389,7 +389,7 @@ class Users(models.Model):
 
     @api.constrains('company_id', 'company_ids')
     def _check_company(self):
-        if any(user.company_ids and user.company_id not in user.company_ids for user in self):
+        if any(user.company_id not in user.company_ids for user in self):
             raise ValidationError(_('The chosen company is not in the allowed companies for this user'))
 
     @api.constrains('action_id')
@@ -473,7 +473,10 @@ class Users(models.Model):
     def create(self, vals_list):
         users = super(Users, self).create(vals_list)
         for user in users:
-            user.partner_id.write({'company_id': user.company_id.id, 'active': user.active})
+            # if partner is global we keep it that way
+            if user.partner_id.company_id:
+                user.partner_id.company_id = user.company_id
+            user.partner_id.active = user.active
         return users
 
     def write(self, values):
@@ -503,8 +506,6 @@ class Users(models.Model):
                 # if partner is global we keep it that way
                 if user.partner_id.company_id and user.partner_id.company_id.id != values['company_id']:
                     user.partner_id.write({'company_id': user.company_id.id})
-            # clear default ir values when company changes
-            self.env['ir.default'].clear_caches()
 
         if 'company_id' in values or 'company_ids' in values:
             # Reset lazy properties `company` & `companies` on all envs
@@ -545,11 +546,13 @@ class Users(models.Model):
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []
-        if operator == 'ilike' and not (name or '').strip():
-            domain = []
-        else:
-            domain = [('login', '=', name)]
-        user_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
+        user_ids = []
+        if operator not in expression.NEGATIVE_TERM_OPERATORS:
+            if operator == 'ilike' and not (name or '').strip():
+                domain = []
+            else:
+                domain = [('login', '=', name)]
+            user_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         if not user_ids:
             user_ids = self._search(expression.AND([[('name', operator, name)], args]), limit=limit, access_rights_uid=name_get_uid)
         return models.lazy_name_get(self.browse(user_ids).with_user(name_get_uid))
@@ -1137,7 +1140,7 @@ class GroupsView(models.Model):
             xml_content = etree.tostring(xml, pretty_print=True, encoding="unicode")
 
             new_context = dict(view._context)
-            new_context.pop('install_mode_data', None)  # don't set arch_fs for this computed view
+            new_context.pop('install_filename', None)  # don't set arch_fs for this computed view
             new_context['lang'] = None
             view.with_context(new_context).write({'arch': xml_content})
 

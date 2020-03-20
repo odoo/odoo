@@ -1,11 +1,11 @@
-odoo.define('product_matrix.section_and_note_widget_tests', function (require) {
+odoo.define('sale_product_matrix.section_and_note_widget_tests', function (require) {
 "use strict";
 
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
 var createView = testUtils.createView;
 
-QUnit.module('section_and_note: product_matrix', {
+QUnit.module('section_and_note: sale_product_matrix', {
     beforeEach: function () {
         this.data = {
             sale_order: {

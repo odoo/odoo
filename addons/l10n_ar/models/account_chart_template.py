@@ -57,4 +57,11 @@ class AccountChartTemplate(models.Model):
                 'country_id': self.env.ref('base.ar').id,
                 'tax_calculation_rounding_method': 'round_globally',
             })
-        return super()._load(sale_tax_rate, purchase_tax_rate, company)
+        res = super()._load(sale_tax_rate, purchase_tax_rate, company)
+
+        # If Responsable Monotributista remove the default purchase tax
+        if self == self.env.ref('l10n_ar.l10nar_base_chart_template') or \
+           self == self.env.ref('l10n_ar.l10nar_ex_chart_template'):
+            company.account_purchase_tax_id = self.env['account.tax']
+
+        return res

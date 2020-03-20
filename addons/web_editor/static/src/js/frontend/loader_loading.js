@@ -10,7 +10,10 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('textarea.o_wysiwyg_loader').forEach(textarea => {
+    // Standard loop for better browser support
+    var textareaEls = document.querySelectorAll('textarea.o_wysiwyg_loader');
+    for (var i = 0; i < textareaEls.length; i++) {
+        var textarea = textareaEls[i];
         var wrapper = document.createElement('div');
         wrapper.classList.add('position-relative', 'o_wysiwyg_wrapper');
 
@@ -24,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         textarea.parentNode.insertBefore(wrapper, textarea);
         wrapper.insertBefore(textarea, loadingElement);
-    });
+    }
 });
 
 })();

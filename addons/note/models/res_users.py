@@ -37,16 +37,14 @@ GROUP BY id"""
         self.browse(uids)._create_note_stages()
 
     def _create_note_stages(self):
-        data_found = False
         for num in range(4):
             stage = self.env.ref('note.note_stage_%02d' % (num,), raise_if_not_found=False)
-            data_found = True
-            if stage:
-                for user in self:
-                    stage.sudo().copy(default={'user_id': user.id})
-        if data_found:
+            if not stage:
+                break
             for user in self:
-                _logger.info('Note default columns created for user id %s', user.id)
+                stage.sudo().copy(default={'user_id': user.id})
+        else:
+            _logger.debug("Created note columns for %s", self)
 
     @api.model
     def systray_get_activities(self):

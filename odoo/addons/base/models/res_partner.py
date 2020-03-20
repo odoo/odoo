@@ -9,8 +9,6 @@ import pytz
 import threading
 import re
 
-from email.utils import formataddr
-
 import requests
 from lxml import etree
 from werkzeug import urls
@@ -44,7 +42,7 @@ def _tz_get(self):
 
 class FormatAddressMixin(models.AbstractModel):
     _name = "format.address.mixin"
-    _description = 'Fomat Address'
+    _description = 'Address Format'
 
     def _fields_view_get_address(self, arch):
         # consider the country of the user, not the country of the partner we want to display
@@ -136,6 +134,14 @@ class Partner(models.Model):
 
     def _default_category(self):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
+
+    @api.model
+    def default_get(self, default_fields):
+        """Add the company of the parent as default if we are creating a child partner."""
+        values = super().default_get(default_fields)
+        if 'parent_id' in default_fields and values.get('parent_id'):
+            values['company_id'] = self.browse(values.get('parent_id')).company_id.id
+        return values
 
     def _split_street_with_params(self, street_raw, street_format):
         return {'street': street_raw}
@@ -230,13 +236,13 @@ class Partner(models.Model):
             self._cr.execute("""CREATE INDEX res_partner_vat_index ON res_partner (regexp_replace(upper(vat), '[^A-Z0-9]+', '', 'g'))""")
 
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name')
-    @api.depends_context('show_address', 'show_address_only', 'show_email', 'html_format', 'show_vat')
     def _compute_display_name(self):
         diff = dict(show_address=None, show_address_only=None, show_email=None, html_format=None, show_vat=None)
         names = dict(self.with_context(**diff).name_get())
         for partner in self:
             partner.display_name = names.get(partner.id)
 
+    @api.depends('lang')
     def _compute_active_lang_count(self):
         lang_count = len(self.env['res.lang'].get_installed())
         for partner in self:
@@ -355,7 +361,7 @@ class Partner(models.Model):
     def _compute_email_formatted(self):
         for partner in self:
             if partner.email:
-                partner.email_formatted = formataddr((partner.name or u"False", partner.email or u"False"))
+                partner.email_formatted = tools.formataddr((partner.name or u"False", partner.email or u"False"))
             else:
                 partner.email_formatted = ''
 
@@ -426,8 +432,9 @@ class Partner(models.Model):
         sync_children = self.child_ids.filtered(lambda c: not c.is_company)
         for child in sync_children:
             child._commercial_sync_to_children()
+        res = sync_children.write(sync_vals)
         sync_children._compute_commercial_partner()
-        return sync_children.write(sync_vals)
+        return res
 
     def _fields_sync(self, values):
         """ Sync commercial fields and address fields from company and to children after create/update,
@@ -512,6 +519,8 @@ class Partner(models.Model):
                     if len(companies) > 1 or company not in companies:
                         raise UserError(
                             ("The selected company is not compatible with the companies of the related user(s)"))
+                if partner.child_ids:
+                    partner.child_ids.write({'company_id': company.id})
         result = True
         # To write in SUPERUSER on field is_company and avoid access rights problems.
         if 'is_company' in vals and self.user_has_groups('base.group_partner_manager') and not self.env.su:

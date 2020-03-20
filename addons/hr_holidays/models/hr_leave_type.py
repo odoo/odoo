@@ -330,7 +330,7 @@ class HolidaysType(models.Model):
         leave_ids = super(HolidaysType, self)._search(args, offset=offset, limit=(None if post_sort else limit), order=order, count=count, access_rights_uid=access_rights_uid)
         leaves = self.browse(leave_ids)
         if post_sort:
-            return leaves.sorted(key=self._model_sorting_key, reverse=True).ids[:limit]
+            return leaves.sorted(key=self._model_sorting_key, reverse=True).ids[:limit or None]
         return leave_ids
 
     def action_see_days_allocated(self):

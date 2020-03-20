@@ -79,6 +79,7 @@ class UoM(models.Model):
             not possible to do it in SQL directly.
         """
         category_ids = self.mapped('category_id').ids
+        self.env['uom.uom'].flush(['category_id', 'uom_type', 'active'])
         self._cr.execute("""
             SELECT C.id AS category_id, count(U.id) AS uom_count
             FROM uom_category C

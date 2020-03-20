@@ -307,6 +307,7 @@ class Repair(models.Model):
             current_invoices_list = grouped_invoices_vals[(partner_invoice.id, currency.id)]
 
             if not group or len(current_invoices_list) == 0:
+                fp_id = repair.partner_id.property_account_position_id.id or self.env['account.fiscal.position'].get_fiscal_position(repair.partner_id.id, delivery_id=repair.address_id.id)
                 invoice_vals = {
                     'type': 'out_invoice',
                     'partner_id': partner_invoice.id,
@@ -316,6 +317,7 @@ class Repair(models.Model):
                     'invoice_origin': repair.name,
                     'repair_ids': [(4, repair.id)],
                     'invoice_line_ids': [],
+                    'fiscal_position_id': fp_id
                 }
                 current_invoices_list.append(invoice_vals)
             else:
@@ -491,19 +493,30 @@ class Repair(models.Model):
                     'partner_id': repair.address_id.id,
                     'location_id': operation.location_id.id,
                     'location_dest_id': operation.location_dest_id.id,
-                    'move_line_ids': [(0, 0, {'product_id': operation.product_id.id,
-                                           'lot_id': operation.lot_id.id, 
-                                           'product_uom_qty': 0,  # bypass reservation here
-                                           'product_uom_id': operation.product_uom.id,
-                                           'qty_done': operation.product_uom_qty,
-                                           'package_id': False,
-                                           'result_package_id': False,
-                                           'owner_id': owner_id,
-                                           'location_id': operation.location_id.id, #TODO: owner stuff
-                                           'location_dest_id': operation.location_dest_id.id,})],
                     'repair_id': repair.id,
                     'origin': repair.name,
                 })
+
+                # Best effort to reserve the product in a (sub)-location where it is available
+                product_qty = move.product_uom._compute_quantity(
+                    operation.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
+                available_quantity = self.env['stock.quant']._get_available_quantity(
+                    move.product_id,
+                    move.location_id,
+                    lot_id=operation.lot_id,
+                    strict=False,
+                )
+                move._update_reserved_quantity(
+                    product_qty,
+                    available_quantity,
+                    move.location_id,
+                    lot_id=operation.lot_id,
+                    strict=False,
+                )
+                # Then, set the quantity done. If the required quantity was not reserved, negative
+                # quant is created in operation.location_id.
+                move._set_quantity_done(operation.product_uom_qty)
+
                 moves |= move
                 operation.write({'move_id': move.id, 'state': 'done'})
             move = Move.create({
@@ -633,7 +646,12 @@ class RepairLine(models.Model):
             self.product_uom = self.product_id.uom_id.id
         if self.type != 'remove':
             if partner and self.product_id:
-                self.tax_id = partner.property_account_position_id.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
+                fp = partner.property_account_position_id
+                if not fp:
+                    # Check automatic detection
+                    fp_id = self.env['account.fiscal.position'].get_fiscal_position(partner.id, delivery_id=self.repair_id.address_id.id)
+                    fp = self.env['account.fiscal.position'].browse(fp_id)
+                self.tax_id = fp.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
             warning = False
             if not pricelist:
                 warning = {
@@ -670,7 +688,7 @@ class RepairFee(models.Model):
     name = fields.Text('Description', index=True, required=True)
     product_id = fields.Many2one('product.product', 'Product')
     product_uom_qty = fields.Float('Quantity', digits='Product Unit of Measure', required=True, default=1.0)
-    price_unit = fields.Float('Unit Price', required=True)
+    price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
     product_uom = fields.Many2one('uom.uom', 'Product Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_subtotal', store=True, digits=0)
@@ -695,7 +713,12 @@ class RepairFee(models.Model):
         pricelist = self.repair_id.pricelist_id
 
         if partner and self.product_id:
-            self.tax_id = partner.property_account_position_id.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
+            fp = partner.property_account_position_id
+            if not fp:
+                # Check automatic detection
+                fp_id = self.env['account.fiscal.position'].get_fiscal_position(partner.id, delivery_id=self.repair_id.address_id.id)
+                fp = self.env['account.fiscal.position'].browse(fp_id)
+            self.tax_id = fp.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
         if self.product_id:
             self.name = self.product_id.display_name
             self.product_uom = self.product_id.uom_id.id

@@ -14,13 +14,6 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='utm_link']" position="replace">
-                <group name="utm_link" colspan="2" class="mt-0">
-                    <field name="campaign_id"/>
-                    <field name="medium_id"/>
-                    <field name="source_id"/>
-                </group>
-            </xpath>
             <xpath expr="//group[@name='technical']" position="inside">
                 <field name="opportunity_id" help="Log in the chatter from which opportunity the order originates" groups="base.group_no_one"/>
             </xpath>

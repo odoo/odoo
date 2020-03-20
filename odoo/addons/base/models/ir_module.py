@@ -315,7 +315,7 @@ class Module(models.Model):
         except pkg_resources.DistributionNotFound as e:
             try:
                 importlib.import_module(pydep)
-                _logger.warning("python external dependency %s should be replaced by it's PyPI package name", pydep)
+                _logger.info("python external dependency on '%s' does not appear to be a valid PyPI package. Using a PyPI package name is recommended.", pydep)
             except ImportError:
                 # backward compatibility attempt failed
                 _logger.warning("DistributionNotFound: %s", e)
@@ -600,6 +600,11 @@ class Module(models.Model):
     def button_uninstall(self):
         if 'base' in self.mapped('name'):
             raise UserError(_("The `base` module cannot be uninstalled"))
+        if not all(state == 'installed' for state in self.mapped('state')):
+            raise UserError(_(
+                "One or more of the selected modules have already been uninstalled, if you "
+                "believe this to be an error, you may try again later or contact support."
+            ))
         deps = self.downstream_dependencies()
         (self + deps).write({'state': 'to remove'})
         return dict(ACTION_DICT, name=_('Uninstall'))

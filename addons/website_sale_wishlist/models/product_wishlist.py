@@ -31,9 +31,9 @@ class ProductWishlist(models.Model):
         if request.website.is_public_user():
             wish = self.sudo().search([('id', 'in', request.session.get('wishlist_ids', []))])
         else:
-            wish = self.search([("partner_id", "=", self.env.user.partner_id.id)])
+            wish = self.search([("partner_id", "=", self.env.user.partner_id.id), ('website_id', '=', request.website.id)])
 
-        return wish.sudo().filtered('product_id.product_tmpl_id.website_published')
+        return wish.filtered(lambda x: x.sudo().product_id.product_tmpl_id.website_published)
 
     @api.model
     def _add_to_wishlist(self, pricelist_id, currency_id, website_id, price, product_id, partner_id=False):

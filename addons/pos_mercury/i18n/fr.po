@@ -8,14 +8,15 @@
 # thomas quertinmont <tqu@odoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # Martin Trigaux, 2019
+# lcaodoo <lca@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:26+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: lcaodoo <lca@odoo.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,9 +25,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: pos_mercury
-#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_view_form_inherit_pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Buy a card reader"
-msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>"
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Acheter un lecteur de carte"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -37,6 +38,11 @@ msgid ""
 "                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
+"<i>Les configurations Vantiv</i> définissent quel compte Vantiv sera utilisé lors\n"
+"de transactions par carte de crédit dans le Point de Vente. Mettre en place une configuration \n"
+"Vantiv vous permettra d'accepter des paiements à partir de plusieurs cartes de crédit \n"
+"(ex. Visa, MasterCard, Discovery, American Express, ...). Après avoir mis en place\n"
+"cette configuration, vous devriez l'associer avec une méthode de paiement dans le Point de Vente."
 
 #. module: pos_mercury
 #. openerp-web
@@ -63,9 +69,9 @@ msgid "Barcode Rule"
 msgstr "Règle de code-barres"
 
 #. module: pos_mercury
-#: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury_2
+#: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
 msgid "Barcode Scanner/Card Reader"
-msgstr "Lecteur de codes à barres/Lecteur de cartes"
+msgstr "Lecteur de codes-barres/Lecteur de cartes"
 
 #. module: pos_mercury
 #. openerp-web
@@ -207,7 +213,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_invoice_no
 msgid "Invoice number from Vantiv Pay"
-msgstr ""
+msgstr "Numéro de facture de Mercury Pay"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration____last_update
@@ -320,19 +326,19 @@ msgstr "Payez avec :"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_record_no
 msgid "Payment record number from Vantiv Pay"
-msgstr ""
+msgstr "Entrée du payment chez Vantiv Pay"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_ref_no
 msgid "Payment reference number from Vantiv Pay"
-msgstr ""
+msgstr "Référence du paiement chez Vantiv Pay"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
 #, python-format
 msgid "Please setup your Vantiv merchant account."
-msgstr ""
+msgstr "Merci de configurer votre compte marchand Vantiv."
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
@@ -352,12 +358,12 @@ msgstr "Paiements au point de vente"
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
 msgid "Point of Sale Vantiv Configuration"
-msgstr ""
+msgstr "Configuration Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
 msgid "Point of Sale Vantiv Transaction"
-msgstr ""
+msgstr "Transaction Vantiv"
 
 #. module: pos_mercury
 #. openerp-web
@@ -407,7 +413,7 @@ msgstr "Le numéro de la carte de crédit utilisé pour le paiement. "
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment_method__pos_mercury_config_id
 msgid "The configuration of Vantiv used for this journal"
-msgstr ""
+msgstr "La configuration Vantiv utilisée pour ce journal"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_number
@@ -450,9 +456,13 @@ msgid ""
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
+"Utiliser l'intégration Vantiv dans le point de vente est simple: pressez\n"
+"simplement la méthode de paiement correspodante. Ce montant peut ensuite être ajusté (ex: rendu en espèces)\n"
+"comme toute autre ligne de paiement. Lorsque la ligne de paiement est définie, une carte\n"
+"peut être lue via le terminal de paiement."
 
 #. module: pos_mercury
-#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_view_form_inherit_pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
 msgid "Vantiv Accounts"
 msgstr "Comptes Vantiv"
 
@@ -465,7 +475,7 @@ msgstr "Configurations de Vantiv"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment_method__pos_mercury_config_id
 msgid "Vantiv Credentials"
-msgstr ""
+msgstr "Vantiv Credentials"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_invoice_no

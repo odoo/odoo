@@ -15,6 +15,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.product1 = self.create_product('Product 1', self.categ_basic, 10.0, 5)
         self.product2 = self.create_product('Product 2', self.categ_basic, 20.0, 10)
         self.product3 = self.create_product('Product 3', self.categ_basic, 30.0, 15)
+        self.product4 = self.create_product('Product_4', self.categ_basic, 9.96, 4.98)
         self.adjust_inventory([self.product1, self.product2, self.product3], [100, 50, 50])
 
     def test_orders_no_invoiced(self):
@@ -388,7 +389,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         session_move = self.pos_session.move_id
 
         sale_lines = session_move.line_ids.filtered(lambda line: line.account_id == self.sale_account)
-        self.assertAlmostEqual(len(sale_lines), 2, 'There should be lines for both sales and refund.')
+        self.assertEqual(len(sale_lines), 2, msg='There should be lines for both sales and refund.')
         self.assertAlmostEqual(sum(sale_lines.mapped('balance')), -110.0)
 
         receivable_line_bank = session_move.line_ids.filtered(lambda line: self.bank_pm.name in line.name)

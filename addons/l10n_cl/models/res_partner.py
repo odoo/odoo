@@ -16,7 +16,7 @@ class ResPartner(models.Model):
     ]
 
     l10n_cl_sii_taxpayer_type = fields.Selection(
-        _sii_taxpayer_types, 'Taxpayer Types', index=True,
+        _sii_taxpayer_types, 'Taxpayer Type', index=True,
         help='1 - VAT Affected (1st Category) (Most of the cases)\n'
              '2 - Fees Receipt Issuer (Applies to suppliers who issue fees receipt)\n'
              '3 - End consumer (only receipts)\n'

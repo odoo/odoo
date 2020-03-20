@@ -46,6 +46,12 @@ class EventTypeMail(models.Model):
         domain=[('model', '=', 'event.registration')], ondelete='restrict',
         help='This field contains the template of the mail that will be automatically sent')
 
+    @api.model
+    def _get_event_mail_fields_whitelist(self):
+        """ Whitelist of fields that are copied from event_type_mail_ids to event_mail_ids when
+        changing the event_type_id field of event.event """
+        return ['notification_type', 'template_id', 'interval_nbr', 'interval_unit', 'interval_type']
+
 
 class EventMailScheduler(models.Model):
     """ Event automated mailing. This model replaces all existing fields and

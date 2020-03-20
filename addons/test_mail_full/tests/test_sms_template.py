@@ -69,3 +69,23 @@ class TestSmsTemplate(test_mail_full_common.BaseFunctionalTest, sms_common.MockS
                 self.assertEqual(rids, test_record_2.ids)
             else:
                 self.assertTrue(False, 'Should not return lang %s' % lang)
+
+    def test_sms_template_create_and_unlink_sidebar_action(self):
+        ActWindow = self.env['ir.actions.act_window']
+        self.sms_template.action_create_sidebar_action()
+        action_id = self.sms_template.sidebar_action_id.id
+
+        self.assertNotEqual(action_id, False)
+        self.assertEqual(ActWindow.search_count([('id', '=', action_id)]), 1)
+
+        self.sms_template.action_unlink_sidebar_action()
+        self.assertEqual(ActWindow.search_count([('id', '=', action_id)]), 0)
+
+    def test_sms_template_unlink_with_action(self):
+        ActWindow = self.env['ir.actions.act_window']
+        self.sms_template.action_create_sidebar_action()
+        action_id = self.sms_template.sidebar_action_id.id
+
+        self.sms_template.unlink()
+        self.assertEqual(ActWindow.search_count([('id', '=', action_id)]), 0)
+

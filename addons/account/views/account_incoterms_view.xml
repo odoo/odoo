@@ -20,7 +20,7 @@
             <field name="arch" type="xml">
                 <form string="Incoterms">
                     <sheet>
-                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="name"/>
@@ -36,6 +36,7 @@
             <field name="model">account.incoterms</field>
             <field name="arch" type="xml">
                 <search string="Incoterms">
+                    <field name="name"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 </search>

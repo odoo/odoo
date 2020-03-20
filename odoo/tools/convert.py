@@ -192,7 +192,6 @@ def _eval_xml(self, node, env):
 
         if a_eval:
             idref2 = _get_idref(self, env, model_str, self.idref)
-            args = safe_eval(a_eval, idref2)
             args = list(safe_eval(a_eval, idref2))
         for child in node:
             if child.tag == 'value' and child.get('name'):

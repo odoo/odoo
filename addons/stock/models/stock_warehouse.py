@@ -513,7 +513,7 @@ class Warehouse(models.Model):
         def_values = self.default_get(['reception_steps', 'delivery_steps'])
         reception_steps = vals.get('reception_steps', def_values['reception_steps'])
         delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
-        code = vals.get('code') or code
+        code = vals.get('code') or code or ''
         code = code.replace(' ', '').upper()
         company_id = vals.get('company_id', self.default_get(['company_id'])['company_id'])
         sub_locations = {
@@ -782,6 +782,9 @@ class Warehouse(models.Model):
                     warehouse.mto_pull_id.write({'name': warehouse.mto_pull_id.name.replace(warehouse.name, new_name, 1)})
         for warehouse in self:
             sequence_data = warehouse._get_sequence_values()
+            # `ir.sequence` write access is limited to system user
+            if self.user_has_groups('stock.group_stock_manager'):
+                warehouse = warehouse.sudo()
             warehouse.in_type_id.sequence_id.write(sequence_data['in_type_id'])
             warehouse.out_type_id.sequence_id.write(sequence_data['out_type_id'])
             warehouse.pack_type_id.sequence_id.write(sequence_data['pack_type_id'])

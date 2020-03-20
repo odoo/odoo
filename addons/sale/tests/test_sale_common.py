@@ -3,6 +3,7 @@
 from collections import OrderedDict
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.addons.account.tests.account_test_no_chart import TestAccountNoChartCommon
+from odoo.addons.account.tests.account_test_multi_company_no_chart import TestAccountMultiCompanyNoChartCommon
 
 
 class TestSale(AccountingTestCase):
@@ -236,4 +237,156 @@ class TestCommonSaleNoChart(TestAccountNoChartCommon):
             'service_type': 'manual',
             'taxes_id': False,
             'property_account_expense_id': cls.account_expense_for_products.id,
+        })
+
+
+class TestCommonSaleMultiCompanyNoChart(TestAccountMultiCompanyNoChartCommon, TestCommonSaleNoChart):
+    """ This class should be extended for test suite of sale flows with a minimal chart of accounting
+        installed. This test suite should be executed at module installation.
+        This class provides some method to generate testing data well configured, according to the minimal
+        chart of account, defined in `TestAccountNoChartCommon` class.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestCommonSaleMultiCompanyNoChart, cls).setUpClass()
+        cls.setUpAdditionalAccounts()
+
+    @classmethod
+    def setUpClassicProducts(cls):
+        super(TestCommonSaleMultiCompanyNoChart, cls).setUpClassicProducts()
+        # Create an expense journal
+        user_type_income = cls.env.ref('account.data_account_type_direct_costs')
+        cls.account_income_product_company_B = cls.env['account.account'].create({
+            'code': 'INCOME_PROD111',
+            'name': 'Income - Test Account Company B',
+            'user_type_id': user_type_income.id,
+            'company_id': cls.company_B.id,
+        })
+        # Create category
+        cls.product_category_company_B = cls.env['product.category'].create({
+            'name': 'Product Category with Income account Company B',
+            'property_account_income_categ_id': cls.account_income_product_company_B.id
+        })
+        # Products
+        uom_unit = cls.env.ref('uom.product_uom_unit')
+        uom_hour = cls.env.ref('uom.product_uom_hour')
+
+        cls.product_order_company_B = cls.env['product.product'].create({
+            'name': "Pigeon pie",
+            'standard_price': 235.0,
+            'list_price': 280.0,
+            'type': 'consu',
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+            'invoice_policy': 'order',
+            'expense_policy': 'no',
+            'default_code': 'PROD_ORDER',
+            'service_type': 'manual',
+            'taxes_id': False,
+            'categ_id': cls.product_category_company_B.id,
+        })
+
+        cls.service_deliver_company_B = cls.env['product.product'].create({
+            'name': "Golden Company Contract",
+            'standard_price': 200.0,
+            'list_price': 180.0,
+            'type': 'service',
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+            'invoice_policy': 'delivery',
+            'expense_policy': 'no',
+            'default_code': 'SERV_DEL',
+            'service_type': 'manual',
+            'taxes_id': False,
+            'categ_id': cls.product_category_company_B.id,
+        })
+
+        cls.service_order_company_B = cls.env['product.product'].create({
+            'name': "Maester Consulting",
+            'standard_price': 40.0,
+            'list_price': 90.0,
+            'type': 'service',
+            'uom_id': uom_hour.id,
+            'uom_po_id': uom_hour.id,
+            'invoice_policy': 'order',
+            'expense_policy': 'no',
+            'default_code': 'PRE-PAID',
+            'service_type': 'manual',
+            'taxes_id': False,
+            'categ_id': cls.product_category_company_B.id,
+        })
+
+        cls.product_deliver_company_B = cls.env['product.product'].create({
+            'name': "Swords",
+            'standard_price': 55.0,
+            'list_price': 70.0,
+            'type': 'consu',
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+            'invoice_policy': 'delivery',
+            'expense_policy': 'no',
+            'default_code': 'PROD_DEL',
+            'service_type': 'manual',
+            'taxes_id': False,
+            'categ_id': cls.product_category_company_B.id,
+        })
+
+    @classmethod
+    def setUpExpenseProducts(cls):
+        super(TestCommonSaleMultiCompanyNoChart, cls).setUpExpenseProducts()
+        cls.product_ordered_cost_company_B = cls.env['product.product'].create({
+            'name': "Ordered at cost",
+            'standard_price': 8,
+            'list_price': 10,
+            'type': 'consu',
+            'invoice_policy': 'order',
+            'expense_policy': 'cost',
+            'default_code': 'CONSU-ORDERED1',
+            'service_type': 'manual',
+            'taxes_id': False,
+            'property_account_expense_id': cls.account_expense_company_B.id,
+            'company_id': cls.company_B.id,
+        })
+
+        cls.product_deliver_cost_company_B = cls.env['product.product'].create({
+            'name': "Delivered at cost",
+            'standard_price': 8,
+            'list_price': 10,
+            'type': 'consu',
+            'invoice_policy': 'delivery',
+            'expense_policy': 'cost',
+            'default_code': 'CONSU-DELI1',
+            'service_type': 'manual',
+            'taxes_id': False,
+            'property_account_expense_id': cls.account_expense_company_B.id,
+            'company_id': cls.company_B.id,
+        })
+
+        cls.product_order_sales_price_company_B = cls.env['product.product'].create({
+            'name': "Ordered at sales price",
+            'standard_price': 8,
+            'list_price': 10,
+            'type': 'consu',
+            'invoice_policy': 'order',
+            'expense_policy': 'sales_price',
+            'default_code': 'CONSU-ORDERED2',
+            'service_type': 'manual',
+            'taxes_id': False,
+            'property_account_expense_id': cls.account_expense_company_B.id,
+            'company_id': cls.company_B.id,
+        })
+
+        cls.product_deliver_sales_price_company_B = cls.env['product.product'].create({
+            'name': "Delivered at sales price",
+            'standard_price': 8,
+            'list_price': 10,
+            'type': 'consu',
+            'invoice_policy': 'delivery',
+            'expense_policy': 'sales_price',
+            'default_code': 'CONSU-DELI2',
+            'service_type': 'manual',
+            'taxes_id': False,
+            'property_account_expense_id': cls.account_expense_company_B.id,
+            'company_id': cls.company_B.id,
         })

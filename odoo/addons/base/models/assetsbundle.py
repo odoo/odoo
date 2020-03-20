@@ -334,41 +334,77 @@ class AssetsBundle(object):
         return attachments
 
     def dialog_message(self, message):
+        """
+        Returns a JS script which shows a warning to the user on page load.
+        TODO: should be refactored to be a base js file whose code is extended
+              by related apps (web/website).
+        """
         return """
             (function (message) {
-                if (window.__assetsBundleErrorSeen) return;
+                'use strict';
+
+                if (window.__assetsBundleErrorSeen) {
+                    return;
+                }
                 window.__assetsBundleErrorSeen = true;
 
-                var loaded = function () {
-                    clearTimeout(loadedTimeout);
-                    var alertTimeout = setTimeout(alert.bind(window, message), 0);
-                    var odoo = window.top.odoo;
-                    if (!odoo || !odoo.define) return;
+                if (document.readyState !== 'loading') {
+                    onDOMContentLoaded();
+                } else {
+                    window.addEventListener('DOMContentLoaded', () => onDOMContentLoaded());
+                }
 
-                    odoo.define("AssetsBundle.ErrorMessage", function (require) {
-                        "use strict";
+                async function onDOMContentLoaded() {
+                    var odoo = window.top.odoo;
+                    if (!odoo || !odoo.define) {
+                        useAlert();
+                        return;
+                    }
+
+                    // Wait for potential JS loading
+                    await new Promise(resolve => {
+                        const noLazyTimeout = setTimeout(() => resolve(), 10); // 10 since need to wait for promise resolutions of odoo.define
+                        odoo.define('AssetsBundle.PotentialLazyLoading', function (require) {
+                            'use strict';
+
+                            const lazyloader = require('web.public.lazyloader');
+
+                            clearTimeout(noLazyTimeout);
+                            lazyloader.allScriptsLoaded.then(() => resolve());
+                        });
+                    });
+
+                    var alertTimeout = setTimeout(useAlert, 10); // 10 since need to wait for promise resolutions of odoo.define
+                    odoo.define('AssetsBundle.ErrorMessage', function (require) {
+                        'use strict';
 
                         require('web.dom_ready');
-                        var core = require("web.core");
-                        var Dialog = require("web.Dialog");
+                        var core = require('web.core');
+                        var Dialog = require('web.Dialog');
 
                         var _t = core._t;
 
                         clearTimeout(alertTimeout);
-
                         new Dialog(null, {
                             title: _t("Style error"),
-                            $content: $("<div/>")
-                                .append($("<p/>", {text: _t("The style compilation failed, see the error below. Your recent actions may be the cause, please try reverting the changes you made.")}))
-                                .append($("<pre/>", {html: message})),
+                            $content: $('<div/>')
+                                .append($('<p/>', {text: _t("The style compilation failed, see the error below. Your recent actions may be the cause, please try reverting the changes you made.")}))
+                                .append($('<pre/>', {html: message})),
                         }).open();
                     });
                 }
 
-                var loadedTimeout = setTimeout(loaded, 5000);
-                document.addEventListener("DOMContentLoaded", loaded);
+                function useAlert() {
+                    window.alert(message);
+                }
             })("%s");
         """ % message.replace('"', '\\"').replace('\n', '&NewLine;')
+
+    def _get_assets_domain_for_already_processed_css(self, assets):
+        """ Method to compute the attachments' domain to search the already process assets (css).
+        This method was created to be overridden.
+        """
+        return [('url', 'in', list(assets.keys()))]
 
     def is_css_preprocessed(self):
         preprocessed = True
@@ -381,7 +417,7 @@ class AssetsBundle(object):
             outdated = False
             assets = dict((asset.html_url, asset) for asset in self.stylesheets if isinstance(asset, atype))
             if assets:
-                assets_domain = [('url', 'in', list(assets.keys()))]
+                assets_domain = self._get_assets_domain_for_already_processed_css(assets)
                 attachments = self.env['ir.attachment'].sudo().search(assets_domain)
                 for attachment in attachments:
                     asset = assets[attachment.url]
@@ -441,7 +477,7 @@ class AssetsBundle(object):
                         fname = os.path.basename(asset.url)
                         url = asset.html_url
                         with self.env.cr.savepoint():
-                            self.env['ir.attachment'].sudo().with_context(not_force_website_id=True).create(dict(
+                            self.env['ir.attachment'].sudo().create(dict(
                                 datas=base64.b64encode(asset.content.encode('utf8')),
                                 mimetype='text/css',
                                 type='binary',

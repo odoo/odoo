@@ -76,6 +76,116 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         current_session.action_pos_session_closing_control()
         self.assertEqual(current_session.state, 'closed', msg='State of current session should be closed.')
 
+    def test_order_refund_lots(self):
+        # open pos session
+        self.pos_config.open_session_cb()
+        current_session = self.pos_config.current_session_id
+
+        # set up product iwith SN tracing and create two lots (1001, 1002)
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.product2 = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+            'tracking': 'serial',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+        inventory = self.env['stock.inventory'].create({
+            'name': 'add product2',
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product2.id)],
+        })
+        inventory.action_start()
+
+        lot1 = self.env['stock.production.lot'].create({
+            'name': '1001',
+            'product_id': self.product2.id,
+            'company_id': self.env.company.id,
+        })
+        lot2 = self.env['stock.production.lot'].create({
+            'name': '1002',
+            'product_id': self.product2.id,
+            'company_id': self.env.company.id,
+        })
+
+        self.env['stock.inventory.line'].create([
+            {
+            'inventory_id': inventory.id,
+            'location_id': self.stock_location.id,
+            'product_id': self.product2.id,
+            'prod_lot_id': lot1.id,
+            'product_qty': 1
+            },
+            {
+            'inventory_id': inventory.id,
+            'location_id': self.stock_location.id,
+            'product_id': self.product2.id,
+            'prod_lot_id': lot2.id,
+            'product_qty': 1
+            },
+        ])
+
+        inventory.action_validate()
+
+        # create pos order with the two SN created before
+
+        order = self.PosOrder.create({
+            'company_id': self.company_id,
+            'session_id': current_session.id,
+            'partner_id': self.partner1.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'id': 1,
+                'product_id': self.product2.id,
+                'price_unit': 6,
+                'discount': 0,
+                'qty': 2,
+                'tax_ids': [[6, False, []]],
+                'price_subtotal': 12,
+                'price_subtotal_incl': 12,
+                'pack_lot_ids': [
+                    [0, 0, {'lot_name': '1001'}],
+                    [0, 0, {'lot_name': '1002'}],
+                ]
+            })],
+            'pricelist_id': 1,
+            'amount_paid': 12.0,
+            'amount_total': 12.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+            })
+
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
+
+        # I create a refund
+        refund_action = order.refund()
+        refund = self.PosOrder.browse(refund_action['res_id'])
+
+        order_lot_id = [lot_id.lot_name for lot_id in order.lines.pack_lot_ids]
+        refund_lot_id = [lot_id.lot_name for lot_id in refund.lines.pack_lot_ids]
+        self.assertEqual(
+            order_lot_id,
+            refund_lot_id,
+            "In the refund we should find the same lot as in the original order")
+
+        payment_context = {"active_ids": refund.ids, "active_id": refund.id}
+        refund_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': refund.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+
+        # I click on the validate button to register the payment.
+        refund_payment.with_context(**payment_context).check()
+
+        self.assertEqual(refund.state, 'paid', "The refund is not marked as paid")
+        current_session.action_pos_session_closing_control()
+
     def test_order_to_picking(self):
         """
             In order to test the Point of Sale in module, I will do three orders from the sale to the payment,

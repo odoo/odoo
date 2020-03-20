@@ -210,7 +210,7 @@ var TokenIterator = require("../../token_iterator").TokenIterator;
 var lang = require("../../lib/lang");
 
 function is(token, type) {
-    return token.type.lastIndexOf(type + ".xml") > -1;
+    return token && token.type.lastIndexOf(type + ".xml") > -1;
 }
 
 var XmlBehaviour = function () {
@@ -284,12 +284,14 @@ var XmlBehaviour = function () {
                 if (position.column < tokenEndColumn)
                     return;
                 if (position.column == tokenEndColumn) {
-                    if (is(iterator.stepForward(), "attribute-value"))
+                    var nextToken = iterator.stepForward();
+                    // TODO also handle non-closed string at the end of the line
+                    if (nextToken && is(nextToken, "attribute-value"))
                         return;
                     iterator.stepBackward();
                 }
             }
-            
+
             if (/^\s*>/.test(session.getLine(position.row).slice(position.column)))
                 return;
             while (!is(token, "tag-name")) {

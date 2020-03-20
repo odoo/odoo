@@ -126,7 +126,7 @@ var RenameConversationDialog = Dialog.extend({
         this._callback = callback;
 
         this._super(parent, {
-            title: 'Rename conversation',
+            title: _t('Rename conversation'),
             size: 'medium',
             buttons: [{
                 text: _t("Rename"),
@@ -1482,9 +1482,8 @@ var Discuss = AbstractAction.extend({
     /**
      * @private
      * @param {Object} messageData
-     * @param {Function} callback
      */
-    _onPostMessage: function (messageData, callback) {
+    _onPostMessage: function (messageData) {
         var self = this;
         var options = {};
         if (this._selectedMessage) {
@@ -1505,7 +1504,6 @@ var Discuss = AbstractAction.extend({
                 } else {
                     self._threadWidget.scrollToBottom();
                 }
-                callback();
             });
     },
     /**

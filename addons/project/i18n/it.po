@@ -3,7 +3,6 @@
 # 	* project
 # 
 # Translators:
-# Mario Riva <mario.riva@gmail.com>, 2019
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2019
 # Lorenzo Battistini <lb@takobi.online>, 2019
@@ -24,15 +23,17 @@
 # Davide Speranza <dsp@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Simone Sanfilippo <s.sanfilippo@hinge16.eu>, 2019
+# Mario Riva <mario.riva@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-18 09:46+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -544,7 +545,9 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
 msgstr "Archiviato"
@@ -811,7 +814,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
 msgid "Config Settings"
-msgstr "Impostazioni configurazione"
+msgstr "Impostazioni di configurazione"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
@@ -999,6 +1002,11 @@ msgid "Daily"
 msgstr "Giornaliera"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__date_deadline_formatted
+msgid "Date Deadline Formatted"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Days"
 msgstr "Giorni"
@@ -1101,7 +1109,7 @@ msgstr "Nome visualizzato"
 #: code:addons/project/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "Non hai accesso, salta questi dati per l'e-mail digest dell'utente"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1194,7 +1202,7 @@ msgstr "Data finale"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of task(s)."
-msgstr "Errore! Impossibile creare una gerarchia ricorsiva nei lavori."
+msgstr "Errore, impossibile creare gerarchie ricorsive nei lavori."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
@@ -1241,6 +1249,11 @@ msgid ""
 "review the \"This Week\" column to move important tasks \"Today\". Every "
 "Monday, you review the \"This Month\" column."
 msgstr ""
+"Riempi facilmente la Posta in arrivo con il gateway e-mail. Rivedi "
+"periodicamente la Posta in arrivo e pianifica le attività spostandole su "
+"altre colonne. Ogni giorno, rivedi la colonna \"Questa settimana\" per "
+"spostare importanti attività nella colonna \"Oggi\". Ogni lunedì, rivedi la "
+"colonna \"Questo mese\"."
 
 #. module: project
 #. openerp-web
@@ -1283,13 +1296,13 @@ msgstr "Chi segue"
 #: model:ir.model.fields,field_description:project.field_project_project__message_channel_ids
 #: model:ir.model.fields,field_description:project.field_project_task__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Chi segue (canali)"
+msgstr "Chi sta seguendo (canali)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_partner_ids
 #: model:ir.model.fields,field_description:project.field_project_task__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Chi segue (partner)"
+msgstr "Chi sta seguendo (partner)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast
@@ -1326,7 +1339,7 @@ msgstr "Stabilisce l'ordine con cui visualizzare un elenco dei progetti."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__sequence
 msgid "Gives the sequence order when displaying a list of tasks."
-msgstr "Stabilisce l'ordine con cui visualizzare un elenco dei lavori."
+msgstr "Stabilisce l'ordine con cui visualizzare un elenco di lavori."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__done
@@ -2172,9 +2185,9 @@ msgid ""
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
 "Politica di pubblicazione messaggi su documenti usando il gateway di posta.\n"
-"- Tutti: tutti possono pubblicare\n"
-"- Partner: solo partner autenticati\n"
-"- Chi segue: solo chi segue il documento collegato o gli iscritti ai relativi canali\n"
+"- tutti: tutti possono pubblicare\n"
+"- partner: solo partner autenticati\n"
+"- chi sta seguendo: solo chi segue il documento collegato o gli iscritti ai relativi canali\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_url
@@ -2349,17 +2362,17 @@ msgstr "Frequenza valutazione"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Valutazione - Ultima opinione"
+msgstr "Opinione ultima valutazione"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_image
 msgid "Rating Last Image"
-msgstr "Valutazione - Ultima immagine"
+msgstr "Immagine ultima valutazione"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
 msgid "Rating Last Value"
-msgstr "Valutazione - Ultimo valore"
+msgstr "Valore ultima valutazione"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
@@ -2944,6 +2957,12 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
+msgid "The parent task belongs to a company you do not have access to."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
 msgid ""
 "The project cannot be shared with the recipient(s) because the privacy of "
 "the project is too restricted. Set the privacy to 'Visible by following "
@@ -2952,6 +2971,12 @@ msgstr ""
 "Il progetto non può essere condiviso con i destinatari a causa delle "
 "impostazioni di privacy. Impostare il progetto a \"Visibile dai clienti "
 "follower\" per renderlo accessibile ai destinatari."
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "The subtasks belong to a company you do not have access to."
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0

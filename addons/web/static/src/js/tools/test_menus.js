@@ -79,14 +79,13 @@
         var testPromise = Promise.resolve();
         testPromise = chainDeferred($listOfAppMenuItems, testPromise, testApp);
         return testPromise.then(function () {
+            console.log("Test took ", (performance.now() - startTime) / 1000, " seconds");
             console.log("Successfully tested ", testedApps.length, " apps");
             console.log("Successfully tested ", testedMenus.length - testedApps.length, " menus");
             console.log("test successful");
+        }).catch(function (error) {
             console.log("Test took ", (performance.now() - startTime) / 1000, " seconds");
-        }).catch(function () {
-            console.log("Test took ", (performance.now() - startTime) / 1000, " seconds");
-            console.error('test failed')
-            console.error("Error !");
+            console.error(error || 'test failed');
         });
     }
 

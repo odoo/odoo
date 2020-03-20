@@ -61,7 +61,8 @@ registry
     .add('toggle_button', basic_fields.FieldToggleBoolean)
     .add('dashboard_graph', basic_fields.JournalDashboardGraph)
     .add('ace', basic_fields.AceEditor)
-    .add('color', basic_fields.FieldColor);
+    .add('color', basic_fields.FieldColor)
+    .add('many2one_reference', basic_fields.FieldInteger);
 
 // Relational fields
 registry

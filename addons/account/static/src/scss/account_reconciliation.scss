@@ -216,6 +216,11 @@
         /* Match view & Create view */
         > .o_notebook {
             display: none;
+
+            > .o_notebook_headers {
+                margin-right: 0;
+                margin-left: 0;
+            }
         }
 
         > .o_notebook > .tab-content > div {
@@ -289,8 +294,14 @@
     /* Create view */
     .create {
         > div > div.quick_add > .o_reconcile_models {
-            max-height: 54px;
+            max-width: 100%;
+            max-height: 70px;
+            flex-wrap: wrap;
             overflow: auto;
+
+            & > * {
+                flex-grow: 0;
+            }
         }
         .quick_add {
             margin-bottom: 7px;

@@ -30,7 +30,7 @@ SectionAndNoteFieldOne2Many.include({
         // even if there isn't any.
         // the only solution would be to use a custom event catched on a new controller
         // on the so/po form (as a js_class).
-        this.getParent().trigger_up('field_changed', {
+        this.trigger_up('field_changed', {
             dataPointID: this.dataPointID,
             changes: {
                 grid: JSON.stringify({changes: changes, product_template_id: productTemplateId}),
@@ -65,15 +65,19 @@ SectionAndNoteFieldOne2Many.include({
         // even if there isn't any.
         // the only solution would be to use a custom event catched on a new controller
         // on the so/po form (as a js_class).
-        this.getParent().trigger_up('field_changed', {
+        this.trigger_up('field_changed', {
             dataPointID: this.dataPointID,
             changes: {
                 grid_product_tmpl_id: {id: productTemplateId}
             },
             viewType: 'form',
             onSuccess: function (result) {
-                // why the hell do we receive a table of 8 classes here? :o
-                self._openMatrixConfigurator(result[0].recordData.grid, productTemplateId, editedCellAttributes);
+                // result = list of widgets
+                // find one of the SO widget
+                // (not so lines because the grid values are computed on the SO)
+                // and get the grid information from its recordData.
+                var gridInfo = result.find(r => r.recordData.grid).recordData.grid;
+                self._openMatrixConfigurator(gridInfo, productTemplateId, editedCellAttributes);
             }
         });
     },

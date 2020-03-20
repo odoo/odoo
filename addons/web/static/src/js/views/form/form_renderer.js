@@ -147,6 +147,8 @@ var FormRenderer = BasicRenderer.extend({
                 }));
             if (this.$('.o_form_statusbar').length) {
                 this.$('.o_form_statusbar').after($notification);
+            } else if (this.$('.o_form_sheet_bg').length) {
+                this.$('.o_form_sheet_bg').prepend($notification);
             } else {
                 this.$el.prepend($notification);
             }
@@ -249,7 +251,7 @@ var FormRenderer = BasicRenderer.extend({
             var $notebook = $(this);
             var name = $notebook.data('name');
             if (name in state) {
-                var $page = $notebook.find('> ul > li').eq(state[name]);
+                var $page = $notebook.find('> .o_notebook_headers > .nav-tabs > .nav-item').eq(state[name]);
                 if (!$page.hasClass('o_invisible_modifier')) {
                     $page.find('a[data-toggle="tab"]').click();
                 }
@@ -338,7 +340,6 @@ var FormRenderer = BasicRenderer.extend({
         }
     },
     /**
-            excludedElements: ".o_notebook .nav.nav-tabs",
      * @private
      * @param {string} name
      * @returns {string}
@@ -572,10 +573,13 @@ var FormRenderer = BasicRenderer.extend({
             } else if (child.tag === 'label') {
                 $tds = self._renderInnerGroupLabel(child);
             } else {
-                if (child.tag === 'div' && child.attrs.class !== undefined && child.attrs.class.includes('o_td_label'))
-                    $tds = $('<td class="o_td_label"/>').append(self._renderNode(child));
-                else
-                    $tds = $('<td/>').append(self._renderNode(child));
+                var $td = $('<td/>');
+                var $child = self._renderNode(child);
+                if ($child.hasClass('o_td_label')) { // transfer classname to outer td for css reasons
+                    $td.addClass('o_td_label');
+                    $child.removeClass('o_td_label');
+                }
+                $tds = $td.append($child);
             }
             if (finalColspan > 1) {
                 $tds.last().attr('colspan', finalColspan);
@@ -898,9 +902,10 @@ var FormRenderer = BasicRenderer.extend({
                 },
             });
         });
+        var $notebookHeaders = $('<div class="o_notebook_headers">').append($headers);
         var $notebook = $('<div class="o_notebook">')
                 .data('name', node.attrs.name || '_default_')
-                .append($headers, $pages);
+                .append($notebookHeaders, $pages);
         this._registerModifiers(node, this.state, $notebook);
         this._handleAttributes($notebook, node);
         return $notebook;

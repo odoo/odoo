@@ -109,7 +109,7 @@ class ProductProduct(models.Model):
         In FIFO: value of the last unit that left the stock (automatically computed).
         Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
         Used to compute margins on sale orders.""")
-    volume = fields.Float('Volume')
+    volume = fields.Float('Volume', digits='Volume')
     weight = fields.Float('Weight', digits='Stock Weight')
 
     pricelist_item_count = fields.Integer("Number of price rules", compute="_compute_variant_item_count")
@@ -124,7 +124,7 @@ class ProductProduct(models.Model):
     image_variant_1920 = fields.Image("Variant Image", max_width=1920, max_height=1920)
 
     # resized fields stored (as attachment) for performance
-    image_variant_1024 = fields.Image("Variant Image 1204", related="image_variant_1920", max_width=1024, max_height=1024, store=True)
+    image_variant_1024 = fields.Image("Variant Image 1024", related="image_variant_1920", max_width=1024, max_height=1024, store=True)
     image_variant_512 = fields.Image("Variant Image 512", related="image_variant_1920", max_width=512, max_height=512, store=True)
     image_variant_256 = fields.Image("Variant Image 256", related="image_variant_1920", max_width=256, max_height=256, store=True)
     image_variant_128 = fields.Image("Variant Image 128", related="image_variant_1920", max_width=128, max_height=128, store=True)
@@ -227,7 +227,9 @@ class ProductProduct(models.Model):
             partner = self.env.context.get('partner', False)
             quantity = self.env.context.get('quantity', 1.0)
 
-            # Support context pricelists specified as display_name or ID for compatibility
+            # Support context pricelists specified as list, display_name or ID for compatibility
+            if isinstance(pricelist_id_or_name, list):
+                pricelist_id_or_name = pricelist_id_or_name[0]
             if isinstance(pricelist_id_or_name, str):
                 pricelist_name_search = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
                 if pricelist_name_search:
@@ -327,6 +329,7 @@ class ProductProduct(models.Model):
         if 'active' in values:
             # prefetched o2m have to be reloaded (because of active_test)
             # (eg. product.template: product_variant_ids)
+            self.flush()
             self.invalidate_cache()
             # `_get_first_possible_variant_id` depends on variants active state
             self.clear_caches()

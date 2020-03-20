@@ -64,11 +64,11 @@ class ProfitabilityAnalysis(models.Model):
                        ELSE 0.0
                     END AS expense_amount_untaxed_invoiced,
                     CASE
-                       WHEN SOL.qty_delivered_method IN ('timesheet', 'manual') THEN (SOL.untaxed_amount_to_invoice / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
+                       WHEN SOL.qty_delivered_method IN ('timesheet', 'manual', 'stock_move') THEN (SOL.untaxed_amount_to_invoice / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
                        ELSE 0.0
                     END AS amount_untaxed_to_invoice,
                     CASE
-                       WHEN SOL.qty_delivered_method IN ('timesheet', 'manual') THEN (COALESCE(SOL.untaxed_amount_invoiced, COST_SUMMARY.downpayment_invoiced) / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
+                       WHEN SOL.qty_delivered_method IN ('timesheet', 'manual', 'stock_move') THEN (COALESCE(SOL.untaxed_amount_invoiced, COST_SUMMARY.downpayment_invoiced) / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
                        ELSE 0.0
                     END AS amount_untaxed_invoiced,
                     COST_SUMMARY.timesheet_unit_amount AS timesheet_unit_amount,
@@ -106,13 +106,17 @@ class ProfitabilityAnalysis(models.Model):
                                 AAL.so_line AS sale_line_id,
                                 0.0 AS timesheet_unit_amount,
                                 0.0 AS timesheet_cost,
-                                SUM(AAL.amount) AS expense_cost,
+                                CASE
+                                  WHEN AAL.product_id != CAST((COALESCE((SELECT value FROM ir_config_parameter WHERE key='sale.default_deposit_product_id'), '-1')) as INT)
+                                  THEN (SUM(AAL.amount))
+                                  ELSE 0.0
+                                END AS expense_cost,
                                 0.0 AS downpayment_invoiced
                             FROM project_project P
                                 LEFT JOIN account_analytic_account AA ON P.analytic_account_id = AA.id
                                 LEFT JOIN account_analytic_line AAL ON AAL.account_id = AA.id
                             WHERE AAL.amount < 0.0 AND AAL.project_id IS NULL AND P.active = 't' AND P.allow_timesheets = 't'
-                            GROUP BY P.id, AA.id, AAL.so_line
+                            GROUP BY P.id, AA.id, AAL.so_line, AAL.product_id
 
                             UNION
 

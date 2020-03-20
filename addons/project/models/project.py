@@ -6,6 +6,7 @@ from datetime import timedelta
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools.misc import format_date
 
 
 class ProjectTaskType(models.Model):
@@ -95,26 +96,19 @@ class Project(models.Model):
             project.task_count = result.get(project.id, 0)
 
     def attachment_tree_view(self):
-        self.ensure_one()
-        domain = [
+        attachment_action = self.env.ref('base.action_attachment')
+        action = attachment_action.read()[0]
+        action['domain'] = str([
             '|',
-            '&', ('res_model', '=', 'project.project'), ('res_id', 'in', self.ids),
-            '&', ('res_model', '=', 'project.task'), ('res_id', 'in', self.task_ids.ids)]
-        return {
-            'name': _('Attachments'),
-            'domain': domain,
-            'res_model': 'ir.attachment',
-            'type': 'ir.actions.act_window',
-            'view_id': False,
-            'view_mode': 'kanban,tree,form',
-            'help': _('''<p class="o_view_nocontent_smiling_face">
-                        Documents are attached to the tasks of your project.</p><p>
-                        Send messages or log internal notes with attachments to link
-                        documents to your project.
-                    </p>'''),
-            'limit': 80,
-            'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, self.id)
-        }
+            '&',
+            ('res_model', '=', 'project.project'),
+            ('res_id', 'in', self.ids),
+            '&',
+            ('res_model', '=', 'project.task'),
+            ('res_id', 'in', self.task_ids.ids)
+        ])
+        action['context'] = "{'default_res_model': '%s','default_res_id': %d}" % (self._name, self.id)
+        return action
 
     @api.model
     def activate_sample_project(self):
@@ -500,6 +494,7 @@ class Task(models.Model):
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True)
     date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True)
+    date_deadline_formatted = fields.Char(compute='_compute_date_deadline_formatted')
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
         index=True,
         copy=False,
@@ -540,6 +535,11 @@ class Task(models.Model):
     working_days_close = fields.Float(compute='_compute_elapsed', string='Working days to close', store=True, group_operator="avg")
     # customer portal: include comment and incoming emails in communication history
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
+
+    @api.depends('date_deadline')
+    def _compute_date_deadline_formatted(self):
+        for task in self:
+            task.date_deadline_formatted = format_date(self.env, task.date_deadline) if task.date_deadline else None
 
     def _compute_attachment_ids(self):
         for task in self:
@@ -634,6 +634,11 @@ class Task(models.Model):
             self.company_id = self.project_id.company_id
         else:
             self.stage_id = False
+    
+    @api.onchange('company_id')
+    def _onchange_task_company(self):
+        if self.project_id.company_id != self.company_id:
+            self.project_id = False
 
     @api.constrains('parent_id', 'child_ids')
     def _check_subtask_level(self):

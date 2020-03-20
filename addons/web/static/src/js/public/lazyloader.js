@@ -21,11 +21,13 @@ function waitLazy() {
     }
     waitingLazy = true;
 
-    document.querySelectorAll('.o_wait_lazy_js').forEach(function (element) {
+    var lazyEls = document.querySelectorAll('.o_wait_lazy_js');
+    for (var i = 0; i < lazyEls.length; i++) {
+        var element = lazyEls[i];
         blockEvents.forEach(function (evType) {
             element.addEventListener(evType, blockFunction);
         });
-    });
+    }
 }
 /**
  * Unblocks the DOM sections blocked by @see waitLazy and removes the related
@@ -37,12 +39,14 @@ function stopWaitingLazy() {
     }
     waitingLazy = false;
 
-    document.querySelectorAll('.o_wait_lazy_js').forEach(function (element) {
+    var lazyEls = document.querySelectorAll('.o_wait_lazy_js');
+    for (var i = 0; i < lazyEls.length; i++) {
+        var element = lazyEls[i];
         blockEvents.forEach(function (evType) {
             element.removeEventListener(evType, blockFunction);
         });
         element.classList.remove('o_wait_lazy_js');
-    });
+    }
 }
 
 // Start waiting for lazy loading as soon as the DOM is available

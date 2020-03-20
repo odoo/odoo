@@ -73,8 +73,9 @@ class AccountMove(models.Model):
                             # In case val_stock_move is a return move, its valuation entries have been made with the
                             # currency rate corresponding to the original stock move
                             valuation_date = val_stock_move.origin_returned_move_id.date or val_stock_move.date
-                            layers_qty = sum(val_stock_move.mapped('stock_valuation_layer_ids.quantity'))
-                            layers_values = sum(val_stock_move.mapped('stock_valuation_layer_ids.value'))
+                            svl = val_stock_move.mapped('stock_valuation_layer_ids').filtered(lambda l: l.quantity)
+                            layers_qty = sum(svl.mapped('quantity'))
+                            layers_values = sum(svl.mapped('value'))
                             valuation_price_unit_total += line.company_currency_id._convert(
                                 layers_values, move.currency_id,
                                 move.company_id, valuation_date, round=False,
@@ -160,6 +161,8 @@ class AccountMove(models.Model):
     def post(self):
         # OVERRIDE
         # Create additional price difference lines for vendor bills.
+        if self._context.get('move_reverse_cancel'):
+            return super(AccountMove, self).post()
         self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_in_lines_vals())
         return super(AccountMove, self).post()
 

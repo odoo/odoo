@@ -74,6 +74,7 @@ class StockRule(models.Model):
         )._bom_find(product=product_id, picking_type=self.picking_type_id, bom_type='normal')  # TDE FIXME: context bullshit
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values, bom):
+        date_deadline = fields.Datetime.to_string(self._get_date_planned(product_id, company_id, values))
         return {
             'origin': origin,
             'product_id': product_id.id,
@@ -82,9 +83,9 @@ class StockRule(models.Model):
             'location_src_id': self.location_src_id.id or self.picking_type_id.default_location_src_id.id or location_id.id,
             'location_dest_id': location_id.id,
             'bom_id': bom.id,
-            'date_deadline': fields.Datetime.to_string(self._get_date_planned(product_id, company_id, values)),
-            'date_planned_finished': values['date_planned'],
-            'date_planned_start': fields.Datetime.from_string(values['date_planned']) - relativedelta(hours=1),
+            'date_deadline': date_deadline,
+            'date_planned_finished': fields.Datetime.from_string(values['date_planned']),
+            'date_planned_start': date_deadline,
             'procurement_group_id': False,
             'propagate_cancel': self.propagate_cancel,
             'propagate_date': self.propagate_date,
@@ -98,7 +99,10 @@ class StockRule(models.Model):
 
     def _get_date_planned(self, product_id, company_id, values):
         format_date_planned = fields.Datetime.from_string(values['date_planned'])
-        date_planned = format_date_planned - relativedelta(days=product_id.produce_delay or 0.0)
+        if product_id.produce_delay:
+            date_planned = format_date_planned - relativedelta(days=product_id.produce_delay)
+        else:
+            date_planned = format_date_planned - relativedelta(hours=1)
         date_planned = date_planned - relativedelta(days=company_id.manufacturing_lead)
         return date_planned
 

@@ -49,19 +49,23 @@ class WebsiteForm(WebsiteForm):
         return super(WebsiteForm, self).website_form(model_name, **kwargs)
 
     def insert_record(self, request, model, values, custom, meta=None):
-        if model.model == 'crm.lead':
+        is_lead_model = model.model == 'crm.lead'
+        if is_lead_model:
             if 'company_id' not in values:
                 values['company_id'] = request.website.company_id.id
             lang = request.context.get('lang', False)
             lang_id = request.env["res.lang"].sudo().search([('code', '=', lang)], limit=1).id
             values['lang_id'] = lang_id
+
         result = super(WebsiteForm, self).insert_record(request, model, values, custom, meta=meta)
-        visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
-        if visitor_sudo and result:
-            lead_sudo = request.env['crm.lead'].browse(result).sudo()
-            if lead_sudo.exists():
-                vals = {'lead_ids': [(4, result)]}
-                if not visitor_sudo.lead_ids and not visitor_sudo.partner_id:
-                    vals['name'] = request.env['crm.lead'].browse(result).sudo().contact_name
-                visitor_sudo.write(vals)
+
+        if is_lead_model:
+            visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
+            if visitor_sudo and result:
+                lead_sudo = request.env['crm.lead'].browse(result).sudo()
+                if lead_sudo.exists():
+                    vals = {'lead_ids': [(4, result)]}
+                    if not visitor_sudo.lead_ids and not visitor_sudo.partner_id:
+                        vals['name'] = lead_sudo.contact_name
+                    visitor_sudo.write(vals)
         return result

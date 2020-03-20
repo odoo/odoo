@@ -84,7 +84,7 @@ class AccountInvoiceReport(models.Model):
                 line.analytic_account_id,
                 line.journal_id,
                 line.company_id,
-                line.currency_id,
+                COALESCE(line.currency_id, line.company_currency_id)        AS currency_id,
                 line.partner_id AS commercial_partner_id,
                 move.name,
                 move.state,
@@ -98,10 +98,30 @@ class AccountInvoiceReport(models.Model):
                 move.invoice_payment_term_id,
                 move.invoice_partner_bank_id,
                 move.amount_residual_signed                                 AS residual,
-                move.amount_total_signed                                    AS amount_total,
+                ROUND(
+                  line.price_total / COALESCE(
+                    (SELECT rate FROM res_currency_rate cr WHERE
+                      cr.currency_id = line.currency_id AND
+                      cr.company_id = line.company_id AND
+                      cr.name <= COALESCE(line.date,NOW())
+                    ORDER BY cr.name DESC
+                    LIMIT 1)
+                    ,1),
+                  COALESCE((SELECT decimal_places
+                   FROM res_currency rc INNER JOIN res_currency_rate cr ON
+                    rc.id = cr.currency_id
+                   WHERE cr.currency_id = (COALESCE(line.currency_id, line.company_currency_id)) AND
+                         cr.company_id = line.company_id
+                   LIMIT 1
+                   ),2))
+                    *
+                   (CASE WHEN move.amount_total_signed < 0
+                        THEN -1
+                        ELSE 1
+                    END)                                                    AS amount_total,
                 uom_template.id                                             AS product_uom_id,
                 template.categ_id                                           AS product_categ_id,
-                SUM(line.quantity / NULLIF(COALESCE(uom_line.factor, 1) * COALESCE(uom_template.factor, 1), 0.0))
+                SUM(line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0))
                                                                             AS quantity,
                 -SUM(line.balance)                                          AS price_subtotal,
                 -SUM(line.balance / NULLIF(COALESCE(uom_line.factor, 1) * COALESCE(uom_template.factor, 1), 0.0))

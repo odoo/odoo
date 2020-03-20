@@ -5,6 +5,7 @@
 # Translators:
 # Андрей Гусев <gaussgss@gmail.com>, 2019
 # Martin Trigaux, 2019
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-13 11:29+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +51,7 @@ msgstr "Количество вложений"
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_tree
 msgid "Blacklist Date"
-msgstr ""
+msgstr "Дата черный список"
 
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
@@ -125,7 +126,7 @@ msgstr "Если отмечено - новые сообщения требуют
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Если обозначено, некоторые сообщения имеют ошибку доставки."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_blacklisted
@@ -133,12 +134,14 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
+"Если адрес электронной почты находится в черном списке, контакт не будет "
+"больше получать массовые рассылки с любого списка"
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Impossible number %s: probably invalid number of digits"
-msgstr ""
+msgstr "Невозможен номер %s: наверное, недействительна количество цифр"
 
 #. module: phone_validation
 #: code:addons/phone_validation/models/phone_blacklist.py:0
@@ -151,7 +154,7 @@ msgstr ""
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Invalid number %s: probably incorrect prefix"
-msgstr ""
+msgstr "Недействителен номер %s: вероятно неправильный префикс"
 
 #. module: phone_validation
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
@@ -187,13 +190,13 @@ msgstr "Последнее обновление"
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_main_attachment_id
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Основное прикрепления"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_has_error
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Ошибка доставки сообщения"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_ids
@@ -228,7 +231,7 @@ msgstr "Количество сообщений, требующих вниман
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error_counter
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Количество сообщений с ложной дставкою"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_unread_counter
@@ -273,7 +276,7 @@ msgstr "Номер телефона"
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_validation_mixin
 msgid "Phone Validation Mixin"
-msgstr ""
+msgstr "Проверка телефона Mixin"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized
@@ -286,7 +289,7 @@ msgstr ""
 msgid ""
 "Unable to format %s:\n"
 "%s"
-msgstr ""
+msgstr "Невозможно отформатировать %s:%s "
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0

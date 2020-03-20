@@ -588,6 +588,15 @@ $o-cw-filter-avatar-size: 20px;
         .fc-event.o_calendar_color_#{$i} {
             border-color: $color;
             color: darken($color, 35%);
+            opacity: 0.8;
+
+            &.o_event_hightlight {
+                opacity: 1;
+
+                .fc-content {
+                    font-weight: bold;
+                }
+            }
 
             .fc-bg {
                 background: mix($color, white);

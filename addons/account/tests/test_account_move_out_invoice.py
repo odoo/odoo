@@ -188,11 +188,299 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             'amount_total': 520.0,
         })
 
+    def test_out_invoice_line_onchange_product_2_with_fiscal_pos_1(self):
+        ''' Test mapping a price-included tax (10%) with a price-excluded tax (20%) on a price_unit of 110.0.
+        The price_unit should be 100.0 after applying the fiscal position.
+        '''
+        tax_price_include = self.env['account.tax'].create({
+            'name': '10% incl',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+        tax_price_exclude = self.env['account.tax'].create({
+            'name': '15% excl',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 15,
+        })
+
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'fiscal_pos_a',
+            'tax_ids': [
+                (0, None, {
+                    'tax_src_id': tax_price_include.id,
+                    'tax_dest_id': tax_price_exclude.id,
+                }),
+            ],
+        })
+
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'lst_price': 110.0,
+            'taxes_id': [(6, 0, tax_price_include.ids)],
+        })
+
+        move_form = Form(self.env['account.move'].with_context(default_type='out_invoice'))
+        move_form.partner_id = self.partner_a
+        move_form.invoice_date = fields.Date.from_string('2019-01-01')
+        move_form.currency_id = self.currency_data['currency']
+        move_form.fiscal_position_id = fiscal_position
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = product
+        invoice = move_form.save()
+
+        self.assertInvoiceValues(invoice, [
+            {
+                'product_id': product.id,
+                'price_unit': 200.0,
+                'price_subtotal': 200.0,
+                'price_total': 230.0,
+                'tax_ids': tax_price_exclude.ids,
+                'tax_line_id': False,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -200.0,
+                'debit': 0.0,
+                'credit': 100.0,
+            },
+            {
+                'product_id': False,
+                'price_unit': 30.0,
+                'price_subtotal': 30.0,
+                'price_total': 30.0,
+                'tax_ids': [],
+                'tax_line_id': tax_price_exclude.id,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -30.0,
+                'debit': 0.0,
+                'credit': 15.0,
+            },
+            {
+                'product_id': False,
+                'price_unit': -230.0,
+                'price_subtotal': -230.0,
+                'price_total': -230.0,
+                'tax_ids': [],
+                'tax_line_id': False,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 230.0,
+                'debit': 115.0,
+                'credit': 0.0,
+            },
+        ], {
+            'currency_id': self.currency_data['currency'].id,
+            'fiscal_position_id': fiscal_position.id,
+            'amount_untaxed': 200.0,
+            'amount_tax': 30.0,
+            'amount_total': 230.0,
+        })
+
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        with Form(invoice) as move_form:
+            with move_form.invoice_line_ids.edit(0) as line_form:
+                line_form.product_uom_id = uom_dozen
+
+        self.assertInvoiceValues(invoice, [
+            {
+                'product_id': product.id,
+                'product_uom_id': uom_dozen.id,
+                'price_unit': 2400.0,
+                'price_subtotal': 2400.0,
+                'price_total': 2760.0,
+                'tax_ids': tax_price_exclude.ids,
+                'tax_line_id': False,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -2400.0,
+                'debit': 0.0,
+                'credit': 1200.0,
+            },
+            {
+                'product_id': False,
+                'product_uom_id': False,
+                'price_unit': 360.0,
+                'price_subtotal': 360.0,
+                'price_total': 360.0,
+                'tax_ids': [],
+                'tax_line_id': tax_price_exclude.id,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -360.0,
+                'debit': 0.0,
+                'credit': 180.0,
+            },
+            {
+                'product_id': False,
+                'product_uom_id': False,
+                'price_unit': -2760.0,
+                'price_subtotal': -2760.0,
+                'price_total': -2760.0,
+                'tax_ids': [],
+                'tax_line_id': False,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 2760.0,
+                'debit': 1380.0,
+                'credit': 0.0,
+            },
+        ], {
+            'currency_id': self.currency_data['currency'].id,
+            'fiscal_position_id': fiscal_position.id,
+            'amount_untaxed': 2400.0,
+            'amount_tax': 360.0,
+            'amount_total': 2760.0,
+        })
+
+    def test_out_invoice_line_onchange_product_2_with_fiscal_pos_2(self):
+        ''' Test mapping a price-included tax (10%) with another price-included tax (20%) on a price_unit of 110.0.
+        The price_unit should be 120.0 after applying the fiscal position.
+        '''
+        tax_price_include_1 = self.env['account.tax'].create({
+            'name': '10% incl',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+        tax_price_include_2 = self.env['account.tax'].create({
+            'name': '20% incl',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 20,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'fiscal_pos_a',
+            'tax_ids': [
+                (0, None, {
+                    'tax_src_id': tax_price_include_1.id,
+                    'tax_dest_id': tax_price_include_2.id,
+                }),
+            ],
+        })
+
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'lst_price': 110.0,
+            'taxes_id': [(6, 0, tax_price_include_1.ids)],
+        })
+
+        move_form = Form(self.env['account.move'].with_context(default_type='out_invoice'))
+        move_form.partner_id = self.partner_a
+        move_form.invoice_date = fields.Date.from_string('2019-01-01')
+        move_form.currency_id = self.currency_data['currency']
+        move_form.fiscal_position_id = fiscal_position
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = product
+        invoice = move_form.save()
+
+        self.assertInvoiceValues(invoice, [
+            {
+                'product_id': product.id,
+                'price_unit': 240.0,
+                'price_subtotal': 200.0,
+                'price_total': 240.0,
+                'tax_ids': tax_price_include_2.ids,
+                'tax_line_id': False,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -200.0,
+                'debit': 0.0,
+                'credit': 100.0,
+            },
+            {
+                'product_id': False,
+                'price_unit': 40.0,
+                'price_subtotal': 40.0,
+                'price_total': 40.0,
+                'tax_ids': [],
+                'tax_line_id': tax_price_include_2.id,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -40.0,
+                'debit': 0.0,
+                'credit': 20.0,
+            },
+            {
+                'product_id': False,
+                'price_unit': -240.0,
+                'price_subtotal': -240.0,
+                'price_total': -240.0,
+                'tax_ids': [],
+                'tax_line_id': False,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 240.0,
+                'debit': 120.0,
+                'credit': 0.0,
+            },
+        ], {
+            'currency_id': self.currency_data['currency'].id,
+            'fiscal_position_id': fiscal_position.id,
+            'amount_untaxed': 200.0,
+            'amount_tax': 40.0,
+            'amount_total': 240.0,
+        })
+
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        with Form(invoice) as move_form:
+            with move_form.invoice_line_ids.edit(0) as line_form:
+                line_form.product_uom_id = uom_dozen
+
+        self.assertInvoiceValues(invoice, [
+            {
+                'product_id': product.id,
+                'product_uom_id': uom_dozen.id,
+                'price_unit': 2880.0,
+                'price_subtotal': 2400.0,
+                'price_total': 2880.0,
+                'tax_ids': tax_price_include_2.ids,
+                'tax_line_id': False,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -2400.0,
+                'debit': 0.0,
+                'credit': 1200.0,
+            },
+            {
+                'product_id': False,
+                'product_uom_id': False,
+                'price_unit': 480.0,
+                'price_subtotal': 480.0,
+                'price_total': 480.0,
+                'tax_ids': [],
+                'tax_line_id': tax_price_include_2.id,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -480.0,
+                'debit': 0.0,
+                'credit': 240.0,
+            },
+            {
+                'product_id': False,
+                'product_uom_id': False,
+                'price_unit': -2880.0,
+                'price_subtotal': -2880.0,
+                'price_total': -2880.0,
+                'tax_ids': [],
+                'tax_line_id': False,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 2880.0,
+                'debit': 1440.0,
+                'credit': 0.0,
+            },
+        ], {
+            'currency_id': self.currency_data['currency'].id,
+            'fiscal_position_id': fiscal_position.id,
+            'amount_untaxed': 2400.0,
+            'amount_tax': 480.0,
+            'amount_total': 2880.0,
+        })
+
     def test_out_invoice_line_onchange_business_fields_1(self):
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
             # Current price_unit is 1000.
-            # We set quantity = 4, discount = 50%, price_unit = 500 because (4 * 500) * 0.5 = 1000.
+            # We set quantity = 4, discount = 50%, price_unit = 400. The debit/credit fields don't change because (4 * 500) * 0.5 = 1000.
             line_form.quantity = 4
             line_form.discount = 50
             line_form.price_unit = 500
@@ -520,6 +808,345 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             'amount_untaxed': 1200.0,
             'amount_tax': 530.0,
             'amount_total': 1730.0,
+        })
+
+    def test_out_invoice_line_onchange_rounding_price_subtotal(self):
+        ''' Seek for rounding issue on the price_subtotal when dealing with a price_unit having more digits than the
+        foreign currency one.
+        '''
+        decimal_precision_name = self.env['account.move.line']._fields['price_unit']._digits
+        decimal_precision = self.env['decimal.precision'].search([('name', '=', decimal_precision_name)])
+
+        self.assertTrue(decimal_precision, "Decimal precision '%s' not found" % decimal_precision_name)
+
+        self.currency_data['currency'].rounding = 0.01
+        decimal_precision.digits = 4
+
+        def check_invoice_values(invoice):
+            self.assertInvoiceValues(invoice, [
+                {
+                    'quantity': 1.0,
+                    'price_unit': 0.025,
+                    'price_subtotal': 0.03,
+                    'debit': 0.0,
+                    'credit': 0.02,
+                    'currency_id': self.currency_data['currency'].id,
+                },
+                {
+                    'quantity': 1.0,
+                    'price_unit': -0.03,
+                    'price_subtotal': -0.03,
+                    'debit': 0.02,
+                    'credit': 0.0,
+                    'currency_id': self.currency_data['currency'].id,
+                },
+            ], {
+                'amount_untaxed': 0.03,
+                'amount_tax': 0.0,
+                'amount_total': 0.03,
+            })
+
+        # == Test at the creation of the invoice ==
+
+        invoice_1 = self.env['account.move'].create({
+            'type': 'out_invoice',
+            'invoice_date': '2017-01-01',
+            'date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'test line',
+                'price_unit': 0.025,
+                'quantity': 1,
+                'account_id': self.company_data['default_account_revenue'].id,
+            })],
+        })
+
+        check_invoice_values(invoice_1)
+
+        # == Test when writing on the invoice ==
+
+        invoice_2 = self.env['account.move'].create({
+            'type': 'out_invoice',
+            'invoice_date': '2017-01-01',
+            'date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+        })
+        invoice_2.write({
+            'invoice_line_ids': [(0, 0, {
+                'name': 'test line',
+                'price_unit': 0.025,
+                'quantity': 1,
+                'account_id': self.company_data['default_account_revenue'].id,
+            })],
+        })
+
+        check_invoice_values(invoice_2)
+
+    def test_out_invoice_line_onchange_taxes_2_price_unit_tax_included(self):
+        ''' Seek for rounding issue in the price unit. Suppose a price_unit of 2300 with a 5.5% price-included tax
+        applied on it.
+
+        The computed balance will be computed as follow: 2300.0 / 1.055 = 2180.0948 ~ 2180.09.
+        Since accounting / business fields are synchronized, the inverse computation will try to recompute the
+        price_unit based on the balance: 2180.09 * 1.055 = 2299.99495 ~ 2299.99.
+
+        This test ensures the price_unit is not overridden in such case.
+        '''
+        tax_price_include = self.env['account.tax'].create({
+            'name': 'Tax 5.5% price included',
+            'amount': 5.5,
+            'amount_type': 'percent',
+            'price_include': True,
+        })
+
+        # == Single-currency ==
+
+        # price_unit=2300 with 15% tax (excluded) + 5.5% tax (included).
+        move_form = Form(self.invoice)
+        move_form.invoice_line_ids.remove(1)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.price_unit = 2300
+            line_form.tax_ids.add(tax_price_include)
+        move_form.save()
+
+        self.assertInvoiceValues(self.invoice, [
+            {
+                **self.product_line_vals_1,
+                'price_unit': 2300.0,
+                'price_subtotal': 2180.09,
+                'price_total': 2627.01,
+                'tax_ids': (self.product_a.taxes_id + tax_price_include).ids,
+                'credit': 2180.09,
+            },
+            {
+                **self.tax_line_vals_1,
+                'price_unit': 327.01,
+                'price_subtotal': 327.01,
+                'price_total': 327.01,
+                'credit': 327.01,
+            },
+            {
+                'name': tax_price_include.name,
+                'product_id': False,
+                'account_id': self.product_line_vals_1['account_id'],
+                'partner_id': self.partner_a.id,
+                'product_uom_id': False,
+                'quantity': 1.0,
+                'discount': 0.0,
+                'price_unit': 119.91,
+                'price_subtotal': 119.91,
+                'price_total': 119.91,
+                'tax_ids': [],
+                'tax_line_id': tax_price_include.id,
+                'currency_id': False,
+                'amount_currency': 0.0,
+                'debit': 0.0,
+                'credit': 119.91,
+                'date_maturity': False,
+                'tax_exigible': True,
+            },
+            {
+                **self.term_line_vals_1,
+                'price_unit': -2627.01,
+                'price_subtotal': -2627.01,
+                'price_total': -2627.01,
+                'debit': 2627.01,
+            },
+        ], {
+            **self.move_vals,
+            'amount_untaxed': 2180.09,
+            'amount_tax': 446.92,
+            'amount_total': 2627.01,
+        })
+
+        move_form = Form(self.invoice)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.price_unit = -2300
+        move_form.save()
+
+        self.assertInvoiceValues(self.invoice, [
+            {
+                **self.product_line_vals_1,
+                'price_unit': -2300.0,
+                'price_subtotal': -2180.09,
+                'price_total': -2627.01,
+                'tax_ids': (self.product_a.taxes_id + tax_price_include).ids,
+                'debit': 2180.09,
+                'credit': 0.0,
+            },
+            {
+                **self.tax_line_vals_1,
+                'price_unit': -327.01,
+                'price_subtotal': -327.01,
+                'price_total': -327.01,
+                'debit': 327.01,
+                'credit': 0.0,
+            },
+            {
+                'name': tax_price_include.name,
+                'product_id': False,
+                'account_id': self.product_line_vals_1['account_id'],
+                'partner_id': self.partner_a.id,
+                'product_uom_id': False,
+                'quantity': 1.0,
+                'discount': 0.0,
+                'price_unit': -119.91,
+                'price_subtotal': -119.91,
+                'price_total': -119.91,
+                'tax_ids': [],
+                'tax_line_id': tax_price_include.id,
+                'currency_id': False,
+                'amount_currency': 0.0,
+                'debit': 119.91,
+                'credit': 0.0,
+                'date_maturity': False,
+                'tax_exigible': True,
+            },
+            {
+                **self.term_line_vals_1,
+                'price_unit': 2627.01,
+                'price_subtotal': 2627.01,
+                'price_total': 2627.01,
+                'debit': 0.0,
+                'credit': 2627.01,
+            },
+        ], {
+            **self.move_vals,
+            'amount_untaxed': -2180.09,
+            'amount_tax': -446.92,
+            'amount_total': -2627.01,
+        })
+
+        # == Multi-currencies ==
+
+        move_form = Form(self.invoice)
+        move_form.currency_id = self.currency_data['currency']
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.price_unit = 2300
+        move_form.save()
+
+        self.assertInvoiceValues(self.invoice, [
+            {
+                **self.product_line_vals_1,
+                'price_unit': 2300.0,
+                'price_subtotal': 2180.095,
+                'price_total': 2627.014,
+                'tax_ids': (self.product_a.taxes_id + tax_price_include).ids,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -2180.095,
+                'credit': 1090.05,
+            },
+            {
+                **self.tax_line_vals_1,
+                'price_unit': 327.014,
+                'price_subtotal': 327.014,
+                'price_total': 327.014,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -327.014,
+                'credit': 163.51,
+            },
+            {
+                'name': tax_price_include.name,
+                'product_id': False,
+                'account_id': self.product_line_vals_1['account_id'],
+                'partner_id': self.partner_a.id,
+                'product_uom_id': False,
+                'quantity': 1.0,
+                'discount': 0.0,
+                'price_unit': 119.905,
+                'price_subtotal': 119.905,
+                'price_total': 119.905,
+                'tax_ids': [],
+                'tax_line_id': tax_price_include.id,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -119.905,
+                'debit': 0.0,
+                'credit': 59.95,
+                'date_maturity': False,
+                'tax_exigible': True,
+            },
+            {
+                **self.term_line_vals_1,
+                'price_unit': -2627.014,
+                'price_subtotal': -2627.014,
+                'price_total': -2627.014,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 2627.014,
+                'debit': 1313.51,
+            },
+        ], {
+            **self.move_vals,
+            'currency_id': self.currency_data['currency'].id,
+            'amount_untaxed': 2180.095,
+            'amount_tax': 446.919,
+            'amount_total': 2627.014,
+        })
+
+        move_form = Form(self.invoice)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.price_unit = -2300
+        move_form.save()
+
+        self.assertInvoiceValues(self.invoice, [
+            {
+                **self.product_line_vals_1,
+                'price_unit': -2300.0,
+                'price_subtotal': -2180.095,
+                'price_total': -2627.014,
+                'tax_ids': (self.product_a.taxes_id + tax_price_include).ids,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 2180.095,
+                'debit': 1090.05,
+                'credit': 0.0,
+            },
+            {
+                **self.tax_line_vals_1,
+                'price_unit': -327.014,
+                'price_subtotal': -327.014,
+                'price_total': -327.014,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 327.014,
+                'debit': 163.51,
+                'credit': 0.0,
+            },
+            {
+                'name': tax_price_include.name,
+                'product_id': False,
+                'account_id': self.product_line_vals_1['account_id'],
+                'partner_id': self.partner_a.id,
+                'product_uom_id': False,
+                'quantity': 1.0,
+                'discount': 0.0,
+                'price_unit': -119.905,
+                'price_subtotal': -119.905,
+                'price_total': -119.905,
+                'tax_ids': [],
+                'tax_line_id': tax_price_include.id,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 119.905,
+                'debit': 59.95,
+                'credit': 0.0,
+                'date_maturity': False,
+                'tax_exigible': True,
+            },
+            {
+                **self.term_line_vals_1,
+                'price_unit': 2627.014,
+                'price_subtotal': 2627.014,
+                'price_total': 2627.014,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -2627.014,
+                'debit': 0.0,
+                'credit': 1313.51,
+            },
+        ], {
+            **self.move_vals,
+            'currency_id': self.currency_data['currency'].id,
+            'amount_untaxed': -2180.095,
+            'amount_tax': -446.919,
+            'amount_total': -2627.014,
         })
 
     def test_out_invoice_line_onchange_analytic(self):
@@ -916,6 +1543,14 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             'amount_total': 260.006,
         })
 
+        # The journal forces you to provide a secondary currency.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            move_form = Form(self.invoice)
+            move_form.currency_id = self.company_data['currency']
+            move_form.save()
+
+        # Exit the multi-currencies.
+        journal.currency_id = False
         move_form = Form(self.invoice)
         move_form.currency_id = self.company_data['currency']
         move_form.save()
@@ -924,7 +1559,7 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             {
                 **self.product_line_vals_1,
                 'quantity': 0.1,
-                'price_unit': 0.1,
+                'price_unit': 0.05,
                 'price_subtotal': 0.01,
                 'price_total': 0.01,
                 'credit': 0.01,
@@ -974,7 +1609,10 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
 
         self.assertRecordValues(self.invoice, [{'name': 'INV/2019/0042'}])
 
-        invoice_copy = self.invoice.copy()
+        values = {
+            'invoice_date': self.invoice.invoice_date,
+        }
+        invoice_copy = self.invoice.copy(default=values)
         invoice_copy.post()
 
         self.assertRecordValues(invoice_copy, [{'name': 'INV/2019/0043'}])
@@ -1806,3 +2444,46 @@ class TestAccountMoveOutInvoiceOnchanges(InvoiceTestCommon):
             {'amount_currency': -120.0, 'debit': 0.0,   'credit': 60.0,     'account_id': self.product_line_vals_2['account_id'],   'reconciled': False},
             {'amount_currency': 120.0,  'debit': 60.0,  'credit': 0.0,      'account_id': wizard.revenue_accrual_account.id,        'reconciled': True},
         ])
+
+    def test_out_invoice_filter_zero_balance_lines(self):
+        zero_balance_payment_term = self.env['account.payment.term'].create({
+            'name': 'zero_balance_payment_term',
+            'line_ids': [
+                (0, 0, {
+                    'value': 'percent',
+                    'value_amount': 100.0,
+                    'sequence': 10,
+                    'days': 0,
+                    'option': 'day_after_invoice_date',
+                }),
+                (0, 0, {
+                    'value': 'balance',
+                    'value_amount': 0.0,
+                    'sequence': 20,
+                    'days': 0,
+                    'option': 'day_after_invoice_date',
+                }),
+            ],
+        })
+
+        zero_balance_tax = self.env['account.tax'].create({
+            'name': 'zero_balance_tax',
+            'amount_type': 'percent',
+            'amount': 0.0,
+        })
+
+        invoice = self.env['account.move'].create({
+            'type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'invoice_payment_term_id': zero_balance_payment_term.id,
+            'invoice_line_ids': [(0, None, {
+                'name': 'whatever',
+                'quantity': 1.0,
+                'price_unit': 1000.0,
+                'tax_ids': [(6, 0, zero_balance_tax.ids)],
+            })]
+        })
+
+        self.assertEqual(len(invoice.invoice_line_ids), 1)
+        self.assertEqual(len(invoice.line_ids), 2)

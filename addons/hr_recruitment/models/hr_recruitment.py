@@ -228,6 +228,7 @@ class Applicant(models.Model):
 
     def _onchange_job_id_internal(self, job_id):
         department_id = False
+        company_id = False
         user_id = False
         company_id = False
         stage_id = self.stage_id.id or self._context.get('default_stage_id')
@@ -300,12 +301,16 @@ class Applicant(models.Model):
             vals['date_open'] = fields.Datetime.now()
         if 'stage_id' in vals:
             vals.update(self._onchange_stage_id_internal(vals.get('stage_id'))['value'])
+        if vals.get('email_from'):
+            vals['email_from'] = vals['email_from'].strip()
         return super(Applicant, self).create(vals)
 
     def write(self, vals):
         # user_id change: update date_open
         if vals.get('user_id'):
             vals['date_open'] = fields.Datetime.now()
+        if vals.get('email_from'):
+            vals['email_from'] = vals['email_from'].strip()
         # stage_id: track last stage before update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.Datetime.now()
@@ -335,7 +340,6 @@ class Applicant(models.Model):
         category = self.env.ref('hr_recruitment.categ_meet_interview')
         res = self.env['ir.actions.act_window'].for_xml_id('calendar', 'action_calendar_event')
         res['context'] = {
-            'search_default_partner_ids': self.partner_id.name,
             'default_partner_ids': partners.ids,
             'default_user_id': self.env.uid,
             'default_name': self.name,

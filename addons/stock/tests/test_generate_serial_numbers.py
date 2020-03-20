@@ -17,7 +17,7 @@ class StockGenerate(SavepointCase):
         })
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
 
-        warehouse = cls.env['stock.warehouse'].create({
+        cls.warehouse = cls.env['stock.warehouse'].create({
             'name': 'Base Warehouse',
             'reception_steps': 'one_step',
             'delivery_steps': 'ship_only',
@@ -25,11 +25,11 @@ class StockGenerate(SavepointCase):
         })
         cls.location = cls.env['stock.location'].create({
             'name': 'Room A',
-            'location_id': warehouse.lot_stock_id.id,
+            'location_id': cls.warehouse.lot_stock_id.id,
         })
         cls.location_dest = cls.env['stock.location'].create({
             'name': 'Room B',
-            'location_id': warehouse.lot_stock_id.id,
+            'location_id': cls.warehouse.lot_stock_id.id,
         })
 
         cls.Wizard = cls.env['stock.assign.serial']
@@ -275,7 +275,12 @@ class StockGenerate(SavepointCase):
         has five new move lines with the right `lot_name`.
         """
         nbre_of_lines = 10
+        picking_type = self.env['stock.picking.type'].search([
+            ('use_create_lots', '=', True),
+            ('warehouse_id', '=', self.warehouse.id)
+        ])
         move = self.get_new_move(nbre_of_lines)
+        move.picking_type_id = picking_type
         # We must begin with a move with 10 move lines.
         self.assertEqual(len(move.move_line_ids), nbre_of_lines)
 
@@ -307,7 +312,12 @@ class StockGenerate(SavepointCase):
         been correctly set.
         """
         nbre_of_lines = 5
+        picking_type = self.env['stock.picking.type'].search([
+            ('use_create_lots', '=', True),
+            ('warehouse_id', '=', self.warehouse.id)
+        ])
         move = self.get_new_move(nbre_of_lines)
+        move.picking_type_id = picking_type
         # We must begin with a move with five move lines.
         self.assertEqual(len(move.move_line_ids), nbre_of_lines)
 

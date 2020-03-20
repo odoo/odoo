@@ -4,12 +4,11 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
-# Goh Gangtai <gangtai.goh@gmail.com>, 2019
-# JH CHOI <hwangtog@gmail.com>, 2019
 # heejun lee <tkm01b@gmail.com>, 2019
 # Link Up링크업 <linkup.way@gmail.com>, 2019
-# Seongseok Shin <shinss61@hotmail.com>, 2019
 # Linkup <link-up@naver.com>, 2019
+# Seongseok Shin <shinss61@hotmail.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,13 +16,24 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2019\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid ""
+"\"\n"
+"                    (ID:"
+msgstr ""
+"\"\n"
+"                    (ID:"
 
 #. module: base_automation
 #: model:mail.template,body_html:base_automation.test_mail_template_automation
@@ -84,7 +94,7 @@ msgstr "적용"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
 msgid "Archived"
-msgstr "보관"
+msgstr "보존"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__is_assigned_to_admin
@@ -165,7 +175,7 @@ msgstr "기본 자동화 : 쓰기 검사 문맥에 대한 규칙 테스트"
 #: model:base.automation,name:base_automation.test_rule_with_trigger
 #: model:ir.actions.server,name:base_automation.test_rule_with_trigger_ir_actions_server
 msgid "Base Automation: test rule with trigger"
-msgstr ""
+msgstr "기본 자동화 : 트리거를 사용하여 규칙 테스트"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_write_recompute_send_email
@@ -201,7 +211,7 @@ msgstr "바인딩 유형"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_view_types
 msgid "Binding View Types"
-msgstr "View 유형을 연결"
+msgstr "화면 유형을 연결"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation_lead_test__state__cancel
@@ -291,6 +301,28 @@ msgid "Demo"
 msgstr "데모"
 
 #. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid "Disable Action"
+msgstr "작업 비활성화"
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid ""
+"Disabling this automated action will enable you to continue your workflow\n"
+"                    but any data created after this could potentially be corrupted,\n"
+"                    as you are effectively disabling a customization that may set\n"
+"                    important and/or required fields."
+msgstr ""
+"이 자동 작업을 비활성화하면 작업 절차를 계속 진행할 수 있지만 \n"
+"                   중요하거나 또는 필수인 필드를 설정할 수 있는 \n"
+"                   사용자 지정을 효과적으로 비활성화하기 때문에 \n"
+"                   이 작업 이후에 생성된 모든 데이터가 손상될 수 있습니다."
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__display_name
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__display_name
@@ -306,6 +338,13 @@ msgstr "만기일"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
 msgid "Due type"
 msgstr "만기 유형"
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid "Edit action"
+msgstr "작업 편집하기"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -397,7 +436,7 @@ msgstr "최근 갱신일"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__lead_id
 msgid "Lead"
-msgstr "리드"
+msgstr "영업제안"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__line_ids
@@ -429,7 +468,7 @@ msgstr "모델명"
 msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
-msgstr "생성 / 업데이트 된 모델을 기록하십시오. 이 필드를 설정하면 기본 모델과 다른 모델만 정의됩니다."
+msgstr "생성 / 업데이트된 모델을 기록하십시오. 이 필드를 설정하면 기본 모델과 다른 모델만 정의됩니다."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
@@ -588,7 +627,18 @@ msgstr ""
 msgid ""
 "The action will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
+msgstr "이러한 필드 중 하나가 업데이트된 경우에만 작업이 트리거됩니다. 비어있는 경우 모든 필드가 감시됩니다."
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid ""
+"The error occurred during the execution of the automated action\n"
+"                    \""
 msgstr ""
+"자동화된 작업 실행 중 오류가 발생했습니다\n"
+"                    \""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -598,7 +648,7 @@ msgstr "트리거 조건"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_id
 msgid "Trigger Date"
-msgstr "작동일"
+msgstr "트리거 날짜"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__state
@@ -612,6 +662,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"서버 작업 유형입니다. 다음 값을 사용할 수 있습니다.\n"
+"- 'Python 코드 실행' : 실행될 Python 코드 블록입니다.\n"
+"- '작성 ': 새 값으로 새 레코드를 만듭니다.\n"
+"- '기록 업데이트' : 레코드의 값을 업데이트합니다.\n"
+"- '여러 작업 실행' : 여러 다른 서버 작업을 트리거하는 작업을 정의합니다.\n"
+"- '이메일 보내기' : 자동으로 이메일을 보냅니다(토론).\n"
+"- '팔로워 추가' : 레코드에 팔로워를 추가합니다(토론).\n"
+"- '다음 활동 만들기' : 활동을 만듭니다(토론)."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -632,7 +690,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
 msgid "Use Calendar"
-msgstr "달력 사용"
+msgstr "일정표 사용"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -644,8 +702,8 @@ msgid ""
 "                trigger an automatic reminder email."
 msgstr ""
 "자동 작업을 사용하여 작업 자동 실행 다른 화면. \n"
-"                예 : 특정 사용자가 만든 리드는 특정 영업팀에 자동으로 설정됩니다. \n"
-"                14일이 지난 후에도 보류 상태인 리드는  자동 알림 이메일을 트리거합니다."
+"                예 : 특정 사용자가 만든 영업제안은 특정 영업팀에 자동으로 설정됩니다. \n"
+"                14일이 지난 후에도 보류 상태인 영업제안은 자동 미리 알림 이메일을 트리거합니다."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__user_id
@@ -671,7 +729,7 @@ msgstr "경고"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
 msgid "Watched fields"
-msgstr ""
+msgstr "관찰된 필드"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
@@ -693,7 +751,7 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
-"조건이 트리거되는시기. \n"
+"조건이 트리거 되는 시기. \n"
 "                                   존재하는 경우, 스케줄러에 의해 점검됩니다. 비어있는 경우 생성 및 업데이트 할 때 검사됩니다."
 
 #. module: base_automation
@@ -708,3 +766,18 @@ msgid ""
 " for use; help about python expression is given in the help tab."
 msgstr ""
 "작업을 실행할 파이썬 코드를 작성하십시오. 일부 변수는 사용할 수 있지만 파이썬 표현식에 대한 도움말은 도움말 옵션 탭에 있습니다."
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid ""
+"You can ask an administrator to disable or correct this automated action."
+msgstr "관리자에게 이 자동 작업을 비활성화하거나 수정하도록 요청할 수 있습니다."
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid "You can disable this automated action or edit it to solve the issue."
+msgstr "이 자동 작업을 비활성화하거나 편집하여 문제를 해결할 수 있습니다."

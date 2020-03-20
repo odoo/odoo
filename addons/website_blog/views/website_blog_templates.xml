@@ -438,8 +438,8 @@ list of filtered posts (by date or tag).
                            t-att-data-text="_cp.get('text_size_class')"
                            t-att-data-url="'/blog/' + slug(next_post.blog_id) + '/post/' + slug(next_post) + '?anim'"/>
 
-                        <t t-set="next_cover_is_full" t-value="'cover_full' in _cp.get('resize_class')"/>
-                        <t t-set="next_cover_is_auto" t-value="'cover_auto' in _cp.get('resize_class')"/>
+                        <t t-set="next_cover_is_full" t-value="'cover_full' in _cp.get('resize_class', '')"/>
+                        <t t-set="next_cover_is_auto" t-value="'cover_auto' in _cp.get('resize_class', '')"/>
 
                         <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
                             <div t-attf-class="o_wblog_post_title">
