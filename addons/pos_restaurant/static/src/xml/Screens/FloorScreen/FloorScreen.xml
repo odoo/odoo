@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="FloorScreen" owl="1">
+        <div class="floor-screen screen">
+            <div class="screen-content-flexbox">
+                <t t-if="env.pos.floors.length > 1">
+                    <div class="floor-selector">
+                        <t t-foreach="env.pos.floors" t-as="floor" t-key="floor.id">
+                            <span class="button button-floor" t-att-class="{ active: floor.id === state.selectedFloorId }" t-on-click="selectFloor(floor)">
+                                <t t-esc="floor.name" />
+                            </span>
+                        </t>
+                    </div>
+                </t>
+                <div class="floor-map" t-on-click="trigger('deselect-table')" t-ref="floor-map-ref">
+                    <div t-if="isFloorEmpty" class="empty-floor">
+                        <span>This floor has no tables yet, use the </span>
+                        <i class="fa fa-plus" role="img" aria-label="Add button" title="Add button"></i>
+                        <span> button in the editing toolbar to create new tables.</span>
+                    </div>
+                    <div t-else="" class="tables">
+                        <t t-foreach="activeTables" t-as="table" t-key="table.id">
+                            <TableWidget t-if="table.id !== state.selectedTableId" table="table" />
+                            <EditableTable t-else="" table="table" />
+                        </t>
+                    </div>
+                    <span t-if="env.pos.user.role == 'manager'" class="edit-button editing" t-att-class="{ active: state.isEditMode }" t-on-click.stop="toggleEditMode">
+                        <i class="fa fa-pencil" role="img" aria-label="Edit" title="Edit"></i>
+                    </span>
+                    <div t-if="state.isEditMode" class="edit-bar">
+                        <span class="edit-button" t-on-click.stop="createTable">
+                            <i class="fa fa-plus" role="img" aria-label="Add" title="Add"></i>
+                        </span>
+                        <span class="edit-button" t-att-class="{ disabled: !selectedTable }" t-on-click.stop="duplicateTable">
+                            <i class="fa fa-files-o" role="img" aria-label="Duplicate" title="Duplicate"></i>
+                        </span>
+                        <span class="edit-button" t-att-class="{ disabled: !selectedTable }" t-on-click.stop="renameTable">
+                            <i class="fa fa-font" role="img" aria-label="Rename" title="Rename"></i>
+                        </span>
+                        <span class="edit-button" t-att-class="{ disabled: !selectedTable }" t-on-click.stop="changeSeatsNum">
+                            <i class="fa fa-user" role="img" aria-label="Seats" title="Seats"></i>
+                        </span>
+                        <span class="edit-button" t-att-class="{ disabled: !selectedTable }" t-on-click.stop="changeShape">
+                            <span t-if="!selectedTable or selectedTable.shape == 'square'" class="button-option square">
+                                <i class="fa fa-square-o" role="img" aria-label="Square Shape" title="Square Shape"></i>
+                            </span>
+                            <span t-else="" class="button-option round">
+                                <i class="fa fa-circle-o" role="img" aria-label="Round Shape" title="Round Shape"></i>
+                            </span>
+                        </span>
+                        <span class="edit-button" t-on-click.stop="toggleColorPicker">
+                            <i class="fa fa-tint" role="img" aria-label="Tint" title="Tint"></i>
+                        </span>
+                        <div t-if="state.isColorPicker and selectedTable" class="color-picker fg-picker">
+                            <div  class="close-picker" title="Close" role="img" aria-label="Close" t-on-click.stop="state.isColorPicker = false">
+                                <i class="fa fa-times" />
+                            </div>
+                            <span class="color tl"  style="background-color:#EB6D6D" role="img" aria-label="Red" title="Red" t-on-click.stop="setTableColor('#EB6D6D')" />
+                            <span class="color"     style="background-color:#35D374" role="img" aria-label="Green" title="Green" t-on-click.stop="setTableColor('#35D374')" />
+                            <span class="color tr"  style="background-color:#6C6DEC" role="img" aria-label="Blue" title="Blue" t-on-click.stop="setTableColor('#6C6DEC')" />
+                            <span class="color"     style="background-color:#EBBF6D" role="img" aria-label="Orange" title="Orange" t-on-click.stop="setTableColor('#EBBF6D')" />
+                            <span class="color"     style="background-color:#EBEC6D" role="img" aria-label="Yellow" title="Yellow" t-on-click.stop="setTableColor('#EBEC6D')" />
+                            <span class="color"     style="background-color:#AC6DAD" role="img" aria-label="Purple" title="Purple" t-on-click.stop="setTableColor('#AC6DAD')" />
+                            <span class="color bl"  style="background-color:#6C6D6D" role="img" aria-label="Grey" title="Grey" t-on-click.stop="setTableColor('#6C6D6D')" />
+                            <span class="color"     style="background-color:#ACADAD" role="img" aria-label="Light grey" title="Light grey" t-on-click.stop="setTableColor('#ACADAD')" />
+                            <span class="color br"  style="background-color:#4ED2BE" role="img" aria-label="Turquoise" title="Turquoise" t-on-click.stop="setTableColor('#4ED2BE')" />
+                        </div>
+                        <div t-if="state.isColorPicker and !selectedTable" class="color-picker bg-picker">
+                            <div  class="close-picker" title="Close" role="img" aria-label="Close" t-on-click.stop="state.isColorPicker = false">
+                                <i class="fa fa-times" />
+                            </div>
+                            <span class="color tl"  style="background-color:rgb(244, 149, 149)" role="img" aria-label="Red" title="Red" t-on-click.stop="setFloorColor('rgb(244, 149, 149)')" />
+                            <span class="color"     style="background-color:rgb(130, 233, 171)" role="img" aria-label="Green" title="Green" t-on-click.stop="setFloorColor('rgb(130, 233, 171)')" />
+                            <span class="color tr"  style="background-color:rgb(136, 137, 242)" role="img" aria-label="Blue" title="Blue" t-on-click.stop="setFloorColor('rgb(136, 137, 242)')" />
+                            <span class="color"     style="background-color:rgb(255, 214, 136)" role="img" aria-label="Orange" title="Orange" t-on-click.stop="setFloorColor('rgb(255, 214, 136)')" />
+                            <span class="color"     style="background-color:rgb(254, 255, 154)" role="img" aria-label="Yellow" title="Yellow" t-on-click.stop="setFloorColor('rgb(254, 255, 154)')" />
+                            <span class="color"     style="background-color:rgb(209, 171, 210)" role="img" aria-label="Purple" title="Purple" t-on-click.stop="setFloorColor('rgb(209, 171, 210)')" />
+                            <span class="color bl"  style="background-color:rgb(75, 75, 75)"    role="img" aria-label="Grey" title="Grey" t-on-click.stop="setFloorColor('rgb(75, 75, 75)')" />
+                            <span class="color"     style="background-color:rgb(210, 210, 210)" role="img" aria-label="Light grey" title="Light grey" t-on-click.stop="setFloorColor('rgb(210, 210, 210)')" />
+                            <span class="color br"  style="background-color:rgb(127, 221, 236)" role="img" aria-label="Turquoise" title="Turquoise" t-on-click.stop="setFloorColor('rgb(127, 221, 236)')" />
+                        </div>
+                        <span class="edit-button trash" t-att-class="{ disabled: !selectedTable }" t-on-click.stop="deleteTable">
+                            <i class="fa fa-trash" role="img" aria-label="Delete" title="Delete"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
