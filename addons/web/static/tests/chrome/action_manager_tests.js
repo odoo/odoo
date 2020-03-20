@@ -751,7 +751,7 @@ QUnit.module('ActionManager', {
         await doAction(1);
         assert.containsOnce(webClient, '.o_kanban_view');
         assert.containsNone(webClient, '.o_reward');
-        webClient.trigger('show-effect', {type: 'rainbow_man', fadeout: 'no'});
+        webClient.env.bus.trigger('show-effect', {type: 'rainbow_man', fadeout: 'no'});
         await testUtils.nextTick();
         await testUtils.owlCompatibilityExtraNextTick();
 
@@ -762,7 +762,7 @@ QUnit.module('ActionManager', {
         assert.containsNone(webClient, '.o_reward');
         assert.containsOnce(webClient, '.o_kanban_view');
 
-        webClient.trigger('show-effect', {type: 'rainbow_man', fadeout: 'no'});
+        webClient.env.bus.trigger('show-effect', {type: 'rainbow_man', fadeout: 'no'});
         await testUtils.nextTick();
         await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(webClient, '.o_reward');
@@ -796,7 +796,7 @@ QUnit.module('ActionManager', {
         assert.containsOnce(webClient, '.o_kanban_view');
         assert.containsNone(webClient, '.o_reward');
         assert.containsNone(document.querySelector('body'), '.o_notification');
-        webClient.trigger('show-effect', {type: 'rainbow_man', fadeout: 'no'});
+        webClient.env.bus.trigger('show-effect', {type: 'rainbow_man', fadeout: 'no'});
         await testUtils.nextTick();
         await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(webClient, '.o_kanban_view');
