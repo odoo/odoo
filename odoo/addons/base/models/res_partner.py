@@ -137,10 +137,15 @@ class Partner(models.Model):
 
     @api.model
     def default_get(self, default_fields):
-        """Add the company of the parent as default if we are creating a child partner."""
+        """Add the company of the parent as default if we are creating a child partner.
+        Also take the parent lang by default if any, otherwise, fallback to default DB lang."""
         values = super().default_get(default_fields)
+        parent = self.env["res.partner"]
         if 'parent_id' in default_fields and values.get('parent_id'):
-            values['company_id'] = self.browse(values.get('parent_id')).company_id.id
+            parent = self.browse(values.get('parent_id'))
+            values['company_id'] = parent.company_id.id
+        if 'lang' in default_fields:
+            values['lang'] = values.get('lang') or parent.lang or self.env.lang
         return values
 
     name = fields.Char(index=True)
@@ -151,7 +156,7 @@ class Partner(models.Model):
     parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
     child_ids = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)])  # force "active_test" domain to bypass _search() override
     ref = fields.Char(string='Reference', index=True)
-    lang = fields.Selection(_lang_get, string='Language', default=lambda self: self.env.lang,
+    lang = fields.Selection(_lang_get, string='Language',
                             help="All the emails and documents sent to this contact will be translated in this language.")
     active_lang_count = fields.Integer(compute='_compute_active_lang_count')
     tz = fields.Selection(_tz_get, string='Timezone', default=lambda self: self._context.get('tz'),
