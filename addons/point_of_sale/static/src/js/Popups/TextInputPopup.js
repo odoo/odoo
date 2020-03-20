@@ -12,7 +12,7 @@ odoo.define('point_of_sale.TextInputPopup', function(require) {
         static template = 'TextInputPopup';
         constructor() {
             super(...arguments);
-            this.state = useState({ inputValue: '' });
+            this.state = useState({ inputValue: this.props.startingValue });
             this.inputRef = useRef('input');
         }
         mounted() {
@@ -27,6 +27,7 @@ odoo.define('point_of_sale.TextInputPopup', function(require) {
         cancelText: 'Cancel',
         title: '',
         body: '',
+        startingValue: '',
     };
 
     addComponents(Chrome, [TextInputPopup]);
