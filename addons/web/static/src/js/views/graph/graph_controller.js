@@ -54,13 +54,6 @@ var GraphController = AbstractController.extend({
         this.buttonDropdownPromises = [];
     },
     /**
-     * @override
-     */
-    start: function () {
-        this.$el.addClass('o_graph_controller');
-        return this._super.apply(this, arguments);
-    },
-    /**
      * @todo check if this can be removed (mostly duplicate with
      * AbstractController method)
      */
@@ -130,16 +123,16 @@ var GraphController = AbstractController.extend({
                 items: this.measures,
             });
             this.buttonDropdownPromises = [this.measureMenu.mount(fragment)];
+            if (this.isEmbedded) {
+                // Instantiate and append GroupBy menu
+                this.groupByMenu = new ComponentWrapper(this, CarretDropdownMenu, {
+                    title: "Group By",
+                    icon: 'fa fa-bars',
+                    items: this._getGroupBys(state.groupBy),
+                });
+                this.buttonDropdownPromises.push(this.groupByMenu.mount(fragment));
+            }
             if ($node) {
-                if (this.isEmbedded) {
-                    // Instantiate and append GroupBy menu
-                    this.groupByMenu = new ComponentWrapper(this, CarretDropdownMenu, {
-                        title: "Group By",
-                        icon: 'fa fa-bars',
-                        items: this._getGroupBys(state.groupBy),
-                    });
-                    this.buttonDropdownPromises.push(this.groupByMenu.mount(fragment));
-                }
                 this.$buttons.appendTo($node);
             }
         }

@@ -11,7 +11,8 @@ var AbstractView = require('web.AbstractView');
 var core = require('web.core');
 var GraphModel = require('web.GraphModel');
 var Controller = require('web.GraphController');
-var GraphRenderer = require('web.GraphRenderer');
+const GraphRenderer = require("web/static/src/js/views/graph/graph_renderer");
+const RendererWrapper = require("web.RendererWrapper");
 
 var _t = core._t;
 var _lt = core._lt;
@@ -154,6 +155,15 @@ var GraphView = AbstractView.extend({
         this.loadParams.fields = this.fields;
         this.loadParams.comparisonDomain = params.comparisonDomain;
         this.loadParams.stacked = this.arch.attrs.stacked !== "False";
+    },
+
+     /**
+     *
+     * @override
+     */
+    getRenderer(parent, props) {
+        props = Object.assign(props || {}, this.rendererParams);
+        return new RendererWrapper(null, this.config.Renderer, props);
     },
 });
 
