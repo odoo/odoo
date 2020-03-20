@@ -250,7 +250,6 @@ class WebClient extends Component {
             }
         });
     }
-    // TODO: handle set_title* events
     _setTitlePart(part, title) {
         this._titleParts[part] = title;
     }
@@ -295,8 +294,7 @@ class WebClient extends Component {
         if (hash !== this._getWindowHash()) {
             this._setWindowHash(hash);
         }
-        const fullTitle = this._computeTitle();
-        this._setWindowTitle(fullTitle);
+        this._setWindowTitle(this._computeTitle());
     }
     _wcUpdated() {
         if (this.renderingInfo) {
@@ -502,6 +500,14 @@ class WebClient extends Component {
             // i.e.: the rendering cycle will update the state at its end
             // Any event hapening in the meantime would be irrelevant
             this._updateState(ev.detail.state);
+        }
+    }
+    _onSetTitlePart(ev) {
+        const part = ev.detail.part;
+        const title = ev.detail.title;
+        this._setTitlePart(part, title);
+        if (!this.renderingInfo) {
+            this._setWindowTitle(this._computeTitle());
         }
     }
     /**

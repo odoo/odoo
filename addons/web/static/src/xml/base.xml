@@ -7,6 +7,7 @@
     <t t-set="renderingInfo" t-value="renderingInfo || {}"/>
     <body class="o_web_client" t-att-class="{ o_fullscreen: renderingInfo.fullscreen }"
           t-on-push-state="_onPushState"
+          t-on-set-title-part="_onSetTitlePart"
           t-on-warning="_onDisplayWarning">
         <Menu t-if="!renderingInfo.fullscreen" t-ref="menu"
             t-on-open-menu="_onOpenMenu"
