@@ -125,6 +125,7 @@
                 t-att-placeholder="field.placeholder"
                 t-att-id="field.id"
                 t-att-rows="field.rows || 3"
+                t-esc="field.value"
             />
         </t>
     </t>
@@ -147,6 +148,7 @@
                 t-att-name="field.name"
                 step="1"
                 t-att-required="field.required || field.modelRequired || None"
+                t-att-value="field.value"
                 t-att-placeholder="field.placeholder"
                 t-att-id="field.id"
             />
@@ -162,6 +164,7 @@
                 t-att-name="field.name"
                 step="any"
                 t-att-required="field.required || field.modelRequired || None"
+                t-att-value="field.value"
                 t-att-placeholder="field.placeholder"
                 t-att-id="field.id"
             />
@@ -179,6 +182,7 @@
                         t-attf-data-target="##{datepickerID}"
                         t-att-name="field.name"
                         t-att-required="field.required || field.modelRequired || None"
+                        t-att-value="field.value"
                         t-att-placeholder="field.placeholder"
                         t-att-id="field.id"
                 />
@@ -200,6 +204,7 @@
                         t-attf-data-target="##{datetimepickerID}"
                         t-att-name="field.name"
                         t-att-required="field.required || field.modelRequired || None"
+                        t-att-value="field.value"
                         t-att-placeholder="field.placeholder"
                         t-att-id="field.id"
                 />
@@ -214,14 +219,17 @@
     <t t-name="website_form.field_boolean">
         <t t-set="field.isCheck" t-value="true"/>
         <t t-call="website_form.field">
-            <input
-                type="checkbox"
-                value="Yes"
-                class="s_website_form_input"
-                t-att-name="field.name"
-                t-att-required="field.required || field.modelRequired || None"
-                t-att-id="field.id"
-            />
+            <div class="form-check">
+                <input
+                    type="checkbox"
+                    value="Yes"
+                    class="s_website_form_input"
+                    t-att-name="field.name"
+                    t-att-checked="field.value and 'checked' or None"
+                    t-att-required="field.required || field.modelRequired || None"
+                    t-att-id="field.id"
+                />
+            </div>
         </t>
     </t>
 
@@ -256,6 +264,7 @@
                     class="s_website_form_input form-check-input"
                     t-att-id="recordId"
                     t-att-name="field.name"
+                    t-att-checked="record.selected and 'checked' or None"
                     t-att-value="record.id"
                     t-att-required="field.required || field.modelRequired || None"
                 />
@@ -277,14 +286,12 @@
             <t t-call="website_form.field">
                 <select class="form-control s_website_form_input" t-att-name="field.name" t-att-required="field.required || field.modelRequired || None" t-att-id="field.id" style="display: none">
                     <t t-foreach="field.records" t-as="record">
-                        <option t-att-value="record.id" t-att-selected="record.selected">
-                            <t t-esc="record.display_name"/>
-                        </option>
+                        <option t-esc="record.display_name" t-att-value="record.id" t-att-selected="record.selected and 'selected' or None"/>
                     </t>
                 </select>
                 <div id="editable_select" class="form-control s_website_form_input">
                     <t t-foreach="field.records" t-as="record">
-                        <div t-esc="record.display_name" t-att-id="record.id" class="s_website_form_select_item"/>
+                        <div t-esc="record.display_name" t-att-id="record.id" t-attf-class="s_website_form_select_item #{record.selected and 'selected' or ''}"/>
                     </t>
                 </div>
             </t>
@@ -331,6 +338,7 @@
                     class="s_website_form_input form-check-input"
                     t-att-id="recordId"
                     t-att-name="field.name"
+                    t-att-checked="record.selected and 'checked' or None"
                     t-att-value="record.id"
                     t-att-required="field.required || field.modelRequired || None"
                 />

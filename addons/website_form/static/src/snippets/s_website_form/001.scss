@@ -12,6 +12,10 @@
     // Display the editable select as a single big field
     #editable_select.form-control {
         height: auto;
+
+        .s_website_form_select_item.selected {
+            font-weight: bold;
+        }
     }
 }
 
@@ -52,6 +56,16 @@
     .s_website_form_no_submit_label {
         .s_website_form_label {
             display: none;
+        }
+    }
+}
+
+body:not(.editor_enable) .s_website_form[data-vcss="001"] {
+    .s_website_form_date, .s_website_form_datetime {
+        &:not(.s_website_form_datepicker_initialized) {
+            [value] {
+                color: transparent;
+            }
         }
     }
 }
