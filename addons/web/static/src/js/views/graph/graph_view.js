@@ -12,6 +12,7 @@ var core = require('web.core');
 var GraphModel = require('web.GraphModel');
 var Controller = require('web.GraphController');
 var GraphRenderer = require('web.GraphRenderer');
+const RendererWrapper = require('web.RendererWrapper');
 
 var _t = core._t;
 var _lt = core._lt;
@@ -134,11 +135,21 @@ var GraphView = AbstractView.extend({
         this.rendererParams.disableLinking = !!JSON.parse(this.arch.attrs.disable_linking || '0');
 
         this.loadParams.mode = this.arch.attrs.type || 'bar';
+        this.loadParams.orderBy = this.arch.attrs.order;
         this.loadParams.measure = measure || '__count__';
         this.loadParams.groupBys = groupBys;
         this.loadParams.fields = this.fields;
         this.loadParams.comparisonDomain = params.comparisonDomain;
         this.loadParams.stacked = this.arch.attrs.stacked !== "False";
+    },
+
+     /**
+     *
+     * @override
+     */
+    getRenderer(parent, props) {
+        props = Object.assign(props || {}, this.rendererParams);
+        return new RendererWrapper(null, this.config.Renderer, props);
     },
 });
 

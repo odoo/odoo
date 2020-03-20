@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="web.GraphOwlRenderer" owl="1">
+        <div class="o_graph_renderer">
+            <label t-if="props.title"><t t-esc="props.title"/></label>
+            <t t-if="noContentHelperData.show" t-call="web.NoContentHelper">
+                <t t-set="title" t-value="noContentHelperData.title"/>
+                <t t-set="description" t-value="noContentHelperData.description"/>
+            </t>
+            <t t-else="">
+                <div class="o_graph_canvas_container" t-attf-style="{{props.isEmbedded ? '' : 'position: absolute;'}}">
+                    <canvas t-ref="canvas"/>
+                </div>
+             </t>
+        </div>
+    </div>
+</templates>
