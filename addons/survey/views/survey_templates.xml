@@ -202,8 +202,15 @@
 
                 <div class="row">
                     <div class="offset-3 col-6 text-center mt16 mb128">
-                        <button t-if="not answer.is_session_answer and survey.users_can_go_back and question != answer.predefined_question_ids[0]" type="submit" class="btn btn-secondary"
-                                name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Back</button>
+                        <!-- Can go back if:
+                            - Back button is allowed in configuration
+                            - This is not a session answer (doesn't make sense to go back in session context)
+                            - This is not the first question
+                            - The survey doesn't have pages OR this is not the first page of the survey
+                              (pages are displayed in 'page_per_question' layout when they have a description, see PR#44271)
+                        -->
+                        <button t-if="survey.users_can_go_back and not answer.is_session_answer and question != answer.predefined_question_ids[0] and (not survey.page_ids or question != survey.page_ids[0])"
+                            type="submit" class="btn btn-secondary" name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Back</button>
                         <button type="submit" t-att-value="'next' if not survey_last else 'finish'" class="btn btn-primary">
                             <t t-if="answer.is_session_answer">
                                 Submit
