@@ -100,9 +100,24 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         }
     },
 
+<<<<<<< HEAD
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+=======
+    var $carriers = $("#delivery_carrier input[name='delivery_type']");
+    $carriers.click(_onCarrierClick);
+
+    // Wait a tick in case form is updated on page load (eg. back button on Chromium browser)
+    setTimeout(function () {
+        // Workaround to:
+        // - update the amount/error on the label at first rendering
+        // - prevent clicking on 'Pay Now' if the shipper rating fails
+        if ($carriers.length > 0) {
+            $carriers.filter(':checked').click();
+        }
+    })
+>>>>>>> 1cfb68330e4... temp
 
     /**
      * @private
