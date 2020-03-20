@@ -1402,6 +1402,7 @@ QUnit.module('Views', {
                 date_start="start"
                 date_stop="stop"
                 mode="week"
+                all_day="allday"
                 quick_add="False"/>`,
             archs,
             viewOptions: {
@@ -1420,8 +1421,9 @@ QUnit.module('Views', {
                     assert.step('do_action');
                     assert.deepEqual(ev.data.action.context, {
                         default_name: "New",
-                        default_start: "2016-12-14 05:00:00",
-                        default_stop: "2016-12-15 17:00:00",
+                        default_start: "2016-12-14 00:00:00",
+                        default_stop: "2016-12-15 00:00:00",
+                        default_allday: true,
                     },
                     "should send the correct data to create events");
                 },
@@ -1457,6 +1459,7 @@ QUnit.module('Views', {
                 'date_start="start" '+
                 'date_stop="stop" '+
                 'mode="week" '+
+                'all_day="allday" '+
                 'quick_add="False"/>',
             archs: archs,
             viewOptions: {
@@ -1470,8 +1473,9 @@ QUnit.module('Views', {
             intercepts: {
                 do_action: function (event) {
                     assert.deepEqual(event.data.action.context, {
-                        "default_start": "2016-12-14 05:00:00",
-                        "default_stop": "2016-12-15 17:00:00",
+                            default_start: "2016-12-14 00:00:00",
+                            default_stop: "2016-12-15 00:00:00",
+                            default_allday: true,
                     },
                     "should send the correct data to create events");
                 },
