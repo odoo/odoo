@@ -23,7 +23,7 @@
             <t t-set='dialog' t-value='renderingInfo.dialog' />
             <t t-set="main" t-value="renderingInfo.main"/>
             <!-- fixme: class below totally ignored -->
-            <ActionAdapter t-if="main" class="o_action" t-ref="currentControllerComponent"
+            <ActionAdapter t-if="main" class="o_action" t-ref="currentMainComponent"
                     t-key="main.controller.jsID"
                     Component="main.controller.Component"
                     action="main.action"

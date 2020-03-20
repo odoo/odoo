@@ -20,7 +20,7 @@ class WebClient extends Component {
         this.LoadingWidget = LoadingWidget;
         useExternalListener(window, 'hashchange', this._onHashchange);
 
-        this.currentControllerComponent = useRef('currentControllerComponent');
+        this.currentMainComponent = useRef('currentMainComponent');
         this.currentDialogComponent = useRef('currentDialogComponent');
         this.menu = useRef('menu');
         this._setActionManager();
@@ -235,8 +235,8 @@ class WebClient extends Component {
         });
         this.actionManager.on('update', this, this._onActionManagerUpdated);
         this.actionManager.on('clear-uncommitted-changes', this, async (callBack) => {
-            if (!this.currentDialogComponent.comp && this.currentControllerComponent.comp) {
-                await this.currentControllerComponent.comp.canBeRemoved();
+            if (!this.currentDialogComponent.comp && this.currentMainComponent.comp) {
+                await this.currentMainComponent.comp.canBeRemoved();
             }
             callBack();
         });
@@ -303,7 +303,7 @@ class WebClient extends Component {
             let state = {};
             if (this.renderingInfo.main) {
                 const main = this.renderingInfo.main;
-                const mainComponent = this.currentControllerComponent.comp;
+                const mainComponent = this.currentMainComponent.comp;
                 this.controllerComponentMap.set(main.controller.jsID, mainComponent);
                 Object.assign(state, mainComponent.getState());
                 state.action = main.action.id;

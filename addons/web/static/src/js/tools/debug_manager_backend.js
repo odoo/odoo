@@ -128,8 +128,10 @@ DebugManager.include({
         await this._super(...arguments);
         this._updateCB = webClient => {
             const state = webClient.actionManager.getCurrentState();
-            const { action, controller } = state[this.mode] || {};
-            this.update('action', action, controller && controller.component);
+            const { action } = state[this.mode] || {};
+            const refKey = this.mode === 'main' ? 'currentMainComponent' : 'currentDialogComponent';
+            const component = webClient[refKey].comp;
+            this.update('action', action, component);
         };
         this.env.bus.on('web-client-updated', this, this._updateCB);
     },
