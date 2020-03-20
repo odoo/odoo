@@ -30,6 +30,15 @@ class TestStructure(common.TransactionCase):
             partner.vat = '11111111111'
         partner.vat = '20507822470'
 
+    def test_vat_country_difference(self):
+        """Test the validation when country code is different from vat code"""
+        partner = self.env['res.partner'].create({
+            'name': "Test",
+            'country_id': self.env.ref('base.mx').id,
+            'vat': 'RORO790707I47',
+        })
+        self.assertEqual(partner.vat, 'RORO790707I47', "Partner VAT should not be altered")
+
     def test_parent_validation(self):
         """Test the validation with company and contact"""
 
