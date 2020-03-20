@@ -5508,6 +5508,34 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('nested x2many (non inline views and no widget on inner x2many in list)', async function (assert) {
+            assert.expect(5);
+
+            this.data.partner.records[0].p = [1];
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form><field name="p"/></form>',
+                archs: {
+                    'partner,false,list': '<tree><field name="turtles"/></tree>',
+                    'partner,false,form': '<form><field name="turtles" widget="many2many_tags"/></form>',
+                },
+                res_id: 1,
+            });
+
+            assert.containsOnce(form, '.o_data_row');
+            assert.strictEqual(form.$('.o_data_row').text(), '1 record');
+
+            await testUtils.dom.click(form.$('.o_data_row'));
+
+            assert.containsOnce(document.body, '.modal .o_form_view');
+            assert.containsOnce(document.body, '.modal .o_form_view .o_field_many2manytags .badge');
+            assert.strictEqual($('.modal .o_field_many2manytags').text().trim(), 'donatello');
+
+            form.destroy();
+        });
+
         QUnit.test('one2many (who contains display_name) with tree view and without form view', async function (assert) {
             assert.expect(1);
 
