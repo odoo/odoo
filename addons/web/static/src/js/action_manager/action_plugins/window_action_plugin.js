@@ -97,7 +97,8 @@ odoo.define('web.WindowActionPlugin', function (require) {
                     // this._closeDialog(true); // there may be a currently opened dialog, close it // FIXME
                     var viewOptions = {currentId: state.id};
                     var viewType = state.view_type || currentController.viewType;
-                    return this._switchController(currentAction, viewType, viewOptions);
+                    this._switchController(currentAction, viewType, viewOptions);
+                    return true;
                 } else if (!action_registry.contains(state.action)) {
                     // the action to load isn't the current one, so execute it
                     var context = {};

@@ -12,12 +12,13 @@ const LegacyDialog = require('web.Dialog');
 const WarningDialog = require('web.CrashManager').WarningDialog;
 
 const { Component, hooks } = owl;
-const useRef = hooks.useRef;
+const {useRef, useExternalListener } = hooks;
 
 class WebClient extends Component {
     constructor() {
         super();
         this.LoadingWidget = LoadingWidget;
+        useExternalListener(window, 'hashchange', this._onHashchange);
 
         this.currentControllerComponent = useRef('currentControllerComponent');
         this.currentDialogComponent = useRef('currentDialogComponent');
@@ -35,6 +36,41 @@ class WebClient extends Component {
 
         this.renderingInfo = null;
         this.controllerComponentMap = new Map();
+    }
+    //--------------------------------------------------------------------------
+    // OWL Overrides
+    //--------------------------------------------------------------------------
+    catchError(e) {
+        if (e && e.name) {
+            // Real runtime error
+            throw e;
+        }
+        // Errors that have been handled before
+        console.warn(e);
+        const newStack = this.renderingInfo.controllerStack;
+        const newDialog = this.renderingInfo.dialog;
+        this.actionManager.rollBack(newStack, newDialog);
+    }
+    mounted() {
+        super.mounted();
+        this._wcUpdated();
+        odoo.isReady = true;
+        this.env.bus.trigger('web-client-mounted');
+    }
+    patched() {
+        super.patched();
+        this._wcUpdated();
+    }
+    willPatch() {
+        super.willPatch();
+        const scrollPosition = this._getScrollPosition();
+        this._storeScrollPosition(scrollPosition);
+    }
+    async willStart() {
+        this.menus = await this._loadMenus();
+        const state = this._getUrlState();
+        this._determineCompanyIds(state);
+        return this.loadState(state);
     }
     _setActionManager() {
         this.actionManager = new ActionManager(this.env);
@@ -69,12 +105,6 @@ class WebClient extends Component {
         this.titleParts[part] = title;
     }
 
-    async willStart() {
-        this.menus = await this._loadMenus();
-        const state = this._getUrlState();
-        this._determineCompanyIds(state);
-        return this.loadState(state);
-    }
     async loadState(state) {
         let stateLoaded = await this.actionManager.loadState(state, { menuID: state.menu_id });
         if (stateLoaded === null) {
@@ -91,58 +121,62 @@ class WebClient extends Component {
         }
         return stateLoaded;
     }
-    mounted() {
-        this._onHashchange = () => {
-            if (!this.ignoreHashchange) {
-                const state = this._getUrlState();
-                this.loadState(state);
-            }
-            this.ignoreHashchange = false;
-            // TODO: reset oldURL in case of failure?
-        };
-        window.addEventListener('hashchange', this._onHashchange);
-        super.mounted();
-        this._wcUpdated();
-        odoo.isReady = true;
-        this.env.bus.trigger('web-client-mounted');
-    }
-    willPatch() {
-        super.willPatch();
-        const scrollPosition = this._getScrollPosition();
-        this._storeScrollPosition(scrollPosition);
-    }
-    patched() {
-        super.patched();
-        this._wcUpdated();
-    }
-
-    catchError(e) {
-        if (e && e.name) {
-            // Real runtime error
-            throw e;
-        }
-        // Errors that have been handled before
-        console.warn(e);
-        if (this.renderingInfo) {
-            const newStack = this.renderingInfo.controllerStack;
-            const newDialog = this.renderingInfo.dialog;
-            this.actionManager.rollBack(newStack, newDialog);
-        }
-        this.actionManager.restoreController();
-    }
-    willUnmount() {
-        window.removeEventListener('hashchange', this._onHashchange);
-    }
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-    _getWindowHash() {
-        return window.location.hash;
+
+    _computeTitle() {
+        const parts = Object.keys(this.titleParts).sort();
+        let tmp = "";
+        for (let part of parts) {
+            const title = this.titleParts[part];
+            if (title) {
+                tmp = tmp ? tmp + " - " + title : title;
+            }
+        }
+        return tmp;
     }
-    _setWindowHash(newHash) {
-        this.ignoreHashchange = true;
-        window.location.hash = newHash;
+    _determineCompanyIds(state) {
+        const userCompanies = this.env.session.user_companies;
+        const currentCompanyId = userCompanies.current_company[0];
+        if (!state.cids) {
+            state.cids = this.env.services.getCookie('cids') || currentCompanyId;
+        }
+        let stateCompanyIds = state.cids.toString().split(',').map(id => parseInt(id, 10));
+        const userCompanyIds = userCompanies.allowed_companies.map(company => company[0]);
+        // Check that the user has access to all the companies
+        if (!_.isEmpty(_.difference(stateCompanyIds, userCompanyIds))) {
+            state.cids = String(currentCompanyId);
+            stateCompanyIds = [currentCompanyId];
+        }
+        this.env.session.user_context.allowed_company_ids = stateCompanyIds;
+    }
+    _displayNotification(params) {
+        const notifService = this.env.services.notification;
+        return notifService.notify(params);
+    }
+    _domCleaning() {
+        const body = document.body;
+        // multiple bodies in tests
+        const tooltips = body.querySelectorAll('body .tooltip');
+        for (let tt of tooltips) {
+            tt.parentNode.removeChild(tt);
+        }
+    }
+    /**
+     * Returns the left and top scroll positions of the main scrolling area
+     * (i.e. the '.o_content' div in desktop).
+     *
+     * @private
+     * @returns {Object} with keys left and top
+     */
+    _getScrollPosition() {
+        var scrollingEl = this.el.getElementsByClassName('o_content')[0];
+        return {
+            left: scrollingEl ? scrollingEl.scrollLeft : 0,
+            top: scrollingEl ? scrollingEl.scrollTop : 0,
+        };
     }
     /**
      * @private
@@ -165,24 +199,11 @@ class WebClient extends Component {
 
         return state;
     }
-    _determineCompanyIds(state) {
-        const userCompanies = this.env.session.user_companies;
-        const currentCompanyId = userCompanies.current_company[0];
-        if (!state.cids) {
-            state.cids = this.env.services.getCookie('cids') || currentCompanyId;
-        }
-        let stateCompanyIds = state.cids.toString().split(',').map(id => parseInt(id, 10));
-        const userCompanyIds = userCompanies.allowed_companies.map(company => company[0]);
-        // Check that the user has access to all the companies
-        if (!_.isEmpty(_.difference(stateCompanyIds, userCompanyIds))) {
-            state.cids = String(currentCompanyId);
-            stateCompanyIds = [currentCompanyId];
-        }
-        this.env.session.user_context.allowed_company_ids = stateCompanyIds;
+    _getWindowHash() {
+        return window.location.hash;
     }
-    _displayNotification(params) {
-        const notifService = this.env.services.notification;
-        return notifService.notify(params);
+    _getWindowTitle() {
+        return document.title;
     }
     /**
      * FIXME: consider moving this to menu.js
@@ -229,6 +250,28 @@ class WebClient extends Component {
             return menus;
         });
     }
+    _scrollTo(scrollPosition) {
+        const scrollingEl = this.el.getElementsByClassName('o_content')[0];
+        if (!scrollingEl) {
+            return;
+        }
+        scrollingEl.scrollTop = scrollPosition.top || 0;
+        scrollingEl.scrollLeft = scrollPosition.left || 0;
+    }
+    _setWindowHash(newHash) {
+        this.ignoreHashchange = true;
+        window.location.hash = newHash;
+    }
+    _setWindowTitle(title) {
+        document.title = title;
+    }
+    _storeScrollPosition(scrollPosition) {
+        const cStack = this.renderingInfo.controllerStack;
+        const { controller } = cStack[cStack.length-2] || {};
+        if (controller) {
+            controller.scrollPosition = scrollPosition;
+        }
+    }
     /**
      * @private
      * @param {Object} state
@@ -258,46 +301,6 @@ class WebClient extends Component {
         }
         const fullTitle = this._computeTitle();
         this._setWindowTitle(fullTitle);
-    }
-    _onActionManagerUpdated(payload) {
-        const { controllerStack, dialog, onCommit, doOwlReload } = payload;
-        const breadcrumbs = [];
-        let fullscreen = false;
-        let menuID;
-        controllerStack.forEach((elm, index) =>{
-            const controller = elm.controller;
-            menuID = controller.options && controller.options.menuID || menuID;
-            if (elm.action.target === 'fullscreen') {
-                fullscreen = true;
-            }
-            const component = this.controllerComponentMap.get(controller.jsID);
-            breadcrumbs.push({
-                controllerID: controller.jsID,
-                title: component && component.title || elm.action.name,
-            });
-            controller.viewOptions = controller.viewOptions || {};
-            controller.viewOptions.breadcrumbs = breadcrumbs.slice(0, index);
-        });
-        const main = controllerStack[controllerStack.length - 1];
-        if (!menuID) {
-            if (this.state.menu_id) {
-                menuID = this.state.menu_id;
-            } else if (main) {
-                const menu = Object.values(this.menus).find(menu => {
-                    return menu.actionID === main.action.id;
-                });
-                menuID = menu && menu.id;
-            }
-        }
-        if (main) {
-            main.reload = doOwlReload !== undefined ? doOwlReload && !dialog : !dialog;
-        }
-        this.renderingInfo = {
-            main, dialog, menuID, fullscreen,
-            controllerStack, onCommit
-        };
-        this._domCleaning();
-        this.render();
     }
     _wcUpdated() {
         if (this.renderingInfo) {
@@ -352,74 +355,50 @@ class WebClient extends Component {
         this.renderingInfo = null;
         this.env.bus.trigger('web-client-updated', this);
     }
-    _domCleaning() {
-        const body = document.body;
-        // multiple bodies in tests
-        const tooltips = body.querySelectorAll('body .tooltip');
-        for (let tt of tooltips) {
-            tt.parentNode.removeChild(tt);
-        }
-    }
-    _computeTitle() {
-        const parts = Object.keys(this.titleParts).sort();
-        let tmp = "";
-        for (let part of parts) {
-            const title = this.titleParts[part];
-            if (title) {
-                tmp = tmp ? tmp + " - " + title : title;
-            }
-        }
-        return tmp;
-    }
-    /**
-     * Returns the left and top scroll positions of the main scrolling area
-     * (i.e. the '.o_content' div in desktop).
-     *
-     * @private
-     * @returns {Object} with keys left and top
-     */
-    _getScrollPosition() {
-        var scrollingEl = this.el.getElementsByClassName('o_content')[0];
-        return {
-            left: scrollingEl ? scrollingEl.scrollLeft : 0,
-            top: scrollingEl ? scrollingEl.scrollTop : 0,
-        };
-    }
-    _storeScrollPosition(scrollPosition) {
-        const cStack = this.renderingInfo.controllerStack;
-        const { controller } = cStack[cStack.length-2] || {};
-        if (controller) {
-            controller.scrollPosition = scrollPosition;
-        }
-    }
-    _setWindowTitle(title) {
-        document.title = title;
-    }
-    _getWindowTitle() {
-        return document.title;
-    }
-    _scrollTo(scrollPosition) {
-        const scrollingEl = this.el.getElementsByClassName('o_content')[0];
-        if (!scrollingEl) {
-            return;
-        }
-        scrollingEl.scrollTop = scrollPosition.top || 0;
-        scrollingEl.scrollLeft = scrollPosition.left || 0;
-    }
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     */
-    _onOpenMenu(ev) {
-        const action = this.menus[ev.detail.menuID].actionID;
-        this.actionManager.doAction(action, {
-            clear_breadcrumbs: true,
-            menuID: ev.detail.menuID,
+    _onActionManagerUpdated(payload) {
+        const { controllerStack, dialog, onCommit, doOwlReload } = payload;
+        const breadcrumbs = [];
+        let fullscreen = false;
+        let menuID;
+        controllerStack.forEach((elm, index) =>{
+            const controller = elm.controller;
+            menuID = controller.options && controller.options.menuID || menuID;
+            if (elm.action.target === 'fullscreen') {
+                fullscreen = true;
+            }
+            const component = this.controllerComponentMap.get(controller.jsID);
+            breadcrumbs.push({
+                controllerID: controller.jsID,
+                title: component && component.title || elm.action.name,
+            });
+            controller.viewOptions = controller.viewOptions || {};
+            controller.viewOptions.breadcrumbs = breadcrumbs.slice(0, index);
         });
+        const main = controllerStack[controllerStack.length - 1];
+        if (!menuID) {
+            if (this.state.menu_id) {
+                menuID = this.state.menu_id;
+            } else if (main) {
+                const menu = Object.values(this.menus).find(menu => {
+                    return menu.actionID === main.action.id;
+                });
+                menuID = menu && menu.id;
+            }
+        }
+        if (main) {
+            main.reload = doOwlReload !== undefined ? doOwlReload && !dialog : !dialog;
+        }
+        this.renderingInfo = {
+            main, dialog, menuID, fullscreen,
+            controllerStack, onCommit
+        };
+        this._domCleaning();
+        this.render();
     }
     /**
      * @private
@@ -462,12 +441,59 @@ class WebClient extends Component {
         this.actionManager.doAction({type: 'ir.actions.act_window_close'});
     }
     /**
+     * Displays a warning in a dialog or with the notification service
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {string} ev.data.message the warning's message
+     * @param {string} ev.data.title the warning's title
+     * @param {string} [ev.data.type] 'dialog' to display in a dialog
+     * @param {boolean} [ev.data.sticky] whether or not the warning should be
+     *   sticky (if displayed with the Notification)
+     */
+    _onDisplayWarning(ev) {
+        var data = ev.detail;
+        if (data.type === 'dialog') {
+            const warningDialog = new LegacyDialog.DialogAdapter(this,
+                {
+                    Component: WarningDialog,
+                    widgetArgs: {
+                        options: {title: data.title},
+                        error: data
+                    },
+                }
+            );
+            warningDialog.mount(this.el.querySelector('.o_dialogs'));
+        } else {
+            data.type = 'warning';
+            this._displayNotification(data);
+        }
+    }
+    /**
      * @private
      * @param {OdooEvent} ev
      * @param {Object} ev.detail
      */
     _onExecuteAction(ev) {
         this.actionManager.executeInFlowAction(ev.detail);
+    }
+    _onHashchange() {
+        if (!this.ignoreHashchange) {
+            const state = this._getUrlState();
+            this.loadState(state);
+        }
+        this.ignoreHashchange = false;
+        // TODO: reset oldURL in case of failure?
+     }
+    /**
+     * @private
+     */
+    _onOpenMenu(ev) {
+        const action = this.menus[ev.detail.menuID].actionID;
+        this.actionManager.doAction(action, {
+            clear_breadcrumbs: true,
+            menuID: ev.detail.menuID,
+        });
     }
     /**
      * @private
@@ -512,35 +538,6 @@ class WebClient extends Component {
         if (!this.renderingInfo) {
             const params = ev.detail;
             this._showEffect(params);
-        }
-    }
-    /**
-     * Displays a warning in a dialog or with the notification service
-     *
-     * @private
-     * @param {OdooEvent} ev
-     * @param {string} ev.data.message the warning's message
-     * @param {string} ev.data.title the warning's title
-     * @param {string} [ev.data.type] 'dialog' to display in a dialog
-     * @param {boolean} [ev.data.sticky] whether or not the warning should be
-     *   sticky (if displayed with the Notification)
-     */
-    _onDisplayWarning(ev) {
-        var data = ev.detail;
-        if (data.type === 'dialog') {
-            const warningDialog = new LegacyDialog.DialogAdapter(this,
-                {
-                    Component: WarningDialog,
-                    widgetArgs: {
-                        options: {title: data.title},
-                        error: data
-                    },
-                }
-            );
-            warningDialog.mount(this.el.querySelector('.o_dialogs'));
-        } else {
-            data.type = 'warning';
-            this._displayNotification(data);
         }
     }
 }
