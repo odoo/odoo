@@ -58,7 +58,6 @@ class TestOnchangeProductId(TransactionCase):
         with order_form.order_line.new() as line:
             line.name = product_id.name
             line.product_id = product_id
-            line.product_uom_qty = 1.0
             line.product_uom = uom_id
         sale_order = order_form.save()
 
@@ -157,15 +156,9 @@ class TestOnchangeProductId(TransactionCase):
             'product_id': computer_case.id,
         })
 
-        # force compute uom and prices
-        order_line.product_id_change()
-        order_line.product_uom_change()
-        order_line._onchange_discount()
         self.assertEqual(order_line.price_subtotal, 90, "Christmas discount pricelist rule not applied")
         self.assertEqual(order_line.discount, 10, "Christmas discount not equalt to 10%")
         order_line.product_uom = new_uom
-        order_line.product_uom_change()
-        order_line._onchange_discount()
         self.assertEqual(order_line.price_subtotal, 900, "Christmas discount pricelist rule not applied")
         self.assertEqual(order_line.discount, 10, "Christmas discount not equalt to 10%")
 
@@ -215,9 +208,6 @@ class TestOnchangeProductId(TransactionCase):
             'product_id': computer_case.id,
         })
 
-        # force compute uom and prices
-        order_line.product_id_change()
-        order_line._onchange_discount()
         self.assertEqual(order_line.price_subtotal, 81, "Second pricelist rule not applied")
         self.assertEqual(order_line.discount, 19, "Second discount not applied")
 
@@ -273,8 +263,6 @@ class TestOnchangeProductId(TransactionCase):
         })
 
         # force compute uom and prices
-        order_line.product_id_change()
         self.assertEqual(order_line.price_unit, 180, "First pricelist rule not applied")
         order_line.product_uom = new_uom
-        order_line.product_uom_change()
         self.assertEqual(order_line.price_unit, 1800, "First pricelist rule not applied")
