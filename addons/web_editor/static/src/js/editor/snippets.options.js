@@ -1695,6 +1695,229 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
     },
 });
 
+const ListUserValueWidget = UserValueWidget.extend({
+    tagName: 'we-list',
+    events: {
+        'click we-button.o_we_select_remove_option': '_onRemoveItemClick',
+        'click we-button.o_we_list_add_optional': '_onAddCustomItemClick',
+        'click we-button.o_we_list_add_existing': '_onAddExistingItemClick',
+        'click we-select.o_we_user_value_widget': '_onAddItemSelectClick',
+        'input table input': '_onListItemInput',
+    },
+
+    /**
+     * @override
+     */
+    start() {
+        this.addItemTitle = this.el.dataset.addItemTitle;
+        if (this.el.dataset.availableRecords) {
+            this.records = JSON.parse(this.el.dataset.availableRecords);
+        } else {
+            this.isCustom = true;
+        }
+        this.listTable = document.createElement('table');
+        const tableWrapper = document.createElement('div');
+        tableWrapper.classList.add('o_we_table_wrapper');
+        tableWrapper.appendChild(this.listTable);
+        this.containerEl.appendChild(tableWrapper);
+        this.el.classList.add('o_we_fw');
+        this._makeListItemsSortable();
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    getMethodsParams() {
+        return _.extend(this._super(...arguments), {
+            records: this.records,
+        });
+    },
+    /**
+     * @override
+     */
+    setValue() {
+        this._super(...arguments);
+        const currentValues = JSON.parse(this._value);
+        this.listTable.innerHTML = '';
+        if (this.addItemButton) {
+            this.addItemButton.remove();
+        }
+        if (this.isCustom) {
+            this.addItemButton = document.createElement('we-button');
+            this.addItemButton.textContent = this.addItemTitle;
+            this.addItemButton.classList.add('o_we_list_add_optional');
+            currentValues.forEach(el => this._addItemToTable(el, el));
+        } else {
+            // TODO use a real select widget ?
+            this.addItemButton = document.createElement('we-select');
+            this.addItemButton.classList.add('o_we_user_value_widget');
+            const divEl = document.createElement('div');
+            this.addItemButton.appendChild(divEl);
+            const togglerEl = document.createElement('we-toggler');
+            togglerEl.textContent = this.addItemTitle;
+            divEl.appendChild(togglerEl);
+            this.selectMenuEl = document.createElement('we-selection-items');
+            divEl.appendChild(this.selectMenuEl);
+            currentValues.forEach(val => {
+                const record = this.records.find(rec => rec.id === val);
+                this._addItemToTable(record.id, record.display_name);
+            });
+            this._reloadSelectDropdown(currentValues);
+        }
+        this.containerEl.appendChild(this.addItemButton);
+        this._makeListItemsSortable();
+    },
+
+    //----------------------------------------------------------------------
+    // Private
+    //----------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {string || integer} id
+     * @param {string} text
+     */
+    _addItemToTable(id, text) {
+        if (text === undefined) {
+            text = _t("Item");
+        }
+        const draggableEl = document.createElement('we-button');
+        draggableEl.classList.add('o_we_drag_handle', 'o_we_link', 'fa', 'fa-fw', 'fa-arrows');
+        draggableEl.dataset.noPreview = 'true';
+        const inputEl = document.createElement('input');
+        inputEl.type = 'text';
+        if (text) {
+            inputEl.value = text;
+        }
+        if (!this.isCustom && id) {
+            inputEl.name = id;
+        }
+        inputEl.disabled = !this.isCustom;
+        const trEl = document.createElement('tr');
+        const buttonEl = document.createElement('we-button');
+        buttonEl.classList.add('o_we_select_remove_option', 'o_we_link', 'o_we_text_danger', 'fa', 'fa-fw', 'fa-minus');
+        buttonEl.dataset.removeOption = id;
+        const draggableTdEl = document.createElement('td');
+        const inputTdEl = document.createElement('td');
+        const buttonTdEl = document.createElement('td');
+        draggableTdEl.appendChild(draggableEl);
+        trEl.appendChild(draggableTdEl);
+        inputTdEl.appendChild(inputEl);
+        trEl.appendChild(inputTdEl);
+        buttonTdEl.appendChild(buttonEl);
+        trEl.appendChild(buttonTdEl);
+        this.listTable.appendChild(trEl);
+        if (this.isCustom) {
+            inputEl.focus();
+        }
+    },
+    /**
+     * @private
+     */
+    _makeListItemsSortable() {
+        $(this.listTable).sortable({
+            axis: 'y',
+            handle: '.o_we_drag_handle',
+            items: 'tr',
+            cursor: 'move',
+            opacity: 0.6,
+            stop: (event, ui) => {
+                this._notifyCurrentState();
+            },
+        });
+    },
+    /**
+     * @private
+     */
+    _notifyCurrentState() {
+        const values = [...this.listTable.querySelectorAll('input')].map(el => {
+            const id = this.isCustom ? el.value : el.name;
+            const idInt = parseInt(id);
+            return isNaN(idInt) ? id : idInt;
+        });
+        if (this.isCustom) {
+            this.records = values.map(v => ({id: v, display_name: v}));
+        }
+        this._value = JSON.stringify(values);
+        this.notifyValueChange(true);
+        if (!this.isCustom) {
+            this._reloadSelectDropdown(values);
+        }
+    },
+    /**
+     * @private
+     * @param {Array} currentValues
+     */
+    _reloadSelectDropdown(currentValues) {
+        this.selectMenuEl.innerHTML = '';
+        this.records.forEach(el => {
+            if (!currentValues.includes(el.id)) {
+                const option = document.createElement('we-button');
+                option.classList.add('o_we_list_add_existing');
+                option.dataset.addOption = el.id;
+                option.dataset.noPreview = 'true';
+                const divEl = document.createElement('div');
+                divEl.textContent = el.display_name;
+                option.appendChild(divEl);
+                this.selectMenuEl.appendChild(option);
+            }
+        });
+        if (!this.selectMenuEl.children.length) {
+            const title = document.createElement('we-title');
+            title.textContent = _("No more records");
+            this.selectMenuEl.appendChild(title);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onAddCustomItemClick() {
+        this._addItemToTable();
+        this._notifyCurrentState();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onAddExistingItemClick(ev) {
+        const value = ev.currentTarget.dataset.addOption;
+        this._addItemToTable(value, ev.currentTarget.textContent);
+        this._notifyCurrentState();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onAddItemSelectClick(ev) {
+        ev.currentTarget.querySelector('we-toggler').classList.toggle('active');
+    },
+    /**
+     * @private
+     */
+    _onListItemInput() {
+        this._notifyCurrentState();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onRemoveItemClick(ev) {
+        if (ev.target.closest('table').querySelectorAll('tr').length > 1) {
+            ev.target.closest('tr').remove();
+            this._notifyCurrentState();
+        }
+    },
+});
+
 const RangeUserValueWidget = UnitUserValueWidget.extend({
     tagName: 'we-range',
     events: {
@@ -2075,6 +2298,7 @@ const userValueWidgetsRegistry = {
     'we-multi': MultiUserValueWidget,
     'we-colorpicker': ColorpickerUserValueWidget,
     'we-datetimepicker': DatetimePickerUserValueWidget,
+    'we-list': ListUserValueWidget,
     'we-imagepicker': ImagepickerUserValueWidget,
     'we-videopicker': VideopickerUserValueWidget,
     'we-range': RangeUserValueWidget,
