@@ -4095,7 +4095,7 @@ QUnit.module('ActionManager', {
         webClient.destroy();
     });
 
-    QUnit.skip('switch request to unknown view type', async function (assert) {
+    QUnit.test('switch request to unknown view type', async function (assert) {
         assert.expect(7);
 
         this.actions.push({

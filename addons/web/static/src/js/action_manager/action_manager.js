@@ -76,11 +76,9 @@ class ActionManager extends core.EventBus {
      *   rejected otherwise.
      */
     clearUncommittedChanges() {
-        const mainState = this.getCurrentState().main;
-        if (mainState && mainState.controller) {
-            return mainState.controller.component.canBeRemoved();
-        }
-        return Promise.resolve();
+        return new Promise((resolve) => {
+            this.trigger('clear-uncommitted-changes', resolve);
+        });
     }
     /**
      * Executes Odoo actions, given as an ID in database, an xml ID, a client
@@ -139,7 +137,7 @@ class ActionManager extends core.EventBus {
             });
             action = await this._transaction.add(loadActionProm);
         }
-        if (!this.currentDialogController && action.target !== 'new') {
+        if (action.target !== 'new') {
             await this.clearUncommittedChanges();
         }
         // action.target 'main' is equivalent to 'current' except that it
@@ -342,9 +340,7 @@ class ActionManager extends core.EventBus {
         if (!controllerID) {
             controllerID = this.currentStack[this.currentStack.length - 1];
         }
-        if (!this.currentDialogController) {
-            await this.clearUncommittedChanges();
-        }
+        await this.clearUncommittedChanges();
         const { action, controller } = this.getStateFromController(controllerID);
         if (action) {
             if (controller.onReverseBreadcrumb) {
@@ -387,18 +383,18 @@ class ActionManager extends core.EventBus {
         if (this.currentDialogController) {
             usedActionIDs.push(this.currentDialogController.actionID);
         }
+        const cleanedControllers = [];
         for (const controllerID in this.controllers) {
             const controller = this.controllers[controllerID];
             if (!usedActionIDs.includes(controller.actionID)) {
-                if (controller.component) { // component may not exist yet
-                    controller.component.destroy(true);
-                }
+                cleanedControllers.push(controllerID);
                 delete this.controllers[controllerID];
             }
         }
         const unusedActionIDs = Object.keys(this.actions).filter(actionID => {
             return !usedActionIDs.includes(actionID);
         });
+        this.trigger('controller-cleaned', cleanedControllers);
         unusedActionIDs.forEach(actionID => delete this.actions[actionID]);
     }
     /**

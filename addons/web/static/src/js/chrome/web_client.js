@@ -18,9 +18,25 @@ class WebClient extends Component {
     constructor() {
         super();
         this.LoadingWidget = LoadingWidget;
-        this.renderingInfo = null;
+
         this.currentControllerComponent = useRef('currentControllerComponent');
         this.currentDialogComponent = useRef('currentDialogComponent');
+        this.menu = useRef('menu');
+        this._setActionManager();
+
+        // the state of the webclient contains information like the current
+        // menu id, action id, view type (for act_window actions)...
+        this.ignoreHashchange = false;
+        this.state = {};
+
+        this.env.bus.on('show-effect', this, this._showEffect);
+        this.env.bus.on('connection_lost', this, this._onConnectionLost);
+        this.env.bus.on('connection_restored', this, this._onConnectionRestored);
+
+        this.renderingInfo = null;
+        this.controllerComponentMap = new Map();
+    }
+    _setActionManager() {
         this.actionManager = new ActionManager(this.env);
         this.actionManager.on('cancel', this, () => {
             if (this.renderingInfo) {
@@ -28,18 +44,22 @@ class WebClient extends Component {
             }
         });
         this.actionManager.on('update', this, this._onActionManagerUpdated);
-        this.menu = useRef('menu');
-
-        this.ignoreHashchange = false;
-
-        // the state of the webclient contains information like the current
-        // menu id, action id, view type (for act_window actions)...
-        this.state = {};
-        this.env.bus.on('show-effect', this, this._showEffect);
-        this.env.bus.on('connection_lost', this, this._onConnectionLost);
-        this.env.bus.on('connection_restored', this, this._onConnectionRestored);
+        this.actionManager.on('clear-uncommitted-changes', this, async (callBack) => {
+            if (!this.currentDialogComponent.comp && this.currentControllerComponent.comp) {
+                await this.currentControllerComponent.comp.canBeRemoved();
+            }
+            callBack();
+        });
+        this.actionManager.on('controller-cleaned', this, (controllerIds) => {
+            for (const jsID of controllerIds) {
+                const comp = this.controllerComponentMap.get(jsID);
+                this.controllerComponentMap.delete(jsID);
+                if (comp) {
+                    comp.destroy(true);
+                }
+            }
+        });
     }
-
     get titleParts() {
         this._titleParts = this._titleParts || {};
         return this._titleParts;
@@ -250,7 +270,7 @@ class WebClient extends Component {
             if (elm.action.target === 'fullscreen') {
                 fullscreen = true;
             }
-            const component = controller.component;
+            const component = this.controllerComponentMap.get(controller.jsID);
             breadcrumbs.push({
                 controllerID: controller.jsID,
                 title: component && component.title || elm.action.name,
@@ -285,7 +305,7 @@ class WebClient extends Component {
             if (this.renderingInfo.main) {
                 const main = this.renderingInfo.main;
                 const mainComponent = this.currentControllerComponent.comp;
-                main.controller.component = mainComponent;
+                this.controllerComponentMap.set(main.controller.jsID, mainComponent);
                 Object.assign(state, mainComponent.getState());
                 state.action = main.action.id;
                 let active_id = null;
@@ -316,7 +336,7 @@ class WebClient extends Component {
                 }
             }
             if (this.renderingInfo.dialog) {
-                this.renderingInfo.dialog.controller.component = this.currentDialogComponent.comp;
+                this.controllerComponentMap.set(this.renderingInfo.dialog.controller.jsID, this.currentDialogComponent.comp);
             }
             const newStack = this.renderingInfo.controllerStack;
             const newDialog = this.renderingInfo.dialog;
