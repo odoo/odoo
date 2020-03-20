@@ -126,7 +126,7 @@ class WebClient extends Component {
         if (this.renderingInfo) {
             const newStack = this.renderingInfo.controllerStack;
             const newDialog = this.renderingInfo.dialog;
-            this.actionManager.rollback(newStack, newDialog);
+            this.actionManager.rollBack(newStack, newDialog);
         }
         this.actionManager.restoreController();
     }

@@ -18,7 +18,6 @@ class ActionManager extends core.EventBus {
         // TODO control Plugin.type
         ActionManager.Plugins[Plugin.type] = Plugin;
     }
-
     constructor(env) {
         super();
         this.env = env;
@@ -42,7 +41,7 @@ class ActionManager extends core.EventBus {
         // Before switching views, an event is triggered
         // containing the state of the current controller
         this.env.bus.on('legacy-export-state', this, payload => {
-            this.legacyStateExported(payload);
+            this._legacyStateExported(payload);
         });
         this.env.bus.on('history-back', this, this._onHistoryBack);
         this.plugins = new WeakMap();
@@ -66,20 +65,6 @@ class ActionManager extends core.EventBus {
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * This function is called when the current controller is about to be
-     * removed from the DOM, because a new one will be pushed, or an old one
-     * will be restored. It ensures that the current controller can be left (for
-     * instance, that it has no unsaved changes).
-     *
-     * @returns {Promise} resolved if the current controller can be left,
-     *   rejected otherwise.
-     */
-    clearUncommittedChanges() {
-        return new Promise((resolve) => {
-            this.trigger('clear-uncommitted-changes', resolve);
-        });
-    }
     /**
      * Executes Odoo actions, given as an ID in database, an xml ID, a client
      * action tag or an action descriptor.
@@ -138,7 +123,7 @@ class ActionManager extends core.EventBus {
             action = await this._transaction.add(loadActionProm);
         }
         if (action.target !== 'new') {
-            await this.clearUncommittedChanges();
+            await this._clearUncommittedChanges();
         }
         // action.target 'main' is equivalent to 'current' except that it
         // also clears the breadcrumbs
@@ -273,13 +258,6 @@ class ActionManager extends core.EventBus {
         action.flags = Object.assign({}, action.flags, { searchPanelDefaultNoFilter: true });
         return this.doAction(action, options);
     }
-    getStateFromController(controllerID) {
-        const controller = this.controllers[controllerID];
-        return {
-            action: controller && this.actions[controller.actionID],
-            controller: controller,
-        };
-    }
     /**
      * @returns {Object}
      */
@@ -290,7 +268,7 @@ class ActionManager extends core.EventBus {
         };
         const currentControllerID = this.currentStack[this.currentStack.length - 1];
         if (currentControllerID) {
-            const {action, controller} = this.getStateFromController(currentControllerID);
+            const {action, controller} = this._getStateFromController(currentControllerID);
             res.main = {
                 action: action,
                 controller: controller,
@@ -298,7 +276,7 @@ class ActionManager extends core.EventBus {
          }
          if (this.currentDialogController) {
              res.dialog = {
-                 action: this.getStateFromController(this.currentDialogController.jsID).action,
+                 action: this._getStateFromController(this.currentDialogController.jsID).action,
                  controller: this.currentDialogController,
               }
          }
@@ -326,6 +304,19 @@ class ActionManager extends core.EventBus {
         }
         return result;
     }
+    makeBaseController(action, params) {
+        const controllerID = params.controllerID || this._nextID('controller');
+        const index = this._getControllerStackIndex(params);
+        const newController = {
+            actionID: action.jsID,
+            Component: params.Component,
+            index: index,
+            jsID: controllerID,
+        };
+        action.controller = newController;
+        this.controllers[controllerID] = newController;
+        return newController;
+    }
     /**
      * Restores a controller from the controllerStack and removes all
      * controllers stacked over the given controller (called when coming back
@@ -340,8 +331,8 @@ class ActionManager extends core.EventBus {
         if (!controllerID) {
             controllerID = this.currentStack[this.currentStack.length - 1];
         }
-        await this.clearUncommittedChanges();
-        const { action, controller } = this.getStateFromController(controllerID);
+        await this._clearUncommittedChanges();
+        const { action, controller } = this._getStateFromController(controllerID);
         if (action) {
             if (controller.onReverseBreadcrumb) {
                 await controller.onReverseBreadcrumb();
@@ -353,166 +344,9 @@ class ActionManager extends core.EventBus {
             }
         }
         this.pushControllers([this.controllers[controllerID]]);
-
-        // AAB: AbstractAction should define a proper hook to execute code when
-        // it is restored (other than do_show), and it should return a promise
-        // var def;
-        // if (action.on_reverse_breadcrumb) {
-        //     def = action.on_reverse_breadcrumb();
-        // }
-        // return Promise.resolve(def).then(function () {
-        //     return Promise.resolve(controller.widget.do_show()).then(function () {
-        //         var index = _.indexOf(self.controllerStack, controllerID);
-        //         self.pushControllers(controller, index);
-        //     });
-        // });
-    }
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Cleans this.actions and this.controllers according to the current stack.
-     *
-     * @private
-     */
-    _cleanActions() {
-        const usedActionIDs = this.currentStack.map(controllerID => {
-            return this.controllers[controllerID].actionID;
-        });
-        if (this.currentDialogController) {
-            usedActionIDs.push(this.currentDialogController.actionID);
-        }
-        const cleanedControllers = [];
-        for (const controllerID in this.controllers) {
-            const controller = this.controllers[controllerID];
-            if (!usedActionIDs.includes(controller.actionID)) {
-                cleanedControllers.push(controllerID);
-                delete this.controllers[controllerID];
-            }
-        }
-        const unusedActionIDs = Object.keys(this.actions).filter(actionID => {
-            return !usedActionIDs.includes(actionID);
-        });
-        this.trigger('controller-cleaned', cleanedControllers);
-        unusedActionIDs.forEach(actionID => delete this.actions[actionID]);
-    }
-    /**
-     * Returns the index where a controller should be inserted in the controller
-     * stack according to the given options. By default, a controller is pushed
-     * on the top of the stack.
-     *
-     * @private
-     * @param {options} [options.clear_breadcrumbs=false] if true, insert at
-     *   index 0 and remove all other controllers
-     * @param {options} [options.index=null] if given, that index is returned
-     * @param {options} [options.replace_last_action=false] if true, replace the
-     *   last controller of the stack
-     * @returns {integer} index
-     */
-    _getControllerStackIndex(options) {
-        let index;
-        if ('index' in options) {
-            index = options.index;
-        } else if (options.clear_breadcrumbs) {
-            index = 0;
-        } else if (options.replace_last_action) {
-            index = this.currentStack.length - 1;
-        } else {
-            index = this.currentStack.length;
-        }
-        return index;
-    }
-    makeBaseController(action, params) {
-        const controllerID = params.controllerID || this._nextID('controller');
-        const index = this._getControllerStackIndex(params);
-        const newController = {
-            actionID: action.jsID,
-            Component: params.Component,
-            index: index,
-            jsID: controllerID,
-        };
-        action.controller = newController;
-        this.controllers[controllerID] = newController;
-        return newController;
-    }
-    _getPlugin(actionType) {
-        const Plugin = ActionManager.Plugins[actionType];
-        if (!Plugin) {
-            console.error(`The ActionManager can't handle actions of type ${actionType}`);
-            return null;
-        }
-        let plugin = this.plugins.get(Plugin);
-        if (!plugin) {
-            plugin = new Plugin(this, this.env);
-            this.plugins.set(Plugin, plugin);
-        }
-        return plugin;
-    }
-    /**
-     * Dispatches the given action to the corresponding handler to execute it,
-     * according to its type. This function can be overridden to extend the
-     * range of supported action types.
-     *
-     * @private
-     * @param {Object} action
-     * @param {string} action.type
-     * @param {Object} options
-     * @returns {Promise} resolved when the action has been executed ; rejected
-     *   if the type of action isn't supported, or if the action can't be
-     *   executed
-     */
-    _handleAction(action, options) {
-        if (!action.type) {
-            console.error(`No type for action ${action}`);
-            return Promise.reject();
-        }
-        const plugin = this._getPlugin(action.type);
-        if (!plugin) {return Promise.reject();}
-        try {
-            return plugin.executeAction(action, options);
-        } catch (e) {
-            if (e.message === 'Plugin Error') {
-                return this.restoreController();
-            } else {
-                throw e;
-            }
-        }
-    }
-    _nextID(type) {
-        return `${type}${this.constructor.nextID++}`;
-    }
-    legacyStateExported(payload) {
-        const { action } = this.getCurrentState().main;
-        Object.assign(action, payload.commonState);
-        action.controllerState = Object.assign({}, action.controllerState, payload.controllerState);
     }
     rpc() {
         return this.env.services.rpc(...arguments);
-    }
-    /**
-     * Preprocesses the action before it is handled by the ActionManager
-     * (assigns a JS id, evaluates its context and domains...).
-     *
-     * @param {Object} action
-     * @param {Object} options
-     * @returns {Object} shallow copy of action with some new/updated values
-     */
-    _preprocessAction(action, options) {
-        action = Object.assign({}, action);
-
-        // ensure that the context and domain are evaluated
-        var context = new Context(this.env.session.user_context, options.additional_context, action.context);
-        action.context = pyUtils.eval('context', context);
-        if (action.domain) {
-            action.domain = pyUtils.eval('domain', action.domain, action.context);
-        }
-
-        action._originalAction = JSON.stringify(action);
-        action.jsID = this._nextID('action');
-        // action.pushState = options.pushState;
-
-        return action;
     }
     /**
      * Updates the pendingStack with a given controller. It triggers a rendering
@@ -606,7 +440,7 @@ class ActionManager extends core.EventBus {
         }
         this._cleanActions();
     }
-    rollback(newStack, newDialog) {
+    rollBack(newStack, newDialog) {
         let controller;
         if (!newDialog) {
             const main = newStack[newStack.length - 1];
@@ -618,6 +452,162 @@ class ActionManager extends core.EventBus {
             controller.options.on_fail();
         }
     }
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Cleans this.actions and this.controllers according to the current stack.
+     *
+     * @private
+     */
+    _cleanActions() {
+        const usedActionIDs = this.currentStack.map(controllerID => {
+            return this.controllers[controllerID].actionID;
+        });
+        if (this.currentDialogController) {
+            usedActionIDs.push(this.currentDialogController.actionID);
+        }
+        const cleanedControllers = [];
+        for (const controllerID in this.controllers) {
+            const controller = this.controllers[controllerID];
+            if (!usedActionIDs.includes(controller.actionID)) {
+                cleanedControllers.push(controllerID);
+                delete this.controllers[controllerID];
+            }
+        }
+        const unusedActionIDs = Object.keys(this.actions).filter(actionID => {
+            return !usedActionIDs.includes(actionID);
+        });
+        this.trigger('controller-cleaned', cleanedControllers);
+        unusedActionIDs.forEach(actionID => delete this.actions[actionID]);
+    }
+    /**
+     * This function is called when the current controller is about to be
+     * removed from the DOM, because a new one will be pushed, or an old one
+     * will be restored. It ensures that the current controller can be left (for
+     * instance, that it has no unsaved changes).
+     *
+     * @returns {Promise} resolved if the current controller can be left,
+     *   rejected otherwise.
+     */
+    _clearUncommittedChanges() {
+        return new Promise((resolve) => {
+            this.trigger('clear-uncommitted-changes', resolve);
+        });
+    }
+    /**
+     * Returns the index where a controller should be inserted in the controller
+     * stack according to the given options. By default, a controller is pushed
+     * on the top of the stack.
+     *
+     * @private
+     * @param {options} [options.clear_breadcrumbs=false] if true, insert at
+     *   index 0 and remove all other controllers
+     * @param {options} [options.index=null] if given, that index is returned
+     * @param {options} [options.replace_last_action=false] if true, replace the
+     *   last controller of the stack
+     * @returns {integer} index
+     */
+    _getControllerStackIndex(options) {
+        let index;
+        if ('index' in options) {
+            index = options.index;
+        } else if (options.clear_breadcrumbs) {
+            index = 0;
+        } else if (options.replace_last_action) {
+            index = this.currentStack.length - 1;
+        } else {
+            index = this.currentStack.length;
+        }
+        return index;
+    }
+    _getPlugin(actionType) {
+        const Plugin = ActionManager.Plugins[actionType];
+        if (!Plugin) {
+            console.error(`The ActionManager can't handle actions of type ${actionType}`);
+            return null;
+        }
+        let plugin = this.plugins.get(Plugin);
+        if (!plugin) {
+            plugin = new Plugin(this, this.env);
+            this.plugins.set(Plugin, plugin);
+        }
+        return plugin;
+    }
+    _getStateFromController(controllerID) {
+        const controller = this.controllers[controllerID];
+        return {
+            action: controller && this.actions[controller.actionID],
+            controller: controller,
+        };
+    }
+    /**
+     * Dispatches the given action to the corresponding handler to execute it,
+     * according to its type. This function can be overridden to extend the
+     * range of supported action types.
+     *
+     * @private
+     * @param {Object} action
+     * @param {string} action.type
+     * @param {Object} options
+     * @returns {Promise} resolved when the action has been executed ; rejected
+     *   if the type of action isn't supported, or if the action can't be
+     *   executed
+     */
+    _handleAction(action, options) {
+        if (!action.type) {
+            console.error(`No type for action ${action}`);
+            return Promise.reject();
+        }
+        const plugin = this._getPlugin(action.type);
+        if (!plugin) {return Promise.reject();}
+        try {
+            return plugin.executeAction(action, options);
+        } catch (e) {
+            if (e.message === 'Plugin Error') {
+                return this.restoreController();
+            } else {
+                throw e;
+            }
+        }
+    }
+    _legacyStateExported(payload) {
+        const { action } = this.getCurrentState().main;
+        Object.assign(action, payload.commonState);
+        action.controllerState = Object.assign({}, action.controllerState, payload.controllerState);
+    }
+    _nextID(type) {
+        return `${type}${this.constructor.nextID++}`;
+    }
+    /**
+     * Preprocesses the action before it is handled by the ActionManager
+     * (assigns a JS id, evaluates its context and domains...).
+     *
+     * @param {Object} action
+     * @param {Object} options
+     * @returns {Object} shallow copy of action with some new/updated values
+     */
+    _preprocessAction(action, options) {
+        action = Object.assign({}, action);
+
+        // ensure that the context and domain are evaluated
+        var context = new Context(this.env.session.user_context, options.additional_context, action.context);
+        action.context = pyUtils.eval('context', context);
+        if (action.domain) {
+            action.domain = pyUtils.eval('domain', action.domain, action.context);
+        }
+
+        action._originalAction = JSON.stringify(action);
+        action.jsID = this._nextID('action');
+        // action.pushState = options.pushState;
+
+        return action;
+    }
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
     /**
      * Goes back in the history: if a controller is opened in a dialog, closes
      * the dialog, otherwise, restores the second to last controller from the
