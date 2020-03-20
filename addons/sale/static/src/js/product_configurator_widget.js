@@ -116,7 +116,7 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
      */
     reset: async function (record, ev) {
         await this._super(...arguments);
-        if (ev.target === this) {
+        if (ev && ev.target === this) {
             if (ev.data.changes && !ev.data.preventProductIdCheck && ev.data.changes.product_template_id) {
                 this._onTemplateChange(record.data.product_template_id.data.id, ev.data.dataPointID);
             } else if (ev.data.changes && ev.data.changes.product_id) {
