@@ -468,8 +468,11 @@ class ResPartner(models.Model):
             return False
         return True
 
-    def _fix_vat_number(self, vat):
+    def _fix_vat_number(self, vat, country_id):
+        code = self.env['res.country'].browse(country_id).code if country_id else False
         vat_country, vat_number = self._split_vat(vat)
+        if code and code.lower() != vat_country:
+            return vat
         stdnum_vat_fix_func = getattr(stdnum.util.get_cc_module(vat_country, 'vat'), 'compact', None)
         #If any localization module need to define vat fix method for it's country then we give first priority to it.
         format_func_name = 'format_vat_' + vat_country
@@ -481,10 +484,12 @@ class ResPartner(models.Model):
     @api.model
     def create(self, values):
         if values.get('vat'):
-            values['vat'] = self._fix_vat_number(values['vat'])
+            country_id = values.get('country_id')
+            values['vat'] = self._fix_vat_number(values['vat'], country_id)
         return super(ResPartner, self).create(values)
 
     def write(self, values):
         if values.get('vat'):
-            values['vat'] = self._fix_vat_number(values['vat'])
+            country_id = values.get('country_id', self.country_id.id)
+            values['vat'] = self._fix_vat_number(values['vat'], country_id)
         return super(ResPartner, self).write(values)
