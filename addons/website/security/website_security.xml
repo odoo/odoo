@@ -27,6 +27,8 @@
         <field name="implied_ids" eval="[(4, ref('website.group_website_designer'))]"/>
     </record>
 
+    <data noupdate="1">
+
     <record id="website_menu" model="ir.rule">
         <field name="name">Website menu: group_ids</field>
         <field name="model_id" ref="model_website_menu"/>
@@ -90,4 +92,6 @@
         <field name="perm_unlink" eval="False"/>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>
+
+    </data>
 </odoo>

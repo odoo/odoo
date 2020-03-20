@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
-<odoo>
+<odoo noupdate="1">
     <record id="note_note_rule_global" model="ir.rule">
         <field name="name">Only followers can access a sticky notes</field>
         <field name="model_id" ref="model_note_note"/>
         <field name="domain_force">['|', ('user_id', '=', user.id), ('message_partner_ids', '=', user.partner_id.id)]</field>
-        <field name="global" eval="True"/>
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
     </record>
@@ -13,7 +12,6 @@
         <field name="name">note: create / unlink: responsible</field>
         <field name="model_id" ref="model_note_note"/>
         <field name="domain_force">[('user_id', '=', user.id)]</field>
-        <field name="global" eval="True"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_read" eval="False"/>
     </record>
@@ -22,7 +20,6 @@
         <field name="name">Each user have his stage name</field>
         <field name="model_id" ref="model_note_stage"/>
         <field name="domain_force">['|',('user_id','=',False),('user_id','=',user.id)]</field>
-        <field name="global" eval="True"/>
     </record>
 
 </odoo>
