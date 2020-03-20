@@ -317,9 +317,6 @@ class ActionManager extends core.EventBus {
      * @param {string} controllerID
      */
     async restoreController(controllerID) {
-        // TODO
-        //  - move logic from act window (clear uncommitted changes + on _reverse_bc)
-        //  - add hook onRestoreController (async)
         if (!controllerID) {
             controllerID = this.currentStack[this.currentStack.length - 1];
         }
@@ -329,7 +326,6 @@ class ActionManager extends core.EventBus {
             if (controller.onReverseBreadcrumb) {
                 await controller.onReverseBreadcrumb();
             }
-            // TODO: call willRestore here?
             const plugin = this._getPlugin(action.type);
             if (plugin.restoreControllerHook) {
                 return plugin.restoreControllerHook(action, controller);
@@ -594,11 +590,8 @@ class ActionManager extends core.EventBus {
         if (action.domain) {
             action.domain = pyUtils.eval('domain', action.domain, action.context);
         }
-
         action._originalAction = JSON.stringify(action);
         action.jsID = this._nextID('action');
-        // action.pushState = options.pushState;
-
         return action;
     }
     //--------------------------------------------------------------------------

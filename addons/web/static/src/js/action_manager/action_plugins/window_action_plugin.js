@@ -21,122 +21,6 @@ odoo.define('web.WindowActionPlugin', function (require) {
         //--------------------------------------------------------------------------
 
         /**
-         * @override
-         */
-        loadState(state, options) {
-            let action;
-            if (state.action) {
-                const mainDescriptors = this._getMainActionDescriptors();
-                const currentAction = mainDescriptors.action;
-                const currentController = mainDescriptors.controller;
-                if (currentAction && currentAction.id === state.action &&
-                    currentAction.type === 'ir.actions.act_window') {
-                    // the action to load is already the current one, so update it
-                    // this._closeDialog(true); // there may be a currently opened dialog, close it // FIXME
-                    var viewOptions = {currentId: state.id};
-                    var viewType = state.view_type || currentController.viewType;
-                    return this._switchController(currentAction, viewType, viewOptions);
-                } else if (!action_registry.contains(state.action)) {
-                    // the action to load isn't the current one, so execute it
-                    var context = {};
-                    if (state.active_id) {
-                        context.active_id = state.active_id;
-                    }
-                    if (state.active_ids) {
-                        context.active_ids = state.active_ids.split(',').map(function (id) {
-                            return parseInt(id, 10) || id;
-                        });
-                    } else if (state.active_id) {
-                        context.active_ids = [state.active_id];
-                    }
-                    context.params = state;
-                    action = state.action;
-                    options = Object.assign(options, {
-                        additional_context: context,
-                        resID: state.id || undefined, // empty string with bbq
-                        viewType: state.view_type,
-                    });
-                }
-            } else if (state.model && state.id) {
-                action = {
-                    res_model: state.model,
-                    res_id: state.id,
-                    type: 'ir.actions.act_window',
-                    views: [[state.view_id || false, 'form']],
-                };
-            } else if (state.model && state.view_type) {
-                // this is a window action on a multi-record view, so restore it
-                // from the session storage
-                const storedAction = this.env.services.session_storage.getItem('current_action');
-                const lastAction = JSON.parse(storedAction || '{}');
-                if (lastAction.res_model === state.model) {
-                    action = lastAction;
-                    options.viewType = state.view_type;
-                }
-            }
-            if (action) {
-                return this.doAction(action, options);
-            }
-        }
-
-        //--------------------------------------------------------------------------
-        // Private
-        //--------------------------------------------------------------------------
-
-        /**
-         * Instantiates the controller for a given action and view type, and adds it
-         * to the list of controllers in the action.
-         *
-         * @private
-         * @param {Object} action
-         * @param {AbstractController[]} action.controllers the already created
-         *   controllers for this action
-         * @param {Object[]} action.views the views available for the action, each
-         *   one containing its fieldsView
-         * @param {Object} action.env
-         * @param {string} viewType
-         * @param {Object} [viewOptions] dict of options passed to the initialization
-         *   of the controller's widget
-         * @param {Object} [options]
-         * @param {string} [options.controllerID=false] when the controller has
-         *   previously been lazy-loaded, we want to keep its jsID when loading it
-         * @param {integer} [options.index=0] the controller's index in the stack
-         * @param {boolean} [options.lazy=false] set to true to differ the
-         *   initialization of the controller's widget
-         */
-        _createViewController(action, viewType, viewOptions, options) {
-            options = options || {};
-            if (action.controllers[viewType]) {
-                action.controller = action.controllers[viewType];
-                if (action.controllerState && action.controllerState.currentId) {
-                   action.controller.viewOptions.currentId = action.controllerState.currentId;
-                }
-                delete action.controller.viewOptions.mode;
-                Object.assign(action.controller.viewOptions, viewOptions);
-                return;
-            }
-
-            const viewDescr = action.views.find(view => view.type === viewType);
-            if (!viewDescr) {
-                throw new Error('Plugin Error');
-            }
-            const params = Object.assign({}, options, {Component: viewDescr.View});
-            const newController = this.makeBaseController(action, params);
-            // build the view options from different sources
-            const flags = action.flags || {};
-            viewOptions = Object.assign({}, flags, flags[viewType], viewOptions, {
-                action: action,
-                // pass the controllerID to the views as an hook for further communication
-                controllerID: newController.jsID,
-            });
-            Object.assign(newController, {
-                className: 'o_act_window', // used to remove the padding in dialogs
-                viewType,
-                viewOptions
-            });
-            action.controllers[viewType] = newController;
-        }
-        /**
          * Executes actions of type 'ir.actions.act_window'.
          *
          * @override
@@ -197,6 +81,137 @@ odoo.define('web.WindowActionPlugin', function (require) {
             action.controller.options = options;
             controllers.push(action.controller);
             this.pushControllers(controllers);
+        }
+        /**
+         * @override
+         */
+        loadState(state, options) {
+            let action;
+            if (state.action) {
+                const mainDescriptors = this._getMainActionDescriptors();
+                const currentAction = mainDescriptors.action;
+                const currentController = mainDescriptors.controller;
+                if (currentAction && currentAction.id === state.action &&
+                    currentAction.type === 'ir.actions.act_window') {
+                    // the action to load is already the current one, so update it
+                    // this._closeDialog(true); // there may be a currently opened dialog, close it // FIXME
+                    var viewOptions = {currentId: state.id};
+                    var viewType = state.view_type || currentController.viewType;
+                    return this._switchController(currentAction, viewType, viewOptions);
+                } else if (!action_registry.contains(state.action)) {
+                    // the action to load isn't the current one, so execute it
+                    var context = {};
+                    if (state.active_id) {
+                        context.active_id = state.active_id;
+                    }
+                    if (state.active_ids) {
+                        context.active_ids = state.active_ids.split(',').map(function (id) {
+                            return parseInt(id, 10) || id;
+                        });
+                    } else if (state.active_id) {
+                        context.active_ids = [state.active_id];
+                    }
+                    context.params = state;
+                    action = state.action;
+                    options = Object.assign(options, {
+                        additional_context: context,
+                        resID: state.id || undefined, // empty string with bbq
+                        viewType: state.view_type,
+                    });
+                }
+            } else if (state.model && state.id) {
+                action = {
+                    res_model: state.model,
+                    res_id: state.id,
+                    type: 'ir.actions.act_window',
+                    views: [[state.view_id || false, 'form']],
+                };
+            } else if (state.model && state.view_type) {
+                // this is a window action on a multi-record view, so restore it
+                // from the session storage
+                const storedAction = this.env.services.session_storage.getItem('current_action');
+                const lastAction = JSON.parse(storedAction || '{}');
+                if (lastAction.res_model === state.model) {
+                    action = lastAction;
+                    options.viewType = state.view_type;
+                }
+            }
+            if (action) {
+                return this.doAction(action, options);
+            }
+        }
+        /**
+         * Overrides to handle the case where the controller to restore is from an
+         * 'ir.actions.act_window' action. In this case we simply switch to this
+         * controller.
+         *
+         * For instance, when going back to the list controller from a form
+         * controller of the same action using the breadcrumbs, the form controller
+         * is kept, as it might be reused in the future.
+         *
+         * @override
+         * @private
+         */
+        restoreControllerHook(action, controller) {
+            this._switchController(action, controller.viewType);
+        }
+
+        //--------------------------------------------------------------------------
+        // Private
+        //--------------------------------------------------------------------------
+
+        /**
+         * Instantiates the controller for a given action and view type, and adds it
+         * to the list of controllers in the action.
+         *
+         * @private
+         * @param {Object} action
+         * @param {AbstractController[]} action.controllers the already created
+         *   controllers for this action
+         * @param {Object[]} action.views the views available for the action, each
+         *   one containing its fieldsView
+         * @param {Object} action.env
+         * @param {string} viewType
+         * @param {Object} [viewOptions] dict of options passed to the initialization
+         *   of the controller's widget
+         * @param {Object} [options]
+         * @param {string} [options.controllerID=false] when the controller has
+         *   previously been lazy-loaded, we want to keep its jsID when loading it
+         * @param {integer} [options.index=0] the controller's index in the stack
+         * @param {boolean} [options.lazy=false] set to true to differ the
+         *   initialization of the controller's widget
+         */
+        _createViewController(action, viewType, viewOptions, options) {
+            options = options || {};
+            if (action.controllers[viewType]) {
+                action.controller = action.controllers[viewType];
+                if (action.controllerState && action.controllerState.currentId) {
+                   action.controller.viewOptions.currentId = action.controllerState.currentId;
+                }
+                delete action.controller.viewOptions.mode;
+                Object.assign(action.controller.viewOptions, viewOptions);
+                return;
+            }
+
+            const viewDescr = action.views.find(view => view.type === viewType);
+            if (!viewDescr) {
+                throw new Error('Plugin Error');
+            }
+            const params = Object.assign({}, options, {Component: viewDescr.View});
+            const newController = this.makeBaseController(action, params);
+            // build the view options from different sources
+            const flags = action.flags || {};
+            viewOptions = Object.assign({}, flags, flags[viewType], viewOptions, {
+                action: action,
+                // pass the controllerID to the views as an hook for further communication
+                controllerID: newController.jsID,
+            });
+            Object.assign(newController, {
+                className: 'o_act_window', // used to remove the padding in dialogs
+                viewType,
+                viewOptions
+            });
+            action.controllers[viewType] = newController;
         }
         /**
          * Helper function to find the first mobile-friendly view, if any.
@@ -282,21 +297,6 @@ odoo.define('web.WindowActionPlugin', function (require) {
                 views_descr: views,
             };
             return this.env.dataManager.load_views(params, options);
-        }
-        /**
-         * Overrides to handle the case where the controller to restore is from an
-         * 'ir.actions.act_window' action. In this case we simply switch to this
-         * controller.
-         *
-         * For instance, when going back to the list controller from a form
-         * controller of the same action using the breadcrumbs, the form controller
-         * is kept, as it might be reused in the future.
-         *
-         * @override
-         * @private
-         */
-        restoreControllerHook(action, controller) {
-            this._switchController(action, controller.viewType);
         }
         /**
          * Handles the switch from a controller to another (either inside the same
