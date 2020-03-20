@@ -262,13 +262,18 @@
         <!-- Generic one2many -->
         <t t-if="field.relation != 'ir.attachment'">
             <t t-call="website_form.field">
-                <select class="form-control s_website_form_input" t-att-name="field.name" t-att-required="field.required || field.modelRequired || None" t-att-id="field.id">
+                <select class="form-control s_website_form_input" t-att-name="field.name" t-att-required="field.required || field.modelRequired || None" t-att-id="field.id" style="display: none">
                     <t t-foreach="field.records" t-as="record">
                         <option t-att-value="record.id" t-att-selected="record.selected">
                             <t t-esc="record.display_name"/>
                         </option>
                     </t>
                 </select>
+                <div id="editable_select" class="form-control s_website_form_input">
+                    <t t-foreach="field.records" t-as="record">
+                        <div t-esc="record.display_name" t-att-id="record.id" class="s_website_form_select_item"/>
+                    </t>
+                </div>
             </t>
         </t>
     </t>
