@@ -810,7 +810,13 @@ class Website(models.Model):
     def image_url(self, record, field, size=None):
         """ Returns a local url that points to the image field of a given browse record. """
         sudo_record = record.sudo()
-        sha = hashlib.sha1(str(getattr(sudo_record, '__last_update')).encode('utf-8')).hexdigest()[0:7]
+        last_update = self.env['ir.attachment'].sudo()\
+            .search_read([('res_model', '=', record._name),
+                          ('res_field', '=', field),
+                          ('res_id', 'in', [sudo_record.id])],
+                         ['write_date'])
+        last_update = last_update and str(last_update[0]['write_date']) or str(getattr(sudo_record, '__last_update'))
+        sha = hashlib.sha1(last_update.encode('utf-8')).hexdigest()[0:7]
         size = '' if size is None else '/%s' % size
         return '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, field, size, sha)
 

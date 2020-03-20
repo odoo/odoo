@@ -43,7 +43,13 @@ class Image(models.AbstractModel):
             if max_width or max_height:
                 max_size = '%sx%s' % (max_width, max_height)
 
-        sha = hashlib.sha1(str(getattr(record, '__last_update')).encode('utf-8')).hexdigest()[0:7]
+        last_update = self.env['ir.attachment'].sudo()\
+            .search_read([('res_model', '=', record._name),
+                          ('res_field', '=', field_name),
+                          ('res_id', 'in', [record.id])],
+                         ['write_date'])
+        last_update = last_update and str(last_update[0]['write_date']) or str(getattr(record, '__last_update'))
+        sha = hashlib.sha1(last_update.encode('utf-8')).hexdigest()[0:7]
         max_size = '' if max_size is None else '/%s' % max_size
 
         if options.get('filename-field') and getattr(record, options['filename-field'], None):
