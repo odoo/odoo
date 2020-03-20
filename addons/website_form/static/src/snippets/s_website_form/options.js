@@ -259,6 +259,14 @@ const FieldEditor = FormEditor.extend({
         const textarea = this.$target[0].querySelector('textarea');
         const input = this.$target[0].querySelector('input[type="text"], input[type="email"], input[type="number"], input[type="tel"], input[type="url"], textarea');
         field.placeholder = input && input.placeholder;
+        if (input) {
+            // textarea value has no attribute,  date/datetime timestamp property is formated
+            field.value = input.getAttribute('value') || input.value;
+        } else if (field.type === 'boolean') {
+            field.value = !!this.$target[0].querySelector('input[type="checkbox"][checked]');
+        }
+        // property value is needed for date/datetime (formated date).
+        field.propertyValue = input && input.value;
         field.rows = textarea && textarea.rows;
         field.required = classList.contains('s_website_form_required');
         field.modelRequired = classList.contains('s_website_form_model_required');
@@ -837,6 +845,19 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         await this._replaceField(field);
     },
     /**
+     * Select the textarea default value
+     */
+    selectTextareaValue: function (previewMode, value, params) {
+        this.$target[0].textContent = value;
+        this.$target[0].value = value;
+    },
+    /**
+     * Select the date as value property and convert it to the right format
+     */
+    selectValueProperty: function (previewMode, value, params) {
+        this.$target[0].value = value ? moment.unix(value).format(params.format) : '';
+    },
+    /**
      * Select the display of the multicheckbox field (vertical & horizontal)
      */
     multiCheckboxDisplay: function (previewMode, value, params) {
@@ -891,6 +912,10 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 return this._getLabelPosition();
             case 'selectType':
                 return this._getFieldType();
+            case 'selectTextareaValue':
+                return this.$target[0].textContent;
+            case 'selectValueProperty':
+                return this.$target[0].getAttribute('value') || '';
             case 'multiCheckboxDisplay': {
                 const target = this._getMultipleInputs();
                 return target ? target.dataset.display : '';
@@ -950,6 +975,13 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         list.dataset.addItemTitle = _.str.sprintf(_t("Add new %s"), optionText);
         list.dataset.renderListItems = '';
 
+        list.dataset.hasDefault = ['one2many', 'many2many'].includes(type) ? 'multiple' : 'unique';
+        const defaults = [...this.$target[0].querySelectorAll('[checked], [selected]')].map(el => {
+            const idInt = parseInt(el.value);
+            return isNaN(idInt) ? el.value : idInt;
+        });
+        list.dataset.defaults = JSON.stringify(defaults);
+
         if (!this._isFieldCustom()) {
             await this._fetchFieldRecords(field);
             list.dataset.availableRecords = JSON.stringify(field.records);
@@ -965,11 +997,16 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     _replaceField: async function (field) {
         await this._fetchFieldRecords(field);
+        const activeField = this._getActiveField();
+        if (activeField.type !== field.type) {
+            field.value = '';
+        }
         const htmlField = this._renderField(field);
         [...this.$target[0].childNodes].forEach(node => node.remove());
         [...htmlField.childNodes].forEach(node => this.$target[0].appendChild(node));
         [...htmlField.attributes].forEach(el => this.$target[0].removeAttribute(el.nodeName));
         [...htmlField.attributes].forEach(el => this.$target[0].setAttribute(el.nodeName, el.nodeValue));
+        this.$target[0].querySelectorAll('input.datetimepicker-input').forEach(el => el.value = field.propertyValue);
     },
     /**
      * @private
@@ -985,9 +1022,11 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         }
         return options.map(opt => {
             const id = parseInt(opt.value);
+            const name = select ? opt : opt.nextElementSibling;
             return {
                 id: isNaN(id) ? opt.value : id,
-                display_name: select ? opt.textContent : opt.value
+                display_name: name.textContent.trim(),
+                selected: select ? opt.selected : opt.checked,
             };
         });
     },
