@@ -268,10 +268,12 @@ class Survey(http.Controller):
         if 'previous_page_id' in post:
             previous_page_or_question_id = int(post['previous_page_id'])
             new_previous_id = survey_sudo._get_next_page_or_question(answer_sudo, previous_page_or_question_id, go_back=True).id
+            page_or_question = request.env['survey.question'].sudo().browse(previous_page_or_question_id)
             data.update({
-                page_or_question_key: request.env['survey.question'].sudo().browse(previous_page_or_question_id),
+                page_or_question_key: page_or_question,
                 'previous_page_id': new_previous_id,
-                'has_answered': answer_sudo.user_input_line_ids.filtered(lambda line: line.question_id.id == new_previous_id)
+                'has_answered': answer_sudo.user_input_line_ids.filtered(lambda line: line.question_id.id == new_previous_id),
+                'can_go_back': survey_sudo._can_go_back(answer_sudo, page_or_question),
             })
             return data
 
@@ -296,7 +298,8 @@ class Survey(http.Controller):
 
             data.update({
                 page_or_question_key: next_page_or_question,
-                'has_answered': answer_sudo.user_input_line_ids.filtered(lambda line: line.question_id == next_page_or_question)
+                'has_answered': answer_sudo.user_input_line_ids.filtered(lambda line: line.question_id == next_page_or_question),
+                'can_go_back': survey_sudo._can_go_back(answer_sudo, next_page_or_question),
             })
             if survey_sudo.questions_layout != 'one_page':
                 data.update({
@@ -338,7 +341,8 @@ class Survey(http.Controller):
 
         return {
             'survey_content': survey_content,
-            'survey_progress': survey_progress
+            'survey_progress': survey_progress,
+            'survey_navigation': request.env.ref('survey.survey_navigation').render(survey_data),
         }
 
     @http.route('/survey/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
