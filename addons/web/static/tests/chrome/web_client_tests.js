@@ -254,6 +254,35 @@ QUnit.module('WebClient', {
 
         webClient.destroy();
     });
+
+    QUnit.test('can set window title', async function (assert) {
+        assert.expect(6);
+
+        const webClient = await createWebClient({
+            data: this.data,
+            actions: this.actions,
+            archs: this.archs,
+            menus: this.menus,
+            webClient: {
+                _setWindowTitle(title) {
+                    assert.step(title);
+                }
+            }
+        });
+        const randomEl = document.querySelector('.o_web_client div');
+        assert.verifySteps([
+            'Partners'
+        ]);
+        randomEl.dispatchEvent(new CustomEvent('set-title-part', {bubbles: true, detail: {title: 'fire', part: 'b'}}));
+        assert.verifySteps([
+            'Partners - fire'
+        ]);
+        randomEl.dispatchEvent(new CustomEvent('set-title-part', {bubbles: true, detail: {title: 'on the bayou', part: 'a'}}));
+        assert.verifySteps([
+            'on the bayou - Partners - fire'
+        ]);
+        webClient.destroy();
+    });
 });
 
 });
