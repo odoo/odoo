@@ -50,5 +50,8 @@ position.
         'views/res_partner_view.xml',
         'views/report_invoice.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
     'post_init_hook': 'load_translations',
 }
