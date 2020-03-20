@@ -3464,6 +3464,51 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test("drag and drop 24h event on week mode", async function (assert) {
+        assert.expect(1);
+
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch: `
+                <calendar
+                    event_open_popup="true"
+                    quick_add="False"
+                    date_start="start"
+                    date_stop="stop"
+                    all_day="allday"
+                    mode="week"
+                 />
+            `,
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        }, {positionalClicks: true});
+
+        var top = calendar.$('.fc-axis:contains(8:00)').offset().top + 5;
+        var left = calendar.$('.fc-day:eq(2)').offset().left + 5;
+
+        try {
+            testUtils.dom.triggerPositionalMouseEvent(left, top, "mousedown");
+        } catch (e) {
+            calendar.destroy();
+            throw new Error('The test fails to simulate a click in the screen. Your screen is probably too small or your dev tools is open.');
+        }
+
+        top = calendar.$('.fc-axis:contains(8:00)').offset().top - 5;
+        var leftNextDay = calendar.$('.fc-day:eq(3)').offset().left + 5;
+        testUtils.dom.triggerPositionalMouseEvent(leftNextDay, top, "mousemove");
+        await testUtils.dom.triggerPositionalMouseEvent(leftNextDay, top, "mouseup");
+        await testUtils.nextTick();
+        assert.equal($('.o_field_boolean.o_field_widget[name=allday] input').is(':checked'), false,
+            "The event must not have the all_day active");
+        await testUtils.dom.click($('.modal button.btn:contains(Discard)'));
+
+        calendar.destroy();
+    });
+
 });
 
 });

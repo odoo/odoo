@@ -45,11 +45,6 @@ return AbstractModel.extend({
         var start = event.start.clone();
         var end = event.end && event.end.clone();
 
-        // Detects allDay events (86400000 = 1 day in ms)
-        if (event.allDay || (end && end.diff(start) % 86400000 === 0)) {
-            event.allDay = true;
-        }
-
         // Set end date if not existing
         if (!end || end.diff(start) < 0) { // undefined or invalid end date
             if (event.allDay) {
