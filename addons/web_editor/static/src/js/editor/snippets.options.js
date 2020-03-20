@@ -1260,7 +1260,6 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
             defaultDate: moment().format(),
             icons: {
                 close: 'fa fa-check primary',
-                today: 'far fa-calendar-check',
             },
             locale: moment.locale(),
             format: time.getLangDatetimeFormat(),
