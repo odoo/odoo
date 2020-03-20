@@ -48,7 +48,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             self._focusOnFirstInput();
             // Init event listener
             if (!self.readonly) {
-                $(document).on('keypress', self._onKeyPress.bind(self));
+                $(document).on('keydown', self._onKeyDown.bind(self));
             }
             if (self.options.sessionInProgress &&
                 (self.options.isStartScreen || self.options.hasAnswered || self.options.isPageDescription)) {
@@ -56,9 +56,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             }
             self._initSessionManagement();
 
-            // Needs global selector as the progress is not within the survey form, but needs to be
-            // updated at the same time
+            // Needs global selector as progress/navigation are not within the survey form, but need
+            //to be updated at the same time
             self.$surveyProgress = $('.o_survey_progress_wrapper');
+            self.$surveyNavigation = $('.o_survey_navigation_wrapper');
+            self.$surveyNavigation.find('.o_survey_navigation_submit').on('click', self._onSubmit.bind(self));
         });
     },
 
@@ -69,9 +71,18 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     // Handlers
     // -------------------------------------------------------------------------
 
-    _onKeyPress: function (event) {
-        // If user is answering a textarea, do not handle keyPress
-        if (this.$("textarea").is(":focus")) {
+    /**
+     * Handle keyboard navigation:
+     * - 'enter' or 'arrow-right' => submit form
+     * - 'arrow-left' => submit form (but go back backwards)
+     * - other alphabetical character ('a', 'b', ...)
+     *   Select the related option in the form (if available)
+     *
+     * @param {Event} event
+     */
+    _onKeyDown: function (event) {
+        // If user is answering a text input, do not handle keydown
+        if (this.$("textarea").is(":focus") || this.$('input').is(':focus')) {
             return;
         }
 
@@ -80,12 +91,17 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         var letter = String.fromCharCode(keyCode).toUpperCase();
 
         // Handle Start / Next / Submit
-        if (keyCode === 13) {  // Enter : go Next
+        if (keyCode === 13 || keyCode === 39) {  // Enter or arrow-right: go Next
             event.preventDefault();
             if (!this.preventEnterSubmit) {
                 var isFinish = this.$('button[value="finish"]').length !== 0;
                 this._submitForm({isFinish: isFinish});
             }
+        } else if (keyCode === 37) {  // arrow-left: previous (if available)
+            // It's easier to actually click on the button (if in the DOM) as it contains necessary
+            // data that are used in the event handler.
+            // Again, global selector necessary since the navigation is outside of the form.
+            $('.o_survey_navigation_submit[value="previous"]').click();
         } else if (self.options.questionsLayout === 'page_per_question'
                    && letter.match(/[a-z]/i)) {
             var $choiceInput = this.$(`input[data-selection-key=${letter}]`);
@@ -414,6 +430,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 this.$surveyProgress.html(result.survey_progress);
             } else if (options.isFinish && this.$surveyProgress.length !== 0) {
                 this.$surveyProgress.remove();
+            }
+
+            if (result.survey_navigation && this.$surveyNavigation.length !== 0) {
+                this.$surveyNavigation.html(result.survey_navigation);
+                this.$surveyNavigation.find('.o_survey_navigation_submit').on('click', self._onSubmit.bind(self));
             }
 
             // Hide timer if end screen (if page_per_question in case of conditional questions)
