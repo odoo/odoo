@@ -60,7 +60,11 @@ var AttributeTranslateDialog = Dialog.extend({
             $input.on('change keyup', function () {
                 var value = $input.val();
                 $node.html(value).trigger('change', node);
-                $node.data('$node').attr($node.data('attribute'), value).trigger('translate');
+                if ($node.data('attribute')) {
+                    $node.data('$node').attr($node.data('attribute'), value).trigger('translate');
+                } else {
+                    $node.data('$node').text(value).trigger('translate');
+                }
                 $node.trigger('change');
             });
             $group.append($label).append($input);
@@ -100,36 +104,60 @@ var WysiwygTranslate = WysiwygMultizone.extend({
 
         return promise.then(function () {
             self._relocateEditorBar();
-            var attrs = ['placeholder', 'title', 'alt'];
+            var attrs = ['placeholder', 'title', 'alt', 'value'];
+            const $editable = self._getEditableArea();
+            const translationRegex = /<span [^>]*data-oe-translation-id="([0-9]+)"[^>]*>(.*)<\/span>/;
+            let $edited = $();
             _.each(attrs, function (attr) {
-                self._getEditableArea().filter('[' + attr + '*="data-oe-translation-id="]').filter(':empty, input, select, textarea, img').each(function () {
+                const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-id="]').filter(':empty, input, select, textarea, img');
+                attrEdit.each(function () {
                     var $node = $(this);
                     var translation = $node.data('translation') || {};
                     var trans = $node.attr(attr);
-                    var match = trans.match(/<span [^>]*data-oe-translation-id="([0-9]+)"[^>]*>(.*)<\/span>/);
+                    var match = trans.match(translationRegex);
                     var $trans = $(trans).addClass('d-none o_editable o_editable_translatable_attribute').appendTo('body');
                     $trans.data('$node', $node).data('attribute', attr);
 
                     translation[attr] = $trans[0];
                     $node.attr(attr, match[2]);
 
-                    var select2 = $node.data('select2');
-                    if (select2) {
-                        select2.blur();
-                        $node.on('translate', function () {
-                            select2.blur();
-                        });
-                        $node = select2.container.find('input');
-                    }
                     $node.addClass('o_translatable_attribute').data('translation', translation);
                 });
+                $edited = $edited.add(attrEdit);
+            });
+            const textEdit = $editable.filter('textarea:contains(data-oe-translation-id)');
+            textEdit.each(function () {
+                var $node = $(this);
+                var translation = $node.data('translation') || {};
+                var trans = $node.text();
+                var match = trans.match(translationRegex);
+                var $trans = $(trans).addClass('d-none o_editable o_editable_translatable_text').appendTo('body');
+                $trans.data('$node', $node);
+
+                translation['textContent'] = $trans[0];
+                $node.text(match[2]);
+
+                $node.addClass('o_translatable_text').data('translation', translation);
+            });
+            $edited = $edited.add(textEdit);
+
+            $edited.each(function () {
+                var $node = $(this);
+                var select2 = $node.data('select2');
+                if (select2) {
+                    select2.blur();
+                    $node.on('translate', function () {
+                        select2.blur();
+                    });
+                    $node = select2.container.find('input');
+                }
             });
 
             self.translations = [];
-            self.$editables_attr = self._getEditableArea().filter('.o_translatable_attribute');
-            self.$editables_attribute = $('.o_editable_translatable_attribute');
+            self.$translations = self._getEditableArea().filter('.o_translatable_attribute, .o_translatable_text');
+            self.$editables = $('.o_editable_translatable_attribute, .o_editable_translatable_text');
 
-            self.$editables_attribute.on('change', function () {
+            self.$editables.on('change', function () {
                 self.trigger_up('rte_change', {target: this});
             });
 
@@ -153,7 +181,7 @@ var WysiwygTranslate = WysiwygMultizone.extend({
      * @returns {Boolean}
      */
     isDirty: function () {
-        return this._super() || this.$editables_attribute.hasClass('o_dirty');
+        return this._super() || this.$editables.hasClass('o_dirty');
     },
 
     //--------------------------------------------------------------------------
@@ -168,7 +196,7 @@ var WysiwygTranslate = WysiwygMultizone.extend({
      */
     _getEditableArea: function () {
         var $editables = this._super();
-        return $editables.add(this.$editables_attribute);
+        return $editables.add(this.$editables);
     },
     /**
      * Return an object describing the linked record.
@@ -262,9 +290,9 @@ var WysiwygTranslate = WysiwygMultizone.extend({
             ev.stopPropagation();
         });
 
-        // attributes
+        // attributes and textarea text
 
-        this.$editables_attr.each(function () {
+        this.$translations.each(function () {
             var $node = $(this);
             var translation = $node.data('translation');
             _.each(translation, function (node, attr) {
@@ -274,7 +302,7 @@ var WysiwygTranslate = WysiwygMultizone.extend({
             });
         });
 
-        this.$editables_attr.prependEvent('mousedown.translator click.translator mouseup.translator', function (ev) {
+        this.$translations.prependEvent('mousedown.translator click.translator mouseup.translator', function (ev) {
             if (ev.ctrlKey) {
                 return;
             }

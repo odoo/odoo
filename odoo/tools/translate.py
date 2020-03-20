@@ -135,6 +135,7 @@ def encode(s):
     assert isinstance(s, str)
     return s
 
+
 # which elements are translated inline
 TRANSLATED_ELEMENTS = {
     'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'del', 'dfn', 'em',
@@ -143,14 +144,16 @@ TRANSLATED_ELEMENTS = {
     'sup', 'time', 'u', 'var', 'wbr', 'text',
 }
 
-# which attributes must be translated
-TRANSLATED_ATTRS = {
+# Which attributes must be translated. This is a dict, where the value indicates
+# a condition for a node to have the attribute translatable.
+TRANSLATED_ATTRS = dict.fromkeys({
     'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
     'value_label',
-}
+}, lambda e: True)
+TRANSLATED_ATTRS['value'] = lambda e: (e.tag == 'input' and e.attrib.get('type', 'text') == 'text') and 'datetimepicker-input' not in e.attrib['class'].split(' ')
 
-TRANSLATED_ATTRS = TRANSLATED_ATTRS | {'t-attf-' + attr for attr in TRANSLATED_ATTRS}
+TRANSLATED_ATTRS.update({f't-attf-{attr}': cond for attr, cond in TRANSLATED_ATTRS.items()})
 
 avoid_pattern = re.compile(r"\s*<!DOCTYPE", re.IGNORECASE | re.MULTILINE | re.UNICODE)
 node_pattern = re.compile(r"<[^>]*>(.*)</[^<]*>", re.DOTALL | re.MULTILINE | re.UNICODE)
@@ -268,7 +271,8 @@ def translate_xml_node(node, callback, parse, serialize):
 
         # translate the required attributes
         for name, value in result.attrib.items():
-            if name in TRANSLATED_ATTRS:
+            condition = TRANSLATED_ATTRS.get(name)
+            if condition and condition(result):
                 result.set(name, translate_text(value) or value)
 
         # add the untranslated tail to result
