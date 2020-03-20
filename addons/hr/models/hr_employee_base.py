@@ -90,3 +90,9 @@ class HrEmployeeBase(models.AbstractModel):
                 employee.coach_id = manager
             elif not employee.coach_id:
                 employee.coach_id = False
+
+    def _get_placeholder_filename(self, field=None):
+        image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
+        if field in image_fields and not self:
+            return 'base/static/img/user-slash.png'
+        return super()._get_placeholder_filename(field=field)
