@@ -327,7 +327,7 @@ class PosConfig(models.Model):
         for config in self:
             if config.use_pricelist and config.pricelist_id not in config.available_pricelist_ids:
                 raise ValidationError(_("The default pricelist must be included in the available pricelists."))
-        if any(self.available_pricelist_ids.mapped(lambda pricelist: pricelist.currency_id != self.currency_id)):
+        if any(self.available_pricelist_ids.mapped(lambda pricelist: self.pricelist_id.currency_id != self.currency_id)):
             raise ValidationError(_("All available pricelists must be in the same currency as the company or"
                                     " as the Sales Journal set on this point of sale if you use"
                                     " the Accounting application."))
