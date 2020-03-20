@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="1">
+<odoo noupdate="1">
 
         <record id="payment_transaction_user_rule" model="ir.rule">
             <field name="name">Access own payment transaction only</field>
@@ -19,5 +18,4 @@
             <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>
         </record>
 
-    </data>
 </odoo>
