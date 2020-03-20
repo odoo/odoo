@@ -1174,6 +1174,47 @@ body.editor_enable.editor_has_snippets {
             }
         }
 
+        // Lists
+        we-list {
+            > div {
+                flex-flow: row wrap;
+            }
+            .o_we_table_wrapper {
+                width: 100%;
+                max-height: 200px;
+                overflow-y: auto;
+                margin-bottom: $o-we-sidebar-content-field-spacing / 2;
+
+                table {
+                    table-layout: auto;
+                    width: 100%;
+
+                    input {
+                        width: 100%;
+                        border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
+                        border-radius: $o-we-sidebar-content-field-border-radius;
+                        padding: 0 $o-we-sidebar-content-field-clickable-spacing;
+                        background-color: $o-we-sidebar-content-field-input-bg;
+                        color: inherit;
+                        font-family: $o-we-sidebar-content-field-input-font-family;
+                    }
+                    tr {
+                        border: none;
+                    }
+                    td {
+                        padding-bottom: $o-we-sidebar-content-field-spacing / 2;
+
+                        &:first-child, &:last-child {
+                            width: 1px;
+                        }
+                    }
+                }
+            }
+            .o_we_user_value_widget {
+                flex: 1 1 auto;
+            }
+        }
+
         // Multi widgets
         we-multi.o_we_user_value_widget {
             margin-top: 0;
