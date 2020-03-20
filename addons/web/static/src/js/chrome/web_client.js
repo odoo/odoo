@@ -31,7 +31,7 @@ class WebClient extends Component {
         this.state = {};
         this._titleParts = {};
 
-        this.env.bus.on('show-effect', this, this._showEffect);
+        this.env.bus.on('show-effect', this, this._onShowEffect);
         this.env.bus.on('connection_lost', this, this._onConnectionLost);
         this.env.bus.on('connection_restored', this, this._onConnectionRestored);
 
@@ -504,36 +504,30 @@ class WebClient extends Component {
             this._updateState(ev.detail.state);
         }
     }
-    _showEffect(params) {
-        params = params || {};
-        const type = params.type || 'rainbow_man';
+    /**
+     * Displays a visual effect (for example, a rainbowMan0
+     *
+     * @private
+     * @param {Object} payload
+     * @param {Object} [ev.detail] - key-value options to decide rainbowMan
+     *   behavior / appearance
+     */
+    _onShowEffect(payload) {
+        if (this.renderingInfo && !payload.force) {return;}
+        const type = payload.type || 'rainbow_man';
         if (type === 'rainbow_man') {
             if (this.env.session.show_effect) {
-                RainbowMan.display(params, {target: this.el, parent: this});
+                RainbowMan.display(payload, {target: this.el, parent: this});
             } else {
                 // For instance keep title blank, as we don't have title in data
                 this._displayNotification({
                     title: "",
-                    message: params.message,
+                    message: payload.message,
                     sticky: false
                 });
             }
         } else {
             throw new Error('Unknown effect type: ' + type);
-        }
-    }
-    /**
-     * Displays a visual effect (for example, a rainbowMan0
-     *
-     * @private
-     * @param {OdooEvent} ev
-     * @param {Object} [ev.data] - key-value options to decide rainbowMan
-     *   behavior / appearance
-     */
-    _onShowEffect(ev) {
-        if (!this.renderingInfo) {
-            const params = ev.detail;
-            this._showEffect(params);
         }
     }
 }

@@ -282,6 +282,8 @@ odoo.define('web.OwlCompatibility', function () {
                 return this.env.bus.trigger('switch-view', payload);
             } else if (evType === 'history_back') {
                 return this.env.bus.trigger('history-back', payload);
+            } else if (evType === 'show_effect') {
+                return this.env.bus.trigger('show-effect', payload);
             } else {
                 payload.__targetWidget = ev.target;
                 this.trigger(evType.replace(/_/g, '-'), payload);

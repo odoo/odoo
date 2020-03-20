@@ -30,7 +30,8 @@ odoo.define('web.CloseActionPlugin', function (require) {
             let onCommit = null;
             if (action.effect) {
                 onCommit = () => {
-                    this.env.bus.trigger('show-effect', action.effect);
+                    const payload = Object.assign({}, action.effect, {force: true})
+                    this.env.bus.trigger('show-effect', payload);
                 };
             }
             const controllerID = this.currentStack[this.currentStack.length-1];
