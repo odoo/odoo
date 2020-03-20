@@ -29,6 +29,7 @@ class WebClient extends Component {
         // menu id, action id, view type (for act_window actions)...
         this.ignoreHashchange = false;
         this.state = {};
+        this._titleParts = {};
 
         this.env.bus.on('show-effect', this, this._showEffect);
         this.env.bus.on('connection_lost', this, this._onConnectionLost);
@@ -70,56 +71,7 @@ class WebClient extends Component {
         this.menus = await this._loadMenus();
         const state = this._getUrlState();
         this._determineCompanyIds(state);
-        return this.loadState(state);
-    }
-    _setActionManager() {
-        this.actionManager = new ActionManager(this.env);
-        this.actionManager.on('cancel', this, () => {
-            if (this.renderingInfo) {
-                this.__owl__.currentFiber.cancel();
-            }
-        });
-        this.actionManager.on('update', this, this._onActionManagerUpdated);
-        this.actionManager.on('clear-uncommitted-changes', this, async (callBack) => {
-            if (!this.currentDialogComponent.comp && this.currentControllerComponent.comp) {
-                await this.currentControllerComponent.comp.canBeRemoved();
-            }
-            callBack();
-        });
-        this.actionManager.on('controller-cleaned', this, (controllerIds) => {
-            for (const jsID of controllerIds) {
-                const comp = this.controllerComponentMap.get(jsID);
-                this.controllerComponentMap.delete(jsID);
-                if (comp) {
-                    comp.destroy(true);
-                }
-            }
-        });
-    }
-    get titleParts() {
-        this._titleParts = this._titleParts || {};
-        return this._titleParts;
-    }
-    // TODO: handle set_title* events
-    setTitlePart(part, title) {
-        this.titleParts[part] = title;
-    }
-
-    async loadState(state) {
-        let stateLoaded = await this.actionManager.loadState(state, { menuID: state.menu_id });
-        if (stateLoaded === null) {
-            if ('menu_id' in state) {
-                const action = this.menus[state.menu_id].actionID;
-                return this.actionManager.doAction(action, state);
-            } else if (('home' in state || Object.keys(state).filter(key => key !== 'cids').length === 0)) {
-                const menuID = this.menus ? this.menus.root.children[0] : null;
-                const actionID =  menuID ? this.menus[menuID].actionID : null;
-                if (actionID) {
-                    return this.actionManager.doAction(actionID, {menuID, clear_breadcrumbs: true});
-                }
-            }
-        }
-        return stateLoaded;
+        return this._loadState(state);
     }
 
     //--------------------------------------------------------------------------
@@ -127,10 +79,10 @@ class WebClient extends Component {
     //--------------------------------------------------------------------------
 
     _computeTitle() {
-        const parts = Object.keys(this.titleParts).sort();
+        const parts = Object.keys(this._titleParts).sort();
         let tmp = "";
         for (let part of parts) {
-            const title = this.titleParts[part];
+            const title = this._titleParts[part];
             if (title) {
                 tmp = tmp ? tmp + " - " + title : title;
             }
@@ -250,6 +202,22 @@ class WebClient extends Component {
             return menus;
         });
     }
+    async _loadState(state) {
+        let stateLoaded = await this.actionManager.loadState(state, { menuID: state.menu_id });
+        if (stateLoaded === null) {
+            if ('menu_id' in state) {
+                const action = this.menus[state.menu_id].actionID;
+                return this.actionManager.doAction(action, state);
+            } else if (('home' in state || Object.keys(state).filter(key => key !== 'cids').length === 0)) {
+                const menuID = this.menus ? this.menus.root.children[0] : null;
+                const actionID =  menuID ? this.menus[menuID].actionID : null;
+                if (actionID) {
+                    return this.actionManager.doAction(actionID, {menuID, clear_breadcrumbs: true});
+                }
+            }
+        }
+        return stateLoaded;
+    }
     _scrollTo(scrollPosition) {
         const scrollingEl = this.el.getElementsByClassName('o_content')[0];
         if (!scrollingEl) {
@@ -257,6 +225,34 @@ class WebClient extends Component {
         }
         scrollingEl.scrollTop = scrollPosition.top || 0;
         scrollingEl.scrollLeft = scrollPosition.left || 0;
+    }
+    _setActionManager() {
+        this.actionManager = new ActionManager(this.env);
+        this.actionManager.on('cancel', this, () => {
+            if (this.renderingInfo) {
+                this.__owl__.currentFiber.cancel();
+            }
+        });
+        this.actionManager.on('update', this, this._onActionManagerUpdated);
+        this.actionManager.on('clear-uncommitted-changes', this, async (callBack) => {
+            if (!this.currentDialogComponent.comp && this.currentControllerComponent.comp) {
+                await this.currentControllerComponent.comp.canBeRemoved();
+            }
+            callBack();
+        });
+        this.actionManager.on('controller-cleaned', this, (controllerIds) => {
+            for (const jsID of controllerIds) {
+                const comp = this.controllerComponentMap.get(jsID);
+                this.controllerComponentMap.delete(jsID);
+                if (comp) {
+                    comp.destroy(true);
+                }
+            }
+        });
+    }
+    // TODO: handle set_title* events
+    _setTitlePart(part, title) {
+        this._titleParts[part] = title;
     }
     _setWindowHash(newHash) {
         this.ignoreHashchange = true;
@@ -284,7 +280,7 @@ class WebClient extends Component {
             state.menu_id = menuID;
         }
         if ('title' in state) {
-            this.setTitlePart('action', state.title);
+            this._setTitlePart('action', state.title);
             delete state.title
         }
         this.state = state;
@@ -480,7 +476,7 @@ class WebClient extends Component {
     _onHashchange() {
         if (!this.ignoreHashchange) {
             const state = this._getUrlState();
-            this.loadState(state);
+            this._loadState(state);
         }
         this.ignoreHashchange = false;
         // TODO: reset oldURL in case of failure?
