@@ -241,3 +241,11 @@ class AccountBankStatementImport(models.TransientModel):
                 }
             }]
         return statement_ids, notifications
+
+    @api.model
+    def create(self, vals):
+        return super(AccountBankStatementImport, self.sudo()).create(vals)
+
+    @api.multi
+    def read(self, fields=None, load='_classic_read'):
+        return super(AccountBankStatementImport, self.sudo()).read(fields=fields, load=load)
