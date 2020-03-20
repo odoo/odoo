@@ -24,19 +24,42 @@ odoo.define('web.ActionAdapter', function (require) {
             this.inDialog = 'inDialog' in this.props;
         }
 
-        get title() {
-            if (this.legacy && this.widget) {
-                return this.widget.getTitle();
-            }
-            return this.props.action.name;
-        }
+        //--------------------------------------------------------------------------
+        // OWL Overrides
+        //--------------------------------------------------------------------------
 
-        canBeRemoved() {
-            if (this.legacy && this.widget) {
-                return this.widget.canBeRemoved();
+        destroy(force) {
+            if (!this.inDialog && this.__owl__.isMounted && this.legacy && this.widget && !force) { // FIXME: do not detach twice?
+                // keep legacy stuff alive because some stuff
+                // are kept by AbstractModel (e.g.: orderedBy)
+                dom.detach([{widget: this.widget}]);
+                this.legacyZombie = true;
+                return;
+            }
+            return super.destroy();
+        }
+        patched() {
+            if (this.legacy) {
+                this.widgetReloadProm = null;
+                if (this.legacyZombie) {
+                    if (this.widget && this.widget.on_attach_callback) {
+                        this.widget.on_attach_callback();
+                    }
+                    this.legacyZombie = false;
+                }
             }
         }
-
+        shouldUpdate(nextProps) {
+            if (this.legacy) {
+                const activatingViewType = nextProps.action.controller.viewType;
+                let zombie = this.legacyZombie;
+                if (activatingViewType === this.widget.viewType) {
+                    zombie = false;
+                }
+                return !zombie;
+            }
+            return super.shouldUpdate(nextProps);
+        }
         async willStart() {
             if (this.props.Component.prototype instanceof AbstractView) {
                 const action = this.props.action;
@@ -64,28 +87,42 @@ odoo.define('web.ActionAdapter', function (require) {
             return super.willStart();
         }
 
+
+        //--------------------------------------------------------------------------
+        // Getters
+        //--------------------------------------------------------------------------
+
+        get title() {
+            if (this.legacy && this.widget) {
+                return this.widget.getTitle();
+            }
+            return this.props.action.name;
+        }
         get widgetArgs() {
             return [this.props.action, this.props.options];
         }
 
-        shouldUpdate(nextProps) {
-            if (this.legacy) {
-                const activatingViewType = nextProps.action.controller.viewType;
-                let zombie = this.legacyZombie;
-                if (activatingViewType === this.widget.viewType) {
-                    zombie = false;
-                }
-                return !zombie;
+        //--------------------------------------------------------------------------
+        // Public
+        //--------------------------------------------------------------------------
+
+        canBeRemoved() {
+            if (this.legacy && this.widget) {
+                return this.widget.canBeRemoved();
             }
-            return super.shouldUpdate(nextProps);
         }
-        _trigger_up(ev) {
-            const evType = ev.name;
-            if (!this.inDialog && this.legacy === 'view' && this.widget && (evType === "switch_view" || evType === "execute_action")) {
-                const controllerState = this.widget.exportState();
-                this.env.bus.trigger('legacy-export-state', { controllerState });
+        /**
+         * @returns {Widget | Component | null} the legacy widget or owl Component
+         *   instance, or null if this function is called too soon
+         */
+        getController() {
+            return this.widget || (this.componentRef && this.componentRef.comp) || null;
+        }
+        getState() {
+            if (this.widget) {
+                return this.widget.getState();
             }
-            return super._trigger_up(...arguments);
+            return {}; // TODO
         }
         async updateWidget(nextProps) {
             if (this.widgetReloadProm || ('reload' in nextProps && !nextProps.reload)) {
@@ -109,6 +146,10 @@ odoo.define('web.ActionAdapter', function (require) {
             }
             return super.updateWidget(...arguments);
         }
+
+        //--------------------------------------------------------------------------
+        // Private
+        //--------------------------------------------------------------------------
 
         _reHookControllerMethods() {
             const self = this;
@@ -134,41 +175,13 @@ odoo.define('web.ActionAdapter', function (require) {
                 });
             };
         }
-
-        /**
-         * @returns {Widget | Component | null} the legacy widget or owl Component
-         *   instance, or null if this function is called too soon
-         */
-        getController() {
-            return this.widget || (this.componentRef && this.componentRef.comp) || null;
-        }
-        getState() {
-            if (this.widget) {
-                return this.widget.getState();
+        _trigger_up(ev) {
+            const evType = ev.name;
+            if (!this.inDialog && this.legacy === 'view' && this.widget && (evType === "switch_view" || evType === "execute_action")) {
+                const controllerState = this.widget.exportState();
+                this.env.bus.trigger('legacy-export-state', { controllerState });
             }
-            return {}; // TODO
-        }
-
-        destroy(force) {
-            if (!this.inDialog && this.__owl__.isMounted && this.legacy && this.widget && !force) { // FIXME: do not detach twice?
-                // keep legacy stuff alive because some stuff
-                // are kept by AbstractModel (e.g.: orderedBy)
-                dom.detach([{widget: this.widget}]);
-                this.legacyZombie = true;
-                return;
-            }
-            return super.destroy();
-        }
-        patched() {
-            if (this.legacy) {
-                this.widgetReloadProm = null;
-                if (this.legacyZombie) {
-                    if (this.widget && this.widget.on_attach_callback) {
-                        this.widget.on_attach_callback();
-                    }
-                    this.legacyZombie = false;
-                }
-            }
+            return super._trigger_up(...arguments);
         }
     }
 
