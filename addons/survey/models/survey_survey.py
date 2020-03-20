@@ -481,7 +481,7 @@ class Survey(models.Model):
         current_page_index = pages_or_questions.ids.index(next(p.id for p in pages_or_questions if p.id == page_or_question_id))
 
         # Get previous and we are on first page  OR Get Next and we are on last page
-        if (go_back and current_page_index == 0) or current_page_index == len(pages_or_questions) - 1:
+        if (go_back and current_page_index == 0) or (not go_back and current_page_index == len(pages_or_questions) - 1):
             return Question
 
         # Conditional Questions Management
