@@ -66,11 +66,6 @@ class ProjectTaskCreateSalesOrder(models.TransientModel):
             'company_id': self.task_id.company_id.id,
             'analytic_account_id': self.task_id.project_id.analytic_account_id.id,
         })
-        sale_order.onchange_partner_id()
-        sale_order.onchange_partner_shipping_id()
-        # rewrite the user as the onchange_partner_id erases it
-        sale_order.write({'user_id': self.task_id.user_id.id})
-        sale_order.onchange_user_id()
 
         sale_order_line = self.env['sale.order.line'].create({
             'order_id': sale_order.id,

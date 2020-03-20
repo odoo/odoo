@@ -52,6 +52,7 @@ class AccountFiscalPosition(models.Model):
                 raise ValidationError(_('Invalid "Zip Range", please configure it properly.'))
 
     def map_tax(self, taxes, product=None, partner=None):
+        # VFE TODO remove product and partner args
         if not self:
             return taxes
         result = self.env['account.tax']

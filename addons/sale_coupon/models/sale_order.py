@@ -427,7 +427,24 @@ class SaleOrderLine(models.Model):
             taxes = line.tax_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
             line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id)
 
-    # Invalidation of `coupon.program.order_count`
+    def _compute_price_unit(self):
+        """Reward SO line prices is defined by the coupons on line creation.
+
+        To update the coupons effects, the dedicated button/method has to be called manually.
+        It cannot be managed here as we can be in a newId situation.
+        """
+        reward_lines = self.filtered('is_reward_line')
+        super(SaleOrderLine, self - reward_lines)._compute_price_unit()
+        for line in reward_lines:
+            line = line.with_company(line.company_id)
+            line.price_unit = line.env['account.tax']._fix_tax_included_price_company(
+                line.price_unit,
+                line.product_id.taxes_id,
+                line.tax_id,
+                line.env.company)
+            line.discount = line.discount or 0.0
+
+    # Invalidation of `sale.coupon.program.order_count`
     # `test_program_rules_validity_dates_and_uses`,
     # Overriding modified is quite hardcore as you need to know how works the cache and the invalidation system,
     # but at least the below works and should be efficient.

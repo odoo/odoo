@@ -11,10 +11,10 @@ class TestSaleStockMargin(TestStockValuationCommon):
     #########
 
     def _create_sale_order(self):
+        partner_id = self.env.ref("base.partner_admin").id
         return self.env['sale.order'].create({
             'name': 'Sale order',
-            'partner_id': self.env.ref('base.partner_admin').id,
-            'partner_invoice_id': self.env.ref('base.partner_admin').id,
+            'partner_id': partner_id,
         })
 
     def _create_sale_order_line(self, sale_order, product, quantity, price_unit=0):
@@ -24,7 +24,6 @@ class TestSaleStockMargin(TestStockValuationCommon):
             'price_unit': price_unit,
             'product_id': product.id,
             'product_uom_qty': quantity,
-            'product_uom': self.env.ref('uom.product_uom_unit').id,
         })
 
     def _create_product(self):

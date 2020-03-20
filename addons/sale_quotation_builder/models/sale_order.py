@@ -8,69 +8,49 @@ from odoo.tools.translate import html_translate
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    website_description = fields.Html('Website Description', sanitize_attributes=False, translate=html_translate, sanitize_form=False)
+    website_description = fields.Html(
+        'Website Description', sanitize_attributes=False, sanitize_form=False,
+        compute="_compute_website_description", store=True, copy=True, readonly=False)
 
-    @api.onchange('partner_id')
-    def onchange_update_description_lang(self):
-        if not self.sale_order_template_id:
-            return
-        else:
-            template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
-            self.website_description = template.website_description
-
-    def _compute_line_data_for_template_change(self, line):
-        vals = super(SaleOrder, self)._compute_line_data_for_template_change(line)
-        vals.update(website_description=line.website_description)
-        return vals
-
-    def _compute_option_data_for_template_change(self, option):
-        vals = super(SaleOrder, self)._compute_option_data_for_template_change(option)
-        vals.update(website_description=option.website_description)
-        return vals
-
-    @api.onchange('sale_order_template_id')
-    def onchange_sale_order_template_id(self):
-        ret = super(SaleOrder, self).onchange_sale_order_template_id()
-        if self.sale_order_template_id:
-            template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
-            self.website_description = template.website_description
-        return ret
+    @api.depends("sale_order_template_id", "partner_id")
+    def _compute_website_description(self):
+        for order in self:
+            order.website_description = order.with_context(
+                lang=order.partner_id.lang
+            ).sale_order_template_id.website_description
 
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    website_description = fields.Html('Website Description', sanitize=False, translate=html_translate, sanitize_form=False)
+    website_description = fields.Html(
+        'Website Description', sanitize=False, readonly=False, sanitize_form=False,
+        compute="_compute_website_description", store=True, copy=True,
+    )
 
-    @api.model
-    def create(self, values):
-        values = self._inject_quotation_description(values)
-        return super(SaleOrderLine, self).create(values)
-
-    def write(self, values):
-        values = self._inject_quotation_description(values)
-        return super(SaleOrderLine, self).write(values)
-
-    def _inject_quotation_description(self, values):
-        values = dict(values or {})
-        if not values.get('website_description') and values.get('product_id'):
-            product = self.env['product.product'].browse(values['product_id'])
-            values.update(website_description=product.quotation_description)
-        return values
+    @api.depends('product_id')
+    def _compute_website_description(self):
+        for line in self:
+            line.website_description = line.with_context(
+                lang=line.order_partner_id.lang
+            ).product_id.quotation_description
 
 
 class SaleOrderOption(models.Model):
     _inherit = "sale.order.option"
 
-    website_description = fields.Html('Website Description', sanitize_attributes=False, translate=html_translate)
+    # VFE TODO isn't there a missing sanitize_form=False here ???
+    website_description = fields.Html(
+        'Website Description', sanitize=False, readonly=False,
+        compute="_compute_website_description", store=True, copy=True,
+    )
 
-    @api.onchange('product_id', 'uom_id')
-    def _onchange_product_id(self):
-        ret = super(SaleOrderOption, self)._onchange_product_id()
-        if self.product_id:
-            product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
-            self.website_description = product.quotation_description
-        return ret
+    @api.depends('product_id')
+    def _compute_website_description(self):
+        for option in self:
+            option.website_description = option.with_context(
+                lang=option.order_id.partner_id.lang
+            ).product_id.quotation_description
 
     def _get_values_to_add_to_order(self):
         values = super(SaleOrderOption, self)._get_values_to_add_to_order()

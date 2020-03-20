@@ -223,6 +223,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.sale_order.write({
             'pricelist_id': self.discount_excluded_price_list.id,
             'sale_order_template_id': self.quotation_template_no_discount.id
+            'payment_term_id': False,
         })
         self.sale_order.onchange_sale_order_template_id()
 

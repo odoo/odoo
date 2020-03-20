@@ -9,10 +9,7 @@ class SaleOrderLine(models.Model):
 
     @api.depends('move_ids', 'move_ids.stock_valuation_layer_ids', 'order_id.picking_ids.state')
     def _compute_purchase_price(self):
-        lines_without_moves = self.browse()
-        for line in self:
-            if not line.move_ids:
-                lines_without_moves |= line
-            else:
-                line.purchase_price = line.product_id._compute_average_price(0, line.product_uom_qty, line.move_ids)
-        return super(SaleOrderLine, lines_without_moves)._compute_purchase_price()
+        lines_with_moves = self.filtered("move_ids")
+        for line in lines_with_moves:
+            line.purchase_price = line.product_id._compute_average_price(0, line.product_uom_qty, line.move_ids)
+        return super(SaleOrderLine, self-lines_with_moves)._compute_purchase_price()

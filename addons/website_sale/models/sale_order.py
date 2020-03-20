@@ -29,6 +29,21 @@ class SaleOrder(models.Model):
     website_id = fields.Many2one('website', string='Website', readonly=True,
                                  help='Website through which this order was placed.')
 
+    def _compute_partner_adress_info(self):
+        """For e-commerce orders, we use the delivery adress of last order (if existing)."""
+        website_orders = self.filtered('website_id')
+        for order in website_orders:
+            order.partner_invoice_id = order.partner_id
+            partner_shipping = None
+            if request and not request.website.is_public_user():
+                last_sale_order = self.env['sale.order'].search([
+                    ('partner_id', '=', order.partner_id.id)
+                ], limit=1, order="date_order desc, id desc")
+                if last_sale_order:  # first = me
+                    partner_shipping = last_sale_order.partner_shipping_id.id
+            order.partner_shipping_id = partner_shipping or order.partner_id.address_get(['delivery']).get('delivery')
+        super(SaleOrder, self - website_orders)._compute_partner_adress_info()
+
     @api.depends('order_line')
     def _compute_website_order_line(self):
         for order in self:
@@ -103,6 +118,8 @@ class SaleOrder(models.Model):
         })
         product = self.env['product.product'].with_context(product_context).with_company(order.company_id.id).browse(product_id)
         discount = 0
+
+        # VFE TODO remove all this bc replaced by computes in sale.
 
         if order.pricelist_id.discount_policy == 'without_discount':
             # This part is pretty much a copy-paste of the method '_onchange_discount' of
@@ -239,8 +256,7 @@ class SaleOrder(models.Model):
             order_line.unlink()
             if linked_line:
                 # update description of the parent
-                linked_product = product_with_context.browse(linked_line.product_id.id)
-                linked_line.name = linked_line.get_sale_order_line_multiline_description_sale(linked_product)
+                linked_line.name = linked_line._get_sale_description()
         else:
             # update line
             no_variant_attributes_price_extra = [ptav.price_extra for ptav in order_line.product_no_variant_attribute_value_ids]
@@ -270,14 +286,13 @@ class SaleOrder(models.Model):
                 order_line.write({
                     'linked_line_id': linked_line.id,
                 })
-                linked_product = product_with_context.browse(linked_line.product_id.id)
-                linked_line.name = linked_line.get_sale_order_line_multiline_description_sale(linked_product)
+                linked_line.name = linked_line._get_sale_description()
             # Generate the description with everything. This is done after
             # creating because the following related fields have to be set:
             # - product_no_variant_attribute_value_ids
             # - product_custom_attribute_value_ids
             # - linked_line_id
-            order_line.name = order_line.get_sale_order_line_multiline_description_sale(product)
+            order_line.name = order_line._get_sale_description()
 
         option_lines = self.order_line.filtered(lambda l: l.linked_line_id.id == order_line.id)
 
@@ -358,8 +373,8 @@ class SaleOrderLine(models.Model):
     linked_line_id = fields.Many2one('sale.order.line', string='Linked Order Line', domain="[('order_id', '!=', order_id)]", ondelete='cascade')
     option_line_ids = fields.One2many('sale.order.line', 'linked_line_id', string='Options Linked')
 
-    def get_sale_order_line_multiline_description_sale(self, product):
-        description = super(SaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)
+    def _get_sale_description(self):
+        description = super(SaleOrderLine, self)._get_sale_description()
         if self.linked_line_id:
             description += "\n" + _("Option for: %s") % self.linked_line_id.product_id.display_name
         if self.option_line_ids:

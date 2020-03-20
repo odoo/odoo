@@ -79,19 +79,19 @@ class TestStockValuation(StockAccountTestCommon):
 
         # sell one unit of this product
         customer1 = self.env['res.partner'].create({'name': 'customer1'})
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Public Test Pricelist',
+            'currency_id': self.env.company.currency_id.id,
+        })
+        self.product1.lst_price = 12.0
+        self.product1.taxes_id = None
         self.sale_order1 = self.env['sale.order'].create({
             'partner_id': customer1.id,
-            'partner_invoice_id': customer1.id,
-            'partner_shipping_id': customer1.id,
             'order_line': [(0, 0, {
-                'name': self.product1.name,
                 'product_id': self.product1.id,
                 'product_uom_qty': 1,
-                'product_uom': self.product1.uom_id.id,
-                'price_unit': 12,
-                'tax_id': [(6, 0, [])],
             })],
-            'pricelist_id': self.env.ref('product.list0').id,
+            'pricelist_id': pricelist.id,
             'picking_policy': 'direct',
         })
         self.sale_order1.action_confirm()

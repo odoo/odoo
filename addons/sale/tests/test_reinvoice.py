@@ -35,7 +35,6 @@ class TestReInvoice(TestCommonSaleNoChart):
         """ Test vendor bill at cost for product based on ordered and delivered quantities. """
         # create SO line and confirm SO (with only one line)
         sale_order_line1 = self.env['sale.order.line'].create({
-            'name': self.product_ordered_cost.name,
             'product_id': self.product_ordered_cost.id,
             'product_uom_qty': 2,
             'qty_delivered': 1,
@@ -43,9 +42,7 @@ class TestReInvoice(TestCommonSaleNoChart):
             'price_unit': self.product_ordered_cost.list_price,
             'order_id': self.sale_order.id,
         })
-        sale_order_line1.product_id_change()
         sale_order_line2 = self.env['sale.order.line'].create({
-            'name': self.product_deliver_cost.name,
             'product_id': self.product_deliver_cost.id,
             'product_uom_qty': 4,
             'qty_delivered': 1,
@@ -53,10 +50,7 @@ class TestReInvoice(TestCommonSaleNoChart):
             'price_unit': self.product_deliver_cost.list_price,
             'order_id': self.sale_order.id,
         })
-        sale_order_line2.product_id_change()
 
-        self.sale_order.onchange_partner_id()
-        self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 
         # create invoice lines and validate it
@@ -122,7 +116,6 @@ class TestReInvoice(TestCommonSaleNoChart):
         """
         # create SO line and confirm SO (with only one line)
         sale_order_line1 = self.env['sale.order.line'].create({
-            'name': self.product_deliver_sales_price.name,
             'product_id': self.product_deliver_sales_price.id,
             'product_uom_qty': 2,
             'qty_delivered': 1,
@@ -130,9 +123,7 @@ class TestReInvoice(TestCommonSaleNoChart):
             'price_unit': self.product_deliver_sales_price.list_price,
             'order_id': self.sale_order.id,
         })
-        sale_order_line1.product_id_change()
         sale_order_line2 = self.env['sale.order.line'].create({
-            'name': self.product_order_sales_price.name,
             'product_id': self.product_order_sales_price.id,
             'product_uom_qty': 3,
             'qty_delivered': 1,
@@ -140,8 +131,6 @@ class TestReInvoice(TestCommonSaleNoChart):
             'price_unit': self.product_order_sales_price.list_price,
             'order_id': self.sale_order.id,
         })
-        sale_order_line2.product_id_change()
-        self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 
         # create invoice lines and validate it
@@ -212,7 +201,6 @@ class TestReInvoice(TestCommonSaleNoChart):
             'price_unit': self.product_no_expense.list_price,
             'order_id': self.sale_order.id,
         })
-        self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 
         # create invoice lines and validate it

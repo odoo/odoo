@@ -55,7 +55,6 @@ class TestAccessRights(TestCommonSaleNoChart):
         # Create the SO with a specific salesperson
         self.order = self.env['sale.order'].with_context(tracking_disable=True).create({
             'partner_id': self.partner_customer_usd.id,
-            'user_id': self.user_salesperson.id
         })
 
     def test_access_sales_manager(self):

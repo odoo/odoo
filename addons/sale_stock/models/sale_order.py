@@ -16,12 +16,6 @@ _logger = logging.getLogger(__name__)
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    @api.model
-    def _default_warehouse_id(self):
-        # !!! Any change to the default value may have to be repercuted
-        # on _init_column() below.
-        return self.env.user._get_default_warehouse_id()
-
     incoterm = fields.Many2one(
         'account.incoterms', 'Incoterm',
         help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
@@ -33,9 +27,9 @@ class SaleOrder(models.Model):
         ,help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
         "product lead time. Otherwise, it will be based on the shortest.")
     warehouse_id = fields.Many2one(
-        'stock.warehouse', string='Warehouse',
-        required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        default=_default_warehouse_id, check_company=True)
+        'stock.warehouse', string='Warehouse', compute="_compute_warehouse_id", store=True,
+        required=True, readonly=True, check_company=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
     picking_ids = fields.One2many('stock.picking', 'sale_id', string='Transfers')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
@@ -47,26 +41,13 @@ class SaleOrder(models.Model):
     json_popover = fields.Char('JSON data for the popover widget', compute='_compute_json_popover')
     show_json_popover = fields.Boolean('Has late picking', compute='_compute_json_popover')
 
-    def _init_column(self, column_name):
-        """ Ensure the default warehouse_id is correctly assigned
-
-        At column initialization, the ir.model.fields for res.users.property_warehouse_id isn't created,
-        which means trying to read the property field to get the default value will crash.
-        We therefore enforce the default here, without going through
-        the default function on the warehouse_id field.
-        """
-        if column_name != "warehouse_id":
-            return super(SaleOrder, self)._init_column(column_name)
-        field = self._fields[column_name]
-        default = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        value = field.convert_to_write(default, self)
-        value = field.convert_to_column(value, self)
-        if value is not None:
-            _logger.debug("Table '%s': setting default value of new column %s to %r",
-                self._table, column_name, value)
-            query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" IS NULL' % (
-                self._table, column_name, field.column_format, column_name)
-            self._cr.execute(query, (value,))
+    @api.depends('company_id', 'user_id')
+    def _compute_warehouse_id(self):
+        for order in self:
+            company = self.env.company or order.company_id
+            # Keep current warehouse on company change if warehouse company is the order current company.
+            order.warehouse_id = order.warehouse_id.filtered(lambda w: w.company_id == order.company_id) or \
+                order.with_company(order.company_id).user_id._get_default_warehouse_id()
 
     @api.depends('picking_ids.date_done')
     def _compute_effective_date(self):
@@ -87,12 +68,17 @@ class SaleOrder(models.Model):
                 expected_date = min(dates_list) if order.picking_policy == 'direct' else max(dates_list)
                 order.expected_date = fields.Datetime.to_string(expected_date)
 
-    @api.model
-    def create(self, vals):
-        if 'warehouse_id' not in vals and 'company_id' in vals:
-            user = self.env['res.users'].browse(vals.get('user_id', False))
-            vals['warehouse_id'] = user.with_company(vals.get('company_id'))._get_default_warehouse_id().id
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        # VFE TODO remove this create override, it can be managed by the compute now.
+        user_company_warehouse = dict()
+        for vals in vals_list:
+            if 'warehouse_id' not in vals:
+                user = self.env['res.users'].browse(vals['user_id']) if "user_id" in vals else self.env.user
+                company_id = vals.get("company_id", self.env.company.id)
+                user_company_warehouse.setdefault((user.id, company_id), user.with_company(company_id)._get_default_warehouse_id().id)
+                vals['warehouse_id'] = user_company_warehouse.get((user.id, company_id))
+        return super().create(vals_list)
 
     def write(self, values):
         if values.get('order_line') and self.state == 'sale':
@@ -144,17 +130,6 @@ class SaleOrder(models.Model):
     def _compute_picking_ids(self):
         for order in self:
             order.delivery_count = len(order.picking_ids)
-
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        if self.company_id:
-            warehouse_id = self.env['ir.default'].get_model_defaults('sale.order').get('warehouse_id')
-            self.warehouse_id = warehouse_id or self.user_id.with_company(self.company_id.id)._get_default_warehouse_id().id
-
-    @api.onchange('user_id')
-    def onchange_user_id(self):
-        super().onchange_user_id()
-        self.warehouse_id = self.user_id.with_company(self.company_id.id)._get_default_warehouse_id().id
 
     @api.onchange('partner_shipping_id')
     def _onchange_partner_shipping_id(self):
@@ -219,11 +194,6 @@ class SaleOrder(models.Model):
         invoice_vals = super(SaleOrder, self)._prepare_invoice()
         invoice_vals['invoice_incoterm_id'] = self.incoterm.id
         return invoice_vals
-
-    @api.model
-    def _get_customer_lead(self, product_tmpl_id):
-        super(SaleOrder, self)._get_customer_lead(product_tmpl_id)
-        return product_tmpl_id.sale_delay
 
     def _log_decrease_ordered_quantity(self, documents, cancel=False):
 
@@ -386,6 +356,11 @@ class SaleOrderLine(models.Model):
                     qty -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                 line.qty_delivered = qty
 
+    @api.depends('product_id')
+    def _compute_customer_lead(self):
+        for line in self:
+            line.customer_lead = line.product_id.sale_delay
+
     @api.model_create_multi
     def create(self, vals_list):
         lines = super(SaleOrderLine, self).create(vals_list)
@@ -427,10 +402,6 @@ class SaleOrderLine(models.Model):
                 super(SaleOrderLine, line)._compute_product_updatable()
             else:
                 line.product_updatable = False
-
-    @api.onchange('product_id')
-    def _onchange_product_id_set_customer_lead(self):
-        self.customer_lead = self.product_id.sale_delay
 
     @api.onchange('product_packaging')
     def _onchange_product_packaging(self):
@@ -474,7 +445,7 @@ class SaleOrderLine(models.Model):
             'route_ids': self.route_id,
             'warehouse_id': self.order_id.warehouse_id or False,
             'partner_id': self.order_id.partner_shipping_id.id,
-            'product_description_variants': self._get_sale_order_line_multiline_description_variants(),
+            'product_description_variants': self._get_variants_description(),
             'company_id': self.order_id.company_id,
         })
         for line in self.filtered("order_id.commitment_date"):

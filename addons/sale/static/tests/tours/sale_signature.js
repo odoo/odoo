@@ -46,6 +46,7 @@ tour.register('sale_signature', {
     {
         content: "check it's confirmed",
         trigger: '#quote_content:contains("Thank You")',
+        extra_trigger: "div[id='portal_sale_content']:contains('Sales Order')",
     },
 ]);
 });

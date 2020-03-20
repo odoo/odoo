@@ -27,7 +27,6 @@ class TestSaleExpense(TestSaleCommon):
             'order_line': [(0, 0, {'name': prod.name, 'product_id': prod.id, 'product_uom_qty': 2, 'product_uom': prod.uom_id.id, 'price_unit': prod.list_price})],
             'pricelist_id': self.env.ref('product.list0').id,
         })
-        so._compute_tax_id()
         so.action_confirm()
         so._create_analytic_account()  # normally created at so confirmation when you use the right products
         init_price = so.amount_total

@@ -208,22 +208,21 @@ class Website(models.Model):
         self.ensure_one()
         affiliate_id = request.session.get('affiliate_id')
         salesperson_id = affiliate_id if self.env['res.users'].sudo().browse(affiliate_id).exists() else request.website.salesperson_id.id
-        addr = partner.address_get(['delivery'])
-        if not request.website.is_public_user():
-            last_sale_order = self.env['sale.order'].sudo().search([('partner_id', '=', partner.id)], limit=1, order="date_order desc, id desc")
-            if last_sale_order:  # first = me
-                addr['delivery'] = last_sale_order.partner_shipping_id.id
         default_user_id = partner.parent_id.user_id.id or partner.user_id.id
+        user_id = salesperson_id or self.salesperson_id.id or default_user_id
+        team_id = self.salesteam_id.id or partner.parent_id.team_id.id or partner.team_id.id
         values = {
-            'partner_id': partner.id,
-            'pricelist_id': pricelist.id,
             'payment_term_id': self.sale_get_payment_term(partner),
-            'team_id': self.salesteam_id.id or partner.parent_id.team_id.id or partner.team_id.id,
-            'partner_invoice_id': partner.id,
-            'partner_shipping_id': addr['delivery'],
-            'user_id': salesperson_id or self.salesperson_id.id or default_user_id,
             'website_id': self._context.get('website_id'),
         }
+        if pricelist:
+            values['pricelist_id'] = pricelist.id
+        if partner:
+            values['partner_id'] = partner.id
+        if user_id:
+            values['user_id'] = user_id
+        if team_id:
+            values['team_id'] = team_id
         company = self.company_id or pricelist.company_id
         if company:
             values['company_id'] = company.id
@@ -274,17 +273,12 @@ class Website(models.Model):
             so_data = self._prepare_sale_order_values(partner, pricelist)
             sale_order = self.env['sale.order'].with_company(request.website.company_id.id).with_user(SUPERUSER_ID).create(so_data)
 
-            # set fiscal position
-            if request.website.partner_id.id != partner.id:
-                sale_order.onchange_partner_shipping_id()
-            else: # For public user, fiscal position based on geolocation
+            # set fiscal position based on geoip for public users.
+            if request.website.partner_id.id == partner.id:
                 country_code = request.session['geoip'].get('country_code')
                 if country_code:
                     country_id = request.env['res.country'].search([('code', '=', country_code)], limit=1).id
                     sale_order.fiscal_position_id = request.env['account.fiscal.position'].sudo().with_company(request.website.company_id.id)._get_fpos_by_region(country_id)
-                else:
-                    # if no geolocation, use the public user fp
-                    sale_order.onchange_partner_shipping_id()
 
             request.session['sale_order_id'] = sale_order.id
 
@@ -304,9 +298,7 @@ class Website(models.Model):
 
             # change the partner, and trigger the onchange
             sale_order.write({'partner_id': partner.id})
-            sale_order.with_context(not_self_saleperson=True).onchange_partner_id()
             sale_order.write({'partner_invoice_id': partner.id})
-            sale_order.onchange_partner_shipping_id() # fiscal position
             sale_order['payment_term_id'] = self.sale_get_payment_term(partner)
 
             # check the pricelist : update it if the pricelist is not the 'forced' one
@@ -315,10 +307,6 @@ class Website(models.Model):
                 if sale_order.pricelist_id.id != pricelist_id:
                     values['pricelist_id'] = pricelist_id
                     update_pricelist = True
-
-            # if fiscal position, update the order lines taxes
-            if sale_order.fiscal_position_id:
-                sale_order._compute_tax_id()
 
             # if values, then make the SO update
             if values:

@@ -173,15 +173,11 @@ class AccountMoveLine(models.Model):
         last_so_line = self.env['sale.order.line'].search([('order_id', '=', order.id)], order='sequence desc', limit=1)
         last_sequence = last_so_line.sequence + 1 if last_so_line else 100
 
-        fpos = order.fiscal_position_id or order.fiscal_position_id.get_fiscal_position(order.partner_id.id)
-        taxes = fpos.map_tax(self.product_id.taxes_id, self.product_id, order.partner_id)
-
         return {
             'order_id': order.id,
             'name': self.name,
             'sequence': last_sequence,
             'price_unit': price,
-            'tax_id': [x.id for x in taxes],
             'discount': 0.0,
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,

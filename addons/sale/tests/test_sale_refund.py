@@ -11,6 +11,8 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
     def setUpClass(cls):
         super(TestSaleToInvoice, cls).setUpClass()
 
+        cls.env.company.currency_id = cls.env.ref('base.USD')
+
         cls.setUpClassicProducts()
         cls.setUpAdditionalAccounts()
         cls.setUpAccountJournal()

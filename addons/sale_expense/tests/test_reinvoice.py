@@ -39,9 +39,6 @@ class TestReInvoice(TestExpenseCommon, TestCommonSaleNoChart):
             'price_unit': self.product_ordered_cost.list_price,
             'order_id': self.sale_order.id,
         })
-        sale_order_line.product_id_change()
-        self.sale_order.onchange_partner_id()
-        self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 
         self.assertTrue(self.sale_order.analytic_account_id, "Confirming SO with an expense product should trigger the analytic account creation")
@@ -94,7 +91,6 @@ class TestReInvoice(TestExpenseCommon, TestCommonSaleNoChart):
     def test_sales_price_ordered(self):
         """ Test invoicing expenses at sales price for product based on ordered quantities. """
         # confirm SO (with no line)
-        self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
         self.assertFalse(self.sale_order.analytic_account_id, "Confirming SO with no expense product should not trigger the analytic account creation")
 
@@ -138,8 +134,6 @@ class TestReInvoice(TestExpenseCommon, TestCommonSaleNoChart):
             'price_unit': self.product_deliver_sales_price.list_price,
             'order_id': self.sale_order.id,
         })
-        sale_order_line1.product_id_change()
-        self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 
         self.assertTrue(self.sale_order.analytic_account_id, "Confirming SO with an expense product should trigger the analytic account creation")
@@ -204,7 +198,6 @@ class TestReInvoice(TestExpenseCommon, TestCommonSaleNoChart):
             'price_unit': self.product_no_expense.list_price,
             'order_id': self.sale_order.id,
         })
-        self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 
         self.assertFalse(self.sale_order.analytic_account_id, "Confirming SO with an no-expense product should not trigger the analytic account creation")

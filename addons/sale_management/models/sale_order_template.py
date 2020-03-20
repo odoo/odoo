@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 
 
 class SaleOrderTemplate(models.Model):
@@ -29,15 +29,6 @@ class SaleOrderTemplate(models.Model):
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
     active = fields.Boolean(default=True, help="If unchecked, it will allow you to hide the quotation template without removing it.")
     company_id = fields.Many2one('res.company', string='Company')
-
-    @api.constrains('company_id', 'sale_order_template_line_ids', 'sale_order_template_option_ids')
-    def _check_company_id(self):
-        for template in self:
-            companies = template.mapped('sale_order_template_line_ids.product_id.company_id') | template.mapped('sale_order_template_option_ids.product_id.company_id')
-            if len(companies) > 1:
-                raise ValidationError(_("Your template cannot contain products from multiple companies."))
-            elif companies and companies != template.company_id:
-                raise ValidationError((_("Your template contains products from company %s whereas your template belongs to company %s. \n Please change the company of your template or remove the products from other companies.") % (companies.mapped('display_name'), template.company_id.display_name)))
 
     @api.onchange('sale_order_template_line_ids', 'sale_order_template_option_ids')
     def _onchange_template_line_ids(self):
@@ -97,6 +88,7 @@ class SaleOrderTemplateLine(models.Model):
     _name = "sale.order.template.line"
     _description = "Quotation Template Line"
     _order = 'sale_order_template_id, sequence, id'
+    _check_company_auto = True
 
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of sale quote lines.",
         default=10)
@@ -104,28 +96,43 @@ class SaleOrderTemplateLine(models.Model):
         'sale.order.template', 'Quotation Template Reference',
         required=True, ondelete='cascade', index=True)
     company_id = fields.Many2one('res.company', related='sale_order_template_id.company_id', store=True, index=True)
-    name = fields.Text('Description', required=True, translate=True)
+
+    name = fields.Text(
+        'Description', translate=True,
+        compute="_compute_name", store=True, readonly=False)
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,
         domain=[('sale_ok', '=', True)])
-    product_uom_qty = fields.Float('Quantity', required=True, digits='Product UoS', default=1)
-    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True)
+
+    product_uom_qty = fields.Float(
+        'Quantity', digits='Product Unit of Measure',
+        compute="_compute_product_information", store=True, readonly=False)
+    product_uom_id = fields.Many2one(
+        'uom.uom', 'Unit of Measure',
+        compute="_compute_product_information", store=True, readonly=False,
+        domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+
 
     display_type = fields.Selection([
         ('line_section', "Section"),
-        ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
+        ('line_note', "Note")], help="Technical field for UX purpose.")
 
-    @api.onchange('product_id')
-    def _onchange_product_id(self):
-        self.ensure_one()
-        if self.product_id:
-            self.product_uom_id = self.product_id.uom_id.id
-            self.name = self.product_id.get_product_multiline_description_sale()
+    @api.depends('product_id')
+    def _compute_product_information(self):
+        for line in self:
+            line.product_uom = line.product_id.uom_id  # if category different else line.product_uom ?
+            line.product_uom_qty = 1.0 # VFE TODO do we really want to reset qty whenever the product_id is changed ?
+
+    @api.depends('product_id', 'company_id')
+    def _compute_name(self):
+        # is the product_id name company_dependent?
+        for line in self:
+            line.name = line.product_id.get_product_multiline_description_sale()
 
     @api.model
     def create(self, values):
-        if values.get('display_type', self.default_get(['display_type'])['display_type']):
+        if values.get('display_type', self.default_get(['display_type']).get('display_type', False)):
             values.update(product_id=False, product_uom_qty=0, product_uom_id=False)
         return super(SaleOrderTemplateLine, self).create(values)
 
@@ -144,6 +151,15 @@ class SaleOrderTemplateLine(models.Model):
             "Forbidden product, unit price, quantity, and UoM on non-accountable sale quote line"),
     ]
 
+    def _prepare_soline_values(self):
+        return {
+            'display_type': self.display_type,
+            'name': self.name,
+            'product_uom_qty': self.product_uom_qty,
+            'product_id': self.product_id.id,
+            'product_uom': self.product_uom_id.id,
+        }
+
 
 class SaleOrderTemplateOption(models.Model):
     _name = "sale.order.template.option"
@@ -152,18 +168,37 @@ class SaleOrderTemplateOption(models.Model):
 
     sale_order_template_id = fields.Many2one('sale.order.template', 'Quotation Template Reference', ondelete='cascade',
         index=True, required=True)
-    company_id = fields.Many2one('res.company', related='sale_order_template_id.company_id', store=True, index=True)
-    name = fields.Text('Description', required=True, translate=True)
+    company_id = fields.Many2one(related='sale_order_template_id.company_id', store=True, index=True)
+
     product_id = fields.Many2one(
         'product.product', 'Product', domain=[('sale_ok', '=', True)],
         required=True, check_company=True)
-    uom_id = fields.Many2one('uom.uom', 'Unit of Measure ', required=True, domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True)
-    quantity = fields.Float('Quantity', required=True, digits='Product UoS', default=1)
+    name = fields.Text(
+        'Description', translate=True,
+        compute="_compute_name", store=True, readonly=False)
 
-    @api.onchange('product_id')
-    def _onchange_product_id(self):
-        if not self.product_id:
-            return
-        self.uom_id = self.product_id.uom_id
-        self.name = self.product_id.get_product_multiline_description_sale()
+    uom_id = fields.Many2one(
+        'uom.uom', 'Unit of Measure ',
+        compute="_compute_product_information", store=True, readonly=False,
+        domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+    quantity = fields.Float('Quantity', required=True, digits='Product Unit of Measure', default=1)
+
+    @api.depends('product_id')
+    def _compute_product_information(self):
+        for line in self:
+            line.product_uom = line.product_id.uom_id  # if category different else line.product_uom ?
+            line.product_uom_qty = 1.0
+
+    @api.depends('product_id', 'company_id')
+    def _compute_name(self):
+        for line in self:
+            line.name = line.product_id.get_product_multiline_description_sale()
+
+    def _prepare_sooption_values(self):
+        return {
+            'product_id': self.product_id.id,
+            'name': self.name,
+            'quantity': self.quantity,
+            'uom_id': self.uom_id.id,
+        }

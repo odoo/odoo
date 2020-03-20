@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo
 from odoo.exceptions import UserError, AccessError
-from odoo.tests import Form
 from odoo.tools import float_compare
 
 from .test_sale_common import TestCommonSaleNoChart
@@ -16,6 +14,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         super(TestSaleOrder, cls).setUpClass()
 
         SaleOrder = cls.env['sale.order'].with_context(tracking_disable=True)
+        cls.env.company.currency_id = cls.env.ref('base.USD')
 
         # set up users
         cls.setUpUsers()
@@ -247,11 +246,6 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.sol_serv_order.write({'tax_id': [(4, tax_exclude.id)]})
         self.sol_product_deliver.write({'tax_id': [(4, tax_exclude.id)]})
 
-        # Trigger onchange to reset discount, unit price, subtotal, ...
-        for line in self.sale_order.order_line:
-            line.product_id_change()
-            line._onchange_discount()
-
         for line in self.sale_order.order_line:
             if line.tax_id.price_include:
                 price = line.price_unit * line.product_uom_qty - line.price_tax
@@ -260,9 +254,10 @@ class TestSaleOrder(TestCommonSaleNoChart):
 
             self.assertEqual(float_compare(line.price_subtotal, price, precision_digits=2), 0)
 
-        self.assertEqual(self.sale_order.amount_total,
-                          self.sale_order.amount_untaxed + self.sale_order.amount_tax,
-                          'Taxes should be applied')
+        self.assertEqual(
+            self.sale_order.amount_total,
+            round(self.sale_order.amount_untaxed + self.sale_order.amount_tax, 2),
+            'Taxes should be applied')
 
     def test_so_create_multicompany(self):
         """Check that only taxes of the right company are applied on the lines."""
@@ -314,12 +309,10 @@ class TestSaleOrder(TestCommonSaleNoChart):
         so_1 = self.env['sale.order'].with_user(user_demo.id).create({
             'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
             'company_id': company_1.id,
-        })
-        so_1.write({
-            'order_line': [(0, False, {'product_id': product_shared.product_variant_id.id, 'order_id': so_1.id})],
+            'order_line': [(0, False, {'product_id': product_shared.product_variant_id.id})],
         })
 
-        self.assertEqual(set(so_1.order_line.tax_id.ids), set([tax_company_1.id]),
+        self.assertEqual(so_1.order_line.tax_id.ids, tax_company_1.ids,
             'Only taxes from the right company are put by default')
         so_1.action_confirm()
         # i'm not interested in groups/acls, but in the multi-company flow only
@@ -449,6 +442,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         sales_order = product_1_ctxt.with_context(mail_notrack=True, mail_create_nolog=True).env["sale.order"].create({
             "partner_id": self.env.user.partner_id.id,
             "pricelist_id": pricelist.id,
+            "payment_term_id": False,
             "order_line": [
                 (0, 0, {
                     "product_id": product_1.id,
@@ -460,9 +454,6 @@ class TestSaleOrder(TestCommonSaleNoChart):
                 })
             ]
         })
-        for line in sales_order.order_line:
-            # Create values autofill does not compute discount.
-            line._onchange_discount()
 
         so_line_1 = sales_order.order_line[0]
         so_line_2 = sales_order.order_line[1]
@@ -479,6 +470,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         sales_order = product_1_ctxt.with_context(mail_notrack=True, mail_create_nolog=True).env["sale.order"].create({
             "partner_id": self.env.user.partner_id.id,
             "pricelist_id": pricelist.id,
+            "payment_term_id": False,
             "order_line": [
                 # Verify discount is considered in create hack
                 (0, 0, {
@@ -491,8 +483,6 @@ class TestSaleOrder(TestCommonSaleNoChart):
                 })
             ]
         })
-        for line in sales_order.order_line:
-            line._onchange_discount()
 
         so_line_1 = sales_order.order_line[0]
         so_line_2 = sales_order.order_line[1]

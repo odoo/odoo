@@ -11,8 +11,9 @@ class Website(models.Model):
         self.ensure_one()
         values = super(Website, self)._prepare_sale_order_values(partner, pricelist)
         if values['company_id']:
+            # VFE TODO can be simplified, partial duplication of the existing compute
             warehouse_id = (
-                self.warehouse_id and self.warehouse_id.id or
+                self.warehouse_id.id or
                 self.env['ir.default'].get('sale.order', 'warehouse_id', company_id=values.get('company_id')) or
                 self.env['ir.default'].get('sale.order', 'warehouse_id') or
                 self.env['stock.warehouse'].sudo().search([('company_id', '=', values['company_id'])], limit=1).id

@@ -58,7 +58,6 @@ class TestReInvoice(TestCommonSaleTimesheetNoChart):
             'price_unit': self.product_ordered_cost.list_price,
             'order_id': self.sale_order.id,
         })
-        sale_order_line1.product_id_change()
         sale_order_line2 = self.env['sale.order.line'].create({
             'name': self.product_deliver_cost.name,
             'product_id': self.product_deliver_cost.id,
@@ -67,10 +66,7 @@ class TestReInvoice(TestCommonSaleTimesheetNoChart):
             'price_unit': self.product_deliver_cost.list_price,
             'order_id': self.sale_order.id,
         })
-        sale_order_line2.product_id_change()
 
-        self.sale_order.onchange_partner_id()
-        self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 
         self.assertEqual(sale_order_line1.qty_delivered_method, 'timesheet', "Delivered quantity of 'service' SO line should be computed by timesheet amount")
@@ -155,23 +151,18 @@ class TestReInvoice(TestCommonSaleTimesheetNoChart):
             'name': self.product_deliver_sales_price.name,
             'product_id': self.product_deliver_sales_price.id,
             'product_uom_qty': 2,
-            'qty_delivered': 1,
             'product_uom': self.product_deliver_sales_price.uom_id.id,
             'price_unit': self.product_deliver_sales_price.list_price,
             'order_id': self.sale_order.id,
         })
-        sale_order_line1.product_id_change()
         sale_order_line2 = self.env['sale.order.line'].create({
             'name': self.product_order_sales_price.name,
             'product_id': self.product_order_sales_price.id,
             'product_uom_qty': 3,
-            'qty_delivered': 1,
             'product_uom': self.product_order_sales_price.uom_id.id,
             'price_unit': self.product_order_sales_price.list_price,
             'order_id': self.sale_order.id,
         })
-        sale_order_line2.product_id_change()
-        self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 
         # let's log some timesheets (on the project created by sale_order_line1)
@@ -206,8 +197,8 @@ class TestReInvoice(TestCommonSaleTimesheetNoChart):
         self.assertEqual(len(self.sale_order.order_line), 4, "There should be 4 lines on the SO (2 vendor bill lines created)")
         self.assertEqual(len(self.sale_order.order_line.filtered(lambda sol: sol.is_expense)), 2, "There should be 4 lines on the SO (2 vendor bill lines created)")
 
-        self.assertEqual(sale_order_line1.qty_delivered, 1, "Exising SO line 1 should not be impacted by reinvoicing product at cost")
-        self.assertEqual(sale_order_line2.qty_delivered, 0, "Exising SO line 2 should not be impacted by reinvoicing product at cost")
+        self.assertEqual(sale_order_line1.qty_delivered, 1, "Existing SO line 1 should not be impacted by reinvoicing product at cost")
+        self.assertEqual(sale_order_line2.qty_delivered, 0, "Existing SO line 2 should not be impacted by reinvoicing product at cost")
 
         self.assertFalse(sale_order_line3.task_id, "Adding a new expense SO line should not create a task (sol3)")
         self.assertFalse(sale_order_line4.task_id, "Adding a new expense SO line should not create a task (sol4)")
@@ -256,7 +247,6 @@ class TestReInvoice(TestCommonSaleTimesheetNoChart):
             'price_unit': self.product_no_expense.list_price,
             'order_id': self.sale_order.id,
         })
-        self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 
         # create invoice lines and validate it

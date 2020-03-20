@@ -102,15 +102,12 @@ class SaleOrder(models.Model):
                     new_lines.append((0, 0, dict(
                         default_so_line_vals,
                         product_id=product.id,
+                        product_uom=product.uom_id.id,
                         product_uom_qty=qty,
                         product_no_variant_attribute_value_ids=no_variant_attribute_values.ids)
                     ))
             if new_lines:
                 self.update(dict(order_line=new_lines))
-                for line in self.order_line.filtered(lambda line: line.product_template_id == product_template):
-                    line.product_id_change()
-                    line._onchange_discount()
-                    
 
     def _get_matrix(self, product_template):
         """Return the matrix of the given product, updated with current SOLines quantities.

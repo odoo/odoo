@@ -30,7 +30,6 @@ class TestSaleStockMultiCompany(TestSaleCommon):
             'partner_id': partner.id,
             'partner_invoice_id': partner.id,
             'partner_shipping_id': partner.id,
-            'user_id': False,
             'company_id': self.env.company.id,
             'order_line': [(0, 0, {
                 'name': product.name,

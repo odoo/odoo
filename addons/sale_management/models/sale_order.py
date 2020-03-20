@@ -4,7 +4,7 @@
 from datetime import timedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 
 
 class SaleOrder(models.Model):
@@ -29,14 +29,6 @@ class SaleOrder(models.Model):
         copy=True, readonly=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
 
-    @api.constrains('company_id', 'sale_order_option_ids')
-    def _check_optional_product_company_id(self):
-        for order in self:
-            companies = order.sale_order_option_ids.product_id.company_id
-            if companies and companies != order.company_id:
-                bad_products = order.sale_order_option_ids.product_id.filtered(lambda p: p.company_id and p.company_id != order.company_id)
-                raise ValidationError((_("Your quotation contains products from company %s whereas your quotation belongs to company %s. \n Please change the company of your quotation or remove the products from other companies (%s).") % (', '.join(companies.mapped('display_name')), order.company_id.display_name, ', '.join(bad_products.mapped('display_name')))))
-
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if self.sale_order_template_id and self.sale_order_template_id.number_of_days > 0:
@@ -44,104 +36,42 @@ class SaleOrder(models.Model):
             default['validity_date'] = fields.Date.context_today(self) + timedelta(self.sale_order_template_id.number_of_days)
         return super(SaleOrder, self).copy(default=default)
 
-    @api.onchange('partner_id')
-    def onchange_partner_id(self):
-        super(SaleOrder, self).onchange_partner_id()
-        template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
-        self.note = template.note or self.note
+    @api.depends('partner_id', 'company_id', 'sale_order_template_id')
+    def _compute_note(self):
+        super()._compute_note()
 
-    def _compute_line_data_for_template_change(self, line):
-        return {
-            'display_type': line.display_type,
-            'name': line.name,
-            'state': 'draft',
-        }
+    def _get_note(self):
+        return self.sale_order_template_id.note or super()._get_note()
 
-    def _compute_option_data_for_template_change(self, option):
-        price = option.product_id.lst_price
-        discount = 0
-
-        if self.pricelist_id:
-            pricelist_price = self.pricelist_id.with_context(uom=option.uom_id.id).get_product_price(option.product_id, 1, False)
-
-            if self.pricelist_id.discount_policy == 'without_discount' and price:
-                discount = max(0, (price - pricelist_price) * 100 / price)
-            else:
-                price = pricelist_price
-
-        return {
-            'product_id': option.product_id.id,
-            'name': option.name,
-            'quantity': option.quantity,
-            'uom_id': option.uom_id.id,
-            'price_unit': price,
-            'discount': discount
-        }
-
-    def update_prices(self):
-        self.ensure_one()
-        res = super().update_prices()
-        for line in self.sale_order_option_ids:
-            line.price_unit = self.pricelist_id.get_product_price(line.product_id, line.quantity, self.partner_id, uom_id=line.uom_id.id)
-        return res
+    @api.depends('company_id', 'sale_order_template_id')
+    def _compute_company_defaults(self):
+        template_based_order = self.filtered('sale_order_template_id')
+        for order in template_based_order:
+            template = order.sale_order_template_id
+            order.require_signature = template.require_signature
+            order.require_payment = template.require_payment
+            order.validity_date = template.number_of_days > 0 and \
+                fields.Date.to_string(fields.Datetime.now() + timedelta(template.number_of_days))
+        super(SaleOrder, self-template_based_order)._compute_company_defaults()
 
     @api.onchange('sale_order_template_id')
     def onchange_sale_order_template_id(self):
-
-        if not self.sale_order_template_id:
-            self.require_signature = self._get_default_require_signature()
-            self.require_payment = self._get_default_require_payment()
-            return
-
-        template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
+        self = self.with_context(lang=self.partner_id.lang)
+        template = self.sale_order_template_id
 
         # --- first, process the list of products from the template
-        order_lines = [(5, 0, 0)]
-        for line in template.sale_order_template_line_ids:
-            data = self._compute_line_data_for_template_change(line)
-
-            if line.product_id:
-                price = line.product_id.lst_price
-                discount = 0
-
-                if self.pricelist_id:
-                    pricelist_price = self.pricelist_id.with_context(uom=line.product_uom_id.id).get_product_price(line.product_id, 1, False)
-
-                    if self.pricelist_id.discount_policy == 'without_discount' and price:
-                        discount = max(0, (price - pricelist_price) * 100 / price)
-                    else:
-                        price = pricelist_price
-
-                data.update({
-                    'price_unit': price,
-                    'discount': discount,
-                    'product_uom_qty': line.product_uom_qty,
-                    'product_id': line.product_id.id,
-                    'product_uom': line.product_uom_id.id,
-                    'customer_lead': self._get_customer_lead(line.product_id.product_tmpl_id),
-                })
-
-            order_lines.append((0, 0, data))
+        order_lines = [(5, 0, 0)] + [
+            (0, 0, line._prepare_soline_values()) for line in template.sale_order_template_line_ids
+        ]
 
         self.order_line = order_lines
-        self.order_line._compute_tax_id()
 
         # then, process the list of optional products from the template
-        option_lines = [(5, 0, 0)]
-        for option in template.sale_order_template_option_ids:
-            data = self._compute_option_data_for_template_change(option)
-            option_lines.append((0, 0, data))
+        option_lines = [(5, 0, 0)] + [
+            (0, 0, option._prepare_sooption_values()) for option in template.sale_order_template_option_ids
+        ]
 
         self.sale_order_option_ids = option_lines
-
-        if template.number_of_days > 0:
-            self.validity_date = fields.Date.context_today(self) + timedelta(template.number_of_days)
-
-        self.require_signature = template.require_signature
-        self.require_payment = template.require_payment
-
-        if template.note:
-            self.note = template.note
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
@@ -171,37 +101,79 @@ class SaleOrderLine(models.Model):
 
     sale_order_option_ids = fields.One2many('sale.order.option', 'line_id', 'Optional Products Lines')
 
-    # Take the description on the order template if the product is present in it
-    @api.onchange('product_id')
-    def product_id_change(self):
-        domain = super(SaleOrderLine, self).product_id_change()
-        if self.product_id and self.order_id.sale_order_template_id:
-            for line in self.order_id.sale_order_template_id.sale_order_template_line_ids:
-                if line.product_id == self.product_id:
-                    self.name = line.with_context(lang=self.order_id.partner_id.lang).name
-                    break
-        return domain
-
 
 class SaleOrderOption(models.Model):
     _name = "sale.order.option"
     _description = "Sale Options"
     _order = 'sequence, id'
+    _check_company_auto = True
 
-    is_present = fields.Boolean(string="Present on Quotation",
-                           help="This field will be checked if the option line's product is "
-                                "already present in the quotation.",
-                           compute="_compute_is_present", search="_search_is_present")
     order_id = fields.Many2one('sale.order', 'Sales Order Reference', ondelete='cascade', index=True)
+    company_id = fields.Many2one('res.company', related='order_id.company_id', store=True)
+    currency_id = fields.Many2one('res.currency', related='order_id.currency_id', store=True)
+
+    name = fields.Text('Description', compute="_compute_name", store=True, readonly=False)
+    product_id = fields.Many2one(
+        'product.product', string='Product',
+        domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        change_default=True, ondelete='restrict', check_company=True)
+
+    uom_id = fields.Many2one(
+        'uom.uom', 'Unit of Measure ',
+        compute="_compute_product_information", store=True, readonly=False,
+        domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+    quantity = fields.Float(
+        'Quantity', digits='Product Unit of Measure',
+        compute="_compute_product_information", store=True, readonly=False)
+
+    price_unit = fields.Float(
+        'Unit Price', digits='Product Price',
+        compute="_compute_price_unit", store=True, readonly=False)
+    discount = fields.Float(
+        string='Discount (%)', digits='Discount', copy=True,
+        compute="_compute_price_unit", store=True, readonly=False)
     line_id = fields.Many2one('sale.order.line', ondelete="set null", copy=False)
-    name = fields.Text('Description', required=True)
-    product_id = fields.Many2one('product.product', 'Product', required=True, domain=[('sale_ok', '=', True)])
-    price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
-    discount = fields.Float('Discount (%)', digits='Discount')
-    uom_id = fields.Many2one('uom.uom', 'Unit of Measure ', required=True, domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True)
-    quantity = fields.Float('Quantity', required=True, digits='Product UoS', default=1)
+    is_present = fields.Boolean(
+        string="Present on Quotation",
+        compute="_compute_is_present", search="_search_is_present",
+        help="This field will be checked if the option line's product is "
+        "already present in the quotation.")
+
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of optional products.")
+
+    # VFE FEEDBACK
+    # Do we want the price shown for the option to be the fucking final price when added on order ?
+    # Then we need to consider taxes and pricelist discount on options
+    # Otherwise, probably remove discount bc it's confusing what to do with it?
+    # final SO line should have both discounts?
+
+    # TODO dependency on pricelist and compute discount on it also for the option lines.
+    @api.depends('product_id', 'company_id', 'quantity', 'uom_id')
+    def _compute_price_unit(self):
+        for option in self:
+            option = option.with_company(option.company_id)
+            if option.order_id.pricelist_id:
+                option.price_unit = option.order_id.pricelist_id.get_product_price(
+                    option.product_id, option.quantity,
+                    option.order_id.partner_id, uom_id=option.uom_id.id)
+                option.discount = 0.0
+            else:
+                option.price_unit = 0.0
+                option.discount = 0.0
+
+    @api.depends('product_id')
+    def _compute_product_information(self):
+        for option in self:
+            option.product_uom = option.product_id.uom_id  # if category different else option.product_uom ?
+            option.product_uom_qty = 1.0
+
+    @api.depends('product_id')
+    def _compute_name(self):
+        for option in self:
+            if option.order_id.partner_id:
+                option = option.with_context(lang=option.order_id.partner_id)
+            option.name = option.product_id.get_product_multiline_description_sale()
 
     @api.depends('line_id', 'order_id.order_line', 'product_id')
     def _compute_is_present(self):
@@ -215,34 +187,18 @@ class SaleOrderOption(models.Model):
             return [('line_id', '=', False)]
         return [('line_id', '!=', False)]
 
-    @api.onchange('product_id', 'uom_id')
-    def _onchange_product_id(self):
-        if not self.product_id:
-            return
-        product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
-        self.name = product.get_product_multiline_description_sale()
-        self.uom_id = self.uom_id or product.uom_id
-        # To compute the dicount a so line is created in cache
-        values = self._get_values_to_add_to_order()
-        new_sol = self.env['sale.order.line'].new(values)
-        new_sol._onchange_discount()
-        self.discount = new_sol.discount
-        self.price_unit = new_sol._get_display_price(product)
-
+    # VFE TODO remove one of the two methods ???
     def button_add_to_order(self):
         self.add_option_to_order()
 
     def add_option_to_order(self):
         self.ensure_one()
 
-        sale_order = self.order_id
-
-        if sale_order.state not in ['draft', 'sent']:
+        if self.order_id.state not in ['draft', 'sent']:
             raise UserError(_('You cannot add options to a confirmed order.'))
 
         values = self._get_values_to_add_to_order()
         order_line = self.env['sale.order.line'].create(values)
-        order_line._compute_tax_id()
 
         self.write({'line_id': order_line.id})
 
@@ -256,5 +212,4 @@ class SaleOrderOption(models.Model):
             'product_uom_qty': self.quantity,
             'product_uom': self.uom_id.id,
             'discount': self.discount,
-            'company_id': self.order_id.company_id.id,
         }

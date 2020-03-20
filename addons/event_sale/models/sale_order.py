@@ -96,29 +96,34 @@ class SaleOrderLine(models.Model):
         return True
 
     @api.onchange('product_id')
-    def _onchange_product_id(self):
+    def _cleanup_event_information(self):
         # We reset the event when keeping it would lead to an inconstitent state.
         # We need to do it this way because the only relation between the product and the event is through the corresponding tickets.
         if self.event_id and (not self.product_id or self.product_id.id not in self.event_id.mapped('event_ticket_ids.product_id.id')):
             self.event_id = None
 
     @api.onchange('event_id')
-    def _onchange_event_id(self):
+    def _cleanup_ticket_information(self):
         # We reset the ticket when keeping it would lead to an inconstitent state.
         if self.event_ticket_id and (not self.event_id or self.event_id != self.event_ticket_id.event_id):
             self.event_ticket_id = None
 
-    @api.onchange('product_uom', 'product_uom_qty')
-    def product_uom_change(self):
-        if not self.event_ticket_id:
-            super(SaleOrderLine, self).product_uom_change()
+    @api.depends('product_id', 'product_uom', 'product_uom_qty', 'tax_id', 'event_ticket_id')
+    def _compute_price_unit(self):
+        # VFE TODO clean price computation extension for event tickets.
+        event_ticket_lines = self.filtered('event_ticket_id')
+        for line in event_ticket_lines:
+            line.discount = 0.0
+            line.price_unit = line.event_ticket_id.price
+        super(SaleOrderLine, self-event_ticket_lines)._compute_price_unit()
 
-    @api.onchange('event_ticket_id')
-    def _onchange_event_ticket_id(self):
-        # we call this to force update the default name
-        self.product_id_change()
+    @api.depends('product_id', 'product_custom_attribute_value_ids', 'product_no_variant_attribute_value_ids', 'event_ticket_id')
+    def _compute_name(self):
+        super()._compute_name()
+        # _get_sale_description is extended to consider event_ticket_id field
+        # This override is only there for the depends on 'event_ticket_id' field.
 
-    def get_sale_order_line_multiline_description_sale(self, product):
+    def _get_sale_description(self):
         """ We override this method because we decided that:
                 The default description of a sales order line containing a ticket must be different than the default description when no ticket is present.
                 So in that case we use the description computed from the ticket, instead of the description computed from the product.
@@ -129,9 +134,9 @@ class SaleOrderLine(models.Model):
                 lang=self.order_id.partner_id.lang,
             )
 
-            return ticket._get_ticket_multiline_description() + self._get_sale_order_line_multiline_description_variants()
+            return ticket._get_ticket_multiline_description() + self._get_variants_description()
         else:
-            return super(SaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)
+            return super(SaleOrderLine, self)._get_sale_description()
 
     def _get_display_price(self, product):
         if self.event_ticket_id and self.event_id:

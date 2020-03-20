@@ -31,6 +31,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
             'product_uom_qty': 5,
             'product_uom': cls.product_order.uom_id.id,
             'price_unit': cls.product_order.list_price,
+            'discount': 0.0,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
@@ -40,6 +41,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
             'product_uom_qty': 4,
             'product_uom': cls.service_deliver.uom_id.id,
             'price_unit': cls.service_deliver.list_price,
+            'discount': 0.0,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
@@ -49,6 +51,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
             'product_uom_qty': 3,
             'product_uom': cls.service_order.uom_id.id,
             'price_unit': cls.service_order.list_price,
+            'discount': 0.0,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
@@ -58,6 +61,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
             'product_uom_qty': 2,
             'product_uom': cls.product_deliver.uom_id.id,
             'price_unit': cls.product_deliver.list_price,
+            'discount': 0.0,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
@@ -77,15 +81,17 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         # Confirm the SO
         self.sale_order.action_confirm()
         # Let's do an invoice for a deposit of 100
-        payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
+        invoicing_wizard = self.env['sale.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'fixed',
             'fixed_amount': 100,
             'deposit_account_id': self.account_income.id
         })
-        payment.create_invoices()
+        invoicing_wizard.create_invoices()
 
         self.assertEqual(len(self.sale_order.invoice_ids), 1, 'Invoice should be created for the SO')
         downpayment_line = self.sale_order.order_line.filtered(lambda l: l.is_downpayment)
+        self.assertEqual(downpayment_line.price_unit, 100.0, "SO line downpayment price shouldn't have changed")
+        self.assertEqual(downpayment_line.product_uom_qty, 0.0, "SO line downpayment qty should be 0")
         self.assertEqual(len(downpayment_line), 1, 'SO line downpayment should be created on SO')
 
         # Update delivered quantity of SO lines
@@ -99,6 +105,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         payment.create_invoices()
 
         self.assertEqual(len(self.sale_order.invoice_ids), 2, 'Invoice should be created for the SO')
+        self.assertEqual(downpayment_line.price_unit, 100.0, "SO line downpayment price shouldn'h have changed")
 
         invoice = self.sale_order.invoice_ids.sorted()[-1]
         self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))), len(self.sale_order.order_line), 'All lines should be invoiced')

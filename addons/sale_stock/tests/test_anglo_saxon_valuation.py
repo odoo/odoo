@@ -15,6 +15,8 @@ class TestAngloSaxonValuation(SavepointCase):
             'name': 'product',
             'type': 'product',
             'categ_id': cls.env.ref('product.product_category_all').id,
+            'lst_price': 12.0,
+            'taxes_id': [],
         })
         cls.stock_input_account = cls.env['account.account'].create({
             'name': 'Stock Input',
@@ -108,12 +110,8 @@ class TestAngloSaxonValuation(SavepointCase):
             'partner_id': self.customer.id,
             'order_line': [
                 (0, 0, {
-                    'name': self.product.name,
                     'product_id': self.product.id,
                     'product_uom_qty': 2.0,
-                    'product_uom': self.product.uom_id.id,
-                    'price_unit': 12,
-                    'tax_id': False,  # no love taxes amls
                 })],
         })
         sale_order.action_confirm()

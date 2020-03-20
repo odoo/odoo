@@ -139,7 +139,6 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
             'price_unit': self.product_delivery_timesheet2.list_price,
             'order_id': self.sale_order.id,
         })
-        so_line_deliver_global_project.product_id_change()
         self.sale_order.action_confirm()
         task_serv2 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_global_project.id)])
 
@@ -185,7 +184,6 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
             'price_unit': self.product_delivery_timesheet3.list_price,
             'order_id': self.sale_order.id,
         })
-        so_line_deliver_new_task_project.product_id_change()
         self.sale_order.action_confirm()
         task_serv2 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_new_task_project.id)])
 
@@ -508,8 +506,6 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
             'price_unit': self.product_delivery_timesheet3.list_price,
             'order_id': self.sale_order.id,
         })
-        so_line_deliver_new_task_project.product_id_change()
-        so_line_deliver_new_task_project_2.product_id_change()
         self.sale_order.action_confirm()
 
         project = so_line_deliver_new_task_project.project_id

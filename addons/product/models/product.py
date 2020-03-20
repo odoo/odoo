@@ -228,7 +228,7 @@ class ProductProduct(models.Model):
         pricelist_id_or_name = self._context.get('pricelist')
         if pricelist_id_or_name:
             pricelist = None
-            partner = self.env.context.get('partner', False)
+            partner = self.env.context.get('partner_id', False)
             quantity = self.env.context.get('quantity', 1.0)
 
             # Support context pricelists specified as list, display_name or ID for compatibility
