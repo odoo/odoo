@@ -33,6 +33,7 @@
                 </label>
                 <div class="col-sm">
                     <t t-raw="0"/>
+                    <t t-call="website_form.field_description"/>
                 </div>
             </div>
             <t t-else="">
@@ -40,6 +41,7 @@
                      <t t-call="website_form.label_content"/>
                 </label>
                 <t t-raw="0"/>
+                <t t-call="website_form.field_description"/>
             </t>
         </div>
     </t>
@@ -53,9 +55,11 @@
         <t t-else="">
             <span class="s_website_form_mark" t-if="field.formatInfo.optionalMark" t-esc="' ' + field.formatInfo.mark"/>
         </t>
-        <span t-if="['email_cc', 'email_to'].includes(field.name)" title="Separate email addresses with a comma.">
-            <i class="fa fa-info-circle"/>
-        </span>
+    </t>
+
+    <t t-name="website_form.field_description">
+        <t t-if="['email_cc', 'email_to'].includes(field.name) and !field.description" t-set="field.description" t-value="'Separate email addresses with a comma.'"/>
+        <small t-if="field.description" t-esc="field.description" class="s_website_form_field_description form-text text-muted"/>
     </t>
 
     <!-- Hidden Field -->

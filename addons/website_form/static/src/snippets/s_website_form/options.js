@@ -255,6 +255,7 @@ const FieldEditor = FormEditor.extend({
         const classList = this.$target[0].classList;
         const textarea = this.$target[0].querySelector('textarea');
         const input = this.$target[0].querySelector('input[type="text"], input[type="email"], input[type="number"], textarea');
+        const description = this.$target[0].querySelector('.s_website_form_field_description');
         field.placeholder = input && input.placeholder;
         if (input) {
             // textarea value has no attribute,  date/datetime timestamp property is formated
@@ -264,6 +265,7 @@ const FieldEditor = FormEditor.extend({
         }
         // property value is needed for date/datetime (formated date).
         field.propertyValue = input && input.value;
+        field.description = description && description.textContent;
         field.rows = textarea && textarea.rows;
         field.required = classList.contains('s_website_form_required');
         field.modelRequired = classList.contains('s_website_form_model_required');
@@ -756,6 +758,19 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
     //----------------------------------------------------------------------
 
     /**
+     * Add a description to the field input
+     */
+    appendDescription: async function (previewMode, value, params) {
+        const description = this.$target[0].querySelector('.s_website_form_field_description');
+        if (description && value) {
+            description.textContent = value;
+        } else {
+            const field = this._getActiveField();
+            field.description = value;
+            await this._replaceField(field);
+        }
+    },
+    /**
      * Replace the current field with the custom field selected.
      */
     customField: async function (previewMode, value, params) {
@@ -862,6 +877,10 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     _computeWidgetState: function (methodName, params) {
         switch (methodName) {
+            case 'appendDescription': {
+                const description = this.$target[0].querySelector('.s_website_form_field_description');
+                return description ? description.textContent : '';
+            }
             case 'customField':
                 return this._isFieldCustom() ? this._getFieldType() : '';
             case 'existingField':
