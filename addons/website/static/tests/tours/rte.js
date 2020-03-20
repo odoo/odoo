@@ -13,23 +13,11 @@ var ready = Promise.all([domReady, session.is_bound, ajax.loadXML()]);
 
 tour.register('rte_translator', {
     test: true,
-    url: '/',
+    url: '/fr_BE',
     wait_for: ready,
 }, [{
-    content: "click on Add a language",
-    trigger: '.js_language_selector a:has(i.fa)',
-}, {
-    content: "select french",
-    trigger: 'select[name="lang"]',
-    run: 'text "fr_BE"',
-}, {
-    content: "load french",
-    trigger: '.modal-footer button:first',
-    extra_trigger: '.modal select[name="lang"]:propValueContains(fr_BE)',
-}, {
     content : "click language dropdown",
     trigger : '.js_language_selector .dropdown-toggle',
-    timeout: 60000,
 }, {
     content: "go to english version",
     trigger: '.js_language_selector a[data-url_code="en"]',
