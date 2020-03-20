@@ -40,9 +40,7 @@ class ActionManager extends core.EventBus {
         });
         // Before switching views, an event is triggered
         // containing the state of the current controller
-        this.env.bus.on('legacy-export-state', this, payload => {
-            this._legacyStateExported(payload);
-        });
+        this.env.bus.on('legacy-export-state', this, this._onLegacyExportState);
         this.env.bus.on('history-back', this, this._onHistoryBack);
         this.plugins = new WeakMap();
 
@@ -62,9 +60,40 @@ class ActionManager extends core.EventBus {
         this.currentDialogController = null;
     }
     //--------------------------------------------------------------------------
-    // Public
+    // Main API
     //--------------------------------------------------------------------------
+    commit(newStack, newDialog, onCommit) {
+        this.currentStack = newStack.map(obj => {
+            return obj.controller.jsID;
+        });
+        let controller, action;
+        if (!newDialog && newStack.length) {
+            const main = newStack[newStack.length - 1];
+            controller = main.controller;
+            action = main.action;
+            // always close dialogs when the current controller changes
+            // use case: have a controller that opens a dialog, and from this dialog, have a
+            // link/button to perform an action that will be stacked in the breadcrumbs
+            // (for instance, a many2one in readonly)
+            this.env.bus.trigger('close_dialogs');
+            this.currentDialogController = null;
 
+            // store the action into the sessionStorage so that it can be fully restored on F5
+            this.env.services.session_storage.setItem('current_action', action._originalAction);
+        } else if (newDialog) {
+            controller = newDialog.controller;
+            this.currentDialogController = controller;
+        }
+
+        if (controller && controller.options && controller.options.on_success) {
+            controller.options.on_success();
+            controller.options.on_success = null;
+        }
+        if (onCommit) {
+            onCommit();
+        }
+        this._cleanActions();
+    }
     /**
      * Executes Odoo actions, given as an ID in database, an xml ID, a client
      * action tag or an action descriptor.
@@ -259,30 +288,6 @@ class ActionManager extends core.EventBus {
         return this.doAction(action, options);
     }
     /**
-     * @returns {Object}
-     */
-    getCurrentState() {
-        const res = {
-            main: null,
-            dialog: null,
-        };
-        const currentControllerID = this.currentStack[this.currentStack.length - 1];
-        if (currentControllerID) {
-            const {action, controller} = this._getStateFromController(currentControllerID);
-            res.main = {
-                action: action,
-                controller: controller,
-            }
-         }
-         if (this.currentDialogController) {
-             res.dialog = {
-                 action: this._getStateFromController(this.currentDialogController.jsID).action,
-                 controller: this.currentDialogController,
-              }
-         }
-         return res;
-    }
-    /**
      * @param {Object} state
      * @returns {Promise}
      */
@@ -303,19 +308,6 @@ class ActionManager extends core.EventBus {
             return null;
         }
         return result;
-    }
-    makeBaseController(action, params) {
-        const controllerID = params.controllerID || this._nextID('controller');
-        const index = this._getControllerStackIndex(params);
-        const newController = {
-            actionID: action.jsID,
-            Component: params.Component,
-            index: index,
-            jsID: controllerID,
-        };
-        action.controller = newController;
-        this.controllers[controllerID] = newController;
-        return newController;
     }
     /**
      * Restores a controller from the controllerStack and removes all
@@ -344,6 +336,60 @@ class ActionManager extends core.EventBus {
             }
         }
         this.pushControllers([this.controllers[controllerID]]);
+    }
+    rollBack(newStack, newDialog) {
+        let controller;
+        if (!newDialog) {
+            const main = newStack[newStack.length - 1];
+            controller = main.controller;
+        } else {
+            controller = newDialog.controller;
+        }
+        if (controller.options && controller.options.on_fail) {
+            controller.options.on_fail();
+        }
+    }
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @returns {Object}
+     */
+    getCurrentState() {
+        const res = {
+            main: null,
+            dialog: null,
+        };
+        const currentControllerID = this.currentStack[this.currentStack.length - 1];
+        if (currentControllerID) {
+            const {action, controller} = this._getStateFromController(currentControllerID);
+            res.main = {
+                action: action,
+                controller: controller,
+            }
+         }
+         if (this.currentDialogController) {
+             res.dialog = {
+                 action: this._getStateFromController(this.currentDialogController.jsID).action,
+                 controller: this.currentDialogController,
+              }
+         }
+         return res;
+    }
+    makeBaseController(action, params) {
+        const controllerID = params.controllerID || this._nextID('controller');
+        const index = this._getControllerStackIndex(params);
+        const newController = {
+            actionID: action.jsID,
+            Component: params.Component,
+            index: index,
+            jsID: controllerID,
+        };
+        action.controller = newController;
+        this.controllers[controllerID] = newController;
+        return newController;
     }
     rpc() {
         return this.env.services.rpc(...arguments);
@@ -407,50 +453,6 @@ class ActionManager extends core.EventBus {
             onCommit: options && options.onCommit,
             doOwlReload: options && 'doOwlReload' in options ? options.doOwlReload : true,
         });
-    }
-    commit(newStack, newDialog, onCommit) {
-        this.currentStack = newStack.map(obj => {
-            return obj.controller.jsID;
-        });
-        let controller, action;
-        if (!newDialog && newStack.length) {
-            const main = newStack[newStack.length - 1];
-            controller = main.controller;
-            action = main.action;
-            // always close dialogs when the current controller changes
-            // use case: have a controller that opens a dialog, and from this dialog, have a
-            // link/button to perform an action that will be stacked in the breadcrumbs
-            // (for instance, a many2one in readonly)
-            this.env.bus.trigger('close_dialogs');
-            this.currentDialogController = null;
-
-            // store the action into the sessionStorage so that it can be fully restored on F5
-            this.env.services.session_storage.setItem('current_action', action._originalAction);
-        } else if (newDialog) {
-            controller = newDialog.controller;
-            this.currentDialogController = controller;
-        }
-
-        if (controller && controller.options && controller.options.on_success) {
-            controller.options.on_success();
-            controller.options.on_success = null;
-        }
-        if (onCommit) {
-            onCommit();
-        }
-        this._cleanActions();
-    }
-    rollBack(newStack, newDialog) {
-        let controller;
-        if (!newDialog) {
-            const main = newStack[newStack.length - 1];
-            controller = main.controller;
-        } else {
-            controller = newDialog.controller;
-        }
-        if (controller.options && controller.options.on_fail) {
-            controller.options.on_fail();
-        }
     }
     //--------------------------------------------------------------------------
     // Private
@@ -572,11 +574,6 @@ class ActionManager extends core.EventBus {
             }
         }
     }
-    _legacyStateExported(payload) {
-        const { action } = this.getCurrentState().main;
-        Object.assign(action, payload.commonState);
-        action.controllerState = Object.assign({}, action.controllerState, payload.controllerState);
-    }
     _nextID(type) {
         return `${type}${this.constructor.nextID++}`;
     }
@@ -624,6 +621,11 @@ class ActionManager extends core.EventBus {
                 this.restoreController(this.currentStack[length - 2]);
             }
         }
+    }
+    _onLegacyExportState(payload) {
+        const { action } = this.getCurrentState().main;
+        Object.assign(action, payload.commonState);
+        action.controllerState = Object.assign({}, action.controllerState, payload.controllerState);
     }
 }
 ActionManager.nextID = 1;
