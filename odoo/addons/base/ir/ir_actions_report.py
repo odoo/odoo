@@ -526,15 +526,25 @@ class IrActionsReport(models.Model):
                     streams.append(pdf_content_stream)
                 else:
                     # In case of multiple docs, we need to split the pdf according the records.
-                    # To do so, we split the pdf based on outlines computed by wkhtmltopdf.
+                    # To do so, we split the pdf based on top outlines computed by wkhtmltopdf.
                     # An outline is a <h?> html tag found on the document. To retrieve this table,
-                    # we look on the pdf structure using pypdf to compute the outlines_pages that is
-                    # an array like [0, 3, 5] that means a new document start at page 0, 3 and 5.
+                    # we look on the pdf structure using pypdf to compute the outlines_pages from
+                    # the top level heading in /Outlines.
                     reader = PdfFileReader(pdf_content_stream)
-                    if reader.trailer['/Root'].get('/Dests'):
-                        outlines_pages = sorted(
-                            [outline.getObject()[0] for outline in reader.trailer['/Root']['/Dests'].values()])
+                    root = reader.trailer['/Root']
+                    if '/Outlines' in root and '/First' in root['/Outlines']:
+                        outlines_pages = []
+                        node = root['/Outlines']['/First']
+                        while True:
+                            outlines_pages.append(root['/Dests'][node['/Dest']][0])
+                            if '/Next' not in node:
+                                break
+                            node = node['/Next']
+                        outlines_pages = sorted(set(outlines_pages))
+                        # There should be only one top-level heading by document
                         assert len(outlines_pages) == len(res_ids)
+                        # There should be a top-level heading on first page
+                        assert outlines_pages[0] == 0
                         for i, num in enumerate(outlines_pages):
                             to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
                             attachment_writer = PdfFileWriter()
