@@ -43,5 +43,8 @@ State Data/省份数据
         'data/account_chart_template_data.xml',
         'views/account_move_view.xml'
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
     'post_init_hook': 'load_translations',
 }

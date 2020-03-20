@@ -34,4 +34,7 @@ Romanian accounting chart and localization.
              'data/account_chart_template_data.xml',
              'data/res.bank.csv',
              ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
 }

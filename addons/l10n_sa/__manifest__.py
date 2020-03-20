@@ -21,5 +21,8 @@ In future this module will include some payroll rules for ME .
         'data/l10n_sa_chart_data.xml',
         'data/account_chart_template_configure_data.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
     'post_init_hook': 'load_translations',
 }

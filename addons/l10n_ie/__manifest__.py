@@ -21,4 +21,7 @@
         'data/account_tax_data.xml',
         'data/account_chart_template_configuration_data.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
 }

@@ -22,7 +22,7 @@ This is the module to manage the **accounting chart for Denmark**. Cover both on
         - 25% moms
         - Resturationsmoms 6,25%
         - Omvendt betalingspligt
-        
+
 - Konteringsgrupper
         - EU (Virksomhed)
         - EU (Privat)
@@ -101,5 +101,8 @@ Copyright 2018 Odoo House ApS
         'data/account_fiscal_position_account_template.xml',
         'data/account_chart_template_configuration_data.xml',
         'data/menuitem_data.xml'
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
 }

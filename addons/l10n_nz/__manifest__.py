@@ -31,4 +31,7 @@ Also:
              'data/account_chart_template_configure_data.xml',
              'data/res_currency_data.xml',
              ],
+     'demo': [
+         'demo/demo_company.xml',
+     ],
 }

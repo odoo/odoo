@@ -32,5 +32,8 @@ with Chart of account under Circular No. 200/2014/TT-BTC
          'data/account_tax_data.xml',
          'data/account_chart_template_data.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
     'post_init_hook': '_preserve_tag_on_taxes',
 }

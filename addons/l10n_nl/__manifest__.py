@@ -29,7 +29,9 @@
         'data/account_chart_template_data.xml',
         'data/menuitem.xml',
     ],
-    'demo': [],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
     'auto_install': False,
     'installable': True,
 }

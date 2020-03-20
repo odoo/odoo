@@ -36,5 +36,8 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
               'data/account_fiscal_position_data.xml',
               'data/account_chart_template_data.xml'
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
     'post_init_hook': '_preserve_tag_on_taxes',
 }

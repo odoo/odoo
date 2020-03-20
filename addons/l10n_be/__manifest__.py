@@ -58,6 +58,7 @@ Wizards provided by this module:
     ],
     'demo': [
         'demo/l10n_be_demo.xml',
+        'demo/demo_company.xml',
     ],
     'post_init_hook': 'load_translations',
 }

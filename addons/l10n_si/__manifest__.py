@@ -26,4 +26,7 @@
         "data/account.fiscal.position.tax.template.csv",
         "data/account_chart_template_data.xml",
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
 }

@@ -22,6 +22,9 @@ Updated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>
              'data/account_tax_data.xml',
              'data/account_chart_template_data.xml',
              ],
+     'demo': [
+         'demo/demo_company.xml',
+     ],
     "active": False,
     'post_init_hook': '_preserve_tag_on_taxes',
 }
