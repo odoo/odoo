@@ -190,6 +190,15 @@ var AbstractThreadWindow = Widget.extend({
         return this._thread.getUnreadCounter();
     },
     /**
+     * Return the channel type
+     * @returns {string}
+     */
+    getThreadType: function () {
+        if (this.hasThread()) {
+            return this._thread._type;
+        }
+    },
+    /**
      * States whether this thread window is related to a thread or not.
      *
      * This is useful in order to provide specific behaviour for thread windows
