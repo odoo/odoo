@@ -228,23 +228,6 @@ const FieldEditor = FormEditor.extend({
         return this.$target[0].querySelector('.s_website_form_multiple');
     },
     /**
-     * @private
-     * @returns {string}
-     */
-    _getPlaceholder: function () {
-        const input = this._getPlaceholderInput();
-        return input ? input.placeholder : '';
-    },
-    /**
-     * Returns the field's input if it is placeholder compatible, else null
-     *
-     * @private
-     * @returns {HTMLElement}
-     */
-    _getPlaceholderInput: function () {
-        return this.$target[0].querySelector('input[type="text"], input[type="email"], input[type="number"], input[type="tel"], input[type="url"], textarea');
-    },
-    /**
      * Returns true if the field is a custom field, false if it is an existing field
      *
      * @private
@@ -271,24 +254,13 @@ const FieldEditor = FormEditor.extend({
     _setActiveProperties(field) {
         const classList = this.$target[0].classList;
         const textarea = this.$target[0].querySelector('textarea');
-        field.placeholder = this._getPlaceholder();
+        const input = this.$target[0].querySelector('input[type="text"], input[type="email"], input[type="number"], input[type="tel"], input[type="url"], textarea');
+        field.placeholder = input && input.placeholder;
         field.rows = textarea && textarea.rows;
         field.required = classList.contains('s_website_form_required');
         field.modelRequired = classList.contains('s_website_form_model_required');
         field.hidden = classList.contains('s_website_form_field_hidden');
         field.formatInfo = this._getFieldFormat();
-    },
-    /**
-     * Set the placeholder on the current field if the input allow it
-     *
-     * @private
-     * @param {string} value
-     */
-    _setPlaceholder: function (value) {
-        const input = this._getPlaceholderInput();
-        if (input) {
-            input.placeholder = value;
-        }
     },
 });
 
@@ -859,12 +831,6 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             this.$target[0].querySelectorAll('.s_website_form_input').forEach(el => el.name = value);
         }
     },
-    /*
-    * Set the placeholder of the input
-    */
-    setPlaceholder: function (previewMode, value, params) {
-        this._setPlaceholder(value);
-    },
     /**
      * Replace the field with the same field having the label in a different position.
      */
@@ -921,8 +887,6 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 return this._isFieldCustom() ? '' : this._getFieldName();
             case 'setLabelText':
                 return this.$target.find('.s_website_form_label_content').text();
-            case 'setPlaceholder':
-                return this._getPlaceholder();
             case 'selectLabelPosition':
                 return this._getLabelPosition();
             case 'selectType':
@@ -945,8 +909,6 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 return !this.$target[0].classList.contains('s_website_form_custom') && ['char', 'email', 'tel', 'url'].includes(this.$target[0].dataset.type);
             case 'multi_check_display_opt':
                 return !!this._getMultipleInputs();
-            case 'placeholder_opt':
-                return !!this._getPlaceholderInput();
             case 'required_opt':
             case 'hidden_opt':
             case 'type_opt':
