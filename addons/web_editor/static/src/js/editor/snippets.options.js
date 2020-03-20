@@ -1413,6 +1413,7 @@ const ListUserValueWidget = UserValueWidget.extend({
         'click we-button.o_we_list_add_optional': '_onAddCustomItemClick',
         'click we-button.o_we_list_add_existing': '_onAddExistingItemClick',
         'click we-select.o_we_user_value_widget': '_onAddItemSelectClick',
+        'click we-button.o_we_checkbox_wrapper': '_onAddItemCheckboxClick',
         'input table input': '_onListItemInput',
     },
 
@@ -1425,6 +1426,10 @@ const ListUserValueWidget = UserValueWidget.extend({
             this.records = JSON.parse(this.el.dataset.availableRecords);
         } else {
             this.isCustom = true;
+        }
+        if (this.el.dataset.defaults || this.el.dataset.hasDefault) {
+            this.hasDefault = this.el.dataset.hasDefault || 'unique';
+            this.selected = this.el.dataset.defaults ? JSON.parse(this.el.dataset.defaults) : [];
         }
         this.listTable = document.createElement('table');
         const tableWrapper = document.createElement('div');
@@ -1512,6 +1517,21 @@ const ListUserValueWidget = UserValueWidget.extend({
         trEl.appendChild(draggableTdEl);
         inputTdEl.appendChild(inputEl);
         trEl.appendChild(inputTdEl);
+        if (this.hasDefault) {
+            const checkboxEl = document.createElement('we-button');
+            checkboxEl.classList.add('o_we_user_value_widget', 'o_we_checkbox_wrapper');
+            if (this.selected.includes(id)) {
+                checkboxEl.classList.add('active');
+            }
+            const div = document.createElement('div');
+            const checkbox = document.createElement('we-checkbox');
+            div.appendChild(checkbox);
+            checkboxEl.appendChild(div);
+            checkboxEl.appendChild(checkbox);
+            const checkboxTdEl = document.createElement('td');
+            checkboxTdEl.appendChild(checkboxEl);
+            trEl.appendChild(checkboxTdEl);
+        }
         buttonTdEl.appendChild(buttonEl);
         trEl.appendChild(buttonTdEl);
         this.listTable.appendChild(trEl);
@@ -1545,6 +1565,18 @@ const ListUserValueWidget = UserValueWidget.extend({
         });
         if (this.isCustom) {
             this.records = values.map(v => ({id: v, display_name: v}));
+        }
+        if (this.hasDefault) {
+            const checkboxes = [...this.listTable.querySelectorAll('we-button.o_we_checkbox_wrapper.active')];
+            this.selected = checkboxes.map(el => {
+                const input = el.parentElement.previousSibling.firstChild;
+                const id = input.name || input.value;
+                const idInt = parseInt(id);
+                return isNaN(idInt) ? id : idInt;
+            });
+            this.records.forEach(r => {
+                r.selected = this.selected.includes(r.id);
+            });
         }
         this._value = JSON.stringify(values);
         this.notifyValueChange(true);
@@ -1601,6 +1633,18 @@ const ListUserValueWidget = UserValueWidget.extend({
      */
     _onAddItemSelectClick: function (ev) {
         ev.currentTarget.querySelector('we-toggler').classList.toggle('active');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onAddItemCheckboxClick: function (ev) {
+        const isActive = ev.currentTarget.classList.contains('active');
+        if (this.hasDefault === 'unique') {
+            this.listTable.querySelectorAll('we-button.o_we_checkbox_wrapper.active').forEach(el => el.classList.remove('active'));
+        }
+        ev.currentTarget.classList.toggle('active', !isActive);
+        this._notifyCurrentState();
     },
     /**
      * @private

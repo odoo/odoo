@@ -9,6 +9,29 @@ odoo.define('website_form.s_website_form', function (require) {
     var _t = core._t;
     var qweb = core.qweb;
 
+    publicWidget.registry.EditModeWebsiteForm = publicWidget.Widget.extend({
+        selector: '.s_website_form form, form.s_website_form', // !compatibility
+        disabledInEditableMode: false,
+        /**
+         * @override
+         */
+        start: function () {
+            if (this.editableMode) {
+                // We do not initialize the datetime picker in edit mode but want the dates to be formated
+                const dateTimeFormat = time.getLangDatetimeFormat();
+                const dateFormat = time.getLangDateFormat();
+                this.$target[0].querySelectorAll('.s_website_form_input.datetimepicker-input').forEach(el => {
+                    const value = el.getAttribute('value');
+                    if (value) {
+                        const format = el.closest('.s_website_form_field').dataset.type === 'date' ? dateFormat : dateTimeFormat;
+                        el.value = moment.unix(value).format(format);
+                    }
+                });
+            }
+            return this._super(...arguments);
+        },
+    });
+
     publicWidget.registry.s_website_form = publicWidget.Widget.extend({
         selector: '.s_website_form form, form.s_website_form', // !compatibility
         xmlDependencies: ['/website_form/static/src/xml/website_form.xml'],
@@ -41,6 +64,7 @@ odoo.define('website_form.s_website_form', function (require) {
                     },
                 locale: moment.locale(),
                 format: time.getLangDatetimeFormat(),
+                extraFormats: ['X'],
             };
             this.$target.find('.s_website_form_datetime, .o_website_form_datetime').datetimepicker(datepickers_options); // !compatibility
 
@@ -74,6 +98,21 @@ odoo.define('website_form.s_website_form', function (require) {
 
             // Empty imputs
             this.$target.find('input[type="text"], input[type="email"], input[type="number"], textarea').val('');
+
+            // Apply default values
+            const dateTimeFormat = time.getLangDatetimeFormat();
+            const dateFormat = time.getLangDateFormat();
+            this.$target[0].querySelectorAll('input[type="text"], input[type="email"], input[type="number"]').forEach(el => {
+                let value = el.getAttribute('value');
+                if (value) {
+                    if (el.classList.contains('datetimepicker-input')) {
+                        const format = el.closest('.s_website_form_field').dataset.type === 'date' ? dateFormat : dateTimeFormat;
+                        value = moment.unix(value).format(format);
+                    }
+                    el.value = value;
+                }
+            });
+            this.$target[0].querySelectorAll('textarea').forEach(el => el.value = el.textContent);
 
             // Remove saving of the error colors
             this.$target.find('.o_has_error').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');

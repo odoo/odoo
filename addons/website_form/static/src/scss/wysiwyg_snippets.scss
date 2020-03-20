@@ -4,7 +4,7 @@
             max-height: 200px;
             overflow-y: auto;
             table {
-                table-layout: fixed;
+                table-layout: auto;
                 width: 100%;
                 input {
                     background-color: var(--o-we-bg-color-dark);
@@ -12,10 +12,8 @@
                     border: none;
                     width: 100%;
                 }
-                td {
-                    &:first-child, &:last-child {
-                        width: 28px;
-                    }
+                we-button.o_we_checkbox_wrapper {
+                    margin: 0 0 0 0.3em;
                 }
             }
         }

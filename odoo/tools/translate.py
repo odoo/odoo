@@ -150,6 +150,10 @@ TRANSLATED_ATTRS = {
     'value_label',
 }
 
+TRANSLATED_XPATH_ATTRS = [
+    ('/input[@type="text"]', 'value'),
+]
+
 TRANSLATED_ATTRS = TRANSLATED_ATTRS | {'t-attf-' + attr for attr in TRANSLATED_ATTRS}
 
 avoid_pattern = re.compile(r"\s*<!DOCTYPE", re.IGNORECASE | re.MULTILINE | re.UNICODE)
@@ -222,6 +226,7 @@ def translate_xml_node(node, callback, parse, serialize):
 
         # make an element like node that will contain the result
         result = etree.Element(node.tag, node.attrib, node.nsmap)
+        attrib = result.attrib.items()
 
         # use a "todo" node to translate content by parts
         todo = etree.Element('div', nsmap=node.nsmap)
@@ -259,7 +264,7 @@ def translate_xml_node(node, callback, parse, serialize):
             result.tail = node.tail
             has_text = (
                 todo_has_text or nonspace(result.text) or nonspace(result.tail)
-                or any((key in TRANSLATED_ATTRS and val) for key, val in result.attrib.items())
+                or any((key in TRANSLATED_ATTRS and val) for key, val in attrib)
             )
             return (has_text, result)
 
@@ -267,9 +272,16 @@ def translate_xml_node(node, callback, parse, serialize):
         append_content(result, translate_content(todo) if todo_has_text else todo)
 
         # translate the required attributes
-        for name, value in result.attrib.items():
+        for name, value in attrib:
             if name in TRANSLATED_ATTRS:
                 result.set(name, translate_text(value) or value)
+
+        # translate the attributes on some unique border cases.
+        for xpath, attribute in TRANSLATED_XPATH_ATTRS:
+            if result.xpath(xpath):
+                for name, value in attrib:
+                    if name == attribute:
+                        result.set(name, translate_text(value) or value)
 
         # add the untranslated tail to result
         result.tail = node.tail
@@ -1088,7 +1100,7 @@ class TranslationModuleReader:
 
     def _export_translatable_resources(self):
         """ Export translations for static terms
-        
+
         This will include:
         - the python strings marked with _() or _lt()
         - the javascript strings marked with _t() or _lt() inside static/src/js/
