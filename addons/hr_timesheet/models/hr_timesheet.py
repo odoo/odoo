@@ -199,7 +199,7 @@ class AccountAnalyticLine(models.Model):
     def _compute_display_timer(self):
         uom_hour = self.env.ref('uom.product_uom_hour')
         for analytic_line in self:
-            analytic_line.display_timer = analytic_line.encoding_uom_id == uom_hour and analytic_line.project_id.allow_timesheet_timer
+            analytic_line.display_timer = analytic_line.encoding_uom_id == uom_hour
 
     def action_timer_start(self):
         """ Start a timer if it isn't already started and the
