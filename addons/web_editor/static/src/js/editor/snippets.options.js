@@ -1588,6 +1588,22 @@ const SnippetOptionWidget = Widget.extend({
     },
     /**
      * Default option method which allows to select a value and set it on the
+     * associated snippet as a property. The name of the property is
+     * given by the propertyName parameter.
+     *
+     * @param {boolean} previewMode - @see this.selectClass
+     * @param {string} widgetValue
+     * @param {Object} params
+     */
+    selectProperty: function (previewMode, widgetValue, params) {
+        if (!params.propertyName) {
+            throw new Error('Property name missing');
+        }
+        const value = this._selectValueHelper(widgetValue, params);
+        this.$target[0][params.propertyName] = value;
+    },
+    /**
+     * Default option method which allows to select a value and set it on the
      * associated snippet as a css style. The name of the css property is
      * given by the cssProperty parameter.
      *
@@ -2140,14 +2156,22 @@ const SnippetOptionWidget = Widget.extend({
     /**
      * Used to handle attribute or data attribute value change
      *
-     * @param {string} value
-     * @param {Object} params
-     * @returns {string|undefined}
+     * @see this._selectValueHelper for parameters
      */
     _selectAttributeHelper(value, params) {
         if (!params.attributeName) {
             throw new Error('Attribute name missing');
         }
+        return this._selectValueHelper(value, params);
+    },
+    /**
+     * Used to handle value of a select
+     *
+     * @param {string} value
+     * @param {Object} params
+     * @returns {string|undefined}
+     */
+    _selectValueHelper(value, params) {
         if (params.saveUnit && !params.withUnit) {
             // Values that come with an unit are saved without unit as
             // data-attribute unless told otherwise.
