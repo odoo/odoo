@@ -134,7 +134,7 @@ return mvc.Renderer.extend({
     },
     /**
      * @private
-     * @param {Object} context
+     * @param {Object} [context]
      */
     _renderNoContentHelper: function (context) {
         let templateName;
