@@ -411,6 +411,9 @@ class ResPartner(models.Model):
     property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Vendor Payment Terms',
         help="This payment term will be used instead of the default one for purchase orders and vendor bills")
+    property_purchase_currency_id = fields.Many2one(
+        'res.currency', string="Supplier Currency", company_dependent=True,
+        help="This currency will be used, instead of the default one, for purchases from the current partner")
     ref_company_ids = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner')
     has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',

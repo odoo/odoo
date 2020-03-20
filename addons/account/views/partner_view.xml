@@ -208,6 +208,7 @@
                 </group>
                 <group name="purchase" position="inside">
                     <field string="Payment Terms" name="property_supplier_payment_term_id" widget="selection" groups="account.group_account_invoice,account.group_account_readonly"/>
+                    <field name="property_purchase_currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                 </group>
             </field>
         </record>
