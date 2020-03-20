@@ -26,6 +26,7 @@ This module adds several features to the Point of Sale that are specific to rest
         'views/pos_restaurant_templates.xml',
     ],
     'qweb': [
+        'static/src/xml/Resizeable.xml',
         'static/src/xml/Screens/ProductScreen/ControlButtons/OrderlineNoteButton.xml',
         'static/src/xml/Screens/ProductScreen/ControlButtons/TableGuestsButton.xml',
         'static/src/xml/Screens/ProductScreen/ControlButtons/PrintBillButton.xml',
