@@ -34,7 +34,7 @@ ProductConfiguratorWidget.include({
      * @private
      */
     reset: function (record, ev) {
-        if (ev.target === this) {
+        if (ev && ev.target === this) {
             this.restoreProductTemplateId = this.recordData.product_template_id;
             this.optionalProducts = (ev.data && ev.data.optionalProducts) || this.optionalProducts;
         }
