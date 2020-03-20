@@ -1584,7 +1584,11 @@ const SnippetOptionWidget = Widget.extend({
      */
     selectAttribute: function (previewMode, widgetValue, params) {
         const value = this._selectAttributeHelper(widgetValue, params);
-        this.$target[0].setAttribute(params.attributeName, value);
+        if (value) {
+            this.$target[0].setAttribute(params.attributeName, value);
+        } else {
+            this.$target[0].removeAttribute(params.attributeName);
+        }
     },
     /**
      * Default option method which allows to select a value and set it on the
