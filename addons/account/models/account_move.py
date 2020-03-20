@@ -287,7 +287,8 @@ class AccountMove(models.Model):
         if self.invoice_date:
             if not self.invoice_payment_term_id:
                 self.invoice_date_due = self.invoice_date
-            self.date = self.invoice_date
+            if self.date != self.invoice_date:  # Don't flag date as dirty if not needed
+                self.date = self.invoice_date
             self._onchange_currency()
 
     @api.onchange('journal_id')
@@ -922,7 +923,7 @@ class AccountMove(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('journal_id', 'date', 'state', 'highest_name')
+    @api.depends('posted_before', 'state', 'highest_name')
     def _compute_name(self):
         for record in self.sorted(lambda m: (m.date, m.ref or '', m.id)):
             if not record.name or record.name == '/':
@@ -937,7 +938,7 @@ class AccountMove(models.Model):
                 record.name = '/'
             record.name = record.name or '/'
 
-    @api.depends('journal_id', 'date', 'state')
+    @api.depends('journal_id', 'date')
     def _compute_highest_name(self):
         for record in self:
             record.highest_name = record._get_last_sequence()
@@ -2138,8 +2139,10 @@ class AccountMove(models.Model):
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
         self.mapped('line_ids').create_analytic_lines()
-        self.state = 'posted'
-        self.posted_before = True
+        self.write({
+            'state': 'posted',
+            'posted_before': True,
+        })
         for move in self:
             if move.auto_post and move.date > fields.Date.today():
                 raise UserError(_("This move is configured to be auto-posted on {}".format(move.date.strftime(get_lang(self.env).date_format))))
