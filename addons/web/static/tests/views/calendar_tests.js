@@ -476,6 +476,74 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('quickcreate with custom create_name_field', async function (assert) {
+        assert.expect(3);
+
+        var event = $.Event();
+        this.data.custom_event = {
+            fields: {
+                id: {string: "ID", type: "integer"},
+                x_name: {string: "name", type: "char"},
+                x_start_date: {string: "start date", type: "date"},
+            },
+            records: [
+                {id: 1, x_name: 'some event', x_start_date: "2016-12-06"}
+            ],
+            check_access_rights: function () {
+                return Promise.resolve(true);
+            }
+        };
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'custom_event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'string="Custom Events" ' +
+                'date_start="x_start_date" '+
+                'create_name_field="x_name" '+
+                'mode="month"/>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === "create") {
+                    assert.deepEqual(args.args[0], {
+                        "x_name": "custom event in quick create",
+                        "x_start_date": "2016-12-13 00:00:00",
+                    },
+                    "the custom create_name_field should be used instead of `name`");
+                    this.data.custom_event.records.push({
+                        id: 1,
+                        x_name: args.args[0].x_name,
+                        x_start_date: args.args[0].x_start_date,
+                        display_name: args.args[0].x_name,
+                    })
+                    return Promise.resolve(1);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        // create a new event
+        var $cell = calendar.$('.fc-day-grid .fc-row:eq(2) .fc-day:eq(2)');
+        testUtils.dom.triggerMouseEvent($cell, "mousedown");
+        testUtils.dom.triggerMouseEvent($cell, "mouseup");
+        await testUtils.nextTick();
+
+        assert.strictEqual($('.modal-sm .modal-title').text(), 'Create: Custom Events',
+            "should open the quick create dialog");
+
+        await testUtils.fields.editInput($('.modal-body input:first'), 'custom event in quick create');
+        await testUtils.dom.click($('.modal-footer button.btn:contains(Create)'));
+        await testUtils.nextTick();
+
+        assert.containsOnce(calendar, '.fc-event:contains(custom event in quick create)',
+        "should display the new custom event record");
+        calendar.destroy();
+    });
+
     QUnit.test('quickcreate switching to actual create for required fields', async function (assert) {
         assert.expect(4);
 

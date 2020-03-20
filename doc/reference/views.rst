@@ -403,8 +403,12 @@ calendar view are:
     in a new form view (with a do_action)
 ``quick_add``
     enables quick-event creation on click: only asks the user for a ``name``
-    and tries to create a new event with just that and the clicked event
-    time. Falls back to a full form dialog if the quick creation fails
+    (the field to which this values is saved can be controlled through
+    ``rec_name``) and tries to create a new event with just that and the clicked
+    event time. Falls back to a full form dialog if the quick creation fails
+``create_name_field``
+    name of the record's field holding the textual representation of the record,
+    this is used when creating records through the 'quick create' mechanism
 ``all_day``
     name of a boolean field on the record indicating whether the corresponding
     event is flagged as day-long (and duration is irrelevant)
