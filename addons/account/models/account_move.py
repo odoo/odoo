@@ -185,28 +185,26 @@ class AccountMove(models.Model):
 
     @api.multi
     def unlink(self):
-        for move in self:
-            #check the lock date + check if some entries are reconciled
-            move.line_ids._update_check()
-            move.line_ids.unlink()
+        self.mapped('line_ids').unlink()
         return super(AccountMove, self).unlink()
 
     @api.multi
     def _post_validate(self):
-        for move in self:
-            if move.line_ids:
-                if not all([x.company_id.id == move.company_id.id for x in move.line_ids]):
-                    raise UserError(_("Cannot create moves for different companies."))
+        for move in self.filtered(lambda x: x.line_ids):
+            if not all([x.company_id.id == move.company_id.id for x in move.line_ids]):
+                raise UserError(_("Cannot create moves for different companies."))
         self.assert_balanced()
         return self._check_lock_date()
 
     @api.multi
     def _check_lock_date(self):
-        for move in self:
-            lock_date = max(move.company_id.period_lock_date or '0000-00-00', move.company_id.fiscalyear_lock_date or '0000-00-00')
+        for company_id in self.mapped('company_id'):
+            lock_date = max(company_id.period_lock_date or '0000-00-00', company_id.fiscalyear_lock_date or '0000-00-00')
             if self.user_has_groups('account.group_account_manager'):
-                lock_date = move.company_id.fiscalyear_lock_date
-            if move.date <= (lock_date or '0000-00-00'):
+                lock_date = company_id.fiscalyear_lock_date or '0000-00-00'
+            # /!\ NOTE: For this company_id let us fetch only company's JE and let us find out which is one is the most
+            # critical JE, i.e., the minimum date
+            if min(self.filtered(lambda x: x.company_id == company_id).mapped('date')) <= (lock_date or '0000-00-00'):
                 if self.user_has_groups('account.group_account_manager'):
                     message = _("You cannot add/modify entries prior to and inclusive of the lock date %s") % (lock_date)
                 else:
@@ -1396,13 +1394,10 @@ class AccountMoveLine(models.Model):
     @api.multi
     def unlink(self):
         self._update_check()
-        move_ids = set()
-        for line in self:
-            if line.move_id.id not in move_ids:
-                move_ids.add(line.move_id.id)
+        move_ids = self.mapped('move_id').ids
         result = super(AccountMoveLine, self).unlink()
         if self._context.get('check_move_validity', True) and move_ids:
-            self.env['account.move'].browse(list(move_ids))._post_validate()
+            self.env['account.move'].browse(move_ids)._post_validate()
         return result
 
     @api.multi
@@ -1438,16 +1433,16 @@ class AccountMoveLine(models.Model):
     @api.multi
     def _update_check(self):
         """ Raise Warning to cause rollback if the move is posted, some entries are reconciled or the move is older than the lock date"""
-        move_ids = set()
-        for line in self:
-            err_msg = _('Move name (id): %s (%s)') % (line.move_id.name, str(line.move_id.id))
-            if line.move_id.state != 'draft':
-                raise UserError(_('You cannot do this modification on a posted journal entry, you can just change some non legal fields. You must revert the journal entry to cancel it.\n%s.') % err_msg)
-            if line.reconciled and not (line.debit == 0 and line.credit == 0):
-                raise UserError(_('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
-            if line.move_id.id not in move_ids:
-                move_ids.add(line.move_id.id)
-        self.env['account.move'].browse(list(move_ids))._check_lock_date()
+        err_msg = _('Move name (id): %s (%s)')
+        line = self.search([('id', 'in', self.ids), ('move_id.state', '!=', 'draft'),], limit=1)
+        if line:
+            err_msg = err_msg % (line.move_id.name, str(line.move_id.id))
+            raise UserError(_('You cannot do this modification on a posted journal entry, you can just change some non legal fields. You must revert the journal entry to cancel it.\n%s.') % err_msg)
+        line = self.search(['&', '&', ('id', 'in', self.ids), ('reconciled', '=', True), '!', '&', ('debit', '=', 0), ('credit', '=', 0),], limit=1)
+        if line:
+            err_msg = err_msg % (line.move_id.name, str(line.move_id.id))
+            raise UserError(_('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
+        self.env['account.move'].browse(self.mapped('move_id').ids)._check_lock_date()
         return True
 
     ####################################################
