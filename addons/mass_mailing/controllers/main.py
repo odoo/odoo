@@ -8,7 +8,6 @@ from odoo import _, exceptions, http, tools
 from odoo.http import request
 from odoo.tools import consteq
 
-
 class MassMailController(http.Controller):
 
     def _valid_unsubscribe_token(self, mailing_id, res_id, email, token):
@@ -24,8 +23,7 @@ class MassMailController(http.Controller):
 
     @http.route(['/unsubscribe_from_list'], type='http', website=True, multilang=False, auth='public', sitemap=False)
     def unsubscribe_placeholder_link(self, **post):
-        """Dummy route so placeholder is not prefixed by language, MUST have multilang=False"""
-        raise werkzeug.exceptions.NotFound()
+        return request.render('mass_mailing.page_dummy')
 
     @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
     def mailing(self, mailing_id, email=None, res_id=None, token="", **post):
@@ -47,14 +45,17 @@ class MassMailController(http.Controller):
                 opt_out_list_ids = subscription_list_ids.filtered(lambda rel: rel.opt_out).mapped('list_id')
                 opt_in_list_ids = subscription_list_ids.filtered(lambda rel: not rel.opt_out).mapped('list_id')
                 opt_out_list_ids = set([list.id for list in opt_out_list_ids if list not in opt_in_list_ids])
-
+                opt_in_list_ids = set([list.id for list in opt_in_list_ids])
+                all_list_ids = request.env['mailing.list'].sudo().search([('is_public','=',True)])
                 unique_list_ids = set([list.list_id.id for list in subscription_list_ids])
                 list_ids = request.env['mailing.list'].sudo().browse(unique_list_ids)
                 unsubscribed_list = ', '.join(str(list.name) for list in mailing.contact_list_ids if list.is_public)
                 return request.render('mass_mailing.page_unsubscribe', {
                     'contacts': contacts,
                     'list_ids': list_ids,
+                    'all_list_ids':all_list_ids,
                     'opt_out_list_ids': opt_out_list_ids,
+                    'opt_in_list_ids': opt_in_list_ids,
                     'unsubscribed_list': unsubscribed_list,
                     'email': email,
                     'mailing_id': mailing_id,
@@ -151,8 +152,16 @@ class MassMailController(http.Controller):
         return 'error'
 
     @http.route('/mailing/feedback', type='json', auth='public')
-    def send_feedback(self, mailing_id, res_id, email, feedback, token):
+    def send_feedback(self, mailing_id, res_id, email, feedback,reason, token):
         mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
+        model = request.env['mailing.contact'].with_context(active_test=False)
+        unsubscribed_lists = mailing.contact_list_ids.ids
+        records = model.search([('email_normalized', '=', tools.email_normalize(email))])
+        opt_out_records = request.env['mailing.contact.subscription'].search([
+                ('contact_id', 'in', records.ids),
+                ('list_id', 'in', unsubscribed_lists),
+                ('opt_out', '=', True)
+            ])
         if mailing.exists() and email:
             if not self._valid_unsubscribe_token(mailing_id, res_id, email, token):
                 return 'unauthorized'
@@ -160,5 +169,7 @@ class MassMailController(http.Controller):
             records = model.sudo().search([('email_normalized', '=', tools.email_normalize(email))])
             for record in records:
                 record.sudo().message_post(body=_("Feedback from %s: %s" % (email, feedback)))
+            for rec in opt_out_records:
+                rec.opt_out_reason = reason
             return bool(records)
         return 'error'

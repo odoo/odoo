@@ -15,26 +15,38 @@
                             <div id="info_state" class="alert alert-success" role="status">
                                 <div id="subscription_info"></div>
                                 <div id="div_feedback">
-                                    <p>We would appreciate if you provide feedback about why you updated<br/>your subscriptions</p>
-                                    <textarea class="form-control"  name="opt_out_feedback" cols="60" rows="3"></textarea>
+                                    <p>Please let us know why you updated your subscriptions</p>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                          <label class="input-group-text" for="inputGroupSelect01">Options</label>
+                                        </div>
+                                        <select class="custom-select" id="inputGroupSelect01">
+                                          <option value="1">I never subscribed to this list</option>
+                                          <option value="2">I receive too many emails from this list</option>
+                                          <option value="3">I changed my mind</option>
+                                          <option value="4">The content of these emails is not relevant to me</option>
+                                          <option value="5">Other</option>
+                                        </select>
+                                      </div>
+                                    <textarea class="form-control text-feedback" id="text-feedback" name="opt_out_feedback" cols="60" rows="3"></textarea>
                                     <br/>
                                     <div class="btn btn-primary text-left" id="button_feedback">Send</div>
                                 </div>
                             </div>
 
                             <h1 class="o_page_header">Mailing Subscriptions</h1>
-                            <p>Choose your mailing subscriptions</p>
+                            <p>Update your mailing subscriptions</p>
                             <div id="div_opt_out">
                                 <ul class="list-group">
-                                    <t t-foreach="list_ids" t-as="list_id">
+                                    <t t-foreach="all_list_ids" t-as="list_id">
                                         <t t-if="list_id.is_public == True">
                                             <li class="list-group-item">
                                                 <input type="checkbox" class="mail_list_checkbox" name="contact_ids"
                                                     t-att-value="list_id['id']" t-att-checked="None if list_id['id'] in opt_out_list_ids else 'checked'"/>
                                                 <t t-esc="list_id.name"/>
-                                                <span t-if="list_id['id'] in opt_out_list_ids"
+                                                <span t-if="list_id['id'] in opt_in_list_ids"
                                                       class="o_mass_mailing_unsubscribed">
-                                                    Unsubscribed
+                                                    Subscribed
                                                 </span>
                                             </li>
                                         </t>
@@ -46,7 +58,7 @@
                                         <div class="btn btn-secondary pull-right" id="button_add_blacklist" style="display:none">Blacklist Me</div>
                                     </div>
                                     <div class="btn btn-secondary pull-right" id="button_remove_blacklist" style="display:none">Come Back</div>
-                                    <button type="submit" id="send_form" class="btn btn-primary">Update my subscriptions</button>
+                                    <button type="submit" id="send_form" class="btn btn-primary">Apply Changes</button>
                                 </div>
                             </div>
 
@@ -72,7 +84,7 @@
                     <h1 class="o_page_header">Mailing Subscriptions</h1>
 
                     <div id="subscription_info" class="alert alert-success text-center" role="status">
-                        <p>You have been successfully <strong>unsubscribed</strong>!</p>
+                        <p>You have successfully been <strong>unsubscribed</strong>!</p>
                     </div>
 
                     <div t-if="list_ids" class="alert alert-warning">
@@ -97,9 +109,68 @@
         </div>
     </template>
 
+    <template id="dummy">
+        <div class="container o_unsubscribe_form">
+            <div class="row">
+                <form action="#" method="POST" id="unsubscribe_form" class="col-lg-6 offset-lg-3 mt-4">
+                        <input type="hidden" name="unsubscribed_list" value="LIST"/>
+                    <div>
+                            <div id="info_state" class="alert alert-success" role="status">
+                                <div id="subscription_info"></div>
+                                <div id="div_feedback">
+                                    <p>Please let us know why you updated your subscriptions</p>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                          <label class="input-group-text" for="inputGroupSelect01">Options</label>
+                                        </div>
+                                        <select class="custom-select" id="inputGroupSelect01">
+                                          <option value="1">I never subscribed to this list</option>
+                                          <option value="2">I receive too many emails from this list</option>
+                                          <option value="3">I changed my mind</option>
+                                          <option value="4">The content of these emails is not relevant to me</option>
+                                          <option value="5">Other</option>
+                                        </select>
+                                      </div>
+                                    <textarea class="form-control text-feedback" id="text-feedback" name="opt_out_feedback" cols="60" rows="3"></textarea>
+                                    <br/>
+                                    <div class="btn btn-primary text-left" id="button_dummy">Send</div>
+                                </div>
+                            </div>
+
+                            <h1 class="o_page_header">Mailing Subscriptions</h1>
+                            <p>Update your mailing subscriptions</p>
+                            <div id="div_opt_out">
+                                <ul class="list-group">
+                                            <li class="list-group-item">
+                                                <input type="checkbox" class="mail_list_checkbox" name="contact_ids"/>
+                                                LIST 1
+                                                <span 
+                                                      class="o_mass_mailing_unsubscribed">
+                                                    Subscribed
+                                                </span>
+                                            </li>
+                                </ul>
+
+                                <div class="mb64 pt-3">
+                                    <div class="btn btn-secondary pull-right" id="button_remove_blacklist" style="display:none">Come Back</div>
+                                    <button type="submit" id="send_dummy" class="btn btn-primary">Apply Changes</button>
+                                </div>
+                            </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
+
     <template id="page_unsubscribe" name="Unsubscribe">
         <t t-call="mass_mailing.layout">
             <t t-call="mass_mailing.unsubscribe"/>
+        </t>
+    </template>
+
+    <template id="page_dummy" name="Unsubscribe_dummy">
+        <t t-call="mass_mailing.layout">
+            <t t-call="mass_mailing.dummy"/>
         </t>
     </template>
 
@@ -121,7 +192,7 @@
                 <header>
                     <div><title>Odoo</title></div>
                     <div class="text-center">
-                        <img t-attf-src="/web/binary/company_logo?company={{ res_company.id }}"/>
+                        <img t-attf-src="/web/image/res.company/{{res_company.id}}/logo"/>
                     </div>
                 </header>
                 <div id="wrap" class="oe_structure oe_empty"/>
