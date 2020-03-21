@@ -45,7 +45,7 @@
                                     <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                 </div>
                             </div>
-                            <div t-att-class="'container o_kanban_card_content o-sample_data'">
+                            <div t-att-class="'container o_kanban_card_content o_sample_data'">
                                 <t t-if="record.state.raw_value == 'recruit'">
                                     <div class="row">
                                         <div class="col-6">
@@ -58,6 +58,7 @@
                                             <a type="object" name="action_view_job"><field name="no_of_recruitment"/> To Recruit</a>
                                         </div>
                                     </div>
+                                    <t t-call="JournalBodyGraph"/>
                                 </t>
                                 <t t-if="record.state.raw_value == 'open'">
                                     <div class="row">
@@ -65,13 +66,12 @@
                                             <button class="btn btn-secondary" name="set_recruit" type="object">Start Recruitment</button>
                                         </div>
                                     </div>
-                                    <t t-call="JournalBodyGraph"/>
                                 </t>
                                 <div name="kanban_boxes" class="row o_recruitment_kanban_boxes">
                                     <div class="o_recruitment_kanban_box o_kanban_primary_bottom bottom_block" style="padding-left:8px;">
                                         <div class="col-6"></div>
                                         <div class="col-6">
-                                            <a type="object" name="%(action_hr_job_sources_func)d">Link Trackers</a>
+                                            <a type="object" name="action_hr_job_sources_func">Link Trackers</a>
                                         </div>
                                     </div>
                                 </div>
