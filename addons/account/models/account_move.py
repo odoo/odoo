@@ -1425,8 +1425,8 @@ class AccountMove(models.Model):
         for move in self:
             if move._affect_tax_report() and move.company_id.tax_lock_date and move.date and move.date <= move.company_id.tax_lock_date:
                 move.tax_lock_date_message = _(
-                    "The accounting date is prior to the tax lock date which is set on %s. "
-                    "Then, this will be moved to the next available one during the invoice validation.",
+                    "The accounting date is set prior to the tax lock date which is set on %s. "
+                    "Hence, the accounting date will be changed to the next available date when posting.",
                     format_date(self.env, move.company_id.tax_lock_date))
             else:
                 move.tax_lock_date_message = False
