@@ -3,7 +3,7 @@
 {
     'name': "Odoo referral program",
     'summary': """Allow you to refer your friends to Odoo and get rewards""",
-    'category': 'Hidden/Tools',
+    'category': 'Hidden',
     'version': '1.0',
     'depends': ['base', 'web'],
     'data': [
