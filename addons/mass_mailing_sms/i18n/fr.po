@@ -5,11 +5,12 @@
 # Translators:
 # Eloïse Stilmant <est@odoo.com>, 2019
 # Celia Tydgat <cty@odoo.com>, 2019
-# Cécile Collart <cco@odoo.com>, 2019
 # e2f <projects@e2f.com>, 2019
 # Martin Trigaux, 2019
 # Jonathan <jcs@odoo.com>, 2020
 # Alexandra Jubert <aju@odoo.com>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Vallen Delobel <edv@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 09:01+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2020\n"
+"Last-Translator: Vallen Delobel <edv@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,6 +50,8 @@ msgid ""
 "<span name=\"failed_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=',"
 " 'sms')]}\">SMS Text Message could not be sent.</span>"
 msgstr ""
+"<span name=\"failed_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=',"
+" 'sms')]}\">Le message SMS n'a pas pu être envoyé.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -338,14 +341,14 @@ msgstr "Publipostage"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_report_view_search
 msgid "Mass Mailing Campaign"
-msgstr "Campagne de courriel de masse"
+msgstr "Campagne d'emails de masse"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_report_view_graph
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_report_view_pivot
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_report_view_search
 msgid "Mass Mailing Statistics"
-msgstr "Statistiques du courriel de masse"
+msgstr "Statistiques des emails de masse"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__mailing_sms_ids
@@ -581,7 +584,7 @@ msgstr ""
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "There are no recipients selected."
-msgstr ""
+msgstr "Aucun destinataire sélectionné."
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
@@ -600,6 +603,8 @@ msgstr ""
 msgid ""
 "This will send SMS to all recipients now. Do you still want to proceed ?"
 msgstr ""
+"Vous êtes sur le point d'envoyer des SMS à tous les destinataires. Voulez-"
+"vous toujours continuer?"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__trace_type
@@ -658,6 +663,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
 msgid "You can easily send SMS to any contact saved in other Odoo apps."
 msgstr ""
+"Vous pouvez facilement envoyer des SMS à n'importe quel contact enregistré "
+"dans d'autres applications Odoo."
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
@@ -665,6 +672,8 @@ msgid ""
 "You don't need to import your contacts lists, you can easily\n"
 "            send SMS to any contact saved in other Odoo apps."
 msgstr ""
+"Vous n'avez pas besoin d'importer vos listes de contacts, vous pouvez facilement \n"
+"envoyer des SMS à n'importe quel contact enregistré dans d'autres applications Odoo."
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number

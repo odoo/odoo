@@ -23,6 +23,7 @@
 # Martin Trigaux, 2019
 # Vincent Luba <vincent@biz-4-africa.com>, 2019
 # Jonathan <jcs@odoo.com>, 2019
+# Pauline Thiry <pth@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # 
 msgid ""
@@ -716,6 +717,7 @@ msgstr "Détermine l'ordre d'affichage"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__disabled
+#: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Disabled"
 msgstr "Désactivé"
 
@@ -758,7 +760,7 @@ msgstr "Brouillon"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "E-mail"
-msgstr "Courriel"
+msgstr "Email"
 
 #. module: payment
 #: model:account.payment.method,name:payment.account_payment_method_electronic_in
@@ -770,7 +772,7 @@ msgstr "Electronique"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_email
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Email"
-msgstr "Courriel"
+msgstr "Email"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__enabled
@@ -1308,7 +1310,7 @@ msgstr "Autre intermédiaire de Paiement"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr ""
+msgstr "Jeton d'Identité PDT"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_id
@@ -1330,7 +1332,7 @@ msgstr "PayPal"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_payulatam
 msgid "PayU Latam"
-msgstr ""
+msgstr "PayU Latam"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
@@ -1514,7 +1516,7 @@ msgstr "Veuillez configurer un intermédiaire de paiement."
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid "Please make a payment to:"
-msgstr ""
+msgstr "Veuillez effectuer un paiement à:"
 
 #. module: payment
 #. openerp-web
@@ -1757,6 +1759,7 @@ msgstr "Modèle pour une méthode d'enregistrement"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__test
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
+#: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Test Mode"
 msgstr "Mode test"
 
@@ -2082,7 +2085,7 @@ msgstr ""
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
 msgstr ""
-"Vous devriez recevoir un courriel confirmant votre paiement dans quelques "
+"Vous devriez recevoir un email confirmant votre paiement dans quelques "
 "minutes."
 
 #. module: payment

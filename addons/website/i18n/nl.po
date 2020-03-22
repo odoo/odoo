@@ -7,8 +7,9 @@
 # Eric Geens <ericgeens@yahoo.com>, 2019
 # Martin Trigaux, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Antoine Gilard <ang@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-18 09:46+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"Last-Translator: Antoine Gilard <ang@odoo.com>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -938,6 +939,8 @@ msgstr ""
 msgid ""
 "A new visit is considered if last connection was more than 8 hours ago."
 msgstr ""
+"Een bezoek wordt beschouwd als nieuw als de laatste verbinding was meer dan "
+"8 uren geleden. "
 
 #. module: website
 #: model:ir.model.constraint,message:website.constraint_website_visitor_partner_uniq
@@ -2155,6 +2158,11 @@ msgid "Email support"
 msgstr "E-mail ondersteuning"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Enable billing on your Google Project"
+msgstr "Facturering op uw Google-project mogelijk maken"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Enter email"
@@ -2819,6 +2827,9 @@ msgid ""
 "If this error is caused by a change of yours in the templates, you have the "
 "possibility to reset the template to its <strong>factory settings</strong>."
 msgstr ""
+"Als dit fout veroorzaakt werd door een verandering in de sjabloon, is het "
+"steeds mogelijk de sjabloon tot zijn <strong>standaardinstellingen</strong> "
+"te resetten."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__groups_id
@@ -3264,7 +3275,7 @@ msgstr "Link anker"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__module_website_links
 msgid "Link Trackers"
-msgstr "Link traceerders"
+msgstr "Link trackers"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -5078,7 +5089,7 @@ msgstr "Top menu voor website %s"
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__page_count
 msgid "Total number of tracked page visited"
-msgstr ""
+msgstr "Totaal aantal bezochte pagina's"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__visitor_page_count
@@ -5200,6 +5211,12 @@ msgid ""
 "        308 Redirect / Rewrite: If you want rename a controller with a new url. (Eg: /shop -> /garden - Both url will be accessible but /shop will automatically be redirected to /garden)\n"
 "    "
 msgstr ""
+"Type omleiding/herschrijven: \n"
+"\n"
+"301 Permanent verplaatst: de browser zal de nieuwe url in de cache bewaren. \n"
+"302 Tijdelijk verplaatst: de browser zal de nieuwe url in de cache niet bewaren en zal de volgende keer een nieuwe url vragen. \n"
+"404 niet gevonden wordt, opnieuw vragen: Als u een specifieke pagina/controller wilt verwijderen (bijv. E-commerce is geïnstalleerd, maar u wilt geen /shop op een specifieke website) \n"
+"308 Redirect / Rewrite: als u een controller wilt hernoemen met een nieuwe url. (Bijvoorbeeld: /shop -> /garden - Beide url zullen toegankelijk zijn, maar /shop zal automatisch doorgestuurd worden naar /garden)"
 
 #. module: website
 #. openerp-web
@@ -5396,7 +5413,7 @@ msgstr "Zeer traag"
 #: model:ir.model,name:website.model_ir_ui_view
 #: model:ir.model.fields,field_description:website.field_website_page__view_id
 msgid "View"
-msgstr "Bekijk"
+msgstr "Weergave"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch

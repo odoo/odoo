@@ -135,6 +135,12 @@ msgid ""
 "                                          Extra Price\n"
 "                                        </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
+"                                          Muut hinnat\n"
+"                                        </span>\n"
+"                                        <span attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
+"                                          Muu hinta\n"
+"                                        </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -295,7 +301,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__advanced
 msgid "Advanced price rules (discounts, formulas)"
-msgstr ""
+msgstr "Monipuoliset hinnoitteluasetukset (alennukset, laskentakaavat)"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -329,7 +335,7 @@ msgstr "Saatavilla"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 msgid "Applied On"
-msgstr ""
+msgstr "Pätee"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
@@ -369,7 +375,7 @@ msgstr "Attribuutti"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
 msgid "Attribute Line"
-msgstr ""
+msgstr "Attribuuttirivi"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -1375,7 +1381,7 @@ msgstr "Vähimmäismäärä"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__basic
 msgid "Multiple prices per product"
-msgstr ""
+msgstr "Useita myyntihintoja tuotteella"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_config_settings__product_pricelist_setting
@@ -1430,7 +1436,7 @@ msgstr "Toimenpiteiden määrä"
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Virheiden määrä"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
@@ -1448,7 +1454,7 @@ msgstr "Toimitusvirheellisten viestien määrä"
 #: model:ir.model.fields,field_description:product.field_product_product__pricelist_item_count
 #: model:ir.model.fields,field_description:product.field_product_template__pricelist_item_count
 msgid "Number of price rules"
-msgstr ""
+msgstr "Hintasääntöjen määrä"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_unread_counter
@@ -1743,7 +1749,7 @@ msgstr "Tuotteen ominaisuudet ja arvot"
 #: model:ir.model.fields,field_description:product.field_product_product__attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__attribute_line_ids
 msgid "Product Attributes"
-msgstr "Tuotteen attribuutit"
+msgstr "Tuotteen ominaisuudet"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_product_barcode
@@ -1834,17 +1840,17 @@ msgstr "Tuotemalli"
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_exclusion
 msgid "Product Template Attribute Exclusion"
-msgstr "Tuotemallin määritteen poissulkeminen"
+msgstr "Tuotemallin ominaisuuden poissulkeminen"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr "Product Template Attribute Line"
+msgstr "Tuotemallin ominaisuusrivi"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr ""
+msgstr "Tuotemallin ominaisuuden arvo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__type

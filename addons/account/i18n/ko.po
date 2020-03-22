@@ -3525,7 +3525,7 @@ msgstr "청구서를 작성하고, 대금을 등록하고, 고객과의 논의�
 msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your vendors."
-msgstr "송장을 작성하고 결제를 등록하며 공급업체와의 토론을 추적하십시오."
+msgstr "송장을 작성하고 결제를 등록하며 공급업체와의 업무 협의를 추적하십시오."
 
 #. module: account
 #. openerp-web
@@ -7198,6 +7198,12 @@ msgid "Next Number Prefix"
 msgstr "다음 번호 접두사"
 
 #. module: account
+#: code:addons/account/models/account_bank_statement.py:545
+#, python-format
+msgid "No default debit and credit account defined on journal %s (ids: %s)"
+msgstr "%s 분개장에 기본 차변 및 대변 계정이 정의되지 않았습니다. (ids : %s)"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
 msgid "No Follow-up"
 msgstr "후속 관리 없음"
@@ -7753,7 +7759,7 @@ msgstr "입출고현황"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Package"
-msgstr "상품 포장"
+msgstr "패키지"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__paid
