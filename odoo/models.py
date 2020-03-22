@@ -2986,7 +2986,7 @@ class BaseModel(object):
                         'The requested operation cannot be completed due to security restrictions. '
                         'Please contact your system administrator.\n\n(Document type: %s, Operation: %s)'
                     ) % (self._description, operation)
-                    + ' - ({} {}, {} {})'.format(_('User:'), self._uid, _('Fields:'), ', '.join(invalid_fields))
+                    + u' - ({} {}, {} {})'.format(_('User:'), self._uid, _('Fields:'), ', '.join(invalid_fields))
                 )
 
         return fields
@@ -3202,7 +3202,7 @@ class BaseModel(object):
                 # store an access error exception in existing records
                 exc = AccessError(
                     _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, 'read')
-                    + ' - ({} {}, {} {})'.format(_('Records:'), self.ids[:6], _('User:'), self._uid)
+                    + u' - ({} {}, {} {})'.format(_('Records:'), self.ids[:6], _('User:'), self._uid)
                 )
                 forbidden._cache.update(FailedValue(exc))
 
@@ -3288,7 +3288,7 @@ class BaseModel(object):
                 _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, forbidden_ids, self._uid, self._name)
                 raise AccessError(
                     _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation)
-                    + ' - ({} {}, {}, {})'.format(_('Records:'), forbidden_ids[:6], _('User:'), self._uid)
+                    + u' - ({} {}, {}, {})'.format(_('Records:'), forbidden_ids[:6], _('User:'), self._uid)
                 )
             else:
                 # If we get here, the missing_ids are not in the database
@@ -3300,7 +3300,7 @@ class BaseModel(object):
                 _logger.info('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, self._uid, self._name)
                 raise MissingError(
                     _('Missing document(s)') + ':' + _('One of the documents you are trying to access has been deleted, please try again after refreshing.')
-                    + '\n\n({} {}, {} {}, {} {}, {} {})'.format(
+                    + u'\n\n({} {}, {} {}, {} {}, {} {})'.format(
                         _('Document type:'), self._description, _('Operation:'), operation,
                         _('Records:'), missing_ids[:6], _('User:'), self._uid,
                     )
@@ -3694,7 +3694,7 @@ class BaseModel(object):
                 if cr.rowcount != len(sub_ids):
                     raise MissingError(
                         _('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description
-                        + '\n\n({} {}, {} {})'.format(_('Records:'), sub_ids[:6], _('User:'), self._uid)
+                        + u'\n\n({} {}, {} {})'.format(_('Records:'), sub_ids[:6], _('User:'), self._uid)
                     )
 
             # TODO: optimize
