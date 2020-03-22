@@ -2180,12 +2180,19 @@ class AccountMove(models.Model):
                     to_write['line_ids'].append((1, line.id, {'name': to_write['invoice_payment_ref']}))
                 move.write(to_write)
 
+<<<<<<< HEAD
             if move == move.company_id.account_opening_move_id and not move.company_id.account_bank_reconciliation_start:
                 # For opening moves, we set the reconciliation date threshold
                 # to the move's date if it wasn't already set (we don't want
                 # to have to reconcile all the older payments -made before
                 # installing Accounting- with bank statements)
                 move.company_id.account_bank_reconciliation_start = move.date
+=======
+    @api.multi
+    def unlink(self):
+        self.mapped('line_ids').unlink()
+        return super(AccountMove, self).unlink()
+>>>>>>> ba80b9e7553... temp
 
         for move in self:
             if not move.partner_id: continue
