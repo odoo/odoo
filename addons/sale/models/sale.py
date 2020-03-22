@@ -123,6 +123,10 @@ class SaleOrder(models.Model):
         for order in self:
             order.order_line._compute_tax_id()
 
+    @api.onchange('pricelist_id')
+    def onchange_pricelist_id(self):
+        self.order_line.write(dict(currency_id=self.currency_id))
+
     def _search_invoice_ids(self, operator, value):
         if operator == 'in' and value:
             self.env.cr.execute("""
