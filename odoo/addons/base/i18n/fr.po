@@ -64,7 +64,7 @@
 # Richard Mathot <rim@odoo.com>, 2019
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # lcaodoo <lca@odoo.com>, 2019
-# Corentin Delacroix <edc@odoo.com>, 2020
+# edc <edc@odoo.com>, 2020
 # Eloïse Stilmant <est@odoo.com>, 2020
 # Alexandra Jubert <aju@odoo.com>, 2020
 # bb76cd9ac0cb7e20167a14728edb858b, 2020
@@ -73,6 +73,7 @@
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2020
 # f5f0a0dac17dde787a1d812a6989680e, 2020
 # Cécile Collart <cco@odoo.com>, 2020
+# Jonathan Quique <jqu@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -80,7 +81,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-16 12:49+0000\n"
 "PO-Revision-Date: 2016-08-05 12:54+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2020\n"
+"Last-Translator: Jonathan Quique <jqu@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,6 +121,14 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Rapports comptables pour l'Autriche.\n"
+"================================\n"
+"\n"
+"     * Définit les rapports suivants:\n"
+"         * Bénéfice / perte (§ 231 UGB Gesamtkostenverfahren)\n"
+"         * Bilan (§ 224 UGB)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -180,6 +189,17 @@ msgid ""
 " - Hungarian Bank information\n"
 " "
 msgstr ""
+"\n"
+"\n"
+"Module de localisation pour la Hongrie\n"
+"==========================================\n"
+"\n"
+"Ce module consiste en :\n"
+"\n"
+" - Plan comptable générique pour la Hongrie\n"
+" - Taxes hongroises\n"
+" - Information bancaire pour la Hongrie\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk
@@ -360,6 +380,20 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Vue d'ensemble:\n"
+"---------\n"
+"\n"
+"* Plan comptable et modèle des taxes pour les entreprises japonaises.\n"
+"* Ceci ne couvre probablement pas tous les comptes nécessaires pour une entreprise. Vous pouvez ajouter / supprimer / modifier des comptes sur base de sur ce modèle.\n"
+"\n"
+"Note:\n"
+"-----\n"
+"\n"
+"* Les positions fiscales  '内税' and '外税' ont été ajoutés pour répondre aux exigences particulières du point de vente (POS). [1] Dans la plupart des cas, vous ne devriez pas en avoir besoin.\n"
+"\n"
+"[1] Voir https://github.com/odoo/odoo/pull/6470 pour plus de détails."
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -380,6 +414,9 @@ msgid ""
 "\n"
 "This module adds a custom Sales Team for the Point of Sale. This enables you to view and manage your point of sale sales with more ease.\n"
 msgstr ""
+"\n"
+"\n"
+"Ce module ajoute une équipe de vente personnalisée pour le Point de Vente. Ceci vous permet de voir et gérer plus facilement les ventes de votre Point de Vente.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -392,6 +429,13 @@ msgid ""
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Ce module ajoute au Point de Vente plusieurs fonctionnalités spécifiques à la gestion des restaurants :\n"
+"- Imprimer la Note : vous permet d'imprimer un reçu avant que la commande soit payée\n"
+"- Partager la Note : Vous permet de partager une commande en plusieurs commandes\n"
+"- Imprimer la Note en Cuisine : vous permet d'imprimer les nouvelles commandes sur l'imprimante de la cuisine ou du bar\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
@@ -402,6 +446,11 @@ msgid ""
 "discount to a customer.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Ce module permet au caissier d'offrir rapidement un pourcentage\n"
+"de réduction à un client.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_loyalty
@@ -413,6 +462,12 @@ msgid ""
 "and get rewards.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Ce module vous permet de définir un programme de fidélité dans le\n"
+"Point de Vente, grâce auquel les clients gagnent des points\n"
+"et obtiennent des récompenses.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer_restaurant
@@ -421,6 +476,9 @@ msgid ""
 "\n"
 "Use Epson Printers as Order Printers in the Point of Sale without the IoT Box\n"
 msgstr ""
+"\n"
+"\n"
+"Utiliser une Imprimante Epson en tant qu'Imprimante pour les Commandes du Point de Vente, sans utiliser l'IoT Box\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer
@@ -429,6 +487,9 @@ msgid ""
 "\n"
 "Use Epson ePOS Printers without the IoT Box in the Point of Sale\n"
 msgstr ""
+"\n"
+"\n"
+"Utiliser une Imprimante Epson ePOS pour le Point de Vente, sans l'IoT Box\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at
@@ -447,6 +508,19 @@ msgid ""
 " \n"
 "    "
 msgstr ""
+"\n"
+"   \n"
+"Plan comptable autrichien (Einheitskontenrahmen 2010).\n"
+"==========================================================\n"
+"\n"
+"    * Définit les modèles de plan comptable suivants :\n"
+"        * Plan comptable général autrichien 2010\n"
+"    * Définit des modèles de TVA pour les ventes et les achats\n"
+"    * Définit des modèles de taxes\n"
+"    * Définit les positions fiscales pour la législation fiscale autrichienne\n"
+"    * Définit les rapportsfiscaux U1/U30\n"
+" \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_renting_sign
@@ -455,6 +529,9 @@ msgid ""
 "            Bridge Sign functionalities with the Rental application\n"
 "        "
 msgstr ""
+"\n"
+"            Lie les fonctionnalités de Signature avec l'application Location\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_timesheet
@@ -464,6 +541,10 @@ msgid ""
 "        - Track timesheet for a task from a ticket\n"
 "    "
 msgstr ""
+"\n"
+"        – Autoriser la création d'un projet pour l'équipe d'assistance\n"
+"        – Suivre la feuille de temps d'une tâche à partir du ticket\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports
@@ -494,6 +575,10 @@ msgid ""
 "        Also adds DATEV export options to general ledger\n"
 "    "
 msgstr ""
+"\n"
+"Rapports comptables pour l'Allemagne\n"
+"Contient les rapports de bilan, de résultat, de TVA et de TVA partenaire\n"
+"Ajoute également les options d'exportation DATEV au grand livre."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt_reports
@@ -570,6 +655,11 @@ msgid ""
 "        Colloquially known as \"Month 13\"\n"
 "    "
 msgstr ""
+"\n"
+"        Permet de générer la balance de vérification pour l'écriture de clôture.\n"
+"\n"
+"Appelé familièrement \"13ème Mois\"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents
@@ -646,6 +736,8 @@ msgid ""
 "        Bridge module to make the website e-commerce stock management compatible with the product configurator\n"
 "    "
 msgstr ""
+"\n"
+"Module de lien pour rendre la gestion du stock du site d'eCommerce compatible avec le configurateur de produit"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt
@@ -670,6 +762,9 @@ msgid ""
 "        Convert helpdesk tickets to field service tasks.\n"
 "    "
 msgstr ""
+"\n"
+"        Convertir les tickets d'Assistance en tâche pour les Services sur Site.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form
@@ -689,6 +784,8 @@ msgid ""
 "\n"
 "        Define default purchase journal on the warehouse"
 msgstr ""
+"\n"
+"        Définit le journal par défaut pour les achats de l'entrepôt"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_purchase_stock
@@ -700,6 +797,12 @@ msgid ""
 "        useful when you setup the multiple GSTIN units.\n"
 "    "
 msgstr ""
+"\n"
+"        Définit le journal d'achats par défaut pour l'entrepôt,\n"
+"        vous aide à choisir le journal d'achats correct sur la commande lorsque\n"
+"        vous modifiez l'opération d'enlèvement.\n"
+"        utile quand vous configurez les unités GSTIN multiples.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_sale_stock
@@ -707,6 +810,8 @@ msgid ""
 "\n"
 "        Define default sales journal on the warehouse"
 msgstr ""
+"\n"
+"        Définit le journal d'achats par défaut pour l'entrepôt"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_sale_stock
@@ -718,6 +823,12 @@ msgid ""
 "        useful when you setup the multiple GSTIN units.\n"
 "    "
 msgstr ""
+"\n"
+"        Define default sales journal on the warehouse,\n"
+"        help you to choose correct sales journal on the sales order when\n"
+"        you change the warehouse.\n"
+"        useful when you setup the multiple GSTIN units.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -790,6 +901,11 @@ msgid ""
 "        Manage user and manager notifications\n"
 "    "
 msgstr ""
+"\n"
+" Définir les locations de produits (articles, devis, factures, ...)\n"
+"        Gérer le statut des articles, des locations, des retards\n"
+"        Gérer les notifications des utilisateurs et des gestionnaires\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_sparse_field
@@ -824,6 +940,8 @@ msgid ""
 "        This bridge module allows to manage subcontracting with valuation.\n"
 "    "
 msgstr ""
+"\n"
+"Ce module de lien permet de gérer la valorisation avec la sous-traitance."
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode_mrp_subcontracting
@@ -873,6 +991,10 @@ msgid ""
 "        by choosing product variants quantity through a Grid Entry.\n"
 "    "
 msgstr ""
+"\n"
+"        Ce module permet de remplir rapidement une commande d'achat\n"
+"en sélectionnant la quantité de variantes d'article via une grille d'entrée.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_product_matrix
@@ -1038,6 +1160,9 @@ msgid ""
 "       Add variants to your purchase orders through an Order Grid Entry.\n"
 "    "
 msgstr ""
+"\n"
+"       Ajouter des variantes à vos commandes d'achat via une grille d'entrée.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_partner_autocomplete
@@ -1046,6 +1171,9 @@ msgid ""
 "       Auto-complete partner companies' data\n"
 "    "
 msgstr ""
+"\n"
+"       Compléter automatiquement les données des sociétés partenaires\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_product_matrix
@@ -1108,6 +1236,9 @@ msgid ""
 "    Configure IoT devices to be used in certain \n"
 "    steps for taking measures, taking pictures, ...\n"
 msgstr ""
+"\n"
+"    Configurez des appareils IdO pour les utiliser à certaines \n"
+"    étapes pour prendre des mesures, des photos, ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_documentation_examples
@@ -1131,6 +1262,9 @@ msgid ""
 "    Gantt view for Time Off Dashboard\n"
 "    "
 msgstr ""
+"\n"
+"    Diagramme de Gantt pour le Tableau de Bord des Congés\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_lock
@@ -1192,6 +1326,9 @@ msgid ""
 "    Schedule your teams and employees with shift.\n"
 "    "
 msgstr ""
+"\n"
+"    Planifiez les postes de vos équipes et employés.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ie
@@ -1202,6 +1339,11 @@ msgid ""
 "    - a Chart of Accounts customised to Ireland\n"
 "    - VAT Rates and Structure"
 msgstr ""
+"\n"
+"    Ce module s’adresse à toutes les PME irlandaises qui souhaitent configurer rapidement leur comptabilité. Le module fournit :\n"
+"\n"
+"    - un Plan Comptable adapté à l'Irlande\n"
+"    - Taux et Structure de la TVA"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_ebay
@@ -1235,6 +1377,12 @@ msgid ""
 "This module gives the details of the goods traded between the countries of\n"
 "European Union."
 msgstr ""
+"\n"
+"Un module qui ajoute la gestion du stock dans les compte-rendus Intrastat.\n"
+"=====================================\n"
+"\n"
+"Ce module affiche les détails des biens échangés entre les pays de\n"
+"l'Union Européenne."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_tax_python
@@ -1247,6 +1395,13 @@ msgid ""
 "\"Python Code\" defines the amount of the tax.\n"
 "        "
 msgstr ""
+"\n"
+"Une taxe définie comme code python se compose de deux extraits de code python qui sont exécutés dans un environnement local contenant des données telles que le prix unitaire, l'article ou le partenaire.\n"
+"\n"
+"\"Code Applicable\" définit si la taxe doit être appliquée.\n"
+"\n"
+"\"Code Python\" définit le montant de la taxe.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_aba
@@ -1361,6 +1516,11 @@ msgid ""
 "Manage automatic transfers between your accounts.\n"
 "    "
 msgstr ""
+"\n"
+"Transferts Automatiques de Comptes\n"
+"===========================\n"
+"Gère les transferts automatiques entre vos comptes.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_generic_auto_transfer_demo
@@ -1371,6 +1531,11 @@ msgid ""
 "Demo data for account automatic transfers module\n"
 "    "
 msgstr ""
+"\n"
+"Transferts Automatiques entre Comptes Démo\n"
+"================================\n"
+"Données de démonstration pour le module de transfert automatique entre comptes\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_us_consolidation_demo
@@ -1379,6 +1544,9 @@ msgid ""
 "Account Consolidation Demo Data\n"
 "==================================\n"
 msgstr ""
+"\n"
+"Données de Démo pour la Consolidation des Comptes\n"
+"==================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_accountant
@@ -1493,6 +1661,13 @@ msgid ""
 " - To generate the IRAS Audit File, go to Accounting -> Reporting -> IRAS Audit File\n"
 "    "
 msgstr ""
+"\n"
+"Rapports de comptabilité pour Singapour\n"
+"================================\n"
+"Ce module permet de générer la Déclaration GST (F5) et le Dossier d'Audit IRAS.\n"
+" - Pour générer la Déclaration GST, allez à Comptabilité -> Rapports -> Déclaration GST\n"
+" - Pour générer  le Dossier d'Audit IRAS, allez à Comptabilité -> Rapports -> IRAS Audit File\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract_reports
@@ -2243,6 +2418,11 @@ msgid ""
 "button on Accounting's reports allowing to save the report into the\n"
 "Documents app in the desired format(s).\n"
 msgstr ""
+"\n"
+"Module de lien entre les applis Comptabilité et Documents. Il ajoute\n"
+"         la possibilité de créer des factures à partir du module Documents, et un\n"
+"         bouton sur les rapports de Comptabilité permettant de sauvegarder le rapport dans\n"
+"         l'appli Documents au(x) format(s) souhaité(s).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_enterprise
@@ -2254,6 +2434,12 @@ msgid ""
 "Display a preview of the last chatter attachment in the form view for large\n"
 "screen devices.\n"
 msgstr ""
+"\n"
+"Module de lien pour courriel et entreprise\n"
+"=====================================\n"
+"\n"
+"Affiche une prévisualisation de la dernière pièce jointe du chatter en vue Formulaire pour les appareils \n"
+"à grand écran.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_enterprise
@@ -2307,6 +2493,12 @@ msgid ""
 "This module adds certification to resumé for employees.\n"
 "        "
 msgstr ""
+"\n"
+"Certification et Compétences pour les RH\n"
+"===============================\n"
+"\n"
+"Ce module ajoute la certification au curriculum vitae des employés.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ve
@@ -2412,6 +2604,10 @@ msgid ""
 "Plan contable chileno e impuestos de acuerdo a disposiciones vigentes\n"
 "    "
 msgstr ""
+"\n"
+"Plan comptable chilien et localisation fiscale.\n"
+"Plan comptable chilien et impôts selon les dispositions en vigueur\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_address_city
@@ -2458,6 +2654,13 @@ msgid ""
 "on old plannings.\n"
 "\n"
 msgstr ""
+"\n"
+"Comparer feuilles de temps et planifications\n"
+"================================\n"
+"\n"
+"Mieux préparer vos futures planifications en vérifiant le nombre d'heures prestées\n"
+"sur les anciennes planifications.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_taxcloud
@@ -2466,6 +2669,9 @@ msgid ""
 "Computes the sales tax automatically using TaxCloud and the customer's address in United States.\n"
 "    "
 msgstr ""
+"\n"
+"Calculez automatiquement la taxe de vente à l'aide de TaxCloud, en fonction de l'adresse du client aux États-Unis.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_enterprise
@@ -2559,6 +2765,8 @@ msgid ""
 "\n"
 "Correct address formating when both partner_autocomplete and base_address_extended modules are installed"
 msgstr ""
+"\n"
+"Corrige le formatage de l'adresse quand les deux modules partner_autocomplete et base_address_extended sont installés"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_account
@@ -2567,6 +2775,9 @@ msgid ""
 "Create Credit Notes from Helpdesk tickets\n"
 "    "
 msgstr ""
+"\n"
+"Créer des notes de crédit à partir des tickets d'Assistance\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides
@@ -2796,6 +3007,9 @@ msgid ""
 "E-invoice implementation\n"
 "    "
 msgstr ""
+"\n"
+"Mise en place de la facturation électronique\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_slides
@@ -3267,6 +3481,9 @@ msgid ""
 "Generate Coupons from Helpdesks tickets\n"
 "    "
 msgstr ""
+"\n"
+"Créer des Coupons à partir des tickets d'Assistance\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_landing
@@ -3275,6 +3492,9 @@ msgid ""
 "Generate Electronic Invoice with custom numbers\n"
 "    "
 msgstr ""
+"\n"
+"Créer des factures électroniques avec des numéros personnalisés\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm
@@ -3332,6 +3552,11 @@ msgid ""
 "Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
 "    "
 msgstr ""
+"\n"
+"Crée un rapport XML Intrastat pour la déclaration\n"
+"basé sur les factures.\n"
+"Ajoute la possibilité de spécifier le pays d'origine des marchandises et la TVA du partenaire dans le rapport XML Intrastat.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_intrastat
@@ -3377,6 +3602,14 @@ msgid ""
 "are found in other modules that must be installed separately.\n"
 "\n"
 msgstr ""
+"\n"
+"Proxy matériel\n"
+"===========\n"
+"\n"
+"Ce module vous permets d'utiliser à distance des périphériques connectés à ce serveur.\n"
+"\n"
+"Ce module contient uniquement la structure d'activation. Les pilotes de périphériques \n"
+"sont disponibles dans d'autre modules qui doivent être installés séparément. \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_proxy
@@ -3447,6 +3680,9 @@ msgid ""
 "Hides the attendance presence button when an employee is on leave.\n"
 "    "
 msgstr ""
+"\n"
+"Masque le bouton de présence lorsqu'un employé est en congé.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import_module
@@ -3891,6 +4127,9 @@ msgid ""
 "Manage Product returns from helpdesk tickets\n"
 "    "
 msgstr ""
+"\n"
+"Gérer les retours d'Articles à partir des tickets d'Assistance\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_work_entry_holidays
@@ -4063,6 +4302,9 @@ msgid ""
 "Manage the after sale of the products from helpdesk tickets.\n"
 "    "
 msgstr ""
+"\n"
+"Gérer le service après-vente des articles à partir des tickets d'Assistance.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_stock
@@ -6187,6 +6429,9 @@ msgid ""
 "This module adds a Twitter scroller building block to the website builder, so that you can display Twitter feeds on any page of your website.\n"
 "    "
 msgstr ""
+"\n"
+"Ce module ajoute un bloc de contenu Fil Twitter à l'éditeur de Site Web, vous permettant d'ajouter des flux Twitter sur n'importe quelle page de votre site web.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_comparison
@@ -6351,6 +6596,10 @@ msgid ""
 "The actual till still requires one user but an unlimited number of employees can log on to that till and process sales.\n"
 "    "
 msgstr ""
+"\n"
+"Ce module permet aux Employés (et non aux utilisateurs) de se connecter au Point de Vente à l'aide d'un code à barres, d'un code PIN ou des deux.\n"
+"Le Point de Vente nécessite toujours un utilisateur, mais un nombre illimité d'employés peuvent s'y connecter et traiter les ventes.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating
@@ -6379,6 +6628,9 @@ msgid ""
 "This module allows the user to add real estate related data to the Spanish localization and generates a mod 347 report.\n"
 "    "
 msgstr ""
+"\n"
+"Ce module permet à l'utilisateur d'ajouter des données immobilières à la localisation espagnole et génère un rapport mod 347.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_automation
@@ -6603,6 +6855,9 @@ msgid ""
 "This module enables the barcode scanning feature for the warehouse management system.\n"
 "    "
 msgstr ""
+"\n"
+"Ce module ajoute la fonctionnalité de lecture des codes-barres au système de gestion d'entrepôt.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_barcode
@@ -6611,6 +6866,9 @@ msgid ""
 "This module enables the management of deliveries through the use of barcode scanning.\n"
 "    "
 msgstr ""
+"\n"
+"Ce module ajoute la gestion des livraisons grâce à la lecture de code-barres.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sms
@@ -6646,6 +6904,10 @@ msgid ""
 "by enabling cohort view for registered attendees.\n"
 "    "
 msgstr ""
+"\n"
+"Ce module facilite l'analyse des schémas d'inscription d'un événement,\n"
+"en activant la vue par cohortes des participants inscrits.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_setup

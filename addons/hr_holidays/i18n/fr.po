@@ -32,10 +32,11 @@
 # Nicolas Roussey <nro@odoo.com>, 2019
 # thomas quertinmont <tqu@odoo.com>, 2019
 # Martin Trigaux, 2019
-# Cécile Collart <cco@odoo.com>, 2019
 # Celia Tydgat <cty@odoo.com>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
 # Alexandra Jubert <aju@odoo.com>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Pauline Thiry <pth@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -43,7 +44,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-02-13 08:34+0000\n"
 "PO-Revision-Date: 2016-08-05 12:58+0000\n"
-"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2020\n"
+"Last-Translator: Pauline Thiry <pth@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -923,7 +924,7 @@ msgstr "Analyse des évaluations"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Approval"
-msgstr ""
+msgstr "Validation"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -989,7 +990,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_employee_base
 msgid "Basic Employee"
-msgstr ""
+msgstr "Employé basique"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__black
@@ -1320,7 +1321,7 @@ msgstr "Nom affiché"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__create_calendar_meeting
 msgid "Display Time Off in Calendar"
-msgstr ""
+msgstr "Afficher les congés dans le calendrier"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
@@ -1422,6 +1423,8 @@ msgid ""
 "Field allowing to see the allocation duration in days or hours depending on "
 "the type_request_unit"
 msgstr ""
+"Champ permettant de voir la durée de l'allocation en jours ou heures selon "
+"le type_request_unit"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__duration_display
@@ -1429,6 +1432,8 @@ msgid ""
 "Field allowing to see the leave request duration in days or hours depending "
 "on the leave_type_request_unit"
 msgstr ""
+"Champ permettant de voir la durée de la demande de congé en jours ou en "
+"heures selon le congé_type_request_unit"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -1510,6 +1515,8 @@ msgid ""
 "Green this button when the time off has been taken into account in the "
 "payslip."
 msgstr ""
+"Faites passer ce bouton au vert lorsqu'un congé a été pris en compte dans la"
+" paye."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2446,7 +2453,7 @@ msgstr ""
 #: code:addons/hr_holidays/report/hr_leave_report.py:0
 #, python-format
 msgid "Such grouping is not allowed."
-msgstr ""
+msgstr "Un tel regroupement n'est pas autorisé."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -2553,6 +2560,9 @@ msgid ""
 "This area is automatically filled by the user who validate the time off with"
 " second level (If time off type need second validation)"
 msgstr ""
+"Cet espace est rempli automatiquement par l'utilisateur qui valide les "
+"congés au deuxième niveau (si les congés ont besoin d'une deuxième "
+"validation)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__first_approver_id
@@ -2585,7 +2595,7 @@ msgstr "Ceci indique s'il est toujours possible d'utiliser ce type de congé"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "This modification is not allowed in the current state."
-msgstr ""
+msgstr "Cette modification n'est pas autorisée dans l'état actuel."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_id
@@ -3073,7 +3083,7 @@ msgstr "Années"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "You can allocate %s only before %s"
-msgstr ""
+msgstr "Vous pouvez allouer %s seulement avant %s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3112,12 +3122,16 @@ msgid ""
 "You cannot first approve a leave for %s, because you are not his leave "
 "manager"
 msgstr ""
+"Vous ne pouvez pas réaliser la première validation du congé de %s, car vous "
+"n'êtes pas son gestionnaire des congés"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You don't have the rights to apply second approval on a leave request"
 msgstr ""
+"Vous ne disposez pas des droits pour donner la seconde validation à une "
+"demande de congé"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3132,6 +3146,8 @@ msgstr ""
 msgid ""
 "You must be either %s's manager or time off manager to approve this time off"
 msgstr ""
+"Vous devez soit être le Manager de %s ou le gestionnaire des Congés pour "
+"approuver cette demande"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3233,4 +3249,4 @@ msgstr "au"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "validated"
-msgstr ""
+msgstr "validé"
