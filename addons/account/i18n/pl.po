@@ -31,8 +31,8 @@
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2019
 # Karol Rybak <karolrybak85@gmail.com>, 2019
 # Maksym <ms@myodoo.pl>, 2020
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2020
 # Paweł Wodyński <pw@myodoo.pl>, 2020
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -40,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2020\n"
+"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2020\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -618,7 +618,7 @@ msgstr "<span>Podgląd</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"mr16\">Subtotal</strong>"
-msgstr "<strong class=\"mr16\">Podsuma</strong>"
+msgstr "<strong class=\"mr16\">Wartość</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -722,7 +722,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Subtotal</strong>"
-msgstr "<strong>Suma częściowa</strong>"
+msgstr "<strong>Wartość</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -1244,7 +1244,7 @@ msgstr "Księgowość"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__accounting_date
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Accounting Date"
-msgstr "Data wpływu"
+msgstr "Data księgowania"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -5949,7 +5949,7 @@ msgstr "Faktura zatwierdzona"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_date
 msgid "Invoice/Bill Date"
-msgstr ""
+msgstr "Data faktury"
 
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_invoice
@@ -7186,6 +7186,12 @@ msgstr "Następny numer"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_sequence_number_next_prefix
 msgid "Next Number Prefix"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:545
+#, python-format
+msgid "No default debit and credit account defined on journal %s (ids: %s)"
 msgstr ""
 
 #. module: account
@@ -9868,7 +9874,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_subtotal
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Subtotal"
-msgstr "Suma"
+msgstr "Wartość"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__subtype_id
@@ -10032,7 +10038,7 @@ msgstr "Należny podatek"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Tax Excluded"
-msgstr "Podatek wyłączony"
+msgstr "Netto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids
@@ -10245,7 +10251,7 @@ msgstr "Podatek do zatwierdzenia"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_config_settings__show_line_subtotals_tax_selection__tax_excluded
 msgid "Tax-Excluded"
-msgstr ""
+msgstr "Netto"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_config_settings__show_line_subtotals_tax_selection__tax_included

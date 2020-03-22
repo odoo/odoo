@@ -1,19 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * bus
+# 	* bus
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
-# Somchart Jabsung <jabsung.s@gmail.com>, 2018
+# Martin Trigaux, 2020
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2020
+# Somchart Jabsung <jabsung.s@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Somchart Jabsung <jabsung.s@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Somchart Jabsung <jabsung.s@gmail.com>, 2020\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,12 +22,17 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: bus
-#: sql_constraint:bus.presence:0
+#: model:ir.model.constraint,message:bus.constraint_bus_presence_bus_user_presence_unique
 msgid "A user can only have one IM status."
 msgstr ""
 
 #. module: bus
-#: selection:bus.presence,status:0
+#: model:ir.model,name:bus.model_ir_autovacuum
+msgid "Automatic Vacuum"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
 msgid "Away"
 msgstr ""
 
@@ -107,12 +112,12 @@ msgid "Message"
 msgstr "ข้อความ"
 
 #. module: bus
-#: selection:bus.presence,status:0
+#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__offline
 msgid "Offline"
 msgstr ""
 
 #. module: bus
-#: selection:bus.presence,status:0
+#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__online
 msgid "Online"
 msgstr "ออนไลน์"
 
@@ -128,7 +133,7 @@ msgid "Users"
 msgstr "ผู้ใช้งาน"
 
 #. module: bus
-#: code:addons/bus/controllers/main.py:41
+#: code:addons/bus/controllers/main.py:0
 #, python-format
 msgid "bus.Bus not available in test mode"
 msgstr ""

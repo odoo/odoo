@@ -8,6 +8,7 @@
 # Pedro Castro Silva <pedrocs@exo.pt>, 2020
 # Nuno Silva <nuno.silva@arxi.pt>, 2020
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2020
+# cafonso <cafonso62@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-01-15 14:05+0000\n"
 "PO-Revision-Date: 2020-03-12 07:02+0000\n"
-"Last-Translator: Diogo Fonseca <dsf@thinkopensolutions.pt>, 2020\n"
+"Last-Translator: cafonso <cafonso62@gmail.com>, 2020\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +32,7 @@ msgstr "Arredondamento do dinheiro da conta"
 #. module: pos_cash_rounding
 #: model:ir.model.fields,field_description:pos_cash_rounding.field_pos_config__cash_rounding
 msgid "Cash Rounding"
-msgstr "Arredondamentos de Numerário"
+msgstr "Arredondamento de Numerário"
 
 #. module: pos_cash_rounding
 #: model_terms:ir.ui.view,arch_db:pos_cash_rounding.res_config_view_form_inherit_pos_cash_rounding
@@ -41,23 +42,27 @@ msgstr "Arredondamentos de Numerário"
 #. module: pos_cash_rounding
 #: model:ir.model.fields,field_description:pos_cash_rounding.field_pos_config__rounding_method
 msgid "Cash rounding"
-msgstr ""
+msgstr "Arredondamento de Numerário"
 
 #. module: pos_cash_rounding
 #: code:addons/pos_cash_rounding/models/pos_config.py:0
 #, python-format
 msgid "Cash rounding strategy must be: 'Add a rounding line'"
 msgstr ""
+"A estratégia de arredondamento de numerário deve ser: 'Adicionar uma linha "
+"de arredondamento'"
 
 #. module: pos_cash_rounding
 #: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_config_view_form_inherit_cash_rounding
 msgid "Define the smallest coinage of the currency used to pay"
-msgstr ""
+msgstr "Definir o valor da monetário mais baixo da moeda usada para pagamento"
 
 #. module: pos_cash_rounding
 #: model_terms:ir.ui.view,arch_db:pos_cash_rounding.res_config_view_form_inherit_pos_cash_rounding
 msgid "Define the smallest coinage of the currency used to pay by cash"
 msgstr ""
+"Definir o valor da monetário mais baixo da moeda usada para pagamento em "
+"numerário"
 
 #. module: pos_cash_rounding
 #: model:ir.model.fields,field_description:pos_cash_rounding.field_account_cash_rounding__loss_account_id
@@ -67,7 +72,7 @@ msgstr "Conta de Perdas"
 #. module: pos_cash_rounding
 #: model:ir.model.fields,field_description:pos_cash_rounding.field_pos_config__only_round_cash_method
 msgid "Only apply rounding on cash"
-msgstr ""
+msgstr "Só aplicar arredondamento a numerário"
 
 #. module: pos_cash_rounding
 #: model_terms:ir.ui.view,arch_db:pos_cash_rounding.res_config_view_form_inherit_pos_cash_rounding
@@ -99,7 +104,7 @@ msgstr "Conta de Lucros"
 #: code:addons/pos_cash_rounding/static/src/xml/pos.xml:0
 #, python-format
 msgid "ROUNDED"
-msgstr ""
+msgstr "ARREDONDADO"
 
 #. module: pos_cash_rounding
 #: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_config_view_form_inherit_cash_rounding
@@ -112,11 +117,13 @@ msgid ""
 "The Point of Sale only support the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
+"O Ponto de Venda só suporta a estratégia de arredondamento \"adicionar linha"
+" de arredondamento\"."
 
 #. module: pos_cash_rounding
 #: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_order_view_form_inherit_cash_rounding
 msgid "Total Paid (with rounding)"
-msgstr ""
+msgstr "Total Pago (com arredondamento)"
 
 #. module: pos_cash_rounding
 #: code:addons/pos_cash_rounding/models/account_cash_rounding.py:0
@@ -125,3 +132,5 @@ msgid ""
 "You are not allowed to change the cash rounding configuration while a pos "
 "session using it is already opened."
 msgstr ""
+"Não é permitido alterar a configuração de arredondamento durante uma sessão "
+"de POS após a sua abertura."
