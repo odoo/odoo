@@ -98,7 +98,7 @@ odoo.define('web.WindowActionPlugin', function (require) {
                     var viewOptions = {currentId: state.id};
                     var viewType = state.view_type || currentController.viewType;
                     this._switchController(currentAction, viewType, viewOptions);
-                    return true;
+                    return false;
                 } else if (!action_registry.contains(state.action)) {
                     // the action to load isn't the current one, so execute it
                     var context = {};
