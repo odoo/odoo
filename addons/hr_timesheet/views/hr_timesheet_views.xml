@@ -83,7 +83,7 @@
                             <group>
                                 <field name="date"/>
                                 <field name="project_id" required="1" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
-                                <field name="task_id"/>
+                                <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
                                 <field name="name"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
