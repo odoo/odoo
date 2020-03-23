@@ -930,6 +930,7 @@ class City(models.Model):
     name = fields.Char()
     country_id = fields.Many2one('test_new_api.country')
 
+
 # abstract model with a selection field
 class StateMixin(models.AbstractModel):
     _name = 'test_new_api.state_mixin'
@@ -1037,3 +1038,66 @@ class SelectionNonStored(models.Model):
         ('foo', "Foo"),
         ('bar', "Bar"),
     ], store=False)
+
+
+class ModelAdvancedComputes(models.Model):
+    _name = 'test_new_api.model_advanced_computes'
+    _description = 'model with advanced computes'
+    _pre_compute = True
+
+    name1 = fields.Char('First Name')
+    name2 = fields.Char('Last Name')
+    title = fields.Char('Job Function')
+
+    upper_name_1 = fields.Char(compute="_compute_uppers", store=True)
+    upper_name_2 = fields.Char(compute="_compute_uppers", store=True)
+
+    create_month = fields.Integer(compute="_compute_create_month", store=True)
+
+    full_upper_name = fields.Char(compute="_compute_full_upper", pre_compute=False, store=True)
+    full_card_content = fields.Text(compute="_compute_full_card_content", store=True)
+
+    duplicates = fields.Many2many(
+        comodel_name='test_new_api.model_advanced_computes',
+        relation='test_new_api_advanced_computes_rel', column1="rec1", column2="rec2",
+        compute="_compute_duplicates", pre_compute=False, store=True)
+
+    @api.depends('name1', 'name2')
+    def _compute_uppers(self):
+        for rec in self:
+            if rec.id or not rec.env.context.get('creation', False):
+                raise ValidationError("Should be computed before record creation")
+            rec.upper_name_1 = rec.name1.title()
+            rec.upper_name_2 = rec.name2.title()
+
+    @api.depends('create_date')
+    def _compute_create_month(self):
+        for rec in self:
+            if not rec.id or not rec.env.context.get('creation', False):
+                raise ValidationError("Should be computed after record creation")
+            rec.create_month = rec.create_date and rec.create_date.month
+
+    @api.depends('upper_name_1', 'upper_name_2')
+    def _compute_full_upper(self):
+        for rec in self:
+            if not rec.id or not rec.env.context.get('creation', False):
+                raise ValidationError("Should be computed after creation because specified as pre_compute=False")
+            rec.full_upper_name = rec.upper_name_1 + " " + rec.upper_name_2
+
+    @api.depends('title', 'full_upper_name')
+    def _compute_full_card_content(self):
+        for rec in self:
+            if not rec.id or not rec.env.context.get('creation', False):
+                raise ValidationError("Shouldn't be computed before record creation.")
+            rec.full_card_content = rec.full_upper_name + "\n" + rec.title
+
+    @api.depends('upper_name_1', 'upper_name_2')
+    def _compute_duplicates(self):
+        for rec in self:
+            if not rec.id or not rec.env.context.get('creation', False):
+                raise ValidationError("Shouldn't be computed before record creation")
+            rec.duplicates = rec.search([
+                ('upper_name_1', '=', rec.upper_name_1),
+                ('upper_name_2', '=', rec.upper_name_2),
+                ('id', '!=', rec.id),
+            ])

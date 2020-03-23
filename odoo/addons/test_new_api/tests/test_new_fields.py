@@ -286,10 +286,10 @@ class TestFields(TransactionCaseWithUserDemo):
         check_stored(discussion1)
 
         # switch message from discussion, and check again
-        
+
         # See YTI FIXME
         discussion1.invalidate_cache()
-        
+
         discussion2 = discussion1.copy({'name': 'Another discussion'})
         message2 = discussion1.messages[0]
         message2.discussion = discussion2
@@ -2803,3 +2803,50 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
 
         with self.assertRaises(ValueError):
             self.registry.setup_models(self.env.cr)
+
+
+@common.tagged('prepostcomputes')
+class TestPrePostComputes(common.TransactionCase):
+
+    def test_pre_post_create_computes(self):
+        Model = self.env["test_new_api.model_advanced_computes"]
+
+        # Ensure automatic assignation of pre_compute=False works
+        # 1) dependency on create_date/create_uid/write_date/write_uid
+        self.assertFalse(Model._fields.get('create_month').pre_compute)
+        # 2) dependency on a pre_compute=False field
+        self.assertFalse(Model._fields.get('full_card_content').pre_compute)
+
+        # Force computation on a new and assertRaises Error
+        new_record = Model.new({
+            'name1': 'Nathan',
+            'name2': 'Algren',
+            'title': 'Military Advisor',
+        })
+        with self.assertRaises(ValidationError):
+            new_record.duplicates
+        # Create two records and check duplicates are correctly assigned
+        # If they were computed pre_create, duplicates fields would be empty.
+        # Context key ensure the computes are all called during the create call.
+        records = Model.with_context(creation=True).create([
+            {
+                'name1': 'Hans',
+                'name2': 'zimmer',
+                'title': 'Musical Composer'
+            }, {
+                'name1': 'hans',
+                'name2': 'Zimmer',
+                'title': 'Artist'
+            }
+        ])
+        self.assertEqual(len(records), 2)
+        self.assertEqual(records.duplicates, records)
+        self.assertEqual(records[0].duplicates, records[1])
+        self.assertEqual(records[1].duplicates, records[0])
+
+        self.assertIn("Hans Zimmer\nMusical Composer", records.mapped('full_card_content'))
+        self.assertIn("Hans Zimmer\nArtist", records.mapped('full_card_content'))
+
+        self.assertEqual(records[0].full_upper_name, records[1].full_upper_name)
+        self.assertTrue(records[0].create_month)
+        self.assertTrue(records[1].create_month)
