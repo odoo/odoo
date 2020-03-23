@@ -68,17 +68,17 @@ class SaleOrder(models.Model):
                 expected_date = min(dates_list) if order.picking_policy == 'direct' else max(dates_list)
                 order.expected_date = fields.Datetime.to_string(expected_date)
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        # VFE TODO remove this create override, it can be managed by the compute now.
-        user_company_warehouse = dict()
-        for vals in vals_list:
-            if 'warehouse_id' not in vals:
-                user = self.env['res.users'].browse(vals['user_id']) if "user_id" in vals else self.env.user
-                company_id = vals.get("company_id", self.env.company.id)
-                user_company_warehouse.setdefault((user.id, company_id), user.with_company(company_id)._get_default_warehouse_id().id)
-                vals['warehouse_id'] = user_company_warehouse.get((user.id, company_id))
-        return super().create(vals_list)
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     # VFE TODO remove this create override, it can be managed by the compute now.
+    #     user_company_warehouse = dict()
+    #     for vals in vals_list:
+    #         if 'warehouse_id' not in vals:
+    #             user = self.env['res.users'].browse(vals['user_id']) if "user_id" in vals else self.env.user
+    #             company_id = vals.get("company_id", self.env.company.id)
+    #             user_company_warehouse.setdefault((user.id, company_id), user.with_company(company_id)._get_default_warehouse_id().id)
+    #             vals['warehouse_id'] = user_company_warehouse.get((user.id, company_id))
+    #     return super().create(vals_list)
 
     def write(self, values):
         if values.get('order_line') and self.state == 'sale':
