@@ -5,7 +5,8 @@
 <template id="snippets" inherit_id="web_editor.snippets" primary="True">
     <xpath expr="//div[@id='snippets_menu']" position="inside">
         <button type="button" class="o_we_customize_theme_btn"
-                data-title="Customize your theme">
+                data-title="Customize your theme"
+                groups="website.group_website_designer">
             Options
         </button>
     </xpath>
@@ -372,7 +373,8 @@
 
     <div id="so_header_theme"
          data-selector="#wrapwrap > header"
-         data-no-check="true">
+         data-no-check="true"
+         groups="website.group_website_designer">
         <we-checkbox string="Show Sign In" data-customize-website="portal.portal_show_sign_in" data-reload="/"/>
         <we-checkbox string="Fixed Top Menu" data-customize-website="website.affix_top_menu" data-reload="/"/>
         <we-colorpicker string="Background Color" data-customize-website="" data-color="menu"/>
@@ -404,7 +406,8 @@
     </div>
 
     <div data-selector="#wrapwrap > footer"
-         data-no-check="true">
+         data-no-check="true"
+         groups="website.group_website_designer">
         <we-colorpicker string="Background" data-customize-website="" data-color="footer"/>
     </div>
 
