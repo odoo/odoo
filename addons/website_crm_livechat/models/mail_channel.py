@@ -15,4 +15,9 @@ class MailChannel(models.Model):
         visitor_sudo = self.livechat_visitor_id.sudo()
         if visitor_sudo:
             visitor_sudo.write({'lead_ids': [(4, lead.id)]})
+            lead.write({
+                'campaign_id': visitor_sudo.campaign_id.id or lead.campaign_id.id,
+                'medium_id': visitor_sudo.medium_id.id or lead.medium_id.id,
+                'source_id': visitor_sudo.source_id.id or lead.source_id.id
+            })
         return lead

@@ -3,3 +3,4 @@
 
 from . import crm_lead
 from . import mail_channel
+from . import website_visitor
