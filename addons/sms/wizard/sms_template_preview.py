@@ -29,8 +29,7 @@ class SMSTemplatePreview(models.TransientModel):
             result['resource_ref'] = '%s,%s' % (sms_template.model_id.model, res.id)
         return result
 
-    sms_template_id = fields.Many2one('sms.template') # NOTE This should probably be required
-
+    sms_template_id = fields.Many2one('sms.template', required=True, ondelete='cascade')
     lang = fields.Selection(_selection_languages, string='Template Preview Language')
     model_id = fields.Many2one('ir.model', related="sms_template_id.model_id")
     body = fields.Char('Body', compute='_compute_sms_template_fields')
