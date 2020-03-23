@@ -140,6 +140,14 @@
             </xpath>
         </template>
 
+    <template id="qunit_mobile_suite" name="mail_mobile_tests" inherit_id="web.qunit_mobile_suite">
+         <xpath expr="//t[@t-set='head']" position="inside">
+            <script type="text/javascript" src="/mail/static/tests/chatter_mobile_tests.js"></script>
+            <!-- activity view -->
+            <script type="text/javascript" src="/mail/static/tests/activity_mobile_tests.js"></script>
+         </xpath>
+     </template>
+
         <template id="message_origin_link">
             <p>This <t t-esc="self.env['ir.model']._get(self._name).name.lower()"/> has been <span t-if="edit">modified</span><span t-if="not edit">created</span> from:
                 <t t-foreach="origin" t-as="o">

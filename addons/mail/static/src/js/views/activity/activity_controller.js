@@ -3,6 +3,7 @@ odoo.define('mail.ActivityController', function (require) {
 
 var BasicController = require('web.BasicController');
 var core = require('web.core');
+const config = require('web.config');
 var field_registry = require('web.field_registry');
 var ViewDialogs = require('web.view_dialogs');
 
@@ -75,6 +76,7 @@ var ActivityController = BasicController.extend({
             res_id: false,
         }, {
             on_close: this.reload.bind(this),
+            fullscreen: config.device.isMobile,
         });
     },
     /**
