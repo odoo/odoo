@@ -42,6 +42,7 @@
             <search string="Event Sponsors">
                 <field name="partner_id"/>
                 <field name="event_id"/>
+                <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
             </search>
         </field>
     </record>
@@ -52,6 +53,8 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <field name="active" invisible="1"/>
                     <field name="image_128" widget="image" class="oe_avatar"/>
                     <h1><field name="partner_id"/></h1>
                     <group>

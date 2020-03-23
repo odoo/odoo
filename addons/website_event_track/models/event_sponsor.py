@@ -31,6 +31,7 @@ class Sponsor(models.Model):
     sequence = fields.Integer('Sequence')
     image_128 = fields.Image(
         string="Logo", related='partner_id.image_128', store=True, readonly=False)
+    active = fields.Boolean(default=True)
 
     def _message_get_suggested_recipients(self):
         recipients = super(Sponsor, self)._message_get_suggested_recipients()
