@@ -9,6 +9,7 @@ import werkzeug
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import AccessError
 from odoo.osv import expression
+from odoo.tools import is_html_empty
 
 
 class Survey(models.Model):
@@ -437,12 +438,21 @@ class Survey(models.Model):
 
     @api.model
     def _get_pages_or_questions(self, user_input):
-        if self.questions_layout == 'one_page':
-            return self.env['survey.question']
-        elif self.questions_layout == 'page_per_question' and self.questions_selection == 'random':
-            return user_input.predefined_question_ids
-        else:
-            return self.question_and_page_ids if self.questions_layout == 'page_per_question' else self.page_ids
+        """ Returns the pages or questions (depending on the layout) that will be shown
+        to the user taking the survey.
+        In 'page_per_question' layout, we also want to show pages that have a description. """
+
+        result = self.env['survey.question']
+        if self.questions_layout == 'page_per_section':
+            result = self.page_ids
+        elif self.questions_layout == 'page_per_question':
+            if self.questions_selection == 'random':
+                result = user_input.predefined_question_ids
+            else:
+                result = self.question_and_page_ids.filtered(
+                    lambda question: not question.is_page or not is_html_empty(question.description))
+
+        return result
 
     def _get_next_page_or_question(self, user_input, page_or_question_id, go_back=False):
         """
@@ -580,13 +590,10 @@ class Survey(models.Model):
         if not self.question_ids or not self.env.user.has_group('survey.group_survey_user'):
             return
 
-        if not self.session_question_id:
-            next_question = self.question_ids[0]
-        else:
-            most_voted_answers = self._get_session_most_voted_answers()
-            next_question = self._get_next_page_or_question(most_voted_answers, self.session_question_id.id)
-
-        return next_question
+        most_voted_answers = self._get_session_most_voted_answers()
+        return self._get_next_page_or_question(
+            most_voted_answers,
+            self.session_question_id.id if self.session_question_id else 0)
 
     def _get_session_most_voted_answers(self):
         """ In sessions of survey that has conditional questions, as the survey is passed at the same time by

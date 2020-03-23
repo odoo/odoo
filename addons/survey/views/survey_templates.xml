@@ -74,6 +74,7 @@
                 t-att-data-is-start-screen="answer.state == 'new'"
                 t-att-data-readonly="survey_form_readonly"
                 t-att-data-has-answered="bool(has_answered)"
+                t-att-data-is-page-description="bool(question and question.is_page and not is_html_empty(question.description))"
                 t-att-data-questions-layout="survey.questions_layout"
                 t-att-data-triggered-questions-by-answer="json.dumps(triggered_questions_by_answer)"
                 t-att-data-selected-answers="json.dumps(selected_answers)">
@@ -139,6 +140,7 @@
         <div class="o_survey_form_content_data d-none"
             t-att-data-question-time-limit-reached="answer.question_time_limit_reached"
             t-att-data-has-answered="bool(has_answered)"
+            t-att-data-is-page-description="bool(question and question.is_page and not is_html_empty(question.description))"
             t-att-data-timer="timer_start"
             t-att-data-time-limit-minutes="time_limit_minutes"/>
         <t t-if="survey.questions_layout == 'one_page'">
@@ -191,6 +193,9 @@
                 </fieldset>
                 <div t-if="answer.question_time_limit_reached and not has_answered" class="font-weight-bold mb128">Sorry, you have not been fast enough.</div>
                 <div t-else="" class="font-weight-bold mb128">We have registered your answer! Please wait for the host to go to the next question.</div>
+            </t>
+            <t t-elif="answer.is_session_answer and question.is_page and not is_html_empty(question.description)">
+                <div class="font-weight-bold mt-5">Pay attention to the host screen until the next question.</div>
             </t>
             <t t-else="">
                 <t t-call="survey.question_container"/>
