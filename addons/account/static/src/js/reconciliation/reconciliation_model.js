@@ -1663,7 +1663,7 @@ var ManualModel = StatementModel.extend({
                         if (line.type === 'accounts') {
                             account_ids.push(line.account_id.id);
                         } else {
-                            partner_ids.push(line.partner_id.id);
+                            partner_ids.push(line.partner_id);
                         }
                     }
                 }));
