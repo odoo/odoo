@@ -57,7 +57,7 @@ class CRMRevealRule(models.Model):
     user_id = fields.Many2one('res.users', string='Salesperson')
     priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Priority')
     lead_ids = fields.One2many('crm.lead', 'reveal_rule_id', string='Generated Lead / Opportunity')
-    leads_count = fields.Integer(compute='_compute_leads_count', string='Number of Generated Leads')
+    lead_count = fields.Integer(compute='_compute_lead_count', string='Number of Generated Leads')
     opportunity_count = fields.Integer(compute='_compute_leads_count', string='Number of Generated Opportunity')
 
     # This limits the number of extra contact.
@@ -101,7 +101,7 @@ class CRMRevealRule(models.Model):
         self.clear_caches() # Clear the cache in order to recompute _get_active_rules
         return super(CRMRevealRule, self).unlink()
 
-    def _compute_leads_count(self):
+    def _compute_lead_count(self):
         leads = self.env['crm.lead'].read_group([
             ('reveal_rule_id', 'in', self.ids)
         ], fields=['reveal_rule_id', 'type'], groupby=['reveal_rule_id', 'type'], lazy=False)
