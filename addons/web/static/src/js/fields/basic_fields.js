@@ -1824,6 +1824,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                         if(this.$zoom.height() < 256 && this.$zoom.width() < 256) {
                             this.hide();
                         }
+                        core.bus.on('keydown', this, this.hide);
                     },
                     beforeAttach: function () {
                         this.$flyout.css({ width: '512px', height: '512px' });
