@@ -2181,6 +2181,12 @@ class MailThread(models.AbstractModel):
         if bus_notifications:
             self.env['bus.bus'].sudo().sendmany(bus_notifications)
 
+    def _notify_email_values(self, base_mail_values):
+        headers = self._notify_email_headers()
+        if headers:
+            base_mail_values['headers'] = headers
+        return base_mail_values
+
     def _notify_record_by_email(self, message, recipients_data, msg_vals=False,
                                 model_description=False, mail_auto_delete=True, check_existing=False,
                                 force_send=True, send_after_commit=True,
@@ -2233,9 +2239,7 @@ class MailThread(models.AbstractModel):
             'references': message.parent_id.sudo().message_id if message.parent_id else False,
             'subject': mail_subject,
         }
-        headers = self._notify_email_headers()
-        if headers:
-            base_mail_values['headers'] = headers
+        base_mail_values = self._notify_email_values(base_mail_values)
 
         Mail = self.env['mail.mail'].sudo()
         emails = self.env['mail.mail'].sudo()
