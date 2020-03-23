@@ -2886,11 +2886,27 @@ class _RelationalMulti(_Relational):
                 else:
                     result[0][2].append(origin.id)
                     if record != origin:
-                        values = record._convert_to_write({
-                            name: record[name]
-                            for name in record._cache
-                            if name not in inv_names and record[name] != origin[name]
-                        })
+                        values = dict()
+                        for fname in record._cache:
+                            if fname in inv_names:
+                                continue
+                            if record[fname] == origin[fname]:
+                                continue
+                            field = record._fields[fname]
+                            val = field.convert_to_write(record[fname], record)
+                            # Suppose you have a record A, with relational field containing record B in field b_ids
+                            # You "create" a new record N, using A as relational value for field a_ids
+                            # If you access N.a_ids.b_ids:
+                            #   N.a_ids = New(origin=A)
+                            #   N.a_ids.b_ids = New(origin=B)
+                            # Because New(origin=Rec) != Rec, the x2m values (b_ids)
+                            # in A are considered different, and a useless write diff is given
+                            # N._fields[a_ids].convert_to_write(N[a_ids])
+                            # => [(6, 0, [A.id]), (1, 1, {'b_ids': [(6, 0, [B.id])]})]
+                            if not record.id and field.type in ("one2many", "many2many")\
+                                and val == [(6, 0, origin[fname].ids)]:
+                                continue
+                            values[fname] = val
                         if values:
                             result.append((1, origin.id, values))
             return result
