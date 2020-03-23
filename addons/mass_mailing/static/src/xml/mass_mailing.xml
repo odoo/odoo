@@ -6,7 +6,7 @@
         </a>
         <div class="dropdown-menu" role="menu">
             <t t-foreach="themes" t-as="theme">
-                <a role="menuitem" href="#" class="dropdown-item">
+                <a t-att-id="theme.name" role="menuitem" href="#" class="dropdown-item">
                     <div class="o_thumb small"  t-attf-style="background-image: url(#{theme.img}_small.png)"/>
                     <div class="o_thumb large" t-attf-style="background-image: url(#{theme.img}_large.png)"/>
                     <div class="o_thumb logo" t-attf-style="background-image: url(#{theme.img}_logo.png)"/>

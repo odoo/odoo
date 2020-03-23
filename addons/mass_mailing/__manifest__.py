@@ -17,6 +17,7 @@
         'web_editor',
         'web_kanban_gauge',
         'social_media',
+        'web_tour',
     ],
     'data': [
         'security/mass_mailing_security.xml',

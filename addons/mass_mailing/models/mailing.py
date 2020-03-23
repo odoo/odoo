@@ -9,10 +9,9 @@ import random
 import re
 import threading
 from ast import literal_eval
-from base64 import b64encode
 from datetime import datetime
 
-from odoo import api, fields, models, tools, _, SUPERUSER_ID
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -43,6 +42,16 @@ class MassMailing(models.Model):
     _order = 'sent_date DESC'
     _inherits = {'utm.source': 'source_id'}
     _rec_name = "subject"
+
+    @api.model
+    def default_get(self, fields):
+        vals = super(MassMailing, self).default_get(fields)
+        if 'contact_list_ids' in fields and not vals.get('contact_list_ids') and vals.get('mailing_model_id'):
+            if vals.get('mailing_model_id') == self.env['ir.model']._get('mailing.list').id:
+                mailing_list = self.env['mailing.list'].search([], limit=2)
+                if len(mailing_list) == 1:
+                    vals['contact_list_ids'] = [(6, 0, [mailing_list.id])]
+        return vals
 
     @api.model
     def _get_default_mail_server_id(self):
