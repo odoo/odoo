@@ -272,6 +272,8 @@ class MailComposer(models.TransientModel):
                             add_sign=not bool(wizard.template_id),
                             mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else False,
                             model_description=model_description)
+                        if wizard.template_id:
+                            post_params.update({'scheduled_date': wizard.template_id.scheduled_date})
                         post_params.update(mail_values)
                         if ActiveModel._name == 'mail.thread':
                             if wizard.model:

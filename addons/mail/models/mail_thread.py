@@ -2251,6 +2251,9 @@ class MailThread(models.AbstractModel):
             'references': message.parent_id.sudo().message_id if message.parent_id else False,
             'subject': mail_subject,
         }
+        scheduled_date = kwargs.get('scheduled_date') or False
+        if scheduled_date:
+            base_mail_values['scheduled_date'] = scheduled_date
         base_mail_values = self._notify_by_email_add_values(base_mail_values)
 
         # Clean the context to get rid of residual default_* keys that could cause issues during
