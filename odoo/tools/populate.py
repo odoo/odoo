@@ -1,4 +1,5 @@
 import random
+from datetime import datetime, timedelta
 from odoo.tools import pycompat
 
 
@@ -102,7 +103,6 @@ def compute(function, seed=None):
             values[field_name] = val
             yield values
     return generate
-
 
 def randint(a, b, seed=None):
     """ Return a factory for an iterator of values dicts that sets the field

@@ -10,6 +10,7 @@ _logger = logging.getLogger(__name__)
 
 class Partner(models.Model):
     _inherit = "res.partner"
+    _populate_dependencies = ["res.company", "res.partner.industry"]
 
     _populate_sizes = {
         'small': 10,
