@@ -112,6 +112,7 @@
                         </div>
                         <div t-elif="show_text_answers" class="p-2 pt-4 o_survey_session_text_answers_container">
                         </div>
+                        <div t-elif="question.is_page and not is_html_empty(question.description)" class="mb-6 o_survey_manage_fontsize_14" t-field="question.description" />
                         <div t-else="" class="mb-6">
                             <h2 class="font-weight-normal mb-3">
                                 <span>Waiting for attendees...</span>
