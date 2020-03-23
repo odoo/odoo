@@ -2266,9 +2266,7 @@ class MailThread(models.AbstractModel):
             'references': message.parent_id.sudo().message_id if message.parent_id else False,
             'subject': mail_subject,
         }
-        headers = self._notify_email_headers()
-        if headers:
-            base_mail_values['headers'] = headers
+        base_mail_values = self._notify_by_email_add_values(base_mail_values)
 
         Mail = self.env['mail.mail'].sudo()
         emails = self.env['mail.mail'].sudo()
@@ -2420,6 +2418,19 @@ class MailThread(models.AbstractModel):
             'subtype': message.subtype_id,
             'lang': lang,
         }
+
+    def _notify_by_email_add_values(self, base_mail_values):
+        """ Add model-specific values to the dictionary used to create the
+        notification email. Its base behavior is to compute model-specific
+        headers.
+
+        :param dict base_mail_values: base mail.mail values, holding message
+        to notify (mail_message_id and its fields), server, references, subject.
+        """
+        headers = self._notify_email_headers()
+        if headers:
+            base_mail_values['headers'] = headers
+        return base_mail_values
 
     def _notify_compute_recipients(self, message, msg_vals):
         """ Compute recipients to notify based on subtype and followers. This
