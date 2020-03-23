@@ -509,7 +509,7 @@ class WebsiteSlides(WebsiteProfile):
                 values['modules_to_install'] = [{
                     'id': module.id,
                     'name': module.shortdesc,
-                    'motivational': _('Evaluate and certificate your students.'),
+                    'motivational': _('Evaluate and certify your students.'),
                 }]
 
         values = self._prepare_additional_channel_values(values, **kw)
