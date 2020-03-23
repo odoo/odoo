@@ -366,19 +366,18 @@
             </div>
             <div class="font-icons-icons">
                 <t t-call="wysiwyg.widgets.font-icons.icons">
-                    <t t-set="iconsParser" t-value="widget.iconsParser"/>
+                    <t t-set="fontDb" t-value="widget.fontDb"/>
                 </t>
             </div>
         </form>
     </t>
     <t t-name="wysiwyg.widgets.font-icons.icons">
-        <t t-as="data" t-foreach="iconsParser">
-            <span t-foreach="data.cssData" t-as="cssData"
-                t-att-data-id="cssData.names[0]"
-                t-att-title="cssData.names[0]"
-                t-att-aria-label="cssData.names[0]" role="img"
-                t-attf-class="font-icons-icon #{data.base} #{cssData.names[0]}"
-                t-att-data-alias="cssData.names.join(',')"/>
+        <t t-as="font" t-foreach="Object.keys(fontDb)">
+            <span t-foreach="fontDb[font].styles" t-as="style"
+                t-attf-data-id="#{style} #{font}"
+                t-att-title="font"
+                t-att-aria-label="font" role="img"
+                t-attf-class="font-icons-icon #{style} fa-#{font}"/>
         </t>
     </t>
 

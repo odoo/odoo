@@ -381,9 +381,9 @@ var dom = {
         var $button = $('<button/>', jQueryParams);
 
         if (options.icon) {
-            if (options.icon.substr(0, 3) === 'fa-') {
+            if (options.icon.startsWith('fa')) {
                 $button.append($('<i/>', {
-                    class: 'fa fa-fw o_button_icon ' + options.icon,
+                    class: options.icon + ' fa-fw o_button_icon',
                 }));
             } else {
                 $button.append($('<img/>', {

@@ -929,33 +929,34 @@ var IconWidget = SearchableMediaWidget.extend({
     events: _.extend({}, SearchableMediaWidget.prototype.events || {}, {
         'click .font-icons-icon': '_onIconClick',
     }),
-
     /**
      * @constructor
      */
     init: function (parent, media) {
         this._super.apply(this, arguments);
-
-        fonts.computeFonts();
-        this.iconsParser = fonts.fontIcons;
-        this.alias = _.flatten(_.map(this.iconsParser, function (data) {
-            return data.alias;
-        }));
+        this.fontDb = fonts;
     },
     /**
      * @override
      */
     start: function () {
         this.$icons = this.$('.font-icons-icon');
-        var classes = (this.media && this.media.className || '').split(/\s+/);
-        for (var i = 0; i < classes.length; i++) {
-            var cls = classes[i];
-            if (_.contains(this.alias, cls)) {
-                this.selectedIcon = cls;
-                this._highlightSelectedIcon();
+
+        const classes = this.media && this.media.classList || [];
+        let styleClass;
+        let iconClass;
+        for (let cls of classes) {
+            if (_.contains(['fa', 'fab', 'fas', 'far'], cls)) {
+                styleClass = cls;
+            } else if (cls.startsWith('fa-') && _.has(this.fontDb, cls.slice(3))) {
+                iconClass = cls;
             }
         }
-        this.nonIconClasses = _.without(classes, 'media_iframe_video', this.selectedIcon);
+        if (styleClass && iconClass) {
+            this.selectedIcon = styleClass + ' ' + iconClass;
+            this._highlightSelectedIcon();
+        }
+        this.nonIconClasses = _.without(classes, 'media_iframe_video', styleClass, iconClass);
 
         return this._super.apply(this, arguments);
     },
@@ -969,8 +970,9 @@ var IconWidget = SearchableMediaWidget.extend({
      */
     save: function () {
         var style = this.$media.attr('style') || '';
-        var iconFont = this._getFont(this.selectedIcon) || {base: 'fa', font: ''};
-        var finalClasses = _.uniq(this.nonIconClasses.concat([iconFont.base, iconFont.font]));
+
+        let [iconStyleClass, iconClass] = this.selectedIcon.split(' ');
+        var finalClasses = _.uniq(this.nonIconClasses.concat([iconStyleClass, 'fa-' + iconClass]));
         if (!this.$media.is('span')) {
             var $span = $('<span/>');
             $span.data(this.$media.data());
@@ -988,25 +990,14 @@ var IconWidget = SearchableMediaWidget.extend({
      * @override
      */
     search: function (needle) {
-        var iconsParser = this.iconsParser;
+        let fontDb = fonts;
         if (needle && needle.length) {
-            iconsParser = [];
-            _.filter(this.iconsParser, function (data) {
-                var cssData = _.filter(data.cssData, function (cssData) {
-                    return _.find(cssData.names, function (alias) {
-                        return alias.indexOf(needle) >= 0;
-                    });
-                });
-                if (cssData.length) {
-                    iconsParser.push({
-                        base: data.base,
-                        cssData: cssData,
-                    });
-                }
-            });
+            fontDb = _.pick(fonts, _.filter(_.keys(fonts), (iconName) => {
+                return iconName.indexOf(needle) != -1;
+            }));
         }
         this.$('div.font-icons-icons').html(
-            QWeb.render('wysiwyg.widgets.font-icons.icons', {iconsParser: iconsParser, widget: this})
+            QWeb.render('wysiwyg.widgets.font-icons.icons', {fontDb: fontDb, widget: this})
         );
         return Promise.resolve();
     },
@@ -1019,31 +1010,8 @@ var IconWidget = SearchableMediaWidget.extend({
      * @override
      */
     _clear: function () {
-        var allFaClasses = /(^|\s)(fa(\s|$)|fa-[^\s]*)/g;
+        var allFaClasses = /(^|\s)(fa[brs]?(\s|$)|fa-[^\s]*)/g;
         this.media.className = this.media.className && this.media.className.replace(allFaClasses, ' ');
-    },
-    /**
-     * @private
-     */
-    _getFont: function (classNames) {
-        if (!(classNames instanceof Array)) {
-            classNames = (classNames || "").split(/\s+/);
-        }
-        var fontIcon, cssData;
-        for (var k = 0; k < this.iconsParser.length; k++) {
-            fontIcon = this.iconsParser[k];
-            for (var s = 0; s < fontIcon.cssData.length; s++) {
-                cssData = fontIcon.cssData[s];
-                if (_.intersection(classNames, cssData.names).length) {
-                    return {
-                        base: fontIcon.base,
-                        parser: fontIcon.parser,
-                        font: cssData.names[0],
-                    };
-                }
-            }
-        }
-        return null;
     },
     /**
      * @private
@@ -1052,7 +1020,7 @@ var IconWidget = SearchableMediaWidget.extend({
         var self = this;
         this.$icons.removeClass('o_we_attachment_selected');
         this.$icons.filter(function (i, el) {
-            return _.contains($(el).data('alias').split(','), self.selectedIcon);
+            return $(el).data('id') === self.selectedIcon;
         }).addClass('o_we_attachment_selected');
     },
 

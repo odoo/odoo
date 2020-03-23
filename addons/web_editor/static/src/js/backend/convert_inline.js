@@ -190,25 +190,27 @@ function getMatchedCSSRules(a) {
 function fontToImg($editable) {
     var fonts = odoo.__DEBUG__.services["wysiwyg.fonts"];
 
-    $editable.find('.fa').each(function () {
+    $editable.find('.fa, .far, .fas, .fab').each(function () {
         var $font = $(this);
-        var icon, content;
-        _.find(fonts.fontIcons, function (font) {
-            return _.find(fonts.getCssSelectors(font.parser), function (data) {
-                if ($font.is(data.selector.replace(/::?before/g, ''))) {
-                    icon = data.names[0].split('-').shift();
-                    content = data.css.match(/content:\s*['"]?(.)['"]?/)[1];
-                    return true;
-                }
-            });
+
+        var iconName = _.find($font.attr('class').split(/\s+/), className => {
+            return className.startsWith('fa-') && _.has(fonts, className.slice(3));
         });
-        if (content) {
+
+        var iconStyle = _.find($font.attr('class').split(/\s+/), className => {
+            return _.contains(['fa', 'fas', 'far', 'fab'], className);
+        });
+
+        if (iconName) {
+            if (iconStyle === 'fa' || !iconStyle) iconStyle = 'fas';
+            var iconChar = fonts[iconName].char;
+
             var color = $font.css('color').replace(/\s/g, '');
             $font.replaceWith($('<img/>', {
-                src: _.str.sprintf('/web_editor/font_to_img/%s/%s/%s', content.charCodeAt(0), window.encodeURI(color), Math.max(1, Math.round($font.height()))),
+                src: _.str.sprintf('/web_editor/font_to_img/%s/%s/%s/%s', iconChar, iconStyle, window.encodeURI(color), Math.max(1, Math.round($font.height()))),
                 'data-class': $font.attr('class'),
                 'data-style': $font.attr('style'),
-                class: $font.attr('class').replace(new RegExp('(^|\\s+)' + icon + '(-[^\\s]+)?', 'gi'), ''), // remove inline font-awsome style
+                class: $font.attr('class').replace(new RegExp('(^|\\s+)' + iconName + '(-\\S+)?', 'gi'), ''), // remove inline font-awsome style
                 style: $font.attr('style'),
             }).css({height: 'auto', width: 'auto'}));
         } else {

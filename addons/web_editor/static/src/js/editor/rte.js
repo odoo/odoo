@@ -1,7 +1,6 @@
 odoo.define('web_editor.rte', function (require) {
 'use strict';
 
-var fonts = require('wysiwyg.fonts');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Widget = require('web.Widget');
@@ -270,8 +269,6 @@ var RTEWidget = Widget.extend({
 
         this._getConfig = params && params.getConfig || this._getDefaultConfig;
         this._saveElement = params && params.saveElement || this._saveElement;
-
-        fonts.computeFonts();
     },
     /**
      * @override

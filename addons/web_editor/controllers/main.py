@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
 import logging
+import pathlib
 import re
 import time
 import werkzeug.wrappers
@@ -20,16 +21,17 @@ class Web_Editor(http.Controller):
     # convert font into picture
     #------------------------------------------------------
     @http.route([
-        '/web_editor/font_to_img/<icon>',
-        '/web_editor/font_to_img/<icon>/<color>',
-        '/web_editor/font_to_img/<icon>/<color>/<int:size>',
-        '/web_editor/font_to_img/<icon>/<color>/<int:size>/<int:alpha>',
+        '/web_editor/font_to_img/<icon>/<style>',
+        '/web_editor/font_to_img/<icon>/<style>/<color>',
+        '/web_editor/font_to_img/<icon>/<style>/<color>/<int:size>',
+        '/web_editor/font_to_img/<icon>/<style>/<color>/<int:size>/<int:alpha>',
         ], type='http', auth="none")
-    def export_icon_to_png(self, icon, color='#000', size=100, alpha=255, font='/web/static/lib/fontawesome/fonts/fontawesome-webfont.ttf'):
+    def export_icon_to_png(self, icon, style='fas', color='#000', size=100, alpha=255, font=None):
         """ This method converts an unicode character to an image (using Font
             Awesome font by default) and is used only for mass mailing because
             custom fonts are not supported in mail.
             :param icon : decimal encoding of unicode character
+            :param style: Icon style as string (fas, far, fab)
             :param color : RGB code of the color
             :param size : Pixels in integer
             :param alpha : transparency of the image from 0 to 255
@@ -40,8 +42,14 @@ class Web_Editor(http.Controller):
         # Make sure we have at least size=1
         size = max(1, size)
         # Initialize font
-        addons_path = http.addons_manifest['web']['addons_path']
-        font_obj = ImageFont.truetype(addons_path + font, size)
+        if not font:
+            style = {'fab': 'brands', 'far': 'regular', 'fas': 'solid'}.get(style)
+            if not style:
+                raise ValueError(f"Invalid font style: {style}, must be one of: fab, far ou fas.")
+            font = (pathlib.Path(http.addons_manifest['web']['addons_path'])
+                           .join('web/static/lib/fontawesome/webfonts')
+                           .glob(f'fa-{style}-*.ttf')[0])
+        font_obj = ImageFont.truetype(font, size)
 
         # if received character is not a number, keep old behaviour (icon is character)
         icon = chr(int(icon)) if icon.isdigit() else icon

@@ -478,11 +478,10 @@ dom.isImgFont = function (node) {
     if (fn_is_img_font(node)) return true;
 
     var nodeName = node && node.nodeName.toUpperCase();
-    var className = (node && node.className || "");
-    if (node && (nodeName === "SPAN" || nodeName === "I") && className.length) {
-        var classNames = className.split(/\s+/);
-        for (var k=0; k<fonts.fontIcons.length; k++) {
-            if (_.intersection(fonts.fontIcons[k].alias, classNames).length) {
+    var classList = (node && node.classList || []);
+    if (node && (nodeName === "SPAN" || nodeName === "I") && classList.length) {
+        for (let className of classList) {
+            if (className.startsWith('fa-') && _.has(fonts, className.slice(3))) {
                 return true;
             }
         }
