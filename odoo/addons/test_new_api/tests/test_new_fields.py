@@ -1382,6 +1382,26 @@ class TestFields(TransactionCaseWithUserDemo):
         # check that this does not generate an infinite recursion
         new_disc._convert_to_write(new_disc._cache)
 
+    def test40_new_convert_to_write(self):
+        new_disc = self.env['test_new_api.discussion'].new({
+            'name': "Stuff",
+            'moderator': self.env.uid,
+            'participants': [(6,0,self.env.user.ids)],
+        })
+        # Put the user groups in the cache of the new record
+        new_disc.participants.groups_id
+
+        # Check that the groups in the cache are not returned by convert_to_write
+        # because no real change happened, the values are identical except that
+        # self.env.user.groups_id.ids = [Id1, Id2, ...] whereas
+        # new_disc.participants.groups_id.ids = [NewId(origin=Id1), NewId(origin=Id2), ...]
+        field = new_disc._fields.get("participants")
+        # Ensure there is no inverse field for discussions on res_users
+        # To make sure the test stays valid.
+        self.assertFalse(new_disc._field_inverses[field])
+        convert = field.convert_to_write(new_disc["participants"], new_disc)
+        self.assertEqual(convert, [(6, 0, self.env.user.ids)])
+
     def test_40_new_inherited_fields(self):
         """ Test the behavior of new records with inherited fields. """
         email = self.env['test_new_api.emailmessage'].new({'body': 'XXX'})
