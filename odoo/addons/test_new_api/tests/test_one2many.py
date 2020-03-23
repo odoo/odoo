@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, CacheMiss
+from psycopg2 import ProgrammingError
+from odoo.tools import mute_logger
 
 
 class One2manyCase(TransactionCase):
@@ -247,3 +249,92 @@ class One2manyCase(TransactionCase):
         # delete parent, and check that recomputation ends
         parent.unlink()
         parent.flush()
+
+    def test_new_real_interactions(self):
+        """ Test and specify the interactions between new and real records.
+
+        Through m2o and o2m, with real/unreal records on both sides, the behavior
+        varies greatly.  At least, the behavior will be clearly consistent and any
+        change will have to adapt the current test.
+        """
+        ##############
+        # REAL - NEW #
+        ##############
+        parent = self.env['test_new_api.model_parent_m2o'].create({'name': 'parentB'})
+        child = self.env['test_new_api.model_child_m2o'].new({'name': 'B', 'parent_id': parent.id})
+
+        # Wanted Behavior, when creating a new with a real parent id,
+        # the child isn't present in the parent childs until true creation
+        self.assertEqual(parent.child_ids, self.env["test_new_api.model_child_m2o"])
+        self.assertEqual(child.parent_id, parent)
+
+        # Current (wanted?) behavior, when adding a new record to
+        # a real record o2m, the record is created, but not linked to the new in cache.
+        # REAL.O2M += NEW RECORD
+        parent.child_ids += child
+        self.assertNotEqual(parent.child_ids.id, False)
+        self.assertNotEqual(parent.child_ids, child)
+
+        #############
+        # NEW - NEW #
+        #############
+        # Wanted Behavior, linking new records to new records is totally accepted.
+        parent_2 = self.env['test_new_api.model_parent_m2o'].new({
+            "name": 'parentC3PO',
+            "child_ids": [(0, 0, {"name": "C3"})],
+        })
+        self.assertEqual(parent_2, parent_2.child_ids.parent_id)
+        self.assertEqual(bool(parent_2.id), False)
+        self.assertEqual(bool(parent_2.child_ids.id), False)
+
+        child_2 = self.env['test_new_api.model_child_m2o'].new({
+            'name': 'PO'
+        })
+        parent_2.child_ids += child_2
+        self.assertIn(child_2, parent_2.child_ids)
+        self.assertEqual(len(parent_2.child_ids), 2)
+        self.assertListEqual(parent_2.child_ids.mapped('name'), ['C3', 'PO'])
+
+        child_2bis = self.env['test_new_api.model_child_m2o'].new({
+            'name': 'R2D2',
+            'parent_id': parent_2.id,
+        })
+        self.assertIn(child_2bis, parent_2.child_ids)
+        self.assertEqual(len(parent_2.child_ids), 3)
+        self.assertListEqual(parent_2.child_ids.mapped('name'), ['C3', 'PO', 'R2D2'])
+        ###############################
+        # NEW TO REAL CONVERSION TEST #
+        ###############################
+
+        # A bit out of scope, but was interesting to check
+        # everything was working fine on the way.
+
+        real_from_new = self.env['test_new_api.model_parent_m2o'].create({
+            'name': parent_2._fields.get('name').convert_to_write(parent_2.name, parent_2),
+            'child_ids': parent_2._fields.get('child_ids').convert_to_write(parent_2.child_ids, parent_2),
+        })
+        self.assertEqual(len(real_from_new.child_ids), 3)
+        self.assertEqual(real_from_new, real_from_new.child_ids.parent_id)
+        self.assertEqual(real_from_new.child_ids.mapped('name'), ['C3', 'PO', 'R2D2'])
+
+        ################################
+
+        ##############
+        # NEW - REAL #
+        ##############
+        parent_3 = self.env['test_new_api.model_parent_m2o'].new({'name': 'parentE'})
+        child_3 = self.env['test_new_api.model_child_m2o'].create({'name': 'E'})
+
+        # REAL.M2O += NEW RECORD
+        child_3.parent_id = parent_3
+
+        # NEW record kept as is, but crashes whenever you try to flush
+        # or when trying to access the parent after child_3 cache invalidation.
+        self.assertEqual(child_3.parent_id, parent_3)
+        self.assertEqual(bool(child_3.parent_id.id), False)
+        self.assertEqual(parent_3.child_ids, self.env['test_new_api.model_child_m2o'])
+
+        with self.assertRaises(ProgrammingError):
+            with mute_logger('odoo.sql_db'), self.cr.savepoint():
+                child_3.flush()
+                # self.assertEqual(child_3.parent_id, self.env['test_new_api.model_parent_m2o'])

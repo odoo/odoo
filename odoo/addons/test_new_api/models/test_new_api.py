@@ -885,8 +885,8 @@ class ModelChildM2o(models.Model):
     @api.depends('parent_id.name')
     def _compute_sizes(self):
         for record in self:
-            record.size1 = len(self.parent_id.name)
-            record.size2 = len(self.parent_id.name)
+            record.size1 = len(record.parent_id.name or "")
+            record.size2 = len(record.parent_id.name or "")
 
     @api.depends('name')
     def _compute_cost(self):
