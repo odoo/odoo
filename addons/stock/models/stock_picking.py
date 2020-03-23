@@ -728,10 +728,8 @@ class Picking(models.Model):
 
         # We validate eventual linked inventories after _action_done, as those ones
         # can imply that the current picking(s) considered done by the ZQC.
-        for inventory in self.inventory_ids:
-            if inventory.state == 'confirm':
-                inventory.line_ids.action_refresh_quantity()
-                inventory.action_validate()
+        self.inventory_ids.filtered(lambda i: i.state == 'confirm').action_validate():
+
         return True
 
     def _send_confirmation_email(self):
@@ -966,10 +964,6 @@ class Picking(models.Model):
         }
 
     def _action_generate_zqc_wizard(self, empty_locations):
-        wiz = self.env['stock.zero.quantity.count'].create({
-            'location_ids': [(4, loc.id) for loc in empty_locations],
-            'pick_ids': [(4, p.id) for p in self]
-        })
         view = self.env.ref('stock.view_zero_quantity_count')
         return {
             'name': _('Zero Quantity Cycle Count'),
@@ -978,9 +972,11 @@ class Picking(models.Model):
             'res_model': 'stock.zero.quantity.count',
             'views': [(view.id, 'form')],
             'view_id': view.id,
+            'context': dict(*self.env.context, *{
+                'location_ids': [(4, loc.id) for loc in empty_locations],
+                'pick_ids': [(4, p.id) for p in self]
+            },
             'target': 'new',
-            'res_id': wiz.id,
-            'context': self.env.context,
         }
 
     def action_toggle_is_locked(self):
@@ -1029,7 +1025,18 @@ class Picking(models.Model):
 
         # Check if locations would be emptied by those movelines
         for loc, move_line_ids in ml_per_loc.items():
-            if move_line_ids._will_empty_location(loc):
+            quants = self.env['stock.quant'].search([
+                ('location_id', '=', loc.id),
+            ])
+
+            remaining_qties = defaultdict(lambda: 0)
+            for quant in quants:
+                remaining_qties[quant.product_id] += quant.quantity
+            for ml in move_line_ids:
+                remaining_qties[ml.product_id] -= ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_po_id)
+
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            if all([float_is_zero(value, precision_digits=precision) for value in remaining_qties.values()])
                 empty_locations |= loc
 
         return empty_locations

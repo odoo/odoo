@@ -595,17 +595,3 @@ class StockMoveLine(models.Model):
     def _should_bypass_reservation(self, location):
         self.ensure_one()
         return location.should_bypass_reservation() or self.product_id.type != 'product'
-
-    def _will_empty_location(self, location):
-        quants = self.env['stock.quant'].search([
-            ('location_id', '=', location.id),
-        ])
-
-        remaining_qties = defaultdict(lambda: 0)
-        for quant in quants:
-            remaining_qties[quant.product_id] += quant.quantity
-        for ml in self:
-            remaining_qties[ml.product_id] -= ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_po_id)
-
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        return all([float_is_zero(value, precision_digits=precision) for value in remaining_qties.values()])
