@@ -43,7 +43,7 @@ class MailTemplatePreview(models.TransientModel):
                            help="Comma-separated recipient addresses")
     email_cc = fields.Char('Cc', compute='_compute_mail_template_fields', help="Carbon copy recipients")
     reply_to = fields.Char('Reply-To', compute='_compute_mail_template_fields', help="Preferred response address")
-    scheduled_date = fields.Char('Scheduled Date', compute='_compute_mail_template_fields',
+    scheduled_date = fields.Datetime('Scheduled Date', compute='_compute_mail_template_fields',
                                  help="The queue manager will send the email after the date")
     body_html = fields.Html('Body', compute='_compute_mail_template_fields', sanitize=False)
     attachment_ids = fields.Many2many('ir.attachment', 'Attachments', compute='_compute_mail_template_fields')

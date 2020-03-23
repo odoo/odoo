@@ -178,6 +178,8 @@ class MailTemplate(models.Model):
                 values = results[res_id]
                 if values.get('body_html'):
                     values['body'] = tools.html_sanitize(values['body_html'])
+                if 'scheduled_date' in fields:
+                    values['scheduled_date'] = values.get('scheduled_date') or False
                 # technical settings
                 values.update(
                     mail_server_id=template.mail_server_id.id or False,
