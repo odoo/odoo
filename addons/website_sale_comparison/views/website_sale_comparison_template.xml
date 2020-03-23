@@ -17,7 +17,7 @@
     <template id="add_to_compare" inherit_id="website_sale.products_item" customize_show="True" name="Comparison List" priority="22">
         <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
-            <button t-if="product_variant_id" type="button" role="button" class="d-none d-md-inline-block btn btn-secondary o_add_compare" title="Compare" aria-label="Compare" t-att-data-product-product-id="product_variant_id" data-action="o_comparelist"><span class="fa fa-exchange"></span></button>
+            <button t-if="product_variant_id" type="button" role="button" class="d-none d-md-inline-block btn btn-secondary o_add_compare" title="Compare" aria-label="Compare" t-att-data-product-product-id="product_variant_id" data-action="o_comparelist"><span class="fas fa-exchange-alt"></span></button>
         </xpath>
     </template>
 
@@ -25,7 +25,7 @@
         <xpath expr="//div[@id='product_option_block']" position="inside">
             <t t-if="request.website.viewref('website_sale_comparison.add_to_compare').active">
                 <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
-                <button t-if="product_variant" type="button" role="button" class="d-none d-md-inline-block btn btn-link mt16 o_add_compare_dyn" aria-label="Compare" t-att-data-product-product-id="product_variant.id" data-action="o_comparelist"><span class="fa fa-exchange"></span> Add to compare</button>
+                <button t-if="product_variant" type="button" role="button" class="d-none d-md-inline-block btn btn-link mt16 o_add_compare_dyn" aria-label="Compare" t-att-data-product-product-id="product_variant.id" data-action="o_comparelist"><span class="fas fa-exchange-alt"></span> Add to compare</button>
             </t>
         </xpath>
     </template>
@@ -90,7 +90,7 @@
                 <t t-if="alt_product_variant_id" t-set="id_list" t-value="id_list + [alt_product_variant_id]"/>
             </t>
             <t t-set="ids" t-value="','.join([str(id) for id in id_list])"/>
-            <div><span class='h3'>Suggested alternatives: </span><a t-if="len(id_list) > 1 and compare_active" role="button" class="btn btn-primary" t-attf-href="/shop/compare/?products=#{ids}"><i class="fa fa-exchange"></i> Compare</a></div>
+            <div><span class='h3'>Suggested alternatives: </span><a t-if="len(id_list) > 1 and compare_active" role="button" class="btn btn-primary" t-attf-href="/shop/compare/?products=#{ids}"><i class="fas fa-exchange-alt"></i> Compare</a></div>
         </xpath>
     </template>
 
@@ -133,7 +133,7 @@
 
                                             <form action="/shop/cart/update" method="post" class="text-center">
                                                 <input name="product_id" t-att-value="product.id" type="hidden"/>
-                                                <a role="button" class="btn btn-primary btn-block a-submit" href="#"><i class="fa fa-shopping-cart"></i>&amp;nbsp;Add to Cart</a>
+                                                <a role="button" class="btn btn-primary btn-block a-submit" href="#"><i class="fas fa-shopping-cart"></i>&amp;nbsp;Add to Cart</a>
                                             </form>
                                         </div>
                                     </td>
@@ -143,7 +143,7 @@
                                 <t t-foreach="categories" t-as="category">
                                     <t t-if="len(categories) &gt; 1">
                                         <tr class="clickable" data-toggle="collapse" t-att-data-target="'.o_ws_category_%d' % category.id">
-                                            <th class="text-left" t-att-colspan="len(products) + 1"><i class="fa fa-chevron-circle-down o_product_comparison_collpase" role="img" aria-label="Collapse" title="Collapse"></i><span t-if="category" t-field="category.name"/><span t-else="">Uncategorized</span></th>
+                                            <th class="text-left" t-att-colspan="len(products) + 1"><i class="fas fa-chevron-circle-down o_product_comparison_collpase" role="img" aria-label="Collapse" title="Collapse"></i><span t-if="category" t-field="category.name"/><span t-else="">Uncategorized</span></th>
                                         </tr>
                                     </t>
                                     <tr t-foreach="categories[category]" t-as="attribute" t-att-class="'collapse show o_ws_category_%d' % category.id">
@@ -178,7 +178,7 @@
             </div>
             <div class="col-1 text-right">
                 <a href='#' class="o_remove" title="Remove" t-att-data-product_product_id="product.id">
-                    <i class="fa fa-trash" role="img" aria-label="Remove"></i>
+                    <i class="fas fa-trash-alt" role="img" aria-label="Remove"></i>
                 </a>
             </div>
         </div>

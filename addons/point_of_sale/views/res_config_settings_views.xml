@@ -14,7 +14,7 @@
                             <div class="o_setting_right_pane">
                                 <div>
                                     <label string="Inventory Management" for="update_stock_quantities"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Update quantities in stock
                                     </div>
@@ -41,7 +41,7 @@
                                     </div>
                                 </div>
                                 <div class="mt8">
-                                    <button name="%(account.action_tax_form)d" icon="fa-arrow-right" type="action" string="Taxes" class="btn-link"/>
+                                    <button name="%(account.action_tax_form)d" icon="fas fa-arrow-right" type="action" string="Taxes" class="btn-link"/>
                                 </div>
                             </div>
                         </div>
@@ -63,7 +63,7 @@
                                         <field name="product_pricelist_setting" widget="radio" class="o_light_label"/>
                                     </div>
                                     <div class="mt8">
-                                        <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
+                                        <button name="%(product.product_pricelist_action2)d" icon="fas fa-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
                                     </div>
                                 </div>
                             </div>
@@ -79,7 +79,7 @@
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
                                     <div class="mt8">
-                                        <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="btn-link" icon="fa-arrow-right"/>
+                                        <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="btn-link" icon="fas fa-arrow-right"/>
                                     </div>
                                 </div>
                             </div>
@@ -98,7 +98,7 @@
                                     Define the smallest coinage of the currency used to pay by cash
                                 </div>
                                 <div class="mt8">
-                                    <button name="%(account.rounding_list_action)d" icon="fa-arrow-right"
+                                    <button name="%(account.rounding_list_action)d" icon="fas fa-arrow-right"
                                             type="action" string="Cash Roundings" class="btn-link"
                                             attrs="{'invisible': [('group_cash_rounding', '=', False)]}"/>
                                 </div>

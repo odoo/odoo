@@ -4,18 +4,18 @@
     <li t-att-data-menu-id="submenu.fields['id']" t-att-data-mega-menu="submenu.fields['is_mega_menu'] ? true : undefined">
         <div class="input-group">
             <div class="input-group-prepend">
-                <span class="input-group-text fa fa-bars" role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
+                <span class="input-group-text fas fa-bars" role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
             </div>
             <span class="form-control d-flex align-items-center">
                 <span class="js_menu_label o_text_overflow flex-grow-1">
                     <t t-esc="submenu.fields['name']"/>
                 </span>
                 <span t-if="submenu.fields['is_mega_menu']" class="badge badge-primary">Mega Menu</span>
-                <i t-if="submenu.is_homepage" class="fa fa-home ml-3" role="img" aria-label="Home" title="Home"/>
+                <i t-if="submenu.is_homepage" class="fas fa-home ml-3" role="img" aria-label="Home" title="Home"/>
             </span>
             <span class="input-group-append">
-                <button type="button" class="btn btn-primary js_edit_menu fa fa-pencil-square-o" aria-label="Edit Menu Item" title="Edit Menu Item"/>
-                <button type="button" class="btn btn-danger js_delete_menu fa fa-trash-o" aria-label="Delete Menu Item" title="Delete Menu Item"/>
+                <button type="button" class="btn btn-primary js_edit_menu far fa-edit" aria-label="Edit Menu Item" title="Edit Menu Item"/>
+                <button type="button" class="btn btn-danger js_delete_menu far fa-trash-alt" aria-label="Delete Menu Item" title="Delete Menu Item"/>
             </span>
         </div>
         <t t-set="children" t-value="submenu.children"/>
@@ -49,10 +49,10 @@
             Drag to the right to get a submenu
         </small>
         <a href="#" class="js_add_menu">
-            <i class="fa fa-plus-circle"/> Add Menu Item
+            <i class="fas fa-plus-circle"/> Add Menu Item
         </a><br/>
         <a href="#" class="js_add_menu" data-type="mega">
-            <i class="fa fa-plus-circle"/> Add Mega Menu Item
+            <i class="fas fa-plus-circle"/> Add Mega Menu Item
         </a>
     </div>
 </div>

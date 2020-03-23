@@ -679,7 +679,7 @@ var Dashboard = AbstractAction.extend({
 
     // Utility functions
     addLoader: function(selector) {
-        var loader = '<span class="fa fa-3x fa-spin fa-spinner fa-pulse"/>';
+        var loader = '<span class="fas fa-3x fa-spin fa-spinner fa-pulse"/>';
         selector.html("<div class='o_loader'>" + loader + "</div>");
     },
     getValue: function(d) { return d[1]; },

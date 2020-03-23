@@ -103,7 +103,7 @@
                                         <span t-esc="record.move_id.value"/>
                                     </strong>
                                     <strong class="col-6 text-right">
-                                        <i class="fa fa-clock-o" aria-label="Date" role="img" title="Date"/><field name="date_maturity"/>
+                                        <i class="far fa-clock" aria-label="Date" role="img" title="Date"/><field name="date_maturity"/>
                                     </strong>
                                     <div class="col-10">
                                         <span t-esc="record.name.value"/>
@@ -197,10 +197,10 @@
                            domain="[('applicability', '=', 'taxes')]"/>
                     <groupby name="move_id">
                         <field name="state" invisible="1"/>
-                        <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
-                        <button name="action_post" states="draft" icon="fa-check" title="Post" type="object" groups="account.group_account_invoice"/>
-                        <button name="%(action_view_account_move_reversal)d" states="posted" title="Reverse" icon="fa-refresh" type="action" groups="account.group_account_invoice"/>
-                        <button name="action_duplicate" icon="fa-files-o" title="Duplicate" type="object" groups="account.group_account_invoice"/>
+                        <button name="edit" type="edit" icon="fas fa-edit" title="Edit"/>
+                        <button name="action_post" states="draft" icon="fas fa-check" title="Post" type="object" groups="account.group_account_invoice"/>
+                        <button name="%(action_view_account_move_reversal)d" states="posted" title="Reverse" icon="fas fa-sync" type="action" groups="account.group_account_invoice"/>
+                        <button name="action_duplicate" icon="far fa-copy" title="Duplicate" type="object" groups="account.group_account_invoice"/>
                     </groupby>
                 </tree>
             </field>
@@ -366,7 +366,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group" position="after">
                     <searchpanel class="account_root">
-                        <field name="account_root_id" icon="fa-filter"/>
+                        <field name="account_root_id" icon="fas fa-filter"/>
                     </searchpanel>
                 </xpath>
             </field>
@@ -444,7 +444,7 @@
                                         <strong><span><field name="journal_id"/></span></strong>
                                     </div>
                                     <div class="col-6 text-right">
-                                        <strong><i class="fa fa-clock-o" aria-label="Date" role="img" title="Date"/> <t t-esc="record.date.value"/></strong>
+                                        <strong><i class="far fa-clock" aria-label="Date" role="img" title="Date"/> <t t-esc="record.date.value"/></strong>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -539,7 +539,7 @@
                         <div name="button_box" class="oe_button_box">
                             <button name="open_reconcile_view"
                                     class="oe_stat_button"
-                                    icon="fa-bars"
+                                    icon="fas fa-bars"
                                     type="object"
                                     attrs="{'invisible': ['|', '|', ('move_type', '!=', 'entry'), ('id', '=', False), ('has_reconciled_entries', '=', False)]}"
                                     string="Reconciled Entries">

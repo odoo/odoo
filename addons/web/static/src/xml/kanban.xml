@@ -14,9 +14,9 @@
         <div class="o_kanban_header">
             <div class="o_kanban_header_title">
                 <span t-attf-id="#kanban_header_#{widget.id or widget.db_id}" class="o_column_title"><t t-esc="widget.title"/></span>
-                <span class="o_column_unfold"><i class="fa fa-arrows-h" role="img" aria-label="Unfold" title="Unfold"/></span>
+                <span class="o_column_unfold"><i class="fas fa-arrows-alt-h" role="img" aria-label="Unfold" title="Unfold"/></span>
                 <span class="o_kanban_config dropdown">
-                    <a class="dropdown-toggle o-no-caret" data-toggle="dropdown" href="#"><i class="fa fa-gear" role="img" aria-label="Settings" title="Settings"/></a>
+                    <a class="dropdown-toggle o-no-caret" data-toggle="dropdown" href="#"><i class="fas fa-cog" role="img" aria-label="Settings" title="Settings"/></a>
                     <div class="dropdown-menu" role="menu">
                         <a role="menuitem" class="dropdown-item o_kanban_toggle_fold" href="#">Fold</a>
                         <t t-if="widget.grouped_by_m2o">
@@ -29,7 +29,7 @@
                         </t>
                     </div>
                 </span>
-                <span t-if="widget.quick_create" class="o_kanban_quick_add"><i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add"/></span>
+                <span t-if="widget.quick_create" class="o_kanban_quick_add"><i class="fas fa-plus" role="img" aria-label="Quick add" title="Quick add"/></span>
             </div>
         </div>
         <div t-if="widget.remaining > 0" class="o_kanban_load_more">
@@ -45,7 +45,7 @@
 <t t-name="KanbanView.ColumnQuickCreate">
     <div class="o_column_quick_create">
         <div class="o_quick_create_folded">
-            <span class="o_kanban_add_column"><i class="fa fa-plus" role="img" aria-label="Add column" title="Add column"/></span>
+            <span class="o_kanban_add_column"><i class="fas fa-plus" role="img" aria-label="Add column" title="Add column"/></span>
             <span class="o_kanban_title">Add a Column</span>
         </div>
         <div class="o_quick_create_unfolded">
@@ -245,7 +245,7 @@
             <header t-att-class="'list-group-item-action' + (value.id === category.activeValueId ? ' active' : '')">
                 <label t-att-for="value.display_name" class="o_search_panel_label mb0">
                     <span class="o_search_panel_label_title"><t t-esc="value.display_name"/></span>
-                    <i t-if="value.childrenIds.length" t-attf-class="fa fa-fw o_toggle_fold {{value.folded ? 'fa-caret-left' : 'fa-caret-down'}}"/>
+                    <i t-if="value.childrenIds.length" t-attf-class="fas fa-fw o_toggle_fold {{value.folded ? 'fa-caret-left' : 'fa-caret-down'}}"/>
                 </label>
             </header>
             <ul t-if="!value.folded" class="list-group d-block">
@@ -281,7 +281,7 @@
             <t t-set="inputId" t-value="_.uniqueId('input_')"/>
             <input type="checkbox" t-att-id="inputId" t-att-checked="group.state === 'checked' ? 'checked' : undefined" class="custom-control-input"/>
             <label t-att-for="inputId" class="o_search_panel_label custom-control-label d-block" t-att-title="group.tooltip">
-                <i t-att-class="'fa fa-fw pull-right o_toggle_fold ' + (group.folded ? 'fa-caret-left' : 'fa-caret-down')"/>
+                <i t-att-class="'fas fa-fw pull-right o_toggle_fold ' + (group.folded ? 'fa-caret-left' : 'fa-caret-down')"/>
                 <span t-if="group.hex_color" t-att-style="'color: ' + group.hex_color + ';'">●</span>
                 <span class="o_search_panel_label_title"><t t-esc="group.name"/></span>
             </label>
@@ -327,7 +327,7 @@
                 </div>
             </t>
             <div class="o_kanban_mobile_add_column" t-if="quickCreateEnabled">
-                <i class="fa fa-plus " role="img" aria-label="Add column" title="Add column"/>
+                <i class="fas fa-plus " role="img" aria-label="Add column" title="Add column"/>
             </div>
         </div>
     </div>

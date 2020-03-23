@@ -34,15 +34,15 @@ var DateWidget = Widget.extend({
             maxDate: moment({ y: 9999, M: 11, d: 31 }),
             useCurrent: false,
             icons: {
-                time: 'fa fa-clock-o',
-                date: 'fa fa-calendar',
-                up: 'fa fa-chevron-up',
-                down: 'fa fa-chevron-down',
-                previous: 'fa fa-chevron-left',
-                next: 'fa fa-chevron-right',
-                today: 'fa fa-calendar-check-o',
-                clear: 'fa fa-trash',
-                close: 'fa fa-check primary',
+                time: 'far fa-clock',
+                date: 'fas fa-calendar-alt',
+                up: 'fas fa-chevron-up',
+                down: 'fas fa-chevron-down',
+                previous: 'fas fa-chevron-left',
+                next: 'fas fa-chevron-right',
+                today: 'far fa-calendar-check',
+                clear: 'fas fa-delete',
+                close: 'fas fa-check primary',
             },
             calendarWeeks: true,
             buttons: {
@@ -201,7 +201,7 @@ var DateWidget = Widget.extend({
     _warnFuture: function (currentDate) {
         if (!this.$warning) {
             this.$warning = $('<span>', {
-                class: 'fa fa-exclamation-triangle o_tz_warning o_datepicker_warning',
+                class: 'fas fa-exclamation-triangle o_tz_warning o_datepicker_warning',
             });
             var title = _t("This date is in the future. Make sure this is what you expect.");
             this.$warning.attr('title', title);

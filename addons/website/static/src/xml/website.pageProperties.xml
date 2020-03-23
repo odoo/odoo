@@ -110,7 +110,7 @@
                 <div class="form-group row">
                     <label class="control-label col-md-4" for="is_indexed">
                         Indexed
-                        <i class="fa fa-question-circle-o" title="Hide this page from search results" role="img" aria-label="Info"></i>
+                        <i class="far fa-question-circle" title="Hide this page from search results" role="img" aria-label="Info"></i>
                     </label>
                     <div class="col-md-2">
                         <label class="o_switch" for="is_indexed" >
@@ -134,7 +134,7 @@
                         <div class="input-group date" id="date_publish_container" data-target-input="nearest">
                             <input type="text" class="form-control datetimepicker-input" data-target="#date_publish_container" id="date_publish"/>
                             <div class="input-group-append" data-target="#date_publish_container" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                <div class="input-group-text"><i class="fas fa-calendar-alt"></i></div>
                             </div>
                         </div>
                     </div>
@@ -150,14 +150,14 @@
                                 <option value="password" t-att-selected="widget.page.visibility == 'password' ? 'selected' : undefined">Password</option>
                             </select>
                             <div class="ml-1 input-group-prepend show_visibility_password" >
-                                <div class="input-group-text"><i class="fa fa-key"></i></div>
+                                <div class="input-group-text"><i class="fas fa-key"></i></div>
                             </div>
                             <input type="password" id="visibility_password"
                                    t-att-value='widget.page.visibility_password'
                                    t-att-required="widget.page.visibility == 'password' ? 'required' : None"
                                    class="form-control show_visibility_password"/>
                             <div class="ml-1 input-group-prepend show_visibility_group">
-                                <div class="input-group-text"><i class="fa fa-group"></i></div>
+                                <div class="input-group-text"><i class="fas fa-users"></i></div>
                             </div>
                             <input type="text" class="form-control show_visibility_group" id="visibility_group" t-att-value="widget.page.visibility_group ? widget.page.visibility_group[1] : ''" t-att-data-group-id='widget.page.visibility_group ? widget.page.visibility_group[0] : 0' />
                         </div>

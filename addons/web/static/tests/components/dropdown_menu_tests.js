@@ -128,15 +128,15 @@ odoo.define('web.dropdown_menu_tests', function (require) {
             assert.containsN(dropdown, '.dropdown-divider, .dropdown-item', 3);
 
             const firstItemEl = dropdown.el.querySelector('.o_menu_item > a');
-            assert.hasClass(firstItemEl.querySelector('i'), 'o_icon_right fa fa-caret-right');
+            assert.hasClass(firstItemEl.querySelector('i'), 'o_icon_right fas fa-caret-right');
             // open options menu
             await testUtils.dom.click(firstItemEl);
-            assert.hasClass(firstItemEl.querySelector('i'), 'o_icon_right fa fa-caret-down');
+            assert.hasClass(firstItemEl.querySelector('i'), 'o_icon_right fas fa-caret-down');
             assert.containsN(dropdown, '.dropdown-divider, .dropdown-item', 6);
 
             // close options menu
             await testUtils.dom.click(firstItemEl);
-            assert.hasClass(firstItemEl.querySelector('i'), 'o_icon_right fa fa-caret-right');
+            assert.hasClass(firstItemEl.querySelector('i'), 'o_icon_right fas fa-caret-right');
             assert.containsN(dropdown, '.dropdown-divider, .dropdown-item', 3);
 
             dropdown.destroy();

@@ -960,7 +960,7 @@ range.WrappedRange.prototype.isContentEditable = function () {
 renderer.tplButtonInfo.fontsize = function (lang, options) {
     var items = options.fontSizes.reduce(function (memo, v) {
         return memo + '<a data-event="fontSize" href="#" class="dropdown-item" data-value="' + v + '">' +
-                  '<i class="fa fa-check"></i> ' + v +
+                  '<i class="fas fa-check"></i> ' + v +
                 '</a>';
     }, '');
 
@@ -1004,7 +1004,7 @@ renderer.tplButtonInfo.checklist = function (lang, options) {
             'data-event="insertCheckList" ' +
             'tabindex="-1" ' +
             'data-name="ul" ' +
-        '><i class="fa fa-check-square"></i></button>';
+        '><i class="fas fa-check-square"></i></button>';
 };
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -2348,7 +2348,7 @@ function summernote_table_update(oStyle) {
         var $td = $(this);
         var pos = $td.offset();
 
-        var $del = $('<span class="o_table_handler fa fa-minus-square"/>').appendTo('body');
+        var $del = $('<span class="o_table_handler fas fa-minus-square"/>').appendTo('body');
         $del.data('td', this);
         $dels = $dels.add($del);
         $del.css({
@@ -2356,7 +2356,7 @@ function summernote_table_update(oStyle) {
             top: (pos.top-6) + "px"
         });
 
-        var $add = $('<span class="o_table_handler fa fa-plus-square"/>').appendTo('body');
+        var $add = $('<span class="o_table_handler fas fa-plus-square"/>').appendTo('body');
         $add.data('td', this);
         $adds = $adds.add($add);
         $add.css({
@@ -2367,7 +2367,7 @@ function summernote_table_update(oStyle) {
 
     var $last = $tds.last();
     var pos = $last.offset();
-    var $add = $('<span class="o_table_handler fa fa-plus-square"/>').appendTo('body');
+    var $add = $('<span class="o_table_handler fas fa-plus-square"/>').appendTo('body');
     $adds = $adds.add($add);
     $add.css({
         left: (pos.left+$last.outerWidth()-6) + "px",

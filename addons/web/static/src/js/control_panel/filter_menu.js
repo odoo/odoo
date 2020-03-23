@@ -63,7 +63,7 @@ odoo.define('web.FilterMenu', function (require) {
         CustomFilterItem,
     });
     FilterMenu.defaultProps = Object.assign({}, DropdownMenu.defaultProps, {
-        icon: 'fa fa-filter',
+        icon: 'fas fa-filter',
     });
     FilterMenu.props = Object.assign({}, DropdownMenu.props, {
         fields: Object,

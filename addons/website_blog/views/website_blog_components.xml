@@ -33,7 +33,7 @@
         <t t-foreach="tags" t-as="tag">
             <t t-if="tag.post_ids">
                 <span t-if="dismissibleBtn and tag.id in active_tag_ids" class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
-                    <i class="fa fa-tag mr-2 text-muted"/>
+                    <i class="fas fa-tag mr-2 text-muted"/>
                     <t t-esc="tag.name"/>
                     <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1">&#215;</a>
                 </span>
@@ -118,13 +118,13 @@ Options:
             <h6 class="text-uppercase pb-2 mb-4 border-bottom font-weight-bold">Follow Us</h6>
             <div class="o_wblog_social_links d-flex flex-wrap mx-n1">
                 <t t-set="classes" t-translation="off">bg-100 border mx-1 mb-2 rounded-circle d-flex align-items-center justify-content-center text-decoration-none</t>
-                <a t-if="website.social_facebook" t-att-href="website.social_facebook" aria-label="Facebook" title="Facebook" t-att-class="classes"><i class="fa fa-facebook-square text-facebook"/></a>
-                <a t-if="website.social_twitter" t-att-href="website.social_twitter" t-att-class="classes"><i class="fa fa-twitter text-twitter" aria-label="Twitter" title="Twitter"/></a>
-                <a t-if="website.social_linkedin" t-att-href="website.social_linkedin" t-att-class="classes"><i class="fa fa-linkedin text-linkedin" aria-label="LinkedIn" title="LinkedIn"/></a>
-                <a t-if="website.social_youtube" t-att-href="website.social_youtube" t-att-class="classes"><i class="fa fa-youtube-play text-youtube" aria-label="Youtube" title="Youtube"/></a>
-                <a t-if="website.social_github" t-att-href="website.social_github" t-att-class="classes"><i class="fa fa-github text-github" aria-label="Github" title="Github"/></a>
-                <a t-if="website.social_instagram" t-att-href="website.social_instagram" t-att-class="classes"><i class="fa fa-instagram text-instagram" aria-label="Instagram" title="Instagram"/></a>
-                <a t-if="blog" t-att-href="'/blog/%s/feed' % (blog.id)" t-att-class="classes"><i class="fa fa-rss-square" aria-label="RSS" title="RSS"/></a>
+                <a t-if="website.social_facebook" t-att-href="website.social_facebook" aria-label="Facebook" title="Facebook" t-att-class="classes"><i class="fab fa-facebook-square text-facebook"/></a>
+                <a t-if="website.social_twitter" t-att-href="website.social_twitter" t-att-class="classes"><i class="fab fa-twitter text-twitter" aria-label="Twitter" title="Twitter"/></a>
+                <a t-if="website.social_linkedin" t-att-href="website.social_linkedin" t-att-class="classes"><i class="fab fa-linkedin-in text-linkedin" aria-label="LinkedIn" title="LinkedIn"/></a>
+                <a t-if="website.social_youtube" t-att-href="website.social_youtube" t-att-class="classes"><i class="fab fa-youtube text-youtube" aria-label="Youtube" title="Youtube"/></a>
+                <a t-if="website.social_github" t-att-href="website.social_github" t-att-class="classes"><i class="fab fa-github text-github" aria-label="Github" title="Github"/></a>
+                <a t-if="website.social_instagram" t-att-href="website.social_instagram" t-att-class="classes"><i class="fab fa-instagram text-instagram" aria-label="Instagram" title="Instagram"/></a>
+                <a t-if="blog" t-att-href="'/blog/%s/feed' % (blog.id)" t-att-class="classes"><i class="fas fa-rss-square" aria-label="RSS" title="RSS"/></a>
             </div>
             <t t-call="website_mail.follow" t-if="blog">
                 <t t-set="email" t-value="user_id.email"/>
@@ -210,9 +210,9 @@ Display a sidebar beside the post content.
 
             <div class="o_wblog_social_links d-flex flex-wrap mx-n1">
                 <t t-set="classes" t-translation="off">bg-100 border mx-1 mb-2 rounded-circle d-flex align-items-center justify-content-center text-decoration-none</t>
-                <a href="#" aria-label="Facebook" title="Share on Facebook" t-attf-class="o_facebook #{classes}"><i class="fa fa-facebook-square text-facebook"/></a>
-                <a href="#" aria-label="Twitter" title="Share on Twitter" t-attf-class="o_twitter #{classes}"><i class="fa fa-twitter text-twitter" aria-label="Twitter" title="Twitter"/></a>
-                <a href="#" aria-label="LinkedIn" title="Share on LinkedIn" t-attf-class="o_linkedin #{classes}"><i class="fa fa-linkedin text-linkedin" aria-label="LinkedIn" title="LinkedIn"/></a>
+                <a href="#" aria-label="Facebook" title="Share on Facebook" t-attf-class="o_facebook #{classes}"><i class="fab fa-facebook-square text-facebook"/></a>
+                <a href="#" aria-label="Twitter" title="Share on Twitter" t-attf-class="o_twitter #{classes}"><i class="fab fa-twitter text-twitter" aria-label="Twitter" title="Twitter"/></a>
+                <a href="#" aria-label="LinkedIn" title="Share on LinkedIn" t-attf-class="o_linkedin #{classes}"><i class="fab fa-linkedin-in text-linkedin" aria-label="LinkedIn" title="LinkedIn"/></a>
             </div>
         </div>
 

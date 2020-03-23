@@ -32,7 +32,7 @@
 
     <!-- Rendering of thread when messaging not yet ready -->
     <div t-name="mail.widget.ThreadLoading" class="o_mail_thread_loading">
-        <i class="o_mail_thread_loading_icon fa fa-spinner fa-spin"/>
+        <i class="o_mail_thread_loading_icon fas fa-spinner fa-spin"/>
         <span>Please wait...</span>
     </div>
 
@@ -44,16 +44,17 @@
             <t t-set="model" t-value="widget.modelName"/>
             <div class="o_viewer-header">
                 <span class="o_image_caption">
-                    <i class="fa fa-picture-o mr8" t-if="widget.activeAttachment.fileType == 'image'" role="img" aria-label="Image" title="Image"/>
-                    <i class="fa fa-file-text mr8" t-if="widget.activeAttachment.fileType == 'application/pdf'" role="img" aria-label="PDF file" title="PDF file"/>
-                    <i class="fa fa-video-camera mr8" t-if="widget.activeAttachment.fileType == 'video'" role="img" aria-label="Video" title="Video"/>
+                    <i class="far fa-image mr8" t-if="widget.activeAttachment.fileType == 'image'" role="img" aria-label="Image" title="Image"/>
+                    <i class="fas fa-file-alt mr8" t-if="widget.activeAttachment.fileType == 'application/pdf'" role="img" aria-label="PDF file" title="PDF file"/>
+                    <i class="fas fa-video mr8" t-if="widget.activeAttachment.fileType == 'video'" role="img" aria-label="Video" title="Video"/>
                     <t t-esc="widget.activeAttachment.name"/>
-                    <a role="button" href="#" class="o_download_btn ml8 small" data-toggle="tooltip" data-placement="right" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
+                    <a role="button" href="#" class="o_download_btn ml8 small" data-toggle="tooltip" data-placement="right" title="Download"><i class="fas fa-fw fa-download" role="img" aria-label="Download"/></a>
                 </span>
                 <a role="button" class="o_close_btn float-right" href="#" aria-label="Close" title="Close">×</a>
             </div>
             <div class="o_viewer_img_wrapper">
                 <div class="o_viewer_zoomer">
+<<<<<<< HEAD
                     <t t-if="widget.activeAttachment.fileType === 'image'">
                         <div class="o_loading_img text-center">
                             <i class="fa fa-circle-o-notch fa-spin text-gray-light fa-3x fa-fw" role="img" aria-label="Loading" title="Loading"/>
@@ -61,6 +62,12 @@
                         <t t-set="unique" t-value="widget.activeAttachment.checksum ? widget.activeAttachment.checksum.slice(-8) : ''"/>
                         <img class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=#{unique}&amp;model=#{model}" alt="Viewer"/>
                     </t>
+=======
+                    <div t-if="widget.activeAttachment.fileType == 'image'" class="o_loading_img text-center">
+                        <i class="fas fa-circle-notch fa-spin text-gray-light fa-3x fa-fw" role="img" aria-label="Loading" title="Loading"/>
+                    </div>
+                    <img t-if="widget.activeAttachment.fileType === 'image'" class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=1&amp;signature=#{widget.activeAttachment.checksum}&amp;model=#{model}" alt="Viewer"/>
+>>>>>>> [IMP] all: change Font-Awesome v4 icons to use v5
                     <iframe t-if="widget.activeAttachment.fileType == 'application/pdf'" class="mt32 o_viewer_pdf"  t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}?model%3D#{model}" />
                     <iframe t-if="(widget.activeAttachment.fileType || '').indexOf('text') !== -1" class="mt32 o_viewer_text" t-attf-src="/web/content/#{widget.activeAttachment.id}?model=#{model}" />
                     <iframe t-if="widget.activeAttachment.fileType == 'youtu'" class="mt32 o_viewer_text"  allow="autoplay; encrypted-media" width="560" height="315" t-attf-src="https://www.youtube.com/embed/#{widget.activeAttachment.youtube}"/>
@@ -71,16 +78,16 @@
             </div>
             <div t-if="widget.activeAttachment.fileType == 'image'" class="o_viewer_toolbar btn-toolbar" role="toolbar">
                 <div class="btn-group" role="group">
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_in" data-toggle="tooltip" title="Zoom In"><i class="fa fa-fw fa-plus" role="img" aria-label="Zoom In"/></a>
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_reset disabled" data-toggle="tooltip" title="Reset Zoom"><i class="fa fa-fw fa-search" role="img" aria-label="Reset Zoom"/></a>
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_out disabled" data-toggle="tooltip" title="Zoom Out"><i class="fa fa-fw fa-minus" role="img" aria-label="Zoom Out"/></a>
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_in" data-toggle="tooltip" title="Zoom In"><i class="fas fa-fw fa-plus" role="img" aria-label="Zoom In"/></a>
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_reset disabled" data-toggle="tooltip" title="Reset Zoom"><i class="fas fa-fw fa-search" role="img" aria-label="Reset Zoom"/></a>
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_out disabled" data-toggle="tooltip" title="Zoom Out"><i class="fas fa-fw fa-minus" role="img" aria-label="Zoom Out"/></a>
                 </div>
                 <div class="btn-group" role="group">
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_rotate" data-toggle="tooltip" title="Rotate"><i class="fa fa-fw fa-repeat" role="img" aria-label="Rotate"/></a>
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_rotate" data-toggle="tooltip" title="Rotate"><i class="fas fa-fw fa-redo" role="img" aria-label="Rotate"/></a>
                 </div>
                 <div class="btn-group" role="group">
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_print_btn" data-toggle="tooltip" title="Print"><i class="fa fa-fw fa-print" role="img" aria-label="Print"/></a>
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_download_btn" data-toggle="tooltip" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_print_btn" data-toggle="tooltip" title="Print"><i class="fas fa-fw fa-print" role="img" aria-label="Print"/></a>
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_download_btn" data-toggle="tooltip" title="Download"><i class="fas fa-fw fa-download" role="img" aria-label="Download"/></a>
                 </div>
             </div>
         </div>
@@ -95,10 +102,10 @@
 
             <t t-if="widget.attachment.length !== 1">
                 <a class="arrow arrow-left move_previous" href="#">
-                    <span class="fa fa-chevron-left" role="img" aria-label="Previous" title="Previous"/>
+                    <span class="fas fa-chevron-left" role="img" aria-label="Previous" title="Previous"/>
                 </a>
                 <a class="arrow arrow-right move_next" href="#">
-                    <span class="fa fa-chevron-right" role="img" aria-label="Next" title="Next"/>
+                    <span class="fas fa-chevron-right" role="img" aria-label="Next" title="Next"/>
                 </a>
             </t>
         </div>
@@ -336,13 +343,13 @@
                     <span t-attf-class="o_thread_icons">
                         <t t-if="thread.hasSeenFeature()" t-call="mail.widget.Thread.Message.SeenIcon"/>
                         <i t-if="options.displayStars and !message.isSystemNotification() and !message.needsModeration()"
-                            t-att-class="'fa fa-lg o_thread_icon o_thread_message_star ' + (message.isStarred() ? 'fa-star' : 'fa-star-o')"
+                            t-att-class="'fas fa-lg o_thread_icon o_thread_message_star ' + (message.isStarred() ? 'fa-star' : 'fa-star-o')"
                             t-att-data-message-id="message.getID()" title="Mark as Todo" role="img" aria-label="Mark as Todo"/>
                        <i t-if="message.isLinkedToDocumentThread() and options.displayReplyIcons"
-                           class="fa fa-reply o_thread_icon o_thread_message_reply"
+                           class="fas fa-reply o_thread_icon o_thread_message_reply"
                            t-att-data-message-id="message.getID()" title="Reply" role="img" aria-label="Reply"/>
                         <i t-if="message.isNeedaction() and options.displayMarkAsRead"
-                           class="fa fa-check o_thread_icon o_thread_message_needaction"
+                           class="fas fa-check o_thread_icon o_thread_message_needaction"
                            t-att-data-message-id="message.getID()" title="Mark as Read" role="img" aria-label="Mark as Read"/>
 
                         <t t-if="message.needsModeration() and message.originatesFromChannel()">
@@ -395,10 +402,10 @@
         <t t-if="message.isMyselfAuthor() and message.getID() >= thread.getLastMessageIDSeenByEveryone()">
             <span t-attf-class="o_mail_thread_message_seen_icon #{thread.hasEveryoneSeen(message) ? 'o_all_seen' : ''}" t-att-data-message-id="message.getID()">
                 <t t-if="thread.hasSomeoneFetched(message)">
-                    <i class="fa fa-check"/>
+                    <i class="fas fa-check"/>
                 </t>
                 <t t-if="thread.hasSomeoneSeen(message)">
-                    <i class="fa fa-check"/>
+                    <i class="fas fa-check"/>
                 </t>
             </span>
         </t>
@@ -453,6 +460,7 @@
            {notification_status, partner_name}
     -->
     <t t-name="mail.widget.Thread.Message.MailTooltip">
+<<<<<<< HEAD
         <div t-foreach="notifications" t-as="notification">
             <span name="notification_status" class="d-inline-block text-center o_thread_tooltip_icon">
                 <i t-if="notification.notification_status === 'sent'" class='fa fa-check' title="Sent" role="img" aria-label="Sent"/>
@@ -460,6 +468,15 @@
                 <i t-if="notification.notification_status === 'exception'" class='fa fa-exclamation text-danger' title="Error" role="img" aria-label="Error"/>
                 <i t-if="notification.notification_status === 'ready'" class='fa fa-send-o' title="Ready" role="img" aria-label="Ready"/>
                 <i t-if="notification.notification_status === 'canceled'" class='fa fa-trash-o' title="Canceled" role="img" aria-label="Canceled"/>
+=======
+        <div t-foreach="data" t-as="customerEmailData">
+            <span class="d-inline-block text-center o_thread_tooltip_icon">
+                <i t-if="customerEmailData[2] === 'sent'" class='fas fa-check' title="Sent" role="img" aria-label="Sent"/>
+                <i t-if="customerEmailData[2] === 'bounce'" class='fas fa-exclamation text-danger' title="Bounced" role="img" aria-label="Bounced"/>
+                <i t-if="customerEmailData[2] === 'exception'" class='fas fa-exclamation text-danger' title="Error" role="img" aria-label="Error"/>
+                <i t-if="customerEmailData[2] === 'ready'" class='far fa-paper-plane' title="Ready" role="img" aria-label="Ready"/>
+                <i t-if="customerEmailData[2] === 'canceled'" class='far fa-trash-alt' title="Canceled" role="img" aria-label="Canceled"/>
+>>>>>>> [IMP] all: change Font-Awesome v4 icons to use v5
             </span>
             <span name="partner_name" t-esc="notification.partner_name"/>
         </div>
@@ -509,7 +526,7 @@
                     <t t-esc="value.changed_field"/>:
                     <t t-if="value.old_value">
                         <span> <t t-esc="value.old_value || ((value.field_type !== 'boolean') and '')"/> </span>
-                        <span t-if="value.old_value !== value.new_value" class="fa fa-long-arrow-right" role="img" aria-label="Changed" title="Changed"/>
+                        <span t-if="value.old_value !== value.new_value" class="fas fa-long-arrow-alt-right" role="img" aria-label="Changed" title="Changed"/>
                     </t>
                     <span t-if="value.old_value !== value.new_value">
                         <t t-esc="value.new_value || ((value.field_type !== 'boolean') and '')"/>
@@ -545,10 +562,10 @@
                 <div class="o_image_box">
                     <div class="o_attachment_image" t-attf-style="background-image:url('/web/image/#{attachment.id}/160x160/?crop=true')"/>
                     <div t-attf-class="o_image_overlay o_attachment_view"  t-att-data-id="attachment.id">
-                        <span t-if="isDeletable" class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
+                        <span t-if="isDeletable" class="fas fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
                         <span class="o_attachment_title text-white"><t t-esc="attachment.name"/></span>
                         <a class="o_attachment_download" t-att-href='attachment.url'>
-                            <i t-attf-class="fa fa-download text-white" t-att-title="'Download ' + attachment.name" role="img" aria-label="Download"></i>
+                            <i t-attf-class="fas fa-download text-white" t-att-title="'Download ' + attachment.name" role="img" aria-label="Download"></i>
                         </a>
                     </div>
                 </div>
@@ -572,7 +589,7 @@
         <t t-set="type" t-value="attachment.mimetype and attachment.mimetype.split('/').shift()"/>
         <div t-attf-class="o_attachment #{ editable ? 'o_attachment_editable' : '' } #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
             <div class="o_attachment_wrap">
-                <span t-if="!editable and isDeletable" class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
+                <span t-if="!editable and isDeletable" class="fas fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
                 <t t-set="has_preview" t-value="type == 'image' or type == 'video' or attachment.mimetype == 'application/pdf'"/>
                 <t t-set="ext" t-value="attachment.filename.split('.').pop()"/>
 
@@ -601,9 +618,9 @@
                 <div t-if="!editable" class="caption small">
                     <b t-if="has_preview" class="ml4 small text-uppercase o_attachment_view" t-att-data-id="attachment.id"><t t-esc="ext"/></b>
                     <a t-else="" class="ml4 small text-uppercase" t-att-href="attachment.url" t-att-title="'Download ' + attachment.name"><b><t t-esc='ext'/></b></a>
-                    <a class="ml4 o_attachment_download float-right" t-att-title="'Download ' + attachment.name" t-att-href='attachment.url'><i t-attf-class="fa fa-download" role="img" aria-label="Download"/></a>
+                    <a class="ml4 o_attachment_download float-right" t-att-title="'Download ' + attachment.name" t-att-href='attachment.url'><i t-attf-class="fas fa-download" role="img" aria-label="Download"/></a>
                 </div>
-                <div t-if="editable" class="o_attachment_uploaded"><i class="text-success fa fa-check" role="img" aria-label="Uploaded" title="Uploaded"/></div>
+                <div t-if="editable" class="o_attachment_uploaded"><i class="text-success fas fa-check" role="img" aria-label="Uploaded" title="Uploaded"/></div>
                 <div t-if="editable" class="o_attachment_delete" t-att-data-id="attachment.id"><span class="text-white" role="img" aria-label="Delete" title="Delete">×</span></div>
             </div>
         </div>
@@ -616,7 +633,7 @@
      <t t-name="mail.widget.Thread.LoadMore">
         <div class="o_thread_show_more">
             <t t-if="options.loadMoreOnScroll">
-                <span><i class="fa fa-spinner fa-spin" role="img" aria-label="Please wait" title="Please wait"/> Loading older messages... </span>
+                <span><i class="fas fa-spinner fa-spin" role="img" aria-label="Please wait" title="Please wait"/> Loading older messages... </span>
             </t>
             <t t-else="">
                 <button class="btn btn-link">-------- Show older messages --------</button>

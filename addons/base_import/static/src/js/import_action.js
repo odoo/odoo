@@ -830,7 +830,7 @@ var DataImport = AbstractAction.extend({
                     }
                     if (msg instanceof Array) {
                         return _.str.sprintf(
-                            '<div class="oe_import_moreinfo oe_import_moreinfo_choices"><a href="#" class="oe_import_report_see_possible_value oe_import_see_all"><i class="fa fa-arrow-right"/> %s </a><ul class="oe_import_report_more">%s</ul></div>',
+                            '<div class="oe_import_moreinfo oe_import_moreinfo_choices"><a href="#" class="oe_import_report_see_possible_value oe_import_see_all"><i class="fas fa-arrow-right"/> %s </a><ul class="oe_import_report_more">%s</ul></div>',
                             _.str.escapeHTML(_t("See possible values")),
                             _(msg).map(function (msg) {
                                 return '<li>'
@@ -841,7 +841,7 @@ var DataImport = AbstractAction.extend({
                     // Final should be object, action descriptor
                     return [
                         '<div class="oe_import_moreinfo oe_import_moreinfo_action">',
-                            _.str.sprintf('<a href="#" data-action="%s" class="oe_import_see_all"><i class="fa fa-arrow-right"/> ',
+                            _.str.sprintf('<a href="#" data-action="%s" class="oe_import_see_all"><i class="fas fa-arrow-right"/> ',
                                     _.str.escapeHTML(JSON.stringify(msg))),
                                 _.str.escapeHTML(
                                     _t("See possible values")),

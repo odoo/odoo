@@ -31,20 +31,20 @@
                             type="object"
                             class="oe_stat_button"
                             attrs="{'invisible': [('access_mode', '=', 'public')]}"
-                            icon="fa-envelope-o">
+                            icon="far fa-envelope">
                             <field string="Registered" name="answer_count" widget="statinfo"/>
                         </button>
                         <button name="action_survey_user_input_certified"
                             type="object"
                             class="oe_stat_button"
                             attrs="{'invisible': [('certification', '=', False)]}"
-                            icon="fa-trophy">
+                            icon="fas fa-trophy">
                             <field string="Certified" name="success_count" widget="statinfo"/>
                         </button>
                         <button name="action_survey_user_input_completed"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-pencil-square-o">
+                            icon="far fa-edit">
                             <field string="Answers" name="answer_done_count" widget="statinfo"/>
                         </button>
                     </div>
@@ -72,7 +72,7 @@
                                     <field name="survey_id" invisible="1"/>
                                     <field name="triggering_question_id" invisible="1"/>
                                     <field name="random_questions_count" attrs="{'column_invisible': [('parent.questions_selection', '=', 'all')], 'invisible': [('is_page', '=', False)]}" />
-                                    <button icon="fa-code-fork" attrs="{'invisible': [('triggering_question_id', '=', False)]}"
+                                    <button icon="fas fa-code-branch" attrs="{'invisible': [('triggering_question_id', '=', False)]}"
                                         title="This question depends on another question's answer." class="icon_rotates"/>
                                     <control>
                                         <create name="add_section_control" string="Add a section" context="{'default_is_page': True, 'default_questions_selection': 'all'}"/>
@@ -118,7 +118,7 @@
                                         <field name="certification_report_layout" class="oe_inline"/>
                                         <button name="action_survey_preview_certification_template"
                                             string="Preview" type="object"
-                                            icon="fa-external-link"  target="_blank" class="btn-link pt-0"/>
+                                            icon="fas fa-external-link-alt"  target="_blank" class="btn-link pt-0"/>
                                     </div>
                                     <field name="certification_give_badge" attrs="{'invisible': ['|', ('certification', '=', False), ('users_login_required', '=', False)]}" />
                                     <field name="certification_badge_id" attrs="{'invisible': ['|', ('certification_give_badge', '=', False), ('certification_badge_id', '!=', False)]}"
@@ -170,7 +170,7 @@
                 <field name="success_count"/>
                 <field name="success_ratio"/>
                 <field name="answer_score_avg"/>
-                <button name="certification" icon="fa-trophy" title="Certification" aria-label="Certification" attrs="{'invisible': [('certification', '=', False)]}"/>
+                <button name="certification" icon="fas fa-trophy" title="Certification" aria-label="Certification" attrs="{'invisible': [('certification', '=', False)]}"/>
                 <!-- Tweak as icons aren't directly supported in xml -->
             </tree>
         </field>
@@ -198,7 +198,7 @@
                         <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
 
                             <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                <span class="fa fa-ellipsis-v"/>
+                                <span class="fas fa-ellipsis-v"/>
                             </a>
                             <div class="dropdown-menu" role="menu">
                                 <a role="menuitem" type="edit" class="dropdown-item">Edit Survey</a>

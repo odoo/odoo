@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template id="template" xml:space="preserve">
-
     <t t-inherit="mail.widget.Thread.Message" t-inherit-mode="extension">
         <xpath expr="//span[@name='notification_icon']" position="attributes">
             <!--
@@ -21,19 +20,19 @@
             <t t-if="notification.notification_type === 'snail'">
                 <span class="d-inline-block text-center o_thread_tooltip_icon">
                     <t t-if="notification.notification_status === 'sent'">
-                        <i class="fa fa-check o_thread_tooltip_snailmail_icon" title="Sent" role="img" aria-label="Sent"/>
+                        <i class="fas fa-check o_thread_tooltip_snailmail_icon" title="Sent" role="img" aria-label="Sent"/>
                         Sent
                     </t>
                     <t t-elif="notification.notification_status === 'canceled'">
-                        <i class="fa fa-trash-o o_thread_tooltip_snailmail_icon" title="Canceled" role="img" aria-label="Canceled"/>
+                        <i class="far fa-trash-alt o_thread_tooltip_snailmail_icon" title="Canceled" role="img" aria-label="Canceled"/>
                         Canceled
                     </t>
                     <t t-elif="notification.notification_status === 'ready'">
-                        <i class="fa fa-clock-o o_thread_tooltip_snailmail_icon" title="Awaiting Dispatch" role="img" aria-label="Awaiting Dispatch"/>
+                        <i class="far fa-clock o_thread_tooltip_snailmail_icon" title="Awaiting Dispatch" role="img" aria-label="Awaiting Dispatch"/>
                         Awaiting Dispatch
                     </t>
                     <t t-else="">
-                        <i class="fa fa-exclamation text-danger o_thread_tooltip_snailmail_icon" title="Error" role="img" aria-label="Error"/>
+                        <i class="fas fa-exclamation text-danger o_thread_tooltip_snailmail_icon" title="Error" role="img" aria-label="Error"/>
                         Error
                     </t>
                 </span>

@@ -123,7 +123,7 @@
                             string="Email Alias" required="0"/>
                         <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
                             <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                            <button  icon="fa-arrow-right" type="action" name="%(base_setup.action_general_configuration)d" string="Configure a custom domain" class="btn-link" attrs="{'invisible': [('alias_domain', '!=', False)]}"/>
+                            <button  icon="fas fa-arrow-right" type="action" name="%(base_setup.action_general_configuration)d" string="Configure a custom domain" class="btn-link" attrs="{'invisible': [('alias_domain', '!=', False)]}"/>
                         </div>
                     </div>
                     <field name="alias_contact"
@@ -186,7 +186,7 @@
 
                     <xpath expr="//div[hasclass('o_primary')]" position="after">
                         <div t-if="record.use_leads.raw_value and record.alias_name.value and record.alias_domain.value">
-                            <small t-translation="off"><i class="fa fa-envelope-o" aria-label="Leads" title="Leads" role="img"></i>&amp;nbsp; <field name="alias_id"/></small>
+                            <small t-translation="off"><i class="far fa-envelope" aria-label="Leads" title="Leads" role="img"></i>&amp;nbsp; <field name="alias_id"/></small>
                         </div>
                     </xpath>
 

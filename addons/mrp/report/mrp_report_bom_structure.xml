@@ -50,7 +50,7 @@
                                         <td t-if="data['report_type'] == 'html'">
                                             <span>
                                                 <t t-if="data['attachments']">
-                                                    <a href="#" role="button" t-att-data-res-id="data['attachments'].ids" t-att-data-model="'mrp.document'" class="o_mrp_show_attachment_action fa fa-fw o_button_icon fa-files-o"/>
+                                                    <a href="#" role="button" t-att-data-res-id="data['attachments'].ids" t-att-data-model="'mrp.document'" class="o_mrp_show_attachment_action fas fa-fw o_button_icon fa-files-o"/>
                                                 </t>
                                             </span>
                                         </td>
@@ -91,13 +91,13 @@
                 <td>
                     <div t-att-style="space_td">
                         <t t-if="l['child_bom']">
-                            <div t-att-data-function="'get_bom'" class="o_mrp_bom_unfoldable fa fa-fw fa-caret-right" style="display:inline-block;" role="img" aria-label="Unfold" title="Unfold"/>
+                            <div t-att-data-function="'get_bom'" class="o_mrp_bom_unfoldable fas fa-fw fa-caret-right" style="display:inline-block;" role="img" aria-label="Unfold" title="Unfold"/>
                         </t>
                         <div t-att-class="None if l['child_bom'] else 'o_mrp_bom_no_fold'" style="display:inline-block;">
                             <a href="#" t-att-data-res-id="l['prod_id']" t-att-data-model="'product.product'" class="o_mrp_bom_action"><t t-esc="l['prod_name']"/></a>
                         </div>
                         <t t-if="l['phantom_bom']">
-                            <div class="fa fa-dropbox" title="This is a BoM of type Kit!" role="img" aria-label="This is a BoM of type Kit!"/>
+                            <div class="fab fa-dropbox" title="This is a BoM of type Kit!" role="img" aria-label="This is a BoM of type Kit!"/>
                         </t>
                     </div>
                 </td>
@@ -117,7 +117,7 @@
                 <td>
                     <span>
                         <t t-if="l['attachments']">
-                            <a href="#" role="button" t-att-data-res-id="l['attachments'].ids" t-att-data-model="'mrp.document'" class="o_mrp_show_attachment_action fa fa-fw o_button_icon fa-files-o"/>
+                            <a href="#" role="button" t-att-data-res-id="l['attachments'].ids" t-att-data-model="'mrp.document'" class="o_mrp_show_attachment_action fas fa-fw o_button_icon fa-files-o"/>
                         </t>
                     </span>
                 </td>
@@ -128,7 +128,7 @@
             <tr class="o_mrp_bom_report_line o_mrp_bom_cost" t-att-data-id="'operation-' + str(data['bom'].id)" t-att-data-bom-id="data['bom'].id" t-att-parent_id="data['bom'].id" t-att-data-qty="data['bom_qty']" t-att-data-level="data['level']">
                 <td name="td_opr">
                     <span t-att-style="space_td"/>
-                    <span class="o_mrp_bom_unfoldable fa fa-fw fa-caret-right" t-att-data-function="'get_operations'" role="img" aria-label="Unfold" title="Unfold"/>
+                    <span class="o_mrp_bom_unfoldable fas fa-fw fa-caret-right" t-att-data-function="'get_operations'" role="img" aria-label="Unfold" title="Unfold"/>
                     Operations
                 </td>
                 <td/>

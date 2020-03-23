@@ -14,7 +14,7 @@
                             <div class="row mt16 o_settings_container" name="users_setting_container">
                                 <div class="col-12 col-lg-6 o_setting_box" id="active_user_setting">
                                     <div class="o_setting_right_pane">
-                                        <span class="fa fa-lg fa-users" aria-label="Number of active users"/>
+                                        <span class="fas fa-lg fa-users" aria-label="Number of active users"/>
                                         <field name='active_user_count' class="w-auto pl-3 font-weight-bold"/>
                                         <span class='o_form_label' attrs="{'invisible':[('active_user_count', '&gt;', '1')]}">
                                             Active User
@@ -24,7 +24,7 @@
                                         </span>
                                         <a href="https://www.odoo.com/documentation/user/13.0/general/odoo_basics/add_user.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                         <br/>
-                                        <button name="%(base.action_res_users)d" icon="fa-arrow-right" type="action" string="Manage Users" class="btn-link o_web_settings_access_rights"/>
+                                        <button name="%(base.action_res_users)d" icon="fas fa-arrow-right" type="action" string="Manage Users" class="btn-link o_web_settings_access_rights"/>
 
                                     </div>
                                 </div>
@@ -45,7 +45,7 @@
                                         <br/>
                                         <field name="company_informations" class="text-muted" style="width: 90%;"/>
                                         <br/>
-                                        <button name="open_company" icon="fa-arrow-right" type="object" string="Update Info" class="btn-link"/>
+                                        <button name="open_company" icon="fas fa-arrow-right" type="object" string="Update Info" class="btn-link"/>
                                     </div>
                                 </div>
                                 <div class="col-12 col-lg-6 o_setting_box" id="companies_setting">
@@ -59,7 +59,7 @@
                                         </span>
                                         <br/>
                                         <div class="mt8">
-                                            <button name="%(base.action_res_company_form)d" icon="fa-arrow-right" type="action" string="Manage Companies" class="btn-link"/>
+                                            <button name="%(base.action_res_company_form)d" icon="fas fa-arrow-right" type="action" string="Manage Companies" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
@@ -83,7 +83,7 @@
                                             <a href="https://www.odoo.com/documentation/user/13.0/general/odoo_basics/choose_language.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                         </div>
                                         <div class="mt8">
-                                            <button name="%(base.res_lang_act_window)d" icon="fa-arrow-right" type="action" string="Manage Languages" class="btn-link"/>
+                                            <button name="%(base.res_lang_act_window)d" icon="fas fa-arrow-right" type="action" string="Manage Languages" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
@@ -96,7 +96,7 @@
                                 <div class="col-12 col-lg-6 o_setting_box" id="paper_format_setting">
                                     <div class="o_setting_right_pane">
                                         <span class="o_form_label">Format</span>
-                                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                        <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                         <div class="text-muted">
                                             Set the paper format of printed documents
                                         </div>
@@ -111,7 +111,7 @@
                                 <div class="col-12 col-lg-6 o_setting_box" id="document_layout_setting">
                                     <div class="o_setting_right_pane">
                                         <span class="o_form_label">Document Layout</span>
-                                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                        <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                         <div class="text-muted">
                                             Choose the layout of your documents
                                         </div>
@@ -121,7 +121,7 @@
                                                 <field name="external_report_layout_id" domain="[('type','=', 'qweb')]" class="oe_inline"/>
                                             </div>
                                             <div class="mt8">
-                                                <button name="%(base.action_base_document_layout_configurator)d" string="Configure Document Layout" type="action" class="oe_link" icon="fa-arrow-right"/>
+                                                <button name="%(base.action_base_document_layout_configurator)d" string="Configure Document Layout" type="action" class="oe_link" icon="fas fa-arrow-right"/>
                                                 <button name="edit_external_header" string="Edit Layout" type="object" class="oe_link" groups="base.group_no_one"/>
                                                 <button name="%(web.action_report_externalpreview)d" string="Preview Document" type="action" class="oe_link" groups="base.group_no_one"/>
                                             </div>
@@ -179,7 +179,7 @@
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('user_default_rights','=',False)]}">
                                     <div class="mt8">
-                                        <button type="object" name="open_default_user" string="Default Access Rights" icon="fa-arrow-right" class="btn-link"/>
+                                        <button type="object" name="open_default_user" string="Default Access Rights" icon="fas fa-arrow-right" class="btn-link"/>
                                     </div>
                                 </div>
                             </div>
@@ -218,7 +218,7 @@
                                     </div>
                                     <div class="o_setting_right_pane">
                                         <label string="Inter-Company Transactions" for="module_account_inter_company_rules"/>
-                                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                        <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                         <div class="text-muted">
                                             Automatically generate counterpart documents for orders/invoices between companies
                                         </div>

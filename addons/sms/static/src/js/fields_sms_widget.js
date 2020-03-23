@@ -106,7 +106,7 @@ var SmsWidget = FieldText.extend({
             'target': '_blank',
             'title': _t('SMS Pricing'),
             'aria-label': _t('SMS Pricing'),
-            'class': 'fa fa-lg fa-info-circle',
+            'class': 'fas fa-lg fa-info-circle',
         });
     },
 

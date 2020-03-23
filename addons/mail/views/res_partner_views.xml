@@ -11,7 +11,7 @@
                     <field name="is_blacklisted" invisible="1"/>
                     <label for="email" class="oe_inline"/>
                     <div class="o_row o_row_readonly">
-                        <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
+                        <button name="mail_action_blacklist_remove" class="fas fa-ban text-danger"
                             title="This email is blacklisted for mass mailings. Click to unblacklist."
                             type="object" context="{'default_email': email}" groups="base.group_user"
                             attrs="{'invisible': [('is_blacklisted', '=', False)]}"/>

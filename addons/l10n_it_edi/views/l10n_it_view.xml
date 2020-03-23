@@ -115,9 +115,9 @@
                 <field name="l10n_it_send_state" invisible="1" widget="label_selection" options="{'classes': {'to_send': 'default', 'invalid': 'danger', 'sent': 'warning',
                                             'delivered': 'success', 'delivered_accepted': 'success', 'delivered_refused': 'success', 'delivered_expired': 'success', 'failed_delivery': 'success'}}"/>
 
-                <button icon="fa-paper-plane-o" class="btn-outline-warning disabled" aria-label="Sent" title="Sent" attrs="{'invisible': [('l10n_it_send_state', '!=', 'sent')]}"/>
-                <button icon="fa-exclamation-triangle" class="btn-outline-danger disabled" aria-label="Error" title="Error" attrs="{'invisible': [('l10n_it_send_state', '!=', 'invalid')]}"/>
-                <button icon="fa-check" class="btn-outline-success disabled" aria-label="Delivered" title="Delivered" attrs="{'invisible': [('l10n_it_send_state', 'not in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]}"/>
+                <button icon="far fa-paper-plane" class="btn-outline-warning disabled" aria-label="Sent" title="Sent" attrs="{'invisible': [('l10n_it_send_state', '!=', 'sent')]}"/>
+                <button icon="fas fa-exclamation-triangle" class="btn-outline-danger disabled" aria-label="Error" title="Error" attrs="{'invisible': [('l10n_it_send_state', '!=', 'invalid')]}"/>
+                <button icon="fas fa-check" class="btn-outline-success disabled" aria-label="Delivered" title="Delivered" attrs="{'invisible': [('l10n_it_send_state', 'not in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]}"/>
             </xpath>
         </data>
         </field>
@@ -135,10 +135,10 @@
             </xpath>
 
             <xpath expr="//div[hasclass('o_kanban_record_headings')]" position="inside">
-                <i class="text-success fa fa-plus-circle" aria-label="New" t-if="record.l10n_it_send_state.raw_value == 'new'"/>
-                <i class="text-warning fa fa-paper-plane-o" aria-label="Sent, waiting for response" t-if="record.l10n_it_send_state.raw_value == 'sent'"/>
-                <i class="text-danger fa fa-exclamation-triangle" aria-label="Sent, but invalid" t-if="record.l10n_it_send_state.raw_value == 'invalid'"/>
-                <i class="text-success fa fa-check" aria-label="Delivered Invoice" t-if="['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'].indexOf(record.l10n_it_send_state.raw_value) >= 0" />
+                <i class="text-success fas fa-plus-circle" aria-label="New" t-if="record.l10n_it_send_state.raw_value == 'new'"/>
+                <i class="text-warning far fa-paper-plane" aria-label="Sent, waiting for response" t-if="record.l10n_it_send_state.raw_value == 'sent'"/>
+                <i class="text-danger fas fa-exclamation-triangle" aria-label="Sent, but invalid" t-if="record.l10n_it_send_state.raw_value == 'invalid'"/>
+                <i class="text-success fas fa-check" aria-label="Delivered Invoice" t-if="['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'].indexOf(record.l10n_it_send_state.raw_value) >= 0" />
             </xpath>
         </data>
         </field>
@@ -152,21 +152,21 @@
         <field name="arch" type="xml">
         <data>
             <xpath expr="//button[@name='preview_invoice']" position="after">
-                <button name="post" type="object" icon="fa-envelope-o" class="btn btn-primary" string="Resend"
+                <button name="post" type="object" icon="far fa-envelope" class="btn btn-primary" string="Resend"
                         attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', '!=', 'invalid')]}"/>
             </xpath>
             <xpath expr="//field[@name='move_type']" position="before">
                 <div class="alert alert-success" role="alert"
                      attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', 'not in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]}">
-                    <i class="fa fa-check" aria-label="Delivered" title="Delivered"></i> <field name="l10n_it_send_state" readonly="1"/>
+                    <i class="fas fa-check" aria-label="Delivered" title="Delivered"></i> <field name="l10n_it_send_state" readonly="1"/>
                 </div>
                 <div class="alert alert-warning" role="alert"
                      attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', '!=', 'sent')]}">
-                    <i class="fa fa-paper-plane-o"/> E-Invoice sent, waiting for a response
+                    <i class="far fa-paper-plane"/> E-Invoice sent, waiting for a response
                 </div>
                 <div class="alert alert-danger" role="alert"
                      attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', '!=', 'invalid')]}">
-                    <i class="fa fa-exclamation-triangle"/> E-Invoice check failed. You can modify the invoice, and resend it.
+                    <i class="fas fa-exclamation-triangle"/> E-Invoice check failed. You can modify the invoice, and resend it.
                 </div>
             </xpath>
             <xpath expr="//page[@name='other_info']" position="after">

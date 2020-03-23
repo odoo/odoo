@@ -27,13 +27,13 @@
     <t t-name="website.seo_keyword">
         <tr class="js_seo_keyword" t-att-data-keyword="widget.keyword">
             <td t-esc="widget.keyword"/>
-            <td class="text-center"><i t-if="widget.used_h1" class="fa fa-check" t-attf-title="{{ widget.keyword }} is used in page first level heading"/></td>
-            <td class="text-center"><i t-if="widget.used_h2" class="fa fa-check" t-attf-title="{{ widget.keyword }} is used in page second level heading"/></td>
-            <td class="text-center"><i class="js_seo_keyword_title fa fa-check" style="visibility: hidden;" t-attf-title="{{ widget.keyword }} is used in page title"/></td>
-            <td class="text-center"><i class="js_seo_keyword_description fa fa-check" style="visibility: hidden;" t-attf-title="{{ widget.keyword }} is used in page description"/></td>
-            <td class="text-center"><i t-if="widget.used_content" class="fa fa-check" t-attf-title="{{ widget.keyword }} is used in page content"/></td>
+            <td class="text-center"><i t-if="widget.used_h1" class="fas fa-check" t-attf-title="{{ widget.keyword }} is used in page first level heading"/></td>
+            <td class="text-center"><i t-if="widget.used_h2" class="fas fa-check" t-attf-title="{{ widget.keyword }} is used in page second level heading"/></td>
+            <td class="text-center"><i class="js_seo_keyword_title fas fa-check" style="visibility: hidden;" t-attf-title="{{ widget.keyword }} is used in page title"/></td>
+            <td class="text-center"><i class="js_seo_keyword_description fas fa-check" style="visibility: hidden;" t-attf-title="{{ widget.keyword }} is used in page description"/></td>
+            <td class="text-center"><i t-if="widget.used_content" class="fas fa-check" t-attf-title="{{ widget.keyword }} is used in page content"/></td>
             <td class="o_seo_keyword_suggestion"/>
-            <td class="text-center"><a href="#" class="oe_remove" data-action="remove-keyword" t-attf-title="Remove {{ widget.keyword }}"><i class="fa fa-trash"/></a></td>
+            <td class="text-center"><a href="#" class="oe_remove" data-action="remove-keyword" t-attf-title="Remove {{ widget.keyword }}"><i class="fas fa-trash-alt"/></a></td>
         </tr>
     </t>
 
@@ -60,13 +60,13 @@
             <div class="col-lg-6">
                 <div class="form-group">
                     <label for="website_meta_title">
-                        Title <i class="fa fa-question-circle-o" title="The title will take a default value unless you specify one."/>
+                        Title <i class="far fa-question-circle" title="The title will take a default value unless you specify one."/>
                     </label>
                     <input type="text" name="website_meta_title" id="website_meta_title" class="form-control" placeholder="Keep empty to use default value" maxlength="70" size="70"/>
                 </div>
                 <div class="form-group">
                     <label for="website_meta_description">
-                        Description <i class="fa fa-question-circle-o" t-att-title="widget.previewDescription"/>
+                        Description <i class="far fa-question-circle" t-att-title="widget.previewDescription"/>
                     </label>
                     <textarea name="website_meta_description" id="website_meta_description" placeholder="Keep empty to use default value" class="form-control"/>
                     <div class="alert alert-warning mt16 mb0 small" id="website_meta_description_warning" style="display: none;"/>
@@ -135,7 +135,7 @@
                     <img t-att-src="widget.customImgUrl"/>
                 </div>
                 <div class="o_meta_img_upload mt4" title="Click to choose more images">
-                    <i class="fa fa-upload"/>
+                    <i class="fas fa-upload"/>
                 </div>
             </div>
             <div class="col-lg-6">

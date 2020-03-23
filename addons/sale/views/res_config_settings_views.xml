@@ -23,7 +23,7 @@
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('group_product_variant','=',False)]}">
                                     <div class="mt8">
-                                        <button name="%(product.attribute_action)d" icon="fa-arrow-right" type="action" string="Attributes" class="btn-link"/>
+                                        <button name="%(product.attribute_action)d" icon="fas fa-arrow-right" type="action" string="Attributes" class="btn-link"/>
                                     </div>
                                 </div>
                             </div>
@@ -61,7 +61,7 @@
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('group_uom','=',False)]}">
                                     <div class="mt8">
-                                        <button name="%(uom.product_uom_form_action)d" icon="fa-arrow-right" type="action" string="Units of Measure" class="btn-link"/>
+                                        <button name="%(uom.product_uom_form_action)d" icon="fas fa-arrow-right" type="action" string="Units of Measure" class="btn-link"/>
                                     </div>
                                 </div>
                             </div>
@@ -137,7 +137,7 @@
                                         <field name="product_pricelist_setting" widget="radio" class="o_light_label"/>
                                     </div>
                                     <div class="mt8">
-                                        <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
+                                        <button name="%(product.product_pricelist_action2)d" icon="fas fa-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
                                     </div>
                                 </div>
                             </div>
@@ -180,7 +180,7 @@
                             <div class="o_setting_right_pane">
                                 <label for="portal_confirmation_sign"/>
                                 <a href="https://www.odoo.com/documentation/user/13.0/sales/send_quotations/get_signature_to_validate.html" title="Documentation" class="mr-2 o_doc_link" target="_blank"></a>
-                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                <span class="far fa-lg fa-building" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                 <div class="text-muted">
                                     Request an online signature to confirm orders
                                 </div>
@@ -193,12 +193,12 @@
                             <div class="o_setting_right_pane">
                                 <label for="portal_confirmation_pay"/>
                                 <a href="https://www.odoo.com/documentation/user/13.0/sales/send_quotations/get_paid_to_validate.html" title="Documentation" class="mr-2 o_doc_link" target="_blank"></a>
-                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                <span class="far fa-lg fa-building" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                 <div class="text-muted">
                                     Request an online payment to confirm orders
                                 </div>
                                 <div class="mt8" attrs="{'invisible': [('portal_confirmation_pay', '=', False)]}">
-                                    <button name='%(payment.action_payment_acquirer)d' icon="fa-arrow-right" type="action" string="Payment Acquirers" class="btn-link"/>
+                                    <button name='%(payment.action_payment_acquirer)d' icon="fas fa-arrow-right" type="action" string="Payment Acquirers" class="btn-link"/>
                                 </div>
                             </div>
                         </div>
@@ -232,7 +232,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="use_quotation_validity_days"/>
-                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                 <div class="text-muted">
                                     Set a default validity on your quotations
                                 </div>

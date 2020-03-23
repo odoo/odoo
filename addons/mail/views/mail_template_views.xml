@@ -12,7 +12,7 @@
                             <button class="oe_stat_button"
                                     groups="base.group_system"
                                     name="create_action" type="object"
-                                    attrs="{'invisible':[('ref_ir_act_window','!=',False)]}" icon="fa-plus"
+                                    attrs="{'invisible':[('ref_ir_act_window','!=',False)]}" icon="fas fa-plus"
                                     help="Display an option on related documents to open a composition wizard with this template">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_text">Add</span>
@@ -21,7 +21,7 @@
                             </button>
                             <button name="unlink_action" type="object"
                                     groups="base.group_system"
-                                    class="oe_stat_button" icon="fa-minus"
+                                    class="oe_stat_button" icon="fas fa-minus"
                                     attrs="{'invisible':[('ref_ir_act_window','=',False)]}"
                                     help="Remove the contextual action to use this template on related documents" widget="statinfo">
                                 <div class="o_field_widget o_stat_info">
@@ -29,7 +29,7 @@
                                     <span class="o_stat_text">Context Action</span>
                                 </div>
                             </button>
-                            <button class="oe_stat_button" name="%(mail_template_preview_action)d" icon="fa-search-plus" string="Preview"
+                            <button class="oe_stat_button" name="%(mail_template_preview_action)d" icon="fas fa-search-plus" string="Preview"
                                     type="action" target="new"/>
                         </div>
                         <div class="oe_title">

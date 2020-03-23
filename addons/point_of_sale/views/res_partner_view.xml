@@ -11,7 +11,7 @@
                     <button class="oe_stat_button" type="action" name="%(point_of_sale.action_pos_pos_form)d" 
                         context="{'search_default_partner_id': active_id,'default_partner_id': active_id}"
                         attrs="{'invisible': [('pos_order_count', '=', 0)]}"
-                        icon="fa-shopping-bag">
+                        icon="fas fa-shopping-bag">
                         <field string="PoS Orders" name="pos_order_count" widget="statinfo"/>
                     </button>
                 </div>
@@ -33,7 +33,7 @@
                     <field name="pos_order_count"/>
                 </field>
                 <xpath expr="//div[hasclass('oe_kanban_partner_links')]" position="inside">
-                    <span t-if="record.pos_order_count.value>0" class="badge badge-pill"><i class="fa fa-fw fa-shopping-bag" role="img" aria-label="Shopping cart" title="Shopping cart"/><t t-esc="record.pos_order_count.value"/></span>
+                    <span t-if="record.pos_order_count.value>0" class="badge badge-pill"><i class="fas fa-fw fa-shopping-bag" role="img" aria-label="Shopping cart" title="Shopping cart"/><t t-esc="record.pos_order_count.value"/></span>
                 </xpath>
             </field>
         </record>

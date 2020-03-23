@@ -93,7 +93,7 @@ odoo.define('web.FavoriteMenu', function (require) {
         Dialog,
     });
     FavoriteMenu.defaultProps = Object.assign({}, DropdownMenu.defaultProps, {
-        icon: 'fa fa-star',
+        icon: 'fas fa-star',
     });
     FavoriteMenu.template = 'web.FavoriteMenu';
 

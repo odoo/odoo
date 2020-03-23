@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <template xml:space="preserve">
     <t t-name="PresenceIndicator">
-        <div id="oe_hr_attendance_status" class="fa fa-circle" role="img" aria-label="Available" title="Available">
+        <div id="oe_hr_attendance_status" class="fas fa-circle" role="img" aria-label="Available" title="Available">
         </div>
     </t>
 
@@ -43,8 +43,8 @@
                     <h1 class="mb8"><t t-esc="widget.employee.name"/></h1>
                     <h3 class="mt8 mb24"><t t-if="!checked_in">Welcome!</t><t t-else="">Want to check out?</t></h3>
                     <h4 class="mt0 mb0 text-muted" t-if="checked_in">Today's work hours: <span t-esc="widget.hours_today"/></h4>
-                    <a class="fa fa-7x o_hr_attendance_sign_in_out_icon fa-sign-out btn-warning" t-if="checked_in" aria-label="Sign out" title="Sign out"/>
-                    <a class="fa fa-7x o_hr_attendance_sign_in_out_icon fa-sign-in btn-secondary" t-if="!checked_in" aria-label="Sign in" title="Sign in"/>
+                    <a class="fas fa-7x o_hr_attendance_sign_in_out_icon fa-sign-out btn-warning" t-if="checked_in" aria-label="Sign out" title="Sign out"/>
+                    <a class="fas fa-7x o_hr_attendance_sign_in_out_icon fa-sign-in btn-secondary" t-if="!checked_in" aria-label="Sign in" title="Sign in"/>
                     <h3 class="mt0 mb0 text-muted">Click to <b t-if="checked_in">check out</b><b t-if="!checked_in">check in</b></h3>
                 </t>
                 <t t-else="">
@@ -61,8 +61,8 @@
             <div class="o_hr_attendance_kiosk_mode">
                 <t t-set="checked_in" t-value="widget.employee_state=='checked_in'"/>
                 <div class="o_hr_attendance_back_button">
-                    <span class="btn btn-secondary btn-lg d-block d-md-none"><i class="fa fa-chevron-left mr8"/> Go back</span>
-                    <span class="btn btn-secondary d-none d-md-inline-block"><i class="fa fa-chevron-left" role="img" aria-label="Go back" title="Go back"/></span>
+                    <span class="btn btn-secondary btn-lg d-block d-md-none"><i class="fas fa-chevron-left mr8"/> Go back</span>
+                    <span class="btn btn-secondary d-none d-md-inline-block"><i class="fas fa-chevron-left" role="img" aria-label="Go back" title="Go back"/></span>
                 </div>
                 <t t-if="widget.employee_id">
                     <div class="o_hr_attendance_user_badge o_home_menu_background">
@@ -72,8 +72,8 @@
                     <h3 class="mt8 mb24"><t t-if="!checked_in">Welcome!</t><t t-else="">Want to check out?</t></h3>
                     <h4 class="mt0 mb0 text-muted" t-if="checked_in">Today's work hours: <span t-esc="widget.employee_hours_today"/></h4>
                     <t t-if="!widget.use_pin">
-                        <a class="fa fa-7x o_hr_attendance_sign_in_out_icon fa-sign-out btn-warning" t-if="checked_in" aria-label="Sign out" title="Sign out"/>
-                        <a class="fa fa-7x o_hr_attendance_sign_in_out_icon fa-sign-in btn-secondary" t-if="!checked_in" aria-label="Sign in" title="Sign in"/>
+                        <a class="fas fa-7x o_hr_attendance_sign_in_out_icon fa-sign-out btn-warning" t-if="checked_in" aria-label="Sign out" title="Sign out"/>
+                        <a class="fas fa-7x o_hr_attendance_sign_in_out_icon fa-sign-in btn-secondary" t-if="!checked_in" aria-label="Sign in" title="Sign in"/>
                         <h3 class="mt0 mb0 text-muted">Click to <b t-if="checked_in">check out</b><b t-else="">check in</b></h3>
                     </t>
                     <t t-else="">

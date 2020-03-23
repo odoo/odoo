@@ -14,7 +14,7 @@
         <t id="default_snippets">
             <div id="snippet_mega_menu" class="o_panel d-none">
                 <div class="o_panel_header">
-                    <i class="fa fa-puzzle-piece"/> Mega Menu
+                    <i class="fas fa-puzzle-piece"/> Mega Menu
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_mega_menu_multi_menus" t-thumbnail="/website/static/src/img/snippets_thumbs/s_mega_menu_multi_menus.png"/>
@@ -24,7 +24,7 @@
 
             <div id="snippet_structure" class="o_panel">
                 <div class="o_panel_header">
-                    <i class="fa fa-th-large"/> Structure
+                    <i class="fas fa-th-large"/> Structure
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/snippets_thumbs/s_banner.png"/>
@@ -49,7 +49,7 @@
 
             <div id="snippet_feature" class="o_panel">
                 <div class="o_panel_header">
-                    <i class="fa fa-diamond"/> Features
+                    <i class="far fa-gem"/> Features
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_comparisons" t-thumbnail="/website/static/src/img/snippets_thumbs/s_comparison.png"/>
@@ -70,7 +70,7 @@
 
             <div id="snippet_effect" class="o_panel">
                 <div class="o_panel_header">
-                    <i class="fa fa-magic icon-fix"/> Dynamic Content
+                    <i class="fas fa-magic icon-fix"/> Dynamic Content
                 </div>
                 <div class="o_panel_body">
                     <t id="form_form_hook"/>
@@ -91,7 +91,7 @@
 
             <div id="snippet_content" class="o_panel">
                 <div class="o_panel_header">
-                    <i class="fa fa-indent"/> Inner content
+                    <i class="fas fa-indent"/> Inner content
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_hr" t-thumbnail="/website/static/src/img/snippets_thumbs/s_hr.png"/>
@@ -236,10 +236,10 @@
 
     <div data-js="CarouselItem"
          data-selector=".s_carousel .carousel-item, .s_quotes_carousel .carousel-item">
-        <we-button data-slide="left" data-no-preview="true" class="fa fa-fw fa-angle-left"/>
-        <we-button data-slide="right" data-no-preview="true" class="fa fa-fw fa-angle-right"/>
-        <we-button data-add-slide="true" data-no-preview="true" class="fa fa-fw fa-plus"/>
-        <we-button data-remove-slide="true" data-no-preview="true" class="fa fa-fw fa-minus"/>
+        <we-button data-slide="left" data-no-preview="true" class="fas fa-fw fa-angle-left"/>
+        <we-button data-slide="right" data-no-preview="true" class="fas fa-fw fa-angle-right"/>
+        <we-button data-add-slide="true" data-no-preview="true" class="fas fa-fw fa-plus"/>
+        <we-button data-remove-slide="true" data-no-preview="true" class="fas fa-fw fa-minus"/>
     </div>
 
     <!-- Accordion -->
@@ -264,14 +264,14 @@
     <!-- Move snippets around -->
     <div data-js="SnippetMove"
          data-selector="section, .accordion > .card, .s_showcase .row:not(.s_col_no_resize) > div">
-        <we-button class="fa fa-fw fa-angle-up" data-move-snippet="prev" data-no-preview="true"/>
-        <we-button class="fa fa-fw fa-angle-down" data-move-snippet="next" data-no-preview="true"/>
+        <we-button class="fas fa-fw fa-angle-up" data-move-snippet="prev" data-no-preview="true"/>
+        <we-button class="fas fa-fw fa-angle-down" data-move-snippet="next" data-no-preview="true"/>
     </div>
     <div data-js="SnippetMove"
          data-selector=".row:not(.s_col_no_resize) > div, .nav-item"
          data-exclude=".s_showcase .row > div">
-        <we-button class="fa fa-fw fa-angle-left" data-move-snippet="prev" data-no-preview="true"/>
-        <we-button class="fa fa-fw fa-angle-right" data-move-snippet="next" data-no-preview="true"/>
+        <we-button class="fas fa-fw fa-angle-left" data-move-snippet="prev" data-no-preview="true"/>
+        <we-button class="fas fa-fw fa-angle-right" data-move-snippet="next" data-no-preview="true"/>
     </div>
 
     <!-- Background Image -->
@@ -290,7 +290,7 @@
                 <we-button data-background-type="cover">Cover</we-button>
                 <we-button data-background-type="repeat-pattern" data-name="background_repeat_opt">Repeat pattern</we-button>
             </we-select>
-            <we-button class="fa fa-fw fa-crosshairs" title="Background Position"
+            <we-button class="fas fa-fw fa-crosshairs" title="Background Position"
                        data-background-position-overlay="true" data-no-preview="true"/>
         </we-row>
         <we-multi data-css-property="background-size" data-dependencies="background_repeat_opt">
@@ -364,7 +364,7 @@
 
     <div data-js="SnippetSave"
         t-attf-data-selector="#{so_snippet_addition_selector}, #{so_content_addition_selector}">
-        <we-button class="fa fa-fw fa-save"
+        <we-button class="fas fa-fw fa-save"
                    title="Save the block to use it elsewhere"
                    data-save-snippet=""
                    data-no-preview="true"/>
@@ -531,7 +531,7 @@
     <div data-js="anchor"
         data-selector=":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *"
         data-exclude=".modal *, .oe_structure .oe_structure *, [data-oe-type=html] .oe_structure *">
-        <we-button class="fa fa-fw fa-link"
+        <we-button class="fas fa-fw fa-link"
                    title="Create a link to target this section"
                    data-no-preview="true"/>
     </div>

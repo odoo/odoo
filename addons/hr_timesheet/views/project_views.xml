@@ -39,7 +39,7 @@
             <field name="priority">24</field>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
-                    <button class="oe_stat_button" name="%(act_hr_timesheet_line_by_project)d" type="action" icon="fa-calendar" string="Timesheets" attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <button class="oe_stat_button" name="%(act_hr_timesheet_line_by_project)d" type="action" icon="fas fa-calendar-alt" string="Timesheets" attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </div>
                 <xpath expr="//div[@id='rating_settings']/.." position="before">
                     <div class="row mt16 o_settings_container">
@@ -306,10 +306,10 @@
                     <field name="timer_start" invisible="1"/>
                     <field name="timer_pause" invisible="1"/>
                     <t t-if="record.display_timesheet_timer &amp;&amp; record.timer_pause.raw_value">
-                        <i class="fa fa-pause text-warning" title="Timer is Paused"></i>
+                        <i class="fas fa-pause text-warning" title="Timer is Paused"></i>
                     </t>
                     <t t-elif="record.display_timesheet_timer &amp;&amp; record.timer_start.raw_value">
-                        <i class="fa fa-play text-success" title="Timer is Running"></i>
+                        <i class="fas fa-play text-success" title="Timer is Running"></i>
                     </t>
                 </xpath>
             </field>

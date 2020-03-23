@@ -29,7 +29,7 @@
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
                                     <span class="o_form_label">Fiscal Localization</span>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Taxes, fiscal positions, chart of accounts &amp; legal statements for your country
                                     </div>
@@ -39,7 +39,7 @@
                                             <field name="chart_template_id" widget="selection"/>
                                         </div>
                                         <div class="mt8">
-                                            <button name="%(account.open_account_charts_modules)d" icon="fa-arrow-right" type="action" string="Install More Packages" class="btn-link"/>
+                                            <button name="%(account.open_account_charts_modules)d" icon="fas fa-arrow-right" type="action" string="Install More Packages" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
@@ -53,7 +53,7 @@
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
                                     <span class="o_form_label">Default Taxes</span>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Default taxes applied to local transactions
                                     </div>
@@ -73,7 +73,7 @@
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
                                     <span class="o_form_label">Rounding Method</span>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         How total tax amount is computed in orders and invoices
                                     </div>
@@ -113,7 +113,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="tax_exigibility"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Allow to configure taxes using cash basis
                                     </div>
@@ -132,7 +132,7 @@
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
                                     <span class="o_form_label">Main Currency</span>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Main currency of your company
                                     </div>
@@ -155,7 +155,7 @@
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
                                         <div class="mt8">
-                                            <button name="%(base.action_currency_all_form)d" icon="fa-arrow-right" type="action" string="Activate Other Currencies" class="btn-link"/>
+                                            <button name="%(base.action_currency_all_form)d" icon="fas fa-arrow-right" type="action" string="Activate Other Currencies" class="btn-link"/>
                                         </div>
                                         <div class="row mt16">
                                             <label for="currency_exchange_journal_id" class="col-lg-3 o_light_label"/>
@@ -193,12 +193,12 @@
                                             <div class="row">
                                                 <field name="invoice_is_print" class="col-lg-1 ml16"/>
                                                 <label for="invoice_is_print"/>
-                                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                                                <span class="far fa-lg fa-building" title="Values set here are company-specific."/>
                                             </div>
                                             <div class="row">
                                                 <field name="invoice_is_email" class="col-lg-1 ml16"/>
                                                 <label for="invoice_is_email"/>
-                                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                                                <span class="far fa-lg fa-building" title="Values set here are company-specific."/>
                                             </div>
                                         </div>
                                     </div>
@@ -236,7 +236,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="use_invoice_terms"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Show standard terms &amp; conditions on invoices/orders
                                     </div>
@@ -268,7 +268,7 @@
                                         Define the smallest coinage of the currency used to pay by cash
                                     </div>
                                     <div class="mt8">
-                                        <button name="%(account.rounding_list_action)d" icon="fa-arrow-right"
+                                        <button name="%(account.rounding_list_action)d" icon="fas fa-arrow-right"
                                                 type="action" string="Cash Roundings" class="btn-link"
                                                 attrs="{'invisible': [('group_cash_rounding', '=', False)]}"/>
                                     </div>
@@ -343,7 +343,7 @@
                                 </div>
                                 <div class="o_setting_right_pane" name="sepa_direct_debit_right_pane">
                                     <label string="SEPA Direct Debit (SDD)" for="module_account_sepa_direct_debit"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Collect customer payments in one-click using Euro SEPA Service
                                     </div>
@@ -362,7 +362,7 @@
                                 </div>
                                 <div class="o_setting_right_pane" name="qr_code_right_pane">
                                     <label string="QR Codes" for="qr_code"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Add a payment QR-code to your invoices
                                     </div>
@@ -407,7 +407,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="Checks" for="module_account_check_printing"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted" id="print_bills_payment">
                                         Print checks to pay your vendors
                                     </div>
@@ -421,7 +421,7 @@
                                 </div>
                                 <div class="o_setting_right_pane" name="sepa_right_pane">
                                     <label for="module_account_sepa"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Pay your bills in one-click using Euro SEPA Service
                                     </div>

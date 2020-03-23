@@ -10,12 +10,12 @@
         <div class="o_mail_discuss">
             <div class="o_mail_discuss_sidebar">
                 <div class="o_mail_discuss_loading">
-                    <i class="fa fa-spinner fa-spin"/> Please wait...
+                    <i class="fas fa-spinner fa-spin"/> Please wait...
                 </div>
             </div>
             <div class="o_mail_discuss_content">
                 <div class="o_mail_discuss_loading">
-                    <i class="fa fa-spinner fa-spin"/> Please wait...
+                    <i class="fas fa-spinner fa-spin"/> Please wait...
                 </div>
             </div>
         </div>
@@ -57,23 +57,23 @@
     <t t-name="mail.discuss.SidebarMailboxes">
         <div t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID === 'mailbox_inbox') ? 'o_active': ''}"
                 data-thread-id="mailbox_inbox">
-            <span class="o_thread_name"><i class="fa fa-inbox mr8"/>Inbox</span>
+            <span class="o_thread_name"><i class="fas fa-inbox mr8"/>Inbox</span>
             <t t-set="counter" t-value="inbox.getMailboxCounter()"/>
             <t t-call="mail.discuss.SidebarCounter"/>
         </div>
         <div t-attf-class="o_mail_discuss_title_main o_mail_mailbox_title_starred o_mail_discuss_item #{(activeThreadID === 'mailbox_starred') ? 'o_active': ''}"
                 data-thread-id="mailbox_starred">
-            <span class="o_thread_name"><i class="fa fa-star-o mr8"/>Starred</span>
+            <span class="o_thread_name"><i class="far fa-star mr8"/>Starred</span>
             <t t-set="counter" t-value="starred.getMailboxCounter()"/>
             <t t-call="mail.discuss.SidebarCounter"/>
         </div>
         <div t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID === 'mailbox_history') ? 'o_active': ''}"
             data-thread-id="mailbox_history">
-            <span class="o_thread_name"><i class="fa fa-history mr8"/>History</span>
+            <span class="o_thread_name"><i class="fas fa-history mr8"/>History</span>
         </div>
         <div t-if="isMyselfModerator" t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID == 'mailbox_moderation') ? 'o_active': ''}"
                 data-thread-id="mailbox_moderation">
-            <span class="o_thread_name"> <i class="fa fa-envelope mr8"/>Moderation Queue</span>
+            <span class="o_thread_name"> <i class="fas fa-envelope mr8"/>Moderation Queue</span>
             <t t-set="counter" t-value="moderation.getMailboxCounter()"/>
             <t t-call="mail.discuss.SidebarCounter"/>
         </div>
@@ -139,7 +139,7 @@
                     <i t-if="icon" t-attf-class="mr4 fa-fw fa #{icon}" role="img" aria-label="Channel" title="Channel"></i>
                     <b><t t-esc="title"/></b>
                 </h4>
-                <span t-if="!disableAddThread" class="fa fa-plus o_add" title="Add" t-attf-data-type="#{type}" role="img" aria-label="Add"/>
+                <span t-if="!disableAddThread" class="fas fa-plus o_add" title="Add" t-attf-data-type="#{type}" role="img" aria-label="Add"/>
             </div>
         </t>
     </t>
@@ -169,18 +169,18 @@
                         </t>
                     </span>
                     <span t-if="displayHash" class="o_mail_hash">#</span>
-                    <i t-if="channel.getType() === 'multi_user_channel' and !channel.isPublic()" class="fa fa-lock" title="Private channel" role="img" aria-label="Private channel"/>
+                    <i t-if="channel.getType() === 'multi_user_channel' and !channel.isPublic()" class="fas fa-lock" title="Private channel" role="img" aria-label="Private channel"/>
                     <t t-esc="_.unescape(channel.getName())"/>
-                    <i t-if="channel.isMassMailing()" class="fa fa-envelope-o" title="Sends messages by email" role="img" aria-label="Send by mail"/>
+                    <i t-if="channel.isMassMailing()" class="far fa-envelope" title="Sends messages by email" role="img" aria-label="Send by mail"/>
                 </span>
                 <t t-if="channel.hasTypingNotification() and channel.isSomeoneTyping()">
                     <t t-set="thread" t-value="channel"/>
                     <t t-call="mail.ThreadTypingIcon"/>
                 </t>
-                <span t-attf-class="fa fa-cog o_mail_channel_settings"
+                <span t-attf-class="fas fa-cog o_mail_channel_settings"
                       title="Channel settings" role="img" aria-label="Channel settings" t-att-data-thread-id="channel.getID()"/>
                 <t t-call="mail.discuss.SidebarCounter"/>
-                <span t-if="!channel.isGroupBasedSubscription()" t-attf-class="fa fa-times o_mail_partner_unpin #{counter ? 'd-none' : ''}"
+                <span t-if="!channel.isGroupBasedSubscription()" t-attf-class="fas fa-times o_mail_partner_unpin #{counter ? 'd-none' : ''}"
                       title="Leave this channel" role="img" aria-label="Leave this channel" t-att-data-thread-id="channel.getID()"/>
             </div>
         </t>
@@ -192,9 +192,9 @@
     -->
     <t t-name="mail.UserStatus">
         <span t-att-class="partnerID ? 'o_updatable_im_status' : ''" t-att-data-partner-id="partnerID">
-            <i t-if="status == 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online" role="img" aria-label="User is online"/>
-            <i t-if="status == 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle" role="img" aria-label="User is idle"/>
-            <i t-if="status == 'offline'" class="o_mail_user_status fa fa-circle-o" title="Offline" role="img" aria-label="User is offline"/>
+            <i t-if="status == 'online'" class="o_mail_user_status o_user_online fas fa-circle" title="Online" role="img" aria-label="User is online"/>
+            <i t-if="status == 'away'" class="o_mail_user_status o_user_idle fas fa-circle" title="Idle" role="img" aria-label="User is idle"/>
+            <i t-if="status == 'offline'" class="o_mail_user_status far fa-circle" title="Offline" role="img" aria-label="User is offline"/>
         </span>
     </t>
 
@@ -260,15 +260,15 @@
             <div class="o_mail_discuss_content"/>
             <div class="o_mail_mobile_tabs">
                 <div class="o_mail_mobile_tab" data-type="mailbox_inbox">
-                    <span class="fa fa-inbox"/>
+                    <span class="fas fa-inbox"/>
                     <span class="o_tab_title">Inbox</span>
                 </div>
                 <div class="o_mail_mobile_tab" data-type="dm_chat">
-                    <span class="fa fa-user"/>
+                    <span class="fas fa-user"/>
                     <span class="o_tab_title">Chat</span>
                 </div>
                 <div class="o_mail_mobile_tab" data-type="multi_user_channel">
-                    <span class="fa fa-users"/>
+                    <span class="fas fa-users"/>
                     <span class="o_tab_title">Channels</span>
                 </div>
             </div>
@@ -330,13 +330,13 @@
                     <span class="o_preview_counter">
                         <t t-if="preview.unreadCounter &gt; 0">&amp;nbsp;(<t t-esc="preview.unreadCounter"/>)</t>
                     </span>
-                    <span t-if="preview.isLinkedToDocumentThread" class="o_discuss_icon o_thread_window_expand fa fa-expand"/>
+                    <span t-if="preview.isLinkedToDocumentThread" class="o_discuss_icon o_thread_window_expand fas fa-expand"/>
                     <span class="o_last_message_date ml-auto mr-2"> <t t-esc="preview.date ? preview.date.fromNow() : ''"/> </span>
                 </div>
                 <div class="o_last_message_preview">
                     <t t-if="preview.body">
                         <t t-if="preview.isMyselfAuthor">
-                            <span class="fa fa-mail-reply" role="img" aria-label="Reply"/> You:
+                            <span class="fas fa-reply" role="img" aria-label="Reply"/> You:
                         </t>
                         <t t-elif="preview.author">
                             <t t-esc="preview.author"/>:
@@ -344,7 +344,7 @@
                         <t t-esc="preview.body"/>
                     </t>
                 </div>
-                <span title="Mark as Read" class="o_discuss_icon o_mail_preview_mark_as_read fa fa-check" t-if="preview.unreadCounter"/>
+                <span title="Mark as Read" class="o_discuss_icon o_mail_preview_mark_as_read fas fa-check" t-if="preview.unreadCounter"/>
             </div>
         </div>
     </t>

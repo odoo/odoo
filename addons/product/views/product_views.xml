@@ -49,7 +49,7 @@
                                     <div name="pricing">
                                       <field name="list_price" class="oe_inline" widget='monetary'
                                         options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                                      <button name="open_pricelist_rules" icon="fa-arrow-right" type="object"
+                                      <button name="open_pricelist_rules" icon="fas fa-arrow-right" type="object"
                                         groups="product.group_product_pricelist" class="oe_inline">
                                         <field name="pricelist_item_count" attrs="{'invisible': [('pricelist_item_count', '=', 0)]}"/>
                                         <span attrs="{'invisible': [('pricelist_item_count', '=', 1)]}">
@@ -446,7 +446,7 @@
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button"
                                 name="%(product_template_action_all)d"
-                                icon="fa-th-list"
+                                icon="fas fa-th-list"
                                 type="action"
                                 context="{'search_default_categ_id': active_id, 'default_categ_id': active_id, 'group_expand': True}">
                                 <div class="o_field_widget o_stat_info">

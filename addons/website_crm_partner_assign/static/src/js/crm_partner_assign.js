@@ -254,10 +254,10 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
         $(ev.currentTarget).closest('div.date').datetimepicker({
             format : time.getLangDateFormat(),
             icons: {
-                time: 'fa fa-clock-o',
-                date: 'fa fa-calendar',
-                up: 'fa fa-chevron-up',
-                down: 'fa fa-chevron-down',
+                time: 'far fa-clock',
+                date: 'fas fa-calendar-alt',
+                up: 'fas fa-chevron-up',
+                down: 'fas fa-chevron-down',
             },
         });
     },

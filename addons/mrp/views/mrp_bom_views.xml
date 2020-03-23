@@ -37,7 +37,7 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="%(action_report_mrp_bom)d" type="action"
-                                class="oe_stat_button" icon="fa-bars" string="Structure &amp; Cost"/>
+                                class="oe_stat_button" icon="fas fa-bars" string="Structure &amp; Cost"/>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
@@ -79,7 +79,7 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" context="{'default_type': 'product'}"/>
                                     <field name="product_tmpl_id" invisible="1"/>
-                                    <button name="action_see_attachments" type="object" icon="fa-files-o" aria-label="Product Attachments" title="Product Attachments" class="float-right oe_read_only"/>
+                                    <button name="action_see_attachments" type="object" icon="far fa-copy" aria-label="Product Attachments" title="Product Attachments" class="float-right oe_read_only"/>
                                     <field name="attachments_count" class="text-left oe_read_only"
                                     string=" "/>
                                     <field name="product_qty"/>

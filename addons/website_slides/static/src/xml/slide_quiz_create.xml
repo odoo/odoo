@@ -46,20 +46,20 @@
                                     <label class="my-0">
                                         <input t-if="answer and answer.is_correct" class="d-none" type="radio" name="radio" checked="true" />
                                         <input t-else="" class="d-none" type="radio" name="radio" />
-                                        <i class="o_wslides_js_quiz_icon fa fa-lg fa-check-circle-o text-muted" />
+                                        <i class="o_wslides_js_quiz_icon far fa-lg fa-check-circle text-muted" />
                                     </label>
                                 </a>
                             </div>
                         </div>
                     </div>
-                    <i t-attf-class="o_wslides_js_quiz_icon o_wslides_js_quiz_comment_answer fa fa-lg fa-info-circle p-md-2 py-2 pl-2 pr-1 #{answer &amp;&amp; answer.comment ? 'text-primary' : 'text-muted'}" title="Add comment on this answer" />
-                    <i class="o_wslides_js_quiz_icon o_wslides_js_quiz_add_answer fa fa-lg fa-plus-circle p-md-2 py-2 px-1 text-muted" title="Add an answer below this one" />
-                    <i class="o_wslides_js_quiz_icon o_wslides_js_quiz_remove_answer fa fa-lg fa-trash-o p-md-2 py-2 px-1 text-muted" title="Remove this answer" />
+                    <i t-attf-class="o_wslides_js_quiz_icon o_wslides_js_quiz_comment_answer fas fa-lg fa-info-circle p-md-2 py-2 pl-2 pr-1 #{answer &amp;&amp; answer.comment ? 'text-primary' : 'text-muted'}" title="Add comment on this answer" />
+                    <i class="o_wslides_js_quiz_icon o_wslides_js_quiz_add_answer fas fa-lg fa-plus-circle p-md-2 py-2 px-1 text-muted" title="Add an answer below this one" />
+                    <i class="o_wslides_js_quiz_icon o_wslides_js_quiz_remove_answer far fa-lg fa-trash-alt p-md-2 py-2 px-1 text-muted" title="Remove this answer" />
                 </div>
                 <div class="o_wslides_js_quiz_answer_comment row align-items-center d-none">
                     <input type="text" class="form-control col-8 offset-1 mt-1" placeholder="This is the correct answer, congratulation"
                         t-attf-value="#{answer ? answer.comment : ''}" />
-                    <i class="o_wslides_js_quiz_icon o_wslides_js_quiz_remove_answer_comment fa fa-lg fa-trash-o p-2 text-muted" title="Remove the answer comment" />
+                    <i class="o_wslides_js_quiz_icon o_wslides_js_quiz_remove_answer_comment far fa-lg fa-trash-alt p-2 text-muted" title="Remove the answer comment" />
                 </div>
             </div>
         </div>

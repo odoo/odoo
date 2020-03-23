@@ -54,7 +54,7 @@
             <button t-if="is_publisher"
                 t-attf-class="btn px-2 mb-2 btn-sm border o_wrating_js_publisher_comment_btn {{ rating.publisher_comment !== '' ? 'd-none' : '' }}"
                 t-att-data-mes_index="rating.mes_index">
-                <i class="fa fa-comment text-muted mr-1"/>Comment
+                <i class="fas fa-comment text-muted mr-1"/>Comment
             </button>
             <div class="o_wrating_publisher_comment mt-2 mb-2">
                 <t t-if="rating.publisher_comment" t-call="portal_rating.chatter_rating_publisher_comment"/>
@@ -72,14 +72,14 @@
                     </div>
                     <div t-if="is_publisher" class="dropdown d-inline-block">
                         <button class="btn py-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-ellipsis-v"/>
+                            <i class="fas fa-ellipsis-v"/>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <button class="dropdown-item o_wrating_js_publisher_comment_edit" t-att-data-mes_index="rating.mes_index">
-                                <i class="fa fa-fw fa-pencil mr-1"/>Edit
+                                <i class="fas fa-fw fa-pencil-alt mr-1"/>Edit
                             </button>
                             <button class="dropdown-item o_wrating_js_publisher_comment_delete" t-att-data-mes_index="rating.mes_index">
-                                <i class="fa fa-fw fa-trash-o mr-1"/>Delete
+                                <i class="far fa-fw fa-trash-alt mr-1"/>Delete
                             </button>
                         </div>
                     </div>

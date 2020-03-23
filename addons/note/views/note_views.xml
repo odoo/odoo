@@ -98,7 +98,7 @@
 
                 <div class="o_dropdown_kanban dropdown">
                     <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                        <span class="fa fa-ellipsis-v"/>
+                        <span class="fas fa-ellipsis-v"/>
                     </a>
                     <div class="dropdown-menu" role="menu">
                         <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
@@ -106,8 +106,8 @@
                     </div>
                 </div>
                   <span>
-                    <a name="action_close" type="object" t-if="record.open.raw_value"><i class="fa fa-check" role="img" aria-label="Opened" title="Opened"/></a>
-                    <a name="action_open" type="object" t-if="!record.open.raw_value"><i class="fa fa-undo" role="img" aria-label="Closed" title="Closed"/></a>
+                    <a name="action_close" type="object" t-if="record.open.raw_value"><i class="fas fa-check" role="img" aria-label="Opened" title="Opened"/></a>
+                    <a name="action_open" type="object" t-if="!record.open.raw_value"><i class="fas fa-undo" role="img" aria-label="Closed" title="Closed"/></a>
                   </span>
                 <!-- kanban note -->
                 <span t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">

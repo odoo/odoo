@@ -4,7 +4,7 @@
         <t t-set="count" t-value="widget.get('message_count')"/>
         <div class="o_message_counter">
             <t t-if="count">
-                <span class="fa fa-comments" />
+                <span class="fas fa-comments" />
                 <span class="o_message_count"> <t t-esc="count"/></span>
                 <t t-if="count == 1">comment</t>
                 <t t-else="">comments</t>
@@ -52,7 +52,7 @@
                                 <div class="mt8">
                                     <button t-attf-class="o_portal_chatter_composer_btn btn btn-primary" type="submit">Send</button>
                                     <button class="o_portal_chatter_attachment_btn btn btn-secondary" type="button" title="Add attachment">
-                                        <i class="fa fa-paperclip"/>
+                                        <i class="fas fa-paperclip"/>
                                     </button>
                                 </div>
                             </div>
@@ -71,7 +71,7 @@
             <div t-foreach="attachments" t-as="attachment" class="col-lg-2 col-md-3 col-sm-6">
                 <div class="o_portal_chatter_attachment mb-2 position-relative text-center" t-att-data-id="attachment.id">
                     <button t-if="showDelete and attachment.state == 'pending'" class="o_portal_chatter_attachment_delete btn btn-sm btn-outline-danger" title="Delete">
-                        <i class="fa fa-times"/>
+                        <i class="fas fa-times"/>
                     </button>
                     <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}" target="_blank">
                         <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype"/>
@@ -128,7 +128,7 @@
             <t t-if="!_.isEmpty(widget.get('pager'))">
                 <ul class="pagination" t-if="widget.get('pager')['pages'].length &gt; 1">
                     <li t-if="widget.get('pager')['page'] != widget.get('pager')['page_previous']" t-att-data-page="widget.get('pager')['page_previous']" class="page-item o_portal_chatter_pager_btn">
-                        <a href="#" class="page-link"><i class="fa fa-chevron-left" role="img" aria-label="Previous" title="Previous"/></a>
+                        <a href="#" class="page-link"><i class="fas fa-chevron-left" role="img" aria-label="Previous" title="Previous"/></a>
                     </li>
                     <t t-foreach="widget.get('pager')['pages']" t-as="page">
                         <li t-att-data-page="page" t-attf-class="page-item #{page == widget.get('pager')['page'] ? 'o_portal_chatter_pager_btn active' : 'o_portal_chatter_pager_btn'}">
@@ -136,7 +136,7 @@
                         </li>
                     </t>
                     <li t-if="widget.get('pager')['page'] != widget.get('pager')['page_next']" t-att-data-page="widget.get('pager')['page_next']" class="page-item o_portal_chatter_pager_btn">
-                        <a href="#" class="page-link"><i class="fa fa-chevron-right" role="img" aria-label="Next" title="Next"/></a>
+                        <a href="#" class="page-link"><i class="fas fa-chevron-right" role="img" aria-label="Next" title="Next"/></a>
                     </li>
                 </ul>
             </t>

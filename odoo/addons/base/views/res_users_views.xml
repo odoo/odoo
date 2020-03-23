@@ -160,13 +160,13 @@
                     <sheet>
                         <field name="id" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
-                            <button name="action_show_groups" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-users">
+                            <button name="action_show_groups" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fas fa-users">
                                 <field string="Groups" name="groups_count" widget="statinfo"/>
                             </button>
-                            <button name="action_show_accesses" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-list">
+                            <button name="action_show_accesses" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fas fa-list">
                                 <field string="Access Rights" name="accesses_count" widget="statinfo"/>
                             </button>
-                            <button name="action_show_rules" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-list-ul">
+                            <button name="action_show_rules" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fas fa-list-ul">
                                 <field string="Record Rules" name="rules_count" widget="statinfo"/>
                             </button>
                         </div>
@@ -219,7 +219,7 @@
                                             <button
                                                 type="action"
                                                 name="%(base.res_lang_act_window)d"
-                                                class="btn-sm btn-link mb4 fa fa-globe"
+                                                class="btn-sm btn-link mb4 fas fa-globe"
                                                 aria-label="More languages"
                                                 title="More languages"/>
                                         </div>
@@ -272,13 +272,13 @@
                                 </div>
                                 <div class="oe_kanban_details">
                                     <ul>
-                                        <li class="text-success float-right mb4" t-if="record.active.raw_value"><i class="fa fa-circle" role="img" aria-label="Ok" title="Ok"></i></li>
-                                        <li class="text-danger float-right mb4" t-if="!record.active.raw_value"><i class="fa fa-circle" role="img" aria-label="Invalid" title="Invalid"></i></li>
+                                        <li class="text-success float-right mb4" t-if="record.active.raw_value"><i class="fas fa-circle" role="img" aria-label="Ok" title="Ok"></i></li>
+                                        <li class="text-danger float-right mb4" t-if="!record.active.raw_value"><i class="fas fa-circle" role="img" aria-label="Invalid" title="Invalid"></i></li>
                                         <li class="mb4">
                                             <strong><field name="name"/></strong>
                                         </li>
                                         <li class="badge badge-pill float-right mb4" t-if="record.lang.raw_value"><field name="lang"/></li>
-                                        <li class="mb4" t-if="record.login.raw_value" title="Login"><i class="fa fa-envelope" role="img" aria-label="Login"/> <field name="login"/></li>
+                                        <li class="mb4" t-if="record.login.raw_value" title="Login"><i class="fas fa-envelope" role="img" aria-label="Login"/> <field name="login"/></li>
                                     </ul>
                                 </div>
                             </div>
@@ -357,7 +357,7 @@
                                 <button
                                     type="action"
                                     name="%(base.res_lang_act_window)d"
-                                    class="btn-sm btn-link mb4 fa fa-globe"
+                                    class="btn-sm btn-link mb4 fas fa-globe"
                                     aria-label="More languages"
                                     groups="base.group_system"
                                     title="More languages"

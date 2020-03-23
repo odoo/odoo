@@ -35,8 +35,8 @@
                              t-att-src="visitor.partner_id ? '/web/image/res.partner/' + visitor.partner_id + '/image_128' : '/mail/static/src/img/smiley/avatar.jpg'"
                              class="o_thread_message_avatar rounded-circle"/>
                         <span>
-                            <i t-if="visitor.is_connected" aria-label="Visitor is connected" class="o_w_visitor_status o_w_visitor_connected fa fa-circle" role="img" title="Online"></i>
-                            <i t-else="" aria-label="Visitor is offline" class="o_w_visitor_status o_w_visitor_disconnected fa fa-circle" role="img" title="Offline"></i>
+                            <i t-if="visitor.is_connected" aria-label="Visitor is connected" class="o_w_visitor_status o_w_visitor_connected fas fa-circle" role="img" title="Online"></i>
+                            <i t-else="" aria-label="Visitor is offline" class="o_w_visitor_status o_w_visitor_disconnected fas fa-circle" role="img" title="Offline"></i>
                         </span>
                     </div>
                 </div>
@@ -44,12 +44,12 @@
                     <div class="d-flex">
                         <img t-if="visitor.country_code" t-attf-src='base/static/img/country_flags/#{visitor.country_code}.png' class="o_country_flag mr-2 mb-1"/>
                         <strong class="o_thread_author" t-esc="visitor.name"/>
-                        <span><i class="fa fa-comment-o ml-4 mr-2" aria-label="Lang"/><t t-esc="visitor.lang"/></span>
-                        <span t-if="visitor.website"><i class="fa fa-globe ml-4 mr-2" aria-label="Website"/><span t-esc="visitor.website"/></span>
+                        <span><i class="far fa-comment ml-4 mr-2" aria-label="Lang"/><t t-esc="visitor.lang"/></span>
+                        <span t-if="visitor.website"><i class="fas fa-globe ml-4 mr-2" aria-label="Website"/><span t-esc="visitor.website"/></span>
                     </div>
                     <div class="o_thread_message_content">
                         <div class="d-flex">
-                            <span><i class="fa fa-history mr-2" aria-label="History"/></span>
+                            <span><i class="fas fa-history mr-2" aria-label="History"/></span>
                             <p t-esc="visitor.history"/>
                         </div>
                     </div>

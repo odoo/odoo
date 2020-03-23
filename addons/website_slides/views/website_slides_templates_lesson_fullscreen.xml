@@ -16,21 +16,21 @@
             <div class="o_wslides_slide_fs_header d-flex flex-shrink-0 text-white">
                 <div class="d-flex">
                     <a class="o_wslides_fs_toggle_sidebar d-flex align-items-center px-3" href="#" title="Lessons">
-                        <i class="fa fa-bars"/><span class="d-none d-md-inline-block ml-1">Lessons</span>
+                        <i class="fas fa-bars"/><span class="d-none d-md-inline-block ml-1">Lessons</span>
                     </a>
                     <a class="o_wslides_fs_review d-flex align-items-center px-3" t-att-href="slide.channel_id.website_url + '?active_tab=review'" title="Reviews" t-if="slide.channel_id.allow_comment">
-                        <i class="fa fa-pencil"/><span class="d-none d-md-inline-block ml-1">Write a review</span>
+                        <i class="fas fa-pencil-alt"/><span class="d-none d-md-inline-block ml-1">Write a review</span>
                     </a>
                     <a class="o_wslides_fs_share d-flex align-items-center px-3" href="#" title="Share">
-                        <i class="fa fa-share-alt"/><span class="d-none d-md-inline-block ml-1">Share</span>
+                        <i class="fas fa-share-alt"/><span class="d-none d-md-inline-block ml-1">Share</span>
                     </a>
                 </div>
                 <div class="d-flex ml-auto">
                     <a class="d-flex align-items-center px-3 o_wslides_fs_exit_fullscreen" t-attf-href="/slides/slide/#{slug(slide)}">
-                        <i class="fa fa-sign-out"/><span class="d-none d-md-inline-block ml-1">Exit Fullscreen</span>
+                        <i class="fas fa-sign-out-alt"/><span class="d-none d-md-inline-block ml-1">Exit Fullscreen</span>
                     </a>
                     <a class="d-flex align-items-center px-3" t-attf-href="/slides/#{slug(slide.channel_id)}">
-                        <i class="fa fa-home"/><span class="d-none d-md-inline-block ml-1">Back to course</span>
+                        <i class="fas fa-home"/><span class="d-none d-md-inline-block ml-1">Back to course</span>
                     </a>
                 </div>
             </div>
@@ -46,7 +46,7 @@
                             </a>
                             <div t-if="not is_public_user" class="d-flex align-items-center">
                                 <t t-if="slide.channel_id.completed">
-                                    <span class="badge badge-pill badge-success py-1 px-2" style="font-size: 1em"><i class="fa fa-check"/> Completed</span>
+                                    <span class="badge badge-pill badge-success py-1 px-2" style="font-size: 1em"><i class="fas fa-check"/> Completed</span>
                                 </t>
                                 <t t-else="">
                                     <div class="progress flex-grow-1 bg-black-50" style="height: 6px;">
@@ -101,8 +101,8 @@
                     t-att-data-is-member="is_member"
                     t-att-data-session-answers="session_answers">
                     <span class="ml-3">
-                        <i t-if="slide_completed and is_member" class="o_wslides_slide_completed fa fa-check fa-fw text-success" t-att-data-slide-id="slide.id"/>
-                        <i t-if="not slide_completed and is_member" class="fa fa-circle-thin fa-fw" t-att-data-slide-id="slide.id"/>
+                        <i t-if="slide_completed and is_member" class="o_wslides_slide_completed fas fa-check fa-fw text-success" t-att-data-slide-id="slide.id"/>
+                        <i t-if="not slide_completed and is_member" class="far fa-circle fa-fw" t-att-data-slide-id="slide.id"/>
                     </span>
                     <div class="ml-2">
                         <a t-if="can_access" class="d-block pt-1" href="#">
@@ -120,22 +120,22 @@
                         <ul class="list-unstyled w-100 pt-2 small" t-if="slide.link_ids or slide.slide_resource_ids or (slide.question_ids and not slide.slide_type =='quiz')" >
                             <li t-if="slide.link_ids" t-foreach="slide.link_ids" t-as="link" class="pl-0 mb-1">
                                 <a t-if="can_access" class="o_wslides_fs_slide_link" t-att-href="link.link" target="_blank">
-                                    <i class="fa fa-link mr-2"/><span t-esc="link.name"/>
+                                    <i class="fas fa-link mr-2"/><span t-esc="link.name"/>
                                 </a>
                                 <span t-else="" class="o_wslides_fs_slide_link text-muted">
-                                    <i class="fa fa-link mr-2"/><span t-esc="link.name"/>
+                                    <i class="fas fa-link mr-2"/><span t-esc="link.name"/>
                                 </span>
                             </li>
                             <div class="o_wslides_js_course_join pl-0" t-if="slide.slide_resource_ids">
                                 <t t-if="is_member or slide.channel_id.can_publish">
                                     <li t-foreach="slide.slide_resource_ids" t-as="resource" class="mb-1">
                                         <a class="o_wslides_fs_slide_link" t-attf-href="/web/content/slide.slide.resource/#{resource.id}/data?download=true">
-                                            <i class="fa fa-download mr-2"/><span t-esc="resource.name"/>
+                                            <i class="fas fa-download mr-2"/><span t-esc="resource.name"/>
                                         </a>
                                     </li>
                                 </t>
                                 <li t-elif="slide.channel_id.enroll == 'public'" class="o_wslides_fs_slide_link mb-1">
-                                    <i class="fa fa-download mr-1"/>
+                                    <i class="fas fa-download mr-1"/>
                                     <t t-call="website_slides.join_course_link"/>
                                 </li>
                             </div>
@@ -151,10 +151,10 @@
                                 t-att-data-is-member="is_member"
                                 t-att-data-session-answers="session_answers">
                                 <a t-if="can_access" class="o_wslides_fs_slide_quiz" href="#" t-att-index="i">
-                                    <i class="fa fa-flag-checkered text-warning mr-2"/>Quiz
+                                    <i class="fas fa-flag-checkered text-warning mr-2"/>Quiz
                                 </a>
                                 <span t-else="" class="text-muted">
-                                    <i class="fa fa-flag-checkered text-warning mr-2"/>Quiz
+                                    <i class="fas fa-flag-checkered text-warning mr-2"/>Quiz
                                 </span>
                             </li>
                         </ul>

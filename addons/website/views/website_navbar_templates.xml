@@ -24,7 +24,7 @@
                 <ul id="oe_applications">
                     <li class="dropdown active">
                         <a class="dropdown-toggle full" data-toggle="dropdown" href="#">
-                            <i class="fa fa-th-large"/> WEBSITE
+                            <i class="fas fa-th-large"/> WEBSITE
                         </a>
                         <div class="dropdown-menu" role="menu">
                             <!-- This will be populated on hover in JS -->
@@ -32,7 +32,7 @@
                     </li>
                 </ul>
 
-                <button type="button" class="fa fa-bars float-right d-block d-md-none o_mobile_menu_toggle" aria-label="Menu" title="Menu"/>
+                <button type="button" class="fas fa-bars float-right d-block d-md-none o_mobile_menu_toggle" aria-label="Menu" title="Menu"/>
 
                 <ul class="o_menu_sections" groups="website.group_website_designer">
                     <!-- Content -->
@@ -72,11 +72,11 @@
                     </t>
                     <!-- Mobile preview -->
                     <li class="o_mobile_preview" id="mobile-menu">
-                        <a data-action="show-mobile-preview" href="#" accesskey="v"><span title="Mobile preview" role="img" aria-label="Mobile preview" class="fa fa-mobile"/></a>
+                        <a data-action="show-mobile-preview" href="#" accesskey="v"><span title="Mobile preview" role="img" aria-label="Mobile preview" class="fas fa-mobile"/></a>
                     </li>
                     <li groups="website.group_multi_website" t-if="multi_website_websites" id="website_switcher">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" accesskey="w">
-                            <i class="fa fa-globe d-lg-none"/>
+                            <i class="fas fa-globe d-lg-none"/>
                             <span class="d-none d-lg-inline-block">
                                 <t t-esc="multi_website_websites_current['name']"/>
                             </span>
@@ -99,25 +99,25 @@
 
                     <!-- Page Edition -->
                     <li class="o_new_content_menu" id="new-content-menu">
-                        <a href="#" accesskey="c"><span class="fa fa-plus mr-2"/>New</a>
+                        <a href="#" accesskey="c"><span class="fas fa-plus mr-2"/>New</a>
                         <div id="o_new_content_menu_choices" class="o_hidden">
                             <div class="container pt32 pb32">
                                 <div class="row">
                                     <div groups="website.group_website_designer" class="col-md-4 mb8 o_new_content_element">
                                         <a href="#" data-action="new_page" aria-label="New page" title="New page">
-                                            <i class="fa fa-file-o"/>
+                                            <i class="far fa-file"/>
                                             <p>Page</p>
                                         </a>
                                     </div>
                                     <div groups="base.group_system" name="module_website_blog" t-att-data-module-id="env.ref('base.module_website_blog').id" t-att-data-module-shortdesc="env.ref('base.module_website_blog').shortdesc" class="col-md-4 mb8 o_new_content_element">
                                         <a href="#" data-action="new_blog_post">
-                                            <i class="fa fa-rss"/>
+                                            <i class="fas fa-rss"/>
                                             <p>Blog Post</p>
                                         </a>
                                     </div>
                                     <div groups="base.group_system" name="module_website_event" t-att-data-module-id="env.ref('base.module_website_event').id" t-att-data-module-shortdesc="env.ref('base.module_website_event').shortdesc" class="col-md-4 mb8 o_new_content_element">
                                         <a href="#" data-action="new_event">
-                                            <i class="fa fa-glass"/>
+                                            <i class="fas fa-glass-martini"/>
                                             <p>Event</p>
                                         </a>
                                     </div>
@@ -126,25 +126,25 @@
                                          t-att-data-module-shortdesc="env.ref('base.module_website_forum').shortdesc"
                                          class="col-md-4 mb8 o_new_content_element o_new_content_element_once">
                                         <a href="#" data-url="/forum" data-action="new_forum">
-                                            <i class="fa fa-comment"/>
+                                            <i class="fas fa-comment"/>
                                             <p>Forum</p>
                                         </a>
                                     </div>
                                     <div groups="base.group_system" name="module_website_hr_recruitment" t-att-data-module-id="env.ref('base.module_website_hr_recruitment').id" t-att-data-module-shortdesc="env.ref('base.module_website_hr_recruitment').shortdesc" class="col-md-4 mb8 o_new_content_element">
                                         <a href="#">
-                                            <i class="fa fa-briefcase"/>
+                                            <i class="fas fa-briefcase"/>
                                             <p>Job Offer</p>
                                         </a>
                                     </div>
                                     <div groups="base.group_system" name="module_website_sale" t-att-data-module-id="env.ref('base.module_website_sale').id" t-att-data-module-shortdesc="env.ref('base.module_website_sale').shortdesc" class="col-md-4 mb8 o_new_content_element">
                                         <a href="#" data-action="new_product">
-                                            <i class="fa fa-shopping-cart"/>
+                                            <i class="fas fa-shopping-cart"/>
                                             <p>Product</p>
                                         </a>
                                     </div>
                                     <div groups="base.group_system" name="module_website_slides" t-att-data-module-id="env.ref('base.module_website_slides').id" t-att-data-module-shortdesc="env.ref('base.module_website_slides').shortdesc" class="col-md-4 mb8 o_new_content_element">
                                         <a href="#" data-action="new_slide_channel">
-                                            <i class="fa fa-graduation-cap"></i>
+                                            <i class="fas fa-graduation-cap"></i>
                                             <p>Course</p>
                                         </a>
                                     </div>
@@ -153,7 +153,7 @@
                                          t-att-data-module-shortdesc="env.ref('base.module_website_livechat').shortdesc"
                                          class="col-md-4 mb8 o_new_content_element o_new_content_element_once">
                                         <a href="#" data-url="/livechat" data-action="new_channel">
-                                            <i class="fa fa-hashtag"/>
+                                            <i class="fas fa-hashtag"/>
                                             <p>Livechat Widget</p>
                                         </a>
                                     </div>
@@ -162,7 +162,7 @@
                         </div>
                     </li>
                     <li t-if="not translatable" id="edit-page-menu">
-                        <a data-action="edit" href="#" accesskey="a"><span class="fa fa-pencil mr-2"/>Edit</a>
+                        <a data-action="edit" href="#" accesskey="a"><span class="fas fa-pencil-alt mr-2"/>Edit</a>
                     </li>
                     <li t-if="edit_in_backend or ('website_published' in main_object.fields_get() and main_object._name != 'website.page')">
                         <a role="button" class="btn btn-primary btn-sm dropdown-toggle css_edit_dynamic" data-toggle="dropdown">

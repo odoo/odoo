@@ -31,7 +31,7 @@
                     <t t-set="multi_upload" t-value="true"/>
                     <input type="hidden" name="model" t-att-value="widget.currentResModel"/>
                     <input type="hidden" name="id" t-att-value="widget.currentResID"/>
-                    <center><span class="btn btn-link o_upload_attachments_button"><span class="fa fa-plus-square"/> Add Attachments</span></center>
+                    <center><span class="btn btn-link o_upload_attachments_button"><span class="fas fa-plus-square"/> Add Attachments</span></center>
                 </t>
             </div>
         </div>
@@ -99,7 +99,7 @@
 
         <!-- Add a button to open the full composer dialog -->
         <t t-jquery=".o_composer_button_add_attachment" t-operation="after">
-            <button tabindex="6" class="btn btn-secondary fa fa-expand o_composer_button_full_composer" type="button" title="Full composer" aria-label="Full composer"/>
+            <button tabindex="6" class="btn btn-secondary fas fa-expand o_composer_button_full_composer" type="button" title="Full composer" aria-label="Full composer"/>
         </t>
     </t>
 
@@ -119,7 +119,7 @@
             Log note
         </button>
         <button t-if="scheduleActivityButton" class="btn btn-link o_chatter_button_schedule_activity" title="Log or schedule an activity" disabled="disabled">
-            <i class="fa fa-clock-o" title="Dates"/> <t t-if="isMobile">Activity</t><t t-else="">Schedule activity</t>
+            <i class="far fa-clock" title="Dates"/> <t t-if="isMobile">Activity</t><t t-else="">Schedule activity</t>
         </button>
     </t>
 
@@ -132,7 +132,7 @@
         <t t-set="attachment_button_aria_label">Attachments</t>
         <button class="btn btn-link o_chatter_button_attachment" title="View all the attachments of the current record" t-attf-aria-label="#{attachment_button_aria_label} #{count}">
             <span>
-                <i class="fa fa-paperclip"/>
+                <i class="fas fa-paperclip"/>
                 <span class="o_chatter_attachment_button_count" t-esc="count"/>
             </span>
         </button>

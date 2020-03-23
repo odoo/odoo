@@ -54,7 +54,7 @@
                             <button name="toggle_prod_environment"
                                     attrs="{'invisible': ['|', '|', ('prod_environment', '=', False), ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"
                                     class="oe_stat_button"
-                                    type="object" icon="fa-play">
+                                    type="object" icon="fas fa-play">
                                 <div class="o_stat_info o_field_widget">
                                     <span class="text-success">Production</span>
                                     <span class="o_stat_text">Environment</span>
@@ -64,7 +64,7 @@
                             <button name="toggle_prod_environment"
                                     attrs="{'invisible': ['|', '|', ('prod_environment', '=', True), ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"
                                     class="oe_stat_button"
-                                    type="object" icon="fa-stop">
+                                    type="object" icon="fas fa-stop">
                                 <div class="o_stat_info o_field_widget">
                                     <span class="o_warning_text">Test</span>
                                     <span class="o_stat_text">Environment</span>
@@ -73,7 +73,7 @@
                             <button name="toggle_debug"
                                     attrs="{'invisible': ['|', '|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule'), ('debug_logging', '=', True)]}"
                                     class="oe_stat_button"
-                                    type="object" icon="fa-code">
+                                    type="object" icon="fas fa-code">
                                 <div class="o_stat_info o_field_widget">
                                     <span class="text-danger">No debug</span>
                                 </div>
@@ -81,7 +81,7 @@
                             <button name="toggle_debug"
                                     attrs="{'invisible': ['|', '|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule'), ('debug_logging', '=', False)]}"
                                     class="oe_stat_button"
-                                    type="object" icon="fa-code">
+                                    type="object" icon="fas fa-code">
                                 <div class="o_stat_info o_field_widget">
                                     <span class="text-success">Debug requests</span>
                                 </div>
@@ -230,7 +230,7 @@
                         <label for="carrier_tracking_ref"/>
                         <div name="tracking">
                             <field name="carrier_tracking_ref" class="oe_inline" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
-                            <button type='object' class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
+                            <button type='object' class="fas fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
                         </div>
                         <label for="weight" string="Weight"/>
                         <div>
@@ -245,7 +245,7 @@
                     </group>
                 </xpath>
                 <div name="button_box" position="inside">
-                    <button type="object" name="open_website_url" class="oe_stat_button" icon='fa-truck' string="Tracking"
+                    <button type="object" name="open_website_url" class="oe_stat_button" icon='fas fa-truck' string="Tracking"
                          attrs="{'invisible': ['|','|',('carrier_tracking_ref','=',False),('carrier_id', '=', False),('delivery_type','=','grid')]}" />
                 </div>
                 <xpath expr="/form/header/button[last()]" position="after">

@@ -12,7 +12,7 @@
                     <div>Begin your <b>certification</b> today!</div>
 
                     <a t-attf-href="#{'/slides_survey/slide/get_certification_url?slide_id=%s' %(first_slide.id) if first_slide.slide_type == 'certification' and channel.total_slides == 1 else '/slides/slide/%s?fullscreen=1' %(slug(first_slide))}" class="btn btn-success mt-2 mt-sm-0">
-                        <span>Start Now</span><i class="fa fa-chevron-right ml-2 align-middle"/>
+                        <span>Start Now</span><i class="fas fa-chevron-right ml-2 align-middle"/>
                     </a>
                 </div>
             </xpath>
@@ -20,7 +20,7 @@
 
         <template id="slide_icon_inherit_survey" inherit_id="website_slides.slide_icon">
             <xpath expr="//i[last()]" position="after">
-                <i t-if="slide.slide_type == 'certification'" t-att-class="'fa fa-trophy %s' % icon_class"></i>
+                <i t-if="slide.slide_type == 'certification'" t-att-class="'fas fa-trophy %s' % icon_class"></i>
             </xpath>
         </template>
 

@@ -29,7 +29,7 @@ QUnit.module("Views", {
                         return Promise.resolve(
                             '<div>foo' +
                                 '<div data-model="test" data-method="wheee" data-id="42" data-other="5">' +
-                                    '<a type="toggle" class="fa fa-caret-right">Unfold</a>' +
+                                    '<a type="toggle" class="fas fa-caret-right">Unfold</a>' +
                                 '</div>' +
                             '</div>'
                         );

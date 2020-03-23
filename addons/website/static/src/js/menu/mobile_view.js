@@ -54,7 +54,7 @@ var MobileMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             return this.mobilePreview.close();
         }
         this.mobilePreview = new MobilePreviewDialog(this, {
-            title: _t('Mobile preview') + ' <span class="fa fa-refresh"/>',
+            title: _t('Mobile preview') + ' <span class="fas fa-sync"/>',
         }).open();
     },
 });

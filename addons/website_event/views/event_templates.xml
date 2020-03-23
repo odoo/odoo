@@ -80,7 +80,7 @@
     <xpath expr="//ul[hasclass('o_wevent_index_topbar_filters')]" position="inside">
         <li class="nav-item dropdown mr-2 my-1">
             <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
-                <i class="fa fa-calendar"/>
+                <i class="fas fa-calendar-alt"/>
                 <t t-if="current_date" t-esc="current_date"/>
                 <t t-else="">Upcoming Events</t>
             </a>
@@ -103,7 +103,7 @@
         <t t-foreach="categories" t-as="category">
             <li t-if="category.tag_ids" class="nav-item dropdown mr-2 my-1">
                 <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
-                    <i class="fa fa-folder-open"/>
+                    <i class="fas fa-folder-open"/>
                     <t t-esc="category.name"/>
                 </a>
                 <div class="dropdown-menu">
@@ -124,7 +124,7 @@
     <xpath expr="//ul[hasclass('o_wevent_index_topbar_filters')]" position="inside">
         <li class="nav-item dropdown mr-2 my-1">
             <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
-                <i class="fa fa-map-marker"/>
+                <i class="fas fa-map-marker-alt"/>
                 <t t-if="current_country" t-esc="current_country.name"/>
                 <t t-else="">All countries</t>
             </a>
@@ -198,11 +198,11 @@
                                 </div>
                                 <!-- Participating -->
                                 <small t-if="event.is_participating" class="o_wevent_participating bg-success">
-                                    <i class="fa fa-check mr-2"/>Registered
+                                    <i class="fas fa-check mr-2"/>Registered
                                 </small>
                                 <!-- Unpublished -->
                                 <small t-if="not event.website_published" class="o_wevent_unpublished bg-danger">
-                                    <i class="fa fa-ban mr-2"/>Unpublished
+                                    <i class="fas fa-ban mr-2"/>Unpublished
                                 </small>
                             </t>
                         </div>
@@ -288,12 +288,12 @@
         <div class="o_wevent_sidebar_block">
             <h6 class="o_wevent_sidebar_title">Follow Us</h6>
             <div class="o_wevent_sidebar_social mx-n1">
-                <a t-if="website.social_facebook" t-att-href="website.social_facebook" class="o_wevent_social_link"><i class="fa fa-facebook text-facebook" aria-label="Facebook" title="Facebook"/></a>
-                <a t-if="website.social_twitter" t-att-href="website.social_twitter" class="o_wevent_social_link"><i class="fa fa-twitter text-twitter" aria-label="Twitter" title="Twitter"/></a>
-                <a t-if="website.social_linkedin" t-att-href="website.social_linkedin" class="o_wevent_social_link"><i class="fa fa-linkedin text-linkedin" aria-label="LinkedIn" title="LinkedIn"/></a>
-                <a t-if="website.social_youtube" t-att-href="website.social_youtube" class="o_wevent_social_link"><i class="fa fa-youtube-play text-youtube" aria-label="Youtube" title="Youtube"/></a>
-                <a t-if="website.social_github" t-att-href="website.social_github" class="o_wevent_social_link"><i class="fa fa-github text-github" aria-label="Github" title="Github"/></a>
-                <a t-if="website.social_instagram" t-att-href="website.social_instagram" class="o_wevent_social_link"><i class="fa fa-instagram text-instagram" aria-label="Instagram" title="Instagram"/></a>
+                <a t-if="website.social_facebook" t-att-href="website.social_facebook" class="o_wevent_social_link"><i class="fab fa-facebook-f text-facebook" aria-label="Facebook" title="Facebook"/></a>
+                <a t-if="website.social_twitter" t-att-href="website.social_twitter" class="o_wevent_social_link"><i class="fab fa-twitter text-twitter" aria-label="Twitter" title="Twitter"/></a>
+                <a t-if="website.social_linkedin" t-att-href="website.social_linkedin" class="o_wevent_social_link"><i class="fab fa-linkedin-in text-linkedin" aria-label="LinkedIn" title="LinkedIn"/></a>
+                <a t-if="website.social_youtube" t-att-href="website.social_youtube" class="o_wevent_social_link"><i class="fab fa-youtube text-youtube" aria-label="Youtube" title="Youtube"/></a>
+                <a t-if="website.social_github" t-att-href="website.social_github" class="o_wevent_social_link"><i class="fab fa-github text-github" aria-label="Github" title="Github"/></a>
+                <a t-if="website.social_instagram" t-att-href="website.social_instagram" class="o_wevent_social_link"><i class="fab fa-instagram text-instagram" aria-label="Instagram" title="Instagram"/></a>
             </div>
         </div>
         <div id="oe_structure_website_event_follow_us_1" class="oe_structure"/>
@@ -350,17 +350,17 @@
                 <nav class="navbar navbar-light border-top shadow-sm d-print-none">
                     <div class="container">
                         <a href="/event" class="navbar-brand h4 my-0 mr-4">
-                            <i class="fa fa-long-arrow-left text-primary mr-2"/>All Events
+                            <i class="fas fa-long-arrow-alt-left text-primary mr-2"/>All Events
                         </a>
                         <ul class="navbar-nav flex-row">
                             <li class="nav-item mr-3">
                                 <a t-attf-href="/event?type=#{event.event_type_id.id}" t-if="event.event_type_id" class="nav-link">
-                                    <i class="fa fa-folder-open text-primary mr-2"/><t t-esc="event.event_type_id.name"/>
+                                    <i class="fas fa-folder-open text-primary mr-2"/><t t-esc="event.event_type_id.name"/>
                                 </a>
                             </li>
                             <li class="nav-item mr-3">
                                 <a t-if="event.country_id" t-attf-href="/event?country=#{event.country_id.id}" class="nav-link">
-                                    <i class="fa fa-map-marker text-primary mr-2"/><t t-esc="event.country_id.name"/>
+                                    <i class="fas fa-map-marker-alt text-primary mr-2"/><t t-esc="event.country_id.name"/>
                                 </a>
                             </li>
                         </ul>
@@ -408,7 +408,7 @@
 
                 <div class="container d-flex flex-column flex-grow-1 justify-content-around">
                     <div class="o_wevent_event_title">
-                        <span t-if="event.is_participating" class="badge badge-success o_wevent_badge"><i class="fa fa-check mr-2"/>Registered</span>
+                        <span t-if="event.is_participating" class="badge badge-success o_wevent_badge"><i class="fas fa-check mr-2"/>Registered</span>
                         <h1 t-field="event.name" class="o_wevent_event_name" itemprop="name" placeholder="Event Title"/>
                         <h2 t-field="event.subtitle" class="o_wevent_event_subtitle" placeholder="Event Subtitle"/>
                     </div>
@@ -443,11 +443,11 @@
                             <t t-if="not event.is_one_day">Start -</t>
                             <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'time_only': 'true', 'format': 'short'}"/>
                             <t t-if="event.is_one_day">
-                                <i class="fa fa-long-arrow-right mx-1"/>
+                                <i class="fas fa-long-arrow-alt-right mx-1"/>
                                 <span t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'time_only': 'true', 'format': 'short'}"/>
                             </t>
                             <t t-else="">
-                                <i class="fa fa-long-arrow-down d-block text-muted mx-3 my-2" style="font-size: 1.5rem"/>
+                                <i class="fas fa-long-arrow-alt-down d-block text-muted mx-3 my-2" style="font-size: 1.5rem"/>
                                 <div class="d-flex">
                                     <h5 t-field="event.with_context(tz=event.date_tz).date_end" class="my-1 mr-1" t-options="{'date_only': 'true', 'format': 'EEEE'}"/>
                                     <h5 class="my-1" t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'date_only': 'true', 'format': 'long'}"/>
@@ -459,7 +459,7 @@
                             <small t-esc="event.date_tz" class="d-block my-3 text-muted"/>
 
                             <div class="dropdown">
-                                <i class="fa fa-calendar mr-1"/>
+                                <i class="fas fa-calendar-alt mr-1"/>
                                 <a href="#" role="button" data-toggle="dropdown">Add to Calendar</a>
                                 <div class="dropdown-menu">
                                     <a t-att-href="iCal_url" class="dropdown-item">iCal/Outlook</a>
@@ -483,7 +483,7 @@
                                 "widget": "contact",
                                 "fields": ["phone", "mobile", "email"]
                             }'/>
-                            <i class="fa fa-map-marker fa-fw" role="img"/>
+                            <i class="fas fa-map-marker fa-fw" role="img"/>
                             <a t-att-href="event.google_map_link()" target="_blank">Get the direction</a>
                         </div>
                         <!-- Organizer -->
@@ -562,11 +562,11 @@
                 <div class="d-flex justify-content-between align-items-center py-2 pl-3 pr-2 border-bottom">
                     <div id="price-range" class="pr-3 d-none"/>
                     <span t-if="not event.event_registrations_open" class="text-danger">
-                        <i class="fa fa-ban mr-2"/>Sold Out
+                        <i class="fas fa-ban mr-2"/>Sold Out
                     </span>
                     <div t-if="event.is_participating" id="registered" class="ml-auto pr-3 d-none">
                         <span  class="text-success ml-3">
-                            <i class="fa fa-check mr-2"/>Registered
+                            <i class="fas fa-check mr-2"/>Registered
                         </span>
                     </div>
                     <a href="#" role="button" class="btn o_wevent_registration_btn text-left pl-0" data-target="#o_wevent_tickets_collapse">
@@ -636,7 +636,7 @@
                             </t>
                             <t t-else="">
                                 <span itemprop="availability" content="http://schema.org/SoldOut" class="text-danger">
-                                    <i class="fa fa-ban mr-2"/>Sold Out
+                                    <i class="fas fa-ban mr-2"/>Sold Out
                                 </span>
                             </t>
                         </div>
@@ -719,7 +719,7 @@
                             <t t-foreach="attendees" t-as="attendee">
                                 <tr>
                                     <td><t t-if="attendee.name" t-esc="attendee.name"/><t t-else="">N/A</t></td>
-                                    <td><i class="fa fa-ticket"></i> <t t-if='attendee.event_ticket_id'><t t-esc="attendee.event_ticket_id.name"/></t><t t-if='not attendee.event_ticket_id'>N/A</t></td>
+                                    <td><i class="fas fa-ticket-alt"></i> <t t-if='attendee.event_ticket_id'><t t-esc="attendee.event_ticket_id.name"/></t><t t-if='not attendee.event_ticket_id'>N/A</t></td>
                                     <td><t t-if="attendee.email" t-esc="attendee.email"/><t t-else="">N/A</t></td>
                                     <td><t t-if="attendee.phone" t-esc="attendee.phone"/><t t-else="">N/A</t></td>
                                     <td><t t-esc="attendee.id"/></td>
@@ -733,10 +733,10 @@
                     <p><b>Start</b> <span itemprop="startDate" t-esc="event.date_begin_located"/><br/> <b>End</b> <span itemprop="endDate" t-esc="event.date_end_located"/></p>
                     <div id="add_to_calendar" class="mt-4">
                         <a role="button" class="btn btn-primary" t-att-href="iCal_url">
-                            <i class="fa fa-fw fa-calendar"/> Add to iCal/Outlook
+                            <i class="fas fa-fw fa-calendar-alt"/> Add to iCal/Outlook
                         </a>
                         <a role="button" class="btn btn-primary" t-att-href="google_url" target='_blank'>
-                            <i class="fa fa-fw fa-calendar"/> Add to Google Calendar
+                            <i class="fas fa-fw fa-calendar-alt"/> Add to Google Calendar
                         </a>
                     </div>
                 </div>

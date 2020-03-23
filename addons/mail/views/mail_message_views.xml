@@ -152,7 +152,7 @@
                                     <div class="offset-10">
                                         <div class="o_dropdown_kanban dropdown" groups="base.group_user">
                                             <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                                <span class="fa fa-ellipsis-v"/>
+                                                <span class="fas fa-ellipsis-v"/>
                                             </a>
                                             <div class="dropdown-menu" role="menu">
                                                 <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
@@ -163,7 +163,7 @@
                                 <div class="o_kanban_image">
                                     <div class="o_kanban_image_wrapper">
                                         <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
-                                        <div t-if="record.type.raw_value == 'url'" class="o_url_image fa fa-link fa-3x text-muted" aria-label="Image is a link"/>
+                                        <div t-if="record.type.raw_value == 'url'" class="o_url_image fas fa-link fa-3x text-muted" aria-label="Image is a link"/>
                                         <img t-elif="webimage" t-attf-src="/web/image/#{record.id.raw_value}" width="100" height="100" alt="Document" class="o_attachment_image"/>
                                         <div t-else="!webimage" class="o_image o_image_thumbnail" t-att-data-mimetype="record.mimetype.value"/>
                                     </div>
@@ -175,7 +175,7 @@
                                         </div>
                                         <div class="o_kanban_record_body">
                                             <t t-if="record.type.raw_value == 'url'">
-                                                <span class="o_document_url"><i class="fa fa-globe" aria-label="Document url"/> <field name="url" widget="url"/></span>
+                                                <span class="o_document_url"><i class="fas fa-globe" aria-label="Document url"/> <field name="url" widget="url"/></span>
                                             </t>
                                             <samp t-else="" class="text-muted"> </samp>
                                         </div>

@@ -39,16 +39,16 @@
                         <div class="card-body">
                             <h4 class="card-title">
                                 Your order
-                                <button t-if="widget.raw_state != 'confirmed'" class="btn btn-sm btn-icon btn-link fa fa-trash o_lunch_widget_unlink"/>
+                                <button t-if="widget.raw_state != 'confirmed'" class="btn btn-sm btn-icon btn-link fas fa-trash-alt o_lunch_widget_unlink"/>
                                 <span t-if="widget.raw_state != 'new'" t-esc="widget.state" t-attf-class="badge badge-pill {{ state_class }}"/>
                             </h4>
                             <ul class="list-unstyled o_lunch_widget_lines">
                                 <li t-foreach="widget.lines" t-as="line">
                                     <div class="d-flex align-items-center">
                                         <div class="flex-grow-0 flex-shrink-0 o_lunch_product_quantity">
-                                            <button class="btn btn-sm btn-icon btn-link fa fa-minus-circle o_remove_product" t-if="widget.raw_state != 'confirmed'" t-attf-data-id="{{ line.id }}"/>
+                                            <button class="btn btn-sm btn-icon btn-link fas fa-minus-circle o_remove_product" t-if="widget.raw_state != 'confirmed'" t-attf-data-id="{{ line.id }}"/>
                                             <span t-esc="line.quantity"/>
-                                            <button class="btn btn-sm btn-icon btn-link fa fa-plus-circle o_add_product" t-if="widget.raw_state != 'confirmed'" t-attf-data-id="{{ line.id }}"/>
+                                            <button class="btn btn-sm btn-icon btn-link fas fa-plus-circle o_add_product" t-if="widget.raw_state != 'confirmed'" t-attf-data-id="{{ line.id }}"/>
                                         </div>
                                         <div class="flex-grow-1 pl-2">
                                             <button t-esc="line.product[1]" class="btn btn-link o_lunch_open_wizard" t-attf-data-product-id="{{ line.product[0] }}" t-attf-data-id="{{ line.id }}"/>
@@ -119,7 +119,7 @@
     <t t-name="LunchKanbanWidgetMobile">
         <details class="fixed-bottom" t-attf-open="#{widget.keepOpen}">
             <summary class="o_lunch_toggle_cart btn btn-primary w-100">
-                <i class="fa fa-fw fa-shopping-cart"/>
+                <i class="fas fa-fw fa-shopping-cart"/>
                 Your cart
                 (<t t-call="currency_field">
                     <t t-set="value" t-value="widget.total"/>

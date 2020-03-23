@@ -830,7 +830,7 @@ var ViewEditor = Widget.extend({
 
             if ($elem.data('dirty') || $elem.data('customized')) {
                 $div.prepend($('<span/>', {
-                    class: 'mr8 fa fa-floppy-o ' + ($elem.data('dirty') ? 'text-warning' : 'text-success'),
+                    class: 'mr8 far fa-save ' + ($elem.data('dirty') ? 'text-warning' : 'text-success'),
                 }));
             }
 

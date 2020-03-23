@@ -133,7 +133,7 @@ list of filtered posts (by date or tag).
 
                                 <div t-if="not blog" class="d-flex">
                                     <div class="small mt-2 mb-3 mr-1">
-                                        in <i class="fa fa-folder-open text-muted"/> <a t-attf-href="#{blog_url(blog=first_post.blog_id)}" t-field="first_post.blog_id"/>
+                                        in <i class="fas fa-folder-open text-muted"/> <a t-attf-href="#{blog_url(blog=first_post.blog_id)}" t-field="first_post.blog_id"/>
                                     </div>
                                 </div>
                                 <div t-field="first_post.teaser" class="mb-4 lead"  placeholder=""/>
@@ -173,7 +173,7 @@ list of filtered posts (by date or tag).
 
                     <div>
                         <span t-if="not blog and blog_post" class="text-white small mt-2 mb-3">
-                            in <i class="fa fa-folder-open text-white-75"/><a t-attf-href="#{blog_url(blog=blog_post.blog_id)}" class="text-white" t-field="blog_post.blog_id"/>
+                            in <i class="fas fa-folder-open text-white-75"/><a t-attf-href="#{blog_url(blog=blog_post.blog_id)}" class="text-white" t-field="blog_post.blog_id"/>
                         </span>
                         <span t-else="">&amp;nbsp;</span>
                     </div>
@@ -245,7 +245,7 @@ list of filtered posts (by date or tag).
                         <a t-if="{'o_full_screen_height', 'o_half_screen_height', 'cover_full', 'cover_mid'}.intersection(resize_classes)"
                             id="o_wblog_post_content_jump" href="#o_wblog_post_main"
                             class="css_editable_mode_hidden justify-content-center align-items-center rounded-circle mx-auto text-decoration-none">
-                            <i class="fa fa-angle-down fa-3x text-white" aria-label="To blog content" title="To blog content"/>
+                            <i class="fas fa-angle-down fa-3x text-white" aria-label="To blog content" title="To blog content"/>
                         </a>
                     </div>
                 </t>
@@ -330,7 +330,7 @@ list of filtered posts (by date or tag).
                         <div t-field="blog_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
                     </div>
                     <div class="text-muted mb-2">
-                        <i class="fa fa-clock-o fa-fw"/>
+                        <i class="far fa-clock fa-fw"/>
                         <span t-field="blog_post.post_date" class="text-muted" t-options='{"format": "d MMMM, yyyy"}'/>
                         <span>by
                             <t t-call="website_blog.post_author">
@@ -339,7 +339,7 @@ list of filtered posts (by date or tag).
                             </t>
                         </span>
                         <span t-if="len(blog_post.message_ids) > 0" class="text-nowrap pl-2 o_not_editable">|
-                            <i class="fa fa-comment text-muted mr-1"/>
+                            <i class="fas fa-comment text-muted mr-1"/>
                             <a href="#discussion">
                                 <t t-esc="len(blog_post.message_ids)"/>
                                 <t t-if="len(blog_post.message_ids)>1">Comments</t>
@@ -452,7 +452,7 @@ list of filtered posts (by date or tag).
 
                             <div t-attf-class="o_wblog_toggle #{next_cover_is_full and 'mb-n5'}">
                                 <span class="h4 d-inline-block py-1 px-2 rounded-sm text-white">
-                                    <i class="fa fa-angle-right fa-3x text-white" aria-label="Read next" title="Read Next"/>
+                                    <i class="fas fa-angle-right fa-3x text-white" aria-label="Read next" title="Read Next"/>
                                 </span>
                             </div>
 

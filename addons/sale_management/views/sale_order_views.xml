@@ -39,7 +39,7 @@
                                                 </strong>
                                             </div>
                                             <div class="col-2">
-                                                <button name="button_add_to_order" class="btn btn-link oe_link fa fa-shopping-cart" title="Add to order lines" type="object" attrs="{'invisible': [('is_present', '=', True)]}"/>
+                                                <button name="button_add_to_order" class="btn btn-link oe_link fas fa-shopping-cart" title="Add to order lines" type="object" attrs="{'invisible': [('is_present', '=', True)]}"/>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -76,7 +76,7 @@
                             <field name="price_unit"/>
                             <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show"/>
                             <field name="is_present" invisible="1" />
-                            <button name="button_add_to_order" class="oe_link" icon="fa-shopping-cart" title="Add to order lines" type="object" attrs="{'invisible': [('is_present', '=', True)]}"/>
+                            <button name="button_add_to_order" class="oe_link" icon="fas fa-shopping-cart" title="Add to order lines" type="object" attrs="{'invisible': [('is_present', '=', True)]}"/>
                         </tree>
                     </field>
                 </page>

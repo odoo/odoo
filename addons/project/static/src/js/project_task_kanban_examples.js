@@ -8,8 +8,8 @@ var _lt = core._lt;
 
 var greenBullet = '<span class="o_status o_status_green"></span>';
 var redBullet = '<span class="o_status o_status_red"></span>';
-var star = '<a style="color: gold;" class="fa fa-star"/>';
-var clock = '<a class="fa fa-clock-o" />'
+var star = '<a style="color: gold;" class="fas fa-star"/>';
+var clock = '<a class="far fa-clock" />'
 
 var description_activities = escFormat(_lt('%s Use the %s icon to organize your daily activities.'), '<br/>', clock);
 var description = escFormat(_lt('Prioritize Tasks by using the %s icon.'+

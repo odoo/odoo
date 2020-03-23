@@ -72,22 +72,22 @@
                             </div>
                             <div class="row">
                                 <div class="col-6">
-                                    <i class="fa fa-money" role="img" aria-label="Money" title="Money"/> <field name="price"/>
+                                    <i class="far fa-money-bill-alt" role="img" aria-label="Money" title="Money"/> <field name="price"/>
                                 </div>
                                 <div class="col-6 text-right">
-                                    <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <field name="date"/>
+                                    <i class="far fa-clock" role="img" aria-label="Date" title="Date"/> <field name="date"/>
                                 </div>
                             </div>
                             <div class="row mt4">
                                 <div class="col-6">
                                     <a class="btn btn-sm btn-success" role="button" name="action_order" string="Order" type="object" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}" groups="lunch.group_lunch_manager">
-                                        <i class="fa fa-phone" role="img" aria-label="Order button" title="Order button"/>
+                                        <i class="fas fa-phone" role="img" aria-label="Order button" title="Order button"/>
                                     </a>
                                     <a class="btn btn-sm btn-info" role="button" name="action_confirm" string="Receive" type="object" attrs="{'invisible': [('state','!=','ordered')]}" groups="lunch.group_lunch_manager">
-                                        <i class="fa fa-check" role="img" aria-label="Receive button" title="Receive button"/>
+                                        <i class="fas fa-check" role="img" aria-label="Receive button" title="Receive button"/>
                                     </a>
                                     <a class="btn btn-sm btn-danger" role="button" name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('state','=','cancelled')]}" groups="lunch.group_lunch_manager">
-                                        <i class="fa fa-times" role="img" aria-label="Cancel button" title="Cancel button"/>
+                                        <i class="fas fa-times" role="img" aria-label="Cancel button" title="Cancel button"/>
                                     </a>
                                 </div>
                                 <div class="col-6">
@@ -149,9 +149,9 @@
           </p><p>
             Here you can see today's orders grouped by vendors.
           </p><p>
-            Click on the <span class="fa fa-phone text-success" role="img" aria-label="Order button" title="Order button"/> to announce that the order is ordered.<br/>
-            Click on the <span class="fa fa-check text-success" role="img" aria-label="Receive button" title="Receive button"/> to announce that the order is received.<br/>
-            Click on the <span class="fa fa-times-circle text-danger" role="img" aria-label="Cancel button" title="Cancel button"/> to announce that the order isn't available.
+            Click on the <span class="fas fa-phone text-success" role="img" aria-label="Order button" title="Order button"/> to announce that the order is ordered.<br/>
+            Click on the <span class="fas fa-check text-success" role="img" aria-label="Receive button" title="Receive button"/> to announce that the order is received.<br/>
+            Click on the <span class="fas fa-times-circle text-danger" role="img" aria-label="Cancel button" title="Cancel button"/> to announce that the order isn't available.
           </p>
         </field>
     </record>
@@ -168,9 +168,9 @@
           </p><p>
             Summary of all lunch orders, grouped by vendor and by date.
           </p><p>
-            Click on the <span class="fa fa-phone text-success" role="img" aria-label="Order button" title="Order button"/> to announce that the order is ordered.<br/>
-            Click on the <span class="fa fa-check text-success" role="img" aria-label="Receive button" title="Receive button"/> to announce that the order is received.<br/>
-            Click on the <span class="fa fa-times-circle text-danger" role="img" aria-label="Cancel button" title="Cancel button"/> red X to announce that the order isn't available.
+            Click on the <span class="fas fa-phone text-success" role="img" aria-label="Order button" title="Order button"/> to announce that the order is ordered.<br/>
+            Click on the <span class="fas fa-check text-success" role="img" aria-label="Receive button" title="Receive button"/> to announce that the order is received.<br/>
+            Click on the <span class="fas fa-times-circle text-danger" role="img" aria-label="Cancel button" title="Cancel button"/> red X to announce that the order isn't available.
           </p>
         </field>
     </record>

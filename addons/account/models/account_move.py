@@ -3775,7 +3775,7 @@ class AccountMoveLine(models.Model):
             }
 
     def _get_tracking_field_string(self, fields):
-        ARROW_RIGHT = '<span aria-label="Changed" class="fa fa-long-arrow-alt-right" role="img" title="Changed"></span>'
+        ARROW_RIGHT = '<span aria-label="Changed" class="fas fa-long-arrow-alt-right" role="img" title="Changed"></span>'
         msg = '<ul>'
         for field in fields:
             redirect_link = '<a href=# data-oe-model=account.move.line data-oe-id=%d>#%d</a>' % (field['line_id'], field['line_id']) # Account move line link

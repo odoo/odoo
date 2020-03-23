@@ -30,11 +30,11 @@
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_order"
                             class="oe_stat_button"
-                            icon="fa-shopping-basket"
+                            icon="fas fa-shopping-basket"
                             type="object">
                             <field name="order_count" widget="statinfo" string="Orders"/>
                         </button>
-                        <button class="oe_stat_button" name="action_stock_picking" type="object" icon="fa-truck" attrs="{'invisible':[('picking_count', '=', 0)]}">
+                        <button class="oe_stat_button" name="action_stock_picking" type="object" icon="fas fa-truck" attrs="{'invisible':[('picking_count', '=', 0)]}">
                             <field name="picking_count" widget="statinfo" string="Pickings" attrs="{'invisible': [('failed_pickings', '!=', False)]}"/>
                             <field name="picking_count" widget="statinfo" string="Pickings" class="text-danger" attrs="{'invisible': [('failed_pickings', '=', False)]}"/>
                         </button>
@@ -42,7 +42,7 @@
                             name="action_show_payments_list"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-dollar"
+                            icon="fas fa-dollar-sign"
                             >
                             <field name="total_payments_amount" widget="statinfo" string="Payments"/>
                         </button>
@@ -50,7 +50,7 @@
                             name="show_journal_items"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-bars"
+                            icon="fas fa-bars"
                             string="Journal Items"
                             attrs="{'invisible':[('move_id', '=', False)]}"
                             groups="account.group_account_readonly"
@@ -225,7 +225,7 @@
         <field name="summary">note</field>
         <field name="category">default</field>
         <field name="res_model_id" ref="model_pos_session"/>
-        <field name="icon">fa-tasks</field>
+        <field name="icon">fas fa-tasks</field>
         <field name="delay_count">0</field>
     </record>
 

@@ -76,7 +76,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//form" position="inside">
                     <footer>
-                        <button name="create_and_redirect_to_theme" type="object" string="Choose a theme" class="btn btn-primary" icon="fa-paint-brush"/>
+                        <button name="create_and_redirect_to_theme" type="object" string="Choose a theme" class="btn btn-primary" icon="fas fa-paint-brush"/>
                         <button string="Cancel" class="btn btn-secondary" special="cancel"/>
                     </footer>
                 </xpath>
@@ -361,7 +361,7 @@
                                     <button role="button" type="edit" t-if="record.url.value" class="btn btn-secondary">Live Preview</button>
                                 </div>
                                 <i states="installed" t-if="record.is_installed_on_current_website.raw_value"
-                                    class="fa fa-check position-absolute p-1 m-2 rounded-circle bg-primary shadow"
+                                    class="fas fa-check position-absolute p-1 m-2 rounded-circle bg-primary shadow"
                                     style="top: 0; right: 0;"
                                     role="img" aria-label="Installed" title="Installed"/>
                             </div>

@@ -18,11 +18,11 @@
                     <div class="oe_button_box" name="button_box">
                         <button string="Putaway Rules"
                                 class="oe_stat_button"
-                                icon="fa-random" name="%(location_open_putaway)d" type="action"
+                                icon="fas fa-random" name="%(location_open_putaway)d" type="action"
                                 groups="stock.group_stock_multi_locations" context="{'default_company_id': company_id}"/>
                         <button string="Current Stock"
                                 class="oe_stat_button"
-                                icon="fa-cubes" name="%(location_open_quants)d" type="action"/>
+                                icon="fas fa-cubes" name="%(location_open_quants)d" type="action"/>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <label for="name" class="oe_edit_only"/>

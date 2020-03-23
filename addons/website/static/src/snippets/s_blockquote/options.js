@@ -22,7 +22,7 @@ options.registry.Blockquote = options.Class.extend({
         $content.find('.quote_char').remove();
         if (widgetValue === 'cover') {
             this.$target.find('.s_blockquote_content > p').before(
-                $('<fa/>').addClass('quote_char fa fa-quote-left font-italic')
+                $('<fa/>').addClass('quote_char fas fa-quote-left font-italic')
             );
         }
 

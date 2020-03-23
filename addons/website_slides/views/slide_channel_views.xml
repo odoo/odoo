@@ -14,7 +14,7 @@
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_slides"
                                 type="object"
-                                icon="fa-files-o"
+                                icon="far fa-copy"
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer">
                                 <div class="o_field_widget o_stat_info">
@@ -24,7 +24,7 @@
                             </button>
                             <button name="action_redirect_to_done_members"
                                 type="object"
-                                icon="fa-trophy"
+                                icon="fas fa-trophy"
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer">
                                 <div class="o_field_widget o_stat_info">
@@ -34,14 +34,14 @@
                             </button>
                             <button name="action_redirect_to_members"
                                 type="object"
-                                icon="fa-users"
+                                icon="fas fa-users"
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer">
                                 <field name="members_count" string="Attendees" widget="statinfo"/>
                             </button>
                              <button name="action_view_ratings"
                                 type="object"
-                                icon="fa-star"
+                                icon="fas fa-star"
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer"
                                 attrs="{'invisible': [('allow_comment', '=', False)]}">
@@ -221,7 +221,7 @@
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown">
                                     <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                        <span class="fa fa-ellipsis-v" aria-hidden="false"/>
+                                        <span class="fas fa-ellipsis-v" aria-hidden="false"/>
                                     </a>
                                     <div class="dropdown-menu" role="menu">
                                         <ul class="oe_kanban_colorpicker" data-field="color"/>

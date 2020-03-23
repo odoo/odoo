@@ -35,7 +35,7 @@
                                        type="action"
                                        t-att="stat_button['action']"
                                     >
-                                        <div t-attf-class="fa fa-fw o_button_icon #{stat_button['icon']}" role="img" aria-label="Statistics" title="Statistics"></div>
+                                        <div t-attf-class="fas fa-fw o_button_icon #{stat_button['icon']}" role="img" aria-label="Statistics" title="Statistics"></div>
                                         <div class="o_field_widget o_stat_info o_readonly_modifier" t-att-title="stat_button['name']">
                                             <span class="o_stat_value" t-if="stat_button.get('count')">
                                                 <t t-esc="stat_button['count']"/>
@@ -325,7 +325,7 @@
                                                     <t t-foreach="row" t-as="row_value">
                                                         <td t-att-class="'o_right_bordered' if row_value_index in [5,10] else '' + ' text-center' if row_value_index != 0 else ''">
                                                             <t t-if="row_value_index == 0">
-                                                                <span t-if="foldable" t-att-class="'fa fa-caret-right' + (' project_overview_foldable' if foldable else '')" style="cursor: pointer;"
+                                                                <span t-if="foldable" t-att-class="'fas fa-caret-right' + (' project_overview_foldable' if foldable else '')" style="cursor: pointer;"
                                                                       t-att-data-model="row[0].get('res_model')" t-att-data-res-id="row[0].get('res_id')"/>
                                                                 <t t-if="row_type == 'sale_order'">
                                                                     <a type="action" t-att-data-model="row_value['res_model']" t-att-data-res-id="row_value['res_id']" t-att-class="'o_timesheet_plan_redirect' if row_value['res_id'] else ''">

@@ -16,7 +16,7 @@
 <template name="Buy Course To Download Resource" id="slide_aside_training_category_buy_course" inherit_id="website_slides.slide_aside_training_category">
     <xpath expr="//div[hasclass('o_wslides_js_course_join')]" position="inside">
         <li t-elif="aside_slide.channel_id.enroll == 'payment'" class="text-decoration-none small">
-            <i class="fa fa-download mr-1"/>
+            <i class="fas fa-download mr-1"/>
             <t t-call="website_sale_slides.course_buy_course_link">
                 <t t-set="slide" t-value="aside_slide"/>
             </t>
@@ -47,7 +47,7 @@
 <template name="Buy Course To Download Resource Fullscreen" id="slide_fullscreen_sidebar_category_buy_course" inherit_id="website_slides.slide_fullscreen_sidebar_category">
     <xpath expr="//div[hasclass('o_wslides_js_course_join')]" position="inside">
         <li t-elif="slide.channel_id.enroll == 'payment'" class="o_wslides_fs_slide_link mb-1">
-            <i class="fa fa-download mr-1"/>
+            <i class="fas fa-download mr-1"/>
             <t t-call="website_sale_slides.course_buy_course_link"/>
         </li>
     </xpath>
@@ -124,7 +124,7 @@
                     <input type="hidden" class="product_id" name="product_id" t-att-value="channel.product_id.id"/>
                     <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="channel.product_id.id"/>
                     <a id="add_to_cart" role="button" class="btn btn-primary btn-block js_check_product o_js_add_to_cart a-submit" href="#">
-                        <i class="fa fa-shopping-cart"></i> Add to Cart
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
                     </a>
                     <div id="product_option_block"/>
                 </form>
@@ -143,7 +143,7 @@
     <xpath expr="//div[hasclass('buy_now_button')]" position="inside">
         <div style="margin-top:5px;">
             <a role="button" class="btn btn-outline-primary btn-block" t-att-href="'/shop/cart/update?product_id=%s&amp;express=1' % channel.product_id.id">
-                <i class="fa fa-bolt"></i> Buy Now
+                <i class="fas fa-bolt"></i> Buy Now
             </a>
         </div>
     </xpath>

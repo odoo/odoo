@@ -33,7 +33,7 @@
                         <h1 class="mb-4" t-field="survey.title" />
                         <h2 class="mb-5 font-weight-normal">
                             <span>Go to <a t-att-href="survey.session_link" t-esc="survey.session_link" target="_blank" /></span>
-                            <i class="fa fa-copy font-weight-normal ml-3 o_survey_session_copy" />
+                            <i class="fas fa-copy font-weight-normal ml-3 o_survey_session_copy" />
                             <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey.session_link" />
                         </h2>
                         <h2 class="font-weight-normal"><span>Waiting for attendees...</span>
@@ -41,7 +41,7 @@
                         </h2>
                     </div>
                     <a role="button"
-                        class="font-weight-bold fa fa-chevron-right o_survey_session_navigation o_survey_session_navigation_next p-3" />
+                        class="font-weight-bold fas fa-chevron-right o_survey_session_navigation o_survey_session_navigation_next p-3" />
                 </div>
             </div>
         </t>
@@ -79,13 +79,13 @@
             <div class="p-4 d-flex flex-column o_survey_session_manage_container min-w-75 pt-6">
                 <h3 class="o_survey_session_link_reminder">
                     <span>Go to <a t-att-href="survey.session_link" t-esc="survey.session_link" target="_blank" /></span>
-                    <i class="fa fa-copy font-weight-normal ml-3 mr-1 o_survey_session_copy" />
+                    <i class="fas fa-copy font-weight-normal ml-3 mr-1 o_survey_session_copy" />
                     <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey.session_link" />
                 </h3>
                 <a role="button"
-                    class="font-weight-bold fa fa-chevron-right o_survey_session_navigation o_survey_session_navigation_next p-3" />
+                    class="font-weight-bold fas fa-chevron-right o_survey_session_navigation o_survey_session_navigation_next p-3" />
                 <a role="button"
-                    class="font-weight-bold fa fa-chevron-left o_survey_session_navigation o_survey_session_navigation_previous p-3 d-none" />
+                    class="font-weight-bold fas fa-chevron-left o_survey_session_navigation o_survey_session_navigation_previous p-3 d-none" />
                 <div class="o_survey_session_results flex-column flex-grow-1">
                     <div class="row">
                         <div class="col-lg-8"><h1 t-esc="question.title"></h1></div>
@@ -140,8 +140,8 @@
                             <span t-else="">Leaderboard</span>
                         </h1>
                         <div t-att-class="'o_survey_leaderboard_buttons font-weight-bold %s' % 'd-none' if not is_last_question else ''">
-                            <a href="#" role="button" class="o_survey_session_close btn btn-primary mr-4"><i class="fa fa-close"/> Close</a>
-                            <a href="#" role="button" class="o_survey_session_close btn btn-primary" t-att-data-show-results="True"><i class="fa fa-bar-chart"/> Results</a>
+                            <a href="#" role="button" class="o_survey_session_close btn btn-primary mr-4"><i class="fas fa-times"/> Close</a>
+                            <a href="#" role="button" class="o_survey_session_close btn btn-primary" t-att-data-show-results="True"><i class="far fa-chart-bar"/> Results</a>
                         </div>
                     </div>
                     <div class="justify-content-center d-flex flex-column flex-grow-1 mb-5 o_survey_session_leaderboard_container" />

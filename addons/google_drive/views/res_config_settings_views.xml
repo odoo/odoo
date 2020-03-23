@@ -14,31 +14,31 @@
                             <field name="is_google_drive_token_generated" invisible="1"/>
                             <div role="alert"
                                  attrs="{'invisible': [('is_google_drive_token_generated', '=', False)]}">
-                                <i class="text-success fa fa-check"></i> &amp;nbsp; Refresh token set
+                                <i class="text-success fas fa-check"></i> &amp;nbsp; Refresh token set
                             </div>
                             <div role="alert"
                                  attrs="{'invisible': [('is_google_drive_token_generated', '=', True)]}">
-                                <i class="fa fa-exclamation-triangle text-warning"></i> &amp;nbsp; No refresh token set
+                                <i class="fas fa-exclamation-triangle text-warning"></i> &amp;nbsp; No refresh token set
                             </div>
                         </div>
                         <div class="col-sm text-center"
                              attrs="{'invisible': [('is_google_drive_token_generated', '=', True)]}">
                             <button class="btn btn-link"
                                     name="action_setup_token"
-                                    type="object"><i class="fa fa-arrow-right"></i> Set up token</button>
+                                    type="object"><i class="fas fa-arrow-right"></i> Set up token</button>
                         </div>
                         <div class="col-sm text-center"
                              attrs="{'invisible': [('is_google_drive_token_generated', '=', False)]}">
                             <button class="btn btn-link"
                                     name="action_setup_token"
-                                    type="object"><i class="fa fa-arrow-right"></i> Reset token</button>
+                                    type="object"><i class="fas fa-arrow-right"></i> Reset token</button>
                         </div>
                     </div>
                     <div class="mt8">
                         <button type="action"
                                 name="%(action_google_drive_users_config)d"
                                 string="Google Drive Templates"
-                                icon="fa-arrow-right"
+                                icon="fas fa-arrow-right"
                                 class="btn-link pl-0"/>
                     </div>
                 </div>
@@ -56,7 +56,7 @@
                 <group>
                     <span>Get an authorization code and set it in the field below.</span>
                     <field name="google_drive_uri"
-                           class="fa fa-arrow-right mt-1"
+                           class="fas fa-arrow-right mt-1"
                            widget="url"
                            text="Get Authorization Code"
                            nolabel="1"/>

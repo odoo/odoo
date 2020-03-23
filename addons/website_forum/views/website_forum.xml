@@ -31,7 +31,7 @@
     <form  t-attf-method="#{form_method or 'POST'}" t-att-action="url" t-attf-class="#{form_classes} #{not inDropdown and 'btn btn-sm border'}">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <button t-attf-class="#{icon and not label and ('fa ' + icon)} #{inDropdown and 'dropdown-item pl-3' or 'btn btn-sm p-0'} #{classes} #{karma and 'karma_required text-muted'}" t-attf-data-karma="#{karma}" t-att-title="title">
-            <i t-if="icon and label" t-attf-class="fa fa-fw text-muted #{icon} #{inDropdown and 'mr-1'}"/>
+            <i t-if="icon and label" t-attf-class="fas fa-fw text-muted #{icon} #{inDropdown and 'mr-1'}"/>
             <t t-esc="label"/>
         </button>
     </form>
@@ -129,7 +129,7 @@
     <div class="navbar navbar-expand-sm navbar-light">
         <div class="container flex-wrap flex-md-nowrap">
             <a t-if="back_button_url" class="btn btn-light border mr-2" t-attf-href="#{back_button_url}" title="Back">
-                <i class="fa fa-chevron-left mr-1"/>Back
+                <i class="fas fa-chevron-left mr-1"/>Back
             </a>
             <!-- Desktop -->
             <ul class="navbar-nav mr-auto d-none d-lg-flex">
@@ -193,20 +193,20 @@
                 <t t-if="user.karma>=forum.karma_moderate">
                     <li t-if="forum.count_posts_waiting_validation" class="nav-item">
                         <a class="nav-link" t-attf-href="/forum/#{slug(forum)}/validation_queue">
-                            <i class="fa fa-check-square-o fa-fw text-warning"/>
+                            <i class="far fa-check-square fa-fw text-warning"/>
                             <b t-esc="forum.count_posts_waiting_validation" class="text-800"/>
                         </a>
                     </li>
                     <li t-if="forum.count_flagged_posts" class="nav-item ml-2">
                         <a class="nav-link" t-attf-href="/forum/#{slug(forum)}/flagged_queue">
-                            <i class="fa fa-flag fa-fw text-danger"/>
+                            <i class="fas fa-flag fa-fw text-danger"/>
                             <b t-esc="forum.count_flagged_posts" class="text-800"/>
                         </a>
                     </li>
                 </t>
                 <!-- Mobile 'Search Box' toggler-->
                 <li class="nav-item ml-4">
-                    <a data-toggle="collapse" href="#o_wforum_search" class="nav-link"><i class="fa fa-search"/></a>
+                    <a data-toggle="collapse" href="#o_wforum_search" class="nav-link"><i class="fas fa-search"/></a>
                 </li>
             </ul>
 
@@ -233,12 +233,12 @@
                 title="Solved"
                 aria-label="Solved"
                 data-toggle="tooltip"
-                class="fa fa-check-circle text-success"/>
+                class="fas fa-check-circle text-success"/>
             <span t-if="question.user_favourite and not (my == 'favourites' or hide_fav_icon)"
                 title="Your favourite"
                 aria-label="Your favourite"
                 data-toggle="tooltip"
-                class="fa fa-star o_wforum_gold"/>
+                class="fas fa-star o_wforum_gold"/>
 
             <a t-attf-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}#{answer and ('/#answer-%s' % answer.id)}"
                 t-attf-title="Read: #{question.name}"
@@ -292,7 +292,7 @@
                 <span t-field="question.views" /> <t t-if="question.views&lt;=1">View</t><t t-else="">Views</t>
                 <span t-if="question.favourite_count &gt; 0">
                     <span class="mx-1">|</span>
-                    <i class="fa fa-star"/>
+                    <i class="fas fa-star"/>
                     <t t-esc="question.favourite_count"/>
                 </span></span>
             <span t-if="question.state == 'flagged'" class="text-black"> | Flagged</span>
@@ -364,7 +364,7 @@
         <div t-field="forum.faq"/>
         <div class="card mb-2">
             <a href="#collapseFour" class="card-header" id="headingFour" data-toggle="collapse" aria-expanded="false" aria-controls="collapseFour">
-                <b>Why can other people edit my questions/answers?</b> <i class="fa fa-caret-down float-right"/>
+                <b>Why can other people edit my questions/answers?</b> <i class="fas fa-caret-down float-right"/>
             </a>
             <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
               <div class="card-body">
@@ -505,38 +505,38 @@
 
         <!-- My Questions -->
         <span t-if="my == 'mine'" class="nav-link rounded-pill mb-2 active font-weight-bold">
-            <i class="fa fa-question-circle-o fa-fw"/> My Questions
+            <i class="far fa-question-circle fa-fw"/> My Questions
             <a class="text-reset pull-right no-decoration" t-att-href="location + keep_query('search', 'filters', 'sorting')">&#215;</a>
         </span>
         <a t-else="" class="nav-link rounded-pill mb-2 text-reset" t-att-href="location + keep_query('search', 'filters', 'sorting', my='mine')">
-            <i class="fa fa-question-circle-o fa-fw"/> My Questions
+            <i class="far fa-question-circle fa-fw"/> My Questions
         </a>
 
         <!-- My Favourites -->
         <span t-if="my == 'favourites'" class="nav-link rounded-pill mb-2 active font-weight-bold">
-            <i class="fa fa-star fa-fw"/> Favourites
+            <i class="fas fa-star fa-fw"/> Favourites
             <a class="text-reset pull-right no-decoration" t-att-href="location + keep_query( 'search', 'filters', 'sorting')">&#215;</a>
         </span>
         <a t-else="" t-attf-class="nav-link rounded-pill mb-2 text-reset" t-att-href="location + keep_query( 'search', 'filters', 'sorting', my='favourites')">
-            <i class="fa fa-star fa-fw"/> Favourites
+            <i class="fas fa-star fa-fw"/> Favourites
         </a>
 
         <!-- My Followed posts -->
         <span t-if="my == 'followed'" class="nav-link rounded-pill mb-2 active font-weight-bold">
-            <i class="fa fa-bell fa-fw"/> Followed Posts
+            <i class="fas fa-bell fa-fw"/> Followed Posts
             <a class="text-reset pull-right no-decoration" t-att-href="location + keep_query( 'search', 'filters', 'sorting')">&#215;</a>
         </span>
         <a t-else="" class="nav-link rounded-pill mb-2 text-reset" t-att-href="location + keep_query( 'search', 'filters', 'sorting', my='followed')">
-            <i class="fa fa-bell fa-fw"/> Followed Posts
+            <i class="fas fa-bell fa-fw"/> Followed Posts
         </a>
 
         <!-- My Followed tags -->
         <span t-if="my == 'tagged'" class="nav-link rounded-pill mb-2 active font-weight-bold">
-            <i class="fa fa-tags fa-fw"/> Followed Tags
+            <i class="fas fa-tags fa-fw"/> Followed Tags
             <a class="text-reset pull-right no-decoration" t-att-href="location + keep_query( 'search', 'filters', 'sorting')">&#215;</a>
         </span>
         <a t-else="" class="nav-link rounded-pill mb-2 text-reset" t-att-href="location + keep_query( 'search', 'filters', 'sorting', my='tagged')">
-            <i class="fa fa-tags fa-fw"/> Followed Tags
+            <i class="fas fa-tags fa-fw"/> Followed Tags
         </a>
 
         <!-- Moderation Tools -->
@@ -546,19 +546,19 @@
             </span>
 
             <span t-if="queue_type == 'validation'" class="nav-link rounded-pill mb-2 active font-weight-bold">
-                <i class="fa fa-check-square-o fa-fw"/> To Validate
+                <i class="far fa-check-square fa-fw"/> To Validate
                 <a class="text-reset pull-right no-decoration" t-attf-href="/forum/#{ slug(forum) }">&#215;</a>
             </span>
             <a t-else="" class="nav-link rounded-pill text-reset" t-attf-href="/forum/#{slug(forum)}/validation_queue">
-                <i class="fa fa-check-square-o fa-fw"/> To Validate
+                <i class="far fa-check-square fa-fw"/> To Validate
                 <span t-attf-class="badge pull-right #{forum.count_posts_waiting_validation > 0 and 'badge-warning' or 'badge-light'}" t-esc="forum.count_posts_waiting_validation"/>
             </a>
             <span t-if="queue_type == 'offensive' or queue_type == 'flagged'" class="nav-link rounded-pill mb-2 active font-weight-bold">
-                <i class="fa fa-flag fa-fw"/> Flagged
+                <i class="fas fa-flag fa-fw"/> Flagged
                 <a class="text-reset pull-right no-decoration" t-attf-href="/forum/#{ slug(forum) }">&#215;</a>
             </span>
             <a t-else="" class="nav-link rounded-pill text-reset" t-attf-href="/forum/#{slug(forum)}/flagged_queue">
-                <i class="fa fa-flag fa-fw"/> Flagged
+                <i class="fas fa-flag fa-fw"/> Flagged
                 <span t-attf-class="badge pull-right #{forum.count_flagged_posts > 0 and 'badge-danger' or 'badge-light'}" t-esc="forum.count_flagged_posts"/>
             </a>
         </t>
@@ -588,7 +588,7 @@
                     </span>
                     <span t-if="tag" t-attf-class="w-100 w-md-auto mb-2 mb-md-0 border rounded pl-2 d-inline-flex align-items-center justify-content-between #{(search or my) and 'ml-md-2'}">
                         <div>
-                            <span class="fa fa-tag text-muted mr-1"/>
+                            <span class="fas fa-tag text-muted mr-1"/>
                             <span t-esc="tag.name"/>
                         </div>
                         <a t-att-href="url_for('/forum/') + slug(forum) + '?' + keep_query( 'search', 'sorting', 'filters', 'my')" class="btn py-1">&#215;</a>
@@ -762,7 +762,7 @@
         <div t-if="request.env.user.forum_waiting_posts_count" class="alert border" role="alert">
             <b>You already have a pending post.</b><br/>
             <p>Please wait for a moderator to validate your previous post before continuing.</p>
-            <a t-attf-href="/forum/#{ slug(forum) }" title="All Topics"><i class="fa fa-chevron-left mr-2"/>Back to All Topics</a>
+            <a t-attf-href="/forum/#{ slug(forum) }" title="All Topics"><i class="fas fa-chevron-left mr-2"/>Back to All Topics</a>
         </div>
 
         <form t-else="" t-attf-action="/forum/#{slug(forum)}/new" method="post" role="form" class="tag_text js_website_submit_form o_wforum_readable">
@@ -775,14 +775,14 @@
                 <div class="form-text small text-muted">
                     <a data-toggle="collapse" href="#newQuestionExample" role="button" aria-expanded="false" aria-controls="newQuestionExample">
                         Example
-                        <i class="fa fa-question-circle"/>
+                        <i class="fas fa-question-circle"/>
                     </a>
                     <div class="collapse" id="newQuestionExample">
                         <div class="text-success mt-2">
-                            <i class="fa fa-check"/> How to configure TPS and TVQ's canadian taxes?
+                            <i class="fas fa-check"/> How to configure TPS and TVQ's canadian taxes?
                         </div>
                         <div class="text-danger">
-                            <i class="fa fa-times"/> Good morning to all! Please, can someone help solve solve my tax computation problem in Canada? Thanks!
+                            <i class="fas fa-times"/> Good morning to all! Please, can someone help solve solve my tax computation problem in Canada? Thanks!
                         </div>
                     </div>
                 </div>
@@ -827,15 +827,15 @@
                 <div class="form-text small text-muted">
                     <a data-toggle="collapse" href="#newQuestionExample" role="button" aria-expanded="false" aria-controls="newQuestionExample">
                         Example
-                        <i class="fa fa-question-circle"/>
+                        <i class="fas fa-question-circle"/>
                     </a>
                     <div class="collapse" id="newQuestionExample">
                         <div class="my-2">Use a clear, explicit and concise question title</div>
                         <div class="text-success">
-                            <i class="fa fa-check"/> How to configure TPS and TVQ's canadian taxes?
+                            <i class="fas fa-check"/> How to configure TPS and TVQ's canadian taxes?
                         </div>
                         <div class="text-danger">
-                            <i class="fa fa-times"/> Good morning to all! Please, can someone help solve solve my tax computation problem in Canada? Thanks!
+                            <i class="fas fa-times"/> Good morning to all! Please, can someone help solve solve my tax computation problem in Canada? Thanks!
                         </div>
                     </div>
                 </div>
@@ -955,14 +955,14 @@
     <t t-set="can_downvote" t-value="post.can_downvote"/>
     <div t-attf-class="vote text-center d-inline-flex align-items-center #{vertical and 'o_wforum_vote_vertical flex-md-column'} #{classes}">
         <button type="button" t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/upvote"
-            t-attf-class="btn btn-link vote_up fa fa-caret-up pl-0 #{vertical and 'px-md-0 pt-md-0' or 'pr-2'} #{own_vote == 1 and 'text-success' or 'text-muted'} #{not can_upvote and 'karma_required'}"
+            t-attf-class="btn btn-link vote_up fas fa-caret-up pl-0 #{vertical and 'px-md-0 pt-md-0' or 'pr-2'} #{own_vote == 1 and 'text-success' or 'text-muted'} #{not can_upvote and 'karma_required'}"
             t-att-disabled="own_vote == 1 and 'disabled'"
             t-att-data-karma="forum.karma_upvote"
             aria-label="Positive vote" title="Positive vote"/>
         <b t-attf-class="vote_count #{own_vote == 1 and 'text-success' or (own_vote == -1 and 'text-danger' or 'text-muted')}"
            t-esc="post.vote_count"/>
         <button type="button" t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/downvote"
-            t-attf-class="btn btn-link vote_down fa fa-caret-down #{vertical and 'px-md-0' or 'px-2'} #{own_vote == -1 and 'text-danger' or 'text-muted'} #{not can_downvote and 'karma_required'}"
+            t-attf-class="btn btn-link vote_down fas fa-caret-down #{vertical and 'px-md-0' or 'px-2'} #{own_vote == -1 and 'text-danger' or 'text-muted'} #{not can_downvote and 'karma_required'}"
             t-att-disabled="own_vote == -1 and 'disabled'"
             t-att-data-karma="forum.karma_downvote"
             aria-label="Negative vote" title="Negative vote"/>
@@ -978,9 +978,9 @@
                 Do you want <b>Accept</b> or <b>Reject</b> this post ?</p>
             <div>
                 <a role="button" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" type="button" class="btn btn-success">
-                    <i class="fa fa-check fa-fw mr-1"/>Accept</a>
+                    <i class="fas fa-check fa-fw mr-1"/>Accept</a>
                 <a role="button" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" type="button" class="btn btn-danger">
-                    <i class="fa fa-times fa-fw mr-1"/>Reject</a>
+                    <i class="fas fa-times fa-fw mr-1"/>Reject</a>
             </div>
         </div>
 
@@ -1044,7 +1044,7 @@
                         </div>
                     </div>
                     <div t-if="len(question.tag_ids) > 0" class="col-12 col-sm order-sm-2 o_wforum_index_entry_tags mb-1">
-                        <i class="fa fa-tag text-muted"/>
+                        <i class="fas fa-tag text-muted"/>
                         <a t-foreach="question.tag_ids" t-as="question_tag"
                             t-attf-href="/forum/#{slug(question_tag.forum_id)}/tag/#{slug(question_tag)}/questions?#{keep_query(filters='tag')}"
                             t-attf-class="badge border text-600 badge-light #{not question_tag_first and 'ml-1'}"
@@ -1083,17 +1083,17 @@
                         <a t-attf-class="btn btn-primary #{not question.can_answer and 'karma_required text-muted'}"
                             t-att-data-karma="question.forum_id.karma_answer"
                             href="#post_reply">
-                            <i class="fa fa-reply mr-1"/>Answer
+                            <i class="fas fa-reply mr-1"/>Answer
                         </a>
                     </div>
                     <div class="btn-group btn-group-sm">
                         <a t-attf-class="btn px-2 border #{not question.can_comment and 'karma_required text-muted'}" t-att-data-karma="question.karma_comment" t-att-data-toggle="question.can_comment and 'collapse' or None"
                             t-attf-href="##{_question_comment_collapse_uid}">
-                            <i class=" fa fa-comment text-muted mr-1"/>Comment
+                            <i class=" fas fa-comment text-muted mr-1"/>Comment
                         </a>
                         <a href="javascript:void(0)" class="oe_social_share btn px-2 border"
                             t-attf-data-hashtags="#question">
-                            <i class="fa fa-share-alt text-muted mr-1"/>Share
+                            <i class="fas fa-share-alt text-muted mr-1"/>Share
                         </a>
                     </div>
                 </div>
@@ -1140,7 +1140,7 @@
 <template id="website_forum.question_dropdown">
     <div class="dropdown">
         <a class="btn py-0" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-ellipsis-v"/>
+            <i class="fas fa-ellipsis-v"/>
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
             <t t-if="question.state == 'close'" t-call="website_forum.link_button">
@@ -1218,8 +1218,8 @@
                            data-toggle="tooltip"
                            t-attf-data-target="#answer_#{answer.id}"
                            t-attf-data-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct">
-                            <i class="fa fa-circle-o fa-stack-2x"/>
-                            <i class="fa fa-check fa-stack-1x"/>
+                            <i class="far fa-circle fa-stack-2x"/>
+                            <i class="fas fa-check fa-stack-1x"/>
                         </a>
                     </t>
                 </div>
@@ -1247,7 +1247,7 @@
                                 title="Only one answer per question is allowed"
                                 data-toggle="tooltip"
                                 t-attf-href="/forum/#{slug(forum)}/question/#{slug(question)}/edit_answer">
-                                <i class="fa fa-pencil"/>
+                                <i class="fas fa-pencil-alt"/>
                                 Edit<span class="d-none d-lg-inline"> your answer</span>
                             </a>
                         </div>
@@ -1256,13 +1256,13 @@
                                 t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
                                 t-att-data-toggle="answer.can_comment and 'collapse' or None"
                                 t-attf-data-target="##{_answer_comment_collapse_uid}">
-                                <i t-attf-class="fa fa-comment text-muted #{not answer.can_comment and 'karma_required'}"/>
+                                <i t-attf-class="fas fa-comment text-muted #{not answer.can_comment and 'karma_required'}"/>
                                 Comment
                             </a>
                             <a href="javascript:void(0)" class="oe_social_share btn border px-2"
                                 t-attf-data-urlshare="#{request.httprequest.url}##{_answer_comment_collapse_uid}"
                                 t-attf-data-hashtags="question">
-                                <i class="fa fa-share-alt text-muted"/>
+                                <i class="fas fa-share-alt text-muted"/>
                                 Share
                             </a>
                         </div>
@@ -1342,7 +1342,7 @@
 
         <a t-att-href="user_profile_url" class="o_wforum_author_pic position-relative rounded-circle">
             <span t-if="object_validable" class="o_wforum_author_box_check rounded-circle bg-success position-absolute">
-                <i class="fa fa-check fa-fw small text-white"/>
+                <i class="fas fa-check fa-fw small text-white"/>
             </span>
             <img t-attf-class="rounded-circle o_forum_avatar #{not display_info and 'shadow'}" t-att-src="website.image_url(object.create_uid, 'image_128', '40x40')" alt="Avatar"/>
         </a>
@@ -1408,7 +1408,7 @@
                             </div>
                             <div class="dropdown ml-2">
                                 <a class="btn btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-ellipsis-v"/>
+                                    <i class="fas fa-ellipsis-v"/>
                                 </a>
                                 <div class="dropdown-menu shadow">
                                     <t t-call="website_forum.link_button">
@@ -1465,7 +1465,7 @@
         <div class="row mb-5" t-if="tags">
             <div class="col-md-3 mt16 o_js_forum_tag_follow" t-foreach="tags" t-as="tag">
                 <span t-attf-class="badge border px-2 #{tag.message_is_follower and 'border-success text-success' or 'badge-light text-600'}">
-                    <i class="fa fa-tag small"/>
+                    <i class="fas fa-tag small"/>
                     <t t-esc="tag.name"/>
                     <b class="small align-top">(<t t-esc="tag.posts_count"/>)</b>
                 </span>
@@ -1496,10 +1496,10 @@
     <t t-call="website_forum.header">
         <t t-set="website_forum_action" t-value="'o_wforum_moderation_queue'"/>
         <div t-if="len(posts_ids) > 0" class="mb-2 text-right">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#markAllAsSpam"><i class="fa fa-bug"></i> Filter Tool</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#markAllAsSpam"><i class="fas fa-bug"></i> Filter Tool</button>
         </div>
         <div t-attf-class="o_caught_up_alert alert text-center #{len(posts_ids) and 'd-none'}">
-            <i class="fa fa-check text-success d-block display-2"></i>
+            <i class="fas fa-check text-success d-block display-2"></i>
             <b>You've Completely Caught Up!</b><br/>
             <t t-if="queue_type == 'validation'">No post to be validated</t>
             <t t-if="queue_type == 'flagged'">No flagged posts</t>
@@ -1512,10 +1512,10 @@
                         <div class="text-muted mr-2">Filter by:</div>
                         <ul class="nav nav-tabs border-bottom-0" id="myTab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active spam_menu" id="user-tab" data-toggle="tab" href="#spam_user" role="tab" aria-controls="user" aria-selected="true"><i class="fa fa-user"/> User</a>
+                                <a class="nav-link active spam_menu" id="user-tab" data-toggle="tab" href="#spam_user" role="tab" aria-controls="user" aria-selected="true"><i class="fas fa-user"/> User</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link spam_menu" id="country-tab" data-toggle="tab" href="#spam_country" role="tab" aria-controls="spam_country" aria-selected="false"><i class="fa fa-flag"/> Country</a>
+                                <a class="nav-link spam_menu" id="country-tab" data-toggle="tab" href="#spam_country" role="tab" aria-controls="spam_country" aria-selected="false"><i class="fas fa-flag"/> Country</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link spam_menu" id="character-tab" data-toggle="tab" href="#spam_character" role="tab" aria-controls="spam_character" aria-selected="false">圾 Text</a>
@@ -1577,21 +1577,21 @@
                 <div class="row">
                     <div class="col-md-2 col-sm-3 o_js_validation_queue border-right">
                         <div class="text-center d-flex align-items-end flex-sm-column justify-content-end align-items-sm-stretch">
-                            <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" title="Validate" aria-label="Validate" data-toggle="tooltip" class="btn border-success m-1 bg-white"><i class="fa fa-check text-success"/></a>
-                            <a t-if="queue_type == 'validation'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" data-toggle="tooltip" title="Refuse" aria-label="Refuse" class="btn border-danger m-1 bg-white"><i class="fa fa-times text-danger"/></a>
-                            <a t-if="queue_type == 'flagged'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/ask_for_mark_as_offensive" data-toggle="tooltip" aria-label="Mark as offensive" title="Mark as offensive" class="btn border-danger m-1 bg-white"><i class="fa fa-times text-danger"/></a>
-                            <a href="#" t-if="queue_type == 'offensive'" disabled="True" aria-label="Offensive" title="Offensive" data-toggle="tooltip" class="btn border-danger bg-white"><i class="fa fa-times m-1 text-danger"/></a>
+                            <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" title="Validate" aria-label="Validate" data-toggle="tooltip" class="btn border-success m-1 bg-white"><i class="fas fa-check text-success"/></a>
+                            <a t-if="queue_type == 'validation'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" data-toggle="tooltip" title="Refuse" aria-label="Refuse" class="btn border-danger m-1 bg-white"><i class="fas fa-times text-danger"/></a>
+                            <a t-if="queue_type == 'flagged'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/ask_for_mark_as_offensive" data-toggle="tooltip" aria-label="Mark as offensive" title="Mark as offensive" class="btn border-danger m-1 bg-white"><i class="fas fa-times text-danger"/></a>
+                            <a href="#" t-if="queue_type == 'offensive'" disabled="True" aria-label="Offensive" title="Offensive" data-toggle="tooltip" class="btn border-danger bg-white"><i class="fas fa-times m-1 text-danger"/></a>
                         </div>
                     </div>
                     <t t-if="question.parent_id">
                         <div t-foreach="question" t-as="answer" class="col-md-10 col-sm-8">
                             <t t-call="website_forum.moderation_display_post_answer"/>
                             <small class="text-muted">
-                                 <i t-attf-class="fa fa-user" role="img" aria-label="Question" />
+                                 <i t-attf-class="fas fa-user" role="img" aria-label="Question" />
                                 <span>By </span><span t-field="question.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}' style="display: inline-block;"/>
-                                <i class="ml-4 mr4 fa fa-calendar"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
+                                <i class="ml-4 mr4 fas fa-calendar-alt"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
                                 <span t-if="question.state == 'flagged'" class="text-black">
-                                    <i class="fa fa-flag ml-4 mr4"/>
+                                    <i class="fas fa-flag ml-4 mr4"/>
                                     Flagged
                                 </span>
                             </small>

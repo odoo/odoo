@@ -34,7 +34,7 @@ odoo.define('web.DropdownMenu', function (require) {
             this.dropdownMenu = useRef('dropdown');
             this.state = useState({ open: false });
 
-            this.symbol = this.env.device.isMobile ? 'fa fa-chevron-right float-right mt4' : false;
+            this.symbol = this.env.device.isMobile ? 'fas fa-chevron-right float-right mt4' : false;
 
             useExternalListener(window, 'click', this._onWindowClick);
             useExternalListener(window, 'keydown', this._onWindowKeydown);

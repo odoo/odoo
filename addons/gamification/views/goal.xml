@@ -159,9 +159,9 @@
                                 <div class="o_goal_state_block">
                                     <t t-if="record.definition_display.raw_value == 'boolean'">
                                         <div class="o_goal_state text-center">
-                                            <t t-if="record.state.raw_value=='reached'"><i role="img" class="o_green fa fa-check fa-3x" title="Goal Reached" aria-label="Goal Reached"/></t>
-                                            <t t-if="record.state.raw_value=='inprogress'"><i role="img" class="fa fa-clock-o fa-3x" title="Goal in Progress" aria-label="Goal in Progress"/></t>
-                                            <t t-if="record.state.raw_value=='failed'"><i role="img" class="o_red fa fa-times fa-3x" title="Goal Failed" aria-label="Goal Failed"/></t>
+                                            <t t-if="record.state.raw_value=='reached'"><i role="img" class="o_green fas fa-check fa-3x" title="Goal Reached" aria-label="Goal Reached"/></t>
+                                            <t t-if="record.state.raw_value=='inprogress'"><i role="img" class="far fa-clock fa-3x" title="Goal in Progress" aria-label="Goal in Progress"/></t>
+                                            <t t-if="record.state.raw_value=='failed'"><i role="img" class="o_red fas fa-times fa-3x" title="Goal Failed" aria-label="Goal Failed"/></t>
                                         </div>
                                     </t>
                                     <t t-if="record.definition_display.raw_value == 'progress'">

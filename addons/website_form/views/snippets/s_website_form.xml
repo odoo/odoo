@@ -36,14 +36,14 @@
                     <we-button data-on-success="redirect" data-name="show_redirect_opt">Redirect</we-button>
                     <we-button data-on-success="message" data-name="show_message_opt">Show Message</we-button>
                 </we-select>
-                <we-button class="fa fa-fw fa-eye align-self-end toggle-edit-message" title="Edit Message" data-name="message_opt" data-dependencies="show_message_opt"/>
+                <we-button class="far fa-fw fa-eye align-self-end toggle-edit-message" title="Edit Message" data-name="message_opt" data-dependencies="show_message_opt"/>
             </we-row>
             <we-urlpicker string="URL" data-select-data-attribute="/contactus-thank-you" data-attribute-name="successPage" data-name="url_opt" data-dependencies="show_redirect_opt"/>
         </div>
 
         <!-- Add Field Form -->
         <div data-js="AddFieldForm" data-selector=".s_website_form" data-target="form">
-            <we-button class="fa fa-fw fa-plus"
+            <we-button class="fas fa-fw fa-plus"
                 title="Add a new field at the end"
                 data-add-field=""
                 data-no-preview="true"/>
@@ -51,7 +51,7 @@
 
         <!-- Add Field -->
         <div data-js="AddField" data-selector=".s_website_form_field" data-exclude=".s_website_form_dnone">
-            <we-button class="fa fa-fw fa-plus"
+            <we-button class="fas fa-fw fa-plus"
                 title="Add a new field after this one"
                 data-add-field=""
                 data-no-preview="true"/>

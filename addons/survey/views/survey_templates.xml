@@ -251,7 +251,7 @@
                                     <a role="button"
                                         class="btn btn-primary btn-lg"
                                         t-att-href="'/survey/%s/get_certification' % survey.id">
-                                        <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/>
+                                        <i class="fas fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/>
                                         Download certification
                                     </a>
                                 </div>
@@ -358,7 +358,7 @@
                    t-att-value="format_date(answer_lines[0].value_date) if answer_lines else None"
                    t-att-data-question-type="question.question_type"/>
             <div t-if="not survey_form_readonly" class="input-group-append position-absolute" t-attf-data-target="#datetimepicker_#{question.id}" data-toggle="datetimepicker">
-                <div class="input-group-text text-primary border-0 bg-transparent p-0"><i class="fa fa-calendar"></i></div>
+                <div class="input-group-text text-primary border-0 bg-transparent p-0"><i class="fas fa-calendar-alt"></i></div>
             </div>
         </div>
     </template>
@@ -372,7 +372,7 @@
                    t-att-value="format_datetime(answer_lines[0].value_datetime) if answer_lines else None"
                    t-att-data-question-type="question.question_type"/>
             <div t-if="not survey_form_readonly" class="input-group-append position-absolute" t-attf-data-target="#datetimepicker_#{question.id}" data-toggle="datetimepicker">
-                <div class="input-group-text text-primary border-0 bg-transparent p-0"><i class="fa fa-calendar"></i></div>
+                <div class="input-group-text text-primary border-0 bg-transparent p-0"><i class="fas fa-calendar-alt"></i></div>
             </div>
         </div>
     </template>
@@ -419,8 +419,8 @@
                                t-att-name='question.id'
                                t-att-checked="answer_line and answer_line.suggested_answer_id.id == label.id and 'checked' or None"
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
-                        <i class="fa fa-check-circle float-right mt-1 position-relative"></i>
-                        <i class="fa fa-circle-thin float-right mt-1 position-relative"></i>
+                        <i class="fas fa-check-circle float-right mt-1 position-relative"></i>
+                        <i class="fas fa-circle-thin float-right mt-1 position-relative"></i>
                         <t t-call="survey.question_suggested_value_image"/>
                     </label>
                 </t>
@@ -437,8 +437,8 @@
                                t-att-checked="comment_line and 'checked' or None"
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
                         <span class="ml-2" t-field="question.comments_message" />
-                        <i class="fa fa-check-circle float-right mt-1 position-relative"></i>
-                        <i class="fa fa-circle-thin float-right mt-1 position-relative"></i>
+                        <i class="fas fa-check-circle float-right mt-1 position-relative"></i>
+                        <i class="fas fa-circle-thin float-right mt-1 position-relative"></i>
                     </label>
                 </div>
                 <div t-attf-class="o_survey_comment_container mt-3 py-0 px-1  #{'d-none' if not comment_line else ''}">
@@ -481,8 +481,8 @@
                                t-att-checked="'checked' if answer_line else None"
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
                         <span class="ml-2" t-field='label.value'/>
-                        <i class="fa fa-check-square float-right mt-1 position-relative"></i>
-                        <i class="fa fa-square-o float-right mt-1 position-relative"></i>
+                        <i class="fas fa-check-square float-right mt-1 position-relative"></i>
+                        <i class="fas fa-square float-right mt-1 position-relative"></i>
                         <t t-call="survey.question_suggested_value_image"/>
                     </label>
                 </t>
@@ -499,8 +499,8 @@
                                t-att-checked="comment_line and 'checked' or None"
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
                         <span class="ml-2" t-field="question.comments_message" />
-                        <i class="fa fa-check-square float-right mt-1 position-relative"></i>
-                        <i class="fa fa-square-o float-right mt-1 position-relative"></i>
+                        <i class="fas fa-check-square float-right mt-1 position-relative"></i>
+                        <i class="fas fa-square-o float-right mt-1 position-relative"></i>
                     </label>
                 </div>
                 <div t-attf-class="o_survey_comment_container mt-3 py-0 px-1 #{'d-none' if not comment_line else ''}">
@@ -543,9 +543,9 @@
                                    t-att-data-row-id="row_label.id"
                                    t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"
                                    class="o_survey_form_choice_item d-none"/>
-                            <i t-att-class="'o_survey_matrix_empty_checkbox fa fa-%s position-relative'
+                            <i t-att-class="'o_survey_matrix_empty_checkbox fas fa-%s position-relative'
                             % ('square-o' if question.matrix_subtype == 'multiple' else 'circle-thin')"></i>
-                            <i t-att-class="'fa fa-%s position-relative'
+                            <i t-att-class="'fas fa-%s position-relative'
                             % ('check-square' if question.matrix_subtype == 'multiple' else 'check-circle')"></i>
                             <t t-call="survey.survey_selection_key">
                                 <t t-set="selection_key_class"

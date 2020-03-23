@@ -16,14 +16,14 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_get_opportunity_action" class="oe_stat_button" type="object" icon="fa-handshake-o"
+                        <button name="action_get_opportunity_action" class="oe_stat_button" type="object" icon="far fa-handshake"
                                 attrs="{'invisible': ['|', ('lead_type', '!=', 'opportunity'), ('state', '!=' , 'done')]}">
                             <div class="o_stat_info">
                                 <field name="lead_count"/>
                                 <span class="o_stat_text">Opportunities</span>
                             </div>
                         </button>
-                        <button name="action_get_lead_action" class="oe_stat_button" type="object" icon="fa-handshake-o" groups="crm.group_use_lead"
+                        <button name="action_get_lead_action" class="oe_stat_button" type="object" icon="far fa-handshake" groups="crm.group_use_lead"
                                 attrs="{'invisible': ['|', ('lead_type', '!=', 'lead'), ('state', '!=' , 'done')]}">
                             <div class="o_stat_info">
                                 <field name="lead_count"/>

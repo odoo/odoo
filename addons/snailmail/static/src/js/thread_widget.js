@@ -95,7 +95,7 @@ ThreadWidget.include({
                 '<p>The letter could not be sent due to insufficient credits on your IAP account.</p>' +
                 '<div class= "text-right">' +
                 '<a class="btn btn-link buy_credits" href=%s target="_blank">' +
-                '<i class= "fa fa-arrow-right"/> Buy credits' +
+                '<i class= "fas fa-arrow-right"/> Buy credits' +
                 '</a>' +
                 '</div>'
             ), link);
@@ -194,7 +194,7 @@ ThreadWidget.include({
                 '<p>You need credits on your IAP account to send a letter.</p>' +
                 '<div class= "text-right">' +
                 '<a class="btn btn-link buy_credits" href=%s>' +
-                '<i class= "fa fa-arrow-right"/> Buy credits' +
+                '<i class= "fas fa-arrow-right"/> Buy credits' +
                 '</a>' +
                 '</div>'
             ), link);

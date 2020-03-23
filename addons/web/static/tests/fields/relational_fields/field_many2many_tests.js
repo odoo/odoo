@@ -136,7 +136,7 @@ QUnit.module('fields', {}, function () {
                     '<templates>' +
                     '<t t-name="kanban-box">' +
                     '<div class="oe_kanban_global_click">' +
-                    '<a t-if="!read_only_mode" type="delete" class="fa fa-times float-right delete_icon"/>' +
+                    '<a t-if="!read_only_mode" type="delete" class="fas fa-times float-right delete_icon"/>' +
                     '<span><t t-esc="record.display_name.value"/></span>' +
                     '</div>' +
                     '</t>' +
@@ -317,7 +317,7 @@ QUnit.module('fields', {}, function () {
                     '<templates>' +
                     '<t t-name="kanban-box">' +
                     '<div class="oe_kanban_global_click">' +
-                    '<a t-if="!read_only_mode" type="delete" class="fa fa-times float-right delete_icon"/>' +
+                    '<a t-if="!read_only_mode" type="delete" class="fas fa-times float-right delete_icon"/>' +
                     '<span><t t-esc="record.display_name.value"/></span>' +
                     '</div>' +
                     '</t>' +
@@ -577,7 +577,7 @@ QUnit.module('fields', {}, function () {
                 'display_name of first subrecord should be the one in DB');
             assert.ok(form.$('.o_list_record_remove').length,
                 'delete icon should be visible in edit');
-            assert.hasClass(form.$('td.o_list_record_remove button').first(),'fa fa-times',
+            assert.hasClass(form.$('td.o_list_record_remove button').first(),'fas fa-times',
                 "should have X icons to remove (unlink) records");
             assert.ok(form.$('.o_field_x2many_list_row_add').length,
                 '"Add an item" should not visible in edit');

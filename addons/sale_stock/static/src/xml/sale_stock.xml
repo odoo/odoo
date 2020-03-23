@@ -2,10 +2,10 @@
     <div t-name="sale_stock.qtyAtDate">
         <div t-att-class="!widget.data.display_qty_widget ? 'd-none' : ''">
             <t t-if="widget.data.virtual_available_at_date &lt; widget.data.qty_to_deliver and !widget.data.is_mto">
-                <a tabindex="0" class="fa fa-info-circle text-danger"/>
+                <a tabindex="0" class="fas fa-info-circle text-danger"/>
             </t>
             <t t-else="">
-                <a tabindex="0" class="fa fa-info-circle text-primary"/>
+                <a tabindex="0" class="fas fa-info-circle text-primary"/>
             </t>
         </div>
     </div>
@@ -38,7 +38,7 @@
         </table>
         <button t-if="!data.is_mto" class="text-left btn btn-link action_open_forecast"
             type="button">
-            <i class="fa fa-fw o_button_icon fa-arrow-right"></i>
+            <i class="fas fa-fw o_button_icon fa-arrow-right"></i>
             View Forecast
         </button>
     </div>

@@ -9,7 +9,7 @@
             <form string="Coupon Program">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" type="object" icon="fa-usd" name="action_view_sales_orders">
+                        <button class="oe_stat_button" type="object" icon="fas fa-dollar-sign" name="action_view_sales_orders">
                             <field name="order_count" string="Sales" widget="statinfo"/>
                         </button>
                     </div>
@@ -88,7 +88,7 @@
                 </header>
             </xpath>
             <xpath expr="//field[@name='order_count']/.." position="before">
-                <button class="oe_stat_button" type="action" icon="fa-ticket" name="%(sale_coupon.sale_coupon_action)d">
+                <button class="oe_stat_button" type="action" icon="fas fa-ticket-alt" name="%(sale_coupon.sale_coupon_action)d">
                     <field name="coupon_count" string="Coupons" widget="statinfo"/>
                 </button>
             </xpath>
@@ -204,7 +204,7 @@
                 <h1><field name="name" class="oe_title" placeholder="Promotion Program Name..." height="20px"/></h1>
             </xpath>
             <xpath expr="//field[@name='order_count']/.." position="before">
-                <button class="oe_stat_button" type="action" icon="fa-ticket" name="%(sale_coupon.sale_coupon_action)d" attrs="{'invisible': [('promo_applicability', '=', 'on_current_order')]}">
+                <button class="oe_stat_button" type="action" icon="fas fa-ticket-alt" name="%(sale_coupon.sale_coupon_action)d" attrs="{'invisible': [('promo_applicability', '=', 'on_current_order')]}">
                     <field name="coupon_count" string="Coupons" widget="statinfo"/>
                 </button>
             </xpath>

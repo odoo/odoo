@@ -893,7 +893,7 @@ var SnippetsMenu = Widget.extend({
                 text: _t('Invisible Elements'),
                 class: 'o_panel_header',
             }).prepend(
-                $('<i/>', {class: 'fa fa-eye-slash'})
+                $('<i/>', {class: 'far fa-eye-slash'})
             )[0]
         );
 

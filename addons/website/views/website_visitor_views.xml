@@ -106,8 +106,8 @@
                                     <div>
                                         <b><field name="display_name"/></b>
                                         <div class="float-right">
-                                            <span class="fa fa-circle text-success" t-if="record.is_connected.raw_value" aria-label="Online" title="Online"/>
-                                            <span class="fa fa-circle text-danger" t-else="" aria-label="Offline" title="Offline"/>
+                                            <span class="fas fa-circle text-success" t-if="record.is_connected.raw_value" aria-label="Online" title="Online"/>
+                                            <span class="fas fa-circle text-danger" t-else="" aria-label="Offline" title="Offline"/>
                                         </div>
                                         <div>
                                             <img t-if="record.country_id.raw_value"
@@ -142,8 +142,8 @@
                             <!-- displayed in grouped mode -->
                             <div class="oe_kanban_details">
                                 <div class="float-right">
-                                    <span class="fa fa-circle text-success" t-if="record.is_connected.raw_value" aria-label="Online" title="Online"/>
-                                    <span class="fa fa-circle text-danger" t-else="" aria-label="Offline" title="Offline"/>
+                                    <span class="fas fa-circle text-success" t-if="record.is_connected.raw_value" aria-label="Online" title="Online"/>
+                                    <span class="fas fa-circle text-danger" t-else="" aria-label="Offline" title="Offline"/>
                                 </div>
                                 <strong>
                                     <img t-if="record.country_id.raw_value"
@@ -180,19 +180,19 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button o_stat_button_info" attrs="{'invisible': [('is_connected', '=', False)]}">
-                            <i class="fa fa-fw o_button_icon fa-circle text-success"/>
+                            <i class="fas fa-fw o_button_icon fa-circle text-success"/>
                             <span>Connected</span>
                         </button>
                         <button class="oe_stat_button o_stat_button_info" attrs="{'invisible': [('is_connected', '=', True)]}">
-                            <i class="fa fa-fw o_button_icon fa-circle text-danger"/>
+                            <i class="fas fa-fw o_button_icon fa-circle text-danger"/>
                             <span>Offline</span>
                         </button>
-                        <button id="w_visitor_visit_counter" class="oe_stat_button o_stat_button_info" icon="fa-globe">
+                        <button id="w_visitor_visit_counter" class="oe_stat_button o_stat_button_info" icon="fas fa-globe">
                             <field name="visit_count" widget="statinfo" string="Visits"/>
                         </button>
                         <button name="%(website.website_visitor_page_action)d" type="action"
                                 class="oe_stat_button"
-                                icon="fa-tags">
+                                icon="fas fa-tags">
                             <field name="visitor_page_count" widget="statinfo" string="Page views"/>
                         </button>
                     </div>
@@ -237,7 +237,7 @@
                 <field name="is_connected" invisible="1"/>
                 <field name="email" invisible="1"/>
                 <button string="Send Email" name="action_send_mail" type="object"
-                    icon="fa-envelope" attrs="{'invisible': [('email', '=', False)]}"/>
+                    icon="fas fa-envelope" attrs="{'invisible': [('email', '=', False)]}"/>
             </tree>
         </field>
     </record>

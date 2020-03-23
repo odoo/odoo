@@ -17,7 +17,7 @@
             <h1>
                 <span t-field="survey.title"/>
                 <span style="font-size:1.5em;"
-                    t-attf-class="fa fa-bar-chart-o #{'fa-bar-chart-o' if survey.scoring_type == 'no_scoring' else 'fa-trophy' if survey.certification else 'fa-question-circle-o'} float-right " role="img" aria-label="Chart" title="Chart"/>
+                    t-attf-class="far fa-chart-bar #{'fa-bar-chart-o' if survey.scoring_type == 'no_scoring' else 'fa-trophy' if survey.certification else 'fa-question-circle-o'} float-right " role="img" aria-label="Chart" title="Chart"/>
             </h1>
             <div t-field="survey.description" class="oe_no_empty"/>
             <h2 t-if="not question_and_page_data">
@@ -32,12 +32,12 @@
             <t t-call="survey.user_input_session_leaderboard" />
         </div>
         <div t-if="question_and_page_data" class="card d-print-none">
-            <div class="card-header"><span class="fa fa-filter"></span>  Filters <span t-if="search_filters" class="float-right text-primary clear_survey_filter"><i class="fa fa-times"></i> Clear All Filters</span></div>
+            <div class="card-header"><span class="fas fa-filter"></span>  Filters <span t-if="search_filters" class="float-right text-primary clear_survey_filter"><i class="fas fa-times"></i> Clear All Filters</span></div>
             <div class="card-body">
                 <span t-att-class="'badge only_left_radius filter-all %s' % 'badge-secondary' if search_finished else 'badge-primary o_active_filter'">All surveys</span>
                 <span t-att-class="'badge only_right_radius filter-finished %s' % 'badge-secondary' if not search_finished else 'badge-primary o_active_filter'">Finished surveys</span>
                 <span t-foreach="search_filters" t-as="filter_data">
-                    <span class="badge badge-primary only_left_radius"><i class="fa fa-filter" role="img" aria-label="Filter" title="Filter"></i></span><span class="badge badge-primary no_radius" t-esc="filter_data['question']"></span><span class="badge badge-success only_right_radius" t-esc="' > '.join(filter_data['answers'])"></span>
+                    <span class="badge badge-primary only_left_radius"><i class="fas fa-filter" role="img" aria-label="Filter" title="Filter"></i></span><span class="badge badge-primary no_radius" t-esc="filter_data['question']"></span><span class="badge badge-success only_right_radius" t-esc="' > '.join(filter_data['answers'])"></span>
                 </span>
             </div>
         </div>
@@ -199,14 +199,14 @@
                 <a t-att-href="'#survey_stats_question_%d' % question.id"
                     t-att-aria-controls="'survey_stats_question_%d' % question.id"
                     class="nav-link active" data-toggle="tab" role="tab">
-                    <i class="fa fa-list-ol"></i> Most Common
+                    <i class="fas fa-list-ol"></i> Most Common
                 </a>
             </li>
             <li class="nav-item">
                 <a t-att-href="'#survey_data_question_%d' % question.id"
                     t-att-aria-controls="'survey_data_question_%d' % question.id"
                     class="nav-link" data-toggle="tab" role="tab">
-                    <i class="fa fa-list-alt"></i> All Data
+                    <i class="far fa-list-alt"></i> All Data
                 </a>
             </li>
         </ul>
@@ -268,7 +268,7 @@
                 <a t-att-href="'#survey_graph_question_%d' % question.id"
                     t-att-aria-controls="'survey_graph_question_%d' % question.id"
                     class="nav-link active" data-toggle="tab" role="tab">
-                    <i class="fa fa-bar-chart-o"></i>
+                    <i class="far fa-chart-bar"></i>
                     <span t-if="question.question_type == 'simple_choice'">Pie Graph</span>
                     <span t-else="">Graph</span>
                 </a>
@@ -277,7 +277,7 @@
                 <a t-att-href="'#survey_data_question_%d' % question.id"
                     t-att-aria-controls="'survey_data_question_%d' % question.id"
                     class="nav-link" data-toggle="tab" role="tab">
-                    <i class="fa fa-list-alt"></i> Data
+                    <i class="far fa-list-alt"></i> Data
                 </a>
             </li>
         </ul>
@@ -308,7 +308,7 @@
                                 <span t-esc="round(choice_data['count'] * 100.0/ (len(question_data['answer_line_done_ids']) or 1), 2)"></span> %
                                 <span t-esc="'%s Votes' % choice_data['count']" class="badge badge-primary"/>
                                 <i t-if="choice_data['suggested_answer'].id"
-                                    class="fa fa-filter text-primary survey_filter"
+                                    class="fas fa-filter text-primary survey_filter"
                                     t-att-data-question_id="question.id"
                                     t-att-data-answer_id="choice_data['suggested_answer'].id"
                                     role="img" aria-label="Filter question" title="Filter question"/>
@@ -330,14 +330,14 @@
                 <a t-att-href="'#survey_graph_question_%d' % question.id"
                     t-att-aria-controls="'survey_graph_question_%d' % question.id"
                     class="nav-link active" data-toggle="tab" role="tab">
-                    <i class="fa fa-bar-chart"></i> Graph
+                    <i class="far fa-chart-bar"></i> Graph
                 </a>
             </li>
             <li class="nav-item">
                 <a t-att-href="'#survey_data_question_%d' % question.id"
                     t-att-aria-controls="'survey_data_question_%d' % question.id"
                     class="nav-link" data-toggle="tab" role="tab">
-                    <i class="fa fa-list-alt"></i> Data
+                    <i class="far fa-list-alt"></i> Data
                 </a>
             </li>
         </ul>
@@ -368,7 +368,7 @@
                             <td class="survey_answer" t-foreach="choice_data['columns']" t-as="column_data">
                                 <span t-esc="round(column_data['count'] * 100.0/ (len(question_data['answer_line_done_ids']) or 1), 2)"></span> %
                                 <span class="badge badge-primary" t-esc="column_data['count']"></span>
-                                <i class="fa fa-filter text-primary survey_filter"
+                                <i class="fas fa-filter text-primary survey_filter"
                                     t-att-data-question_id="question.id"
                                     t-att-data-row_id="choice_data['row'].id"
                                     t-att-data-answer_id="column_data['suggested_answer'].id" role="img" aria-label="Survey filter" title="Survey filter"></i>

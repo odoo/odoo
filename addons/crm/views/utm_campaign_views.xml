@@ -12,7 +12,7 @@
                 <div class="mr-3"
                     groups="sales_team.group_sale_salesman"
                     t-att-title="record.use_leads.raw_value ? 'Leads' : 'Opportunities'">
-                    <i class="fa fa-star text-muted"></i>
+                    <i class="fas fa-star text-muted"></i>
                     <small class="font-weight-bold"><field name="crm_lead_count"/></small>
                 </div>
             </xpath>
@@ -28,7 +28,7 @@
                 <button name="action_redirect_to_leads_opportunities"
                     type="object"
                     class="oe_stat_button order-3"
-                    icon="fa-star"
+                    icon="fas fa-star"
                     groups="sales_team.group_sale_salesman">
                     <div class="o_field_widget o_stat_info">
                         <field name="use_leads" invisible="1"/>

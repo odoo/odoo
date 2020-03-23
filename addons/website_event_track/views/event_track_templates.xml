@@ -139,22 +139,22 @@
                                 </h3>
                                 <ul class="list-inline mb0">
                                     <li t-if="track.partner_id" class="list-inline-item">
-                                        <i class="fa fa-user text-primary"/>
+                                        <i class="fas fa-user text-primary"/>
                                         <t t-esc="track.partner_id.sudo().name"/>
                                     </li>
                                     <li t-if="track.date" class="list-inline-item">
-                                        <i class="fa fa-calendar text-primary"/>
+                                        <i class="fas fa-calendar-alt text-primary"/>
                                         <span t-field="track.date" t-options='{"hide_seconds":"True"}'/>
                                     </li>
                                     <li class="list-inline-item" t-if="track.location_id">
-                                        <i class="fa fa-map-marker"/>
+                                        <i class="fas fa-map-marker-alt"/>
                                         <span t-field="track.location_id"/>
                                     </li>
                                 </ul>
                                 <ul class="list-inline">
-                                    <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item fa fa-tags" t-if="tag_id.color != 0">
+                                    <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item fas fa-tags" t-if="tag_id.color != 0">
                                         <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
-                                            <i class="fa fa-tags"/>
+                                            <i class="fas fa-tags"/>
                                             <span t-field="tag_id.name"/>
                                         </a>
                                     </li>
@@ -207,7 +207,7 @@
                         </small>
                         <ul t-if="track.tag_ids" class="text-center text-muted list-inline">
                             <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item" t-if="tag_id.color != 0">
-                                <span class="fa fa-tags"></span>
+                                <span class="fas fa-tags"></span>
                                 <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
                                     <span t-field="tag_id.name"/>
                                 </a>
@@ -232,7 +232,7 @@
                             <div class="col-md-10">
                                 <h4 t-field="track.partner_id.name" class="mb4"/>
                                 <div class="mb16" t-if="track.partner_id.website">
-                                    <i class="fa fa-home mr-2"/><a t-att-href="track.partner_id.website"><span t-field="track.partner_id.website"/></a>
+                                    <i class="fas fa-home mr-2"/><a t-att-href="track.partner_id.website"><span t-field="track.partner_id.website"/></a>
                                 </div>
                                 <div t-field="track.partner_id.website_description"/>
                             </div>
@@ -307,7 +307,7 @@
                                 Fill this form to propose your talk.
                             </p>
                             <div class="alert alert-info" role="alert">
-                                <i class="fa fa-info-circle"/>
+                                <i class="fas fa-info-circle"/>
                                 You can add multiple speakers by separating names, emails and phones with commas.
                             </div>
                         </section>

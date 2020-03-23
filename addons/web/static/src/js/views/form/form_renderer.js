@@ -837,7 +837,7 @@ var FormRenderer = BasicRenderer.extend({
         const field = this.state.fields[fieldName];
         if (field && field.company_dependent) {
             $result.append($('<span>', {
-                class: 'fa fa-sm fa-building-o ml-2',
+                class: 'far fa-sm fa-building ml-2',
                 title: _t("Values set here are company-specific"),
             }));
         }

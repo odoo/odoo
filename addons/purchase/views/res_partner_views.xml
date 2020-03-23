@@ -41,7 +41,7 @@
                     <field name="purchase_order_count"/>
                 </field>
                 <xpath expr="//div[hasclass('oe_kanban_partner_links')]" position="inside">
-                    <span t-if="record.purchase_order_count.value>0" class="badge badge-pill"><i class="fa fa-fw fa-shopping-cart" role="img" aria-label="Shopping cart" title="Shopping cart"/><t t-esc="record.purchase_order_count.value"/></span>
+                    <span t-if="record.purchase_order_count.value>0" class="badge badge-pill"><i class="fas fa-fw fa-shopping-cart" role="img" aria-label="Shopping cart" title="Shopping cart"/><t t-esc="record.purchase_order_count.value"/></span>
                 </xpath>
             </field>
         </record>
@@ -74,7 +74,7 @@
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="%(purchase.act_res_partner_2_purchase_order)d" type="action"
                         groups="purchase.group_purchase_user"
-                        icon="fa-shopping-cart">
+                        icon="fas fa-shopping-cart">
                         <field string="Purchases" name="purchase_order_count" widget="statinfo"/>
                     </button>
                 </div>
@@ -98,7 +98,7 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="%(purchase.act_res_partner_2_supplier_invoices)d" type="action"
-                        icon="fa-pencil-square-o" help="Vendor Bills">
+                        icon="far fa-edit" help="Vendor Bills">
                         <field string="Vendor Bills" name="supplier_invoice_count" widget="statinfo"/>
                     </button>
                 </div>

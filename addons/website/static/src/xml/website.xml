@@ -36,7 +36,7 @@
         <t t-if="dependencies and _.keys(dependencies).length">
             <p class="text-warning">We found these ones:</p>
             <div t-foreach="dependencies" t-as="type" class="mb16">
-                <a class="collapsed fa fa-caret-right" data-toggle="collapse" t-attf-href="#collapseDependencies#{type_index}" aria-expanded="false" t-attf-aria-controls="collapseDependencies#{type_index}">
+                <a class="collapsed fas fa-caret-right" data-toggle="collapse" t-attf-href="#collapseDependencies#{type_index}" aria-expanded="false" t-attf-aria-controls="collapseDependencies#{type_index}">
                     <t t-esc="type"/>&amp;nbsp;
                     <span class="text-muted"><t t-esc="type_value.length"/> found(s)</span>
                 </a>

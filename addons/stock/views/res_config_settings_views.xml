@@ -18,7 +18,7 @@
                                 <div class="o_setting_right_pane" id="barcode_settings">
                                     <label for="module_stock_barcode"/>
                                     <a href="https://www.odoo.com/documentation/user/13.0/inventory/barcode/setup/software.html" title="Documentation" class="mr-2 o_doc_link" target="_blank"></a>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted" name="stock_barcode">
                                         Process operations faster with barcodes
                                     </div>
@@ -73,7 +73,7 @@
                                 <div class="o_setting_right_pane">
                                     <label for="stock_move_email_validation" string="Email Confirmation"/>
                                     <a href="https://www.odoo.com/documentation/user/13.0/inventory/management/misc/email_delivery.html" title="Documentation" class="mr-2 o_doc_link" target="_blank"></a>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted">
                                         Send an automatic confirmation email when Delivery Orders are done
                                     </div>
@@ -90,7 +90,7 @@
                                 <div class="o_setting_right_pane">
                                     <label for="module_stock_sms"/>
                                     <a href="https://www.odoo.com/documentation/user/13.0/inventory/management/misc/sms_delivery.html" title="Documentation" class="mr-2 o_doc_link" target="_blank"></a>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <span class="far fa-lg fa-building" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted">
                                         Send an automatic confirmation SMS Text Message when Delivery Orders are done
                                     </div>
@@ -227,7 +227,7 @@
                                     </div>
                                     <div class="content-group">
                                         <div class="mt8" attrs="{'invisible': [('group_product_variant', '=', False)]}">
-                                            <button name="%(product.attribute_action)d" icon="fa-arrow-right" type="action" string="Attributes" class="btn-link"/>
+                                            <button name="%(product.attribute_action)d" icon="fas fa-arrow-right" type="action" string="Attributes" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
@@ -244,7 +244,7 @@
                                     </div>
                                     <div class="content-group">
                                         <div class="mt8" attrs="{'invisible': [('group_uom', '=', False)]}">
-                                            <button name="%(uom.product_uom_form_action)d" icon="fa-arrow-right" type="action" string="Units Of Measure" class="btn-link"/>
+                                            <button name="%(uom.product_uom_form_action)d" icon="fas fa-arrow-right" type="action" string="Units Of Measure" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
@@ -263,7 +263,7 @@
                                     </div>
                                     <div class="content-group">
                                         <div class="mt8" attrs="{'invisible': [('group_stock_packaging', '=', False)]}">
-                                            <button name="%(product.action_packaging_view)d" icon="fa-arrow-right" type="action" string="Product Packagings" class="btn-link"/>
+                                            <button name="%(product.action_packaging_view)d" icon="fas fa-arrow-right" type="action" string="Product Packagings" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
@@ -337,8 +337,8 @@
                                     </div>
                                     <div class="content-group">
                                         <div class="mt8" attrs="{'invisible': [('group_stock_multi_locations', '=', False)]}">
-                                            <button name="%(stock.action_location_form)d" icon="fa-arrow-right" type="action" string="Locations" class="btn-link"/><br/>
-                                            <button name="stock.action_putaway_tree" icon="fa-arrow-right" type="action" string="Putaway Rules" class="btn-link"/>
+                                            <button name="%(stock.action_location_form)d" icon="fas fa-arrow-right" type="action" string="Locations" class="btn-link"/><br/>
+                                            <button name="stock.action_putaway_tree" icon="fas fa-arrow-right" type="action" string="Putaway Rules" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
@@ -355,7 +355,7 @@
                                     </div>
                                     <div class="content-group">
                                         <div class="mt8" attrs="{'invisible': [('group_stock_multi_warehouses', '=', False)]}">
-                                            <button name="%(stock.action_warehouse_form)d" icon="fa-arrow-right" type="action" string="Warehouses" class="btn-link"/>
+                                            <button name="%(stock.action_warehouse_form)d" icon="fas fa-arrow-right" type="action" string="Warehouses" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
@@ -374,7 +374,7 @@
                                     </div>
                                     <div class="content-group">
                                         <div class="mt8" attrs="{'invisible': [('group_stock_adv_location', '=', False)]}">
-                                            <button name="%(stock.action_warehouse_form)d" icon="fa-arrow-right" type="action" string="Set Warehouse Routes" class="btn-link"/>
+                                            <button name="%(stock.action_warehouse_form)d" icon="fas fa-arrow-right" type="action" string="Set Warehouse Routes" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>

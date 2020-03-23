@@ -39,7 +39,7 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_contacts"
-                                type="object" icon="fa-user" class="oe_stat_button">
+                                type="object" icon="fas fa-user" class="oe_stat_button">
                             <field name="contact_nbr" string="Recipients" widget="statinfo"/>
                         </button>
                     </div>
@@ -115,7 +115,7 @@
                                 <div class="o_kanban_card_manage_pane">
                                     <div class="o_kanban_card_manage_section o_dropdown_kanban dropdown">
                                         <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" data-display="static" aria-label="Dropdown menu" title="Dropdown menu">
-                                            <span class="fa fa-ellipsis-v"/>
+                                            <span class="fas fa-ellipsis-v"/>
                                         </a>
                                         <div class="dropdown-menu" role="menu">
                                             <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
@@ -132,7 +132,7 @@
                                 <a name="action_view_contacts" type="object">
                                     <div>
                                         <span class="badge badge-pill">
-                                            <i class="fa fa-user" role="img" aria-label="Contacts" title="Contacts"/>
+                                            <i class="fas fa-user" role="img" aria-label="Contacts" title="Contacts"/>
                                             <t t-esc="record.contact_nbr.value"/>
                                         </span>
                                     </div>

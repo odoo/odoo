@@ -246,7 +246,7 @@ options.registry.gallery = options.Class.extend({
             text: _t(" Add Images"),
         });
         var $icon = $('<i>', {
-            class: ' fa fa-plus-circle',
+            class: ' fas fa-plus-circle',
         });
         this._replaceContent($addImg.append($icon).append($text));
     },

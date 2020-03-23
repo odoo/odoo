@@ -98,7 +98,7 @@ odoo.define('web.TimeRangeMenu', function (require) {
     }
 
     TimeRangeMenu.defaultProps = Object.assign({}, DropdownMenu.defaultProps, {
-        icon: 'fa fa-calendar',
+        icon: 'fas fa-calendar-alt',
     });
     TimeRangeMenu.props = Object.assign({}, DropdownMenu.props, {
         fields: Object,

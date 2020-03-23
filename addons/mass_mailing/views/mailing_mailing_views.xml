@@ -101,7 +101,7 @@
                                 id="button_view_sent"
                                 type="object"
                                 context="{'search_default_filter_sent': True}"
-                                icon="fa-envelope-o" class="oe_stat_button"
+                                icon="far fa-envelope" class="oe_stat_button"
                                 attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test'))]}" >
                                 <field name="sent" string="Sent" widget="statinfo"/>
                             </button>
@@ -284,7 +284,7 @@
                             <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing">
                                 <div class="o_dropdown_kanban dropdown" t-if="!selection_mode">
                                     <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" data-display="static" aria-label="Dropdown menu" title="Dropdown menu">
-                                        <span class="fa fa-ellipsis-v"/>
+                                        <span class="fas fa-ellipsis-v"/>
                                     </a>
                                     <div class="dropdown-menu" role="menu">
                                         <ul class="oe_kanban_colorpicker" data-field="color"/>
@@ -347,12 +347,12 @@
                                     <div class="oe_kanban_bottom_left">
                                         <span attrs="{'invisible': [('sent_date', '=', False)]}"
                                             t-attf-title="Sent on #{record.sent_date.value}" class="d-inline-flex">
-                                            <span class="fa fa-calendar-check-o mr-2 small my-auto" aria-label="Sent date"/>
+                                            <span class="far fa-calendar-check mr-2 small my-auto" aria-label="Sent date"/>
                                             <span class="align-self-baseline"><field name="sent_date" widget="date"/></span>
                                         </span>
                                         <span attrs="{'invisible': [('schedule_date', '=', False)]}"
                                             t-attf-title="Scheduled on #{record.schedule_date.value}" class="d-inline-flex">
-                                            <span class="fa fa-hourglass-half mr-2 small my-auto" aria-label="Scheduled date"/>
+                                            <span class="fas fa-hourglass-half mr-2 small my-auto" aria-label="Scheduled date"/>
                                             <span class="align-self-baseline"><field name="schedule_date" widget="date"/></span>
                                         </span>
                                         <span attrs="{'invisible': ['|', '|', ('sent_date', '!=', False), ('schedule_date', '!=', False), ('state', '=', 'in_queue')]}"
@@ -363,7 +363,7 @@
                                         </span>
                                         <span attrs="{'invisible': ['|', '|', ('schedule_date', '!=', False), ('state', '!=', 'in_queue'), ('next_departure', '=', False)]}"
                                             t-attf-title="Scheduled on #{record.next_departure.value}" class="d-inline-flex">
-                                            <span class="fa fa-hourglass-o mr-2 small my-auto" aria-label="Scheduled date"/>
+                                            <span class="far fa-hourglass mr-2 small my-auto" aria-label="Scheduled date"/>
                                             <span class="align-self-baseline">Next Batch</span>
                                         </span>
                                     </div>

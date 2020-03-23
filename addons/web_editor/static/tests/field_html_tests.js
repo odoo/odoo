@@ -339,7 +339,7 @@ QUnit.module('web_editor', {}, function () {
             var $editable = form.$('.oe_form_field[name="body"] .note-editable');
 
             assert.strictEqual($editable.data('wysiwyg').getValue(),
-                '<p>t<span class="fa fa-glass"></span>oto toto toto</p><p>tata</p>',
+                '<p>t<span class="fas fa-glass-martini"></span>oto toto toto</p><p>tata</p>',
                 "should have the image in the dom");
 
             testUtils.mock.unpatch(MediaDialog);

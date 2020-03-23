@@ -305,7 +305,7 @@
                         <button name="action_view_invoice"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-pencil-square-o"
+                            icon="far fa-edit"
                             attrs="{'invisible': [('invoice_count', '=', 0)]}">
                             <field name="invoice_count" widget="statinfo" string="Invoices"/>
                         </button>
@@ -338,7 +338,7 @@
                                 <button name="update_prices" type="object"
                                     string=" Update Prices"
                                     help="Recompute all prices based on this pricelist"
-                                    class="btn-link mb-1 px-0" icon="fa-refresh"
+                                    class="btn-link mb-1 px-0" icon="fas fa-sync"
                                     confirm="This will update all unit prices based on the currently set pricelist."
                                     attrs="{'invisible': ['|', ('show_update_pricelist', '=', False), ('state', 'in', ['sale', 'done','cancel'])]}"/>
                             </div>
@@ -1107,7 +1107,7 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="action_view_sales"
-                        type="object" icon="fa-signal" groups="sales_team.group_sale_salesman" help="Sold in the last 365 days" attrs="{'invisible': [('sale_ok', '=', False)]}">
+                        type="object" icon="fas fa-signal" groups="sales_team.group_sale_salesman" help="Sold in the last 365 days" attrs="{'invisible': [('sale_ok', '=', False)]}">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value">
                                 <field name="sales_count" widget="statinfo" nolabel="1" class="mr4"/>
@@ -1135,7 +1135,7 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="action_view_sales"
-                        type="object" icon="fa-signal" groups="sales_team.group_sale_salesman" help="Sold in the last 365 days" attrs="{'invisible': [('sale_ok', '=', False)]}">
+                        type="object" icon="fas fa-signal" groups="sales_team.group_sale_salesman" help="Sold in the last 365 days" attrs="{'invisible': [('sale_ok', '=', False)]}">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value">
                                 <field name="sales_count" widget="statinfo" nolabel="1" class="mr4"/>

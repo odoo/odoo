@@ -13,7 +13,7 @@
 
 <t t-name="mail.KanbanActivityLoading">
     <div class="dropdown-item text-center o_no_activity">
-        <span class="fa fa-spinner fa-spin fa-2x" role="img" aria-label="Loading..." title="Loading..."/>
+        <span class="fas fa-spinner fa-spin fa-2x" role="img" aria-label="Loading..." title="Loading..."/>
     </div>
 </t>
 
@@ -47,7 +47,7 @@
     <div class="dropdown-divider mt-0"/>
     <div role="menuitem" class="o_schedule_activity dropdown-header py-1 text-center">
         <button class="btn btn-secondary mb-1">
-            <i class="fa fa-plus fa-fw"></i><strong>Schedule an activity</strong>
+            <i class="fas fa-plus fa-fw"></i><strong>Schedule an activity</strong>
         </button>
     </div>
 </t>
@@ -58,15 +58,15 @@
             <div t-attf-class="o_activity_title_entry {{! log.force_next ? 'align-items-center' : 'mb-1'}}">
                 <span t-attf-class="fa #{log.icon ? log.icon : 'fa-bell' } fa-fw mr-2 text-center text-muted" role="img" aria-label="Log" title="Log"/>
                 <strong class="text-dark"><t t-esc="log.title_action or log.activity_type_id[1]"/></strong>
-                <button t-if="! log.force_next and log.can_write" class="btn btn-sm btn-link py-0 o_edit_button"><i class="fa fa-pencil"/></button>
+                <button t-if="! log.force_next and log.can_write" class="btn btn-sm btn-link py-0 o_edit_button"><i class="fas fa-pencil-alt"/></button>
             </div>
             <div class="o_activity_title_entry mt-1" t-if="log.state != 'today'">
-                <span class="fa fa-clock-o fa-fw mr-2 text-center text-muted" role="img" aria-label="Deadline" title="Deadline"/>
+                <span class="far fa-clock fa-fw mr-2 text-center text-muted" role="img" aria-label="Deadline" title="Deadline"/>
                 <small t-att-title="log.date_deadline"><t t-esc="log.label_delay" /></small>
             </div>
             <t t-if="log.mail_template_ids">
                 <div t-foreach="log.mail_template_ids" t-as="mail_template" class="o_activity_title_entry mt-2" t-att-data-activity-id="log.id" t-att-data-force-next-activity="log.force_next" t-att-data-previous-activity-type-id="log.activity_type_id[0]">
-                    <i class="fa fa-envelope-o fa-fw mr-2 text-center text-muted" aria-label="Mail" title="Mail" role="img"></i>
+                    <i class="far fa-envelope fa-fw mr-2 text-center text-muted" aria-label="Mail" title="Mail" role="img"></i>
                     <small>
                         <div class="mb-1" t-esc="mail_template.name + ':'"/>
                         <a class="o_activity_template_preview" t-att-data-template-id="mail_template.id" href="#"><b>Preview</b></a>
@@ -76,7 +76,7 @@
                 </div>
             </t>
             <div t-if="log.user_id[0] != session.uid and log.mail_template_ids" class="o_activity_title_entry">
-                <span class="fa fa-user fa-fw mr-2 text-center text-muted" role="img" aria-label="User" title="User"/>
+                <span class="fas fa-user fa-fw mr-2 text-center text-muted" role="img" aria-label="User" title="User"/>
                 <span><t t-esc="log.user_id[1]" /></span>
             </div>
         </div>
@@ -85,7 +85,7 @@
                 <a  t-att-data-force-next-activity="log.force_next"
                     t-att-data-previous-activity-type-id="log.activity_type_id[0]"
                     t-att-data-activity-id="log.id"
-                    class="o_mark_as_done_upload_file o_activity_link o_activity_link_kanban fa fa-upload"
+                    class="o_mark_as_done_upload_file o_activity_link o_activity_link_kanban fas fa-upload"
                     title="Upload file" role="img" t-att-data-fileupload-id="log.fileuploadID"/>
                     <span class="d-none">
                         <t t-call="HiddenInputFile">
@@ -101,7 +101,7 @@
                     t-att-data-previous-activity-type-id="log.activity_type_id[0]"
                     t-att-data-activity-id="log.id"
                     t-attf-href="#o_mark_done_form{{log.id}}"
-                    class="o_mark_as_done o_activity_link o_activity_link_kanban fa fa-check-circle"
+                    class="o_mark_as_done o_activity_link o_activity_link_kanban fas fa-check-circle"
                     data-toggle="collapse" title="Mark as done" role="img" aria-label="Mark as done"/>
             </t>
         </div>

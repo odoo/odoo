@@ -100,14 +100,14 @@
                     </header>
                 <sheet string="Project">
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
-                        <button  class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-file-text-o">
+                        <button  class="oe_stat_button" name="attachment_tree_view" type="object" icon="far fa-file-alt">
                             <field string="Documents" name="doc_count" widget="statinfo"/>
                         </button>
                         <button class="oe_stat_button" type="action"
-                            name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
+                            name="%(act_project_project_2_project_task_all)d" icon="fas fa-tasks">
                             <field string="Tasks" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
                         </button>
-                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', ('rating_status', '=', 'no'), ('rating_percentage_satisfaction', '=', -1)]}" class="oe_stat_button oe_percent" icon="fa-smile-o" groups="project.group_project_rating">
+                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', ('rating_status', '=', 'no'), ('rating_percentage_satisfaction', '=', -1)]}" class="oe_stat_button oe_percent" icon="far fa-smile" groups="project.group_project_rating">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="rating_percentage_satisfaction" nolabel="1"/>
@@ -364,16 +364,16 @@
                                                 </span>
                                             </div>
                                             <div t-if="record.alias_name.value and record.alias_domain.value">
-                                                <span><i class="fa fa-envelope" role="img" aria-label="Domain Alias" title="Domain Alias"></i> <t t-esc="record.alias_id.value"/></span>
+                                                <span><i class="fas fa-envelope" role="img" aria-label="Domain Alias" title="Domain Alias"></i> <t t-esc="record.alias_id.value"/></span>
                                             </div>
                                             <div t-if="record.rating_status.raw_value != 'no'" class="mt8 text-primary" title="Percentage of happy ratings over the past 30 days. Get rating details from the More menu." groups="project.group_project_rating">
                                                 <b>
                                                     <t t-if="record.rating_percentage_satisfaction.value == -1">
-                                                        <i class="fa fa-smile-o"/> No rating yet
+                                                        <i class="far fa-smile"/> No rating yet
                                                     </t>
                                                     <t t-if="record.rating_percentage_satisfaction.value != -1">
                                                         <a name="action_view_all_rating" type="object" context="{'search_default_rating_last_30_days':1}">
-                                                            <i class="fa fa-smile-o" role="img" aria-label="Percentage of satisfaction" title="Percentage of satisfaction"/> <t t-esc="record.rating_percentage_satisfaction.value"/>%
+                                                            <i class="far fa-smile" role="img" aria-label="Percentage of satisfaction" title="Percentage of satisfaction"/> <t t-esc="record.rating_percentage_satisfaction.value"/>%
                                                         </a>
                                                     </t>
                                                 </b>
@@ -396,7 +396,7 @@
                                             <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
                                         </div>
                                     </div>
-                                    <a class="o_kanban_manage_toggle_button o_left" href="#" groups="project.group_project_manager"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
+                                    <a class="o_kanban_manage_toggle_button o_left" href="#" groups="project.group_project_manager"><i class="fas fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                     <span class="o_right"><field name="is_favorite" widget="boolean_favorite" nolabel="1" force_save="1" /></span>
                                 </div>
 
@@ -478,11 +478,11 @@
                     </header>
                     <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_subtask" type="object" class="oe_stat_button" icon="fa-tasks"
+                        <button name="action_subtask" type="object" class="oe_stat_button" icon="fas fa-tasks"
                             attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('id', '=', False)]}" context="{'default_user_id': user_id, 'default_parent_id': id, 'default_project_id': subtask_project_id}">
                             <field string="Sub-tasks" name="subtask_count" widget="statinfo"/>
                         </button>
-                        <button name="%(rating_rating_action_task)d" type="action" attrs="{'invisible': [('rating_count', '=', 0)]}" class="oe_stat_button" icon="fa-smile-o" groups="project.group_project_rating">
+                        <button name="%(rating_rating_action_task)d" type="action" attrs="{'invisible': [('rating_count', '=', 0)]}" class="oe_stat_button" icon="far fa-smile" groups="project.group_project_rating">
                             <field name="rating_count" string="Rating" widget="statinfo"/>
                         </button>
                     </div>
@@ -644,7 +644,7 @@
                                     </div>
                                     <div class="o_dropdown_kanban dropdown" t-if="!selection_mode" groups="base.group_user">
                                         <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                            <span class="fa fa-ellipsis-v"/>
+                                            <span class="fas fa-ellipsis-v"/>
                                         </a>
                                         <div class="dropdown-menu" role="menu">
                                             <a t-if="widget.editable" role="menuitem" type="set_cover" data-auto-open="1" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
@@ -667,12 +667,12 @@
                                         <field name="priority" widget="priority"/>
                                         <field name="activity_ids" widget="kanban_activity"/>
                                         <t t-if="record.message_needaction_counter.raw_value">
-                                            <span role="alert" class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments' role="img" aria-label="Unread Messages"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                            <span role="alert" class='oe_kanban_mail_new' title='Unread Messages'><i class='fas fa-comments' role="img" aria-label="Unread Messages"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                         </t>
                                         <b t-if="record.rating_ids.raw_value.length">
-                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-smile-o text-success" t-if="record.rating_last_value.value == 10" title="Latest Rating: Satisfied" role="img" aria-label="Happy face"/>
-                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-if="record.rating_last_value.value == 5" title="Latest Rating: Not Satisfied" role="img" aria-label="Neutral face"/>
-                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-if="record.rating_last_value.value == 1" title="Latest Rating: Higly Dissatisfied" role="img" aria-label="Sad face"/>
+                                            <span style="font-weight:bold;" class="fas fa-fw mt4 fa-smile-o text-success" t-if="record.rating_last_value.value == 10" title="Latest Rating: Satisfied" role="img" aria-label="Happy face"/>
+                                            <span style="font-weight:bold;" class="fas fa-fw mt4 fa-meh-o text-warning" t-if="record.rating_last_value.value == 5" title="Latest Rating: Not Satisfied" role="img" aria-label="Neutral face"/>
+                                            <span style="font-weight:bold;" class="fas fa-fw mt4 fa-frown-o text-danger" t-if="record.rating_last_value.value == 1" title="Latest Rating: Higly Dissatisfied" role="img" aria-label="Sad face"/>
                                         </b>
                                         <!-- formating of the date -->
                                         <t t-set="date_format" t-value="'MM/DD/YY'" />

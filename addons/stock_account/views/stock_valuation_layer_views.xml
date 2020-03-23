@@ -53,7 +53,7 @@
                 <groupby name="product_id">
                     <field name="cost_method" invisible="1"/>
                     <field name="quantity_svl" invisible="1"/>
-                    <button name="action_revaluation" icon="fa-plus" title="Add Manual Valuation" type="object" attrs="{'invisible':['|', ('cost_method', '=', 'standard'), ('quantity_svl', '&lt;=', 0)]}" />
+                    <button name="action_revaluation" icon="fas fa-plus" title="Add Manual Valuation" type="object" attrs="{'invisible':['|', ('cost_method', '=', 'standard'), ('quantity_svl', '&lt;=', 0)]}" />
                 </groupby>
             </tree>
         </field>
@@ -100,7 +100,7 @@
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button string="Valuation" type="object"
                     name="action_view_stock_valuation_layers"
-                    class="oe_stat_button" icon="fa-dollar" groups="base.group_no_one"
+                    class="oe_stat_button" icon="fas fa-dollar-sign" groups="base.group_no_one"
                     attrs="{'invisible': [('state', 'not in', ['done'])]}" />
             </xpath>
         </field>

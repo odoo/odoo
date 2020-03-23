@@ -3,7 +3,7 @@
     <t t-name="mail.activity_items">
         <div class="o_thread_date_separator o_border_dashed" data-toggle="collapse" data-target="#o_chatter_planned_activities">
             <a role="button" class="o_thread_date btn">
-                <i class="fa fa-fw fa-caret-down"/>
+                <i class="fas fa-fw fa-caret-down"/>
                 Planned activities
                 <small class="o_chatter_planned_activities_summary ml8">
                     <span class="badge rounded-circle badge-danger"><t t-esc="nbOverdueActivities"/></span>
@@ -30,7 +30,7 @@
                             <em> for </em>
                             <t t-esc="activity.user_id[1]" />
                             <a class="btn btn-link btn-info text-muted collapsed o_activity_info ml4" role="button" data-toggle="collapse" t-attf-data-target="#o_chatter_activity_info_#{activity.id}">
-                                <i class="fa fa-info-circle" role="img" aria-label="Info" title="Info"></i>
+                                <i class="fas fa-info-circle" role="img" aria-label="Info" title="Info"></i>
                             </a>
                             <div class="o_thread_message_collapse collapse" t-attf-id="o_chatter_activity_info_#{activity.id}">
                                 <dl class="dl-horizontal">
@@ -65,7 +65,7 @@
                             <div class="mt16" t-att-data-activity-id="activity.id" t-att-data-previous-activity-type-id="activity.activity_type_id[0]">
                                 <t t-foreach="activity.mail_template_ids" t-as="mail_template">
                                     <div>
-                                        <i class="fa fa-envelope-o" aria-label="Mail" title="Mail" role="img"></i>
+                                        <i class="far fa-envelope" aria-label="Mail" title="Mail" role="img"></i>
                                         <span t-esc="mail_template.name"/>:
                                         <span class="o_activity_template_preview" t-att-data-template-id="mail_template.id">Preview</span>
                                         <span class="text-muted">or</span>
@@ -86,11 +86,11 @@
         <div t-if="activity.can_write" class="o_thread_message_tools btn-group">
             <span t-if="activity.activity_category !== 'upload_file'" class="o_mark_as_done" data-toggle="popover" t-att-data-activity-id="activity.id" t-att-data-force-next-activity="activity.force_next" t-att-data-previous-activity-type-id="activity.activity_type_id[0]">
                 <a role="button" href="#" class="btn btn-link btn-success text-muted o_activity_link mr8">
-                <i class="fa fa-check"/> Mark Done </a>
+                <i class="fas fa-check"/> Mark Done </a>
             </span>
             <span t-if="activity.activity_category === 'upload_file'" class="o_mark_as_done_upload_file" t-att-data-activity-id="activity.id" t-att-data-force-next-activity="activity.force_next" t-att-data-previous-activity-type-id="activity.activity_type_id[0]" t-att-data-fileupload-id="activity.fileuploadID">
                 <a role="button" href="#" class="btn btn-link btn-success text-muted o_activity_link mr8">
-                <i class="fa fa-upload"/> Upload Document </a>
+                <i class="fas fa-upload"/> Upload Document </a>
             </span>
             <span t-if="activity.activity_category === 'upload_file'" class="d-none">
                 <t t-call="HiddenInputFile">
@@ -101,10 +101,10 @@
                 </t>
             </span>
             <a role="button" href="#" class="btn btn-link btn-secondary text-muted o_edit_activity o_activity_link" t-att-data-activity-id="activity.id">
-                <i class="fa fa-pencil"/> Edit
+                <i class="fas fa-pencil-alt"/> Edit
             </a>
             <a role="button" href="#" class="btn btn-link btn-danger text-muted o_unlink_activity o_activity_link" t-att-data-activity-id="activity.id">
-                <i class="fa fa-times"/> Cancel
+                <i class="fas fa-times"/> Cancel
             </a>
         </div>
     </t>

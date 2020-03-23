@@ -126,7 +126,7 @@ var PartnerField = FieldMany2One.extend(AutocompleteMixin, {
                     var choices = [];
                     if (suggestions && suggestions.length) {
                         _.each(suggestions, function (suggestion) {
-                            var label = '<i class="fa fa-magic text-muted"/> ';
+                            var label = '<i class="fas fa-magic text-muted"/> ';
                             label += _.str.sprintf('%s, <span class="text-muted">%s</span>', suggestion.label, suggestion.description);
 
                             choices.push({

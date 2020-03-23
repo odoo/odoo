@@ -2140,7 +2140,7 @@ QUnit.module('Views', {
                     <field name="foo"/>
                     <field name="text"/>
                     <button string="choucroute"/>
-                    <button icon="fa-heart"/>
+                    <button icon="fas fa-heart"/>
                 </tree>`,
             data: this.data,
             model: 'foo',
@@ -2151,7 +2151,7 @@ QUnit.module('Views', {
             "Field column should be frozen");
         assert.strictEqual(list.el.querySelector('th[data-string="choucroute"]').style.width, '25%',
             "Nameless button column should be frozen");
-        assert.strictEqual(list.el.querySelector('th[data-icon="fa-heart"]').style.width, '25%',
+        assert.strictEqual(list.el.querySelector('th[data-icon="fas fa-heart"]').style.width, '25%',
             "Nameless and stringless button should be frozen");
 
         list.destroy();
@@ -2173,7 +2173,7 @@ QUnit.module('Views', {
                         '<field name="o2m">' +
                             '<tree editable="top">' +
                                 '<field name="display_name"/>' +
-                                '<button name="the_button" icon="fa-heart"/>' +
+                                '<button name="the_button" icon="fas fa-heart"/>' +
                             '</tree>' +
                         '</field>' +
                     '</sheet>' +
@@ -2404,7 +2404,7 @@ QUnit.module('Views', {
             arch: `
             <tree>
                 <field name="foo"/>
-                <button name="the_button" icon="fa-heart" width="0.1"/>
+                <button name="the_button" icon="fas fa-heart" width="0.1"/>
             </tree>`,
             data: this.data,
             model: 'foo',
@@ -3148,7 +3148,7 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<tree editable="bottom">' +
                     '<field name="foo"/>' +
-                    '<button name="notafield" type="object" icon="fa-asterisk" class="o_yeah"/>' +
+                    '<button name="notafield" type="object" icon="fas fa-asterisk" class="o_yeah"/>' +
                 '</tree>',
         });
         assert.containsN(list, 'tbody button[name=notafield]', 4);
@@ -3633,7 +3633,7 @@ QUnit.module('Views', {
                     '<field name="date"/>' +
                     '<field name="m2o"/>' +
                     '<field name="foo"/>' +
-                    '<button type="object" icon="fa-plus-square" name="method"/>' +
+                    '<button type="object" icon="fas fa-plus-square" name="method"/>' +
                 '</tree>',
             viewOptions: {
                 action: {
@@ -3692,7 +3692,7 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<tree string="Phonecalls" editable="top">' +
                     '<field name="foo"/>' +
-                    '<button string="abc" icon="fa-phone" type="object" name="schedule_another_phonecall"/>' +
+                    '<button string="abc" icon="fas fa-phone" type="object" name="schedule_another_phonecall"/>' +
                 '</tree>',
         });
 
@@ -3799,7 +3799,7 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<tree>' +
                     '<field name="foo"/>' +
-                    '<button string="a button" name="button_action" icon="fa-car" type="object"/>' +
+                    '<button string="a button" name="button_action" icon="fas fa-car" type="object"/>' +
                 '</tree>',
             mockRPC: function (route) {
                 assert.step(route);
@@ -3839,7 +3839,7 @@ QUnit.module('Views', {
             model: 'foo',
             data: this.data,
             arch: '<tree editable="top">' +
-                    '<button string="a button" name="button_action" icon="fa-car" ' +
+                    '<button string="a button" name="button_action" icon="fas fa-car" ' +
                         'type="object" attrs="{\'invisible\': [(\'id\',\'=\', 1)]}"/>' +
                     '<field name="int_field"/>' +
                     '<field name="qux"/>' +
@@ -9297,7 +9297,7 @@ QUnit.module('Views', {
 
         var MyWidget = Widget.extend({
             start: function () {
-                this.$el.html('<i class="fa fa-info"/>');
+                this.$el.html('<i class="fas fa-info"/>');
             },
         });
         widgetRegistry.add('some_widget', MyWidget);

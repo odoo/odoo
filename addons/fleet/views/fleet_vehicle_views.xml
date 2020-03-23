@@ -15,13 +15,13 @@
                         <button name="open_assignation_logs"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-history">
+                            icon="fas fa-history">
                             <field name="history_count" widget="statinfo" string="Drivers History"/>
                         </button>
                         <button name="return_action_to_open"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-book"
+                            icon="fas fa-book"
                             context="{'xml_id':'fleet_vehicle_log_contract_action'}"
                             help="show the contract for this vehicle">
                             <field name="contract_count" widget="statinfo" string="Contracts"/>
@@ -29,7 +29,7 @@
                         <button name="return_action_to_open"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-wrench"
+                            icon="fas fa-wrench"
                             context="{'xml_id':'fleet_vehicle_log_services_action'}"
                             help="show the services logs for this vehicle" >
                             <field name="service_count" widget="statinfo" string="Services"/>
@@ -37,7 +37,7 @@
                         <button name="return_action_to_open"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-tachometer"
+                            icon="fas fa-tachometer-alt"
                             context="{'xml_id':'fleet_vehicle_odometer_action'}"
                             help="show the odometer logs for this vehicle"
                             attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
@@ -242,10 +242,10 @@
                                     <field name="contract_count"/>
                                     Contract(s)
                                     <span t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value"
-                                        class="fa fa-exclamation-triangle" t-att-style="'color:orange'" role="img" aria-label="Warning: renewal due soon" title="Warning: renewal due soon">
+                                        class="fas fa-exclamation-triangle" t-att-style="'color:orange'" role="img" aria-label="Warning: renewal due soon" title="Warning: renewal due soon">
                                     </span>
                                      <span t-if="record.contract_renewal_overdue.raw_value"
-                                        class="fa fa-exclamation-triangle" t-att-style="'color:red;'" role="img" aria-label="Attention: renewal overdue" title="Attention: renewal overdue">
+                                        class="fas fa-exclamation-triangle" t-att-style="'color:red;'" role="img" aria-label="Attention: renewal overdue" title="Attention: renewal overdue">
                                     </span>
                                 </a>
                             </div>

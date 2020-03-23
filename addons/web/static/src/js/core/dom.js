@@ -534,7 +534,7 @@ var dom = {
             var $dropdownMenu = $('<ul/>', {class: 'dropdown-menu'});
             $extraItemsToggle = $('<li/>', {class: 'nav-item dropdown o_extra_menu_items'})
                 .append($('<a/>', {role: 'button', href: '#', class: 'nav-link dropdown-toggle o-no-caret', 'data-toggle': 'dropdown', 'aria-expanded': false})
-                    .append($('<i/>', {class: 'fa fa-plus'})))
+                    .append($('<i/>', {class: 'fas fa-plus'})))
                 .append($dropdownMenu);
             $extraItemsToggle.insertAfter($items.last());
 

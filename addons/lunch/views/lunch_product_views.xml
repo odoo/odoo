@@ -16,8 +16,8 @@
                     <filter name="group_by_category" string="Category" context="{'group_by': 'category_id'}"/>
                 </group>
                 <searchpanel>
-                    <field name="category_id" select="multi" string="Categories" icon="fa-cutlery" color="#875A7B"/>
-                    <field name="supplier_id" select="multi" string="Vendors" icon="fa-truck"/>
+                    <field name="category_id" select="multi" string="Categories" icon="fas fa-utensils" color="#875A7B"/>
+                    <field name="supplier_id" select="multi" string="Vendors" icon="fas fa-truck"/>
                 </searchpanel>
             </search>
         </field>
@@ -37,8 +37,8 @@
                     <filter name="group_by_category" string="Category" context="{'group_by': 'category_id'}"/>
                 </group>
                 <searchpanel>
-                    <field name="category_id" select="multi" string="Categories" icon="fa-cutlery" color="#875A7B"/>
-                    <field name="supplier_id" select="multi" string="Vendors" icon="fa-truck"/>
+                    <field name="category_id" select="multi" string="Categories" icon="fas fa-utensils" color="#875A7B"/>
+                    <field name="supplier_id" select="multi" string="Vendors" icon="fas fa-truck"/>
                 </searchpanel>
             </search>
         </field>
@@ -221,7 +221,7 @@
                         <button class="oe_stat_button" type="action" name="%(lunch.lunch_product_action_statbutton)d"
                             context="{'search_default_category_id': active_id,'default_category_id': active_id}"
                             attrs="{'invisible': [('product_count', '=', 0)]}"
-                            icon="fa-cutlery">
+                            icon="fas fa-utensils">
                             <field string="Products" name="product_count" widget="statinfo"/>
                         </button>
                     </div>

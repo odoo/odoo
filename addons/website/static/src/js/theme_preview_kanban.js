@@ -15,7 +15,7 @@ var ThemePreviewKanbanController = KanbanController.extend({
         const websiteLink = Object.assign(document.createElement('a'), {
             className: 'btn btn-secondary ml-3',
             href: '/',
-            innerHTML: '<i class="fa fa-close"></i>',
+            innerHTML: '<i class="fas fa-times"></i>',
         });
         this._controlPanelWrapper.el.querySelector('.o_cp_top').appendChild(websiteLink);
     },

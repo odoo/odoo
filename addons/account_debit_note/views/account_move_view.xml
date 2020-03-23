@@ -13,7 +13,7 @@
                                         ('move_type', 'not in', ('out_invoice', 'in_invoice', 'out_refund', 'in_refund')), ('state', '!=', 'posted')]}"/>
             </button>
             <div class="oe_button_box" position="inside">
-                <button type="object" class="oe_stat_button" name="action_view_debit_notes" icon="fa-plus" attrs="{'invisible': [('debit_note_count', '=', 0)]}">
+                <button type="object" class="oe_stat_button" name="action_view_debit_notes" icon="fas fa-plus" attrs="{'invisible': [('debit_note_count', '=', 0)]}">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value"><field name="debit_note_count"/></span>
                         <span class="o_stat_text">Debit Notes</span>

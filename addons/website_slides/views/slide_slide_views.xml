@@ -200,28 +200,28 @@
                                     </div>
                                     <div class="o_kanban_record_bottom mt-auto d-flex justify-content-between align-items-end">
                                         <span>
-                                            <i class="fa fa-clock-o mr-2" aria-label="Duration" role="img" title="Duration"/><field name="completion_time" widget="float_time"/>
+                                            <i class="far fa-clock mr-2" aria-label="Duration" role="img" title="Duration"/><field name="completion_time" widget="float_time"/>
                                         </span>
                                         <span>
-                                            <i class="fa fa-question mr-2" aria-label="Number of Questions" role="img" title="Number of Questions"/><field name="questions_count"/>
+                                            <i class="fas fa-question mr-2" aria-label="Number of Questions" role="img" title="Number of Questions"/><field name="questions_count"/>
                                         </span>
                                         <span>
-                                            <i class="fa fa-eye mr-2" aria-label="Views" role="img" title="Views"/><field name="total_views"/>
+                                            <i class="far fa-eye mr-2" aria-label="Views" role="img" title="Views"/><field name="total_views"/>
                                         </span>
                                         <span>
                                             <t t-if="record.slide_type.raw_value == 'infographic'">
-                                                <i class="fa fa-file-image-o mr-2" aria-label="Infographic" role="img" title="Infographic"/>
+                                                <i class="far fa-file-image mr-2" aria-label="Infographic" role="img" title="Infographic"/>
                                             </t>
                                             <t t-elif="record.slide_type.raw_value == 'webpage'">
-                                                <i class="fa fa-file-code-o mr-2" aria-label="Webpage" role="img" title="Webpage"/>
+                                                <i class="far fa-file-code mr-2" aria-label="Webpage" role="img" title="Webpage"/>
                                             </t>
                                             <t t-elif="record.slide_type.raw_value == 'video'">
-                                                <i class="fa fa-file-video-o mr-2" aria-label="Video" role="img" title="Video"/>
+                                                <i class="far fa-file-video mr-2" aria-label="Video" role="img" title="Video"/>
                                             </t>
                                             <t t-elif="record.slide_type.raw_value == 'quiz'">
-                                                <i class="fa fa-flag mr-2" aria-label="Quiz" role="img" title="Quiz"/>
+                                                <i class="fas fa-flag mr-2" aria-label="Quiz" role="img" title="Quiz"/>
                                             </t>
-                                            <t t-else=""><i class="fa fa-file-pdf-o mr-2" aria-label="Document" role="img" title="Document"/></t>
+                                            <t t-else=""><i class="far fa-file-pdf mr-2" aria-label="Document" role="img" title="Document"/></t>
                                             <field name="slide_type"/>
                                         </span>
                                         <t t-set="unassigned"><t t-esc="_t('Unassigned')"/></t>

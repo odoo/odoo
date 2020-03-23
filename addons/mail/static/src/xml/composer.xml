@@ -3,7 +3,7 @@
 
      <div t-name="mail.Composer" t-attf-class="o_thread_composer #{widget.extended ? 'o_thread_composer_extended' : (widget.notInline ? '' : 'o_chat_inline_composer')} #{widget.isMini ? 'o_chat_mini_composer' : ''}">
          <div t-if="widget.isMini || !widget.notInline" class="o_file_drop_zone_container d-none">
-            <h4>Drag Files Here <span class="fa fa-download"/></h4>
+            <h4>Drag Files Here <span class="fas fa-download"/></h4>
          </div>
          <div class="o_composer_container">
              <img t-if="widget.avatarURL" height="36" width="36" class="o_thread_message_sidebar o_chatter_avatar o_object_fit_cover rounded-circle" t-att-src="widget.avatarURL" alt="Avatar"/>
@@ -12,14 +12,14 @@
              </div>
              <div t-attf-class="o_composer #{widget.extended ? 'o_extended_composer' : ''}">
                 <div t-if="widget.notInline" class="o_file_drop_zone_container d-none">
-                    <h4>Drag Files Here <span class="fa fa-download"/></h4>
+                    <h4>Drag Files Here <span class="fas fa-download"/></h4>
                 </div>
                 <div class="o_composer_input">
                     <textarea class="o_input o_composer_text_field" tabindex="2" placeholder="Write something..."/>
                     <div class="o_chatter_composer_tools">
-                        <button tabindex="4" class="btn btn-secondary fa fa-smile-o o_composer_button_emoji" type="button" data-toggle="popover" title="Emojis" aria-label="Emojis"/>
-                        <button tabindex="5" class="btn btn-secondary fa fa-paperclip o_composer_button_add_attachment" type="button" aria-label="Add attachment" title="Add attachment"/>
-                        <button t-if="widget.options.isMobile" tabindex="3" t-attf-class="btn #{widget.isMini ? 'btn-primary' : 'btn-secondary'} fa fa-paper-plane-o o_composer_button_send" type="button" title="Send" aria-label="Send"/>
+                        <button tabindex="4" class="btn btn-secondary far fa-smile o_composer_button_emoji" type="button" data-toggle="popover" title="Emojis" aria-label="Emojis"/>
+                        <button tabindex="5" class="btn btn-secondary fas fa-paperclip o_composer_button_add_attachment" type="button" aria-label="Add attachment" title="Add attachment"/>
+                        <button t-if="widget.options.isMobile" tabindex="3" t-attf-class="btn #{widget.isMini ? 'btn-primary' : 'btn-secondary'} far fa-paper-plane o_composer_button_send" type="button" title="Send" aria-label="Send"/>
                     </div>
                 </div>
              </div>
@@ -102,7 +102,7 @@
         <t t-jquery="[t-attf-class*=badge]" t-operation="replace">
             <div t-attf-class="badge badge-pill dropdown o_tag_color_0 #{el.email.indexOf('@') &lt; 0 ? 'o_tag_error' : ''}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
                 <span class="o_badge_text" t-att-title="el.email"><t t-esc="el.display_name"/></span>
-                <a t-if="!readonly" href="#" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
+                <a t-if="!readonly" href="#" class="fas fa-times o_delete" title="Delete" aria-label="Delete"/>
             </div>
         </t>
     </t>

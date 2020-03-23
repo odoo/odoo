@@ -78,7 +78,7 @@
             <li class="nav-item divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
             <li t-attf-class="nav-item o_wsale_my_cart #{'' if website_sale_order and website_sale_order.cart_quantity else 'd-none'}">
                 <a href="/shop/cart" class="nav-link">
-                    <i class="fa fa-shopping-cart"></i>
+                    <i class="fas fa-shopping-cart"></i>
                     My Cart <sup t-attf-class="my_cart_quantity badge badge-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''" t-att-data-order-id="website_sale_order and website_sale_order.id or ''"/>
                 </a>
             </li>
@@ -173,7 +173,7 @@
             <input name="product_id" t-att-value="product_variant_id" type="hidden"/>
             <t t-if="product_variant_id">
                 <a href="#" role="button" class="btn btn-secondary a-submit" aria-label="Shopping cart" title="Shopping cart">
-                    <span class="fa fa-shopping-cart"/>
+                    <span class="fas fa-shopping-cart"/>
                 </a>
             </t>
         </xpath>
@@ -295,7 +295,7 @@
                             Sort by
                         </t>
                     </span>
-                    <i class="fa fa-sort-amount-asc d-lg-none"/>
+                    <i class="fas fa-sort-amount-down d-lg-none"/>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" role="menu">
                     <t t-foreach="website_sale_sortable" t-as="sortby">
@@ -311,10 +311,10 @@
     <template id="add_grid_or_list_option" inherit_id="website_sale.products" active="True" customize_show="True" name="Grid or List button">
         <xpath expr="//div[hasclass('products_pager')]/t[@t-call][last()]" position="after">
             <div class="btn-group btn-group-toggle mt-2 ml-md-2 d-none d-sm-inline-flex o_wsale_apply_layout" data-toggle="buttons">
-                <label t-attf-class="btn btn-secondary #{'active' if layout_mode != 'list' else None} fa fa-th-large o_wsale_apply_grid" title="Grid">
+                <label t-attf-class="btn btn-secondary #{'active' if layout_mode != 'list' else None} fas fa-th-large o_wsale_apply_grid" title="Grid">
                     <input type="radio" name="wsale_products_layout" t-att-checked="'checked' if layout_mode != 'list' else None"/>
                 </label>
-                <label t-attf-class="btn btn-secondary #{'active' if layout_mode == 'list' else None} fa fa-th-list o_wsale_apply_list" title="List">
+                <label t-attf-class="btn btn-secondary #{'active' if layout_mode == 'list' else None} fas fa-th-list o_wsale_apply_list" title="List">
                     <input type="radio" name="wsale_products_layout" t-att-checked="'checked' if layout_mode == 'list' else None"/>
                 </label>
             </div>
@@ -509,7 +509,7 @@
                                     </t>
                                     <t t-call="website_sale.product_price" />
                                     <p t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
-                                    <a role="button" id="add_to_cart" class="btn btn-primary btn-lg mt16 js_check_product a-submit d-block d-sm-inline-block" href="#"><i class="fa fa-shopping-cart"/> Add to Cart</a>
+                                    <a role="button" id="add_to_cart" class="btn btn-primary btn-lg mt16 js_check_product a-submit d-block d-sm-inline-block" href="#"><i class="fas fa-shopping-cart"/> Add to Cart</a>
                                     <div id="product_option_block"/>
                                 </div>
                             </form>
@@ -620,13 +620,13 @@
         <div class="css_quantity input-group" contenteditable="false">
             <div class="input-group-prepend">
                 <a t-attf-href="#" class="btn btn-secondary js_add_cart_json" aria-label="Remove one" title="Remove one">
-                    <i class="fa fa-minus"></i>
+                    <i class="fas fa-minus"></i>
                 </a>
             </div>
             <input type="text" class="form-control quantity" data-min="1" name="add_qty" t-att-value="add_qty or 1"/>
             <div class="input-group-append">
                 <a t-attf-href="#" class="btn btn-secondary float_left js_add_cart_json" aria-label="Add one" title="Add one">
-                    <i class="fa fa-plus"></i>
+                    <i class="fas fa-plus"></i>
                 </a>
             </div>
         </div>
@@ -635,7 +635,7 @@
 
     <template id="product_buy_now" inherit_id="website_sale.product" active="False" customize_show="True" name="Buy Now Button">
         <xpath expr="//a[@id='add_to_cart']" position="after">
-            <a role="button" id="buy_now" class="btn btn-outline-primary btn-lg mt16 d-block d-sm-inline-block" href="#"><i class="fa fa-bolt"/> Buy Now</a>
+            <a role="button" id="buy_now" class="btn btn-outline-primary btn-lg mt16 d-block d-sm-inline-block" href="#"><i class="fas fa-bolt"/> Buy Now</a>
         </xpath>
     </template>
 
@@ -782,8 +782,8 @@
                                             </div>
                                             <div class="form-group col-12 s_website_form_submit s_website_form_no_submit_options">
                                                 <div style="width: 200px;" class="s_website_form_label"/>
-                                                <a role="button" href="/shop/checkout" class="btn btn-secondary float-left"><span class="fa fa-chevron-left"/> Previous</a>
-                                                <a role="button" class="btn btn-primary float-right s_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-chevron-right" /></a>
+                                                <a role="button" href="/shop/checkout" class="btn btn-secondary float-left"><span class="fas fa-chevron-left"/> Previous</a>
+                                                <a role="button" class="btn btn-primary float-right s_website_form_send" href="/shop/confirm_order">Next <span class="fas fa-chevron-right" /></a>
                                             </div>
                                         </div>
                                     </form>
@@ -866,13 +866,13 @@
                             <div class="css_quantity input-group mx-auto">
                                 <div class="input-group-prepend">
                                     <a t-attf-href="#" class="btn btn-link js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
-                                        <i class="fa fa-minus"></i>
+                                        <i class="fas fa-minus"></i>
                                     </a>
                                 </div>
                                 <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
                                 <div class="input-group-append">
                                     <a t-attf-href="#" class="btn btn-link float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
-                                        <i class="fa fa-plus"></i>
+                                        <i class="fas fa-plus"></i>
                                     </a>
                                 </div>
                             </div>
@@ -892,7 +892,7 @@
                             <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" groups="account.group_show_line_subtotals_tax_included" />
                         </td>
                         <td class="td-action">
-                            <a href='#' aria-label="Remove from cart" title="Remove from cart" class='js_delete_product no-decoration'> <small><i class='fa fa-trash-o'></i></small></a>
+                            <a href='#' aria-label="Remove from cart" title="Remove from cart" class='js_delete_product no-decoration'> <small><i class='far fa-trash-alt'></i></small></a>
                         </td>
                     </tr>
                 </t>
@@ -931,12 +931,12 @@
                                     <t t-call="website_sale.cart_lines" />
                                     <div class="clearfix" />
                                     <a role="button" href="/shop" class="btn btn-secondary mb32 d-none d-xl-inline-block">
-                                        <span class="fa fa-chevron-left" />
+                                        <span class="fas fa-chevron-left" />
                                         <span class="">Continue Shopping</span>
                                     </a>
                                     <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary float-right d-none d-xl-inline-block" href="/shop/checkout?express=1">
                                         <span class="">Process Checkout</span>
-                                        <span class="fa fa-chevron-right" />
+                                        <span class="fas fa-chevron-right" />
                                     </a>
                                     <div class="oe_structure" id="oe_structure_website_sale_cart_1"/>
                                 </div>
@@ -946,12 +946,12 @@
                             <t t-call="website_sale.short_cart_summary"/>
                             <div class="d-xl-none mt8">
                                 <a role="button" href="/shop" class="btn btn-secondary mb32">
-                                    <span class="fa fa-chevron-left" />
+                                    <span class="fas fa-chevron-left" />
                                     Continue<span class="d-none d-md-inline"> Shopping</span>
                                 </a>
                                 <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary float-right" href="/shop/checkout?express=1">
                                     <span class="">Process Checkout</span>
-                                    <span class="fa fa-chevron-right" />
+                                    <span class="fas fa-chevron-right" />
                                 </a>
                             </div>
                         </div>
@@ -1090,7 +1090,7 @@
                                                 <form action="/shop/address" method="post" class=''>
                                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                                     <a role="button" href="#" class='a-submit btn btn-secondary mb16 btn-block'>
-                                                        <i class="fa fa-plus-square"/>
+                                                        <i class="fas fa-plus-square"/>
                                                         <span>Add an address</span>
                                                     </a>
                                                 </form>
@@ -1112,12 +1112,12 @@
                             </t>
                             <div class="d-flex justify-content-between mt-3">
                                 <a role="button" href="/shop/cart" class="btn btn-secondary mb32">
-                                    <i class="fa fa-chevron-left"/>
+                                    <i class="fas fa-chevron-left"/>
                                     <span>Return to Cart</span>
                                 </a>
                                 <a role="button" href="/shop/confirm_order" class="btn btn-primary mb32">
                                     <span>Confirm</span>
-                                    <i class="fa fa-chevron-right"/>
+                                    <i class="fas fa-chevron-right"/>
                                 </a>
                             </div>
                         </div>
@@ -1138,13 +1138,13 @@
             </form>
             <div t-attf-class="card #{selected and 'border border-primary' or 'js_change_shipping'}">
                 <div class='card-body' style='min-height: 130px;'>
-                    <a t-if="not actual_partner or (ship.id in actual_partner.child_ids.ids)" href="#" class="btn btn-link float-right p-0 js_edit_address no-decoration" role="button" title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
+                    <a t-if="not actual_partner or (ship.id in actual_partner.child_ids.ids)" href="#" class="btn btn-link float-right p-0 js_edit_address no-decoration" role="button" title="Edit this address" aria-label="Edit this address"><i class='fas fa-edit'/></a>
                     <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
                 </div>
                 <div class='card-footer' t-if='not readonly'>
                     <span class='btn-ship' t-att-style="'' if selected else 'display:none;'">
                         <a role="button" href='#' class="btn btn-block btn-primary">
-                            <i class='fa fa-check'></i> Ship to this address
+                            <i class='fas fa-check'></i> Ship to this address
                         </a>
                     </span>
                     <span class='btn-ship' t-att-style="'' if not selected else 'display:none;'">
@@ -1289,12 +1289,12 @@
 
                                     <div class="d-flex justify-content-between">
                                         <a role="button" t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'" class="btn btn-secondary mb32">
-                                            <i class="fa fa-chevron-left"/>
+                                            <i class="fas fa-chevron-left"/>
                                             <span>Back</span>
                                         </a>
                                         <a role="button" href="#" class="btn btn-primary mb32 a-submit a-submit-disable a-submit-loading">
                                             <span>Next</span>
-                                            <i class="fa fa-chevron-right"/>
+                                            <i class="fas fa-chevron-right"/>
                                         </a>
                                     </div>
                                 </form>
@@ -1351,7 +1351,7 @@
                         <div class="col-12 col-xl order-xl-1 oe_cart">
                             <div class="card">
                                 <div class="card-body" id="shipping_and_billing">
-                                    <a class='float-right no-decoration' href='/shop/checkout'><i class="fa fa-edit"/> Edit</a>
+                                    <a class='float-right no-decoration' href='/shop/checkout'><i class="fas fa-edit"/> Edit</a>
                                     <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
                                     <div><b>Billing<t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b><span t-esc='order.partner_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/></div>
                                     <div t-if="not same_shipping and not only_services" groups="sale.group_delivery_invoice_address"><b>Shipping: </b><span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/></div>
@@ -1384,15 +1384,15 @@
                                 <a role="button" class="btn-link"
                                     groups="base.group_system"
                                     t-attf-href="/web#action=#{payment_action_id}">
-                                        <i class="fa fa-arrow-right"></i> Add payment acquirers
+                                        <i class="fas fa-arrow-right"></i> Add payment acquirers
                                 </a>
                             </div>
                             <div class="js_payment mt-3" t-if="not website_sale_order.amount_total" id="payment_method">
                                 <form target="_self" action="/shop/payment/validate" method="post" class="float-right">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                     <a role="button" class="btn btn-primary a-submit" href="#">
-                                        <span t-if="order.amount_total &gt; 0">Pay Now <span class="fa fa-chevron-right"></span></span>
-                                        <span t-if="order.amount_total == 0">Confirm Order <span class="fa fa-chevron-right"></span></span>
+                                        <span t-if="order.amount_total &gt; 0">Pay Now <span class="fas fa-chevron-right"></span></span>
+                                        <span t-if="order.amount_total == 0">Confirm Order <span class="fas fa-chevron-right"></span></span>
                                     </a>
                                 </form>
                             </div>
@@ -1431,7 +1431,7 @@
             <div class="card-body p-xl-0">
                 <div class="toggle_summary d-xl-none">
                     <b>Your order: </b> <span t-field="website_sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
-                    <span class='fa fa-chevron-down fa-border float-right' role="img" aria-label="Details" title="Details"></span>
+                    <span class='fas fa-chevron-down fa-border float-right' role="img" aria-label="Details" title="Details"></span>
                 </div>
                 <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
                     Your cart is empty!
@@ -1500,7 +1500,7 @@
                                 <t t-if="payment_tx_id.state == 'done'">
                                     <div class="thanks_msg">
                                         <h2>Thank you for your order.
-                                            <a role="button" class="btn btn-primary d-none d-md-inline-block" href="/shop/print" target="_blank" aria-label="Print" title="Print"><i class="fa fa-print"></i> Print</a>
+                                            <a role="button" class="btn btn-primary d-none d-md-inline-block" href="/shop/print" target="_blank" aria-label="Print" title="Print"><i class="fas fa-print"></i> Print</a>
                                         </h2>
                                     </div>
                                 </t>
@@ -1613,7 +1613,7 @@
                 <div class="card-header">
                     <a role="button" groups="base.group_system" class="btn btn-sm btn-link text-white float-right" target="_blank" aria-label="Edit" title="Edit"
                             t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer', payment_tx_id.acquirer_id.id, 'payment.action_payment_acquirer')">
-                        <i class="fa fa-pencil"></i>
+                        <i class="fas fa-pencil-alt"></i>
                     </a>
                     <t t-if="payment_tx_id.state == 'pending'">
                         <t t-raw="payment_tx_id.acquirer_id.pending_msg"/>
@@ -1732,10 +1732,10 @@
                 </div>
                 <t t-if="len(product_images) > 1">
                     <a class="carousel-control-prev" href="#o-carousel-product" role="button" data-slide="prev">
-                        <span class="fa fa-chevron-left p-2" role="img" aria-label="Previous" title="Previous"/>
+                        <span class="fas fa-chevron-left p-2" role="img" aria-label="Previous" title="Previous"/>
                     </a>
                     <a class="carousel-control-next" href="#o-carousel-product" role="button" data-slide="next">
-                        <span class="fa fa-chevron-right p-2" role="img" aria-label="Next" title="Next"/>
+                        <span class="fas fa-chevron-right p-2" role="img" aria-label="Next" title="Next"/>
                     </a>
                 </t>
             </div>
@@ -1743,7 +1743,7 @@
                 <ol t-if="len(product_images) > 1" class="carousel-indicators d-inline-block position-static mx-auto my-0 p-1 text-left">
                     <t t-foreach="product_images" t-as="product_image"><li t-attf-class="d-inline-block m-1 align-top {{'active' if product_image_first else ''}}" data-target="#o-carousel-product" t-att-data-slide-to="str(product_image_index)">
                         <div t-field="product_image.image_128" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_64_contain", "alt-field": "name"}'/>
-                        <i t-if="product_image._name == 'product.image' and product_image.embed_code" class="fa fa-2x fa-play-circle-o o_product_video_thumb"/>
+                        <i t-if="product_image._name == 'product.image' and product_image.embed_code" class="far fa-2x fa-play-circle o_product_video_thumb"/>
                     </li></t>
                 </ol>
             </div>

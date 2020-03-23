@@ -11,14 +11,14 @@ var options = require('web_editor.snippets.options');
 const COLOR_PICKER_TEMPLATE = `
     <t t-name="web_editor.colorpicker">
         <colorpicker>
-            <div class="o_colorpicker_section" data-name="theme" data-display="Theme Colors" data-icon-class="fa fa-flask">
+            <div class="o_colorpicker_section" data-name="theme" data-display="Theme Colors" data-icon-class="fas fa-flask">
                 <button data-color="alpha"/>
                 <button data-color="beta"/>
                 <button data-color="gamma"/>
                 <button data-color="delta"/>
                 <button data-color="epsilon"/>
             </div>
-            <div class="o_colorpicker_section" data-name="transparent_grayscale" data-display="Transparent Colors" data-icon-class="fa fa-eye-slash">
+            <div class="o_colorpicker_section" data-name="transparent_grayscale" data-display="Transparent Colors" data-icon-class="far fa-eye-slash">
                 <button class="o_btn_transparent"/>
                 <button data-color="black-25"/>
                 <button data-color="black-50"/>
@@ -27,7 +27,7 @@ const COLOR_PICKER_TEMPLATE = `
                 <button data-color="white-50"/>
                 <button data-color="white-75"/>
             </div>
-            <div class="o_colorpicker_section" data-name="common" data-display="Common Colors" data-icon-class="fa fa-paint-brush"/>
+            <div class="o_colorpicker_section" data-name="common" data-display="Common Colors" data-icon-class="fas fa-paint-brush"/>
         </colorpicker>
     </t>`;
 const SNIPPETS_TEMPLATE = `
@@ -35,7 +35,7 @@ const SNIPPETS_TEMPLATE = `
     <div id="o_scroll">
         <div id="snippet_structure" class="o_panel">
             <div class="o_panel_header">
-                <i class="fa fa-th-large"/> First Panel
+                <i class="fas fa-th-large"/> First Panel
             </div>
             <div class="o_panel_body">
                 <div name="Separator" data-oe-type="snippet" data-oe-thumbnail="/website/static/src/img/snippets_thumbs/s_separator.png">
@@ -70,7 +70,7 @@ const SNIPPETS_TEMPLATE = `
         </div>
         <div data-js="background" data-selector=".test_option_all">
             <we-button data-choose-image="true" data-no-preview="true">
-                <i class="fa fa-picture-o"/> Background Image
+                <i class="far fa-image"/> Background Image
             </we-button>
         </div>
         <div data-js="option_test" data-selector=".s_hr">

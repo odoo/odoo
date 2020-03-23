@@ -13,7 +13,7 @@
                 </small>
             </div>
             <div class="mr-3" title="Quotations">
-                <i class="fa fa-money text-muted"></i>
+                <i class="far fa-money-bill-alt text-muted"></i>
                 <small class="font-weight-bold">
                     <field name="quotation_count"/>
                 </small>
@@ -29,11 +29,11 @@
     <field name="arch" type="xml">
         <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
             <button name="action_redirect_to_invoiced"
-                type="object" class="oe_stat_button order-1" icon="fa-usd">
+                type="object" class="oe_stat_button order-1" icon="fas fa-dollar-sign">
                 <field name="invoiced_amount" widget="statinfo" string="Revenues"/>
             </button>
             <button name="action_redirect_to_quotations"
-                type="object" class="oe_stat_button order-2" icon="fa-money">
+                type="object" class="oe_stat_button order-2" icon="far fa-money-bill-alt">
                 <field name="quotation_count" widget="statinfo" string="Quotations"/>
             </button>
         </xpath>

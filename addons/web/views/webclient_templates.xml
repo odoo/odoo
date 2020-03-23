@@ -559,7 +559,7 @@
                     <div t-attf-class="input-group {{'input-group-sm' if form_small else ''}}">
                         <input type="text" name="db" t-att-value="request.db" id="db" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" readonly="readonly"/>
                         <span class="input-group-append">
-                            <a role="button" href="/web/database/selector" class="btn btn-secondary">Select <i class="fa fa-database" role="img" aria-label="Database" title="Database"></i></a>
+                            <a role="button" href="/web/database/selector" class="btn btn-secondary">Select <i class="fas fa-database" role="img" aria-label="Database" title="Database"></i></a>
                         </span>
                     </div>
                 </div>
@@ -897,7 +897,7 @@
         <t t-if="debug">
             <t t-set="debug_mode_help" t-value="' (%s)' % debug if debug != '1' else ''"/>
             <a t-attf-href="?#{keep_query('*', debug='')}" t-attf-title="Debug mode is activated#{debug_mode_help}. Click here to exit debug mode."
-               class="o_debug_mode"><span class="fa fa-bug"/></a>
+               class="o_debug_mode"><span class="fas fa-bug"/></a>
         </t>
     </template>
 

@@ -4272,7 +4272,7 @@ QUnit.module('Views', {
                             '<div color="color">' +
                                 '<div class="o_dropdown_kanban dropdown">' +
                                     '<a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#">' +
-                                            '<span class="fa fa-bars fa-lg"/>' +
+                                            '<span class="fas fa-bars fa-lg"/>' +
                                     '</a>' +
                                     '<ul class="dropdown-menu" role="menu">' +
                                         '<li>' +
@@ -4683,7 +4683,7 @@ QUnit.module('Views', {
                                 '<div color="color">' +
                                     '<div class="o_dropdown_kanban dropdown">' +
                                         '<a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#">' +
-                                            '<span class="fa fa-bars fa-lg"/>' +
+                                            '<span class="fas fa-bars fa-lg"/>' +
                                         '</a>' +
                                         '<ul class="dropdown-menu" role="menu">' +
                                             '<li>' +
@@ -5863,7 +5863,7 @@ QUnit.module('Views', {
                                 '<field name="name"/>' +
                                 '<div class="o_dropdown_kanban dropdown">' +
                                     '<a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#">' +
-                                        '<span class="fa fa-bars fa-lg"/>' +
+                                        '<span class="fas fa-bars fa-lg"/>' +
                                     '</a>' +
                                     '<div class="dropdown-menu" role="menu">' +
                                         '<a type="set_cover" data-field="displayed_image_id" class="dropdown-item">Set Cover Image</a>'+

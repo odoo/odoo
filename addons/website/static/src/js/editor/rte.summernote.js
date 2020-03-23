@@ -13,7 +13,7 @@ var fn_tplPopovers = renderer.tplPopovers;
 renderer.tplPopovers = function (lang, options) {
     var $popover = $(fn_tplPopovers.call(this, lang, options));
     $popover.find('.note-image-popover .btn-group:has([data-value="img-thumbnail"])').append(
-        tplIconButton('fa fa-object-ungroup', {
+        tplIconButton('far fa-object-ungroup', {
             title: _t('Transform the picture (click twice to reset transformation)'),
             event: 'transform',
         }));

@@ -73,7 +73,7 @@ var FieldTimezoneMismatch = FieldSelection.extend({
         this.$el.last().filter('.o_tz_warning').remove();
         this.$el = this.$el.first();
         var value = this.$el.val();
-        var $span = $('<span class="fa fa-exclamation-triangle o_tz_warning"/>');
+        var $span = $('<span class="fas fa-exclamation-triangle o_tz_warning"/>');
 
         if (this.$option && this.$option.html()) {
             this.$option.html(this.$option.html().split(' ')[0]);

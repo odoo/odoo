@@ -2,17 +2,17 @@
 <odoo>
 
 <template id="s_rating" name="Rating">
-    <div class="s_rating pt16 pb16" data-vcss="001" data-icon="fa-star">
+    <div class="s_rating pt16 pb16" data-vcss="001" data-icon="fas fa-star">
         <h4 class="s_rating_title">Quality</h4>
         <div class="s_rating_icons o_not_editable">
             <span class="s_rating_active_icons">
-                <i class="fa fa-star"/>
-                <i class="fa fa-star"/>
-                <i class="fa fa-star"/>
+                <i class="fas fa-star"/>
+                <i class="fas fa-star"/>
+                <i class="fas fa-star"/>
             </span>
             <span class="s_rating_inactive_icons">
-                <i class="fa fa-star-o"/>
-                <i class="fa fa-star-o"/>
+                <i class="far fa-star"/>
+                <i class="far fa-star"/>
             </span>
         </div>
     </div>
@@ -22,11 +22,11 @@
     <xpath expr="." position="inside">
         <div data-js="Rating" data-selector=".s_rating">
             <we-select string="Icon">
-                <we-button data-set-icons="fa-star"><i class="fa fa-fw fa-star"/> Stars</we-button>
-                <we-button data-set-icons="fa-thumbs-up"><i class="fa fa-fw fa-thumbs-up"/> Thumbs</we-button>
-                <we-button data-set-icons="fa-circle"><i class="fa fa-fw fa-circle"/> Circles</we-button>
-                <we-button data-set-icons="fa-square"><i class="fa fa-fw fa-square"/> Squares</we-button>
-                <we-button data-set-icons="fa-heart"><i class="fa fa-fw fa-heart"/> Hearts</we-button>
+                <we-button data-set-icons="fa-star"><i class="fas fa-fw fa-star"/> Stars</we-button>
+                <we-button data-set-icons="fa-thumbs-up"><i class="fas fa-fw fa-thumbs-up"/> Thumbs</we-button>
+                <we-button data-set-icons="fa-circle"><i class="fas fa-fw fa-circle"/> Circles</we-button>
+                <we-button data-set-icons="fa-square"><i class="fas fa-fw fa-square"/> Squares</we-button>
+                <we-button data-set-icons="fa-heart"><i class="fas fa-fw fa-heart"/> Hearts</we-button>
                 <we-button data-set-icons="custom" class="d-none">Custom</we-button>
             </we-select>
             <we-row string="Active Icon">
@@ -35,7 +35,7 @@
                     data-apply-to=".s_rating_active_icons"
                     data-css-property="color"
                     data-color-prefix="text-"/>
-                <we-button class="fa fa-fw fa-edit" data-custom-icon="true" data-custom-active-icon="true" data-no-preview="true"></we-button>
+                <we-button class="fas fa-fw fa-edit" data-custom-icon="true" data-custom-active-icon="true" data-no-preview="true"></we-button>
             </we-row>
             <we-row string="Inactive Icon">
                 <we-colorpicker
@@ -43,7 +43,7 @@
                     data-apply-to=".s_rating_inactive_icons"
                     data-css-property="color"
                     data-color-prefix="text-"/>
-                <we-button class="fa fa-fw fa-edit" data-custom-icon="true" data-custom-active-icon="false" data-no-preview="true"></we-button>
+                <we-button class="fas fa-fw fa-edit" data-custom-icon="true" data-custom-active-icon="false" data-no-preview="true"></we-button>
             </we-row>
             <we-row string="Score">
                 <we-input data-active-icons-number="true" data-step="1"/>

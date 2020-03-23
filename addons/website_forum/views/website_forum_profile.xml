@@ -14,7 +14,7 @@
             <div t-if="request.params.get('forum_origin')" class="o_wprofile_all_users_nav_btn_container col pr-0 flex-grow-0">
                 <a t-att-href="request.website._get_http_domain() + request.params.get('forum_origin')"
                     class="o_wprofile_all_users_nav_btn btn text-nowrap">
-                    <i class="fa fa-chevron-left small"/> Back
+                    <i class="fas fa-chevron-left small"/> Back
                 </a>
             </div>
         </xpath>
@@ -27,9 +27,9 @@
                     <th><small class="font-weight-bold">Votes</small></th>
                     <td>
                         <span>
-                            <i class="fa fa-thumbs-up text-success" role="img" aria-label="Positive votes" title="Positive votes"/>
+                            <i class="fas fa-thumbs-up text-success" role="img" aria-label="Positive votes" title="Positive votes"/>
                             <span class="font-weight-bold" t-esc="up_votes"/>
-                            <i class="fa fa-thumbs-down text-danger ml-3" role="img" aria-label="Negative votes" title="Negative votes"/>
+                            <i class="fas fa-thumbs-down text-danger ml-3" role="img" aria-label="Negative votes" title="Negative votes"/>
                             <span class="font-weight-bold" t-esc="down_votes"/>
                         </span>
                     </td>
@@ -162,8 +162,8 @@
     <template id="user_votes" name="Forum User Votes">
         <div t-foreach="vote_post" t-as="vote">
             <t t-esc="vote.post_id.create_date"/>
-            <span t-if="vote.vote == '1'" class="fa fa-thumbs-up text-success" style="margin-left:30px" role="img" aria-label="Positive vote" title="Positive vote"/>
-            <span t-if="vote.vote == '-1'" class="fa fa-thumbs-down text-warning" style="margin-left:30px" role="img" aria-label="Negative vote" title="Negative vote"/>
+            <span t-if="vote.vote == '1'" class="fas fa-thumbs-up text-success" style="margin-left:30px" role="img" aria-label="Positive vote" title="Positive vote"/>
+            <span t-if="vote.vote == '-1'" class="fas fa-thumbs-down text-warning" style="margin-left:30px" role="img" aria-label="Negative vote" title="Negative vote"/>
             <t t-if="vote.post_id.parent_id">
                 <a t-attf-href="/forum/#{ slug(vote.post_id.forum_id) }/question/#{ vote.post_id.parent_id.id }/#answer-#{ vote.post_id.id }" t-esc="vote.post_id.parent_id.name" style="margin-left:10px"/>
             </t>

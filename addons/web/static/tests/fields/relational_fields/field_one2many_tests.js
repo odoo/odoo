@@ -1821,7 +1821,7 @@ QUnit.module('fields', {}, function () {
                     '<templates>' +
                     '<t t-name="kanban-box">' +
                     '<div class="oe_kanban_global_click">' +
-                    '<a t-if="!read_only_mode" type="delete" class="fa fa-times float-right delete_icon"/>' +
+                    '<a t-if="!read_only_mode" type="delete" class="fas fa-times float-right delete_icon"/>' +
                     '<span><t t-esc="record.display_name.value"/></span>' +
                     '</div>' +
                     '</t>' +
@@ -2165,7 +2165,7 @@ QUnit.module('fields', {}, function () {
             // bar is true -> create and delete action are available
             assert.containsOnce(form, '.o_field_x2many_list_row_add',
                 '"Add an item" link should be available');
-            assert.hasClass(form.$('td.o_list_record_remove button').first(), 'fa fa-trash-o',
+            assert.hasClass(form.$('td.o_list_record_remove button').first(), 'far fa-trash-alt',
                 "should have trash bin icons");
 
             // set bar to false -> create and delete action are no longer available
@@ -2218,7 +2218,7 @@ QUnit.module('fields', {}, function () {
             assert.containsN(form, 'td.o_list_record_remove button', 3,
                 "should have 3 remove buttons");
 
-            assert.hasClass(form.$('td.o_list_record_remove button').first(),'fa fa-times',
+            assert.hasClass(form.$('td.o_list_record_remove button').first(),'fas fa-times',
                 "should have X icons to remove (unlink) records");
 
             await testUtils.dom.click(form.$('td.o_list_record_remove button').first());
@@ -2274,7 +2274,7 @@ QUnit.module('fields', {}, function () {
             assert.containsN(form, 'td.o_list_record_remove button', 3,
                 "should have 3 remove buttons");
 
-            assert.hasClass(form.$('td.o_list_record_remove button').first(),'fa fa-trash-o',
+            assert.hasClass(form.$('td.o_list_record_remove button').first(),'far fa-trash-alt',
                 "should have trash bin icons to remove (delete) records");
 
             await testUtils.dom.click(form.$('td.o_list_record_remove button').first());
@@ -2308,7 +2308,7 @@ QUnit.module('fields', {}, function () {
                     '<templates>' +
                     '<t t-name="kanban-box">' +
                     '<div class="oe_kanban_global_click">' +
-                    '<a t-if="!read_only_mode" type="delete" class="fa fa-times float-right delete_icon"/>' +
+                    '<a t-if="!read_only_mode" type="delete" class="fas fa-times float-right delete_icon"/>' +
                     '<span><t t-esc="record.display_name.value"/></span>' +
                     '<span><t t-esc="record.color.value"/></span>' +
                     '</div>' +
@@ -2455,7 +2455,7 @@ QUnit.module('fields', {}, function () {
                     '<templates>' +
                     '<t t-name="kanban-box">' +
                     '<div class="oe_kanban_global_click">' +
-                    '<a t-if="!read_only_mode" type="delete" class="fa fa-times float-right delete_icon"/>' +
+                    '<a t-if="!read_only_mode" type="delete" class="fas fa-times float-right delete_icon"/>' +
                     '<span><t t-esc="record.display_name.value"/></span>' +
                     '</div>' +
                     '</t>' +
@@ -4684,7 +4684,7 @@ QUnit.module('fields', {}, function () {
                     '<field name="p">' +
                     '<tree>' +
                     '<field name="foo"/>' +
-                    '<button name="method_name" type="object" icon="fa-plus"/>' +
+                    '<button name="method_name" type="object" icon="fas fa-plus"/>' +
                     '</tree>' +
                     '</field>' +
                     '</form>',
@@ -4725,7 +4725,7 @@ QUnit.module('fields', {}, function () {
                     '<t t-name="kanban-box">' +
                     '<div>' +
                     '<span><t t-esc="record.foo.value"/></span>' +
-                    '<button name="method_name" type="object" class="fa fa-plus"/>' +
+                    '<button name="method_name" type="object" class="fas fa-plus"/>' +
                     '</div>' +
                     '</t>' +
                     '</templates>' +
@@ -5670,8 +5670,8 @@ QUnit.module('fields', {}, function () {
                         '<t t-name="kanban-box">' +
                             '<div>' +
                                 '<span><t t-esc="record.foo.value"/></span>' +
-                                '<button type="object" class="btn btn-link fa fa-shopping-cart" name="button_warn" string="button_warn" warn="warn" />' +
-                                '<button type="object" class="btn btn-link fa fa-shopping-cart" name="button_disabled" string="button_disabled" />' +
+                                '<button type="object" class="btn btn-link fas fa-shopping-cart" name="button_warn" string="button_warn" warn="warn" />' +
+                                '<button type="object" class="btn btn-link fas fa-shopping-cart" name="button_disabled" string="button_disabled" />' +
                             '</div>' +
                         '</t>' +
                         '</templates>' +

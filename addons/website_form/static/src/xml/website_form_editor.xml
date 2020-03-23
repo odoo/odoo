@@ -54,7 +54,7 @@
             <span class="s_website_form_mark" t-if="field.formatInfo.optionalMark" t-esc="' ' + field.formatInfo.mark"/>
         </t>
         <span t-if="['email_cc', 'email_to'].includes(field.name)" title="Separate email addresses with a comma.">
-            <i class="fa fa-info-circle"/>
+            <i class="fas fa-info-circle"/>
         </span>
     </t>
 
@@ -170,7 +170,7 @@
                         t-att-id="field.id"
                 />
                 <div class="input-group-append" t-attf-data-target="##{datepickerID}" data-toggle="datetimepicker">
-                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    <div class="input-group-text"><i class="fas fa-calendar-alt"></i></div>
                 </div>
             </div>
         </t>
@@ -191,7 +191,7 @@
                         t-att-id="field.id"
                 />
                 <div class="input-group-append" t-attf-data-target="##{datetimepickerID}" data-toggle="datetimepicker">
-                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    <div class="input-group-text"><i class="fas fa-calendar-alt"></i></div>
                 </div>
             </div>
         </t>

@@ -45,7 +45,7 @@
             <xpath expr="//div[@name='email_details']" position="after">
                 <label for="mobile" class="oe_inline"/>
                 <div class="o_row o_row_readonly" name="phone_details">
-                    <button name="phone_action_blacklist_remove" class="fa fa-ban text-danger"
+                    <button name="phone_action_blacklist_remove" class="fas fa-ban text-danger"
                         title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
                         type="object" context="{'default_phone': mobile}" groups="base.group_user"
                         attrs="{'invisible': [('mobile_blacklisted', '=', False)]}"/>

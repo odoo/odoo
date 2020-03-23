@@ -95,7 +95,7 @@ renderer.tplPopovers = function (lang, options) {
     //////////////// image popover
 
     // add center button for images
-    $(tplIconButton('fa fa-align-center', {
+    $(tplIconButton('fas fa-align-center', {
         title: _t('Center'),
         event: 'floatMe',
         value: 'center'
@@ -113,14 +113,14 @@ renderer.tplPopovers = function (lang, options) {
         '<li><a class="dropdown-item" data-event="padding" href="#" data-value="large">'+_t('Large')+'</a></li>',
         '<li><a class="dropdown-item" data-event="padding" href="#" data-value="xl">'+_t('Xl')+'</a></li>',
     ];
-    $(tplIconButton('fa fa-plus-square-o', {
+    $(tplIconButton('far fa-plus-square', {
         title: _t('Padding'),
         dropdown: tplDropdown(dropdown_content)
     })).appendTo($padding);
 
     // circle, boxed... options became toggled
     $imagePopover.find('[data-event="imageShape"]:not([data-value])').remove();
-    var $button = $(tplIconButton('fa fa-sun-o', {
+    var $button = $(tplIconButton('far fa-sun', {
         title: _t('Shadow'),
         event: 'imageShape',
         value: 'shadow'
@@ -128,7 +128,7 @@ renderer.tplPopovers = function (lang, options) {
 
     // add spin for fa
     var $spin = $('<div class="btn-group d-none only_fa"/>').insertAfter($button.parent());
-    $(tplIconButton('fa fa-refresh', {
+    $(tplIconButton('fas fa-sync', {
             title: _t('Spin'),
             event: 'imageShape',
             value: 'fa-spin'
@@ -151,16 +151,16 @@ renderer.tplPopovers = function (lang, options) {
     // show dialog box and delete
     var $imageprop = $('<div class="btn-group"/>');
     $imageprop.appendTo($imagePopover.find('.popover-body'));
-    $(tplIconButton('fa fa-file-image-o', {
+    $(tplIconButton('far fa-file-image', {
             title: _t('Edit'),
             event: 'showImageDialog'
         })).appendTo($imageprop);
-    $(tplIconButton('fa fa-trash-o', {
+    $(tplIconButton('far fa-trash-alt', {
             title: _t('Remove'),
             event: 'delete'
         })).appendTo($imageprop);
 
-    $(tplIconButton('fa fa-crop', {
+    $(tplIconButton('fas fa-crop', {
         title: _t('Crop Image'),
         event: 'cropImage',
     })).insertAfter($imagePopover.find('[data-event="imageShape"][data-value="img-thumbnail"]'));
@@ -177,7 +177,7 @@ renderer.tplPopovers = function (lang, options) {
 
     $linkPopover.find('.popover-body').append($airPopover.find(".note-history").clone());
 
-    $linkPopover.find('button[data-event="showLinkDialog"] i').attr("class", "fa fa-link");
+    $linkPopover.find('button[data-event="showLinkDialog"] i').attr("class", "fas fa-link");
     $linkPopover.find('button[data-event="unlink"]').before($airPopover.find('button[data-event="showImageDialog"]').clone());
 
     //////////////// text/air popover

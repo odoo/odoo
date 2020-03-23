@@ -83,7 +83,7 @@ odoo.define('web.GroupByMenu', function (require) {
         CustomGroupByItem,
     });
     GroupByMenu.defaultProps = Object.assign({}, DropdownMenu.defaultProps, {
-        icon: 'fa fa-bars',
+        icon: 'fas fa-bars',
     });
     GroupByMenu.props = Object.assign({}, DropdownMenu.props, {
         fields: Object,

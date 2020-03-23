@@ -259,16 +259,16 @@
                         <field name="has_scrap_move" invisible="True"/>
                         <field name="has_tracking" invisible="True"/>
                         <button name="action_see_move_scrap" string="Scraps" type="object"
-                            class="oe_stat_button" icon="fa-arrows-v"
+                            class="oe_stat_button" icon="fas fa-arrows-alt-v"
                             attrs="{'invisible': [('has_scrap_move', '=', False)]}"/>
                         <button name="action_see_packages" string="Packages" type="object"
-                            class="oe_stat_button" icon="fa-cubes"
+                            class="oe_stat_button" icon="fas fa-cubes"
                             attrs="{'invisible': [('has_packages', '=', False)]}"/>
-                        <button name="%(action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="action" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('has_tracking', '=', False)]}" groups="stock.group_production_lot"/>
+                        <button name="%(action_stock_report)d" icon="fas fa-arrow-up" class="oe_stat_button" string="Traceability" type="action" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('has_tracking', '=', False)]}" groups="stock.group_production_lot"/>
                         <!-- Use the following button to avoid onchange on one2many -->
                         <button name="action_picking_move_tree"
                             class="oe_stat_button"
-                            icon="fa-arrows-v"
+                            icon="fas fa-arrows-alt-v"
                             type="object"
                             help="List view of operations"
                             groups="base.group_no_one"
@@ -368,10 +368,10 @@
                                     <field name="reserved_availability" string="Reserved" attrs="{'column_invisible': (['|','|', ('parent.state','=', 'done'), ('parent.picking_type_code', '=', 'incoming'), ('parent.immediate_transfer', '=', True)])}"/>
                                     <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
-                                    <button name="action_show_details" string="Register lots, packs, location" type="object" icon="fa-list" width="0.1"
+                                    <button name="action_show_details" string="Register lots, packs, location" type="object" icon="fas fa-list" width="0.1"
                                             attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
                                     <button name="action_assign_serial" type="object"
-                                            icon="fa-plus-square"
+                                            icon="fas fa-plus-square"
                                             width="0.1"
                                             role="img" title="Assign Serial Numbers"
                                             attrs="{'invisible': ['|', ('display_assign_serial', '=', False), ('show_operations', '=', False)]}"/>
@@ -657,7 +657,7 @@
                                             <div class="o_secondary"><field class="o_secondary"  name="warehouse_id" readonly="1"/></div>
                                         </div>
                                         <div class="o_kanban_manage_button_section" t-if="!selection_mode">
-                                            <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
+                                            <a class="o_kanban_manage_toggle_button" href="#"><i class="fas fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                         </div>
                                     </div>
                                     <div class="container o_kanban_card_content" t-if="!selection_mode">

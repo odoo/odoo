@@ -7,7 +7,7 @@
                 <input type="number" name="qty_to_add" class="o_input o_product_qty form-control text-right" value="1" min="1"/>
                 <div class="input-group-append">
                     <button class="btn btn-secondary o_add_qty text-right form-control" type="submit" title="Add a quantity">
-                        <i class="fa fa-plus"/>
+                        <i class="fas fa-plus"/>
                     </button>
                 </div>
             </div>
@@ -43,7 +43,7 @@
         <t t-foreach="quantities" t-as="qty">
             <span class="badge badge-pill border" t-att-data-qty="qty">
                 <t t-esc="qty"/>
-                <i class="fa fa-close o_remove_qty" title="Remove quantity"/>
+                <i class="fas fa-times o_remove_qty" title="Remove quantity"/>
             </span>
         </t>
     </t>

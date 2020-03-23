@@ -58,16 +58,16 @@
         <div class="oe_status js_synch">
             <span class='js_msg oe_hidden'>0</span>
             <div class="js_connected oe_icon oe_green">
-                <i class='fa fa-fw fa-wifi' role="img" aria-label="Synchronisation Connected" title="Synchronisation Connected"></i>
+                <i class='fas fa-fw fa-wifi' role="img" aria-label="Synchronisation Connected" title="Synchronisation Connected"></i>
             </div>
             <div class="js_connecting oe_icon oe_hidden">
-                <i class='fa fa-fw fa-spin fa-spinner' role="img" aria-label="Synchronisation Connecting" title="Synchronisation Connecting"></i>
+                <i class='fas fa-fw fa-spin fa-spinner' role="img" aria-label="Synchronisation Connecting" title="Synchronisation Connecting"></i>
             </div>
             <div class="js_disconnected oe_icon oe_red oe_hidden">
-                <i class='fa fa-fw fa-wifi' role="img" aria-label="Synchronisation Disconnected" title="Synchronisation Disconnected"></i>
+                <i class='fas fa-fw fa-wifi' role="img" aria-label="Synchronisation Disconnected" title="Synchronisation Disconnected"></i>
             </div>
             <div class="js_error oe_icon oe_red oe_hidden">
-                <i class='fa fa-fw fa-warning' role="img" aria-label="Synchronisation Error" title="Synchronisation Error"></i>
+                <i class='fas fa-fw fa-exclamation-triangle' role="img" aria-label="Synchronisation Error" title="Synchronisation Error"></i>
             </div>
         </div>
     </t>
@@ -76,19 +76,19 @@
         <div class="oe_status js_proxy">
             <div class="js_connected oe_green">
                 <span class="js_msg oe_hidden"></span>
-                <i class='fa fa-fw fa-sitemap' role="img" aria-label="Proxy Connected" title="Proxy Connected"></i>
+                <i class='fas fa-fw fa-sitemap' role="img" aria-label="Proxy Connected" title="Proxy Connected"></i>
             </div>
             <div class="js_connecting oe_hidden">
                 <span class="js_msg oe_hidden"></span>
-                <i class='fa fa-fw fa-spin fa-spinner' role="img" aria-label="Connecting to Proxy" title="Connecting to Proxy"></i>
+                <i class='fas fa-fw fa-spin fa-spinner' role="img" aria-label="Connecting to Proxy" title="Connecting to Proxy"></i>
             </div>
             <div class="js_warning oe_orange oe_hidden">
                 <span class="js_msg oe_hidden"></span>
-                <i class='fa fa-fw fa-sitemap' role="img" aria-label="Proxy Warning" title="Proxy Warning"></i>
+                <i class='fas fa-fw fa-sitemap' role="img" aria-label="Proxy Warning" title="Proxy Warning"></i>
             </div>
             <div class="js_disconnected oe_red oe_hidden">
                 <span class="js_msg oe_hidden"></span>
-                <i class='fa fa-fw fa-sitemap' role="img" aria-label="Proxy Disconnected" title="Proxy Disconnected"></i>
+                <i class='fas fa-fw fa-sitemap' role="img" aria-label="Proxy Disconnected" title="Proxy Disconnected"></i>
             </div>
         </div>
     </t>
@@ -96,7 +96,7 @@
     <t t-name="SaleDetailsButton">
         <div class="oe_status">
             <div class="js_connected oe_icon">
-                <i class='fa fa-fw fa-print' role="img" aria-label="Print" title="Print a report with all the sales of the current PoS Session"></i>
+                <i class='fas fa-fw fa-print' role="img" aria-label="Print" title="Print a report with all the sales of the current PoS Session"></i>
             </div>
         </div>
     </t>
@@ -105,13 +105,13 @@
         <div class="oe_status">
             <span class="oe_customer_display_text"></span>
             <div class="js_warning oe_icon oe_orange oe_hidden">
-                <i class='fa fa-fw fa-desktop' role="img" aria-label="Client Screen Warning" title="Client Screen Warning"></i>
+                <i class='fas fa-fw fa-desktop' role="img" aria-label="Client Screen Warning" title="Client Screen Warning"></i>
             </div>
              <div class="js_disconnected oe_icon oe_red">
-                <i class='fa fa-fw fa-desktop' role="img" aria-label="Client Screen Disconnected" title="Client Screen Disconnected"></i>
+                <i class='fas fa-fw fa-desktop' role="img" aria-label="Client Screen Disconnected" title="Client Screen Disconnected"></i>
             </div>
             <div class="js_connected oe_icon oe_green oe_hidden">
-                <i class='fa fa-fw fa-desktop' role="img" aria-label="Client Screen Connected" title="Client Screen Connected"></i>
+                <i class='fas fa-fw fa-desktop' role="img" aria-label="Client Screen Connected" title="Client Screen Connected"></i>
             </div>
         </div>
     </t>
@@ -122,7 +122,7 @@
                 <t t-esc="widget.label" />
             </t>
             <t t-else="">
-                <i class='fa fa-fw' role="img"/>
+                <i class='fas fa-fw' role="img"/>
             </t>
         </div>
     </t>
@@ -139,20 +139,20 @@
 
     <t t-name="SetFiscalPositionButton">
         <div class='control-button o_fiscal_position_button'>
-            <i class='fa fa-book' role="img" aria-label="Set fiscal position" title="Set fiscal position"/> <t t-esc='widget.get_current_fiscal_position_name()'/>
+            <i class='fas fa-book' role="img" aria-label="Set fiscal position" title="Set fiscal position"/> <t t-esc='widget.get_current_fiscal_position_name()'/>
         </div>
     </t>
 
     <t t-name="SetPricelistButton">
         <div class='control-button o_pricelist_button'>
-            <i class='fa fa-th-list' role="img" aria-label="Price list" title="Price list"/> <t t-esc='widget.get_current_pricelist_name()'/>
+            <i class='fas fa-th-list' role="img" aria-label="Price list" title="Price list"/> <t t-esc='widget.get_current_pricelist_name()'/>
         </div>
     </t>
 
     <t t-name="ActionpadWidget">
         <div class="actionpad">
             <button t-attf-class='button set-customer #{ ( widget.pos.get_client() and widget.pos.get_client().name.length > 10) ? "decentered" : "" }' >
-                <i class='fa fa-user' role="img" aria-label="Customer" title="Customer"/>
+                <i class='fas fa-user' role="img" aria-label="Customer" title="Customer"/>
                 <t t-if="widget.pos.get_client()">
                     <t t-esc="widget.pos.get_client().name" />
                 </t>
@@ -162,7 +162,7 @@
             </button>
             <button class='button pay'>
                 <div class='pay-circle'>
-                    <i class='fa fa-chevron-right' role="img" aria-label="Pay" title="Pay"/>
+                    <i class='fas fa-chevron-right' role="img" aria-label="Pay" title="Pay"/>
                 </div>
                 Payment
             </button>
@@ -218,7 +218,7 @@
             <div class="breadcrumbs">
                 <span class="breadcrumb">
                     <span class=" breadcrumb-button breadcrumb-home js-category-switch">
-                        <i class='fa fa-home' role="img" aria-label="Home" title="Home"></i>
+                        <i class='fas fa-home' role="img" aria-label="Home" title="Home"></i>
                     </span>
                 </span>
                 <t t-foreach="widget.breadcrumb" t-as="category">
@@ -233,10 +233,10 @@
             <div class="searchbox">
                 <input placeholder="Search Products" />
                 <span class="search-clear left">
-                    <i class="fa fa-search" />
+                    <i class="fas fa-search" />
                 </span>
                 <span class="search-clear right">
-                    <i class="fa fa-remove" />
+                    <i class="fas fa-times" />
                 </span>
             </div>
         </header>
@@ -324,7 +324,7 @@
             <div class="screen-content">
                 <div class="top-content">
                     <span class='button back'>
-                        <i class='fa fa-angle-double-left'></i>
+                        <i class='fas fa-angle-double-left'></i>
                         Back
                     </span>
                     <h1 class='product-name'><t t-esc="widget.get_product_name()" /></h1>
@@ -341,7 +341,7 @@
                     </div>
                     <div class='buy-product'>
                         Order
-                        <i class='fa fa-angle-double-right'></i>
+                        <i class='fas fa-angle-double-right'></i>
                     </div>
                 </div>
             </div>
@@ -360,7 +360,7 @@
         <section class='client-details edit'>
             <div class='client-picture'>
                 <t t-if='!partner.id'>
-                    <i class='fa fa-camera' role="img" aria-label="Picture" title="Picture"></i>
+                    <i class='fas fa-camera' role="img" aria-label="Picture" title="Picture"></i>
                 </t>
                 <t t-if='partner.id'>
                     <img t-att-src='widget.partner_icon_url(partner.id)' alt="Partner" style="width: 64px; height: 64px; object-fit: cover;"/>
@@ -369,8 +369,8 @@
             </div>
             <input class='detail client-name' name='name' t-att-value='partner.name' placeholder='Name'></input>
             <div class='edit-buttons'>
-                <div class='button undo'><i class='fa fa-undo' role="img" aria-label="Undo" title="Undo"/></div>
-                <div class='button save'><i class='fa fa-floppy-o' role="img" aria-label="Save" title="Save"/></div>
+                <div class='button undo'><i class='fas fa-undo' role="img" aria-label="Undo" title="Undo"/></div>
+                <div class='button save'><i class='far fa-save' role="img" aria-label="Save" title="Save"/></div>
             </div>
             <div class='client-details-box clearfix'>
                 <div class='client-details-left'>
@@ -459,7 +459,7 @@
             </div>
             <div class='client-name'><t t-esc='partner.name' /></div>
             <div class='edit-buttons'>
-                <div class='button edit'><i class='fa fa-pencil-square' role="img" aria-label="Edit" title="Edit"/></div>
+                <div class='button edit'><i class='fas fa-pen-square' role="img" aria-label="Edit" title="Edit"/></div>
             </div>
             <div class='client-details-box clearfix'>
                 <div class='client-details-left'>
@@ -529,7 +529,7 @@
             <div class="screen-content">
                 <section class="top-content">
                     <span class='button back'>
-                        <i class='fa fa-angle-double-left'></i>
+                        <i class='fas fa-angle-double-left'></i>
                         Cancel
                     </span>
                     <span class='searchbox'>
@@ -538,12 +538,12 @@
                     </span>
                     <span class='searchbox'></span>
                     <span class='button new-customer' role="img" aria-label="Add a customer" title="Add a customer">
-                        <i class='fa fa-user'></i>
-                        <i class='fa fa-plus'></i>
+                        <i class='fas fa-user'></i>
+                        <i class='fas fa-plus'></i>
                     </span>
                     <span class='button next oe_hidden highlight'>
                         Select Customer
-                        <i class='fa fa-angle-double-right'></i>
+                        <i class='fas fa-angle-double-right'></i>
                     </span>
                 </section>
                 <section class="full-content">
@@ -616,7 +616,7 @@
                     Request sent
                 </div>
                 <div>
-                    <i class='fa fa-spinner fa-spin' role='img'/>
+                    <i class='fas fa-spinner fa-spin' role='img'/>
                 </div>
             </t>
             <t t-elif="line.payment_status == 'reversing'">
@@ -624,7 +624,7 @@
                     Reversal request sent to terminal
                 </div>
                 <div>
-                    <i class='fa fa-spinner fa-spin' role='img'/>
+                    <i class='fas fa-spinner fa-spin' role='img'/>
                 </div>
             </t>
             <t t-elif="line.payment_status == 'done'">
@@ -718,7 +718,7 @@
                                 </t>
                                 <t t-else=''>
                                     <div class='delete-button' t-att-data-cid='line.cid' aria-label="Delete" title="Delete">
-                                        <i class='fa fa-times-circle'/>
+                                        <i class='fas fa-times-circle'/>
                                     </div>
                                 </t>
                             </div>
@@ -735,7 +735,7 @@
                                 </t>
                                 <t t-else=''>
                                     <div class='delete-button' t-att-data-cid='line.cid' aria-label="Delete" title="Delete">
-                                        <i class='fa fa-times-circle'/>
+                                        <i class='fas fa-times-circle'/>
                                     </div>
                                 </t>
                             </div>
@@ -788,13 +788,13 @@
             <div class='screen-content'>
                 <div class='top-content'>
                     <span class='button back'>
-                        <i class='fa fa-angle-double-left'></i>
+                        <i class='fas fa-angle-double-left'></i>
                         Back
                     </span>
                     <h1>Payment</h1>
                     <span class='button next'>
                         Validate
-                        <i class='fa fa-angle-double-right'></i>
+                        <i class='fas fa-angle-double-right'></i>
                     </span>
                 </div>
                 <div class='left-content pc40 touch-scrollable scrollable-y'>
@@ -813,7 +813,7 @@
 
                     <div class='payment-buttons'>
                         <div class='button js_set_customer'>
-                            <i class='fa fa-user' role="img" aria-label="Customer" title="Customer"/>
+                            <i class='fas fa-user' role="img" aria-label="Customer" title="Customer"/>
                             <span class='js_customer_name'>
                                 <t t-if="widget.pos.get_client()">
                                     <t t-esc="widget.pos.get_client().name" />
@@ -826,21 +826,21 @@
                         <t t-if='widget.pos.config.module_account'>
                             <t t-if='widget.pos.get_order()'>
                                 <div t-attf-class='button js_invoice #{ widget.pos.get_order().is_to_invoice() ? "highlight" : ""} '>
-                                    <i class='fa fa-file-text-o' /> Invoice
+                                    <i class='far fa-file-alt' /> Invoice
                                 </div>
                             </t>
                         </t>
                         <div class='button js_email'>
-                            <i class='fa fa-inbox' /> Email
+                            <i class='fas fa-inbox' /> Email
                         </div>
                         <t t-if='widget.pos.config.tip_product_id'>
                             <div class='button js_tip'>
-                                <i class='fa fa-heart' /> Tip
+                                <i class='fas fa-heart' /> Tip
                             </div>
                         </t>
                         <t t-if='widget.pos.config.iface_cashdrawer'>
                             <div class='button js_cashdrawer'>
-                                <i class='fa fa-archive' /> Open Cashbox
+                                <i class='fas fa-archive' /> Open Cashbox
                             </div>
                         </t>
                      </div>
@@ -856,13 +856,13 @@
                     <h1>Change: <span class='change-value'>0.00</span></h1>
                     <span class='button next'>
                         Next Order
-                        <i class='fa fa-angle-double-right'></i>
+                        <i class='fas fa-angle-double-right'></i>
                     </span>
                 </div>
                 <div class="centered-content touch-scrollable">
                     <h2 class="print_invoice">The order has been synchronized earlier. To print the invoice please refer to the order in the backend</h2>
                     <div class="button print">
-                        <i class='fa fa-print'></i> Print Receipt
+                        <i class='fas fa-print'></i> Print Receipt
                     </div>
                     <div class="pos-receipt-container">
                     </div>
@@ -1185,13 +1185,13 @@
                         Ok
                     </div>
                     <a><div class="button icon download_error_file oe_hidden">
-                        <i class="fa fa-arrow-down" role="img" aria-label="Download error" title="Download error"></i>
+                        <i class="fas fa-arrow-down" role="img" aria-label="Download error" title="Download error"></i>
                     </div></a>
                     <div class="button icon download">
-                        <i class="fa fa-download" role="img" aria-label="Download" title="Download"></i>
+                        <i class="fas fa-download" role="img" aria-label="Download" title="Download"></i>
                     </div>
                     <div class="button icon email">
-                        <i class="fa fa-paper-plane" role="img" aria-label="Send by email" title="Send by email"></i>
+                        <i class="fas fa-paper-plane" role="img" aria-label="Send by email" title="Send by email"></i>
                     </div>
                 </footer>
             </div>
@@ -1265,7 +1265,7 @@
                                 t-att-autofocus="lot_line === focus_lot_line ? 'autofocus': undefined"
                                 class="popup-input packlot-line-input"
                                 placeholder="Serial/Lot Number"/>
-                            <i class="oe_link_icon remove-lot fa fa-trash-o" role="img" aria-label="Remove" title="Remove"></i>
+                            <i class="oe_link_icon remove-lot far fa-trash-alt" role="img" aria-label="Remove" title="Remove"></i>
                         </t>
                     </t>
                 </main>
@@ -1435,9 +1435,9 @@
             <span class="product-name">
                 <t t-esc="line.get_product().display_name"/>
                 <t t-if="line.get_product().tracking!=='none'">
-                    <i class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_green" t-if="line.has_valid_product_lot()"
+                    <i class="oe_link_icon fas fa-list oe_icon line-lot-icon oe_green" t-if="line.has_valid_product_lot()"
                        aria-label="Valid product lot" role="img" title="Valid product lot"/>
-                    <i class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_red" t-if="!line.has_valid_product_lot()"
+                    <i class="oe_link_icon fas fa-list oe_icon line-lot-icon oe_red" t-if="!line.has_valid_product_lot()"
                        aria-label="Invalid product lot" role="img" title="Invalid product lot"/>
                 </t>
             </span>
@@ -1485,7 +1485,7 @@
                 <div class="order">
                     <t t-if="orderlines.length === 0" >
                         <div class='order-empty'>
-                            <i class='fa fa-shopping-cart' role="img" aria-label="Shopping cart" title="Shopping cart"/>
+                            <i class='fas fa-shopping-cart' role="img" aria-label="Shopping cart" title="Shopping cart"/>
                             <h1>Your shopping cart is empty</h1>
                         </div>
                     </t>
@@ -1510,7 +1510,7 @@
     <t t-name="DebugWidget">
         <div class="debug-widget oe_hidden">
             <h1>Debug Window</h1>
-            <div class="toggle" title="Dismiss" role="img" aria-label="Dismiss"><i class='fa fa-times' /></div>
+            <div class="toggle" title="Dismiss" role="img" aria-label="Dismiss"><i class='fas fa-times' /></div>
             <div class="content">
                 <p class="category">Electronic Scale</p>
                 <ul>
@@ -1607,10 +1607,10 @@
                 </t>
             </span>
             <span class="order-button square neworder-button">
-                <i class='fa fa-plus' role="img" aria-label="New order" title="New order"/>
+                <i class='fas fa-plus' role="img" aria-label="New order" title="New order"/>
             </span>
             <span class="order-button square deleteorder-button">
-                <i class='fa fa-minus' role="img" aria-label="Delete order" title="Delete order"/>
+                <i class='fas fa-minus' role="img" aria-label="Delete order" title="Delete order"/>
             </span>
         </div>
     </t>

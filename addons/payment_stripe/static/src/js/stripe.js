@@ -55,7 +55,7 @@ function _redirectToStripeCheckout(providerForm) {
 
     var paymentForm = $('.o_payment_form');
     if (!paymentForm.find('i').length) {
-        paymentForm.append('<i class="fa fa-spinner fa-spin"/>');
+        paymentForm.append('<i class="fas fa-spinner fa-spin"/>');
         paymentForm.attr('disabled', 'disabled');
     }
 

@@ -16,8 +16,8 @@
                         <div t-if="state != 'pending'" class="share-icons text-center text-primary">
                             <t t-foreach="medias" t-as="media">
                                 <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share #{media}" t-attf-aria-label="Share on #{media}" t-attf-title="Share on #{media}">
-                                    <span class="fa fa-square fa-stack-2x"></span>
-                                    <span t-attf-class="oe_social_#{media} fa fa-#{media} fa-stack-1x fa-inverse"></span>
+                                    <span class="fas fa-square fa-stack-2x"></span>
+                                    <span t-attf-class="oe_social_#{media} fas fa-#{media} fa-stack-1x fa-inverse"></span>
                                 </a>
                             </t>
                         </div>
@@ -65,8 +65,8 @@
             <div>
                 <t t-foreach="medias" t-as="media">
                     <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share oe_share_bump #{media}" t-attf-aria-label="Share on #{media}" t-attf-title="Share on #{media}">
-                        <span class="fa fa-square fa-stack-2x"></span>
-                        <span t-attf-class="oe_social_#{media} fa fa-#{media} fa-stack-1x fa-inverse"></span>
+                        <span class="fas fa-square fa-stack-2x"></span>
+                        <span t-attf-class="oe_social_#{media} fas fa-#{media} fa-stack-1x fa-inverse"></span>
                     </a>
                 </t>
             </div>

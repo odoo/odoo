@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button name="%(link_tracker_action_campaign)d"
-                    type="action" class="oe_stat_button order-12" icon="fa-mouse-pointer">
+                    type="action" class="oe_stat_button order-12" icon="fas fa-mouse-pointer">
                     <field name="click_count" widget="statinfo" string="Clicks"/>
                 </button>
             </xpath>
@@ -24,7 +24,7 @@
             </xpath>
             <xpath expr="//div[@id='utm_statistics']" position="inside">
                 <div class="mr-3" title="Clicks">
-                    <i class="fa fa-mouse-pointer text-muted"></i>
+                    <i class="fas fa-mouse-pointer text-muted"></i>
                     <small class="font-weight-bold" t-esc="record.click_count.raw_value" />
                 </div>
             </xpath>

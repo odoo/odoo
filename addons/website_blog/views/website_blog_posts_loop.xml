@@ -70,7 +70,7 @@ according to the enabled options.
                     </t>
                 </t>
                 <span t-if="date_begin" class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
-                    <i class="fa fa-calendar-o mr-2 text-muted"/>
+                    <i class="far fa-calendar mr-2 text-muted"/>
                     <t t-esc="date_begin" t-options="{'widget': 'date', 'format': 'MMM yyyy'}"></t>
                     <a t-attf-href="#{blog_url(date_begin=False, date_end=False)}" class="btn border-0 py-1">&#215;</a>
                 </span>
@@ -113,7 +113,7 @@ according to the enabled options.
                             </div>
                             <div t-else="" class="mt-3">
                                 <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/post/#{slug(blog_post)}" class="btn btn-primary">
-                                    Read more <i class="fa fa-chevron-right ml-2"/>
+                                    Read more <i class="fas fa-chevron-right ml-2"/>
                                 </a>
                             </div>
                         </t>
@@ -161,11 +161,11 @@ according to the enabled options.
         <div t-attf-class="d-flex flex-wrap align-items-center justify-content-between mx-n2 #{opt_blog_list_view and 'flex-grow-0 w-auto mw-100' or 'flex-grow-1' }">
             <time t-field="blog_post.post_date" class="text-nowrap font-weight-bold px-2" t-options='{"format": "MMM d, yyyy"}'/>
             <div t-if="opt_posts_loop_show_stats" class="px-2">
-                <b class="text-nowrap" title="Comments"><i class="fa fa-comment text-muted mr-1"/><t t-esc="len(blog_post.message_ids)"/></b>
-                <b class="text-nowrap pl-2" title="Views"><i class="fa fa-binoculars text-muted mr-1"/><t t-esc="blog_post.visits"/></b>
+                <b class="text-nowrap" title="Comments"><i class="fas fa-comment text-muted mr-1"/><t t-esc="len(blog_post.message_ids)"/></b>
+                <b class="text-nowrap pl-2" title="Views"><i class="fas fa-binoculars text-muted mr-1"/><t t-esc="blog_post.visits"/></b>
             </div>
             <b t-if="posts_list_show_parent_blog" class="text-nowrap text-truncate px-2">
-                <i class="fa fa-folder-open text-muted"/>
+                <i class="fas fa-folder-open text-muted"/>
                 <a t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id"/>
             </b>
         </div>

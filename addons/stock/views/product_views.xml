@@ -10,7 +10,7 @@
                 <div name="button_box" position="inside">
                     <button string="Putaway Rules"
                         class="oe_stat_button"
-                        icon="fa-random" name="%(category_open_putaway)d" type="action"
+                        icon="fas fa-random" name="%(category_open_putaway)d" type="action"
                         groups="stock.group_stock_multi_locations"/>
                 </div>
                 <group name="first" position="after">
@@ -197,7 +197,7 @@
                 <div name="button_box" position="inside">
                     <button string="Putaway Rules" type="object"
                         name="action_view_related_putaway_rules"
-                        class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
+                        class="oe_stat_button" icon="fas fa-random" groups="stock.group_stock_multi_locations"
                         attrs="{'invisible': [('type', '=', 'service')]}"
                         context="{'invisible_handle': True, 'single_product': True}"/>
                 </div>
@@ -226,7 +226,7 @@
                     <div name="button_box" position="inside">
                         <button class="oe_stat_button"
                                name="action_open_quants"
-                               icon="fa-cubes"
+                               icon="fas fa-cubes"
                                type="object" attrs="{'invisible':[('type', '!=', 'product')]}">
                                <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value">
@@ -240,7 +240,7 @@
                             name="action_product_forecast_report"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
                             context="{'default_product_id': id}"
-                            class="oe_stat_button" icon="fa-cubes">
+                            class="oe_stat_button" icon="fas fa-cubes">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="virtual_available" widget="statinfo" nolabel="1" class="mr4"/>
@@ -253,11 +253,11 @@
                             type="object"
                             name= "action_view_stock_move_lines"
                             attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
-                            class="oe_stat_button" icon="fa-exchange"
+                            class="oe_stat_button" icon="fas fa-exchange-alt"
                             groups="stock.group_stock_user"/>
                         <button name="action_view_orderpoints" type="object"
                             attrs="{'invisible':['|',('type', 'not in', ['product', 'consu']),('nbr_reordering_rules', '!=', 1)]}"
-                            class="oe_stat_button" icon="fa-refresh">
+                            class="oe_stat_button" icon="fas fa-sync">
                             <div class="o_field_widget o_stat_info mr4">
                                 <span class="o_stat_text">Min :</span>
                                 <span class="o_stat_text">Max:</span>
@@ -270,16 +270,16 @@
                         <button type="object"
                             name="action_view_orderpoints"
                             attrs="{'invisible':['|',('type', '!=', 'product'),('nbr_reordering_rules', '==', 1)]}"
-                            class="oe_stat_button" icon="fa-refresh">
+                            class="oe_stat_button" icon="fas fa-sync">
                             <field name="nbr_reordering_rules" widget="statinfo"/>
                         </button>
                         <button string="Lot/Serial Numbers" type="object"
                             name="action_open_product_lot"
                             attrs="{'invisible': [('tracking', '=', 'none')]}"
-                            class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot"/>
+                            class="oe_stat_button" icon="fas fa-bars" groups="stock.group_production_lot"/>
                         <button string="Putaway Rules" type="object"
                             name="action_view_related_putaway_rules"
-                            class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
+                            class="oe_stat_button" icon="fas fa-random" groups="stock.group_stock_multi_locations"
                             attrs="{'invisible': [('type', '=', 'service')]}"
                             context="{'invisible_handle': True, 'single_product': True}"/>
                     </div>
@@ -315,7 +315,7 @@
                         <button type="object"
                             name="action_open_quants"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
-                            class="oe_stat_button" icon="fa-cubes">
+                            class="oe_stat_button" icon="fas fa-cubes">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value" widget="statinfo">
                                     <field name="qty_available" widget="statinfo" nolabel="1" class="mr4"/>
@@ -328,7 +328,7 @@
                             name="action_product_tmpl_forecast_report"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
                             context="{'default_product_tmpl_id': id}"
-                            class="oe_stat_button" icon="fa-cubes">
+                            class="oe_stat_button" icon="fas fa-cubes">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="virtual_available" widget="statinfo" nolabel="1" class="mr4"/>
@@ -340,12 +340,12 @@
                         <button string="Traceability" type="object"
                             name= "action_view_stock_move_lines"
                             attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
-                            class="oe_stat_button" icon="fa-exchange"
+                            class="oe_stat_button" icon="fas fa-exchange-alt"
                             groups="stock.group_stock_user"/>
                         <button type="object"
                             name="action_view_orderpoints"
                             attrs="{'invisible':['|',('type', '!=', 'product'),('nbr_reordering_rules', '!=', 1)]}"
-                            class="oe_stat_button" icon="fa-refresh">
+                            class="oe_stat_button" icon="fas fa-sync">
                             <div class="o_field_widget o_stat_info mr4">
                                 <span class="o_stat_text">Min:</span>
                                 <span class="o_stat_text">Max:</span>
@@ -359,16 +359,16 @@
                             name="action_view_orderpoints"
                             attrs="{'invisible':['|',('type', '!=', 'product'),('nbr_reordering_rules', '==', 1)]}"
                             class="oe_stat_button"
-                            icon="fa-refresh">
+                            icon="fas fa-sync">
                             <field name="nbr_reordering_rules" widget="statinfo"/>
                          </button>
                         <button string="Lot/Serial Numbers" type="object"
                             name="action_open_product_lot"
                             attrs="{'invisible': [('tracking', '=', 'none')]}"
-                            class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot"/>
+                            class="oe_stat_button" icon="fas fa-bars" groups="stock.group_production_lot"/>
                         <button string="Putaway Rules" type="object"
                             name="action_view_related_putaway_rules"
-                            class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
+                            class="oe_stat_button" icon="fas fa-random" groups="stock.group_stock_multi_locations"
                             attrs="{'invisible': [('type', '=', 'service')]}"
                             context="{
                                 'invisible_handle': True,

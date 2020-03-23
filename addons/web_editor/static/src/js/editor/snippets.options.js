@@ -1,4 +1,4 @@
-odoo.define('web_editor.snippets.options', function (require) {
+Fodoo.define('web_editor.snippets.options', function (require) {
 'use strict';
 
 var core = require('web.core');
@@ -1264,7 +1264,7 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
             calendarWeeks: true,
             defaultDate: moment().format(),
             icons: {
-                close: 'fa fa-check primary',
+                close: 'far fa-check primary',
             },
             locale: moment.locale(),
             format: time.getLangDatetimeFormat(),

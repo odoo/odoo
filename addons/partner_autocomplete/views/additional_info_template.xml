@@ -30,12 +30,12 @@
 
             <div class="col-12 row m-0 p-0">
                 <div t-if="company_type" class="my-1 p-0 col-3">
-                    <i class="fa fa-fw mr-2 fa-building text-primary"/>
+                    <i class="fas fa-fw mr-2 fa-building text-primary"/>
                     <b>Company type</b>
                 </div>
                 <div t-if="company_type" class="my-1 col-9" t-esc="company_type" />
                 <div t-if="founded_year" class="my-1 p-0 col-3">
-                    <i class="fa fa-fw mr-2 fa-calendar text-primary"/>
+                    <i class="fas fa-fw mr-2 fa-calendar text-primary"/>
                     <b>Founded</b>
                 </div>
                 <div t-if="founded_year" class="my-1 col-9" t-esc="founded_year" />
@@ -45,7 +45,7 @@
                 <t t-if="industry_group" t-set="sectors" t-value="sectors + [industry_group]" />
                 <t t-if="sub_industry" t-set="sectors" t-value="sectors + [sub_industry]" />
                 <div t-if="sectors" class="my-1 p-0 col-3">
-                    <i class="fa fa-fw mr-2 fa-industry text-primary"/>
+                    <i class="fas fa-fw mr-2 fa-industry text-primary"/>
                     <b>Sectors</b>
                 </div>
                 <div t-if="sectors" class="my-1 col-9">
@@ -54,19 +54,19 @@
                     </t>
                 </div>
                 <div t-if="employees" class="my-1 p-0 col-3">
-                    <i class="fa fa-fw mr-2 fa-users text-primary"/>
+                    <i class="fas fa-fw mr-2 fa-users text-primary"/>
                     <b>Employees</b>
                 </div>
                 <div t-if="employees" class="my-1 col-9" t-esc="'%.0f' % employees" />
                 <div t-if="estimated_annual_revenue" class="my-1 p-0 col-3">
-                    <i class="fa fa-fw mr-2 fa-money text-primary"/>
+                    <i class="fas fa-fw mr-2 fa-money text-primary"/>
                     <b>Estimated revenue</b>
                 </div>
                 <div t-if="estimated_annual_revenue" class="my-1 col-9">
                     <span t-esc="estimated_annual_revenue" /><span> per year</span>
                 </div>
                 <div t-if="phone_numbers" class="my-1 p-0 col-3">
-                    <i class="fa fa-fw mr-2 fa-phone text-primary"/>
+                    <i class="fas fa-fw mr-2 fa-phone text-primary"/>
                     <b>Phone</b>
                 </div>
                 <div t-if="phone_numbers" class="col-9">
@@ -75,7 +75,7 @@
                     </t>
                 </div>
                 <div t-if="email" class="my-1 p-0 col-3">
-                    <i class="fa fa-fw mr-2 fa-envelope text-primary"/>
+                    <i class="fas fa-fw mr-2 fa-envelope text-primary"/>
                     <b>Email</b>
                 </div>
                 <div t-if="email" class="col-9">
@@ -84,12 +84,12 @@
                     </t>
                 </div>
                 <div t-if="timezone" class="my-1 p-0 col-3">
-                    <i class="fa fa-fw mr-2 fa-globe text-primary"/>
+                    <i class="fas fa-fw mr-2 fa-globe text-primary"/>
                     <b>Timezone</b>
                 </div>
                 <div t-if="timezone" class="my-1 col-9" t-esc="timezone.replace('_', ' ')" />
                 <div t-if="tech" class="my-1 p-0 col-3">
-                    <i class="fa fa-fw mr-2 fa-cube text-primary"/>
+                    <i class="fas fa-fw mr-2 fa-cube text-primary"/>
                     <b>Technologies Used</b>
                 </div>
                 <div t-if="tech" class="my-1 col-9">
@@ -98,7 +98,7 @@
                     </t>
                 </div>
                 <div t-if="twitter_bio" class="my-1 p-0 col-3">
-                    <i class="fa fa-fw mr-2 fa-twitter text-primary"/>
+                    <i class="fas fa-fw mr-2 fa-twitter text-primary"/>
                     <b>Twitter</b>
                 </div>
                 <div t-if="twitter_bio" class="my-1 col-9">

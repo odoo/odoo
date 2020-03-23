@@ -154,7 +154,7 @@
                     <div class="oe_button_box" name="button_box">
                         <button type="object"  name="action_view_invoice"
                             class="oe_stat_button"
-                            icon="fa-pencil-square-o" attrs="{'invisible':['|', ('invoice_count', '=', 0), ('state', 'in', ('draft','sent','to approve'))]}">
+                            icon="far fa-edit" attrs="{'invisible':['|', ('invoice_count', '=', 0), ('state', 'in', ('draft','sent','to approve'))]}">
                             <field name="invoice_count" widget="statinfo" string="Vendor Bills"/>
                             <field name='invoice_ids' invisible="1"/>
                         </button>

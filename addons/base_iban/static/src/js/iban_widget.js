@@ -81,10 +81,10 @@ var IbanWidget = FieldChar.extend({
         if (this.$el.filter('.o_iban').length === 0) {
             var $span;
             if (!this.ibanIsValid) {
-                $span = $('<span class="fa fa-times o_iban text-danger o_iban_fail"/>');
+                $span = $('<span class="fas fa-times o_iban text-danger o_iban_fail"/>');
                 $span.attr('title', warningMessage);
             } else {
-                $span = $('<span class="fa fa-check o_iban text-success"/>');
+                $span = $('<span class="fas fa-check o_iban text-success"/>');
             }
             this.$el.addClass('o_iban_input_with_validator');
             $span.insertAfter(this.$el);

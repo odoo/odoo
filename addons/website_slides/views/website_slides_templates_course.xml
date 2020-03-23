@@ -40,7 +40,7 @@
                         <div class="input-group o_wslides_course_nav_search ml-1 position-relative">
                             <span class="input-group-prepend">
                                 <button class="btn btn-link text-white rounded-0 pr-1" type="submit" aria-label="Search" title="Search">
-                                    <i class="fa fa-search"></i>
+                                    <i class="fas fa-search"></i>
                                 </button>
                             </span>
                             <input type="text" class="form-control border-0 rounded-0 bg-transparent text-white" name="search" placeholder="Search courses"/>
@@ -79,14 +79,14 @@
                         </div>
 
                         <div class="btn-group ml-1 position-static">
-                            <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></a>
+                            <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-search"></i></a>
                             <div class="dropdown-menu dropdown-menu-right w-100" style="right: 10px;">
                                 <form class="px-3" t-attf-action="/slides/#{slug(channel)}" role="search" method="get">
                                     <div class="input-group">
                                         <input type="text" class="form-control" name="search" placeholder="Search courses"/>
                                         <span class="input-group-append">
                                             <button class="btn btn-primary" type="submit" aria-label="Search" title="Search">
-                                                <i class="fa fa-search"/>
+                                                <i class="fas fa-search"/>
                                             </button>
                                         </span>
                                     </div>
@@ -132,7 +132,7 @@
                                     <button role="button" class="btn text-white pl-0" title="Share Channel"
                                         aria-label="Share Channel"
                                         data-toggle="modal" t-att-data-target="'#slideChannelShareModal_%s' % channel.id">
-                                        <i class="fa fa-share-square"></i> Share
+                                        <i class="fas fa-share-square"></i> Share
                                     </button>
                                 </div>
                             </div>
@@ -179,7 +179,7 @@
                                     <a t-att-class="'nav-link %s' % ('active' if active_tab == 'home' else '')"
                                         id="home-tab" data-toggle="pill" href="#home" role="tab" aria-controls="home"
                                         t-att-aria-selected="'true' if active_tab == 'home' else 'false'">
-                                        <i class="fa fa-home"/> Course
+                                        <i class="fas fa-home"/> Course
                                     </a>
                                 </li>
                                 <li t-if="channel.allow_comment" class="nav-item o_wslides_course_header_nav_review_training">
@@ -206,7 +206,7 @@
                                             href="#"
                                             t-att-data-channel-id="channel.id"
                                             t-att-data-channel-tag-ids="channel.tag_ids.ids">
-                                            <i class="fa fa-plus mr-1"/><span>Add Tag</span>
+                                            <i class="fas fa-plus mr-1"/><span>Add Tag</span>
                                          </a>
                                     </div>
                                     <t t-if="channel.channel_type == 'training'" t-call="website_slides.course_slides_list"/>
@@ -235,7 +235,7 @@
                                         <a t-att-class="'nav-link %s' % ('active' if active_tab == 'home' else '')"
                                             id="home-tab" data-toggle="pill" href="#home" role="tab" aria-controls="home"
                                             t-att-aria-selected="'true' if active_tab == 'home' else 'false'">
-                                            <i class="fa fa-home"/>
+                                            <i class="fas fa-home"/>
                                             Course
                                         </a>
                                     </li>
@@ -309,11 +309,11 @@
                             <t t-set="img_style" t-value="'width: 1.4em; height: 1.4em; object-fit: cover;'"/>
                         </t>
                         <h6 class="d-flex flex-grow-1 my-0">You're enrolled</h6>
-                        <i class="fa fa-check"/>
+                        <i class="fas fa-check"/>
                     </button>
                     <div class="d-flex align-items-center pt-3">
                         <t t-if="channel.completed">
-                            <span class="badge badge-pill badge-success py-1 px-2 mx-auto" style="font-size: 1em"><i class="fa fa-check"/> Completed</span>
+                            <span class="badge badge-pill badge-success py-1 px-2 mx-auto" style="font-size: 1em"><i class="fas fa-check"/> Completed</span>
                         </t>
                         <t t-else="">
                             <div class="progress flex-grow-1 bg-black-50" style="height: 6px;">
@@ -349,7 +349,7 @@
                 <button role="button" class="btn btn-link btn-block" title="Share Channel"
                     aria-label="Share Channel"
                     data-toggle="modal" t-att-data-target="'#slideChannelShareModal_%s' % channel.id">
-                    <i class="fa fa-share-square fa-fw"/> Share
+                    <i class="fas fa-share-square fa-fw"/> Share
                 </button>
             </div>
         </div>
@@ -369,7 +369,7 @@
                          t-att-class="'o_wslides_slide_list_category_header position-relative d-flex justify-content-between align-items-center mt8 %s' % ('o_wslides_js_category bg-white shadow-sm border-bottom-0' if category_id and channel.can_upload  else 'border-0 py-1')">
                         <div t-att-class="'d-flex align-items-center pl-3 %s' % ('o_wslides_slides_list_drag' if channel.can_publish else '')">
                             <div t-if="channel.can_publish and category_id" class="o_wslides_slides_list_drag py-2 pr-3">
-                                <i class="fa fa-bars"/>
+                                <i class="fas fa-bars"/>
                             </div>
                             <span t-if="category_id" t-att-class="'text-muted' if not channel.can_upload else ''" t-field="category['category'].name"/>
                             <small t-if="not category['total_slides'] and category_id" class="ml-1 text-muted"><b>(empty)</b></small>
@@ -385,7 +385,7 @@
                                 t-att-data-category-id="category_id"
                                 t-att-data-can-upload="channel.can_upload"
                                 t-att-data-can-publish="channel.can_publish">
-                                <i class="fa fa-plus mr-1"/> <span class="d-none d-md-inline-block">Add Content</span>
+                                <i class="fas fa-plus mr-1"/> <span class="d-none d-md-inline-block">Add Content</span>
                             </a>
                         </div>
                     </div>
@@ -410,10 +410,10 @@
                 t-att-data-modules-to-install="modules_to_install"
                 t-att-data-channel-id="channel.id"
                 t-att-data-can-upload="channel.can_upload"
-                t-att-data-can-publish="channel.can_publish"><i class="fa fa-plus mr-1"/><span>Add Content</span></a>
+                t-att-data-can-publish="channel.can_publish"><i class="fas fa-plus mr-1"/><span>Add Content</span></a>
             <a class="o_wslides_js_slide_section_add border btn btn-light bg-white" t-attf-channel_id="#{channel.id}"
                 href="#" role="button"
-                groups="website_slides.group_website_slides_officer"><i class="fa fa-folder-o mr-1"/><span>Add Section</span></a>
+                groups="website_slides.group_website_slides_officer"><i class="far fa-folder mr-1"/><span>Add Section</span></a>
         </div>
     </div>
     <div t-field="channel.description_html"/>
@@ -422,7 +422,7 @@
 <template id="course_slides_list_slide" name="Slide template for a training channel">
     <li t-att-index="j" t-att-data-slide-id="slide.id" t-att-data-category-id="category_id" t-attf-class="o_wslides_slides_list_slide o_wslides_js_list_item bg-white-50 border-top-0 d-flex align-items-center pl-2 #{'py-1 pr-2' if not channel.can_upload else ''}">
         <div t-if="channel.can_publish" class=" o_wslides_slides_list_drag border-right p-2">
-            <i class="fa fa-bars mr-2"></i>
+            <i class="fas fa-bars mr-2"></i>
         </div>
         <t t-call="website_slides.slide_icon">
             <t t-set="icon_class" t-value="'py-2 mx-2'"/>
@@ -438,7 +438,7 @@
 
         <div class="d-flex flex-row">
             <a name="o_wslides_list_slide_add_quizz" t-if="channel.can_upload and not slide.question_ids" t-attf-href="/slides/slide/#{slug(slide)}?quiz_quick_create">
-                <span class="badge badge-light badge-hide border font-weight-normal px-2 py-1 m-1"><i class="fa fa-plus mr-1"/>Add Quiz</span>
+                <span class="badge badge-light badge-hide border font-weight-normal px-2 py-1 m-1"><i class="fas fa-plus mr-1"/>Add Quiz</span>
             </a>
             <a t-if="channel.can_upload" href="#">
                 <span t-att-data-slide-id="slide.id" t-attf-class="o_wslides_js_slide_toggle_is_preview badge #{'badge-success py-1' if slide.is_preview else 'badge-light badge-hide border'} font-weight-normal px-2 m-1">Free preview</span>
@@ -448,7 +448,7 @@
                 New
             </span>
             <span t-if="slide.question_ids" t-att-class="'badge font-weight-bold px-2 py-1 m-1 %s' % ('badge-success' if channel_progress[slide.id].get('completed') else 'badge-warning')">
-                <i t-attf-class="fa fa-fw #{'fa-check' if channel_progress[slide.id].get('completed') else 'fa-flag'}"/>
+                <i t-attf-class="fas fa-fw #{'fa-check' if channel_progress[slide.id].get('completed') else 'fa-flag'}"/>
                 <t t-esc="channel_progress[slide.id].get('quiz_karma_won', 0) if channel_progress[slide.id].get('completed') else channel_progress[slide.id].get('quiz_karma_gain', 0)"/> xp
             </span>
             <span class="badge badge-danger font-weight-normal px-2 py-1 m-1" t-if="not slide.website_published">Unpublished</span>
@@ -456,13 +456,13 @@
 
         <div t-if="channel.is_member or channel.can_publish" class="pt-2 pb-2 border-left ml-2 mr-2 pl-2 d-flex flex-row align-items-center o_wslides_slides_list_slide_controls">
             <t t-if="channel.is_member">
-                <i t-if="not channel_progress[slide.id].get('completed')" class="check-done fa fa-circle-o text-500 px-2"></i>
-                <i t-else="" class="check-done text-success fa fa-check-circle px-2"></i>
+                <i t-if="not channel_progress[slide.id].get('completed')" class="check-done far fa-circle text-500 px-2"></i>
+                <i t-else="" class="check-done text-success fas fa-check-circle px-2"></i>
             </t>
             <span t-if="channel.can_publish" class="d-none d-md-flex">
-                <a t-if="slide.slide_type == 'webpage'" class="px-2 o_text_link text-primary" target="_blank" t-attf-href="/slides/slide/#{slug(slide)}?enable_editor=1"><span class="fa fa-pencil"/></a>
-                <a t-else="" class="px-2 o_text_link text-primary" target="_blank" t-attf-href="/web#id=#{slide.id}&amp;action=#{slide_action}&amp;model=slide.slide&amp;view_type=form"><span class="fa fa-pencil"/></a>
-                <a href="#" t-att-data-slide-id="slide.id" class="o_text_link text-danger px-2 o_wslides_js_slide_archive"><span class="fa fa-trash"/></a>
+                <a t-if="slide.slide_type == 'webpage'" class="px-2 o_text_link text-primary" target="_blank" t-attf-href="/slides/slide/#{slug(slide)}?enable_editor=1"><span class="fas fa-pencil-alt"/></a>
+                <a t-else="" class="px-2 o_text_link text-primary" target="_blank" t-attf-href="/web#id=#{slide.id}&amp;action=#{slide_action}&amp;model=slide.slide&amp;view_type=form"><span class="fas fa-pencil-alt"/></a>
+                <a href="#" t-att-data-slide-id="slide.id" class="o_text_link text-danger px-2 o_wslides_js_slide_archive"><span class="fas fa-trash-alt"/></a>
             </span>
         </div>
     </li>
@@ -510,7 +510,7 @@
 
                     <div class="form-inline ml-auto d-lg-none" t-if="search_slide_type or search">
                         <a t-att-href="'/slides/%s' % (slug(channel))" class="btn btn-info mr-3">
-                            <i class="fa fa-eraser mr-1"/>Clear filters
+                            <i class="fas fa-eraser mr-1"/>Clear filters
                         </a>
                     </div>
 
@@ -569,7 +569,7 @@
 
                         <div class="form-inline mr-3 d-none d-lg-inline-block">
                             <a t-if="search_slide_type or search" t-att-href="'/slides/%s' % (slug(channel))" class="btn btn-sm btn-info ml-1">
-                                <i class="fa fa-eraser mr-1"/>Clear filters
+                                <i class="fas fa-eraser mr-1"/>Clear filters
                             </a>
                         </div>
 
@@ -578,7 +578,7 @@
                                 <input type="text" class="form-control border" name="search" placeholder="Search in content" t-att-value="search"/>
                                 <div class="input-group-append">
                                     <button class="btn border" type="submit" aria-label="Search" title="Search">
-                                        <i class="fa fa-search"/>
+                                        <i class="fas fa-search"/>
                                     </button>
                                 </div>
                             </div>
@@ -604,7 +604,7 @@
                     href="#"
                     t-att-data-channel-id="channel.id"
                     t-att-data-channel-tag-ids="channel.tag_ids.ids">
-                    <i class="fa fa-plus mr-1"/><span>Add Tag</span>
+                    <i class="fas fa-plus mr-1"/><span>Add Tag</span>
                 </a>
             </div>
 
@@ -615,13 +615,13 @@
                     t-att-data-channel-id="channel.id"
                     t-att-data-can-upload="channel.can_upload"
                     t-att-data-can-publish="channel.can_publish">
-                    <i class="fa fa-cloud-upload mr-1"/>Upload new content
+                    <i class="fas fa-cloud-upload-alt mr-1"/>Upload new content
                 </a>
                 <a class="btn btn-secondary py-1 o_wslides_js_slide_section_add"
                     title="Add Section" role="button"
                     aria-label="Add Section" href="#"
                     t-att-channel_id="channel.id">
-                    <i class="fa fa-folder-o mr-1"/>Add a section
+                    <i class="far fa-folder mr-1"/>Add a section
                 </a>
             </div>
         </div>
@@ -714,16 +714,16 @@
                 <span class="font-weight-bold mr-auto" t-field="slide.completion_time" t-options='{"widget": "float_time"}'/>
                 <div class="o_wslides_js_slide_like mr-2">
                     <span t-att-class="'o_wslides_js_slide_like_up %s' % ('disabled' if not channel.can_vote else '')" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
-                        <i class="fa fa-thumbs-up fa-1x" role="img" aria-label="Likes" title="Likes"></i>
+                        <i class="fas fa-thumbs-up fa-1x" role="img" aria-label="Likes" title="Likes"></i>
                         <span t-esc="slide.likes"/>
                     </span>
                     <span t-att-class="'o_wslides_js_slide_like_down %s' % ('disabled' if not channel.can_vote else '')" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
-                        <i class="fa fa-thumbs-down fa-1x" role="img" aria-label="Dislikes" title="Dislikes"></i>
+                        <i class="fas fa-thumbs-down fa-1x" role="img" aria-label="Dislikes" title="Dislikes"></i>
                         <span t-esc="slide.dislikes"/>
                     </span>
                 </div>
                 <t t-if="channel.is_member and channel_progress[slide.id].get('completed')">
-                    <span class="badge badge-pill badge-success"><i class="fa fa-check"/> Completed</span>
+                    <span class="badge badge-pill badge-success"><i class="fas fa-check"/> Completed</span>
                 </t>
             </div>
         </div>
@@ -732,13 +732,13 @@
 
 <template id="slide_icon">
     <t t-set="icon_class" t-value="icon_class if icon_class else 'mr-2 text-muted'"/>
-    <i t-if="slide.slide_type == 'document'" t-att-class="'fa fa-file-pdf-o %s' % icon_class"></i>
-    <i t-if="slide.slide_type == 'presentation'" t-att-class="'fa fa-file-pdf-o %s' % icon_class"></i>
-    <i t-if="slide.slide_type == 'infographic'" t-att-class="'fa fa-file-picture-o %s' % icon_class"></i>
-    <i t-if="slide.slide_type == 'video'" t-att-class="'fa fa-play-circle %s' % icon_class"></i>
-    <i t-if="slide.slide_type == 'link'" t-att-class="'fa fa-file-code-o %s' % icon_class"></i>
-    <i t-if="slide.slide_type == 'webpage'" t-att-class="'fa fa-file-text %s' % icon_class"></i>
-    <i t-if="slide.slide_type == 'quiz'" t-att-class="'fa fa-question-circle %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'document'" t-att-class="'far fa-file-pdf %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'presentation'" t-att-class="'far fa-file-pdf %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'infographic'" t-att-class="'far fa-file-image %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'video'" t-att-class="'fas fa-play-circle %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'link'" t-att-class="'far fa-file-code %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'webpage'" t-att-class="'fas fa-file-alt %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'quiz'" t-att-class="'fas fa-question-circle %s' % icon_class"></i>
 </template>
 
 <template name="Display Promoted Slide" id="display_promoted_slide" inherit_id="website_slides.course_promoted_slide" active="True" customize_show="True">

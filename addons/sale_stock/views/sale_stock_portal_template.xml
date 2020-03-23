@@ -26,9 +26,9 @@
                                     <span t-if="i.state in ['draft', 'waiting', 'confirmed', 'assigned']" class="text-muted" t-field="i.scheduled_date" t-options="{'date_only': True}"/>
                                 </div>
                             </div>
-                            <span t-if="i.state == 'done'" class="small badge badge-success orders_label_text_align"><i class="fa fa-fw fa-truck"/> <b>Shipped</b></span>
-                            <span t-if="i.state == 'cancel'" class="small badge badge-danger orders_label_text_align"><i class="fa fa-fw fa-times"/> <b>Cancelled</b></span>
-                            <span t-if="i.state in ['draft', 'waiting', 'confirmed', 'assigned']" class="small badge badge-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> <b>Preparation</b></span>
+                            <span t-if="i.state == 'done'" class="small badge badge-success orders_label_text_align"><i class="fas fa-fw fa-truck"/> <b>Shipped</b></span>
+                            <span t-if="i.state == 'cancel'" class="small badge badge-danger orders_label_text_align"><i class="fas fa-fw fa-times"/> <b>Cancelled</b></span>
+                            <span t-if="i.state in ['draft', 'waiting', 'confirmed', 'assigned']" class="small badge badge-info orders_label_text_align"><i class="far fa-fw fa-clock"/> <b>Preparation</b></span>
                         </div>
                     </t>
                 </div>

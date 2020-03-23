@@ -2140,19 +2140,19 @@ class TestViews(ViewCase):
 
     def test_valid_accessibility_icon_text(self):
         self.assertWarning(
-            '<form><span class="fa fa-warning"/></form>',
-            'A <span> with fa class (fa fa-warning) must have title in its tag, parents, descendants or have text'
+            '<form><span class="fas fa-exclamation-triangle"/></form>',
+            'A <span> with fa class (fas fa-exclamation-triangle) must have title in its tag, parents, descendants or have text'
         )
         self.assertWarning(
-            '<form><button icon="fa-warning"/></form>',
+            '<form><button icon="fas fa-exclamation-triangle"/></form>',
             'A button with icon attribute (fa-warning) must have title in its tag, parents, descendants or have text'
         )
-        self.assertValid('<form><button icon="fa-warning"/>text</form>')
-        self.assertValid('<form><span class="fa fa-warning"/>text</form>')
-        self.assertValid('<form>text<span class="fa fa-warning"/></form>')
-        self.assertValid('<form><span class="fa fa-warning">text</span></form>')
-        self.assertValid('<form><span title="text" class="fa fa-warning"/></form>')
-        self.assertValid('<form><span aria-label="text" class="fa fa-warning"/></form>')
+        self.assertValid('<form><button icon="fas fa-exclamation-triangle"/>text</form>')
+        self.assertValid('<form><span class="fas fa-exclamation-triangle"/>text</form>')
+        self.assertValid('<form>text<span class="fas fa-exclamation-triangle"/></form>')
+        self.assertValid('<form><span class="fas fa-exclamation-triangle">text</span></form>')
+        self.assertValid('<form><span title="text" class="fas fa-exclamation-triangle"/></form>')
+        self.assertValid('<form><span aria-label="text" class="fas fa-exclamation-triangle"/></form>')
 
     def test_valid_simili_button(self):
         self.assertWarning('<form><a class="btn"/></form>')

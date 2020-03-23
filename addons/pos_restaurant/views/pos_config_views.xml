@@ -16,7 +16,7 @@
                     </div>
                     <div class="o_setting_right_pane">
                         <label for="iface_printbill"/>
-                        <span class="fa fa-lg fa-cutlery" title="For bars and restaurants" role="img" aria-label="For bars and restaurants"/>
+                        <span class="fas fa-lg fa-utensils" title="For bars and restaurants" role="img" aria-label="For bars and restaurants"/>
                         <div class="text-muted">
                             Allow to print bill before payment
                         </div>
@@ -30,7 +30,7 @@
                     </div>
                     <div class="o_setting_right_pane">
                         <label for="iface_splitbill"/>
-                        <span class="fa fa-lg fa-cutlery" title="For bars and restaurants" role="img" aria-label="For bars and restaurants"/>
+                        <span class="fas fa-lg fa-utensils" title="For bars and restaurants" role="img" aria-label="For bars and restaurants"/>
                         <div class="text-muted">
                             Split total or order lines
                         </div>
@@ -46,7 +46,7 @@
                     </div>
                     <div class="o_setting_right_pane">
                         <label for="is_order_printer"/>
-                        <span class="fa fa-lg fa-cutlery" title="For bars and restaurants" role="img" aria-label="For bars and restaurants"/>
+                        <span class="fas fa-lg fa-utensils" title="For bars and restaurants" role="img" aria-label="For bars and restaurants"/>
                         <div class="text-muted">
                             Print orders at the kitchen, at the bar, etc.
                         </div>
@@ -56,7 +56,7 @@
                                 <field name="printer_ids" widget="many2many_tags"/>
                             </div>
                             <div>
-                                <button name="%(pos_restaurant.action_restaurant_printer_form)d" icon="fa-arrow-right" type="action" string="Printers" class="btn-link"/>
+                                <button name="%(pos_restaurant.action_restaurant_printer_form)d" icon="fas fa-arrow-right" type="action" string="Printers" class="btn-link"/>
                             </div>
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                     </div>
                     <div class="o_setting_right_pane">
                         <label for="is_table_management"/>
-                        <span class="fa fa-lg fa-cutlery" title="For bars and restaurants" role="img" aria-label="For bars and restaurants"/>
+                        <span class="fas fa-lg fa-utensils" title="For bars and restaurants" role="img" aria-label="For bars and restaurants"/>
                         <div class="text-muted">
                             Manage table orders
                         </div>
@@ -81,7 +81,7 @@
                                 <field name="floor_ids" widget="many2many_tags" attrs="{'readonly': [('has_active_session','=', True)]}"/>
                             </div>
                             <div>
-                                <button name="%(pos_restaurant.action_restaurant_floor_form)d" icon="fa-arrow-right" type="action" string="Floors" class="btn-link"/>
+                                <button name="%(pos_restaurant.action_restaurant_floor_form)d" icon="fas fa-arrow-right" type="action" string="Floors" class="btn-link"/>
                             </div>
                         </div>
                     </div>
@@ -94,7 +94,7 @@
                     </div>
                     <div class="o_setting_right_pane">
                         <label for="iface_orderline_notes"/>
-                        <span class="fa fa-lg fa-cutlery" title="For bars and restaurants" role="img" aria-label="For bars and restaurants"/>
+                        <span class="fas fa-lg fa-utensils" title="For bars and restaurants" role="img" aria-label="For bars and restaurants"/>
                         <div class="text-muted">
                             Add notes to orderlines
                         </div>

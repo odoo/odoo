@@ -90,7 +90,7 @@
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button string="Document" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
+                        <button string="Document" icon="fas fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="res_model" invisible="1" />
@@ -196,14 +196,14 @@
                         </page>
 
                         <page name="page_invitations" string="Invitations" groups="base.group_no_one">
-                            <button name="action_sendmail" type="object" string="Send mail" icon="fa-envelope" class="oe_link"/>
+                            <button name="action_sendmail" type="object" string="Send mail" icon="fas fa-envelope" class="oe_link"/>
                             <field name="attendee_ids" widget="one2many" mode="tree,kanban">
                                 <tree string="Invitation details" editable="top" create="false" delete="false">
                                     <field name="partner_id" />
                                     <field name="state" />
                                     <field name="email" widget="email"/>
 
-                                    <button name="do_tentative" states="needsAction,declined,accepted" string="Uncertain" type="object" icon="fa-asterisk" />
+                                    <button name="do_tentative" states="needsAction,declined,accepted" string="Uncertain" type="object" icon="fas fa-asterisk" />
                                     <button name="do_accept" string="Accept" states="needsAction,tentative,declined" type="object" icon="fa-check text-success"/>
                                     <button name="do_decline" string="Decline" states="needsAction,tentative,accepted" type="object" icon="fa-times-circle text-danger"/>
                                 </tree>
@@ -220,9 +220,9 @@
                                                 <span>Status: <field name="state" /></span>
 
                                                 <div class="text-right">
-                                                    <button name="do_tentative" states="needsAction,declined,accepted" string="Uncertain" type="object" class="btn fa fa-asterisk"/>
-                                                    <button name="do_accept" states="needsAction,tentative,declined" string="Accept" type="object" class="btn fa fa-check text-success"/>
-                                                    <button name="do_decline" states="needsAction,tentative,accepted" string="Decline" type="object" class="btn fa fa-times-circle text-danger"/>
+                                                    <button name="do_tentative" states="needsAction,declined,accepted" string="Uncertain" type="object" class="btn fas fa-asterisk"/>
+                                                    <button name="do_accept" states="needsAction,tentative,declined" string="Accept" type="object" class="btn fas fa-check text-success"/>
+                                                    <button name="do_decline" states="needsAction,tentative,accepted" string="Decline" type="object" class="btn fas fa-times-circle text-danger"/>
                                                 </div>
                                             </div>
                                         </t>

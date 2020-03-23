@@ -139,7 +139,7 @@ var GraphController = AbstractController.extend({
                     // Instantiate and append GroupBy menu
                     this.groupByMenu = new ComponentWrapper(this, CarretDropdownMenu, {
                         title: "Group By",
-                        icon: 'fa fa-bars',
+                        icon: 'fas fa-bars',
                         items: this._getGroupBys(state.groupBy),
                     });
                     promises.push(this.groupByMenu.mount(fragment).then(() => {

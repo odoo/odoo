@@ -151,7 +151,7 @@
                         class="oe_stat_button"
                         context="{'search_default_employee_id': active_id}"
                         attrs="{'invisible': [('is_absent', '=', False)]}">
-                    <div role="img" class="fa fa-fw fa-plane o_button_icon text-danger" aria-label="Off Till" title="Off Till"/>
+                    <div role="img" class="fas fa-fw fa-plane o_button_icon text-danger" aria-label="Off Till" title="Off Till"/>
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
                             <field name="leave_date_to"/>
@@ -164,7 +164,7 @@
                 <button name="%(act_hr_employee_holiday_request)d"
                         type="action"
                         class="oe_stat_button"
-                        icon="fa-calendar"
+                        icon="fas fa-calendar-alt"
                         attrs="{'invisible': [('show_leaves','=', False)]}"
                         context="{'search_default_employee_id': active_id}"
                         groups="base.group_user"
@@ -208,7 +208,7 @@
                 <button disabled="1"
                         class="oe_stat_button"
                         attrs="{'invisible': [('is_absent', '=', False)]}">
-                    <div role="img" class="fa fa-fw fa-plane o_button_icon text-warning" aria-label="Off Till" title="Off Till"/>
+                    <div role="img" class="fas fa-fw fa-plane o_button_icon text-warning" aria-label="Off Till" title="Off Till"/>
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
                             <field name="leave_date_to"/>
@@ -248,7 +248,7 @@
                         class="oe_stat_button"
                         invisible="context.get('from_my_profile', False)"
                         attrs="{'invisible': [('is_absent', '=', False)]}">
-                    <div role="img" class="fa fa-fw fa-plane o_button_icon text-danger" aria-label="Off Till" title="Off Till"/>
+                    <div role="img" class="fas fa-fw fa-plane o_button_icon text-danger" aria-label="Off Till" title="Off Till"/>
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
                             <field name="leave_date_to"/>
@@ -261,7 +261,7 @@
                 <button name="%(hr_leave_action_new_request)d"
                         type="action"
                         class="oe_stat_button"
-                        icon="fa-calendar"
+                        icon="fas fa-calendar-alt"
                         attrs="{'invisible': [('show_leaves','=', False)]}"
                         groups="base.group_user"
                         help="Remaining leaves">

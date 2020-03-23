@@ -19,7 +19,7 @@
                     <button name="action_stock_picking"
                         type="object"
                         class="oe_stat_button"
-                        icon="fa-truck"
+                        icon="fas fa-truck"
                         attrs="{'invisible':[('picking_count', '=', 0)]}">
                         <field name="picking_count" widget="statinfo" string="Pickings" attrs="{'invisible': [('failed_pickings', '!=', False)]}"/>
                         <field name="picking_count" widget="statinfo" string="Pickings" class="text-danger" attrs="{'invisible': [('failed_pickings', '=', False)]}"/>
@@ -28,7 +28,7 @@
                         string="Invoice"
                         type="object"
                         class="oe_stat_button"
-                        icon="fa-pencil-square-o"
+                        icon="far fa-edit"
                         attrs="{'invisible':[('state','!=','invoiced')]}">
                     </button>
                 </div>
@@ -151,7 +151,7 @@
                                         </span>
                                     </strong>
                                 </div>
-                                <strong><span class="badge badge-pill"><i class="fa fa-money" role="img" aria-label="Amount" title="Amount"/> <field name="amount_total"/></span></strong>
+                                <strong><span class="badge badge-pill"><i class="far fa-money-bill-alt" role="img" aria-label="Amount" title="Amount"/> <field name="amount_total"/></span></strong>
                             </div>
                             <div class="row">
                                 <div class="col-12">

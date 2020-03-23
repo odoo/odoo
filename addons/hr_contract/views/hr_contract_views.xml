@@ -22,7 +22,7 @@
                         <field name="contract_warning" invisible="1"/>
                         <button name="%(act_hr_employee_2_hr_contract)d"
                             class="oe_stat_button"
-                            icon="fa-book"
+                            icon="fas fa-book"
                             type="action"
                             groups="hr_contract.group_hr_contract_manager">
                             <div attrs="{'invisible' : [('first_contract_date', '=', False)]}" class="o_stat_info">
@@ -59,7 +59,7 @@
                         <div>
                             <field name="resource_calendar_id" required="1" nolabel="1"/>
                             <span attrs="{'invisible': [('calendar_mismatch', '=', False)]}"
-                                class="fa fa-exclamation-triangle text-danger o_calendar_warning pl-3">
+                                class="fas fa-exclamation-triangle text-danger o_calendar_warning pl-3">
                             </span>
                             <span class="o_calendar_warning_tooltip text-danger">
                                 Calendar Mismatch : The employee's calendar does not match its current contract calendar. This could lead to unexpected behaviors.
@@ -79,7 +79,7 @@
                     <xpath expr="//div[hasclass('o_kanban_record_headings')]" position="after">
                     <field name="contract_warning" invisible="1"/>
                         <t t-if="record.contract_warning.raw_value">
-                            <i class="fa fa-exclamation-triangle text-danger" role="img"
+                            <i class="fas fa-exclamation-triangle text-danger" role="img"
                             title="There is something wrong with the contract. Either there is no running contract for this employee or employee's contract is about to expire."
                             aria-label="There is something wrong with the contract. Either there is no running contract for this employee or employee's contract is about to expire."></i>
                         </t>
@@ -184,7 +184,7 @@
                             <div>
                                 <field name="resource_calendar_id" required="1" nolabel="1"/>
                                 <span attrs="{'invisible': ['|', ('calendar_mismatch', '=', False), ('state', '!=', 'open')]}"
-                                    class="fa fa-exclamation-triangle text-danger o_calendar_warning pl-3">
+                                    class="fas fa-exclamation-triangle text-danger o_calendar_warning pl-3">
                                 </span>
                                 <span class="o_calendar_warning_tooltip text-danger">
                                     Calendar Mismatch : The employee's calendar does not match this contract's calendar. This could lead to unexpected behaviors.
@@ -261,7 +261,7 @@
                         <div class="oe_kanban_card oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown" t-if="!selection_mode" groups="base.group_user">
                                 <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                    <span class="fa fa-ellipsis-v"/>
+                                    <span class="fas fa-ellipsis-v"/>
                                 </a>
                                 <div class="dropdown-menu" role="menu">
                                     <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit Contract</a></t>

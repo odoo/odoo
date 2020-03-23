@@ -44,7 +44,7 @@
 
     <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
         <ol t-if="page_name != 'home'" class="o_portal_submenu breadcrumb mb-0 py-2 flex-grow-1">
-            <li class="breadcrumb-item"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
+            <li class="breadcrumb-item"><a href="/my/home" aria-label="Home" title="Home"><i class="fas fa-home"/></a></li>
             <li t-if="page_name == 'my_details'" class="breadcrumb-item">Details</li>
         </ol>
     </template>
@@ -53,7 +53,7 @@
         <div t-ignore="true" class="text-center">
             <t t-if="custom_html" t-raw="custom_html"/>
             <t t-else="">This is a preview of the customer portal.</t>
-            <a t-att-href="backend_url"><i class="fa fa-arrow-right mr-1"/>Back to edit mode</a>
+            <a t-att-href="backend_url"><i class="fas fa-arrow-right mr-1"/>Back to edit mode</a>
         </div>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"> &#215; </button>
     </template>
@@ -84,7 +84,7 @@
                                     <t t-call="portal.portal_contact"/>
                                 </div>
                                 <div class="o_portal_my_details">
-                                    <h4>Details <a role="button" href="/my/account" class="btn btn-sm btn-link"><i class="fa fa-pencil"/> Edit</a></h4>
+                                    <h4>Details <a role="button" href="/my/account" class="btn btn-sm btn-link"><i class="fas fa-pencil-alt"/> Edit</a></h4>
                                     <hr class="mt-1 mb-0"/>
                                     <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
                                 </div>
@@ -261,7 +261,7 @@
                         <input type="text" class="form-control form-control-sm" placeholder="Search" t-att-value='search' name="search"/>
                         <span class="input-group-append">
                             <button class="btn btn-secondary search-submit" type="button">
-                                <span class="fa fa-search"/>
+                                <span class="fas fa-search"/>
                             </button>
                         </span>
                     </div>
@@ -287,15 +287,15 @@
             <hr class="mt-1 mb0"/>
             <h6 class="mb-1"><b t-esc="sales_user.name"/></h6>
             <div class="d-flex align-items-center mb-1">
-                <div class="fa fa-envelope fa-fw mr-1"></div>
+                <div class="fas fa-envelope fa-fw mr-1"></div>
                 <a t-att-href="'mailto:'+sales_user.email" t-esc="sales_user.email"/>
             </div>
             <div class="d-flex flex-nowrap align-items-center mb-1">
-                <div class="fa fa-phone fa-fw mr-1"></div>
+                <div class="fas fa-phone fa-fw mr-1"></div>
                 <span t-esc="sales_user.phone"/>
             </div>
             <div class="d-flex flex-nowrap align-items-center mb-1">
-                <div class="fa fa-map-marker fa-fw mr-1"></div>
+                <div class="fas fa-map-marker-alt fa-fw mr-1"></div>
                 <span t-esc="sales_user.city"/>
             </div>
         </div>
@@ -399,7 +399,7 @@
                         <div class="clearfix">
                             <button type="submit" class="btn btn-primary float-right mb32 ">
                                 Confirm
-                                <span class="fa fa-long-arrow-right" />
+                                <span class="fas fa-long-arrow-alt-right" />
                             </button>
                         </div>
                     </div>
@@ -411,8 +411,8 @@
     <template id="record_pager" name="Portal Record Pager">
         <t t-if='prev_record or next_record'>
             <div class="record_pager btn-group" role="group">
-                <a role="button" t-att-class="'btn btn-link %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="fa fa-chevron-left" role="img" aria-label="Previous" title="Previous"></i></a>
-                <a role="button" t-att-class="'btn btn-link %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fa fa-chevron-right" role="img" aria-label="Next" title="Next"></i></a>
+                <a role="button" t-att-class="'btn btn-link %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="fas fa-chevron-left" role="img" aria-label="Previous" title="Previous"></i></a>
+                <a role="button" t-att-class="'btn btn-link %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fas fa-chevron-right" role="img" aria-label="Next" title="Next"></i></a>
             </div>
         </t>
     </template>

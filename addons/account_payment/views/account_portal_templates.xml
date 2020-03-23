@@ -9,7 +9,7 @@
                 <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.acquirer_id.provider in ('transfer', 'manual'))"/>
                 <a t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and invoice.amount_total and invoice.move_type == 'out_invoice' and (pending_manual_txs or not tx_ids)"
                     t-att-href="invoice.get_portal_url(anchor='portal_pay')" title="Pay Now" aria-label="Pay now" class="btn btn-sm btn-primary" role="button">
-                    <i class="fa fa-arrow-circle-right"/><span class='d-none d-md-inline'> Pay Now</span>
+                    <i class="fas fa-arrow-circle-right"/><span class='d-none d-md-inline'> Pay Now</span>
                 </a>
             </td>
         </xpath>
@@ -17,19 +17,19 @@
             <t t-set="last_tx" t-value="invoice.get_portal_last_transaction()"/>
             <td class="tx_status text-center">
                 <t t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and (last_tx.state not in ['pending', 'authorized', 'done', 'cancel'] or (last_tx.state == 'pending' and last_tx.acquirer_id.provider in ('transfer', 'manual')))">
-                    <span class="badge badge-pill badge-info"><i class="fa fa-fw fa-clock-o"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
+                    <span class="badge badge-pill badge-info"><i class="far fa-fw fa-clock"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
                 </t>
                 <t t-if="invoice.state == 'posted' and last_tx.state == 'authorized'">
-                    <span class="badge badge-pill badge-primary"><i class="fa fa-fw fa-check"/><span class="d-none d-md-inline"> Authorized</span></span>
+                    <span class="badge badge-pill badge-primary"><i class="fas fa-fw fa-check"/><span class="d-none d-md-inline"> Authorized</span></span>
                 </t>
                 <t t-if="invoice.state == 'posted' and last_tx.state == 'pending' and last_tx.acquirer_id.provider not in ('transfer', 'manual')">
                   <span class="badge badge-pill badge-warning"><span class="d-none d-md-inline"> Pending</span></span>
                 </t>
                 <t t-if="invoice.state == 'posted' and invoice.payment_state == 'paid' or last_tx.state == 'done'">
-                    <span class="badge badge-pill badge-success"><i class="fa fa-fw fa-check"></i><span class="d-none d-md-inline"> Paid</span></span>
+                    <span class="badge badge-pill badge-success"><i class="fas fa-fw fa-check"></i><span class="d-none d-md-inline"> Paid</span></span>
                 </t>
                 <t t-if="invoice.state == 'cancel'">
-                    <span class="badge badge-pill badge-danger"><i class="fa fa-fw fa-remove"></i><span class="d-none d-md-inline"> Cancelled</span></span>
+                    <span class="badge badge-pill badge-danger"><i class="fas fa-fw fa-times"></i><span class="d-none d-md-inline"> Cancelled</span></span>
                 </t>
             </td>
         </xpath>
@@ -74,13 +74,13 @@
                 <a href="#" t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and invoice.amount_total and invoice.move_type == 'out_invoice' and (pending_manual_txs or not tx_ids)"
 
                     class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#pay_with">
-                    <i class="fa fa-fw fa-arrow-circle-right"/> Pay Now
+                    <i class="fas fa-fw fa-arrow-circle-right"/> Pay Now
                 </a>
                 <div t-if="tx_ids and not pending_manual_txs and invoice.payment_state != 'paid'" class="alert alert-info py-1 mb-2" >
-                    <i class="fa fa-fw fa-check-circle"/> Pending
+                    <i class="fas fa-fw fa-check-circle"/> Pending
                 </div>
                 <div t-if="invoice.payment_state == 'paid'" class="alert alert-success py-1 mb-2" >
-                    <i class="fa fa-fw fa-check-circle"/> Paid
+                    <i class="fas fa-fw fa-check-circle"/> Paid
                 </div>
             </div>
         </xpath>
@@ -99,7 +99,7 @@
             </div>
             <div class="panel-body" t-if="existing_token">
                 <div class="offset-lg-3 col-lg-6">
-                    <i class="fa fa-info"></i> You have credits card registered, you can log-in to be able to use them.
+                    <i class="fas fa-info"></i> You have credits card registered, you can log-in to be able to use them.
                 </div>
             </div>
         </xpath>

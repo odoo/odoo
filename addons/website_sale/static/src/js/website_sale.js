@@ -604,7 +604,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             $aSubmit.addClass("disabled");
         }
         if ($aSubmit.hasClass('a-submit-loading')){
-            var loading = '<span class="fa fa-cog fa-spin"/>';
+            var loading = '<span class="fas fa-cog fa-spin"/>';
             var fa_span = $aSubmit.find('span[class*="fa"]');
             if (fa_span.length){
                 fa_span.replaceWith(loading);

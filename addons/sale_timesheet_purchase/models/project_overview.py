@@ -16,7 +16,7 @@ class Project(models.Model):
                 stat_buttons.append({
                     'name': _('Purchase Orders'),
                     'count': len(purchase_orders),
-                    'icon': 'fa fa-shopping-cart',
+                    'icon': 'fas fa-shopping-cart',
                     'action': _to_action_data('purchase.order',
                         domain=[('id', 'in', purchase_orders.ids)],
                         context={'create': False, 'edit': False, 'delete': False}
@@ -30,7 +30,7 @@ class Project(models.Model):
                 stat_buttons.append({
                     'name': _('Vendor Bills'),
                     'count': len(account_invoices),
-                    'icon': 'fa fa-pencil-square-o',
+                    'icon': 'far fa-edit',
                     'action': _to_action_data(
                         action=self.env.ref('account.action_move_in_invoice_type'),
                         domain=[('id', 'in', account_invoices.ids)],

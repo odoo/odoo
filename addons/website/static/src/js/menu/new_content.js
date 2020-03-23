@@ -279,7 +279,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                             }
                             // change style to use spinner
                             $i.removeClass()
-                                .addClass('fa fa-spin fa-spinner fa-pulse');
+                                .addClass('fas fa-spin fa-spinner fa-pulse');
                             $p.removeClass('text-muted')
                                 .text(_.str.sprintf(self.newContentText.installPleaseWait, name));
                             $el.fadeTo(1000, 1);
@@ -292,7 +292,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                         window.location.href = origin + redirectURL;
                     }, function () {
                         $i.removeClass()
-                            .addClass('fa fa-exclamation-triangle');
+                            .addClass('fas fa-exclamation-triangle');
                         $p.text(_.str.sprintf(self.newContentText.failed, name));
                     });
                 }

@@ -187,7 +187,7 @@
                             <button name="%(event.act_event_registration_from_event)d"
                                     type="action"
                                     class="oe_stat_button"
-                                    icon="fa-users"
+                                    icon="fas fa-users"
                                     help="Total Registrations for this Event">
                                 <field name="seats_expected" widget="statinfo" string="Attendees"/>
                             </button>
@@ -207,7 +207,7 @@
                                 <label for="date_begin" string="Date"/>
                                 <div class="o_row">
                                     <field name="date_begin" widget="daterange" nolabel="1" class="oe_inline" options="{'related_end_date': 'date_end'}"/>
-                                    <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
+                                    <i class="fas fa-long-arrow-alt-right mx-2" aria-label="Arrow icon" title="Arrow"/>
                                     <field name="date_end" widget="daterange" nolabel="1" class="oe_inline" options="{'related_start_date': 'date_begin'}"/>
                                 </div>
                                 <field name="date_tz"/>
@@ -339,14 +339,14 @@
                                         </div>
                                         <div><t t-esc="moment(record.date_begin.raw_value).format('LT')"/></div>
                                         <div t-if="moment(record.date_begin.raw_value).dayOfYear() !== moment(record.date_end.raw_value).dayOfYear()">
-                                            <i class="fa fa-arrow-right o_event_fontsize_09" title="End date"/>
+                                            <i class="fas fa-arrow-right o_event_fontsize_09" title="End date"/>
                                             <t t-esc="moment(record.date_end.raw_value).format('D MMM')"/>
                                          </div>
                                     </div>
                                     <div class="col-9 py-2 px-3 d-flex flex-column justify-content-between pt-3">
                                         <div>
                                             <h4 class="o_event_fontweight_500 mb-0 o_text_overflow" t-att-title="record.name.value"><field name="name"/></h4>
-                                            <div><i class="fa fa-map-marker" title="Location"/> <span class="o_text_overflow o_event_kanban_location" t-esc="record.address_id.value"/></div>
+                                            <div><i class="fas fa-map-marker-alt" title="Location"/> <span class="o_text_overflow o_event_kanban_location" t-esc="record.address_id.value"/></div>
                                         </div>
                                         <h5 class="o_event_fontsize_11 p-0">
                                             <a name="%(act_event_registration_from_event)d" type="action">
@@ -568,10 +568,10 @@
                             <div class="oe_kanban_card oe_kanban_global_click">
                                 <div class="float-right">
                                     <a class="btn btn-sm btn-success" string="Confirm Registration" name="action_confirm" type="object" states="draft" role="button">
-                                        <i class="fa fa-check" role="img" aria-label="Confirm button" title="Confirm Registration"/>
+                                        <i class="fas fa-check" role="img" aria-label="Confirm button" title="Confirm Registration"/>
                                     </a>
                                     <a class="btn btn-sm btn-success" string="Attended the Event" name="action_set_done" type="object" states="open" role="button">
-                                        <i class="fa fa-level-down" role="img" aria-label="Attended button" title="Attended the Event"/>
+                                        <i class="fas fa-level-down-alt" role="img" aria-label="Attended button" title="Attended the Event"/>
                                     </a>
                                 </div>
                                 <div class="oe_kanban_content">

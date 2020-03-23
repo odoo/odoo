@@ -13,14 +13,14 @@
         </div>
         <div class="container mt32">
             <div t-if="'unsubscribe' in request.params" class="offset-lg-9 col-lg-3 alert alert-info" role="status">
-               <h3>Need to unsubscribe? It's right here! <span class="fa fa-2x fa-arrow-down float-right" role="img" aria-label="" title="Read this !"></span></h3>
+               <h3>Need to unsubscribe? It's right here! <span class="fas fa-2x fa-arrow-down float-right" role="img" aria-label="" title="Read this !"></span></h3>
             </div>
             <div class="row mt8" t-foreach="groups" t-as="group">
                 <div class="col-lg-3">
                     <img t-att-src="website.image_url(group, 'image_128')" class="o_image_64_cover float-left" alt="Group"/>
                     <strong><a t-attf-href="/groups/#{ slug(group) }" t-esc="group.name"/></strong><br />
                     <t t-if="group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain">
-                        <i class='fa fa-envelope-o' role="img" aria-label="Alias" title="Alias"/>
+                        <i class='far fa-envelope' role="img" aria-label="Alias" title="Alias"/>
                         <a t-attf-href="mailto:#{group.alias_id.alias_name}@#{group.alias_id.alias_domain}"><span t-field="group.alias_id"/></a>
                     </t>
                 </div>
@@ -28,8 +28,8 @@
                     <div t-esc="group.description" class="text-muted"/>
                 </div>
                 <div class="col-lg-2">
-                    <i class='fa fa-fw fa-user' role="img" aria-label="Recipients" title="Recipients"/> <t t-esc="group_data[group.id]['members_count']"/> members<br />
-                    <i class='fa fa-fw fa-envelope-o' role="img" aria-label="Traffic" title="Traffic"/> <t t-raw="group_data[group.id]['monthly_message_nbr']"/> messages / month
+                    <i class='fas fa-fw fa-user' role="img" aria-label="Recipients" title="Recipients"/> <t t-esc="group_data[group.id]['members_count']"/> members<br />
+                    <i class='far fa-fw fa-envelope' role="img" aria-label="Traffic" title="Traffic"/> <t t-raw="group_data[group.id]['monthly_message_nbr']"/> messages / month
                 </div>
                 <div class="col-lg-3">
                     <!--<t t-call="website_mail.follow"><t t-set="object" t-value="group"/></t>-->
@@ -52,9 +52,9 @@
                             </div>
                         </div>
                         <p class="js_mg_details d-none">
-                            <span class="js_mg_email d-none"><a href="#" class="js_mg_email"><i class="fa fa-envelope-o"/> send mail</a> - </span>
-                            <a href="#" class="js_mg_link"><i class="fa fa-file-o"/> archives</a> -
-                            <a role="button" href="#" class="js_unfollow_btn"><i class="fa fa-times"/> unsubscribe</a>
+                            <span class="js_mg_email d-none"><a href="#" class="js_mg_email"><i class="far fa-envelope"/> send mail</a> - </span>
+                            <a href="#" class="js_mg_link"><i class="far fa-file"/> archives</a> -
+                            <a role="button" href="#" class="js_unfollow_btn"><i class="fas fa-times"/> unsubscribe</a>
                         </p>
                     </div>
 
@@ -81,7 +81,7 @@
                     <h1 class="text-center">
                         <t t-esc="group.name"/> mailing list archives
                     </h1><h4 class="text-center text-muted" t-if="group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain">
-                        <i class='fa fa-envelope-o' role="img" aria-label="Alias" title="Alias"/>
+                        <i class='far fa-envelope' role="img" aria-label="Alias" title="Alias"/>
                         <a t-attf-href="mailto:#{group.alias_id.alias_name}@#{group.alias_id.alias_domain}"><span t-field="group.alias_id"/></a>
                     </h4>
                 </div>
@@ -142,7 +142,7 @@
                 <h1 class="text-center">
                     <t t-esc="group.name"/> mailing list archives
                 </h1><h4 class="text-center text-muted" t-if="group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain">
-                    <i class='fa fa-envelope-o' role="img" aria-label="Alias" title="Alias"/>
+                    <i class='far fa-envelope' role="img" aria-label="Alias" title="Alias"/>
                     <a t-attf-href="mailto:#{group.alias_id.alias_name}@#{group.alias_id.alias_domain}"><span t-field="group.alias_id"/></a>
                 </h4>
             </div>
@@ -173,12 +173,12 @@
                     <div class="row">
                         <h4 class="col-lg-6">
                             <t t-if="prev_message"><a t-attf-href='/groups/#{slug(group)}/#{slug(prev_message)}?#{mode and "mode=%s" % mode or ""}'>
-                                <i class="fa fa-arrow-left" role="img" aria-label="Previous message" title="Previous message"/> <t t-esc="prev_message.description"/>
+                                <i class="fas fa-arrow-left" role="img" aria-label="Previous message" title="Previous message"/> <t t-esc="prev_message.description"/>
                             </a></t>
                         </h4>
                         <h4 class="col-lg-6">
                             <t t-if="next_message"><a class="float-right" t-attf-href='/groups/#{slug(group)}/#{slug(next_message)}?#{mode and "mode=%s" % mode or ""}'>
-                                <t t-esc="next_message.description"/> <i class="fa fa-arrow-right" role="img" aria-label="Next message" title="Next message"/>
+                                <t t-esc="next_message.description"/> <i class="fas fa-arrow-right" role="img" aria-label="Next message" title="Next message"/>
                             </a></t>
                         </h4>
                     </div>
@@ -196,17 +196,17 @@
                                     }'/>
                                 </t>
                                 <t t-if="not message.author_id"><t t-esc="message.email_from"/></t>
-                                - <i class="fa fa-calendar" role="img" aria-label="Date" title="Date"/> <span t-field="message.date"/>
+                                - <i class="fas fa-calendar-alt" role="img" aria-label="Date" title="Date"/> <span t-field="message.date"/>
                             </small>
                             <div t-raw="message.body"/>
 
                             <div>
                                 <p t-if="message.attachment_ids" class="mt8">
                                     <a href="#" class="o_mg_link_hide">
-                                        <i class="fa fa-chevron-right" role="img" aria-label="Hide attachments" title="Hide attachments"/> <t t-raw="len(message.attachment_ids)"/> attachments
+                                        <i class="fas fa-chevron-right" role="img" aria-label="Hide attachments" title="Hide attachments"/> <t t-raw="len(message.attachment_ids)"/> attachments
                                     </a>
                                     <a href="#" class="o_mg_link_show">
-                                        <i class="fa fa-chevron-down" role="img" aria-label="Show attachments" title="Show attachments"/> <t t-raw="len(message.attachment_ids)"/> attachments
+                                        <i class="fas fa-chevron-down" role="img" aria-label="Show attachments" title="Show attachments"/> <t t-raw="len(message.attachment_ids)"/> attachments
                                     </a>
                                 </p>
                                 <div class="o_mg_link_content">
@@ -259,15 +259,15 @@
                             }'/>
                         </t>
                         <t t-if="not thread.author_id"><t t-esc="thread.email_from"/></t>
-                        - <i class="fa fa-calendar" role="img" aria-label="Date" title="Date"/> <span t-field="thread.date"/>
-                        - <i class="fa fa-paperclip" role="img" aria-label="Attachments" title="Attachments"/> <t t-esc="len(thread.attachment_ids)"/>
+                        - <i class="fas fa-calendar-alt" role="img" aria-label="Date" title="Date"/> <span t-field="thread.date"/>
+                        - <i class="fas fa-paperclip" role="img" aria-label="Attachments" title="Attachments"/> <t t-esc="len(thread.attachment_ids)"/>
                     </small>
                     <p t-if="thread.child_ids" class="mt8">
                         <a href="#" class="o_mg_link_hide">
-                            <i class="fa fa-chevron-right" role="img" aria-label="Hide replies" title="Hide replies"/> <t t-raw="len(thread.child_ids)"/> replies
+                            <i class="fas fa-chevron-right" role="img" aria-label="Hide replies" title="Hide replies"/> <t t-raw="len(thread.child_ids)"/> replies
                         </a>
                         <a href="#" class="o_mg_link_show">
-                            <i class="fa fa-chevron-down" role="img" aria-label="Show replies" title="Show replies"/> <t t-raw="len(thread.child_ids)"/> replies
+                            <i class="fas fa-chevron-down" role="img" aria-label="Show replies" title="Show replies"/> <t t-raw="len(thread.child_ids)"/> replies
                         </a>
                     </p>
                     <div class="o_mg_link_content o_mg_replies">

@@ -51,7 +51,7 @@
                                         <strong><span><field name="name"/></span></strong>
                                     </div>
                                     <div class="col-6 text-right">
-                                        <strong><i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <t t-esc="record.date.value"/></strong>
+                                        <strong><i class="far fa-clock" role="img" aria-label="Date" title="Date"/> <t t-esc="record.date.value"/></strong>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -160,7 +160,7 @@
                         <div class="oe_button_box" name="button_box">
                             <!-- Invoice stat button -->
                             <button name="button_open_invoices" type="object"
-                                    class="oe_stat_button" icon="fa-bars"
+                                    class="oe_stat_button" icon="fas fa-bars"
                                     attrs="{'invisible': [('reconciled_invoices_count','=', 0)]}">
                                 <field name="reconciled_invoices_count"/>
                                 <span attrs="{'invisible': [('reconciled_invoices_count','&gt;', 1)]}">Invoice</span>

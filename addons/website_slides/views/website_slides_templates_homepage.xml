@@ -52,7 +52,7 @@
                             <input type="search" name="search" class="form-control" placeholder="Search courses" aria-label="Search" t-att-value="search_term"/>
                             <div class="input-group-append">
                                 <button class="btn border border-left-0 oe_search_button" type="submit" aria-label="Search" title="Search">
-                                    <i class="fa fa-search"/>
+                                    <i class="fas fa-search"/>
                                 </button>
                             </div>
                         </div>
@@ -64,7 +64,7 @@
                     </button>
                     <div class="collapse navbar-collapse order-2" id="navbarSlidesHomepage">
                         <div class="navbar-nav pt-3 pt-lg-0">
-                            <a class="nav-link nav-link mr-md-2 o_wslides_home_all_slides" href="/slides/all"><i class="fa fa-graduation-cap mr-1"/>All courses</a>
+                            <a class="nav-link nav-link mr-md-2 o_wslides_home_all_slides" href="/slides/all"><i class="fas fa-graduation-cap mr-1"/>All courses</a>
                         </div>
                     </div>
                 </nav>
@@ -214,12 +214,12 @@
                 <!-- Navbar dynamically composed using displayed channel tag groups. -->
                 <nav class="navbar navbar-expand-md navbar-light shadow-sm pl-0" style="background: white!important">
                     <div class="navbar-nav border-right">
-                        <a class="nav-link nav-item px-3" href="/slides"><i class="fa fa-chevron-left"/></a>
+                        <a class="nav-link nav-item px-3" href="/slides"><i class="fas fa-chevron-left"/></a>
                     </div>
                     <!-- Clear filtering (mobile)-->
                     <div class="form-inline text-nowrap ml-auto d-md-none" t-if="search_slide_type or search_my or search_tags or search_channel_tag_id">
                         <a href="/slides/all" class="btn btn-info mr-2" role="button" title="Clear filters">
-                            <i class="fa fa-eraser"/> Clear filters
+                            <i class="fas fa-eraser"/> Clear filters
                         </a>
                     </div>
                     <form t-else="" method="GET" class="form-inline o_wslides_nav_navbar_right d-md-none">
@@ -233,7 +233,7 @@
                             <input t-if="search_slide_type" type="hidden" name="slide_type" t-att-value="search_slide_type" />
                             <div class="input-group-append">
                                 <button class="btn border border-left-0 oe_search_button" type="submit" aria-label="Search" title="Search">
-                                    <i class="fa fa-search"/>
+                                    <i class="fas fa-search"/>
                                 </button>
                             </div>
                         </div>
@@ -267,7 +267,7 @@
                         <!-- Clear filtering (desktop)-->
                         <div class="form-inline ml-auto d-none d-md-flex" t-if="search_slide_type or search_my or search_tags or search_channel_tag_id">
                             <a href="/slides/all" class="btn btn-info text-nowrap mr-2" role="button" title="Clear filters">
-                                <i class="fa fa-eraser"/> Clear filters
+                                <i class="fas fa-eraser"/> Clear filters
                             </a>
                         </div>
                         <!-- Search box (desktop) -->
@@ -281,7 +281,7 @@
                                 <input t-if="search_slide_type" type="hidden" name="slide_type" t-att-value="search_slide_type" />
                                 <div class="input-group-append">
                                     <button class="btn border border-left-0 oe_search_button" type="submit" aria-label="Search" title="Search">
-                                        <i class="fa fa-search"/>
+                                        <i class="fas fa-search"/>
                                     </button>
                                 </div>
                             </div>
@@ -298,21 +298,21 @@
                 <!-- Display tags -->
                 <t t-if="search_my">
                       <span class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
-                      <i class="fa fa-tag mr-2 text-muted"/>
+                      <i class="fas fa-tag mr-2 text-muted"/>
                       My Courses
                       <a t-att-href="'/slides/all?%s' % keep_query('*', my=None)" class="btn border-0 py-1">&#215;</a>
                     </span>
                 </t>
                 <t t-if="search_term">
                       <span class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
-                      <i class="fa fa-tag mr-2 text-muted"/>
+                      <i class="fas fa-tag mr-2 text-muted"/>
                       <t t-esc="search_term"/>
                       <a t-att-href="'/slides/all?%s' % keep_query('*', search=None)" class="btn border-0 py-1">&#215;</a>
                     </span>
                 </t>
                 <t t-foreach="search_tags" t-as="tag">
                     <span class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
-                        <i class="fa fa-tag mr-2 text-muted"/>
+                        <i class="fas fa-tag mr-2 text-muted"/>
                         <t t-esc="tag.display_name"/>
                         <a t-att-href="'/slides/all?%s' % keep_query('*', tags=str((search_tags - tag).ids))" class="btn border-0 py-1">&#215;</a>
                     </span>
@@ -350,7 +350,7 @@
             <t t-if="channel.partner_has_new_content" t-call="website_slides.course_card_information"/> 
             <div t-if="channel.image_1024" class="card-img-top" t-attf-style="padding-top: 50%; background-image: url(#{course_image}); background-size: cover; background-position:center"/>
             <div t-else="" class="o_wslides_gradient card-img-top position-relative" style="padding-top: 50%; opacity: 0.8">
-                <i class="fa fa-graduation-cap fa-2x mr-3 mb-3 position-absolute text-white-75" style="right:0; bottom: 0"/>
+                <i class="fas fa-graduation-cap fa-2x mr-3 mb-3 position-absolute text-white-75" style="right:0; bottom: 0"/>
             </div>
         </a>
         <div class="card-body p-3">
@@ -375,7 +375,7 @@
                 <small t-if="channel.total_time" class="font-weight-bold" t-esc="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/>
                 <div class="d-flex flex-grow-1 justify-content-end">
                     <t t-if="channel.is_member and channel.completed">
-                        <span class="badge badge-pill badge-success pull-right py-1 px-2"><i class="fa fa-check"/> Completed</span>
+                        <span class="badge badge-pill badge-success pull-right py-1 px-2"><i class="fas fa-check"/> Completed</span>
                     </t>
                     <div t-elif="channel.is_member and channel.channel_type != 'documentation'" class="progress w-50" style="height: 6px">
                         <div class="progress-bar" role="progressbar" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{channel.completion}%;"/>
@@ -512,7 +512,7 @@
                     <b class="text_small_caps" t-esc="challenge.reward_id.name"/><br/>
                     <span class="text-muted" t-esc="challenge.reward_id.description"/>
                 </div>
-                <i t-if="challenge_done" class="fa fa-check h5 text-success" aria-label="Done" title="Done" role="img"></i>
+                <i t-if="challenge_done" class="fas fa-check h5 text-success" aria-label="Done" title="Done" role="img"></i>
             </div>
         </t>
     </div>

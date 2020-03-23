@@ -1272,7 +1272,7 @@ QUnit.module('Views', {
                     '</header>' +
                     '<sheet>' +
                         '<group>' +
-                            '<button string="Geolocate" name="geo_localize" icon="fa-check" type="object"/>' +
+                            '<button string="Geolocate" name="geo_localize" icon="fas fa-check" type="object"/>' +
                         '</group>' +
                     '</sheet>' +
                 '</form>',
@@ -1380,7 +1380,7 @@ QUnit.module('Views', {
                     '</header>' +
                     '<sheet>' +
                         '<group>' +
-                            '<button string="Geolocate" name="geo_localize" icon="fa-check" type="object"/>' +
+                            '<button string="Geolocate" name="geo_localize" icon="fas fa-check" type="object"/>' +
                         '</group>' +
                     '</sheet>' +
                 '</form>',
@@ -3323,7 +3323,7 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<form>' +
                     '<div name="button_box" class="oe_button_box">' +
-                        '<button type="object" class="oe_stat_button" icon="fa-check-square">' +
+                        '<button type="object" class="oe_stat_button" icon="fas fa-check-square">' +
                             '<field name="bar"/>' +
                         '</button>' +
                     '</div>' +
@@ -4506,7 +4506,7 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<form>' +
                     '<div name="button_box" class="oe_button_box">' +
-                        '<button type="object" class="oe_stat_button" icon="fa-check-square">' +
+                        '<button type="object" class="oe_stat_button" icon="fas fa-check-square">' +
                             '<field name="bar"/>' +
                         '</button>' +
                         '<label/>' +
@@ -4542,7 +4542,7 @@ QUnit.module('Views', {
                     '<field name="state" invisible="1"/>' +
                     '<field name="date" invisible="1"/>' +
                     '<field name="datetime" invisible="1"/>' +
-                    '<button type="object" class="oe_stat_button" icon="fa-check-square"/>' +
+                    '<button type="object" class="oe_stat_button" icon="fas fa-check-square"/>' +
                 '</div>' +
                 '</form>',
             res_id: 2,
@@ -4565,10 +4565,10 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<form>' +
                     '<div name="button_box" class="oe_button_box">' +
-                        '<button type="object" class="oe_stat_button" icon="fa-check-square">' +
+                        '<button type="object" class="oe_stat_button" icon="fas fa-check-square">' +
                             '<field name="bar"/>' +
                         '</button>' +
-                        '<button type="object" class="oe_stat_button" icon="fa-check-square">' +
+                        '<button type="object" class="oe_stat_button" icon="fas fa-check-square">' +
                             '<field name="foo"/>' +
                         '</button>' +
                     '</div>' +
@@ -5092,7 +5092,7 @@ QUnit.module('Views', {
             arch: '<form string="Manufacturing Orders">' +
                     '<sheet>' +
                         '<div class="oe_button_box" name="button_box">' +
-                            '<button string="Inventory Moves" class="oe_stat_button" icon="fa-arrows-v"/>' +
+                            '<button string="Inventory Moves" class="oe_stat_button" icon="fas fa-arrows-alt-v"/>' +
                         '</div>' +
                     '</sheet>' +
                 '</form>',
@@ -5233,7 +5233,7 @@ QUnit.module('Views', {
 
         var self = this;
         var buttons = Array(8).join(
-            '<button type="object" class="oe_stat_button" icon="fa-check-square">' +
+            '<button type="object" class="oe_stat_button" icon="fas fa-check-square">' +
                 '<field name="bar"/>' +
             '</button>'
         );
@@ -5756,7 +5756,7 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             arch: '<form string="Partners">' +
-                            '<a type="action" name="42"><i class="fa fa-arrow-right"/> Click me !</a>' +
+                            '<a type="action" name="42"><i class="fas fa-arrow-right"/> Click me !</a>' +
                     '</form>',
             res_id: 1,
             intercepts: {

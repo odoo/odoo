@@ -126,14 +126,14 @@
                                 <input t-if="mode == 'payment'" type="radio" name="pm_id" t-att-value="pm.id" t-att-checked="checked_pm_id == pm.id"/>
                                 <span class="payment_option_name" t-esc="pm.name"/>
                                 <t t-if="pm.verified">
-                                    <i class="fa fa-check text-success" title="This payment method is verified by our system." role="img" aria-label="Ok"></i>
+                                    <i class="fas fa-check text-success" title="This payment method is verified by our system." role="img" aria-label="Ok"></i>
                                 </t>
                                 <t t-else="">
-                                    <i class="fa fa-check text-muted" title="This payment method has not been verified by our system." role="img" aria-label="Not verified"></i>
+                                    <i class="fas fa-check text-muted" title="This payment method has not been verified by our system." role="img" aria-label="Not verified"></i>
                                 </t>
                             </label>
                             <button t-if="mode == 'manage'" name="delete_pm" t-att-value="pm.id" class="btn btn-primary btn-sm float-right">
-                                <i class="fa fa-trash"></i> Delete
+                                <i class="fas fa-trash-alt"></i> Delete
                             </button>
                         </div>
                     </t>
@@ -153,14 +153,14 @@
                         <i t-if="icon_class and icon_right" t-attf-class="fa {{icon_class}}"/>
                     </t>
                     <t t-else="">
-                        <i class="fa fa-lock"/> Pay
+                        <i class="fas fa-lock"/> Pay
                     </t>
                 </button>
                 <t t-if="show_manage_btn">
                     <a class="btn btn-link mb8 mt8" href="/my/payment_method">Manage your payment methods</a>
                 </t>
                 <button t-if="mode == 'manage' and list(filter(lambda x: x.payment_flow == 's2s', acquirers))" type="submit" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
-                    <i class="fa fa-plus-circle"/> Add new card
+                    <i class="fas fa-plus-circle"/> Add new card
                 </button>
             </div>
         </form>
