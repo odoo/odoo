@@ -20,7 +20,7 @@ odoo.define('web.UrlActionPlugin', function (require) {
          *   redirects to a new page by default
          * @param {Object} options @see doAction for details
          */
-        executeAction(action, options) {
+        async executeAction(action, options) {
             if (action.target === 'self') {
                 redirect(action.url);
             } else {

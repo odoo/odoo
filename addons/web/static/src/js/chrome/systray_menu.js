@@ -13,7 +13,7 @@ class ItemAdapter extends ComponentAdapter {
 class SystrayMenu extends owl.Component {
     constructor() {
         super(...arguments);
-        this.Items = SystrayMenu.Items.sort((ItemA, ItemB) => {
+        this.Items = SystrayMenu.Items.slice().sort((ItemA, ItemB) => {
             const seqA = ItemA.prototype.sequence !== undefined ? ItemA.prototype.sequence : 50;
             const seqB = ItemB.prototype.sequence !== undefined ? ItemB.prototype.sequence : 50;
             return seqA < seqB;

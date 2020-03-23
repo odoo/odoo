@@ -55,7 +55,7 @@ odoo.define('web.test_utils_create', function (require) {
      * @param {function} [params.mockRPC]
      * @returns {WebClient}
      */
-    async function createWebClient(params) {
+    async function createWebClientFromClass(WCClass, params) {
         params = params || {};
 
         const target = prepareTarget(params.debug);
@@ -77,7 +77,7 @@ odoo.define('web.test_utils_create', function (require) {
             resolve(menus);
         });
 
-        const webClient = new WebClient();
+        const webClient = new WCClass();
         const patchWC = {
             _determineCompanyIds() {},
             _getWindowHash() {
@@ -449,7 +449,8 @@ odoo.define('web.test_utils_create', function (require) {
         createModel,
         createParent,
         createView,
-        createWebClient,
+        createWebClientFromClass,
+        createWebClient: createWebClientFromClass.bind(null, WebClient),
         prepareTarget,
     };
 });

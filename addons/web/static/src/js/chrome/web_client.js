@@ -3,6 +3,7 @@ odoo.define('web.WebClient', function (require) {
 
 const ActionManager = require('web.ActionManager');
 const ActionAdapter = require('web.ActionAdapter');
+const { useListener } = require('web.custom_hooks');
 const { ComponentAdapter } = require('web.OwlCompatibility');
 const DialogAction = require('web.DialogAction');
 const LoadingWidget = require('web.Loading');
@@ -12,13 +13,14 @@ const LegacyDialog = require('web.Dialog');
 const WarningDialog = require('web.CrashManager').WarningDialog;
 
 const { Component, hooks } = owl;
-const {useRef, useExternalListener } = hooks;
+const { useRef, useExternalListener } = hooks;
 
 class WebClient extends Component {
     constructor() {
         super();
         this.LoadingWidget = LoadingWidget;
         useExternalListener(window, 'hashchange', this._onHashchange);
+        useListener('click', this._onGenericClick);
 
         this.currentMainComponent = useRef('currentMainComponent');
         this.currentDialogComponent = useRef('currentDialogComponent');
@@ -34,9 +36,12 @@ class WebClient extends Component {
         this.env.bus.on('show-effect', this, this._onShowEffect);
         this.env.bus.on('connection_lost', this, this._onConnectionLost);
         this.env.bus.on('connection_restored', this, this._onConnectionRestored);
+        this.env.bus.on('webclient-class-included', this, this.render);
 
         this.renderingInfo = null;
+        this.rState = null;
         this.controllerComponentMap = new Map();
+        this.allComponents = this.constructor.components;
     }
     //--------------------------------------------------------------------------
     // OWL Overrides
@@ -68,16 +73,32 @@ class WebClient extends Component {
         this._storeScrollPosition(scrollPosition);
     }
     async willStart() {
-        this.menus = await this._loadMenus();
+        await this._loadMenus();
         const state = this._getUrlState();
         this._determineCompanyIds(state);
         return this._loadState(state);
     }
 
+    get bodyClass() {
+        return {
+            o_fullscreen: this.renderingInfo && this.renderingInfo.fullscreen,
+            o_rtl: this.env._t.database.parameters.direction === 'rtl',
+            o_touch_device: this.env.device.touch,
+        };
+    }
+    get isRendering() {
+        return !!this.renderingInfo;
+    }
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
+    _cancel() {
+        if (this.isRendering) {
+            this.__owl__.currentFiber.cancel();
+        }
+        this.renderingInfo = null;
+    }
     _computeTitle() {
         const parts = Object.keys(this._titleParts).sort();
         let tmp = "";
@@ -116,6 +137,15 @@ class WebClient extends Component {
             tt.parentNode.removeChild(tt);
         }
     }
+    _getHomeAction() {
+        let menuID = this.menus ? this.menus.root.children[0] : null;
+        let actionID =  menuID ? this.menus[menuID].actionID : null;
+        if (this.env.session.home_action_id) {
+            actionID = this.env.session.home_action_id;
+            menuID = null;
+        }
+        return { actionID , menuID };
+    }
     /**
      * Returns the left and top scroll positions of the main scrolling area
      * (i.e. the '.o_content' div in desktop).
@@ -143,10 +173,12 @@ class WebClient extends Component {
             let decodedVal;
             if (val === undefined) {
                 decodedVal = '1';
-            } else {
+            } else if (val) {
                 decodedVal = decodeURI(val);
             }
-            state[key] = isNaN(decodedVal) ? decodedVal : parseInt(decodedVal, 10);
+            if (decodedVal) {
+                state[key] = isNaN(decodedVal) ? decodedVal : parseInt(decodedVal, 10);
+            }
         }
 
         return state;
@@ -178,28 +210,8 @@ class WebClient extends Component {
                     app.action = child.action;
                 }
             }
-            const menus = {};
-            function processMenu(menu, appID) {
-                appID = appID || menu.id;
-                for (let submenu of menu.children) {
-                    processMenu(submenu, appID);
-                }
-                const action = menu.action && menu.action.split(',');
-                const menuID = menu.id || 'root';
-                menus[menuID] = {
-                    id: menuID,
-                    appID: appID,
-                    name: menu.name,
-                    children: menu.children.map(submenu => submenu.id),
-                    actionModel: action ? action[0] : false,
-                    actionID: action ? parseInt(action[1], 10) : false,
-                    xmlid: menu.xmlid,
-                };
-            }
-            processMenu(menuData);
-
+            this._processMenu(menuData);
             odoo.loadMenusPromise = null;
-            return menus;
         });
     }
     async _loadState(state) {
@@ -209,14 +221,36 @@ class WebClient extends Component {
                 const action = this.menus[state.menu_id].actionID;
                 return this.actionManager.doAction(action, state);
             } else if (('home' in state || Object.keys(state).filter(key => key !== 'cids').length === 0)) {
-                const menuID = this.menus ? this.menus.root.children[0] : null;
-                const actionID =  menuID ? this.menus[menuID].actionID : null;
+                const {actionID , menuID} = this._getHomeAction();
                 if (actionID) {
                     return this.actionManager.doAction(actionID, {menuID, clear_breadcrumbs: true});
+                } else {
+                    return true;
                 }
             }
         }
         return stateLoaded;
+    }
+    _processMenu(menu, appID) {
+        this.menus = this.menus || {};
+        appID = appID || menu.id;
+        const children = [];
+        for (let submenu of menu.children) {
+            children.push(this._processMenu(submenu, appID).id);
+        }
+        const action = menu.action && menu.action.split(',');
+        const menuID = menu.id || 'root';
+        const _menu = {
+            id: menuID,
+            appID: appID,
+            name: menu.name,
+            children: children,
+            actionModel: action ? action[0] : false,
+            actionID: action ? parseInt(action[1], 10) : false,
+            xmlid: menu.xmlid,
+        };
+        this.menus[menuID] = _menu;
+        return _menu;
     }
     _scrollTo(scrollPosition) {
         const scrollingEl = this.el.getElementsByClassName('o_content')[0];
@@ -228,11 +262,7 @@ class WebClient extends Component {
     }
     _setActionManager() {
         this.actionManager = new ActionManager(this.env);
-        this.actionManager.on('cancel', this, () => {
-            if (this.renderingInfo) {
-                this.__owl__.currentFiber.cancel();
-            }
-        });
+        this.actionManager.on('cancel', this, this._cancel);
         this.actionManager.on('update', this, this._onActionManagerUpdated);
         this.actionManager.on('clear-uncommitted-changes', this, async (callBack) => {
             if (!this.currentDialogComponent.comp && this.currentMainComponent.comp) {
@@ -273,7 +303,7 @@ class WebClient extends Component {
      */
     _updateState(state) {
         // the action and menu_id may not have changed
-        state.action = state.action || this.state.action || '';
+        state.action = state.action || this.state.action || null;
         const menuID = state.menu_id || this.state.menu_id || '';
         if (menuID) {
             state.menu_id = menuID;
@@ -335,7 +365,7 @@ class WebClient extends Component {
             if (this.renderingInfo.dialog) {
                 this.controllerComponentMap.set(this.renderingInfo.dialog.controller.jsID, this.currentDialogComponent.comp);
             }
-            const newStack = this.renderingInfo.controllerStack;
+            const newStack = this.renderingInfo.controllerStack || [];
             const newDialog = this.renderingInfo.dialog;
             this.actionManager.commit(newStack, newDialog, this.renderingInfo.onCommit);
 
@@ -345,6 +375,10 @@ class WebClient extends Component {
             if (!this.renderingInfo.dialog) {
                 this._updateState(state);
             }
+        }
+        this.rState = this.renderingInfo;
+        if (this.rState && this.rState.main) {
+            this.rState.main.reload = false;
         }
         this.renderingInfo = null;
         this.env.bus.trigger('web-client-updated', this);
@@ -471,10 +505,39 @@ class WebClient extends Component {
     _onExecuteAction(ev) {
         this.actionManager.executeInFlowAction(ev.detail);
     }
-    _onHashchange() {
+    _onGenericClick(ev) {
+        this._domCleaning();
+        const target = ev.target;
+        if (!target.tagName === 'a') {
+            return;
+        }
+        var disable_anchor = target.attributes.disable_anchor;
+        if (disable_anchor && disable_anchor.value === "true") {
+            return;
+        }
+
+        var href = target.attributes.href;
+        if (href) {
+            if (href.value[0] === '#' && href.value.length > 1) {
+                let matchingEl = null;
+                try {
+                    matchingEl = this.el.querySelector(`.o_content #${href.value.substr(1)}`);
+                } catch (e) {} // Inavlid selector: not an anchor anyway
+                if (matchingEl) {
+                    ev.preventDefault();
+                    const {top, left} = matchingEl.getBoundingClientRect();
+                    this._scrollTo({top, left});
+                }
+            }
+        }
+    }
+    async _onHashchange() {
         if (!this.ignoreHashchange) {
             const state = this._getUrlState();
-            this._loadState(state);
+            const loaded = await this._loadState(state);
+            if (loaded === true) {
+                this.render();
+            }
         }
         this.ignoreHashchange = false;
         // TODO: reset oldURL in case of failure?
@@ -495,7 +558,7 @@ class WebClient extends Component {
      * @param {Object} ev.detail.state
      */
     _onPushState(ev) {
-        if (!this.renderingInfo) {
+        if (!this.isRendering) {
             // Deal with that event only if we are not in a rendering cycle
             // i.e.: the rendering cycle will update the state at its end
             // Any event hapening in the meantime would be irrelevant
@@ -506,7 +569,7 @@ class WebClient extends Component {
         const part = ev.detail.part;
         const title = ev.detail.title;
         this._setTitlePart(part, title);
-        if (!this.renderingInfo) {
+        if (!this.isRendering) {
             this._setWindowTitle(this._computeTitle());
         }
     }
@@ -519,7 +582,7 @@ class WebClient extends Component {
      *   behavior / appearance
      */
     _onShowEffect(payload) {
-        if (this.renderingInfo && !payload.force) {return;}
+        if (this.isRendering && !payload.force) {return;}
         const type = payload.type || 'rainbow_man';
         if (type === 'rainbow_man') {
             if (this.env.session.show_effect) {

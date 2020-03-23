@@ -40,7 +40,7 @@ class Menu extends Component {
         return this.menus[currentAppID];
     }
     shouldUpdate(nextProps) {
-        return nextProps.menuID && nextProps.menuID !== this.props.menuID;
+        return nextProps.menuID !== this.props.menuID;
     }
 
     //--------------------------------------------------------------------------

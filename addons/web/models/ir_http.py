@@ -42,6 +42,7 @@ class Http(models.AbstractModel):
             "partner_id": user.partner_id.id if request.session.uid and user.partner_id else None,
             "web.base.url": IrConfigSudo.get_param('web.base.url', default=''),
             "active_ids_limit": int(IrConfigSudo.get_param('web.active_ids_limit', default='20000')),
+            "home_action_id": user.action_id.id,
         }
         if self.env.user.has_group('base.group_user'):
             # the following is only useful in the context of a webclient bootstrapping

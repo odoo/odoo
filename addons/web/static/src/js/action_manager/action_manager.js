@@ -123,6 +123,7 @@ class ActionManager extends core.EventBus {
     async doAction(action, options) {
         // cancel potential current rendering
         this.trigger('cancel');
+        this.env.bus.trigger('do-action-requested');
 
         const defaultOptions = {
             additional_context: {},

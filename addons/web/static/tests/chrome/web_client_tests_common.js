@@ -1,11 +1,13 @@
-odoo.define('web.web_client_tests', function (require) {
+odoo.define('web.web_client_tests_common', function (require) {
 "use strict";
 
+const { createWebClientFromClass } = require('web.test_utils_create');
 const testUtils = require('web.test_utils');
+const WebClient = require('web.WebClientClass');
 
-const { createWebClient } = testUtils;
+const createWebClient = createWebClientFromClass.bind(null, WebClient);
 
-QUnit.module('WebClient Community', {
+QUnit.module('WebClient Common', {
     beforeEach: function () {
         this.data = {
             partner: {
@@ -144,8 +146,8 @@ QUnit.module('WebClient Community', {
         };
     },
 }, function () {
-    QUnit.test('initial rendering (should open first menu)', async function (assert) {
-        assert.expect(10);
+    QUnit.test('do not call clearUncommittedChanges() when target=new && dialog is opened', async function (assert) {
+        assert.expect(2);
 
         const webClient = await createWebClient({
             data: this.data,
@@ -153,53 +155,59 @@ QUnit.module('WebClient Community', {
             archs: this.archs,
             menus: this.menus,
         });
+        await testUtils.actionManager.doAction(10);
 
-        assert.containsOnce(webClient, 'header .o_main_navbar');
-        assert.containsOnce(webClient, 'header .o_main_navbar .o_menu_brand');
-        assert.containsOnce(webClient, 'header .o_main_navbar .o_menu_sections');
-        assert.containsOnce(webClient, 'header .o_main_navbar .o_menu_systray');
-        assert.containsOnce(webClient, '.o_action_manager');
+        // Open Partner form view and enter some text
+        await testUtils.dom.click(webClient.el.querySelector('.o_menu_sections a[data-menu-id="3"]'));
+        await testUtils.owlCompatibilityExtraNextTick();
+        await testUtils.fields.editInput(webClient.el.querySelector('.o_input[name=display_name]'), "TEST");
 
-        assert.strictEqual(webClient.el.querySelector('.o_menu_brand').innerText, 'Partners');
-        assert.containsN(webClient, 'header .o_main_navbar .o_menu_sections li a', 3);
-        assert.containsN(webClient, '.o_menu_sections li', 3);
-
-        assert.strictEqual(webClient.el.querySelector('.breadcrumb').innerText, 'Partners');
-        assert.containsOnce(webClient, '.o_list_view');
+        // Open dialog without saving should not ask to discard
+        await testUtils.dom.click(webClient.el.querySelector('.o_menu_sections a[data-menu-id="6"]'));
+        await testUtils.owlCompatibilityExtraNextTick();
+        assert.containsOnce(webClient, '.o_dialog');
+        assert.containsOnce(webClient, '.o_dialog .o_act_window .o_view_controller');
 
         webClient.destroy();
     });
 
-    QUnit.test('initial rendering (should open custom action on user)', async function (assert) {
-        assert.expect(10);
+    QUnit.test('do not restore when reloading', async function (assert) {
+        assert.expect(5);
 
         const webClient = await createWebClient({
             data: this.data,
             actions: this.actions,
             archs: this.archs,
             menus: this.menus,
-            session: {
-                home_action_id: 30,
+            webClient: {
+                _getWindowHash() {return '#action=10';}
             }
         });
 
-        assert.containsOnce(webClient, 'header .o_main_navbar');
-        assert.containsOnce(webClient, 'header .o_main_navbar .o_menu_brand');
-        assert.containsOnce(webClient, 'header .o_main_navbar .o_menu_sections');
-        assert.containsOnce(webClient, 'header .o_main_navbar .o_menu_systray');
-        assert.containsOnce(webClient, '.o_action_manager');
+        await testUtils.dom.click(webClient.el.querySelector('.o_data_row'));
+        await testUtils.owlCompatibilityExtraNextTick();
+        assert.containsOnce(webClient, '.o_form_buttons_view .o_form_button_edit');
 
-        assert.strictEqual(webClient.el.querySelector('.o_menu_brand').innerText, 'Tasks');
-        assert.containsNone(webClient, 'header .o_main_navbar .o_menu_sections li a');
-        assert.containsNone(webClient, '.o_menu_sections li');
+        await testUtils.dom.click(webClient.el.querySelector('.o_form_buttons_view .o_form_button_edit'));
+        await testUtils.owlCompatibilityExtraNextTick();
 
-        assert.strictEqual(webClient.el.querySelector('.breadcrumb').innerText, 'Tasks');
-        assert.containsOnce(webClient, '.o_kanban_view');
+        assert.containsOnce(webClient, '.o_form_buttons_edit .o_form_button_save');
+        assert.containsOnce(webClient, '.o_statusbar_buttons button[name=do_something]');
+
+        await testUtils.dom.click(webClient.el.querySelector('.o_statusbar_buttons button[name=do_something]'));
+        await testUtils.owlCompatibilityExtraNextTick();
+
+        assert.containsOnce(webClient, '.o_form_buttons_edit .o_form_button_save');
+
+        await testUtils.dom.click(webClient.el.querySelector('.o_form_buttons_edit .o_form_button_save'));
+        await testUtils.owlCompatibilityExtraNextTick();
+
+        assert.containsOnce(webClient, '.o_form_buttons_view .o_form_button_edit');
 
         webClient.destroy();
     });
 
-    QUnit.test('can click on a menuitem', async function (assert) {
+    QUnit.test('can set window title', async function (assert) {
         assert.expect(6);
 
         const webClient = await createWebClient({
@@ -207,42 +215,67 @@ QUnit.module('WebClient Community', {
             actions: this.actions,
             archs: this.archs,
             menus: this.menus,
+            webClient: {
+                _getWindowHash() {return '#action=10';},
+                _setWindowTitle(title) {
+                    assert.step(title);
+                }
+            }
         });
-
-        assert.containsOnce(webClient, '.o_list_view');
-        assert.strictEqual(webClient.el.querySelector('.o_menu_brand').innerText, 'Partners');
-        assert.strictEqual(webClient.el.querySelector('.breadcrumb').innerText, 'Partners');
-        await testUtils.dom.click(webClient.el.querySelector('a[data-menu-id="3"]'));
-        await testUtils.owlCompatibilityExtraNextTick();
-        assert.containsOnce(webClient, '.o_form_view');
-        assert.strictEqual(webClient.el.querySelector('.o_menu_brand').innerText, 'Partners');
-        assert.strictEqual(webClient.el.querySelector('.breadcrumb').innerText, 'New');
-
+        const randomEl = document.querySelector('.o_web_client div');
+        assert.verifySteps([
+            'Partners'
+        ]);
+        randomEl.dispatchEvent(new CustomEvent('set-title-part', {bubbles: true, detail: {title: 'fire', part: 'b'}}));
+        assert.verifySteps([
+            'Partners - fire'
+        ]);
+        randomEl.dispatchEvent(new CustomEvent('set-title-part', {bubbles: true, detail: {title: 'on the bayou', part: 'a'}}));
+        assert.verifySteps([
+            'on the bayou - Partners - fire'
+        ]);
         webClient.destroy();
     });
 
-    QUnit.test('can switch app', async function (assert) {
-        assert.expect(6);
+    QUnit.test('can click on anchor link', async function (assert) {
+        assert.expect(2);
 
+        this.archs['partner,false,form'] = `
+                <form>
+                    <sheet>
+                        <a href="#anchored_div" id="the_trigger">The Trigger</a>
+                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                        <div id="anchored_div">
+                            <field name="display_name"/>
+                        </div>
+                    </sheet>
+                </form>`;
+
+        let targetRect = null;
         const webClient = await createWebClient({
             data: this.data,
             actions: this.actions,
             archs: this.archs,
             menus: this.menus,
+            webClient: {
+                _scrollTo(data) {
+                    const {top, left} = data;
+                    assert.strictEqual(top, targetRect.top);
+                    assert.strictEqual(left, targetRect.left);
+                    return this._super.apply(this, arguments);
+                }
+            },
         });
-
-        assert.containsOnce(webClient, '.o_list_view');
-        assert.strictEqual(webClient.el.querySelector('.o_menu_brand').innerText, 'Partners');
-        assert.strictEqual(webClient.el.querySelector('.breadcrumb').innerText, 'Partners');
-
-        await testUtils.dom.click(webClient.el.querySelector('.o_menu_apps li a'));
-        await testUtils.dom.click(webClient.el.querySelector('.o_menu_apps a[data-menu-id="5"]'));
-        await testUtils.owlCompatibilityExtraNextTick();
-        assert.containsOnce(webClient, '.o_kanban_view');
-        assert.strictEqual(webClient.el.querySelector('.o_menu_brand').innerText, 'Tasks');
-        assert.strictEqual(webClient.el.querySelector('.breadcrumb').innerText, 'Tasks');
+        await testUtils.actionManager.doAction(11, {resID: 1});
+        const anchorTarget = document.getElementById('anchored_div');
+        targetRect = anchorTarget.getBoundingClientRect();
+        await testUtils.dom.click(document.getElementById('the_trigger'));
 
         webClient.destroy();
     });
-});
+})
 });

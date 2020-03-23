@@ -106,7 +106,7 @@ odoo.define('web.ActionAdapter', function (require) {
         // Public
         //--------------------------------------------------------------------------
 
-        canBeRemoved() {
+        async canBeRemoved() {
             if (this.legacy && this.widget) {
                 return this.widget.canBeRemoved();
             }
@@ -123,6 +123,12 @@ odoo.define('web.ActionAdapter', function (require) {
                 return this.widget.getState();
             }
             return {}; // TODO
+        }
+        exportState() {
+            if (this.widget && this.widget.exportState) {
+                return this.widget.exportState();
+            }
+            return this.getState();
         }
         async updateWidget(nextProps) {
             if (this.widgetReloadProm || ('reload' in nextProps && !nextProps.reload)) {

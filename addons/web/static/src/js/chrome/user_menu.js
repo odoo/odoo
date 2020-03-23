@@ -5,7 +5,7 @@ const OwlDialog = require('web.OwlDialog');
 const { useListener } = require('web.custom_hooks');
 
 class ShortCuts extends owl.Component {};
-ShortCuts.template = 'UserMenu.shortcuts';
+ShortCuts.template = 'web.UserMenu.shortcuts';
 
 /**
  * This widget is appended by the webclient to the right of the navbar.
