@@ -230,7 +230,7 @@ var BasicActivity = AbstractField.extend({
             },
             res_id: id || false,
         };
-        return this.do_action(action, { on_close: callback });
+        return this.do_action(action, { on_close: callback, fullscreen: true });
     },
     /**
      * @private
