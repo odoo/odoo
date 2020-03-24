@@ -53,7 +53,8 @@ class Survey(models.Model):
     description_done = fields.Html(
         "End Message", translate=True,
         help="This message will be displayed when survey is completed")
-    background_image = fields.Binary("Background Image")
+    background_image = fields.Image("Background Image")
+    background_image_url = fields.Char('Background Url', compute="_compute_background_image_url")
     active = fields.Boolean("Active", default=True)
     user_id = fields.Many2one('res.users', string='Responsible', tracking=True, default=lambda self: self.env.user)
     # questions
@@ -165,6 +166,12 @@ class Survey(models.Model):
             'The attempts limit needs to be a positive number if the survey has a limited number of attempts.'),
         ('badge_uniq', 'unique (certification_badge_id)', "The badge for each survey should be unique!"),
     ]
+
+    @api.depends('background_image', 'access_token')
+    def _compute_background_image_url(self):
+        base_bg_url = "/survey/get_background_image/%s"
+        for survey in self:
+            survey.background_image_url = base_bg_url % survey.access_token if survey.background_image else False
 
     def _compute_users_can_signup(self):
         signup_allowed = self.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'
@@ -682,6 +689,39 @@ class Survey(models.Model):
         if answer:
             questions = questions & answer.predefined_question_ids
         return questions, page_or_question_id
+
+    def _get_questions_information(self):
+        """
+        Prepares a dict that will be used to handle background transitions and image handling
+        For each survey question, we return
+            survey_question_id : {
+                - is_section : if the current question is a section
+                - next_question_id : the question that follow the current one (no conditional check here)
+                - background_image_url : if the question's section as has background image
+                - image_url : if there is an image on the question
+                - has_description : if the section has a description (only if the question is a section)
+            }
+        """
+        questions_info = dict.fromkeys([0] + self.question_and_page_ids.ids)
+        # Add a fake 'start survey' section.
+        questions_info[0] = {
+            'is_section': False,
+            'next_question_id': self.question_and_page_ids.ids[0],
+            'has_description': False,
+            'background_image_url': self.background_image_url
+        }
+        for question in self.question_and_page_ids:
+            current_question_index = self.question_and_page_ids.ids.index(question.id)
+            next_question_id = self.question_and_page_ids.ids[current_question_index + 1] \
+                if current_question_index + 1 < len(self.question_and_page_ids) else 0
+            questions_info[question.id] = {
+                'is_section': question.is_page,
+                'question_ids': question.question_ids.ids if question.is_page else [],
+                'next_question_id': next_question_id,
+                'has_description': not is_html_empty(question.description) if question.is_page else False,
+                'background_image_url': question.background_image_url or self.background_image_url
+            }
+        return questions_info
 
     # ------------------------------------------------------------
     # CONDITIONAL QUESTIONS MANAGEMENT

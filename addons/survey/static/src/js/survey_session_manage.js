@@ -41,6 +41,8 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
             // display props
             self.showBarChart = self.$el.data('showBarChart');
             self.showTextAnswers = self.$el.data('showTextAnswers');
+            // Question props
+            self.currentBackgroundImageUrl = self.$el.data('currentBackgroundImageUrl');
 
             var isRpcCall = self.$el.data('isRpcCall');
             if (!isRpcCall) {
@@ -304,64 +306,80 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
     _nextQuestion: function (goBack) {
         var self = this;
 
-        this.isStartScreen = false;
-        if (this.surveyTimerWidget) {
-            this.surveyTimerWidget.destroy();
-        }
-
-        var resolveFadeOut;
-        var fadeOutPromise = new Promise(function (resolve, reject) { resolveFadeOut = resolve; });
-        this.$el.fadeOut(this.fadeInOutTime, function () {
-            resolveFadeOut();
-        });
-
-        var nextQuestionPromise = this._rpc({
+        this._rpc({
+            // Background management
             route: _.str.sprintf('/survey/session/next_question/%s', self.surveyAccessToken),
             params: {
                 'go_back': goBack,
             }
-        });
-
-        // avoid refreshing results while transitioning
-        if (this.resultsRefreshInterval) {
-            clearInterval(this.resultsRefreshInterval);
-            delete this.resultsRefreshInterval;
-        }
-
-        Promise.all([fadeOutPromise, nextQuestionPromise]).then(async function (results) {
-            if (results[1]) {
-                var $renderedTemplate = $(results[1]);
-                self.$el.replaceWith($renderedTemplate);
-
-                // Ensure new question is fully loaded before force loading previous question screen.
-                await self.attachTo($renderedTemplate);
-                if (goBack) {
-                    // As we arrive on "question" screen, simulate going to the results screen or leaderboard.
-                    self._setShowInputs(true);
-                    self._setShowAnswers(true);
-                    if (self.sessionShowLeaderboard && self.isScoredQuestion) {
-                        self.currentScreen = 'leaderboard';
-                        self.leaderBoard.showLeaderboard(false, self.isScoredQuestion);
-                    } else {
-                        self.currentScreen = 'results';
-                        self._refreshResults();
-                    }
-                } else {
-                    self._startTimer();
+        }).then(function (nextQuestion) {
+            var refreshBackgroundPromise = Promise.resolve(false);
+            // Do we need to fade out the background ? Needed here before switching questions to get fade in/out
+            // effect at the same time.
+            if (nextQuestion.background_image_url != self.options.currentBackgroundImageUrl) {
+                $('div#wrapwrap').css("box-shadow", "inset 0 0 0 10000px rgba(255,255,255,1)");
+                if (nextQuestion.background_image_url) {
+                    refreshBackgroundPromise = self._refreshBackground(nextQuestion.background_image_url);
                 }
-                self.$el.fadeIn(self.fadeInOutTime);
-            } else if (self.sessionShowLeaderboard) {
-                // Display last screen if leaderboard activated
-                self.isLastQuestion = true;
-                self._setupLeaderboard().then(function () {
-                    self.$('.o_survey_session_leaderboard_title').text(_t('Final Leaderboard'));
-                    self.$('.o_survey_session_navigation_next').addClass('d-none');
-                    self.$('.o_survey_leaderboard_buttons').removeClass('d-none');
-                    self.leaderBoard.showLeaderboard(false, false);
-                });
-            } else {
-                self.$('.o_survey_session_close').click();
             }
+
+            self.isStartScreen = false;
+            if (self.surveyTimerWidget) {
+                self.surveyTimerWidget.destroy();
+            }
+
+            var resolveFadeOut;
+            var fadeOutPromise = new Promise(function (resolve, reject) { resolveFadeOut = resolve; });
+            self.$el.fadeOut(self.fadeInOutTime, function () {
+                resolveFadeOut();
+            });
+
+            // avoid refreshing results while transitioning
+            if (self.resultsRefreshInterval) {
+                clearInterval(self.resultsRefreshInterval);
+                delete self.resultsRefreshInterval;
+            }
+
+            Promise.all([fadeOutPromise, refreshBackgroundPromise]).then(async function (results) {
+                if (nextQuestion.question_html) {
+                    var $renderedTemplate = $(nextQuestion.question_html);
+                    self.$el.replaceWith($renderedTemplate);
+
+                    // Ensure new question is fully loaded before force loading previous question screen.
+                    await self.attachTo($renderedTemplate);
+                    if (goBack) {
+                        // As we arrive on "question" screen, simulate going to the results screen or leaderboard.
+                        self._setShowInputs(true);
+                        self._setShowAnswers(true);
+                        if (self.sessionShowLeaderboard && self.isScoredQuestion) {
+                            self.currentScreen = 'leaderboard';
+                            self.leaderBoard.showLeaderboard(false, self.isScoredQuestion);
+                        } else {
+                            self.currentScreen = 'results';
+                            self._refreshResults();
+                        }
+                    } else {
+                        self._startTimer();
+                    }
+                    self.$el.fadeIn(self.fadeInOutTime);
+                } else if (self.sessionShowLeaderboard) {
+                    // Display last screen if leaderboard activated
+                    self.isLastQuestion = true;
+                    self._setupLeaderboard().then(function () {
+                        self.$('.o_survey_session_leaderboard_title').text(_t('Final Leaderboard'));
+                        self.$('.o_survey_session_navigation_next').addClass('d-none');
+                        self.$('.o_survey_leaderboard_buttons').removeClass('d-none');
+                        self.leaderBoard.showLeaderboard(false, false);
+                    });
+                } else {
+                    self.$('.o_survey_session_close').click();
+                }
+
+                if (nextQuestion.background_image_url) {
+                    $('div#wrapwrap').css("background-image", "url(" + nextQuestion.background_image_url + ")");
+                    $('div#wrapwrap').css("box-shadow", "inset 0 0 0 10000px rgba(255,255,255,0.7)");
+                }
+            });
         });
     },
 
@@ -456,6 +474,20 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
             // on failure, stop refreshing
             clearInterval(self.attendeesRefreshInterval);
         });
+    },
+
+    _refreshBackground: function (imageUrl) {
+        var resolveRefresh;
+        var refreshPromise = new Promise(function (resolve, reject) {resolveRefresh = resolve;});
+
+        // Wait until new background is loaded before changing the background
+        var background = new Image();
+        background.onload = function() {
+            resolveRefresh(imageUrl);
+        };
+        background.src = imageUrl;
+
+        return refreshPromise;
     },
 
     /**

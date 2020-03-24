@@ -193,6 +193,8 @@ class Survey(http.Controller):
             values['token'] = token
         if survey.scoring_type != 'no_scoring' and survey.certification:
             values['graph_data'] = json.dumps(answer._prepare_statistics()[answer])
+        if survey.background_image:
+            values['background_image_url'] = survey.background_image_url
         return values
 
     # ------------------------------------------------------------
@@ -236,30 +238,29 @@ class Survey(http.Controller):
             :param post:
                 - previous_page_id : come from the breadcrumb or the back button and force the next questions to load
                                      to be the previous ones. """
+        triggering_answer_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
+
         data = {
             'is_html_empty': is_html_empty,
             'survey': survey_sudo,
             'answer': answer_sudo,
+            'questions_info': survey_sudo._get_questions_information(),
             'breadcrumb_pages': [{
                 'id': page.id,
                 'title': page.title,
             } for page in survey_sudo.page_ids],
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
-            'format_date': lambda date: format_date(request.env, date)
+            'format_date': lambda date: format_date(request.env, date),
+            'triggering_answer_by_question': {
+                question.id: triggering_answer_by_question[question].id for question in triggering_answer_by_question.keys()
+                if triggering_answer_by_question[question]
+            },
+            'triggered_questions_by_answer': {
+                answer.id: triggered_questions_by_answer[answer].ids
+                for answer in triggered_questions_by_answer.keys()
+            },
+            'selected_answers': selected_answers.ids
         }
-        if survey_sudo.questions_layout != 'page_per_question':
-            triggering_answer_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
-            data.update({
-                'triggering_answer_by_question': {
-                    question.id: triggering_answer_by_question[question].id for question in triggering_answer_by_question.keys()
-                    if triggering_answer_by_question[question]
-                },
-                'triggered_questions_by_answer': {
-                    answer.id: triggered_questions_by_answer[answer].ids
-                    for answer in triggered_questions_by_answer.keys()
-                },
-                'selected_answers': selected_answers.ids
-            })
 
         if not answer_sudo.is_session_answer and survey_sudo.is_time_limited and answer_sudo.start_datetime:
             data.update({
@@ -279,6 +280,7 @@ class Survey(http.Controller):
                 'previous_page_id': new_previous_id,
                 'has_answered': answer_sudo.user_input_line_ids.filtered(lambda line: line.question_id.id == new_previous_id),
                 'can_go_back': survey_sudo._can_go_back(answer_sudo, page_or_question),
+                'background_image_url': page_or_question.background_image_url
             })
             return data
 
@@ -305,6 +307,7 @@ class Survey(http.Controller):
                 page_or_question_key: next_page_or_question,
                 'has_answered': answer_sudo.user_input_line_ids.filtered(lambda line: line.question_id == next_page_or_question),
                 'can_go_back': survey_sudo._can_go_back(answer_sudo, next_page_or_question),
+                'background_image_url': next_page_or_question.background_image_url
             })
             if survey_sudo.questions_layout != 'one_page':
                 data.update({
@@ -313,6 +316,9 @@ class Survey(http.Controller):
         elif answer_sudo.state == 'done' or answer_sudo.survey_time_limit_reached:
             # Display success message
             return self._prepare_survey_finished_values(survey_sudo, answer_sudo)
+        elif survey_sudo.background_image:
+            # If survey start, add background if any
+            data['background_image_url'] = survey_sudo.background_image_url
 
         return data
 
@@ -363,16 +369,22 @@ class Survey(http.Controller):
         return request.render('survey.survey_page_fill',
             self._prepare_survey_data(access_data['survey_sudo'], answer_sudo, **post))
 
-    @http.route('/survey/get_background_image/<string:survey_token>/<string:answer_token>', type='http', auth="public", website=True, sitemap=False)
-    def survey_get_background(self, survey_token, answer_token):
-        access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
-        if access_data['validity_code'] is not True:
-            return werkzeug.exceptions.Forbidden()
+    @http.route([
+        '/survey/get_background_image/<string:survey_token>',
+        '/survey/get_background_image/<string:survey_token>/<model("survey.question"):question>'
+    ], type='http', auth="public", website=True, sitemap=False)
+    def survey_get_background(self, survey_token, question=None):
+        survey_sudo, dummy = self._fetch_from_access_token(survey_token, False)
 
-        survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
+        if question and question not in survey_sudo.question_and_page_ids:
+            # trying to access a question that is not in this survey
+            raise werkzeug.exceptions.Forbidden()
+
+        target_model = 'survey.question' if question else 'survey.survey'
+        target_id = question.id if question else survey_sudo.id
 
         status, headers, image_base64 = request.env['ir.http'].sudo().binary_content(
-            model='survey.survey', id=survey_sudo.id, field='background_image',
+            model=target_model, id=target_id, field='background_image',
             default_mimetype='image/png')
 
         return request.env['ir.http']._content_image_get_response(status, headers, image_base64)

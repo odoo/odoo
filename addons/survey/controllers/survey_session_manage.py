@@ -64,7 +64,8 @@ class UserInputSession(http.Controller):
                     'answer': request.env['survey.user_input'],
                 })
             return request.render('survey.user_input_session_open', {
-                'survey': survey
+                'survey': survey,
+                'background_image_url': survey.background_image_url
             })
         else:
             template_values = self._prepare_manage_session_values(survey)
@@ -93,7 +94,7 @@ class UserInputSession(http.Controller):
 
         if not survey or not survey.session_state:
             # no open session
-            return ''
+            return {}
 
         if survey.session_state == 'ready':
             survey._session_open()
@@ -114,9 +115,12 @@ class UserInputSession(http.Controller):
 
             template_values = self._prepare_manage_session_values(survey)
             template_values['is_rpc_call'] = True
-            return request.env.ref('survey.user_input_session_manage_content')._render(template_values)
+            return {
+                'background_image_url': next_question.background_image_url,
+                'question_html': request.env.ref('survey.user_input_session_manage_content')._render(template_values)
+            }
         else:
-            return False
+            return {}
 
     @http.route('/survey/session/results/<string:survey_token>', type='json', auth='user', website=True)
     def survey_session_results(self, survey_token, **kwargs):
@@ -248,4 +252,5 @@ class UserInputSession(http.Controller):
             'answers_validity': json.dumps(answers_validity),
             'answer_count': survey.session_question_answer_count,
             'attendees_count': survey.session_answer_count,
+            'background_image_url': survey.session_question_id.background_image_url
         }

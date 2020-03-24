@@ -42,6 +42,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 utils.set_cookie('survey_' + self.options.surveyToken, self.options.answerToken, 60*60*24);
             }
 
+            // Find current SectionID - If we are not on End Session Page
+            if (self.options.questionsInfo) {
+                var currentQuestion = self.options.questionsInfo[self._getCurrentQuestionId()];
+                self.options.currentBackgroundImageUrl = currentQuestion['background_image_url'];
+            }
             // Init fields
             if (!self.options.isStartScreen && !self.readonly) {
                 self._initTimer();
@@ -179,10 +184,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 }
 
                 // Conditional display
-                if (this.options.questionsLayout !== 'page_per_question') {
-                    var treatedQuestionIds = [];  // Needed to avoid show (1st 'if') then immediately hide (2nd 'if') question during conditional propagation cascade
-                    if (Object.keys(this.options.triggeredQuestionsByAnswer).includes(previouslySelectedAnswer.find('input').val())) {
-                        // Hide and clear depending question
+                var treatedQuestionIds = [];  // Needed to avoid show (1st 'if') then immediately hide (2nd 'if') question during conditional propagation cascade
+                if (Object.keys(this.options.triggeredQuestionsByAnswer).includes(previouslySelectedAnswer.find('input').val())) {
+                    // Hide and clear depending question
+                    if (this.options.questionsLayout !== 'page_per_question') {
                         this.options.triggeredQuestionsByAnswer[previouslySelectedAnswer.find('input').val()].forEach(function (questionId) {
                             var dependingQuestion = $('.js_question-wrapper#' + questionId);
 
@@ -191,20 +196,22 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
                             treatedQuestionIds.push(questionId);
                         });
-                        // Remove answer from selected answer
-                        self.selectedAnswers.splice(self.selectedAnswers.indexOf(parseInt($target.val())), 1);
                     }
-                    if (Object.keys(this.options.triggeredQuestionsByAnswer).includes($target.val())) {
-                        // Display depending question
+                    // Remove answer from selected answer
+                    self.selectedAnswers.splice(self.selectedAnswers.indexOf(parseInt($target.val())), 1);
+                }
+                if (Object.keys(this.options.triggeredQuestionsByAnswer).includes($target.val())) {
+                    // Display depending question
+                    if (this.options.questionsLayout !== 'page_per_question') {
                         this.options.triggeredQuestionsByAnswer[$target.val()].forEach(function (questionId) {
                             if (!treatedQuestionIds.includes(questionId)) {
                                 var dependingQuestion = $('.js_question-wrapper#' + questionId);
                                 dependingQuestion.removeClass('d-none');
                             }
                         });
-                        // Add answer to selected answer
-                        this.selectedAnswers.push(parseInt($target.val()));
                     }
+                    // Add answer to selected answer
+                    this.selectedAnswers.push(parseInt($target.val()));
                 }
             }
             // Auto Submit Form
@@ -222,8 +229,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 $label.toggleClass('o_survey_selected', !$label.hasClass('o_survey_selected'));
 
                 // Conditional display
+                var isInputSelected = $label.hasClass('o_survey_selected');
                 if (this.options.questionsLayout !== 'page_per_question' && Object.keys(this.options.triggeredQuestionsByAnswer).includes($target.val())) {
-                    var isInputSelected = $label.hasClass('o_survey_selected');
                     // Hide and clear or display depending question
                     this.options.triggeredQuestionsByAnswer[$target.val()].forEach(function (questionId) {
                         var dependingQuestion = $('.js_question-wrapper#' + questionId);
@@ -232,12 +239,12 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                             self._clearQuestionInputs(dependingQuestion);
                         }
                     });
-                    // Add/remove answer to/from selected answer
-                    if (!isInputSelected) {
-                        self.selectedAnswers.splice(self.selectedAnswers.indexOf(parseInt($target.val())), 1);
-                    } else {
-                        self.selectedAnswers.push(parseInt($target.val()));
-                    }
+                }
+                // Add/remove answer to/from selected answer
+                if (!isInputSelected) {
+                    self.selectedAnswers.splice(self.selectedAnswers.indexOf(parseInt($target.val())), 1);
+                } else {
+                    self.selectedAnswers.push(parseInt($target.val()));
                 }
             }
         }
@@ -341,7 +348,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                     route: `/survey/next_question/${this.options.surveyToken}/${this.options.answerToken}`,
                 }), {
                     initTimer: true,
-                    isFinish: nextPageEvent.type === 'end_session'
+                    isFinish: nextPageEvent.type === 'end_session',
+                    isNotification: true,
                 }
             );
         }
@@ -430,8 +438,24 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         self.$(selectorsToFadeout.join(',')).fadeOut(this.fadeInOutDelay, function () {
             resolveFadeOut();
         });
+        // Background management - Will the background change between current and next/previous questions ?
+        var refreshBackgroundPromise = Promise.resolve(false);
+        if (self.options.questionsLayout !== 'one_page' && (!self.options.sessionInProgress || options.isNotification)) {
+            var targetBackgroundImageUrl = this._getTargetBackgroundImageUrl(options.previousPageId)
+            if (this.options.currentBackgroundImageUrl === undefined || targetBackgroundImageUrl != this.options.currentBackgroundImageUrl) {
+                this.options.currentBackgroundImageUrl = targetBackgroundImageUrl;
+                if (targetBackgroundImageUrl) {
+                    refreshBackgroundPromise = self._refreshBackground(targetBackgroundImageUrl)
+                }
+                // If we make a transition, hide previous background by setting 'background overlay' opacity = 1
+                $('div#wrapwrap').css("box-shadow", "inset 0 0 0 10000px rgba(255,255,255,1)");
+            }
+        }
 
-        Promise.all([fadeOutPromise, nextScreenPromise]).then(function (results) {
+        Promise.all([fadeOutPromise, nextScreenPromise, refreshBackgroundPromise]).then(function (results) {
+            if (results[2]) { // If we need to refresh the background
+                $('div#wrapwrap').css("background-image", "url(" + results[2] + ")");
+            }
             return self._onNextScreenDone(results[1], options);
         });
     },
@@ -500,7 +524,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 // prevent enter submit if we're on a page description (there is nothing to submit)
                 this.preventEnterSubmit = true;
             }
-
+            // Background management - reset background overlay opacity to 0.7 to discover next background.
+            if (this.options.currentBackgroundImageUrl) {
+                $('div#wrapwrap').css("box-shadow", "inset 0 0 0 10000px rgba(255,255,255,0.7)");
+            }
             this.$('.o_survey_form_content').fadeIn(this.fadeInOutDelay);
             $("html, body").animate({ scrollTop: 0 }, this.fadeInOutDelay);
             self._focusOnFirstInput();
@@ -979,6 +1006,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         }
     },
 
+    // OTHER TOOLS
+    // -------------------------------------------------------------------------
+
    /**
     * Will automatically focus on the first input to allow the user to complete directly the survey,
     * without having to manually get the focus (only if the input has the right type - can write something inside -)
@@ -1014,6 +1044,87 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             $errorModal.modal('show');
         }
         return false;
+    },
+
+   /**
+    * Load the target section background and render it when loaded.
+    *
+    * @private
+    */
+    _refreshBackground: function (imageUrl) {
+        var resolveRefresh;
+        var refreshPromise = new Promise(function (resolve, reject) {resolveRefresh = resolve;});
+
+        // Wait until new background is loaded before changing the background
+        var background = new Image();
+        background.onload = function() {
+            resolveRefresh(imageUrl);
+        };
+        background.src = imageUrl;
+
+        return refreshPromise;
+    },
+
+    /**
+    * This method finds the id of the next question (or section) to display,
+    * depending on conditional question configuration and what the user has already answered,
+    * but also depending on Free Text section configuration.
+    *
+    * @private
+    */
+    _getNextQuestionId: function () {
+        var currentQuestion = this.options.questionsInfo[this._getCurrentQuestionId()];
+        var nextQuestionId = currentQuestion['next_question_id'];
+        var nextQuestionInfo = this.options.questionsInfo[nextQuestionId];
+        var inactiveQuestionIds = this._getInactiveConditionalQuestionIds();
+
+        var found = nextQuestionId === 0;
+        while (!found) {
+            var isPagePerSection = this.options.questionsLayout === 'page_per_section';
+            var isPagePerQuestion = this.options.questionsLayout === 'page_per_question';
+            var isSection = nextQuestionInfo['is_section'];
+            var isSectionActive = isSection ? this._isSectionActive(nextQuestionInfo, inactiveQuestionIds) : false
+
+            // If page per section, skip next question until an active section is found (that contains active questions or has description)
+            // if page per question, skip next question if it's a section, unless it has description and no sub-questions (next question must be active)
+            if ((isPagePerSection && isSection && isSectionActive) ||
+                (isPagePerQuestion && !inactiveQuestionIds.includes(nextQuestionId) && (!isSection || isSectionActive))) {
+                found = true;
+            } else {
+                nextQuestionId = nextQuestionInfo['next_question_id'];
+                nextQuestionInfo = this.options.questionsInfo[nextQuestionId];
+                found = nextQuestionId === 0;  // if no next question
+            }
+        }
+        return nextQuestionId;
+    },
+
+    /**
+    * This method returns the background of the next section to display.
+    *   - If survey has background: returns Background Url (section or survey background)
+    *   - else: returns False -> The background will be removed
+    *
+    * @private
+    */
+    _getTargetBackgroundImageUrl: function (previousPageId) {
+        // Get next question to display
+        if (previousPageId) {
+            var targetQuestion = this.options.questionsInfo[previousPageId];
+        } else {
+            var targetQuestion = this.options.questionsInfo[this._getNextQuestionId()];
+        }
+
+        return targetQuestion['background_image_url'];
+    },
+
+    _getCurrentQuestionId: function () {
+        var currentQuestionId = 0;
+        if (this.options.questionsLayout === 'page_per_question') {
+            var currentQuestionId = this.$('input[name=question_id]').val();
+        } else if (this.options.questionsLayout === 'page_per_section') {
+            var currentQuestionId = this.$('input[name=page_id]').val();
+        }
+        return currentQuestionId ? currentQuestionId : 0
     },
 
     // CONDITIONAL QUESTIONS MANAGEMENT TOOLS
@@ -1055,6 +1166,28 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             });
         }
         return inactiveQuestionIds;
+    },
+
+    /**
+    * This method checks if the section is active.
+    * A section is active if
+    *     - section has no sub-questions and has a description
+    *  OR - one of the section's sub-questions is active
+    * Useful to know if this section should be displayed to client or skipped.
+    *
+    * @private
+    */
+    _isSectionActive: function (sectionInfo, inactiveQuestionIds) {
+        var sectionQuestions = sectionInfo.question_ids;
+        if (sectionQuestions.length === 0 && sectionInfo.has_description) {
+            return true;
+        }
+        for (var i = 0; i < sectionQuestions.length; i++) {
+            if (!inactiveQuestionIds.includes(sectionQuestions[i])) {
+                return true;
+            }
+        };
+        return false;
     },
 
     // ERRORS TOOLS
