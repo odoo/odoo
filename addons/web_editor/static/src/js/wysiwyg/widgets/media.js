@@ -118,7 +118,6 @@ var SearchableMediaWidget = MediaWidget.extend({
 var FileWidget = SearchableMediaWidget.extend({
     events: _.extend({}, SearchableMediaWidget.prototype.events || {}, {
         'click .o_upload_media_button': '_onUploadButtonClick',
-        'click .o_we_quick_upload': '_onQuickUploadClick',
         'change .o_file_input': '_onFileInputChange',
         'click .o_upload_media_url_button': '_onUploadURLButtonClick',
         'input .o_we_url_input': '_onURLInputChange',
@@ -150,7 +149,6 @@ var FileWidget = SearchableMediaWidget.extend({
         this.numberOfAttachmentsToDisplay = this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY;
 
         this.options = _.extend({
-            showQuickUpload: config.isDebug(),
             mediaWidth: media && media.clientWidth,
         }, options || {});
 
@@ -192,7 +190,7 @@ var FileWidget = SearchableMediaWidget.extend({
             await this._renderThumbnails();
             if (o.url) {
                 self._selectAttachement(_.find(self.attachments, function (attachment) {
-                    return attachment.image_src === o.url;
+                    return o.url === attachment.image_src;
                 }) || o);
             }
             return def;
@@ -231,7 +229,7 @@ var FileWidget = SearchableMediaWidget.extend({
             args: [],
             kwargs: {
                 domain: this._getAttachmentsDomain(this.needle),
-                fields: ['name', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height'],
+                fields: ['name', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height', 'original_id'],
                 order: [{name: 'id', asc: false}],
                 context: this.options.context,
                 // Try to fetch first record of next page just to know whether there is a next page.
@@ -328,7 +326,8 @@ var FileWidget = SearchableMediaWidget.extend({
         var self = this;
         this.$('.o_existing_attachment_cell.o_we_attachment_selected').removeClass("o_we_attachment_selected");
         _.each(this.selectedAttachments, function (attachment) {
-            self.$('.o_existing_attachment_cell[data-id=' + attachment.id + ']').addClass("o_we_attachment_selected");
+            self.$('.o_existing_attachment_cell[data-id=' + attachment.id + ']')
+                .addClass("o_we_attachment_selected").css('display', '');
         });
     },
     /**
@@ -336,6 +335,7 @@ var FileWidget = SearchableMediaWidget.extend({
      * @param {object} attachment
      */
     _handleNewAttachment: function (attachment) {
+        this.attachments = this.attachments.filter(att => att.id !== attachment.id);
         this.attachments.unshift(attachment);
         this._renderThumbnails();
         this._selectAttachement(attachment);
@@ -368,7 +368,7 @@ var FileWidget = SearchableMediaWidget.extend({
      * @returns {Promise} resolved with the updated attachment object when the
      *  optimize dialog is saved. Rejected if the dialog is otherwise closed.
      */
-    _openImageOptimizeDialog: function (attachment, isExisting) {
+    _openImageOptimizeDialog: function (attachment, isExisting, $attachmentCell) {
         var self = this;
         var promise = new Promise(function (resolve, reject) {
             self.trigger_up('hide_parent_dialog_request');
@@ -390,7 +390,7 @@ var FileWidget = SearchableMediaWidget.extend({
                 }
             });
         });
-        var always = function () {
+        var always = () => {
             self.trigger_up('show_parent_dialog_request');
         };
         promise.then(always).guardedCatch(always);
@@ -431,21 +431,23 @@ var FileWidget = SearchableMediaWidget.extend({
      * @private
      * @returns {Promise}
      */
-    _save: function () {
-        var self = this;
-
+    _save: async function () {
         if (this.options.multiImages) {
-            return Promise.resolve(this.selectedAttachments);
+            return this.selectedAttachments;
         }
 
         var img = this.selectedAttachments[0];
         if (!img || !img.id) {
-            return Promise.resolve(this.media);
+            return this.media;
         }
 
-        var prom;
+        // Auto optimize unoptimized images.
+        if (['image/jpeg', 'image/jpe', 'image/jpg', 'image/png'].includes(img.mimetype) && img.type === 'binary' && !img.original_id) {
+            img = await this._optimizeAttachment(img);
+        }
+
         if (!img.public && !img.access_token) {
-            prom = this._rpc({
+            await this._rpc({
                 model: 'ir.attachment',
                 method: 'generate_access_token',
                 args: [[img.id]]
@@ -454,52 +456,67 @@ var FileWidget = SearchableMediaWidget.extend({
             });
         }
 
-        return Promise.resolve(prom).then(function () {
-            if (img.image_src) {
-                var src = img.image_src;
-                if (!img.public && img.access_token) {
-                    src += _.str.sprintf('?access_token=%s', img.access_token);
-                }
-                if (!self.$media.is('img')) {
-
-                    // Note: by default the images receive the bootstrap opt-in
-                    // img-fluid class. We cannot make them all responsive
-                    // by design because of libraries and client databases img.
-                    self.$media = $('<img/>', {class: 'img-fluid o_we_custom_image'});
-                    self.media = self.$media[0];
-                }
-                self.$media.attr('src', src);
-            } else {
-                if (!self.$media.is('a')) {
-                    $('.note-control-selection').hide();
-                    self.$media = $('<a/>');
-                    self.media = self.$media[0];
-                }
-                var href = '/web/content/' + img.id + '?';
-                if (!img.public && img.access_token) {
-                    href += _.str.sprintf('access_token=%s&', img.access_token);
-                }
-                href += 'unique=' + img.checksum + '&download=true';
-                self.$media.attr('href', href);
-                self.$media.addClass('o_image').attr('title', img.name).attr('data-mimetype', img.mimetype);
+        if (img.image_src) {
+            var src = img.image_src;
+            if (!img.public && img.access_token) {
+                src += _.str.sprintf('?access_token=%s', img.access_token);
             }
+            if (!this.$media.is('img')) {
 
-            self.$media.attr('alt', img.alt);
-            var style = self.style;
-            if (style) {
-                self.$media.css(style);
+                // Note: by default the images receive the bootstrap opt-in
+                // img-fluid class. We cannot make them all responsive
+                // by design because of libraries and client databases img.
+                this.$media = $('<img/>', {class: 'img-fluid o_we_custom_image'});
+                this.media = this.$media[0];
             }
+            this.$media.attr('src', src);
+        } else {
+            if (!this.$media.is('a')) {
+                $('.note-control-selection').hide();
+                this.$media = $('<a/>');
+                this.media = this.$media[0];
+            }
+            var href = '/web/content/' + img.id + '?';
+            if (!img.public && img.access_token) {
+                href += _.str.sprintf('access_token=%s&', img.access_token);
+            }
+            href += 'unique=' + img.checksum + '&download=true';
+            this.$media.attr('href', href);
+            this.$media.addClass('o_image').attr('title', img.name).attr('data-mimetype', img.mimetype);
+        }
 
-            // Remove crop related attributes
-            if (self.$media.attr('data-aspect-ratio')) {
-                var attrs = ['aspect-ratio', 'x', 'y', 'width', 'height', 'rotate', 'scale-x', 'scale-y', 'crop:originalSrc'];
-                self.$media.removeClass('o_cropped_img_to_save');
-                _.each(attrs, function (attr) {
-                    self.$media.removeData(attr);
-                    self.$media.removeAttr('data-' + attr);
-                });
-            }
-            return self.media;
+        this.$media.attr('alt', img.alt);
+        var style = this.style;
+        if (style) {
+            this.$media.css(style);
+        }
+
+        // Remove crop related attributes
+        if (this.$media.attr('data-aspect-ratio')) {
+            var attrs = ['aspect-ratio', 'x', 'y', 'width', 'height', 'rotate', 'scale-x', 'scale-y', 'crop:originalSrc'];
+            this.$media.removeClass('o_cropped_img_to_save');
+            attrs.forEach(attr => {
+                this.$media.removeData(attr);
+                this.$media.removeAttr('data-' + attr);
+            });
+        }
+        return this.media;
+    },
+    /**
+     * Creates and returns an optimized copy of an attachment.
+     *
+     * @private
+     * @param {object} attachment
+     */
+    _optimizeAttachment: function (attachment) {
+        return this._rpc({
+            route: `/web_editor/attachment/${attachment.id}/update`,
+            params: {
+                copy: true,
+                name: attachment.name,
+                quality: attachment.mimetype === 'image/png' ? 0 : 80,
+                width: this._computeOptimizedWidth(),
+            },
         });
     },
     /**
@@ -562,13 +579,12 @@ var FileWidget = SearchableMediaWidget.extend({
      * @private
      */
     _onExistingOptimizeClick: function (ev) {
-        var self = this;
         var $a = $(ev.currentTarget).closest('.o_existing_attachment_cell');
         var id = parseInt($a.data('id'), 10);
         var attachment = _.findWhere(this.attachments, {id: id});
         ev.stopPropagation();
-        return this._openImageOptimizeDialog(attachment, true).then(function (newAttachment) {
-            self._handleNewAttachment(newAttachment);
+        return this._openImageOptimizeDialog(attachment, true, $a).then(newAttachment => {
+            this._handleNewAttachment(newAttachment);
         });
     },
     /**
@@ -594,7 +610,6 @@ var FileWidget = SearchableMediaWidget.extend({
     _addData: function () {
         var self = this;
         var uploadMutex = new concurrency.Mutex();
-        var optimizeMutex = new concurrency.Mutex();
 
         // Upload the smallest file first to block the user the least possible.
         var files = _.sortBy(this.$fileInput[0].files, 'size');
@@ -604,53 +619,29 @@ var FileWidget = SearchableMediaWidget.extend({
             // limited by bandwidth.
             uploadMutex.exec(function () {
                 return utils.getDataURLFromFile(file).then(function (result) {
-                    var params = {
-                        'name': file.name,
-                        'data': result.split(',')[1],
-                        'res_id': self.options.res_id,
-                        'res_model': self.options.res_model,
-                    };
-                    if (self.quickUpload) {
-                        params['width'] = self._computeOptimizedWidth();
-                        params['quality'] = 80;
-                    } else {
-                        params['width'] = 0;
-                        params['quality'] = 0;
-                    }
                     return self._rpc({
                         route: '/web_editor/attachment/add_data',
-                        params: params,
+                        params: {
+                            'name': file.name,
+                            'data': result.split(',')[1],
+                            'res_id': self.options.res_id,
+                            'res_model': self.options.res_model,
+                            'width': 0,
+                            'quality': 0,
+                        },
                     }).then(function (attachment) {
-                        if (attachment.image_src && !self.quickUpload) {
-                            optimizeMutex.exec(function () {
-                                return self._openImageOptimizeDialog(attachment).then(function (updatedAttachment) {
-                                    self._handleNewAttachment(updatedAttachment);
-                                });
-                            });
-                        } else {
-                            self._handleNewAttachment(attachment);
-                        }
+                        self._handleNewAttachment(attachment);
                     });
                 });
             });
         });
 
         return uploadMutex.getUnlockedDef().then(function () {
-            return optimizeMutex.getUnlockedDef().then(function () {
-                self.quickUpload = false;
-                if (!self.options.multiImages && !self.noSave) {
-                    self.trigger_up('save_request');
-                }
-                self.noSave = false;
-            });
+            if (!self.options.multiImages && !self.noSave) {
+                self.trigger_up('save_request');
+            }
+            self.noSave = false;
         });
-    },
-    /**
-     * @private
-     */
-    _onQuickUploadClick: function () {
-        this.quickUpload = true;
-        this.$uploadButton.trigger('click');
     },
     /**
      * @private
@@ -671,6 +662,7 @@ var FileWidget = SearchableMediaWidget.extend({
                 }).then(function (prevented) {
                     if (_.isEmpty(prevented)) {
                         self.attachments = _.without(self.attachments, attachment);
+                        self.attachments.filter(at => at.original_id[0] === attachment.id).forEach(at => delete at.original_id);
                         if (!self.attachments.length) {
                             self._renderThumbnails(); //render the message and image if empty
                         } else {
@@ -760,6 +752,9 @@ var FileWidget = SearchableMediaWidget.extend({
 var ImageWidget = FileWidget.extend({
     template: 'wysiwyg.widgets.image',
     existingAttachmentsTemplate: 'wysiwyg.widgets.image.existing.attachments',
+    events: Object.assign({}, FileWidget.prototype.events, {
+        'change input.o_we_show_optimized': '_onShowOptimizedChange',
+    }),
     MIN_ROW_HEIGHT: 128,
 
     /**
@@ -820,12 +815,30 @@ var ImageWidget = FileWidget.extend({
                 toReplace.replaceWith(el);
             }
         });
+        this._toggleOptimized(this.$('input.o_we_show_optimized')[0].checked);
         // Placeholders have a 3:2 aspect ratio like most photos.
         const placeholderWidth = 3 / 2 * this.MIN_ROW_HEIGHT;
         this.$('.o_we_attachment_placeholder').css({
             flexGrow: placeholderWidth,
             flexBasis: placeholderWidth,
         });
+    },
+    /**
+     * @override
+     */
+    _renderExisting: function (attachments) {
+        return QWeb.render(this.existingAttachmentsTemplate, {
+            attachments: attachments,
+            widget: this,
+        });
+    },
+    /**
+     * @private
+     *
+     * @param {boolean} value whether to toggle optimized attachments on or off
+     */
+    _toggleOptimized: function (value) {
+        this.$('.o_we_attachment_optimized').each((i, cell) => cell.style.setProperty('display', value ? null : 'none', 'important'));
     },
 
     //--------------------------------------------------------------------------
@@ -848,6 +861,12 @@ var ImageWidget = FileWidget.extend({
         cell.classList.remove('d-none');
         cell.classList.add('d-flex');
         cell.dataset.loaded = 'true';
+    },
+    /**
+     * @override
+     */
+    _onShowOptimizedChange: function (ev) {
+        this._toggleOptimized(ev.target.checked);
     },
 });
 
