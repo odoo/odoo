@@ -51,6 +51,9 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      *        the url to load when manually running the tour
      * @param {boolean} [options.rainbowMan=true]
      *        whether or not the rainbowman must be shown at the end of the tour
+     * @param {boolean} [options.sequence=1000]
+     *        priority sequence of the tour (lowest is first, tours with the same
+     *        sequence will be executed in a non deterministic order).
      * @param {Promise} [options.wait_for]
      *        indicates when the tour can be started
      * @param {Object[]} steps - steps' descriptions, each step being an object
@@ -71,6 +74,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             steps: steps,
             url: options.url,
             rainbowMan: options.rainbowMan === undefined ? true : !!options.rainbowMan,
+            sequence: options.sequence || 1000,
             test: options.test,
             wait_for: options.wait_for || Promise.resolve(),
         };
@@ -113,7 +117,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     _register: function (do_update, tour, name) {
         if (tour.ready) return Promise.resolve();
 
-        var tour_is_consumed = _.contains(this.consumed_tours, name);
+        const tour_is_consumed = this._isTourConsumed(name);
 
         return tour.wait_for.then((function () {
             tour.current_step = parseInt(local_storage.getItem(get_step_key(name))) || 0;
@@ -198,7 +202,10 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 self._check_for_tooltip(self.active_tooltips[tour_name], tour_name);
             });
         } else {
-            for (var tourName in this.active_tooltips) {
+            const sortedTooltips = Object.keys(this.active_tooltips).sort(
+                (a, b) => this.tours[a].sequence - this.tours[b].sequence
+            );
+            for (const tourName of sortedTooltips) {
                 var tip = this.active_tooltips[tourName];
                 var activated = this._check_for_tooltip(tip, tourName);
                 if (activated) {
@@ -341,6 +348,14 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             }
         }
         this.active_tooltips[tour_name] = tour.steps[tour.current_step];
+    },
+    /**
+     * @private
+     * @param {string} tourName
+     * @returns {boolean}
+     */
+    _isTourConsumed(tourName) {
+        return this.consumed_tours.includes(tourName);
     },
     _consume_tour: function (tour_name, error) {
         delete this.active_tooltips[tour_name];
