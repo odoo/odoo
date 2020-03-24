@@ -8,7 +8,10 @@
             <t t-set="no_livechat" t-value="True"/>
         </xpath>
         <xpath expr="//div[@id='wrapwrap']" position="attributes">
-            <attribute name="t-att-style" add="(('height: 100%; overflow: auto; background: url(' + '/survey/get_background_image/%s/%s' % (survey.access_token, answer.access_token) + ') no-repeat fixed center; box-shadow: inset 0 0 0 10000px rgba(255,255,255,.7); background-size: cover;') if survey and survey.background_image and answer else 'height: 100%; overflow: auto;')"/>
+            <attribute name="t-att-style"
+                       add="(('background-image: url(' + background_image_url + ');')
+                             if background_image_url else '')"/>
+            <attribute name="t-att-class" add="'o_survey_background'"/>
         </xpath>
         <xpath expr="//head/t[@t-call-assets][last()]" position="after">
             <t t-call-assets="survey.survey_assets" lazy_load="True"/>
@@ -96,7 +99,9 @@
                 t-att-data-is-page-description="bool(question and question.is_page and not is_html_empty(question.description))"
                 t-att-data-questions-layout="survey.questions_layout"
                 t-att-data-triggered-questions-by-answer="json.dumps(triggered_questions_by_answer)"
-                t-att-data-selected-answers="json.dumps(selected_answers)">
+                t-att-data-selected-answers="json.dumps(selected_answers)"
+                t-att-data-background-image-url="background_image_url"
+                t-att-data-reload-background-on-next="reload_background_on_next">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" name="token" t-att-value="answer.access_token" />
             <div class="o_survey_error alert alert-danger d-none" role="alert">

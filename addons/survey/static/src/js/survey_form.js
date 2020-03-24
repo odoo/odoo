@@ -355,7 +355,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                     route: `/survey/next_question/${this.options.surveyToken}/${this.options.answerToken}`,
                 }), {
                     initTimer: true,
-                    isFinish: nextPageEvent.type === 'end_session'
+                    isFinish: nextPageEvent.type === 'end_session',
+                    goBack: nextPageEvent.go_back
                 }
             );
         }
@@ -384,6 +385,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         var params = {};
         if (options.previousPageId) {
             params.previous_page_id = options.previousPageId;
+            options['goBack'] = true;
         }
         var route = "/survey/submit";
 
@@ -444,9 +446,31 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         self.$(selectorsToFadeout.join(',')).fadeOut(this.fadeInOutDelay, function () {
             resolveFadeOut();
         });
+        // Background management - Will the background change between current and next/previous questions ?
+        var needBackgroundRefresh = self.options.reloadBackgroundOnNext || options.goBack;
+        if (needBackgroundRefresh) {
+            $('div.o_survey_background').addClass('o_survey_background_transition');
+        }
 
         Promise.all([fadeOutPromise, nextScreenPromise]).then(function (results) {
-            return self._onNextScreenDone(results[1], options);
+            var refreshBackgroundPromise = Promise.resolve(false);
+            var nextScreenResult = results[1];
+            var nextQuestionBackground = nextScreenResult.background_image_url;
+            self.options.reloadBackgroundOnNext = nextScreenResult.reload_background_on_next;
+
+            if (nextQuestionBackground && self.options.backgroundImageUrl != nextQuestionBackground) {
+                refreshBackgroundPromise = self._refreshBackground(nextQuestionBackground);
+                needBackgroundRefresh = true;  // at this stage, we are sure to refresh the background.
+            }
+
+            return Promise.resolve(refreshBackgroundPromise).then(function (backgroundResults) {
+                if (needBackgroundRefresh) { // If we need to refresh the background
+                    $('div.o_survey_background').css("background-image", "url(" + nextQuestionBackground + ")");
+                    self.options.backgroundImageUrl = nextQuestionBackground;
+                }
+                return self._onNextScreenDone(nextScreenResult, needBackgroundRefresh, options);
+            });
+
         });
     },
 
@@ -456,7 +480,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
      * @param {string} result the HTML result of the screen to display
      * @param {Object} options see '_submitForm' for details
      */
-   _onNextScreenDone: function (result, options) {
+   _onNextScreenDone: function (result, needBackgroundRefresh, options) {
         var self = this;
 
         if (!(options && options.isFinish)
@@ -514,7 +538,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 // prevent enter submit if we're on a page description (there is nothing to submit)
                 this.preventEnterSubmit = true;
             }
-
+            // Background management - reset background overlay opacity to 0.7 to discover next background.
+            if (needBackgroundRefresh) {
+                $('div.o_survey_background').removeClass('o_survey_background_transition');
+            }
             this.$('.o_survey_form_content').fadeIn(this.fadeInOutDelay);
             $("html, body").animate({ scrollTop: 0 }, this.fadeInOutDelay);
             self._focusOnFirstInput();
@@ -995,6 +1022,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         }
     },
 
+    // OTHER TOOLS
+    // -------------------------------------------------------------------------
+
    /**
     * Will automatically focus on the first input to allow the user to complete directly the survey,
     * without having to manually get the focus (only if the input has the right type - can write something inside -)
@@ -1030,6 +1060,28 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             $errorModal.modal('show');
         }
         return false;
+    },
+
+   /**
+    * Load the target section background and render it when loaded.
+    * This method is used to pre-load the image during the questions transitions (fade out) in order to be sure the
+    * image is fully loaded when setting it as background of the next question and finally display it (fade in)
+    *
+    * @param {string} imageUrl
+    * @private
+    */
+    _refreshBackground: async function (imageUrl) {
+        var resolveRefresh;
+        var refreshPromise = new Promise(function (resolve, reject) {resolveRefresh = resolve;});
+
+        // Wait until new background is loaded before changing the background
+        var background = new Image();
+        background.onload = function() {
+            resolveRefresh(imageUrl);
+        };
+        background.src = imageUrl;
+
+        return refreshPromise;
     },
 
     // CONDITIONAL QUESTIONS MANAGEMENT TOOLS

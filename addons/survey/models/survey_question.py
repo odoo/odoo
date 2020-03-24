@@ -57,6 +57,8 @@ class SurveyQuestion(models.Model):
     description = fields.Html(
         'Description', translate=True, sanitize=False,  # TDE TODO: sanitize but find a way to keep youtube iframe media stuff
         help="Use this field to add additional explanations about your question or to illustrate it with pictures or a video")
+    background_image = fields.Image("Background Image")
+    background_image_url = fields.Char("Background Url", compute="_compute_background_image_url")
     survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade')
     scoring_type = fields.Selection(related='survey_id.scoring_type', string='Scoring Type', readonly=True)
     sequence = fields.Integer('Sequence', default=10)
@@ -170,6 +172,18 @@ class SurveyQuestion(models.Model):
         ('scored_date_have_answers', "CHECK (is_scored_question != True OR question_type != 'date' OR answer_date is not null)",
             'All "Is a scored question = True" and "Question Type: Date" questions need an answer')
     ]
+
+    @api.depends('survey_id.access_token', 'background_image', 'page_id', 'survey_id.background_image_url')
+    def _compute_background_image_url(self):
+        base_bg_url = "/survey/get_background_image/%s/%s"
+        for question in self:
+            if question.background_image or question.page_id.background_image:
+                question.background_image_url = base_bg_url % (
+                    question.survey_id.access_token,
+                    question.page_id.id if question.page_id else question.id
+                )
+            else:
+                question.background_image_url = question.survey_id.background_image_url
 
     @api.depends('is_page')
     def _compute_question_type(self):

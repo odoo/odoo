@@ -41,6 +41,11 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
             // display props
             self.showBarChart = self.$el.data('showBarChart');
             self.showTextAnswers = self.$el.data('showTextAnswers');
+            // Question props
+            self.backgroundImageUrl = self.$el.data('backgroundImageUrl');
+            self.reloadBackgroundOnNext = self.$el.data('reloadBackgroundOnNext');
+            // Question transition
+            self.stopNextQuestion = false;
 
             var isRpcCall = self.$el.data('isRpcCall');
             if (!isRpcCall) {
@@ -115,14 +120,12 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
      */
     _onKeyDown: function (ev) {
         var keyCode = ev.keyCode;
-
         if (keyCode === 39 || keyCode === 32) {
             this._onNext(ev);
         } else if (keyCode === 37) {
             this._onBack(ev);
         }
     },
-
     /**
      * Handles the "next screen" behavior.
      * It happens when the host uses the keyboard key / button to go to the next screen.
@@ -304,6 +307,12 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
     _nextQuestion: function (goBack) {
         var self = this;
 
+        // stop calling multiple times "get next question" process until next question is fully loaded.
+        if (this.stopNextQuestion) {
+            return;
+        }
+        this.stopNextQuestion = true;
+
         this.isStartScreen = false;
         if (this.surveyTimerWidget) {
             this.surveyTimerWidget.destroy();
@@ -315,12 +324,10 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
             resolveFadeOut();
         });
 
-        var nextQuestionPromise = this._rpc({
-            route: _.str.sprintf('/survey/session/next_question/%s', self.surveyAccessToken),
-            params: {
-                'go_back': goBack,
-            }
-        });
+        var needBackgroundRefresh = this.reloadBackgroundOnNext || goBack;
+        if (needBackgroundRefresh) {
+            $('div.o_survey_background').addClass('o_survey_background_transition');
+        }
 
         // avoid refreshing results while transitioning
         if (this.resultsRefreshInterval) {
@@ -328,41 +335,68 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
             delete this.resultsRefreshInterval;
         }
 
-        Promise.all([fadeOutPromise, nextQuestionPromise]).then(async function (results) {
-            if (results[1]) {
-                var $renderedTemplate = $(results[1]);
-                self.$el.replaceWith($renderedTemplate);
-
-                // Ensure new question is fully loaded before force loading previous question screen.
-                await self.attachTo($renderedTemplate);
-                if (goBack) {
-                    // As we arrive on "question" screen, simulate going to the results screen or leaderboard.
-                    self._setShowInputs(true);
-                    self._setShowAnswers(true);
-                    if (self.sessionShowLeaderboard && self.isScoredQuestion) {
-                        self.currentScreen = 'leaderboard';
-                        self.leaderBoard.showLeaderboard(false, self.isScoredQuestion);
-                    } else {
-                        self.currentScreen = 'results';
-                        self._refreshResults();
-                    }
-                } else {
-                    self._startTimer();
-                }
-                self.$el.fadeIn(self.fadeInOutTime);
-            } else if (self.sessionShowLeaderboard) {
-                // Display last screen if leaderboard activated
-                self.isLastQuestion = true;
-                self._setupLeaderboard().then(function () {
-                    self.$('.o_survey_session_leaderboard_title').text(_t('Final Leaderboard'));
-                    self.$('.o_survey_session_navigation_next').addClass('d-none');
-                    self.$('.o_survey_leaderboard_buttons').removeClass('d-none');
-                    self.leaderBoard.showLeaderboard(false, false);
-                });
-            } else {
-                self.$('.o_survey_session_close').click();
+        this._rpc({
+            // Background management
+            route: _.str.sprintf('/survey/session/next_question/%s', self.surveyAccessToken),
+            params: {
+                'go_back': goBack,
             }
+        }).then(function (nextQuestion) {
+            var refreshBackgroundPromise = Promise.resolve(false);
+            // Do we need to fade out the background ? Needed here before switching questions to get fade in/out
+            // effect at the same time.
+            if (nextQuestion.background_image_url && nextQuestion.background_image_url != self.backgroundImageUrl) {
+                // force refresh background to be executed in _onNextQuestionDone. (avoid issues with quick navigation)
+                needBackgroundRefresh = true;
+                refreshBackgroundPromise = self._refreshBackground(nextQuestion.background_image_url);
+            }
+
+            Promise.all([fadeOutPromise, refreshBackgroundPromise]).then(function (results) {
+                return self._onNextQuestionDone(nextQuestion, goBack, needBackgroundRefresh);
+            });
         });
+    },
+
+    _onNextQuestionDone: async function (nextQuestion, goBack, needBackgroundRefresh) {
+        var self = this;
+        if (nextQuestion.question_html) {
+            var $renderedTemplate = $(nextQuestion.question_html);
+            this.$el.replaceWith($renderedTemplate);
+
+            // Ensure new question is fully loaded before force loading previous question screen.
+            await this.attachTo($renderedTemplate);
+            if (goBack) {
+                // As we arrive on "question" screen, simulate going to the results screen or leaderboard.
+                this._setShowInputs(true);
+                this._setShowAnswers(true);
+                if (this.sessionShowLeaderboard && this.isScoredQuestion) {
+                    this.currentScreen = 'leaderboard';
+                    this.leaderBoard.showLeaderboard(false, this.isScoredQuestion);
+                } else {
+                    this.currentScreen = 'results';
+                    this._refreshResults();
+                }
+            } else {
+                this._startTimer();
+            }
+            this.$el.fadeIn(this.fadeInOutTime);
+        } else if (this.sessionShowLeaderboard) {
+            // Display last screen if leaderboard activated
+            this.isLastQuestion = true;
+            this._setupLeaderboard().then(function () {
+                self.$('.o_survey_session_leaderboard_title').text(_t('Final Leaderboard'));
+                self.$('.o_survey_session_navigation_next').addClass('d-none');
+                self.$('.o_survey_leaderboard_buttons').removeClass('d-none');
+                self.leaderBoard.showLeaderboard(false, false);
+            });
+        } else {
+            this.$('.o_survey_session_close').click();
+        }
+
+        if (needBackgroundRefresh) {
+            $('div.o_survey_background').css("background-image", "url(" + nextQuestion.background_image_url + ")");
+            $('div.o_survey_background').removeClass('o_survey_background_transition');
+        }
     },
 
     /**
@@ -456,6 +490,28 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
             // on failure, stop refreshing
             clearInterval(self.attendeesRefreshInterval);
         });
+    },
+
+   /**
+    * Load the target section background and render it when loaded.
+    * This method is used to pre-load the image during the questions transitions (fade out) in order to be sure the
+    * image is fully loaded when setting it as background of the next question and finally display it (fade in)
+    *
+    * @param {string} imageUrl
+    * @private
+    */
+    _refreshBackground: function (imageUrl) {
+        var resolveRefresh;
+        var refreshPromise = new Promise(function (resolve, reject) {resolveRefresh = resolve;});
+
+        // Wait until new background is loaded before changing the background
+        var background = new Image();
+        background.onload = function() {
+            resolveRefresh(imageUrl);
+        };
+        background.src = imageUrl;
+
+        return refreshPromise;
     },
 
     /**

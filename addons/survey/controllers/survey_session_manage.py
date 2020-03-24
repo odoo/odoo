@@ -64,7 +64,8 @@ class UserInputSession(http.Controller):
                     'answer': request.env['survey.user_input'],
                 })
             return request.render('survey.user_input_session_open', {
-                'survey': survey
+                'survey': survey,
+                'background_image_url': survey.background_image_url
             })
         else:
             template_values = self._prepare_manage_session_values(survey)
@@ -93,7 +94,7 @@ class UserInputSession(http.Controller):
 
         if not survey or not survey.session_state:
             # no open session
-            return ''
+            return {}
 
         if survey.session_state == 'ready':
             survey._session_open()
@@ -109,14 +110,19 @@ class UserInputSession(http.Controller):
             })
             request.env['bus.bus'].sendone(survey.access_token, {
                 'question_start': now.timestamp(),
-                'type': 'next_question'
+                'type': 'next_question',
+                'go_back': go_back,
             })
 
             template_values = self._prepare_manage_session_values(survey)
             template_values['is_rpc_call'] = True
-            return request.env.ref('survey.user_input_session_manage_content')._render(template_values)
+
+            return {
+                'background_image_url': template_values['background_image_url'],
+                'question_html': request.env.ref('survey.user_input_session_manage_content')._render(template_values)
+            }
         else:
-            return False
+            return {}
 
     @http.route('/survey/session/results/<string:survey_token>', type='json', auth='user', website=True)
     def survey_session_results(self, survey_token, **kwargs):
@@ -224,7 +230,9 @@ class UserInputSession(http.Controller):
           (and not the id or anything else we can identify).
           In other words, we need to know if the answer at index 2 is correct or not.
         - answer_count
-          The number of answers to the current question. """
+          The number of answers to the current question.
+        - background image url and reload_background_on_next flag are needed for background image display management
+          when switching from one question (or section) to another. """
 
         question = survey.session_question_id
         answers_validity = []
@@ -241,6 +249,12 @@ class UserInputSession(http.Controller):
                 'value': line['value_%s' % question.question_type]
             } for line in full_statistics.get('table_data', request.env['survey.user_input.line'])[:100]]
 
+        # get the question that follows the one to return (for background management)
+        most_voted_answers = survey._get_session_most_voted_answers()
+        following_question = survey._get_next_page_or_question(most_voted_answers, survey.session_question_id.id)
+
+        reload_background_on_next = survey.has_conditional_questions or survey.session_question_id.background_image_url != following_question.background_image_url
+
         return {
             'is_html_empty': is_html_empty,
             'question_statistics_graph': full_statistics.get('graph_data'),
@@ -248,4 +262,6 @@ class UserInputSession(http.Controller):
             'answers_validity': json.dumps(answers_validity),
             'answer_count': survey.session_question_answer_count,
             'attendees_count': survey.session_answer_count,
+            'background_image_url': survey.session_question_id.background_image_url,
+            'reload_background_on_next': reload_background_on_next
         }
