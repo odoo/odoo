@@ -363,7 +363,8 @@ class Base(models.AbstractModel):
     def search_panel_select_range(self, field_name, **kwargs):
         """
         Return possible values of the field field_name (case select="one"),
-        possibly with counters and the parent field (if any) used to hierarchize them.
+        possibly with counters, and the parent field (if any and required)
+        used to hierarchize them.
 
         :param field_name: the name of a field;
             of type many2one or selection.

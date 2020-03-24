@@ -2,7 +2,7 @@
 import odoo.tests
 
 
-@odoo.tests.tagged('post_install', '-at_install')
+@odoo.tests.tagged('post_install', '-at_install', 'dam')
 class TestSelectRange(odoo.tests.TransactionCase):
 
     def setUp(self):
@@ -119,6 +119,63 @@ class TestSelectRange(odoo.tests.TransactionCase):
                 {'count': 0, 'display_name': 'Folder 4',
                     'id': f4_id, 'parent_name_id': f2_id, },
             ]
+        )
+
+        # counters and no expand
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            enable_counters=True,
+            expand=False,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'count': 1, 'display_name': 'Folder 1', 'id': f1_id, },
+                {'count': 1, 'display_name': 'Folder 3', 'id': f3_id, },
+                {'count': 1, 'display_name': 'Folder 4', 'id': f4_id, },
+            ]
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False
+        )
+
+        # no counters and no expand
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            expand=False,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'count': 0, 'display_name': 'Folder 1', 'id': f1_id, },
+                {'count': 0, 'display_name': 'Folder 3', 'id': f3_id, },
+                {'count': 0, 'display_name': 'Folder 4', 'id': f4_id, },
+            ]
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False
+        )
+
+        # no hierarchization
+        result = self.SourceModel.search_panel_select_range(
+            'folder_id',
+            enable_counters=True,
+            hierarchize=False,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'count': 1, 'display_name': 'Folder 1', 'id': f1_id, },
+                {'count': 0, 'display_name': 'Folder 2', 'id': f2_id, },
+                {'count': 1, 'display_name': 'Folder 3', 'id': f3_id, },
+                {'count': 1, 'display_name': 'Folder 4', 'id': f4_id, },
+            ]
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False
         )
 
     def test_many2one_deep_hierarchy(self):
@@ -276,6 +333,60 @@ class TestSelectRange(odoo.tests.TransactionCase):
             ]
         )
 
+        # counters and no expand
+        result = self.SourceModel.search_panel_select_range(
+            'categ_id',
+            enable_counters=True,
+            expand=False,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'count': 2, 'display_name': 'Cat 2', 'id': c2_id, },
+                {'count': 1, 'display_name': 'Cat 1', 'id': c1_id, },
+            ]
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False
+        )
+
+        # no counters and no expand
+        result = self.SourceModel.search_panel_select_range(
+            'categ_id',
+            expand=False,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'count': 0, 'display_name': 'Cat 2', 'id': c2_id, },
+                {'count': 0, 'display_name': 'Cat 1', 'id': c1_id, },
+            ]
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False
+        )
+
+        # no hierarchization
+        result = self.SourceModel.search_panel_select_range(
+            'categ_id',
+            enable_counters=True,
+            hierarchize=False,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'count': 0, 'display_name': 'Cat 3', 'id': c3_id, },
+                {'count': 2, 'display_name': 'Cat 2', 'id': c2_id, },
+                {'count': 1, 'display_name': 'Cat 1', 'id': c1_id, },
+            ]
+        )
+        self.assertEqual(
+            result['parent_field'],
+            False
+        )
+
     # Selection case
 
     def test_selection_empty(self):
@@ -345,6 +456,45 @@ class TestSelectRange(odoo.tests.TransactionCase):
             result['values'],
             [
                 {'display_name': 'A', 'id': 'a', 'count': 0, },
+                {'display_name': 'B', 'id': 'b', 'count': 0, },
+            ]
+        )
+
+        # counters and no expand
+        result = self.SourceModel.search_panel_select_range(
+            'state',
+            enable_counters=True,
+            expand=False,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'count': 2, 'display_name': 'A', 'id': 'a', },
+            ]
+        )
+
+        # no counters and no expand
+        result = self.SourceModel.search_panel_select_range(
+            'state',
+            expand=False,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'count': 0, 'display_name': 'A', 'id': 'a', },
+            ]
+        )
+
+        # no hierarchization
+        result = self.SourceModel.search_panel_select_range(
+            'state',
+            enable_counters=True,
+            hierarchize=False,
+        )
+        self.assertEqual(
+            result['values'],
+            [
+                {'display_name': 'A', 'id': 'a', 'count': 2, },
                 {'display_name': 'B', 'id': 'b', 'count': 0, },
             ]
         )

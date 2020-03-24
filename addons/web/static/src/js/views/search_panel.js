@@ -46,13 +46,15 @@ function _processSearchPanelNode(node, fields) {
             color: childNode.attrs.color,
             description: childNode.attrs.string || fields[fieldName].string,
             enableCounters: !!pyUtils.py_eval(childNode.attrs.enable_counters || '0'),
-            fieldName: fieldName,
+            expand: fields[fieldName].type === 'many2one' ? !!pyUtils.py_eval(childNode.attrs.expand || '1') : true,
+            fieldName,
             icon: childNode.attrs.icon,
             id: sectionId,
-            index: index,
-            type: type,
+            index,
+            type,
         };
         if (section.type === 'category') {
+            section.hierarchize = section.expand && !!pyUtils.py_eval(childNode.attrs.hierarchize || '1');
             section.icon = section.icon || 'fa-folder';
         } else if (section.type === 'filter') {
             section.domain = childNode.attrs.domain || '[]';
@@ -384,19 +386,22 @@ const SearchPanel = Widget.extend({
     _fetchCategories(force) {
         const proms = [];
         for (const category of Object.values(this.categories)) {
+            const { enableCounters, expand, hierarchize } = category;
             const field = this.fields[category.fieldName];
-            if (force || category.enableCounters) {
+            if (force || enableCounters) {
                 const prom = this._rpc({
                     method: 'search_panel_select_range',
                     model: this.model,
                     args: [category.fieldName],
                     kwargs: {
                         category_domain: this._getCategoryDomain(category.id),
-                        enable_counters: category.enableCounters,
+                        enableCounters,
+                        expand,
+                        hierarchize,
                         search_domain: this.searchDomain,
                     },
                 }).then(({ parent_field, values }) => {
-                    if (field.type === 'many2one') {
+                    if (field.type === 'many2one' && hierarchize) {
                         category.parentField = parent_field;
                     }
                     this._createCategoryTree(category.id, values);
@@ -430,6 +435,7 @@ const SearchPanel = Widget.extend({
                     comodel_domain: Domain.prototype.stringToArray(filter.domain, evalContext),
                     enable_counters: filter.enableCounters,
                     filter_domain: this._getFilterDomain(filter.id),
+                    expand: filter.expand,
                     group_by: filter.groupBy || false,
                     group_domain: this._getGroupDomain(filter),
                     search_domain: this.searchDomain,
