@@ -7,7 +7,6 @@ from odoo import fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    country_code = fields.Char(string="Company Country code", related='company_id.country_id.code', readonly=True)
     account_check_printing_layout = fields.Selection(related='company_id.account_check_printing_layout', string="Check Layout", readonly=False,
         help="Select the format corresponding to the check paper you will be printing your checks on.\n"
              "In order to disable the printing feature, select 'None'.")

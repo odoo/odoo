@@ -89,6 +89,9 @@ class ResConfigSettings(models.TransientModel):
         string='Default Terms & Conditions',
         config_parameter='account.use_invoice_terms')
 
+    # Technical field to hide country specific fields from accounting configuration
+    country_code = fields.Char(related='company_id.country_id.code', readonly=True)
+
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         if self.group_multi_currency:
