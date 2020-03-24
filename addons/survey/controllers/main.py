@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 import json
 import logging
 import werkzeug
@@ -41,10 +42,11 @@ class Survey(http.Controller):
         return survey_sudo, answer_sudo
 
     def _fetch_from_access_code(self, survey_short_token):
-        if survey_short_token and len(survey_short_token) == 6:
+        if survey_short_token and re.match(r'[a-zA-Z0-9-]{6}', survey_short_token):
             matching_survey = request.env['survey.survey'].sudo().search([
                 ('state', '=', 'open'),
                 ('access_token', 'like', f'{survey_short_token}%'),
+                ('session_state', 'in', ['ready', 'in_progress']),
             ])
             if len(matching_survey) == 1:
                 return matching_survey

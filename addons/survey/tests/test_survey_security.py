@@ -4,7 +4,7 @@
 from odoo.addons.survey.tests import common
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import tagged
-from odoo.tests.common import users
+from odoo.tests.common import users, HttpCase
 from odoo.tools import mute_logger
 
 
@@ -322,3 +322,36 @@ class TestAccess(common.TestSurveyCommon):
 
         # Unlink: always
         (answer_own | answer_other | self.answer_0).unlink()
+
+
+@tagged('post_install')
+class TestSurveySecurityControllers(common.TestSurveyCommon, HttpCase):
+    def test_survey_start_short(self):
+        # keep only one survey in the database
+        surveys = self.env['survey.survey'].search([])
+        surveys[1:].unlink()
+        survey = surveys[0]
+
+        survey.write({
+            'state': 'open',
+            'session_state': 'ready',
+        })
+
+        # right short access token
+        response = self.url_open(f'/s/{survey.access_token[:6]}')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(survey.title in response.text)
+
+        # `like` operator injection
+        response = self.url_open(f'/s/______')
+        self.assertFalse(survey.title in response.text)
+
+        # right short token, but wrong state
+        survey.state = 'draft'
+        response = self.url_open(f'/s/{survey.access_token[:6]}')
+        self.assertFalse(survey.title in response.text)
+
+        # right short token, but wrong `session_state`
+        survey.write({'state': 'open', 'session_state': False})
+        response = self.url_open(f'/s/{survey.access_token[:6]}')
+        self.assertFalse(survey.title in response.text)
