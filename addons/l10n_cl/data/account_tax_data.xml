@@ -5,7 +5,6 @@
     <record id="ITAX_19" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
         <field name="name">IVA 19% Venta</field>
-        <field name="description">IVA 19% Venta</field>
         <field name="amount">19</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -42,7 +41,6 @@
     <record id="OTAX_19" model="account.tax.template">
       <field name="chart_template_id" ref="cl_chart_template"/>
       <field name="name">IVA 19% Compra</field>
-      <field name="description">IVA 19% Compra</field>
       <field name="amount">19</field>
       <field name="amount_type">percent</field>
       <field name="type_tax_use">purchase</field>
@@ -79,7 +77,6 @@
     <record id="I_IU2C" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
         <field name="name">Retención de Segunda Categoría</field>
-        <field name="description">Retención de Segunda Categoría</field>
         <field name="amount">-10</field>
         <field name="sequence" eval="2"/>
         <field name="amount_type">percent</field>
@@ -117,7 +114,6 @@
     <record id="especifico_compra" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
         <field name="name">Específico Compra</field>
-        <field name="description">Especifico</field>
         <field name="amount">63</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -151,7 +147,6 @@
     <record id="iva_activo_fijo" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
         <field name="name">IVA Compra - 19% Activo Fijo</field>
-        <field name="description">IVA 19% ActF</field>
         <field name="amount">19</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -189,7 +184,6 @@
     <record id="iva_activo_fijo_uso_comun" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
         <field name="name">IVA Compra - 19% Activo Fijo Uso Común</field>
-        <field name="description">IVA 19% ActFUC</field>
         <field name="amount">19</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -227,7 +221,6 @@
     <record id="iva_activo_fijo_uso_no_recup" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
         <field name="name">IVA Compra - 19% Activo Fijo No Recuperable</field>
-        <field name="description">IVA 19% ActFNR</field>
         <field name="amount">19</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
