@@ -31,7 +31,6 @@ class Contract(models.Model):
         default=lambda self: self.env.company.resource_calendar_id.id, copy=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.")
-    advantages = fields.Text('Advantages')
     notes = fields.Text('Notes')
     state = fields.Selection([
         ('draft', 'New'),
@@ -184,6 +183,14 @@ class Contract(models.Model):
     def _assign_open_contract(self):
         for contract in self:
             contract.employee_id.sudo().write({'contract_id': contract.id})
+
+    def _get_contract_wage(self):
+        self.ensure_one()
+        return self[self._get_contract_wage_field()]
+
+    def _get_contract_wage_field(self):
+        self.ensure_one()
+        return 'wage'
 
     def write(self, vals):
         res = super(Contract, self).write(vals)
