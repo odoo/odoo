@@ -112,7 +112,8 @@
                         </page>
                         <page string="Transfers">
                             <field name="allowed_picking_ids" invisible="1"/>
-                            <field name="picking_ids" widget="many2many" context="{'form_view_ref': 'stock_picking_batch.view_picking_form_inherited'}">
+                            <field name="picking_ids" widget="many2many" mode="tree,kanban"
+                                context="{'form_view_ref': 'stock_picking_batch.view_picking_form_inherited'}">
                                 <tree>
                                     <field name="name"/>
                                     <field name="scheduled_date"/>
