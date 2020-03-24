@@ -1232,39 +1232,5 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
         mediaDialog.open();
     },
 });
-/**
- * @todo cannot do this without include because it would make a loop in the
- * JS module dependencies otherwise.
- */
-rte.Class.include({
-    /**
-     * @override
-     */
-    start: function () {
-        this._summernoteManager = new SummernoteManager(this);
-        return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    cancel: function () {
-        this._super.apply(this, arguments);
-        this._summernoteManager.destroy();
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * Create/Update cropped attachments.
-     *
-     * @param {jQuery} $editable
-     * @returns {Deferred}
-     */
-    saveCroppedImages: function ($editable) {
-        return this._summernoteManager.saveCroppedImages($editable);
-    },
-});
 return SummernoteManager;
 });
