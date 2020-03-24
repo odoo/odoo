@@ -40,7 +40,7 @@ SlidesUpload.SlideUploadDialog.include({
     _setup: function () {
         this._super.apply(this, arguments);
         this.slide_type_data['certification'] = {
-            icon: 'fa-trophy',
+            icon: 'fas fa-trophy',
             label: _t('Certification'),
             template: 'website.slide.upload.modal.certification',
         };

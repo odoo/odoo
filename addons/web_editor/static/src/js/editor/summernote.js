@@ -972,8 +972,8 @@ renderer.tplButtonInfo.fontsize = function (lang, options) {
 };
 
 renderer.tplButtonInfo.color = function (lang, options) {
-    var foreColorButtonLabel = '<i class="' + options.iconPrefix + options.icons.color.recent + '"></i>';
-    var backColorButtonLabel = '<i class="' + options.iconPrefix + 'paint-brush"></i>';
+    var foreColorButtonLabel = '<i class="' + options.icons.color.recent + '"></i>';
+    var backColorButtonLabel = '<i class="fas fa-paint-brush"></i>';
     // TODO Remove recent color button if possible.
     // It is still put to avoid JS errors when clicking other buttons as the
     // editor still expects it to exist.
@@ -2487,7 +2487,7 @@ eventHandler.detach = function (oLayoutInfo, options) {
     $('.o_table_handler').remove();
 };
 
-options.icons.image.image = "file-image-o";
+options.icons.image.image = "far fa-file-image";
 $.summernote.lang['en-US'].image.image = "File / Image";
 
 return $.summernote;

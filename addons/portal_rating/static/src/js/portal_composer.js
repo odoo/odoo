@@ -82,11 +82,11 @@ PortalComposer.include({
         var index = Math.floor(val);
         var decimal = val - index;
         // reset the stars
-        this.$star_list.removeClass('fa-star fa-star-half-o').addClass('fa-star-o');
+        this.$star_list.removeClass('far fas fa-star fa-star-half').addClass('far fa-star');
 
-        this.$('.stars').find("i:lt(" + index + ")").removeClass('fa-star-o fa-star-half-o').addClass('fa-star');
+        this.$('.stars').find("i:lt(" + index + ")").removeClass('fas fas fa-star fa-star-half').addClass('fas fa-star');
         if (decimal) {
-            this.$('.stars').find("i:eq(" + index + ")").removeClass('fa-star-o fa-star fa-star-half-o').addClass('fa-star-half-o');
+            this.$('.stars').find("i:eq(" + index + ")").removeClass('far fas fa-star fa-star-half').addClass('far fa-star-half');
         }
         this.$('.rate_text .badge').text(this.labels[index]);
     },

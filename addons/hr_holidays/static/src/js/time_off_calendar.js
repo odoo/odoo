@@ -114,11 +114,11 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
             let state = eventData.extendedProps.record.state;
 
             if (state === 'validate') {
-                calendarIcon = 'fa-calendar-check-o';
+                calendarIcon = 'far fa-calendar-check';
             } else if (state === 'refuse') {
-                calendarIcon = 'fa-calendar-times-o';
+                calendarIcon = 'far fa-calendar-times';
             } else if(state) {
-                calendarIcon = 'fa-calendar-o';
+                calendarIcon = 'far fa-calendar';
             }
 
             params['title'] = eventData.extendedProps.record.display_name.split(':').slice(0, -1).join(':');

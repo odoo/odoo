@@ -692,13 +692,15 @@ var KanbanActivity = BasicActivity.extend({
     _render: function () {
         // span classes need to be updated manually because the template cannot
         // be re-rendered eaasily (because of the dropdown state)
-        const spanClasses = ['fa', 'fa-lg', 'fa-fw'];
+        const spanClasses = ['fa-lg', 'fa-fw'];
         spanClasses.push('o_activity_color_' + (this.activityState || 'default'));
         if (this.recordData.activity_exception_decoration) {
             spanClasses.push('text-' + this.recordData.activity_exception_decoration);
+            spanClasses.push('fas');
             spanClasses.push(this.recordData.activity_exception_icon);
         } else {
-            spanClasses.push('fa-clock-o');
+            spanClasses.push('far');
+            spanClasses.push('fa-clock');
         }
         this.$('.o_activity_btn > span').removeClass().addClass(spanClasses.join(' '));
 
@@ -791,7 +793,7 @@ var ActivityException = AbstractField.extend({
         if (this.value) {
             this.$el.attr({
                 'title': _t('This record has an exception activity.'),
-                'class': "pull-right mt-1 text-" + this.value + " fa " + this.recordData.activity_exception_icon
+                'class': "pull-right mt-1 text-" + this.value + " " + this.recordData.activity_exception_icon
             });
         }
     }

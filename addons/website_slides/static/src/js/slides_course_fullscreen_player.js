@@ -199,8 +199,8 @@ odoo.define('website_slides.fullscreen', function (require) {
          * @param {Integer} slideId
          */
         setSlideCompleted: function (slideId) {
-            var $elem = this.$('.fa-circle-thin[data-slide-id="'+slideId+'"]');
-            $elem.removeClass('fa-circle-thin').addClass('fa-check text-success o_wslides_slide_completed');
+            var $elem = this.$('.far.fa-circle[data-slide-id="'+slideId+'"]');
+            $elem.removeClass('far fa-circle').addClass('fas fa-check text-success o_wslides_slide_completed');
         },
         /**
          * Updates the progressbar whenever a lesson is completed

@@ -63,7 +63,7 @@ class Users(models.Model):
 
                 for mailing_type in user_activities.keys():
                     user_activities[mailing_type].update({
-                        'actions': [{'icon': 'fa-clock-o', 'name': 'Summary',}],
+                        'actions': [{'icon': 'far fa-clock', 'name': 'Summary',}],
                         'domain': json.dumps([['activity_ids.res_id', 'in', list(user_activities[mailing_type]['res_ids'])]])
                     })
                 activities.extend(list(user_activities.values()))

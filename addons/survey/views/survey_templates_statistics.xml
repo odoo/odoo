@@ -17,7 +17,7 @@
             <h1>
                 <span t-field="survey.title"/>
                 <span style="font-size:1.5em;"
-                    t-attf-class="far fa-chart-bar #{'fa-bar-chart-o' if survey.scoring_type == 'no_scoring' else 'fa-trophy' if survey.certification else 'fa-question-circle-o'} float-right " role="img" aria-label="Chart" title="Chart"/>
+                    t-attf-class="#{'far chart-bar' if survey.scoring_type == 'no_scoring' else 'fas fa-trophy' if survey.certification else 'far fa-question-circle'} float-right " role="img" aria-label="Chart" title="Chart"/>
             </h1>
             <div t-field="survey.description" class="oe_no_empty"/>
             <h2 t-if="not question_and_page_data">

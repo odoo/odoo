@@ -218,7 +218,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      */
     async function deleteFavorite(el, favoriteFinder) {
         const favorite = findItem(getNode(el), `.o_favorite_menu .o_menu_item`, favoriteFinder);
-        await click(favorite.querySelector('i.fa-trash-o'));
+        await click(favorite.querySelector('i.far.fa-trash-alt'));
     }
 
     /**

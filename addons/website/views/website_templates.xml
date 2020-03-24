@@ -1043,7 +1043,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                       <th>Url</th>
                       <th class="text-center"><i title="Is the page included in the main menu?" class="fas fa-thumbtack"></i></th>
                       <th class="text-center"><i title="Is the page published?" class="far fa-eye"></i></th>
-                      <th class="text-center"><i title="Is the page indexed by search engines?" class="fas fa-globe"></i></th>
+                      <th class="text-center"><i title="Is the page indexed by search engines?" class="fas fa-globe-africa"></i></th>
                       <th class="text-center"><i title="Is the page SEO optimized?" class="fas fa-search"></i></th>
                       <th></th>
                     </tr>
@@ -1075,7 +1075,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         <td>
             <t groups="website.group_multi_website">
                 <i t-if='specific_page and prev_page and prev_page.url == page.url and not prev_page.website_id' class="fas fa-level-up-alt fa-rotate-90 ml32 mr4"/>
-                <i t-else="1" class="fas fa-globe mr4" t-att-style="'visibility:hidden;' if specific_page else ''"/>
+                <i t-else="1" class="fas fa-globe-africa mr4" t-att-style="'visibility:hidden;' if specific_page else ''"/>
             </t>
             <i t-if="page.is_homepage" class="fas fa-home" title="Home"/> <span t-esc="page.name"/>
         </td>

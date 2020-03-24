@@ -1010,7 +1010,7 @@
                         <i t-if="uid" aria-label="Toggle favorite status"
                             title="Toggle favorite status"
                             t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
-                            t-attf-class="o_wforum_favourite_toggle no-decoration small mr-1 fa #{question.user_favourite and 'fa-star o_wforum_gold' or 'fa-star-o text-muted'}"/>
+                            t-attf-class="o_wforum_favourite_toggle no-decoration small mr-1 #{question.user_favourite and 'fas fa-star o_wforum_gold' or 'far fa-star text-muted'}"/>
 
                         <h1 class="d-inline mb-0 h2" t-esc="question.name"/>
 
@@ -1068,7 +1068,7 @@
                             <t t-set="url" t-value="'/forum/' + slug(forum) + '/question/' + slug(question) + '/reopen'"/>
                             <t t-set="label">Reopen</t>
                             <t t-set="inDropdown" t-value="False"/>
-                            <t t-set="icon" t-value="'fa-arrow-right'"/>
+                            <t t-set="icon" t-value="'fas fa-arrow-right'"/>
                             <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
                         </t>
                     </div>
@@ -1147,49 +1147,49 @@
                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/reopen'"/>
                 <t t-set="label">Reopen</t>
                 <t t-set="inDropdown" t-value="True"/>
-                <t t-set="icon" t-value="'fa-undo fa-fw'"/>
+                <t t-set="icon" t-value="'fas fas-undo fa-fw'"/>
                 <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
             </t>
             <t t-call="website_forum.link_button">
                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/edit'"/>
                 <t t-set="label">Edit</t>
                 <t t-set="inDropdown" t-value="True"/>
-                <t t-set="icon" t-value="'fa-pencil fa-fw'"/>
+                <t t-set="icon" t-value="'fas fa-pencil-alt fa-fw'"/>
                 <t t-set="karma" t-value="not question.can_edit and question.karma_edit or 0"/>
             </t>
             <t t-if="question.state != 'close'" t-call="website_forum.link_button">
                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/ask_for_close'"/>
                 <t t-set="label">Close</t>
                 <t t-set="inDropdown" t-value="True"/>
-                <t t-set="icon" t-value="'fa-times fa-fw'"/>
+                <t t-set="icon" t-value="'fas fas-times fa-fw'"/>
                 <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
             </t>
             <t t-if="question.active" t-call="website_forum.link_button">
                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/delete'"/>
                 <t t-set="label">Delete</t>
                 <t t-set="inDropdown" t-value="True"/>
-                <t t-set="icon" t-value="'fa-trash-o fa-fw'"/>
+                <t t-set="icon" t-value="'far fa-trash-alt fa-fw'"/>
                 <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
             </t>
             <t t-if="not question.active and question.state != 'offensive'" t-call="website_forum.link_button">
                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/undelete'"/>
                 <t t-set="label">Undelete</t>
                 <t t-set="inDropdown" t-value="True"/>
-                <t t-set="icon" t-value="'fa-upload fa-fw'"/>
+                <t t-set="icon" t-value="'fas fas-upload fa-fw'"/>
                 <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
             </t>
             <t t-if="not question.active and question.state == 'offensive'" t-call="website_forum.link_button">
                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/validate'"/>
                 <t t-set="label">Validate</t>
                 <t t-set="inDropdown" t-value="True"/>
-                <t t-set="icon" t-value="'fa-check fa-fw'"/>
+                <t t-set="icon" t-value="'fas fas-check fa-fw'"/>
                 <t t-set="karma" t-value="not question.can_moderate and question.forum_id.karma_moderate or 0"/>
             </t>
             <t t-if="question.active" href="#" t-call="website_forum.link_button">
                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/flag'"/>
                 <t t-set="label">Flag</t>
                 <t t-set="inDropdown" t-value="True"/>
-                <t t-set="icon" t-value="not question.can_flag and 'fa-flag-o' or 'fa-flag'"/>
+                <t t-set="icon" t-value="not question.can_flag and 'far fa-flag' or 'fas fas-flag'"/>
                 <t t-set="karma" t-value="not question.can_flag and question.forum_id.karma_flag or 0"/>
                 <t t-set="classes" t-value="'flag'"/>
             </t>
@@ -1275,14 +1275,14 @@
                                     <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/edit'"/>
                                     <t t-set="label">Edit</t>
                                     <t t-set="inDropdown" t-value="True"/>
-                                    <t t-set="icon" t-value="'fa-pencil-square-o text-muted mr-2'"/>
+                                    <t t-set="icon" t-value="'far fa-edit text-muted mr-2'"/>
                                     <t t-set="karma" t-value="not answer.can_edit and answer.karma_edit or 0"/>
                                 </t>
                                 <t t-call="website_forum.link_button">
                                     <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/delete'"/>
                                     <t t-set="label">Delete</t>
                                     <t t-set="inDropdown" t-value="True"/>
-                                    <t t-set="icon" t-value="'fa-trash-o text-muted mr-2'"/>
+                                    <t t-set="icon" t-value="'far fa-trash-alt text-muted mr-2'"/>
                                     <t t-set="karma" t-value="not answer.can_unlink and answer.karma_unlink or 0"/>
                                 </t>
                                 <t t-if="answer.can_flag" t-call="website_forum.link_button">
@@ -1291,14 +1291,14 @@
                                     <t t-set="form_method" t-value="'GET'"/>
                                     <t t-set="inDropdown" t-value="True"/>
                                     <t t-set="karma" t-value="not answer.can_flag and answer.forum_id.karma_flag or 0"/>
-                                    <t t-set="icon" t-value="'fa-flag-o text-muted mr-2'"/>
+                                    <t t-set="icon" t-value="'far fa-flag text-muted mr-2'"/>
                                     <t t-set="form_classes" t-value="'flag'"/>
                                 </t>
                                 <t t-call="website_forum.link_button">
                                     <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/convert_to_comment'"/>
                                     <t t-set="label">Convert as a comment</t>
                                     <t t-set="inDropdown" t-value="True"/>
-                                    <t t-set="icon" t-value="'fa-magic text-muted mr-2'"/>
+                                    <t t-set="icon" t-value="'fas fas-magic text-muted mr-2'"/>
                                     <t t-set="karma" t-value="not answer.can_comment_convert and answer.karma_comment_convert or 0"/>
                                 </t>
                             </div>
@@ -1416,7 +1416,7 @@
                                         <t t-set="label">Delete</t>
                                         <t t-set="title">Delete</t>
                                         <t t-set="inDropdown" t-value="True"/>
-                                        <t t-set="icon" t-value="'fa-trash-o text-muted'"/>
+                                        <t t-set="icon" t-value="'far fa-trash-alt text-muted'"/>
                                         <t t-set="classes" t-value="'comment_delete'"/>
                                         <t t-set="karma" t-value="not object.can_unlink and object.karma_unlink or 0"/>
                                     </t>
@@ -1424,7 +1424,7 @@
                                         <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) +  '/convert_to_answer'"/>
                                         <t t-set="label">Convert as a answer</t>
                                         <t t-set="inDropdown" t-value="True"/>
-                                        <t t-set="icon" t-value="'fa-magic text-muted'"/>
+                                        <t t-set="icon" t-value="'fas fas-magic text-muted'"/>
                                         <t t-set="karma" t-value="not object.can_comment_convert and object.karma_comment_convert or 0"/>
                                     </t>
                                 </div>

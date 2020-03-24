@@ -39,14 +39,14 @@
                         <!-- !! Every fields inside this container should be website specific (related to website record) !! -->
                         <div class="row mt16 o_settings_container" id="website_settings" attrs="{'invisible': [('website_id', '=', False)]}">
                             <div class="col-12 o_setting_box" id="website_action_setting" style="margin-left: 30px; margin-bottom: 16px;">
-                                <button name="website_go_to" type="object" string="Go to Website" class="btn btn-primary" icon="fas fa-globe"/>
+                                <button name="website_go_to" type="object" string="Go to Website" class="btn btn-primary" icon="fas fa-globe-africa"/>
                                 <button name="install_theme_on_current_website" type="object" string="Choose a theme" class="ml-2 btn btn-primary" icon="fas fa-paint-brush"/>
                                 <button name="%(website.action_website_add_features)d" type="action" string="Add features" class="ml-2 btn btn-secondary" icon="fas fa-plus"/>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="domain_setting">
                                 <div class="o_setting_right_pane">
                                     <label for="website_name" string="Website Title"/>
-                                    <span class="fas fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <span class="fas fa-lg fa-globe-africa" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                     <div class="text-muted">
                                         Name and favicon of your website
                                     </div>
@@ -65,7 +65,7 @@
                             <div class="col-12 col-lg-6 o_setting_box" id="company_settings" groups="base.group_multi_company">
                                 <div class="o_setting_right_pane">
                                     <label string="Company" for="website_company_id"/>
-                                    <span class="fas fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <span class="fas fa-lg fa-globe-africa" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                     <div class="text-muted">
                                         The company this website belongs to
                                     </div>
@@ -75,7 +75,7 @@
                             <div class="col-12 col-lg-6 o_setting_box" id="languages_setting">
                                 <div class="o_setting_right_pane">
                                     <label for="language_ids"/>
-                                    <span class="fas fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <span class="fas fa-lg fa-globe-africa" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                     <div class="text-muted">
                                         Languages available on your website
                                     </div>
@@ -98,7 +98,7 @@
                             <div class="col-12 col-lg-6 o_setting_box" id="domain_settings" groups="website.group_multi_website">
                                 <div class="o_setting_right_pane">
                                     <label string="Domain" for="website_domain"/>
-                                    <span class="fas fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <span class="fas fa-lg fa-globe-africa" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                     <div class="text-muted">
                                         Display this website when users visit this domain
                                     </div>
@@ -121,7 +121,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="specific_user_account"/>
-                                    <span class="fas fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <span class="fas fa-lg fa-globe-africa" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                     <div class="text-muted">
                                         Force your user to create an account per website
                                     </div>
@@ -133,7 +133,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="website_cookies_bar"/>
-                                    <span class="fas fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <span class="fas fa-lg fa-globe-africa" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                     <div class="text-muted">
                                         Display a customizable cookies bar on your website.
                                     </div>
@@ -145,7 +145,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="cdn_activated"/>
-                                    <span class="fas fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <span class="fas fa-lg fa-globe-africa" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                     <div class="text-muted">
                                         Use a CDN to optimize the availability of your website's content
                                     </div>
@@ -171,7 +171,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="Social Media" for="has_social_network"/>
-                                    <span class="fas fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <span class="fas fa-lg fa-globe-africa" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                     <div class="text-muted">
                                         Add links to social media on your website
                                     </div>
@@ -209,7 +209,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="Default Social Share Image" for="has_default_share_image"/>
-                                    <span class="fas fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <span class="fas fa-lg fa-globe-africa" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                     <div class="text-muted" attrs="{'invisible': [('has_default_share_image', '=', False)]}">
                                         If set, replaces the website logo as the default social share image.
                                     </div>
@@ -226,7 +226,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="has_google_maps"/>
-                                    <span class="fas fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <span class="fas fa-lg fa-globe-africa" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                     <div class="text-muted">
                                         Use Google Map on your website (<a href="/contactus">Contact Us</a> page, snippets, ...)
                                     </div>
@@ -256,7 +256,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="auth_signup_uninvited"/>
-                                    <span class="fas fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <span class="fas fa-lg fa-globe-africa" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                     <div class="text-muted">
                                         Let your customers log in to see their documents
                                     </div>
@@ -278,7 +278,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="has_google_analytics"/>
-                                    <span class="fas fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <span class="fas fa-lg fa-globe-africa" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                     <div class="text-muted">
                                         Track visits in Google Analytics
                                     </div>
@@ -304,7 +304,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="has_google_search_console"/>
-                                    <span class="fas fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <span class="fas fa-lg fa-globe-africa" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                     <div class="text-muted">
                                         Monitor Google Search results data
                                     </div>
@@ -328,7 +328,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="has_google_analytics_dashboard"/>
-                                    <span class="fas fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <span class="fas fa-lg fa-globe-africa" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                     <div class="text-muted">
                                         Follow your website traffic in Odoo.
                                     </div>
@@ -354,7 +354,7 @@
                             <div class="col-12 col-lg-6 o_setting_box" id="robots_setting">
                                 <div class="o_setting_right_pane">
                                     <span class="o_form_label">Robots.txt</span>
-                                    <span class="fas fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <span class="fas fa-lg fa-globe-africa" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                     <div class="text-muted">
                                         Robots.txt: This file tells to search engine crawlers which pages or files they can or can't request from your site.<br/>
                                     </div>
@@ -366,7 +366,7 @@
                             <div class="col-12 col-lg-6 o_setting_box" id="robots_setting">
                                 <div class="o_setting_right_pane">
                                     <span class="o_form_label">Sitemap</span>
-                                    <span class="fas fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                    <span class="fas fa-lg fa-globe-africa" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                     <div class="text-muted mt8">
                                         Sitemap.xml: Help search engine crawlers to find out what pages are present and which have recently changed, and to crawl your site accordingly. This file is automatically generated by Odoo.
                                     </div>

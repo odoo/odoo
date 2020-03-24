@@ -133,7 +133,7 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
                 user_activities[activity['model']]['total_count'] += activity['count']
 
             user_activities[activity['model']]['actions'] = [{
-                'icon': 'fa-clock-o',
+                'icon': 'far fa-clock',
                 'name': 'Summary',
             }]
         return list(user_activities.values())

@@ -38,7 +38,7 @@
             <div t-if="mobile and 'mobile' in fields"><i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fas fa-mobile-alt fa-fw' role="img" aria-label="Mobile" title="Mobile"/> <span class="o_force_ltr" itemprop="telephone" t-esc="mobile"/></div>
             <div t-if="fax and 'fax' in fields"><i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fas fa-fax fa-fw' role="img" aria-label="Fax" title="Fax"/> <span class="o_force_ltr" itemprop="faxNumber" t-esc="fax"/></div>
             <div t-if="website and 'website' in fields">
-                <i t-if="not options.get('no_marker')" class='fas fa-globe' role="img" aria-label="Website" title="Website"/>
+                <i t-if="not options.get('no_marker')" class='fas fa-globe-africa' role="img" aria-label="Website" title="Website"/>
                 <a t-att-href="website and '%s%s' % ('http://' if '://' not in website else '',website)"><span itemprop="website" t-esc="website"/></a>
             </div>
             <div t-if="email and 'email' in fields"><i t-if="not options.get('no_marker')" class='fas fa-envelope fa-fw' role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-esc="email"/></div>

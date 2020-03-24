@@ -21,7 +21,7 @@ var _lt = core._lt;
 var ListView = BasicView.extend({
     accesskey: "l",
     display_name: _lt('List'),
-    icon: 'fa-list-ul',
+    icon: 'fas fa-list-ul',
     config: _.extend({}, BasicView.prototype.config, {
         Model: ListModel,
         Renderer: ListRenderer,

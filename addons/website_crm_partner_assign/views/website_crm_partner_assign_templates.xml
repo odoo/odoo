@@ -545,7 +545,7 @@
                                 <div class="col">
                                     <span class="" title="Rating" role="img" t-attf-aria-label="Rating: #{opportunity.priority} on 4">
                                         <t t-foreach="range(1, 4)" t-as="i">
-                                            <span t-attf-class="fa text-warning fa-lg fa-star#{'' if i &lt;= int(opportunity.priority) else '-o'}" role="img" t-att-aria-label="'Star %d of 3' % i"/>
+                                            <span t-attf-class="text-warning fa fa-lg fa-star#{'' if i &lt;= int(opportunity.priority) else '-o'}" role="img" t-att-aria-label="'Star %d of 3' % i"/>
                                         </t>
                                     </span>
                                 </div>
@@ -657,18 +657,18 @@
                                                             </label>
                                                             <label class="radio-inline ml-2">
                                                                 <input type="radio" name="PriorityRadioOptions" value="1" t-att-checked="opportunity.priority == '1'" aria-label="Rating: 1 on 3" title="Rating: 1 on 3"/>
-                                                                <i class="ml-1 fa text-warning fa-star"></i>
+                                                                <i class="ml-1 text-warning fas fa-star"></i>
                                                             </label>
                                                             <label class="radio-inline ml-2">
                                                                 <input type="radio" name="PriorityRadioOptions" value="2" t-att-checked="opportunity.priority == '2'" aria-label="Rating: 2 on 3" title="Rating: 2 on 3"/>
-                                                                <i class="ml-1 fa text-warning fa-star"></i>
-                                                                <i class="ml-1 fa text-warning fa-star"></i>
+                                                                <i class="ml-1 text-warning fas fa-star"></i>
+                                                                <i class="ml-1 text-warning fas fa-star"></i>
                                                             </label>
                                                             <label class="radio-inline ml-2">
                                                                 <input type="radio" name="PriorityRadioOptions" value="3" t-att-checked="opportunity.priority == '3'" aria-label="Rating: 3 on 3" title="Rating: 3 on 3"/>
-                                                                <i class="ml-1 fa text-warning fa-star"></i>
-                                                                <i class="ml-1 fa text-warning fa-star"></i>
-                                                                <i class="ml-1 fa text-warning fa-star"></i>
+                                                                <i class="ml-1 text-warning fas fa-star"></i>
+                                                                <i class="ml-1 text-warning fas fa-star"></i>
+                                                                <i class="ml-1 text-warning fas fa-star"></i>
                                                             </label>
                                                         </div>
                                                     </div>

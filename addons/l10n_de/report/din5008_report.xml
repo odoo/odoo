@@ -81,7 +81,7 @@
                         <ul class="list-inline">
                             <li t-if="company.phone"><i class="fas fa-phone"/> <span t-field="company.phone"/></li>
                             <li t-if="company.email"><i class="fas fa-at"/> <span t-field="company.email"/></li>
-                            <li t-if="company.website"><i class="fas fa-globe"/> <span t-field="company.website"/></li>
+                            <li t-if="company.website"><i class="fas fa-globe-africa"/> <span t-field="company.website"/></li>
                             <li t-if="company.vat"><i class="far fa-building"/><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
                         </ul>
                         <div t-field="company.report_footer"/>

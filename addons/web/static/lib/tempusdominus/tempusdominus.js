@@ -130,15 +130,15 @@ var DateTimePicker = function ($, moment) {
         disabledDates: false,
         enabledDates: false,
         icons: {
-            time: 'fa fa-clock-o',
-            date: 'fa fa-calendar',
-            up: 'fa fa-arrow-up',
-            down: 'fa fa-arrow-down',
-            previous: 'fa fa-chevron-left',
-            next: 'fa fa-chevron-right',
-            today: 'fa fa-calendar-check-o',
-            clear: 'fa fa-trash',
-            close: 'fa fa-times'
+            time: 'far fa-clock',
+            date: 'fas fa-calendar-alt',
+            up: 'fas fa-arrow-up',
+            down: 'fas fa-arrow-down',
+            previous: 'fas fa-chevron-left',
+            next: 'fas fa-chevron-right',
+            today: 'far fa-calendar-check',
+            clear: 'fas fa-trash',
+            close: 'fas fa-times'
         },
         tooltips: {
             today: 'Go to today',

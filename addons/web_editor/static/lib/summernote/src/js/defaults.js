@@ -56,71 +56,69 @@ define('summernote/defaults', function () {
       placeholder: false,           // enable placeholder text
       prettifyHtml: true,           // enable prettifying html while toggling codeview
 
-      iconPrefix: 'fas fa-',         // prefix for css icon classes
-
       icons: {
         font: {
-          bold: 'bold',
-          italic: 'italic',
-          underline: 'underline',
-          clear: 'eraser',
-          height: 'text-height',
-          strikethrough: 'strikethrough',
-          superscript: 'superscript',
-          subscript: 'subscript'
+          bold: 'fas fa-bold',
+          italic: 'fas fa-italic',
+          underline: 'fas fa-underline',
+          clear: 'fas fa-eraser',
+          height: 'fas fa-text-height',
+          strikethrough: 'fas fa-strikethrough',
+          superscript: 'fas fa-superscript',
+          subscript: 'fas fa-subscript'
         },
         image: {
-          image: 'picture-o',
-          floatLeft: 'align-left',
-          floatRight: 'align-right',
-          floatNone: 'align-justify',
-          shapeRounded: 'square',
-          shapeCircle: 'circle-o',
-          shapeThumbnail: 'picture-o',
-          shapeNone: 'times',
-          remove: 'trash-o'
+          image: 'far fa-image',
+          floatLeft: 'fas fa-align-left',
+          floatRight: 'fas fa-align-right',
+          floatNone: 'fas fa-align-justify',
+          shapeRounded: 'fas fa-square',
+          shapeCircle: 'far fa-circle',
+          shapeThumbnail: 'far fa-image',
+          shapeNone: 'fas fa-times',
+          remove: 'far fa-trash-alt'
         },
         link: {
-          link: 'link',
-          unlink: 'unlink',
-          edit: 'edit'
+          link: 'fas fa-link',
+          unlink: 'fas fa-unlink',
+          edit: 'fas fa-edit'
         },
         table: {
-          table: 'table'
+          table: 'fas fa-table'
         },
         hr: {
-          insert: 'minus'
+          insert: 'fas fa-minus'
         },
         style: {
-          style: 'magic'
+          style: 'fas fa-magic'
         },
         lists: {
-          unordered: 'list-ul',
-          ordered: 'list-ol'
+          unordered: 'fas fa-list-ul',
+          ordered: 'fas fa-list-ol'
         },
         options: {
-          help: 'question',
-          fullscreen: 'arrows-alt',
-          codeview: 'code'
+          help: 'fas fa-question',
+          fullscreen: 'fas fa-arrows-alt',
+          codeview: 'fas fa-code'
         },
         paragraph: {
-          paragraph: 'align-left',
-          outdent: 'outdent',
-          indent: 'indent',
-          left: 'align-left',
-          center: 'align-center',
-          right: 'align-right',
-          justify: 'align-justify'
+          paragraph: 'fas fa-align-left',
+          outdent: 'fas fa-outdent',
+          indent: 'fas fa-indent',
+          left: 'fas fa-align-left',
+          center: 'fas fa-align-center',
+          right: 'fas fa-align-right',
+          justify: 'fas fa-align-justify'
         },
         color: {
-          recent: 'font'
+          recent: 'fas fa-font'
         },
         history: {
-          undo: 'undo',
-          redo: 'repeat'
+          undo: 'fas fa-undo',
+          redo: 'fas fa-redo'
         },
         misc: {
-          check: 'check'
+          check: 'fas fa-check'
         }
       },
 

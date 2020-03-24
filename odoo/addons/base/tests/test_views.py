@@ -2145,7 +2145,7 @@ class TestViews(ViewCase):
         )
         self.assertWarning(
             '<form><button icon="fas fa-exclamation-triangle"/></form>',
-            'A button with icon attribute (fa-warning) must have title in its tag, parents, descendants or have text'
+            'A button with icon attribute (fas fa-exclamation-triangle) must have title in its tag, parents, descendants or have text'
         )
         self.assertValid('<form><button icon="fas fa-exclamation-triangle"/>text</form>')
         self.assertValid('<form><span class="fas fa-exclamation-triangle"/>text</form>')

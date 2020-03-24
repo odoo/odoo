@@ -84,7 +84,7 @@
                             <t t-foreach="activity.actions" t-as="action">
                                 <button type="button"
                                     t-att-title="action.name"
-                                    t-att-class="'o_mail_activity_action btn btn-link fa ' + action.icon"
+                                    t-att-class="'o_mail_activity_action btn btn-link ' + action.icon"
                                     t-att-data-action_xmlid="action.action_xmlid"
                                     t-att-data-res_model="activity.model"
                                     t-att-data-model_name="activity.name"

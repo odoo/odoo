@@ -51,7 +51,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         if (options.fromPageManagement) {
             buttons.push({
                 text: _t("Go To Page"),
-                icon: 'fa-globe',
+                icon: 'fas fa-globe-africa',
                 classes: 'btn-link',
                 click: function (e) {
                     window.location.href = '/' + self.page.url;
@@ -60,7 +60,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         }
         buttons.push({
             text: _t("Duplicate Page"),
-            icon: 'fa-clone',
+            icon: 'far fa-clone',
             classes: 'btn-link',
             click: function (e) {
                 // modal('hide') will break the rpc, so hide manually
@@ -70,7 +70,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         });
         buttons.push({
             text: _t("Delete Page"),
-            icon: 'fa-trash',
+            icon: 'fas fa-trash-alt',
             classes: 'btn-link',
             click: function (e) {
                 _deletePage.call(this, self.page_id, options.fromPageManagement);

@@ -31,7 +31,7 @@ odoo.define('web.time_range_menu_tests', function (require) {
             };
             const controlPanel = await createControlPanel(params);
 
-            assert.containsOnce(controlPanel, 'div.o_time_range_menu > button i.fa.fa-calendar');
+            assert.containsOnce(controlPanel, 'div.o_time_range_menu > button i.fas.fa-calendar-alt');
             assert.strictEqual(controlPanel.el.querySelector('div.o_time_range_menu > button span').innerText.trim(), 'Time Ranges');
 
             await cpHelpers.toggleTimeRangeMenu(controlPanel);

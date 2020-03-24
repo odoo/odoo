@@ -41,7 +41,7 @@ var AbstractView = Factory.extend({
     // indicates whether or not the view is mobile-friendly
     mobile_friendly: false,
     // icon is the font-awesome icon to display in the view switcher
-    icon: 'fa-question',
+    icon: 'fas fa-question',
     // multi_record is used to distinguish views displaying a single record
     // (e.g. FormView) from those that display several records (e.g. ListView)
     multi_record: true,

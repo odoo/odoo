@@ -24,7 +24,7 @@ var PopoverWidgetField = AbstractField.extend({
     placement: 'top',
     html: true,
     color: 'text-primary',
-    icon: 'fa-info-circle',
+    icon: 'fas fa-info-circle',
 
     _render: function () {
         var value = JSON.parse(this.value);

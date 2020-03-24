@@ -16,7 +16,7 @@ var FormView = BasicView.extend({
         Controller: FormController,
     }),
     display_name: _lt('Form'),
-    icon: 'fa-edit',
+    icon: 'fas fa-edit',
     multi_record: false,
     withSearchBar: false,
     searchMenuTypes: [],

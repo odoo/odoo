@@ -134,14 +134,14 @@ options.registry.Rating = options.Class.extend({
      */
     _renderIcons: function () {
         const icons = {
-            'fa-star': 'fa-star-o',
-            'fa-thumbs-up': 'fa-thumbs-o-up',
-            'fa-circle': 'fa-circle-o',
-            'fa-square': 'fa-square-o',
-            'fa-heart': 'fa-heart-o'
+            'fas fa-star': 'far fa-star',
+            'fas fa-thumbs-up': 'far fa-thumbs-up',
+            'fas fa-circle': 'far fa-circle',
+            'fas fa-square': 'far fa-square',
+            'fas fa-heart': 'far fa-heart'
         };
-        const faClassActiveIcons = (this.iconType === "custom") ? this.faClassActiveCustomIcons : 'fas ' + this.iconType;
-        const faClassInactiveIcons = (this.iconType === "custom") ? this.faClassInactiveCustomIcons : 'fas ' + icons[this.iconType];
+        const faClassActiveIcons = (this.iconType === "custom") ? this.faClassActiveCustomIcons : this.iconType;
+        const faClassInactiveIcons = (this.iconType === "custom") ? this.faClassInactiveCustomIcons : icons[this.iconType];
         const $activeIcons = this.$target.find('.s_rating_active_icons > i');
         const $inactiveIcons = this.$target.find('.s_rating_inactive_icons > i');
         $activeIcons.removeClass().addClass(faClassActiveIcons);

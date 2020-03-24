@@ -25,12 +25,12 @@ according to the enabled options.
                 <div class="btn-group btn-group-sm">
                     <a t-attf-class="btn #{state == 'published' and 'btn-success' or 'btn-default bg-white border'}"
                        t-attf-href="#{state == 'published' and blog_url(state='') or blog_url(state='published')}">
-                        <i t-attf-class="fa mr-1 #{state == 'published' and 'fa-check-square-o' or 'fa-square-o'}"/>
+                        <i t-attf-class="mr-1 #{state == 'published' and 'far fa-check-square' or 'far fa-square'}"/>
                         Published (<t t-esc="state_info['published']" />)
                     </a>
                     <a t-attf-class="btn #{state == 'unpublished' and 'btn-success' or 'btn-default bg-white border'}"
                        t-attf-href="#{state == 'unpublished' and blog_url(state='') or blog_url(state='unpublished')}">
-                        <i t-attf-class="fa mr-1 #{state == 'unpublished' and 'fa-check-square-o' or 'fa-square-o'}"/>
+                        <i t-attf-class="mr-1 #{state == 'unpublished' and 'far fa-check-square' or 'far fa-square'}"/>
                         Unpublished (<t t-esc="state_info['unpublished']" />)
                     </a>
                 </div>

@@ -50,7 +50,7 @@
                                         <td t-if="data['report_type'] == 'html'">
                                             <span>
                                                 <t t-if="data['attachments']">
-                                                    <a href="#" role="button" t-att-data-res-id="data['attachments'].ids" t-att-data-model="'mrp.document'" class="o_mrp_show_attachment_action fas fa-fw o_button_icon fa-files-o"/>
+                                                    <a href="#" role="button" t-att-data-res-id="data['attachments'].ids" t-att-data-model="'mrp.document'" class="o_mrp_show_attachment_action o_button_icon far fa-fw fa-copy"/>
                                                 </t>
                                             </span>
                                         </td>
@@ -117,7 +117,7 @@
                 <td>
                     <span>
                         <t t-if="l['attachments']">
-                            <a href="#" role="button" t-att-data-res-id="l['attachments'].ids" t-att-data-model="'mrp.document'" class="o_mrp_show_attachment_action fas fa-fw o_button_icon fa-files-o"/>
+                            <a href="#" role="button" t-att-data-res-id="l['attachments'].ids" t-att-data-model="'mrp.document'" class="o_mrp_show_attachment_action far fa-fw fa-copy o_button_icon"/>
                         </t>
                     </span>
                 </td>

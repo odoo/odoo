@@ -700,7 +700,7 @@ odoo.define('website_slides.quiz', function (require) {
         _onQuizCompleted: function (ev) {
             var slide = ev.data.slide;
             var completion = ev.data.completion;
-            this.$('#o_wslides_lesson_aside_slide_check_' + slide.id).addClass('text-success fa-check').removeClass('text-600 fa-circle-o');
+            this.$('#o_wslides_lesson_aside_slide_check_' + slide.id).addClass('text-success fas fa-check').removeClass('text-600 far fa-circle');
             // need to use global selector as progress bar is outside this animation widget scope
             $('.o_wslides_lesson_header .progress-bar').css('width', completion + "%");
             $('.o_wslides_lesson_header .progress span').text(_.str.sprintf("%s %%", completion));

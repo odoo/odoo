@@ -23,7 +23,7 @@ odoo.define('web.PivotView', function (require) {
 
     const PivotView = AbstractView.extend({
         display_name: _lt('Pivot'),
-        icon: 'fa-table',
+        icon: 'fas fa-table',
         config: Object.assign({}, AbstractView.prototype.config, {
             Model: PivotModel,
             Controller: PivotController,

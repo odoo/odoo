@@ -21,7 +21,7 @@ var GROUPABLE_TYPES = searchUtils.GROUPABLE_TYPES;
 
 var GraphView = AbstractView.extend({
     display_name: _lt('Graph'),
-    icon: 'fa-bar-chart',
+    icon: 'fas fa-chart-bar',
     jsLibs: [
         '/web/static/lib/Chart/Chart.js',
     ],

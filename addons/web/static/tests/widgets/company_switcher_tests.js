@@ -72,9 +72,9 @@ QUnit.module('widgets', {
             assert.equal(menu.$('.company_label:contains(Company 2)').length, 1, "it should display Company 2")
             assert.equal(menu.$('.company_label:contains(Company 3)').length, 1, "it should display Company 3")
 
-            assert.equal(menu.$('div[data-company-id=1] .fa-check-square').length, 1, "Company 1 should be checked")
-            assert.equal(menu.$('div[data-company-id=2] .fa-square-o').length, 1, "Company 2 should not be checked")
-            assert.equal(menu.$('div[data-company-id=3] .fa-check-square').length, 1, "Company 3 should be checked")
+            assert.equal(menu.$('div[data-company-id=1] .fas.fa-check-square').length, 1, "Company 1 should be checked")
+            assert.equal(menu.$('div[data-company-id=2] .far.fa-square').length, 1, "Company 2 should not be checked")
+            assert.equal(menu.$('div[data-company-id=3] .fas.fa-check-square').length, 1, "Company 3 should be checked")
             menu.destroy();
         });
     });

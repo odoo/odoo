@@ -42,7 +42,7 @@ QUnit.module('website', {
         });
         var selector = '.oe_button_box .oe_stat_button[name="website_published"] .o_stat_text';
         assert.containsN(form, selector, 1, "there should be one text displayed");
-        selector = '.oe_button_box .oe_stat_button[name="website_published"] .o_button_icon.fa-globe.text-danger';
+        selector = '.oe_button_box .oe_stat_button[name="website_published"] .o_button_icon.fa-globe-africa.text-danger';
         assert.containsOnce(form, selector, "there should be one icon in red");
         form.destroy();
     });
@@ -64,7 +64,7 @@ QUnit.module('website', {
         });
         var selector = '.oe_button_box .oe_stat_button[name="website_published"] .o_stat_text';
         assert.containsN(form, selector, 1, "should be one text displayed");
-        selector = '.oe_button_box .oe_stat_button[name="website_published"] .o_button_icon.fa-globe.text-success';
+        selector = '.oe_button_box .oe_stat_button[name="website_published"] .o_button_icon.fa-globe-africa.text-success';
         assert.containsOnce(form, selector, "there should be one text in green");
         form.destroy();
     });

@@ -260,13 +260,13 @@ QUnit.test('searchview options visibility', async function (assert) {
 
     assert.containsOnce(discuss, '.o_control_panel .o_search_options',
         "should have search options");
-    assert.hasClass(discuss.$('.o_control_panel .o_searchview_more.fa'), 'fa-search-minus',
+    assert.hasClass(discuss.$('.o_control_panel .o_searchview_more.fas'), 'fa-search-minus',
         "should have a button to toggle search options");
 
     assert.isVisible(discuss.$('.o_control_panel .o_search_options'),
         "search options should be visible by default");
-    await testUtils.dom.click(discuss.$('.o_control_panel .o_searchview_more.fa'));
-    assert.hasClass(discuss.$('.o_control_panel .o_searchview_more.fa'), 'fa-search-plus',
+    await testUtils.dom.click(discuss.$('.o_control_panel .o_searchview_more.fas'));
+    assert.hasClass(discuss.$('.o_control_panel .o_searchview_more.fas'), 'fa-search-plus',
         "should have a button to toggle search options");
     assert.isNotVisible(discuss.$('.o_control_panel .o_search_options'),
         "search options should be hidden after clicking on search option toggler");

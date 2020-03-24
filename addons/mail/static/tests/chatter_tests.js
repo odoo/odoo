@@ -126,7 +126,7 @@ QUnit.module('Chatter', {
                     { id: 1, name: "Type 1" },
                     { id: 2, name: "Type 2" },
                     { id: 3, name: "Type 3", category: 'upload_file' },
-                    { id: 4, name: "Exception", decoration_type: "warning", icon: "fa-warning"}
+                    { id: 4, name: "Exception", decoration_type: "warning", icon: "fas fa-exclamation-triangle"}
                 ],
             },
             'mail.message': {
@@ -754,7 +754,7 @@ QUnit.test('kanban activity widget with an activity', async function (assert) {
     this.data.partner.records[0].activity_ids = [1, 2];
     this.data.partner.records[0].activity_state = 'today';
     this.data.partner.records[0].activity_exception_decoration = 'warning';
-    this.data.partner.records[0].activity_exception_icon = 'fa-warning';
+    this.data.partner.records[0].activity_exception_icon = 'fas fa-exclamation-triangle';
     this.data['mail.activity'].records = [{
         id: 1,
         display_name: "An activity",
@@ -805,8 +805,8 @@ QUnit.test('kanban activity widget with an activity', async function (assert) {
         "activity widget should have been rendered correctly");
     assert.strictEqual(rpcCount, 1, '1 RPC (search_read) should have been done');
 
-    // Check exception activity icon fa-warning
-    assert.hasClass($record.find('.o_activity_btn span'), "fa-warning", "should display correct exception activity icon");
+    // Check exception activity icon fa-exclamation-triangle
+    assert.hasClass($record.find('.o_activity_btn span'), "fa-exclamation-triangle", "should display correct exception activity icon");
     // click on the activity button
     await testUtils.dom.click($record.find('.o_activity_btn'));
     assert.strictEqual(rpcCount, 2, 'a read should have been done to fetch the activity details');
@@ -829,7 +829,7 @@ QUnit.test('kanban activity widget with an activity', async function (assert) {
     $record = kanban.$('.o_kanban_record').first(); // the record widget has been reset
 
     // check activity icon replaced with fa-clock
-    assert.hasClass($record.find('.o_activity_btn span'), "fa-clock-o", "should display correct activity icon");
+    assert.hasClass($record.find('.o_activity_btn span'), "far", "should display correct activity icon");
 
     // mark activity as done
     await testUtils.dom.click($record.find('.o_mark_as_done'));
@@ -916,7 +916,7 @@ QUnit.test('list activity exception widget with activity', async function (asser
         message_ids: [],
         activity_ids: [2],
         activity_exception_decoration: 'warning',
-        activity_exception_icon: 'fa-warning',
+        activity_exception_icon: 'fas fa-exclamation-triangle',
     });
     this.data['mail.activity'].records = [{
         id: 1,
@@ -949,9 +949,9 @@ QUnit.test('list activity exception widget with activity', async function (asser
     });
 
     assert.containsN(list, '.o_data_row', 2, "should have two records");
-    assert.doesNotHaveClass(list.$('.o_data_row:eq(0) .o_activity_exception_cell div'), 'fa-warning',
+    assert.doesNotHaveClass(list.$('.o_data_row:eq(0) .o_activity_exception_cell div'), 'fa-exclamation-triangle',
         "there is no any exception activity on record");
-    assert.hasClass(list.$('.o_data_row:eq(1) .o_activity_exception_cell div'), 'fa-warning',
+    assert.hasClass(list.$('.o_data_row:eq(1) .o_activity_exception_cell div'), 'fa-exclamation-triangle',
         "there is an exception on a record");
 
     list.destroy();
@@ -1080,7 +1080,7 @@ QUnit.test('chatter: post, receive and star messages', async function (assert) {
         "the message's author should be correct");
 
     // star message 2
-    assert.ok(form.$('.o_thread_message[data-message-id=2] .o_thread_message_star.fa-star-o').length,
+    assert.ok(form.$('.o_thread_message[data-message-id=2] .o_thread_message_star.far.fa-star').length,
         "message 2 should not be starred");
     await testUtils.dom.click(form.$('.o_thread_message[data-message-id=2] .o_thread_message_star'));
     assert.ok(form.$('.o_thread_message[data-message-id=2] .o_thread_message_star.fa-star').length,
@@ -1088,7 +1088,7 @@ QUnit.test('chatter: post, receive and star messages', async function (assert) {
 
     // unstar message 2
     await testUtils.dom.click(form.$('.o_thread_message[data-message-id=2] .o_thread_message_star'));
-    assert.ok(form.$('.o_thread_message[data-message-id=2] .o_thread_message_star.fa-star-o').length,
+    assert.ok(form.$('.o_thread_message[data-message-id=2] .o_thread_message_star.far.fa-star').length,
         "message 2 should not be starred");
 
     // very basic test of mention
@@ -2862,7 +2862,7 @@ QUnit.test('chatter: do not duplicate messages on (un)star message', async funct
 
     assert.containsOnce(form, '.o_thread_message',
         "there should be a single message in the chatter");
-    assert.ok(form.$('.o_thread_message .o_thread_message_star.fa-star-o').length,
+    assert.ok(form.$('.o_thread_message .o_thread_message_star.far.fa-star').length,
         "message should not be starred");
 
     // star message

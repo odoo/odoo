@@ -277,7 +277,7 @@ QUnit.module('web_editor', {}, function () {
             var pText = $field.find('.note-editable p').first().contents()[0];
             Wysiwyg.setRange(pText, 1);
 
-            await testUtils.dom.click($field.find('.note-toolbar .note-insert button:has(.fa-file-image-o)'));
+            await testUtils.dom.click($field.find('.note-toolbar .note-insert button:has(.fa-file-image)'));
 
             // load static xml file (dialog, media dialog, unsplash image widget)
             await defMediaDialog;
@@ -328,13 +328,13 @@ QUnit.module('web_editor', {}, function () {
             var pText = $field.find('.note-editable p').first().contents()[0];
             Wysiwyg.setRange(pText, 1);
 
-            await testUtils.dom.click($field.find('.note-toolbar .note-insert button:has(.fa-file-image-o)'));
+            await testUtils.dom.click($field.find('.note-toolbar .note-insert button:has(.fa-file-image)'));
 
             // load static xml file (dialog, media dialog, unsplash image widget)
             await defMediaDialog;
             $('.modal .tab-content .tab-pane').removeClass('fade'); // to be sync in test
             await testUtils.dom.click($('.modal a[aria-controls="editor-media-icon"]'));
-            await testUtils.dom.click($('.modal #editor-media-icon .font-icons-icon.fa-glass'));
+            await testUtils.dom.click($('.modal #editor-media-icon .font-icons-icon.fas.fa-glass-martini'));
 
             var $editable = form.$('.oe_form_field[name="body"] .note-editable');
 

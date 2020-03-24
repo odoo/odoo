@@ -11,7 +11,7 @@ var PopoverStockPicking = PopoverWidgetField.extend({
     title: _t('Planning Issue'),
     trigger: 'focus',
     color: 'text-danger',
-    icon: 'fa-exclamation-triangle',
+    icon: 'fas fa-exclamation-triangle',
 
     _render: function () {
         this._super();

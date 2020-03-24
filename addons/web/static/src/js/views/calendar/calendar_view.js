@@ -22,7 +22,7 @@ var fieldsToGather = [
 
 var CalendarView = AbstractView.extend({
     display_name: _lt('Calendar'),
-    icon: 'fa-calendar',
+    icon: 'fas fa-calendar-alt',
     jsLibs: [
         '/web/static/lib/fullcalendar/core/main.js',
         '/web/static/lib/fullcalendar/interaction/main.js',

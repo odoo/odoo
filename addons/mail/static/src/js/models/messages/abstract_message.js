@@ -170,9 +170,9 @@ var AbstractMessage =  Class.extend({
      */
     getNotificationIcon() {
         if (!this.hasNotificationsError()) {
-            return 'fa fa-envelope-o';
+            return 'far fa-envelope';
         }
-        return 'fa fa-envelope';
+        return 'fas fa-envelope';
     },
     /**
      * Gets the list of notifications of this message, in no specific order.

@@ -432,7 +432,7 @@ tour.register('test_survey_session_manage_tour', {
     trigger: '.o_survey_session_leaderboard_item:contains("nicktalope"):contains("3."):contains("10")',
     run: function () {} // 'nicktalope' is third with 10 points
 }, {
-    trigger: '.o_survey_session_close:has("i.fa-close")'
+    trigger: '.o_survey_session_close:has("i.fa-times")'
 }, {
     trigger: 'button[name="action_start_session"]',
     run: function () {} // check that we can start another session
