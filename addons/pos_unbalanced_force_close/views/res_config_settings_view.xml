@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_view_form_inherit_pos_force_close" model="ir.ui.view">
+        <field name="name">res.config.form.inherit.pos.force_close</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='point_of_sale']" position="inside" >
+                <div groups="base.group_no_one">
+                    <h2>Support</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="group_force_close_unbalanced"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_force_close_unbalanced"/>
+                                <div class="text-muted">
+                                    Allow to force the closing of a POS session that has
+                                    an unbalanced journal entry by posting the difference.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

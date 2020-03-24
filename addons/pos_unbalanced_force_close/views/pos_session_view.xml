@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_pos_session_form_inherit" model="ir.ui.view">
+            <field name="name">pos_unbalanced_force_close.pos.session.form.view</field>
+            <field name="model">pos.session</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="before">
+                    <field name="_is_unbalanced" invisible="1"/>
+                    <field name="_allow_force_close" invisible="1"/>
+                    <button id="force_close" name="action_pos_session_unbalanced_force_close" type="object"
+                            string="Force Close Unbalanced Session"
+                            class="oe_highlight"
+                            attrs="{'invisible' : ['|', '|', ('_is_unbalanced', '=', False),
+                                               ('_allow_force_close', '=', False),
+                                               ('state', 'in', ['opening_control', 'closed'])]}"
+                            groups="pos_unbalanced_force_close.group_force_close_unbalanced"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

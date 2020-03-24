@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="pos_unbalanced_force_close.form">
+            <field name="name">pos_unbalanced_force_close_wizard.form</field>
+            <field name="model">pos_unbalanced_force_close.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <div>
+                            <strong>This session has an unbalanced journal entry.</strong><br/>
+                        </div>
+                        <div>
+                            You have multiple options:
+                            <ul>
+                                <li>
+                                    <strong>Force close the session.</strong><br/>
+                                    The difference will be posted in the specified account.
+                                </li>
+                                <li>
+                                    <strong>Set the session into the "Recovery" modus.</strong><br/>
+                                    This will allow you to open a new session.
+                                    Don't forget to contact <a href="www.odoo.com/help" target="_blank">Odoo Support</a>
+                                    to investigate the issue and close this session.
+                                </li>
+                            </ul>
+                        </div>
+                    </group>
+                    <footer>
+                        <button name="force_close" type="object" string="Force Close" class="oe_highlight"/>
+                        <button name="set_rescue" type="object" string="Set Recovery Modus" class="oe_highlight"/>
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
