@@ -259,6 +259,11 @@ function wysiwygData(data) {
                     string: "image_height",
                     type: 'integer',
                 },
+                original_id: {
+                    string: "original_id",
+                    type: 'many2one',
+                    relation: 'ir.attachment',
+                },
             },
             records: [{
                 id: 1,

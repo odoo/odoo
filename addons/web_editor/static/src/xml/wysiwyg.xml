@@ -142,7 +142,6 @@
                 <button type="button" class="btn btn-primary o_upload_media_button">
                     <t t-esc="uploadText"/>
                 </button>
-                <t t-raw="alternateUpload"/>
             </div>
 
             <div class="input-group align-items-center ml-2">
@@ -158,7 +157,7 @@
                     </div>
                 </div>
             </div>
-
+            <t t-raw="0"/>
             <t t-call="wysiwyg.widgets.media.search"/>
         </div>
     </t>
@@ -170,12 +169,14 @@
             <t t-set="addText">Add URL</t>
             <t t-set="searchPlaceholder">Search an image</t>
             <t t-set="urlWarningTitle">The URL does not contain any image. The file will be added in the document section.</t>
-            <t t-if="widget.options.showQuickUpload" t-set="alternateUpload">
-                <button class="btn btn-primary o_we_quick_upload" type="button" title="Quick Upload">
-                    <i class="fa fa-fast-forward"/>
-                    <span class="sr-only">Quick Upload</span>
-                </button>
-            </t>
+            <div class="d-flex justify-content-end flex-grow-1 pr-3">
+                <div t-attf-class="custom-control custom-switch #{__debug__ or 'd-none'}">
+                    <input class="o_we_show_optimized ml-2 custom-control-input" type="checkbox" id="o_we_show_optimized_switch"/>
+                    <label class="custom-control-label" for="o_we_show_optimized_switch">
+                        Show optimized images
+                    </label>
+                </div>
+            </div>
         </t>
     </t>
 
@@ -215,7 +216,7 @@
                                     <div class="input-group-prepend">
                                         <div class="input-group-text">Width</div>
                                     </div>
-                                    <input type="number" class="form-control" id="o_we_width" name="width" aria-describedby="sizeHelp" min="1" t-att-max="widget.attachment.image_width" t-att-value="widget.defaultWidth"/>
+                                    <input type="number" class="form-control" id="o_we_width" name="width" aria-describedby="sizeHelp" min="1" t-att-max="widget.image_width" t-att-value="widget.defaultWidth"/>
                                     <div class="input-group-append">
                                         <div class="input-group-text">px</div>
                                     </div>
@@ -229,7 +230,7 @@
                                     <div class="input-group-prepend">
                                         <div class="input-group-text">Height</div>
                                     </div>
-                                    <input type="number" class="form-control" id="o_we_height" name="height" aria-describedby="sizeHelp" min="1" t-att-max="widget.attachment.image_height" t-att-value="widget.defaultHeight"/>
+                                    <input type="number" class="form-control" id="o_we_height" name="height" aria-describedby="sizeHelp" min="1" t-att-max="widget.image_height" t-att-value="widget.defaultHeight"/>
                                     <div class="input-group-append">
                                         <div class="input-group-text">px</div>
                                     </div>
@@ -304,13 +305,15 @@
     </t>
 
     <t t-name="wysiwyg.widgets.image.existing.attachment">
-        <div class="o_existing_attachment_cell position-relative bg-light" t-att-data-id="attachment.id">
+        <t t-set="isOptimized" t-value="!!attachment.original_id"/>
+        <div t-attf-class="o_existing_attachment_cell position-relative bg-light #{isOptimized and 'o_we_attachment_optimized d-none'}" t-att-data-id="attachment.id">
             <i t-if="attachment.type === 'binary'" class="fa fa-cog o_existing_attachment_optimize p-2" title="Optimize" role="img" aria-label="Optimize"/>
             <t t-call="wysiwyg.widgets.file.existing.remove"/>
             <div t-attf-class="d-flex align-items-center justify-content-center h-100 w-100">
                 <!-- 256 is 2 * ImageWidget.MIN_ROW_HEIGHT, hopefully the highest display width of any image -->
                 <img class="img img-fluid o_we_attachment_highlight" t-attf-src="#{attachment.image_src}?height=256" t-att-alt="attachment.name" t-att-title="attachment.name"/>
             </div>
+            <span t-if="isOptimized" class="badge badge-success">Optimized</span>
         </div>
     </t>
 
