@@ -19,7 +19,7 @@
                 <attribute name="attrs">{'invisible': [('l10n_latam_use_documents', '=', True), ('l10n_latam_country_code', '=', 'AR')]}</attribute>
             </label>
             <field name="refund_sequence" position="attributes">
-                <attribute name="attrs">{'invisible': [('l10n_latam_use_documents', '=', True), ('l10n_latam_country_code', '=', 'AR')]}</attribute>
+                <attribute name="attrs">{'invisible': ['|', ('type', 'not in', ['sale', 'purchase']), ('l10n_latam_use_documents', '=', True), ('l10n_latam_country_code', '=', 'AR')]}</attribute>
             </field>
             <xpath expr="//field[@name='sequence_number_next']/.." position="attributes">
                 <attribute name="attrs">{'invisible': [('l10n_latam_use_documents', '=', True), ('l10n_latam_country_code', '=', 'AR')]}</attribute>

@@ -323,7 +323,7 @@ class PurchaseOrder(models.Model):
         return self.env.ref('purchase.report_purchase_quotation').report_action(self)
 
     def button_approve(self, force=False):
-        self.write({'state': 'purchase', 'date_approve': fields.Date.context_today(self)})
+        self.write({'state': 'purchase', 'date_approve': fields.Datetime.now()})
         self.filtered(lambda p: p.company_id.po_lock == 'lock').write({'state': 'done'})
         return {}
 
@@ -417,6 +417,10 @@ class PurchaseOrder(models.Model):
             'default_company_id': self.company_id.id,
             'default_purchase_id': self.id,
         }
+        # Invoice_ids may be filtered depending on the user. To ensure we get all
+        # invoices related to the purchase order, we read them in sudo to fill the
+        # cache.
+        self.sudo()._read(['invoice_ids'])
         # choose the view_mode accordingly
         if len(self.invoice_ids) > 1 and not create_bill:
             result['domain'] = "[('id', 'in', " + str(self.invoice_ids.ids) + ")]"
