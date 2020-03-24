@@ -9,10 +9,12 @@ var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 var utils = require('web.utils');
 
+var SurveyPreloadImageMixin = require('survey.preload_image_mixin');
+
 var _t = core._t;
 var isMac = navigator.platform.toUpperCase().includes('MAC');
 
-publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
+publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloadImageMixin, {
     selector: '.o_survey_form',
     events: {
         'change .o_survey_form_choice_item': '_onChangeChoiceItem',
@@ -441,20 +443,35 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         self.$(selectorsToFadeout.join(',')).fadeOut(this.fadeInOutDelay, function () {
             resolveFadeOut();
         });
+        // Background management - Fade in / out on each transition
+        if (this.options.refreshBackground) {
+            $('div.o_survey_background').addClass('o_survey_background_transition');
+        }
 
-        Promise.all([fadeOutPromise, nextScreenPromise]).then(function (results) {
-            return self._onNextScreenDone(results[1], options);
+        var nextScreenWithBackgroundPromise = nextScreenPromise.then(function (result) {
+            self.nextScreenResult = result;
+            // once we have the next question, wait for the preload of the background
+            if (self.options.refreshBackground && result.background_image_url) {
+                return self._preloadBackground(result.background_image_url);
+            } else {
+                return Promise.resolve();
+            }
+        });
+
+        // Wait for the fade out and the preload of the next background. The next question have already been fetched.
+        Promise.all([fadeOutPromise, nextScreenWithBackgroundPromise]).then(function () {
+            return self._onNextScreenDone(options);
         });
     },
 
     /**
      * Handle server side validation and display eventual error messages.
      *
-     * @param {string} result the HTML result of the screen to display
      * @param {Object} options see '_submitForm' for details
      */
-   _onNextScreenDone: function (result, options) {
+   _onNextScreenDone: function (options) {
         var self = this;
+        var result = this.nextScreenResult;
 
         if (!(options && options.isFinish)
             && !this.options.sessionInProgress) {
@@ -511,7 +528,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                 // prevent enter submit if we're on a page description (there is nothing to submit)
                 this.preventEnterSubmit = true;
             }
-
+            // Background management - reset background overlay opacity to 0.7 to discover next background.
+            if (this.options.refreshBackground) {
+                $('div.o_survey_background').css("background-image", "url(" + result.background_image_url + ")");
+                $('div.o_survey_background').removeClass('o_survey_background_transition');
+            }
             this.$('.o_survey_form_content').fadeIn(this.fadeInOutDelay);
             $("html, body").animate({ scrollTop: 0 }, this.fadeInOutDelay);
             self._focusOnFirstInput();
@@ -991,6 +1012,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             $result.fadeIn(this.fadeInOutDelay);
         }
     },
+
+    // OTHER TOOLS
+    // -------------------------------------------------------------------------
 
    /**
     * Will automatically focus on the first input to allow the user to complete directly the survey,
