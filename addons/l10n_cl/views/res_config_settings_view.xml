@@ -10,7 +10,7 @@
                 <div id="l10n_cl_title" attrs="{'invisible': True}">
                     <h2>Chilean Localization</h2>
                 </div>
-                <div id="l10n_cl_section" class="row mt16 o_settings_container">
+                <div id="l10n_cl_section" class="row mt16 o_settings_container" attrs="{'invisible': [('country_code', '!=', 'CL')]}">
                     <!-- inside empty to add configuration of tags -->
                 </div>
             </xpath>
