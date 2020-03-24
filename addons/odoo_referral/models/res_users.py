@@ -10,7 +10,7 @@ import threading
 from hashlib import sha1
 from werkzeug import url_encode
 
-from odoo import api, models
+from odoo import api, models, tools
 
 
 DEST_SERVER_URL = 'https://www.odoo.com'
@@ -22,6 +22,8 @@ class Users(models.Model):
 
     @api.model
     def get_referral_updates_count_for_current_user(self):
+        if tools.config.options['test_enable']:
+            return 0
         token = self.env.user._get_or_generate_referral_token()
         if not token:
             return 0
