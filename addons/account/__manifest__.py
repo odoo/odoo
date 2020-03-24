@@ -38,6 +38,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'data/mail_template_data.xml',
         'wizard/account_validate_move_view.xml',
         'views/account_end_fy.xml',
+        'views/res_company_views.xml',
         'views/product_view.xml',
         'views/account_analytic_view.xml',
         'views/account_tip_data.xml',
