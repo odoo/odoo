@@ -22,7 +22,7 @@ var FormDescriptionPage = FieldChar.extend({
         var $button = $(
             '<div class="input-group-append">\
                 <button type="button" title="Open section" class="btn oe_edit_only o_icon_button">\
-                    <i class="fa fa-fw o_button_icon fa-info-circle"/>\
+                    <i class="fa fa-fw o_button_icon fa-external-link"/>\
                 </button>\
             </div>'
         );
