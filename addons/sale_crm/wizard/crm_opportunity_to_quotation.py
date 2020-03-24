@@ -24,7 +24,7 @@ class Opportunity2Quotation(models.TransientModel):
             lead = self.env['crm.lead'].browse(self._context['active_id'])
         if lead:
             result['lead_id'] = lead.id
-            partner_id = result.get('partner_id') or lead._find_matching_partner()
+            partner_id = result.get('partner_id') or lead._find_matching_partner().id
             if 'action' in fields and not result.get('action'):
                 result['action'] = 'exist' if partner_id else 'create'
             if 'partner_id' in fields and not result.get('partner_id'):
@@ -46,16 +46,5 @@ class Opportunity2Quotation(models.TransientModel):
         """
         self.ensure_one()
         if self.action != 'nothing':
-            self.lead_id.write({
-                'partner_id': self.partner_id.id if self.action == 'exist' else self._create_partner()
-            })
-            self.lead_id._onchange_partner_id()
+            self.lead_id.handle_partner_assignment(force_partner_id=self.partner_id.id, create_missing=(self.action == 'create'))
         return self.lead_id.action_new_quotation()
-
-    def _create_partner(self):
-        """ Create partner based on action.
-            :return int: created res.partner id
-        """
-        self.ensure_one()
-        result = self.lead_id.handle_partner_assignation(action='create')
-        return result.get(self.lead_id.id)
