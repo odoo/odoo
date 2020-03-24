@@ -962,7 +962,6 @@ var ActionManager = Widget.extend({
      * @param {OdooEvent} ev
      * @param {integer} ev.data.res_id
      * @param {string} ev.data.res_model
-     * @param {integer} ev.data.view_id
      */
     _onRedirect: function (ev) {
         this.do_action({
@@ -970,7 +969,7 @@ var ActionManager = Widget.extend({
             view_type: 'form',
             view_mode: 'form',
             res_model: ev.data.res_model,
-            views: ev.data.view_id ? [[ev.data.view_id,'form']] : [[false, 'form']],
+            views: [[false, 'form']],
             res_id: ev.data.res_id,
         });
     },

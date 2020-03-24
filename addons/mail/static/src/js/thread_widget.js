@@ -442,13 +442,12 @@ var ThreadWidget = Widget.extend({
      * @param {integer} [options.channelID]
      * @param {string} options.model
      * @param {integer} options.id
-     * @param {integer} [options.view]
      */
     _redirect: _.debounce(function (options) {
         if ('channelID' in options) {
             this.trigger('redirect_to_channel', options.channelID);
         } else {
-            this.trigger('redirect', options.model, options.id, options.view);
+            this.trigger('redirect', options.model, options.id);
         }
     }, 500, true),
     /**
@@ -623,10 +622,6 @@ var ThreadWidget = Widget.extend({
                     model: model,
                     id: id
                 };
-                var view = $(ev.target).data('view-id');
-                if (view !== undefined) {
-                    options = _.extend(options, {view: view});
-                }
             } else {
                 options = { channelID: id };
             }
