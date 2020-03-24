@@ -284,9 +284,7 @@ QUnit.module('web_editor', {}, function () {
             await testUtils.dom.click($('.modal #editor-media-image .o_existing_attachment_cell:first').removeClass('d-none'));
 
             var $editable = form.$('.oe_form_field[name="body"] .note-editable');
-
-            assert.strictEqual($editable.data('wysiwyg').getValue(),
-                '<p>t<img class="img-fluid o_we_custom_image" data-src="/web_editor/static/src/img/transparent.png">oto toto toto</p><p>tata</p>',
+            assert.ok($editable.find('img')[0].dataset.src.includes('/web_editor/static/src/img/transparent.png'),
                 "should have the image in the dom");
 
             testUtils.mock.unpatch(MediaDialog);

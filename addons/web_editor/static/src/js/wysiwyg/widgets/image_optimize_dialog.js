@@ -33,20 +33,37 @@ var ImageOptimizeDialog = Dialog.extend({
                 {text: _t("Keep Original"), close: false, click: this._onKeepOriginalClick.bind(this)}
             ],
         }, options));
-
-        this.isExisting = params.isExisting;
-        this.attachment = params.attachment;
+        this.params = params;
+    },
+    /**
+     * @override
+     */
+    willStart: async function () {
+        const _super = this._super.bind(this);
+        const {isExisting, attachment, optimizedWidth} = this.params;
+        this.isExisting = isExisting;
+        this.attachment = attachment;
+        let original = attachment;
+        if (attachment.original_id) {
+            [original] = await this._rpc({
+                model: 'ir.attachment',
+                method: 'read',
+                args: [[attachment.original_id[0]], ['image_width', 'image_height']],
+            });
+        }
+        this.image_width = original.image_width;
+        this.image_height = original.image_height;
         // We do not support resizing and quality for:
         //  - SVG because it doesn't make sense
         //  - GIF because our current code is not made to handle all the frames
         this.disableResize = ['image/jpeg', 'image/jpe', 'image/jpg', 'image/png'].indexOf(this.attachment.mimetype) === -1;
         this.disableQuality = this.disableResize;
         this.toggleQuality = this.attachment.mimetype === 'image/png';
-        this.optimizedWidth = Math.min(params.optimizedWidth || this.attachment.image_width, this.attachment.image_width);
+        this.optimizedWidth = Math.min(optimizedWidth || this.image_width, this.image_width);
         this.defaultQuality = this.isExisting ? 100 : 80;
-        this.defaultWidth = parseInt(this.isExisting ? this.attachment.image_width : this.optimizedWidth);
-        this.defaultHeight = parseInt(this.isExisting || !this.attachment.image_width ? this.attachment.image_height :
-            this.optimizedWidth / this.attachment.image_width * this.attachment.image_height);
+        this.defaultWidth = parseInt(this.isExisting ? this.image_width : this.optimizedWidth);
+        this.defaultHeight = parseInt(this.isExisting || !this.image_width ? this.image_height :
+            this.optimizedWidth / this.image_width * this.image_height);
 
         this.suggestedWidths = [];
         this._addSuggestedWidth(128, '128');
@@ -56,11 +73,12 @@ var ImageOptimizeDialog = Dialog.extend({
         this._addSuggestedWidth(this.optimizedWidth,
             _.str.sprintf(_t("%d (Suggested)"), this.optimizedWidth));
         this.suggestedWidths.push({
-            'width': this.attachment.image_width,
-            'text': _.str.sprintf(_t("%d (Original)"), this.attachment.image_width),
+            'width': this.image_width,
+            'text': _.str.sprintf(_t("%d (Original)"), this.image_width),
         });
         this.suggestedWidths = _.sortBy(this.suggestedWidths, 'width');
         this._updatePreview = _.debounce(this._updatePreview.bind(this), 300);
+        return _super(...arguments);
     },
     /**
      * @override
@@ -104,7 +122,7 @@ var ImageOptimizeDialog = Dialog.extend({
      * @param {string} text
      */
     _addSuggestedWidth: function (size, text) {
-        if (size < this.attachment.image_width) {
+        if (size < this.image_width) {
             this.suggestedWidths.push({
                 width: size,
                 text: text,
@@ -154,7 +172,7 @@ var ImageOptimizeDialog = Dialog.extend({
         var width = parseInt(this.$widthInput.val() || 0);
         var height = parseInt(this.$heightInput.val() || 0);
         this.$previewImage.attr('src', _.str.sprintf('/web/image/%d/%dx%d?quality=%d',
-            this.attachment.id, width, height, this._getAdaptedQuality()));
+            (this.attachment.original_id || [this.attachment.id])[0], width, height, this._getAdaptedQuality()));
         this.$widthPresets.removeClass('active');
         _.each(this.$widthPresets, function (button) {
             var $button = $(button);
@@ -189,10 +207,10 @@ var ImageOptimizeDialog = Dialog.extend({
         if (quality < 0 || quality > 100) {
             isValid = false;
         }
-        if (width < 0 || width > this.attachment.image_width) {
+        if (width < 0 || width > this.image_width) {
             isValid = false;
         }
-        if (height < 0 || height > this.attachment.image_height) {
+        if (height < 0 || height > this.image_height) {
             isValid = false;
         }
         return isValid;
@@ -208,7 +226,7 @@ var ImageOptimizeDialog = Dialog.extend({
     _onHeightInput: function () {
         var height = parseInt(this.$heightInput.val()) || 0;
         this.$widthInput
-            .val(parseInt(height / this.attachment.image_height * this.attachment.image_width));
+            .val(parseInt(height / this.image_height * this.image_width));
         this._updatePreview();
         this._validateForm();
     },
@@ -244,7 +262,7 @@ var ImageOptimizeDialog = Dialog.extend({
             'width': parseInt(this.$widthInput.val() || 0),
             'height': parseInt(this.$heightInput.val() || 0),
         };
-        if (this.isExisting) {
+        if (this.isExisting && !this.attachment.original_id) {
             params['copy'] = true;
         }
         return this._rpc({
@@ -292,7 +310,7 @@ var ImageOptimizeDialog = Dialog.extend({
     _onWidthInput: function () {
         var width = parseInt(this.$widthInput.val() || 0);
         this.$heightInput
-            .val(parseInt(width / this.attachment.image_width * this.attachment.image_height));
+            .val(parseInt(width / this.image_width * this.image_height));
         this._updatePreview();
         this._validateForm();
     },
