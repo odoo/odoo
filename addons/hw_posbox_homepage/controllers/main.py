@@ -220,7 +220,7 @@ class IoTboxHomepage(web.Home):
             'breadcrumb': 'Configure IoT Box',
             'loading_message': 'Configuring your IoT Box',
             'ssid': helpers.get_wifi_essid(),
-            'server': helpers.get_odoo_server_url(),
+            'server': helpers.get_odoo_server_url() or '',
             'hostname': subprocess.check_output('hostname').decode('utf-8').strip('\n'),
         })
 
