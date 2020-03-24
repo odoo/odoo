@@ -24,99 +24,20 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
             });
         }
         get order() {
-            return this.env.pos.get_order();
+            return this.props.order;
         }
         get orderlinesArray() {
-            return this.order.get_orderlines();
+            return this.order ? this.order.get_orderlines() : [];
         }
         mounted() {
-            this.env.pos.on(
-                'change:selectedOrder',
-                () => {
-                    this.trigger('new-orderline-selected');
-                },
-                this
-            );
-            this.order.orderlines.on(
-                'new-orderline-selected',
-                () => {
-                    this.trigger('new-orderline-selected');
-                },
-                this
-            );
-            this.order.orderlines.on(
-                'change',
-                () => {
-                    this.render();
-                },
-                this
-            );
-            this.order.orderlines.on(
-                'add remove',
-                () => {
-                    this.scrollToBottom = true;
-                    this.render();
-                },
-                this
-            );
-            this.order.on(
-                'change',
-                () => {
-                    this.render();
-                },
-                this
-            );
+            this._startListeners(this.props.order);
         }
-        patched() {
-            this.env.pos.off('change:selectedOrderline', null, this);
-            this.order.orderlines.off('new-orderline-selected', null, this);
-            this.order.orderlines.off('change', null, this);
-            this.order.orderlines.off('add remove', null, this);
-            this.order.off('change', null, this);
-
-            this.env.pos.on(
-                'change:selectedOrder',
-                () => {
-                    this.trigger('new-orderline-selected');
-                },
-                this
-            );
-            this.order.orderlines.on(
-                'new-orderline-selected',
-                () => {
-                    this.trigger('new-orderline-selected');
-                },
-                this
-            );
-            this.order.orderlines.on(
-                'change',
-                () => {
-                    this.render();
-                },
-                this
-            );
-            this.order.orderlines.on(
-                'add remove',
-                () => {
-                    this.scrollToBottom = true;
-                    this.render();
-                },
-                this
-            );
-            this.order.on(
-                'change',
-                () => {
-                    this.render();
-                },
-                this
-            );
+        willUpdateProps(nextProps) {
+            this._stopListeners(this.props.order);
+            this._startListeners(nextProps.order);
         }
         willUnmount() {
-            this.env.pos.off('change:selectedOrderline', null, this);
-            this.order.orderlines.off('new-orderline-selected', null, this);
-            this.order.orderlines.off('change', null, this);
-            this.order.orderlines.off('add remove', null, this);
-            this.order.off('change', null, this);
+            this._stopListeners(this.props.order);
         }
         selectLine(event) {
             this.order.select_orderline(event.detail.orderline);
@@ -149,6 +70,39 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
                 orderline.setPackLotLines({ modifiedPackLotLines, newPackLotLines });
             }
             this.order.select_orderline(event.detail.orderline);
+        }
+        _startListeners(order) {
+            this.env.pos.on(
+                'change:selectedOrder',
+                () => this.trigger('new-orderline-selected'),
+                this
+            );
+            if (order) {
+                order.orderlines.on(
+                    'new-orderline-selected',
+                    () => this.trigger('new-orderline-selected'),
+                    this
+                );
+                order.orderlines.on('change', this.render, this);
+                order.orderlines.on(
+                    'add remove',
+                    async () => {
+                        this.scrollToBottom = true;
+                        await this.render();
+                    },
+                    this
+                );
+                order.on('change', this.render, this);
+            }
+        }
+        _stopListeners(order) {
+            this.env.pos.off('change:selectedOrderline', null, this);
+            if (order) {
+                order.orderlines.off('new-orderline-selected', null, this);
+                order.orderlines.off('change', null, this);
+                order.orderlines.off('add remove', null, this);
+                order.off('change', null, this);
+            }
         }
     }
 

@@ -26,13 +26,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             this.numpadMode = 'quantity';
         }
         mounted() {
-            this.env.pos.on(
-                'change:selectedOrder',
-                () => {
-                    this.render();
-                },
-                this
-            );
+            this.env.pos.on('change:selectedOrder', this._onChangeSelectedOrder, this);
 
             this.env.pos.barcode_reader.set_action_callback({
                 product: this._barcodeProductAction.bind(this),
@@ -58,6 +52,9 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             });
         }
         async clickProduct(event) {
+            if (!this.currentOrder) {
+                this.env.pos.add_new_order();
+            }
             const product = event.detail;
             let draftPackLotLines, weight, packLotLinesToEdit;
 
@@ -188,6 +185,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 return code.code.substring(0, 29) + '...';
             } else {
                 return code.code;
+            }
+        }
+        async _onChangeSelectedOrder(pos, newSelectedOrder) {
+            if (newSelectedOrder) {
+                await this.render();
             }
         }
     }
