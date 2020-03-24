@@ -144,7 +144,7 @@ class MailComposer(models.TransientModel):
                           if message.get('model') and not message.get('res_id')]
             self = self.browse(list(set(self.ids) - set(author_ids)))  # not sure slef = ...
 
-        return super(MailComposer, self).check_access_rule(operation)
+        super(MailComposer, self).check_access_rule(operation)
 
     @api.multi
     def _notify(self, force_send=False, user_signature=True):
