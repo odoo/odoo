@@ -561,7 +561,7 @@ class MassMailing(models.Model):
             if mass_mailing.medium_id:
                 vals['medium_id'] = mass_mailing.medium_id.id
 
-            res[mass_mailing.id] = self.env['link.tracker'].convert_links(html, vals, blacklist=['/unsubscribe_from_list'])
+            res[mass_mailing.id] = self._shorten_links(html, vals, blacklist=['/unsubscribe_from_list'])
 
         return res
 

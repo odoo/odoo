@@ -751,7 +751,7 @@ Reason(s) of this behavior could be:
         lang = self.env.context.get('lang')
         template = self.env['mail.template'].browse(template_id)
         if template.lang:
-            lang = template._render_template(template.lang, 'sale.order', self.ids[0])
+            lang = template._render_lang(self.ids)[self.id]
         ctx = {
             'default_model': 'sale.order',
             'default_res_id': self.ids[0],

@@ -13,6 +13,7 @@ import time
 
 from email.utils import getaddresses
 from lxml import etree
+from werkzeug import urls
 
 import odoo
 from odoo.loglevels import ustr
@@ -250,9 +251,19 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
 
     return cleaned
 
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # HTML/Text management
-#----------------------------------------------------------
+# ----------------------------------------------------------
+
+URL_REGEX = r'(\bhref=[\'"](?!mailto:|tel:|sms:)([^\'"]+)[\'"])'
+TEXT_URL_REGEX = r'https?://[a-zA-Z0-9@:%._\+~#=/-]+(?:\?\S+)?'
+
+
+def validate_url(url):
+    if urls.url_parse(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
+        return 'http://' + url
+
+    return url
 
 
 def is_html_empty(html_content):
@@ -280,6 +291,7 @@ def html_keep_url(text):
         idx = item.end()
     final += text[idx:]
     return final
+
 
 def html2plaintext(html, body_id=None, encoding='utf-8'):
     """ From an HTML text, convert the HTML to plain text.

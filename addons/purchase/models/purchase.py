@@ -292,7 +292,7 @@ class PurchaseOrder(models.Model):
         if {'default_template_id', 'default_model', 'default_res_id'} <= ctx.keys():
             template = self.env['mail.template'].browse(ctx['default_template_id'])
             if template and template.lang:
-                lang = template._render_template(template.lang, ctx['default_model'], ctx['default_res_id'])
+                lang = template._render_lang([ctx['default_res_id']])[ctx['default_res_id']]
 
         self = self.with_context(lang=lang)
         if self.state in ['draft', 'sent']:

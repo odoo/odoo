@@ -6,8 +6,6 @@ import werkzeug.urls
 
 from odoo import api, fields, models, tools
 
-from odoo.addons.link_tracker.models.link_tracker import URL_REGEX
-
 
 class MailMail(models.Model):
     """Add the mass mailing campaign data to mail"""
@@ -54,7 +52,7 @@ class MailMail(models.Model):
         body = super(MailMail, self)._send_prepare_body()
 
         if self.mailing_id and body and self.mailing_trace_ids:
-            for match in re.findall(URL_REGEX, self.body_html):
+            for match in re.findall(tools.URL_REGEX, self.body_html):
                 href = match[0]
                 url = match[1]
 
@@ -69,7 +67,7 @@ class MailMail(models.Model):
             if tracking_url:
                 body = tools.append_content_to_html(body, tracking_url, plaintext=False, container_tag='div')
 
-        body = self.env['mail.thread']._replace_local_links(body)
+        body = self.env['mail.render.mixin']._replace_local_links(body)
 
         return body
 

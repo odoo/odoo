@@ -199,8 +199,8 @@ class SurveyInvite(models.TransientModel):
 
     def _send_mail(self, answer):
         """ Create mail specific for recipient containing notably its access token """
-        subject = self.env['mail.template']._render_template(self.subject, 'survey.user_input', answer.id, post_process=True)
-        body = self.env['mail.template']._render_template(self.body, 'survey.user_input', answer.id, post_process=True)
+        subject = self.env['mail.render.mixin']._render_template(self.subject, 'survey.user_input', answer.ids, post_process=True)[answer.id]
+        body = self.env['mail.render.mixin']._render_template(self.body, 'survey.user_input', answer.ids, post_process=True)[answer.id]
         # post the message
         mail_values = {
             'email_from': self.email_from,
@@ -231,7 +231,7 @@ class SurveyInvite(models.TransientModel):
                     'company': self.env.company,
                 }
                 body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
-                mail_values['body_html'] = self.env['mail.thread']._replace_local_links(body)
+                mail_values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
 
         return self.env['mail.mail'].sudo().create(mail_values)
 

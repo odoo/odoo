@@ -476,38 +476,6 @@ class MailThread(models.AbstractModel):
             return self.with_context(lang=self.env.user.lang)
         return self
 
-    def _replace_local_links(self, html, base_url=None):
-        """ Replace local links by absolute links. It is required in various
-        cases, for example when sending emails on chatter or sending mass
-        mailings. It replaces
-
-         * href of links (mailto will not match the regex)
-         * src of images (base64 hardcoded data will not match the regex)
-         * styling using url like background-image: url
-
-        It is done using regex because it is shorten than using an html parser
-        to create a potentially complex soupe and hope to have a result that
-        has not been harmed.
-        """
-        if not html:
-            return html
-
-        html = ustr(html)
-
-        def _sub_relative2absolute(match):
-            # compute here to do it only if really necessary + cache will ensure it is done only once
-            # if not base_url
-            if not _sub_relative2absolute.base_url:
-                _sub_relative2absolute.base_url = self.env["ir.config_parameter"].sudo().get_param("web.base.url")
-            return match.group(1) + urls.url_join(_sub_relative2absolute.base_url, match.group(2))
-
-        _sub_relative2absolute.base_url = base_url
-        html = re.sub(r"""(<img(?=\s)[^>]*\ssrc=")(/[^/][^"]+)""", _sub_relative2absolute, html)
-        html = re.sub(r"""(<a(?=\s)[^>]*\shref=")(/[^/][^"]+)""", _sub_relative2absolute, html)
-        html = re.sub(r"""(<[^>]+\bstyle="[^"]+\burl\('?)(/[^/'][^'")]+)""", _sub_relative2absolute, html)
-
-        return html
-
     @api.model
     def _garbage_collect_attachments(self):
         """ Garbage collect lost mail attachments. Those are attachments
@@ -2322,7 +2290,7 @@ class MailThread(models.AbstractModel):
                 mail_body = base_template.render(render_values, engine='ir.qweb', minimal_qcontext=True)
             else:
                 mail_body = message.body
-            mail_body = self._replace_local_links(mail_body)
+            mail_body = self.env['mail.render.mixin']._replace_local_links(mail_body)
 
             # create email
             for recipients_ids_chunk in split_every(recipients_max, recipients_ids):
@@ -2421,11 +2389,12 @@ class MailThread(models.AbstractModel):
 
         # Retrieve the language in which the template was rendered, in order to render the custom
         # layout in the same language.
+        # TDE FIXME: this whole brol should be cleaned !
         lang = self.env.context.get('lang')
         if {'default_template_id', 'default_model', 'default_res_id'} <= self.env.context.keys():
             template = self.env['mail.template'].browse(self.env.context['default_template_id'])
             if template and template.lang:
-                lang = template._render_template(template.lang, self.env.context['default_model'], self.env.context['default_res_id'])
+                lang = template._render_lang([self.env.context['default_res_id']])[self.env.context['default_res_id']]
 
         if not model_description and model:
             model_description = self.env['ir.model'].with_context(lang=lang)._get(model).display_name
@@ -2898,7 +2867,7 @@ class MailThread(models.AbstractModel):
                 'access_link': self._notify_get_action_link('view'),
             }
             assignation_msg = view.render(values, engine='ir.qweb', minimal_qcontext=True)
-            assignation_msg = self.env['mail.thread']._replace_local_links(assignation_msg)
+            assignation_msg = self.env['mail.render.mixin']._replace_local_links(assignation_msg)
             record.message_notify(
                 subject=_('You have been assigned to %s') % record.display_name,
                 body=assignation_msg,
