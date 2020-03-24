@@ -87,13 +87,17 @@ class UserInputSession(http.Controller):
 
         Writing the next question on the survey is sudo'ed to avoid potential access right issues.
         e.g: a survey user can create a live session from any survey but he can only write
-        on its own survey. """
+        on its own survey.
+
+        In addition to return a pre-rendered html template with the next question, we also return the background
+        to display. Background image depends on the next question to display and cannot be extracted from the
+        html rendered question template. The background needs to be changed at frontend side on a specific selector."""
 
         survey = self._fetch_from_token(survey_token)
 
         if not survey or not survey.session_state:
             # no open session
-            return ''
+            return {}
 
         if survey.session_state == 'ready':
             survey._session_open()
@@ -107,13 +111,19 @@ class UserInputSession(http.Controller):
                 'session_question_id': next_question.id,
                 'session_question_start_time': fields.Datetime.now() + relativedelta(seconds=1)
             })
-            request.env['bus.bus']._sendone(survey.access_token, 'next_question', {'question_start': now.timestamp()})
+            request.env['bus.bus']._sendone(survey.access_token, 'next_question', {
+                'question_start': now.timestamp()
+            })
 
             template_values = self._prepare_manage_session_values(survey)
             template_values['is_rpc_call'] = True
-            return request.env.ref('survey.user_input_session_manage_content')._render(template_values)
+
+            return {
+                'background_image_url': survey.session_question_id.background_image_url,
+                'question_html': request.env.ref('survey.user_input_session_manage_content')._render(template_values)
+            }
         else:
-            return False
+            return {}
 
     @http.route('/survey/session/results/<string:survey_token>', type='json', auth='user', website=True)
     def survey_session_results(self, survey_token, **kwargs):

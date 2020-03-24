@@ -46,6 +46,8 @@
                                     </div>
                                 </t>
                             </t>
+                            <!--Set question to false to avoid background miss match as last question is still in context and is used in survey.layout t-call.-->
+                            <t t-set="question" t-value="False"/>
                         </fieldset>
                     </div>
                 </div>

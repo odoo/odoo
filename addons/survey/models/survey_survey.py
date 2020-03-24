@@ -54,7 +54,8 @@ class Survey(models.Model):
     description_done = fields.Html(
         "End Message", translate=True,
         help="This message will be displayed when survey is completed")
-    background_image = fields.Binary("Background Image")
+    background_image = fields.Image("Background Image")
+    background_image_url = fields.Char('Background Url', compute="_compute_background_image_url")
     active = fields.Boolean("Active", default=True)
     user_id = fields.Many2one(
         'res.users', string='Responsible',
@@ -170,6 +171,12 @@ class Survey(models.Model):
             'The attempts limit needs to be a positive number if the survey has a limited number of attempts.'),
         ('badge_uniq', 'unique (certification_badge_id)', "The badge for each survey should be unique!"),
     ]
+
+    @api.depends('background_image', 'access_token')
+    def _compute_background_image_url(self):
+        self.background_image_url = False
+        for survey in self.filtered(lambda survey: survey.background_image and survey.access_token):
+            survey.background_image_url = "/survey/%s/get_background_image" % survey.access_token
 
     def _compute_users_can_signup(self):
         signup_allowed = self.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'

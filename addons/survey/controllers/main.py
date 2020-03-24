@@ -319,10 +319,11 @@ class Survey(http.Controller):
 
     def _prepare_question_html(self, survey_sudo, answer_sudo, **post):
         """ Survey page navigation is done in AJAX. This function prepare the 'next page' to display in html
-        and send back this html to the survey_form widget that will inject it into the page."""
+        and send back this html to the survey_form widget that will inject it into the page.
+        Background url must be given to the caller in order to process its refresh as we don't have the next question
+        object at frontend side."""
         survey_data = self._prepare_survey_data(survey_sudo, answer_sudo, **post)
 
-        survey_content = False
         if answer_sudo.state == 'done':
             survey_content = request.env.ref('survey.survey_fill_form_done')._render(survey_data)
         else:
@@ -345,10 +346,17 @@ class Survey(http.Controller):
                     'page_number': page_ids.index(survey_data['question'].id)
                 })
 
+        background_image_url = survey_sudo.background_image_url
+        if 'question' in survey_data:
+            background_image_url = survey_data['question'].background_image_url
+        elif 'page' in survey_data:
+            background_image_url = survey_data['page'].background_image_url
+
         return {
             'survey_content': survey_content,
             'survey_progress': survey_progress,
             'survey_navigation': request.env.ref('survey.survey_navigation')._render(survey_data),
+            'background_image_url': background_image_url
         }
 
     @http.route('/survey/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
@@ -364,18 +372,32 @@ class Survey(http.Controller):
         return request.render('survey.survey_page_fill',
             self._prepare_survey_data(access_data['survey_sudo'], answer_sudo, **post))
 
-    @http.route('/survey/get_background_image/<string:survey_token>/<string:answer_token>', type='http', auth="public", website=True, sitemap=False)
-    def survey_get_background(self, survey_token, answer_token):
-        access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
-        if access_data['validity_code'] is not True:
-            return werkzeug.exceptions.Forbidden()
+    # --------------------------------------------------------------------------
+    # ROUTES to handle question images + survey background transitions + Tool
+    # --------------------------------------------------------------------------
 
-        survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
+    @http.route('/survey/<string:survey_token>/get_background_image',
+                type='http', auth="public", website=True, sitemap=False)
+    def survey_get_background(self, survey_token):
+        survey_sudo, dummy = self._fetch_from_access_token(survey_token, False)
+        return self._get_background_image(survey_sudo._name, survey_sudo.id)
 
+    @http.route('/survey/<string:survey_token>/<int:section_id>/get_background_image',
+                type='http', auth="public", website=True, sitemap=False)
+    def survey_section_get_background(self, survey_token, section_id):
+        survey_sudo, dummy = self._fetch_from_access_token(survey_token, False)
+
+        section = survey_sudo.page_ids.filtered(lambda q: q.id == section_id)
+        if not section:
+            # trying to access a question that is not in this survey
+            raise werkzeug.exceptions.Forbidden()
+
+        return self._get_background_image(section._name, section.id)
+
+    def _get_background_image(self, model_name, res_id):
         status, headers, image_base64 = request.env['ir.http'].sudo().binary_content(
-            model='survey.survey', id=survey_sudo.id, field='background_image',
+            model=model_name, id=res_id, field='background_image',
             default_mimetype='image/png')
-
         return request.env['ir.http']._content_image_get_response(status, headers, image_base64)
 
     @http.route('/survey/get_question_image/<string:survey_token>/<string:answer_token>/<int:question_id>/<int:suggested_answer_id>', type='http', auth="public", website=True, sitemap=False)

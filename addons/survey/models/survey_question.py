@@ -58,6 +58,8 @@ class SurveyQuestion(models.Model):
         'Description', translate=True, sanitize=False,  # TDE TODO: sanitize but find a way to keep youtube iframe media stuff
         help="Use this field to add additional explanations about your question or to illustrate it with pictures or a video")
     question_placeholder = fields.Char("Placeholder", translate=True, compute="_compute_question_placeholder", store=True, readonly=False)
+    background_image = fields.Image("Background Image", compute="_compute_background_image", store=True, readonly=False)
+    background_image_url = fields.Char("Background Url", compute="_compute_background_image_url")
     survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade')
     scoring_type = fields.Selection(related='survey_id.scoring_type', string='Scoring Type', readonly=True)
     sequence = fields.Integer('Sequence', default=10)
@@ -178,6 +180,34 @@ class SurveyQuestion(models.Model):
             if question.question_type in ('simple_choice', 'multiple_choice', 'matrix') \
                     or not question.question_placeholder:  # avoid CacheMiss errors
                 question.question_placeholder = False
+
+    @api.depends('is_page')
+    def _compute_background_image(self):
+        """ Background image is only available on sections. """
+        for question in self.filtered(lambda q: not q.is_page):
+            question.background_image = False
+
+    @api.depends('survey_id.access_token', 'background_image', 'page_id', 'survey_id.background_image_url')
+    def _compute_background_image_url(self):
+        """ How the background url is computed:
+        - For a question: it depends on the related section (see below)
+        - For a section:
+            - if a section has a background, then we create the background URL using this section's ID
+            - if not, then we fallback on the survey background url """
+        base_bg_url = "/survey/%s/%s/get_background_image"
+        for question in self:
+            if question.is_page:
+                background_section_id = question.id if question.background_image else False
+            else:
+                background_section_id = question.page_id.id if question.page_id.background_image else False
+
+            if background_section_id:
+                question.background_image_url = base_bg_url % (
+                    question.survey_id.access_token,
+                    background_section_id
+                )
+            else:
+                question.background_image_url = question.survey_id.background_image_url
 
     @api.depends('is_page')
     def _compute_question_type(self):

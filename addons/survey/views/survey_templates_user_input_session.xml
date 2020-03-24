@@ -7,7 +7,13 @@
             <t t-set="no_livechat" t-value="True"/>
         </xpath>
         <xpath expr="//div[@id='wrapwrap']" position="attributes">
-            <attribute name="t-att-style" add="('height: 100%; overflow: auto; background: url(' + '/web/image/survey.survey/%s/background_image' % survey.id + ') no-repeat fixed center; box-shadow: inset 0 0 0 10000px rgba(255,255,255,.7); background-size: cover;') if survey and survey.background_image else 'height: 100%; overflow: auto;'"/>
+            <attribute name="t-att-style"
+                       add="(('background-image: url(' + survey.session_question_id.background_image_url + ');')
+                             if survey.session_question_id and survey.session_question_id.background_image_url
+                             else ('background-image: url(' + survey.background_image_url + ');')
+                             if survey.background_image_url
+                             else '')"/>
+            <attribute name="t-att-class" add="'o_survey_background'"/>
         </xpath>
         <xpath expr="//head/t[@t-call-assets][last()]" position="after">
             <t t-call-assets="survey.survey_assets" lazy_load="True"/>
@@ -76,7 +82,8 @@
             t-att-data-is-last-question="is_last_question"
             t-att-data-current-screen="'question' if is_scored_question else 'userInputs'"
             t-att-data-show-bar-chart="show_bar_chart"
-            t-att-data-show-text-answers="show_text_answers">
+            t-att-data-show-text-answers="show_text_answers"
+            t-att-data-refresh-background="any(page.background_image for page in survey.page_ids)">
             <div class="o_survey_question_header flex-wrap px-3 w-100 d-flex justify-content-between align-items-center position-absolute">
                 <h3>
                     <span>Go to <a t-att-href="survey.session_link" t-esc="survey.session_link" target="_blank" /></span>
@@ -137,6 +144,8 @@
                     </div>
                 </div>
                 <div class="o_survey_session_leaderboard w-100 flex-column flex-grow-1" style="display: none;">
+                    <!--Set question to false to avoid background miss match when no question are displayed.-->
+                    <t t-set="question" t-value="False"/>
                     <div class="d-flex">
                         <h1 class="o_survey_session_leaderboard_title flex-grow-1">
                             <span t-if="is_last_question">Final Leaderboard</span>
