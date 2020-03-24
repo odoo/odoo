@@ -21,6 +21,7 @@
             <field name="name">Small Refrigerator</field>
             <field name="usage">internal</field>
             <field name="location_id" ref="stock.stock_location_14"/>
+            <field name="barcode">WH-SHELF-REF</field>
         </record>
 
         <record id="product_cable_management_box" model="product.product">
@@ -521,7 +522,6 @@
         <function model="stock.picking" name="action_done">
             <value model="stock.picking" eval="[
                 obj().env.ref('stock.outgoing_shipment_main_warehouse1').id,
-                obj().env.ref('stock.outgoing_shipment_main_warehouse4').id,
                 obj().env.ref('stock.outgoing_shipment_main_warehouse5').id,
                 obj().env.ref('stock.outgoing_shipment_main_warehouse6').id,
                 obj().env.ref('stock.incomming_chicago_warehouse1').id,
@@ -531,10 +531,6 @@
 
         <record id="stock.outgoing_chicago_warehouse1" model="stock.picking">
             <field name="date_done" eval="DateTime.today() - timedelta(days=5)"/>
-        </record>
-
-        <record id="stock.outgoing_shipment_main_warehouse4" model="stock.picking">
-            <field name="date_done" eval="DateTime.today() - timedelta(days=24)"/>
         </record>
 
         <record id="stock.outgoing_shipment_main_warehouse5" model="stock.picking">
@@ -547,7 +543,7 @@
 
         <function model="stock.move" name="write">
             <value model="stock.move" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse4'))]"/>
-            <value eval="{'date_expected': DateTime.today() - timedelta(days=26)}"/>
+            <value eval="{'date_expected': DateTime.today() + timedelta(days=3)}"/>
         </function>
 
         <function model="stock.move" name="write">
