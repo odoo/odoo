@@ -213,10 +213,7 @@ class Goal(models.Model):
             return {}
 
         # generate a reminder report
-        template = self.env.ref('gamification.email_template_goal_reminder')\
-                           .get_email_template(self.id)
-        body_html = self.env['mail.template'].with_context(template._context)\
-            ._render_template(template.body_html, 'gamification.goal', self.id)
+        body_html = self.env.ref('gamification.email_template_goal_reminder')._render_field('body_html', self.ids, compute_lang=True)[self.id]
         self.message_notify(
             body=body_html,
             partner_ids=[self.user_id.partner_id.id],

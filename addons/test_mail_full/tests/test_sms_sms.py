@@ -64,7 +64,7 @@ class TestSMSPost(test_mail_full_common.TestSMSCommon, LinkTrackerMock):
     def test_body_link_shorten(self):
         link = 'http://www.example.com'
         self.env['link.tracker'].search([('url', '=', link)]).unlink()
-        new_body = self.env['link.tracker']._convert_links_text('Welcome to %s !' % link, self.tracker_values)
+        new_body = self.env['mail.render.mixin']._shorten_links_text('Welcome to %s !' % link, self.tracker_values)
         self.assertNotIn(link, new_body)
         self.assertLinkTracker(link, {'utm_campaign': self.utm_c.name, 'utm_medium': self.utm_m.name})
         link = self.env['link.tracker'].search([('url', '=', link)])
@@ -72,7 +72,7 @@ class TestSMSPost(test_mail_full_common.TestSMSCommon, LinkTrackerMock):
 
         link = 'https://test.odoo.com/my/super_page?test[0]=42&toto=áâà#title3'
         self.env['link.tracker'].search([('url', '=', link)]).unlink()
-        new_body = self.env['link.tracker']._convert_links_text('Welcome to %s !' % link, self.tracker_values)
+        new_body = self.env['mail.render.mixin']._shorten_links_text('Welcome to %s !' % link, self.tracker_values)
         self.assertNotIn(link, new_body)
         self.assertLinkTracker(link, {
             'utm_campaign': self.utm_c.name,
@@ -86,14 +86,14 @@ class TestSMSPost(test_mail_full_common.TestSMSCommon, LinkTrackerMock):
     def test_body_link_shorten_wshort(self):
         link = 'https://test.odoo.com/r/RAOUL'
         self.env['link.tracker'].search([('url', '=', link)]).unlink()
-        new_body = self.env['link.tracker']._convert_links_text('Welcome to %s !' % link, self.tracker_values)
+        new_body = self.env['mail.render.mixin']._shorten_links_text('Welcome to %s !' % link, self.tracker_values)
         self.assertIn(link, new_body)
         self.assertFalse(self.env['link.tracker'].search([('url', '=', link)]))
 
     def test_body_link_shorten_wunsubscribe(self):
         link = 'https://test.odoo.com/sms/3/'
         self.env['link.tracker'].search([('url', '=', link)]).unlink()
-        new_body = self.env['link.tracker']._convert_links_text('Welcome to %s !' % link, self.tracker_values)
+        new_body = self.env['mail.render.mixin']._shorten_links_text('Welcome to %s !' % link, self.tracker_values)
         self.assertIn(link, new_body)
         self.assertFalse(self.env['link.tracker'].search([('url', '=', link)]))
 

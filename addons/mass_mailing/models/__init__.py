@@ -7,7 +7,7 @@ from . import mailing_list
 from . import mailing_trace
 from . import mailing
 from . import mail_mail
-from . import mail_template
+from . import mail_render_mixin
 from . import mail_thread
 from . import res_config_settings
 from . import res_users
