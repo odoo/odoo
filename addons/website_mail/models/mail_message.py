@@ -58,7 +58,7 @@ class MailMessage(models.Model):
                     _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation)
                     + ' - ({} {}, {} {})'.format(_('Records:'), self.ids[:6], _('User:'), self._uid)
                 )
-        return super(MailMessage, self).check_access_rule(operation=operation)
+        super(MailMessage, self).check_access_rule(operation=operation)
 
     @api.multi
     def _portal_message_format(self, fields_list):
