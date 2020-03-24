@@ -191,11 +191,11 @@
                     </xpath>
 
                     <xpath expr="//t[@name='first_options']" position="after">
-                        <div class="row" t-if="record.unassigned_leads_count.raw_value">
+                        <div class="row" t-if="record.lead_unassigned_count.raw_value">
                             <div class="col-8">
                                 <a name="%(crm_case_form_view_salesteams_lead)d" type="action" context="{'search_default_unassigned_leads': 1}">
-                                    <field name="unassigned_leads_count"/>
-                                    <t t-if="record.unassigned_leads_count.raw_value == 1">Unassigned Lead</t>
+                                    <field name="lead_unassigned_count"/>
+                                    <t t-if="record.lead_unassigned_count.raw_value == 1">Unassigned Lead</t>
                                     <t t-else="">Unassigned Leads</t>
                                 </a>
                             </div>
@@ -212,16 +212,16 @@
                                 <field name="opportunities_amount" widget="monetary"/>
                             </div>
                         </div>
-                        <div class="row" t-if="record.overdue_opportunities_count.raw_value">
+                        <div class="row" t-if="record.opportunities_overdue_count.raw_value">
                             <div class="col-8">
                                 <a name="%(crm_lead_action_team_overdue_opportunity)d" type="action">
-                                    <field name="overdue_opportunities_count"/>
-                                    <t t-if="record.overdue_opportunities_count.raw_value == 1">Overdue Opportunity</t>
+                                    <field name="opportunities_overdue_count"/>
+                                    <t t-if="record.opportunities_overdue_count.raw_value == 1">Overdue Opportunity</t>
                                     <t t-else="">Overdue Opportunities</t>
                                 </a>
                             </div>
                              <div class="col-4 text-right text-truncate">
-                                <field name="overdue_opportunities_amount" widget="monetary"/>
+                                <field name="opportunities_overdue_amount" widget="monetary"/>
                             </div>
                         </div>
                     </xpath>

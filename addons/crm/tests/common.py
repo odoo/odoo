@@ -116,6 +116,10 @@ class TestCrmCommon(SavepointCase, MailCase):
             'contact_name': 'Amy Wong',
             'email_from': 'amy.wong@test.example.com',
         })
+        # update lead_1: stage_id is not computed anymore by default for leads
+        cls.lead_1.write({
+            'stage_id': cls.stage_team1_1.id,
+        })
 
         # create an history for new team
         cls.lead_team_1_won = cls.env['crm.lead'].create({
@@ -303,6 +307,7 @@ class TestLeadConvertMassCommon(TestLeadConvertCommon):
             'stage_id': False,
             'partner_id': cls.contact_1.id,
         })
+        cls.lead_w_partner.write({'stage_id': False})
         cls.lead_w_partner_company = cls.env['crm.lead'].create({
             'name': 'New1',
             'type': 'lead',
@@ -338,6 +343,4 @@ class TestLeadConvertMassCommon(TestLeadConvertCommon):
             'stage_id': cls.stage_team1_2.id,
             'active': False,
         })
-        for l in (cls.lead_w_partner | cls.lead_w_partner_company | cls.lead_w_contact | cls.lead_w_email | cls.lead_w_email_lost):
-            l._onchange_user_id()
         (cls.lead_w_partner | cls.lead_w_partner_company | cls.lead_w_contact | cls.lead_w_email | cls.lead_w_email_lost).flush()
