@@ -26,6 +26,20 @@ class ProductAttribute(models.Model):
         string="Create Variants",
         help="Check this if you want to create multiple variants for this attribute.", required=True)
 
+    @api.constrains('name')
+    def _check_name(self):
+        """ The name must be unique """
+        for att in self:
+            domain = [('name', '=', att.name), ('id', '!=', att.id)]
+            if self.search(domain):
+                raise ValidationError(_('The name be unique!'))
+
+    @api.multi
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        default = dict(default or {}, name=_("%s (Copy)") % self.name)
+        return super(ProductAttribute, self).copy(default=default)
+
     @api.multi
     def _without_no_variant_attributes(self):
         return self.filtered(lambda pa: pa.create_variant != 'no_variant')
