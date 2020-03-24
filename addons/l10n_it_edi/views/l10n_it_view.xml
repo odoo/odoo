@@ -57,16 +57,16 @@
         <field name="arch" type="xml">
         <data>
             <xpath expr="//div[hasclass('o_address_format')]" position="after">
-                <field name="l10n_it_mail_pec_server_id"/>
-                <field name="l10n_it_address_send_fatturapa"/>
-                <field name="l10n_it_address_recipient_fatturapa"/>
+                <field name="l10n_it_mail_pec_server_id" attrs="{'invisible': [('country_code', '!=', 'IT')]}"/>
+                <field name="l10n_it_address_send_fatturapa" attrs="{'invisible': [('country_code', '!=', 'IT')]}"/>
+                <field name="l10n_it_address_recipient_fatturapa" attrs="{'invisible': [('country_code', '!=', 'IT')]}"/>
             </xpath>
             <xpath expr="//field[@name='vat']" position="after">
-                <field name="l10n_it_codice_fiscale"/>
-                <field name="l10n_it_tax_system"/>
+                <field name="l10n_it_codice_fiscale" attrs="{'invisible': [('country_code', '!=', 'IT')]}"/>
+                <field name="l10n_it_tax_system" attrs="{'invisible': [('country_code', '!=', 'IT')]}"/>
             </xpath>
             <xpath expr="//page" position="after">
-                <page string="Electronic Invoicing" name="electronic_invoicing">
+                <page string="Electronic Invoicing" name="electronic_invoicing" attrs="{'invisible': [('country_code', '!=', 'IT')]}">
                     <group>
                         <separator string="Economic and Administrative Index" colspan="4"/>
                         <div colspan="4">
