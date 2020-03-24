@@ -1539,3 +1539,111 @@ class TestSaleMrpFlow(AccountTestCommon):
         mo = self.env['mrp.production'].search([('product_id', '=', finished_product.id)])
 
         self.assertTrue(mo, 'Manufacturing order created.')
+
+    def test_cancel_flow_1(self):
+        """ Sell a MTO/manufacture product.
+
+        Cancel the delivery and the production order. Then duplicate
+        the delivery. Another production order should be created."""
+        route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
+        route_mto = self.warehouse.mto_pull_id.route_id.id
+        self.uom_unit = self.env.ref('uom.product_uom_unit')
+
+        # Create finished product
+        finished_product = self.env['product.product'].create({
+            'name': 'Geyser',
+            'type': 'product',
+            'route_ids': [(4, route_mto), (4, route_manufacture)],
+        })
+
+        product_raw = self.env['product.product'].create({
+            'name': 'raw Geyser',
+            'type': 'product',
+        })
+
+        # Create bom for finish product
+        bom = self.env['mrp.bom'].create({
+            'product_id': finished_product.id,
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [(5, 0), (0, 0, {'product_id': product_raw.id})]
+        })
+
+        # Create sale order
+        sale_form = Form(self.env['sale.order'])
+        sale_form.partner_id = self.env['res.partner'].create({'name': 'My Test Partner'})
+        with sale_form.order_line.new() as line:
+            line.name = finished_product.name
+            line.product_id = finished_product
+            line.product_uom_qty = 1.0
+            line.product_uom = self.uom_unit
+            line.price_unit = 10.0
+        sale_order = sale_form.save()
+
+        sale_order.action_confirm()
+
+        mo = self.env['mrp.production'].search([('product_id', '=', finished_product.id)])
+        delivery = sale_order.picking_ids
+        delivery.action_cancel()
+        mo.action_cancel()
+        copied_delivery = delivery.copy()
+        copied_delivery.action_confirm()
+        mos = self.env['mrp.production'].search([('product_id', '=', finished_product.id)])
+        self.assertEqual(len(mos), 1)
+        self.assertEqual(mos.state, 'cancel')
+
+    def test_cancel_flow_2(self):
+        """ Sell a MTO/manufacture product.
+
+        Cancel the production order and the delivery. Then duplicate
+        the delivery. Another production order should be created."""
+        route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
+        route_mto = self.warehouse.mto_pull_id.route_id.id
+        self.uom_unit = self.env.ref('uom.product_uom_unit')
+
+        # Create finished product
+        finished_product = self.env['product.product'].create({
+            'name': 'Geyser',
+            'type': 'product',
+            'route_ids': [(4, route_mto), (4, route_manufacture)],
+        })
+
+        product_raw = self.env['product.product'].create({
+            'name': 'raw Geyser',
+            'type': 'product',
+        })
+
+        # Create bom for finish product
+        bom = self.env['mrp.bom'].create({
+            'product_id': finished_product.id,
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [(5, 0), (0, 0, {'product_id': product_raw.id})]
+        })
+
+        # Create sale order
+        sale_form = Form(self.env['sale.order'])
+        sale_form.partner_id = self.env['res.partner'].create({'name': 'My Test Partner'})
+        with sale_form.order_line.new() as line:
+            line.name = finished_product.name
+            line.product_id = finished_product
+            line.product_uom_qty = 1.0
+            line.product_uom = self.uom_unit
+            line.price_unit = 10.0
+        sale_order = sale_form.save()
+
+        sale_order.action_confirm()
+
+        mo = self.env['mrp.production'].search([('product_id', '=', finished_product.id)])
+        delivery = sale_order.picking_ids
+        mo.action_cancel()
+        delivery.action_cancel()
+        copied_delivery = delivery.copy()
+        copied_delivery.action_confirm()
+        mos = self.env['mrp.production'].search([('product_id', '=', finished_product.id)])
+        self.assertEqual(len(mos), 1)
+        self.assertEqual(mos.state, 'cancel')

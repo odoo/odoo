@@ -541,7 +541,7 @@ class StockMove(models.Model):
         self.ensure_one()
 
         picking_type_id = self.picking_type_id or self.picking_id.picking_type_id
-        
+
         # If "show suggestions" is not checked on the picking type, we have to filter out the
         # reserved move lines. We do this by displaying `move_line_nosuggest_ids`. We use
         # different views to display one field or another so that the webclient doesn't have to
@@ -1291,7 +1291,12 @@ class StockMove(models.Model):
                 if all(state in ('done', 'cancel') for state in siblings_states):
                     move.move_dest_ids.write({'procure_method': 'make_to_stock'})
                     move.move_dest_ids.write({'move_orig_ids': [(3, move.id, 0)]})
-        self.write({'state': 'cancel', 'move_orig_ids': [(5, 0, 0)], 'delay_alert_date': False})
+        self.write({
+            'state': 'cancel',
+            'move_orig_ids': [(5, 0, 0)],
+            'delay_alert_date': False,
+            'procure_method': 'make_to_stock',
+        })
         return True
 
     def _prepare_extra_move_vals(self, qty):
