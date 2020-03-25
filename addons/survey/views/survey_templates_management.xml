@@ -101,9 +101,9 @@
         </div>
     </template>
 
-    <!-- Survey Home page - Access Code
-    Mainly used in 'session mode' to give an easy access to the survey through the '/s' route. -->
-    <template id="survey_access_code" name="Survey: Access Code page">
+    <!-- Survey Home page - Session Code
+    Used in 'session mode' to give an easy access to the survey through the '/s' route. -->
+    <template id="survey_session_code" name="Survey: Access Code page">
         <t t-call="survey.layout">
             <div class="wrap o_survey_wrap pb16 d-flex">
                 <div class="container o_survey_quick_access d-flex flex-column">
@@ -114,7 +114,7 @@
                             </div>
                             <div class="row">
                             <div class="offset-md-4 col-md-4 text-center">
-                                <input id="access_code" type="text" placeholder="ABC123"
+                                <input id="session_code" type="text" placeholder="4812"
                                        class="form-control o_survey_question_text_box font-weight-bold bg-transparent text-primary text-center rounded-0 p-2 w-100"/>
                             </div>
                             <div class="col-3 text-center o_survey_error text-danger d-none pt-2" role="alert">

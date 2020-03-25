@@ -23,6 +23,27 @@ class Survey(models.Model):
     def _get_default_access_token(self):
         return str(uuid.uuid4())
 
+    def _get_default_session_code(self):
+        """ Attempt to generate a session code for our survey.
+        The method will first try to generate 20 codes with 4 digits each and check if any are colliding.
+        If we have at least one non-colliding code, we use it.
+        If all 20 generated codes are colliding, we try with 20 codes of 5 digits,
+        then 6, ... up to 10 digits. """
+
+        for digits_count in range(4, 10):
+            range_lower_bound = 1 * (10 ** (digits_count - 1))
+            range_upper_bound = (range_lower_bound * 10) - 1
+            code_candidates = set([str(random.randint(range_lower_bound, range_upper_bound)) for i in range(20)])
+            colliding_codes = self.sudo().search_read(
+                [('session_code', 'in', list(code_candidates))],
+                ['session_code']
+            )
+            code_candidates -= set([colliding_code['session_code'] for colliding_code in colliding_codes])
+            if code_candidates:
+                return list(code_candidates)[0]
+
+        return False  # could not generate a code
+
     # description
     title = fields.Char('Survey Title', required=True, translate=True)
     color = fields.Integer('Color Index', default=0)
@@ -113,6 +134,9 @@ class Survey(models.Model):
         ('ready', 'Ready'),
         ('in_progress', 'In Progress'),
         ], string="Session State", copy=False)
+    session_code = fields.Char('Session Code', default=lambda self: self._get_default_session_code(), copy=False,
+        help="This code will be used by your attendees to reach your session. Feel free to customize it however you like!")
+    session_link = fields.Char('Session Link', compute='_compute_session_link')
     # live sessions - current question fields
     session_question_id = fields.Many2one('survey.question', string="Current Question", copy=False,
         help="The current question of the survey session.")
@@ -130,6 +154,7 @@ class Survey(models.Model):
 
     _sql_constraints = [
         ('access_token_unique', 'unique(access_token)', 'Access token should be unique'),
+        ('session_code_unique', 'unique(session_code)', 'Session code should be unique'),
         ('certification_check', "CHECK( scoring_type!='no_scoring' OR certification=False )",
             'You can only create certifications for surveys that have a scoring mechanism.'),
         ('time_limit_check', "CHECK( (is_time_limited=False) OR (time_limit is not null AND time_limit > 0) )",
@@ -192,10 +217,14 @@ class Survey(models.Model):
         """ We have to loop since our result is dependent of the survey.session_start_time.
         This field is currently used to display the count about a single survey, in the
         context of sessions, so it should not matter too much. """
+
         for survey in self:
             answer_count = 0
             input_count = self.env['survey.user_input'].read_group(
-                [('survey_id', '=', survey.id), ('create_date', '>=', survey.session_start_time)],
+                [('survey_id', '=', survey.id),
+                 ('is_session_answer', '=', True),
+                 ('state', '!=', 'done'),
+                 ('create_date', '>=', survey.session_start_time)],
                 ['create_uid:count'],
                 ['survey_id'],
             )
@@ -223,6 +252,18 @@ class Survey(models.Model):
                 answer_count = input_line_count[0].get('user_input_id', 0)
 
             survey.session_question_answer_count = answer_count
+
+    @api.depends('session_code')
+    def _compute_session_link(self):
+        for survey in self:
+            if survey.session_code:
+                survey.session_link = werkzeug.urls.url_join(
+                    survey.get_base_url(),
+                    '/s/%s' % survey.session_code)
+            else:
+                survey.session_link = werkzeug.urls.url_join(
+                    survey.get_base_url(),
+                    survey.get_start_url())
 
     @api.depends('scoring_type', 'question_and_page_ids.save_as_nickname')
     def _compute_session_show_leaderboard(self):

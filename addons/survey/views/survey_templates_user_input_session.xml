@@ -32,9 +32,9 @@
                     <div class="text-center">
                         <h1 class="mb-4" t-field="survey.title" />
                         <h2 class="mb-5 font-weight-normal">
-                            <span>Go to <a t-att-href="survey_url" t-esc="survey_url" target="_blank" /></span>
+                            <span>Go to <a t-att-href="survey.session_link" t-esc="survey.session_link" target="_blank" /></span>
                             <i class="fa fa-copy font-weight-normal ml-3 o_survey_session_copy" />
-                            <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey_url" />
+                            <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey.session_link" />
                         </h2>
                         <h2 class="font-weight-normal"><span>Waiting for attendees...</span>
                             <span class="ml-1 font-weight-bold o_survey_session_attendees_count" t-esc="survey.session_answer_count" />
@@ -78,9 +78,9 @@
             t-att-data-show-text-answers="show_text_answers">
             <div class="p-4 d-flex flex-column o_survey_session_manage_container min-w-75 pt-6">
                 <h3 class="o_survey_session_link_reminder">
-                    <span>Go to <a t-att-href="survey_url" t-esc="survey_url" target="_blank" /></span>
+                    <span>Go to <a t-att-href="survey.session_link" t-esc="survey.session_link" target="_blank" /></span>
                     <i class="fa fa-copy font-weight-normal ml-3 mr-1 o_survey_session_copy" />
-                    <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey_url" />
+                    <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey.session_link" />
                 </h3>
                 <a role="button"
                     class="font-weight-bold fa fa-chevron-right o_survey_session_navigation o_survey_session_navigation_next p-3" />

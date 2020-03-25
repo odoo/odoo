@@ -40,16 +40,6 @@ class Survey(http.Controller):
             ], limit=1)
         return survey_sudo, answer_sudo
 
-    def _fetch_from_access_code(self, survey_short_token):
-        if survey_short_token and len(survey_short_token) == 6:
-            matching_survey = request.env['survey.survey'].sudo().search([
-                ('state', '=', 'open'),
-                ('access_token', 'like', f'{survey_short_token}%'),
-            ])
-            if len(matching_survey) == 1:
-                return matching_survey
-        return False
-
     def _check_validity(self, survey_token, answer_token, ensure_token=True):
         """ Check survey is open and can be taken. This does not checks for
         security rules, only functional / business rules. It returns a string key
@@ -147,30 +137,6 @@ class Survey(http.Controller):
             return request.render("survey.survey_auth_required", {'survey': survey_sudo, 'redirect_url': redirect_url})
         elif error_key == 'answer_deadline' and answer_sudo.access_token:
             return request.render("survey.survey_closed_expired", {'survey': survey_sudo})
-
-        return werkzeug.utils.redirect("/")
-
-    # ------------------------------------------------------------
-    # QUICK ACCESS SURVEY ROUTES
-    # ------------------------------------------------------------
-
-    @http.route('/s', type='http', auth='public', website=True, sitemap=False)
-    def survey_access_code(self, **post):
-        """ Renders the survey access code page route.
-        This page allows the user to enter the short code of the survey.
-        It's mainly used in 'session mode' when attendees have to manually type the
-        URL, to ease survey access. """
-        return request.render("survey.survey_access_code")
-
-    @http.route('/s/<string:survey_short_token>', type='http', auth='public', website=True)
-    def survey_start_short(self, survey_short_token):
-        """" Redirects to 'survey_start' route using a shortened link & token.
-        We match the 6 first characters of the token for open surveys.
-        This route is mostly used in survey sessions where we need short links for people to type. """
-
-        survey = self._fetch_from_access_code(survey_short_token)
-        if survey:
-            return werkzeug.utils.redirect("/survey/start/%s" % survey.access_token)
 
         return werkzeug.utils.redirect("/")
 
@@ -491,17 +457,6 @@ class Survey(http.Controller):
             answer_sudo.write(vals)
 
         return self._prepare_question_html(survey_sudo, answer_sudo)
-
-    @http.route('/survey/check_access_code/<string:access_code>', type='json', auth='public', website=True)
-    def survey_access_code_check(self, access_code):
-        """ Checks if the given code is matching a survey access_token.
-        If yes, redirect to /s/code route.
-        If not, return error. The user is invited to type again the code. """
-        survey = self._fetch_from_access_code(access_code)
-        if survey:
-            return {"survey_url": "/survey/start/%s" % survey.access_token}
-
-        return {"error": "survey_wrong"}
 
     def _extract_comment_from_answers(self, question, answers):
         """ Answers is a custom structure depending of the question type

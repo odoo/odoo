@@ -110,7 +110,7 @@
         <div class="wrap o_survey_start pb256">
             <div class='mt32 mb32'>
                 <div t-field='survey.description' class="oe_no_empty"/>
-                <t t-if="survey.session_state == 'ready'">
+                <t t-if="answer.is_session_answer">
                     <div class="font-weight-bold">
                         The session will begin automatically when the host starts.
                     </div>
