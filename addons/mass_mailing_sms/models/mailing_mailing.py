@@ -43,7 +43,7 @@ class Mailing(models.Model):
         'Unregistered IAP account', compute='_compute_sms_has_iap_failure',
         help='UX Field to propose to Register the SMS IAP account')
     sms_force_send = fields.Boolean(
-        'Send Directly', help='Use at your own risks.')
+        'Send Directly', help='Immediately send the SMS Mailing instead of queuing up. Use at your own risk.')
     # opt_out_link
     sms_allow_unsubscribe = fields.Boolean('Include opt-out link', default=False)
 
@@ -97,17 +97,6 @@ class Mailing(models.Model):
     # --------------------------------------------------
     # BUSINESS / VIEWS ACTIONS
     # --------------------------------------------------
-
-    def action_put_in_queue_sms(self):
-        res = self.action_put_in_queue()
-        if self.sms_force_send:
-            self.action_send_mail()
-        return res
-
-    def action_send_now_sms(self):
-        if not self.sms_force_send:
-            self.write({'sms_force_send': True})
-        return self.action_send_mail()
 
     def action_retry_failed(self):
         mass_sms = self.filtered(lambda m: m.mailing_type == 'sms')

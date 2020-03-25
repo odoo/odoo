@@ -19,18 +19,25 @@
         <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_form"/>
         <field name="arch" type="xml">
             <!-- Buttons / Actions -->
-            <xpath expr="//button[@name='action_put_in_queue']" position="attributes">
-                <attribute name="attrs">{'invisible': ['|', ('state', 'in', ('in_queue', 'done')), ('mailing_type', '!=', 'mail')]}</attribute>
+            <xpath expr="//button[@name='action_launch']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', ('mailing_type', '!=', 'mail'), ('state', 'in', ('in_queue', 'done')), ('schedule_type', '=', 'scheduled')]}</attribute>
             </xpath>
-            <xpath expr="//button[@name='action_put_in_queue']" position="after">
-                <button name="action_put_in_queue_sms" type="object"
-                    class="oe_highlight" string="Put in Queue"
-                    attrs="{'invisible': ['|', ('mailing_type', '=', 'mail'), ('state', 'in', ('in_queue', 'done'))]}"
-                    confirm="This will schedule an SMS marketing to all recipients. Do you still want to proceed ?"/>
-                <button name="action_send_now_sms" type="object"
-                    string="Send Now"
-                    attrs="{'invisible': ['|', ('mailing_type', '=', 'mail'), ('state', 'in', ('done'))]}"
+            <xpath expr="//button[@name='action_test']" position="before">
+                <button name="action_put_in_queue" type="object"
+                    string="Launch" class="oe_highlight"
+                    attrs="{'invisible': ['|', '|', '|', ('mailing_type', '=', 'mail'), ('state', 'in', ('in_queue', 'done')), ('schedule_type', '=', 'scheduled'), ('sms_force_send', '=', True)]}"
+                    confirm="This will send SMS to all recipients. Do you still want to proceed ?"/>
+                <button name="action_send_mail" type="object"
+                    string="Launch Now" class="oe_highlight"
+                    attrs="{'invisible': ['|', '|', '|', ('mailing_type', '=', 'mail'), ('state', 'in', ('in_queue', 'done')), ('schedule_type', '=', 'scheduled'), ('sms_force_send', '!=', True)]}"
                     confirm="This will send SMS to all recipients now. Do you still want to proceed ?"/>
+            </xpath>
+            <xpath expr="//div[@name='schedule_block']/div[hasclass('row')]" position="inside">
+                <div class="col-xs-12 col-md-9"
+                     attrs="{'invisible': ['|', '|', ('mailing_type', '=', 'mail'), ('state', 'in', ['in_queue', 'sending', 'done']), ('schedule_type', '=', 'scheduled')]}">
+                    <label for="sms_force_send" string="Skip Queue"/>
+                    <field name="sms_force_send"/>
+                </div>
             </xpath>
             <!-- Headers / Warnings -->
             <xpath expr="//header" position="after">
@@ -110,11 +117,8 @@
             </xpath>
             <xpath expr="//page[@name='mail_body']" position="after">
                 <page string="SMS Content" name="sms_body" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">
-                    <field name="body_plaintext" widget="sms_widget" attrs="{'required': [('mailing_type', '=', 'sms')]}" 
+                    <field name="body_plaintext" widget="sms_widget" attrs="{'required': [('mailing_type', '=', 'sms')]}"
                         options='{"enable_emojis": True}'/>
-                    <group>
-                        <field name="sms_force_send" invisible="1"/>
-                    </group>
                 </page>
             </xpath>
             <xpath expr="//field[@name='user_id']" position="after">
@@ -217,7 +221,7 @@
     <record id="mailing_mailing_action_sms" model="ir.actions.act_window">
         <field name="name">SMS Marketing</field>
         <field name="res_model">mailing.mailing</field>
-        <field name="view_mode">kanban,tree,form,graph</field>
+        <field name="view_mode">kanban,tree,form,calendar,graph</field>
         <field name="search_view_id" ref="mailing_mailing_view_search_sms"/>
         <field name="domain">[('mailing_type', '=', 'sms')]</field>
         <field name="context">{
