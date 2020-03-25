@@ -127,6 +127,13 @@ class StockWarehouseOrderpoint(models.Model):
                 'lead_days_date': fields.Date.to_string(orderpoint.lead_days_date),
                 'lead_days_description': lead_days_description,
                 'today': fields.Date.to_string(fields.Date.today()),
+                'trigger': orderpoint.trigger,
+                'qty_forecast': orderpoint.qty_forecast,
+                'qty_to_order': orderpoint.qty_to_order,
+                'product_min_qty': orderpoint.product_min_qty,
+                'product_max_qty': orderpoint.product_max_qty,
+                'product_uom_name': orderpoint.product_uom_name,
+                'virtual': orderpoint.trigger == 'manual' and orderpoint.create_uid.id == SUPERUSER_ID,
             })
 
     @api.depends('rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
