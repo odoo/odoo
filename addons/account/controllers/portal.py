@@ -4,6 +4,7 @@
 from odoo import http, _
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 from odoo.exceptions import AccessError, MissingError
+from collections import OrderedDict
 from odoo.http import request
 
 
@@ -29,14 +30,14 @@ class PortalAccount(CustomerPortal):
         return self._get_page_view_values(invoice, access_token, values, 'my_invoices_history', False, **kwargs)
 
     @http.route(['/my/invoices', '/my/invoices/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_invoices(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
+    def portal_my_invoices(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
         values = self._prepare_portal_layout_values()
         AccountInvoice = request.env['account.move']
 
         domain = [('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]
 
         searchbar_sortings = {
-            'date': {'label': _('Invoice Date'), 'order': 'invoice_date desc'},
+            'date': {'label': _('Date'), 'order': 'invoice_date desc'},
             'duedate': {'label': _('Due Date'), 'order': 'invoice_date_due desc'},
             'name': {'label': _('Reference'), 'order': 'name desc'},
             'state': {'label': _('Status'), 'order': 'state'},
@@ -45,6 +46,16 @@ class PortalAccount(CustomerPortal):
         if not sortby:
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
+
+        searchbar_filters = {
+            'all': {'label': _('All'), 'domain': [('move_type', 'in', ['in_invoice', 'out_invoice'])]},
+            'invoices': {'label': _('Invoices'), 'domain': [('move_type', '=', 'out_invoice')]},
+            'bills': {'label': _('Bills'), 'domain': [('move_type', '=', 'in_invoice')]},
+        }
+        # default filter by value
+        if not filterby:
+            filterby = 'all'
+        domain += searchbar_filters[filterby]['domain']
 
         archive_groups = self._get_archive_groups('account.move', domain)
         if date_begin and date_end:
@@ -73,6 +84,8 @@ class PortalAccount(CustomerPortal):
             'default_url': '/my/invoices',
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
+            'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
+            'filterby':filterby,
         })
         return request.render("account.portal_my_invoices", values)
 
