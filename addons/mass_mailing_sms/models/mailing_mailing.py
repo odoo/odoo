@@ -79,15 +79,13 @@ class Mailing(models.Model):
     # --------------------------------------------------
 
     def action_put_in_queue_sms(self):
-        res = self.action_put_in_queue()
-        if self.sms_force_send:
-            self.action_send_mail()
-        return res
+        return self.action_put_in_queue()
 
     def action_send_now_sms(self):
-        if not self.sms_force_send:
-            self.write({'sms_force_send': True})
-        return self.action_send_mail()
+        if self.sms_force_send:
+            return self.action_send_mail()
+        else:
+            return self.action_put_in_queue()
 
     def action_retry_failed(self):
         mass_sms = self.filtered(lambda m: m.mailing_type == 'sms')

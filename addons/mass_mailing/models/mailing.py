@@ -14,7 +14,7 @@ from dateutil.relativedelta import relativedelta
 from werkzeug.urls import url_join
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
@@ -48,6 +48,15 @@ class MassMailing(models.Model):
     @api.model
     def default_get(self, fields):
         vals = super(MassMailing, self).default_get(fields)
+
+        #When created from the calendar view, we set the schedule_date at the selected date.
+        default_schedule_date = self.env.context.get('default_schedule_date')
+        if default_schedule_date:
+            vals.update({
+                'schedule_type': 'scheduled',
+                'schedule_date': default_schedule_date
+            })
+
         if 'contact_list_ids' in fields and not vals.get('contact_list_ids') and vals.get('mailing_model_id'):
             if vals.get('mailing_model_id') == self.env['ir.model']._get('mailing.list').id:
                 mailing_list = self.env['mailing.list'].search([], limit=2)
@@ -69,7 +78,10 @@ class MassMailing(models.Model):
     email_from = fields.Char(string='Send From', required=True,
         default=lambda self: self.env.user.email_formatted)
     sent_date = fields.Datetime(string='Sent Date', copy=False)
-    schedule_date = fields.Datetime(string='Scheduled for', tracking=True)
+
+    schedule_type = fields.Selection([('now', 'Send now'), ('scheduled', 'Send on')], string='Schedule',
+        default='now', required=True, readonly=True, states={'draft': [('readonly', False)]})
+    schedule_date = fields.Datetime(string='Scheduled for', tracking=True, readonly=True, states={'draft': [('readonly', False)]})
     # don't translate 'body_arch', the translations are only on 'body_html'
     body_arch = fields.Html(string='Body', translate=False)
     body_html = fields.Html(string='Body converted to be send by mail', sanitize_attributes=False)
@@ -239,11 +251,23 @@ class MassMailing(models.Model):
                 mailing.mailing_domain = repr(mailing._get_default_mailing_domain())
 
     # ------------------------------------------------------
+    # CONSTRAINS
+    # ------------------------------------------------------
+
+    @api.constrains('schedule_date', 'schedule_type')
+    def _check_schedule_date(self):
+        for mailing in self:
+            if mailing.schedule_type == 'scheduled' and (not mailing.schedule_date or mailing.schedule_date < fields.Datetime.now()):
+                raise ValidationError(_('Please select a date equal/or greater than the current date.'))
+
+    # ------------------------------------------------------
     # ORM
     # ------------------------------------------------------
 
     @api.model
     def create(self, values):
+        if values.get('schedule_type') == 'now' and values.get('schedule_date'):
+            values['schedule_date'] = False
         if values.get('subject') and not values.get('name'):
             values['name'] = "%s %s" % (values['subject'], datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT))
         if values.get('body_html'):
@@ -251,6 +275,8 @@ class MassMailing(models.Model):
         return super(MassMailing, self).create(values)
 
     def write(self, values):
+        if values.get('schedule_type') == 'now' and values.get('schedule_date'):
+            values['schedule_date'] = False
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
         return super(MassMailing, self).write(values)
@@ -297,17 +323,11 @@ class MassMailing(models.Model):
             'context': ctx,
         }
 
-    def action_schedule(self):
-        self.ensure_one()
-        action = self.env.ref('mass_mailing.mailing_mailing_schedule_date_action').read()[0]
-        action['context'] = dict(self.env.context, default_mass_mailing_id=self.id)
-        return action
-
     def action_put_in_queue(self):
         self.write({'state': 'in_queue'})
 
     def action_cancel(self):
-        self.write({'state': 'draft', 'schedule_date': False, 'next_departure': False})
+        self.write({'state': 'draft', 'schedule_date': False, 'schedule_type': 'now', 'next_departure': False})
 
     def action_retry_failed(self):
         failed_mails = self.env['mail.mail'].sudo().search([
