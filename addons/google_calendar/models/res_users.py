@@ -62,7 +62,7 @@ class User(models.Model):
         }
 
         try:
-            dummy, response, dummy = self.env['google.service']._do_request(GOOGLE_TOKEN_ENDPOINT, params=data, headers=headers, type='POST', preuri='')
+            dummy, response, dummy = self.env['google.service']._do_request(GOOGLE_TOKEN_ENDPOINT, params=data, headers=headers, method='POST', preuri='')
             ttl = response.get('expires_in')
             self.write({
                 'google_calendar_token': response.get('access_token'),

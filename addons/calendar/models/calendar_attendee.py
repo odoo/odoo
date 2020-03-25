@@ -3,7 +3,6 @@
 import uuid
 import base64
 import logging
-from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -13,7 +12,6 @@ _logger = logging.getLogger(__name__)
 
 class Attendee(models.Model):
     """ Calendar Attendee Information """
-
     _name = 'calendar.attendee'
     _rec_name = 'common_name'
     _description = 'Calendar Attendee Information'
@@ -28,13 +26,15 @@ class Attendee(models.Model):
         ('accepted', 'Accepted'),
     ]
 
-    event_id = fields.Many2one('calendar.event', 'Meeting linked', required=True, ondelete='cascade')
+    event_id = fields.Many2one(
+        'calendar.event', 'Meeting linked', required=True, ondelete='cascade')
     partner_id = fields.Many2one('res.partner', 'Contact', required=True, readonly=True)
     state = fields.Selection(STATE_SELECTION, string='Status', readonly=True, default='needsAction',
                              help="Status of the attendee's participation")
     common_name = fields.Char('Common name', compute='_compute_common_name', store=True)
     email = fields.Char('Email', related='partner_id.email', help="Email of Invited Person")
-    availability = fields.Selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly=True)
+    availability = fields.Selection(
+        [('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly=True)
     access_token = fields.Char('Invitation Token', default=_default_access_token)
     recurrence_id = fields.Many2one('calendar.recurrence', related='event_id.recurrence_id')
 
@@ -50,8 +50,8 @@ class Attendee(models.Model):
                 values['state'] = 'accepted'
             if not values.get("email") and values.get("common_name"):
                 common_nameval = values.get("common_name").split(':')
-                email = [x for x in common_nameval if '@' in x] # TODO JEM : should be refactored
-                values['email'] = email and email[0] or ''
+                email = [x for x in common_nameval if '@' in x]
+                values['email'] = email[0] if email else ''
                 values['common_name'] = values.get("common_name")
         attendees = super().create(vals_list)
         attendees._subscribe_partner()
@@ -64,7 +64,8 @@ class Attendee(models.Model):
     def _subscribe_partner(self):
         for event in self.event_id:
             partners = (event.attendee_ids & self).partner_id - event.message_partner_ids
-            partners -= self.env.user.partner_id  # current user is automatically added as followers, don't add it twice.
+            # current user is automatically added as followers, don't add it twice.
+            partners -= self.env.user.partner_id
             event.message_subscribe(partner_ids=partners.ids)
 
     def _unsubscribe_partner(self):
@@ -147,12 +148,15 @@ class Attendee(models.Model):
     def do_accept(self):
         """ Marks event invitation as Accepted. """
         for attendee in self:
-            attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype_xmlid="calendar.subtype_invitation")
+            attendee.event_id.message_post(
+                body=_("%s has accepted invitation") % (attendee.common_name),
+                subtype_xmlid="calendar.subtype_invitation")
         return self.write({'state': 'accepted'})
 
     def do_decline(self):
         """ Marks event invitation as Declined. """
         for attendee in self:
-            attendee.event_id.message_post(body=_("%s has declined invitation") % (attendee.common_name), subtype_xmlid="calendar.subtype_invitation")
+            attendee.event_id.message_post(
+                body=_("%s has declined invitation") % (attendee.common_name),
+                subtype_xmlid="calendar.subtype_invitation")
         return self.write({'state': 'declined'})
-

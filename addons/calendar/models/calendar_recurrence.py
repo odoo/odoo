@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, time
 import pytz
 
-from datetime import datetime, time
 from dateutil import rrule
-from dateutil.relativedelta import relativedelta, MO
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -91,9 +91,12 @@ class RecurrenceRule(models.Model):
     _description = 'Event Recurrence Rule'
 
     name = fields.Char(compute='_compute_name', store=True)
-    base_event_id = fields.Many2one('calendar.event', ondelete='set null', copy=False)
+    base_event_id = fields.Many2one(
+        'calendar.event', ondelete='set null', copy=False)  # store=False ?
     calendar_event_ids = fields.One2many('calendar.event', 'recurrence_id')
-    event_tz = fields.Selection(_tz_get, string='Timezone', default=lambda self: self.env.context.get('tz') or self.env.user.tz)
+    event_tz = fields.Selection(
+        _tz_get, string='Timezone',
+        default=lambda self: self.env.context.get('tz') or self.env.user.tz)
     rrule = fields.Char(compute='_compute_rrule', inverse='_inverse_rrule', store=True)
     dtstart = fields.Datetime(compute='_compute_dtstart')
     rrule_type = fields.Selection(RRULE_TYPE_SELECTION, default='weekly')
@@ -132,8 +135,8 @@ class RecurrenceRule(models.Model):
 
             if recurrence.rrule_type == 'weeky':
                 weekdays = recurrence._get_week_days()
-                fields = (self._fields[weekday_to_field(w)] for w in weekdays)
-                on = _("on %s,") % ", ".join([field.string for field in fields])
+                weekday_fields = (self._fields[weekday_to_field(w)] for w in weekdays)
+                on = _("on %s,") % ", ".join([field.string for field in weekday_fields])
             elif recurrence.rrule_type == 'monthly':
                 if recurrence.month_by == 'day':
                     weekday_label = dict(BYDAY_SELECTION)[recurrence.byday]
@@ -154,7 +157,9 @@ class RecurrenceRule(models.Model):
         for recurrence in self:
             recurrence.dtstart = start_mapping.get(recurrence.id)
 
-    @api.depends('byday', 'until', 'rrule_type', 'month_by', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'day', 'weekday')
+    @api.depends(
+        'byday', 'until', 'rrule_type', 'month_by', 'interval', 'count', 'end_type',
+        'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'day', 'weekday')
     def _compute_rrule(self):
         for recurrence in self:
             recurrence.rrule = recurrence._rrule_serialize()
@@ -168,7 +173,8 @@ class RecurrenceRule(models.Model):
     def _reconcile_events(self, ranges):
         """
         :param ranges: iterable of tuples (datetime_start, datetime_stop)
-        :return: tuple (events of the recurrence already in sync with ranges, and ranges not covered by any events)
+        :return: tuple (events of the recurrence already in sync with ranges,
+                 and ranges not covered by any events)
         """
         ranges = set(ranges)
 
@@ -328,16 +334,17 @@ class RecurrenceRule(models.Model):
 
     def _get_start_of_period(self, dt):
         if self.rrule_type == 'daily':
-            return dt
+            start = dt
         elif self.rrule_type == 'weekly':
             lang = self.env['res.lang']._lang_get(self.env.user.lang)
             week_start = int(lang.week_start)  # lang.week_start ranges from '1' to '7'
             week_start = rrule.weekday(week_start - 1)  # expects an int from 0 to 6
-            return dt + relativedelta(weekday=week_start(-1))
+            start = dt + relativedelta(weekday=week_start(-1))
         elif self.rrule_type == 'monthly':
-            return dt + relativedelta(day=1)
+            start = dt + relativedelta(day=1)
         elif self.rrule_type == 'yearly':
-            return dt
+            start = dt
+        return start
 
     def _get_first_event(self, include_outliers=False):
         if not self.calendar_event_ids:

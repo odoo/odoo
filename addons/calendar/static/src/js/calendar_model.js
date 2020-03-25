@@ -15,10 +15,7 @@ odoo.define('calendar.CalendarModel', function (require) {
                 'recurrence_update': event.recurrenceUpdate,
             });
         }
-
-
     });
 
     return CalendarModel;
-
 });

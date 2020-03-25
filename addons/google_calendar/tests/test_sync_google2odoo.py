@@ -262,7 +262,7 @@ class TestSyncGoogle2Odoo(SavepointCase):
             'reminders': {'useDefault': True},
             'updated': self.now,
         },
-        {   # Third event has been moved
+        {  # Third event has been moved
             'id': '%s_20200113' % recurrence_id,
             'summary': 'Pricing new update',
             'start': {'date': '2020-01-18'},
@@ -308,4 +308,3 @@ class TestSyncGoogle2Odoo(SavepointCase):
         self.assertEqual(events[1].start_date, date(2020, 1, 15))
         self.assertEqual(events[0].google_id, '%s_20200108' % recurrence_id)
         self.assertEqual(events[1].google_id, '%s_20200115' % recurrence_id)
-

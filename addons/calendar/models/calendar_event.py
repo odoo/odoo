@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import babel.dates
-import datetime
-import math
 from datetime import timedelta
-from dateutil.relativedelta import relativedelta
+import math
+import babel.dates
 import logging
 import pytz
 
@@ -19,9 +17,7 @@ from odoo.tools.misc import get_lang
 from odoo.tools import pycompat
 from odoo.exceptions import UserError, ValidationError
 
-
 _logger = logging.getLogger(__name__)
-
 
 SORT_ALIASES = {
     'start': 'sort_start',
@@ -45,12 +41,6 @@ def get_weekday_occurence(date):
 
 
 class Meeting(models.Model):
-    """ Model for Calendar Event
-
-        Special context keys :
-            - `no_mail_to_attendees` : disabled sending email to attendees when creating/editing a meeting
-    """
-
     _name = 'calendar.event'
     _description = "Calendar Event"
     _order = "start desc"
@@ -188,27 +178,45 @@ class Meeting(models.Model):
 
     name = fields.Char('Meeting Subject', required=True)
 
-    attendee_status = fields.Selection(Attendee.STATE_SELECTION, string='Attendee Status', compute='_compute_attendee')
+    attendee_status = fields.Selection(
+        Attendee.STATE_SELECTION, string='Attendee Status', compute='_compute_attendee')
     display_time = fields.Char('Event Time', compute='_compute_display_time')
-    start = fields.Datetime('Start', required=True, tracking=True, default=fields.Date.today, help="Start date of an event, without time for full days events")
-    stop = fields.Datetime('Stop', required=True, tracking=True, default=fields.Date.today, compute='_compute_stop', readonly=False, store=True,
-                           help="Stop date of an event, without time for full days events")
+    start = fields.Datetime(
+        'Start', required=True, tracking=True, default=fields.Date.today,
+        help="Start date of an event, without time for full days events")
+    stop = fields.Datetime(
+        'Stop', required=True, tracking=True, default=fields.Date.today,
+        compute='_compute_stop', readonly=False, store=True,
+        help="Stop date of an event, without time for full days events")
 
     allday = fields.Boolean('All Day', default=False)
-    start_date = fields.Date('Start Date', compute='_compute_dates', inverse='_inverse_dates', store=True, tracking=True)
-    stop_date = fields.Date('End Date', compute='_compute_dates', inverse='_inverse_dates', store=True, tracking=True)
-    event_tz = fields.Selection('_event_tz_get', string='Timezone', default=lambda self: self.env.context.get('tz') or self.user_id.tz)
+    start_date = fields.Date(
+        'Start Date', store=True, tracking=True,
+        compute='_compute_dates', inverse='_inverse_dates')
+    stop_date = fields.Date(
+        'End Date', store=True, tracking=True,
+        compute='_compute_dates', inverse='_inverse_dates')
+    event_tz = fields.Selection(
+        '_event_tz_get', string='Timezone',
+        default=lambda self: self.env.context.get('tz') or self.user_id.tz)
     duration = fields.Float('Duration', compute='_compute_duration', store=True, readonly=False)
     description = fields.Text('Description')
-    privacy = fields.Selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', default='public', required=True)
+    privacy = fields.Selection(
+        [('public', 'Everyone'),
+         ('private', 'Only me'),
+         ('confidential', 'Only internal users')],
+        'Privacy', default='public', required=True)
     location = fields.Char('Location', tracking=True, help="Location of Event")
-    show_as = fields.Selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', default='busy', required=True)
+    show_as = fields.Selection(
+        [('free', 'Free'),
+         ('busy', 'Busy')], 'Show Time as', default='busy', required=True)
 
     # linked document
     # LUL TODO use fields.Reference ?
     res_id = fields.Integer('Document ID')
     res_model_id = fields.Many2one('ir.model', 'Document Model', ondelete='cascade')
-    res_model = fields.Char('Document Model Name', related='res_model_id.model', readonly=True, store=True)
+    res_model = fields.Char(
+        'Document Model Name', related='res_model_id.model', readonly=True, store=True)
     activity_ids = fields.One2many('mail.activity', 'calendar_event_id', string='Activities')
 
     #redifine message_ids to remove autojoin to avoid search to crash in get_recurrent_ids
@@ -235,7 +243,8 @@ class Meeting(models.Model):
 
     # RECURRENCE FIELD
     recurrency = fields.Boolean('Recurrent', help="Recurrent Event")
-    recurrence_id = fields.Many2one('calendar.recurrence', string="Recurrence Rule", index=True)
+    recurrence_id = fields.Many2one(
+        'calendar.recurrence', string="Recurrence Rule", index=True)
     recurrence_update = fields.Selection([
         ('self_only', "This event"),
         ('future_events', "This and following events"),
@@ -246,16 +255,22 @@ class Meeting(models.Model):
     # Those field are pseudo-related fields of recurrence_id.
     # They can't be "real" related fields because it should work at record creation
     # when recurrence_id is not created yet.
-    # If some of these fields are set and recurrence_id does not exists, a `calendar.recurrence.rule`
-    # will be dynamically created.
+    # If some of these fields are set and recurrence_id does not exists,
+    # a `calendar.recurrence.rule` will be dynamically created.
     rrule = fields.Char('Recurrent Rule', compute='_compute_recurrence', readonly=False)
     rrule_type = fields.Selection(RRULE_TYPE_SELECTION, string='Recurrence',
                                   help="Let the event automatically repeat at that interval",
                                   compute='_compute_recurrence', readonly=False)
-    event_tz = fields.Selection(_tz_get, string='Timezone', compute='_compute_recurrence', readonly=False)
-    end_type = fields.Selection(END_TYPE_SELECTION, string='Recurrence Termination', compute='_compute_recurrence', readonly=False)
-    interval = fields.Integer(string='Repeat Every', help="Repeat every (Days/Week/Month/Year)", compute='_compute_recurrence', readonly=False)
-    count = fields.Integer(string='Repeat', help="Repeat x times", compute='_compute_recurrence', readonly=False)
+    event_tz = fields.Selection(
+        _tz_get, string='Timezone', compute='_compute_recurrence', readonly=False)
+    end_type = fields.Selection(
+        END_TYPE_SELECTION, string='Recurrence Termination',
+        compute='_compute_recurrence', readonly=False)
+    interval = fields.Integer(
+        string='Repeat Every', compute='_compute_recurrence', readonly=False,
+        help="Repeat every (Days/Week/Month/Year)")
+    count = fields.Integer(
+        string='Repeat', help="Repeat x times", compute='_compute_recurrence', readonly=False)
     mo = fields.Boolean('Mon', compute='_compute_recurrence', readonly=False)
     tu = fields.Boolean('Tue', compute='_compute_recurrence', readonly=False)
     we = fields.Boolean('Wed', compute='_compute_recurrence', readonly=False)
@@ -263,7 +278,8 @@ class Meeting(models.Model):
     fr = fields.Boolean('Fri', compute='_compute_recurrence', readonly=False)
     sa = fields.Boolean('Sat', compute='_compute_recurrence', readonly=False)
     su = fields.Boolean('Sun', compute='_compute_recurrence', readonly=False)
-    month_by = fields.Selection(MONTH_BY_SELECTION, string='Option', compute='_compute_recurrence', readonly=False)
+    month_by = fields.Selection(
+        MONTH_BY_SELECTION, string='Option', compute='_compute_recurrence', readonly=False)
     day = fields.Integer('Date of month', compute='_compute_recurrence', readonly=False)
     weekday = fields.Selection(WEEKDAY_SELECTION, compute='_compute_recurrence', readonly=False)
     byday = fields.Selection(BYDAY_SELECTION, compute='_compute_recurrence', readonly=False)
@@ -280,8 +296,10 @@ class Meeting(models.Model):
 
     @api.depends('allday', 'start', 'stop')
     def _compute_dates(self):
-        """ Adapt the value of start_date(time)/stop_date(time) according to start/stop fields and allday. Also, compute
-            the duration for not allday meeting ; otherwise the duration is set to zero, since the meeting last all the day.
+        """ Adapt the value of start_date(time)/stop_date(time)
+            according to start/stop fields and allday. Also, compute
+            the duration for not allday meeting ; otherwise the
+            duration is set to zero, since the meeting last all the day.
         """
         for meeting in self:
             if meeting.allday and meeting.start and meeting.stop:
@@ -380,8 +398,7 @@ class Meeting(models.Model):
             if idate:
                 if allday:
                     return idate
-                else:
-                    return idate.replace(tzinfo=pytz.timezone('UTC'))
+                return idate.replace(tzinfo=pytz.timezone('UTC'))
             return False
 
         try:
@@ -749,8 +766,6 @@ class Meeting(models.Model):
         private_fields = set(groupby) - self._get_public_fields()
         if not self.env.su and private_fields:
             raise UserError(_("Grouping by %s is not allowed." % ', '.join([self._fields[field_name].string for field_name in private_fields])))
-        if 'date' in groupby:
-            raise UserError(_('Group by date is not supported, use the calendar view instead.'))
         return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     def unlink(self):
@@ -797,7 +812,6 @@ class Meeting(models.Model):
         attendee = self.attendee_ids.filtered(lambda x: x.partner_id == self.env.user.partner_id)
         if status == 'accepted':
             return attendee.do_accept()
-        elif status == 'declined':
+        if status == 'declined':
             return attendee.do_decline()
-        else:
-            return attendee.do_tentative()
+        return attendee.do_tentative()

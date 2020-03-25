@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import datetime
 from datetime import timedelta
 
 from odoo import api, fields, models
@@ -11,7 +10,6 @@ _logger = logging.getLogger(__name__)
 
 
 class AlarmManager(models.AbstractModel):
-
     _name = 'calendar.alarm_manager'
     _description = 'Event Alarm Manager'
 
@@ -77,12 +75,12 @@ class AlarmManager(models.AbstractModel):
             tuple_params += (seconds,)
 
         self._cr.execute("""
-                    WITH calcul_delta AS (%s)
-                    SELECT *
-                        FROM ( %s WHERE cal.active = True ) AS ALL_EVENTS
-                       WHERE ALL_EVENTS.first_alarm < %s
-                         AND ALL_EVENTS.last_event_date > (now() at time zone 'utc')
-                   """ % (delta_request, base_request, first_alarm_max_value), tuple_params)
+            WITH calcul_delta AS (%s)
+            SELECT *
+                FROM ( %s WHERE cal.active = True ) AS ALL_EVENTS
+               WHERE ALL_EVENTS.first_alarm < %s
+                 AND ALL_EVENTS.last_event_date > (now() at time zone 'utc')
+        """ % (delta_request, base_request, first_alarm_max_value), tuple_params)
 
         for event_id, first_alarm, last_alarm, first_meeting, last_meeting, min_duration, max_duration, rule in self._cr.fetchall():
             result[event_id] = {

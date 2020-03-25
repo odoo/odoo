@@ -19,13 +19,13 @@
     </p>
     <div style="text-align: center; margin: 16px 0px 16px 0px;">
         % set target = 'recurrence' if recurrent else 'meeting'
-        <a href="/calendar/${target}/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}"
+        <a href="/calendar/${target}/accept?token=${object.access_token}&amp;id=${object.event_id.id}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Accept</a>
-        <a href="/calendar/${target}/decline?db=${'dbname' in ctx and ctx['dbname'] or '' }&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}"
+        <a href="/calendar/${target}/decline?token=${object.access_token}&amp;id=${object.event_id.id}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Decline</a>
-        <a href="/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}"
+        <a href="/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             View</a>
     </div>
@@ -110,13 +110,13 @@
     </p>
     <div style="text-align: center; margin: 16px 0px 16px 0px;">
         % set target = 'recurrence' if recurrent else 'meeting'
-        <a href="/calendar/${target}/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}"
+        <a href="/calendar/${target}/accept?token=${object.access_token}&amp;id=${object.event_id.id}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Accept</a>
-        <a href="/calendar/${target}/decline?db=${'dbname' in ctx and ctx['dbname'] or '' }&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}"
+        <a href="/calendar/${target}/decline?token=${object.access_token}&amp;id=${object.event_id.id}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Decline</a>
-        <a href="/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}"
+        <a href="/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             View</a>
     </div>
@@ -204,13 +204,13 @@
         This is a reminder for the below event :
     </p>
     <div style="text-align: center; margin: 16px 0px 16px 0px;">
-        <a href="/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}" 
+        <a href="/calendar/meeting/accept?token=${object.access_token}&amp;event_id=${object.event_id.id}" 
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Accept</a>
-        <a href="/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or '' }&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}"
+        <a href="/calendar/meeting/decline?token=${object.access_token}&amp;id=${object.event_id.id}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Decline</a>
-        <a href="/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}" 
+        <a href="/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}" 
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             View</a>
     </div>

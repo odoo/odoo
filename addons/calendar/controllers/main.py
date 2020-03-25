@@ -11,15 +11,20 @@ from odoo.tools.misc import get_lang
 
 class CalendarController(http.Controller):
 
+    # YTI Note: Keep id and kwargs only for retrocompatibility purpose
     @http.route('/calendar/meeting/accept', type='http', auth="calendar")
-    def accept(self, token, action, id, **kwargs):
-        attendee = request.env['calendar.attendee'].search([('access_token', '=', token), ('state', '!=', 'accepted')])
+    def accept_meeting(self, token, id, **kwargs):
+        attendee = request.env['calendar.attendee'].search([
+            ('access_token', '=', token),
+            ('state', '!=', 'accepted')])
         attendee.do_accept()
-        return self.view(token, action, id, view='form')
+        return self.view_meeting(token, id)
 
     @http.route('/calendar/recurrence/accept', type='http', auth="calendar")
-    def accept_recurrence(self, token, action, id, **kwargs):
-        attendee = request.env['calendar.attendee'].sudo().search([('access_token', '=', token), ('state', '!=', 'accepted')])
+    def accept_recurrence(self, token, id, **kwargs):
+        attendee = request.env['calendar.attendee'].sudo().search([
+            ('access_token', '=', token),
+            ('state', '!=', 'accepted')])
         if attendee:
             attendees = request.env['calendar.attendee'].sudo().search([
                 ('event_id', 'in', attendee.event_id.recurrence_id.calendar_event_ids.ids),
@@ -27,11 +32,21 @@ class CalendarController(http.Controller):
                 ('state', '!=', 'accepted'),
             ])
             attendees.do_accept()
-        return self.view(token, action, id, view='form')
+        return self.view_meeting(token, id)
+
+    @http.route('/calendar/meeting/decline', type='http', auth="calendar")
+    def decline_meeting(self, token, id, **kwargs):
+        attendee = request.env['calendar.attendee'].search([
+            ('access_token', '=', token),
+            ('state', '!=', 'declined')])
+        attendee.do_decline()
+        return self.view_meeting(token, id)
 
     @http.route('/calendar/recurrence/decline', type='http', auth="calendar")
-    def decline_recurrence(self, token, action, id, **kwargs):
-        attendee = request.env['calendar.attendee'].sudo().search([('access_token', '=', token), ('state', '!=', 'declined')])
+    def decline_recurrence(self, token, id, **kwargs):
+        attendee = request.env['calendar.attendee'].sudo().search([
+            ('access_token', '=', token),
+            ('state', '!=', 'declined')])
         if attendee:
             attendees = request.env['calendar.attendee'].sudo().search([
                 ('event_id', 'in', attendee.event_id.recurrence_id.calendar_event_ids.ids),
@@ -39,17 +54,13 @@ class CalendarController(http.Controller):
                 ('state', '!=', 'declined'),
             ])
             attendees.do_decline()
-        return self.view(token, action, id, view='form')
-
-    @http.route('/calendar/meeting/decline', type='http', auth="calendar")
-    def decline(self, token, action, id, **kwargs):
-        attendee = request.env['calendar.attendee'].search([('access_token', '=', token), ('state', '!=', 'declined')])
-        attendee.do_decline()
-        return self.view(token, action, id, view='form')
+        return self.view_meeting(token, id)
 
     @http.route('/calendar/meeting/view', type='http', auth="calendar")
-    def view(self, token, action, id, view='calendar'):
-        attendee = request.env['calendar.attendee'].search([('access_token', '=', token), ('event_id', '=', int(id))])
+    def view_meeting(self, token, id, **kwargs):
+        attendee = request.env['calendar.attendee'].search([
+            ('access_token', '=', token),
+            ('event_id', '=', int(id))])
         if not attendee:
             return request.not_found()
         timezone = attendee.partner_id.tz
@@ -78,5 +89,5 @@ class CalendarController(http.Controller):
         return request.env['calendar.alarm_manager'].get_next_notif()
 
     @http.route('/calendar/notify_ack', type='json', auth="user")
-    def notify_ack(self, type=''):
+    def notify_ack(self):
         return request.env['res.partner'].sudo()._set_calendar_last_notif_ack()
