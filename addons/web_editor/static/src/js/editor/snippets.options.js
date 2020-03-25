@@ -2725,6 +2725,9 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
             width: `${this.$target.innerWidth()}px`,
             height: `${this.$target.innerHeight()}px`,
         });
+
+        const topPos = (parseInt(this.$overlay.css('top')) - parseInt(this.$overlayContent.css('top')));
+        this.$overlayContent.find('.o_we_overlay_buttons').css('top', `${topPos}px`);
     },
     /**
      * Toggles the overlay's display and renders a background clone inside of it.
