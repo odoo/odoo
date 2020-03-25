@@ -2301,7 +2301,7 @@ var StateSelectionWidget = AbstractField.extend({
             .addClass(currentState.state_class)
             .prop('special_click', true)
             .parent().attr('title', currentState.state_name)
-            .attr('aria-label', self.string + ": " + currentState.state_name);
+            .attr('aria-label', this.string + ": " + currentState.state_name);
 
         // Render "FormSelection.Items" and move it into "FormSelection"
         var $items = $(qweb.render('FormSelection.items', {
