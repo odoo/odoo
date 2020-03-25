@@ -34,7 +34,7 @@ class CustomerPortal(CustomerPortal):
             'order': order,
             'resize_to_48': resize_to_48,
         }
-        return self._get_page_view_values(order, access_token, values, 'my_purchases_history', True, **kwargs)
+        return self._get_page_view_values(order, access_token, values, 'my_purchases_history', False, **kwargs)
 
     @http.route(['/my/purchase', '/my/purchase/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_purchase_orders(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
@@ -109,5 +109,8 @@ class CustomerPortal(CustomerPortal):
         except (AccessError, MissingError):
             return request.redirect('/my')
 
+        report_type = kw.get('report_type')
+        if report_type in ('html', 'pdf', 'text'):
+            return self._show_report(model=order_sudo, report_type=report_type, report_ref='purchase.action_report_purchase_order',download=kw.get('download'))
         values = self._purchase_order_get_page_view_values(order_sudo, access_token, **kw)
         return request.render("purchase.portal_my_purchase_order", values)
