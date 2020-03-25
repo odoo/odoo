@@ -56,9 +56,11 @@
             <field name="arch" type="xml">
                 <form string="Mailing">
                     <header style="min-height:31px;">
-                        <button name="action_put_in_queue" type="object" attrs="{'invisible': [('state', 'in', ('in_queue', 'done'))]}" class="oe_highlight" string="Send"
+                        <button name="action_launch" type="object" class="oe_highlight" string="Launch"
+                            attrs="{'invisible': ['|', ('state', 'in', ('in_queue', 'done')), ('schedule_type', '=', 'scheduled')]}"
                             confirm="This will send the email to all recipients. Do you still want to proceed ?"/>
-                        <button name="action_schedule" type="object" attrs="{'invisible': [('state', 'in', ('in_queue', 'done'))]}" class="btn-secondary" string="Schedule"/>
+                        <button name="action_schedule" type="object" class="oe_highlight" string="Schedule"
+                            attrs="{'invisible': ['|', ('state', 'in', ('in_queue', 'done')), ('schedule_type', '=', 'now')]}"/>
                         <button name="action_test" type="object" class="btn-secondary" string="Test"/>
                         <button name="action_cancel" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="btn-secondary" string="Cancel"/>
                         <button name="action_retry_failed" type="object" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" class="oe_highlight" string="Retry"/>
@@ -183,6 +185,17 @@
                                 <div attrs="{'invisible': [('mailing_model_name', '=', 'mailing.list')]}">
                                     <field name="mailing_domain" widget="domain" options="{'model': 'mailing_model_real'}"
                                     attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                </div>
+                            </div>
+                            <label for="schedule_type" string="Schedule"/>
+                            <div name="schedule_block">
+                                <div class="row">
+                                    <div class="col-xs-12 col-md-3">
+                                        <field name="schedule_type"/>
+                                    </div>
+                                    <div class="col-xs-12 col-md-3" attrs="{'invisible': [('schedule_type', '=', 'now')]}">
+                                        <field name="schedule_date" attrs="{'required': [('schedule_type', '=', 'scheduled')]}" />
+                                    </div>
                                 </div>
                             </div>
                         </group>
@@ -406,6 +419,18 @@
             </field>
         </record>
 
+        <record id="mailing_mailing_view_calendar" model="ir.ui.view">
+            <field name="name">mailing.mailing.view.calendar</field>
+            <field name="model">mailing.mailing</field>
+            <field name="arch" type="xml">
+                <calendar date_start="calendar_date" string="Mailings" hide_time="true" mode="month" color="state" quick_add="False">
+                    <field name="mailing_model_id" string="Recipient" options="{'no_open': True}"/>
+                    <field name="user_id" filters="1" invisible="1"/>
+                    <field name="state" filters="1" invisible="1"/>
+                </calendar>
+            </field>
+        </record>
+
         <record id="view_mail_mass_mailing_graph" model="ir.ui.view">
             <field name="name">mailing.mailing.graph</field>
             <field name="model">mailing.mailing</field>
@@ -420,7 +445,7 @@
         <record id="mailing_mailing_action_mail" model="ir.actions.act_window">
             <field name="name">Mailings</field>
             <field name="res_model">mailing.mailing</field>
-            <field name="view_mode">kanban,tree,form,graph</field>
+            <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <field name="domain">[('mailing_type', '=', 'mail')]</field>
             <field name="context">{
                     'search_default_assigned_to_me': 1,
@@ -440,7 +465,7 @@
         <record id="action_view_mass_mailings_from_campaign" model="ir.actions.act_window">
             <field name="name">Mailings</field>
             <field name="res_model">mailing.mailing</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,tree,form,calendar</field>
             <field name="context">{
                 'search_default_assigned_to_me': 1,
                 'search_default_campaign_id': [active_id],
