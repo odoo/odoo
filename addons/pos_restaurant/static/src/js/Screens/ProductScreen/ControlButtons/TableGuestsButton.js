@@ -34,7 +34,7 @@ odoo.define('pos_restaurant.TableGuestsButton', function(require) {
     ProductScreen.addControlButton({
         component: TableGuestsButton,
         condition: function() {
-            return true;
+            return this.env.pos.config.module_pos_restaurant;
         },
     });
 

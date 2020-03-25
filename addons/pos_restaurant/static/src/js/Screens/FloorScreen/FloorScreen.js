@@ -34,9 +34,9 @@ odoo.define('pos_restaurant.FloorScreen', function(require) {
             this.floorMapRef.el.style.background = this.state.floorBackground;
         }
         mounted() {
+            this.env.pos.set_table(null);
             this.floorMapRef.el.style.background = this.state.floorBackground;
         }
-        willUnmount() {}
         get activeFloor() {
             return this.env.pos.floors_by_id[this.state.selectedFloorId];
         }

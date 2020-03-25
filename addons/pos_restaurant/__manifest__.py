@@ -32,6 +32,7 @@ This module adds several features to the Point of Sale that are specific to rest
         'static/src/xml/Screens/ProductScreen/ControlButtons/PrintBillButton.xml',
         'static/src/xml/Screens/ProductScreen/ControlButtons/SubmitOrderButton.xml',
         'static/src/xml/Screens/ProductScreen/ControlButtons/SplitBillButton.xml',
+        'static/src/xml/Screens/ProductScreen/ControlButtons/TransferOrderButton.xml',
         'static/src/xml/Screens/BillScreen.xml',
         'static/src/xml/Screens/SplitBillScreen/SplitBillScreen.xml',
         'static/src/xml/Screens/SplitBillScreen/SplitOrderline.xml',

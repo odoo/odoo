@@ -10,7 +10,10 @@ odoo.define('pos_restaurant.ReceiptScreen', function(require) {
              * @override
              */
             get nextScreen() {
-                if (this.env.pos.config.iface_floorplan) {
+                if (
+                    this.env.pos.config.module_pos_restaurant &&
+                    this.env.pos.config.iface_floorplan
+                ) {
                     const table = this.env.pos.table;
                     return { name: 'FloorScreen', props: { floor: table ? table.floor : null } };
                 } else {
