@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import logging
 from datetime import datetime, timedelta
 from collections import defaultdict
 
@@ -9,13 +10,17 @@ from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare
 from odoo.exceptions import UserError
 
+_logger = logging.getLogger(__name__)
+
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     @api.model
     def _default_warehouse_id(self):
-        return self.user_id._get_default_warehouse_id()
+        # !!! Any change to the default value may have to be repercuted
+        # on _init_column() below.
+        return self.env.user._get_default_warehouse_id()
 
     incoterm = fields.Many2one(
         'account.incoterms', 'Incoterm',
@@ -41,6 +46,27 @@ class SaleOrder(models.Model):
                                           "the order lines.")
     json_popover = fields.Char('JSON data for the popover widget', compute='_compute_json_popover')
     show_json_popover = fields.Boolean('Has late picking', compute='_compute_json_popover')
+
+    def _init_column(self, column_name):
+        """ Ensure the default warehouse_id is correctly assigned
+
+        At column initialization, the ir.model.fields for res.users.property_warehouse_id isn't created,
+        which means trying to read the property field to get the default value will crash.
+        We therefore enforce the default here, without going through
+        the default function on the warehouse_id field.
+        """
+        if column_name != "warehouse_id":
+            return super(SaleOrder, self)._init_column(column_name)
+        field = self._fields[column_name]
+        default = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        value = field.convert_to_write(default, self)
+        value = field.convert_to_column(value, self)
+        if value is not None:
+            _logger.debug("Table '%s': setting default value of new column %s to %r",
+                self._table, column_name, value)
+            query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" IS NULL' % (
+                self._table, column_name, field.column_format, column_name)
+            self._cr.execute(query, (value,))
 
     @api.depends('picking_ids.date_done')
     def _compute_effective_date(self):
