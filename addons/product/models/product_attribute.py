@@ -91,7 +91,7 @@ class ProductAttributeValue(models.Model):
         help="The attribute cannot be changed once the value is used on at least one product.")
 
     pav_attribute_line_ids = fields.Many2many('product.template.attribute.line', string="Lines",
-        relation='product_attribute_value_product_template_attribute_line_rel')
+        relation='product_attribute_value_product_template_attribute_line_rel', copy=False)
     is_used_on_products = fields.Boolean('Used on Products', compute='_compute_is_used_on_products')
 
     _sql_constraints = [
