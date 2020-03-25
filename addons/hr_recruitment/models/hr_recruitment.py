@@ -469,6 +469,7 @@ class Applicant(models.Model):
                             and applicant.department_id.company_id.email or False,
                     'work_phone': applicant.department_id and applicant.department_id.company_id
                             and applicant.department_id.company_id.phone or False})
+                copy_custom_fields(applicant, employee)
                 applicant.write({'emp_id': employee.id})
                 if applicant.job_id:
                     applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1})
@@ -493,6 +494,16 @@ class Applicant(models.Model):
         """ Reinsert the applicant into the recruitment pipe in the first stage"""
         default_stage_id = self._default_stage_id()
         self.write({'active': True, 'stage_id': default_stage_id})
+
+
+def copy_custom_fields(obj1, obj2):
+    """copy custom fields from obj1 to obj2. But only those that exist on both"""
+
+    obj1_fields = [a for a in dir(obj1) if a.startswith('x_')]
+    obj2_fields = [a for a in dir(obj2) if a.startswith('x_')]
+    for field in obj2_fields:
+        if field in obj1_fields:
+            obj2[field] = obj1[field]
 
 
 class ApplicantCategory(models.Model):

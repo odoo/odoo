@@ -10,6 +10,13 @@ class TestRecruitmentProcess(common.TransactionCase):
     def test_00_recruitment_process(self):
         """ Test recruitment process """
 
+        # adding custom fields, so I can later check that they are populated when converting applicant to employee
+        self.create_field('hr.applicant', 'x_hobby')
+        self.create_field('hr.applicant', 'x_bff')
+        self.create_field('hr.employee',  'x_hobby')
+        self.create_field('hr.employee',  'x_bff')
+        self.create_field('hr.employee',  'x_something_we_dont_ask_applicants')
+
         # Create a new HR Recruitment Officer
         self.res_users_hr_recruitment_officer = self.env['res.users'].create({
             'company_id': self.env.ref('base.main_company').id,
@@ -44,3 +51,30 @@ class TestRecruitmentProcess(common.TransactionCase):
         self.assertEquals(applicant_meeting['context']['default_name'], 'Application for the post of Jr.application Programmer.',
             'Applicant name does not match.')
 
+        # 'Manually' set some applicant fields
+        applicant.x_hobby = 'Knitting'
+        applicant.x_bff = 'Mr. Bob'
+
+        # Hire the applicant - make him an employee!
+        applicant.create_employee_from_applicant()
+        employee = self.env['hr.employee'].search([('name', 'ilike', 'Richard Anderson')], limit=1)
+        self.assertTrue(employee, "Employee is not created after clicking the 'Create Employee' button")
+        self.assertEquals(employee.name, applicant.employee_name, "Employee name should be populated from applicant")
+        # Custom fields with same names should be populated:
+        self.assertEquals(employee.x_hobby, applicant.x_hobby)
+        self.assertEquals(employee.x_bff, applicant.x_bff)
+        self.assertEquals(employee.x_something_we_dont_ask_applicants, False,
+                          "x_something_we_dont_ask_applicants should be blank - " +
+                          "we certainly didn't ask it during recruitment")
+
+    def create_field(self, model_name, name, *, field_type='char'):
+        """ create a custom field and return it """
+        model = self.env['ir.model'].search([('model', '=', model_name)])
+        field = self.env['ir.model.fields'].create({
+            'model_id': model.id,
+            'name': name,
+            'field_description': name,
+            'ttype': field_type,
+        })
+        self.assertIn(name, self.env[model_name]._fields)
+        return field
