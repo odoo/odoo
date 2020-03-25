@@ -374,6 +374,12 @@ const UserValueWidget = Widget.extend({
         this.trigger_up('user_value_update', data);
     },
     /**
+     * Opens the widget (only meaningful for widgets that can be opened).
+     */
+    open: function () {
+        this.trigger_up('user_value_widget_opening');
+    },
+    /**
      * Adds the given widget to the known list of user value sub-widgets (useful
      * for container widgets).
      *
@@ -495,6 +501,10 @@ const UserValueWidget = Widget.extend({
             ev.data.triggerWidgetsValues = [];
         }
         ev.data.triggerWidgetsValues.push(...this._triggerWidgetsValues);
+
+        if (!ev.data.previewMode) {
+            this.close();
+        }
     },
     /**
      * Should be called when an user event on the widget indicates a value
@@ -624,7 +634,7 @@ const CheckboxUserValueWidget = ButtonUserValueWidget.extend({
 const SelectUserValueWidget = UserValueWidget.extend({
     tagName: 'we-select',
     events: {
-        'click': '_onClick',
+        'click we-toggler': '_onTogglerClick',
     },
 
     /**
@@ -686,6 +696,17 @@ const SelectUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
+    open: function () {
+        this._super(...arguments);
+        this.menuTogglerEl.classList.add('active');
+        const activeButton = this._userValueWidgets.find(widget => widget.isActive());
+        if (activeButton) {
+            this.menuEl.scrollTop = activeButton.el.offsetTop - (this.menuEl.offsetHeight / 2);
+        }
+    },
+    /**
+     * @override
+     */
     setValue: function (value, methodName) {
         this._userValueWidgets.forEach(widget => {
             widget.setValue('__NULL__', methodName);
@@ -719,18 +740,15 @@ const SelectUserValueWidget = UserValueWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Called when the select is clicked anywhere -> open/close it.
+     * Called when the select toggler is clicked -> open/close it.
      *
      * @private
      */
-    _onClick: function () {
+    _onTogglerClick: function () {
         if (!this.menuTogglerEl.classList.contains('active')) {
-            this.trigger_up('user_value_widget_opening');
-        }
-        this.menuTogglerEl.classList.toggle('active');
-        const activeButton = this._userValueWidgets.find(widget => widget.isActive());
-        if (activeButton) {
-            this.menuEl.scrollTop = activeButton.el.offsetTop - (this.menuEl.offsetHeight / 2);
+            this.open();
+        } else {
+            this.close();
         }
     },
 });
@@ -985,6 +1003,9 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         'color_leave': '_onColorLeft',
         'color_reset': '_onColorReset',
     }),
+    events: _.extend({}, SelectUserValueWidget.prototype.events, {
+        'click': '_onClick',
+    }),
 
     /**
      * @override
@@ -1093,6 +1114,18 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Called when the colorpicker is clicked
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onClick: function (ev) {
+        const selectMenu = ev.target.closest('.colorpicker');
+        if (!selectMenu) {
+            this._onTogglerClick();
+        }
+    },
     /**
      * Called when a color button is clicked -> confirms the preview.
      *

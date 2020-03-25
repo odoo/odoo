@@ -920,7 +920,7 @@ var SnippetsMenu = Widget.extend({
             });
 
             var $target = $(srcElement);
-            if (!$target.closest('we-button, we-toggler, .o_we_color_preview').length) {
+            if (!$target.closest('we-button, we-select, .o_we_color_preview, .colorpicker, .modal').length) {
                 this._closeWidgets();
             }
             if (!$target.closest('body > *').length) {
