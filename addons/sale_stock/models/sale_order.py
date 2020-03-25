@@ -80,9 +80,8 @@ class SaleOrder(models.Model):
         super(SaleOrder, self)._compute_expected_date()
         for order in self:
             dates_list = []
-            confirm_date = fields.Datetime.from_string(order.date_order if order.state in ['sale', 'done'] else fields.Datetime.now())
             for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery()):
-                dt = confirm_date + timedelta(days=line.customer_lead or 0.0)
+                dt = line._expected_date()
                 dates_list.append(dt)
             if dates_list:
                 expected_date = min(dates_list) if order.picking_policy == 'direct' else max(dates_list)
@@ -289,7 +288,6 @@ class SaleOrderLine(models.Model):
         grouped_lines = defaultdict(lambda: self.env['sale.order.line'])
         # We first loop over the SO lines to group them by warehouse and schedule
         # date in order to batch the read of the quantities computed field.
-        now = fields.Datetime.now()
         for line in self:
             if not line.display_qty_widget:
                 continue
@@ -297,8 +295,7 @@ class SaleOrderLine(models.Model):
             if line.order_id.commitment_date:
                 date = line.order_id.commitment_date
             else:
-                confirm_date = line.order_id.date_order if line.order_id.state in ['sale', 'done'] else now
-                date = confirm_date + timedelta(days=line.customer_lead or 0.0)
+                date = line._expected_date()
             grouped_lines[(line.warehouse_id.id, date)] |= line
 
         treated = self.browse()
