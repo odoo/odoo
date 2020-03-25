@@ -28,7 +28,7 @@ var createViewer = function (params) {
         if (route === '/web/content/4') {
             return $.when();
         }
-        if (route === '/web/image/6?unique=1&signature=999') {
+        if (route === '/web/image/6?unique=56789abc') {
             return $.when();
         }
     };
@@ -69,7 +69,7 @@ QUnit.module('DocumentViewer', {
             {id: 3, name: 'urlGoogle', type: 'url', mimetype: '', url: 'https://www.google.com', datas_fname: 'urlRandom'},
             {id: 4, name: 'text.html', datas_fname: 'text.html', type: 'binary', mimetype: 'text/html', datas:'testee'},
             {id: 5, name: 'video.mp4', datas_fname: 'video.mp4', type: 'binary', mimetype: 'video/mp4', datas:'R0lDOP////ywAADs='},
-            {id: 6, name: 'image.jpg', datas_fname: 'image.jpg', type: 'binary', mimetype: 'image/jpeg', checksum: 999, datas:'R0lVOP////ywAADs='},
+            {id: 6, name: 'image.jpg', datas_fname: 'image.jpg', type: 'binary', mimetype: 'image/jpeg', checksum: '123456789abc', datas:'R0lVOP////ywAADs='},
         ];
     },
 }, function () {
@@ -197,7 +197,7 @@ QUnit.module('DocumentViewer', {
 
         assert.strictEqual(viewer.$(".o_image_caption:contains('image.jpg')").length, 1,
             "the viewer be on the right attachment");
-        assert.strictEqual(viewer.$('img[data-src="/web/image/6?unique=1&signature=999"]').length, 1,
+        assert.strictEqual(viewer.$('img[data-src="/web/image/6?unique=56789abc"]').length, 1,
             "there should be a video player");
 
         viewer.destroy();
