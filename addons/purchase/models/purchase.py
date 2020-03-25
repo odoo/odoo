@@ -216,6 +216,10 @@ class PurchaseOrder(models.Model):
             return self.env.ref('purchase.mt_rfq_done')
         return super(PurchaseOrder, self)._track_subtype(init_values)
 
+    def _get_report_base_filename(self):
+        self.ensure_one()
+        return 'Purchase Order-%s' % (self.name)
+
     @api.onchange('partner_id', 'company_id')
     def onchange_partner_id(self):
         # Ensures all properties and fiscal positions
