@@ -115,7 +115,7 @@ class AccountMove(models.Model):
             for line in move.invoice_line_ids:
 
                 # Filter out lines being not eligible for COGS.
-                if line.product_id.type != 'product' or line.product_id.valuation != 'real_time':
+                if line.product_id.type != 'product' or line.product_id.valuation != 'real_time' or not line.sale_line_ids:
                     continue
 
                 # Retrieve accounts needed to generate the COGS.
