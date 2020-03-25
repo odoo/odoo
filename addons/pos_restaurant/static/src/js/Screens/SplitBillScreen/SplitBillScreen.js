@@ -1,4 +1,4 @@
-odoo.define('point_of_sale.SplitBillScreen', function(require) {
+odoo.define('pos_restaurant.SplitBillScreen', function(require) {
     'use strict';
 
     const { PosComponent } = require('point_of_sale.PosComponent');
@@ -25,11 +25,9 @@ odoo.define('point_of_sale.SplitBillScreen', function(require) {
         }
         mounted() {
             this.env.pos.on('change:selectedOrder', this._resetState, this);
-            this.newOrder.on('change', this.render, this);
         }
         willUnmount() {
             this.env.pos.off('change:selectedOrder', null, this);
-            this.newOrder.off('change', null, this);
         }
         get currentOrder() {
             return this.env.pos.get_order();
@@ -73,7 +71,8 @@ odoo.define('point_of_sale.SplitBillScreen', function(require) {
                 }
 
                 this.newOrder.set_customer_count(1);
-                this.currentOrder.set_customer_count(this.currentOrder.get_customer_count() - 1);
+                const newCustomerCount = this.currentOrder.get_customer_count() - 1;
+                this.currentOrder.set_customer_count(newCustomerCount || 1);
                 this.currentOrder.set_screen_data('screen', { name: 'ProductScreen' });
 
                 this.env.pos.get('orders').add(this.newOrder);
@@ -144,7 +143,6 @@ odoo.define('point_of_sale.SplitBillScreen', function(require) {
                 if (Math.abs(line.get_quantity()) < 0.00001) {
                     this.currentOrder.remove_orderline(line);
                 }
-                delete this.splitlines[id];
             }
         }
         _resetState() {

@@ -270,26 +270,26 @@ models.PosModel = models.PosModel.extend({
 
     // if we have tables, we do not load a default order, as the default order will be
     // set when the user selects a table.
-    // set_start_order: function() {
-    //     if (!this.config.iface_floorplan) {
-    //         _super_posmodel.set_start_order.apply(this,arguments);
-    //     }
-    // },
+    set_start_order: function() {
+        if (!this.config.iface_floorplan) {
+            _super_posmodel.set_start_order.apply(this,arguments);
+        }
+    },
 
     // we need to prevent the creation of orders when there is no
     // table selected.
-    // add_new_order: function() {
-    //     if (this.config.iface_floorplan) {
-    //         if (this.table) {
-    //             return _super_posmodel.add_new_order.call(this);
-    //         } else {
-    //             console.warn("WARNING: orders cannot be created when there is no active table in restaurant mode");
-    //             return undefined;
-    //         }
-    //     } else {
-    //         return _super_posmodel.add_new_order.apply(this,arguments);
-    //     }
-    // },
+    add_new_order: function() {
+        if (this.config.iface_floorplan) {
+            if (this.table) {
+                return _super_posmodel.add_new_order.call(this);
+            } else {
+                console.warn("WARNING: orders cannot be created when there is no active table in restaurant mode");
+                return undefined;
+            }
+        } else {
+            return _super_posmodel.add_new_order.apply(this,arguments);
+        }
+    },
 
 
     // get the list of unpaid orders (associated to the current table)

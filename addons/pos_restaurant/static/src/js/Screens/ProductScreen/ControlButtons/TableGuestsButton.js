@@ -1,4 +1,4 @@
-odoo.define('point_of_sale.TableGuestsButton', function(require) {
+odoo.define('pos_restaurant.TableGuestsButton', function(require) {
     'use strict';
 
     const { PosComponent } = require('point_of_sale.PosComponent');
@@ -16,7 +16,7 @@ odoo.define('point_of_sale.TableGuestsButton', function(require) {
             return this.env.pos.get_order();
         }
         get nGuests() {
-            return this.currentOrder.get_customer_count();
+            return this.currentOrder ? this.currentOrder.get_customer_count() : 0;
         }
         async onClick() {
             const { confirmed, payload: inputNumber } = await this.showPopup('NumberPopup', {

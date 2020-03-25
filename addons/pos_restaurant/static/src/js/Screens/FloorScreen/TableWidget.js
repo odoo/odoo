@@ -1,4 +1,4 @@
-odoo.define('point_of_sale.TableWidget', function(require) {
+odoo.define('pos_restaurant.TableWidget', function(require) {
     'use strict';
 
     const { PosComponent } = require('point_of_sale.PosComponent');
@@ -17,8 +17,7 @@ odoo.define('point_of_sale.TableWidget', function(require) {
                 'line-height': unit(table.height),
                 top: unit(table.position_v),
                 left: unit(table.position_h),
-                'border-radius':
-                    table.shape === 'round' ? unit(1000) : '3px',
+                'border-radius': table.shape === 'round' ? unit(1000) : '3px',
             };
             if (table.color) {
                 style.background = table.color;
@@ -27,6 +26,13 @@ odoo.define('point_of_sale.TableWidget', function(require) {
                 style['font-size'] = '32px';
             }
             Object.assign(this.el.style, style);
+
+            const tableCover = this.el.querySelector('.table-cover');
+            Object.assign(tableCover.style, { height: `${Math.ceil(this.fill * 100)}%` })
+        }
+        get fill() {
+            const customerCount = this.env.pos.get_customer_count(this.props.table);
+            return Math.min(1, Math.max(0, customerCount / this.props.table.seats));
         }
     }
 

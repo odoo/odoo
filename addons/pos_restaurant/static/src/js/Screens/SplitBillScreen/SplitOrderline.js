@@ -1,4 +1,4 @@
-odoo.define('point_of_sale.SplitOrderline', function(require) {
+odoo.define('pos_restaurant.SplitOrderline', function(require) {
     'use strict';
 
     const { useListener } = require('web.custom_hooks');

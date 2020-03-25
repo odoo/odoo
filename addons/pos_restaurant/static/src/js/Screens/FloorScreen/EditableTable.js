@@ -1,4 +1,4 @@
-odoo.define('point_of_sale.EditableTable', function(require) {
+odoo.define('pos_restaurant.EditableTable', function(require) {
     'use strict';
 
     const { useListener } = require('web.custom_hooks');

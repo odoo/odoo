@@ -1,4 +1,4 @@
-odoo.define('point_of_sale.BillScreen', function(require) {
+odoo.define('pos_restaurant.BillScreen', function(require) {
     'use strict';
 
     const Registry = require('point_of_sale.ComponentsRegistry');

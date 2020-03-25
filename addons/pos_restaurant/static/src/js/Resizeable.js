@@ -1,4 +1,4 @@
-odoo.define('point_of_sale.Resizeable', function(require) {
+odoo.define('pos_restaurant.Resizeable', function(require) {
     'use strict';
 
     const { useExternalListener } = owl.hooks;

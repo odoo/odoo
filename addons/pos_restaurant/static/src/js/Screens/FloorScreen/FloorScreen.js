@@ -1,27 +1,30 @@
-odoo.define('point_of_sale.FloorScreen', function(require) {
+odoo.define('pos_restaurant.FloorScreen', function(require) {
     'use strict';
 
     const { debounce } = owl.utils;
     const { PosComponent } = require('point_of_sale.PosComponent');
-    const { Chrome } = require('point_of_sale.chrome');
     const { useState, useRef } = owl.hooks;
     const { useListener } = require('web.custom_hooks');
     const Registry = require('point_of_sale.ComponentsRegistry');
 
     class FloorScreen extends PosComponent {
         static template = 'FloorScreen';
+        /**
+         * @param {Object} props
+         * @param {Object} props.floor
+         */
         constructor() {
             super(...arguments);
             useListener('select-table', this._onSelectTable);
             useListener('deselect-table', this._onDeselectTable);
             useListener('save-table', this._onSaveTable);
-            const firstFloor = this.env.pos.floors[0];
+            const floor = this.props.floor ? this.props.floor : this.env.pos.floors[0];
             this.state = useState({
-                selectedFloorId: firstFloor.id,
+                selectedFloorId: floor.id,
                 selectedTableId: null,
                 isEditMode: false,
                 isColorPicker: false,
-                floorBackground: firstFloor.background_color,
+                floorBackground: floor.background_color,
             });
             this.floorMapRef = useRef('floor-map-ref');
             this.setTableColor = debounce(this.setTableColor, 70);
@@ -158,12 +161,12 @@ odoo.define('point_of_sale.FloorScreen', function(require) {
                 }
             }
         }
-        _onSelectTable(event) {
+        async _onSelectTable(event) {
             const table = event.detail;
             if (this.state.isEditMode) {
                 this.state.selectedTableId = table.id;
             } else {
-                // this.showScreen('ProductScreen');
+                await this.env.pos.set_table(table);
             }
         }
         _onDeselectTable() {
@@ -244,8 +247,6 @@ odoo.define('point_of_sale.FloorScreen', function(require) {
     }
 
     Registry.add('FloorScreen', FloorScreen);
-
-    Chrome.setStartUpScreen(FloorScreen);
 
     return { FloorScreen };
 });
