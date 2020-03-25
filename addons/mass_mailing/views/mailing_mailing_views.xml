@@ -57,7 +57,7 @@
 
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
-                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': ['&amp;','&amp;',('ignored', '=', 0),('scheduled', '=', 0),('failed', '=', 0)]}">
+                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': ['&amp;','&amp;','&amp;',('sent', '=', 0),('ignored', '=', 0),('scheduled', '=', 0),('failed', '=', 0)]}">
                         <div attrs="{'invisible': [('ignored', '=', 0)]}">
                             <button class="btn-link py-0"
                                     name="action_view_traces_ignored"
@@ -75,6 +75,16 @@
                                 <strong>
                                     <field name="scheduled" class="oe_inline mr-2"/>
                                     <span name="scheduled_text">emails are in queue and will be sent soon.</span>
+                                </strong>
+                            </button>
+                        </div>
+                        <div attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test'))]}">
+                            <button class="btn-link py-0"
+                                    name="action_view_traces_sent"
+                                    type="object">
+                                <strong>
+                                    <field name="sent" class="oe_inline mr-2"/>
+                                    <span name="sent">emails have been sent.</span>
                                 </strong>
                             </button>
                         </div>
@@ -97,15 +107,8 @@
                     </div>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="action_view_sent"
-                                id="button_view_sent"
-                                type="object"
-                                context="{'search_default_filter_sent': True}"
-                                icon="fa-envelope-o" class="oe_stat_button"
-                                attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test'))]}" >
-                                <field name="sent" string="Sent" widget="statinfo"/>
-                            </button>
                             <button name="action_view_delivered"
+                                id="button_view_delivered"
                                 type="object"
                                 context="{'search_default_filter_delivered': True}"
                                 attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
@@ -118,6 +121,13 @@
                                 attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
                                 class="oe_stat_button">
                                 <field name="opened_ratio" string="Opened" widget="percentpie"/>
+                            </button>
+                            <button name="action_view_clicked"
+                                type="object"
+                                context="{'search_default_filter_clicked': True}"
+                                attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
+                                class="oe_stat_button">
+                                <field name="clicks_ratio" string="Clicked" widget="percentpie"/>
                             </button>
                             <button name="action_view_replied"
                                 type="object"
@@ -212,6 +222,13 @@
                                                     'invisible': [('reply_to_mode', '=', 'thread')],
                                                     'readonly': [('state', 'in', ('sending', 'done'))]
                                             }"/>
+                                            <div style="margin-top:-5px">
+                                                <small class="oe_edit_only text-muted mb-2"
+                                                    style="font-size:74%"
+                                                    attrs="{'invisible': ['|', ('reply_to_mode', '=', 'thread'), ('mailing_model_name', 'in', ['mailing.contact', 'res.partner', 'mailing.list'])],}">
+                                                    To track replies, this address must belong to this database.
+                                                </small>
+                                            </div>
                                         </div>
                                         <label for="attachment_ids"/>
                                         <div name="attachment_ids_details">
