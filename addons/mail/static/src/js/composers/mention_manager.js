@@ -179,28 +179,28 @@ var MentionManager = Widget.extend({
     /**
      * @param {integer} keycode
      */
-    propositionNavigation: function (keycode) {
-        var $active = this.$('.o_mention_proposition.active');
+    propositionNavigation: function (keycode, shiftKey) {
+        let $active = this.$('.o_mention_proposition.active');
         if (keycode === $.ui.keyCode.ENTER) {
             // selecting proposition
             $active.click();
         } else {
             // navigation in propositions
-            var $to;
+            let $to;
+            const hasCannedDelimiter = this._activeListener.delimiter === ':' && !$active.length;
             if (keycode === $.ui.keyCode.DOWN) {
-                $to = $active.nextAll('.o_mention_proposition').first();
+                $to = hasCannedDelimiter ? this.$('.o_mention_proposition').first() : $active.nextAll('.o_mention_proposition').first();;
             } else if (keycode === $.ui.keyCode.UP) {
-                $to = $active.prevAll('.o_mention_proposition').first();
+                $to = hasCannedDelimiter ? this.$('.o_mention_proposition').last() : $active.prevAll('.o_mention_proposition').first();
             } else if (keycode === $.ui.keyCode.TAB) {
-                $to = $active.nextAll('.o_mention_proposition').first();
-                if (!$to.length) {
-                    $to = $active.prevAll('.o_mention_proposition').last();
-                }
+                $to = hasCannedDelimiter ? this.$('.o_mention_proposition').first()
+                                         : shiftKey ? $active.prevAll('.o_mention_proposition').first() : $active.nextAll('.o_mention_proposition').first();
             }
-            if ($to && $to.length) {
-                $active.removeClass('active');
-                $to.addClass('active');
+            if (!$to.length) {
+                $to = $active.prevAll('.o_mention_proposition').last().length ? $active.prevAll('.o_mention_proposition').last() : $active.nextAll('.o_mention_proposition').last();
             }
+            $active.removeClass('active');
+            $to.addClass('active');
         }
     },
     /**
@@ -322,9 +322,9 @@ var MentionManager = Widget.extend({
                 .find('.dropdown-menu')
                 .addClass('show')
                 .css('max-width', this._composer.$input.width())
-                .find('.o_mention_proposition')
-                .first()
-                .addClass('active');
+            if (this._activeListener.delimiter != ':') {
+                this.el.querySelector('.o_mention_proposition').classList.add('active');
+            }
             this._open = true;
         } else {
             this.$el.removeClass('show')

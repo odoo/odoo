@@ -304,15 +304,10 @@ var BasicComposer = Widget.extend({
     _mentionGetCannedResponses: function (search) {
         var self = this;
         var def = new Promise(function (resolve, reject) {
-            clearTimeout(self._cannedTimeout);
-            self._cannedTimeout = setTimeout(function () {
-                var cannedResponses = self.call('mail_service', 'getCannedResponses');
-                var matches = fuzzy.filter(utils.unaccent(search), _.pluck(cannedResponses, 'source'));
-                var indexes = _.pluck(matches.slice(0, self.options.mentionFetchLimit), 'index');
-                resolve(_.map(indexes, function (index) {
-                    return cannedResponses[index];
-                }));
-            }, 500);
+            const cannedResponses = self.call('mail_service', 'getCannedResponses');
+            const matches = fuzzy.filter(utils.unaccent(search), cannedResponses.map(response => response.source));
+            const indexes = matches.slice(0, self.options.mentionFetchLimit).map(match => match.index);
+            resolve(indexes.map(index => cannedResponses[index]));
         });
         return def;
     },
@@ -520,7 +515,6 @@ var BasicComposer = Widget.extend({
             return;
         }
 
-        clearTimeout(this._cannedTimeout);
         var self = this;
         this._preprocessMessage().then(function (message) {
             self.trigger('post_message', message);
@@ -788,9 +782,14 @@ var BasicComposer = Widget.extend({
                 break;
             // ENTER: submit the message only if the dropdown mention proposition is not displayed
             case $.ui.keyCode.ENTER:
-                if (this._mentionManager.isOpen()) {
+                const hasCannedDelimiter = this._mentionManager._activeListener && this._mentionManager._activeListener.delimiter === ':';
+                const mentionDropdown = this._mentionManager.el;
+                if (this._mentionManager.isOpen() && !hasCannedDelimiter || this.el.querySelector('.o_mention_proposition.active')) {
                     ev.preventDefault();
                 } else {
+                    if (hasCannedDelimiter && mentionDropdown.hasChildNodes()) {
+                        [mentionDropdown, mentionDropdown.querySelector('.dropdown-menu')].forEach(el => el.classList.remove('show'));
+                    }
                     var sendMessage = ev.ctrlKey || this._shouldSend(ev);
                     if (sendMessage) {
                         ev.preventDefault();
@@ -815,6 +814,10 @@ var BasicComposer = Widget.extend({
             case $.ui.keyCode.END:
             case $.ui.keyCode.PAGE_UP:
             case $.ui.keyCode.PAGE_DOWN:
+            case 16:
+            case 17:
+            case 18:
+            case 20:
                 break;
             // ESCAPE: close mention propositions
             case $.ui.keyCode.ESCAPE:
@@ -831,7 +834,7 @@ var BasicComposer = Widget.extend({
             case $.ui.keyCode.DOWN:
             case $.ui.keyCode.TAB:
                 if (this._mentionManager.isOpen()) {
-                    this._mentionManager.propositionNavigation(ev.which);
+                    this._mentionManager.propositionNavigation(ev.which, ev.shiftKey);
                 }
                 break;
             // Otherwise, check if a mention is typed
