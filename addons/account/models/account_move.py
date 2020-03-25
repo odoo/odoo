@@ -331,6 +331,8 @@ class AccountMove(models.Model):
 
     @api.onchange('date', 'currency_id')
     def _onchange_currency(self):
+        if not self.currency_id:
+            return
         if self.is_invoice(include_receipts=True):
             company_currency = self.company_id.currency_id
             has_foreign_currency = self.currency_id and self.currency_id != company_currency
