@@ -42,6 +42,8 @@ class SaleOrder(models.Model):
         Compute the total amounts of the SO.
         """
         for order in self:
+            self.env.cache._data[self.env['sale.order']._fields['amount_untaxed']].pop(order.id, False)
+            self.env.cache._data[self.env['sale.order']._fields['amount_tax']].pop(order.id, False)
             amount_untaxed = amount_tax = 0.0
             for line in order.order_line:
                 amount_untaxed += line.price_subtotal
