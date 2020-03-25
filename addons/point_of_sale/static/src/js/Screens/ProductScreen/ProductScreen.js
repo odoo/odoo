@@ -199,7 +199,9 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     /**
      * @param {Object} controlButton
      * @param {Component} controlButton.component
-     * @param {Function} controlButton.condition
+     * @param {Function} controlButton.condition zero argument function that is bound
+     *      to the instance of ProductScreen, such that `this.env.pos` can be used
+     *      inside the function.
      * @param {Array} [controlButton.position] array of two elements
      *      [locator, relativeTo]
      *      locator: string -> any of ('before', 'after', 'replace')
