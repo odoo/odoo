@@ -184,7 +184,6 @@ class TestSyncOdoo2Google(SavepointCase):
             'recurrency': True,
             'rrule': 'FREQ=WEEKLY;COUNT=2;BYDAY=WE',
         })
-        event.recurrence_id
         to_delete = self.env['calendar.event'].with_context(active_test=False).search([('google_id', '=', google_id)])
         self.assertTrue(to_delete)
         self.assertFalse(to_delete.active)

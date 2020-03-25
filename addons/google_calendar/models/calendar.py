@@ -12,7 +12,8 @@ class Meeting(models.Model):
     _name = 'calendar.event'
     _inherit = ['calendar.event', 'google.calendar.sync']
 
-    google_id = fields.Char('Google Calendar Event Id', compute='_compute_google_id', store=True, readonly=False)
+    google_id = fields.Char(
+        'Google Calendar Event Id', compute='_compute_google_id', store=True, readonly=False)
 
     @api.depends('recurrence_id.google_id')
     def _compute_google_id(self):
@@ -65,9 +66,6 @@ class Meeting(models.Model):
             'recurrency': google_event.is_recurrent()
         }
 
-        if google_event.reminders and google_event.reminders.get('useDefault'):
-            values
-
         if not google_event.is_recurrence():
             values['google_id'] = google_event.id
         if google_event.start.get('dateTime'):
@@ -91,7 +89,9 @@ class Meeting(models.Model):
         emails = [a.get('email') for a in google_event.attendees]
         existing_attendees = self.env['calendar.attendee']
         if google_event.exists(self.env):
-            existing_attendees = self.env['calendar.attendee'].search([('event_id', '=', google_event.odoo_id(self.env)), ('email', 'in', emails)])
+            existing_attendees = self.env['calendar.attendee'].search([
+                ('event_id', '=', google_event.odoo_id(self.env)),
+                ('email', 'in', emails)])
         attendees_by_emails = {a.email: a for a in existing_attendees}
         for attendee in google_event.attendees:
             email = attendee.get('email')

@@ -251,7 +251,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
         Check that mail are NOT sent to the attendees when detaching a recurring event
         """
 
-        def _test_one_mail_per_attendee(self, m, partners):
+        def _test_one_mail_per_attendee(self, partners):
             # check that every attendee receive a (single) mail for the event
             for partner in partners:
                 mail = self.env['mail.message'].sudo().search([
@@ -260,9 +260,9 @@ class TestCalendar(SavepointCaseWithUserDemo):
                 self.assertEqual(len(mail), 1)
 
         partners = [
-           self.env['res.partner'].create({'name':'testuser0','email': u'bob@example.com'}),
-           self.env['res.partner'].create({'name':'testuser1','email': u'alice@example.com'}),
-           ]
+            self.env['res.partner'].create({'name': 'testuser0', 'email': u'bob@example.com'}),
+            self.env['res.partner'].create({'name': 'testuser1', 'email': u'alice@example.com'}),
+        ]
         partner_ids = [(6, False, [p.id for p in partners]),]
         now = fields.Datetime.now()
         m = self.CalendarEvent.create({
@@ -276,13 +276,13 @@ class TestCalendar(SavepointCaseWithUserDemo):
             })
 
         # every partner should have 1 mail sent
-        _test_one_mail_per_attendee(self, m, partners)
+        _test_one_mail_per_attendee(self, partners)
 
         # adding more partners to the event
         partners.extend([
-            self.env['res.partner'].create({'name':'testuser2','email': u'marc@example.com'}),
-            self.env['res.partner'].create({'name':'testuser3','email': u'carl@example.com'}),
-            self.env['res.partner'].create({'name':'testuser4','email': u'alain@example.com'}),
+            self.env['res.partner'].create({'name': 'testuser2', 'email': u'marc@example.com'}),
+            self.env['res.partner'].create({'name': 'testuser3', 'email': u'carl@example.com'}),
+            self.env['res.partner'].create({'name': 'testuser4', 'email': u'alain@example.com'}),
             ])
         partner_ids = [(6, False, [p.id for p in partners]),]
         m.write({
@@ -291,4 +291,4 @@ class TestCalendar(SavepointCaseWithUserDemo):
         })
 
         # more email should be sent
-        _test_one_mail_per_attendee(self, m, partners)
+        _test_one_mail_per_attendee(self, partners)

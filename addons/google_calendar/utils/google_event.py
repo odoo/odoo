@@ -169,6 +169,6 @@ class GoogleEvent(abc.Set):
     def _get_model(self, env):
         if all([e.is_recurrence() for e in self]):
             return env['calendar.recurrence']
-        elif all([not e.is_recurrence() for e in self]):
+        if all([not e.is_recurrence() for e in self]):
             return env['calendar.event']
         raise TypeError("Mixing Google events and Google recurrences")

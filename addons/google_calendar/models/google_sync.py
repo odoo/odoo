@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
+from contextlib import contextmanager
+from functools import wraps
 import requests
 import pytz
-from functools import wraps
 from dateutil.parser import parse
-from contextlib import contextmanager
 
 from odoo import api, fields, models, registry, _
 from odoo.tools import ormcache_context
@@ -52,7 +53,7 @@ def google_calendar_token(user):
             # Rollback manually first to avoid concurrent access errors/deadlocks.
             user.env.cr.rollback()
             with user.pool.cursor() as cr:
-                env= user.env(cr=cr)
+                env = user.env(cr=cr)
                 user.with_env(env)._set_auth_tokens(False, False, 0)
         raise e
 
@@ -155,7 +156,7 @@ class GoogleSync(models.AbstractModel):
         cancelled_odoo._cancel()
 
         synced_records = new_odoo + cancelled_odoo
-        for gevent in existing - cancelled :
+        for gevent in existing - cancelled:
             # Last updated wins.
             # This could be dangerous if google server time and odoo server time are different
             updated = parse(gevent.updated)
@@ -169,7 +170,6 @@ class GoogleSync(models.AbstractModel):
 
     @after_commit
     def _google_delete(self, google_service: GoogleCalendarService, google_id, timeout=TIMEOUT):
-        print('DELETE', google_id)
         with google_calendar_token(self.env.user.sudo()) as token:
             if token:
                 google_service.delete(google_id, token=token, timeout=timeout)
@@ -177,7 +177,6 @@ class GoogleSync(models.AbstractModel):
 
     @after_commit
     def _google_patch(self, google_service: GoogleCalendarService, google_id, values, timeout=TIMEOUT):
-        print('Patch', google_id)
         with google_calendar_token(self.env.user.sudo()) as token:
             if token:
                 google_service.patch(google_id, values, token=token, timeout=timeout)
@@ -185,7 +184,6 @@ class GoogleSync(models.AbstractModel):
 
     @after_commit
     def _google_insert(self, google_service: GoogleCalendarService, values, timeout=TIMEOUT):
-        print('insert')
         if not values:
             return
         with google_calendar_token(self.env.user.sudo()) as token:

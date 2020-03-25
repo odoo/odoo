@@ -8,7 +8,6 @@ from odoo import api, fields, models
 from addons.google_calendar.utils.google_calendar import GoogleCalendarService
 
 
-
 class RecurrenceRule(models.Model):
     _name = 'calendar.recurrence'
     _inherit = ['calendar.recurrence', 'google.calendar.sync']

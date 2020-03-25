@@ -23,9 +23,13 @@ class Users(models.Model):
 
         return ['&', '|',
                 '&',
-                    '|', ['start', '>=', fields.Datetime.to_string(start_dt)], ['stop', '>=', fields.Datetime.to_string(start_dt)],
+                    '|',
+                        ['start', '>=', fields.Datetime.to_string(start_dt)],
+                        ['stop', '>=', fields.Datetime.to_string(start_dt)],
                     ['start', '<=', fields.Datetime.to_string(end_dt)],
-                '&', ['allday', '=', True], ['start_date', '=', fields.Date.to_string(start_date)],
+                '&',
+                    ['allday', '=', True],
+                    ['start_date', '=', fields.Date.to_string(start_date)],
                 ('attendee_ids.partner_id', '=', self.env.user.partner_id.id)]
 
     @api.model

@@ -23,13 +23,20 @@ class Alarm(models.Model):
     _interval_selection = {'minutes': 'Minutes', 'hours': 'Hours', 'days': 'Days'}
 
     name = fields.Char('Name', translate=True, required=True)
-    alarm_type = fields.Selection([('notification', 'Notification'), ('email', 'Email')], string='Type', required=True, default='email')
+    alarm_type = fields.Selection(
+        [('notification', 'Notification'), ('email', 'Email')],
+        string='Type', required=True, default='email')
     duration = fields.Integer('Remind Before', required=True, default=1)
-    interval = fields.Selection(list(_interval_selection.items()), 'Unit', required=True, default='hours')
-    duration_minutes = fields.Integer('Duration in minutes', search='_search_duration_minutes', compute='_compute_duration_minutes', store=True, help="Duration in minutes")
+    interval = fields.Selection(
+        list(_interval_selection.items()), 'Unit', required=True, default='hours')
+    duration_minutes = fields.Integer(
+        'Duration in minutes', store=True,
+        search='_search_duration_minutes', compute='_compute_duration_minutes',
+        help="Duration in minutes")
 
     def _search_duration_minutes(self, operator, value):
-        return ['|', '|',
+        return [
+            '|', '|',
             '&', ('interval', '=', 'minutes'), ('duration', operator, value),
             '&', ('interval', '=', 'hours'), ('duration', operator, value / 60),
             '&', ('interval', '=', 'days'), ('duration', operator, value / 60 / 24),
@@ -38,7 +45,9 @@ class Alarm(models.Model):
     @api.onchange('duration', 'interval', 'alarm_type')
     def _onchange_duration_interval(self):
         display_interval = self._interval_selection.get(self.interval, '')
-        display_alarm_type = {key: value for key, value in self._fields['alarm_type']._description_selection(self.env)}[self.alarm_type]
+        display_alarm_type = {
+            key: value for key, value in self._fields['alarm_type']._description_selection(self.env)
+        }[self.alarm_type]
         self.name = "%s - %s %s" % (display_alarm_type, self.duration, display_interval)
 
     def _update_cron(self):
