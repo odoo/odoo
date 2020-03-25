@@ -91,6 +91,19 @@
                     <h2>Payment Terminals</h2>
                     <div class="row mt16 o_settings_container" id="o_settings_use_payment_terminals">
                         <div class="col-12 col-lg-6 o_setting_box"
+                            id="adyen_payment_terminal_setting"
+                            title="The transactions are processed by Adyen. Set your Adyen credentials on the related payment method.">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pos_adyen"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_pos_adyen" string="Adyen"/>
+                                <div class="text-muted">
+                                    Accept payments with an Adyen payment terminal
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box"
                             id="vantiv_payment_terminal_setting"
                             title="The transactions are processed by Vantiv. Set your Vantiv credentials on the related payment method.">
                             <div class="o_setting_left_pane">
@@ -105,19 +118,6 @@
                                 <div class="content-group" attrs="{'invisible': [('module_pos_mercury', '=', False)]}">
                                     <div class="mt16" id="btn_use_pos_mercury">
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box"
-                            id="adyen_payment_terminal_setting"
-                            title="The transactions are processed by Adyen. Set your Adyen credentials on the related payment method.">
-                            <div class="o_setting_left_pane">
-                                <field name="module_pos_adyen"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_pos_adyen" string="Adyen"/>
-                                <div class="text-muted">
-                                    Accept payments with an Adyen payment terminal
                                 </div>
                             </div>
                         </div>
