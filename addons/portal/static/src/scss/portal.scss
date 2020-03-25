@@ -340,11 +340,13 @@ img.o_we_custom_image {
         th {
             padding-top: $o-portal-table-th-pt;
             padding-bottom: $o-portal-table-th-pb;
+            max-width: 500px;
         }
 
         td {
             padding-top: $o-portal-table-td-pt;
             padding-bottom: $o-portal-table-td-pb;
+            max-width: 10rem;
 
         }
 
@@ -355,6 +357,8 @@ img.o_we_custom_image {
         td, th {
             vertical-align: middle;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 
