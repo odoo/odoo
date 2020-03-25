@@ -25,7 +25,7 @@ class MrpDocumentRoute(http.Controller):
                 request.env['mrp.document'].create({
                     'name': ufile.filename,
                     'res_model': kwargs.get('res_model'),
-                    'res_id': kwargs.get('res_id'),
+                    'res_id': int(kwargs.get('res_id')),
                     'mimetype': mimetype,
                     'datas': base64.encodebytes(ufile.read()),
                 })
