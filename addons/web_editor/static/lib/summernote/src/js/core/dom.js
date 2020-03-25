@@ -122,7 +122,7 @@ define([
       } else {
         // ODOO: editor on [data-note-id] attribute
         // $editor = $('#note-editor-' + list.last($target.attr('id').split('-')));
-        $editor = $('[data-note-id="' + list.last($target.attr('id')) + '"]');
+        $editor = $('[data-note-id="' + list.last($target.attr('id').split('-')) + '"]');
       }
 
       return buildLayoutInfo($editor);
