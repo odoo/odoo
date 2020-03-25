@@ -67,6 +67,12 @@
             <xpath expr="//span[@name='scheduled_text']" position="after">
                 <span name="scheduled_text_sms" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">SMS Text Message are in queue and will be sent soon.</span>
             </xpath>
+            <xpath expr="//span[@name='sent']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//span[@name='sent']" position="after">
+                <span name="sent_sms" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">SMS Text Message have been sent.</span>
+            </xpath>
             <xpath expr="//span[@name='failed_text']" position="attributes">
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
             </xpath>
@@ -80,27 +86,6 @@
                 <span name="next_departure_text" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">This SMS marketing is scheduled for </span>
             </xpath>
             <!-- Stat Buttons -->
-            <xpath expr="//button[@id='button_view_sent']" position="attributes">
-                <attribute name="attrs">{'invisible': ['|', '&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test')), ('mailing_type', '!=', 'mail')]}</attribute>
-            </xpath>
-            <xpath expr="//button[@id='button_view_sent']" position="after">
-                <button name="action_view_sent"
-                    type="object"
-                    context="{'search_default_filter_sent': True}"
-                    icon="fa-comment-o" class="oe_stat_button"
-                    attrs="{'invisible': ['|', '&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test')), ('mailing_type', '!=', 'sms')]}" >
-                    <field name="sent" string="Sent" widget="statinfo"/>
-                </button>
-            </xpath>
-            <xpath expr="//button[@name='action_view_opened']" position="after">
-                <button name="action_view_clicked"
-                    type="object"
-                    context="{'search_default_filter_clicked': True}" 
-                    class="oe_stat_button"
-                    attrs="{'invisible': ['|',('mailing_type', '!=', 'sms'),('state', 'in', ('draft','test'))]}">
-                    <field name="clicks_ratio" string="Clicked" widget="percentpie"/>
-                </button>
-            </xpath>
             <xpath expr="//button[@name='action_view_opened']" position="attributes">
                 <attribute name="attrs">{'invisible': ['|',('mailing_type', '!=', 'mail'),('state', 'in', ('draft','test'))]}</attribute>
             </xpath>
