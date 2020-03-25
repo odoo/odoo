@@ -2,18 +2,18 @@
 <odoo>
     <template id="portal_layout" name="Portal layout: project menu entry" inherit_id="portal.portal_breadcrumbs" priority="40">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li t-if="page_name == 'project' or project" t-attf-class="breadcrumb-item #{'active ' if not project else ''}">
+            <li t-if="page_name == 'project' or project" class="col-lg-2" t-attf-class="breadcrumb-item #{'active ' if not project else ''}">
                 <a t-if="project" t-attf-href="/my/projects?{{ keep_query() }}">Projects</a>
                 <t t-else="">Projects</t>
             </li>
-            <li t-if="project" class="breadcrumb-item active">
+            <li t-if="project" class="breadcrumb-item active text-truncate col-8 col-lg-10">
                 <t t-esc="project.name"/>
             </li>
             <li t-if="page_name == 'task' or task" t-attf-class="breadcrumb-item #{'active ' if not task else ''}">
                 <a t-if="task" t-attf-href="/my/tasks?{{ keep_query() }}">Tasks</a>
                 <t t-else="">Tasks</t>
             </li>
-            <li t-if="task" class="breadcrumb-item active">
+            <li t-if="task" class="breadcrumb-item active col-8 col-lg-10 text-truncate">
                 <span t-field="task.name"/>
             </li>
         </xpath>
@@ -74,9 +74,10 @@
 
             <t t-call="portal.portal_record_layout">
                 <t t-set="card_header">
-                    <h5 class="mb-0">
-                        <small class="text-muted">Project - </small><span t-field="project.name"/>
-                        <span class="float-right">
+                    <h5 class="mb-0 row">
+                        <small class="text-muted col-3 col-md-1">Project - </small>
+                        <span t-field="project.name" class="col-7 col-sm-9 text-truncate "/>
+                        <span class="col-2 text-center">
                             <a role="button" t-attf-href="/my/tasks?filterby=#{project.id}" class="btn btn-sm btn-secondary">
                                 <span class="fa fa-tasks" role="img" aria-label="Tasks" title="Tasks"/>
                                 <span t-esc="project.task_count" />
@@ -141,7 +142,7 @@
                                     <span t-field="tasks[0].sudo().project_id.name"/></th>
                                 <th t-if="groupby == 'stage'">
                                     <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> in stage:</em>
-                                    <span t-field="tasks[0].sudo().stage_id.name"/></th>
+                                    <span class="text-truncate" t-field="tasks[0].sudo().stage_id.name"/></th>
                                 <th t-if="groupby != 'project'" class="text-center">Project</th>
                                 <th t-if="groupby != 'stage'" class="text-center">Stage</th>
                             </tr>
@@ -181,15 +182,15 @@
             <t t-call="portal.portal_record_layout">
                 <t t-set="card_header">
                     <div class="row no-gutters">
-                        <div class="col-md">
-                            <h5 class="mb-1 mb-md-0">
-                                <span t-field="task.name"/>
-                                <small class="text-muted"> (#<span t-field="task.id"/>)</small>
+                        <div class="col-12">
+                            <h5 class="d-flex mb-1 mb-md-0 row">
+                                <span t-field="task.name" class="col-9 text-truncate"/>
+                                <small class="text-muted d-none d-md-inline"> (#<span t-field="task.id"/>)</small>
+                                <div class="col-3 col-md-2 text-right">
+                                    <small class="text-right">Status:</small>
+                                    <span t-field="task.stage_id.name" class=" badge badge-pill badge-info" title="Current stage of this task"/>
+                                </div>
                             </h5>
-                        </div>
-                        <div class="col-md text-md-right">
-                            <small class="text-right">Status:</small>
-                            <span t-field="task.stage_id.name" class=" badge badge-pill badge-info" title="Current stage of this task"/>
                         </div>
                     </div>
                 </t>
