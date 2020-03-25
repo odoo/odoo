@@ -2,9 +2,8 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
     'use strict';
 
     const core = require('web.core');
-    const { Chrome } = require('point_of_sale.chrome');
     const { useRef, useState } = owl.hooks;
-    const { PosComponent, addComponents } = require('point_of_sale.PosComponent');
+    const { PosComponent } = require('point_of_sale.PosComponent');
     const { OrderReceipt } = require('point_of_sale.OrderReceipt');
     const { useErrorHandlers } = require('point_of_sale.custom_hooks');
     const Registry = require('point_of_sale.ComponentsRegistry');
@@ -26,8 +25,10 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
         mounted() {
             this.env.pos.on(
                 'change:selectedOrder',
-                () => {
-                    this.render();
+                (pos, newSelectedOrder) => {
+                    if (newSelectedOrder) {
+                        this.render();
+                    }
                 },
                 this
             );
@@ -47,6 +48,9 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
         get currentOrder() {
             return this.env.pos.get_order();
         }
+        get nextScreen() {
+            return { name: 'ProductScreen' };
+        }
         /**
          * This function is called outside the rendering call stack. This way,
          * we don't block the displaying of ReceiptScreen when it is mounted; additionally,
@@ -62,7 +66,8 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
         }
         orderDone() {
             this.currentOrder.finalize();
-            this.showScreen('ProductScreen');
+            const { name, props } = this.nextScreen;
+            this.showScreen(name, props);
         }
         async printReceipt() {
             if (this.env.pos.proxy.printer) {
@@ -133,9 +138,6 @@ odoo.define('point_of_sale.ReceiptScreen', function(require) {
         }
     }
     ReceiptScreen.components = { OrderReceipt };
-
-    // register screen component
-    addComponents(Chrome, [ReceiptScreen]);
 
     Registry.add('ReceiptScreen', ReceiptScreen);
 

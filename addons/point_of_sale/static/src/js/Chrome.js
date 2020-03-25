@@ -48,7 +48,7 @@ odoo.define('point_of_sale.chrome', function(require) {
                 skipButtonIsShown: false,
             });
 
-            this.mainScreen = useState(this.constructor.startUpScreen);
+            this.mainScreen = useState({ name: null, component: null });
             this.mainScreenProps = {};
 
             this.popup = useState({ isShown: false, name: null, component: null });
@@ -91,6 +91,20 @@ odoo.define('point_of_sale.chrome', function(require) {
                 this.env.pos.config.use_proxy && this.env.pos.config.iface_customer_facing_display
             );
         }
+        /**
+         * Startup screen can be based on pos config so the startup screen
+         * is only determined after pos data is completely loaded.
+         *
+         * NOTE: Wait for pos data to be completed before calling this getter.
+         */
+        get startScreen() {
+            if (this.state.uiState !== 'READY') {
+                console.warn(
+                    `Accessing startScreen of Chrome component before 'state.uiState' to be 'READY' is not recommended.`
+                );
+            }
+            return { name: 'ProductScreen' };
+        }
 
         // CONTROL METHODS //
 
@@ -120,8 +134,8 @@ odoo.define('point_of_sale.chrome', function(require) {
                     ? this.env.pos.config.iface_start_categ_id[0]
                     : 0;
                 this.state.uiState = 'READY';
-                this.env.pos.on('change:selectedOrder', () => this._showSavedScreen(), this);
-                this._showSavedScreen();
+                this.env.pos.on('change:selectedOrder', this._showSavedScreen, this);
+                this._showStartScreen();
                 this.env.pos.push_orders(); // push order in the background, no need to await
             } catch (error) {
                 let title = 'Unknown Error',
@@ -157,18 +171,25 @@ odoo.define('point_of_sale.chrome', function(require) {
 
         // EVENT HANDLERS //
 
-        _showSavedScreen() {
-            const order = this.env.pos.get_order();
-            const { name } = order.get_screen_data('screen') || {
-                name: this.constructor.startUpScreen.name,
-            };
-            this.showScreen(name);
+        _showStartScreen() {
+            const { name, props } = this.startScreen;
+            this.showScreen(name, props);
         }
-
+        /**
+         * Show the screen saved in the order when the `selectedOrder` of pos is changed.
+         * @param {models.PosModel} pos
+         * @param {models.Order} newSelectedOrder
+         */
+        _showSavedScreen(pos, newSelectedOrder) {
+            const { name, props } = this._getSavedScreen(newSelectedOrder);
+            this.showScreen(name, props);
+        }
+        _getSavedScreen(order) {
+            return order.get_screen_data('screen') || { name: 'ProductScreen' };
+        }
         _setSelectedCategoryId(event) {
             this.state.selectedCategoryId.value = event.detail;
         }
-
         __showPopup(event) {
             const { name, props, resolve } = event.detail;
             const popupConstructor = this.constructor.components[name];
@@ -190,17 +211,12 @@ odoo.define('point_of_sale.chrome', function(require) {
             this.tempScreen.name = name;
             this.tempScreen.component = this.constructor.components[name];
             this.tempScreenProps = { ...props, resolve };
-            // hide main screen
-            this.mainScreen.isShown = false;
         }
         __closeTempScreen() {
             this.tempScreen.isShown = false;
-            // show main screen
-            this.mainScreen.isShown = true;
         }
         __showScreen({ detail: { name, props } }) {
             // 1. Set the information of the screen to display.
-            this.mainScreen.isShown = true;
             this.mainScreen.name = name;
             this.mainScreen.component = this.constructor.components[name];
             this.mainScreenProps = {
@@ -209,8 +225,21 @@ odoo.define('point_of_sale.chrome', function(require) {
             };
             // 2. Save the screen to the order.
             //  - This screen is shown when the order is selected.
+            this._setScreenData(name, props);
+        }
+        /**
+         * Set the latest screen to the current order. This is done so that
+         * when the order is selected again, the ui returns to the latest screen
+         * saved in the order.
+         *
+         * @param {string} name Screen name
+         * @param {Object} props props for the Screen component
+         */
+        _setScreenData(name, props) {
             const order = this.env.pos.get_order();
-            order.set_screen_data('screen', { name });
+            if (order) {
+                order.set_screen_data('screen', { name, props });
+            }
         }
         async _closePos() {
             // If pos is not properly loaded, we just go back to /web without
@@ -385,16 +414,6 @@ odoo.define('point_of_sale.chrome', function(require) {
             return scrollable;
         }
     }
-
-    Chrome.startUpScreen = {
-        name: 'ProductScreen',
-        isShown: false,
-        component: null,
-    };
-
-    Chrome.setStartUpScreen = function(screenComponent) {
-        this.startUpScreen.name = screenComponent.name;
-    };
 
     Registry.add(Chrome.name, Chrome);
 

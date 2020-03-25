@@ -26,7 +26,7 @@
                         <div class="subwindow">
                             <div class="subwindow-container">
                                 <div class="subwindow-container-fix screens">
-                                    <t isShown="mainScreen.isShown" t-component="mainScreen.component"
+                                    <t isShown="!tempScreen.isShown" t-component="mainScreen.component"
                                        t-props="mainScreenProps" t-key="mainScreen.name" />
                                     <t t-if="tempScreen.isShown" t-component="tempScreen.component"
                                        t-props="tempScreenProps" t-key="tempScreen.name" />
