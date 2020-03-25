@@ -315,6 +315,9 @@ class MassMailing(models.Model):
     def action_view_traces_failed(self):
         return self._action_view_traces_filtered('failed')
 
+    def action_view_traces_sent(self):
+        return self._action_view_traces_filtered('sent')
+
     def _action_view_traces_filtered(self, view_filter):
         action = self.env.ref('mass_mailing.mailing_trace_action').read()[0]
         action['name'] = _('%s Traces') % (self.name)
@@ -322,9 +325,6 @@ class MassMailing(models.Model):
         filter_key = 'search_default_filter_%s' % (view_filter)
         action['context'][filter_key] = True
         return action
-
-    def action_view_sent(self):
-        return self._action_view_documents_filtered('sent')
 
     def action_view_opened(self):
         return self._action_view_documents_filtered('opened')
@@ -342,7 +342,7 @@ class MassMailing(models.Model):
         return self._action_view_documents_filtered('delivered')
 
     def _action_view_documents_filtered(self, view_filter):
-        if view_filter in ('sent', 'opened', 'replied', 'bounced', 'clicked'):
+        if view_filter in ('opened', 'replied', 'bounced', 'clicked'):
             opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat[view_filter])
         elif view_filter == ('delivered'):
             opened_stats = self.mailing_trace_ids.filtered(lambda stat: stat.sent and not stat.bounced)
