@@ -338,12 +338,13 @@ class Message(models.Model):
         partner_tree = dict((partner[0], partner) for partner in partners_names)
 
         # 2. Attachments as SUPERUSER, because could receive msg and attachments for doc uid cannot see
-        attachments_data = attachments.sudo().read(['id', 'datas_fname', 'name', 'mimetype'])
+        attachments_data = attachments.sudo().read(['id', 'datas_fname', 'name', 'mimetype', 'checksum'])
         safari = request and request.httprequest.user_agent.browser == 'safari'
         attachments_tree = dict((attachment['id'], {
             'id': attachment['id'],
             'filename': attachment['datas_fname'],
             'name': attachment['name'],
+            'checksum': attachment['checksum'],
             'mimetype': 'application/octet-stream' if safari and attachment['mimetype'] and 'video' in attachment['mimetype'] else attachment['mimetype'],
         }) for attachment in attachments_data)
 
