@@ -47,6 +47,7 @@ function _processSearchPanelNode(node, fields) {
             description: childNode.attrs.string || fields[fieldName].string,
             fieldName: fieldName,
             icon: childNode.attrs.icon,
+            order: childNode.attrs.order || false,
             id: sectionId,
             index: index,
             type: type,
@@ -410,6 +411,7 @@ var SearchPanel = Widget.extend({
                     method: 'search_panel_select_range',
                     model: self.model,
                     args: [category.fieldName],
+                    kwargs: { order: category.order || false },
                 }).then(function (result) {
                     category.parentField = result.parent_field;
                     return result.values;
@@ -449,6 +451,7 @@ var SearchPanel = Widget.extend({
                     disable_counters: filter.disableCounters,
                     filter_domain: filterDomain,
                     group_by: filter.groupBy || false,
+                    order: filter.order || false,
                     search_domain: [...self.searchDomain, ...self.viewDomain],
                 },
             }).then(function (values) {

@@ -921,7 +921,7 @@ class Module(models.Model):
         }
 
     @api.model
-    def search_panel_select_range(self, field_name):
+    def search_panel_select_range(self, field_name, **kwargs):
         if field_name == 'category_id':
             domain = [('module_ids', '!=', False)]
 
@@ -950,9 +950,9 @@ class Module(models.Model):
                 'parent_field': 'parent_id',
                 'values': self.env['ir.module.category'].search_read(
                     [('id', 'in', categories.ids)],
-                    ['display_name', 'parent_id']),
+                    ['display_name', 'parent_id'], order=kwargs.get('order', None)),
             }
-        return super(Module, self).search_panel_select_range(field_name)
+        return super(Module, self).search_panel_select_range(field_name, **kwargs)
 
 
 DEP_STATES = STATES + [('unknown', 'Unknown')]

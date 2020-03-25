@@ -1570,6 +1570,7 @@ QUnit.module('Views', {
                         category_domain: [],
                         filter_domain: [],
                         search_domain: [],
+                        order: false,
                         comodel_domain: [['parent_id', '=', false]],
                         disable_counters: false,
                     });
@@ -2285,6 +2286,57 @@ QUnit.module('Views', {
         assert.containsNone(document.body, '.modal .o_search_panel');
 
         form.destroy();
+    });
+
+    QUnit.test('do sorting in the searchpanel field value', async function (assert) {
+        assert.expect(2);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            services: this.services,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" order="name"/>
+                            <field select="multi" name="category_id" order="name"/>
+                            <field name="state"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            mockRPC: function (route, args) {
+                if (route === "/web/dataset/call_kw/partner/search_panel_select_range") {
+                    assert.deepEqual(args.kwargs, {order: "name"},
+                            'order argument passed to sort the list by name in descending order.');
+                }
+                if (route === "/web/dataset/call_kw/partner/search_panel_select_multi_range") {
+                    assert.deepEqual(args.kwargs, {
+                            category_domain: [],
+                            comodel_domain: [],
+                            disable_counters: false,
+                            filter_domain: [],
+                            group_by: false,
+                            order: "name",
+                            search_domain: [],
+                        }, 'order argument passed to sort the list by name in ascending order.');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        kanban.destroy();
     });
 });
 });
