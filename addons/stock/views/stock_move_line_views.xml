@@ -4,7 +4,7 @@
         <field name="name">stock.move.line.tree</field>
         <field name="model">stock.move.line</field>
         <field name="arch" type="xml">
-            <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done'))" string="Move Lines" create="0" default_order="date">
+            <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done'))" string="Move Lines" default_order="date">
                 <field name="date"/>
                 <field name="reference" string="Reference"
                        invisible="context.get('no_reference', False)"/>
@@ -124,7 +124,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,pivot,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
-            <field name="context">{'search_default_done': 1, 'search_default_groupby_product_id': 1}</field>
+            <field name="context">{'search_default_done': 1, 'search_default_groupby_product_id': 1, 'create': 0}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_empty_folder">
                     There's no product move yet
