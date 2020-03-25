@@ -376,7 +376,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
     _refreshResults: function () {
         var self = this;
 
-        this._rpc({
+        return this._rpc({
             route: _.str.sprintf('/survey/session/results/%s', self.surveyAccessToken)
         }).then(function (questionResults) {
             if (questionResults) {
@@ -398,6 +398,8 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
                     );
                 }
             }
+
+            return Promise.resolve();
         }, function () {
             // on failure, stop refreshing
             clearInterval(self.resultsRefreshInterval);
@@ -412,7 +414,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
     _refreshAttendeesCount: function () {
         var self = this;
 
-        self._rpc({
+        return self._rpc({
             model: 'survey.survey',
             method: 'read',
             args: [[self.surveyId], ['session_answer_count']],
