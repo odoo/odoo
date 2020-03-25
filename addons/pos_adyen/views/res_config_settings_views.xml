@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.point_of_sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="95"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='adyen_payment_terminal_setting']/div[hasclass('o_setting_right_pane')]" position="inside">
+                <span attrs="{'invisible': [('adyen_account_id', '=', False)]}">
+                    <label for="adyen_account_id" string="Account"/>
+                    <span class="fa fa-lg fa-building-o mr8" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                    <field name="adyen_account_id"/>
+                </span>
+                <button name="create_adyen_account" icon="fa-arrow-right" type="object" class="btn-link" string="Create an account in 1 minute"
+                    attrs="{'invisible': [('adyen_account_id', '!=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

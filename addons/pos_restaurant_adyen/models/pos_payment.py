@@ -29,10 +29,4 @@ class PosPayment(models.Model):
             'merchantAccount': self.payment_method_id.adyen_merchant_account,
         }
 
-        return self.payment_method_id.proxy_adyen_request(
-            data,
-            self.payment_method_id.adyen_test_mode,
-            self.payment_method_id.adyen_api_key,
-            'https://pal-test.adyen.com/pal/servlet/Payment/v52/capture',
-            'https://pal-live.adyen.com/pal/servlet/Payment/v52/capture',
-        )
+        return self.payment_method_id.proxy_adyen_request(data, 'capture')

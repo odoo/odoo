@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="adyen_transaction_view_form" model="ir.ui.view">
+        <field name="name">adyen.transaction.view.form</field>
+        <field name="model">adyen.transaction</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="reference"/>
+                        <field name="amount" widget='monetary'/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="date"/>
+                        <field name="description"/>
+                        <field name="status"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="adyen_transaction_view_list" model="ir.ui.view">
+        <field name="name">adyen.transaction.view.list</field>
+        <field name="model">adyen.transaction</field>
+        <field name="arch" type="xml">
+            <tree js_class="adyen_transactions_tree">
+                <field name="reference"/>
+                <field name="amount" widget='monetary'/>
+                <field name="currency_id" invisible="1"/>
+                <field name="date"/>
+                <field name="description"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+</odoo>
