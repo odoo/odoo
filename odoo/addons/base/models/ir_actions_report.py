@@ -28,11 +28,17 @@ from PyPDF2 import PdfFileWriter, PdfFileReader
 from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile
+
 # Allow truncated images
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 
 _logger = logging.getLogger(__name__)
+
+try:
+    import pdf417gen
+except:
+    _logger.error('Could not import pdf417gen library')
 
 # A lock occurs when the user wants to print a report having multiple barcode while the server is
 # started in threaded-mode. The reason is that reportlab has to build a cache of the T1 fonts
@@ -496,6 +502,18 @@ class IrActionsReport(models.Model):
             barcode_type = 'EAN13'
             if len(value) in (11, 12):
                 value = '0%s' % value
+        if barcode_type == 'pdf417':
+            ratio = int(round(int(width) / int(height), 0))
+            columns = int(round(int(width) / 25, 0))
+            scale = int(round(int(width) / 320, 0))
+            padding = 15
+            _buffer = io.BytesIO()
+            bc = pdf417gen.encode(value, columns=columns, security_level=5)
+            image = pdf417gen.render_image(bc, scale=scale, ratio=ratio, padding=padding)
+            image.save(_buffer, 'PNG')
+            data = _buffer.getvalue()
+            _buffer.close()
+            return data
         try:
             width, height, humanreadable, quiet = int(width), int(height), bool(int(humanreadable)), bool(int(quiet))
             barcode = createBarcodeDrawing(
