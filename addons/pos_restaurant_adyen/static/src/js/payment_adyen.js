@@ -32,11 +32,7 @@ odoo.define('pos_restaurant_adyen.payment', function (require) {
                 },
             };
 
-            return this._call_adyen(
-                data,
-                'https://pal-test.adyen.com/pal/servlet/Payment/v52/adjustAuthorisation',
-                'https://pal-live.adyen.com/pal/servlet/Payment/v52/adjustAuthorisation',
-            );
+            return this._call_adyen(data, 'adjust');
         },
 
         canBeAdjusted: function (cid) {
