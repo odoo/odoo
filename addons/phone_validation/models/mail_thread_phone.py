@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.addons.phone_validation.tools import phone_validation
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 
 
 class PhoneMixin(models.AbstractModel):
@@ -30,10 +30,18 @@ class PhoneMixin(models.AbstractModel):
     phone_sanitized = fields.Char(
         string='Sanitized Number', compute="_compute_phone_sanitized", compute_sudo=True, store=True,
         help="Field used to store sanitized phone number. Helps speeding up searches and comparisons.")
+    phone_sanitized_blacklisted = fields.Boolean(
+        string='Phone Blacklisted', compute="_compute_blacklisted", compute_sudo=True, store=False,
+        search="_search_phone_sanitized_blacklisted", groups="base.group_user",
+        help="If the sanitized phone number is on the blacklist, the contact won't receive mass mailing sms anymore, from any list")
     phone_blacklisted = fields.Boolean(
-        string='Phone Blacklisted', compute="_compute_phone_blacklisted", compute_sudo=True, store=False,
-        search="_search_phone_blacklisted", groups="base.group_user",
-        help="If the email address is on the blacklist, the contact won't receive mass mailing anymore, from any list")
+        string='Blacklisted Phone is Phone', compute="_compute_blacklisted", compute_sudo=True, store=False, groups="base.group_user",
+        help="Indicates if a blacklisted sanitized phone number is a phone number. Helps distinguish which number is blacklisted \
+            when there is both a mobile and phone field in a model.")
+    mobile_blacklisted = fields.Boolean(
+        string='Blacklisted Phone Is Mobile', compute="_compute_blacklisted", compute_sudo=True, store=False, groups="base.group_user",
+        help="Indicates if a blacklisted sanitized phone number is a mobile number. Helps distinguish which number is blacklisted \
+            when there is both a mobile and phone field in a model.")
 
     @api.depends(lambda self: self._phone_get_number_fields())
     def _compute_phone_sanitized(self):
@@ -47,16 +55,26 @@ class PhoneMixin(models.AbstractModel):
             record.phone_sanitized = sanitized
 
     @api.depends('phone_sanitized')
-    def _compute_phone_blacklisted(self):
+    def _compute_blacklisted(self):
         # TODO : Should remove the sudo as compute_sudo defined on methods.
         # But if user doesn't have access to mail.blacklist, doen't work without sudo().
         blacklist = set(self.env['phone.blacklist'].sudo().search([
             ('number', 'in', self.mapped('phone_sanitized'))]).mapped('number'))
+        number_fields = self._phone_get_number_fields()
         for record in self:
-            record.phone_blacklisted = record.phone_sanitized in blacklist
+            record.phone_sanitized_blacklisted = record.phone_sanitized in blacklist
+            # This is a bit of a hack. Assume that any "mobile" numbers will have the word 'mobile'
+            # in them due to varying field names and assume all others are just "phone" numbers.
+            # Note that the limitation of only having 1 phone_sanitized value means that a phone/mobile number
+            # may not be calculated as blacklisted even though it is if both field values exist in a model.
+            for number_field in number_fields:
+                if 'mobile' in number_field:
+                    record.mobile_blacklisted = record.phone_sanitized_blacklisted and record.phone_get_sanitized_number(number_fname=number_field) == record.phone_sanitized
+                else:
+                    record.phone_blacklisted = record.phone_sanitized_blacklisted and record.phone_get_sanitized_number(number_fname=number_field) == record.phone_sanitized
 
     @api.model
-    def _search_phone_blacklisted(self, operator, value):
+    def _search_phone_sanitized_blacklisted(self, operator, value):
         # Assumes operator is '=' or '!=' and value is True or False
         self._assert_phone_field()
         if operator != '=':
@@ -121,3 +139,18 @@ class PhoneMixin(models.AbstractModel):
 
     def _phone_reset_blacklisted(self):
         return self.env['phone.blacklist'].sudo()._remove([r.phone_sanitized for r in self])
+
+    def phone_action_blacklist_remove(self):
+        # wizard access rights currently not working as expected and allows users without access to
+        # open this wizard, therefore we check to make sure they have access before the wizard opens.
+        can_access = self.env['phone.blacklist'].check_access_rights('write', raise_exception=False)
+        if can_access:
+            return {
+                'name': 'Are you sure you want to unblacklist this Phone Number?',
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'phone.blacklist.remove',
+                'target': 'new',
+            }
+        else:
+            raise AccessError("You do not have the access right to unblacklist phone numbers. Please contact your administrator.")

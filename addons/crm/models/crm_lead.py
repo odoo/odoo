@@ -54,6 +54,7 @@ class Lead(models.Model):
     _order = "priority desc, id desc"
     _inherit = ['mail.thread.cc',
                 'mail.thread.blacklist',
+                'mail.thread.phone',
                 'mail.activity.mixin',
                 'utm.mixin',
                 'format.address.mixin',

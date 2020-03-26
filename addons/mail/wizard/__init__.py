@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import invite
+from . import mail_blacklist_remove
 from . import mail_compose_message
 from . import mail_resend_cancel
 from . import mail_resend_message
