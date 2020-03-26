@@ -28,6 +28,10 @@ $bronze: #eea91e;
             background-color: rgba(theme-color('info'), 0.1);
             color: darken(theme-color('info'), 15%)!important;
         }
+
+        img.o_forum_avatar {
+            @include size(30px);
+        }
     }
 
     // Single Post
@@ -47,6 +51,12 @@ $bronze: #eea91e;
             padding-left: 1em;
             border-left: .25em solid gray('500');
             color: gray('600');
+        }
+
+        #post_reply {
+            img.o_forum_avatar {
+                @include size(24px);
+            }
         }
     }
 
@@ -204,6 +214,12 @@ img.o_forum_avatar {
 img.o_forum_avatar_big {
     @include size(75px);
     object-fit: cover;
+}
+
+.o_wprofile_email_validation_container {
+    img.o_forum_avatar {
+        @include size(16px);
+    }
 }
 
 .o_wforum_bio_popover_wrap {
