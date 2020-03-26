@@ -1775,21 +1775,21 @@ QUnit.test('chatter: Attachment viewer', async function (assert) {
         attachment_ids: [{
             filename: 'image1.jpg',
             id:1,
-            checksum: 999,
+            checksum: '123456789abc',
             mimetype: 'image/jpeg',
             name: 'Test Image 1',
             url: '/web/content/1?download=true'
         },{
             filename: 'image2.jpg',
             id:2,
-            checksum: 999,
+            checksum: '123456789abc',
             mimetype: 'image/jpeg',
             name: 'Test Image 2',
             url: '/web/content/2?download=true'
         },{
             filename: 'image3.jpg',
             id:3,
-            checksum: 999,
+            checksum: '123456789abc',
             mimetype: 'image/jpeg',
             name: 'Test Image 3',
             url: '/web/content/3?download=true'
@@ -1840,11 +1840,11 @@ QUnit.test('chatter: Attachment viewer', async function (assert) {
         "image caption should have correct download link");
     // click on first image attachement
     await testUtils.dom.click(form.$('.o_thread_message .o_attachment .o_image_box .o_image_overlay').first());
-    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/1?unique=1&signature=999&model=ir.attachment"]').length, 1,
+    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/1?unique=56789abc&model=ir.attachment"]').length, 1,
         "Modal popup should open with first image src");
     //  click on next button
     await testUtils.dom.click($('.modal .arrow.arrow-right.move_next span'));
-    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/2?unique=1&signature=999&model=ir.attachment"]').length, 1,
+    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/2?unique=56789abc&model=ir.attachment"]').length, 1,
         "Modal popup should have now second image src");
     assert.strictEqual($('.o_modal_fullscreen .o_viewer_toolbar .o_download_btn').length, 1,
         "Modal popup should have download button");
