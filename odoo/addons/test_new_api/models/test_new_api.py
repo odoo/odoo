@@ -1062,6 +1062,12 @@ class ModelAdvancedComputes(models.Model):
         relation='test_new_api_advanced_computes_rel', column1="rec1", column2="rec2",
         compute="_compute_duplicates", pre_compute=False, store=True)
 
+    child_ids = fields.One2many("test_new_api.x2m_computes", "parent_id")
+    related_ids = fields.Many2many("test_new_api.x2m_computes", relation="advanced_computes_m2m_rel")
+
+    children_value = fields.Float(compute="_compute_children_value", store=True, required=True)
+    related_value = fields.Float(compute="_compute_related_value", store=True, required=True)
+
     @api.depends('name1', 'name2')
     def _compute_uppers(self):
         for rec in self:
@@ -1101,3 +1107,49 @@ class ModelAdvancedComputes(models.Model):
                 ('upper_name_2', '=', rec.upper_name_2),
                 ('id', '!=', rec.id),
             ])
+
+    @api.depends('child_ids')
+    def _compute_children_value(self):
+        for rec in self:
+            if rec.id or not rec.env.context.get('creation', False):
+                raise ValidationError("Should be computed before record creation")
+            rec.children_value = sum(rec.child_ids.mapped('value'))
+
+    @api.depends('related_ids')
+    def _compute_related_value(self):
+        for rec in self:
+            if rec.id or not rec.env.context.get('creation', False):
+                raise ValidationError("Should be computed before record creation")
+            rec.related_value = sum(rec.related_ids.mapped('value'))
+
+
+class ModelAdvancedComputesX2M(models.Model):
+    _name = 'test_new_api.x2m_computes'
+    _description = 'model with advanced computes'
+    _pre_compute = True
+
+    info = fields.Char('Info', default="blabla")
+
+    display_info = fields.Char(compute="_compute_display_info", store=True, required=True)
+
+    parent_id = fields.Many2one("test_new_api.model_advanced_computes")
+
+    value = fields.Float("", default=5.0)
+
+    @api.depends('parent_id')
+    def _compute_display_info(self):
+        if len(self) == 1 and not self.parent_id:
+            raise ValidationError("x2m_precomputes should be computed in batch")
+        for rec in self:
+            if rec.id or not rec.env.context.get('creation', False):
+                raise ValidationError("Should be computed before record creation")
+            rec.display_info = (rec.parent_id.title or "") + "\n" + rec.info.title()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            # Only true because we create all records of this model through x2m on the other model
+            assert 'display_info' in vals, "display_info should have been pre-computed"
+        if not self.env.context.get("pre_computed"):
+            raise ValidationError("should have been pre-computed through parent")
+        return super().create(vals_list)

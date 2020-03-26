@@ -2867,3 +2867,28 @@ class TestPrePostComputes(common.TransactionCase):
         self.assertEqual(records[0].full_upper_name, records[1].full_upper_name)
         self.assertTrue(records[0].create_month)
         self.assertTrue(records[1].create_month)
+
+    def test_x2m_precomputation(self):
+        Model = self.env["test_new_api.model_advanced_computes"]
+        recs = Model.with_context(creation=True).create([
+            {
+                'name1': 'Hans',
+                'name2': 'zimmer',
+                'title': 'Musical Composer',
+                'child_ids': [(0,0,dict()), (0,0,dict())],
+                'related_ids': [(0,0,dict()), (0,0,dict()), (0,0,dict()), (0,0,dict())]
+            }, {
+                'name1': 'hans',
+                'name2': 'Zimmer',
+                'title': 'Artist',
+                'child_ids': [(0,0,dict())],
+                'related_ids': [(0,0,dict()), (0,0,dict()), (0,0,dict())]
+            }
+        ])
+        self.assertEqual(recs[0].related_value, 20.0)
+        self.assertEqual(recs[0].children_value, 10.0)
+        for display_info in recs[0].child_ids.mapped("display_info"):
+            self.assertEqual(display_info, "Musical Composer\nBlabla")
+        for display_info in recs[0].related_ids.mapped("display_info"):
+            self.assertEqual(display_info, "\nBlabla")
+
