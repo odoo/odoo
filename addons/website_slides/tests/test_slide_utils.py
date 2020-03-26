@@ -5,6 +5,25 @@ from odoo.addons.website_slides.tests import common as slides_common
 from odoo.tests.common import users
 
 
+class TestSlidesManagement(slides_common.SlidesCase):
+
+    @users('user_publisher')
+    def test_get_categorized_slides(self):
+        new_category = self.env['slide.slide'].create({
+            'name': 'Cooking Tips for Cooking Humans',
+            'channel_id': self.channel.id,
+            'is_category': True,
+            'sequence': 5,
+        })
+        order = self.env['slide.slide']._order_by_strategy['sequence']
+        categorized_slides = self.channel._get_categorized_slides([], order)
+        self.assertEquals(categorized_slides[0]['category'], False)
+        self.assertEquals(categorized_slides[1]['category'], self.category)
+        self.assertEquals(categorized_slides[1]['total_slides'], 2)
+        self.assertEquals(categorized_slides[2]['total_slides'], 0)
+        self.assertEquals(categorized_slides[2]['category'], new_category)
+
+
 class TestSequencing(slides_common.SlidesCase):
 
     @users('user_publisher')
@@ -55,20 +74,32 @@ class TestSequencing(slides_common.SlidesCase):
 
     @users('user_publisher')
     def test_resequence(self):
+        self.assertEqual(self.slide.sequence, 1)
         self.category.write({'sequence': 4})
         self.slide_2.write({'sequence': 8})
         self.slide_3.write({'sequence': 3})
 
         self.channel.invalidate_cache()
         self.assertEqual([s.id for s in self.channel.slide_ids], [self.slide.id, self.slide_3.id, self.category.id, self.slide_2.id])
-
         self.assertEqual(self.slide.sequence, 1)
-        # self.channel._resequence_slides(self.slide)
-        # self.channel.invalidate_cache()
-        # # self.assertEqual([s.id for s in self.channel.slide_ids], [self.slide.id, self.slide_3.id, self.category.id, self.slide_2.id])
-        # self.assertEqual(self.slide_3.sequence, 2)
-        # self.assertEqual(self.category.sequence, 3)
-        # self.assertEqual(self.slide_2.sequence, 4)
+
+        # insert a new category and check resequence_slides does as expected
+        new_category = self.env['slide.slide'].create({
+            'name': 'Sub-cooking Tips Category',
+            'channel_id': self.channel.id,
+            'is_category': True,
+            'is_published': True,
+            'sequence': 2,
+        })
+        new_category.flush()
+        self.channel.invalidate_cache()
+        self.channel._resequence_slides(self.slide_3, force_category=new_category)
+        self.assertEqual(self.slide.sequence, 1)
+        self.assertEqual(new_category.sequence, 2)
+        self.assertEqual(self.slide_3.sequence, 3)
+        self.assertEqual(self.category.sequence, 4)
+        self.assertEqual(self.slide_2.sequence, 5)
+        self.assertEqual([s.id for s in self.channel.slide_ids], [self.slide.id, new_category.id, self.slide_3.id, self.category.id, self.slide_2.id])
 
 
 class TestFromURL(slides_common.SlidesCase):
