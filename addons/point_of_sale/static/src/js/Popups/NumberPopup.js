@@ -31,7 +31,7 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
             }
             this.state = useState({ buffer: startingBuffer });
             NumberBuffer.use({
-                nonKeyboardEvent: 'numpad-click-input',
+                nonKeyboardInputEvent: 'numpad-click-input',
                 triggerAtEnter: 'accept-input',
                 triggerAtEscape: 'close-this-popup',
                 state: this.state,

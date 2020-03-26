@@ -18,7 +18,7 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
         triggerAtEnter: false,
         triggerAtEsc: false,
         triggerAtInput: false,
-        nonKeyboardEvent: false,
+        nonKeyboardInputEvent: false,
         useWithBarcode: false,
     });
 
@@ -103,12 +103,9 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
          * @param {String|null} config.decimalPoint The decimal character.
          * @param {String|null} config.triggerAtEnter Event triggered when 'Enter' key is pressed.
          * @param {String|null} config.triggerAtInput Event triggered for every accepted input.
-         * @param {String|null} config.nonKeyboardEvent Event to trigger when input from other event
-         *      that is different from keyup occurs.
-         *      e.g. Clicking a numpad button can trigger an event and if it triggered
-         *          `nonKeyboardEvent` then that event is intercepted here via
-         *          `onNonKeyboardInput`. The event should carry a payload { key } that will
-         *          be checked and used as input to the buffer.
+         * @param {String|null} config.nonKeyboardInputEvent Also listen to a non-keyboard input event
+         *      that carries a payload of { key }. The key is checked if it is a valid input. If valid,
+         *      the number buffer is modified just as it is modified when a keyboard key is pressed.
          * @param {Boolean} config.useWithBarcode Whether this buffer is used with barcode.
          */
         use(config) {
@@ -128,8 +125,8 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
                 this._setUp();
             });
             // Add listener that accepts non keyboard inputs
-            if (typeof config.nonKeyboardEvent === 'string') {
-                useListener(config.nonKeyboardEvent, this._onNonKeyboardInput.bind(this));
+            if (typeof config.nonKeyboardInputEvent === 'string') {
+                useListener(config.nonKeyboardInputEvent, this._onNonKeyboardInput.bind(this));
             }
         }
         get _currentBufferHolder() {

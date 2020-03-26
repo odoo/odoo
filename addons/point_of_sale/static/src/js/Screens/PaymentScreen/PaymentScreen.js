@@ -27,7 +27,7 @@ odoo.define('point_of_sale.PaymentScreen', function(require) {
             NumberBuffer.use({
                 // The numberBuffer listens to this event to update its state.
                 // Basically means 'update the buffer when this event is triggered'
-                nonKeyboardEvent: 'input-from-numpad',
+                nonKeyboardInputEvent: 'input-from-numpad',
                 // When the buffer is updated, trigger this event.
                 // Note that the component listens to it.
                 triggerAtInput: 'update-selected-paymentline',

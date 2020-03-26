@@ -19,7 +19,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             useListener('new-orderline-selected', this._newOrderlineSelected);
             useListener('set-numpad-mode', this._setNumpadMode);
             NumberBuffer.use({
-                nonKeyboardEvent: 'numpad-click-input',
+                nonKeyboardInputEvent: 'numpad-click-input',
                 triggerAtInput: 'update-selected-orderline',
                 useWithBarcode: true,
             });
