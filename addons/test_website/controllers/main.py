@@ -119,3 +119,9 @@ class WebsiteTest(Home):
     @http.route(['/get_post_nomultilang'], type='http', auth="public", methods=['GET', 'POST'], website=True, multilang=False, sitemap=False)
     def get_post_method_no_multilang(self, **kw):
         return request.make_response('get_post_nomultilang')
+
+    # Test Perfs
+
+    @http.route(['/empty_controller_test'], type='http', auth='public', website=True, multilang=False, sitemap=False)
+    def empty_controller_test(self, **kw):
+        return 'Basic Controller Content'

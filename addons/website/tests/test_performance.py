@@ -17,24 +17,7 @@ EXTRA_REQUEST = 5
 """
 
 
-class TestWebsitePerformance(HttpCase):
-
-    def setUp(self):
-        super().setUp()
-
-        self.page = self.env['website.page'].create({
-            'url': '/sql_page',
-            'name': 'Page Test SQL Perf',
-            'type': 'qweb',
-            'arch': '<t name="Contact Us" t-name="website.contactus"> \
-                       <t t-call="website.layout"> \
-                         <div id="wrap"><div class="oe_structure"/></div> \
-                       </t> \
-                     </t>',
-            'key': 'website.page_test_perf_sql',
-            'is_published': True,
-        })
-
+class UtilPerf(HttpCase):
     def _get_url_hot_query(self, url):
         # ensure worker is in hot state
         self.url_open(url)
@@ -42,21 +25,98 @@ class TestWebsitePerformance(HttpCase):
 
         sql_count = self.registry.test_cr.sql_log_count
         self.url_open(url)
-        return self.registry.test_cr.sql_log_count - sql_count
+        return self.registry.test_cr.sql_log_count - sql_count - EXTRA_REQUEST
+
+
+class TestStandardPerformance(UtilPerf):
+    def test_10_perf_sql_img_controller(self):
+        self.authenticate('demo', 'demo')
+        url = '/web/image/res.country/4/image'
+        self.assertEqual(self._get_url_hot_query(url), 5)
+        url = '/web/image/res.users/2/image_256'
+        self.assertEqual(self._get_url_hot_query(url), 8)
+
+    def test_20_perf_sql_img_controller_bis(self):
+        url = '/web/image/website/1/favicon'
+        self.assertEqual(self._get_url_hot_query(url), 6)
+        self.authenticate('portal', 'portal')
+        self.assertEqual(self._get_url_hot_query(url), 5)
+
+
+class TestWebsitePerformance(UtilPerf):
+
+    def setUp(self):
+        super().setUp()
+        self.page, self.menu = self._create_page_with_menu('/sql_page')
+
+    def _create_page_with_menu(self, url):
+        name = url[1:]
+        website = self.env['website'].browse(1)
+        page = self.env['website.page'].create({
+            'url': url,
+            'name': name,
+            'type': 'qweb',
+            'arch': '<t name="%s" t-name="website.page_test_%s"> \
+                       <t t-call="website.layout"> \
+                         <div id="wrap"><div class="oe_structure"/></div> \
+                       </t> \
+                     </t>' % (name, name),
+            'key': 'website.page_test_%s' % name,
+            'is_published': True,
+            'website_id': website.id,
+            'track': False,
+        })
+        menu = self.env['website.menu'].create({
+            'name': name,
+            'url': url,
+            'page_id': page.id,
+            'website_id': website.id,
+            'parent_id': website.menu_id.id
+        })
+        return (page, menu)
 
     def test_10_perf_sql_queries_page(self):
-        # standard website.page
-        expected_sql = 14 + EXTRA_REQUEST
-        self.assertEqual(self._get_url_hot_query(self.page.url), expected_sql)
+        # standard untracked website.page
+        self.assertEqual(self._get_url_hot_query(self.page.url), 14)
+        self.menu.unlink()
+        self.assertEqual(self._get_url_hot_query(self.page.url), 14)
+
+    def test_15_perf_sql_queries_page(self):
+        # standard tracked website.page
+        self.page.track = True
+        self.assertEqual(self._get_url_hot_query(self.page.url), 22)
+        self.menu.unlink()
+        self.assertEqual(self._get_url_hot_query(self.page.url), 22)
 
     def test_20_perf_sql_queries_homepage(self):
         # homepage "/" has its own controller
-        # add 5 queries for test environment (RELEASE/SAVEPOINT/ROLLBACK test_cursor)
-        expected_sql = 21 + EXTRA_REQUEST
-        self.assertEqual(self._get_url_hot_query('/'), expected_sql)
+        self.assertEqual(self._get_url_hot_query('/'), 21)
 
     def test_30_perf_sql_queries_page_no_layout(self):
         # website.page with no call to layout templates
         self.page.arch = '<div>I am a blank page</div>'
-        expected_sql = 8 + EXTRA_REQUEST
-        self.assertEqual(self._get_url_hot_query(self.page.url), expected_sql)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 8)
+
+    def test_40_perf_sql_queries_page_multi_level_menu(self):
+        # menu structure should not impact SQL requests
+        _, menu_a = self._create_page_with_menu('/a')
+        _, menu_aa = self._create_page_with_menu('/aa')
+        _, menu_b = self._create_page_with_menu('/b')
+        _, menu_bb = self._create_page_with_menu('/bb')
+        _, menu_bbb = self._create_page_with_menu('/bbb')
+        _, menu_bbbb = self._create_page_with_menu('/bbbb')
+        _, menu_bbbbb = self._create_page_with_menu('/bbbbb')
+        self._create_page_with_menu('c')
+        menu_bbbbb.parent_id = menu_bbbb
+        menu_bbbb.parent_id = menu_bbb
+        menu_bbb.parent_id = menu_bb
+        menu_bb.parent_id = menu_b
+        menu_aa.parent_id = menu_a
+
+        self.assertEqual(self._get_url_hot_query(self.page.url), 22)
+
+    def test_50_perf_sql_web_content(self):
+        # assets route /web/content/..
+        self.url_open('/')  # create assets attachments
+        assets_url = self.env['ir.attachment'].search([('url', '=like', '/web/content/%/web.assets_common%.js')], limit=1).url
+        self.assertEqual(self._get_url_hot_query(assets_url), 6)
