@@ -25,6 +25,50 @@
         <field name="default_timezone">Europe/Brussels</field>
     </record>
 
+    <!-- Category and Tags -->
+    <record id="event_tag_category_1" model="event.tag.category">
+        <field name="name">Age</field>
+    </record>
+
+    <record id="event_tag_category_2" model="event.tag.category">
+        <field name="name">Activity</field>
+    </record>
+
+    <record id="event_tag_category_1_tag_1" model="event.tag">
+        <field name="name">5-10</field>
+        <field name="category_id" ref="event_tag_category_1"/>
+    </record>
+
+    <record id="event_tag_category_1_tag_2" model="event.tag">
+        <field name="name">10-14</field>
+        <field name="category_id" ref="event_tag_category_1"/>
+    </record>
+
+    <record id="event_tag_category_1_tag_3" model="event.tag">
+        <field name="name">15-18</field>
+        <field name="category_id" ref="event_tag_category_1"/>
+    </record>
+
+    <record id="event_tag_category_1_tag_4" model="event.tag">
+        <field name="name">18+</field>
+        <field name="category_id" ref="event_tag_category_1"/>
+    </record>
+
+    <record id="event_tag_category_2_tag_1" model="event.tag">
+        <field name="name">Culture</field>
+        <field name="category_id" ref="event_tag_category_2"/>
+    </record>
+
+    <record id="event_tag_category_2_tag_2" model="event.tag">
+        <field name="name">Music</field>
+        <field name="category_id" ref="event_tag_category_2"/>
+    </record>
+
+    <record id="event_tag_category_2_tag_3" model="event.tag">
+        <field name="name">Sport</field>
+        <field name="category_id" ref="event_tag_category_2"/>
+    </record>
+
     <!-- Event -->
     <record id="event.event_0" model="event.event">
         <field name="name">Design Fair Los Angeles</field>
@@ -37,6 +81,7 @@
         <field name="date_tz">US/Pacific</field>
         <field name="event_type_id" ref="event_type_0"/>
         <field name="stage_id" ref="event_stage_booked"/>
+        <field name="tag_ids" eval="[(6, 0, [event_tag_category_1_tag_1,event_tag_category_2_tag_1])]"/>
     </record>
     <record id="event_0_ticket_0" model="event.event.ticket">
         <field name="name">Free</field>
@@ -72,6 +117,7 @@
         <field name="address_id" ref="event.res_partner_location_0"/>
         <field name="stage_id" ref="event_stage_booked"/>
         <field name="kanban_state">blocked</field>
+        <field name="tag_ids" eval="[(6, 0, [event_tag_category_1_tag_4,event_tag_category_2_tag_3])]"/>
     </record>
 
     <record id="message_event_1_0" model="mail.message">
@@ -125,6 +171,7 @@
         <field name="seats_availability">limited</field>
         <field name="seats_max">200</field>
         <field name="stage_id" ref="event_stage_booked"/>
+        <field name="tag_ids" eval="[(6, 0, [event_tag_category_1_tag_4,event_tag_category_2_tag_1])]"/>
     </record>
     <record id="event_2_ticket_1" model="event.event.ticket">
         <field name="name">Standard</field>
@@ -160,6 +207,7 @@
         <field name="event_type_id" ref="event_type_0"/>
         <field name="address_id" ref="event.res_partner_location_1"/>
         <field name="stage_id" ref="event_stage_announced"/>
+        <field name="tag_ids" eval="[(6, 0, [event_tag_category_1_tag_3,event_tag_category_2_tag_2])]"/>
     </record>
     <record id="event_3_ticket_0" model="event.event.ticket">
         <field name="name">Standard</field>
@@ -200,6 +248,7 @@
         <field name="event_type_id" ref="event_type_1"/>
         <field name="stage_id" ref="event_stage_done"/>
         <field name="kanban_state">done</field>
+        <field name="tag_ids" eval="[(6, 0, [event_tag_category_1_tag_4,event_tag_category_2_tag_1])]"/>
     </record>
     <record id="event_4_ticket_0" model="event.event.ticket">
         <field name="name">General Admission</field>
@@ -224,6 +273,7 @@
         <field eval="(DateTime.today()+ timedelta(days=371)).strftime('%Y-%m-%d 17:00:00')" name="date_end"/>
         <field name="event_type_id" ref="event_type_2"/>
         <field name="address_id" ref="event.res_partner_location_1"/>
+        <field name="tag_ids" eval="[(6, 0, [event_tag_category_1_tag_2,event_tag_category_2_tag_3])]"/>
     </record>
 
     <record id="event.event_6" model="event.event">

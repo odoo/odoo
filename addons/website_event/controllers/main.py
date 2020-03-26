@@ -5,6 +5,8 @@ import re
 import werkzeug
 from werkzeug.datastructures import OrderedMultiDict
 
+from ast import literal_eval
+from collections import defaultdict
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -12,6 +14,7 @@ from odoo import fields, http, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.http import request
+from odoo.osv import expression
 from odoo.tools.misc import get_lang, format_date
 
 
@@ -28,6 +31,7 @@ class WebsiteEventController(http.Controller):
 
         searches.setdefault('search', '')
         searches.setdefault('date', 'all')
+        searches.setdefault('tags', '')
         searches.setdefault('type', 'all')
         searches.setdefault('country', 'all')
 
@@ -70,6 +74,19 @@ class WebsiteEventController(http.Controller):
         if searches['search']:
             domain_search['search'] = [('name', 'ilike', searches['search'])]
 
+        search_tags = self._extract_searched_event_tags(searches)
+        if search_tags:
+            # Example: You filter on age: 10-12 and activity: football.
+            # Doing it this way allows to only get events who are tagged "age: 10-12" AND "activity: football".
+            # Add another tag "age: 12-15" to the search and it would fetch the ones who are tagged:
+            # ("age: 10-12" OR "age: 12-15") AND "activity: football
+            grouped_tags = defaultdict(list)
+            for tag in search_tags:
+                grouped_tags[tag.category_id].append(tag)
+            domain_search['tags'] = []
+            for group in grouped_tags:
+                domain_search['tags'] = expression.AND([domain_search['tags'], [('tag_ids', 'in', [tag.id for tag in grouped_tags[group]])]])
+
         current_date = None
         current_type = None
         current_country = None
@@ -102,11 +119,6 @@ class WebsiteEventController(http.Controller):
                 date[3] = Event.search_count(dom_without('date') + date[2])
 
         domain = dom_without('type')
-        types = Event.read_group(domain, ["id", "event_type_id"], groupby=["event_type_id"], orderby="event_type_id")
-        types.insert(0, {
-            'event_type_id_count': sum([int(type['event_type_id_count']) for type in types]),
-            'event_type_id': ("all", _("All Categories"))
-        })
 
         domain = dom_without('country')
         countries = Event.read_group(domain, ["id", "country_id"], groupby="country_id", orderby="country_id")
@@ -141,10 +153,11 @@ class WebsiteEventController(http.Controller):
             'current_type': current_type,
             'event_ids': events,  # event_ids used in website_event_track so we keep name as it is
             'dates': dates,
-            'types': types,
+            'categories': request.env['event.tag.category'].search([]),
             'countries': countries,
             'pager': pager,
             'searches': searches,
+            'search_tags': search_tags,
             'keep': keep,
         }
 
@@ -199,6 +212,7 @@ class WebsiteEventController(http.Controller):
         urls = event._get_event_resource_urls()
         values = {
             'event': event,
+            'sold_out': all(not ticket.sale_available and not ticket.is_expired for ticket in event.event_ticket_ids),
             'main_object': event,
             'range': range,
             'registrable': event.sudo().event_registrations_open,
@@ -342,3 +356,15 @@ class WebsiteEventController(http.Controller):
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url')
         })
+
+    def _extract_searched_event_tags(self, searches):
+        tags = request.env['event.tag']
+        if searches.get('tags'):
+            try:
+                tag_ids = literal_eval(searches['tags'])
+            except:
+                pass
+            else:
+                # perform a search to filter on existing / valid tags implicitely
+                tags = request.env['event.tag'].search([('id', 'in', tag_ids)])
+        return tags

@@ -82,12 +82,13 @@ class EventTicket(models.Model):
             else:
                 ticket.is_expired = False
 
-    @api.depends('start_sale_date', 'end_sale_date', 'event_id.date_tz')
+    @api.depends('start_sale_date', 'end_sale_date', 'event_id.date_tz', 'seats_available', 'seats_max')
     def _compute_sale_available(self):
         for ticket in self:
             current_date = fields.Date.context_today(ticket.with_context(tz=ticket._get_ticket_tz()))
             if (ticket.start_sale_date and ticket.start_sale_date > current_date) or \
-                    ticket.end_sale_date and ticket.end_sale_date < current_date:
+                    ticket.end_sale_date and ticket.end_sale_date < current_date or \
+                    ticket.seats_available <= 0 and ticket.seats_max > 0:
                 ticket.sale_available = False
             else:
                 ticket.sale_available = True
