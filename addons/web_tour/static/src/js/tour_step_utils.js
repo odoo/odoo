@@ -139,12 +139,8 @@ return core.Class.extend({
         return [
             {
                 mobile: true,
-                trigger: '.o_enable_searchview',
-                extra_trigger: `.modal:not(.o_inactive_modal) .modal-title:contains('${modalTitle}')`,
-                position: 'bottom',
-            }, {
-                mobile: true,
                 trigger: '.o_searchview_input',
+                extra_trigger: `.modal:not(.o_inactive_modal) .modal-title:contains('${modalTitle}')`,
                 position: 'bottom',
                 run: `text ${valueSearched}`,
             },
