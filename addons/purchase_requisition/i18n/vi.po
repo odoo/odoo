@@ -128,12 +128,12 @@ msgstr "Kiểu Lựa chọn"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__name
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
-msgstr "Kiểu Thoả ước"
+msgstr "Kiểu Yêu cầu"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.res_config_settings_view_form
 msgid "Agreement Types"
-msgstr "Kiểu Thoả ước"
+msgstr "Kiểu Yêu cầu"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__account_analytic_id
@@ -187,7 +187,7 @@ msgstr "Đã hủy"
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
-msgstr "Bị huỷ bởi thoả ước liên quan đến báo giá này"
+msgstr "Bị huỷ bởi Yêu cầu mua hàng liên quan đến báo giá này"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
@@ -314,7 +314,7 @@ msgstr "Dự thảo"
 msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
 msgstr ""
-"Một số ví dụ về thoả ước mua hàng chính là các hồ sơ mời thầu hoặc các đơn "
+"Một số ví dụ về Yêu cầu mua hàng chính là các hồ sơ mời thầu (tender) hoặc các đơn "
 "đặt hàng tổng quát (blanket orders)"
 
 #. module: purchase_requisition
@@ -344,8 +344,8 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
 "            from the negociated prices."
 msgstr ""
-"Đối với một đơn đặt hàng tổng quát (blanket order), bạn có thể ghi nhận một thoả ước cho một\n"
-"            chu kỳ cụ thể (vd: 1 năm) và bạn đặt hàng theo khuôn khổ thoả ước này, để\n"
+"Đối với một đơn đặt hàng tổng quát (blanket order), bạn có thể ghi nhận một Yêu cầu mua hàng cho một\n"
+"            chu kỳ cụ thể (vd: 1 năm) và bạn đặt hàng theo khuôn khổ Yêu cầu này, để\n"
 "            hưởng lợi từ chính sách giá đã đàm phán."
 
 #. module: purchase_requisition
@@ -469,7 +469,7 @@ msgstr "Yêu cầu mua hàng của tôi"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "New Agreements"
-msgstr "Thoả ước Mới"
+msgstr "Yêu cầu Mới"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -581,7 +581,7 @@ msgstr "Đề xuất một Hồ sơ mời thầu"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__requisition_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__requisition_id
 msgid "Purchase Agreement"
-msgstr "Thoả ước Mua hàng"
+msgstr "Yêu cầu Mua hàng"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.tender_type_action
@@ -589,7 +589,7 @@ msgstr "Thoả ước Mua hàng"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_tree
 msgid "Purchase Agreement Types"
-msgstr "Kiểu Thoả ước Mua hàng"
+msgstr "Kiểu Yêu cầu Mua hàng"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
@@ -597,7 +597,7 @@ msgstr "Kiểu Thoả ước Mua hàng"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_tree
 msgid "Purchase Agreements"
-msgstr "Thoả ước Mua hàng"
+msgstr "Yêu cầu Mua hàng"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
@@ -717,7 +717,7 @@ msgstr "Ngày theo kế hoạch"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Search Purchase Agreements"
-msgstr "Tìm kiếm Thoả ước Mua hàng"
+msgstr "Tìm kiếm Yêu cầu Mua hàng"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
@@ -853,12 +853,12 @@ msgstr "Đơn vị"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__copy
 msgid "Use lines of agreement"
-msgstr "Nạp các dòng theo thoả ước"
+msgstr "Nạp các dòng theo Yêu cầu"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__copy
 msgid "Use quantities of agreement"
-msgstr "Nạp số lượng theo thoả ước"
+msgstr "Nạp số lượng theo Yêu cầu"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
