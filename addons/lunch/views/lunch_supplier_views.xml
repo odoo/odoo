@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
-                <field name="phone"/>
+                <field name="phone" class="o_force_ltr"/>
                 <field name="email"/>
             </tree>
         </field>
@@ -39,7 +39,7 @@
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="email" attrs="{'required': [('send_by', '=', 'mail')]}"/>
-                            <field name="phone"  attrs="{'required': [('send_by', '=', 'phone')]}"/>
+                            <field name="phone" class="o_force_ltr" attrs="{'required': [('send_by', '=', 'phone')]}"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="responsible_id" attrs="{'required': [('send_by', '=', 'mail')]}" groups="base.group_no_one"/>
                         </group>
