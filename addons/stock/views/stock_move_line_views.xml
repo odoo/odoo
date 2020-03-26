@@ -10,8 +10,8 @@
                        invisible="context.get('no_reference', False)"/>
                 <field name="product_id"/>
                 <field name="lot_id" groups="stock.group_production_lot"/>
-                <field name="location_id"/>
-                <field name="location_dest_id"/>
+                <field name="location_id" groups="stock.group_stock_multi_locations" />
+                <field name="location_dest_id" groups="stock.group_stock_multi_locations" />
                 <field name="qty_done" string="Quantity Done"/>
                 <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                 <field name="company_id" groups="base.group_multi_company" force_save="1"/>
