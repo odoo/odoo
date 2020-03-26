@@ -3,6 +3,7 @@ odoo.define('web.pivot_tests', function (require) {
 
 var core = require('web.core');
 var PivotView = require('web.PivotView');
+const PivotController = require("web.PivotController");
 var testUtils = require('web.test_utils');
 var testUtilsDom = require('web.test_utils_dom');
 
@@ -2833,6 +2834,37 @@ QUnit.module('Views', {
         assert.strictEqual(pivot.$('tbody tr:contains("2019-05-14")').length, 1, 'There should be a second column');
         assert.notOk(pivot.$('tbody tr:contains("2019-05-14") [type="checkbox"]').is(':checked'), "second column should have checkbox that is not checked by default");
 
+        pivot.destroy();
+    });
+
+    QUnit.test('Allow to add behaviour to buttons on pivot', async function (assert) {
+        assert.expect(2);
+
+        let _testButtons = (ev) => {
+            if ($(ev.target).hasClass("o_pivot_flip_button")) {
+                assert.step("o_pivot_flip_button")
+            }
+        }
+
+        PivotController.include({
+            _addIncludedButtons: async function (ev) {
+                await this._super(...arguments);
+                _testButtons(ev);
+            },
+        });
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="date" type="row" interval="day"/>' +
+                        '<field name="bar" type="col"/>' +
+                '</pivot>',
+        });
+        await testUtils.dom.click(pivot.$buttons.find('.o_pivot_flip_button'));
+        assert.verifySteps(["o_pivot_flip_button"]);
+        _testButtons = () => true;
         pivot.destroy();
     });
 });

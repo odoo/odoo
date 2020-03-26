@@ -91,11 +91,7 @@ odoo.define('web.PivotController', function (require) {
          *   does nothing
          */
         renderButtons: function ($node) {
-            const context = {
-                measures: Object.entries(this.measures)
-                    .filter(x => x[0] !== '__count')
-                    .sort((a, b) => a[1].string.toLowerCase() > b[1].string.toLowerCase() ? 1 : -1),
-            };
+            const context = this._getRenderButtonContext();
             this.$buttons = $(QWeb.render('PivotView.buttons', context));
             this.$buttons.click(this._onButtonClick.bind(this));
             this.$buttons.find('button').tooltip();
@@ -183,6 +179,30 @@ odoo.define('web.PivotController', function (require) {
             if ($target.hasClass('o_pivot_download')) {
                 this._downloadTable();
             }
+
+            await this._addIncludedButtons(ev);
+        },
+
+        /**
+         * Declared to be overwritten in includes of pivot controller
+         *
+         * @param {MouseEvent} ev
+         * @returns {Promise<void>}
+         * @private
+         */
+        _addIncludedButtons: async function(ev) {},
+        /**
+         * Get the context of rendering of the buttons
+         *
+         * @returns {Object}
+         * @private
+         */
+        _getRenderButtonContext: function () {
+            return {
+                measures: Object.entries(this.measures)
+                .filter(x => x[0] !== '__count')
+                .sort((a, b) => a[1].string.toLowerCase() > b[1].string.toLowerCase() ? 1 : -1),
+            };
         },
         /**
          *
