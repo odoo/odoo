@@ -450,12 +450,9 @@ class View(models.Model):
                 website=request.website,
                 url_for=url_for,
                 res_company=request.website.company_id.sudo(),
-                default_lang_code=request.env['ir.http']._get_default_lang().code,
                 languages=request.env['res.lang'].get_available(),
                 translatable=translatable,
                 editable=editable,
-                # retrocompatibility, remove me in master
-                menu_data={'children': []} if request.website.is_user() else None,
             ))
 
         return qcontext
