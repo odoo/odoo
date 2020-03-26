@@ -284,9 +284,9 @@ class Survey(http.Controller):
                     if triggering_answer_by_question[question]
                 },
                 'triggered_questions_by_answer': {
-                    answer.id: [
-                        triggered_questions_by_answer[answer].ids
-                    ] for answer in triggered_questions_by_answer.keys()},
+                    answer.id: triggered_questions_by_answer[answer].ids
+                    for answer in triggered_questions_by_answer.keys()
+                },
                 'selected_answers': selected_answers.ids
             })
 
