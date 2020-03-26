@@ -487,7 +487,10 @@ class WebsiteBinary(http.Controller):
                 kw['unique'] = unique
         return Binary().content_image(**kw)
 
+    # if not icon provided in DOM, browser tries to access /favicon.ico, eg when opening an order pdf
     @http.route(['/favicon.ico'], type='http', auth='public', website=True, multilang=False, sitemap=False)
     def favicon(self, **kw):
-        # when opening a pdf in chrome, chrome tries to open the default favicon url
-        return self.content_image(model='website', id=str(request.website.id), field='favicon', **kw)
+        website = request.website
+        response = request.redirect(website.image_url(website, 'favicon'), code=301)
+        response.headers['Cache-Control'] = 'public, max-age=%s' % (365 * 24 * 60)
+        return response
