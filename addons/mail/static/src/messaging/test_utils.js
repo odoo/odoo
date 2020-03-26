@@ -321,6 +321,27 @@ function beforeEach(self) {
                 mimetype: { type: 'char', string: "mimetype" },
             },
         },
+        'mail.channel': {
+            fields: {
+                channel_type: {
+                    string: "Channel Type",
+                    type: "selection",
+                },
+                id: {
+                    string: "Id",
+                    type: 'integer',
+                },
+                message_unread_counter: {
+                    string: "# unread messages",
+                    type: 'integer',
+                },
+                name: {
+                    string: "Name",
+                    type: "char",
+                    required: true,
+                },
+            },
+        },
         'mail.message': {
             fields: {
                 attachment_ids: {
@@ -351,6 +372,10 @@ function beforeEach(self) {
                     type: 'many2many',
                     relation: 'res.partner',
                 },
+                id: {
+                    string: "Id",
+                    type: 'integer',
+                },
                 is_discussion: {
                     string: "Discussion",
                     type: 'boolean',
@@ -367,6 +392,10 @@ function beforeEach(self) {
                     string: "Starred",
                     type: 'boolean',
                 },
+                message_type: {
+                    string: "Type",
+                    type: 'selection',
+                },
                 model: {
                     string: "Related Document model",
                     type: 'char',
@@ -379,6 +408,10 @@ function beforeEach(self) {
                     string: "Partners with Need Action",
                     type: 'many2many',
                     relation: 'res.partner',
+                },
+                record_name: {
+                    string: "Name",
+                    type: 'string',
                 },
                 res_id: {
                     string: "Related Document ID",

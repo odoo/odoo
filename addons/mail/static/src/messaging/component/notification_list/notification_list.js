@@ -63,13 +63,32 @@ class NotificationList extends Component {
      */
     _useStoreSelector(props) {
         const threads = this._useStoreSelectorThreads(props);
-        const notifications = threads.map(thread => {
-            return {
-                thread: thread,
-                type: 'thread',
-                uniqueId: thread.localId,
-            };
-        });
+        const notifications = threads
+            .sort((t1, t2) => {
+                if (t1.message_unread_counter > 0 && t2.message_unread_counter === 0) {
+                    return -1;
+                }
+                if (t1.message_unread_counter === 0 && t2.message_unread_counter > 0) {
+                    return 1;
+                }
+                if (t1.lastMessage && t2.lastMessage) {
+                    return t1.lastMessage.date.isBefore(t2.lastMessage.date) ? 1 : -1;
+                }
+                if (t1.lastMessage) {
+                    return -1;
+                }
+                if (t2.lastMessage) {
+                    return 1;
+                }
+                return 0;
+            })
+            .map(thread => {
+                return {
+                    thread: thread,
+                    type: 'thread',
+                    uniqueId: thread.localId,
+                };
+            });
         return {
             isDeviceMobile: this.env.messaging.device.isMobile,
             notifications,
