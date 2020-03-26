@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="crm_team_member_view_search" model="ir.ui.view">
+        <field name="name">crm.team.member.view.search</field>
+        <field name="model">crm.team.member</field>
+        <field name="arch" type="xml">
+            <search string="Sales Person">
+                <field name="name"/>
+                <field name="crm_team_id"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Sales Team" name="groupby_crm_team_id" context="{'group_by': 'crm_team_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="crm_team_member_view_tree" model="ir.ui.view">
+        <field name="name">crm.team.member.view.tree</field>
+        <field name="model">crm.team.member</field>
+        <field name="arch" type="xml">
+            <tree string="Sales Men" sample="1">
+                <field name="crm_team_id"/>
+                <field name="user_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_team_member_view_tree_from_team" model="ir.ui.view">
+        <field name="name">crm.team.member.view.tree.from.team</field>
+        <field name="model">crm.team.member</field>
+        <field name="inherit_id" ref="sales_team.crm_team_member_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='crm_team_id']" position="replace">
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_team_member_view_kanban" model="ir.ui.view">
+        <field name="name">crm.team.member.view.kanban</field>
+        <field name="model">crm.team.member</field>
+        <field name="arch" type="xml">
+            <kanban quick_create="false"
+                create="true"
+                sample="1">
+                <field name="user_id"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <t t-set="active" t-value="record.active.raw_value"/>
+                        <t t-set="button_state" t-value="active ? 'o_assignation_button_active' : 'o_assignation_button_inactive'"/>
+                        <div class="o_assignation_kanban_record oe_kanban_global_click pb-0">
+                            <div class="o_kanban_record_top mb-0">
+                                <ul class="nav">
+                                    <li class="nav-item">
+                                        <a type="open" class="nav-link">
+                                            <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" class="o_kanban_image o_image_64_cover" alt="Avatar"/>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <ul class="nav o_assignation_body">
+                                    <li class="nav-item o_salesteam_member_name"><a type="open" class="nav-link"><b><field name="name"/></b></a></li>
+                                    <li class="nav-item o_salesteam_member_crm_team_id w-100"><a type="open" class="nav-link"><field name="crm_team_id"/></a></li>
+                                    <li t-attf-class="nav-item #{button_state}">
+                                        <a type="object" name="toggle_active" t-attf-class="nav-link fa fa-check-square" title="Toggle active"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="crm_team_member_view_kanban_from_team" model="ir.ui.view">
+        <field name="name">crm.team.member.view.kanban.from.team</field>
+        <field name="model">crm.team.member</field>
+        <field name="inherit_id" ref="sales_team.crm_team_member_view_kanban"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="//li[hasclass('o_salesteam_member_crm_team_id')]" position="replace">
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_team_member_view_form" model="ir.ui.view">
+        <field name="name">crm.team.member.view.form</field>
+        <field name="model">crm.team.member</field>
+        <field name="arch" type="xml">
+            <form string="Sales Men">
+                <field name="active" invisible="1"/>
+                <sheet>
+                    <h1>
+                        <field name="user_id" domain="[('share', '=', False)]"/>
+                    </h1>
+                    <group>
+                        <field name="crm_team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" readonly="context.get('ro_team', False)"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="crm_team_member_view_form_from_team" model="ir.ui.view">
+        <field name="name">crm.team.member.view.form.from.team</field>
+        <field name="model">crm.team.member</field>
+        <field name="inherit_id" ref="sales_team.crm_team_member_view_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <field name="crm_team_id" position="replace"/>
+            <xpath expr="//div[hasclass('oe_chatter')]" position="replace"/>
+        </field>
+    </record>
+
+    <record id="crm_team_member_action" model="ir.actions.act_window">
+        <field name="name">Team Members</field>
+        <field name="res_model">crm.team.member</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new salesman
+            </p><p>
+                Link users to salesteam.
+            </p>
+        </field>
+    </record>
+
+</data></odoo>
