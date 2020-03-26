@@ -367,6 +367,52 @@
             </field>
         </record>
 
+<<<<<<< HEAD
+=======
+        <record id="view_move_picking_form" model="ir.ui.view">
+            <field name="name">stock.move.form</field>
+            <field name="model">stock.move</field>
+            <field eval="20" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Stock Moves">
+                <header>
+                        <field name="state" widget="statusbar"/>
+                </header>
+                <field name="scrapped" invisible="1"/>
+                <group>
+                    <group string="#Products">
+                        <field name="product_id"/>
+                        <field name="picking_type_id" invisible="1"/>
+                        <field name="group_id" invisible="1"/>
+                        <label for="product_uom_qty"/>
+                        <div>
+                            <field name="product_uom_qty"/>
+                            <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
+                        </div>
+                        <field name="product_tmpl_id" invisible="1" readonly="True"/>
+                    </group>
+                    <group string="Locations" groups="base.group_no_one">
+                        <field name="name"/>
+                        <field name="location_id"/>
+                        <field name="location_dest_id"/>
+                    </group>
+                </group>
+                <group>
+                    <group string="Conditions">
+                       <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="stock.group_adv_location"/>
+                        <field name="create_date" invisible="1"/>
+                        <field name="date_expected"/>
+                        <field name="move_dest_ids" groups="base.group_no_one" readonly="1"/>
+                    </group>
+                    <group name="quants_grp" string="Reserved" attrs="{'invisible': [('state', '=', 'draft')]}">
+                        <field name="string_availability_info"/>
+                    </group>
+                </group>
+                </form>
+            </field>
+        </record>
+
+>>>>>>> d236b773a30... temp
         <record id="view_move_search" model="ir.ui.view">
             <field name="name">stock.move.search</field>
             <field name="model">stock.move</field>
