@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+
+    <record id="sales_team.crm_team_member_admin_sales" model="crm.team.member">
+        <field name="maximum_user_leads">1</field>
+    </record>
+    <record id="sales_team.crm_team_member_demo_team_1" model="crm.team.member">
+        <field name="maximum_user_leads">2</field>
+        <field name="team_user_domain">['&amp;', ['lang_id', '=', 'English'], ['country_id', '=', 'Belgium']]</field>
+    </record>
+
+</data></odoo>
