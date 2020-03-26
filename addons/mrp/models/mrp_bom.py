@@ -74,6 +74,10 @@ class MrpBom(models.Model):
         required=True
     )
 
+    _sql_constraints = [
+        ('qty_positive', 'check (product_qty > 0)', 'The quantity to produce must be positive!'),
+    ]
+
     @api.onchange('product_id')
     def onchange_product_id(self):
         if self.product_id:
