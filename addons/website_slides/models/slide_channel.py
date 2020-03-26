@@ -621,13 +621,13 @@ class Channel(models.Model):
             })
         return category_data
 
-    def _resequence_slides(self, slide):
+    def _resequence_slides(self, slide, force_category=False):
         ids_to_resequence = self.slide_ids.ids
         index_of_added_slide = ids_to_resequence.index(slide.id)
-        category_id = slide.category_id.id
         next_category_id = None
         if self.slide_category_ids:
-            index_of_category = self.slide_category_ids.ids.index(category_id) if category_id else None
+            force_category_id = force_category.id if force_category else slide.category_id.id
+            index_of_category = self.slide_category_ids.ids.index(force_category_id) if force_category_id else None
             if index_of_category is None:
                 next_category_id = self.slide_category_ids.ids[0]
             elif index_of_category < len(self.slide_category_ids.ids) - 1:
@@ -638,7 +638,7 @@ class Channel(models.Model):
             index_of_next_category = ids_to_resequence.index(next_category_id)
             ids_to_resequence.insert(index_of_next_category, added_slide_id)
             for i, record in enumerate(self.env['slide.slide'].browse(ids_to_resequence)):
-                record.write({'sequence': i})
+                record.write({'sequence': i + 1})  # start at 1 to make people scream
         else:
             slide.write({
                 'sequence': self.env['slide.slide'].browse(ids_to_resequence[-1]).sequence + 1
