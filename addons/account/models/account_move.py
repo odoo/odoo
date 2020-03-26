@@ -3356,7 +3356,7 @@ class AccountMoveLine(models.Model):
                     discount=to_write.get('discount', line.discount),
                 ))
                 super(AccountMoveLine, line).write(to_write)
-            elif any(field in vals for field in BUSINESS_FIELDS):
+            elif any(field_will_change(line, field) for field in (vals.keys() & BUSINESS_FIELDS)):
                 to_write = line._get_price_total_and_subtotal()
                 to_write.update(line._get_fields_onchange_subtotal(
                     price_subtotal=to_write['price_subtotal'],
