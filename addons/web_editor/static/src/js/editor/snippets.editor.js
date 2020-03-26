@@ -347,16 +347,19 @@ var SnippetEditor = Widget.extend({
             customize$Elements: show ? this._customize$Elements : [],
         });
         this._customize$Elements.forEach(($el, i) => {
-            var editor = $el.data('editor');
-            var styles = _.values(editor.styles);
-            _.sortBy(styles, '__order').forEach(style => {
-                if (show) {
-                    style.onFocus();
-                    style.updateUI();
-                } else {
-                    style.onBlur();
-                }
-            });
+            const editor = $el.data('editor');
+            const styles = _.chain(editor.styles).values().sortBy('__order')
+                            .value();
+            // TODO ideally: should account the async parts of updateUI and
+            // allow async parts in onFocus/onBlur.
+            if (show) {
+                // All onFocus before all updateUI as the onFocus of an option
+                // might affect another option (like updating the $target)
+                styles.forEach(style => style.onFocus());
+                styles.forEach(style => style.updateUI());
+            } else {
+                styles.forEach(style => style.onBlur());
+            }
         });
     },
     /**
