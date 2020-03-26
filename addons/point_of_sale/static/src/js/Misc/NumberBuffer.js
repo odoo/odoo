@@ -188,7 +188,7 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
             } else if (INPUT_KEYS.has(key)) {
                 this._updateBuffer(key);
                 if (this.config.triggerAtInput)
-                    this.component.trigger(this.config.triggerAtInput, this.state);
+                    this.component.trigger(this.config.triggerAtInput, { buffer: this.state.buffer, key });
             }
         }
         /**
