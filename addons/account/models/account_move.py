@@ -1291,8 +1291,8 @@ class AccountMove(models.Model):
                 res[line.tax_line_id.tax_group_id]['amount'] += line.price_subtotal
                 tax_key_add_base = tuple(move._get_tax_key_for_group_add_base(line))
                 if tax_key_add_base not in done_taxes:
-                    if line.currency_id != self.company_id.currency_id:
-                        amount = self.company_id.currency_id._convert(line.tax_base_amount, line.currency_id, self.company_id, line.date or fields.Date.today())
+                    if line.currency_id and line.company_currency_id and line.currency_id != line.company_currency_id:
+                        amount = line.company_currency_id._convert(line.tax_base_amount, line.currency_id, line.company_id, line.date or fields.Date.today())
                     else:
                         amount = line.tax_base_amount
                     res[line.tax_line_id.tax_group_id]['base'] += amount
@@ -4331,8 +4331,12 @@ class AccountFullReconcile(models.Model):
                 # (reversing will cause a nested attempt to drop the full reconciliation)
                 to_reverse = rec.exchange_move_id
                 rec.exchange_move_id = False
+                if to_reverse.date > (to_reverse.company_id.period_lock_date or date.min):
+                    reverse_date = to_reverse.date
+                else:
+                    reverse_date = fields.Date.today()
                 to_reverse._reverse_moves([{
-                    'date': fields.Date.today(),
+                    'date': reverse_date,
                     'ref': _('Reversal of: %s') % to_reverse.name,
                 }], cancel=True)
         return super(AccountFullReconcile, self).unlink()

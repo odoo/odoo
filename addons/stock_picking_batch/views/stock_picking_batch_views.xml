@@ -24,7 +24,7 @@
                         </group>
                     </group>
                     <separator string="Transfers"/>
-                    <field name="picking_ids" widget="many2many" options="{'not_delete': True}">
+                    <field name="picking_ids" widget="many2many" options="{'not_delete': True}" mode="tree,kanban">
                         <tree>
                             <field name="name"/>
                             <field name="scheduled_date"/>

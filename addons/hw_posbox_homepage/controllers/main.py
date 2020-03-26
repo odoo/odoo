@@ -220,7 +220,7 @@ class IoTboxHomepage(web.Home):
             'breadcrumb': 'Configure IoT Box',
             'loading_message': 'Configuring your IoT Box',
             'ssid': helpers.get_wifi_essid(),
-            'server': helpers.get_odoo_server_url(),
+            'server': helpers.get_odoo_server_url() or '',
             'hostname': subprocess.check_output('hostname').decode('utf-8').strip('\n'),
         })
 
@@ -318,7 +318,7 @@ class IoTboxHomepage(web.Home):
     def perform_flashing_create_partition(self):
         try:
             response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; create_partition']).decode().split('\n')[-2]
-            if response == 'Error_Card_Size':
+            if response in ['Error_Card_Size', 'Error_Upgrade_Already_Started']:
                 raise Exception(response)
             return Response('success', status=200)
         except subprocess.CalledProcessError as e:

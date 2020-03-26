@@ -1722,6 +1722,33 @@ QUnit.module('Search View', {
         actionManager.destroy();
     });
 
+    QUnit.test('open seach view autocomplete on paste value using mouse', async function (assert) {
+        assert.expect(1);
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        await actionManager.doAction(11);
+
+        // Simulate paste text through the mouse.
+        $('.o_searchview_input').val("ABC");
+        const nativeInputEvent = new window.InputEvent('input', { inputType: 'insertFromPaste' });
+        const jqueryInputEvent = $.Event('input', { bubbles: true });
+        jqueryInputEvent.originalEvent = nativeInputEvent;
+        $('.o_searchview_input').trigger(jqueryInputEvent);
+        await testUtils.nextTick();
+        assert.containsOnce(
+            $,
+            '.o_searchview_autocomplete',
+            "should display autocomplete dropdown menu on paste in search view"
+        );
+
+        actionManager.destroy();
+    });
+
     QUnit.module('TimeRangeMenu');
 
     QUnit.test('time range menu stays hidden', async function (assert) {

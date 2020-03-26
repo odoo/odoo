@@ -75,10 +75,10 @@ class HolidaysAllocation(models.Model):
     number_of_days_display = fields.Float(
         'Duration (days)', compute='_compute_number_of_days_display',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
-        help="UX field allowing to see and modify the allocation duration, computed in days.")
+        help="If Accrual Allocation: Number of days allocated in addition to the ones you will get via the accrual' system.")
     number_of_hours_display = fields.Float(
         'Duration (hours)', compute='_compute_number_of_hours_display',
-        help="UX field allowing to see and modify the allocation duration, computed in hours.")
+        help="If Accrual Allocation: Number of hours allocated in addition to the ones you will get via the accrual' system.")
     duration_display = fields.Char('Allocated (Days/Hours)', compute='_compute_duration_display',
         help="Field allowing to see the allocation duration in days or hours depending on the type_request_unit")
     # details
