@@ -239,6 +239,9 @@ class Http(models.AbstractModel):
         published_domain = page_domain
         # specific page first
         page = request.env['website.page'].sudo().search(published_domain, order='website_id asc', limit=1)
+        if page:
+            # prefetch all menus (it will prefetch website.page too)
+            request.website.menu_id
         if page and (request.website.is_publisher() or page.is_visible):
             _, ext = os.path.splitext(req_page)
             return request.render(page.get_view_identifier(), {
