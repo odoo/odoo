@@ -2592,11 +2592,28 @@ class TestSelectionDeleteUpdate(common.TransactionCase):
     MODEL_ABSTRACT = 'test_new_api.state_mixin'
 
     def test_unlink_asbtract(self):
-        self.env['ir.model.fields.selection'].search([
+        selections = self.env['ir.model.fields.selection'].search([
             ('field_id.model', '=', self.MODEL_ABSTRACT),
             ('field_id.name', '=', 'state'),
             ('value', '=', 'confirmed'),
-        ], limit=1).unlink()
+        ], limit=1)
+        if selections.pool.ready:
+            # Ensures the test works fine in post-install
+            # for local tests
+            self.env.cr.execute("""
+                WITH fields AS (
+                    Select field.id
+                    from ir_model_fields field
+                    JOIN ir_model_fields_selection selection on field_id=field.id
+                    WHERE selection.id=%i
+                )
+                UPDATE ir_model_fields field
+                SET state = 'manual'
+                FROM fields f
+                WHERE f.id=field.id
+            """% selections.id)
+            selections.invalidate_cache()
+        selections.unlink()
 
 
 @common.tagged('selection_ondelete_base')
