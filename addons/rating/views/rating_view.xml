@@ -69,7 +69,7 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
                                 <div class="o_kanban_image">
-                                    <img t-attf-src="/rating/static/src/img/rating_#{record.rating.raw_value}.png" t-att-alt="record.rating.name"/>
+                                    <field name="rating_image" widget="image"/>
                                 </div>
                                 <div class="oe_kanban_details">
                                     <strong>
