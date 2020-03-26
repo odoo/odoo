@@ -213,6 +213,19 @@ class Lang(models.Model):
         langs = self.with_context(active_test=False).search([])
         return sorted([(lang.code, lang.url_code, lang.name) for lang in langs], key=itemgetter(2))
 
+    @tools.ormcache('self.id')
+    def _get_cached_values(self):
+        self.ensure_one()
+        return {
+            'id': self.id,
+            'code': self.code,
+            'url_code': self.url_code,
+            'name': self.name,
+        }
+
+    def _get_cached(self, field):
+        return self._get_cached_values()[field]
+
     @api.model
     @tools.ormcache('code')
     def _lang_code_to_urlcode(self, code):
