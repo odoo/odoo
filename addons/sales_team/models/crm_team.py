@@ -20,16 +20,18 @@ class CrmTeam(models.Model):
     _check_company_auto = True
 
     def _get_default_team_id(self, user_id=None, domain=None):
-        user_id = user_id or self.env.uid
-        user_salesteam_id = self.env['res.users'].browse(user_id).sale_team_id.id
-        # Avoid searching on member_ids (+1 query) when we may have the user salesteam already in cache.
+        if user_id is None:
+            user_id = self.env.user.id
+
         team = self.env['crm.team'].search([
             ('company_id', 'in', [False, self.env.company.id]),
-            '|', ('user_id', '=', user_id), ('id', '=', user_salesteam_id),
+            '|', ('user_id', '=', user_id), ('member_ids', 'in', user_id),
         ], limit=1)
         if not team and 'default_team_id' in self.env.context:
             team = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
-        return team or self.env['crm.team'].search(domain or [], limit=1)
+        if not team:
+            team = self.env['crm.team'].search(domain or [], limit=1)
+        return team
 
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
@@ -45,10 +47,11 @@ class CrmTeam(models.Model):
         related='company_id.currency_id', readonly=True)
     user_id = fields.Many2one('res.users', string='Team Leader', check_company=True)
     # memberships
-    member_ids = fields.One2many(
-        'res.users', 'sale_team_id', string='Channel Members',
+    member_ids = fields.Many2many(
+        'res.users', 'crm_team_member', 'crm_team_id', 'user_id', string='Channel Members',
         check_company=True, domain=[('share', '=', False)],
-        help="Add members to automatically assign their documents to this sales team. You can only be member of one team.")
+        help="Add members to automatically assign their documents to this sales team.")
+    crm_team_member_ids = fields.One2many('crm.team.member', 'crm_team_id', string='Sales Team Memberships')
     # UX options
     color = fields.Integer(string='Color Index', help="The color of the channel")
     favorite_user_ids = fields.Many2many(

@@ -3,16 +3,16 @@
 
 import logging
 import threading
+from collections import OrderedDict, defaultdict
 from datetime import date, datetime, timedelta
 from psycopg2 import sql
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.addons.phone_validation.tools import phone_validation
+from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 from odoo.tools.translate import _
-from odoo.tools import email_re, email_split
-from odoo.exceptions import UserError, AccessError
-from collections import OrderedDict, defaultdict
+from odoo.tools import email_re, email_split, safe_eval
 
 from . import crm_stage
 
@@ -70,6 +70,12 @@ PARTNER_ADDRESS_FIELDS_TO_SYNC = [
 # computation time, number of transaction and transaction time.
 PLS_COMPUTE_BATCH_STEP = 50000  # odoo.models.PREFETCH_MAX = 1000 but larger cluster can speed up global computation
 PLS_UPDATE_BATCH_STEP = 5000
+
+# Evaluation context for all domain-based lead auto assignment
+LEAD_ASSIGN_EVAL_CONTEXT = {
+    'datetime': safe_eval.datetime,
+    'context_today': datetime.now,
+}
 
 
 class Lead(models.Model):
@@ -249,7 +255,7 @@ class Lead(models.Model):
             if not lead.user_id:
                 continue
             user = lead.user_id
-            if lead.team_id and user in lead.team_id.member_ids | lead.team_id.user_id:
+            if lead.team_id and user in (lead.team_id.member_ids | lead.team_id.user_id):
                 continue
             team_domain = [('use_leads', '=', True)] if lead.type == 'lead' else [('use_opportunities', '=', True)]
             team = self.env['crm.team']._get_default_team_id(user_id=user.id, domain=team_domain)

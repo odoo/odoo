@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="crm_team_member_view_tree" model="ir.ui.view">
+        <field name="name">crm.team.member.view.tree</field>
+        <field name="model">crm.team.member</field>
+        <field name="inherit_id" ref="sales_team.crm_team_member_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="maximum_user_leads"/>
+                <field name="lead_month_count"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="crm_team_member_view_kanban" model="ir.ui.view">
+        <field name="name">crm.team.member.view.kanban.inherit.crm</field>
+        <field name="model">crm.team.member</field>
+        <field name="inherit_id" ref="sales_team.crm_team_member_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//li[hasclass('o_salesteam_member_name')]" position="after">
+                <li class="nav-item"><field name="team_user_domain" widget="filters"/></li>
+            </xpath>
+            <xpath expr="//ul[hasclass('o_assignation_body')]" position="after">
+                <div class="o_assignation_leads_count">
+                    <field name="maximum_user_leads" invisible="1"/>
+                    <field name="lead_month_count" widget="gauge"
+                           options="{'max_field': 'maximum_user_leads'}"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_team_member_view_form" model="ir.ui.view">
+        <field name="name">crm.team.member.view.form.inherit.crm</field>
+        <field name="model">crm.team.member</field>
+        <field name="inherit_id" ref="sales_team.crm_team_member_view_form"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="lead_month_count" invisible="1"/>
+            </field>
+            <xpath expr="//group" position="inside">
+                <label for="maximum_user_leads" string="Maximum Leads / 30 days" />
+                <div>
+                    <field name="maximum_user_leads" class="oe_inline"/>
+                </div>
+                <field name="team_user_domain" widget="domain" options="{'model': 'crm.lead'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sales_team.crm_team_member_action" model="ir.actions.act_window">
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new salesman
+            </p><p>
+                Link users to salesteam, set a per 30 days lead capacity for each
+                of them and set filters to auto assign your leads.
+            </p>
+        </field>
+    </record>
+
+</data></odoo>
