@@ -19,7 +19,7 @@ import werkzeug.utils
 
 import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
-from odoo.exceptions import AccessDenied, AccessError
+from odoo.exceptions import AccessDenied, AccessError, MissingError
 from odoo.http import request, content_disposition
 from odoo.tools import consteq, pycompat
 from odoo.tools.mimetypes import guess_mimetype
@@ -296,35 +296,38 @@ class IrHttp(models.AbstractModel):
             record = self.env[model].browse(int(id))
 
         # obj exists
-        if not record or not record.exists() or field not in record:
+        if not record or field not in record:
             return None, 404
 
-        if model == 'ir.attachment':
-            record_sudo = record.sudo()
-            if access_token and not consteq(record_sudo.access_token or '', access_token):
-                return None, 403
-            elif (access_token and consteq(record_sudo.access_token or '', access_token)):
-                record = record_sudo
-            elif record_sudo.public:
-                record = record_sudo
-            elif self.env.user.has_group('base.group_portal'):
-                # Check the read access on the record linked to the attachment
-                # eg: Allow to download an attachment on a task from /my/task/task_id
-                record.check('read')
-                record = record_sudo
-
-        # check read access
         try:
-            # We have prefetched some fields of record, among which the field
-            # 'write_date' used by '__last_update' below. In order to check
-            # access on record, we have to invalidate its cache first.
-            if not record.env.su:
-                record._cache.clear()
-            record['__last_update']
-        except AccessError:
-            return None, 403
+            if model == 'ir.attachment':
+                record_sudo = record.sudo()
+                if access_token and not consteq(record_sudo.access_token or '', access_token):
+                    return None, 403
+                elif (access_token and consteq(record_sudo.access_token or '', access_token)):
+                    record = record_sudo
+                elif record_sudo.public:
+                    record = record_sudo
+                elif self.env.user.has_group('base.group_portal'):
+                    # Check the read access on the record linked to the attachment
+                    # eg: Allow to download an attachment on a task from /my/task/task_id
+                    record.check('read')
+                    record = record_sudo
 
-        return record, 200
+            # check read access
+            try:
+                # We have prefetched some fields of record, among which the field
+                # 'write_date' used by '__last_update' below. In order to check
+                # access on record, we have to invalidate its cache first.
+                if not record.env.su:
+                    record._cache.clear()
+                record['__last_update']
+            except AccessError:
+                return None, 403
+
+            return record, 200
+        except MissingError:
+            return None, 404
 
     @classmethod
     def _binary_ir_attachment_redirect_content(cls, record, default_mimetype='application/octet-stream'):
