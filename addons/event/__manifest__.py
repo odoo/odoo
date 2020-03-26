@@ -32,6 +32,7 @@ Key Features
         'views/res_config_settings_views.xml',
         'views/event_templates.xml',
         'views/res_partner_views.xml',
+        'views/event_tag_views.xml'
     ],
     'demo': [
         'data/res_users_demo.xml',
