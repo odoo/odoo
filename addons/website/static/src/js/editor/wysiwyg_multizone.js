@@ -77,8 +77,12 @@ var WysiwygMultizone = Wysiwyg.extend({
                 });
         });
 
-        // TODO review why this is needed
-        _.each(this.$('.oe_structure[data-editor-message!="False"]'), el => {
+        // TODO remove me in master, this should just be solved in master XML
+        // if required. Keep this in stable for now though.
+        _.each(this.$('.oe_structure[data-editor-message]'), el => {
+            if (!el.dataset.editorMessage || el.dataset.editorMessage === "False") {
+                return;
+            }
             var isBlank = !el.innerHTML.trim();
             if (isBlank) {
                 el.innerHTML = '';
