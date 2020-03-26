@@ -244,7 +244,7 @@ class Http(models.AbstractModel):
             request.website.menu_id
         if page and (request.website.is_publisher() or page.is_visible):
             _, ext = os.path.splitext(req_page)
-            return request.render(page.get_view_identifier(), {
+            return request.render(page.view_id.id, {
                 'deletable': True,
                 'main_object': page,
             }, mimetype=_guess_mimetype(ext))
