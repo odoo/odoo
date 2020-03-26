@@ -73,6 +73,13 @@ class Attendee(models.Model):
             partners = (event.attendee_ids & self).partner_id & event.message_partner_ids
             event.message_unsubscribe(partner_ids=partners.ids)
 
+    def _get_notify_event_record_name(self):
+        """ To be overridden when you need custom record_name in `mail.mail_notification_light`
+            header template.
+        """
+        self.ensure_one()
+        return ''
+
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         raise UserError(_('You cannot duplicate a calendar attendee.'))
@@ -138,6 +145,7 @@ class Attendee(models.Model):
                     body=body,
                     subject=subject,
                     partner_ids=attendee.partner_id.ids,
+                    record_name=attendee._get_notify_event_record_name(),
                     email_layout_xmlid='mail.mail_notification_light',
                     attachment_ids=attachment_values,
                     force_send=force_send)
