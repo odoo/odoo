@@ -132,8 +132,8 @@ class Http(models.AbstractModel):
         if not request.session.uid:
             env = api.Environment(request.cr, SUPERUSER_ID, request.context)
             website = env['website'].get_current_website()
-            if website and website.user_id:
-                request.uid = website.user_id.id
+            request.uid = website and website._get_cached('user_id')
+
         if not request.uid:
             super(Http, cls)._auth_method_public()
 
@@ -199,8 +199,9 @@ class Http(models.AbstractModel):
         # context (eg: /shop), and it's not going to propagate to the global context of the tab
         # If the company of the website is not in the allowed companies of the user, set the main
         # company of the user.
-        if request.website.company_id in request.env.user.company_ids:
-            context['allowed_company_ids'] = request.website.company_id.ids
+        website_company_id = request.website._get_cached('company_id')
+        if website_company_id in request.env.user.company_ids.ids:
+            context['allowed_company_ids'] = [website_company_id]
         else:
             context['allowed_company_ids'] = request.env.user.company_id.ids
 
@@ -222,7 +223,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _get_default_lang(cls):
         if getattr(request, 'website', False):
-            return request.website.default_lang_id
+            return request.env['res.lang'].browse(request.website._get_cached('default_lang_id'))
         return super(Http, cls)._get_default_lang()
 
     @classmethod
@@ -239,9 +240,12 @@ class Http(models.AbstractModel):
         published_domain = page_domain
         # specific page first
         page = request.env['website.page'].sudo().search(published_domain, order='website_id asc', limit=1)
+        if page:
+            # prefetch all menus (it will prefetch website.page too)
+            request.website.menu_id
         if page and (request.website.is_publisher() or page.is_visible):
             _, ext = os.path.splitext(req_page)
-            return request.render(page.get_view_identifier(), {
+            return request.render(page.view_id.id, {
                 'deletable': True,
                 'main_object': page,
             }, mimetype=_guess_mimetype(ext))
@@ -363,7 +367,7 @@ class Http(models.AbstractModel):
         if request.env.user.has_group('website.group_website_publisher'):
             session_info.update({
                 'website_id': request.website.id,
-                'website_company_id': request.website.company_id.id,
+                'website_company_id': request.website._get_cached('company_id'),
             })
         return session_info
 

@@ -58,10 +58,6 @@ class Page(models.Model):
 
         return most_specific_page == page_to_test
 
-    def get_view_identifier(self):
-        """ Get identifier of this page view that may be used to render it """
-        return self.view_id.id
-
     def get_page_properties(self):
         self.ensure_one()
         res = self.read([
