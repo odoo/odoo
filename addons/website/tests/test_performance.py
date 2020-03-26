@@ -113,7 +113,7 @@ class TestWebsitePerformance(UtilPerf):
         menu_bb.parent_id = menu_b
         menu_aa.parent_id = menu_a
 
-        self.assertEqual(self._get_url_hot_query(self.page.url), 22)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 14)
 
     def test_50_perf_sql_web_content(self):
         # assets route /web/content/..
