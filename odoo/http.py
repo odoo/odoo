@@ -48,6 +48,7 @@ import odoo
 from odoo import fields
 from .service.server import memory_info
 from .service import security, model as service_model
+from .sql_db import flush_env
 from .tools.func import lazy_property
 from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
 from .tools.mimetypes import guess_mimetype
@@ -339,6 +340,10 @@ class WebRequest(object):
             if isinstance(result, Response) and result.is_qweb:
                 # Early rendering of lazy responses to benefit from @service_model.check protection
                 result.flatten()
+            if self._cr is not None:
+                # flush here to avoid triggering a serialization error outside
+                # of this context, which would not retry the call
+                flush_env(self._cr)
             return result
 
         if self.db:
