@@ -30,7 +30,7 @@
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='is_blacklisted']" position="after">
-                <field name="mobile"/>
+                <field name="mobile" class="o_force_ltr"/>
                 <field name="phone_sanitized" invisible="1"/>
                 <field name="phone_sanitized_blacklisted"/>
             </xpath>
@@ -63,7 +63,7 @@
         <field name="inherit_id" ref="mass_mailing.mailing_contact_view_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='email']" position="after">
-                <field name="mobile"/>
+                <field name="mobile" widget="phone"/>
                 <field name="phone_sanitized" invisible="1"/>
             </xpath>
             <xpath expr="//t[@t-esc='record.email.value']" position="after">
