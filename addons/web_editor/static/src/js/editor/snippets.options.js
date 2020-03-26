@@ -3043,9 +3043,7 @@ registry.many2one = SnippetOptionWidget.extend({
             self.$target.html($li.data('name'));
         }
 
-        _.defer(function () {
-            self.trigger_up('deactivate_snippet');
-        });
+        this._clear();
     }
 });
 
