@@ -125,14 +125,6 @@ def init_logger():
         return record
     logging.setLogRecordFactory(record_factory)
 
-    logging.RUNBOT = 25
-    logging.addLevelName(logging.RUNBOT, "INFO") # displayed as info in log
-    logging.captureWarnings(True)
-
-    def runbot(self, message, *args, **kws):
-        self.log(logging.RUNBOT, message, *args, **kws)
-    logging.Logger.runbot = runbot
-
     # enable deprecation warnings (disabled by default)
     warnings.filterwarnings('once', category=DeprecationWarning)
     # ignore deprecation warnings from invalid escape (there's a ton and it's
@@ -242,3 +234,11 @@ PSEUDOCONFIG_MAPPER = {
     'error': ['odoo:ERROR', 'werkzeug:ERROR'],
     'critical': ['odoo:CRITICAL', 'werkzeug:CRITICAL'],
 }
+
+logging.RUNBOT = 25
+logging.addLevelName(logging.RUNBOT, "INFO") # displayed as info in log
+logging.captureWarnings(True)
+
+def runbot(self, message, *args, **kws):
+    self.log(logging.RUNBOT, message, *args, **kws)
+logging.Logger.runbot = runbot
