@@ -131,7 +131,7 @@
                                                 'form_view_ref': 'base.res_partner_view_form_private'}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
                                         <field name="private_email" string="Email"/>
-                                        <field name="phone" groups="hr.group_hr_user" string="Phone"/>
+                                        <field name="phone" class="o_force_ltr" groups="hr.group_hr_user" string="Phone"/>
                                         <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
                                         <field name="km_home_work" groups="hr.group_hr_user"/>
                                     </group>
@@ -154,7 +154,7 @@
                                     </group>
                                     <group string="Emergency">
                                         <field name="emergency_contact"/>
-                                        <field name="emergency_phone"/>
+                                        <field name="emergency_phone" class="o_force_ltr"/>
                                     </group>
                                     <group string="Work Permit" name="work_permit">
                                         <field name="visa_no"/>
@@ -202,7 +202,7 @@
             <field name="arch" type="xml">
                 <tree string="Employees">
                     <field name="name"/>
-                    <field name="work_phone"/>
+                    <field name="work_phone" class="o_force_ltr"/>
                     <field name="work_email"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="department_id"/>
@@ -248,7 +248,7 @@
                                <ul>
                                    <li id="last_login"/>
                                    <li t-if="record.work_email.raw_value" class="o_text_overflow"><field name="work_email" /></li>
-                                   <li t-if="record.work_phone.raw_value"><field name="work_phone" /></li>
+                                   <li t-if="record.work_phone.raw_value" class="o_force_ltr"><field name="work_phone" /></li>
                                </ul>
                            </div>
                        </div>
@@ -321,7 +321,7 @@
             <field name="arch" type="xml">
                 <tree string="Employees">
                     <field name="name"/>
-                    <field name="work_phone"/>
+                    <field name="work_phone" class="o_force_ltr"/>
                     <field name="work_email"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="department_id"/>
