@@ -21,24 +21,28 @@ class Employee(models.AbstractModel):
     # Stored field used in the presence kanban reporting view
     # to allow group by state.
     hr_presence_state_display = fields.Selection([
-        ('present', 'Present'),
-        ('absent', 'Absent'),
-        ('to_define', 'To Define')])
+        ('present', 'At Work'),
+        ('absent', 'Off'),
+        ('to_define', 'To Be Checked')], default='to_define')
 
+    @api.depends('user_id.im_status', 'manually_set_present')
     def _compute_presence_state(self):
         super()._compute_presence_state()
-        employees = self.filtered(lambda employee: employee.hr_presence_state != 'present' and not employee.is_absent)
+        check_login = literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr.hr_presence_control_login', 'False'))
+        if check_login:
+            employee_present = self.filtered(lambda e: e.hr_presence_state != 'present' and e.user_id.im_status == 'online')
+            employee_present.hr_presence_state = 'present'
+
         company = self.env.company
-        for employee in employees:
-            if not employee.is_absent and company.hr_presence_last_compute_date and company.hr_presence_last_compute_date.day == Datetime.now().day and \
-                    (employee.email_sent or employee.ip_connected or employee.manually_set_present):
-                employee.hr_presence_state = 'present'
+        if company.hr_presence_last_compute_date and company.hr_presence_last_compute_date.day == fields.Datetime.now().day:
+            self.filtered(lambda e: e.hr_presence_state != 'present' and e.email_sent or e.ip_connected or e.manually_set_present).hr_presence_state = 'present'
+        self.filtered(lambda e: e.hr_presence_state == 'to_define' and not e.must_be_at_work).hr_presence_state = 'absent'
 
     @api.model
     def _check_presence(self):
         company = self.env.company
         if not company.hr_presence_last_compute_date or \
-                company.hr_presence_last_compute_date.day != Datetime.now().day:
+                company.hr_presence_last_compute_date.day != fields.Datetime.now().day:
             self.env['hr.employee'].search([
                 ('company_id', '=', company.id)
             ]).write({
@@ -50,9 +54,8 @@ class Employee(models.AbstractModel):
         employees = self.env['hr.employee'].search([('company_id', '=', company.id)])
         all_employees = employees
 
-
         # Check on IP
-        if literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr.hr_presence_control_ip', 'False')):
+        if literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr_presence.hr_presence_control_ip', 'False')):
             ip_list = company.hr_presence_control_ip_list
             ip_list = ip_list.split(',') if ip_list else []
             ip_employees = self.env['hr.employee']
@@ -60,7 +63,7 @@ class Employee(models.AbstractModel):
                 employee_ips = self.env['res.users.log'].search([
                     ('create_uid', '=', employee.user_id.id),
                     ('ip', '!=', False),
-                    ('create_date', '>=', Datetime.to_string(Datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)))]
+                    ('create_date', '>=', Datetime.to_string(fields.Datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)))]
                 ).mapped('ip')
                 if any([ip in ip_list for ip in employee_ips]):
                     ip_employees |= employee
@@ -68,20 +71,20 @@ class Employee(models.AbstractModel):
             employees = employees - ip_employees
 
         # Check on sent emails
-        if literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr.hr_presence_control_email', 'False')):
+        if literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr_presence.hr_presence_control_email', 'False')):
             email_employees = self.env['hr.employee']
             threshold = company.hr_presence_control_email_amount
             for employee in employees:
                 sent_emails = self.env['mail.message'].search_count([
                     ('author_id', '=', employee.user_id.partner_id.id),
-                    ('date', '>=', Datetime.to_string(Datetime.now().replace(hour=0, minute=0, second=0, microsecond=0))),
-                    ('date', '<=', Datetime.to_string(Datetime.now()))])
+                    ('date', '>=', Datetime.to_string(fields.Datetime.now().replace(hour=0, minute=0, second=0, microsecond=0))),
+                    ('date', '<=', Datetime.to_string(fields.Datetime.now()))])
                 if sent_emails >= threshold:
                     email_employees |= employee
             email_employees.write({'email_sent': True})
             employees = employees - email_employees
 
-        company.sudo().hr_presence_last_compute_date = Datetime.now()
+        company.sudo().hr_presence_last_compute_date = fields.Datetime.now()
 
         for employee in all_employees:
             employee.hr_presence_state_display = employee.hr_presence_state
@@ -102,8 +105,11 @@ class Employee(models.AbstractModel):
             "views": [[self.env.ref('hr_presence.hr_employee_view_kanban').id, "kanban"], [False, "tree"], [False, "form"]],
             'view_mode': 'kanban,tree,form',
             "domain": [],
-            "name": "Employee's Presence to Define",
-            "context": {'search_default_group_hr_presence_state': 1},
+            "name": "Employee's Presence",
+            "context": {
+                'group_by': 'hr_presence_state_display',
+                'write_manually_set_present': True,
+            },
         }
 
     def action_set_present(self):
@@ -112,19 +118,9 @@ class Employee(models.AbstractModel):
         self.write({'manually_set_present': True})
 
     def write(self, vals):
-        if vals.get('hr_presence_state_display') == 'present':
+        if 'write_manually_set_present' in self.env.context and vals.get('hr_presence_state_display') == 'present':
             vals['manually_set_present'] = True
         return super().write(vals)
-
-    def action_open_leave_request(self):
-        self.ensure_one()
-        return {
-            "type": "ir.actions.act_window",
-            "res_model": "hr.leave",
-            "views": [[False, "form"]],
-            "view_mode": 'form',
-            "context": {'default_employee_id': self.id},
-        }
 
     # --------------------------------------------------
     # Messaging

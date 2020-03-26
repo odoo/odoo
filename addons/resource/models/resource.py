@@ -440,6 +440,22 @@ class ResourceCalendar(models.Model):
             day_total[start.date()] += (stop - start).total_seconds() / 3600
         return day_total
 
+    def _get_calendar_including_time(self, date_included):
+        """
+        Return all calendars including the datetime passed in parameter
+        """
+        weekday = str(date_included.weekday())
+        week_type = str(int(math.floor((date_included.toordinal() - 1) / 7) % 2))
+        hour = date_included.hour + date_included.minute / 60
+        attendance_ids = self.attendance_ids.filtered(
+            lambda att: att.dayofweek == weekday and
+            att.hour_from <= hour and att.hour_to >= hour and
+            (not att.date_from or att.date_from <= date_included) and
+            (not att.date_to or att.date_to >= date_included) and
+            (not att.two_weeks_calendar or att.week_type == week_type))
+
+        return attendance_ids.calendar_id
+
     # --------------------------------------------------
     # External API
     # --------------------------------------------------

@@ -130,7 +130,8 @@ class HolidaysRequest(models.Model):
     # HR data
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', index=True, readonly=True, ondelete="restrict",
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, tracking=True)
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, group_expand='_read_group_employee_id',
+        default=_default_employee, tracking=True)
     tz_mismatch = fields.Boolean(compute='_compute_tz_mismatch')
     tz = fields.Selection(_tz_get, compute='_compute_tz')
     department_id = fields.Many2one(
@@ -598,6 +599,11 @@ class HolidaysRequest(models.Model):
             return leave_date - timedelta(days=1)
         else:
             return leave_date
+
+    def _read_group_employee_id(self, employees, domain, order):
+        if self._context.get('time_off_expand_employee'):
+            return self.env['hr.employee'].browse(self._context.get('time_off_expand_employee'))
+        return employees
 
     ####################################################
     # ORM Overrides methods
