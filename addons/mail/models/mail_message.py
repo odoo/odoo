@@ -977,6 +977,7 @@ class Message(models.Model):
             attachment_ids = []
             for attachment in message_sudo.attachment_ids:
                 attachment_ids.append({
+                    'checksum': attachment.checksum,
                     'id': attachment.id,
                     'filename': attachment.name,
                     'name': attachment.name,
