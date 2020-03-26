@@ -3,12 +3,15 @@
 import base64
 import hashlib
 import itertools
+import io
 import logging
 import mimetypes
 import os
 import re
 from collections import defaultdict
 import uuid
+
+from PIL import Image
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, ValidationError, MissingError, UserError
@@ -223,6 +226,14 @@ class IrAttachment(models.Model):
             super(IrAttachment, attach.sudo()).write(vals)
             if fname:
                 self._file_delete(fname)
+
+    def rotate_image(self, angle):
+        image = Image.open(io.BytesIO(base64.decodebytes(self.datas)))
+        new_image = image.rotate(-angle, expand=1)
+        buffered = io.BytesIO()
+        new_image.save(buffered, format=self.mimetype.split('/')[1])
+        self.datas = base64.b64encode(buffered.getvalue())
+        return True
 
     def _get_datas_related_values(self, data, mimetype):
         values = {

@@ -405,13 +405,13 @@ var Chatter = Widget.extend({
     /**
      * @private
      */
-    _reloadAttachmentBox: function () {
+    _reloadAttachmentBox: function (event) {
         this._areAttachmentsLoaded = false;
         if (this._isAttachmentBoxOpen) {
             this._fetchAttachments().then(this._openAttachmentBox.bind(this));
         }
         if (!this._disableAttachmentBox) {
-            this.trigger_up('reload', { fieldNames: ['message_attachment_count'], keepChanges: true });
+            this.trigger_up('reload', { fieldNames: event && event.data.fieldNames || ['message_attachment_count'], keepChanges: true });
         }
     },
     /**
@@ -608,11 +608,14 @@ var Chatter = Widget.extend({
     /**
      * @private
      */
-    _onReloadAttachmentBox: function () {
+    _onReloadAttachmentBox: function (event) {
+        if (this.fields.thread) {
+            this.fields.thread.updateAttachment(event.data.attachmentId);
+        }
         if (this.reloadOnUploadAttachment) {
             this.trigger_up('reload');
         }
-        this._reloadAttachmentBox();
+        this._reloadAttachmentBox(event);
     },
     /**
      * @private
