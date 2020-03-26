@@ -318,7 +318,8 @@ class IrHttp(models.AbstractModel):
             # We have prefetched some fields of record, among which the field
             # 'write_date' used by '__last_update' below. In order to check
             # access on record, we have to invalidate its cache first.
-            record._cache.clear()
+            if not record.env.su:
+                record._cache.clear()
             record['__last_update']
         except AccessError:
             return None, 403
