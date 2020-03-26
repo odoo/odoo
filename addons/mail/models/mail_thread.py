@@ -431,7 +431,7 @@ class MailThread(models.AbstractModel):
         if not fnames:
             return
         func = self.browse()._finalize_tracking
-        [initial_values] = self.env.cr.precommit.add(func, dict)
+        [initial_values] = self.env.cr.precommit(func, dict)
         for record in self:
             if not record.id:
                 continue
@@ -445,7 +445,7 @@ class MailThread(models.AbstractModel):
         if not self._get_tracked_fields():
             return
         func = self.browse()._finalize_tracking
-        [initial_values] = self.env.cr.precommit.add(func, dict)
+        [initial_values] = self.env.cr.precommit(func, dict)
         # disable tracking by setting initial values to None
         for id_ in self.ids:
             initial_values[id_] = None
@@ -2345,12 +2345,13 @@ class MailThread(models.AbstractModel):
                 email_ids = emails.ids
                 dbname = self.env.cr.dbname
                 _context = self._context
+
+                @self._cr.postcommit
                 def send_notifications():
                     db_registry = registry(dbname)
                     with api.Environment.manage(), db_registry.cursor() as cr:
                         env = api.Environment(cr, SUPERUSER_ID, _context)
                         env['mail.mail'].browse(email_ids).send()
-                self._cr.after('commit', send_notifications)
             else:
                 emails.send()
 

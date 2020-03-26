@@ -373,13 +373,11 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                 login = self.env.user.login
                 expected = counters.get(login, default)
                 if flush:
-                    self.env.user.flush()
-                    self.env.cr.precommit()
+                    self.env.cr._precommit()
                 count0 = self.cr.sql_log_count
                 yield
                 if flush:
-                    self.env.user.flush()
-                    self.env.cr.precommit()
+                    self.env.cr._precommit()
                 count = self.cr.sql_log_count - count0
                 if count != expected:
                     # add some info on caller to allow semi-automatic update of query count
@@ -397,12 +395,10 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
             # flush before and after during warmup, in order to reproduce the
             # same operations, otherwise the caches might not be ready!
             if flush:
-                self.env.user.flush()
-                self.env.cr.precommit()
+                self.env.cr._precommit()
             yield
             if flush:
-                self.env.user.flush()
-                self.env.cr.precommit()
+                self.env.cr._precommit()
 
     def assertRecordValues(self, records, expected_values):
         ''' Compare a recordset with a list of dictionaries representing the expected results.

@@ -14,6 +14,7 @@ import itertools
 import logging
 import time
 import uuid
+import warnings
 
 from decorator import decorator
 import psycopg2
@@ -63,18 +64,11 @@ from inspect import currentframe
 
 def flush_env(cr):
     """ Retrieve and flush an environment corresponding to the given cursor """
-    for env in list(Environment.envs):
-        # don't flush() on another cursor or with a RequestUID
-        if env.cr is cr and (isinstance(env.uid, int) or env.uid is None):
-            env['base'].flush()
-            break
+    cr._flush_env()
 
 def clear_env(cr):
     """ Retrieve and clear an environment corresponding to the given cursor """
-    for env in list(Environment.envs):
-        if env.cr is cr:
-            env.clear()
-            break
+    cr._clear_env()
 
 import re
 re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$')
@@ -95,10 +89,90 @@ class BaseCursor:
     """ Base class for cursors that manages pre/post commit/rollback hooks. """
 
     def __init__(self):
-        self.precommit = tools.Callbacks()
-        self.postcommit = tools.Callbacks()
-        self.prerollback = tools.Callbacks()
-        self.postrollback = tools.Callbacks()
+        self._precommit_hooks = tools.Callbacks()
+        self._postcommit_hooks = tools.Callbacks()
+        self._prerollback_hooks = tools.Callbacks()
+        self._postrollback_hooks = tools.Callbacks()
+
+    @check
+    def precommit(self, func, *types):
+        """ Add a pre-commit hook. """
+        return self._precommit_hooks.add(func, *types)
+
+    @check
+    def postcommit(self, func, *types):
+        """ Add a post-commit hook. """
+        return self._postcommit_hooks.add(func, *types)
+
+    @check
+    def prerollback(self, func, *types):
+        """ Add a pre-rollback hook. """
+        return self._prerollback_hooks.add(func, *types)
+
+    @check
+    def postrollback(self, func, *types):
+        """ Add a post-rollback hook. """
+        return self._postcommit_hooks.add(func, *types)
+
+    def _precommit(self):
+        """ Process all pre-commit hooks, and discard pre-rollback hooks. """
+        self._flush_env()
+        self._precommit_hooks()
+        self._prerollback_hooks.clear()
+
+    def _postcommit(self):
+        """ Process all post-commit hooks, and discard post-rollback hooks. """
+        self._postcommit_hooks()
+        self._postrollback_hooks.clear()
+
+    def _prerollback(self):
+        """ Process all pre-rollback hooks, and discard pre-commit hooks. """
+        self._clear_env()
+        self._precommit_hooks.clear()
+        self._prerollback_hooks()
+
+    def _postrollback(self):
+        """ Process all post-rollback hooks, and discard post-commit hooks. """
+        self._postcommit_hooks.clear()
+        self._postrollback_hooks()
+
+    def _flush_env(self):
+        """ Retrieve and flush an environment corresponding to self. """
+        for env in list(Environment.envs):
+            # don't flush() on another cursor or with a RequestUID
+            if env.cr is self and (isinstance(env.uid, int) or env.uid is None):
+                env['base'].flush()
+                break
+
+    def _clear_env(self):
+        """ Retrieve and clear an environment corresponding to self. """
+        for env in list(Environment.envs):
+            if env.cr is self:
+                env.clear()
+                break
+
+    @check
+    def after(self, event, func):
+        """ Register an event handler.
+
+            :param event: the event, either `'commit'` or `'rollback'`
+            :param func: a callable object, called with no argument after the
+                event occurs
+
+            Be careful when coding an event handler, since any operation on the
+            cursor that was just committed/rolled back will take place in the
+            next transaction that has already begun, and may still be rolled
+            back or committed independently. You may consider the use of a
+            dedicated temporary cursor to do some database operation.
+        """
+        warnings.warn(
+            "Cursor.after() is deprecated, use Cursor.postcommit() or Cursor.postrollback() instead.",
+            DeprecationWarning,
+        )
+        if event == 'commit':
+            self.postcommit(func)
+        elif event == 'rollback':
+            self.postrollback(func)
 
     @contextmanager
     @check
@@ -106,21 +180,15 @@ class BaseCursor:
         """context manager entering in a new savepoint"""
         name = uuid.uuid1().hex
         if flush:
-            flush_env(self)
-            self.precommit()
-            self.prerollback.clear()
+            self._precommit()
         self.execute('SAVEPOINT "%s"' % name)
         try:
             yield
             if flush:
-                flush_env(self)
-                self.precommit()
-                self.prerollback.clear()
+                self._precommit()
         except Exception:
             if flush:
-                clear_env(self)
-                self.precommit.clear()
-                self.prerollback()
+                self._prerollback()
             self.execute('ROLLBACK TO SAVEPOINT "%s"' % name)
             raise
         else:
@@ -408,44 +476,19 @@ class Cursor(BaseCursor):
         self._cnx.set_isolation_level(isolation_level)
 
     @check
-    def after(self, event, func):
-        """ Register an event handler.
-
-            :param event: the event, either `'commit'` or `'rollback'`
-            :param func: a callable object, called with no argument after the
-                event occurs
-
-            Be careful when coding an event handler, since any operation on the
-            cursor that was just committed/rolled back will take place in the
-            next transaction that has already begun, and may still be rolled
-            back or committed independently. You may consider the use of a
-            dedicated temporary cursor to do some database operation.
-        """
-        if event == 'commit':
-            self.postcommit.add(func)
-        elif event == 'rollback':
-            self.postrollback.add(func)
-
-    @check
     def commit(self):
         """ Perform an SQL `COMMIT` """
-        flush_env(self)
-        self.precommit()
+        self._precommit()
         result = self._cnx.commit()
-        self.prerollback.clear()
-        self.postrollback.clear()
-        self.postcommit()
+        self._postcommit()
         return result
 
     @check
     def rollback(self):
         """ Perform an SQL `ROLLBACK` """
-        clear_env(self)
-        self.precommit.clear()
-        self.postcommit.clear()
-        self.prerollback()
+        self._prerollback()
         result = self._cnx.rollback()
-        self.postrollback()
+        self._postrollback()
         return result
 
     @check
@@ -501,24 +544,20 @@ class TestCursor(BaseCursor):
     @check
     def commit(self):
         """ Perform an SQL `COMMIT` """
-        flush_env(self)
-        self.precommit()
+        self._precommit()
         self._cursor.execute('SAVEPOINT "%s"' % self._savepoint)
-        self.prerollback.clear()
         # ignore post-commit/rollback hooks
-        self.postcommit.clear()
-        self.postrollback.clear()
+        self._postcommit_hooks.clear()
+        self._postrollback_hooks.clear()
 
     @check
     def rollback(self):
         """ Perform an SQL `ROLLBACK` """
-        clear_env(self)
-        self.precommit.clear()
-        self.prerollback()
+        self._prerollback()
         self._cursor.execute('ROLLBACK TO SAVEPOINT "%s"' % self._savepoint)
         # ignore post-commit/rollback hooks
-        self.postcommit.clear()
-        self.postrollback.clear()
+        self._postcommit_hooks.clear()
+        self._postrollback_hooks.clear()
 
     def __getattr__(self, name):
         value = getattr(self._cursor, name)
