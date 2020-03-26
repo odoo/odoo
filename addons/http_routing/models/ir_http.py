@@ -411,7 +411,7 @@ class IrHttp(models.AbstractModel):
                 lang = preferred_lang or cls._get_default_lang()
 
             request.lang = lang
-            context['lang'] = lang.code
+            context['lang'] = lang._get_cached('code')
 
             # bind modified context
             request.context = context
