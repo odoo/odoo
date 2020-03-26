@@ -3356,11 +3356,16 @@ class AccountMoveLine(models.Model):
                     discount=to_write.get('discount', line.discount),
                 ))
                 super(AccountMoveLine, line).write(to_write)
-            elif any(field_will_change(line, field) for field in (vals.keys() & BUSINESS_FIELDS)):
+            elif any(field in vals for field in BUSINESS_FIELDS):
                 to_write = line._get_price_total_and_subtotal()
                 to_write.update(line._get_fields_onchange_subtotal(
                     price_subtotal=to_write['price_subtotal'],
                 ))
+                if line.account_id.user_type_id.type in ('receivable', 'payable'):
+                    # Prevent rounding error in multi-currency
+                    other_lines = line.move_id.line_ids - line
+                    to_write['credit'] = line.company_id.currency_id.round(sum(other_lines.mapped('debit')))
+                    to_write['debit'] = line.company_id.currency_id.round(sum(other_lines.mapped('credit')))
                 super(AccountMoveLine, line).write(to_write)
 
         # Check total_debit == total_credit in the related moves.
