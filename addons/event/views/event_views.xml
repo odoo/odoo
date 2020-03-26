@@ -475,7 +475,7 @@
                             <group string="Attendee" name="attendee">
                                 <field name="partner_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
                                 <field name="name"/>
-                                <field name="phone"/>
+                                <field name="phone" class="o_force_ltr"/>
                                 <field name="email"/>
                             </group>
                             <group string="Event Information" name="event">
