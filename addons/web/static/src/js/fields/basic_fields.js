@@ -11,6 +11,7 @@ var AbstractField = require('web.AbstractField');
 var config = require('web.config');
 var core = require('web.core');
 var datepicker = require('web.datepicker');
+var deprecatedFields = require('web.basic_fields.deprecated');
 var dom = require('web.dom');
 var Domain = require('web.Domain');
 var DomainSelector = require('web.DomainSelector');
@@ -23,6 +24,8 @@ var view_dialogs = require('web.view_dialogs');
 var field_utils = require('web.field_utils');
 var time = require('web.time');
 var ColorpickerDialog = require('web.ColorpickerDialog');
+
+let FieldBoolean = deprecatedFields.FieldBoolean;
 
 require("web.zoomodoo");
 
@@ -983,134 +986,6 @@ var FieldMonetary = NumericField.extend({
         var currencyID = this.record.data[currencyField] && this.record.data[currencyField].res_id;
         this.currency = session.get_currency(currencyID);
         this.formatOptions.currency = this.currency; // _formatValue() uses formatOptions
-    },
-});
-
-var FieldBoolean = AbstractField.extend({
-    className: 'o_field_boolean',
-    description: _lt("Checkbox"),
-    events: _.extend({}, AbstractField.prototype.events, {
-        change: '_onChange',
-    }),
-    supportedFieldTypes: ['boolean'],
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * Toggle the checkbox if it is activated due to a click on itself.
-     *
-     * @override
-     */
-    activate: function (options) {
-        var activated = this._super.apply(this, arguments);
-        // The formatValue of boolean fields renders HTML elements similar to
-        // the one rendered by the widget itself. Even though the event might
-        // have been fired on the non-widget version of this field, we can still
-        // test the presence of its custom class.
-        if (activated && options && options.event && $(options.event.target).closest('.custom-control.custom-checkbox').length) {
-            this._setValue(!this.value);  // Toggle the checkbox
-        }
-        return activated;
-    },
-
-    /**
-     * @override
-     * @returns {jQuery} the focusable checkbox input
-     */
-    getFocusableElement: function () {
-        return this.mode === 'readonly' ? $() : this.$input;
-    },
-    /**
-     * A boolean field is always set since false is a valid value.
-     *
-     * @override
-     */
-    isSet: function () {
-        return true;
-    },
-    /**
-     * When the checkbox is rerendered, we need to check if it was the actual
-     * origin of the reset. If it is, we need to activate it back so it looks
-     * like it was not rerendered but is still the same input.
-     *
-     * @override
-     */
-    reset: function (record, event) {
-        var rendered = this._super.apply(this, arguments);
-        if (event && event.target.name === this.name) {
-            this.activate();
-        }
-        return rendered;
-    },
-    /**
-     * Associates the 'for' attribute of the internal label.
-     *
-     * @override
-     */
-    setIDForLabel: function (id) {
-        this._super.apply(this, arguments);
-        this.$('.custom-control-label').attr('for', id);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * The actual checkbox is designed in css to have full control over its
-     * appearance, as opposed to letting the browser and the os decide how
-     * a checkbox should look. The actual input is disabled and hidden. In
-     * readonly mode, the checkbox is disabled.
-     *
-     * @override
-     * @private
-     */
-    _render: function () {
-        var $checkbox = this._formatValue(this.value);
-        this.$input = $checkbox.find('input');
-        this.$input.prop('disabled', this.mode === 'readonly');
-        this.$el.addClass($checkbox.attr('class'));
-        this.$el.empty().append($checkbox.contents());
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Properly update the value when the checkbox is (un)ticked to trigger
-     * possible onchanges.
-     *
-     * @private
-     */
-    _onChange: function () {
-        this._setValue(this.$input[0].checked);
-    },
-    /**
-     * Implement keyboard movements.  Mostly useful for its environment, such
-     * as a list view.
-     *
-     * @override
-     * @private
-     * @param {KeyEvent} ev
-     */
-    _onKeydown: function (ev) {
-        switch (ev.which) {
-            case $.ui.keyCode.ENTER:
-                // prevent subsequent 'click' event (see _onKeydown of AbstractField)
-                ev.preventDefault();
-                this.$input.prop('checked', !this.value);
-                this._setValue(!this.value);
-                return;
-            case $.ui.keyCode.UP:
-            case $.ui.keyCode.RIGHT:
-            case $.ui.keyCode.DOWN:
-            case $.ui.keyCode.LEFT:
-                ev.preventDefault();
-        }
-        this._super.apply(this, arguments);
     },
 });
 
