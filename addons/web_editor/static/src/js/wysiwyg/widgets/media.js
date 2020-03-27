@@ -379,7 +379,12 @@ var FileWidget = SearchableMediaWidget.extend({
             }).open();
             optimizeDialog.on('attachment_updated', self, function (ev) {
                 optimizeDialog.off('closed');
-                resolve(ev.data);
+                if (self.$media[0].getAttribute('src') === attachment.image_src) {
+                    self.$media[0].src = ev.data.image_src;
+                }
+                Object.assign(attachment, ev.data);
+                $attachmentCell.find('img')[0].src = attachment.image_src;
+                resolve(attachment);
             });
             optimizeDialog.on('closed', self, function () {
                 self.noSave = true;
