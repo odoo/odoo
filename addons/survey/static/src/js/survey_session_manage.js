@@ -156,15 +156,17 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
             delete this.resultsRefreshInterval;
             this.$('.o_survey_session_navigation_previous').removeClass('d-none');
         } else if (['leaderboard', 'leaderboardFinal'].includes(screenToDisplay)
-                   && this.currentScreen !== 'leaderboardFinal') {
-            if (screenToDisplay === 'leaderboardFinal') {
-                this.$('.o_survey_session_leaderboard_title').text(_('Final Leaderboard'));
+                   && !['leaderboard', 'leaderboardFinal'].includes(this.currentScreen)) {
+            if (this.isLastQuestion) {
                 this.$('.o_survey_session_navigation_next').addClass('d-none');
             }
             this.leaderBoard.showLeaderboard(true);
         } else {
             if (!this.isLastQuestion) {
                 this._nextQuestion();
+            } else if (!this.sessionShowLeaderboard) {
+                // If we have no leaderboard to show, directly end the session
+                this.$('.o_survey_session_close').click();
             }
         }
 

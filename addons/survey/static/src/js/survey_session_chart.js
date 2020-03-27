@@ -199,8 +199,8 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
     _getBackgroundColor: function (metaData) {
         var opacity = '0.8';
         if (this.showAnswers && this.hasCorrectAnswers) {
-            if (this._isValidAnswer(metaData.dataIndex)){
-                opacity = 0.3;
+            if (!this._isValidAnswer(metaData.dataIndex)){
+                opacity = '0.3';
             }
         }
         var rgb = SESSION_CHART_COLORS[metaData.dataIndex];

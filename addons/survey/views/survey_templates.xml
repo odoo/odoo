@@ -74,6 +74,7 @@
                 t-att-data-is-start-screen="answer.state == 'new'"
                 t-att-data-readonly="survey_form_readonly"
                 t-att-data-has-answered="bool(has_answered)"
+                t-att-data-is-page-description="bool(question and question.is_page and not is_html_empty(question.description))"
                 t-att-data-questions-layout="survey.questions_layout"
                 t-att-data-triggered-questions-by-answer="json.dumps(triggered_questions_by_answer)"
                 t-att-data-selected-answers="json.dumps(selected_answers)">
@@ -139,6 +140,7 @@
         <div class="o_survey_form_content_data d-none"
             t-att-data-question-time-limit-reached="answer.question_time_limit_reached"
             t-att-data-has-answered="bool(has_answered)"
+            t-att-data-is-page-description="bool(question and question.is_page and not is_html_empty(question.description))"
             t-att-data-timer="timer_start"
             t-att-data-time-limit-minutes="time_limit_minutes"/>
         <t t-if="survey.questions_layout == 'one_page'">
@@ -192,13 +194,23 @@
                 <div t-if="answer.question_time_limit_reached and not has_answered" class="font-weight-bold mb128">Sorry, you have not been fast enough.</div>
                 <div t-else="" class="font-weight-bold mb128">We have registered your answer! Please wait for the host to go to the next question.</div>
             </t>
+            <t t-elif="answer.is_session_answer and question.is_page and not is_html_empty(question.description)">
+                <div class="font-weight-bold mt-5">Pay attention to the host screen until the next question.</div>
+            </t>
             <t t-else="">
                 <t t-call="survey.question_container"/>
 
                 <div class="row">
                     <div class="offset-3 col-6 text-center mt16 mb128">
-                        <button t-if="not answer.is_session_answer and survey.users_can_go_back and question != answer.predefined_question_ids[0]" type="submit" class="btn btn-secondary"
-                                name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Back</button>
+                        <!-- Can go back if:
+                            - Back button is allowed in configuration
+                            - This is not a session answer (doesn't make sense to go back in session context)
+                            - This is not the first question
+                            - The survey doesn't have pages OR this is not the first page of the survey
+                              (pages are displayed in 'page_per_question' layout when they have a description, see PR#44271)
+                        -->
+                        <button t-if="survey.users_can_go_back and not answer.is_session_answer and question != answer.predefined_question_ids[0] and (not survey.page_ids or question != survey.page_ids[0])"
+                            type="submit" class="btn btn-secondary" name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">Back</button>
                         <button type="submit" t-att-value="'next' if not survey_last else 'finish'" class="btn btn-primary">
                             <t t-if="answer.is_session_answer">
                                 Submit

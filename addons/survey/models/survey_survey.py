@@ -9,6 +9,7 @@ import werkzeug
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import AccessError
 from odoo.osv import expression
+from odoo.tools import is_html_empty
 
 
 class Survey(models.Model):
@@ -437,23 +438,38 @@ class Survey(models.Model):
 
     @api.model
     def _get_pages_or_questions(self, user_input):
-        if self.questions_layout == 'one_page':
-            return self.env['survey.question']
-        elif self.questions_layout == 'page_per_question' and self.questions_selection == 'random':
-            return user_input.predefined_question_ids
-        else:
-            return self.question_and_page_ids if self.questions_layout == 'page_per_question' else self.page_ids
+        """ Returns the pages or questions (depending on the layout) that will be shown
+        to the user taking the survey.
+        In 'page_per_question' layout, we also want to show pages that have a description. """
+
+        result = self.env['survey.question']
+        if self.questions_layout == 'page_per_section':
+            result = self.page_ids
+        elif self.questions_layout == 'page_per_question':
+            if self.questions_selection == 'random':
+                result = user_input.predefined_question_ids
+            else:
+                result = self.question_and_page_ids.filtered(
+                    lambda question: not question.is_page or not is_html_empty(question.description))
+
+        return result
 
     def _get_next_page_or_question(self, user_input, page_or_question_id, go_back=False):
-        """
-        This methods gets the next question or page to display.
-        In case the survey contains conditional question, when navigating to next or previous questions,
-        in page_per_question layout only, the next or previous question to display depends on the selected answers
-        and the questions hierarchy. This methods returns the next question index to display among the survey_questions.
+        """ Generalized logic to retrieve the next question or page to show on the survey.
+        It's based on the page_or_question_id parameter, that is usually the currently displayed question/page.
+
+        There is a special case when the survey is configured with conditional questions:
+        - for "page_per_question" layout, the next question to display depends on the selected answers and
+          the questions 'hierarchy'.
+        - for "page_per_section" layout, before returning the result, we check that it contains at least a question
+          (all section questions could be disabled based on previously selected answers)
+
+        The whole logic is inverted if "go_back" is passed as True.
+
         :param user_input: user's answers
         :param page_or_question_id: current page or question id
-        :param go_back: must be True to get the previous question
-        :return: next or previous question.id
+        :param go_back: reverse the logic and get the PREVIOUS question/page
+        :return: next or previous question/page
         """
 
         survey = user_input.survey_id
@@ -471,19 +487,31 @@ class Survey(models.Model):
         current_page_index = pages_or_questions.ids.index(next(p.id for p in pages_or_questions if p.id == page_or_question_id))
 
         # Get previous and we are on first page  OR Get Next and we are on last page
-        if (go_back and current_page_index == 0) or current_page_index == len(pages_or_questions) - 1:
+        if (go_back and current_page_index == 0) or (not go_back and current_page_index == len(pages_or_questions) - 1):
             return Question
 
         # Conditional Questions Management
         triggering_answer_by_question, triggered_questions_by_answer, selected_answers = user_input._get_conditional_values()
-        if survey.has_conditional_questions and survey.questions_layout == 'page_per_question' and triggered_questions_by_answer:
-            potential_next_questions = pages_or_questions[0:current_page_index] if go_back \
-                else pages_or_questions[current_page_index+1:]
-            for question in sorted(potential_next_questions, key=lambda q: q.id, reverse=go_back):
-                triggering_answer = triggering_answer_by_question.get(question)
-                if not triggering_answer or triggering_answer in selected_answers:
-                    # If next question found
-                    return question
+        if survey.has_conditional_questions and triggered_questions_by_answer:
+            if survey.questions_layout == 'page_per_question':
+                question_candidates = pages_or_questions[0:current_page_index] if go_back \
+                    else pages_or_questions[current_page_index + 1:]
+                for question in question_candidates.sorted(reverse=go_back):
+                    triggering_answer = triggering_answer_by_question.get(question)
+                    if not triggering_answer or triggering_answer in selected_answers:
+                        # question is visible because not conditioned or conditioned by a selected answer
+                        # -> return it
+                        return question
+            elif survey.questions_layout == 'page_per_section':
+                inactive_questions = user_input._get_inactive_conditional_questions()
+                section_candidates = pages_or_questions[0:current_page_index] if go_back \
+                    else pages_or_questions[current_page_index + 1:]
+                for section in section_candidates.sorted(reverse=go_back):
+                    if any(question not in inactive_questions for question in section.question_ids):
+                        # section contains at least one active question
+                        # -> return it
+                        return section
+                return Question
         else:
             return pages_or_questions[current_page_index + (1 if not go_back else -1)]
 
@@ -580,13 +608,10 @@ class Survey(models.Model):
         if not self.question_ids or not self.env.user.has_group('survey.group_survey_user'):
             return
 
-        if not self.session_question_id:
-            next_question = self.question_ids[0]
-        else:
-            most_voted_answers = self._get_session_most_voted_answers()
-            next_question = self._get_next_page_or_question(most_voted_answers, self.session_question_id.id)
-
-        return next_question
+        most_voted_answers = self._get_session_most_voted_answers()
+        return self._get_next_page_or_question(
+            most_voted_answers,
+            self.session_question_id.id if self.session_question_id else 0)
 
     def _get_session_most_voted_answers(self):
         """ In sessions of survey that has conditional questions, as the survey is passed at the same time by
