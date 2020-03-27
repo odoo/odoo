@@ -9,6 +9,7 @@
                 <field name="mail_message_id" invisible="1"/>
                 <field name="has_cancel" invisible="1"/>
                 <field name="has_insufficient_credit" invisible="1"/>
+                <field name="has_unregistered_account" invisible="1"/>
                 <field name="recipient_ids">
                     <tree string="Recipient" editable="top" create="0" delete="0">
                         <field name="partner_name"/>
@@ -23,6 +24,8 @@
                 <footer>
                     <button string="Buy credits" name="action_buy_credits" type="object" class="btn-primary o_mail_send" 
                             attrs="{'invisible': [('has_insufficient_credit', '=', False)]}"/>
+                    <button string="Set up an account" name="action_buy_credits" type="object" class="btn-primary o_mail_send" 
+                            attrs="{'invisible': [('has_unregistered_account', '=', False)]}"/>
                     <button string="Resend" name="action_resend" type="object" class="btn-primary o_mail_send"/>
                     <button string="Ignore all" name="action_cancel" type="object" class="btn-secondary" />
                     <button string="Cancel" class="btn-secondary" special="cancel" />

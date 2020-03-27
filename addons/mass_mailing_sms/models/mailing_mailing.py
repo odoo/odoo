@@ -28,8 +28,11 @@ class Mailing(models.Model):
     body_plaintext = fields.Text('SMS Body', compute='_compute_body_plaintext', store=True, readonly=False)
     sms_template_id = fields.Many2one('sms.template', string='SMS Template', ondelete='set null')
     sms_has_insufficient_credit = fields.Boolean(
-        'Insufficient IAP credits', compute='_compute_sms_has_insufficient_credit',
+        'Insufficient IAP credits', compute='_compute_sms_has_iap_failure',
         help='UX Field to propose to buy IAP credits')
+    sms_has_unregistered_account = fields.Boolean(
+        'Unregistered IAP account', compute='_compute_sms_has_iap_failure',
+        help='UX Field to propose to Register the SMS IAP account')
     sms_force_send = fields.Boolean(
         'Send Directly', help='Use at your own risks.')
     # opt_out_link
@@ -51,14 +54,25 @@ class Mailing(models.Model):
                 mailing.body_plaintext = mailing.sms_template_id.body
 
     @api.depends('mailing_trace_ids.failure_type')
-    def _compute_sms_has_insufficient_credit(self):
-        mailing_ids = self.env['mailing.trace'].sudo().search([
-            ('mass_mailing_id', 'in', self.ids),
-            ('trace_type', '=', 'sms'),
-            ('failure_type', '=', 'sms_credit')
-        ]).mapped('mass_mailing_id')
-        for mailing in self:
-            mailing.sms_has_insufficient_credit = mailing in mailing_ids
+    def _compute_sms_has_iap_failure(self):
+        failures = ['sms_acc', 'sms_credit'] 
+        if not self.ids:
+            self.sms_has_insufficient_credit = self.sms_has_unregistered_account = False
+        else:
+            traces = self.env['mailing.trace'].sudo().read_group([
+                        ('mass_mailing_id', 'in', self.ids),
+                        ('trace_type', '=', 'sms'),
+                        ('failure_type', 'in', failures)
+            ], ['mass_mailing_id', 'failure_type'], ['mass_mailing_id', 'failure_type'], lazy=False)
+
+            trace_dict = dict.fromkeys(self.ids, {key: False for key in failures})
+            for t in traces:
+                trace_dict[t['mass_mailing_id'][0]][t['failure_type']] =  t['__count'] and True or False
+
+            for mail in self:
+                mail.sms_has_insufficient_credit = trace_dict[mail.id]['sms_credit']
+                mail.sms_has_unregistered_account = trace_dict[mail.id]['sms_acc']
+
 
     # --------------------------------------------------
     # BUSINESS / VIEWS ACTIONS

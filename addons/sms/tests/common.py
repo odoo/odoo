@@ -28,7 +28,7 @@ class MockSMS(common.BaseCase):
                 } for number in params['numbers']]
                 return True  # send_message v0 API returns always True
             # mock batch sending
-            if local_endpoint == '/iap/sms/1/send':
+            if local_endpoint == '/iap/sms/2/send':
                 result = []
                 for to_send in params['messages']:
                     res = {'res_id': to_send['res_id'], 'state': 'success', 'credit': 1}
@@ -37,6 +37,8 @@ class MockSMS(common.BaseCase):
                         res.update(credit=0, state='insufficient_credit')
                     elif error and error == 'wrong_number_format':
                         res.update(state='wrong_number_format')
+                    elif error and error == 'unregistered':
+                        res.update(state='unregistered')
                     elif error and error == 'jsonrpc_exception':
                         raise exceptions.AccessError(
                             'The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was ' + local_endpoint
